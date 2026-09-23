@@ -32,6 +32,8 @@
 - Do bosses for large projects amplify or trivialise real achievement? *(Proposed instead: great gates opened by real milestones, `game/QUEST_SYSTEM.md`.)*
 - ~~Could a composable ability system be the core progression?~~ Yes: signs combine into words that are powers (`game/PROGRESSION.md`).
 - Is creative building worth its cost here, or is it a separate game?
+- Runs (D-016): is "two missed days end a run" the right grace? Do lamps and relics motivate without turning into pressure? *(Test in use.)*
+- Can the app read and write Google Calendar simply and safely? *(Phase 7.)*
 
 ## Narrative
 - Which world direction? (Deliberately undecided; do not anchor on the "arrival in an abandoned world" premise.)

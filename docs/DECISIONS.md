@@ -151,3 +151,19 @@
 - **Rationale:** Dan plays for the story and to be surprised. A long story needs a fixed destination to avoid "going nowhere".
 - **Consequences:** Dan's control over the story is at the level of the pitch, the tone and morning questions. The sealed folder must stay internally consistent, because Dan won't catch contradictions in it. Each Phase 3 run includes an adversarial self-review for that reason.
 - **Reversible:** Yes. Dan can open the sealed folder at any time; that can't be undone for him.
+
+## D-016 — Productivity tools, built into the world
+- **Date:** 2026-09-23
+- **Context:** After Phase 2 closed, Dan asked for "the functionality of some of the best productivity apps", integrated into the game, "not just plonked into the app". He chose: the timer inside the story, the Chronicle, a calendar link, **lists**, **a scheduler** "if that won't be crazy to do", and **streaks** that feed the story or the collection. Lists, planning and streaks were limited or excluded in Phase 1 (P6, P7, anti-features) because of pile-up and punitive streaks, so this reverses part of that.
+- **Decision:** Add `game/TOOLS.md`:
+  - the timer becomes *the delve* (moves the expedition; four in a row reach deeper);
+  - lists become *the satchel* (on request; worked under the timer; stale items drift to *someday*);
+  - light, optional **plotting** of jobs to days or times (waypoints, no time-blocking, a passed time returns quietly);
+  - a **calendar link** (subject to Phase 7 feasibility);
+  - **non-punitive runs** (low and rested days count; one missed day is forgiven; lamps and relics are kept forever);
+  - **the Chronicle** (an automatic journal of real progress, no stats).
+  New principle P16: every tool must move or reveal something in the world, and must never create a pile, a debt or a red number. P6, P7 and anti-features amended.
+- **Alternatives:** Keep the Phase 1 exclusions (safer against pile-up, but Dan wants these, and a game that fits only his low days is D-011's mistake again). Add the tools as a separate "productivity" tab (easier, but "plonked").
+- **Rationale:** Dan's preference, and the tools make the app useful on ordinary and high days. The original harms were pile-up, guilt and planning instead of starting. Each is designed out rather than the tool being banned.
+- **Consequences:** More to build. The first playable adds the delve, the satchel, daily runs and a simple Chronicle; plotting and the calendar come later. Phase 3 names the delve, satchel, lamps, relics and Chronicle in the chosen world, a small addition that doesn't change the story work.
+- **Reversible:** Yes. Any tool that creates pressure in use is cut or softened.

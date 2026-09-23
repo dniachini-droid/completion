@@ -18,6 +18,8 @@ Create the story the game runs on. It must be unique and connected, and it must 
 
 **Overnight run (2026-09-23 → 24), Claude Fable 5.1, unattended.** Work order: `docs/narrative/PHASE3_PLAN.md`. Research → three pitches → Claude picks one and develops it fully (sealed) → adversarial self-review → spoiler-free morning briefing below.
 
+**Also 2026-09-23 (review session):** Dan asked for productivity-app features built into the game. Drafted `game/TOOLS.md` (D-016): timer as *the delve*, lists as *the satchel*, optional plotting, calendar link, non-punitive runs with lamps and relics, and the Chronicle. **Awaiting Dan's review.** Phase 3 just needs to give these their in-world names.
+
 ## Morning briefing for Dan
 
 _To be written by the overnight run at stage 5._

@@ -1,5 +1,7 @@
 # Collections
 
-> Discoverables, rarity, collection design. Phase 2.
+> Discoverables, rarity, collection design.
 
-_Placeholder — not yet in scope. See `docs/CURRENT_STATE.md` for the current phase._
+_Draft, 2026-09-23 (D-016)._
+
+One collection: **relics** from runs (`TOOLS.md` §5) and finds from the Site (avoided jobs, deep delves). Every item belongs to the world truth and can be read with the script. No shop, no random loot, no rarity tiers for their own sake. The detailed design comes with the chosen world (Phase 3).

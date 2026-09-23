@@ -48,7 +48,7 @@ Farming is prevented by **structure**, not by policing:
 
 ### Things no candidate has [proposal]
 - **No XP, no levels, no HP/MP numbers.** Capacity already does HP/MP's useful job (sizing the day, giving permission to stop), and "day complete" says "enough" more clearly than an empty MP bar. Progression is shown by **new abilities and a changed world**, which the player model says Dan actually cares about. If a candidate needs a number, it must say what changes when it goes up.
-- No streaks, no backlog, no decay, no loss. (Anti-features.)
+- No streaks, no backlog, no decay, no loss. (Anti-features.) *Superseded in part by D-016: non-punitive runs and lists on request, see `TOOLS.md`.*
 
 ### The shared content-rate problem
 Story is why Dan plays, and he stops when it ends. With about one main beat per completed day plus small beats per job, a year of play needs roughly **250 main beats and ~750 small ones**. Each candidate below handles this differently; it's one of the biggest differences between them.
@@ -292,6 +292,9 @@ Systems unfold gradually (MASTER_BRIEF §262), so week one is simple:
 
 ### Large projects
 A big real project (the 24-week Claude course, a module of it, restarting Spanish lessons) is a **great gate** visible from far off. Its parts open as real milestones are reached. Dan confirms the milestone with one tap ("finished module 3"): the only "approval" in the system. The fiction amplifies the real achievement; it never makes it look small (MASTER_BRIEF §15).
+
+### Tools inside the loop (D-016)
+The focus timer (*the delve*), lists (*the satchel*), plotting, the calendar link, runs and the Chronicle are specified in `TOOLS.md`. Each feeds the same three reward sizes: step, arrival, Key. Runs add relics to the collection.
 
 ### Absence
 After days away: a short "where you were" (last place, the gate you were looking at, one unfinished record), and one small welcoming step. No counts, no summary of what was missed.
