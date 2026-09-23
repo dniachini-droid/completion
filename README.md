@@ -25,4 +25,4 @@ research/        reference material and notes
 src/             application code (empty until Phase 8)
 ```
 
-> `docs/narrative/WORLD_TRUTH.md` will contain spoilers. Dan may choose not to read it.
+> `docs/narrative/sealed/` holds the story's hidden truth. **Dan has chosen not to read it** (D-015).
