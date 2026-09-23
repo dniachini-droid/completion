@@ -10,7 +10,7 @@ _Status: draft for Dan's review, 2026-09-23. "Quest" is a design word here; what
 |---|---|---|---|
 | **Main job** | One of the day's 2–5 real things | Suggested by the app from the pool below; Dan accepts or swaps | Step (a find if it's an avoided job) |
 | **Day complete** | All the day's main jobs done | Automatic | Arrival |
-| **Extra session** | A 25-min focus session after day complete | Dan just starts the timer | Step (slows after ~2 extra h of the same kind) |
+| **Extra session** | A 25-min focus session after day complete | Dan starts the timer on a job from the day (one tap), so the app knows its kind without tagging | Step (slows after ~2 extra h of the same kind) |
 | **Weekly target** | Dan's own weekly commitments (gym 4×, Spanish, cooking, meal prep, course) | Set once in Phase 1; changed only when Dan wants | Key |
 | **One-off** | A typed line ("order the cat's medication") | Dan types one line | Becomes a main job candidate; avoided one-offs are suggested early |
 | **Great gate** | A large real project and its milestones (the course, restarting Spanish lessons) | Set up once with Dan | Key per milestone; the great gate opens at the end |

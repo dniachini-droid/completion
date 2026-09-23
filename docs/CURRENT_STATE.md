@@ -3,7 +3,7 @@
 > **Authoritative project-progress tracker.** Read at the start of every session; update before ending every substantial session.
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 
-_Last updated: 2026-09-23 (Session 3: loop chosen; full Phase 2 drafts awaiting Dan's review)_
+_Last updated: 2026-09-23 (Session 4: reviewing the Phase 2 drafts with Dan)_
 
 ## Current phase
 
@@ -20,6 +20,10 @@ Design the core game: how real-life action moves the game, and why Dan would wan
 - ✅ Dan chose **a blend** (D-010) and asked that the game also serve him at full capacity (D-011, P2 amended).
 - ✅ Drafted for Dan's review: the chosen loop with daily, weekly and long-term loops (`CORE_LOOPS.md` Part 4), `PROGRESSION.md`, `ECONOMY.md`, `QUEST_SYSTEM.md`, and first-playable needs (`GAME_DESIGN.md`). No XP, levels, HP/MP or currencies (D-012).
 - ⏳ Waiting for Dan's review of those drafts.
+
+**Session 4 (2026-09-23):**
+- ✅ Consistency pass: Keys come only from weekly targets and milestones (avoided jobs give a *find*); extra sessions are started on a job so the app knows their kind; stale XP question closed.
+- ⏳ Four design points put to Dan: Keys vs words, first-word timing, what a High day yields when signs are Key-paced, and how long the first playable test runs and what it measures.
 
 ## Do NOT work on yet
 

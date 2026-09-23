@@ -26,7 +26,7 @@
 - ~~Do HP/MP add real meaning?~~ No: dropped with XP, levels and currencies (D-012). Revisit if Dan misses a sense of size in use.
 - ~~Which core loop?~~ A blend, *Explore · Decode · Connect* (D-010).
 - Is the same-kind slowdown after ~2 extra hours the right high-day balance? *(Test in use.)*
-- If capabilities beat numbers for Dan, what is XP even for? How do daily repetitive inputs unlock *new verbs* often enough without inflation?
+- ~~What is XP even for?~~ Dropped (D-012). Still open: how do daily repetitive inputs unlock *new verbs* often enough without inflation? *(Pacing in `game/PROGRESSION.md`.)*
 - ~~How many core daily actions define a complete day?~~ About 3 main jobs (P2). Test in use.
 - Does collection/rarity motivate him in practice, and how to prevent farming?
 - Do bosses for large projects amplify or trivialise real achievement? *(Proposed instead: great gates opened by real milestones, `game/QUEST_SYSTEM.md`.)*

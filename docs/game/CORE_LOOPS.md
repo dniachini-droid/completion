@@ -233,7 +233,7 @@ Each return to the app takes **under a minute**, and every one ends by showing s
 |---|---|---|
 | **Step** | each main job, and each focus session after day complete | the map extends; often a small find or a line of script |
 | **Arrival** | day complete | a place worth arriving at: a chamber, a view, a record whose fragment you can decode |
-| **Key** | each weekly target met; avoided jobs; major milestones | opens something **already seen and sealed**: a gate, a sealed record, a new sign |
+| **Key** | each weekly target met; major milestones | opens something **already seen and sealed**: a gate, a sealed record, a new sign |
 
 Avoided jobs (admin, Spanish, housework, costly one-offs) always turn a step into a **find**: never just a corridor. This is the "aim at what's avoided" pull (P5), done through reward, not pressure.
 
