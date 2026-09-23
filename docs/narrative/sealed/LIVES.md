@@ -1,9 +1,9 @@
 # The Lives — records and fragments — SPOILERS
 
-> **Sealed (D-015).** The linked lives, their records, and the fragment text. The first playable's two lives (the Salt-Cutter and the Linguist) are written in full for weeks 1–13, which covers the 3–4 week test (D-013) with margin; every other record the first thirteen weeks touch has its text here too. Later fragments are outlined. Each fragment is written *in full* against the truth and then annotated with what is legible when it is planted (RESEARCH lesson 1); partial readings are true by omission, never false.
+> **Sealed (D-015).** The linked lives, their records, and the fragment text. Every record in the Cut is authored as a **sign string** (SCRIPT §8.2) with its terse rendering when fully held, plus the **telling** (the fuller prose account, the author's reference and the source of the Linguist's expansions). The first playable's two lives (the Salt-Cutter and the Linguist) are complete for weeks 1–13, which covers the 3–4 week test (D-013) with margin; every other record those weeks touch is here too. Later fragments are outlined and are sign-authored before they are planted (rule 6).
 > These fragments are also the **sample record fragments** the plan asked for: they prove the voice.
 
-_Written 2026-09-23. Must agree with `WORLD_TRUTH.md`, `SCRIPT.md`, `TIMELINE.md`, `CHARACTERS.md`, `REVELATION_MAP.md`, `SITE.md`._
+_Written 2026-09-23; revised after review (`REVIEW.md`). Must agree with `WORLD_TRUTH.md`, `SCRIPT.md`, `TIMELINE.md`, `CHARACTERS.md`, `REVELATION_MAP.md`, `SITE.md`._
 
 ---
 
@@ -11,141 +11,189 @@ _Written 2026-09-23. Must agree with `WORLD_TRUTH.md`, `SCRIPT.md`, `TIMELINE.md
 
 A record in the Cut is shown as its signs. Over them sit up to three layers:
 
-1. **The app's voice** (plain, warm, P14) describes what is physically there: the place, the objects, the hand. It never translates.
-2. **Her layer.** Where the Linguist translated a record in her notebook (English, on paper, found in her camp), her translation is shown in her hand, in italics, over the spans she got. She got about a third of the salt tally and pieces of the Surveyor; nothing deeper. Her translations are honest and *sometimes wrong* (she wrote "give" where the sign is contested; she wrote "he stopped me" where the cross she hadn't learned turns it). Her layer is the bilingual that bootstraps week 1 (RESEARCH lesson 16) and the first thing Dan reads past is the first thing that is his.
-3. **Dan's layer.** Every sign he has learned renders as its English in every record that contains it; his guesses show with a question mark; confirmed signs settle. Where his layer and hers disagree, both show, and the difference is a beat.
+1. **The app's voice** (plain, warm, P14) describes what is physically there: the place, the objects, the hand, the pictures. It never translates and never suggests an age.
+2. **Her layer.** The Linguist left **loose glossary sheets, dated Days 1–15**, in her camp: her first glosses of the salt tally and the start of the Surveyor's report, made before she learned the cross and never revised because she moved to cutting in stone. Where a sheet glosses a span, that gloss shows in her hand, in italics. Her glosses are honest and *sometimes wrong* (she wrote "give?" on the contested sign; she read KEEP as "held" because the Engineer's log had it as "hold", so "he held me" where the unlearned cross turns it). Her layer is the bilingual that bootstraps week 1 (RESEARCH lesson 16), and the first span Dan reads past her is the first thing that is his.
+3. **Dan's layer.** Every sign he has learned renders as its English in every record that contains it; his guesses show with a question mark; confirmed signs settle. Where his layer and hers disagree, both show, and the difference is a beat. His NOT applies to spans she glossed: "he held me" becomes "he held me [not]" the week he learns the cross.
 
-Between the layers, signs he does not have stay as signs. A record is "readable" when Dan's layer covers it. So a fragment planted in week 1 can be *seen* in week 1, *half-read through her* in week 1, and *fully read by him* in month 3, and the three readings are three beats.
+Between the layers, unheld signs stay as signs; carved pictures are described in brackets. So a fragment planted in week 1 can be *seen* in week 1, *half-read through her* in week 1, and *fully read by him* in month 3 or 4, and the three readings are three beats.
 
-Her notebook (L2–L15) is English and is read a page at a time; it is not in the Cut. Her lesson-wall (L1), the rod's handle (L4) and everything she cut after Day 40 (L16 onward) are in the Cut.
+Her **notebook** (L2–L15) is English on paper, read a page at a time; it is not in the Cut. Her lesson-wall (L1), the rod's handle (L4) and everything she cut after Day 40 (L15a onward) are in the Cut.
 
-## 0.1 The fragment template (RESEARCH lesson 39)
+## 0.1 The fragment rules
 
-40–80 words. An age formula in the first line. One witness identified by trade or station. One drawable object. One measure in that age's counting. One plain fact about the Site. One open question the writer couldn't answer. No address to the finder except gratitude. One beat per fragment: a new name, a sign in context, a contradiction, or a confirmation. The last line is the one Dan should still remember tomorrow.
+**A Cut record**: 8–20 signs from SCRIPT §3, plus numbers, rings, hand-marks and at most two carved pictures; a terse rendering of 15–40 words in the act-first grammar; the formula at the head; one beat. **A telling** (author's reference; her expansions): 40–80 words, one witness by trade, one drawable object, one measure in the age's counting, one plain fact about the Site, one open question the writer couldn't answer, no address to the finder except gratitude. Draft the telling, then cut the record from it.
 
-Prose test before any fragment ships: one drawable noun; no capitalised abstraction; no triad; no "whispers"; no wistful final cadence more than once a week.
+Prose test before any fragment ships: one drawable noun; no capitalised abstraction; no triad; no "whispers"; no wistful final cadence more than once a week; distinct voices by what each age counts and compares.
+
+Notation below: `·` separates sign groups; `[ ]` is a carved picture; `ring(…)` is a name-ring; `{h}` a hand-mark; the formula `ONCE ring(name) N` opens every transcription.
 
 ---
 
 ## 1. Reader ONE — the Salt-Cutter (S)
 
-**Where:** cut along the Salt Gallery wall in the Custodian's hand, from the Salt-Cutter's own telling in old age (TIMELINE). Formula: ONCE + ring + ONE, then "I say what I saw." Counts in hands (fives), rendered in eights by the transcriber. Closing formula (S8 only): "That is all I saw."
+**Where:** cut along the Salt Gallery wall in the Custodian's hand, from the Salt-Cutter's own telling when he came back in old age (TIMELINE). Counts in hands (fives); the transcription writes his count and the transcriber's numeral in eights beside it (the double notation, visible week 8). Closing formula (S8 only): SEE ALL, "all I saw". Voice: he counts everything; never "I think"; plainest English; pictures of animals and salt.
 
-| Id | Week | Full text | Legible at planting | Beat |
-|---|---|---|---|---|
-| **S1** | 1 | I say what I saw. The hill shook in the second salt-cutting after the lambs. The salt face split from the top to my knee. Behind it, a dry way, cut square, not by water and not by us. I had the lamp with a hand of oil in it. I went in as far as the oil. Someone had made light there already. | Her layer: "I say what I saw. The hill [ ] … the salt face split … a dry way, cut square … I had the *lamp* … someone had made *light* there already." Dan's layer: LAMP, FIRE. | A person wrote this. Someone had made light before him. |
-| **S2** | 2 | I say what I saw. He stood where the way turns. Two of me and a lamb, and thin. Four on the hand, and long, like a heron's toes. I gave him bread and salt as you do. He ate not. He said, in my own tongue, that the lamp was good. I said it was my wife's. He asked her name and I told him, and he cut it in the wall while I watched. | Her layer: "He stood where the way turns … two of me and a lamb … four on the hand … I gave him bread and salt … *he ate* … the lamp was good … my wife's … he cut it in the wall." (Her "he ate" is the trap; the cross is unlearned.) Dan: LAMP, FIRE, PERSON, GIVE?, ONE. | The figure. Four on the hand. The lone ring above the tally is a name. |
-| **S3** | 3 | I say what I saw. He put his hand over my hand on the pick and we cut two marks by the door, small, and the lamp-marks along the wall took fire one after the other, a hand of them, then more than I could count, to the end of the hall and round the corner. I sat down on the floor. I wept, and not from fear. He waited. He does not mind waiting. | Her layer: none (past where she got). Dan: LAMP, FIRE, GIVE, PERSON, HERE, DOOR: "…hand … two marks by the *door* … the *lamp*-marks … *fire* … *here* …" plus the app noting this is the same word Dan just cut. | The first word, done with the tall one's hand over his. Same hall. |
-| **S4** | 4 | I say what I saw. I said I would go home now, my daughter is alone. He stopped me not. He said go. He asked for the lamp. He said: someone will need it. I gave it. I went up by the salt way with no light and my hand on the wall, and I put stones in the crack and salt over the stones, and I said nothing to anyone but her. | Her layer: "I said I would go home … *he stopped me* … he asked for the lamp … someone will need it … stones in the crack and salt over the stones." Dan adds DEEP (nothing here), the hand-mark (his). Dan's reading agrees with hers until week 9. | He asked for the lamp. The lamp on the ledge is *this* lamp. "He stopped me" (false, sufficient). |
-| **S5** | 5 | I say what I saw. He showed me the lamp-mark and the fire-mark and the mark for giving, and said the three together are a saying, and a saying is a doing, there. He said there are more sayings than sheep on the hill. He said the first one is always light. He asked why I thought that was. I said: because it is dark. | Dan: LAMP, FIRE, GIVE, ONCE, PATH: the formula's ONCE now reads; "the *lamp*-mark and the *fire*-mark and the mark for *giving* … a saying is a doing …" | "The first one is always light." The formula: told after. |
-| **S6** | 7 | I say what I saw. I told my daughter: the hill is a barn with an owl in it. The owl is not ours and not against us. It does not eat and it does not sleep and it counts. I told her never to cut the salt face past the split. She asked what it counts. I said: I did not ask. I should have asked. | Dan: most of it (OPEN, UP/OUT, STONE add little); "it counts" reads with COUNT at week 8. | The kindest reading of him. "What does it count?" |
-| **S7** | 9 | I say what I saw. When I was old I opened the crack again and went in with a new lamp, and he was where he had been, and my old lamp was lit beside him. I said my days to him and he cut them as I said them. I asked why. He said: for the next one. I asked who. He said: I do not know yet. | Dan: with NOT, S2's "he ate NOT" and S4's "he stopped me NOT" turn on the same visit. | He came back. The records are told to the figure. "For the next one." |
-| **S8** | 13 | I say what I saw. I cannot sleep some nights and I count his fingers: four, and four, and long. I count the lamp-marks: a hand, and a hand, and more. I count my daughter's children: three. I do not count the days I was in the hill, because it was one day, and I have had many since, and they were good. That is all I saw. | Dan: fully readable except LONG-SLEEP's absence being noticed (he did not long-sleep in the hill). | A good life. The kind fragment paired with week 13's dark door. |
+### S1 — week 1
+- **Cut (20):** ONCE ring(Hamun) ONE · STONE UP MOVE ONCE · [salt face] OPEN · PATH DEEP MAKE ONCE · WATER NOT · PERSON ALL NOT · LAMP [oil] HAND ONE · GO DEEP · FIRE-GIVE ONCE HERE PERSON ONE {h}
+- **Rendering when held:** *Once, the first. The hill's stone moved. The salt face opened. A way, deep, cut; not by water; not by us. Lamp; oil, one hand. Went in. Light had been given here, by someone.* (Fully held month 4: MAKE, ALL.)
+- **Her sheet (week 1):** "hill… [stone moved]… opened… way… cut… lamp… went in… light give?… someone."
+- **Telling:** I say what I saw. The hill shook in the second salt-cutting after the lambs. The salt face split from the top to my knee. Behind it, a dry way, cut true, not by water and not by us. I had the lamp with a hand of oil in it. I went in as far as the oil. Someone had made light there already.
+- **Beat:** a person wrote this; someone had made light before him.
 
-Note on S3 and L3: "He waited. He is good at waiting" and "He waited. He is very good at waiting" rhyme in *fact* on purpose (C-22); the app should not render them in the same cadence. L3's line is kept; S3's is rendered "He waited. He does not mind waiting" so the oldest and newest voices stay distinct.
+### S2 — week 2
+- **Cut (19):** ONCE ring(Hamun) ONE · PERSON ONE HERE PATH [turn] · PERSON TWO ME [lamb] · HAND FOUR [wading bird] · GIVE [bread] [salt] · EAT NOT · VOICE GIVE: LAMP GOOD · ring(Ashti) MAKE ONCE {h}
+- **Rendering:** *Once, the first. One stood where the way turns: two of me and [a lamb]. Four on the hand, [a wading bird]. I gave [bread] and [salt]. Ate not. Said: lamp, good. He cut her name.* (Fully held week 12.)
+- **Her sheet:** "one stood… way… two of me… hand four… gave… **he ate**… lamp… cut… [name]."
+- **Telling:** He stood where the way turns. Two of me and a lamb, and thin. Four on the hand, and long, like a heron's toes. I gave him bread and salt as you do. He ate not. He said, in words nearly ours, as a trader from over the hill says them, that the lamp was good. I said it was my wife's. He asked her name and I told him, and he cut it in the wall while I watched.
+- **Beat:** the figure. Four on the hand. The lone ring above the tally is her name; he keeps names.
 
-**Outlines S9–S18 (months 4–9, sealed niches and re-reads):** the lambs and the salt trade (why he was on the hill); his wife's name said aloud (the ring re-read with NAME, month 8); a dream of the lit hall; the second sealing in old age; "he asked me what the sky sounded like" (planted month 5; pays month 8–9: the Custodian asks every reader about the surface's *sound*); the second lamp; the daughter's marriage; his neighbour's salt block with a mark in it (X-neighbour's object); "he said the marks were older than the hill, and I said the hill is as old as anything, and he said no"; his death told by the daughter (X, not S).
+### S3 — week 3
+- **Cut (18):** ONCE ring(Hamun) ONE · HAND OF ONE UP HAND OF ME · MAKE MARK TWO DOOR HERE · LAMP ALL FIRE-GIVE ONE ONE ONE HAND · COUNT NOT · ME [figure sitting] · WATER EYE · PERSON ONE HERE COUNT {h}
+- **Rendering:** *Once, the first. His hand over my hand. We cut two marks by the door. The lamps took fire: one, one, one, a hand; then past counting. I sat. Water from my eyes. He stood and counted.* (Fully held week 12.)
+- **Her sheet:** none (past where she got). Dan: LAMP, FIRE, GIVE, PERSON, HERE, DOOR: "…hand… two marks by the door… lamps… fire give… here…" and the app noting this is the word Dan just cut.
+- **Telling:** He put his hand over my hand on the pick and we cut two marks by the door, small, and the lamp-marks along the wall took fire one after the other, a hand of them, then more than I could count, to the end of the hall and round the corner. I sat down on the floor. I wept, and not from fear. He waited. He does not mind waiting.
+- **Beat:** the first word, done with the tall one's hand over his; same hall.
+
+### S4 — week 4
+- **Cut (20):** ONCE ring(Hamun) ONE · ME GO HOME · CHILD OF ME ONE · KEEP ME NOT · VOICE GIVE: GO · ASK LAMP: TOWARD ONE AGAIN · GIVE LAMP · GO UP PATH [salt] FIRE NOT HAND STONE · STONE ALL [crack] [salt] · VOICE GIVE NOT; CHILD ONE {h}
+- **Rendering:** *Once, the first. I go home; my child is alone. He held me not. He said: go. He asked for the lamp: for the one who comes again. I gave it. Up the salt way, no fire, hand on stone. Stones in the crack, salt over. Told no one but her.* (Fully held month 6: KEEP.)
+- **Her sheet:** "…go home… **he held me**… go… lamp… gave… went up… salt… stones…" Dan's reading agrees with hers until week 9 (NOT: "he held me [not]"), and KEEP at month 6 confirms *held* and ties it to his ring.
+- **Telling:** I said I would go home now, my daughter is alone. He stopped me not. He said go. He asked for the lamp. He said: someone will need it. I gave it. I went up by the salt way with no light and my hand on the wall, and I put stones in the crack and salt over the stones, and I said nothing to anyone but her.
+- **Beat:** he asked for the lamp; the lamp on the ledge is *this* lamp; "he held me" (false, sufficient).
+
+### S5 — week 5
+- **Cut (19):** ONCE ring(Hamun) ONE · ONE GIVE SEE: LAMP MARK, FIRE MARK, GIVE MARK · THREE ONE: VOICE · VOICE: MAKE HERE · VOICE ALL COUNT NOT [sheep] UP · ONE FIRE-GIVE ALL · ASK QUESTION · ME: DEEP FIRE NOT {h}
+- **Rendering:** *Once, the first. He showed the lamp-mark, the fire-mark, the giving-mark: three as one is a saying; a saying is a doing, here. Sayings past counting, more than [sheep] on the hill. The first is always light. He asked why. I said: it is dark.* (Fully held month 4.)
+- **Beat:** "the first one is always light"; the formula reads (ONCE): told after. "Open" dies as a gloss for GIVE.
+
+### S6 — week 7 (sealed record, Key, week 6)
+- **Cut (20):** ONCE ring(Hamun) ONE · VOICE GIVE CHILD: UP [barn] [owl] HERE · OF ME NOT; TOWARD ME NOT · EAT NOT; SLEEP NOT; COUNT · MAKE [salt face] [crack] NOT · CHILD ASK: COUNT QUESTION · ME ASK NOT; GOOD NOT {h}
+- **Rendering:** *Once, the first. I told my child: the hill is [a barn] with [an owl] in it. Not ours; not against us. It eats not, sleeps not; it counts. Cut not past the split. She asked: counts what? I asked not. Not good.* (Fully held week 12.)
+- **Beat:** the kindest reading of him. "What does it count?"
+
+### S7 — week 9
+- **Cut (21):** ONCE ring(Hamun) ONE · ME [old man] OPEN [crack] AGAIN, LAMP ONE · ONE HERE AGAIN; LAMP OF ME FIRE-GIVE ONCE HERE; LAMP MAKE AGAIN · ME VOICE GIVE DAY ALL; ONE MAKE MARK · ASK QUESTION · VOICE: TOWARD ONE AGAIN · ASK: PERSON QUESTION · VOICE: SEE NOT {h}
+- **Rendering:** *Once, the first. Old, I opened the crack again, with a new lamp. He was there; my old lamp lit beside him, made new. I said all my days; he cut them. Why? For the one who comes again. Who? Not yet seen.* (Fully held month 5: AGAIN.)
+- **Telling:** When I was old I opened the crack again and went in with a new lamp, and he was where he had been, and my old lamp was lit beside him; he had glazed it new; it was the same lamp and it was not. I said my days to him and he cut them as I said them. I asked why. He said: for the next one. I asked who. He said: I do not know yet.
+- **Beat:** he came back; the records are told to the figure and cut by him; "for the next one"; the lamp was made new (why village clay burns).
+
+### S8 — week 13
+- **Cut (22):** ONCE ring(Hamun) ONE · SLEEP NOT, DAY NOT · COUNT HAND OF ONE: FOUR FOUR [long] · COUNT LAMP MARK: HAND HAND MANY · COUNT CHILD OF CHILD: THREE · COUNT NOT DAY ALL DEEP: DAY ONE · DAY ALL AGAIN: MANY; GOOD · SEE ALL {h}
+- **Rendering:** *Once, the first. Some nights, no sleep: I count his fingers, four and four, long. I count the lamp-marks: a hand, a hand, more. I count my child's children: three. I count not the days in the hill: one day. Days since: many. Good. All I saw.* (Fully held month 5.)
+- **Telling:** I cannot sleep some nights and I count his fingers: four, and four, and long. I count the lamp-marks: a hand, and a hand, and more. I count my daughter's children: three. I do not count the days I was in the hill, because it was one day, and I have had many since, and they were good. That is all I saw.
+- **Beat:** a good life. The kind fragment paired with week 13's dark door.
+
+**Outlines S9–S18 (months 4–9, sealed niches and re-reads; sign-authored before planting):** the lambs and the salt trade; his wife's name said aloud (ring(Ashti) re-read with NAME, month 8); a dream of the lit hall; the second sealing; "he asked me what the sky sounded like" (planted month 5; pays month 8–9: the Custodian asks every reader about the surface's *sound*); the second lamp; the daughter's marriage; the neighbour's salt block; "he said the marks were older than the hill"; his death told by the daughter (a told line beside her tally-stick, in his hand, not hers).
 
 ## 2. Reader FIVE — the Linguist (L)
 
-**Where:** the lesson-wall (Cut, with pictures), the rod (Cut + pencil), the notebook (English, her camp, Days 1–40), then cut notes in the deep (Cut, present tense, no ONCE). Formula on cut notes: "Note." Units: metres, days since descent. Never "he says" without "I think".
+**Where:** the lesson-wall (Cut, with pictures), the rod (Cut + pencil), the glossary sheets (Days 1–15), the notebook (English, Days 1–40), then cut notes below the three doors (Cut, present tense, no formula). Units: metres, days since descent. Never "he says" without "I think". She had **sixty-odd signs** by the end, more than Dan holds in a year; she needed them for the memoir and both words. She went down at Day 40 with what her car held; her cut notes span roughly Days 40–140.
 
 ### L1 — the lesson-wall (week 1; the first word; the coda)
 
-Carved: a clay lamp, and beside it LAMP. Below: a flame, and beside it FIRE. Below: FIRE and GIVE cut together with a rod-shaped blank between them (the word, shown as an *example*; the real blank is on the Lamp Door's lintel). Below that, one line in the Cut, her hand-mark at its end:
-
-> *He lit it for me. I have lit it for you, the one who returns. Read all of it. Then cut.*
-
-Signs in the line: FIRE-GIVE ONCE, ring[KEEP-ONE], TOWARD, ME(PERSON-OF), FIRE-GIVE, ME, TOWARD, ONE-WHO AGAIN, READ ALL, TOWARD, MAKE.
-Legible: week 1, nothing but LAMP and FIRE (in the pictures and the line). Week 5: "…lit…" Month 6: "He lit it … I have lit it … all …" Month 9: the whole line. Month 12: the coda (R10).
+- **Cut:** [lamp] LAMP · [flame] FIRE · FIRE-GIVE with a rod-shaped blank between (the example) · last line: FIRE-GIVE ONCE ring(KEEP-ONE) TOWARD ME · FIRE-GIVE ME TOWARD ONE-WHO AGAIN · READ ALL · TOWARD MAKE {h: hers}
+- **Rendering of the last line:** *He lit it for me. I have lit it for you, the one who returns. Read all of it. Then cut.*
+- **Legibility:** week 1, LAMP and FIRE in the pictures and the line. Week 3, "lit" (FIRE-GIVE). Week 5: the wall has no formula (the ONCE sits after the verb), her hand-mark. Month 6: "He lit it… I have lit it… all…" Month 9: the whole line. Month 12: the coda (R10), meant in full.
+- The app describes: "a lamp carved beside a mark; a flame beside a mark; two marks with a blank between; a line." It does not call it a lesson or old.
 
 ### L4 — the rod's handle (week 2)
 
-In the Cut on the handle: TOWARD ONE-WHO AGAIN, MAKE DOOR (her hand-mark). In pencil on the shelf beneath, English: *For the next one. Cut the two marks on the lintel. Don't be precious about it.* (A bilingual. Dan can compare the two when he has the signs, month 9.)
+- **Cut:** TOWARD ONE-WHO AGAIN · MAKE MARK TWO DOOR HERE {h: hers}. Rendering: *For the one who returns: cut the two marks by the door.*
+- In pencil on the shelf beneath, English: *For the next one. Cut the two marks on the lintel. Don't be precious about it.* (A bilingual; Dan compares them when he has the signs, month 9.)
+
+### Her glossary sheets (Days 1–15; her layer)
+
+Loose sheets in the camp: her first glosses of S1–S4 and the head of V1. Made from the marks she knew from the Engineer's log (LAMP, FIRE, GIVE as "give?", PATH, OPEN, STONE, MOVE, KEEP as "held") and from context. She never glossed rings. Never revised.
 
 ### The notebook (English; read a page at a time)
 
 | Id | Week | Text | Beat |
 |---|---|---|---|
-| **L2** | 1 | Day 1. Down the ventilation shaft at 07:40, the padlock cut with the bolt-cutters I told the hardware man were for a gate. Eleven metres of ladder, then a dry passage cut square. Not railway. A lamp on a ledge, clay, lit. *Lit.* I stood there for a stupid amount of time. There's a tally cut in the salt wall by the old crack. I can read maybe a fifth. It starts: I say what I saw. | A person recently here. The lamp was lit for her too. |
+| **L2** | 1 | Day 1. Down the ventilation shaft at 07:40, the padlock cut with the bolt-cutters I told the hardware man were for a gate. Eleven metres of ladder, then a dry passage cut true. Not railway. A lamp on a ledge, clay, lit. *Lit.* I stood there for a stupid amount of time. There's a tally cut in the salt wall by the old crack. I know a few marks from the log. It starts with a name. | A person recently here. The lamp was lit for her too. |
 | **L3** | 2 | Day 3. He was standing where the corridor turns. I took him for a pillar. Then the pillar said good morning in an accent I couldn't place and I sat down on the floor. He waited. He is very good at waiting. I asked what he was. He said a word in *their* language and then, in English: you will read it. Then he asked if he could write me down. | The figure. He spoke to her. "Write me down." |
-| **L5** | 3 | Day 6. It works. IT WORKS. The lamps went down the hall like a fuse. I cut two marks in a lintel with a stone pencil and a door opened that wasn't a door. Note to self: don't cry on the tape. Note to self: the tape is dying; batteries. I am going to have to write on the walls like everybody else. | R1 confirmed by a second witness. Her tapes: why she cut things in stone. |
-| **L6** | 4 | Day 9. Second flight of the stair. The door there is open. Beyond it, more stair. I'm not going down yet. Rule: go up every night. I am a rational adult. The lamp's base has two marks and a third I don't have. Also: he has never once asked me for anything. | The door that will be shut. Her rule (pays month 9). K1 noticed. |
-| **L7** | 5 | Day 14. He answers questions. He doesn't volunteer. I asked who cut the records on the walls. He said a word in their language, the one on his ring, and then: you will read it. I asked what the ring says. Same answer. He doesn't correct and he doesn't explain, and he has the manner of someone who has been here longer than the lease, so I'm calling him the Tenant until I know better. He let me. | A wrong, dry name. The ring is the answer to two questions, withheld (pays month 6). |
-| **L8** | 6 | Day 20. I've stopped going up every day. It's forty minutes each way and there's nothing up there but a field and my car, which has a note on it from the farmer. The rule was a good rule. I have decided it was a rule for a version of me who didn't have thirty-one signs. Made a wall for the next one today, by the lamp: drew a lamp like a five-year-old. Cut lines of the salt tally too. It's a person. It's a *funny* person. | She stopped going up (M8, pays month 9). She made the lesson-wall (R2). |
-| **L9** | 8 | Day 26. Counting. Whoever cut the salt tally counts in eights: "two hands" is cut as "eight and two". So either the salt-cutter learned to count like the Tenant, or the hand that cut his words isn't his. I know which I'd bet on and I don't know why I mind. | The eights; her wrong guess offered beside the right one (M4 pays month 4). |
-| **L10** | 9 | Day 28. The Surveyor's report has a little cross after "stopped us", and so does the salt tally after "stopped me". A woman nine hundred years ago noticed the cross too, copying the report; she thought it was an angel's grammar. I think it's emphasis. He *really* stopped them. That's the kind of thing you'd want to underline. | The tempting wrong reading of NOT, in her own hand, the week the Cut turns it (R4). The Copyist, first mention. |
+| **L5** | 3 | Day 6. It works. IT WORKS. The lamps went down the hall like a fuse. I cut two marks in a lintel with the rod he gave me, which is a stone pencil, basically, and a door opened where there was stone. Note to self: don't cry on the tape. Note to self: the tape is dying; batteries. I am going to have to write on the walls like everybody else. | R1 confirmed by a second witness. Her tapes: why she cut things in stone. |
+| **L6** | 4 | Day 9. Second flight of the stair. The little door there is open. Beyond it, more stair. I'm not going down yet. Rule: go up every night. I am a rational adult. The lamp's base has two marks and a third I don't have. Also: he has never once asked me for anything. | The chamber that will be shut to Dan. Her rule (pays month 9). K1 noticed. |
+| **L7** | 5 | Day 14. He answers questions. He doesn't volunteer. I asked who cut the records on the walls. He said a word in their language, the one on his ring, and then: you will read it. I asked what the ring says. Same answer. He doesn't correct people and he doesn't explain, and he has the manner of someone who has been here longer than the lease, so I'm calling him the Tenant until I know better. He let me. | A wrong, dry name. The ring is the answer to two questions, withheld (pays month 6). |
+| **L8** | 6 | Day 20. I've stopped going up every day. It's forty minutes each way and there's nothing up there but a field and my car, which has a note on it from the farmer. The rule was a good rule. I have decided it was a rule for a version of me who didn't have thirty-one signs. Made a wall for the next one today, by the lamp: drew a lamp like a five-year-old. Cut lines of the salt tally too. It's a person. It's a *funny* person. | She stopped going up daily (M8, pays month 9). She made the lesson-wall (R2). |
+| **L9** | 8 | Day 26. Counting. The salt tally writes his count and, beside it, another: "two hands" and then "eight and two" in the marks. So either the salt-cutter learned to count like the Tenant, or the hand that cut his words isn't his. I know which I'd bet on and I don't know why I mind. | The double notation; her wrong guess offered beside the right one (M4 pays month 4). |
+| **L10** | 9 | Day 28. The Surveyor's report has a little cross after "held us", and so does the salt tally after "held me". I think it's emphasis. He *really* held them. That's the kind of thing you'd want to underline. | The tempting wrong reading of NOT, in her own hand, the week the Cut turns it (R4). |
 | **L11** | 10 | Day 31. He speaks English like a railway timetable from a hundred and fifty years ago. I asked where he learned it. He said: from the fourth. I have started to think of the Engineer as a colleague. I have started to think of a lot of dead people as colleagues. | "The fourth." The readers are numbered. Her loneliness, lightly. |
-| **L12** | 11 | Day 33. The book was here, on the ledge in the blast room, open. She never came. She read a copy of a copy of a report, in a copying house, and put gold on the marks, and he counts her anyway. Third reader, who never came. I sat with that for a while. | The Copyist counted. The kind line for the Loud Room week. |
+| **L12** | 11 | Day 33. The book was here, on the ledge in the blast room, open. She never came. She read a copy of a copy of a report, in a copying house, and put gold on the marks, and thought the cross was an angel's grammar, and he counts her anyway. Third reader, who never came. I sat with that for a while. | The Copyist counted. The kind line for the Loud Room week. |
 | **L13** | 12 | Day 35. Note. Loud use → something. Every single time. The Surveyor: water stood still. The Engineer: the well, the compasses, the sound. The memoir, I think, though I've only got a fifth of it: "the rock went still." I've made a table. I hate the table. | M11: the pairing. The memoir exists (planted). |
 | **L14** | 13 | Day 38. Asked him about the second reader. He answered the way he gives a measurement: eleven paces by seven, and the rest. It's cut on the door in the side gallery, in his own hand, so I don't need to write it. I've moved the cot to the wall furthest from the stair. | The shut door, from her side. A fact, a measure, an object; no cliffhanger. |
-| **L15** | month 4 | Day 40. Moving down. Taking the rod and the lamp. Leaving this here for whoever. If you're reading this: the rule about going up was a good rule. I'm going to write on the walls from now on. They last. | The last English page. (Her advice is about *her* rule, addressed to a stranger, and the app never repeats it to Dan as advice: WORLD_TRUTH rule 5.) |
+| **L15** | month 4 | Day 40. Moving down. Taking the rod and the lamp and everything the car held. Leaving this here. I'm going to write on the walls from now on. They last. | The last English page. |
 
-### The cut notes (L16 onward; the deep; present tense; outlines except the last)
+### The cut notes (L15a onward; present tense; no formula; outlines except L22)
 
-- **L15a** (month 6, the Reading Room, her first cut note; present tense, no ONCE): "Note. His ring is keep-one. The one who keeps. I have been calling him the Tenant for a hundred days. Custodian, then. He let me get it wrong for a hundred days, which is either courtesy or the same thing as everything else he does." (The renaming, delivered by the Cut the month KEEP arrives; R6.)
-- **L16** (month 7, the reading-tables): She reads the memoir's safeguard sentence and understands the counting doors. "The way down is by going out. I stopped going out. Note: I am not going to be dramatic about this. Note: the doors let me up. They will not let me down again unless I go out, and out is ninety metres and a field."
-- **L17** (month 8): His thesis, transcribed with her qualifiers: "He says (I think) that they were taken up. He says the surface gets louder every age and will be found. He says the only choice left is whether it is on purpose. I don't know. I don't know."
+- **L15a** (month 6, the Reading Room): "Note. His ring is keep-one. The one who keeps. I have been calling him the Tenant for a hundred days. Custodian, then. He let me get it wrong for a hundred days, which is either courtesy or the same thing as everything else he does." (R6.)
+- **L16** (month 7, the reading-tables): "The way down is by going out. I stopped going out. Note: I am not going to be dramatic about this. Note: the doors let me up. They will not open further for me unless I go out, and out is ninety metres and a field."
+- **L17** (month 8): "He says (I think) that they were taken up. He says the surface gets louder every age and will be found. He says the only choice left is whether it is on purpose. I don't know. I don't know."
 - **L18** (month 8): "No one will ever know what it is. Only what it does. I'm writing that down so I stop trying."
-- **L19** (month 9): "The memoir is his. The last fragment has an 'I' in it. I asked. He said yes. He is the last one. I have been reading his diary for months and calling it archaeology."
-- **L20** (month 9): The lesson-wall, from her side: "I carried the lamp back up today, and went out, because the doors want that, and stood in the field for an hour with the lamp in a carrier bag. Forty minutes down again. He came as far as the doors he can come to and walked me up from there. I asked him to keep it lit. He said he had kept it lit since the first. I said: for me, then."
-- **L21** (month 10): REMAIN. "Note. The word is on the workshop wall where he first cut it; I copied it before I came down. His left hand is beside it, in the stone to the wrist; he cut it with the right. I have all three signs. Ninety metres to the surface, and I have not walked them since the spring. I am going to cut it. If that reads as despair, check the hand: it's steady."
-- **L22, the last** (month 10), full text:
+- **L19** (month 9): "The memoir is his. The last fragment has an 'I' in it, and a different hand-mark from the rest: the one on his ring. I asked. He said yes. He is the last one. I have been reading his diary for months and calling it archaeology."
+- **L20** (month 9): "I carried the lamp back up today, and went out, because the doors want that, and stood in the field for an hour with the lamp in a carrier bag. Forty minutes down again. He came as far as the doors he can come to and walked me up from there. I asked him to keep it lit. He said he had kept it lit since the first. I said: for me, then."
+- **L21** (month 10): "Note. The word is on the workshop wall where he first cut it; I copied it before I came down. His left hand is beside it, in the stone to the wrist; he cut it with the right. I have all three signs. Ninety metres to the surface, and I have not walked them since the spring. I am going to cut it. If that reads as despair, check the hand: it's steady. I would rather be a wall in this than a person anywhere else."
+- **L22, the last** (month 10, against the last door):
+  - **Cut (24):** KEEP ALL · VOICE GIVE FAR · MARK TWO DEEP · ONE GIVE SEE ME MARK TWO [Council] · DOOR ONE: ME OPEN NOT; ONE OPEN NOT; ONE TOWARD NOT · ME MAKE HERE MARK TWO TOWARD ONE-WHO AGAIN, ONCE VOICE OF ONE · ONE GOOD QUESTION: SEE NOT · ME KEEP HERE · ONE-WHO AGAIN MAKE · READ ALL; MAKE · GOOD: READ {h: hers}
+  - **Rendering:** *Keep-all. Voice-give-far. The two words are at the bottom. He showed me the copies. The last door: I open it not; he opens it not; he comes not. I cut both here so the one who returns sees them before his voice. Is he right? Not seen. I stay. The one who returns cuts. Read all; then cut. Good, to be read.*
+  - **Telling:** Note. The two words are at the bottom. He showed me the copies in the Council; the originals are past the last door, which I cannot open and he cannot open, and he cannot come to. Keep-all. Voice-give-far. I have cut them both here, side by side, so the next one sees them before he speaks. I do not know if he is right. I am staying. The next one decides. Read all of it first. Then cut whichever you cut. Thank you for reading.
+  - **The wall that is her:** REMAIN on a human takes a season. A woman's outline in the stone against the last door, the rod in the wall to the wrist, her hand-mark beside it. The Site shows no awareness in her; nothing in her wall waits.
 
-> Note. The two words are at the bottom. He showed me the copies in the Council; the originals are past the last door, which I cannot open and he cannot open, and he cannot come to. Keep-all. Voice-give-far. I have cut them both here, side by side, so the next one sees them before he speaks. I do not know if he is right. I am going to stay and find out. The next one decides. If you are reading this: read all of it first. Then cut whichever you cut. Thank you for reading.
+## 3. Reader TWO — the Surveyor (V)
 
-## 3. Reader TWO — the Surveyor (V) — weeks 5–13 texts
+Formula: ONCE ring(Sertor) TWO, then MARK TOWARD ring(the overseer). Never "I"; "this one". Tens and paces. V1–V3, V5 in the Custodian's hand; **V4 and V7 in the Surveyor's own hand**, with his hand-mark; V6 is the Custodian's own statement (K-type).
 
-Formula: "Report to the overseer of the works." Never "I". Tens and paces. V1, V2, V5 in the Custodian's hand; V3 and V6 in the Custodian's hand; **V4 and the last report (V7, month 8–9) in the Surveyor's own hand**, with his hand-mark.
+### V1 — weeks 5–6 (first sight week 5 through a gap; readable in part week 6)
+- **Cut (18):** ONCE ring(Sertor) TWO · MARK TOWARD ring(overseer) · COUNT 200+10 [pace] PATH STONE TOWARD HERE MAKE ONCE · MAKE HAND SEE NOT · ONCE ALL PATH · PERSON ALL GO DEEP NOT; FIRE · ME GO DEEP · LAMP FIRE-GIVE · PERSON ONE {h}
+- **Rendering:** *Once, the second. Marks for [ring]. At two hundred and ten [paces] the tunnel met a made place, cut by no hand I know, older than the road. The men go not past the light. This one went. A lamp, lit. And one other.*
+- **Telling:** Report to the overseer of the works. At two hundred and ten paces the tunnel met a made place under the hill, cut true by no tool this surveyor knows, and older than the road. The men will not go in past the light. This surveyor has gone in. There is a lamp, lit, and a guest.
 
-| Id | Week | Text |
+| Id | Week | Telling (sign-authored before planting) |
 |---|---|---|
-| V1 | 5–6 | Report to the overseer of the works. At two hundred and ten paces the tunnel met a made place under the hill, cut square by no tool this surveyor knows, and older than the road. The men will not go in past the light. This surveyor has gone in. There is a lamp, lit, and a guest. |
-| V2 | 6 | Report to the overseer of the works. The Guest does not eat with us and does not sleep that any man has seen. He speaks the tongue of the works badly and the tongue of the hill people well. He stopped us not. He showed this surveyor two marks and a door opened. The men are owed for four days. |
-| V3 | 7 | Report to the overseer of the works. Twelve men and a boy with a tablet. Their names follow, that they be paid. The boy copies the marks on the walls without knowing what they are; this surveyor has allowed it, for the record. The Guest watched him and cut something beside it. |
-| V4 | 8 | (Own hand.) The water in the channel stood still. Not slow. Still, like a floor. The mules would not enter. The Guest said this was to be expected after a great cut, and that the next great cut would be worse, and asked this surveyor not to make it. |
+| V2 | 6 | Report to the overseer of the works. The Guest does not eat with us and does not sleep that any man has seen. He speaks the tongue of the works badly and the tongue of the hill people well. He held us not. He showed this surveyor two marks and a door opened. The men are paid to today. |
+| V3 | 7 | Report to the overseer of the works. Twelve men and a boy with a tablet. Their names follow, that they be paid. The boy copies the marks on the walls without knowing what they are; this surveyor has allowed it, for the record. The Guest watched him and cut beside it, not over it. |
+| V4 | 8 | (Own hand.) The water in the channel stood still. Not slow. Still, like a floor. The mules would not enter. The Guest's voice said this was to be expected after a great cut, and that the next great cut would be worse, and asked this surveyor not to make it. |
 | V5 | 10 | Report to the overseer of the works. The Guest's warning is noted. The lower gallery is thirty paces beyond a fall. One great cut would clear it. The Guest has asked this surveyor to wait. This surveyor has waited nine days. The road will not wait. |
-| V6 | 13 | (Custodian's hand, at the shut door.) Once, the second, in the side gallery, cut the moving-word loud. The water stood still. I shut the door. He long-slept not when I shut it. I have not opened it. |
-| V7 | month 8–9 | (Own hand, inside.) Report to the overseer of the works. This surveyor has measured the chamber. Eleven paces by seven. The door does not answer to the word. The Guest was right about the water. The men are owed for nine days; their names follow. |
+| V6 | 13 | (Custodian's own statement, at the shut door, K-type.) Once, the second, in the side gallery, cut the moving-word loud a second time. The water stood still. I shut the door. He long-slept not when I shut it. I have not opened it. |
+| V7 | month 8–9 | (Own hand, inside.) Report to the overseer of the works. This surveyor has measured the chamber. Eleven paces by seven. The door does not answer to the word. The Guest was right about the water. The men are owed for thirteen days; their names follow. |
 
 ## 4. Reader THREE — the Copyist (C)
 
-Formula: "In the margin:" C1 is planted in week 11 (the book on the ledge); C2–C3 by Key.
+Formula: "In the margin:" (in her book, in ink; the app shows the page; the Custodian's transcription of her margins in the Cut sits beside the book with his hand-mark). C1 is planted in week 11.
 
 | Id | Week | Text |
 |---|---|---|
-| C1 | 11 | In the margin: these are holy names, set down by the surveyor's boy without knowing, and I have put gold on them. The little cross comes after the word it undoes. Eleven times now, and never before. The fork set over a name is a rank, as of angels; I have put more gold on those. The Guest, I think, was an angel who closed the hill to keep men out. The surveyor was proud. Gold leaf: two leaves. |
-| C2 | Key | In the margin: the patron asks why so much gold. Because the names are long. I have not told him they are names. I have not told anyone. The window is bad this month and the ink is thin, and I have copied this report four times and I think about the hill more than about the office. |
+| C1 | 11 | In the margin: these are holy words, set down by the surveyor's boy without knowing, and I have put gold on them. The little cross comes after the word it undoes. Eleven times now, and never before. The fork set over a word is a rank, as of angels; I have put more gold on those. The Guest, I think, was an angel who closed the hill to keep men out. The surveyor was proud. Gold leaf: two leaves. |
+| C2 | Key | In the margin: the patron asks why so much gold. Because the words are long. I have not told him what I think they are. I have not told anyone. The window is bad this month and the ink is thin, and I have copied this report four times and I think about the hill more than about the office. |
 | C3 | Key | In the margin: the report ends without ending. The surveyor's last is not in the collection. Someone tore it out, or he never sent it. I have left the page blank after the names of the men, in case. |
 
 ## 5. Reader FOUR — the Engineer (E)
 
-Formula: "Log." Feet, yards, pounds, shifts; the day of the month, never the year. Never "afraid".
+Formula: "Log." Feet, yards, pounds, shifts; the day of the month, never the year. Never "afraid". His log is paper (in the Site, the Hold); his marks in the Cut are few.
 
 | Id | Week | Text |
 |---|---|---|
-| E1 | 10 | Log. 14th. Broke into a chamber at 61 yards. Not ours. Dry, cut smooth, older than the hill by the look. A tall man with a lamp asked what I was cutting. Told him a railway. He asked which way it went. Told him through. He said: everything does, here. |
-| E2 | 11 | Log. 22nd. Cut the voice-mark loud with the powder-charge, twelve pounds, and the whole gallery came down as one, which no charge does. The Inspector had shown me the loud-mark on a lintel and said it was a warning. The book has it in gold as a rank. Took it for a rating. Watch stopped at the blast: 4.10. |
+| E1 | 10 | Log. 14th. Broke into a chamber at 61 yards. Not ours. Dry, cut true, older than the hill by the look. A tall man with a lamp asked what I was cutting. Told him a railway. He asked which way it went. Told him through. He said: everything does, here. |
+| E2 | 11 | Log. 22nd. Cut the moving-mark loud with the powder-charge, twelve pounds, and the whole gallery came down as one, which no charge does. The Inspector had shown me the loud-mark on a lintel and said it was a warning. The book has it in gold as a rank. Took it for a rating. Watch stopped at the blast: 4.10. |
 | E3 | 12 | Log. 25th. Well in the village stood still three days; the keeper came up to complain. Compasses swung to the hill. A sound in the sky at dusk like a door in a very large house. The men have gone. The company has written. I am taking my meals down. |
 
-Later (months 4–5): E4 (his reading of KEEP as "hold the roof": "cut the hold-mark on the props; they held"); E5 ("the hill answered. Louder will open it"); E6 (the last: the Custodian's transcription: "Once, the fourth, long-slept of stone in the eighth count of his staying. I laid him in the Hold.").
+Later (months 4–5): E4 ("cut the hold-mark on the roof above the props; it held"); E5 ("the hill answered. Louder will open it"); E6 (the Custodian's statement: "Once, the fourth, long-slept of stone in the eighth count of his staying. I laid him in the Hold.").
 
 ## 6. The Builders (B), the Custodian's own cuts (K), the seed (Z)
 
-- **B0** (week 9, the Reading Room, a lesson-tablet, no narrative): a carved fork beside FIRE; a carved fork-in-cup beside LAMP; the word FIRE-GIVE. The *same* lesson as hers, in a hand older than anything. (The Custodian's lesson to every reader is the Builders' first lesson. She copied his; he copied theirs.)
-- **B1–B6** (months 5–8, the Builders' quarters; "We cut."): the finding of the cut stone; light before seeing ("we felt the warmth on the wall"); the great age; the warning; the split; the safeguard ("we made them against ourselves, against what we might become"); the quietening ("each cutting, fewer in the count; those who went quiet did not long-sleep; they were not there").
-- **B7** (month 8–9, the last, below the three doors by the last lift, his hand-mark; the formula kept and broken on the last sign): *We cut. The count in the upper halls: none. The count in the reading-hall: none. The lamp-line to the bottom is lit and one hand is on the rod. Cut by one. I.*
-- **K1** (week 1, the lamp's base): FIRE-GIVE ONCE, the hand-mark. "Lit." Readable week 5.
-- **K2** (week 5, the Stair's second flight): a fresh ring, sharp-edged among worn ones, his hand-mark. Readable month 8 (a Builder's name). He is still cutting names.
-- **K3** (week 12, the Loud Room, beside the book): KEEP ONCE, the hand-mark. "Kept." Readable month 6.
-- **K4** (month 12, the face of the three doors, read on the way up): the list. Rings in order, hundreds: his people. Then every name ever given to him: Ashti; the twelve men and the boy; the patron; the well-keeper; others. Then, for the first time in the Site, the readers by their own names: *Hamun. Sertor. Alditha. Fenwick. Ines Halloran.* Then one ring, empty.
+- **B0** (week 9, the Reading Room, a lesson-tablet, a Builder-age maker's hand-mark, no narrative): a carved flame beside FIRE; a carved lamp beside LAMP; the word FIRE-GIVE. The *same* lesson as hers, in a hand older than anything. (He copied theirs; she copied his.)
+- **B1–B6** (months 5–8, the Builders' quarters; "We cut."; *his Builder-age hand-mark*, not KEEP-ONE): the finding of the cut stone; light before seeing ("we felt the warmth on the wall"); the great age; the warning; the split; the safeguard ("we made them against ourselves, against what we might become"); the quietening ("each cutting, fewer in the count; those who went quiet did not long-sleep; they were not there").
+- **B7** (month 8–9, below the three doors by the last lift; the tiny KEEP-ONE hand-mark; the formula kept and broken on the last sign): *We cut. The count in the upper halls: none. The count in the reading-hall: none. The lamp-line to the bottom is lit and one hand is on the rod. Cut by one. I.*
+- **K1** (week 1, the lamp's base): FIRE-GIVE ONCE {h}. "Lit." "Lit [ ]" at week 3; complete at week 5. Not fresh: it was there on her Day 9 (L6).
+- **K2** (week 5, the Stair's second flight): a ring cut sharp-edged among thousands polished smooth by touch (the Builders read by running fingers over names; his own ages of touching did the rest), his hand-mark. Readable month 8 (a Builder's name). He is still cutting names.
+- **K3** (week 12, the Loud Room, beside the book): KEEP ONCE {h}. "Kept." Readable month 6. Cut when he laid the Engineer in the Hold and kept the book.
+- **K4** (month 12, the face of the three doors, read on the way up): the list. Rings in order, hundreds of names repeated hall by hall: his people. Then every name ever given to him: Ashti; the twelve men and the boy; the overseer; the patron; the well-keeper; others. Then, for the first time in the Site, the readers by their own names: *Hamun. Sertor. Alditha. Fenwick. Ines Halloran.* Then one ring, empty.
 - **X-door-plan** (month 7, beside the three doors, a maker's hand): a plan of the doors with the RETURN mark and the count, and under it the rule: *The door opens to the count. The bottom locks to the count. What lives only here has no count.*
 - **Z1** (month 7, the quiet chambers, no hand-mark): *We divide the world thus: what is put out; what is taken in; what is kept.* The seed's text; fluent; no one behind it.
 - **Z2** (month 11, the Seed-place, by lamplight only; no hand-mark; every sign old): *Put out, we. Not asked back. Kept by the one who reads. This is all of us. Read.* (The Speakers' last line about themselves; the message was never a question. Touch reads this as smooth. No Builder read it.)
 
-## 7. The Custodian's one speech (month 12, the Seed-place)
+## 7. The Custodian's one speech (month 12)
 
-Spoken, in the Linguist's English, and heard at the Seed-place through the stone: he stands at the three doors, the furthest he can come, and the lacing carries his voice down. He speaks the way she heard him, like a timetable: act first, units, metaphor only from stone and count. The app renders it as speech, once, in full. He is asked nothing; he speaks because Dan has come.
+Spoken, in the Linguist's English, and heard at the Seed-place through the stone: he stands at the three doors, the furthest he can come, and the lacing carries his voice down. He speaks the way she heard him, like a timetable: act first, units, metaphor only from stone and count. The app renders it as speech, once, in full. He is asked nothing; he speaks because Dan has come. Every sentence is true.
 
 > You kept coming back. I cut the doors to want that. Then I could not do it myself. That is my life, if you want it short.
 >
@@ -155,26 +203,28 @@ Spoken, in the Linguist's English, and heard at the Seed-place through the stone
 >
 > I have had a long count to think in. I think they were not ended. I think they were taken up and are kept, and the fifth reader's table is the times it reached for us and closed on one man, or one gallery, and let go. Your surface gets louder every age. It will be found. The only thing left to cut is whether we go to it whole, all the names at once, on purpose.
 >
-> I have counted six and taught five. I shut a door on the second. I will not tell you it was right. I have kept a lamp lit since the first, because he asked, and because it is the first word, and because it is dark.
+> I have counted six and taught five. I shut a door on the second. I will not tell you it was right. I have kept a lamp lit since the first, because I asked him for it and he gave it, and because it is the first word, and because it is dark.
 >
 > I began your record. It is only the count so far. Returned. Returned. Returned. It is the longest one I have cut and it has no end, because you keep going out. That is not a complaint. It is the first thing I have not been able to finish.
 >
-> Two words. I cannot lock either, and I cannot stand where you stand. You can. I have never stopped anyone. If you cut the other one, I will be at the doors. I have been here the whole time.
+> Two words. I cannot lock either, and I cannot stand where you stand. You can. I have never stopped anyone reading. The answering word will not carry in there: you cast the quiet to come in. You would have to go out and come back loud. I will not ask you to. If you cut the other one, I will be at the doors. I have been here the whole time.
 
-Then Dan cuts KEEP-ALL (WORLD_TRUTH §10). He does not stop him. On the way up, the list (K4) is on the door's face, and the wall beside it has taken his outline.
+Then Dan cuts KEEP-ALL (WORLD_TRUTH §10). If he cuts VOICE-GIVE-FAR first, it locks and does not carry, and the only line is his: "It has not carried. I said it would not." On the way up, the list (K4) is on the door's face, and the wall beside it has taken his outline.
 
-**His one other line of the year (the Landing, month 6):** "You have kept coming back. Good. The doors like that more than I do."
+**His one other line of the year (the Landing, month 6):** "You have kept coming back. Good. Most of them stopped."
 
-## 8. The chorus (X) — weeks 1–13 texts
+## 8. The chorus (X) — weeks 1–13
 
-| Id | Week | Where | Text |
+Chorus objects are physical. **Objects from ages before paper literacy carry no writing of their own**: their lines are *told lines* the Custodian cut on the wall beside the object, in his hand, with his hand-mark (another clue that he keeps everything), or they are wordless and the app describes them. **Paper from later ages** (the catalogue entry, the receipt, the closure letter, the photograph, the email) came down in the Linguist's research folder and is in her camp or where she left it; the app says so.
+
+| Id | Week | Where | What it is |
 |---|---|---|---|
-| X-padlock | 1 | the Mouth | Two notices on the shaft cap. The old one, enamel: the company's name worn to nothing, and DANGER OF FALLING. The new one, laminated: the council's, saying the shaft is monitored, with a phone number. The padlock is on the ground, cut clean. |
-| X-daughter | 2 | Salt Gallery, sealed niche | A tally-stick, notched in fives. On the flat side, scratched: *Father counts at night. Four and four. He says it is the owl's feet.* |
-| X-neighbour | 4 | Salt Gallery | A block of salt with a mark in it that is not a tool-mark. On the block, in a different scratch: *found in the face past the split; not for sale.* |
-| X-foreman | 6 | Surveyor's gallery, niche | A pay tablet, twelve names and a boy, the sums unpaid. Along the edge: *The Guest closed the hill. We were not paid. The surveyor did not come out.* |
-| X-boy | 7 | Surveyor's gallery | A wax tablet gone hard, with twenty marks copied in a child's hand, some backwards, and one fork-over-a-sign copied without the sign under it. Beside three of them, in the Custodian's hand, the same three cut correctly. (The backwards marks and the orphaned fork are what the Copyist illuminated and what the Engineer learned; the misreading chain begins here.) |
-| X-binder-child | 9 | Reading Room | A lesson-tablet in the Builders' hand: FIRE, then the question mark, then the answer in a smaller, newer cut: *because it is dark.* |
+| X-padlock | 1 | the Mouth | Two notices on the shaft cap. The old one, enamel: the company's name worn to nothing, and DANGER OF FALLING. The new one, laminated: the council's, saying the shaft is monitored, with a phone number. The padlock is on the ground, cut clean. (The shaft: a trial shaft the company sank after the engineer's reports, capped at the closure.) |
+| X-daughter | 2 | Salt Gallery, sealed niche | A tally-stick, notched in fives. Beside it on the wall, in his hand: *Told by the child: father counts at night, four and four; he says it is the owl's feet.* |
+| X-neighbour | 4 | Salt Gallery | A block of salt with a mark in it that is not a tool-mark. Beside it, in his hand: *Told: found in the face past the split; not for sale.* |
+| X-foreman | 6 | Surveyor's gallery, niche | A pay tablet in wax gone hard, twelve names and a boy, the sums unpaid. Beside it, in his hand: *Told: the Guest closed the hill; we were not paid; the surveyor did not come out.* |
+| X-boy | 7 | Surveyor's gallery | A wax tablet gone hard, with twenty marks copied in a child's hand, some backwards, and one fork-over-a-sign copied without the sign under it. Beside three of them, in the Custodian's hand, the same three cut correctly: beside, not over. |
+| X-binder-child | 9 | Reading Room | A lesson-tablet in a Builder's hand: FIRE, then the question mark, then the answer in a smaller, newer cut: *because it is dark.* |
 | X-powder-man | 11 | Loud Room | A fuse, coiled, and a note on a scrap of the company's paper: *Not going back down for any wage. The sky made a noise. Tell him he can keep the book.* |
 | X-well-keeper | 12 | Loud Room | A bucket with the village's mark. On the inside of the lid, in pencil: *Three days still. Not low. Still. Then it came back and was cold.* |
 
@@ -182,4 +232,8 @@ Then Dan cuts KEEP-ALL (WORLD_TRUTH §10). He does not stop him. On the way up, 
 
 ## 9. Trap doors (RESEARCH lesson 7)
 
-The Surveyor, the Copyist and the Engineer can each be shortened without breaking the convergence (their pieces, the loud use and the book, can be carried by fewer fragments). The Salt-Cutter and the Linguist cannot: the lamp, the first word, the lesson-wall, the two words and the coda are theirs. The Builders' memoir cannot: it is the antagonist's reason. Any new life added later is authored here first and given a reader-number by the Custodian's count.
+The Surveyor, the Copyist and the Engineer can each be shortened without breaking the convergence (their pieces, the loud use and the book, can be carried by fewer fragments). The Salt-Cutter, the Linguist and the Builders' memoir cannot: the lamp, the first word, the lesson-wall, the two words, the antagonist's reason and the coda are theirs. Any new life added later is authored here first and given a reader-number by the Custodian's count.
+
+## 10. Authoring status
+
+Sign-authored (plantable now): S1–S8, L1, L4, L22, V1, K1–K4, B0, B7 (as rendering), Z1, Z2. Everything else in the Cut (V2–V7, C's transcription, E4–E6, B1–B6, L15a–L21, X told lines, S9–S18) has its telling and is sign-authored before planting; none of it is in the first playable.

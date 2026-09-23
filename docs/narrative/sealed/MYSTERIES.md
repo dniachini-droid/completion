@@ -30,7 +30,7 @@ Any question Dan can ask attaches to one of these. If a new question arises in l
 **False explanations (each must feel sufficient for a while).**
 1. *A tomb.* The names on the walls, the laid-out dead in the Hold, the quiet. (Sufficient until month 6: the lintels say "keep silent", not "rest".)
 2. *A temple or a machine that wants worship or fuel.* The lamp that is always lit; the figure who teaches; the sense of being led. (Sufficient until month 8: he wants nothing from Dan but *finishing*.)
-3. *A trap that eats readers.* Every reader stopped going up. (Sufficient until month 9: the doors *closed* to them because they stopped, not because the place took them. The Linguist's note on the safeguard turns this.)
+3. *A trap that eats readers.* Every reader after the first stopped going up. (Sufficient until month 9: the doors opened no further for them because they stopped, not because the place took them; nothing shut for good. The Linguist's note on the safeguard turns this.)
 4. *He is the guardian keeping something in.* (The Copyist's angel; the shut door.) Sufficient until months 8–9: he is keeping the *work* whole; he wants it open.
 
 **Who knows what.**
@@ -67,7 +67,7 @@ Any question Dan can ask attaches to one of these. If a new question arises in l
 **Answer.** The Linguist, four to seven years ago, for the next reader.
 **False explanation.** It is the oldest thing in the Site (it is in the first hall; it is a bilingual, like a founding inscription).
 **Who knows.** The Custodian; the Linguist.
-**Misleading evidence.** Its position; its clarity; the app's own first reading of it as "a lesson".
+**Misleading evidence.** Its position; its clarity; the pictures beside the marks, which look like a founding bilingual. (The app only describes it; it never calls it a lesson or old.)
 **Early clue.** Her hand-mark differs from the others (week 4). K1 on the lamp is in *his* hand and reads "lit" (week 5), so someone else lit it for her.
 **Trigger.** Week 5–6: ONCE shows every transcription is retrospective and the wall has none; then L8 ("made a wall for the next one; drew a lamp like a five-year-old").
 **Consequences.** The "oldest" record is the newest. A person recently alive wrote *to* Dan. The Custodian let it stand. Rung 2 opens properly: who else came?
@@ -91,7 +91,7 @@ Any question Dan can ask attaches to one of these. If a new question arises in l
 **Misleading evidence.** First person voice; each age's own units and metaphors, faithfully kept.
 **Early clue.** One hand-mark on nearly all of them (week 4). The Salt-Cutter's counts in fives appear converted to eights (week 8; the Linguist's notebook offers the *wrong* guess that the salt-cutter learned to count in eights). "He asked if he could write me down" (L3).
 **Middle.** ONCE at the head of every transcription (week 5). S7: "he cut them as I said them" (week 9). The formula's reader-number.
-**Trigger.** Month 4, reading MAKE and READ: the transcriptions' formula says "cut by the keeper, from the mouth of the first."
+**Trigger.** Month 4, reading MAKE and READ: every transcription's closing hand-mark line reads "cut by [his hand-mark], from the voice of the first", and the double notation (his eights beside the reader's count) is now legible as his.
 **Consequences.** The archive has a curator, and the curator is the figure. Rung 3: a school. Why?
 
 ## M5 — Whose are the rings, and why? (rung 4 → 6)
@@ -99,7 +99,7 @@ Any question Dan can ask attaches to one of these. If a new question arises in l
 **Answer.** Dan knows from week two that a ring is a name. The thousands on the walls are the Builders' names, cut by him one by one over ages, and beside them every name ever *given* to him (the salt-cutter's wife, the twelve men and the boy, the patron, the well-keeper). A memorial and an index. The list, at the end, gives the five readers' own names for the first time, and the one empty ring is his: a name is a thing given, and no one was left to give him one.
 **False explanations.** The makers' signatures; the records' authors; a register of everyone who ever entered.
 **Misleading evidence.** There are thousands; they are everywhere; they look alike; the readers are never named in their records (act first), so nothing links a ring to a life.
-**Early clue.** Week 2: the wife's ring, cut while the Salt-Cutter watched. Week 4: every ring carries the *same* hand-mark. Week 5: a fresh ring on the Stair, sharp-edged among worn ones (he is still cutting).
+**Early clue.** Week 2: the wife's ring, cut while the Salt-Cutter watched. Week 4: every ring carries the *same* hand-mark. Week 5: a ring on the Stair cut sharp-edged among thousands polished smooth by touch (he is still cutting).
 **Middle.** Month 7: below the three doors the rings stop ("whoever cut these never came down here"). Month 8: NAME; the memoir's "fewer in the count each cutting"; the wife's name read aloud in S's late fragments.
 **Late.** Month 11: one ring unfinished, where a Builder went quiet mid-cut. Month 12: the list on the door.
 **Trigger.** Month 12, the list: the names of his people; every given name; then *Hamun, Sertor, Alditha, Fenwick, Ines Halloran*; then a ring, empty.
@@ -144,19 +144,19 @@ Any question Dan can ask attaches to one of these. If a new question arises in l
 **False readings.** Give; send; answer; open. All provisionally right.
 **Early clue.** Week 2: four candidates. The Linguist's margin: "I keep wanting this to be 'give'."
 **Middle.** Month 5: FAR arrives; VOICE-GIVE-FAR appears on the Council wall as the answerers' word.
-**Late.** Months 9–10: "They had no word for a reply that was not a gift."
-**Trigger.** Month 10.
+**Late.** Month 9: "They had no word for a reply that was not a gift."
+**Trigger.** Month 9 (the QUIET month).
 **Consequences.** The Speakers *gave*. The Custodian wants to *answer*. Same sign, opposite acts; the ending is the difference.
 
 ## M10 — What happened to each reader? (rung 2)
 
 | Reader | False explanation | Truth | Trigger |
 |---|---|---|---|
-| Salt-Cutter | died in the hill | went home; lived; the lamp was left | week 4 (S4) |
+| Salt-Cutter | died in the hill | went home; lived; the lamp was left; came back once | week 2 (X-daughter), week 4 (S4), week 9 (S7) |
 | Surveyor | died in a collapse | shut in alive by the Custodian to stop a carrying | week 13 (LONG-SLEEP NOT) partial; month 8–9 full (the chamber) |
 | Copyist | entered and was lost | never came; her book was carried in | month 3 (C1) |
 | Engineer | went mad | obsession; a fall; laid in the Hold | month 4–5 (ECHO in the Loud Room; the Hold) |
-| Linguist | left; or died | remained; is in the walls of her last camp | month 9–10 |
+| Linguist | left; or died | remained; is the wall of her last camp | month 9–10 |
 
 ## M11 — What are the anomalies? (rung 4)
 
