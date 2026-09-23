@@ -115,7 +115,7 @@ _Written 2026-09-23. Must agree with `WORLD_TRUTH.md` and `TIMELINE.md`._
 
 ## 8. The Speakers
 
-Not a character. A voice with no one behind it (RESEARCH lesson 14): the seed's own text, found in the deep and at the Seed-place, which describes the language in the language ("We divide the world thus: what is put out; what is taken in; what is kept") and folds the warning at its end. Dan learns to mark these records as *no-hand* (they carry no hand-mark, the only records that don't) in month 7–8.
+Not a character. A voice with no one behind it (RESEARCH lesson 14): the seed's own text, found in the deep and at the Seed-place, which describes the language in the language ("We make all of it here: what is put out; what is taken in; what is kept") and folds the warning at its end. Dan learns to mark these records as *no-hand* (they carry no hand-mark, the only records that don't) in month 7–8.
 
 ## 9. The chorus (single-fragment witnesses; ~24 in year 1)
 
@@ -141,7 +141,7 @@ Each is one fragment, one trade, one object, one thing they couldn't explain. Us
 | Builders | a binder teaching a child | a lesson-tablet | why light |
 | Builders | an answerer | the Council wall | "we were sent; we are the proof" |
 | Builders | a maker of the counting doors | a door-plan beside the three doors | the RETURN mark, and the rule that the Seed's words lock only under a hand that carries the count |
-| Builders | the maker of the quiet chambers | a lintel | "here a word is said and carries not" |
+| Builders | the maker of the quiet chambers | a lintel | "Here: voice put out; toward far, not." |
 | Builders | the lift-maker | a device-tablet | the lift counts who goes up and down |
 | Builders | the last binders | a rod-plan in the tool-room | "a rod for a counted hand" |
 | Builders | a ring in another Builder's hand, in the deep works | a name-ring | one of the few rings below the three doors: not his (the gradient clue, month 7) |

@@ -85,7 +85,7 @@ Added for the tellings the core lives need (RESEARCH lesson 1: the inventory mus
 
 Later signs (months 8–9, rare): TEACH (give+mark), LEARN (take+mark), ONE-WHO (the agentive: PERSON element under a verb, "one who keeps"). Total by year end: ~52 signs plus marks. Anything a telling needs beyond this is carried by a carved picture (§8.2) or is not in the record.
 
-**Hand-marks by age (D4).** Every Builder-age record carries its maker's hand-mark (B0, the lesson-tablets, the Council walls, the door-plan). The memoir B1–B6 carries *his Builder-age mark*, the one he used before he took the name KEEP-ONE; only B7 carries the tiny KEEP-ONE. The change of mark is the clue that the memoir is his; it is a hand-mark, recognisable without NAME (Dan knows the round hand's hook from week 4). The seed's own text (Z) carries no hand-mark at all: the only records that don't.
+**Hand-marks by age (D4).** Every Builder-age record carries its maker's hand-mark (B0, the lesson-tablets, the Council walls, the door-plan). The memoir B1–B6 carries *his Builder-age mark*, the one he used before he took the name KEEP-ONE (the app's fixed name for it, from its first sight at ARR3 17.B: *a hook closed on nothing*); only B7 carries the tiny KEEP-ONE (*a hook closed on a dot*). The change of mark is the clue that the memoir is his; it is a hand-mark, recognisable without NAME (Dan knows the round hand's hook from week 4), and the two shapes are shown side by side at weeks 29–30 (B7's corner; B6 re-surfaced with NAME) with no comparison spoken by the app. The seed's own text (Z) carries no hand-mark at all: the only records that don't.
 
 ### 3.2 Function signs (10)
 

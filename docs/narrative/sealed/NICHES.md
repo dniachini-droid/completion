@@ -154,76 +154,82 @@ _Written 2026-09-23._
 
 ## Weeks 27–52 (months 7–12)
 
-Keys are fewer below the doors (the year's later targets are the same weekly ones; the counts are on the deep's niches, the reading-tables' drawers, the tool-room's shelves and the last stair). Three rows a week; surplus Keys open the next week's places.
+Keys are fewer below the doors (the year's later targets are the same weekly ones; the counts are on the deep's niches, the reading-tables' drawers, the tool-room's shelves, the quiet rooms' tables, the last stair, and from week 39 the last door's count, which takes a week's surplus). Three to five rows a week; surplus Keys open the next week's places, never its signs. Visit ids are `ARRIVALS_REGION4_5.md`'s. App names by week (`SITE.md`, regions 4–5): the reading-tables, the soundless passage, the quiet rooms (from week 34), the second level, the last level, the tool-room, the shut door, the walls of rings, the last stair, the last landing, her last camp, the last door, the Seed-place. The makers' hand-mark is *a hook closed on nothing* (ARR3 17.B).
 
 | Wk | # | Where | What the count opens | Told line (his hand) or description | Ties to |
 |---|---|---|---|---|---|
-| 27 | 1 | The Deep's first hall, the floor-stone | A drop inside a wedge beside a picture of a thing falling | — | **SEED** |
-| 27 | 2 | The first reading-table's drawer | L17 (her transcription of his thesis) | — | L17 |
-| 27 | 3 | The first hall, a table's edge | A binder's instruction: *Read with the hand; see not; good.* | (a maker's hand) | X-table; R9.5 |
-| 28 | 1 | The quiet approach, a lesson-tablet | A small fork over a bar beside a picture of a mouth | — | **BREATH** |
-| 28 | 2 | The quiet approach, the wall | (seen, not sealed: in the open at ARR45 wk 28) Z1, cut in no hand | (no hand) | Z1 |
-| 28 | 3 | The lift's panel | The device's blank (WAKE, next week) | — | W6 |
-| 29 | 1 | The lift's lower door | The second level | — | region 4, level 2 |
-| 29 | 2 | A second-level niche | L18 | — | L18 |
-| 29 | 3 | The lift's panel, a device-tablet | *The lift wakes; it counts who goes up and down. Count up: many. Count down: many, and one.* | (a maker's hand) | X-lift, X-lift-count; R7 |
-| 30 | 1 | The tool-room's sealed shelf | A ring beside a mark, beside a picture of a mouth speaking | — | **NAME** |
-| 30 | 2 | The tool-room | A rod-plan and the last binders' tools; a Builder's stylus the length of a forearm | (wordless) | X-tool (read wk 42) |
-| 30 | 3 | The Surveyor's shut door (region 2) | With HOLD and a Key: the chamber | — | V7 (wk 31) |
-| 30 | 4 | The second level, a wall | (seen, not sealed: in the open at ARR45 wk 30) Z3, cut in no hand | (no hand) | Z3 |
-| 31 | 1 | The chamber, floor | A maker's tablet the Surveyor dragged in: make + stone beside a wall going up | — | **BUILD** |
-| 31 | 2 | The chamber, the door's inside | His own attempt at path-open, cut with his rod; the door did not answer | (the Surveyor's hand) | V7 |
-| 31 | 3 | The chamber, a corner | His rod, laid across the corner, and a heap of chippings from the door's inside | (wordless; the app: "cut from this side") | V7 |
-| 32 | 1 | The deep works, a sealed lintel-stone | The fork set over a sign, beside a picture of a mouth open wide | — | **LOUD** |
-| 32 | 2 | The Warning Hall, a recess (re-surfaced) | The small copy of the warning with three strokes and a fourth begun | (re-read with LOUD) | B4; his own test |
-| 33 | 1 | The deep works, level 2 | A ring in another Builder's hand | (wordless; the app: "not the hand you know") | X-Builder-ring |
-| 33 | 2 | Salt Gallery (re-surfaced) | (seen; a re-surface, not a Key) S2 and S11 with NAME: *Ashti* | — | the wife's name |
-| 33 | 3 | The memorial walls, a recess | A rod worn to half its length (re-surfaced) | | his ages of cutting |
-| 34 | 1 | The quiet chambers, a lesson-tablet | Give + mark beside a picture of a hand on a child's hand | — | **TEACH** |
-| 34 | 2 | A quiet-chamber table | L19 | — | L19 |
-| 34 | 3 | The quiet chambers' inner door | The blank for QUIET (wk 36) | — | W7 |
-| 35 | 1 | The inner door's tablet | Take + mark beside a picture of a child copying | — | **LEARN** |
-| 35 | 2 | The inner blank's table | L18a | — | L18a |
-| 35 | 3 | The quiet chambers, a floor-stone | Z1 re-surfaced: *what is put out* = the giving-mark | — | GIVE resolved |
-| 36 | 1 | The quiet chambers' rule-stone | The person element under the keeping-hook, beside a picture of a figure holding a lamp | — | **ONE-WHO** |
-| 36 | 2 | The quiet chambers' niches | Z-pieces | — | Z |
-| 36 | 3 | The way to the last door | A count (several weeks) | — | region 4, level 3 |
-| 37 | 1 | The last stair's top niche | L20 | — | L20 |
-| 37 | 2 | The last stair, a recess | The last binders' tool: a rod-plan, *a rod for a counted hand* | (a maker's hand) | X-tool |
-| 37 | 3 | The last stair, a wall-slot | A makers' plan of the last door with its count drawn far larger than the others' | (wordless) | the last door's count |
-| 38 | 1 | The last landing's niche | L21 | — | L21 |
-| 38 | 2 | The last landing, a recess | A second stove, her tin, her spoon, brought down; a list in her hand: *rod, lamp, tea, batteries (no), the tapes (why)* | (paper) | L15 |
-| 38 | 3 | The last landing, floor | Her boots, the ones she went down in, side by side | (wordless) | NICHES 1.4's twin |
-| 39 | 1 | Her last camp | (seen) The wall: a smooth face, the rod to the wrist, her hand-mark | (the app describes; nothing opens) | L22 |
-| 39 | 2 | Her last camp, a niche | The two words copied side by side, each with its blank drawn but not cut | — | L22 |
-| 39 | 3 | Her last camp, a recess | Her last tape, unplayable, labelled: *DAY 140. FOR WHOEVER. DON'T BOTHER, IT'S ON THE WALL.* | (object) | L22; her wit |
-| 40 | 1 | Her last camp, the wall | L22 in full | — | L22 |
-| 40 | 2 | The last door's sill | The place where QUIET must be cut first (a blank with the sideways fork and the cross) | — | W7 at the door |
-| 40 | 3 | The last door's lintel | *Be loud here and not be heard.* (LOUD PATH-OPEN beside the blank; the quiet-signs above) | — | W8 |
-| 41 | 1 | The first counting door's face (re-surfaced weekly, wks 41–50) | (seen; not a Key) Dan's own record, begun: AGAIN. One mark longer each time Dan comes back down | (his hand; no ring; no closing line) | K6 |
-| 41 | 2 | The Hold's door, the floor (re-surfaced beside K6) | (seen; a re-surface, not a Key) The returns tally: strokes, a gap, five short rows; the app sets it beside K6 and says nothing | (his hand) | the returns tally (wk 15); K6 |
-| 42 | 1 | The lift's panel (re-surfaced) | (seen) *Count down: many, and one.* Re-read now that Dan has read who the one was | (a maker's hand) | X-lift-count; B7 |
-| 42 | 2 | The tool-room's last recess | The last binders' rod-plan: *a rod for a counted hand* | (a maker's hand) | X-tool |
-| 42 | 3 | The last door's count | A great day fills it at once; many days fill it | — | the ending's gate |
-| 43 | 1 | The three doors' faces (re-surfaced weekly, wks 43–50) | (seen; not a Key) Rings in his hand beside K6: the halls' rings, in the halls' order; a column, longer each week | (his hand) | K4 (its body, begun) |
-| 43 | 2 | The Deep's last niches | Z-pieces: *what is put out; what is taken in; what is kept* | (no hand) | Z |
-| 43 | 3 | The last door's count | A great day fills it at once; many days fill it (by wk 44 at the latest) | — | the ending's gate |
-| 44 | 1 | The last door | QUIET on the sill; OPEN-WAY LOUD on the blank; it opens | — | W8 |
-| 44 | 2 | Beyond the door, a recess | The last binders' lamp-line, laced stone, lit to the bottom | (wordless; the app: "you did not light these") | the lamp chain |
-| 44 | 3 | The passage to the Seed | (seen) The rings' last count: none | — | the gradient's end |
-| 45 | 1 | The Seed-place | The two prepared words, each beside its blank; the count between them; Dan sets the clay lamp on the count | — | the Seed |
-| 45 | 2 | The Seed-place, a wall | ECHO's blank (the diamond; the bar with a tick) | — | ECHO-Seed (wk 47) |
-| 46 | 1 | The Seed-place, by lamplight | The smooth surface under the lamp, lifted from the count: dense text (Z2) | — | R9.5 |
-| 46 | 2 | The Seed's count | Begins to fill | — | the ending |
-| 47 | 1 | ECHO at the Seed | The quietening, once, on its own visit | — | ECHO-Seed |
-| 47 | 2 | The first door's face (weekly) | (seen) K6, one mark longer; the column beside it | (his hand) | K6; K4 |
-| 48 | 1 | The Seed's count | Fills with the year's last Keys | — | the ending |
-| 48 | 2 | Re-reads surfaced by the app, one a visit | E1 (the sky question); L6 ("he has never once asked me for anything"); the first landing, lit (wk 3). Not the lesson-wall's last line (saved for the coda) | — | the year re-read |
-| 48 | 3 | The first door's face (weekly) | (seen) K6, one mark longer; the column beside it | (his hand) | K6; K4 |
-| 49 | 1 | The Seed-place | The count full; his voice down the lacing; the speech; then the app, once: *Nothing you say here goes up.* | — | LIVES §7 |
-| 50 | 1 | The Seed-place, the left-hand blank | KEEP-ALL cut; the ring into the glass and not back; the Seed quiet; the lamp in hand lit | — | the ending |
-| 50 | 2 | The Seed-place, the other blank | (if cut first) VOICE-GIVE-FAR locks; nothing carries; *It has not carried. I said so.* (if nothing is cut: the blank, described; nothing nudges) | — | WORLD_TRUTH §10 |
-| 51 | 1 | The Deep, on the way up | (seen) The halls lit as they were | (wordless; described once, no gloss) | the lamps rule |
-| 51 | 2 | The three doors, on the way up | The wall's outline (a hand to the wrist, the shoulder, the head against the door, as the corner was); the list on the door's face (K4), read slowly; K6 under the empty ring, ended | — | R10 |
-| 52 | 1 | Camp | The lesson-wall's last line; the app's last line: *The lamp is lit.*; nothing after it | — | the coda |
-| 52 | 2 | The first door's face, a later visit | (seen) K6 with no new mark; the column as it was | (his hand; ended) | K6 ended; the Site shows it |
+| 27 | 1 | The reading-tables, the floor-stone by the door | A drop inside a wedge beside a picture of a thing falling (ARR45 27.1) | — | **SEED** |
+| 27 | 2 | The first table's edge, a sealed cell | A maker's instruction, a hook closed on nothing in its corner: *Read with the hand; see not; good.* (ARR45 27.B) | (a maker's hand) | X-table; R9.5 |
+| 27 | 3 | The nearest table's drawer, under her note | A maker's stylus snapped a hand's length from the point, both pieces laid side by side (ARR45 27.3) | (wordless) | the makers kept a broken tool |
+| 28 | 1 | The soundless passage, a niche | A small fork over a bar beside a picture of a mouth (ARR45 28.2) | — | **BREATH** |
+| 28 | 2 | The soundless passage, the wall | (seen, not sealed: in the open at ARR45 28.1) Z1, cut in no hand; *given* until week 35 | (no hand) | Z1 |
+| 28 | 3 | The lift's panel | The panel's face, clear of dust: the device's blank beside the fork over the sleeper (ARR45 28.B; WAKE next week) | — | W6 |
+| 29 | 1 | The lift's lower door | The second level (ARR45 29.2) | — | region 4, level 2 |
+| 29 | 2 | The second reading-table's drawer | L17, and under it a cassette with the tape pulled out and wound back by hand (ARR45 29.B) | — | L17; her batteries (L5, L8) |
+| 29 | 3 | The lift's panel, a device-tablet | *[The lift] wakes; it counts who goes up and down. Count up: eight sixty-fours. Count down: eight sixty-fours, and one.* (ARR45 29.3) | (a maker's hand) | X-lift, X-lift-count; R7 |
+| 30 | 1 | The tool-room's sealed shelf | A ring beside a divided cell, beside a picture of a mouth speaking (ARR45 30.1) | — | **NAME** |
+| 30 | 2 | The tool-room | (seen, not sealed: in the open at ARR45 30.A) Rods, styluses the length of a forearm, a door cut in outline with a count beside it, and one rod-plan cut twice, the first crossed through with one stroke; the last recess stays sealed (wk 42) | (wordless) | the makers corrected a maker; X-tool (read wk 42) |
+| 30 | 3 | A second-level niche | L18, and beside it a pencil worn to the ferrule (ARR45 30.3) | — | L18; L15 ("the pencil's nearly gone") |
+| 30 | 4 | The second level, a wall past the tool-room | (seen, not sealed: in the open at ARR45 30.4) Z3, cut in no hand | (no hand) | Z3 |
+| 31 | 1 | The shut door (region 2) | With HOLD and a Key: the chamber, eleven paces by seven; V7 on its wall; the rod across the corner and the chippings by the jamb in the open (ARR45 31.A, 31.1, 31.3) | (the Surveyor's hand on the wall and the door's inside; the app never says "from this side") | V7; C-51a |
+| 31 | 2 | The chamber, floor, against the far wall | A maker's tablet the Surveyor dragged in: make + stone beside a picture of a wall going up (ARR45 31.B) | — | **BUILD** |
+| 31 | 3 | The chamber, the door's inside | (seen, not sealed) The path-mark and the parted drops, cut deep and cut again, no blank beside them; a heap of chippings under them (ARR45 31.3) | (the Surveyor's hand; wordless) | V7 |
+| 32 | 1 | The second level, a sealed lintel-stone past the tool-room | The fork set over a divided cell, beside a picture of a mouth open wide (ARR45 32.A) | — | **LOUD** |
+| 32 | 2 | The Warning Hall, a recess (re-surfaced) | The small copy of the warning with three strokes and a fourth begun (ARR45 32.1) | (re-read with LOUD) | B4; his own test |
+| 32 | 3 | The Warning Hall, the recess, an open cell | (not a Key) One small cell, empty (ARR45 32.4: *douse*) | — | SCRIPT §5.1 |
+| 33 | 1 | The second level's far wall, a niche | A ring in another maker's hand: the hook in its corner is none of the four; in the ring, a name (ARR45 33.A) | (another maker's hand; the app: "none of the four") | X-Builder-ring |
+| 33 | 2 | Salt Gallery, and the ledge's underside (re-surfaced) | (seen; a re-surface, not a Key) S2, S11 and NICHES 5.5 with NAME: *Ashti* (ARR45 33.2–33.3) | — | the wife's name, in three places |
+| 33 | 3 | The walls of rings, the niche by the half ring | *Not finished.* on the niche's lip; in the recess beside it, the rod worn to half its length (ARR3 21.C, re-surfaced) (ARR45 33.B) | MAKE NOT ALL {h} | his ages of cutting; K2's twin |
+| 34 | 1 | The soundless passage's end, the door | The quiet rooms (ARR45 34.A) | — | the quiet chambers (sealed name) |
+| 34 | 2 | The quiet rooms, a lesson-tablet cut at a child's height | Give + mark beside a picture of a hand on a child's hand; under it the give-mark cut three times, the first two shallow (ARR45 34.1) | — | **TEACH** |
+| 34 | 3 | A quiet-room table's drawer | L19, and beside it a tea tin, empty, its lid cut with a tally (ARR45 34.B) | — | L19; the landing's tin (wk 38) |
+| 34 | 4 | The quiet rooms' inner door | (seen, not sealed) The blank for QUIET, the sideways fork and the cross beside it (ARR45 34.2); the inner door's tablet, sealed (wk 35) | — | W7 |
+| 35 | 1 | The inner door's tablet | Take + mark beside a picture of a child copying (ARR45 35.1) | — | **LEARN** |
+| 35 | 2 | The inner blank's table, its drawer | L18a (ARR45 35.A) | — | L18a; GIVE resolved |
+| 35 | 3 | The soundless passage, the wall (re-surfaced) | (seen; a re-surface) Z1 re-rendered: *what is put out* = the giving-mark (ARR45 35.3) | — | GIVE resolved |
+| 36 | 1 | The quiet rooms' rule-stone by the inner blank | The person element under the keeping-hook, beside a picture of a figure holding a lamp (ARR45 36.1) | — | **ONE-WHO** |
+| 36 | 2 | The quiet rooms, a niche | A loose stone with the sideways fork and the cross cut on it three times, the first two crooked; a hook with a tail in the corner (ARR45 36.5) | (hers; wordless) | she practised the word before she cut it (L20–L21) |
+| 36 | 3 | The way to the last door, the stair-head's wall | A count larger than the niches' (several weeks; takes the surplus) (ARR45 36.6, 37.1) | — | region 4, the last level |
+| 37 | 1 | The last stair's top niche | L20 (ARR45 37.A) | — | L20 |
+| 37 | 2 | The last stair, a wall-slot | (seen, not sealed) A makers' plan of the last door with its count drawn far larger than the others' (ARR45 37.2) | (wordless) | the last door's count |
+| 37 | 3 | The last stair, a recess | A carrier bag, folded flat, weighted with a stone (ARR45 37.3) | (hers; wordless) | L20 ("the lamp in a bag") |
+| 38 | 1 | The last landing's niche | L21 (ARR45 38.A) | — | L21 |
+| 38 | 2 | The last landing, a recess | (seen, not sealed) A second stove with a ring of candle stubs, her tin, her spoon, brought down; a list in her hand: *rod, lamp, tea, batteries (no), the tapes (why)* (ARR45 38.A, 38.1, 38.4) | (paper) | L15 |
+| 38 | 3 | The last landing, floor | (seen, not sealed) Her boots, the ones she went down in, side by side, the soles worn through at the heel (ARR45 38.3) | (wordless) | NICHES 1.4's twin |
+| 39 | 1 | Her last camp | (seen) The wall: a smooth face, the rod to the wrist, her hand-mark; the stone flat, not risen (ARR45 39.A, 39.4) | (the app describes; nothing opens) | L22 |
+| 39 | 2 | Her last camp, the wall beside | (seen, not sealed) The two words copied side by side, each with its blank drawn but not cut (ARR45 39.2) | — | L22 |
+| 39 | 3 | Her last camp, a niche | (seen, not sealed) Her last tape, unplayable, labelled: *DAY 140. FOR WHOEVER. DON'T BOTHER, IT'S ON THE WALL.* (ARR45 39.A, 39.3) | (object) | L22; her wit |
+| 39 | 4 | The last door's count | Takes the week's Keys: it fills by a little at a time; many days fill it; a great day fills it at once (ARR45 39.1) | — | the ending's gate (D-019) |
+| 40 | 1 | Her last camp, the niche beside the wall | L22 in full (ARR45 40.A) | — | L22 |
+| 40 | 2 | The last door's sill | (seen, not sealed) The place where QUIET must be cut first (a blank with the sideways fork and the cross) (ARR45 40.1) | — | W7 at the door |
+| 40 | 3 | The last door's lintel | (seen, not sealed) *Be loud here and not be heard.* (LOUD PATH-OPEN beside the blank; the quiet-signs above) (ARR45 40.1, 41.1) | — | W8 |
+| 40 | 4 | The last door's count | Takes the week's Keys (ARR45 40.2) | — | the ending's gate |
+| 41 | 1 | The first counting door's face (re-surfaced weekly, wks 41–50) | (seen; not a Key) Dan's own record, begun: AGAIN. One mark longer each time Dan comes back down (ARR45 41.A) | (his hand; no ring; no closing line) | K6 |
+| 41 | 2 | The Hold's door, the floor (re-surfaced beside K6) | (seen; a re-surface, not a Key) The returns tally: strokes, a gap, five short rows; the app sets it beside K6 and says nothing (ARR45 41.A; its line at the morning) | (his hand) | the returns tally (wk 15); K6 |
+| 41 | 3 | The last door's count | Takes the week's Keys (ARR45 41.2) | — | the ending's gate |
+| 42 | 1 | The lift's panel (re-surfaced) | (seen) *Count down: eight sixty-fours, and one.* Re-read now that Dan has read who the one was (ARR45 42.A) | (a maker's hand) | X-lift-count; B7 |
+| 42 | 2 | The tool-room's last recess | The makers' rod-plan: *a rod for a counted hand*; beside it the rack (ARR3 24.B) re-surfaced (ARR45 42.1, 42.3) | (a maker's hand) | X-tool; *For the sixth.* |
+| 42 | 3 | The last door's count | Takes the week's Keys (ARR45 42.2) | — | the ending's gate |
+| 43 | 1 | The three doors' faces (re-surfaced weekly, wks 43–50) | (seen; not a Key) Rings in his hand beside K6: the halls' rings, in the halls' order; a column, longer each week; the first ring on the first door is the Stair's first (ARR45 43.A, 43.2) | (his hand) | K4 (its body, begun) |
+| 43 | 2 | The Deep's last niches, past the quiet rooms | Z-pieces: *what is put out; what is taken in; what is kept* (ARR45 43.1) | (no hand) | Z |
+| 43 | 3 | The last door's count | A great day fills it at once; many days fill it (by wk 44 at the latest) (ARR45 43.3) | — | the ending's gate |
+| 44 | 1 | The last door | QUIET on the sill; OPEN-WAY LOUD on the blank; it opens (ARR45 44.A) | — | W8 |
+| 44 | 2 | Beyond the door, a recess | The last binders' lamp-line, laced stone, lit to the bottom (ARR45 44.1) | (wordless; the app: "you did not light these") | the lamp chain |
+| 44 | 3 | The passage to the Seed | (seen) The rings' last count: none (ARR45 44.2) | — | the gradient's end |
+| 45 | 1 | The Seed-place | The two prepared words, each beside its blank; the count between them; Dan sets the clay lamp on the count (ARR45 45.A, 45.1) | — | the Seed |
+| 45 | 2 | The Seed-place, a wall | (seen) ECHO's blank (the diamond; the bar with a tick) (ARR45 45.2) | — | ECHO-Seed (wk 47) |
+| 45 | 3 | The Seed's count | Begins to take the year's last Keys (ARR45 45.4) | — | the ending |
+| 46 | 1 | The Seed-place, by lamplight | The smooth surface under the lamp, lifted from the count: dense text (Z2) (ARR45 46.A) | — | R9.5 |
+| 46 | 2 | The Seed's count | Fills further (ARR45 46.2) | — | the ending |
+| 47 | 1 | ECHO at the Seed | The quietening, once, on its own visit (ARR45 47.A) | — | ECHO-Seed |
+| 47 | 2 | The first door's face (weekly) | (seen) K6, one mark longer; the column beside it (ARR45 47.1) | (his hand) | K6; K4 |
+| 48 | 1 | The Seed's count | Fills with the year's last Keys (ARR45 48.A) | — | the ending |
+| 48 | 2 | Re-reads surfaced by the app, one a visit | E1 (the sky question); L6 ("he has never once asked me for anything"); the first landing, lit (wk 3) (ARR45 48.1–48.3). Not the lesson-wall's last line (saved for the coda) | — | the year re-read |
+| 48 | 3 | The first door's face (weekly) | (seen) K6, one mark longer; the column beside it (ARR45 48.A) | (his hand) | K6; K4 |
+| 49 | 1 | The Seed-place | The count full; his voice down the lacing; the speech; then the app, once: *Nothing you say here goes up.* (ARR45 49.A) | — | LIVES §7 |
+| 50 | 1 | The Seed-place, the left-hand blank | KEEP-ALL cut; the ring into the glass and not back; the Seed quiet; the lamp in hand lit (ARR45 50.A) | — | the ending |
+| 50 | 2 | The Seed-place, the other blank | (if cut first) VOICE-GIVE-FAR locks; nothing carries; *It has not carried. I said so.* (if nothing is cut: the blank, described; nothing nudges) (ARR45 50.A, 50.3) | — | WORLD_TRUTH §10 |
+| 51 | 1 | The Deep, on the way up | (seen) The halls lit as they were (ARR45 51.A) | (wordless; described once, no gloss) | the lamps rule |
+| 51 | 2 | The three doors, on the way up | The wall's outline (a hand to the wrist, the shoulder, the head against the door, as the corner was); the list on the door's face (K4), read slowly; the email's header set beside the fifth name; K6 under the empty ring, ended (ARR45 51.B, 51.1–51.2) | — | R10 |
+| 52 | 1 | Camp | The lesson-wall's last line; the app's last line: *The lamp is lit.*; nothing after it (ARR45 52 camp) | — | the coda |
+| 52 | 2 | The first door's face, a later visit | (seen) K6 with no new mark; the column as it was (ARR45 after 52) | (his hand; ended) | K6 ended; the Site shows it |

@@ -110,15 +110,19 @@ Sealed names below; the app's name by week in brackets where it differs. The app
 
 ## Region 4 — The Deep (months 7–9): below the doors
 
+App names by week (`ARRIVALS_REGION4_5.md`): the first hall is **the reading-tables**; the passage past its lintel **the soundless passage**; the rooms beyond that passage's door **the quiet rooms** (from week 34); the lift's stops **the second level** and **the last level**; the room of racks **the tool-room**; the Surveyor's chamber **the shut door** and, inside, **the chamber**; the memorial walls stay **the walls of rings**; then **the last stair**, **the last landing**, **her last camp**. The sealed names below (the quiet chambers, the Builders' deep works) never reach the app.
+
 | Place | What is there |
 |---|---|
-| **The quiet chambers** | Where words act without carrying (a maker's lintel: *here a word is said and carries not*); an inner lintel with VOICE and NOT beside a blank (QUIET, month 9); a rule-stone with ONE-WHO. The rings stop. |
+| **The quiet chambers** (the app: the soundless passage, then the quiet rooms) | Where words act without carrying (a maker's lintel on the approach: *Here: voice put out; toward far, not*; *given* until GIVE resolves); a passage where steps make no sound, with Z1 on its wall and a bench polished by sitting; a door with a count (week 34); tables with drawers (L19, L18a); a lesson-tablet cut at a child's height (TEACH); an inner lintel with VOICE and NOT beside a blank (QUIET, month 9); a rule-stone with ONE-WHO; a niche with her practice stone. The rings stop. |
 | **The seed's text** | Z1 and Z3 on the walls of the way down, and the Z-pieces in sealed niches: no-hand records. |
 | **B7** | On a wall by the last lift, in his hand: the last thing he cut before he came up. |
-| **The Builders' deep works** | Three levels joined by one lift and its device-panel (WAKE, month 7; a device-tablet says it counts who goes up and down); B7 on the wall beside the lift; the reading-tables with drawers (counts) holding her cut notes (L16–L19); the tool-room (NAME's shelf; the rod-plan *a rod for a counted hand*; a second rod, not needed); a sealed lintel-stone with LOUD (month 8); a ring in another Builder's hand, one of the few down here. |
+| **The Builders' deep works** (the app: the reading-tables; the second level; the last level) | Three levels joined by one lift and its device-panel (WAKE, month 7; a device-tablet says it counts who goes up and down: eight sixty-fours up, eight sixty-fours and one down); two hollows a stride apart on the lift's floor; B7 on the wall beside the lift at the second level; the reading-tables, their edges worn to a dip, with drawers (counts) holding her cut notes (L16 on the nearest, L17 in the second drawer) and a snapped stylus, and a maker's instruction on the first edge (*Read with the hand; see not; good.*); the tool-room (NAME's shelf; a rod-plan cut twice, the first crossed through; the last recess with *a rod for a counted hand*); a sealed lintel-stone with LOUD (month 8); a ring in another Builder's hand, one of the few down here; the last level's short hall and the last stair (each step too high; a rail worn a long hand's width). |
 | **Her last camp** (dark room, and the kindest) | Against the last door. Her cut notes (L20–L22); the two words side by side; the wall that is her: a smooth face of stone, no figure, the rod in the wall to the wrist, her hand-mark beside it; nothing in it waits. |
 
 ## Region 5 — The Seed (months 10–12)
+
+App names: **the last door**, **the Seed-place** (SEED held since month 7), **the way up**. The clay lamp leaves the ledge at week 45 (set on the Seed's count) and is back on it at week 51's camp; between them the camp line is the empty ledge and the lit cups.
 
 | Place | What is there |
 |---|---|

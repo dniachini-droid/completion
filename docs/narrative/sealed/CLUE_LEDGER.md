@@ -75,7 +75,7 @@ _Written 2026-09-23._
 
 | C-53 | The memoir carries no closing line, unlike every transcription | Builders' quarters, from wk 17 (legible from month 5) | A different convention for the makers' texts | It was not told to him; it is his own | Month 7–8 (R7) |
 | C-54 | L22, her cut note: "He read the bottom by hand, once. He has seen it not." (ONE READ DEEP HAND ONCE; ONE SEE DEEP NOT) | Her last camp, month 10 | An aside about a blind reader | The finest cut is read by light; no Builder ever read it | Month 11 (R9.5) |
-| C-55 | The hook in B1's corner is not the round hand's; B7's is the one Dan knows | Builders' quarters, from wk 17 (17.B); B7 at wk 29 | The makers' first walls were signed by a different maker | The same hand in two ages: his Builder-age mark, then KEEP-ONE; the memoir is his | Month 7–8 (R7) |
+| C-55 | The hook in B1's corner is *a hook closed on nothing*, not the round hand's *hook closed on a dot*; B7's corner (wk 29) carries the hook closed on a dot, and B6 re-surfaced with NAME (wk 30) carries the hook closed on nothing | Builders' quarters, from wk 17 (17.B); B7 at wk 29 (ARR45 29.A, 29.1); B6 at wk 30 (30.C) | The makers' first walls were signed by a different maker | The same hand in two ages: his Builder-age mark, then KEEP-ONE; the memoir is his. The app names the shapes and never compares them; L19 (wk 34) says it in her voice | Month 7–8 (R7) |
 
 ## Rules for this ledger
 
