@@ -16,7 +16,7 @@ Find how the game looks, moves and feels (MASTER_BRIEF §57–58). First a live 
 
 ## Current session focus
 
-**2026-09-24, afternoon.** Taste session done (D-027). Dan answered the ten prompts, reacted to a sample page of light, line, type, map and motion (`design/taste/samples.html`), and answered three follow-ups. The result is a brief in `design/ART_DIRECTION.md`: dark cool stone lit by one warm lamp; painted and atmospheric; a carved serif; clean, precise layout; smooth everyday motion with cinematic big moments; a map of lit places on dark. Two questions stay open and will be tested visually: where glow belongs, and whether carved letters set the whole interface.
+**2026-09-24, afternoon.** Taste session done (D-027). Dan answered the ten prompts, reacted to a sample page of light, line, type, map and motion (`design/taste/samples.html`), and answered three follow-ups. The result is a brief in `design/ART_DIRECTION.md`: dark cool stone with glow everywhere, mostly cold with some warm; painted and atmospheric; a carved serif; clean, precise layout; smooth everyday motion with cinematic big moments; a map of lit places on dark. Two questions stay open and will be tested visually: how cold and warm glow are balanced, and whether carved letters set the whole interface.
 
 **Next: the long visual run** (`design/PHASE4_PLAN.md` Part 2), starting with a quick model comparison (D-027).
 

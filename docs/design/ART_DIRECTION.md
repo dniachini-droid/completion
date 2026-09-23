@@ -69,10 +69,11 @@ Reactions to rough sketches on a sample page (`design/taste/samples.html`). Unma
 | Node map yes, cold glowing lines no: what was the no about? | Not sure; show more options in the directions |
 | Carved serif yes, mix no: carved letters for buttons and menus too? | Not sure; try both |
 | What does he love in Monument Valley and Destiny's menus? | **How clean they are** and **how they feel to use** (not their colour or their worlds) |
+| Glow, asked again after the brief | **"I want glow everywhere. I like cold glow but some warm glow too. But show me options."** |
 
 ### Brief for the directions (from the above)
 **Settled enough to build on:**
-- Dark, cool stone; the one warm light is the lamp (4A, "cold stone").
+- Dark, cool stone, and **glow everywhere**: mostly cold glow, with some warm glow (the lamp is one warm source). This overrides the earlier reading of 4B/4C.
 - Painted and atmospheric texture (5C), not ink, flat vector or rendered 3D.
 - A carved serif carries the voice (6A).
 - Layout and interaction clean and precise: nothing wasted, satisfying to tap (the Monument Valley / Destiny answer, 9 "clean ones").
@@ -80,7 +81,7 @@ Reactions to rough sketches on a sample page (`design/taste/samples.html`). Unma
 - The map as places of light on dark (7E).
 
 **Open, to be tested visually across the directions (Dan answered "not sure"):**
-- Where glow belongs, and in what colour: map and menus only, or also in the place; cyan, pale, or warm.
+- How the cold and warm glow are balanced and what each one means (e.g. cold for the place, warm for you and what you've earned). Show options.
 - Whether carved letters also set buttons, times and menus, or a quieter companion face does (not the geometric sans he rejected).
 
 ## Directions

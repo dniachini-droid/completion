@@ -25,7 +25,7 @@ Quick reactions, not essays. For each prompt Dan says "yes / no / more like this
 
 ## Part 2 — The long visual run (unattended, about 6–8 hours; D-022)
 
-**Done first (D-027):** the taste session is done. Build from the brief in `ART_DIRECTION.md` → "Brief for the directions". The three directions differ in real ways inside that brief (not colour swaps), and between them test the two open questions: where glow belongs and in what colour, and whether carved letters set the whole interface. Start with the model comparison in D-027.
+**Done first (D-027):** the taste session is done. Build from the brief in `ART_DIRECTION.md` → "Brief for the directions". The three directions differ in real ways inside that brief (not colour swaps), and between them test the two open questions: how cold and warm glow are balanced, and whether carved letters set the whole interface. Start with the model comparison in D-027.
 
 Set up like the Phase 3 overnight run: a keep-alive Routine, a minimum run time, commits after every stage, work on its own branch.
 
