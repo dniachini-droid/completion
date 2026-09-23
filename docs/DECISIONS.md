@@ -281,3 +281,13 @@
 - **Rationale:** D-004 pacing: a small but beautiful first playable, soon. The story is complete to the end of the year.
 - **Consequences:** `CLAUDE.md` and `CURRENT_STATE.md` move to Phase 4. Story work continues only as needed (week 6 of the clue ledger before the build, D-023; the company at work, later).
 - **Reversible:** Yes. Dan can reopen story questions at any time without reopening the phase.
+
+## D-027 — Taste session done; brief for the three directions
+- **Date:** 2026-09-24
+- **Context:** Phase 4 Part 1 (`design/PHASE4_PLAN.md`). Dan answered ten prompts, reacted to a page of visual samples (`design/taste/samples.html`), and answered three follow-ups. Record: `design/ART_DIRECTION.md` → "Dan's taste".
+- **Decision:** The long visual run builds from the brief in `ART_DIRECTION.md`: dark cool stone lit by one warm lamp, painted and atmospheric, a carved serif voice, clean and precise layout, smooth everyday motion with cinematic big moments, a map of lit places on dark. The three directions must differ in real ways inside that brief, and between them test the two open questions (where glow belongs and in what colour; carved letters everywhere or with a companion face). Sound: room tone and material sounds, music at arrivals and reveals (Claude's recommendation; Dan deferred; audio is later).
+- **Also:** The long run opens with a short model comparison: the same screen built by the default model and by Fable; the better result, judged by Dan or by blind reviewers if he is away, sets the model for the rest of the run. Dan asked whether Fable suits the graphics work.
+- **Alternatives:** three directions spread across everything he said yes to in the broad lists (rejected: the forced choices were far sharper and contradicted parts of the broad yeses, e.g. flat vector and sci-fi type).
+- **Rationale:** Rule 20 (ask Dan about taste); the forced choices discriminate, the lists did not.
+- **Consequences:** Phase 4 exit criterion 1 met. `PHASE4_PLAN.md` Part 2 updated.
+- **Reversible:** Yes. Dan picks or blends at the end of the run.

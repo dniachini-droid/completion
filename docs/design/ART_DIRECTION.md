@@ -61,8 +61,27 @@ Reactions to rough sketches on a sample page (`design/taste/samples.html`). Unma
 - **Type:** a carved serif; he rejected every sans, including the mix. Carved letters may carry the app's own voice, not only the place's.
 - **Map:** the glowing node map, the only map picked. Places as points of light on dark.
 - **Motion:** smooth and responsive day to day, and cinematic at big moments; not "almost still".
-- **Tensions to resolve** (follow-ups below): the node map glows cyan but cyan glow in the world was a no; he loves Monument Valley but rejected flat vector; he loves Destiny's menus but rejected the sci-fi interface type.
+- **Tensions** (follow-ups below): the node map glows cyan but cyan glow in the world was a no; he loves Monument Valley but rejected flat vector; he loves Destiny's menus but rejected the sci-fi interface type.
 - **Sound (Claude's recommendation, to revisit when audio is in scope):** room tone and small material sounds (stone, flame, the cut of a mark) as the base, with music reserved for arrivals and reveals, matching "cinematic at big moments".
+### Follow-ups (same session)
+| Question | Dan's answer |
+|---|---|
+| Node map yes, cold glowing lines no: what was the no about? | Not sure; show more options in the directions |
+| Carved serif yes, mix no: carved letters for buttons and menus too? | Not sure; try both |
+| What does he love in Monument Valley and Destiny's menus? | **How clean they are** and **how they feel to use** (not their colour or their worlds) |
+
+### Brief for the directions (from the above)
+**Settled enough to build on:**
+- Dark, cool stone; the one warm light is the lamp (4A, "cold stone").
+- Painted and atmospheric texture (5C), not ink, flat vector or rendered 3D.
+- A carved serif carries the voice (6A).
+- Layout and interaction clean and precise: nothing wasted, satisfying to tap (the Monument Valley / Destiny answer, 9 "clean ones").
+- Motion: smooth and responsive every day, cinematic only at big moments (8B + 8C).
+- The map as places of light on dark (7E).
+
+**Open, to be tested visually across the directions (Dan answered "not sure"):**
+- Where glow belongs, and in what colour: map and menus only, or also in the place; cyan, pale, or warm.
+- Whether carved letters also set buttons, times and menus, or a quieter companion face does (not the geometric sans he rejected).
 
 ## Directions
 
