@@ -1,0 +1,402 @@
+<title>Taste Samples</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=Chakra+Petch:wght@400;600&family=Cinzel:wght@500;700&family=Courier+Prime&family=Instrument+Sans:wght@400;500;600&family=Jost:wght@300;400;500&display=swap">
+<style>
+/* Deliberately single-theme: the samples are about light in the dark, so the frame stays a quiet neutral dark. */
+:root{
+  color-scheme: dark;
+  --ground:#131519; --panel:#1b1e23; --line:#2c3038; --ink:#e6e4df; --dim:#9a9ea6; --faint:#6b7079;
+  --pick:#cfd6e2; --love:#9fd3e6; --no:#6b7079;
+  --warm:#f0a24a; --cold:#7fe3f0;
+  --frame:"Instrument Sans", system-ui, sans-serif;
+}
+html,body{background:var(--ground);color:var(--ink)}
+body{font-family:var(--frame);font-size:15px;line-height:1.55;padding-inline:16px;padding-block:28px 64px}
+.wrap{max-width:1120px;margin:0 auto;display:flex;flex-direction:column;gap:56px}
+header{display:flex;flex-direction:column;gap:10px;max-width:640px}
+h1{font-size:26px;font-weight:600;margin:0;letter-spacing:-.01em;text-wrap:balance}
+header p{margin:0;color:var(--dim)}
+section{display:flex;flex-direction:column;gap:18px}
+.q{display:flex;flex-direction:column;gap:4px;max-width:640px}
+.q .n{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+h2{font-size:20px;font-weight:600;margin:0;text-wrap:balance}
+.q p{margin:0;color:var(--dim)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+.grid.g4{grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}
+.opt{background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden;display:flex;flex-direction:column}
+.opt[data-v="love"]{border-color:var(--love)}
+.opt[data-v="yes"]{border-color:var(--pick)}
+.opt[data-v="no"]{opacity:.55}
+.stage{position:relative;aspect-ratio:4/3;max-width:100%;overflow:hidden}
+.stage svg,.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.meta{padding:12px 14px 14px;display:flex;flex-direction:column;gap:10px}
+.meta b{font-weight:600}
+.meta .l{display:flex;gap:8px;align-items:baseline}
+.meta .l span.k{font-size:12px;color:var(--faint);font-variant-numeric:tabular-nums}
+.meta .d{color:var(--dim);font-size:13.5px;margin:0}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chips button{font:inherit;font-size:13px;background:transparent;color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:4px 11px;cursor:pointer}
+.chips button:hover{color:var(--ink);border-color:var(--faint)}
+.chips button:focus-visible{outline:2px solid var(--love);outline-offset:2px}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+.chips button[data-v="love"][aria-pressed="true"]{background:var(--love);border-color:var(--love)}
+.note{font-size:13px;color:var(--faint);margin:0}
+
+/* ---------- 4. Light ---------- */
+.stone{background:
+  radial-gradient(120% 90% at 50% 110%, #1d1f24 0%, #0b0c0f 70%);}
+.lamp-glow{position:absolute;left:50%;bottom:14%;width:150%;aspect-ratio:1;transform:translate(-50%,50%);
+  background:radial-gradient(closest-side, rgba(240,162,74,.55), rgba(240,162,74,.18) 35%, rgba(240,162,74,0) 70%);
+  animation:flicker 3.2s infinite ease-in-out}
+.lamp-body{position:absolute;left:50%;bottom:12%;width:42px;height:14px;transform:translateX(-50%);background:#6a4a33;border-radius:50% 50% 45% 45%/40% 40% 60% 60%}
+.lamp-flame{position:absolute;left:calc(50% + 12px);bottom:calc(12% + 11px);width:7px;height:14px;background:radial-gradient(ellipse at 50% 70%,#fff4d6,#ffc46b 50%,rgba(255,150,40,0) 72%);border-radius:50% 50% 50% 50%/65% 65% 35% 35%;animation:flicker 1.7s infinite ease-in-out}
+@keyframes flicker{0%,100%{opacity:1}40%{opacity:.86}55%{opacity:.95}70%{opacity:.82}}
+
+/* ---------- 5. Line ---------- */
+.paper{background:#e8e1cf}
+.flat{background:#cfd9e0}
+.painted{background:linear-gradient(180deg,#1a2530 0%,#33424c 55%,#56616a 100%)}
+.painted .fog{position:absolute;inset:auto -10% -10% -10%;height:55%;background:radial-gradient(60% 60% at 50% 100%,rgba(200,214,222,.45),rgba(200,214,222,0));filter:blur(8px)}
+.painted .shaft{position:absolute;top:-10%;left:30%;width:36%;height:120%;background:linear-gradient(180deg,rgba(220,235,240,.35),rgba(220,235,240,0) 80%);transform:skewX(-14deg);filter:blur(10px)}
+.lit{background:radial-gradient(90% 90% at 25% 15%,#4a5360 0%,#1c2027 60%,#101216 100%)}
+
+/* ---------- 6. Type ---------- */
+.spec{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:10px;padding:18px;background:#0f1114}
+.spec .big{font-size:25px;line-height:1.15;color:#ece9e2;text-wrap:balance}
+.spec .ui{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #2a2e35;padding-top:10px;font-size:14px;color:#b9bcc2}
+.spec .ui em{font-style:normal;color:#ece9e2}
+.t-carved{font-family:"Cinzel",Georgia,serif}
+.t-carved .big{letter-spacing:.04em;font-weight:500}
+.t-geo{font-family:"Jost","Avenir Next",sans-serif}
+.t-geo .big{font-weight:300;letter-spacing:.01em}
+.t-sci{font-family:"Chakra Petch","Eurostile",sans-serif}
+.t-sci .big{text-transform:uppercase;letter-spacing:.08em;font-size:21px;font-weight:600}
+.t-sci .ui{text-transform:uppercase;letter-spacing:.12em;font-size:12px}
+.t-type{font-family:"Courier Prime","Courier New",monospace;background:#e7e0cf}
+.t-type .big,.t-type .ui em{color:#2a2622}.t-type .ui{color:#5d564c;border-color:#c9bfa9}
+.t-hand{font-family:"Caveat","Bradley Hand",cursive;background:#e7e0cf}
+.t-hand .big{font-size:32px;color:#2c3a4a}.t-hand .ui{font-size:20px;color:#4b5563;border-color:#c9bfa9}.t-hand .ui em{color:#2c3a4a}
+.t-mix .big{font-family:"Cinzel",Georgia,serif;letter-spacing:.04em}
+.t-mix .ui{font-family:"Jost","Avenir Next",sans-serif}
+
+/* ---------- 7. Map ---------- */
+.hall{background:#0d0f13}
+/* ---------- 8. Motion ---------- */
+.m-card{position:absolute;left:12%;right:12%;top:20%;background:#20242b;border:1px solid #333944;border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px;font-size:13px;color:#b9bcc2}
+.m-card .row{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:6px;background:#191c21}
+.m-card .row.go{animation:tap 4s infinite cubic-bezier(.2,.8,.2,1)}
+.m-card .row b{color:#eceae4;font-weight:500}
+.m-sheet{position:absolute;left:0;right:0;bottom:0;height:46%;background:#2a2f38;border-radius:14px 14px 0 0;padding:14px 18px;color:#eceae4;font-size:14px;display:flex;flex-direction:column;gap:6px;animation:sheet 4s infinite cubic-bezier(.2,.8,.2,1)}
+.m-sheet .bar{height:4px;border-radius:2px;background:#3d4450;overflow:hidden}
+.m-sheet .bar i{display:block;height:100%;width:0;background:var(--cold);animation:fill 4s infinite linear}
+@keyframes tap{0%,18%{transform:scale(1);background:#191c21}22%{transform:scale(.97);background:#2c323c}28%,100%{transform:scale(1);background:#232831}}
+@keyframes sheet{0%,24%{transform:translateY(105%)}36%,88%{transform:translateY(0)}100%{transform:translateY(105%)}}
+@keyframes fill{0%,36%{width:0}88%,100%{width:62%}}
+.cine-btn{position:absolute;right:10px;bottom:10px;font:inherit;font-size:12.5px;background:rgba(19,21,25,.8);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:5px 12px;cursor:pointer;z-index:2}
+.cine-btn:focus-visible{outline:2px solid var(--love);outline-offset:2px}
+.cine .draw{stroke-dasharray:120;stroke-dashoffset:0}
+.cine.play .draw{animation:draw 1.6s .3s both ease-out}
+.cine .halo{opacity:.25}
+.cine.play .halo{animation:bloom 3.6s .9s both ease-in-out}
+.cine .leaf{transition:none}
+.cine.play .leaf-l{animation:openL 1.6s 2.1s both cubic-bezier(.6,0,.2,1)}
+.cine.play .leaf-r{animation:openR 1.6s 2.1s both cubic-bezier(.6,0,.2,1)}
+.cine .cap{opacity:0}
+.cine.play .cap{animation:cap 1.2s 3.1s both ease-out}
+@keyframes draw{from{stroke-dashoffset:120}to{stroke-dashoffset:0}}
+@keyframes bloom{0%{opacity:0}40%{opacity:1}100%{opacity:.6}}
+@keyframes openL{to{transform:translateX(-34px)}}
+@keyframes openR{to{transform:translateX(34px)}}
+@keyframes cap{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ---------- answers ---------- */
+.answers{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:18px;display:flex;flex-direction:column;gap:12px;max-width:760px}
+.answers textarea{width:100%;box-sizing:border-box;min-height:180px;background:#0f1114;color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:12px;font:13.5px/1.5 ui-monospace,Menlo,monospace;resize:vertical}
+.answers .actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.answers button{font:inherit;background:var(--ink);color:var(--ground);border:0;border-radius:999px;padding:8px 16px;cursor:pointer;font-weight:500}
+.answers button:focus-visible{outline:2px solid var(--love);outline-offset:2px}
+.answers .ok{color:var(--dim);font-size:13px}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important}}
+</style>
+
+<div class="wrap">
+<header>
+  <h1>Taste samples: light, line, type, map, motion</h1>
+  <p>These are rough sketches of five categories, not proposed designs. React to the kind of thing each one is, not to how well I drew it. Tap <b>Love</b>, <b>Yes</b>, <b>Maybe</b> or <b>No</b> on as many as you like, then copy your answers at the bottom and paste them into the chat.</p>
+</header>
+
+<!-- 4. LIGHT -->
+<section data-q="4">
+  <div class="q"><span class="n">Prompt 4</span><h2>Light</h2><p>The same dark stone hall, lit three ways.</p></div>
+  <div class="grid">
+    <article class="opt" data-id="4A" data-name="Warm lamp">
+      <div class="stage stone"><div class="lamp-glow"></div>
+        <svg viewBox="0 0 400 300" aria-hidden="true"><path d="M110 300V140a90 90 0 0 1 180 0v160" fill="none" stroke="#3a2f27" stroke-width="3"/><g stroke="#4a3a2c" stroke-width="2" fill="none" opacity=".8"><circle cx="170" cy="112" r="8"/><path d="M196 104v16M190 112h12"/><path d="M222 104l8 16h-16z"/></g></svg>
+        <div class="lamp-body"></div><div class="lamp-flame"></div></div>
+      <div class="meta"><div class="l"><span class="k">A</span><b>One warm lamp in the dark</b></div><p class="d">Only the human light. The stone is barely there.</p></div>
+    </article>
+    <article class="opt" data-id="4B" data-name="Cold glowing lines">
+      <div class="stage stone">
+        <svg viewBox="0 0 400 300" aria-hidden="true"><defs><filter id="gl" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+        <g filter="url(#gl)" fill="none" stroke="#7fe3f0" stroke-width="2"><path d="M110 300V140a90 90 0 0 1 180 0v160" opacity=".9"/><path d="M126 300V142a74 74 0 0 1 148 0v158" opacity=".35"/><circle cx="170" cy="112" r="8"/><path d="M196 104v16M190 112h12"/><path d="M222 104l8 16h-16z"/><path d="M40 300l40-20h240l40 20" opacity=".3"/></g></svg></div>
+      <div class="meta"><div class="l"><span class="k">B</span><b>Cold glowing lines</b></div><p class="d">The place lights itself. Precise, cool, a little alien.</p></div>
+    </article>
+    <article class="opt" data-id="4C" data-name="Both: warm human, cold place">
+      <div class="stage stone"><div class="lamp-glow" style="opacity:.75"></div>
+        <svg viewBox="0 0 400 300" aria-hidden="true"><g filter="url(#gl)" fill="none" stroke="#7fe3f0" stroke-width="2"><path d="M110 300V140a90 90 0 0 1 180 0v160" opacity=".85"/><circle cx="170" cy="112" r="8"/><path d="M196 104v16M190 112h12"/><path d="M222 104l8 16h-16z"/></g></svg>
+        <div class="lamp-body"></div><div class="lamp-flame"></div></div>
+      <div class="meta"><div class="l"><span class="k">C</span><b>Both</b></div><p class="d">Warm for you and your lamp, cold for the place and its marks.</p></div>
+    </article>
+  </div>
+</section>
+
+<!-- 5. LINE AND TEXTURE -->
+<section data-q="5">
+  <div class="q"><span class="n">Prompt 5</span><h2>Line and texture</h2><p>The same doorway with three marks on its lintel, drawn four ways.</p></div>
+  <div class="grid g4">
+    <article class="opt" data-id="5A" data-name="Ink and paper">
+      <div class="stage paper">
+        <svg viewBox="0 0 400 300" aria-hidden="true"><defs><filter id="wob"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="3.5"/></filter></defs>
+        <g filter="url(#wob)" fill="none" stroke="#3b3128" stroke-linecap="round">
+          <path d="M120 270V150a80 80 0 0 1 160 0v120" stroke-width="2.4"/><path d="M104 270V148a96 96 0 0 1 192 0v122" stroke-width="1.4"/>
+          <path d="M60 270h280" stroke-width="1.6"/>
+          <g stroke-width="1" opacity=".7"><path d="M122 180l-16 10M122 196l-16 10M122 212l-16 10M122 228l-16 10M122 244l-16 10M296 180l-16 10M296 196l-16 10M296 212l-16 10M296 228l-16 10M296 244l-16 10"/></g>
+          <g stroke-width="1.8"><circle cx="168" cy="118" r="8"/><path d="M198 108v18M190 117h16"/><path d="M226 108l9 18h-18z"/></g>
+          <path d="M238 104c14-22 30-34 44-38" stroke-width="1"/></g>
+        <text x="236" y="58" font-family="Caveat, cursive" font-size="21" fill="#3b3128">three marks. lamp?</text></svg></div>
+      <div class="meta"><div class="l"><span class="k">A</span><b>Hand-drawn ink and paper</b></div><p class="d">An explorer's notebook. Hatching, annotations, a little wobble.</p></div>
+    </article>
+    <article class="opt" data-id="5B" data-name="Crisp flat vector">
+      <div class="stage flat">
+        <svg viewBox="0 0 400 300" aria-hidden="true"><rect x="0" y="232" width="400" height="68" fill="#9fb1bf"/><path d="M104 232V148a96 96 0 0 1 192 0v84z" fill="#5d7486"/><path d="M128 232V150a72 72 0 0 1 144 0v82z" fill="#243442"/><path d="M296 148v84h24V120z" fill="#48606f"/>
+        <g fill="none" stroke="#e9f1f5" stroke-width="3.2" stroke-linecap="round"><circle cx="168" cy="108" r="7"/><path d="M200 99v18M192 108h16"/><path d="M228 99l9 18h-18z"/></g><rect x="186" y="208" width="28" height="24" fill="#e9c46a"/></svg></div>
+      <div class="meta"><div class="l"><span class="k">B</span><b>Crisp flat vector</b></div><p class="d">Clean shapes, no texture, very designed. Monument Valley territory.</p></div>
+    </article>
+    <article class="opt" data-id="5C" data-name="Painted and atmospheric">
+      <div class="stage painted"><div class="shaft"></div>
+        <svg viewBox="0 0 400 300" aria-hidden="true"><defs><filter id="soft"><feGaussianBlur stdDeviation="1.6"/></filter><radialGradient id="pg" cx=".5" cy=".7" r=".6"><stop offset="0" stop-color="#8fa3ad"/><stop offset="1" stop-color="#1c2831"/></radialGradient></defs>
+        <g filter="url(#soft)"><path d="M104 300V150a96 96 0 0 1 192 0v150z" fill="#1d2830"/><path d="M130 300V152a70 70 0 0 1 140 0v148z" fill="url(#pg)"/>
+        <g fill="none" stroke="#b9cfd6" stroke-width="2.6" opacity=".8"><circle cx="168" cy="110" r="7"/><path d="M200 101v18M192 110h16"/><path d="M228 101l9 18h-18z"/></g></g></svg>
+        <div class="fog"></div></div>
+      <div class="meta"><div class="l"><span class="k">C</span><b>Painted and atmospheric</b></div><p class="d">Soft edges, haze, light you can almost feel. Concept-art mood.</p></div>
+    </article>
+    <article class="opt" data-id="5D" data-name="3D and lit">
+      <div class="stage lit">
+        <svg viewBox="0 0 400 300" aria-hidden="true"><defs>
+          <linearGradient id="face" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8d97a3"/><stop offset=".55" stop-color="#4b525c"/><stop offset="1" stop-color="#23272e"/></linearGradient>
+          <linearGradient id="inner" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#07080a"/><stop offset=".7" stop-color="#15181d"/><stop offset="1" stop-color="#2a2f37"/></linearGradient>
+          <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a414b"/><stop offset="1" stop-color="#15181c"/></linearGradient></defs>
+        <rect x="0" y="236" width="400" height="64" fill="url(#floor)"/>
+        <path d="M96 236V146a104 104 0 0 1 208 0v90z" fill="url(#face)"/>
+        <path d="M124 236V150a76 76 0 0 1 152 0v86z" fill="url(#inner)"/>
+        <path d="M96 146a104 104 0 0 1 104-104" fill="none" stroke="#c9d2dc" stroke-width="1.5" opacity=".7"/>
+        <ellipse cx="200" cy="244" rx="120" ry="6" fill="#000" opacity=".45"/>
+        <g fill="none" stroke-linecap="round"><g stroke="#1a1d22" stroke-width="3.6" transform="translate(1.2 1.2)"><circle cx="168" cy="110" r="7"/><path d="M200 101v18M192 110h16"/><path d="M228 101l9 18h-18z"/></g><g stroke="#aeb8c3" stroke-width="1.2"><circle cx="168" cy="110" r="7"/><path d="M200 101v18M192 110h16"/><path d="M228 101l9 18h-18z"/></g></g></svg></div>
+      <div class="meta"><div class="l"><span class="k">D</span><b>3D and lit</b></div><p class="d">Solid forms, real light and shadow, carved depth you could touch.</p></div>
+    </article>
+  </div>
+</section>
+
+<!-- 6. TYPE -->
+<section data-q="6">
+  <div class="q"><span class="n">Prompt 6</span><h2>Type</h2><p>The same story line and the same button, in six voices.</p></div>
+  <div class="grid">
+    <article class="opt" data-id="6A" data-name="Carved serif">
+      <div class="stage"><div class="spec t-carved"><div class="big">The lamp is already lit.</div><div class="ui"><span>A delve · 25 min</span><em>Begin</em></div></div></div>
+      <div class="meta"><div class="l"><span class="k">A</span><b>Carved serif</b></div><p class="d">Letters cut into stone. Monumental, old.</p></div>
+    </article>
+    <article class="opt" data-id="6B" data-name="Clean geometric sans">
+      <div class="stage"><div class="spec t-geo"><div class="big">The lamp is already lit.</div><div class="ui"><span>A delve · 25 min</span><em>Begin</em></div></div></div>
+      <div class="meta"><div class="l"><span class="k">B</span><b>Clean geometric sans</b></div><p class="d">Calm, modern, light. Gets out of the way.</p></div>
+    </article>
+    <article class="opt" data-id="6C" data-name="Sci-fi interface sans">
+      <div class="stage"><div class="spec t-sci"><div class="big">The lamp is already lit.</div><div class="ui"><span>Delve · 25:00</span><em>Begin</em></div></div></div>
+      <div class="meta"><div class="l"><span class="k">C</span><b>Sci-fi interface</b></div><p class="d">Squared, technical, spaced out. Destiny-menu energy.</p></div>
+    </article>
+    <article class="opt" data-id="6D" data-name="Typewriter">
+      <div class="stage"><div class="spec t-type"><div class="big">The lamp is already lit.</div><div class="ui"><span>A delve, 25 min.</span><em>Begin</em></div></div></div>
+      <div class="meta"><div class="l"><span class="k">D</span><b>Typewriter</b></div><p class="d">A field report, a logbook. Plain and documentary.</p></div>
+    </article>
+    <article class="opt" data-id="6E" data-name="Field-notebook hand">
+      <div class="stage"><div class="spec t-hand"><div class="big">The lamp is already lit.</div><div class="ui"><span>a delve, 25 min</span><em>begin →</em></div></div></div>
+      <div class="meta"><div class="l"><span class="k">E</span><b>Field-notebook hand</b></div><p class="d">Someone's own handwriting. Personal, warm, informal.</p></div>
+    </article>
+    <article class="opt" data-id="6F" data-name="Mix: carved for the place, clean sans for the app">
+      <div class="stage"><div class="spec t-mix"><div class="big">The lamp is already lit.</div><div class="ui"><span>A delve · 25 min</span><em>Begin</em></div></div></div>
+      <div class="meta"><div class="l"><span class="k">F</span><b>A mix</b></div><p class="d">Carved letters for the place's voice, clean sans for buttons and times.</p></div>
+    </article>
+  </div>
+</section>
+
+<!-- 7. MAP -->
+<section data-q="7">
+  <div class="q"><span class="n">Prompt 7</span><h2>The map</h2><p>The first region (the way in, the first hall, two side galleries, a door, the head of a stair), shown five ways.</p></div>
+  <div class="grid">
+    <article class="opt" data-id="7A" data-name="Section drawing">
+      <div class="stage hall">
+        <svg viewBox="0 0 400 300" aria-hidden="true" font-family="Instrument Sans, sans-serif" font-size="10" fill="#8f98a3">
+          <path d="M0 70 C80 60 140 30 210 36 S330 66 400 62 V300 H0Z" fill="#171a20"/>
+          <path d="M0 70 C80 60 140 30 210 36 S330 66 400 62" fill="none" stroke="#5b6572" stroke-width="1.2"/>
+          <g stroke="#29303a" stroke-width="1"><path d="M0 110h400M0 150h400M0 190h400M0 230h400M0 270h400" stroke-dasharray="2 6"/></g>
+          <path d="M226 40V132" stroke="#c9d3de" stroke-width="2"/>
+          <path d="M120 132h200a0 0 0 0 1 0 0v26H120z" fill="#0d0f13" stroke="#c9d3de" stroke-width="1.4"/>
+          <path d="M120 145a20 13 0 0 1 0 0" /><rect x="72" y="140" width="48" height="16" fill="#0d0f13" stroke="#8f98a3"/><rect x="320" y="140" width="46" height="16" fill="#0d0f13" stroke="#8f98a3"/>
+          <path d="M170 158 l0 0 v8 h10 v8 h10 v8 h10 v8 h10 v8 h10 v8" fill="none" stroke="#8f98a3"/>
+          <path d="M146 132v26" stroke="#e9c46a" stroke-width="2.2"/>
+          <circle cx="226" cy="150" r="4.5" fill="#7fe3f0"/>
+          <text x="232" y="30">the way in</text><text x="244" y="126">the first hall</text><text x="74" y="172">gallery</text><text x="322" y="172">gallery</text><text x="214" y="214">the stair ↓</text><text x="126" y="126" fill="#e9c46a">door</text>
+        </svg></div>
+      <div class="meta"><div class="l"><span class="k">A</span><b>Section drawing</b></div><p class="d">The hill cut open from the side, like a surveyor's drawing. Depth reads as going down.</p></div>
+    </article>
+    <article class="opt" data-id="7B" data-name="Top-down plan">
+      <div class="stage hall">
+        <svg viewBox="0 0 400 300" aria-hidden="true" font-family="Instrument Sans, sans-serif" font-size="10" fill="#8f98a3">
+          <g stroke="#1f242c"><path d="M0 20h400M0 40h400M0 60h400M0 80h400M0 100h400M0 120h400M0 140h400M0 160h400M0 180h400M0 200h400M0 220h400M0 240h400M0 260h400M0 280h400M20 0v300M40 0v300M60 0v300M80 0v300M100 0v300M120 0v300M140 0v300M160 0v300M180 0v300M200 0v300M220 0v300M240 0v300M260 0v300M280 0v300M300 0v300M320 0v300M340 0v300M360 0v300M380 0v300"/></g>
+          <g fill="#0d0f13" stroke="#c9d3de" stroke-width="1.4"><rect x="140" y="100" width="120" height="120" rx="40"/><rect x="60" y="130" width="60" height="60" rx="6"/><rect x="280" y="130" width="60" height="60" rx="6"/><rect x="186" y="40" width="28" height="60"/><rect x="186" y="220" width="28" height="44"/></g>
+          <g stroke="#c9d3de" stroke-width="1.4"><path d="M120 160h20M260 160h20"/></g>
+          <g stroke="#8f98a3"><path d="M190 228h20M190 236h20M190 244h20M190 252h20"/></g>
+          <path d="M140 150v20" stroke="#e9c46a" stroke-width="3"/>
+          <circle cx="200" cy="80" r="4.5" fill="#7fe3f0"/>
+          <text x="220" y="54">the way in</text><text x="172" y="165">first hall</text><text x="66" y="206">gallery</text><text x="286" y="206">gallery</text><text x="220" y="258">stair</text>
+        </svg></div>
+      <div class="meta"><div class="l"><span class="k">B</span><b>Top-down plan</b></div><p class="d">An architect's floor plan. Clear, orderly, easy to read at a glance.</p></div>
+    </article>
+    <article class="opt" data-id="7C" data-name="Painted scene you look into">
+      <div class="stage hall">
+        <svg viewBox="0 0 400 300" aria-hidden="true"><defs><radialGradient id="end" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#cfe7ee"/><stop offset=".4" stop-color="#5d7c88"/><stop offset="1" stop-color="#0d0f13" stop-opacity="0"/></radialGradient><linearGradient id="fl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b232a"/><stop offset="1" stop-color="#0a0c0f"/></linearGradient></defs>
+          <rect width="400" height="300" fill="#0b0d10"/><path d="M0 300L180 170h40L400 300z" fill="url(#fl)"/>
+          <circle cx="200" cy="150" r="70" fill="url(#end)"/>
+          <g fill="none" stroke="#6f8791"><path d="M20 300V110a180 180 0 0 1 360 0v190" stroke-width="3" opacity=".55"/><path d="M80 262V128a120 120 0 0 1 240 0v134" stroke-width="2.2" opacity=".55"/><path d="M128 232V140a72 72 0 0 1 144 0v92" stroke-width="1.6" opacity=".6"/><path d="M162 208V148a38 38 0 0 1 76 0v60" stroke-width="1.2" opacity=".7"/></g>
+          <g fill="#7fe3f0" opacity=".9"><circle cx="46" cy="210" r="2"/><circle cx="354" cy="210" r="2"/><circle cx="102" cy="200" r="1.6"/><circle cx="298" cy="200" r="1.6"/></g>
+          <text x="200" y="286" text-anchor="middle" font-family="Instrument Sans, sans-serif" font-size="11" fill="#8f98a3">ahead: the head of the stair</text></svg></div>
+      <div class="meta"><div class="l"><span class="k">C</span><b>A scene you look into</b></div><p class="d">You see where you are, in the first person. The map is the place itself.</p></div>
+    </article>
+    <article class="opt" data-id="7D" data-name="Single path">
+      <div class="stage hall">
+        <svg viewBox="0 0 400 300" aria-hidden="true" font-family="Instrument Sans, sans-serif" font-size="10.5" fill="#8f98a3">
+          <path d="M200 290 C140 250 260 220 200 180 S140 110 200 80 S260 30 200 10" fill="none" stroke="#3a414c" stroke-width="2" stroke-dasharray="1 7" stroke-linecap="round"/>
+          <path d="M200 290 C140 250 260 220 200 180" fill="none" stroke="#c9d3de" stroke-width="2"/>
+          <g fill="#c9d3de"><circle cx="200" cy="290" r="4"/><circle cx="196" cy="236" r="4"/></g>
+          <circle cx="200" cy="180" r="7" fill="#7fe3f0"/><circle cx="200" cy="180" r="13" fill="none" stroke="#7fe3f0" opacity=".4"/>
+          <circle cx="172" cy="118" r="5" fill="none" stroke="#e9c46a" stroke-width="1.6"/>
+          <text x="214" y="184" fill="#eceae4">you are here · the first hall</text><text x="92" y="122">next step: the door</text><text x="212" y="240">the way in</text>
+        </svg></div>
+      <div class="meta"><div class="l"><span class="k">D</span><b>A single path</b></div><p class="d">One route you walk down. Only the next step matters; the rest is dotted.</p></div>
+    </article>
+    <article class="opt" data-id="7E" data-name="Glowing node map">
+      <div class="stage hall">
+        <svg viewBox="0 0 400 300" aria-hidden="true" font-family="Chakra Petch, sans-serif" font-size="9.5" letter-spacing="1" fill="#7f98a4">
+          <rect width="400" height="300" fill="#07090c"/>
+          <g fill="#7fe3f0" opacity=".25"><circle cx="30" cy="40" r=".8"/><circle cx="90" cy="260" r=".8"/><circle cx="350" cy="30" r=".8"/><circle cx="380" cy="200" r=".8"/><circle cx="260" cy="280" r=".8"/><circle cx="60" cy="140" r=".8"/></g>
+          <circle cx="200" cy="150" r="118" fill="none" stroke="#1d2a31"/><circle cx="200" cy="150" r="70" fill="none" stroke="#1d2a31"/>
+          <g stroke="#3a6f7a" stroke-width="1"><path d="M200 60L200 150M200 150L110 170M200 150L290 170M200 150L200 240M200 150L150 110"/></g>
+          <g filter="url(#gl)"><circle cx="200" cy="150" r="6" fill="#7fe3f0"/><circle cx="200" cy="60" r="3.5" fill="#7fe3f0"/><circle cx="110" cy="170" r="3.5" fill="#4aa9b8"/><circle cx="290" cy="170" r="3.5" fill="#4aa9b8"/><circle cx="200" cy="240" r="3.5" fill="none" stroke="#4aa9b8"/><rect x="146" y="106" width="8" height="8" fill="none" stroke="#e9c46a" transform="rotate(45 150 110)"/></g>
+          <text x="210" y="146" fill="#cfeff5">FIRST HALL</text><text x="208" y="62">WAY IN</text><text x="62" y="186">GALLERY</text><text x="262" y="186">GALLERY</text><text x="208" y="252">STAIR · UNSEEN</text><text x="104" y="100" fill="#e9c46a">DOOR</text>
+        </svg></div>
+      <div class="meta"><div class="l"><span class="k">E</span><b>Glowing node map</b></div><p class="d">Places as lit points on dark, like Mass Effect's galaxy map.</p></div>
+    </article>
+  </div>
+</section>
+
+<!-- 8. MOTION -->
+<section data-q="8">
+  <div class="q"><span class="n">Prompt 8</span><h2>Motion</h2><p>How things move. The third one plays when you tap it.</p></div>
+  <div class="grid">
+    <article class="opt" data-id="8A" data-name="Almost still">
+      <div class="stage stone"><canvas id="dust" aria-hidden="true"></canvas><div class="lamp-glow" style="opacity:.6"></div><div class="lamp-body"></div><div class="lamp-flame"></div></div>
+      <div class="meta"><div class="l"><span class="k">A</span><b>Almost still</b></div><p class="d">Dust drifting, a flame breathing. The screen barely moves.</p></div>
+    </article>
+    <article class="opt" data-id="8B" data-name="Smooth and responsive">
+      <div class="stage" style="background:#15181d">
+        <div class="m-card"><div class="row"><span>A breather</span><span>5 min</span></div><div class="row go"><b>Start a delve</b><span>25 min</span></div><div class="row"><span>The satchel</span><span>3</span></div></div>
+        <div class="m-sheet"><span>Delve running</span><div class="bar"><i></i></div><span style="color:#9a9ea6;font-size:12.5px">The expedition moves while you work.</span></div></div>
+      <div class="meta"><div class="l"><span class="k">B</span><b>Smooth and responsive</b></div><p class="d">Every tap answers at once, with springy, precise transitions. A good phone app.</p></div>
+    </article>
+    <article class="opt" data-id="8C" data-name="Cinematic at big moments">
+      <div class="stage cine" id="cine" style="background:#07090c">
+        <svg viewBox="0 0 400 300" aria-hidden="true">
+          <defs><radialGradient id="hl" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#bff4fa" stop-opacity=".9"/><stop offset="1" stop-color="#7fe3f0" stop-opacity="0"/></radialGradient></defs>
+          <ellipse class="halo" cx="200" cy="170" rx="160" ry="120" fill="url(#hl)"/>
+          <g><rect class="leaf leaf-l" x="146" y="120" width="54" height="150" fill="#12161b" stroke="#2c3440"/><rect class="leaf leaf-r" x="200" y="120" width="54" height="150" fill="#12161b" stroke="#2c3440"/></g>
+          <g fill="none" stroke="#7fe3f0" stroke-width="2.4" stroke-linecap="round" filter="url(#gl)"><path class="draw" d="M130 110h140"/><circle class="draw" cx="170" cy="94" r="7"/><path class="draw" d="M200 85v18M192 94h16"/><path class="draw" d="M228 85l9 18h-18z"/></g>
+          <text class="cap" x="200" y="292" text-anchor="middle" font-family="Instrument Sans, sans-serif" font-size="13" fill="#eceae4">The door answers.</text>
+        </svg>
+        <button class="cine-btn" id="cineBtn" type="button">▶ Play the reveal</button></div>
+      <div class="meta"><div class="l"><span class="k">C</span><b>Cinematic at big moments only</b></div><p class="d">Quiet day to day, then a real moment when a word works or a door opens.</p></div>
+    </article>
+  </div>
+</section>
+
+<section>
+  <div class="q"><span class="n">Your answers</span><h2>Copy and paste into the chat</h2><p>This fills in as you tap. Add anything you like in the chat after pasting.</p></div>
+  <div class="answers">
+    <textarea id="out" readonly aria-label="Your answers"></textarea>
+    <div class="actions"><button id="copy" type="button">Copy my answers</button><span class="ok" id="ok" aria-live="polite"></span></div>
+  </div>
+</section>
+</div>
+
+<script>
+(function(){
+  const LABELS=[["love","Love"],["yes","Yes"],["maybe","Maybe"],["no","No"]];
+  const KEY="taste-samples-v1";
+  let state={};
+  try{state=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){state={}}
+  const opts=[...document.querySelectorAll(".opt")];
+  function render(){
+    opts.forEach(o=>{
+      const v=state[o.dataset.id]||"";
+      o.dataset.v=v;
+      o.querySelectorAll(".chips button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===v?"true":"false"));
+    });
+    const titles={4:"Light",5:"Line and texture",6:"Type",7:"Map",8:"Motion"};
+    const lines=[];
+    [4,5,6,7,8].forEach(q=>{
+      const picked=opts.filter(o=>o.dataset.id[0]==q&&state[o.dataset.id]);
+      const txt=picked.length?picked.map(o=>o.dataset.id+" "+o.dataset.name+": "+state[o.dataset.id]).join("; "):"(nothing picked)";
+      lines.push(q+". "+titles[q]+": "+txt);
+    });
+    document.getElementById("out").value=lines.join("\n");
+    try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}
+  }
+  opts.forEach(o=>{
+    const c=document.createElement("div");c.className="chips";
+    LABELS.forEach(([v,t])=>{
+      const b=document.createElement("button");b.type="button";b.dataset.v=v;b.textContent=t;
+      b.addEventListener("click",()=>{state[o.dataset.id]=state[o.dataset.id]===v?"":v;if(!state[o.dataset.id])delete state[o.dataset.id];render()});
+      c.appendChild(b);
+    });
+    o.querySelector(".meta").appendChild(c);
+  });
+  render();
+  const out=document.getElementById("out"),ok=document.getElementById("ok");
+  document.getElementById("copy").addEventListener("click",()=>{
+    const done=()=>{ok.textContent="Copied. Paste it into the chat."};
+    const fallback=()=>{out.focus();out.select();ok.textContent="Selected. Copy it with your phone's Copy."};
+    try{navigator.clipboard.writeText(out.value).then(done,fallback)}catch(e){fallback()}
+  });
+
+  // cinematic reveal
+  const cine=document.getElementById("cine");
+  document.getElementById("cineBtn").addEventListener("click",()=>{cine.classList.remove("play");void cine.offsetWidth;cine.classList.add("play")});
+
+  // drifting dust
+  const cv=document.getElementById("dust"),ctx=cv.getContext("2d");
+  const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let W=0,H=0,motes=[];
+  function size(){const r=cv.getBoundingClientRect(),d=window.devicePixelRatio||1;W=r.width;H=r.height;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0)}
+  size();window.addEventListener("resize",size);
+  for(let i=0;i<46;i++)motes.push({x:Math.random(),y:Math.random(),r:Math.random()*1.3+.3,vx:(Math.random()-.5)*.00012,vy:-(Math.random()*.00016+.00003),a:Math.random()*.5+.2});
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    motes.forEach(m=>{
+      if(!reduce){m.x+=m.vx;m.y+=m.vy;if(m.y<-.02){m.y=1.02;m.x=Math.random()}}
+      const dx=m.x-.5,dy=m.y-.85,near=Math.max(0,1-Math.sqrt(dx*dx+dy*dy)*1.6);
+      ctx.fillStyle="rgba(255,214,160,"+(m.a*(.25+near))+")";
+      ctx.beginPath();ctx.arc(m.x*W,m.y*H,m.r,0,6.283);ctx.fill();
+    });
+    if(!reduce)requestAnimationFrame(frame);
+  }
+  frame();
+})();
+</script>
