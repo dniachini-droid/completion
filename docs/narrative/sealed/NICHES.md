@@ -35,7 +35,7 @@ _Written 2026-09-23._
 | 6 | 1 | Salt Gallery, the last hidden stretch | A lesson-tablet: two drops parted beside a doorway; a hook-over-bar beside a picture of bread; the S6 stretch | — | **OPEN, EAT**; S6 (read wk 7) |
 | 6 | 2 | The Surveyor's upper gallery, a niche | The foreman's pay tablet | *Told: he opened not the hill; we were not paid; the second came not up.* (at wk 6: *[ ]: one door here open [ ]; give person [ ] [ ]; [ ] [ ] [ ].*) | X-foreman |
 | 6 | 3 | The Surveyor's gallery, a wall-shelf | A surveyor's level, bronze, the bubble long dry | (wordless) | V; the Hold has its twin |
-| 6 | 4 | The Surveyor's gallery, floor | (seen, not sealed: on the floor at ARR2 6.3) A mule-shoe, and beside it a stone with a halter's rub on it | (a line beside it, at wk 6 *[ ]: [mule] went in [ ]*; full at wk 14, NICHES 14.4) | X-mule-driver (full line month 4) |
+| 6 | 4 | The Surveyor's gallery, floor | (seen, not sealed: on the floor at ARR2 6.3) A mule-shoe, and beside it a stone with a halter's rub on it | (a line beside it, at wk 6 *[ ]: [a mule] went deep [ ]; me [ ] [ ].*; full at wk 14, NICHES 14.4) | X-mule-driver (full line month 4) |
 | 6 | 5 | Her folder (camp), the first pocket | The council's letter about the shaft ("monitored") and the farmer's note from her windscreen: "Your car's been here nine days. Ring me." | (paper) | L8 |
 | 7 | 1 | The Surveyor's gallery, a niche | A lesson-tablet: an inverted wedge beside a picture of the sky; a wedge-on-bar beside a picture of a block; a small person beside a child's tablet | — | **UP, STONE, CHILD** |
 | 7 | 2 | The Surveyor's gallery, the crew's wall | The boy's wax tablet | (see X-boy) | X-boy |
@@ -86,7 +86,7 @@ _Written 2026-09-23._
 | Wk | # | Where | What the count opens | Told line (his hand) or description | Ties to |
 |---|---|---|---|---|---|
 | 14 | 1 | The cupboard's lower shelf | A lesson-tablet the Engineer never read: an inverted wedge on a bar beside the sun over ground; a reversed hook beside an ear | — | **WORLD, HEAR** |
-| 14 | 2 | The Loud Room's ledge | The log's next page (E5) | — | E5 |
+| 14 | 2 | The Loud Room's ledge | The log's next page (E5) (read wk 15) | — | E5 |
 | 14 | 3 | The blast wall | (seen; a word, not a Key) ECHO's blank exposed by MOVE-STONE | — | W4 |
 | 14 | 4 | The square gallery, the mule-shoe's stone | The mule-driver's told line | *Told: the mules went not in. I [ ] them not.* (MAKE wk 15) | X-mule-driver |
 | 14 | 5 | Salt Gallery, a deep niche | S9 | — | S9 |
@@ -107,7 +107,7 @@ _Written 2026-09-23._
 | 17 | 5 | The shelf room, a drawer | The heel of the Salt-Cutter's bread, gone to stone, on a cloth | *The first's bread. I ate not. I [ ] it.* (KEEP wk 22) | S2; he keeps everything |
 | 18 | 1 | The quarters' star-tablet | A drop with nothing under it beside a picture of the sky | — | **FAR** |
 | 18 | 2 | The Council Gallery's door | The count on the Council's door | — | X-answerer |
-| 18 | 3 | The Council Gallery's left wall | (seen, not sealed at wk 19: ARR3 19.A) B3 first sight (read next week) | — | B3 |
+| 18 | 3 | The Council Gallery's left wall | (seen, not sealed at wk 19: ARR3 19.A) B3 (read at ARR3 19.A) | — | B3 |
 | 18 | 4 | The book, a bound slip | The patron's receipt | (paper, in the book) | X-patron |
 | 18 | 5 | The quarters, a wall-recess | A Builder's stylus and a half-cut lesson: a flame, and the beginning of a lamp, unfinished by a hand that stopped | *A child's mark; the child slept before the lamp.* | the quietening |
 | 18 | 6 | The wall of lamps, low | (seen, not sealed: ARR3 18.4) One cell with the lamp-mark cut upside down, and nothing cut over it | (wordless; never explained) | the makers: a wrong cut let stand for an age (rhymes with X-boy, wk 7) |
@@ -117,7 +117,7 @@ _Written 2026-09-23._
 | 19 | 4 | The Council, floor | Two rods, one on each side of the gallery, laid down and never picked up | *Two. Voices not good. The last time.* | the split |
 | 19 | 5 | The quarters | (seen, not sealed: ARR3 18.A) B2's second wall (the lamps cut "everywhere": a hall where every cell is the lamp-mark) | (wordless; the app: "the same mark, thousands of times") | B2 |
 | 20 | 1 | The Warning Hall's floor-tablet | The RETURN mark beside a picture of a figure going out and coming back; an open cell beside a raised hand | — | **QUESTION, AGAIN** |
-| 20 | 2 | Salt Gallery, a niche past the split | S11 | — | S11 |
+| 20 | 2 | Salt Gallery, a niche past the split | S11 (read wk 21) | — | S11 |
 | 20 | 3 | The square gallery, the order's stone copy | The overseer's told line | *Told: the works are [ ]. The second's marks [ ] me again not.* at wk 20 (SHUT wk 23, TOWARD wk 24); *Told: the works are shut. The second's last marks came not to me.* when held | X-overseer |
 | 20 | 4 | The Warning Hall, a recess | A Builder's copy of the warning in small, with three strokes beside it and a fourth begun | *The times the rock moved not: three. The fourth: the last.* (STONE MOVE NOT ONCE: COUNT 3; 4: ONCE ALL; all held wk 20) | B4; the quietening |
 | 20 | 5 | Salt Gallery, the last niche | S12 (told by the daughter) | — | S12 |
@@ -132,7 +132,7 @@ _Written 2026-09-23._
 | 22 | 4 | The first counting door | The count begins to fill (several weeks) | — | the doors |
 | 22 | 5 | The Hold, a last drawer | The Engineer's spectacles, one lens cracked | *The fourth's. He read the book with these.* | E; the misreading |
 | 23 | 1 | The Landing's second stone | SHUT beside a picture of a door with a cross; STILL beside a picture of water with a cross | — | **SHUT, STILL** |
-| 23 | 2 | The Loud Room, the ledge (re-read) | K3: "Kept." | — | K3 |
+| 23 | 2 | The Loud Room, the ledge (re-read) | K3: "Kept." (re-read ARR3 22.3, wk 22) | — | K3 |
 | 23 | 3 | The side gallery, the door (re-read) | V6: "I shut the door." | — | V6 |
 | 23 | 4 | The Landing, a niche | A Builder's lamp-cup, cracked, laced stone, the crack packed with clay from the surface | *Mended. The first's clay.* | the lamps rule |
 | 23 | 5 | The Landing, a wall-slot | A Builder's plan of the Landing: where the corridor turns, a figure drawn standing, as tall as the doors | (wordless) | the face |
@@ -148,7 +148,7 @@ _Written 2026-09-23._
 | 25 | 5 | The first door's threshold, floor | A line in his hand, alone, cut where he stands: *Here.* (HERE {h}); and at ARR3 25.B he is standing on it, one hand flat on the door over the strokes of its count | *Here.* | his furthest point; the one time he is in Dan's path in the flesh |
 | 26 | 1 | The second counting door | The count fills | — | |
 | 26 | 2 | The third counting door | The count fills over the week | — | |
-| 26 | 3 | The Deep's first hall, the reading-tables | L16 first sight | — | L16 |
+| 26 | 3 | The Deep's first hall, the reading-tables | L16 (read whole at ARR3 26.B) | — | L16 |
 | 26 | 4 | The Deep's first hall, a niche | (seen; opens wk 27) The floor-stone for SEED (month 7's first sign) | — | **SEED** (month 7) |
 | 26 | 5 | The Deep's first hall, a wall | Nearly bare stone: almost no rings. The app describes the absence. | (wordless) | the ring gradient |
 

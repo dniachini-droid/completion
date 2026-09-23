@@ -160,7 +160,7 @@ The lintels tell Dan the words he needs. The language is a language only if he c
 | keep fire | KEEP-FIRE | the nearest lamp stays lit after he leaves the room (it always did; the Site is polite) |
 | remain (REMAIN) | KEEP-ONE-HERE | the place does not answer. Ever. |
 
-Ten to fifteen of these exist by month 6; the app never lists them; Dan finds them by trying. Weeks 14–26 put one open cell in view a week, where the experiment rhymes with the room (`ARRIVALS_REGION3.md`: 15.4 *glimpse* at the high door; 18.A *warm* at the wall of lamps; 20.4 *listen* in the Warning Hall; 23.4 *count* at the Landing, where the tally is three; 24.2 *hum* and *my mark* in the workshop).
+Ten to fifteen of these exist by month 6; the app never lists them; Dan finds them by trying. Weeks 14–26 put one open cell in view a week, where the experiment rhymes with the room (`ARRIVALS_REGION3.md`: 15.4 *glimpse* at the high door; 18.A *warm* at the wall of lamps; 20.4 *listen* in the Warning Hall; 23.4 *count* at the Landing, where the tally is three; 24.2 *hum* in the workshop, and *my mark* in the same cell on a later visit). Weeks 27–35 (`ARRIVALS_REGION4_5.md`): 27.4 *read here* at the tables; 29.4 *wake sleep* by the panel; 32.4 *douse* in the Warning Hall's recess; 34.3 *keep fire* by the inner door; 35.4 *give light* at the inner blank's table.
 
 Words that exist, can be read, and are never cut by the player:
 - **REMAIN**: KEEP-ONE-HERE. The Custodian's word, and later the Linguist's. Cutting it on a gate does nothing ("the place does not answer"; a wrong guess gives a clue, nothing is lost).
