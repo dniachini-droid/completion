@@ -24,9 +24,9 @@ _Written 2026-09-23. Derived from `REVELATION_MAP.md` and `MYSTERIES.md`._
 **Can name the promise:** many came down; one figure met them all; she wrote to whoever came next.
 
 ### End of month 3
-**Knows:** five readers, numbered, each with a name for him (the tall one, the Guest, the Custodian; the Inspector arrives week 10; the Copyist "never came"). He has never stopped anyone (NOT, week 9). The records are told to him and cut by him (L7, L9, S7). The lintels say "voice not". Loud use is followed by something in every age. The Surveyor was alive when the door was shut, and the figure shut it.
-**Suspects:** that the figure is one being across all ages; that "keep" is in his name; that the place was built to keep something quiet.
-**Wrongly believes:** that it is a tomb; that the figure is a guardian keeping something *in*; that the Copyist's angel reading is quaint rather than half-right.
+**Knows:** five readers, numbered, each with a name for him (the tall one, the Guest, the Tenant; the Inspector arrives week 10; the Copyist "never came"). He has never stopped anyone (NOT, week 9: four records turn, and the Linguist's own "I think it's emphasis" turns with them). The lintels say "voice not". Loud use is followed by something in every age. The Surveyor was alive when the door was shut, and the figure shut it.
+**Suspects:** that the figure is one being across all ages; that the records were told to him and cut by him (S7 "he cut them as I said them"; the fives converted to eights); that the place was built to keep something quiet.
+**Wrongly believes:** that it is a tomb; that the figure is a guardian keeping something *in*; that the Copyist's angel reading is quaint rather than half-right; possibly (her guess) that the salt-cutter learned to count in eights.
 
 ### End of month 6 (mid-point)
 **Knows:** KEEP. His name is *the one who keeps*. The lintels say *keep silent*. He kept the lamp. The Builders called the place "the keeping-work." A people before humans made it; a memoir in their hand tells of the first word and a warning. Two positions faced each other (keep / send). He stood at the Landing and spoke.
@@ -39,7 +39,7 @@ _Written 2026-09-23. Derived from `REVELATION_MAP.md` and `MYSTERIES.md`._
 **Wrongly believes:** nothing load-bearing. Open: what the Listeners are (declared unanswerable by L18).
 
 ### End of month 12
-**Knows:** everything in `WORLD_TRUTH.md` §6 except §11's deliberate uncertainties. The rings were his people. The list. The coda.
+**Knows:** everything in `WORLD_TRUTH.md` §6 except §11's deliberate uncertainties. The finest cut (month 11): the message was never a question. The list: his people, every given name, the five readers' own names (Hamun, Sertor, Alditha, Fenwick, Ines Halloran), and the empty ring that is his. The coda.
 **Still open, on purpose:** the nature of the Listeners; whether he is aware in the wall; what the Speakers were.
 
 ## Rules

@@ -45,9 +45,9 @@ Any question Dan can ask attaches to one of these. If a new question arises in l
 **Clues.**
 - *Early (months 1–3):* the lamp is lit; "someone will need it"; every reader met him; "he stopped me not"; the lintels' "voice not"; the one hand.
 - *Middle (months 4–8):* "keep silent"; his ring; the Warning Hall; "we made them against ourselves"; the memoir's "I"; the Surveyor's door; the anomalies line up with loud use.
-- *Late (months 9–12):* the Linguist's "the way down is by going out"; the two words side by side; the safeguard; the no-hand records; the list.
+- *Late (months 9–12):* the Linguist's "the way down is by going out"; the two words side by side; the safeguard and the Seed rule (the door-maker's plan); the no-hand records; the finest cut by lamplight (month 11: the message was never a question); the list.
 
-**Trigger.** Cutting KEEP-ALL at the Seed (month 12).
+**Trigger.** Cutting KEEP-ALL at the Seed (month 12), alone, with his voice from the doors.
 
 **Consequences.** The Seed goes quiet; every word still works inside; the Custodian is kept; the names are read; the coda. The story is complete (D-015: Dan stops when the story ends; later content is new regions, not a reopened ending).
 
@@ -68,8 +68,8 @@ Any question Dan can ask attaches to one of these. If a new question arises in l
 **False explanation.** It is the oldest thing in the Site (it is in the first hall; it is a bilingual, like a founding inscription).
 **Who knows.** The Custodian; the Linguist.
 **Misleading evidence.** Its position; its clarity; the app's own first reading of it as "a lesson".
-**Early clue.** Her hand-mark differs from the others (week 4). Her notes lack ONCE (week 5).
-**Trigger.** Week 5–6, when Dan reads the first line of L2 ("Note. Day 1") next to the wall's hand-mark.
+**Early clue.** Her hand-mark differs from the others (week 4). K1 on the lamp is in *his* hand and reads "lit" (week 5), so someone else lit it for her.
+**Trigger.** Week 5–6: ONCE shows every transcription is retrospective and the wall has none; then L8 ("made a wall for the next one; drew a lamp like a five-year-old").
 **Consequences.** The "oldest" record is the newest. A person recently alive wrote *to* Dan. The Custodian let it stand. Rung 2 opens properly: who else came?
 
 ## M3 — Who is the tall figure? (rung 2)
@@ -80,8 +80,8 @@ Any question Dan can ask attaches to one of these. If a new question arises in l
 **Misleading evidence.** Five different names. The Engineer's "Inspector".
 **Early clues.** "Four on the hand, and long" (S); "the Guest did not eat with us" (V); "does not eat" (S). All three by week 6.
 **Middle.** His hand-mark on every record (week 4); his ring (month 6); the Landing (month 6).
-**Late.** The memoir's "I" (month 8–9); his lower body in the floor, described by the Linguist.
-**Trigger.** Month 6: the ring reads KEEP-ONE and he stands at the Landing.
+**Late.** The memoir's "I" (month 8–9); the print of his hand in the workshop wall; his outline in the door (month 12).
+**Trigger.** Month 6: the ring reads KEEP-ONE and he stands at the Landing. (The notebook never names him "Custodian"; she calls him "the Tenant" there. The renaming is in her cut notes, read the same month.)
 **Consequences.** One figure, across every age, never stopping anyone. Rung 3 opens: why does he teach?
 
 ## M4 — Who wrote the records? (rung 3)
@@ -89,21 +89,21 @@ Any question Dan can ask attaches to one of these. If a new question arises in l
 **Answer.** He did, from what each reader told him, as lessons for the next reader. Exceptions in the readers' own hands (two of the Surveyor's; all of the Linguist's).
 **False explanation.** Each reader cut their own life.
 **Misleading evidence.** First person voice; each age's own units and metaphors, faithfully kept.
-**Early clue.** One hand-mark on nearly all of them (week 4). The Salt-Cutter's counts in fives appear converted to eights (week 8).
-**Middle.** ONCE at the head of every transcription (week 5). "He asked to record me" (S, V). The formula's reader-number.
-**Trigger.** Month 4, reading MAKE and READ: the transcriptions say "cut by the keeper, from the mouth of the first."
+**Early clue.** One hand-mark on nearly all of them (week 4). The Salt-Cutter's counts in fives appear converted to eights (week 8; the Linguist's notebook offers the *wrong* guess that the salt-cutter learned to count in eights). "He asked if he could write me down" (L3).
+**Middle.** ONCE at the head of every transcription (week 5). S7: "he cut them as I said them" (week 9). The formula's reader-number.
+**Trigger.** Month 4, reading MAKE and READ: the transcriptions' formula says "cut by the keeper, from the mouth of the first."
 **Consequences.** The archive has a curator, and the curator is the figure. Rung 3: a school. Why?
 
-## M5 — What are the rings? (rung 4 → 6)
+## M5 — Whose are the rings, and why? (rung 4 → 6)
 
-**Answer.** The Builders' names, cut by him, one by one, over ages: a memorial. His people were in the walls the whole time.
-**False explanations.** Decoration; the readers' signatures; a counting system; the makers' marks of individual craftsmen.
-**Misleading evidence.** There are thousands; they are everywhere; they look repetitive; the app first calls them "the rings" as texture.
-**Early clue.** Week 1: rings recognised, unreadable. Week 4: every ring carries the *same* hand-mark (visible only when Dan looks; surfaced as an optional detail).
-**Middle.** Month 8: NAME learned; the rings are names. The memoir: "fewer in the count each cutting."
-**Late.** Month 11: one ring unfinished, in a chamber where a Builder went quiet mid-cut. Month 12: the list.
-**Trigger.** Month 12, the list in his hand ending with the readers and an empty ring.
-**Consequences.** The "that was there the entire time." Retroactively, every wall Dan passed was grief.
+**Answer.** Dan knows from week two that a ring is a name. The thousands on the walls are the Builders' names, cut by him one by one over ages, and beside them every name ever *given* to him (the salt-cutter's wife, the twelve men and the boy, the patron, the well-keeper). A memorial and an index. The list, at the end, gives the five readers' own names for the first time, and the one empty ring is his: a name is a thing given, and no one was left to give him one.
+**False explanations.** The makers' signatures; the records' authors; a register of everyone who ever entered.
+**Misleading evidence.** There are thousands; they are everywhere; they look alike; the readers are never named in their records (act first), so nothing links a ring to a life.
+**Early clue.** Week 2: the wife's ring, cut while the Salt-Cutter watched. Week 4: every ring carries the *same* hand-mark. Week 5: a fresh ring on the Stair, sharp-edged among worn ones (he is still cutting).
+**Middle.** Month 7: below the three doors the rings stop ("whoever cut these never came down here"). Month 8: NAME; the memoir's "fewer in the count each cutting"; the wife's name read aloud in S's late fragments.
+**Late.** Month 11: one ring unfinished, where a Builder went quiet mid-cut. Month 12: the list on the door.
+**Trigger.** Month 12, the list: the names of his people; every given name; then *Hamun, Sertor, Alditha, Fenwick, Ines Halloran*; then a ring, empty.
+**Consequences.** The "that was there the entire time": every wall Dan passed was grief, and the whole year has an index. The empty ring is the antagonist's nature in one image.
 
 ## M6 — What ended the Builders? (rung 4)
 
@@ -118,18 +118,18 @@ Any question Dan can ask attaches to one of these. If a new question arises in l
 
 ## M7 — What does he want from me? (rung 5)
 
-**Answer.** To reach the Seed and cut VOICE-GIVE-FAR. He cannot: the counting doors exclude him.
+**Answer.** To reach the Seed and cut VOICE-GIVE-FAR. He cannot: the counting doors exclude him and the Seed's words lock only under a counted hand; he has been above the three doors since the end.
 **False explanations.** To keep Dan out; to keep Dan in; to be freed; to be killed.
 **Misleading evidence.** The shut door (he *does* stop people, once); the Copyist's angel.
 **Early clue.** He has never stopped anyone (week 9, NOT). He lights the lamp.
-**Middle.** "We made them against ourselves" (month 6). He cannot pass the doors Dan passes (month 7: he is always on the near side).
+**Middle.** "We made them against ourselves" (month 6). He is always on the near side of the three doors; below them there is no trace of him but B7 and the rings stop (month 7). The door-maker's plan: the Seed rule (month 7).
 **Late.** The Linguist's transcription of his thesis (months 8–9). "Every door you open, he wanted open."
 **Trigger.** Month 9.
 **Consequences.** The help was the antagonist. Dread inverts. Rung 6.
 
 ## M8 — Why do the deep doors need what they need? (the fiction for Keys; rung 5)
 
-**Answer.** They count returns from the surface: the binders' safeguard against anything that lived only in the dark.
+**Answer.** They count returns from the surface: the binders' safeguard against anything that lived only in the dark. The same count is what the Seed's words lock under. They know their bearer and open freely going up.
 **False explanation.** They want an object; they want a word; they are broken.
 **Misleading evidence.** The lock's tally fills with time, so it looks like a timer.
 **Early clue.** Week 5: RETURN mark noticed on the first counting door. Week 8: the tally reads as a count.
@@ -180,6 +180,16 @@ Any question Dan can ask attaches to one of these. If a new question arises in l
 
 **Answer on the page.** Three theories, none confirmed: a gathering mind (the Custodian); a hunger (the Builders); a process with no one in it (the Linguist). Declared unanswerable *up front and loudly* by the Linguist's note in month 8 ("No one will ever know what it is. Only what it does."), so that it is never the question progress is measured by (RESEARCH, *The Leftovers* rule).
 **Authorial truth.** The Linguist is right. Not for the page.
+
+## M15 — What does the finest cut say? (rung 6)
+
+**Answer.** The Speakers' last line about themselves, cut so fine that touch reads it as smooth: *what is put out is not asked back.* The message was never a question. No Builder read it; the Custodian never could.
+**False explanation.** The Seed-place is smooth because it is fused glass; there is nothing more to read.
+**Who knows.** No one.
+**Early clue.** "We made light before we could see it" (B, month 5); "the least useful word" (B); "because it is dark" (S5, X-binder-child); the lamp carried down by every reader.
+**Middle.** "Read all of it" (L1, L22).
+**Trigger.** Month 11, the lamp at the Seed.
+**Consequences.** The Custodian's cure is answered before he asks: a gift is not a question. Dan is the first reader who could read *all of it*.
 
 ## M14 — What did the Linguist choose? (rung 6)
 

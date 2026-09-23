@@ -10,7 +10,7 @@ _Written 2026-09-23. Must agree with `WORLD_TRUTH.md`._
 
 The Cut is the Speakers' language, carried as matter and written into rock by the seed (WORLD_TRUTH §4). It is not an alphabet. **A sign is a concept.** Signs are built from a small set of *elements*, so related concepts share strokes and later signs are half-guessable from earlier ones. **A word is two to four signs cut together**, and a word is a power because laced stone obeys it. The Builders learned it; the readers learned pieces of it; the Custodian is fluent and has been for longer than there have been humans.
 
-**Grammar carries cosmology** (RESEARCH lesson 22): the language *leads with the act*. Verb first, then the thing, then who or where. To the Speakers, what was done mattered more than who did it. Negation is placed *after* the word it negates, so a sentence is true until its last sign turns it. Giving and answering are one sign, because they had no concept of a reply that was not a gift. Those three facts are the script's whole personality and each of them is a plot device.
+**Grammar carries cosmology** (RESEARCH lesson 22): the language *leads with the act*. Verb first, then the thing, then who or where. To the Speakers, what was done mattered more than who did it, and so **a record never cuts a personal name**: names live only in rings, and a record says "the first", "this surveyor", "the fourth". That is why Dan knows every reader by trade for a year and reads their names for the first time in the list. Negation is placed *after* the word it negates, so a sentence is true until its last sign turns it. Giving and answering are one sign, because they had no concept of a reply that was not a gift. Those three facts are the script's whole personality and each of them is a plot device.
 
 ## 2. Visual system (flavour; Phase 4 decides the look)
 
@@ -120,8 +120,31 @@ Words are commands: verb + object (+ modifier). Forming one is the fixed ritual 
 | W5 | HOLD | KEEP-STONE | Holds a collapse, holds a door open, holds a device | m 6 | The Builders' Hold |
 | W6 | WAKE | (device-mark) WAKE | Wakes Builder devices: lifts, the counting-lock displays, the reading-tables | m 7 | The lift to the Deep |
 | W7 | QUIET | VOICE-NOT | Stills an area so a word can be used there without carrying; also the binding's root | m 8–9 | The quiet chambers beyond the memorial walls |
-| W8 | OPEN-WAY, LOUD | LOUD PATH-OPEN | The last counting door. The only time Dan is asked to be loud; with QUIET cast first it does not carry | m 10–11 | The last door |
+| W8 | OPEN-WAY, LOUD | LOUD PATH-OPEN | The last counting door, which opens only to a loud word that does not carry: QUIET first, then this. Its lintel says why: *be loud here and not be heard*, the binders' last test that the reader has learned the whole lesson | m 10–11 | The last door |
 | W9 | **KEEP-ALL** | KEEP-ALL | The binding. Cut once, at the Seed. | m 12 | The ending |
+
+### 5.1 Composition: the unlisted words (RESEARCH; Eternal Darkness's pleasure)
+
+The lintels tell Dan the words he needs. The language is a language only if he can also *try things*. These two-sign words are never required, never listed, and each is answered by the Site with one line and no progress. A wrong or meaningless pair is answered too ("the stone takes the cut and does nothing with it"). Authored so that experiments feel like speaking, not failing.
+
+| Word | Signs | The Site's answer |
+|---|---|---|
+| douse | FIRE-NOT | the nearest lamp-line goes dark, and relights when he leaves |
+| glimpse | SEE-DEEP | the next unlit room is smudged onto the map for a moment |
+| hum | VOICE-STONE | the hall hums at the pitch of the lacing until he lifts the rod |
+| count | COUNT-HERE | the wall shows a tally of everyone who has stood in this room; it is never large |
+| still | WATER-NOT | nothing: the Water was already still |
+| warm | FIRE-STONE | the wall under his hand is warm for a breath ("we felt the warmth on the wall") |
+| listen | HEAR-FAR | a long silence, then the sound of air from below, louder than usual |
+| my mark | MARK-OF-ONE | a small blank cell appears beside his hand; it stays; nothing fills it |
+| wake sleep | WAKE-SLEEP | the lamps flicker once, as if someone turned over |
+| open stone | OPEN-STONE | the stone takes the cut and does nothing with it |
+| read here | READ-HERE | one old record in this room re-renders with his current signs (a shortcut he can find himself) |
+| give light | GIVE-FIRE (reversed) | the lamps brighten and dim once: the place understood, and declined |
+| keep fire | KEEP-FIRE | the nearest lamp stays lit after he leaves the room (it always did; the Site is polite) |
+| remain (REMAIN) | KEEP-ONE-HERE | the place does not answer. Ever. |
+
+Ten to fifteen of these exist by month 6; the app never lists them; Dan finds them by trying.
 
 Words that exist, can be read, and are never cut by the player:
 - **REMAIN**: KEEP-ONE-HERE. The Custodian's word, and later the Linguist's. Cutting it on a gate does nothing ("the place does not answer"; a wrong guess gives a clue, nothing is lost).
@@ -160,10 +183,10 @@ Signs are earned by Keys (one per weekly target met) and occasionally by an arri
 | 6 | **KEEP**, SHUT, STILL; TOWARD | **HOLD** (KEEP-STONE) | **Mid-point.** His ring reads KEEP-ONE; lintels read KEEP VOICE-NOT ("keep silent"); the Salt-Cutter's "he [ ] my lamp" → "he kept my lamp"; the Builders' "the [ ]-work" → "the keeping-work" |
 | 7 | SEED, BREATH | **WAKE** | "The stone that came already cut" → "the seed"; the readers' "the bottom" is the Seed-place |
 | 8 | NAME, BUILD; **LOUD** | | The warning becomes fully readable: LOUD VOICE → FOUND. Every "[ ] cut" was "loud cut". The rings are *names* |
-| 9 | HOUSE, TEACH, LEARN, HEAL; ONE-WHO | **QUIET** (VOICE-NOT) | GIVE resolved: give = send = answer, "to put out from oneself"; the first word was always also "fire-answer" |
-| 10 | AGE/TIME; rare signs | | The two prepared words at the Seed are readable: KEEP-ALL and VOICE-GIVE-FAR |
-| 11 | (none new) | **OPEN-WAY, LOUD** | The last door |
-| 12 | (none new) | **KEEP-ALL** | The list of names; the coda |
+| 9 | TEACH, LEARN; ONE-WHO | **QUIET** (VOICE-NOT) | GIVE resolved: give = send = answer, "to put out from oneself"; the first word was always also "fire-answer". "He taught me" / "I learned" separate in every record for the first time |
+| 10 | (none new; the last rare signs are in the Deep's no-hand records) | **OPEN-WAY, LOUD** | The two prepared words at the Seed are readable: KEEP-ALL and VOICE-GIVE-FAR. The last door |
+| 11 | (no new sign: a new **reading**) | | **The finest cut.** With the lamp at the Seed, the smooth surface is dense text no Builder could read by touch: the Speakers' last line about themselves, *what is put out is not asked back*. It is made only of signs Dan has held for months |
+| 12 | (none new) | **KEEP-ALL** | The list, on the door's face: the readers' own names; the empty ring; the coda |
 
 ## 7. The first word, in detail (D-013: week 2–3, assembled, not handed)
 
@@ -171,8 +194,8 @@ RESEARCH lesson 16, made concrete.
 
 1. **Week 1, arrival 1 or 2: the lesson-wall.** In the first hall, at eye height, a carved clay lamp, and beside it one sign (LAMP). Below, a carved flame, and beside it one sign (FIRE). A picture-with-caption bilingual. Dan taps each: candidates offered (for the first: *lamp, cup, hand, fire*; for the second: *fire, light, sun, fork*). His guesses are recorded with a question mark.
 2. **Week 1, a High day (if any): a partial sign.** A cut on the lamp itself: the *hook* element, alone. The app says only that it is part of a sign not yet seen.
-3. **Week 2, first Key: GIVE.** The full sign appears on the Lamp Door's lintel beside FIRE, and on the rod's handle. Candidates: *give, send, answer, open*. (Any of the first three is "provisionally right"; the contest is the story.)
-4. **Week 2–3: the word.** The lintel shows the two signs together with a blank cut between them the shape of the rod's edge. Dan forms the word: FIRE, GIVE, lock. The lamps along the hall wake; the map fills; the Lamp Door's lintel lights; the door opens. **The place answering is the confirmation** of both guesses (Heaven's Vault's lagged confirmation, delivered by the world).
+3. **Week 2, first Key: GIVE.** The sign has been visible since day one, on the lesson-wall's example word and on the lintel on the hall's side wall beside FIRE; now it is *learnable*: candidates *give, send, answer, open*. (Any of the first three is "provisionally right"; the contest is the story.)
+4. **Week 2–3: the word.** The lintel shows the two signs with a blank cut between them the shape of the rod's edge, and only stone beneath the lintel. Dan forms the word: FIRE, GIVE, lock. The lamps along the hall wake; the map fills; the stone under the lintel opens. **The place answering is the confirmation** of both guesses (Heaven's Vault's lagged confirmation, delivered by the world).
 5. The lesson-wall was made by the Linguist for the next reader. Dan learns that in week 5–6 (ONCE, and her hand-mark), and its last line in month 12.
 
 ## 8. Partial signs (D-013)
@@ -204,6 +227,7 @@ A record shows its signs. Over them: the app's voice (describes what is physical
 | 8 | NAME | m 8 | The rings are names; the hand-mark on every ring is his |
 | 9 | GIVE (resolved) | m 9–10 | Give = answer; the first word and the forbidden word share a sign |
 | 10 | ALL | m 4 → m 12 | KEEP-ALL was readable from month 6; its meaning only lands at the Seed |
+| 11 | (light, not a sign) | m 11 | The Seed's smooth surface, by lamplight, is the finest cut: the message was never a question. Every sign in it is old. The pivot is the lamp, which is why the lamp was the first object |
 
 On the visit after a pivot sign is learned, the app surfaces the one old record with the biggest change, shows the span re-rendering, and lets Dan tap to reopen the whole record (RESEARCH lesson 9). Old content is the reward for new signs, and visits stay short.
 
