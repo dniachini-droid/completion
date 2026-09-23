@@ -148,3 +148,13 @@ Nine questions covering: the draft problem statement (below), a complete day and
 
 ### Round 2 sent (clarifiers)
 Six short questions: whether "it's all ok" means leisure may be counted or may be left alone; the proposed Claude course baseline (1 h = done, more = bonus); whether breakfast and cooking are main jobs or part of the day's rhythm; how to add one-off jobs; the proposed behaviour after absences and interruptions; and using bedtime to set tomorrow's capacity.
+
+### Round 2 findings (clarifiers)
+- **Leisure:** the app *may* count chosen hobbies (reef tank, coding for fun). Rest is acknowledged, never scored.
+- **Course:** 1 h = done; more is a bonus. Agreed.
+- **Breakfast and cooking:** part of the day's rhythm, not main jobs.
+- **One-off jobs:** typed as one quick line.
+- **Absences and interruptions:** both proposals accepted. No backlog; the world waits; a short "where you were" plus one welcoming step; weekly targets restart fresh. Real obligations can be added afterwards as a main job, and the day shrinks to fit.
+- **Bedtime → tomorrow's capacity:** "helpful", not intrusive.
+
+**Result:** enough to write `DESIGN_PRINCIPLES.md` (draft) and review `ANTI_FEATURES.md`. Both presented to Dan for approval.

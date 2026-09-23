@@ -3,7 +3,7 @@
 > **Authoritative project-progress tracker.** Read at the start of every session; update before ending every substantial session.
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 
-_Last updated: 2026-09-23 (Session 2: Phase 1 round 1 answered, round 2 sent)_
+_Last updated: 2026-09-23 (Session 2: Phase 1 rounds 1–2 done; principles drafted)_
 
 ## Current phase
 
@@ -15,7 +15,7 @@ Define the real-life behavioural problem the product solves, and the product rul
 
 ## Current session focus
 
-**Round 1 answered; short round 2 (clarifiers) sent** (see `DISCOVERY.md` → Phase 1). Round 1 covered (MASTER_BRIEF §39, sharpened by the player model):
+**Rounds 1–2 answered. `DESIGN_PRINCIPLES.md` drafted and `ANTI_FEATURES.md` reviewed (D-007); awaiting Dan's approval and his agreement to move to Phase 2.** Rounds covered (MASTER_BRIEF §39, sharpened by the player model):
 - What counts as a **complete day**, and how that changes with **capacity** (good vs low days).
 - What **"I can't start"** should give him (sub-minute starters, timers, the Pomodoro unit).
 - Which activities are **in the system** and which stay **outside** it (rest, leisure).
@@ -37,13 +37,13 @@ Game ideas that come up (e.g. Stargate-style "dialling" to start a session, rune
 ## Phase 1 exit criteria
 
 - [x] The core behavioural problem is stated in one or two sentences, and Dan agrees. (Round 1)
-- [ ] A definition of a **complete day**, including low-capacity days.
-- [ ] How capacity is expressed and what it changes.
-- [ ] What **"I can't start"** does.
-- [ ] What is tracked and what is deliberately **not** tracked (including rest and leisure).
-- [ ] How recurring activities, large projects, missed days and absences behave (non-punitive).
-- [ ] How much the app decides vs Dan decides; how tasks get in with minimal admin.
-- [ ] `docs/DESIGN_PRINCIPLES.md` written; `docs/ANTI_FEATURES.md` reviewed with reasons.
+- [x] A definition of a **complete day**, including low-capacity days.
+- [x] How capacity is expressed and what it changes.
+- [x] What **"I can't start"** does.
+- [x] What is tracked and what is deliberately **not** tracked (including rest and leisure).
+- [x] How recurring activities, large projects, missed days and absences behave (non-punitive).
+- [x] How much the app decides vs Dan decides; how tasks get in with minimal admin.
+- [x] `docs/DESIGN_PRINCIPLES.md` written; `docs/ANTI_FEATURES.md` reviewed with reasons. (Draft; awaiting Dan's approval.)
 - [ ] Dan agrees to move to Phase 2 (Game Design).
 
 ## Completed milestones
@@ -60,4 +60,4 @@ Game ideas that come up (e.g. Stargate-style "dialling" to start a session, rune
 
 ## Recommended next action
 
-**Dan answers Phase 1 round 2** (short clarifiers). Then draft `DESIGN_PRINCIPLES.md` and review `ANTI_FEATURES.md` for his approval.
+**Dan approves (or corrects) `DESIGN_PRINCIPLES.md` and `ANTI_FEATURES.md`, and agrees to close Phase 1.** Then open a PR into `main`, merge it, and start Phase 2 (Game Design) in a new session.

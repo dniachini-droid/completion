@@ -54,3 +54,21 @@
 - **Rationale:** Removes admin from Dan (anti productivity theatre) and keeps continuity in the repo rather than in chat.
 - **Consequences:** `main` is the source of truth between sessions. Feature branches are short-lived.
 - **Reversible:** Yes.
+
+## D-007 — Product rules from Phase 1 discovery
+- **Date:** 2026-09-23
+- **Context:** Phase 1 rounds 1–2. Dan answered directly on a complete day, capacity, "I can't start", planning, absences and weekly targets.
+- **Decision:** Adopt `DESIGN_PRINCIPLES.md` (15 principles) and the reviewed `ANTI_FEATURES.md`. Key rules:
+  - About 3 main jobs make a normal day; outside + a real meal makes a low day.
+  - Capacity is pre-set from bedtime and changeable with one tap.
+  - "I can't start" = a story reveal, then one tiny physical step.
+  - Weekly targets that reset fresh; no backlog.
+  - 1 h of course work = done.
+  - The app suggests and Dan chooses; one-offs are typed as one line.
+  - Rest is acknowledged, not scored.
+  - The app rewards bedtime behaviour, not sleep outcomes.
+- **Alternatives:** More interview rounds, or leaving these open until Phase 2.
+- **Rationale:** Dan's answers were clear and consistent with the player model. The remaining unknowns (notifications, the exact number of jobs, tone on low days) are better tested in use (D-004, D-005).
+- **Consequences:** Phase 2 mechanics must fit these principles. The course's 4 h/day ambition is a ceiling, not a target.
+- **Reversible:** Yes. Change a principle through a new decision entry.
+- **Status:** Principles pending Dan's final approval at the end of Phase 1.

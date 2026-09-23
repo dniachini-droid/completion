@@ -3,7 +3,7 @@
 > Living model of the player. Updated after each discovery round.
 > Rule: only things Dan has actually said go under *Explicitly stated*. Inferences go under hypotheses, and stay there until confirmed.
 
-_Last updated: 2026-09-23 — after Phase 1 round 1 (product). Phase 0 synthesis confirmed; see `DISCOVERY.md`._
+_Last updated: 2026-09-23 — after Phase 1 round 2 (product). Phase 0 synthesis confirmed; see `DISCOVERY.md`._
 
 > **Sensitivity note:** this file contains health information Dan shared for design purposes. Keep it to what the design needs. The repo is private (verified 2026-09-23). Dan was offered a reduction in detail and raised no objection.
 
@@ -98,6 +98,14 @@ _Last updated: 2026-09-23 — after Phase 1 round 1 (product). Phase 0 synthesis
 - Weekly targets: Spanish 1 lesson + 1 h study; gym 4× with sauna after; meal prep Sundays, cooking 2–3×, breakfast most days; Claude Code course (24 weeks) ideally 4 h/day "like a job", but "even 1 hour a day is good"; he finds it interesting, not a chore.
 - Planning: the app suggests the day's few things; he accepts or swaps from a short menu.
 - Likes a morning start moment and an evening close moment that rewards winding down.
+
+*From Phase 1 round 2:*
+- The app may count chosen hobbies (reef tank, coding for fun); rest acknowledged, never scored.
+- Course: 1 hour a day counts as done; more is a bonus.
+- Breakfast and cooking are part of the day's rhythm, not main jobs.
+- Adds one-off jobs by typing a line.
+- Accepts: no backlog after absences, weekly targets restart fresh, and unplanned obligations count as a main job.
+- Pre-setting tomorrow's capacity from bedtime feels helpful, not like being watched.
 
 ## Strong hypotheses
 
