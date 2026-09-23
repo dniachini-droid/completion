@@ -4,41 +4,35 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-24 (morning review done; story and tools agreed; three branches merged)_
+_Last updated: 2026-09-24 (Phase 3 closed; Phase 4 opened; taste session next)_
 
 ## Current phase
 
-**PHASE 3 — NARRATIVE AND WORLD** (Phase 2 closed 2026-09-23, D-014)
+**PHASE 4 — EXPERIENCE AND ART** (Phase 3 closed 2026-09-24, D-026)
 
 ## Current objective
 
-Create the story the game runs on. It must be unique and connected, and it must go somewhere (D-015). Scope before the first playable (D-004): the thematic core, the central mystery's full truth and ending, the revelation architecture, the script and signs system, the linked lives (the playable's two in full), and the truth behind every clue the first playable plants.
+Find how the game looks, moves and feels (MASTER_BRIEF §57–58). First a live taste session with Dan, then a long run that builds three genuinely distinct visual directions as real screens, each critiqued and revised (D-022). Work order: `design/PHASE4_PLAN.md`.
 
 ## Current session focus
 
-**Morning review, 2026-09-24.** Dan confirmed the story (*The Long Answer*) and all seven morning answers, and approved the game bible (D-024). He approved all ten tools proposals from the research (D-023): the satchel loophole is closed, streaks became a trail that never visibly breaks, weekly runs were dropped, the Chronicle is the week close, and the playable test runs 5–6 weeks. The overnight story branch, the tools-research branch and the Phase 2 drafts-review branch are merged. Decisions from the tools branches were renumbered D-020 to D-022 so they don't clash with the story's D-016 to D-019.
+**2026-09-24.** Morning review done. Dan confirmed the story and approved the game bible (D-024), and approved all ten tools changes (D-023). Three branches were merged into `main` (PR #4). Then the last Phase 3 jobs were done: the tools got world names (a delve, a breather, the satchel, cairns, finds, the daybook; D-025), and an app-name shortlist was written (`narrative/NAMES.md`; choose whenever you like). Phase 3 closed (D-026).
 
-**Last Phase 3 jobs:** in-world names for the tools (the delve, the satchel, the trail, relics, the Chronicle), and the app-name shortlist (D-021, `narrative/NAMES.md`).
+**Next: the taste session** (20–30 minutes, live, `design/PHASE4_PLAN.md` Part 1), then the long visual run.
 
 ## Do NOT work on yet
 
-- Application code, scaffolding, frameworks, databases, tech stack (Phase 7+).
-- Art direction and visual design (Phase 4). Visual notes only as flavour. *Planned (D-022): once Phase 3 closes, a short taste session with Dan, then a long overnight run building three visual directions as real screens.*
-- ~~Product naming.~~ Brought forward at Dan's request (D-021): a spoiler-free shortlist; Dan chooses whenever he's ready (by Phase 5).
-- Full chapters of prose beyond sample fragments (D-004).
+- Application code, scaffolding, frameworks, databases, tech stack (Phase 7+). Static mock-up screens for Phase 4 are fine.
+- Showing any sealed story content on a screen (D-015). Screens use the game bible, the terminology and the first region only.
+- More story depth beyond what the playable needs (D-004). Pending, and not urgent: bring week 6 of the sealed clue ledger to full detail before the build (D-023); decide the "company at work" during a delve (later).
 
-## Phase 3 exit criteria
+## Phase 4 exit criteria
 
-- [x] Research into what makes long mysteries work, and what Dan's favourite works do (`narrative/RESEARCH.md`).
-- [x] Three pitches written; one chosen and **confirmed by Dan** (`narrative/PITCHES.md`, D-016, D-024).
-- [x] Hidden truth, ending, and revelation map to the end (sealed).
-- [x] Script, signs and words system, including the first word in week 2–3 (sealed).
-- [x] Linked lives defined; the first playable's two in full (sealed).
-- [x] Every clue the first playable plants has a recorded truth (`sealed/CLUE_LEDGER.md`; week 6 to be brought to full detail before the build, D-023).
-- [x] Adversarial review done; no contradictions (`sealed/REVIEW.md`).
-- [x] Player-safe `GAME_BIBLE.md` written, and Dan has approved it (D-024).
-- [ ] Tools named in the world; app-name shortlist written.
-- [ ] Dan agrees to move to Phase 4 (Experience and art).
+- [ ] Taste session done; answers in `design/ART_DIRECTION.md`.
+- [ ] Three directions with real screens, critiqued and revised.
+- [ ] Dan picks or blends one.
+- [ ] `design/UX_PRINCIPLES.md`, `design/DESIGN_SYSTEM.md`, `design/INTERACTION_NOTES.md` filled in enough for Phase 5.
+- [ ] Dan agrees to move to Phase 5 (Concept synthesis).
 
 ## Completed milestones
 
@@ -54,12 +48,15 @@ Create the story the game runs on. It must be unique and connected, and it must 
 - 2026-09-23 — Productivity tools built into the world (D-020); app naming brought forward (D-021); Phase 4 long visual run planned (D-022).
 - 2026-09-23 — Overnight story run: research, three pitches, the whole story written and sealed, fifteen review passes (D-016 to D-019).
 - 2026-09-24 — Tools research adopted (D-023). Story confirmed and game bible approved (D-024). Three branches merged into `main`.
+- 2026-09-24 — Tools named in the world (D-025); app-name shortlist written (`narrative/NAMES.md`).
+- 2026-09-24 — **Phase 3 complete** (D-026). Phase 4 opened.
 
 ## Unresolved blockers
 
 - None.
-- Housekeeping (non-blocking): rename the GitHub repo once a product name exists. (Privacy verified: private.)
+- Housekeeping (non-blocking): rename the GitHub repo once a product name exists (`narrative/NAMES.md`). (Privacy verified: private.)
+- Open for Dan whenever he likes: the app name (`narrative/NAMES.md`).
 
 ## Recommended next action
 
-**Claude:** name the tools in the world and write the app-name shortlist (`narrative/NAMES.md`), then ask Dan to close Phase 3.
+**Dan: start a new session and paste:** "Read CLAUDE.md and docs/CURRENT_STATE.md, then run the Phase 4 taste session with me from docs/design/PHASE4_PLAN.md."

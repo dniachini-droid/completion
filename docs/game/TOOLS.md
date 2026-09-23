@@ -1,7 +1,7 @@
 # Tools — productivity features, built into the world
 
 > Phase 2 amendment (D-020), revised with the tools research (D-023, `TOOLS_RESEARCH.md`). The best parts of productivity apps, each one **part of the game**, not bolted on. Dan: "all this stuff I kind of want integrated. Not just plonked into the app."
-> Names in *italics* are placeholders. The real names come from the chosen world (`narrative/TERMINOLOGY.md`).
+> In-world names (D-025, `narrative/TERMINOLOGY.md`): the timer is **a delve** (its break **a breather**, four in one sitting **a long delve**), lists are **the satchel**, the trail is **cairns**, relics are **finds**, the Chronicle is **the daybook**. This file keeps the design words.
 
 _Status: agreed by Dan, 2026-09-24._
 
