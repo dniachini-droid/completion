@@ -7,27 +7,27 @@ _Written 2026-09-23._
 
 | Wk | # | Where | What the count opens | Told line (his hand) or description | Ties to |
 |---|---|---|---|---|---|
-| 1 | 1 | Salt Gallery, inner count | The stretch of tally beyond S1 (S2 next week) | — | S2 |
+| 1 | 1 | Salt Gallery, inner count | The stretch of tally beyond S1 (S2 next week); the first count to fill (the app, ARR1 1.6: "On the salt, a row of cut strokes. The first stroke is full of light.") | — | S2 |
 | 1 | 2 | Salt Gallery, the pick niche | A salt-pick, bronze, the edge worn to a curve; the handle wrapped in cord gone black | *Told: my pick. The handle my father wound.* (at wk 1: *[ ] [ ] [ ]: [a pick] [ ] [ ]; [ ] [a cord] [ ], [a father].*) | S (the tool that cut with his hand over it) |
 | 1 | 3 | The Lamp Hall, a low niche under the ledge | A clay saucer, the twin of the lamp's foot, empty | (wordless) | The lamp: it once sat in this |
 | 1 | 4 | The Survey Cut, under the cot | (seen, not sealed: in the open at ARR1 1.C) Her boots, laced, dry, side by side | (wordless; the app: "side by side, as if for the morning") | L15 (she went down in other shoes) |
 | 1 | 5 | The Mouth, a recess in the shaft wall | A railway company's brass tag, stamped with a shaft number, hung on a nail | (wordless) | X-padlock; the trial shaft |
-| 2 | 1 | The Survey Cut, her sealed box | The glossary sheet for GIVE, PERSON, ONE, ME; notebook pages for weeks 3–4 | — | **GIVE, PERSON, ONE, ME** |
-| 2 | 2 | Salt Gallery, the tally-stick niche | The daughter's tally-stick, notched in fives | *The child's voice: father counts at night; four and four; the owl's feet.* | X-daughter |
+| 2 | 1 | The Survey Cut, the tin box on the cot (seen at ARR1 1.C) | The glossary sheet for GIVE, PERSON, ONE, ME: four marks drawn large, a word under three and only a question mark under the fourth (GIVE); notebook pages for weeks 3–4 | — | **GIVE, PERSON, ONE, ME** |
+| 2 | 2 | Salt Gallery, the tally-stick niche | The daughter's tally-stick, notched in fives | *The child's voice: father counts at night; four and four; the owl's feet.* (at wk 2, ONE held: *[ ] [ ]: [a father] [ ], [ ] [ ]; four four; [an owl] [ ].*) | X-daughter |
 | 2 | 3 | Salt Gallery, a crack above the wife's ring | A bone comb, two teeth gone | *Hers. I asked not for it. He left it under the ring.* (at wk 2, GIVE still a guess: *[a comb] [ ] [ring]. I [ ] [ ]. He [give?] [ ] [ ]; [ ] [ring].*) | S2, the wife's ring |
 | 2 | 4 | The Lamp Hall, the corner | A smooth place on the polished wall where the marks are rubbed to nothing, at the height of a long hand | (wordless; the app: "rubbed by touch, not by tools") | C-04a |
-| 2 | 5 | The Survey Cut, the stove's box | A tin of tea, a spoon, a candle stub; a shopping list in her hand: batteries, batteries, tape | (wordless) | L5 |
-| 3 | 1 | The head of the Stair, the niche | The Salt-Cutter's second lamp (unlit, newer clay) and a lesson-tablet: a doorway beside a mark, a bar beside a mark | — | **HERE, DOOR**; S7 |
+| 2 | 5 | The Survey Cut, the stove's box (the stove's first sight; it is not in ARR1 1.C) | A tin of tea, a spoon, a candle stub; a shopping list in her hand: batteries, batteries, tape | (wordless) | L5 |
+| 3 | 1 | The head of the Stair, the niche | The Salt-Cutter's second lamp (clay, unlit, its glaze unchipped) and, on the lid, a lesson-tablet: a doorway beside a mark, a bar beside a mark | — | **HERE, DOOR**; S7 |
 | 3 | 2 | Salt Gallery, next stretch | The tally continues (S3) | — | S3 |
 | 3 | 3 | The Stair's first turn, a recess | A coil of measuring cord, knotted every ten paces, the knots stiff | *The second's cord. Dropped here; he came not back for it.* | V (the cord) |
 | 3 | 4 | The Lamp Hall, behind the lesson-wall's foot | A stub of her stone pencil (a broken rod-edge) and a scatter of chips | (wordless; the app: "the wall was cut with this") | L1 |
-| 3 | 5 | The Survey Cut, a ledge | Three tape cassettes, labelled in her hand: DAY 3 (HIM), DAY 6 (IT WORKS), DAY 14 | (wordless; dead) | L3, L5, L7 |
+| 3 | 5 | The Survey Cut, a ledge | A box of tape cassettes (their first sight; not in ARR1 1.C), three labelled in her hand: DAY 3 (HIM), DAY 6 (IT WORKS), DAY 14 | (wordless; dead) | L3, L5, L7 |
 | 4 | 1 | The Stair's second niche | A lesson-tablet: a wedge beside a picture of a well | — | **DEEP** |
-| 4 | 2 | Salt Gallery, past the split | The salt block with a mark in it | *Told: found in the face past the split; not for sale.* | X-neighbour |
-| 4 | 3 | The Survey Cut, the pinned page | (seen, not sealed: pinned in the open at ARR1 1.C) The printed email (X-colleague), its header showing *To: I. Halloran*: "Come home. Nobody's going to fund this. The department's asked where you are." | (paper) | the institute; the one name on the list Dan can verify (R10) |
+| 4 | 2 | Salt Gallery, past the split | The salt block, with a hook closed on a dot cut into its face (his hand-mark) | *Told: found in the face past the split; not for sale.* (at wk 4: *[ ]: [ ] [a salt face] [a crack] [ ]; give [ ].*) | X-neighbour |
+| 4 | 3 | The Survey Cut, a recess above the cot, with a count | The printed email (X-colleague), pinned inside the recess; its first sight is here, not at ARR1 1.C. Its header shows *To: I. Halloran*: "Come home. Nobody's going to fund this. The department's asked where you are." | (paper) | the institute; the one name on the list Dan can verify (R10) |
 | 4 | 4 | The Lamp Hall, the far end | The Lower Door's count, close: the strokes, the RETURN mark | (the app describes; nothing opens yet) | C-05, C-23 |
 | 4 | 5 | Salt Gallery, a hollow in the salt | A child's clay animal, a sheep, one leg mended with salt | *Told: my child's. She left it for the [owl].* (at wk 4: *[ ] [ ] one: [a sheep] [ ] [ ] [ ] me; [ ] gave [ ] here [ ] [an owl].*) | S6, X-daughter |
-| 5 | 1 | The second-flight chamber | A lesson-tablet: a bar-with-a-tick beside a setting sun; a bar-with-a-drop beside a road; a path with the drop at the far end | — | **ONCE, PATH, GO** |
+| 5 | 1 | The Stair, the recess under the second turn (the second-flight chamber; seen at ARR1 4.1) | A lesson-tablet: a bar-with-a-tick beside a setting sun; a bar-with-a-drop beside a road; a path with the drop at the far end | — | **ONCE, PATH, GO** |
 | 5 | 2 | Salt Gallery, the sealed record | S5 behind a salt crust | — | S5 |
 | 5 | 3 | The Stair, the gap's sill | Wax crumbs and a broken stylus | *Told: the child's. He cut the marks again here, through [the gap].* (at wk 5: *[ ] [ ] [ ]: [a stylus] [ ] [ ] · [ ] [ ] [ ] [ ] here, [a gap].*) | X-boy |
 | 5 | 4 | The Survey Cut, the notebook's back pocket | A folded map of the hill with the shaft marked in pen and, in another pen, the words SALT? and TUNNEL? | (paper) | the three intrusions |

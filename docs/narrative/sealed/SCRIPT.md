@@ -109,7 +109,7 @@ Later signs (months 8–9, rare): TEACH (give+mark), LEARN (take+mark), ONE-WHO 
 | D1 | **Name-ring** | wk 1 (recognised, not read) | A ring around a sign-group: a person's name. Dan sees rings on every wall from day one |
 | D2 | Place-bar | wk 6 | A bar under a group: a place-name |
 | D3 | Device-mark | m 4 | Small wedge-and-fork above a group: a made thing |
-| D4 | **Hand-mark** | wk 4 | A small hook in the cell's corner: *cut by*. A signature. The Custodian's hand-mark is a tiny KEEP-ONE. The Surveyor's and the Linguist's differ |
+| D4 | **Hand-mark** | wk 4 | A small hook in the cell's corner: *cut by*. A signature. The Custodian's hand-mark is a tiny KEEP-ONE (the app's fixed name for it: *a hook closed on a dot*). The Surveyor's and the Linguist's differ (hers, the app: *a hook with a tail*) |
 | D5 | Number bundle | wk 8 | The Builders count in eights (four long fingers a hand): strokes to seven, a bar across for eight, a wedge for sixty-four |
 
 **Total by the end of year 1:** ~52 signs plus 5 marks: within the 48–60 the research recommends and consistent with 1–2 signs a week.
@@ -172,7 +172,7 @@ Words that exist, can be read, and are never cut by the player:
 
 Signs are earned by Keys (one per weekly target met) and occasionally by an arrival or a record; the *order* is authored and cannot be skipped (D-013). If Dan earns Keys faster than the schedule, sealed things ahead in the Site absorb the extra Keys first (gates, niches, sealed records); the next sign is always the next in this order. If slower, the schedule stretches; nothing waits.
 
-**A Key always opens something already seen and sealed** (CORE_LOOPS). So every Key-delivered sign in weeks 1–13 is *inside* a sealed thing Dan has seen: her sealed box (week 2: the glossary sheet for GIVE, PERSON, ONE, ME), the Stair niche (week 3: a lesson-tablet with HERE and DOOR beside the second lamp), the second-flight chamber (week 5: the tablet for ONCE and PATH/GO), the Salt Gallery's sealed record (week 6: OPEN, EAT), the Surveyor's niche (week 7: UP, STONE, CHILD), the Water niche (week 8: SEE, COUNT, DAY, numbers), the Reading Room tablets (week 9: NOT), and so on down the Site. The sign is the thing in the box.
+**A Key always opens something already seen and sealed** (CORE_LOOPS). So every Key-delivered sign in weeks 1–13 is *inside* a sealed thing Dan has seen: her sealed box (week 2: the glossary sheet for GIVE, PERSON, ONE, ME), the Stair niche (week 3: a lesson-tablet with HERE and DOOR beside the second lamp), the recess under the second turn (the second-flight chamber; week 5: the tablet for ONCE and PATH/GO), the Salt Gallery's sealed record (week 6: OPEN, EAT), the Surveyor's niche (week 7: UP, STONE, CHILD), the Water niche (week 8: SEE, COUNT, DAY, numbers), the Reading Room tablets (week 9: NOT), and so on down the Site. The sign is the thing in the box.
 
 ### Beat level: the first three months
 
@@ -213,11 +213,11 @@ Note on ASK (week 17): ASK is compositional (QUESTION + GIVE), so its tablet sho
 RESEARCH lesson 16, made concrete.
 
 1. **Week 1, arrival 1 or 2: the lesson-wall.** In the first hall, at eye height, a carved clay lamp, and beside it one sign (LAMP). Below, a carved flame, and beside it one sign (FIRE). A picture-with-caption bilingual. Dan taps each: candidates offered (for the first: *lamp, cup, hand, fire*; for the second: *fire, light, sun, fork*). His guesses are recorded with a question mark.
-2. **Week 1, a High day (if any): a partial sign.** A cut on the lamp itself: the *hook* element, alone. The app says only that it is part of a sign not yet seen.
+2. **Week 1, a High day (if any): a partial sign.** A cut on the lamp itself: the *hook* element, alone. The app describes it (*a hook, open*) and says nothing more.
 3. **Week 2, first Key: GIVE.** The sign has been visible since day one, on the lesson-wall's example word and on the lintel on the hall's side wall beside FIRE; now it is *learnable*: candidates *give, send, answer, open*. (Any of the first three is "provisionally right"; the contest is the story.)
 4. **Week 2–3: the word.** The lintel shows the two signs with a blank cut between them the shape of the rod's edge, and only stone beneath the lintel. Dan forms the word: FIRE, GIVE, lock. The lamps along the hall wake; the map fills; the stone under the lintel opens. **The place answering is the confirmation** of both guesses (Heaven's Vault's lagged confirmation, delivered by the world).
 5. The lesson-wall was made by the Linguist for the next reader. Dan learns that in week 5–6 (the formula's absence, her hand-mark, and L8), and its last line in month 9, meant in full at month 12.
-6. **The candidates.** "Open" is the tempting wrong candidate for GIVE, and the world's answer (a door opens) seems to confirm it. It dies in week 5: her sheet in the box says *give?*, and S5 shows the same sign in a set of three with no door anywhere near it; the app rejects "open" then, as a one-line beat. A wrong gloss can survive a working word; that is deliberate, and it is the only time it happens in the first playable.
+6. **The candidates.** "Open" is the tempting wrong candidate for GIVE, and the world's answer (a door opens) seems to confirm it. Her sheets do not settle it for him: her Day 1 sheet skips the span ("light …?"), the box sheet's fourth mark has a question mark and no word, and her "gave" appears first on the Day 9 sheet (S4, week 4), after the door has already opened. It dies in week 5: S5 shows the same sign in a set of three with the lamp's and the flame's marks and no door anywhere near it; the app rejects "open" then, as a one-line beat in the marks screen. A wrong gloss can survive a working word; that is deliberate, and it is the only time it happens in the first playable.
 
 ## 8. Partial signs (D-013)
 
