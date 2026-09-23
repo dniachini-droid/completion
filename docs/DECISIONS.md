@@ -116,3 +116,16 @@
 - **Rationale:** Each would be a number with no meaningful change behind it, or would duplicate capacity and "day complete". Shops add decisions Dan doesn't care about and invite farming.
 - **Consequences:** Simpler first playable. Progress must be *felt* through the map, powers and story, so those must be visible and satisfying.
 - **Reversible:** Yes. If in use Dan misses a sense of size, add one number that names what it changes.
+
+## D-013 — Phase 2 review: Keys vs words, early first word, partial signs, the playable test
+- **Date:** 2026-09-23
+- **Context:** Reviewing the Phase 2 drafts, Claude raised four gaps; Dan agreed with all four recommendations.
+- **Decision:**
+  1. Every sealed thing shows whether it needs a **Key** (real life) or a **word** (knowledge); the largest gates need both.
+  2. The **first word** arrives in week 2–3, not month 2; later words slow to about one a month.
+  3. Deep pushes on High days can yield **partial signs**, completed by the next Key, never ahead of the story's authored order.
+  4. The first playable is tested for **3–4 weeks**; the app notes starts, avoided jobs done, "I can't start" use and returns after gaps, without admin; then a short chat with Dan.
+- **Alternatives:** keep Keys and words overlapping; first word at month 2; High days yield only more records; leave the test open-ended.
+- **Rationale:** Clarity of goals (P1); new powers are what Dan loves most; D-011 needs big days to pay off in something usable; rule 14 needs a defined test.
+- **Consequences:** `CORE_LOOPS.md` Part 4, `PROGRESSION.md`, `ECONOMY.md` and `GAME_DESIGN.md` updated. Phase 3 must author an early first word and partial-sign states.
+- **Reversible:** Yes.

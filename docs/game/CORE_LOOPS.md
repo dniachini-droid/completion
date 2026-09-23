@@ -205,7 +205,7 @@ Claude's honest view, for Dan to push against: a blend like that is probably the
 
 ## Part 4 — The chosen loop: *Explore · Decode · Connect* (D-010)
 
-_Working name only. Draft for Dan's review._
+_Working name only. Agreed with Dan 2026-09-23 (D-010–D-013)._
 
 ### The fantasy
 "Every real hour takes me further into a sealed place, and what I find there is written in a script only I am learning. The records are the lives of people from different ages, and slowly I see they are one story."
@@ -226,7 +226,7 @@ real job done ─► a step into the Site ─► something is there (a passage, 
       ▲                                                                                │
       └──────────── a gate ahead you can see, and roughly what it needs ◄──────────────┘
 ```
-Each return to the app takes **under a minute**, and every one ends by showing something ahead that Dan can see but not yet reach.
+Each return to the app takes **under a minute** (a decode included: a record fragment is short enough to read in that time; longer records are split across visits), and every one ends by showing something ahead that Dan can see but not yet reach.
 
 ### Three sizes of reward
 | Size | Earned by | What Dan gets |
@@ -234,6 +234,8 @@ Each return to the app takes **under a minute**, and every one ends by showing s
 | **Step** | each main job, and each focus session after day complete | the map extends; often a small find or a line of script |
 | **Arrival** | day complete | a place worth arriving at: a chamber, a view, a record whose fragment you can decode |
 | **Key** | each weekly target met; major milestones | opens something **already seen and sealed**: a gate, a sealed record, a new sign |
+
+**What opens what (D-013).** Every sealed thing shows what it needs: a **Key** (earned by living the week) or a **word** (earned by learning). The largest gates need both. Dan can always see which, so the goal is clear.
 
 Avoided jobs (admin, Spanish, housework, costly one-offs) always turn a step into a **find**: never just a corridor. This is the "aim at what's avoided" pull (P5), done through reward, not pressure.
 
@@ -249,7 +251,7 @@ Kept small, one tap each, and never required to progress:
 |---|---|---|
 | **Low** | 2 (outside + a real meal) | A short, safe push that still **arrives** somewhere. "That was enough. I still moved forward." |
 | **Normal** | about 3 | A full arrival. |
-| **High** | up to 5, plus open-ended sessions | Dan can call a **deep push** in the morning: a route to places a normal day doesn't reach (deeper chambers, rarer records, harder gates). |
+| **High** | up to 5, plus open-ended sessions | Dan can call a **deep push** in the morning: a route to places a normal day doesn't reach (deeper chambers, rarer records, harder gates, and sometimes **part of a sign**, D-013). |
 
 - **After day complete, effort keeps counting.** Every further focus session is another step. There is **no daily cap**.
 - **Anti-farming on high days** is gentle, and all of it is automatic:
@@ -282,8 +284,8 @@ Systems unfold gradually (MASTER_BRIEF §262), so week one is simple:
 | When | New to Dan |
 |---|---|
 | Week 1 | The Site, steps, arrivals, one record, one gate he can see. |
-| Weeks 2–4 | The first signs; decoding; the first Key opens a gate. Route choices begin. |
-| Month 2 | Enough signs to try **words** on gates. The first time two records turn out to be about the same event, from different ages. |
+| Weeks 2–4 | The first signs; decoding; the first Key opens a gate. Route choices begin. **The first word** (week 2–3, D-013) opens something. |
+| Month 2 | More words to try on gates. The first time two records turn out to be about the same event, from different ages. |
 | Month 3 | Re-reading: a new sign changes an old record's meaning. Deep pushes lead somewhere important. |
 | Months 4–6 | A second region that reframes the first. The first major revelation about who the lives were. |
 | Months 6–12+ | The lives converge on the central mystery. Big real milestones (finishing the course) open the largest gates. |
@@ -295,4 +297,4 @@ A big real project (the 24-week Claude course, a module of it, restarting Spanis
 After days away: a short "where you were" (last place, the gate you were looking at, one unfinished record), and one small welcoming step. No counts, no summary of what was missed.
 
 ### Content load
-Better than any single candidate. The Site gives **systemic** beats (passages, gates, routes) that need design but little prose. Records need **authored** prose, but only at arrivals and Keys, not every step. Rough year: ~250 arrivals, of which perhaps half carry a record fragment. Phase 3 plans the writing around that rate.
+Better than any single candidate. The Site gives **systemic** beats (passages, gates, routes) that need design but little prose. Records need **authored** prose, but only at arrivals and Keys, not every step. Rough year: ~250 arrivals, of which perhaps half carry a record fragment, plus up to ~250 sealed things for Keys to open (5 targets × 52 weeks), and a Site large enough for uncapped High days. Phase 3 plans the writing around that rate.

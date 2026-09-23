@@ -3,7 +3,7 @@
 > How a real action becomes something the game responds to, and how anti-farming works without admin. Phase 2.
 > Applies to the chosen loop (`CORE_LOOPS.md` Part 4).
 
-_Status: draft for Dan's review, 2026-09-23. "Quest" is a design word here; what the app calls these is a Phase 3–4 choice._
+_Status: **agreed with Dan** 2026-09-23. "Quest" is a design word here; what the app calls these is a Phase 3–4 choice._
 
 ## Kinds
 | Kind | What it is | Where it comes from | Reward |

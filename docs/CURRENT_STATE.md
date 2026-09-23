@@ -23,7 +23,8 @@ Design the core game: how real-life action moves the game, and why Dan would wan
 
 **Session 4 (2026-09-23):**
 - ✅ Consistency pass: Keys come only from weekly targets and milestones (avoided jobs give a *find*); extra sessions are started on a job so the app knows their kind; stale XP question closed.
-- ⏳ Four design points put to Dan: Keys vs words, first-word timing, what a High day yields when signs are Key-paced, and how long the first playable test runs and what it measures.
+- ✅ Dan agreed all four recommendations (D-013): Keys vs words, first word in week 2–3, partial signs on High days, a 3–4 week playable test. Drafts now agreed.
+- ⏳ Asking Dan to close Phase 2 and start Phase 3.
 
 ## Do NOT work on yet
 
@@ -34,16 +35,15 @@ Design the core game: how real-life action moves the game, and why Dan would wan
 
 ## Phase 2 exit criteria
 
-`[~]` = drafted, awaiting Dan's review.
 
 
 - [x] 2–3 candidate core loops written and compared; Dan has chosen one (or a blend). (D-010)
-- [~] Daily loop defined, including low days, "I can't start", and the morning and evening moments.
-- [~] Weekly and long-term loops defined (how the game sustains months; systems unfold gradually).
-- [~] Progression defined; every axis names the meaningful change it creates, and meaningless numbers are deleted.
-- [~] Economy defined with the fewest possible resources (source, sink and purpose for each).
-- [~] Quest system and anti-farming defined, with no admin for Dan.
-- [~] What the first playable needs is listed.
+- [x] Daily loop defined, including low days, "I can't start", and the morning and evening moments.
+- [x] Weekly and long-term loops defined (how the game sustains months; systems unfold gradually).
+- [x] Progression defined; every axis names the meaningful change it creates, and meaningless numbers are deleted.
+- [x] Economy defined with the fewest possible resources (source, sink and purpose for each).
+- [x] Quest system and anti-farming defined, with no admin for Dan.
+- [x] What the first playable needs is listed.
 - [ ] Dan agrees to move to Phase 3 (Narrative and world).
 
 ## Completed milestones
@@ -55,6 +55,7 @@ Design the core game: how real-life action moves the game, and why Dan would wan
 - 2026-09-23 — **Phase 1 complete.** Two interview rounds; problem statement agreed; `DESIGN_PRINCIPLES.md` and `ANTI_FEATURES.md` approved by Dan (D-007, D-009).
 - 2026-09-23 — D-008: the story gets dedicated deep, research-led sessions in Phase 3.
 - 2026-09-23 — Phase 2: three candidate core loops compared; Dan chose a blend (D-010); low floor, high ceiling (D-011); no XP/levels/HP/MP/currencies (D-012).
+- 2026-09-23 — Phase 2 drafts reviewed and agreed (D-013).
 
 ## Unresolved blockers
 
@@ -63,4 +64,4 @@ Design the core game: how real-life action moves the game, and why Dan would wan
 
 ## Recommended next action
 
-**Dan reviews the Phase 2 drafts (`game/GAME_DESIGN.md` is the entry point); revise, then ask whether to close Phase 2 and move to Phase 3.**
+**Dan confirms closing Phase 2; then open a PR into `main`, merge it, and start Phase 3 in a fresh session (long, research-led story sessions, D-008).**

@@ -2,7 +2,7 @@
 
 > Every currency or resource: source, sink, purpose, reason to exist, exploit risks, relation to real tasks. Fewer is better. Phase 2.
 
-_Status: draft for Dan's review, 2026-09-23._
+_Status: **agreed with Dan** 2026-09-23 (D-010–D-013)._
 
 ## Decision: no currencies (D-012)
 
@@ -17,8 +17,8 @@ Why:
 | Thing | Source | Is it spent? | Why it exists | Exploit risk and guard |
 |---|---|---|---|---|
 | **Steps** | main jobs; focus sessions after day complete | No: a step *is* movement | Makes every real action move the world | Time can't be split cheaply; rewards attach to slots; same-kind work slows after ~2 extra hours |
-| **Keys** | weekly targets met; big milestones | Used once, on a sealed thing already seen | Makes the week matter without a meeting | Weekly targets are Dan's own real commitments; milestones are confirmed with one tap |
-| **Signs** | Keys, some arrivals and records | No: permanent knowledge | Reading, re-reading and powers | Paced by authored placement, so they can't be farmed |
+| **Keys** | weekly targets met; big milestones | Used once, on a sealed thing already seen that shows it needs a Key (D-013) | Makes the week matter without a meeting | Weekly targets are Dan's own real commitments; milestones are confirmed with one tap |
+| **Signs** | Keys, some arrivals and records; *partial* signs from deep pushes (D-013) | No: permanent knowledge | Reading, re-reading and powers | Paced by authored placement, so they can't be farmed |
 
 ## Revisit when
 A real need appears in use that nothing above covers. Not before (rule 12, earn complexity).

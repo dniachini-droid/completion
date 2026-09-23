@@ -2,7 +2,7 @@
 
 > Overall game design. Phase 2. The detail lives in the linked docs; this page is the map.
 
-_Status: draft for Dan's review, 2026-09-23._
+_Status: **agreed with Dan** 2026-09-23 (D-010–D-013)._
 
 ## In one paragraph
 *Explore · Decode · Connect* (working name, D-010). Real-life action moves Dan through a sealed place. What he finds there is written in a script he slowly learns; the signs combine into words that are his powers; and the records turn out to be the linked lives of people from different ages, converging on one mystery. A low day still arrives somewhere; a high day can go much deeper (D-011). No XP, levels, HP/MP or currencies (D-012).
@@ -26,5 +26,12 @@ Thin, complete and beautiful (D-004, rule 13). Enough to test: *does wanting to 
 - The first few signs, decoding, and **one word** that opens something.
 - A few records from **two** lives that connect, planted with known truths (D-004, rule 6).
 - Absence handling ("where you were").
+
+**The first word arrives in week 2–3** so the test reaches the best part (D-013).
+
+**The test (D-013):**
+- **Length:** 3–4 weeks of normal use.
+- **What the app notes by itself** (no admin for Dan): which jobs he started and when, whether avoided jobs got done more often, how often "I can't start" was used and whether a job followed, and whether he came back after low days or gaps.
+- **Then a short chat**: did wanting to go further in make you start real things? What felt like a chore? That answers rule 14 and decides what to build next.
 
 **Out (for later):** deep pushes to far places, re-reading at scale, great gates beyond one, more lives, audio, AI-written anything, notifications (test separately).

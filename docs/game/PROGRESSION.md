@@ -3,7 +3,7 @@
 > Every progression axis must answer: what meaningful change does increasing this create? Phase 2.
 > Applies to the chosen loop, *Explore · Decode · Connect* (`CORE_LOOPS.md` Part 4; D-010).
 
-_Status: draft for Dan's review, 2026-09-23._
+_Status: **agreed with Dan** 2026-09-23 (D-010–D-013)._
 
 ## The axes
 
@@ -14,6 +14,8 @@ There are three, and none of them is a number on screen.
 | **The Site** (map) | steps and arrivals | New places, routes and sealed things become **visible**. It gives Dan somewhere to want to go. |
 | **Signs → words** (lexicon and powers) | Keys; some arrivals and records | More records become readable. Old records **re-read** differently. Signs combine into **words** that act as powers: they open gates, wake devices and reach new parts of the Site. This is the "new mysterious ability" that the player model ranks highest. |
 | **The web of lives** (records and connections) | decoding records | Links appear between people and events from different ages. The central mystery takes shape. "Everything was related." |
+
+**Keys and words (D-013).** Keys and words both open things, but never the same kind of lock: a sealed thing needs a Key (real life), a word (knowledge), or, for the largest gates, both. It always shows which.
 
 The axes feed one another. The Site leads to records, records teach signs, signs make words, words open more Site. No axis is decoration.
 
@@ -26,6 +28,7 @@ The axes feed one another. The Site leads to records, records teach signs, signs
 Dan said "whatever you think is best" on numbers (2026-09-23). This is reversible: if in use he misses a sense of size or momentum, add a number then, and only one that names what changes.
 
 ## Pacing
-- Roughly **1–2 new signs a week** in the first months, with the first *word* around month 2 (`CORE_LOOPS.md` → long-term loop).
+- The first *word* comes in **week 2–3** (D-013), because new powers are what Dan loves most and the first playable is a short test. After that, signs come at roughly **1–2 a week**, and new words slow to about one a month (`CORE_LOOPS.md` → long-term loop).
 - Powers are authored, not generated: each word has a defined effect and a place in the world truth (Phase 3).
-- High days speed up the Site and records. Signs and words are paced by Keys, so a single huge day can't skip the story ahead of its foreshadowing.
+- High days speed up the Site and records. Whole signs and words are paced by Keys, so a single huge day can't skip the story ahead of its foreshadowing.
+- **Partial signs (D-013).** Deep pushes on High days can turn up **part of a sign** (e.g. half of one). A partial sign already lets Dan read a little more of the records he found. The sign is completed by the next Key, so it can arrive a little sooner, but never ahead of the story's authored order. A big day always pays off in something usable.
