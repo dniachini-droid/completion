@@ -48,6 +48,7 @@ Pacing (D-004): combine or skip topics once answers make them redundant. Target 
 - Tone: **the darker the better.**
 - **Ancient technology that looks like magic** confirmed.
 - Mass Effect: galaxy and aliens, **not** the squad → companions look low priority.
+- Volunteered afterwards: **addicted to Stargate.** It strongly reinforces the pattern: ancient aliens as false gods, a gate network, lost languages, technology that looks like magic.
 
 ### Synthesis checkpoint 1 (given to Dan after round 3)
 Dan is drawn to dark, cosmic science-fantasy: vast timescales, ancient or alien intelligences, and power that looks like magic but is really technology. The story is the engine, above all mystery, interconnection ("everything was related"), and an imposing antagonist with depth. Progression he cares about means new mysterious abilities, not numbers. Repetition is fine if it aims at a goal he can roughly see but not fully predict.

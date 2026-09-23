@@ -51,6 +51,7 @@ _Last updated: 2026-09-23 — after interview round 3 (story structure, stopping
 - **Loves Star Wars** ("love love love"), loves **Arrival**, and **The Three-Body Problem** (read all three books) is one of his **all-time favourite stories**.
 - Tone: **"The darker the better."** Eternal Darkness is his favourite.
 - **Ancient technology that looks like magic** is a good blend.
+- **Was "addicted to" the Stargate series** (volunteered after round 3).
 
 ## Strong hypotheses
 
@@ -76,7 +77,8 @@ _Last updated: 2026-09-23 — after interview round 3 (story structure, stopping
 
 - **Companions are low priority.** In Mass Effect the galaxy and aliens mattered, not the squad. Characters may matter mainly as story figures (above all the antagonist) rather than as companions.
 - **Loot, collecting and rarity** (suspected motivators in the founding brief) have not come up once in three rounds of unprompted answers. Needs a direct test.
-- **Language as power** (Arrival) *might* give Spanish study a meaningful fictional resonance. A design idea to test later, not a finding.
+- **Stargate fits the whole pattern:** ancient aliens posing as gods, a network of gates linking worlds (compare the temples linked to the Temple of Time), a linguist-archaeologist decoding lost languages, and ancient technology read as magic. Which of these hooked him is still unknown.
+- **Language as power** (Arrival, and Daniel Jackson in Stargate) *might* give Spanish study a meaningful fictional resonance. A design idea to test later, not a finding.
 - A long list of tasks reads as a "field of obligations" and increases avoidance (Dan's own hypothesis; untested).
 - A small number of core actions defining "day complete" may work better than open-ended lists (Dan's hypothesis).
 - Explicit permission to stop (e.g. MP depletion) may be valuable.
@@ -112,7 +114,7 @@ _Last updated: 2026-09-23 — after interview round 3 (story structure, stopping
 
 ## Narrative preferences
 
-- Media loved: Star Wars, Arrival, **The Three-Body Problem (all-time favourite)**.
+- Media loved: Star Wars, Arrival, **The Three-Body Problem (all-time favourite)**, **Stargate ("addicted")**.
 - Tone: dark; "the darker the better" (stated).
 - Multiple characters across eras whose stories link up (stated favourite).
 - Ancient technology that looks like magic (stated).
