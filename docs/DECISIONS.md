@@ -300,3 +300,12 @@
 - **Rationale:** Dan's taste (rule 20). A ring and a number don't conflict with the reason for the earlier line, which was that the world should visibly move, not only a count.
 - **Consequences:** `TOOLS.md` §1, `ART_DIRECTION.md`, `PHASE4_RUN.md` updated.
 - **Reversible:** Yes.
+
+## D-029 — The visual run uses the default model (provisional; Dan may override)
+- **Date:** 2026-09-24
+- **Context:** D-027's model comparison. The default model (Opus 5.5) and Fable 5.1 built the same morning screen from one prompt. Dan was shown both, blind; three blind reviewers judged them (`design/model-test/RESULT.md`).
+- **Decision:** Reviewers picked the default model's screen two to one, so it builds the rest of the run. Provisional until Dan gives his own pick; if he prefers the other, the run switches from that point on.
+- **Alternatives:** Fable (picked by one reviewer); waiting for Dan before building (would stall an unattended run).
+- **Rationale:** D-027's rule: blind reviewers decide if Dan is away. Caveat recorded: two reviewers shared a model family with the winner.
+- **Consequences:** The directions and screens are built by the default model.
+- **Reversible:** Yes.
