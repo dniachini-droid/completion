@@ -32,6 +32,13 @@ _Written 2026-09-23._
 | the rod | **the rod** | The cutting tool Dan uses to cut words | On a shelf in the side gallery where the last explorer camped |
 | the lamp | **the lamp** | The clay lamp on the ledge in the first hall, lit | Camp is beside it |
 | camp | **camp** | The evening close, by the lamp | |
+| the focus timer | **a delve** | A timed session of real work; the expedition moves while it runs | Four in one sitting is **a long delve** (`game/TOOLS.md` §1) |
+| the timer's break | **a breather** | The 5-minute pause between delves; ends by itself | Not *camp*: camp is the evening close |
+| lists | **the satchel** | Things Dan wants to remember, on request | Old items sink to **the bottom of the satchel** (design: *someday*) |
+| a plotted job | **a waypoint** | A job put on a day or time, shown on the route ahead | After the first playable |
+| the non-punitive streak | **cairns** | A small stack of stones left on the route for each day complete | After a gap, the cairns turn off in a new direction; never "broken" |
+| relics / finds | **finds** | Things found in the Quiet: on avoided jobs, long delves, and at cairn milestones | One collection, readable with the Cut |
+| the Chronicle | **the daybook** | Dan's own weekly page, written for him in plain English; the week close | Paper, not stone |
 | deep push | **a deep push** | A High-day route to places a Normal day doesn't reach | |
 | "I can't start" | (the app's own phrase, P4) | A teaser from just ahead, then one tiny physical step | Never in-world language |
 

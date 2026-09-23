@@ -263,3 +263,21 @@
 - **Rationale:** Dan's answer.
 - **Consequences:** The Phase 3 exit criteria for the pitch and the bible are met. Renaming stays free until the first playable.
 - **Reversible:** Yes, before clues are planted in a playable.
+
+## D-025 — The tools get in-world names
+- **Date:** 2026-09-24
+- **Context:** D-020 left the tools' names to Phase 3. Dan approved "everything" in the morning plan, which included this naming job.
+- **Decision:** the timer is **a delve**, its break **a breather** (not *camp*, which already means the evening close), four in one sitting **a long delve**; lists are **the satchel**, with *someday* as **the bottom of the satchel**; plotted jobs are **waypoints**; the streak is a line of **cairns** (not lamps, which mean something in the story); relics and Site finds are both **finds**; the Chronicle is **the daybook**, Dan's own page in plain English.
+- **Alternatives:** lamps for the streak (clashes with the story's lamps); *the log* for the Chronicle (too close to a record in the story); *camp* for the break (already taken).
+- **Rationale:** plain, drawable words that follow the app's voice rules (no fantasy-speak) and never touch the sealed truth; checked privately against it (`sealed/README.md`).
+- **Consequences:** `TERMINOLOGY.md` and `TOOLS.md` updated. Renaming stays free until the first playable.
+- **Reversible:** Yes.
+
+## D-026 — Phase 3 closed; Phase 4 (Experience and art) opened
+- **Date:** 2026-09-24
+- **Context:** The morning plan ended: "After that, Phase 3 closes with your agreement and the Phase 4 taste session begins." Dan: "Do everything you listed. I like everything you wrote, so let's go with that… The works. Go." All Phase 3 exit criteria are met: story confirmed and bible approved (D-024), tools named (D-025), app-name shortlist written (`narrative/NAMES.md`).
+- **Decision:** Phase 3 closes. Phase 4 opens with the work order `design/PHASE4_PLAN.md`: a live taste session, then the long visual run (D-022).
+- **Alternatives:** keep deepening the story first (not needed before the first playable, D-004); start with the unattended run (it would be blind to Dan's taste, rule 20).
+- **Rationale:** D-004 pacing: a small but beautiful first playable, soon. The story is complete to the end of the year.
+- **Consequences:** `CLAUDE.md` and `CURRENT_STATE.md` move to Phase 4. Story work continues only as needed (week 6 of the clue ledger before the build, D-023; the company at work, later).
+- **Reversible:** Yes. Dan can reopen story questions at any time without reopening the phase.

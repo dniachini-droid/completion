@@ -5,9 +5,9 @@ It is a genuine game, not a productivity app with an RPG skin. Provisional name:
 
 ## Current phase
 
-**PHASE 3 — NARRATIVE AND WORLD** (started 2026-09-23; Phase 2 closed with Dan's agreement, D-014)
+**PHASE 4 — EXPERIENCE AND ART** (started 2026-09-24; Phase 3 closed with Dan's agreement, D-026)
 
-Design the story on top of the agreed game design (`docs/game/`), following MASTER_BRIEF §51–56 within D-004's scope. **The truth is sealed from Dan** (`docs/narrative/sealed/`, D-015). The quality bar is a story that goes somewhere: the ending is fixed first and everything connects. The current work order is `docs/narrative/PHASE3_PLAN.md`. No application code. Details and exit criteria: `docs/CURRENT_STATE.md`. Phase changes require Dan's explicit agreement.
+Find how the game looks, moves and feels, following MASTER_BRIEF §57–58: a live taste session with Dan, then a long run building **three genuinely distinct visual directions as real screens** (D-022). The current work order is `docs/design/PHASE4_PLAN.md`. The story is agreed and **stays sealed from Dan** (`docs/narrative/sealed/`, D-015); screens use only player-safe content. No application code or tech stack (static mock-up screens are fine). Details and exit criteria: `docs/CURRENT_STATE.md`. Phase changes require Dan's explicit agreement.
 
 Phase order: 0 Player discovery → 1 Product discovery → 2 Game design → 3 Narrative/world → 4 Experience/art/UX → 5 Concept synthesis → 6 MVP → 7 Technical architecture → 8 Prototype → 9 First playable → 10 Personal alpha → 11 Iteration.
 

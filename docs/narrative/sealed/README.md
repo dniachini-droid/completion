@@ -29,3 +29,12 @@ For Claude: the canonical hidden truth lives here. Never quote or summarise it o
 | `REVIEW.md` | The adversarial self-review (three passes plus a final verification) and the fixes it forced | — |
 
 Order to read for a new session: `WORLD_TRUTH` → `SCRIPT` → `TIMELINE` → `CHARACTERS` → `MYSTERIES` → `REVELATION_MAP` → `SITE` → `LIVES` → `CLUE_LEDGER` → `FAIR_PLAY` → `ARRIVALS_REGION1` → `PACING` → `REVIEW`.
+
+## The tools' in-world names (D-025): sealed constraints
+
+The open names are in `TERMINOLOGY.md` (the delve, a breather, the satchel, cairns, finds, the daybook, waypoints). Rules for any later writing about them, so the tools never touch the truth:
+- **The daybook is Dan's own paper, in English, written by the app.** It is never cut in the Cut, never kept by anyone in the Quiet, and never shown beside or compared with K6. Dan's record in the stone stays the Custodian's alone and is never glossed (WORLD_TRUTH §10.5).
+- **Cairns are Dan's own trail marks.** The place never counts them, the doors never read them, and they are never linked to the count on the hand (WORLD_TRUTH §2.6). They keep going after the binding; that is not K6.
+- **No tool is lit, kept or named.** Nothing uses lamps, rings, KEEP, RETURN, ANSWER or ECHO vocabulary. The lamps rule stays the story's.
+- **Company at work during a delve** (later) must not be the figure, and must not imply that anyone in the Quiet is present now. Decide it with the story before it is built.
+- Finds from cairn milestones follow `NICHES.md` rules: each is a thing already in the truth, delivered as a find, never a bare reward.
