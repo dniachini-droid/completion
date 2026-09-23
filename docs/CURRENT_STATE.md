@@ -17,7 +17,7 @@ Build an accurate, evidence-based model of Dan as a player and as a person tryin
 
 ## Current session focus
 
-Interview round 3: Eternal Darkness and Mass Effect specifics, why he stops playing games, tone, and other media. Earlier rounds covered game experiences that completely captured Dan's attention — what he was doing and feeling, what made him want one more hour, which rewards he anticipated, which discoveries stuck, which systems became compulsive and which became chores.
+Interview round 4: real-life motivation: initiation, avoidance, absorption, good and bad days, the injury's effect, structure, and tool history. The game-taste rounds (1–3) are sufficient for now; synthesis checkpoint 1 is recorded in `DISCOVERY.md`.
 
 ## Do NOT work on yet
 
@@ -34,8 +34,8 @@ Ideas on these topics that come up during discovery are **captured** (in `OPEN_Q
 
 We can articulate with reasonable confidence — and Dan explicitly agrees the player model is accurate enough:
 
-- [ ] 1. What game experiences genuinely absorb Dan.
-- [ ] 2. What commonly makes him stop playing games.
+- [x] 1. What game experiences genuinely absorb Dan. *(rounds 1–3; pending Dan's confirmation)*
+- [x] 2. What commonly makes him stop playing games. *(the story ends)*
 - [ ] 3. Which reward structures motivate him.
 - [ ] 4. Which reward structures rapidly become meaningless.
 - [ ] 5. What causes him to initiate real-world activities.
@@ -43,7 +43,7 @@ We can articulate with reasonable confidence — and Dan explicitly agrees the p
 - [ ] 7. What "a good day" actually means to him.
 - [ ] 8. What level of structure helps.
 - [ ] 9. What level of structure becomes oppressive.
-- [ ] 10. What types of fictional worlds reliably interest him.
+- [x] 10. What types of fictional worlds reliably interest him. *(dark cosmic science-fantasy; pending confirmation)*
 - [ ] 11. What UX aesthetics he responds to.
 - [ ] 12. What he strongly does not want.
 - [ ] Dan confirms the player model.
@@ -51,7 +51,7 @@ We can articulate with reasonable confidence — and Dan explicitly agrees the p
 ## Completed milestones
 
 - 2026-09-23 — Repository initialised with documentation skeleton, `CLAUDE.md`, and `MASTER_BRIEF.md`.
-- 2026-09-23 — Interview rounds 1–2 answered; player model updated.
+- 2026-09-23 — Interview rounds 1–3 answered; player model updated; synthesis checkpoint 1 given.
 - 2026-09-23 — Pacing decision D-004 recorded (pragmatic Phases 0–5; first playable prioritised; deep narrative continues in parallel).
 
 ## Unresolved blockers
@@ -61,4 +61,4 @@ We can articulate with reasonable confidence — and Dan explicitly agrees the p
 
 ## Recommended next action
 
-**Dan answers round 3; Claude then gives a first synthesis checkpoint and moves to real-life motivation and days.**
+**Dan corrects synthesis checkpoint 1 (if needed) and answers round 4 (real-life motivation).**

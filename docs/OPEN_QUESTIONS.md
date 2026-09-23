@@ -4,13 +4,13 @@
 
 ## Player
 - Which specific game experiences genuinely absorb Dan, and why?
-- What makes him stop playing games?
 - Which fictional worlds and tones reliably interest him?
 - Which reward structures motivate him, and which quickly become meaningless? *(Round 1: new abilities strongly motivate; grinding doesn't.)*
 - How far can revisionist history ("the evil side had a point") go before it spoils the good-vs-evil stakes he likes? *(Round 2: villain depth is wanted.)*
 - Dead civilisations (ruins) vs living alien cultures? *(Round 2: likes discovering living alien life too.)*
-- What makes a goal feel "visible"?
-- How dark should the tone be: wonder, dread, or both?
+- ~~What makes a goal feel "visible"?~~ Knowing roughly what's coming; the details a surprise (round 3).
+- ~~How dark should the tone be?~~ "The darker the better" (round 3). New question: how does a dark world coexist with a kind app?
+- Does loot/collecting/rarity actually motivate him? (It hasn't come up unprompted.)
 
 ## Behaviour
 - What causes initiation vs avoidance for him, specifically?
@@ -29,7 +29,8 @@
 
 ## Narrative
 - Which world direction? (Deliberately undecided; do not anchor on the "arrival in an abandoned world" premise.)
-- How much authored vs generated content?
+- How much authored vs generated content? **Sharpened by round 3:** story is why he plays and he stops when it ends, so the rate of authored story must keep pace with his real-life activity for months.
+- Could a multi-era, multi-protagonist structure (Eternal Darkness) fit a real-life-driven game?
 
 ## Productivity
 - What in his past tool history worked, and why did he stop using things?

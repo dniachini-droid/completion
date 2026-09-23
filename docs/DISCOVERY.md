@@ -40,5 +40,20 @@ Pacing (D-004): combine or skip topics once answers make them redundant. Target 
 - Builds for fun (confirmed) and loved BotW, so exploration without heavy story also works for him.
 - Still missing: what makes him stop playing, tone/darkness, companions, other media.
 
-### Emerging synthesis (for Dan to correct at the next checkpoint)
-Mysterious, ancient or alien power; a world where everything is connected; an imposing antagonist with depth; progress felt as new abilities rather than numbers; repetition tolerated when aimed at a visible goal.
+### Round 3 findings (structure, stopping, tone, media)
+- **"Once I finish the story I stop."** Story is the retention engine.
+- **Eternal Darkness's linked stories across characters and eras** was his favourite part of his favourite game.
+- Visible goal = **know roughly what's coming; the details surprise.**
+- Media: Star Wars, Arrival, **Three-Body Problem (all-time favourite)**.
+- Tone: **the darker the better.**
+- **Ancient technology that looks like magic** confirmed.
+- Mass Effect: galaxy and aliens, **not** the squad → companions look low priority.
+
+### Synthesis checkpoint 1 (given to Dan after round 3)
+Dan is drawn to dark, cosmic science-fantasy: vast timescales, ancient or alien intelligences, and power that looks like magic but is really technology. The story is the engine, above all mystery, interconnection ("everything was related"), and an imposing antagonist with depth. Progression he cares about means new mysterious abilities, not numbers. Repetition is fine if it aims at a goal he can roughly see but not fully predict.
+
+Flags raised with Dan:
+- Story is why he plays and why he stops, so the pace of authored content becomes a core project risk.
+- Loot and rarity haven't come up unprompted, despite the brief. Test directly.
+- Companions look low priority.
+- A dark world must not become a harsh app.

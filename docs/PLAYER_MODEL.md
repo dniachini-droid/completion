@@ -3,7 +3,7 @@
 > Living model of the player. Updated after each discovery round.
 > Rule: only things Dan has actually said go under *Explicitly stated*. Inferences go under hypotheses, and stay there until confirmed.
 
-_Last updated: 2026-09-23 — after interview round 2 (the "why" behind round 1)._
+_Last updated: 2026-09-23 — after interview round 3 (story structure, stopping, tone, other media). First synthesis checkpoint given._
 
 ## Explicitly stated facts / preferences
 
@@ -43,14 +43,26 @@ _Last updated: 2026-09-23 — after interview round 2 (the "why" behind round 1)
 - **"Repetition is fine so long as it's for a goal that I can see."**
 - **Loved Breath of the Wild** too.
 
+*From round 3:*
+- Eternal Darkness: liked every aspect, including the lore. **"I LOVED how the stories jumped between different characters and they were all linked. That was my favourite part."**
+- Mass Effect: **the aliens and the galaxy** were the draw, not the squad.
+- **"Once I finish the story I stop basically. It's the story that I love."**
+- Visible goal: prefers **knowing roughly what's coming, with the details a surprise**: "I know kind of what it is but it's almost a surprise. Keeps me going."
+- **Loves Star Wars** ("love love love"), loves **Arrival**, and **The Three-Body Problem** (read all three books) is one of his **all-time favourite stories**.
+- Tone: **"The darker the better."** Eternal Darkness is his favourite.
+- **Ancient technology that looks like magic** is a good blend.
+
 ## Strong hypotheses
 
 - **Capabilities beat numbers.** Progression that grants a new *verb* (spell, power, tool) motivates him far more than stat or level increases. Supported by Q3, Q4 and Q8 independently. Implication to test: a visible XP/level number may be weak or irrelevant for him.
-- **Story and lore are primary drivers, not garnish.** His strongest memories are narrative/mythic, not mechanical.
+- **Story is the retention engine.** Confirmed by his own words: he stops when the story ends. Implications: story pacing *is* long-term retention, and running out of authored story is an existential risk for the project.
 - **Repetition is acceptable when the goal is visible** (stated in round 2). Aimless repetition, like grinding, is the turn-off. This eases the design tension around daily real-life inputs: each repeat must visibly advance toward a specific, desired, *seen* goal (e.g. a sealed door, a named power). Exactly what "visible" means is still to probe.
 - **Interconnection is a core pleasure.** "Everything was related": the central act matters because it links the hero, the temples and the history. Promoted from weak.
 - **A powerful, imposing, mysterious antagonist with depth** is a primary hook. Ganondorf was the highlight of his favourite game. Morally complex, not cartoonish, but still genuinely threatening.
 - **Mysterious power systems.** Arcane (runes, spells) or alien/futuristic (Mass Effect). Eternal Darkness suggests he enjoys *composable* magic: collecting parts and combining them.
+- **Anticipation with partial knowledge.** Goals should be foreshadowed (he knows roughly what's coming) but not fully specified (the details surprise). Progress bars alone are not the model.
+- **Multiple linked stories across eras** (Eternal Darkness, and Three-Body's centuries-spanning structure) is a favourite narrative structure, not just a liked one.
+- **Dark, cosmic, science-fantasy register.** Eternal Darkness, Three-Body, Arrival, Mass Effect and Star Wars together point to vast timescales, alien or ancient intelligences, dread, and power that looks like magic.
 
 ## Weak hypotheses
 
@@ -59,9 +71,12 @@ _Last updated: 2026-09-23 — after interview round 2 (the "why" behind round 1)
 - **A world transformed** (OoT's time skip) may be a strong emotional mechanism — seeing the world change as a result of what happened. Unconfirmed which part of the Temple moment mattered most.
 - **Discovery of civilisations**, whether ancient (Hyrule/Zonai) or alien, is a recurring theme across fantasy and space settings. Setting genre may matter less than "a civilisation to uncover".
 - ~~Prefers morally legible conflict~~ → largely resolved: he wants real good-vs-evil stakes **with a deep villain**. Still unclear how far he'd enjoy "the evil side had a point" revisionism.
-- **Ancient technology that reads as magic** (Zonai, Mass Effect-style ancient civilisations) might unify his fantasy and sci-fi tastes. Untested.
+- **Ancient technology that reads as magic**: confirmed as appealing (round 3). Recorded as a preference, not a setting decision.
 - Enjoys **systemic creative play** for its own sake (confirmed: built strange contraptions for fun), plus practical mobility builds. Whether this belongs in *this* game is a separate question: sandbox building is expensive to make.
 
+- **Companions are low priority.** In Mass Effect the galaxy and aliens mattered, not the squad. Characters may matter mainly as story figures (above all the antagonist) rather than as companions.
+- **Loot, collecting and rarity** (suspected motivators in the founding brief) have not come up once in three rounds of unprompted answers. Needs a direct test.
+- **Language as power** (Arrival) *might* give Spanish study a meaningful fictional resonance. A design idea to test later, not a finding.
 - A long list of tasks reads as a "field of obligations" and increases avoidance (Dan's own hypothesis; untested).
 - A small number of core actions defining "day complete" may work better than open-ended lists (Dan's hypothesis).
 - Explicit permission to stop (e.g. MP depletion) may be valuable.
@@ -75,12 +90,15 @@ _Last updated: 2026-09-23 — after interview round 2 (the "why" behind round 1)
 - An imposing, mysterious villain (stated).
 - A visible goal that repetition moves toward (stated).
 - Composable spell systems, e.g. Eternal Darkness runes (stated).
+- Wanting to know what happens next in the story (stated: it's why he keeps playing).
+- Knowing roughly what's coming but not exactly (stated).
 
 ## Demotivators
 
 - Shame, guilt, punitive failure states (stated as hard rule).
 - Maintenance overhead / administering the system (stated).
 - Grinding: repetition **without a visible goal** (refined in round 2).
+- The story ending: when it's over, he stops (stated).
 
 ## Behavioural patterns
 
@@ -88,12 +106,16 @@ _Last updated: 2026-09-23 — after interview round 2 (the "why" behind round 1)
 
 ## Game preferences
 
-- Zelda: OoT foremost; BotW and TotK both loved. Mass Effect (loved). Eternal Darkness (rune magic).
+- Zelda: OoT foremost; BotW and TotK both loved. Mass Effect (loved: aliens and galaxy). **Eternal Darkness (favourite for tone and structure)**.
 - Ability-gated progression; mythic set-pieces; lore; building systems.
 - Dislikes grinding.
 
 ## Narrative preferences
 
+- Media loved: Star Wars, Arrival, **The Three-Body Problem (all-time favourite)**.
+- Tone: dark; "the darker the better" (stated).
+- Multiple characters across eras whose stories link up (stated favourite).
+- Ancient technology that looks like magic (stated).
 - Deep good-vs-evil stories; the villain must be imposing, mysterious and have depth (stated).
 - "Everything was related": interconnected story, places and history (stated).
 - Alien civilisations and other life (stated).
@@ -106,11 +128,9 @@ _Last updated: 2026-09-23 — after interview round 2 (the "why" behind round 1)
 
 ## Uncertainties
 
-- What makes him **stop** playing games, even loved ones (not yet answered, and an exit criterion).
-- What makes a goal feel "visible".
-- Companions: do characters alongside him matter (Mass Effect squad)?
-- Tone: wonder vs dread, and how dark.
-- Other media.
+- Does loot/collecting/rarity actually motivate him?
+- How a dark fictional tone coexists with a warm, non-shaming relationship to *him* (dark world ≠ harsh app).
+- Visual taste (not yet explored).
 - What specifically makes him stop playing games.
 - His actual daily rhythm.
 - His history with productivity tools.
