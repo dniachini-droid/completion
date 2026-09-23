@@ -135,7 +135,7 @@ Loose sheets in the camp: her first glosses of S1–S4 and the head of V1. Made 
 - **L22, the last** (month 10, against the last door):
   - **Cut (24):** KEEP ALL · VOICE GIVE FAR · MARK TWO DEEP · ONE GIVE SEE ME MARK TWO [Council] · DOOR ONE: ME OPEN NOT; ONE OPEN NOT; ONE TOWARD NOT · ME MAKE HERE MARK TWO TOWARD ONE-WHO AGAIN, ONCE VOICE OF ONE · ONE GOOD QUESTION: SEE NOT · ME KEEP HERE · ONE-WHO AGAIN MAKE · READ ALL; MAKE · GOOD: READ {h: hers}
   - **Rendering:** *Keep-all. Voice-give-far. The two words are at the bottom. He showed me the copies. The last door: I open it not; he opens it not; he comes not. I cut both here so the one who returns sees them before his voice. Is he right? Not seen. I stay. The one who returns cuts. Read all; then cut. Good, to be read.*
-  - **Telling:** Note. The two words are at the bottom. He showed me the copies in the Council; the originals are past the last door, which I cannot open and he cannot open, and he cannot come to. Keep-all. Voice-give-far. I have cut them both here, side by side, so the next one sees them before he speaks. I do not know if he is right. I am staying. The next one decides. Read all of it first. Then cut whichever you cut. Thank you for reading.
+  - **Telling:** Note. The two words are at the bottom. He showed me the copies in the Council; the originals are past the last door, which I cannot open and he cannot open, and he cannot come to. He read the bottom with his hands, once, before the end. I don't think he has ever seen it. Keep-all. Voice-give-far. I have cut them both here, side by side, so the next one sees them before he speaks. I do not know if he is right. I am staying. The next one decides. Read all of it first. Then cut whichever you cut. Thank you for reading.
   - **The wall that is her:** REMAIN on a human takes a season. A woman's outline in the stone against the last door, the rod in the wall to the wrist, her hand-mark beside it. The Site shows no awareness in her; nothing in her wall waits.
 
 ## 3. Reader TWO — the Surveyor (V)
@@ -180,6 +180,7 @@ Later (months 4–5): E4 ("cut the hold-mark on the roof above the props; it hel
 
 ## 6. The Builders (B), the Custodian's own cuts (K), the seed (Z)
 
+- **Note on the memoir:** B1–B7 carry no closing line ("cut by [hand], from the voice of…"); every transcription does. It was not told to him. It is his (C-53).
 - **B0** (week 9, the Reading Room, a lesson-tablet, a Builder-age maker's hand-mark, no narrative): a carved flame beside FIRE; a carved lamp beside LAMP; the word FIRE-GIVE. The *same* lesson as hers, in a hand older than anything. (He copied theirs; she copied his.)
 - **B1–B6** (months 5–8, the Builders' quarters; "We cut."; *his Builder-age hand-mark*, not KEEP-ONE): the finding of the cut stone; light before seeing ("we felt the warmth on the wall"); the great age; the warning; the split; the safeguard ("we made them against ourselves, against what we might become"); the quietening ("each cutting, fewer in the count; those who went quiet did not long-sleep; they were not there").
 - **B7** (month 8–9, below the three doors by the last lift; the tiny KEEP-ONE hand-mark; the formula kept and broken on the last sign): *We cut. The count in the upper halls: none. The count in the reading-hall: none. The lamp-line to the bottom is lit and one hand is on the rod. Cut by one. I.*
@@ -271,3 +272,59 @@ Ids and weeks follow `REVELATION_MAP.md` weeks 14–26. Builder records open wit
 | L16 | 26 | the reading-tables | (as §2) |
 
 **Note on B6 and the rings:** the Builders did *not* cut the names of the quiet; there was no one to say them. He said them, alone, afterwards, and cut them all: that is why every ring carries his hand-mark and why the count "would not be less".
+
+## 12. Sign strings for the rest of the first quarter and the memoir
+
+Notation as §0.1. Renderings are what the app shows when every sign is held. Counts in eights are written as sums (8+3).
+
+**V2 (wk 6, his hand):** ONCE ring(Sertor) TWO · MARK TOWARD ring(overseer) · ONE EAT NOT, PERSON ALL · SLEEP NOT · VOICE OF ONE: PATH STONE GOOD NOT; UP PERSON ALL GOOD · KEEP PERSON ALL NOT · GIVE SEE MARK TWO; DOOR OPEN · PERSON ALL GIVE DAY · MAKE {h} VOICE OF TWO AGAIN NOT
+*Once, the second. Marks for [ring]. He eats not with us; sleeps not. His voice: poor in the works' tongue, good in the hill people's. He held us not. He showed two marks; a door opened. The men: paid to this day. Cut by [hand], from the voice of the second; came again not.*
+
+**V3 (wk 7):** ONCE ring(Sertor) TWO · MARK TOWARD ring(overseer) · PERSON 8+4, CHILD ONE [tablet] · ring×12, ring(boy): GIVE · CHILD MAKE MARK ALL, SEE NOT; ME GIVE · ONE SEE; MAKE HERE, UP NOT · MAKE {h} VOICE OF TWO AGAIN NOT
+*Once, the second. Marks for [ring]. Twelve men and a child with [a tablet]. Their names, to be paid: [rings]. The child cuts the marks and sees not; I allowed it. He watched; cut beside; not over.*
+
+**V4 (wk 8, the Surveyor's own hand):** WATER [channel] MOVE NOT; HERE · [mule] GO DEEP NOT · VOICE OF ONE: MAKE LOUD ONCE, TOWARD · MAKE LOUD AGAIN: GOOD NOT · ASK: MAKE NOT {h: Sertor}
+*The water in the channel: moved not. Still, as a floor. The [mules] went not in. His voice: after a loud cut, expected; the next loud cut, worse. He asked: cut not.* (LOUD is a glyph until month 8; at week 8 "after a [ ] cut".)
+
+**V5 (wk 10):** ONCE ring(Sertor) TWO · MARK TOWARD ring(overseer) · VOICE OF ONE: SEE · PATH DEEP: 8+8+8+6 [pace] TOWARD STONE ALL · MAKE LOUD ONE: OPEN · ONE ASK: KEEP · ME KEEP DAY 8+1 · PATH KEEP NOT · MAKE {h} VOICE OF TWO AGAIN NOT
+*Once, the second. Marks for [ring]. His warning: seen. The lower way: thirty paces past a fall. One loud cut opens it. He asked: hold. This one held nine days. The road holds not.*
+
+**V6 (wk 13, his own statement):** ONCE TWO · PATH HERE · MAKE MOVE STONE LOUD AGAIN · WATER MOVE NOT · ME SHUT DOOR · ONE LONG-SLEEP NOT, ME SHUT ONCE · ME OPEN NOT AGAIN {h}
+*Once, the second, in this side way, cut the moving-word loud again. The water moved not. I shut the door. He long-slept not when I shut it. I have not opened it.* (At week 13: "I [ ] the door. He long-slept not when I [ ] it." SHUT arrives month 6.)
+
+**V7 (month 8–9, the Surveyor's own hand, inside):** MARK TOWARD ring(overseer) · ME COUNT HERE: 8+3 [pace], 7 · DOOR: MARK GIVE NOT · ONE GOOD: WATER · PERSON ALL GIVE DAY 8+5; ring×13 {h: Sertor}
+*Marks for [ring]. This one measured here: eleven paces by seven. The door answers not to the word. The Guest: right, about the water. The men are owed thirteen days: [rings].*
+
+**E6 (wk 16, his statement, above the shape in the Hold):** ONCE FOUR · LONG-SLEEP STONE · COUNT 8 [cutting] HERE · ME KEEP ONE HERE (laid) · ME KEEP [book] {h}
+*Once, the fourth, long-slept of stone in the eighth count of his staying. I laid him in the Hold. I kept the book.*
+
+**K5 (wk 24):** KEEP ONE HERE {h}. *Keep-one-here.*
+
+**B1 (wk 17, his Builder-age hand):** MAKE PERSON ALL · SEE STONE MAKE ONCE · READ HAND ALL; COUNT 8×8 [cutting] · TOWARD VOICE GIVE
+*We cut. We found the stone already cut. We read it with hands for eight eights of cuttings; then it answered.*
+
+**B2 (wk 18):** MAKE PERSON ALL · FIRE GIVE MAKE; SEE NOT · HAND FIRE STONE · MARK ONE; GOOD NOT · MAKE HERE ALL
+*We cut. We made light; we saw it not. Hand: fire on the wall. The first word, and the least useful. We cut it everywhere.*
+
+**B3 (wk 19):** MAKE PERSON ALL · MAKE DEEP · MOVE UP · VOICE LOUD; GOOD
+*We cut. We cut the deep. We moved the hill. Loud, because glad.*
+
+**B4 (wk 20):** MAKE PERSON ALL · READ ONCE STONE ALL · VOICE: LOUD, TAKE · STONE MOVE NOT, HAND, THREE · ASK NOT
+*We cut. Late, we read the last of the stone. It said: what is loud is taken. The rock moved not under our hands, three times. We asked not.*
+
+**B5 (wk 21):** MAKE PERSON ALL · PERSON ALL: KEEP; TEACH; MAKE HERE · PERSON ALL: GIVE ONCE TOWARD US; GIVE · ONE-WHO KEEP MAKE DOOR ALL · TOWARD US NOT; SEE NOT PERSON ALL TOWARD
+*We cut. Half: keep it; teach it; make a place. Half: it was given to us; give. We who keep cut the doors. Against ourselves; against what we could not see we would be.* (TEACH and ONE-WHO arrive month 9; until then "[ ] it" and "we [ ] keep cut the doors".)
+
+**B6 (wk 25–26):** MAKE PERSON ALL · COUNT [cutting] ALL: PERSON ALL DEEP NOT · STILL ONE ALL: LONG-SLEEP NOT; HERE NOT · NAME MAKE NOT · VOICE ONE NOT
+*We cut. Each cutting, fewer. Those who went still long-slept not; they were not here. We cut not their names. No voice to say them.*
+
+**B7 (month 8–9, KEEP-ONE hand-mark):** MAKE PERSON ALL · COUNT UP HERE ALL: NOT · COUNT READ HERE: NOT · LAMP PATH DEEP FIRE GIVE ONCE; HAND ONE [rod] · MAKE ONE · ME
+*We cut. The count in the upper halls: none. The count in the reading-hall: none. The lamp-line to the bottom is lit; one hand is on the rod. Cut by one. I.*
+
+**Told lines (his hand, beside pre-literate objects):**
+- X-daughter (wk 2): VOICE CHILD: [father] COUNT, DAY NOT; FOUR FOUR; [owl] HAND {h}. *The child's voice: father counts at night; four and four; the owl's feet.*
+- X-neighbour (wk 4): VOICE: SEE [salt face] [crack] UP; GIVE NOT {h}. *Told: found in the face past the split; not for sale.*
+- X-foreman (wk 6): VOICE: ONE SHUT UP; GIVE US NOT; TWO GO UP NOT {h}. *Told: the Guest shut the hill; we were not paid; the second came not up.*
+- X-mule-driver (wk 14): VOICE: [mule] GO DEEP NOT; ME MAKE NOT {h}. *Told: the mules went not in; I made them not.*
+- X-overseer (wk 20): VOICE: PATH STONE SHUT; MARK OF TWO TOWARD ME AGAIN NOT {h}. *Told: the works are shut. The second's last marks came not to me.*
+- S12 (wk 22): VOICE CHILD: ONE COUNT TOWARD LONG-SLEEP; VOICE: [owl] KEEP LAMP {h}. *The child's voice: he counted to the end. He said: the owl keeps the lamp.*

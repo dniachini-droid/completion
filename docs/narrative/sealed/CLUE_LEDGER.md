@@ -72,6 +72,9 @@ _Written 2026-09-23._
 | C-51 | V6: "I shut the door. He long-slept not when I shut it." | wk 13 | A confession | His one act of stopping a *carrying*; the darkest room; consistent with his thesis | Month 8–9 (V7) |
 | C-52 | L14: "I asked him about the second reader. He answered. I'm not writing it down tonight." | wk 13 | She was frightened | She was told the truth and it was worse than fear: he *records* his own worst act | Month 8–9 |
 
+| C-53 | The memoir carries no closing line, unlike every transcription | Builders' quarters, from wk 17 (legible from month 5) | A different convention for the makers' texts | It was not told to him; it is his own | Month 7–8 (R7) |
+| C-54 | L22: "He read the bottom with his hands. I don't think he has ever seen it." | Her last camp, month 10 | An aside about a blind reader | The finest cut is read by light; no Builder ever read it | Month 11 (R9.5) |
+
 ## Rules for this ledger
 
 1. No clue is planted without a row here first (rule 6).
