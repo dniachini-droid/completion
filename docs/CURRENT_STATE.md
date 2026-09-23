@@ -3,7 +3,7 @@
 > **Authoritative project-progress tracker.** Read at the start of every session; update before ending every substantial session.
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 
-_Last updated: 2026-09-23 (end of Session 2: Phase 1 closed)_
+_Last updated: 2026-09-23 (Session 3: Phase 2 started; candidate core loops sent to Dan)_
 
 ## Current phase
 
@@ -15,8 +15,10 @@ Design the core game: how real-life action moves the game, and why Dan would wan
 
 ## Current session focus
 
-Not started. Suggested order:
-1. **2–3 candidate core loops**, deliberately different, each with its player fantasy and its daily, weekly and long-term loops, plus how it handles failure, rest, the story and real life (`game/CORE_LOOPS.md`). Present them to Dan and don't converge immediately. Keep the fiction abstract: use placeholders, not a chosen setting (that is Phase 3).
+**Session 3:** step 1 done. Three candidate loops (A *Decipherment*, B *Expedition*, C *Linked Lives*) on a shared chassis are in `game/CORE_LOOPS.md`, with six questions to Dan. Waiting for his reactions before converging.
+
+Suggested order:
+1. ✅ **2–3 candidate core loops**, deliberately different, each with its player fantasy and its daily, weekly and long-term loops, plus how it handles failure, rest, the story and real life (`game/CORE_LOOPS.md`). Present them to Dan and don't converge immediately. Keep the fiction abstract: use placeholders, not a chosen setting (that is Phase 3).
 2. Converge with Dan on one loop.
 3. For the chosen loop, write:
    - the **daily loop**: morning start, the 3 main jobs, "I can't start", evening close, opening at 4 pm;
@@ -35,7 +37,7 @@ Not started. Suggested order:
 
 ## Phase 2 exit criteria
 
-- [ ] 2–3 candidate core loops written and compared; Dan has chosen one (or a blend).
+- [ ] 2–3 candidate core loops written and compared (✅ written, 2026-09-23); Dan has chosen one (or a blend).
 - [ ] Daily loop defined, including low days, "I can't start", and the morning and evening moments.
 - [ ] Weekly and long-term loops defined (how the game sustains months; systems unfold gradually).
 - [ ] Progression defined; every axis names the meaningful change it creates, and meaningless numbers are deleted.
@@ -52,6 +54,7 @@ Not started. Suggested order:
 - 2026-09-23 — Working agreement D-006 (Claude saves work, handles PRs, directs the build).
 - 2026-09-23 — **Phase 1 complete.** Two interview rounds; problem statement agreed; `DESIGN_PRINCIPLES.md` and `ANTI_FEATURES.md` approved by Dan (D-007, D-009).
 - 2026-09-23 — D-008: the story gets dedicated deep, research-led sessions in Phase 3.
+- 2026-09-23 — Phase 2: three candidate core loops drafted and sent to Dan (`game/CORE_LOOPS.md`).
 
 ## Unresolved blockers
 
@@ -60,4 +63,4 @@ Not started. Suggested order:
 
 ## Recommended next action
 
-**Start a new session and begin Phase 2: draft 2–3 candidate core loops for Dan to compare.**
+**Get Dan's answers to the six questions in `game/CORE_LOOPS.md`, then converge on one loop (or a blend) and record it as a decision.**

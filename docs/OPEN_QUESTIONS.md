@@ -23,7 +23,8 @@
 - Is Pomodoro the natural unit of effort?
 
 ## Game design
-- Do HP/MP add real meaning, or are they convention?
+- Do HP/MP add real meaning, or are they convention? *(Proposal in `game/CORE_LOOPS.md` Part 1: no XP, levels or HP/MP; capacity and "day complete" do their job. Awaiting Dan.)*
+- Which core loop: A Decipherment, B Expedition, C Linked Lives, or a blend? *(Sent to Dan 2026-09-23.)*
 - If capabilities beat numbers for Dan, what is XP even for? How do daily repetitive inputs unlock *new verbs* often enough without inflation?
 - ~~How many core daily actions define a complete day?~~ About 3 main jobs (P2). Test in use.
 - Does collection/rarity motivate him in practice, and how to prevent farming?
