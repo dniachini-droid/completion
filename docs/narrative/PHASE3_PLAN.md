@@ -84,6 +84,6 @@ If stages 0–5 are done before 21:30 UTC, keep deepening the chosen story in ro
 6. ~~A "fair play" audit: for each major reveal, list the earlier clues that let a sharp player half-guess it; add clues where a reveal would feel unearned.~~ Done twice: against the map (`sealed/FAIR_PLAY.md`) and again against the visit-by-visit text; three clues added and every leak closed.
 7. ~~A final consistency pass across every sealed file.~~ Done: two fresh passes over the visit-by-visit files (3 blockers, 25 should-fixes, 39 nits, all applied), then a verification pass over the fixes.
 
-Status at 17:20 UTC: all seven items done; the run holds until 21:30 UTC with verification and polish.
+Status at 19:30 UTC: all seven items done. After them, four fresh critics read the year as Dan would play it (weeks 1–5, 6–13, 14–26, 27–52) and each region's visit-by-visit file was rewritten to that reading; a final verification pass closes the run.
 
 Only when it is past 21:30 UTC and everything above is done or clearly past the point of useful returns: delete the Routine (`list_triggers` then `delete_trigger`), cancel pending `send_later` check-ins, and reply "done" with a short spoiler-free summary.
