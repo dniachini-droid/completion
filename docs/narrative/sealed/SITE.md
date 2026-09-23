@@ -95,16 +95,18 @@ The place obeys words (R1). Two lives, one lamp, one figure who does not eat and
 
 ## Region 3 — The Hold (months 4–6): the Builders' halls, his domain's end
 
+Sealed names below; the app's name by week in brackets where it differs. The app never names a place with a sign Dan does not yet hold, or with a conclusion ("memorial") he has not yet read.
+
 | Place | What is there |
 |---|---|
-| **The Hold** | Where the Builders kept things, and where he laid the Engineer: a long chamber, the readers' objects on shelves (the Engineer's log and boots; the Surveyor's level; the heel of the Salt-Cutter's bread, gone to stone). ECHO shows the Engineer being laid here. |
+| **The Hold** (the app: "the shelf room" until week 22, when KEEP is held; "the Hold" after) | Where the Builders kept things, and where he laid the Engineer: a long chamber, the readers' objects on shelves (the Engineer's log and boots; the Surveyor's level; the heel of the Salt-Cutter's bread, gone to stone). ECHO shows the Engineer being laid here. |
 | **His workshop** | Beside the Hold. Rods in a rack. REMAIN cut on the wall where he first cut it, the print of his left hand beside it in the stone to the wrist. |
 | **The Council Gallery** | Two facing walls: the binders' rule and the answerers' argument ("we were sent; we are the proof"), in two hands. Copies of both prepared words. VOICE-GIVE-FAR first read here (month 5). |
 | **The Warning Hall** | The seed's warning copied large by the Builders: LOUD VOICE → TAKE ("what speaks loud is taken"). Half readable until month 8. |
 | **The Builders' quarters** | Where the memoir B1–B6 is cut, first person plural. |
-| **The memorial walls** | The approach to the Landing: rings so dense the stone looks woven; the same names repeated hall by hall (hundreds of names, thousands of rings). One ring unfinished: his current cutting, in his hand (seen week 21, understood month 11). Re-read with NAME (learned in the deep works' tool-room, month 8). The last wall before the three doors carries B6. |
+| **The memorial walls** (the app: "the walls of rings" until B6 reads in full with NAME, week 30; never "memorial" before that) | The approach to the Landing: rings so dense the stone looks woven; the same names repeated hall by hall (hundreds of names, thousands of rings). One ring unfinished: his current cutting, in his hand (seen week 21, understood month 11). Re-read with NAME (learned in the deep works' tool-room, month 8). The last wall before the three doors carries B6. |
 | **The Landing** | Where the corridor turns and he stands. First meeting (month 6). |
-| **The three counting doors** | At the region's foot. Tally and RETURN on each. The door-maker's plan (X-door-plan) on the wall beside them: the count is the world on the hand, not the door; the Seed rule. He is always on the near side: at week 25 he stands at the first door, on the word *Here*, as Dan arrives with the Key, and Dan passes within reach; the wall takes his shoulder; he says nothing. From week 41 the first door's face carries Dan's own record, growing (K6). This is where, at the end, his voice comes from, and where the list is found. |
+| **The three counting doors** | At the region's foot. Tally and RETURN on each. The door-maker's plan (X-door-plan) on the wall beside them: the count is the world on the hand, not the door; the Seed rule. He is always on the near side: at week 25 he stands at the first door, on the word *Here*, one long hand flat on the door over the strokes of Dan's count; Dan crosses within reach; the door opens; when Dan looks back he is where he was. He says nothing, and the app says nothing about what the door would do for him (R8 is read at week 36). The door-plan is found on the far side, after the scene. From week 41 the first door's face carries Dan's own record, growing (K6). This is where, at the end, his voice comes from, and where the list is found. |
 
 ## Region 4 — The Deep (months 7–9): below the doors
 

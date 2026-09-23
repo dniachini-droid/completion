@@ -160,7 +160,7 @@ The lintels tell Dan the words he needs. The language is a language only if he c
 | keep fire | KEEP-FIRE | the nearest lamp stays lit after he leaves the room (it always did; the Site is polite) |
 | remain (REMAIN) | KEEP-ONE-HERE | the place does not answer. Ever. |
 
-Ten to fifteen of these exist by month 6; the app never lists them; Dan finds them by trying.
+Ten to fifteen of these exist by month 6; the app never lists them; Dan finds them by trying. Weeks 14–26 put one open cell in view a week, where the experiment rhymes with the room (`ARRIVALS_REGION3.md`: 15.4 *glimpse* at the high door; 18.A *warm* at the wall of lamps; 20.4 *listen* in the Warning Hall; 23.4 *count* at the Landing, where the tally is three; 24.2 *hum* and *my mark* in the workshop).
 
 Words that exist, can be read, and are never cut by the player:
 - **REMAIN**: KEEP-ONE-HERE. The Custodian's word, and later the Linguist's. Cutting it on a gate does nothing ("the place does not answer"; a wrong guess gives a clue, nothing is lost).
@@ -269,7 +269,7 @@ A record's *voice* comes from what it counts and compares, its formula, its unit
 | 10 | ALL | m 4 → m 12 | KEEP-ALL was readable from month 6; its meaning only lands at the Seed |
 | 11 | (light, not a sign) | m 11 | The Seed's smooth surface, by lamplight, is the finest cut: the message was never a question. Every sign in it is old. The pivot is the lamp, which is why the lamp was the first object |
 
-On the visit after a pivot sign is learned, the app surfaces the one old record with the biggest change, shows the span re-rendering, and lets Dan tap to reopen the whole record (RESEARCH lesson 9). Old content is the reward for new signs, and visits stay short.
+On the visit after a pivot sign is learned, the app surfaces the one old record with the biggest change, shows the span re-rendering, and lets Dan tap to reopen the whole record (RESEARCH lesson 9). Old content is the reward for new signs, and visits stay short. At the mid-point (KEEP, week 22) the rule holds by spreading the turn across the week's visits, one record each (`ARRIVALS_REGION3.md` week 22): the arrival shows only the ring and the lintels; S4 and S7 are one visit, side by side; the app never counts the pivot.
 
 ## 11. Formulas by age (the age-marker, RESEARCH lesson 10)
 

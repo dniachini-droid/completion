@@ -56,8 +56,8 @@ Notation below: `·` separates sign groups; `[ ]` is a carved picture; `ring(…
 
 ### S4 — week 4
 - **Cut:** ONCE ring(KEEP-ONE) ONE · ME GO HOME · CHILD OF ME ONE · KEEP ME NOT · VOICE GIVE: GO · ASK LAMP: TOWARD ONE AGAIN · GIVE LAMP · GO UP PATH [salt] FIRE NOT HAND STONE · STONE ALL [crack] [salt] · VOICE GIVE NOT; CHILD ONE · MAKE {h} VOICE OF ONE AGAIN
-- **Rendering:** *Once, the first. I go home; my child is alone. He held me not. He said: go. He asked for the lamp: for the one who comes again. I gave it. Up the salt way, no fire, hand on stone. Stones in the crack, salt over. Told no one but her.* (Fully held month 6: KEEP.)
-- **Her sheet:** "…go home… **he held me**… go… lamp… gave… went up… salt… stones…" (Her first "gave" for the giving-mark: Day 9.) Dan's reading agrees with hers until week 9 (NOT: "he held me [not]"), and KEEP at month 6 confirms *held* and ties it to his ring.
+- **Rendering:** *Once, the first. I go home; my child is alone. He kept me not. He said: go. He asked for the lamp: for the one who comes again. I gave it. Up the salt way, no fire, hand on stone. Stones in the crack, salt over. Told no one but her.* (Fully held week 22: KEEP. The lexicon's one English for KEEP is keep/kept from week 22; before it the span is a glyph over her *held*.)
+- **Her sheet:** "…go home… **he held me**… go… lamp… gave… went up… salt… stones…" (Her first "gave" for the giving-mark: Day 9.) Dan's reading agrees with hers until week 9 (NOT: "he held me [not]"), and KEEP at week 22 re-renders the span as *He kept me not* beside her *held*, which stays visible as hers, and ties the mark to his ring (ARR3 22.2, shown beside S7's *he had kept my lamp*).
 - **Telling:** I said I would go home now, my daughter is alone. He held me not. He said go. He asked for the lamp. He said: someone will need it. I gave it. I went up by the salt way with no light and my hand on the wall, and I put stones in the crack and salt over the stones, and I said nothing to anyone but her.
 - **Beat:** he asked for the lamp; the lamp on the ledge is *this* lamp; "he held me" (false, sufficient).
 
@@ -176,7 +176,7 @@ Formula: "Log." Feet, yards, pounds, shifts; the day of the month, never the yea
 | E2 | 11 | Log. 22nd. Cut the moving-mark loud with the powder-charge, twelve pounds, and the whole gallery came down as one, which no charge does. The Inspector had shown me the loud-mark on a lintel and said it was a warning. The book has it in gold as a rank. Took it for a rating. Watch stopped at the blast: 4.10. |
 | E3 | 12 | Log. 25th. Well in the village stood still three days; the keeper came up to complain. Compasses swung to the hill. A sound in the sky at dusk like a door in a very large house. The men have gone. The company has written. I am taking my meals down. |
 
-Later (months 4–5): E4 ("cut the hold-mark on the roof above the props; it held"); E5 ("the hill answered. Louder will open it"); E6 (the Custodian's statement: "Once, the fourth, long-slept of stone in the eighth count of his staying. I laid him in the Hold.").
+Later (months 4–5): E4 ("cut the hold-mark on the roof above the props; it held"); E5 ("the hill answered. Louder will open it"); E6 (the Custodian's statement: "Once, the fourth, long-slept of stone in the eighth count of his staying. I laid him here."); E7 (the log's one last entry, on the back half in the Hold, read week 19, unsigned: "Log. 30th. Kegs stacked in the chamber, six. Down for good. If the sky says it again I will hear it from here.": never "afraid"; a count; the sky question planted for month 8).
 
 ## 6. The Builders (B), the Custodian's own cuts (K), the seed (Z)
 
@@ -262,6 +262,7 @@ Ids and weeks follow `REVELATION_MAP.md` weeks 14–26. Builder records open wit
 | S10 | 18 | Salt Gallery niche | Once, the first. He asked me what the sky sounded like. I said: like nothing; like wind. He asked if it had ever sounded like a door. I said no. He said: good. |
 | B3 | 19 | the Council Gallery's left wall | We cut. We cut the deep. We moved the hill. We were loud, because we were glad. |
 | X-librarian | 19 | paper, her folder | Catalogue: a book of the old road, with gold. Missing since the railway. |
+| E7 | 19 | paper, the log's back half, on a shelf in the Hold (NICHES 16.3; ARR3 19.4) | Log. 30th. Kegs stacked in the chamber, six. Down for good. If the sky says it again I will hear it from here. |
 | X-answerer | 19 | the Council wall, another maker's hand | What is kept is buried. What is sent is heard. We were sent. We are the proof. |
 | B4 | 20 | the Council's left-hand wall, sealed panel (the Warning Hall's approach) | We cut. Late, we read the last of the stone we could read. It said: what is loud is taken. The rock had gone still under our hands three times. We had not asked why. |
 | X-overseer | 20 | told line by the order's stone copy, his hand | Told: the works are closed. The surveyor's last report never came. |
@@ -280,7 +281,7 @@ Ids and weeks follow `REVELATION_MAP.md` weeks 14–26. Builder records open wit
 Notation as §0.1. Renderings are what the app shows when every sign is held. Counts in eights are written as sums (8+3).
 
 **V2 (wk 6, his hand):** ONCE ring(KEEP-ONE) TWO · MARK TOWARD ring(overseer) · ONE EAT NOT, PERSON ALL · SLEEP NOT · VOICE OF ONE: PATH STONE GOOD NOT; UP PERSON ALL GOOD · KEEP PERSON ALL NOT · GIVE SEE MARK TWO; DOOR OPEN · PERSON ALL GIVE DAY · MAKE {h} VOICE OF TWO AGAIN NOT
-*Once, the second. Marks for [ring]. He eats not with us; sleeps not. His voice: poor in the works' tongue, good in the hill people's. He held us not. He showed two marks; a door opened. The men: paid to this day. Cut by [hand], from the voice of the second; came again not.*
+*Once, the second. Marks for [ring]. He eats not with us; sleeps not. His voice: poor in the works' tongue, good in the hill people's. He kept us not. He showed two marks; a door opened. The men: paid to this day. Cut by [hand], from the voice of the second; came again not.*
 Her sheet (the crew line only): "…he held us…".
 
 **V3 (wk 7):** ONCE ring(KEEP-ONE) TWO · MARK TOWARD ring(overseer) · PERSON 8+4, CHILD ONE [tablet] · ring×12, ring(boy): GIVE · CHILD MAKE MARK ALL, SEE NOT; PERSON ONE GIVE · ONE SEE; MAKE HERE, UP NOT · MAKE {h} VOICE OF TWO AGAIN NOT
@@ -290,7 +291,7 @@ Her sheet (the crew line only): "…he held us…".
 *The water in the channel: moved not. Still, as a floor. The [mules] went not in. His voice: after a loud cut, expected; the next loud cut, worse. He asked: cut not.* (LOUD is a glyph until month 8; at week 8 "after a [ ] cut".)
 
 **V5 (wk 10):** ONCE ring(KEEP-ONE) TWO · MARK TOWARD ring(overseer) · VOICE OF ONE: SEE · PATH DEEP: 8+8+8+6 [pace] TOWARD STONE ALL · MAKE LOUD ONE: OPEN · ONE ASK: KEEP · ONE KEEP DAY 8+1 · PATH KEEP NOT · MAKE {h} VOICE OF TWO AGAIN NOT
-*Once, the second. Marks for [ring]. His warning: seen. The lower way: thirty paces past a fall. One loud cut opens it. He asked: hold. This one held nine days. The road holds not.*
+*Once, the second. Marks for [ring]. His warning: seen. The lower way: thirty paces past a fall. One loud cut opens it. He asked: keep. This one kept nine days. The road keeps not.* (KEEP is a glyph here until week 22; her sheets do not cover V5.)
 
 **V6 (wk 13, his own statement):** ONCE TWO · PATH HERE · MAKE MOVE STONE LOUD AGAIN · WATER MOVE NOT AGAIN; MOVE NOT · ME SHUT DOOR · ONE LONG-SLEEP NOT, ME SHUT ONCE · ME OPEN NOT AGAIN {h}
 *Once, the second, in this side way, cut the moving-word loud again. The water moved not, again; it moves not. I shut the door. He long-slept not when I shut it. I have not opened it.* (At week 13, with MAKE, LOUD, AGAIN and SHUT unheld: *Once, the second, in this side way: [ ] moving-stone [ ] [ ]. The water moved not [ ]; moves not. I [ ] the door. He long-slept not when I [ ] it. I opened not [ ].* SHUT arrives month 6.)
@@ -299,7 +300,7 @@ Her sheet (the crew line only): "…he held us…".
 *Marks for [ring]. This one measured here: eleven paces by seven. The door: mark given not. He: right, about the water. The men are owed thirteen days: [rings].*
 
 **E6 (wk 16, his statement, above the shape in the Hold):** ONCE FOUR · LONG-SLEEP STONE · COUNT 8 [cutting] HERE · ME GIVE ONE SLEEP HERE · ME KEEP [book] {h}
-*Once, the fourth, long-slept of stone in the eighth count of his staying. I laid him in the Hold. I kept the book.*
+*Once, the fourth, long-slept of stone in the eighth count of his staying. I laid him here. I kept the book.* (HERE renders "here", never "in the Hold". At week 16: *…the eighth count of [ ]. I laid him here. I [ ] the book.*; the gap's shape is described once, ARR3 16.A.)
 
 **K5 (wk 24):** KEEP ONE HERE {h}. *Keep-one-here.*
 
@@ -316,7 +317,7 @@ Her sheet (the crew line only): "…he held us…".
 *We cut. Late, we read the last of the stone. It said: what is loud is taken. The rock moved not under our hands, three times. We asked not.*
 
 **B5 (wk 21):** MAKE PERSON ALL · PERSON ALL: KEEP; TEACH; MAKE HERE · PERSON ALL: GIVE ONCE TOWARD PERSON ALL; GIVE · ONE-WHO KEEP MAKE DOOR ALL: MAKE KEEP · TOWARD PERSON ALL NOT; SEE NOT PERSON ALL TOWARD
-*We cut. Half: keep it; teach it; make a place. Half: it was given to us; give. We who keep cut the doors: the keeping-work. Against ourselves; against what we could not see we would be.* (KEEP arrives week 22, TEACH and ONE-WHO month 9. At week 21: *Half: [ ] it; [ ] it… [ ] [ ] cut the doors: the make-[ ].* From week 22: *keep it; [ ] it… [ ] keep cut the doors: the keeping-work.*)
+*We cut. Half: keep it; teach it; make a place. Half: it was given to us; give. We who keep cut the doors: the keeping-work. Against us. Against the us we could not see.* (KEEP arrives week 22, TEACH and ONE-WHO month 9. The full string is kept; the app shows the door clause first and the rest on re-open: at 21.B only *[ ] [ ] cut the doors: the make-[ ]* renders and the two halves stay glyphs; at 22.4 *[ ] keep cut the doors: the keeping-work*; the halves render when Dan reopens the whole record, *Half: keep it; [ ] it… Half: it was given, once, [ ] us; give.*)
 
 **B6 (wk 25–26):** MAKE PERSON ALL · COUNT [cutting] ALL: PERSON ALL DEEP NOT · STILL ONE ALL: LONG-SLEEP NOT; HERE NOT · NAME MAKE NOT · VOICE ONE NOT
 *We cut. Each cutting, fewer. Those who went still long-slept not; they were not here. We cut not their names. No voice to say them.*
@@ -334,7 +335,7 @@ Her sheet (the crew line only): "…he held us…".
 - X-mule-driver (wk 14): VOICE: [mule] GO DEEP NOT; ME MAKE NOT {h}. *Told: the mules went not in; I made them not.*
 - X-overseer (wk 20): VOICE: PATH STONE SHUT; MARK OF TWO TOWARD ME AGAIN NOT {h}. *Told: the works are shut. The second's last marks came not to me.* (At week 20: *Told: the works are [ ]. The second's marks [ ] me again not.*)
 - S12 (wk 20; re-read wk 22 with KEEP): VOICE CHILD: ONE COUNT TOWARD LONG-SLEEP; VOICE: [owl] KEEP LAMP {h}. *The child's voice: he counted to the end. He said: the owl keeps the lamp.* (At week 20: *he counted [ ] long-sleep. He said: the [owl] [ ] the lamp.*)
-- X-answerer (wk 19, the Council's right-hand wall, another maker's hand): KEEP: DEEP · GIVE: HEAR · GIVE PERSON ALL ONCE · PERSON ALL: SEE {h: maker}. *What is kept is deep. What is given is heard. We were given, once. We: see.* (At week 19: *What is [ ] is deep…*)
+- X-answerer (wk 19, the Council's right-hand wall, another maker's hand): KEEP: DEEP · GIVE: HEAR · GIVE PERSON ALL ONCE · SEE: PERSON ALL {h: maker}. *What is kept is deep. What is given is heard. We were given, once. See: us.* (At week 19: *What is [ ] is deep…*)
 - the one stroke (wk 13, the deep door in the square gallery, his hand): COUNT AGAIN NOT; ONE {h}. *Count again not; one.* (At week 13: *count [ ] not; one.*)
 - the ledger of days (wk 13, the side gallery's recess): VOICE: CHILD COUNT DAY, ONE AGAIN NOT {h}. *Told: the child counted the days; he came again not.* (At week 13: *Told: the child counted the days; he [ ] not.* AGAIN week 20.)
 
@@ -343,8 +344,7 @@ Her sheet (the crew line only): "…he held us…".
 - the two rods (wk 19, the Council's floor): PERSON TWO; VOICE GOOD NOT; ONCE ALL {h}. *Two. Voices not good. The last time.*
 - the tie-break (wk 21, the foot of the answerers' wall): COUNT PERSON ALL: 8+8+4, 8+8+4; GOOD NOT ONE; DOOR ALL MAKE: ONE, ONE {h}. *Twenty; twenty. Not one more. The doors were cut: one, and one.*
 - the mended lamp-cup (wk 23, a Landing niche): MAKE AGAIN GOOD · [clay] OF ONE {h}. *Mended. The first's clay.*
-- the five stones (wk 24, the workshop shelf): COUNT: 1 2 3 4 5; 6 ONCE NOT {h}. *The count. One to five. The sixth is not yet.*
-- the set-apart rod (wk 24, the rack): TOWARD 6 {h}. *For the sixth.*
+- the rack (wk 24): five pegs worn to a shine and a sixth with an unworn rod on it; TOWARD 6 {h}. *For the sixth.* (The workshop's one reader-count object; the numbered stones were cut as a doubled countdown.)
 - the Warning Hall's small copy (wk 20; re-surfaced wk 32): STONE MOVE NOT ONCE: COUNT 3; 4: ONCE ALL {h}. *The times the rock moved not: three. The fourth: the last.*
 - the returns tally (wk 15, the lower way's floor-stone by the Hold's door): strokes, a gap, five short rows; COUNT AGAIN OF PERSON ALL READ: ONE, MANY, AGAIN; ALL AGAIN NOT {h}. *The count of the readers' returns: the first, many, and came again; the others, not.* (AGAIN a glyph until week 20; the rows' shapes carry it before then.)
 - the comb (wk 2, a crack above the wife's ring): [comb] OF ring(Ashti) · ME ASK NOT · ONE GIVE ONCE HERE; DEEP ring {h}. *Hers. I asked not for it. He left it under the ring.* (At week 2, GIVE still a guess: *[a comb] [ ] [ring]. I [ ] [ ]. He [give?] [ ] [ ]; [ ] [ring].*)
