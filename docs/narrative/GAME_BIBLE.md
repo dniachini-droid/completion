@@ -36,7 +36,7 @@ You know roughly what's coming; the details are the surprise (player model). Rou
 2. **Everyone met him.** As you read further, the same figure appears in every age's records, under a different name, and he has never once tried to stop anyone reading.
 3. **A school with a warning.** The people who made the place left lessons, a rule, and an argument they had with each other.
 4. **What he wants.** The figure's own story, and why he has been teaching.
-5. **The bottom.** A door that needs the most from you, and what is behind it.
+5. **The bottom.** A door that needs the most from you (it fills at once on a great day, or slowly with steady weeks), and what is behind it.
 
 The story is finished when it is finished. It has a fixed ending, decided before any clue was planted, and every thread connects to it.
 
@@ -81,6 +81,6 @@ One small region: the way in, the first hall, two side galleries, one door you c
 | The script | the Cut | the Marks; the Hand |
 | A learned sign | a mark | a sign; a cut |
 | A power | a word | a saying; a cutting |
-| The figure | (the records name him; the app uses the latest reader's name for him) | |
+| The figure | (the records name him, each age differently; the app itself never names him) | |
 
 Nothing in this file names the product (out of scope until later).
