@@ -28,7 +28,7 @@ Define the real-life behavioural problem the product solves, and the product rul
 
 - Application code, scaffolding, frameworks, `package.json`, databases, tech stack (Phase 7+).
 - Game mechanics: loops, economy, XP/HP/MP, quest system, abilities design (Phase 2).
-- Worldbuilding, lore, world truth, characters, choosing a setting (Phase 3).
+- Worldbuilding, lore, world truth, characters, choosing a setting (Phase 3). When Phase 3 starts, the story gets long dedicated research-led sessions of 5–7 h or more, possibly overnight (D-008).
 - Art direction and visual design proposals (Phase 4).
 - Product naming.
 
