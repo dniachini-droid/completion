@@ -72,5 +72,5 @@ Plus two hard checks: the brief (`ART_DIRECTION.md` → "Brief for the direction
 
 ## Progress log (Sydney time, 24 Sep)
 - 9:36 am — Setup done; keep-alive Routine hourly.
-- 9:55 am — Stage 1 done: model comparison, reviewers 2–1 for the default model (D-029, provisional until Dan picks). Dan asked for the delve timer as a glowing ring with the number inside (D-028).
-- 10:00 am — Stage 2 done: three directions written (`ART_DIRECTION.md`). Stage 3 started: three builders working in parallel, one per direction.
+- 9:48 am — Stage 1 done: model comparison, reviewers 2–1 for the default model (D-029, provisional until Dan picks). Dan asked for the delve timer as a glowing ring with the number inside (D-028).
+- 9:50 am — Stage 2 done: three directions written (`ART_DIRECTION.md`). Stage 3 started: three builders working in parallel, one per direction.
