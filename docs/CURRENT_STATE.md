@@ -86,4 +86,4 @@ Good morning. Here is what happened while you slept, with no answers given away.
 
 ## Recommended next action
 
-**Dan: read the morning briefing above, then answer its five questions in a new session with:** "Read docs/CURRENT_STATE.md. Here are my answers to the morning questions: …"
+**Dan: read the morning briefing above, then answer its six questions in a new session with:** "Read docs/CURRENT_STATE.md. Here are my answers to the morning questions: …"
