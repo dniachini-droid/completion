@@ -70,3 +70,18 @@ Record the critique and the fixes in `sealed/REVIEW.md`.
 - No code, no tech stack, no art direction (Phase 4), no product name. Visual notes only as flavour.
 - **Keep going.** If you are about to end a turn before stage 5 is done, first schedule a check-in to yourself with `send_later` (about 30–60 min) that says to continue this plan. A backup hourly Routine named **"Phase 3 overnight keep-alive"** also wakes the session. When stage 5 is done, find that Routine with `list_triggers` and delete it, and cancel any pending check-ins.
 - If something blocks you (a tool is missing, a decision can't be made provisionally), record it in `CURRENT_STATE.md` and carry on with whatever is not blocked.
+
+## Minimum run time (added 2026-09-23 15:28 UTC via the keep-alive Routine, from Dan's review session)
+
+Dan wants 6–8 hours of real depth, not a fast first draft. The run started 14:26 UTC. **Do not treat the work as finished, and do not delete the keep-alive Routine, before 21:30 UTC** (check with `date -u`). Hard stop around 23:00 UTC in any case.
+
+If stages 0–5 are done before 21:30 UTC, keep deepening the chosen story in roughly this order, committing and pushing after each item and refreshing the morning briefing at the end:
+1. A second, independent critique by a fresh subagent that reads only the sealed docs (plot holes, contradictions, clichés, threads that go nowhere, reveals that don't pay off, weak antagonist motivation). Fix everything it finds.
+2. The revelation map at beat level for months 4–6, not just arc level.
+3. The secondary linked lives in more depth: desires, secrets, how each one's thread turns the central story.
+4. The script: the full sign inventory, the combination rules, each word's effect and place in the truth; re-reading moments planned for the first 6 months.
+5. More sample record fragments in the chosen voice (sealed), including one for each key reveal in the first 3 months.
+6. A "fair play" audit: for each major reveal, list the earlier clues that let a sharp player half-guess it; add clues where a reveal would feel unearned.
+7. A final consistency pass across every sealed file.
+
+Only when it is past 21:30 UTC and everything above is done or clearly past the point of useful returns: delete the Routine (`list_triggers` then `delete_trigger`), cancel pending `send_later` check-ins, and reply "done" with a short spoiler-free summary.
