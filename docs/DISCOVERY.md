@@ -109,3 +109,19 @@ Flags raised with Dan:
 - Loot and rarity haven't come up unprompted, despite the brief. Test directly.
 - Companions look low priority.
 - A dark world must not become a harsh app.
+
+---
+
+# Phase 1 — Product discovery
+
+Plan (D-004): about 1–2 interview rounds, then write `DESIGN_PRINCIPLES.md` and review `ANTI_FEATURES.md`. Exit criteria: `CURRENT_STATE.md`.
+
+## Session 2 — 2026-09-23
+
+### Round 1 sent (product problem)
+Nine questions covering: the draft problem statement (below), a complete day and a low-capacity day, how capacity is expressed, "I can't start", rest and leisure (inside vs outside the system), recurring activities and the Claude course, who plans the day and how one-off tasks get in, absences and unexpected obligations, and whether the app anchors the day (morning start, evening close, bedtime).
+
+**Draft problem statement put to Dan (hypothesis, not agreed):**
+> Dan usually knows what would make a day good, but starting depends on mood and energy, and on low days the couch and phone win. The product's job is to get him *started* on meaningful things at a size that fits the day, and to let a day count as enough, without guilt or admin.
+
+Awaiting answers.
