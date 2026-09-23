@@ -171,7 +171,7 @@
 ## D-017 — App name brought forward into Phase 3
 - **Date:** 2026-09-23
 - **Context:** Product naming was deferred until later in the plan. Dan asked for an app name now.
-- **Decision:** Deliberate deviation from the sequence. The overnight Phase 3 run proposes 5–8 candidate names drawn from the chosen world in `narrative/NAMES.md`, each checked for clashes with existing products. No name may hint at sealed truth. Dan chooses.
+- **Decision:** Deliberate deviation from the sequence. The overnight Phase 3 run proposes 5–8 candidate names drawn from the chosen world in `narrative/NAMES.md`, each checked for clashes with existing products. No name may hint at sealed truth. Dan chooses **whenever he's ready, with no rush**, at the latest in Phase 5. Dan: "We can name it later if appropriate."
 - **Alternatives:** Wait for Phase 5 concept synthesis.
 - **Rationale:** A name grounded in the world is best found while the world is being made, and it costs little.
 - **Consequences:** Once chosen, the GitHub repo can be renamed (housekeeping item in `CURRENT_STATE.md`).
