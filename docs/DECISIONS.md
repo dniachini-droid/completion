@@ -291,3 +291,12 @@
 - **Rationale:** Rule 20 (ask Dan about taste); the forced choices discriminate, the lists did not.
 - **Consequences:** Phase 4 exit criterion 1 met. `PHASE4_PLAN.md` Part 2 updated.
 - **Reversible:** Yes. Dan picks or blends at the end of the run.
+
+## D-028 — The delve timer is a glowing ring with the number inside
+- **Date:** 2026-09-24
+- **Context:** During the visual run, Dan asked for "a circular timer that slowly fills up as the time increases. With glow. And the number inside it. Rather than just a task bar." `TOOLS.md` §1 had said the delve "is not a number counting down".
+- **Decision:** The delve shows a circular ring that fills with glow as the minutes pass, with the time left in the middle. The expedition still moves in the world around it, and the phone can still be put away. Each of the three directions draws the ring in its own style.
+- **Alternatives:** keep the delve as a moving scene with no number (the earlier line); a bar (Dan: no).
+- **Rationale:** Dan's taste (rule 20). A ring and a number don't conflict with the reason for the earlier line, which was that the world should visibly move, not only a count.
+- **Consequences:** `TOOLS.md` §1, `ART_DIRECTION.md`, `PHASE4_RUN.md` updated.
+- **Reversible:** Yes.

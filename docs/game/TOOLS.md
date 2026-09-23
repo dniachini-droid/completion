@@ -10,7 +10,8 @@ A tool earns its place only if (1) using it moves or reveals something in the wo
 
 ## 1. The focus timer → *the delve*
 The 25/5 Pomodoro that already works for Dan, made into a moment in the world.
-- **While it runs**, the expedition is visibly moving through the Site. It is not a number counting down. Dan can put the phone away; nothing needs watching.
+- **While it runs**, the expedition is visibly moving through the Site. Dan can put the phone away; nothing needs watching.
+- **The timer's face** (Dan, 2026-09-24, D-028): a **circular ring that slowly fills with glow** as the time passes, with **the number inside it**. Not a progress bar. The ring sits in the world, so the expedition still moves around it. (Replaces "it is not a number counting down".)
 - **The end must be heard or felt with the phone locked and away** (a requirement for Phase 7).
 - **What a delve earns.** During the day, **main jobs move the world**; the delve is how you do them, and the job's step is the reward (no double count). After day complete, each finished delve earns a step of its own (`CORE_LOOPS.md` Part 4).
 - **A shorter first delve.** After "I can't start" and the tiny step, the offer to continue is "10 minutes?". Minutes count towards the job as usual; a step after day complete still needs a full delve, so nothing becomes farmable.

@@ -51,6 +51,9 @@ Reactions to rough sketches on a sample page (`design/taste/samples.html`). Unma
 ### 9. Screens he likes on his phone
 - "Clean ones." (No specific apps named.)
 
+### The delve timer (Dan, during the run)
+- "A circular timer that slowly fills up as the time increases. With glow. And the number inside it. Rather than just a task bar." (D-028)
+
 ### 10. Sound
 - Yes to sound; he leaves the choice to Claude's recommendation. (Audio is later; recommendation recorded below.)
 
