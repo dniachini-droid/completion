@@ -10,14 +10,15 @@
 - Dead civilisations (ruins) vs living alien cultures? *(Round 2: likes discovering living alien life too.)*
 - ~~What makes a goal feel "visible"?~~ Knowing roughly what's coming; the details a surprise (round 3).
 - ~~How dark should the tone be?~~ "The darker the better" (round 3). New question: how does a dark world coexist with a kind app?
-- Does loot/collecting/rarity actually motivate him? (It hasn't come up unprompted.)
+- ~~Does loot/collecting/rarity motivate him?~~ Only gear with powers; collectibles are mild (round 5).
 
 ## Behaviour
 - What causes initiation vs avoidance for him, specifically?
 - What does "a good day" actually mean to him?
 - How does his capacity vary (injury, energy, mood), and can he reliably self-report it?
 - Is initiation the main problem, or are prioritisation / "what counts as enough" equally important? *(Round 4: initiation gated by mood/energy looks primary.)*
-- Why are admin, housework and Spanish avoided specifically?
+- ~~Why are admin, housework and Spanish avoided?~~ Boredom, easier alternatives (phone/YouTube), pile-up; Spanish lapsed with 20 prepaid lessons unused (round 5).
+- How can the app beat YouTube at the couch moment?
 - Can the game help with sleep (Dan's idea) without creating sleep anxiety? Reward behaviour, not outcome?
 - Is Pomodoro the natural unit of effort?
 
@@ -49,5 +50,5 @@
 
 ## Ethics / privacy
 - What personal data is acceptable to store, and where? *(Now concrete: mental-health context and sleep. Design docs should record only what's needed.)*
-- The game supports recovery but is not treatment. Should it align with any clinician's approach?
+- The game supports recovery but is not treatment. **His psychologist recommends an activity scheduler.** The product should be compatible with that, and Dan may share it with them.
 - What should any AI component be allowed to see?

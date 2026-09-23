@@ -17,7 +17,7 @@ Build an accurate, evidence-based model of Dan as a player and as a person tryin
 
 ## Current session focus
 
-Interview round 5: why specific tasks are avoided, daily rhythm, Pomodoro, lists, the loot test, sleep, and clinician context. Rounds 1–3 covered game taste (checkpoint 1 in `DISCOVERY.md`); round 4 covered real-life motivation. Still to cover: visual/UX taste (criterion 11) and structure limits (8–9).
+Interview round 6: visual/UX taste (criterion 11), limits of structure and notifications (8–9), the YouTube moment, and hard nos (12). Plan: after round 6, give a full synthesis and ask Dan to confirm closing Phase 0.
 
 ## Do NOT work on yet
 
@@ -36,12 +36,12 @@ We can articulate with reasonable confidence — and Dan explicitly agrees the p
 
 - [x] 1. What game experiences genuinely absorb Dan. *(rounds 1–3; pending Dan's confirmation)*
 - [x] 2. What commonly makes him stop playing games. *(the story ends)*
-- [ ] 3. Which reward structures motivate him.
-- [ ] 4. Which reward structures rapidly become meaningless.
-- [ ] 5. What causes him to initiate real-world activities. *(partial: mood/energy; Pomodoro; curiosity in coding/tank)*
-- [ ] 6. What causes avoidance. *(partial: low mood; reasons for specific tasks unknown)*
+- [x] 3. Which reward structures motivate him. *(new abilities; story progress; visible-but-uncertain goals)*
+- [x] 4. Which reward structures rapidly become meaningless. *(grinding; stat/cosmetic loot)*
+- [x] 5. What causes him to initiate real-world activities. *(mood/energy; bounded timers; curiosity; external structure like lessons)*
+- [x] 6. What causes avoidance. *(low mood; boredom; phone/YouTube easier; pile-up)*
 - [x] 7. What "a good day" actually means to him. *(several things done, incl. gym/admin/meals; pending confirmation)*
-- [ ] 8. What level of structure helps.
+- [ ] 8. What level of structure helps. *(partial: wants a routine; Pomodoro; weekly lessons worked)*
 - [ ] 9. What level of structure becomes oppressive.
 - [x] 10. What types of fictional worlds reliably interest him. *(dark cosmic science-fantasy; pending confirmation)*
 - [ ] 11. What UX aesthetics he responds to.
@@ -51,15 +51,14 @@ We can articulate with reasonable confidence — and Dan explicitly agrees the p
 ## Completed milestones
 
 - 2026-09-23 — Repository initialised with documentation skeleton, `CLAUDE.md`, and `MASTER_BRIEF.md`.
-- 2026-09-23 — Interview rounds 1–4 answered; player model updated; synthesis checkpoint 1 given.
+- 2026-09-23 — Interview rounds 1–5 answered; player model updated; synthesis checkpoint 1 given.
 - 2026-09-23 — Pacing decision D-004 recorded (pragmatic Phases 0–5; first playable prioritised; deep narrative continues in parallel).
 
 ## Unresolved blockers
 
 - None blocking discovery.
 - Housekeeping (non-blocking): decide later whether to rename the GitHub repo. (Privacy verified: private, 2026-09-23.)
-- Pending: Dan's comfort with health details being recorded in the repo.
 
 ## Recommended next action
 
-**Dan answers round 5.**
+**Dan answers round 6; Claude then presents the full Phase 0 synthesis for confirmation.**

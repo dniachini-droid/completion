@@ -61,6 +61,15 @@ Pacing (D-004): combine or skip topics once answers make them redundant. Target 
 - Observations: Spanish may be avoided *because* it's grind-like with no visible goal; mood-independent starting may be the core product value; reward controllable sleep behaviour, not sleep outcomes.
 - Repo privacy verified: private.
 
+### Round 5 findings (reasons)
+- **Spanish:** had a teacher weekly; stopped; **20 prepaid lessons unused**. The barrier is restarting, not means.
+- **Admin/housework:** boredom; **the phone and YouTube are the real competitor**; **pile-up makes avoidance worse.**
+- **No routine; wants one** (sleep by 11, wake 7–8).
+- **Pomodoro works through bounded commitment and following the timer.**
+- **Lists work only when motivated**, so volume must adapt to his state.
+- **Loot test:** gear only if it grants powers; collectibles are mild. The brief's rarity/collecting assumption is largely not confirmed.
+- **His psychologist recommended an activity scheduler.** This project is essentially a game-shaped activity scheduler, so the two align.
+
 ### Synthesis checkpoint 1 (given to Dan after round 3)
 Dan is drawn to dark, cosmic science-fantasy: vast timescales, ancient or alien intelligences, and power that looks like magic but is really technology. The story is the engine, above all mystery, interconnection ("everything was related"), and an imposing antagonist with depth. Progression he cares about means new mysterious abilities, not numbers. Repetition is fine if it aims at a goal he can roughly see but not fully predict.
 

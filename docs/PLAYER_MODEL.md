@@ -3,9 +3,9 @@
 > Living model of the player. Updated after each discovery round.
 > Rule: only things Dan has actually said go under *Explicitly stated*. Inferences go under hypotheses, and stay there until confirmed.
 
-_Last updated: 2026-09-23 — after interview round 4 (real-life motivation)._
+_Last updated: 2026-09-23 — after interview round 5 (reasons behind avoidance, Pomodoro, lists, loot, treatment context)._
 
-> **Sensitivity note:** this file contains health information Dan shared for design purposes. Keep it to what the design needs. The repo is private (verified 2026-09-23); Dan has been asked whether he's comfortable with this level of detail.
+> **Sensitivity note:** this file contains health information Dan shared for design purposes. Keep it to what the design needs. The repo is private (verified 2026-09-23). Dan was offered a reduction in detail and raised no objection.
 
 ## Explicitly stated facts / preferences
 
@@ -67,6 +67,16 @@ _Last updated: 2026-09-23 — after interview round 4 (real-life motivation)._
 - **External structure from the game:** open to exploring it, unsure how good it would be.
 - **Pomodoro (25 min focus / 5 min break) "has been incredible"**, used at work and loved.
 
+*From round 5:*
+- **Spanish:** used to have one lesson a week with a teacher plus a few hours of study a week. Has stopped. **20 lessons already paid for and unused.** Hasn't opened a book in months.
+- **Admin and housework:** boredom; the couch, phone and **YouTube feel easier**. **"Especially when it piles up I just don't want to do it."** Motivation is low.
+- **No routine since leaving work, and wants one.** Wants to **sleep by 11 and wake by 7–8.**
+- **Pomodoro, what worked:** "only needing 25 minutes"; working until the timer reached zero; "I just followed the timer"; then 5 minutes' break and back into it.
+- **Lists:** likes them **only when motivated**. On a good day a list "can be genuinely long" and he gets a lot done.
+- **Gear matters only if it has special powers or abilities.** Hidden items "not so much, but could be fun".
+- **Sleep target:** unsure, willing to try.
+- **Working with a psychologist, who has recommended trying an activity scheduler.**
+
 ## Strong hypotheses
 
 - **Capabilities beat numbers.** Progression that grants a new *verb* (spell, power, tool) motivates him far more than stat or level increases. Supported by Q3, Q4 and Q8 independently. Implication to test: a visible XP/level number may be weak or irrelevant for him.
@@ -76,7 +86,12 @@ _Last updated: 2026-09-23 — after interview round 4 (real-life motivation)._
 - **A powerful, imposing, mysterious antagonist with depth** is a primary hook. Ganondorf was the highlight of his favourite game. Morally complex, not cartoonish, but still genuinely threatening.
 - **Mysterious power systems.** Arcane (runes, spells) or alien/futuristic (Mass Effect). Eternal Darkness suggests he enjoys *composable* magic: collecting parts and combining them.
 - **His real-life absorptions are the same pleasure as his games:** a large, complex body of knowledge to uncover and master (coding, reef tank). Discovery and mastery work in real life too.
-- **Spanish is avoided *like grinding*.** It's learning, which he normally loves, but drilling a language rarely shows visible progress toward a goal. Round 2 suggested that's exactly what makes repetition boring. The game could supply the visible goal. Needs confirming (how he studies).
+- **Spanish lapsed when momentum broke, not for lack of means.** Teacher, structure and 20 prepaid lessons all exist. The first step back is tiny (one message to book a lesson) but carries lapse weight. The weekly lesson was external structure that worked. Reason for stopping not yet asked.
+- **Pile-up is a trigger for avoidance** (stated). The product must never show an accumulating backlog.
+- **The real competitor is the phone and YouTube** at the couch moment, not other productivity tools. The app has to be easier and more appealing than YouTube in that moment.
+- **Pomodoro works through bounded commitment plus an external decision-maker:** only 25 minutes, and the timer decides when to stop. This fits a mood-independent way of starting.
+- **The right amount of work depends on his state.** Long lists work on good days and are useless on low days. Strong support for a capacity mechanic.
+- **The product's core function coincides with his psychologist's recommendation:** an activity scheduler. Designing it as a game-shaped activity scheduler aligns with treatment rather than cutting across it. We are not clinicians; the game should complement that guidance, and Dan may want to show it to his psychologist.
 - **He waits for mood and energy before starting, but action improves his mood** (the gym). Initiation that doesn't depend on mood (the "I can't start" idea) may be the single most valuable thing the product does.
 - **Time-boxed focus units work for him** (Pomodoro, proven at work). A strong candidate unit of effort, and it also helps against task farming. Candidate, not decision.
 - **Anticipation with partial knowledge.** Goals should be foreshadowed (he knows roughly what's coming) but not fully specified (the details surprise). Progress bars alone are not the model.
@@ -94,7 +109,7 @@ _Last updated: 2026-09-23 — after interview round 4 (real-life motivation)._
 - Enjoys **systemic creative play** for its own sake (confirmed: built strange contraptions for fun), plus practical mobility builds. Whether this belongs in *this* game is a separate question: sandbox building is expensive to make.
 
 - **Companions are low priority.** In Mass Effect the galaxy and aliens mattered, not the squad. Characters may matter mainly as story figures (above all the antagonist) rather than as companions.
-- **Loot, collecting and rarity** (suspected motivators in the founding brief) have not come up once in three rounds of unprompted answers. Needs a direct test.
+- ~~Loot, collecting and rarity~~ → **tested in round 5:** gear matters only when it grants powers or abilities; hidden collectibles are mildly interesting. Stat loot and rarity for its own sake are weak motivators for him. This reinforces "capabilities beat numbers".
 - **Stargate fits the whole pattern:** ancient aliens posing as gods, a network of gates linking worlds (compare the temples linked to the Temple of Time), a linguist-archaeologist decoding lost languages, and ancient technology read as magic. Which of these hooked him is still unknown.
 - **Language as power** (Arrival, and Daniel Jackson in Stargate) *might* give Spanish study a meaningful fictional resonance. A design idea to test later, not a finding.
 - **Ticking things off feels good, while a long list feels daunting.** Possibly both true: completing is rewarding, seeing everything at once is not. Needs probing.
@@ -114,7 +129,9 @@ _Last updated: 2026-09-23 — after interview round 4 (real-life motivation)._
 - A visible goal that repetition moves toward (stated).
 - Big complex things to learn and master: coding, the reef tank (stated).
 - Getting several things done (stated).
-- Pomodoro time-boxing (stated).
+- Pomodoro: bounded 25-minute commitment, following a timer (stated).
+- Wants a routine (stated).
+- Gear with special powers (stated).
 - The gym improves his mood (stated).
 - Composable spell systems, e.g. Eternal Darkness runes (stated).
 - Wanting to know what happens next in the story (stated: it's why he keeps playing).
@@ -127,7 +144,10 @@ _Last updated: 2026-09-23 — after interview round 4 (real-life motivation)._
 - Grinding: repetition **without a visible goal** (refined in round 2).
 - The story ending: when it's over, he stops (stated).
 - Low mood and low energy (stated main barrier).
-- Admin, housework, Spanish: avoided (stated; reasons not yet known).
+- Admin and housework: boredom; phone and YouTube are easier (stated).
+- Things piling up (stated).
+- Lists on low-motivation days (stated).
+- Stat or cosmetic loot without powers (stated as not very motivating).
 
 ## Behavioural patterns
 
@@ -160,10 +180,10 @@ _Last updated: 2026-09-23 — after interview round 4 (real-life motivation)._
 
 ## Uncertainties
 
-- Does loot/collecting/rarity actually motivate him?
-- Why exactly admin, housework and Spanish are avoided (boredom, overwhelm, anxiety, invisible progress?).
-- His daily rhythm: wake time, best hours, when the couch pulls hardest.
-- Whether he's working with a clinician whose approach the game should fit with.
+- Why the Spanish lessons stopped.
+- Visual and UX taste (not yet explored).
+- When structure turns into pressure; attitude to notifications.
+- Platform: phone?
 - How a dark fictional tone coexists with a warm, non-shaming relationship to *him* (dark world ≠ harsh app).
 - Visual taste (not yet explored).
 - What specifically makes him stop playing games.
