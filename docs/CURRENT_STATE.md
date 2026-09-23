@@ -28,7 +28,7 @@ _To be written by the overnight run at stage 5._
 
 - Application code, scaffolding, frameworks, databases, tech stack (Phase 7+).
 - Art direction and visual design (Phase 4). Visual notes only as flavour.
-- Product naming.
+- ~~Product naming.~~ Brought forward at Dan's request (D-017): the overnight run proposes a spoiler-free shortlist; Dan chooses.
 - Full chapters of prose beyond sample fragments (D-004).
 
 ## Phase 3 exit criteria

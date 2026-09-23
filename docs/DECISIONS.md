@@ -167,3 +167,12 @@
 - **Rationale:** Dan's preference, and the tools make the app useful on ordinary and high days. The original harms were pile-up, guilt and planning instead of starting. Each is designed out rather than the tool being banned.
 - **Consequences:** More to build. The first playable adds the delve, the satchel, daily runs and a simple Chronicle; plotting and the calendar come later. Phase 3 names the delve, satchel, lamps, relics and Chronicle in the chosen world, a small addition that doesn't change the story work.
 - **Reversible:** Yes. Any tool that creates pressure in use is cut or softened.
+
+## D-017 — App name brought forward into Phase 3
+- **Date:** 2026-09-23
+- **Context:** Product naming was deferred until later in the plan. Dan asked for an app name now.
+- **Decision:** Deliberate deviation from the sequence. The overnight Phase 3 run proposes 5–8 candidate names drawn from the chosen world in `narrative/NAMES.md`, each checked for clashes with existing products. No name may hint at sealed truth. Dan chooses.
+- **Alternatives:** Wait for Phase 5 concept synthesis.
+- **Rationale:** A name grounded in the world is best found while the world is being made, and it costs little.
+- **Consequences:** Once chosen, the GitHub repo can be renamed (housekeeping item in `CURRENT_STATE.md`).
+- **Reversible:** Yes, until the name is used publicly or in code.
