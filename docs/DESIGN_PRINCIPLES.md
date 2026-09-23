@@ -45,8 +45,10 @@ Recurring targets are weekly, and Dan set them himself:
 
 Each week starts fresh. Misses never carry over.
 
+*Amended 2026-09-23 (D-020):* **a non-punitive trail** is allowed alongside the weekly rhythm: each day complete adds a marker, relics come from markers in total, and after a gap the trail branches rather than restarting, so nothing ever visibly breaks (`game/TOOLS.md` §5; revised by D-023). Punitive streaks stay excluded.
+
 **7. Nothing piles up.**
-No visible backlog, no overdue counts, no red badges. After an absence, the world is still there. Dan sees a short "where you were" and one small, welcoming first step.
+No overdue counts, no red badges, and no list on the opening screen. *Amended 2026-09-23 (D-020):* Dan can keep **lists on request**. Untouched items quietly move to *someday*, with no counts (`game/TOOLS.md` §2). After an absence, the world is still there. Dan sees a short "where you were" and one small, welcoming first step.
 
 **8. Failure is information.**
 When something is missed, the job waits, shrinks or changes route, or the app asks what happened. No lost progress, no shame, no guilt language (MASTER_BRIEF §16).
@@ -74,6 +76,9 @@ The fiction can be as dark as Dan likes. The app's voice *towards Dan* is plain,
 
 **15. Real life stays larger than the app.**
 Sessions in the app are short: in, started, out. The app must never become the thing he does instead. It complements, and does not replace, the activity scheduling his psychologist recommended. It is not treatment.
+
+**16. Every tool is part of the world** (added 2026-09-23, D-020).
+Productivity features (timer, lists, scheduling, calendar, the trail, record of progress) are in, but each one must move or reveal something in the game, must never create a pile, a debt or a red number, and must never let an easy thing stand in for the avoided thing (P5; D-023). Planning stays optional: starting beats planning (P1).
 
 ## Still to test in use (not settled)
 
