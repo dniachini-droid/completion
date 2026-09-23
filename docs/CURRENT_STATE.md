@@ -27,7 +27,7 @@ _To be written by the overnight run at stage 5._
 ## Do NOT work on yet
 
 - Application code, scaffolding, frameworks, databases, tech stack (Phase 7+).
-- Art direction and visual design (Phase 4). Visual notes only as flavour.
+- Art direction and visual design (Phase 4). Visual notes only as flavour. *Planned (D-018): once Phase 3 closes, a short taste session with Dan, then a long overnight Fable run building three visual directions as real screens.*
 - ~~Product naming.~~ Brought forward at Dan's request (D-017): the overnight run proposes a spoiler-free shortlist; Dan chooses whenever he's ready (by Phase 5).
 - Full chapters of prose beyond sample fragments (D-004).
 

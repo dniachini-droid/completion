@@ -176,3 +176,12 @@
 - **Rationale:** A name grounded in the world is best found while the world is being made, and it costs little.
 - **Consequences:** Once chosen, the GitHub repo can be renamed (housekeeping item in `CURRENT_STATE.md`).
 - **Reversible:** Yes, until the name is used publicly or in code.
+
+## D-018 — Phase 4 gets its own long, visual run
+- **Date:** 2026-09-23
+- **Context:** Dan wants the app to "look stunning" and asked whether a long Fable session would help.
+- **Decision:** Phase 4 starts with a short taste session with Dan (20–30 min, reacting to visual references), after the Phase 3 world is chosen. Then comes a long, unattended Fable run (about 6–8 h, set up like the Phase 3 run: keep-alive, minimum run time). It produces **three genuinely distinct visual directions as real, viewable screens**: the morning screen, the timer (delve), the map, reading a record, day complete, camp. Each goes through repeated rounds of critique and revision. Dan picks or blends one. The first playable later gets a dedicated visual polish pass.
+- **Alternatives:** Start visual work now (it would be blind to the world and to Dan's taste); do Phase 4 as ordinary short sessions.
+- **Rationale:** Beauty is a stated core want (player model). Long runs pay off most when they can iterate on real screens. Taste has to come from Dan first (rule 20).
+- **Consequences:** When Phase 3 closes, Claude sets up the taste session, then the long run.
+- **Reversible:** Yes.
