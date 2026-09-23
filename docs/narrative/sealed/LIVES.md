@@ -125,7 +125,7 @@ Loose sheets in the camp: her first glosses of S1–S4 and the head of V1. Made 
 
 ### The cut notes (L15a onward; present tense; no formula; outlines except L22)
 
-- **L15a** (month 6, the Reading Room): "Note. His ring is keep-one. The one who keeps. I have been calling him the Tenant for a hundred days. Custodian, then. He let me get it wrong for a hundred days, which is either courtesy or the same thing as everything else he does." (R6.)
+- **L15a** (month 6, the Landing's wall; present tense, no formula): "Note. His ring is keep-one. The one who keeps. I have been calling him the Tenant for a hundred days. Custodian, then. He let me get it wrong for a hundred days, which is either courtesy or the same thing as everything else he does." (R6.)
 - **L16** (month 7, the reading-tables): "The way down is by going out. I stopped going out. Note: I am not going to be dramatic about this. Note: the doors let me up. They will not open further for me unless I go out, and out is ninety metres and a field."
 - **L17** (month 8): "He says (I think) that they were taken up. He says the surface gets louder every age and will be found. He says the only choice left is whether it is on purpose. I don't know. I don't know."
 - **L18** (month 8): "No one will ever know what it is. Only what it does. I'm writing that down so I stop trying."

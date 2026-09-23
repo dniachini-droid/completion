@@ -280,6 +280,7 @@ On the visit after a pivot sign is learned, the app surfaces the one old record 
 | Linguist (own hand, present tense, no ONCE) | "Note." | metres, days since descent | "he says" without "I think" | dictionaries, morphemes, tape, dead languages |
 | The Builder memoir (his own past, first person plural) | "We cut." | eights, cuttings, quietenings | "I" (until the last fragment) | rock, touch, sound, the long dark |
 | The Custodian's own statements (a reader's end: V6, E6) | ONCE + reader-number, then act-first, first person | eights | | "I shut the door" |
+| **Closing line of every transcription** | MAKE {h} · VOICE OF (reader-number) · AGAIN / AGAIN NOT | | | "cut by [his hand], from the voice of the first; came again" (S) / "came again not" (V, E). Legible from month 5 |
 | The Custodian's present cuts | one word | | | "Kept." "Lit." |
 
 ## 12. What the app calls things (provisional; morning question)
