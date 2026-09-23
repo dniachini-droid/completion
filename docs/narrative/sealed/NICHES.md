@@ -67,6 +67,7 @@ _Written 2026-09-23._
 | 12 | 3 | The Loud Room, beside the book | K3 ("Kept."), the count on the ledge's lip | — | K3 |
 | 12 | 4 | The Loud Room, the company's box | The company's letters (the closure, in her folder's copy; the original here, water-stained) | (paper) | X-company |
 | 12 | 5 | The Surveyor's deep side gallery, the approach | The shut door seen close: his hand-mark; LONG-SLEEP NOT | (the app describes) | V6 (wk 13) |
+| 12 | 6 | The Loud Room, a shelf | A child's pocket compass, the needle stuck toward the hill; a scrap in a child's hand: *it points at the hill. mam says leave it.* | (paper) | X-compass-child; E3 |
 | 13 | 1 | The side gallery, a niche | A lesson-tablet: three stacked bars beside a picture of a mound; a divided cell beside a picture of a cut | — | **LONG-SLEEP, MARK** |
 | 13 | 2 | The side gallery | V6 on the door | — | V6 |
 | 13 | 3 | The side gallery, a recess | The Surveyor's wax-tablet ledger of days: nine strokes, then four more in a different hand (the boy's) | *Told: the child kept his days after him.* | V5, V7 (thirteen days) |
@@ -119,7 +120,7 @@ _Written 2026-09-23._
 | 20 | 4 | The Warning Hall, a recess | A Builder's copy of the warning in small, with three strokes beside it and a fourth begun | *Told: the times the rock went still. Three. The fourth was the last.* | B4; the quietening |
 | 20 | 5 | Salt Gallery, the last niche | S12 (told by the daughter) | — | S12 |
 | 21 | 1 | The memorial walls, a niche | The wife's ring, cut a third time, beside a picture of a comb | *Told: hers. Three times. Every hall.* | S11; the rings' rule |
-| 21 | 2 | Her folder (camp), fourth pocket | The farmer's photograph | (paper) | X-farmer |
+| 21 | 2 | Her folder (camp), fourth pocket | The farmer's photograph: the shaft cap at night with light coming up round its rim | (paper) | X-farmer |
 | 21 | 3 | The Council, the answerers' wall's foot | A Builder's tally of the two halves: eight and eight and four; eight and eight and four | *Told: even. They were even. The doors were drawn by one more.* | the split; his casting vote |
 | 21 | 4 | The memorial walls, a recess | A rod, worn to half its length | (wordless; the app: "worn by cutting") | his ages of cutting |
 | 21 | 5 | The memorial walls, the sharp ring's niche | A told line beside the unfinished ring | *Told: not finished.* | K2's twin; month 7–9 |
@@ -135,14 +136,14 @@ _Written 2026-09-23._
 | 23 | 5 | The Landing, a wall-slot | A Builder's plan of the Landing: where the corridor turns, a figure drawn standing, twice the height of the doors | (wordless) | the face |
 | 24 | 1 | The low passage's lintel | HOLD's blank (a word) | — | W5 |
 | 24 | 2 | The workshop's drawer | A tablet of directions: a pointed drop beside a picture of a road with an arrow | — | **TOWARD** |
-| 24 | 3 | The workshop's rack | A second rod (not needed) | (wordless) | X-tool's twin |
+| 24 | 3 | The workshop's rack | A rod cut for the sixth, which Dan never needs: he has hers | *Told: for the sixth.* | the reader-count |
 | 24 | 4 | The workshop, a shelf | Five small stones, each cut with one reader's number, in a row, and a sixth uncut | *Told: the count. One to five. The sixth is not yet.* | the reader-count; the empty ring |
 | 24 | 5 | The workshop, the wall | K5 seen (REMAIN) | — | K5 |
 | 25 | 1 | The first counting door | The count fills: the door opens for Dan | — | region 4 begins |
 | 25 | 2 | The second counting door | The count begins | — | |
 | 25 | 3 | The doors' approach, the last wall | B6 first sight | — | B6 |
 | 25 | 4 | The doors' approach, a wall | X-door-plan first sight | — | X-door-plan |
-| 25 | 5 | The first door's threshold, floor | A line in his hand, alone, cut where he stands: *Here.* (HERE {h}) | *Here.* | his furthest point |
+| 25 | 5 | The first door's threshold, floor | A line in his hand, alone, cut where he stands: *Here.* (HERE {h}); and this week he is standing on it | *Here.* | his furthest point; the one time he is in Dan's path in the flesh |
 | 26 | 1 | The second counting door | The count fills | — | |
 | 26 | 2 | The third counting door | The count fills over the week | — | |
 | 26 | 3 | The Deep's first hall, the reading-tables | L16 first sight | — | L16 |

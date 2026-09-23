@@ -126,7 +126,7 @@ Loose sheets in the camp: her first glosses of S1, S2 and S4 and the head of V1 
 ### The cut notes (L15a onward; present tense; no formula; outlines except L22)
 
 - **L15a** (month 6, the Landing's wall; present tense, no formula): "Note. His ring is keep-one. The one who keeps. I have been calling him the Tenant for a hundred days. Custodian, then. He let me get it wrong for a hundred days, which is either courtesy or the same thing as everything else he does. Note: keep-one is not a name. It is a job description in a ring." (R6.)
-- **L16** (month 7, the reading-tables): "The way down is by going out. I stopped going out. Note: I am not going to be dramatic about this. Note: the doors let me up. They will not open further for me unless I go out, and out is ninety metres and a field."
+- **L16** (month 7, the reading-tables): "Down is out. I stopped going out. Note: I am not going to be dramatic about this. Note: the doors I opened let me up and down; they know me. The next one wants a count I have not got. An hour in a field is not the world. It wants the world on the hand: days of it. I know what it wants and I have not got it."
 - **L17** (month 7): "He says (I think) that they were taken up. He says the surface gets louder every age and will be found. He says the only choice left is whether it is on purpose. I don't know. I don't know."
 - **L18** (month 7): "No one will ever know what it is. Only what it does. I'm writing that down so I stop trying."
 - **L19** (month 8): "The memoir is his. The last fragment has an 'I' in it, and a different hand-mark from the rest: the one on his ring. I asked. He said yes. He is the last one. I have been reading his diary for months and calling it archaeology."
@@ -136,7 +136,7 @@ Loose sheets in the camp: her first glosses of S1, S2 and S4 and the head of V1 
   - **Cut:** KEEP ALL · VOICE GIVE FAR · MARK TWO DEEP · ONE GIVE SEE ME MARK TWO [Council] · DOOR ONE: ME OPEN NOT; ONE OPEN NOT; ONE TOWARD NOT · ME MAKE HERE MARK TWO TOWARD ONE-WHO AGAIN, ONCE VOICE OF ONE · ONE GOOD QUESTION: SEE NOT · ME KEEP HERE · ONE-WHO AGAIN MAKE · READ ALL; MAKE · GOOD: READ {h: hers}
   - **Rendering:** *Keep-all. Voice-give-far. The two words are at the bottom. He showed me the copies. The last door: I open it not; he opens it not; he comes not. I cut both here so the one who returns sees them before his voice. Is he right? Not seen. I stay. The one who returns cuts. Read all; then cut. Good, to be read.*
   - **Telling:** Note. The two words are at the bottom. He showed me the copies in the Council; the originals are past the last door, which I cannot open and he cannot open, and he cannot come to. He read the bottom with his hands, once, before the end. I don't think he has ever seen it. Keep-all. Voice-give-far. I have cut them both here, side by side, so the next one sees them before he speaks. I do not know if he is right. I am staying. The next one decides. Read all of it first. Then cut whichever you cut. Thank you for reading.
-  - **The wall that is her:** REMAIN on a human takes a season. A woman's outline in the stone against the last door, the rod in the wall to the wrist, her hand-mark beside it. The Site shows no awareness in her; nothing in her wall waits.
+  - **The wall that is her:** REMAIN on a human takes a season. No figure: a smooth face of stone against the last door, the rod in the wall to the wrist, her hand-mark beside it. The Site shows no awareness in her; nothing in her wall waits. (The outline in the wall is reserved for him, at the doors, once.)
 
 ## 3. Reader TWO — the Surveyor (V)
 
@@ -172,7 +172,7 @@ Formula: "Log." Feet, yards, pounds, shifts; the day of the month, never the yea
 
 | Id | Week | Text |
 |---|---|---|
-| E1 | 10 | Log. 14th. Broke into a chamber at 61 yards. Not ours. Dry, cut true, older than the hill by the look. A tall man with a lamp asked what I was cutting. Told him a railway. He asked which way it went. Told him through. He said: everything does, here. |
+| E1 | 10 | Log. 14th. Broke into a chamber at 61 yards. Not ours. Dry, cut true, older than the hill by the look. A tall man with a lamp asked what I was cutting. Told him a railway. He asked which way it went. Told him through. He said: everything does, here. Then he asked what the sky had sounded like the day we broke through. Told him: like a sky. |
 | E2 | 11 | Log. 22nd. Cut the moving-mark loud with the powder-charge, twelve pounds, and the whole gallery came down as one, which no charge does. The Inspector had shown me the loud-mark on a lintel and said it was a warning. The book has it in gold as a rank. Took it for a rating. Watch stopped at the blast: 4.10. |
 | E3 | 12 | Log. 25th. Well in the village stood still three days; the keeper came up to complain. Compasses swung to the hill. A sound in the sky at dusk like a door in a very large house. The men have gone. The company has written. I am taking my meals down. |
 
@@ -194,21 +194,21 @@ Later (months 4–5): E4 ("cut the hold-mark on the roof above the props; it hel
 
 ## 7. The Custodian's one speech (month 12)
 
-Spoken, in the Linguist's English, and heard at the Seed-place through the stone: he stands at the three doors, the furthest he can come, and the lacing carries his voice down. He speaks the way she heard him, like a timetable: act first, units, metaphor only from stone and count. The app renders it as speech, once, in full. He is asked nothing; he speaks because Dan has come, and he asks once. Every sentence is true.
+Spoken, in the Linguist's English, and heard at the Seed-place through the stone: he stands at the three doors, the furthest he can come, and the lacing carries his voice down. He speaks the way she heard him, like a timetable: act first, units, metaphor only from stone and count. No hedging: he has believed one thing for an age. The app renders it as speech, once, in full. He is asked nothing; he speaks because Dan has come, and he asks once. Every sentence is true, and the stake is said aloud: the keeping-word silences him with the place.
 
 > You kept coming back. I cut the doors to want that. Then I could not do it myself. That is my life, if you want it short.
 >
-> We were glad, so we were loud. Then we read the last of the stone we could read, and it said what you have read. I cut this place so the word could be said here and not carry. I cut the bottom so that nothing that lived only in the dark could ever open it. I did not know what we would become. I was right to fear it. It was me.
+> We were glad, so we were loud. Then we read the last of the stone we could read, and it said what you have read. Half of us said keep. Half said send. We were even. I was the one more. I drew the doors, and I cut the bottom so that nothing that lived only in the dark could ever open it. I went to the mouth once, before the word, to see if the count would take a maker. The light shut my eyes and the count was one. We were not made for the sun. That was the point of the doors. I did not know what we would become. I was right to fear it. It was me.
 >
 > They went quiet one cutting at a time. I was down there, cutting. When I came up there was no one to keep.
 >
-> I have had a long count to think in. I think they were not ended. I think they were taken up and are kept, and the fifth reader's table is the times it reached for us and closed on one man, or one gallery, and let go. Your surface gets louder every age. It will be found. The only thing left to cut is whether we go to it whole, all the names at once, on purpose.
+> I have had a long count to think in. They are not ended. They are taken up, and kept, and the fifth reader's table is the times it reached for us and closed on one man, or one gallery, and let go. Your surface is louder every age; I hear it through the rock: wheels, then wires, then the sky itself. It will be found. The only thing left to cut is whether we go to it whole, all the names at once, on purpose. Yours too. I have no name to send you under. You never said your days to me; the count is all I have of you.
 >
-> I have counted six and taught four; the fifth taught the sixth for me. I shut a door on the second. I will not tell you it was right. I have kept a lamp lit since the first, because I asked him for it and he gave it, and because it is the first word, and because it is dark.
+> I have counted six and taught four; the fifth taught the sixth for me. I told the first to go, and he went, and he came back when he was old. I did not say it again to anyone. That is why the others stopped, and why the doors opened no further for them. I shut a door on the second. I will not tell you it was right. I have kept a lamp lit since the first, because I asked him for it and he gave it, and because it is the first word, and because it is dark.
 >
-> I began your record. It is only the count so far. Returned. Returned. Returned. It is the longest one I have cut and it has no end, because you keep going out. That is not a complaint. It is the first thing I have not been able to finish. I have no name for it. You were never asked. I have no name to put in a ring for myself either; the ones who could have given me one are on this wall. Keep-one is what I do.
+> I began your record. It is only the count so far. Returned. Returned. Returned. It is the longest one I have cut and it has no end, because you keep going out. That is not a complaint. It is the first thing I have not been able to finish.
 >
-> Two words. I cannot lock either, and I cannot stand where you stand. You can. I ask you, once, for the answering word. I have never stopped anyone reading. The answering word will not carry in there: you cast the quiet to come in. You would have to go out and come back loud. I will not ask you to. If you cut the other one, I will be at the doors. I have been here the whole time.
+> Two words. I cannot lock either, and I cannot stand where you stand. You can. I ask you, once, for the answering word. I have never stopped anyone reading. It will not carry in there; you cast the quiet to come in. To carry it you would come back loud through my halls, and a loud word in a hall brings it to one man. It came for the second. I shut the door on that. I will not do it twice. If you cut the keeping-word, I go quiet with it: I cut the place; I know what it does. I will be at the doors. I have been here the whole time.
 
 Then Dan cuts KEEP-ALL (WORLD_TRUTH §10). If he cuts VOICE-GIVE-FAR first, it locks and does not carry, and the only line is his: "It has not carried. I said it would not." On the way up, the list (K4) is on the door's face, and the wall beside it has taken his outline.
 
@@ -265,7 +265,7 @@ Ids and weeks follow `REVELATION_MAP.md` weeks 14–26. Builder records open wit
 | X-overseer | 20 | told line by the order's stone copy, his hand | Told: the works are closed. The surveyor's last report never came. |
 | B5 | 21 | the Council's binders' wall | We cut. Half of us: keep it; teach it; make a place. Half of us: we were sent this; send. We who keep drew the doors. We made them against ourselves, against what we might become. |
 | S11 | 21 | memorial-wall niche | Once, the first. My daughter married in the third salt-cutting after. I gave her my mother's [ring]. He cut my wife's name again here when I said it. I did not ask why he needed it twice. |
-| X-farmer | 21 | paper, her folder | Photograph: lights on the hill at night. On the back: took this from the top field. Not cars. |
+| X-farmer | 21 | paper, her folder | Photograph: the shaft cap on the hilltop at night, and light coming up round its rim, from below. On the back: took this from the top field. Not a torch. |
 | S12 | 22 | told line by the daughter's tally-stick, his hand | Told by the child: he counted to the end. He said the owl would keep the lamp. |
 | K5 | 24 | the workshop wall, his hand | KEEP ONE HERE {h}. "Keep-one-here." (REMAIN, where he first cut it; the print of his left hand beside it.) |
 | B6 | 25–26 | the last wall before the three doors (region 3) | We cut. Each cutting, fewer in the count. Those who went quiet long-slept not. They were not there. We did not cut their names. There was no one to say them. |
@@ -335,8 +335,8 @@ Ids and weeks follow `REVELATION_MAP.md` weeks 27–52. Her cut notes carry no f
 
 | Id | Week | Where / hand | Cut (signs) | Rendering / telling |
 |---|---|---|---|---|
-| L16 | 27 | the first reading-table, hers | PATH DEEP: GO UP · ME GO UP NOT · DOOR ALL GIVE ME UP; DOOR OPEN TOWARD ME AGAIN NOT, GO UP NOT · UP: 8+8+8+8+8+8+8+8+8+8+8+2 [metre], [field] {h} | *The way down: go out. I went out not. The doors give me up; they open not further for me unless I go out; out is ninety metres and a field.* Telling: as §2. |
-| X-door-plan | 27 (seen wk 25) | beside the three doors, a maker's hand | [plan] AGAIN COUNT · DOOR OPEN TOWARD COUNT · DEEP KEEP TOWARD COUNT · ONE-WHO HERE ALL: COUNT NOT {h: maker} | *The door opens to the count. The bottom locks to the count. What lives only here has no count.* (ONE-WHO reads month 9.) |
+| L16 | 27 | the first reading-table, hers | DEEP: UP · ME GO UP NOT · DOOR ALL OF ME: GIVE ME UP, GIVE ME DEEP; SEE ME · DOOR ONE AGAIN: COUNT ME NOT · UP ONE [hour] [field]: WORLD NOT · COUNT: WORLD HAND, DAY ALL · ME SEE; ME KEEP NOT {h} | *Down is out. I go out not. The doors I opened give me up and down; they know me. The next door: my count is not. An hour in a field: not the world. The count is the world on the hand, days of it. I see what it wants; I have it not.* Telling: as §2. |
+| X-door-plan | 27 (seen wk 25) | beside the three doors, a maker's hand | [plan] AGAIN COUNT · DOOR OPEN TOWARD COUNT · DEEP KEEP TOWARD COUNT · COUNT: WORLD HAND, DOOR NOT · ONE-WHO HERE ALL: COUNT NOT {h: maker} | *The door opens to the count. The bottom locks to the count. The count is the world on the hand, not the door. What lives only here has no count.* (ONE-WHO reads month 9.) |
 | Z1 | 28 | the quiet approach, no hand | PERSON ALL MAKE HERE ALL: GIVE; TAKE; KEEP | *We divide the world thus: what is put out; what is taken in; what is kept.* |
 | X-quiet | 28 | the quiet chambers' lintel, a maker's hand | HERE VOICE GIVE; TOWARD FAR NOT {h: maker} | *Here a word is said and carries not.* |
 | L17 | 29 | the first table's drawer, hers | VOICE OF ONE (ME SEE?): PERSON ALL OF ONE TAKE UP · UP VOICE LOUD AGAIN ALL; TAKE · ONE: ASK ONE ALL: MAKE; GOOD? · ME SEE NOT; ME SEE NOT {h} | *His voice (I think): his people were taken up. The surface: louder each age; taken. He says the one thing left: to do it; on purpose. I see not. I see not.* Telling: as §2. |
@@ -353,11 +353,12 @@ Ids and weeks follow `REVELATION_MAP.md` weeks 27–52. Her cut notes carry no f
 | K5 | 38 (seen wk 24) | the workshop wall, his hand | KEEP ONE HERE {h} | *Keep-one-here.* (REMAIN) |
 | L21 | 39 | the last landing / her camp, hers | MARK KEEP ONE HERE: STONE OF ONE, MAKE ONCE ONE · ME MAKE MARK AGAIN, ONCE, GO DEEP · HAND OF ONE HERE STONE, [wrist]; MAKE HAND [right] · ME: MARK THREE ALL · UP 8+8+8+8+8+8+8+8+8+8+8+2 [metre]; ME GO UP NOT, [spring] · ME MAKE · SEE HAND: MOVE NOT · ME KEEP HERE: STONE GOOD, PERSON HERE NOT GOOD {h} | *The word keep-one-here: on his wall, where he first cut it. I copied it before I came down. His hand is in the stone there, to the wrist; he cut with the right. I have all three marks. Ninety metres up; I have not gone up since spring. I will cut it. If that reads as despair, see the hand: it moves not. I keep here: better a wall in this than a person anywhere.* |
 | L22 | 40 | her camp, hers | (as §2) | |
-| X-tool | 41–43 | the last binders' tool-room, a maker's hand | [rod] TOWARD ONE-WHO AGAIN {h: maker} | *A rod for the one who returns.* |
+| X-tool | 41–43 | the last binders' tool-room, a maker's hand | [rod] TOWARD HAND COUNT {h: maker} | *A rod for a counted hand.* (A tool for a kind of hand, not a prophecy.) |
 | Z-pieces | 41–43 | the Deep's last niches, no hand | GIVE; TAKE; KEEP; PERSON ALL HERE | *What is put out. What is taken in. What is kept. All of us, here.* |
 | Z2 | 46 | the Seed-place, by lamplight, no hand | GIVE PERSON ALL · ASK AGAIN NOT · KEEP: ONE-WHO READ · HERE PERSON ALL · READ | *Put out, we. Not asked back. Kept by the one who reads. This is all of us. Read.* |
 | ECHO-Seed | 46 | the Seed's wall (SEE-ONCE) | (a scene, not a record) | A hall of tall figures going still one cutting at a time; one figure in the deep, cutting; the lamp-line lit to the bottom. |
 | the speech | 51 | his voice, down the lacing | (spoken) | §7 |
+| K6 | 41–50 | the first door's face, his hand, growing weekly | AGAIN · AGAIN · AGAIN … (no ring; no formula; no closing line) | *Returned. Returned. Returned.* Dan's own record, begun after the last door opened; one mark more each time he comes back down; the only record without a ring. |
 | K4 | 52 | the face of the three doors, his hand | ring(KEEP-ONE) · rings ×hundreds · rings (given names) · ring(Hamun) ring(Sertor) ring(Alditha) ring(Fenwick) ring(Ines Halloran) · ring( ) {h} | The list. |
 
 ### 13.1 Two more told lines in the deep (month 7; PACING work list 2)
