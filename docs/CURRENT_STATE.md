@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-24 (Phase 3 closed; Phase 4 opened; taste session next)_
+_Last updated: 2026-09-24 (taste session done; long visual run next)_
 
 ## Current phase
 
@@ -16,9 +16,9 @@ Find how the game looks, moves and feels (MASTER_BRIEF §57–58). First a live 
 
 ## Current session focus
 
-**2026-09-24.** Morning review done. Dan confirmed the story and approved the game bible (D-024), and approved all ten tools changes (D-023). Three branches were merged into `main` (PR #4). Then the last Phase 3 jobs were done: the tools got world names (a delve, a breather, the satchel, cairns, finds, the daybook; D-025), and an app-name shortlist was written (`narrative/NAMES.md`; choose whenever you like). Phase 3 closed (D-026).
+**2026-09-24, afternoon.** Taste session done (D-027). Dan answered the ten prompts, reacted to a sample page of light, line, type, map and motion (`design/taste/samples.html`), and answered three follow-ups. The result is a brief in `design/ART_DIRECTION.md`: dark cool stone with glow everywhere, mostly cold with some warm; painted and atmospheric; a carved serif; clean, precise layout; smooth everyday motion with cinematic big moments; a map of lit places on dark. Two questions stay open and will be tested visually: how cold and warm glow are balanced, and whether carved letters set the whole interface.
 
-**Next: the taste session** (20–30 minutes, live, `design/PHASE4_PLAN.md` Part 1), then the long visual run.
+**Next: the long visual run** (`design/PHASE4_PLAN.md` Part 2), starting with a quick model comparison (D-027).
 
 ## Do NOT work on yet
 
@@ -28,7 +28,7 @@ Find how the game looks, moves and feels (MASTER_BRIEF §57–58). First a live 
 
 ## Phase 4 exit criteria
 
-- [ ] Taste session done; answers in `design/ART_DIRECTION.md`.
+- [x] Taste session done; answers in `design/ART_DIRECTION.md` (D-027).
 - [ ] Three directions with real screens, critiqued and revised.
 - [ ] Dan picks or blends one.
 - [ ] `design/UX_PRINCIPLES.md`, `design/DESIGN_SYSTEM.md`, `design/INTERACTION_NOTES.md` filled in enough for Phase 5.
@@ -50,6 +50,7 @@ Find how the game looks, moves and feels (MASTER_BRIEF §57–58). First a live 
 - 2026-09-24 — Tools research adopted (D-023). Story confirmed and game bible approved (D-024). Three branches merged into `main`.
 - 2026-09-24 — Tools named in the world (D-025); app-name shortlist written (`narrative/NAMES.md`).
 - 2026-09-24 — **Phase 3 complete** (D-026). Phase 4 opened.
+- 2026-09-24 — Taste session done; brief for the three directions written (D-027).
 
 ## Unresolved blockers
 
@@ -59,4 +60,4 @@ Find how the game looks, moves and feels (MASTER_BRIEF §57–58). First a live 
 
 ## Recommended next action
 
-**Dan: start a new session and paste:** "Read CLAUDE.md and docs/CURRENT_STATE.md, then run the Phase 4 taste session with me from docs/design/PHASE4_PLAN.md."
+**Dan: start a new session and paste:** "Read CLAUDE.md and docs/CURRENT_STATE.md, then start the Phase 4 long visual run from docs/design/PHASE4_PLAN.md Part 2, beginning with the model comparison in D-027."

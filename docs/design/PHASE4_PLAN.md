@@ -25,6 +25,8 @@ Quick reactions, not essays. For each prompt Dan says "yes / no / more like this
 
 ## Part 2 — The long visual run (unattended, about 6–8 hours; D-022)
 
+**Done first (D-027):** the taste session is done. Build from the brief in `ART_DIRECTION.md` → "Brief for the directions". The three directions differ in real ways inside that brief (not colour swaps), and between them test the two open questions: how cold and warm glow are balanced, and whether carved letters set the whole interface. Start with the model comparison in D-027.
+
 Set up like the Phase 3 overnight run: a keep-alive Routine, a minimum run time, commits after every stage, work on its own branch.
 
 1. **Three genuinely distinct directions** (not colour swaps), each covering mood, materiality, typography, world presentation, UI philosophy, map style, collection style, animation, and how records are shown (MASTER_BRIEF §57). Written into `design/ART_DIRECTION.md`, grounded in Dan's taste answers.
@@ -34,7 +36,7 @@ Set up like the Phase 3 overnight run: a keep-alive Routine, a minimum run time,
 5. **Morning handover.** A short briefing in `CURRENT_STATE.md`: one line per direction, links to its screens, Claude's pick and why, and three to five questions for Dan.
 
 ## Exit criteria for Phase 4
-- [ ] Taste session done; answers in `design/ART_DIRECTION.md`.
+- [x] Taste session done; answers in `design/ART_DIRECTION.md` (D-027).
 - [ ] Three directions with real screens, critiqued and revised.
 - [ ] Dan picks or blends one.
 - [ ] `design/UX_PRINCIPLES.md`, `design/DESIGN_SYSTEM.md` and `design/INTERACTION_NOTES.md` filled in for the chosen direction, enough for Phase 5.
