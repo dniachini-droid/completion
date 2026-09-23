@@ -5,9 +5,9 @@ It is a genuine game, not a productivity app with an RPG skin. Provisional name:
 
 ## Current phase
 
-**PHASE 2 — GAME DESIGN** (started 2026-09-23; Phase 1 closed with Dan's agreement, D-009)
+**PHASE 3 — NARRATIVE AND WORLD** (started 2026-09-23; Phase 2 closed with Dan's agreement, D-014)
 
-Design the core game on top of the approved `docs/DESIGN_PRINCIPLES.md` and `docs/ANTI_FEATURES.md` (MASTER_BRIEF §42–50). Develop 2–3 candidate core loops before converging. No application code; no setting or lore yet (Phase 3). Details and exit criteria: `docs/CURRENT_STATE.md`. Phase changes require Dan's explicit agreement.
+Design the story on top of the agreed game design (`docs/game/`), following MASTER_BRIEF §51–56 within D-004's scope. **The truth is sealed from Dan** (`docs/narrative/sealed/`, D-015). The quality bar is a story that goes somewhere: the ending is fixed first and everything connects. The current work order is `docs/narrative/PHASE3_PLAN.md`. No application code. Details and exit criteria: `docs/CURRENT_STATE.md`. Phase changes require Dan's explicit agreement.
 
 Phase order: 0 Player discovery → 1 Product discovery → 2 Game design → 3 Narrative/world → 4 Experience/art/UX → 5 Concept synthesis → 6 MVP → 7 Technical architecture → 8 Prototype → 9 First playable → 10 Personal alpha → 11 Iteration.
 
@@ -38,8 +38,8 @@ Before any consequential decision, also read: this file → `docs/MASTER_BRIEF.m
 3. Never treat uncertain hypotheses as settled facts. Keep facts, strong hypotheses and weak hypotheses separate.
 4. Update documentation when decisions change.
 5. Preserve narrative continuity. Never casually retcon; follow the retcon procedure in MASTER_BRIEF §55.
-6. Major mysteries must have predetermined truths (`docs/narrative/WORLD_TRUTH.md`) before clues are planted.
-7. Never reveal WORLD_TRUTH content in player-facing material unless it has been legitimately unlocked.
+6. Major mysteries must have predetermined truths (`docs/narrative/sealed/WORLD_TRUTH.md`) before clues are planted.
+7. Never reveal WORLD_TRUTH content in player-facing material unless it has been legitimately unlocked. **Dan is the player: never show him `docs/narrative/sealed/` content, in chat, commit messages, PR text or any non-sealed doc (D-015).**
 8. Real-world action is the main input to game progression.
 9. Failure is information, not punishment. No shame, lost progress, dead companions, guilt language.
 10. Avoid task farming: trivial inputs must never out-earn meaningful effort.
