@@ -19,6 +19,9 @@ For Claude: the canonical hidden truth lives here. Never quote or summarise it o
 | `LIVES.md` | The reading layers; the fragment template; full fragment text for the two playable lives (weeks 1–13) and everything else those weeks touch; the Custodian's speech; the chorus | — |
 | `CLUE_LEDGER.md` | Every clue the first playable plants, with its truth | — |
 | `PLAYER_KNOWLEDGE.md` | Intended player-known state by stage; later, the actual log | — |
-| `REVIEW.md` | The adversarial self-review and the fixes it forced | — |
+| `FAIR_PLAY.md` | Per reveal: the earlier clues, the half-guess, the sufficient wrong reading, the verdict; two clues added | — |
+| `ARRIVALS_REGION1.md` | The first playable visit by visit: step lines, arrival scenes, choices, camp lines, teasers, week-close glimpses (weeks 1–5) | — |
+| `PACING.md` | Content counts by month against the Phase 2 rate; where the year is thin | — |
+| `REVIEW.md` | The adversarial self-review (three passes plus a final verification) and the fixes it forced | — |
 
-Order to read for a new session: `WORLD_TRUTH` → `SCRIPT` → `TIMELINE` → `CHARACTERS` → `MYSTERIES` → `REVELATION_MAP` → `SITE` → `LIVES` → `CLUE_LEDGER` → `REVIEW`.
+Order to read for a new session: `WORLD_TRUTH` → `SCRIPT` → `TIMELINE` → `CHARACTERS` → `MYSTERIES` → `REVELATION_MAP` → `SITE` → `LIVES` → `CLUE_LEDGER` → `FAIR_PLAY` → `ARRIVALS_REGION1` → `PACING` → `REVIEW`.
