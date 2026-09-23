@@ -21,7 +21,7 @@ _Written 2026-09-23._
 | Presence | Month 2 | His hand-mark on nearly every record (week 4). The stone of the Stair's rail has taken the shape of a long four-fingered hand (week 7). "The Guest" (V1). |
 | Face | Month 6 | The Landing: he stands where the corridor turns; one sentence, in the Linguist's English: "You have kept coming back. Good. Most of them stopped." Then he is gone along a way Dan cannot yet take. |
 | Reason | Months 8–9 | B7 ("Cut by one. I."); the Surveyor's chamber; the Linguist's transcription of his thesis (L17); the door-maker's plan and the rings stopping below the doors (month 7). |
-| Nature | Months 11–12 | The unfinished ring; the finest cut by lamplight; his speech from the doors; the list; the empty ring. |
+| Nature | Months 11–12 | The unfinished ring; the finest cut by lamplight; his speech from the doors; the list headed by a job where a name should be; the empty ring for the sixth. |
 
 ## Ten model-changing reveals (each a re-reading)
 
@@ -37,7 +37,7 @@ _Written 2026-09-23._
 | R8 | Month 9 | He wants you to reach the bottom. Every door you opened, he wanted open. He cannot pass the doors because he never leaves, and the bottom locks to the count. | Every gate; the door-maker's plan; the Linguist's safeguard note; the shut door |
 | R9 | Month 10 | The Linguist remained, at the last door. Both words. "I do not know if he is right." | L22; the two words; GIVE = ANSWER |
 | R9.5 | Month 11 | The finest cut, by lamplight: the message was never a question. No Builder could read it. | The lamp (week 1); "light before seeing" (B); "because it is dark" (S5); "read all of it" (L1) |
-| R10 | Month 12 | The list on the door: every ring on every wall was a name given to him; the five readers' own names, read for the first time; the empty ring is his. The coda. | Every wall; the wife's ring (week 2); the sharp ring (week 5); the lesson-wall's last line |
+| R10 | Month 12 | The list on the door: every ring on every wall was a name given to him; the five readers' own names, read for the first time; the empty ring at the end is the sixth reader's; the ring at the head is a job, not a name. The coda. | Every wall; the wife's ring (week 2); the sharp ring (week 5); the lesson-wall's last line |
 
 Confirming reveals (a suspicion made certain, a name attached to a face) fall every one to two weeks between these; a noticeable detail in nearly every fragment (RESEARCH lesson 5). Never three consecutive fragments without a new named fact.
 

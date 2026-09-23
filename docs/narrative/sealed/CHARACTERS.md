@@ -42,7 +42,7 @@ _Written 2026-09-23. Must agree with `WORLD_TRUTH.md` and `TIMELINE.md`._
 
 **His one speech (month 12).** Late, no mechanism, and it is *asked*, not demanded; it comes down the lacing from the three doors, because he cannot stand where Dan stands. What he built. What it cost. What he has waited for. What he believes is on the other side of the word. One thing Dan did not know: the sixth reader's record, which is only the count so far. He says he will not stop Dan whichever word he cuts, and he does not. Written in full in `LIVES.md` §7.
 
-**What happens to him.** Bound quiet with the place. Not destroyed; kept. The wall at the doors takes his outline. His last record, on the door's face: the list, ending with the readers' own names and an empty ring, which is his.
+**What happens to him.** Bound quiet with the place. Not destroyed; kept. The wall at the doors takes his outline. His last record, on the door's face: the list, headed by his own ring (a job, not a name), ending with the readers' own names and an empty ring for the sixth reader, whose name he was never given.
 
 ## 2. Reader ONE — the Salt-Cutter
 
@@ -99,7 +99,7 @@ _Written 2026-09-23. Must agree with `WORLD_TRUTH.md` and `TIMELINE.md`._
 - **What she learned:** sixty-odd signs, more than Dan holds in a year (she needed them for the memoir and both words); the grammar (act first; negation after; give = answer); the memoir; the safeguard; REMAIN. She went down at Day 40 with everything her car held; her cut notes span roughly Days 40–140.
 - **What she did:** reopened the shaft; met him in the first hall; called him "the Tenant" in her notebook (dry, and wrong: he is the landlord) until she read his ring in her cut notes and renamed him the Custodian; made the lesson-wall for the next reader while she was still going up (around her twentieth day); talked with him for months; argued ("I do not know if he is right"); stopped going up around her fortieth day and went down past the three doors with the count she had; read the safeguard and chose; came back up once for the lamp, carried it to the first hall, went out to the field for an hour so the doors would let her down again, and asked him to keep the lamp lit; transcribed her dead tapes onto stone; copied REMAIN from his workshop wall before she went down, and cut it at the last door: "I would rather be a wall in this than a person anywhere else." Not a vigil; the Site shows no awareness in her wall.
 - **Her piece:** the lesson-wall (the first word); the rod; the notes (her hand, present tense, the age-marker misdirection); the grammar; the theory that the Listeners are a process ("no one is in it"); the discovery that the memoir is his (her note in the last camp); the two words copied out side by side; the last line of the story.
-- **Belief vs truth:** she half-believed him. She wrote both words down and did not choose. She is the wall of her last camp, and the Custodian's list ends with her name and then an empty ring.
+- **Belief vs truth:** she half-believed him. She wrote both words down and did not choose. She is the wall of her last camp, and the Custodian's list ends with her name and then an empty ring for the one who came after her.
 - **Voice sample:** "Note. Day 31. He speaks English like a railway timetable from a hundred and fifty years ago. I asked where he learned it. He said: from the fourth. I have started to think of the Engineer as a colleague."
 
 ## 7. The Builders (as a people; the memoir is the Custodian's)

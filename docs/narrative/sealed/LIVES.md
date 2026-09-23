@@ -125,7 +125,7 @@ Loose sheets in the camp: her first glosses of S1–S4 and the head of V1. Made 
 
 ### The cut notes (L15a onward; present tense; no formula; outlines except L22)
 
-- **L15a** (month 6, the Landing's wall; present tense, no formula): "Note. His ring is keep-one. The one who keeps. I have been calling him the Tenant for a hundred days. Custodian, then. He let me get it wrong for a hundred days, which is either courtesy or the same thing as everything else he does." (R6.)
+- **L15a** (month 6, the Landing's wall; present tense, no formula): "Note. His ring is keep-one. The one who keeps. I have been calling him the Tenant for a hundred days. Custodian, then. He let me get it wrong for a hundred days, which is either courtesy or the same thing as everything else he does. Note: keep-one is not a name. It is a job description in a ring." (R6.)
 - **L16** (month 7, the reading-tables): "The way down is by going out. I stopped going out. Note: I am not going to be dramatic about this. Note: the doors let me up. They will not open further for me unless I go out, and out is ninety metres and a field."
 - **L17** (month 8): "He says (I think) that they were taken up. He says the surface gets louder every age and will be found. He says the only choice left is whether it is on purpose. I don't know. I don't know."
 - **L18** (month 8): "No one will ever know what it is. Only what it does. I'm writing that down so I stop trying."
@@ -186,7 +186,7 @@ Later (months 4–5): E4 ("cut the hold-mark on the roof above the props; it hel
 - **K1** (week 1, the lamp's base): FIRE-GIVE ONCE {h}. "Lit." "Lit [ ]" at week 3; complete at week 5. Not fresh: it was there on her Day 9 (L6).
 - **K2** (week 5, the Stair's second flight): a ring cut sharp-edged among thousands polished smooth by touch (the Builders read by running fingers over names; his own ages of touching did the rest), his hand-mark. Readable month 8 (a Builder's name). He is still cutting names.
 - **K3** (week 12, the Loud Room, beside the book): KEEP ONCE {h}. "Kept." Readable month 6. Cut when he laid the Engineer in the Hold and kept the book.
-- **K4** (month 12, the face of the three doors, read on the way up): the list. Rings in order, hundreds of names repeated hall by hall: his people. Then every name ever given to him: Ashti; the twelve men and the boy; the overseer; the patron; the well-keeper; others. Then, for the first time in the Site, the readers by their own names: *Hamun. Sertor. Alditha. Fenwick. Ines Halloran.* Then one ring, empty.
+- **K4** (month 12, the face of the three doors, read on the way up): the list. Rings in order, hundreds of names repeated hall by hall: his people. Then every name ever given to him: Ashti; the twelve men and the boy; the overseer; the patron; the well-keeper; others. Then, for the first time in the Site, the readers by their own names: *Hamun. Sertor. Alditha. Fenwick. Ines Halloran.* Then one ring, empty: the sixth's. At the head of the list, as at the head of every record, his own ring, KEEP-ONE.
 - **X-door-plan** (month 7, beside the three doors, a maker's hand): a plan of the doors with the RETURN mark and the count, and under it the rule: *The door opens to the count. The bottom locks to the count. What lives only here has no count.*
 - **Z1** (month 7, the quiet chambers, no hand-mark): *We divide the world thus: what is put out; what is taken in; what is kept.* The seed's text; fluent; no one behind it.
 - **Z2** (month 11, the Seed-place, by lamplight only; no hand-mark; every sign old): *Put out, we. Not asked back. Kept by the one who reads. This is all of us. Read.* (The Speakers' last line about themselves; the message was never a question. Touch reads this as smooth. No Builder read it.)
@@ -205,7 +205,7 @@ Spoken, in the Linguist's English, and heard at the Seed-place through the stone
 >
 > I have counted six and taught five. I shut a door on the second. I will not tell you it was right. I have kept a lamp lit since the first, because I asked him for it and he gave it, and because it is the first word, and because it is dark.
 >
-> I began your record. It is only the count so far. Returned. Returned. Returned. It is the longest one I have cut and it has no end, because you keep going out. That is not a complaint. It is the first thing I have not been able to finish.
+> I began your record. It is only the count so far. Returned. Returned. Returned. It is the longest one I have cut and it has no end, because you keep going out. That is not a complaint. It is the first thing I have not been able to finish. I have no name for it. You were never asked. I have no name to put in a ring for myself either; the ones who could have given me one are on this wall. Keep-one is what I do.
 >
 > Two words. I cannot lock either, and I cannot stand where you stand. You can. I have never stopped anyone reading. The answering word will not carry in there: you cast the quiet to come in. You would have to go out and come back loud. I will not ask you to. If you cut the other one, I will be at the doors. I have been here the whole time.
 

@@ -288,3 +288,19 @@ On the visit after a pivot sign is learned, the app surfaces the one old record 
 - The script: **the Cut**. A sign: a **mark**. A word: a **word**. Forming one: **cutting a word**.
 - The lexicon screen: **the marks** (Dan's growing table of signs, with question marks on guesses).
 - The rumour board (RESEARCH lesson 12): **the web**: names, places and made things as nodes, "more here" where his reading is thin.
+
+## 5.2 Each word's place in the truth
+
+| Word | What it is in the truth |
+|---|---|
+| LIGHT (FIRE-GIVE) | The Builders' first word, learned from the seed's first lesson; the least useful to a people who read by touch, and the one that lets a sighted reader read the finest cut. The lamp is its object; "because it is dark" is its reason. |
+| OPEN-WAY (PATH-OPEN) | The word the Builders cut most; the shape of the whole place (a descent) is this word repeated. Also the last door's word, with LOUD. |
+| MOVE-STONE | The Surveyor's and the Engineer's word: the one humans reach for first because it does visible work, and the one that carries when cut loud. Every anomaly in the records follows it. |
+| ECHO (SEE-ONCE) | The Site keeps impressions of loud moments; the Builders used it to teach. It shows the blast, the laying-out, and once, at the Seed, the quietening. |
+| HOLD (KEEP-STONE) | KEEP's first use as a power, a week after the mid-point: the Engineer's misreading made literal and true. |
+| WAKE | The Builders' devices are laced stone that sleeps; waking them is how Dan goes down where readers did not. |
+| QUIET (VOICE-NOT) | The binders' whole architecture in one word; the root of the binding; the only way to enter the Seed without carrying. |
+| OPEN-WAY, LOUD | The last door's test: be loud here and not be heard. The only loud cut Dan makes, and it does not carry. |
+| KEEP-ALL | The binders' prepared word, never cut. The ending. KEEP is his name's first sign; ALL is the Speakers' "all of us". |
+| REMAIN (KEEP-ONE-HERE), never cut by Dan | His word and, later, hers: the only irreversible act in the story. |
+| ANSWER (VOICE-GIVE-FAR), never carried | The answerers' word; the first word's sign turned outward. |

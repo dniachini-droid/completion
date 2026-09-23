@@ -96,14 +96,14 @@ Any question Dan can ask attaches to one of these. If a new question arises in l
 
 ## M5 — Whose are the rings, and why? (rung 4 → 6)
 
-**Answer.** Dan knows from week two that a ring is a name. The thousands on the walls are the Builders' names, cut by him one by one over ages, and beside them every name ever *given* to him (the salt-cutter's wife, the twelve men and the boy, the patron, the well-keeper). A memorial and an index. The list, at the end, gives the five readers' own names for the first time, and the one empty ring is his: a name is a thing given, and no one was left to give him one.
+**Answer.** Dan knows from week two that a ring is a name. The thousands on the walls are the Builders' names, cut by him one by one over ages, and beside them every name ever *given* to him (the salt-cutter's wife, the twelve men and the boy, the patron, the well-keeper). A memorial and an index. The list, at the end, gives the five readers' own names for the first time, and the one empty ring is the sixth reader's, Dan's: a name is a thing given, and Dan was never asked. The Custodian's own ring, KEEP-ONE, heads the list as it heads every record: it is what he does, not a name; no one was left to give him one.
 **False explanations.** The makers' signatures; the records' authors; a register of everyone who ever entered.
 **Misleading evidence.** There are thousands; they are everywhere; they look alike; the readers are never named in their records (act first), so nothing links a ring to a life.
 **Early clue.** Week 2: the wife's ring, cut while the Salt-Cutter watched. Week 4: every ring carries the *same* hand-mark. Week 5: a ring on the Stair cut sharp-edged among thousands polished smooth by touch (he is still cutting).
 **Middle.** Month 7: below the three doors the rings stop ("whoever cut these never came down here"). Month 8: NAME; the memoir's "fewer in the count each cutting"; the wife's name read aloud in S's late fragments.
 **Late.** Month 11: one ring unfinished, where a Builder went quiet mid-cut. Month 12: the list on the door.
-**Trigger.** Month 12, the list: the names of his people; every given name; then *Hamun, Sertor, Alditha, Fenwick, Ines Halloran*; then a ring, empty.
-**Consequences.** The "that was there the entire time": every wall Dan passed was grief, and the whole year has an index. The empty ring is the antagonist's nature in one image.
+**Trigger.** Month 12, the list: KEEP-ONE at the head; the names of his people; every given name; then *Hamun, Sertor, Alditha, Fenwick, Ines Halloran*; then a ring, empty.
+**Consequences.** The "that was there the entire time": every wall Dan passed was grief, and the whole year has an index. The empty ring is the story's one direct gesture at the reader, and it is gratitude, not a demand: he began Dan's record and could not name him. The head of the list is the antagonist's nature in one image: a job where a name should be.
 
 ## M6 — What ended the Builders? (rung 4)
 

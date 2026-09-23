@@ -39,7 +39,7 @@ _Written 2026-09-23. Derived from `REVELATION_MAP.md` and `MYSTERIES.md`._
 **Wrongly believes:** nothing load-bearing. Open: what the Listeners are (declared unanswerable by L18).
 
 ### End of month 12
-**Knows:** everything in `WORLD_TRUTH.md` §6 except §11's deliberate uncertainties. The finest cut (month 11): the message was never a question. The list: his people, every given name, the five readers' own names (Hamun, Sertor, Alditha, Fenwick, Ines Halloran), and the empty ring that is his. The coda.
+**Knows:** everything in `WORLD_TRUTH.md` §6 except §11's deliberate uncertainties. The finest cut (month 11): the message was never a question. The list: his people, every given name, the five readers' own names (Hamun, Sertor, Alditha, Fenwick, Ines Halloran), and the empty ring at the end that is the sixth reader's; his own ring is a job, not a name. The coda.
 **Still open, on purpose:** the nature of the Listeners; whether he is aware in the wall; what the Speakers were.
 
 ## Rules
