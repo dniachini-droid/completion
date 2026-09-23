@@ -22,6 +22,7 @@ For Claude: the canonical hidden truth lives here. Never quote or summarise it o
 | `FAIR_PLAY.md` | Per reveal: the earlier clues, the half-guess, the sufficient wrong reading, the verdict; two clues added | — |
 | `ARRIVALS_REGION1.md` | The first playable visit by visit: step lines, arrival scenes, choices, camp lines, teasers, week-close glimpses (weeks 1–5) | — |
 | `ARRIVALS_REGION2.md` | Region 2 visit by visit (weeks 6–13): the three-month runway | — |
+| `ARRIVALS_REGION3.md` | Region 3 visit by visit (weeks 14–26): the mid-point, the face, the doors | — |
 | `NICHES.md` | The Key-sealed niches' contents for weeks 1–13: tablets, objects, told lines | — |
 | `PACING.md` | Content counts by month against the Phase 2 rate; where the year is thin | — |
 | `REVIEW.md` | The adversarial self-review (three passes plus a final verification) and the fixes it forced | — |
