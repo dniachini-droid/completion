@@ -143,3 +143,31 @@ Each is one fragment, one trade, one object, one thing they couldn't explain. Us
 | Speakers | (no hand) | the seed's text | everything |
 
 Others are added as the year needs them; each is authored against this file before it is planted (rule 6).
+
+## 10. The secondary lives in depth: how each thread turns the centre
+
+The three shorter lives are not episodes. Each one turns the central story once, and each is the reason the next one exists.
+
+### The Surveyor (reader TWO)
+- **Desire, stated:** put a road through the hill. **Desire, real:** be the one who found what was under it. He writes "this surveyor" because he is already writing for posterity.
+- **Secret (never in his reports):** he heard the Guest's warning, believed it, and cut anyway, because the road would not wait and because the water standing still *proved* the place was his to prove. His last report ("the Guest was right about the water") is the only place he admits it.
+- **What he knows that Dan needs:** the first loud use; the first anomaly; the Custodian's warning *before* the act; the boy's tablet.
+- **How his thread turns the centre:** (1) his loud cut is the first evidence that using the language *draws* something, planted months before LOUD is readable; (2) the shut door is the antagonist's one act of force, told honestly in the antagonist's own hand, which is what makes the Custodian's "never stopped anyone reading" a *distinction* rather than a lie; (3) his boy's tablet is how the marks left the hill: without him, no Copyist, no book, no Engineer, no Linguist. The chain of readers is his fault.
+- **What the Custodian thinks of him:** the reader he failed. "I will not tell you it was right."
+
+### The Copyist (reader THREE)
+- **Desire, stated:** copy without error. **Desire, real:** to understand the one thing in the collection that was not a report.
+- **Secret:** she believed the marks were holy and never told the patron what she thought she was gilding; she asked for more gold and lied about why ("because the words are long").
+- **What she knows that Dan needs:** the negation rule, found by attention alone; the *misreading* of the fork-over-sign as a rank of angels; the theory that the Guest was a protector.
+- **How her thread turns the centre:** (1) her rule teaches Dan NOT through the Linguist's report of it, the first re-reading; (2) her gold on the fork is why the Engineer, who learned his marks from her book, read the warning on the lintel as a rating and cut the loudest word in human ages: the reader who never came is load-bearing on the loudest act; (3) "he counts her anyway" is the first evidence that the keeper keeps *everyone*, and it lands in the Loud Room, the darkest room of the first quarter, as its kind line. Her blank page "in case" the surveyor's last report turned up is answered by V7, nine hundred years late, and Dan is the one who turns the page.
+- **What the Custodian thinks of her:** the reader he never met and counted anyway. Her name is on the list because the Engineer said it once.
+
+### The Engineer (reader FOUR)
+- **Desire, stated:** through. **Desire, real:** to be answered. "The hill answered" is the sentence his whole decline hangs on.
+- **Secret (the log never says "afraid"):** he knew the fork was a warning. "The Inspector had shown me the loud-mark on a lintel and said it was a warning. The book has it in gold as a rank. Took it for a rating." He chose the book's reading because it let him cut.
+- **What he knows that Dan needs:** KEEP read as "hold", a wrong reading the place accepted (the language forgives readers; the Custodian corrects the word, not the man); the loudest use and its three anomalies; that the company's closure and trial shaft are why the Linguist could get in; the book, carried down.
+- **How his thread turns the centre:** (1) his "hold" is why the Linguist's sheets say "held" over KEEP, which is why S4 reads "he held me" for nine weeks, which is why NOT and then KEEP turn it: the mid-point is built on his misreading; (2) his anomalies are the Linguist's table, and the table is the Custodian's proof; (3) he is the reader the Custodian *let* be loud, which is the first sign the antagonist's stance has changed since the Surveyor; (4) his English is the Custodian's English, and so the Custodian's speech is in the voice of a railway timetable.
+- **What the Custodian thinks of him:** the reader he chose not to stop. He laid him in the Hold and kept the book.
+
+### The chain, in one line
+The Salt-Cutter leaves the lamp; the Surveyor's boy copies the marks; the Copyist gilds them and misreads one; the Engineer reads her gold and cuts loud; the company sinks a shaft; the Linguist reads his log and comes down; she makes a wall for Dan. Nothing in the chain was meant. Everything in it was kept.

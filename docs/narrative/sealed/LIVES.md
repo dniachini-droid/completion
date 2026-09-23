@@ -237,3 +237,37 @@ The Surveyor, the Copyist and the Engineer can each be shortened without breakin
 ## 10. Authoring status
 
 Sign-authored (plantable now): S1–S8, L1, L4, L22, V1, K1–K4, B0, B7 (as rendering), Z1, Z2. Everything else in the Cut (V2–V7, C's transcription, E4–E6, B1–B6, L15a–L21, X told lines, S9–S18) has its telling and is sign-authored before planting; none of it is in the first playable.
+
+## 11. Months 4–6 records (tellings; sign-authored before planting)
+
+Ids and weeks follow `REVELATION_MAP.md` weeks 14–26. Builder records open with the Builders' formula (MAKE PERSON-ALL, "we cut") and carry his Builder-age hand-mark (B1–B6) or another maker's (X-answerer, X-door-plan).
+
+| Id | Week | Where / hand | Telling |
+|---|---|---|---|
+| E4 | 14 | paper, the Loud Room ledge | Log. 3rd. Cut the hold-mark on the roof above the props; it held, which timber does not do at that span. The Inspector says the mark is not "hold". Says it is "keep". A distinction for a man with no roof to lose. |
+| X-mule-driver | 14 | told line by the cord, his hand | Told: the mules would not go in. I did not make them. A mule knows a thing. |
+| S9 | 14 | Salt Gallery niche, his hand | Once, the first. Lambs in the spring; salt in the summer; blocks to the valley in the autumn, four on the donkey. I was on the hill because that is where the salt is. I say this so the next one knows I was not looking for anything. |
+| E5 | 15 | paper, the ledge | Log. 9th. The hill answered. I have it in the sound and in the well. Louder will open it. Ordered six kegs on my own account; the company will not. |
+| X-company | 15 | paper, her folder | To the engineer at the works: the works are closed as of the 26th. The men's statements are enclosed, including the one that reads "the sky made a noise". You are instructed to come up. |
+| L15 | 15 | notebook, Day 40 | (as §2) |
+| E6 | 16 | the Hold, his statement | Once, the fourth, long-slept of stone in the eighth count of his staying. I laid him in the Hold. I kept the book. |
+| C2 | 16 | the book | (as §4) |
+| S10 | 16 | Salt Gallery niche | Once, the first. He asked me what the sky sounded like. I said: like nothing; like wind. He asked if it had ever sounded like a door. I said no. He said: good. |
+| B1 | 17 | Builders' quarters, his Builder-age hand | We cut. We found the stone that came already cut. We read it with our hands for eight eights of cuttings before it answered. |
+| C3 | 17 | the book | (as §4) |
+| B2 | 18 | quarters | We cut. We made light before we could see it. We felt the warmth on the wall. It was the first word and the least useful. We cut it everywhere. |
+| X-patron | 18 | a slip bound into the book | Received, for gold leaf, two leaves, for the words of the old road. The copyist says the words are long. |
+| B3 | 19 | quarters | We cut. We cut the deep. We moved the hill. We were loud, because we were glad. |
+| X-librarian | 19 | paper, her folder | Catalogue: a book of the old road, with gold. Missing since the railway. |
+| X-answerer | 19 | the Council wall, another maker's hand | What is kept is buried. What is sent is heard. We were sent. We are the proof. |
+| B4 | 20 | the Warning Hall's approach | We cut. Late, we read the last of the stone we could read. It said: what is loud is taken. The rock had gone still under our hands three times. We had not asked why. |
+| X-overseer | 20 | told line by the order's stone copy, his hand | Told: the works are closed. The surveyor's last report never came. |
+| B5 | 21 | the Council's binders' wall | We cut. Half of us: keep it; teach it; make a place. Half of us: we were sent this; send. We who keep drew the doors. We made them against ourselves, against what we might become. |
+| S11 | 21 | memorial-wall niche | Once, the first. My daughter married in the third salt-cutting after. I gave her my mother's [ring]. He cut my wife's name again here when I said it. I did not ask why he needed it twice. |
+| X-farmer | 21 | paper, her folder | Photograph: lights on the hill at night. On the back: took this from the top field. Not cars. |
+| S12 | 22 | told line by the daughter's tally-stick, his hand | Told by the child: he counted to the end. He said the owl would keep the lamp. |
+| K5 | 24 | the workshop wall, his hand | KEEP ONE HERE {h}. "Keep-one-here." (REMAIN, where he first cut it; the print of his left hand beside it.) |
+| B6 | 25–26 | the deep's first hall | We cut. Each cutting, fewer in the count. Those who went quiet long-slept not. They were not there. We did not cut their names. There was no one to say them. |
+| L16 | 26 | the reading-tables | (as §2) |
+
+**Note on B6 and the rings:** the Builders did *not* cut the names of the quiet; there was no one to say them. He said them, alone, afterwards, and cut them all: that is why every ring carries his hand-mark and why the count "would not be less".
