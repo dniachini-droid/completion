@@ -347,6 +347,10 @@ Only now choose technology. Don't assume React Native, Swift, Supabase etc. Eval
 - Don't interview forever without synthesis: periodically summarise what's known, suspected, contradictory, emerging opportunities, unresolved — let Dan correct, then continue.
 - Documentation should be useful, not ceremonial: concise, cross-referenced, not duplicated across files.
 
+## Pacing amendment (added by Dan, 2026-09-23)
+
+Phases 0–5 should be thorough but pragmatic. The goal is not to perfect the entire eventual game before implementation. Conduct enough discovery to understand Dan and establish the core game concept, then prioritise getting a **small but beautiful first playable** into his hands quickly. Deep worldbuilding and narrative can continue in parallel after the core loop is proven. (See `DECISIONS.md` D-004.)
+
 ## 87–89. Continuity and phase changes
 
 - **Progress tracker** (added by Dan, 2026-09-23): `docs/CURRENT_STATE.md` is the authoritative record of current phase, objective, session focus, what must NOT be worked on yet, exit criteria, milestones, blockers and exactly one recommended next action. Read it at the start of every session; update it before ending every substantial session. If Dan asks for work that skips substantially ahead, point it out and ask whether he deliberately wants to deviate.

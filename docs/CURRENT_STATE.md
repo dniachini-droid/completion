@@ -13,6 +13,8 @@ _Last updated: 2026-09-23 (Session 1)_
 
 Build an accurate, evidence-based model of Dan as a player and as a person trying to initiate things — in `PLAYER_MODEL.md` — good enough to satisfy the Phase 0 exit criteria.
 
+**Pacing (D-004):** thorough but pragmatic. Aim for enough understanding to establish the core game concept, not an exhaustive profile. The project-level goal after Phase 5 is a small but beautiful first playable, soon.
+
 ## Current session focus
 
 Interview round 1: specific game experiences that completely captured Dan's attention — what he was doing and feeling, what made him want one more hour, which rewards he anticipated, which discoveries stuck, which systems became compulsive and which became chores.
@@ -50,6 +52,7 @@ We can articulate with reasonable confidence — and Dan explicitly agrees the p
 
 - 2026-09-23 — Repository initialised with documentation skeleton, `CLAUDE.md`, and `MASTER_BRIEF.md`.
 - 2026-09-23 — Interview round 1 questions sent.
+- 2026-09-23 — Pacing decision D-004 recorded (pragmatic Phases 0–5; first playable prioritised; deep narrative continues in parallel).
 
 ## Unresolved blockers
 

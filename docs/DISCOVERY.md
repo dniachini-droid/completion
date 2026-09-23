@@ -15,6 +15,8 @@ Rounds are conversational and adapt to answers. Rough intended coverage:
 6. History with productivity tools.
 7. Synthesis and correction; repeat as needed until exit criteria are met.
 
+Pacing (D-004): combine or skip topics once answers make them redundant. Target is "confident enough to establish the core concept", not exhaustive coverage.
+
 ## Session 1 — 2026-09-23
 
 - Repository initialised; founding brief captured in `MASTER_BRIEF.md`.

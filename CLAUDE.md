@@ -11,6 +11,10 @@ No application code. Interview Dan (5–10 concrete questions per round), follow
 
 Phase order: 0 Player discovery → 1 Product discovery → 2 Game design → 3 Narrative/world → 4 Experience/art/UX → 5 Concept synthesis → 6 MVP → 7 Technical architecture → 8 Prototype → 9 First playable → 10 Personal alpha → 11 Iteration.
 
+## Pacing (D-004)
+
+Phases 0–5 are **thorough but pragmatic**: do enough discovery to understand Dan and settle the core game concept, not to design the whole eventual game. Then get a **small but beautiful first playable** into Dan's hands quickly. Deep worldbuilding and narrative continue in parallel after the core loop is proven. Before the first playable, narrative work covers only the thematic core, the central mystery's truth, and the truth behind any clue the playable actually plants. Rule 6 still applies: nothing is planted without a predetermined answer.
+
 ## Session start
 
 **Always read `docs/CURRENT_STATE.md` first** — it is the authoritative progress tracker (phase, objective, what not to work on yet, exit criteria, blockers, the one recommended next action). Update it before ending every substantial session.
