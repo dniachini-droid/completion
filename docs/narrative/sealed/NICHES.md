@@ -78,3 +78,73 @@ _Written 2026-09-23._
 - A niche's told line is in his hand with his hand-mark, always; the app never says "he wrote this". Dan learns whose hand it is in week 4.
 - Objects from pre-paper ages carry no writing of their own (rule 4: the Site never lies).
 - Nothing in a niche is required for the story; nothing in the story is *only* in a niche.
+
+## Weeks 14–26 (months 4–6)
+
+| Wk | # | Where | What the count opens | Told line (his hand) or description | Ties to |
+|---|---|---|---|---|---|
+| 14 | 1 | The Loud Room's cupboard | A lesson-tablet the Engineer never read: an inverted wedge on a bar beside the sun over ground; a reversed hook beside an ear | — | **WORLD, HEAR** |
+| 14 | 2 | The Loud Room's ledge | The log's next page (E5) | — | E5 |
+| 14 | 3 | The blast wall | ECHO's blank exposed by MOVE-STONE (a word, not a Key) | — | W4 |
+| 14 | 4 | The square gallery, the mule-shoe's stone | The mule-driver's told line | *Told: the mules went not in. I made them not. A mule knows a thing.* | X-mule-driver |
+| 14 | 5 | Salt Gallery, a deep niche | S9 | — | S9 |
+| 15 | 1 | Her folder's second pocket (camp) | Her lesson-sheet "make / read" drawn for the next one; a bundle of the company's closure correspondence | — | **MAKE, READ**; X-company |
+| 15 | 2 | The lower way's first recess | A Builder's lamp-cup, loose, laced stone, the size of a bucket | (wordless; the app: "a lamp for a long hand") | the Builders' scale |
+| 15 | 3 | The Hold's door | The count on the Hold's door | — | region 3 |
+| 15 | 4 | The notebook's last page (camp) | L15 | — | L15 |
+| 15 | 5 | The lower way, a floor-stone | A tally of returns in his hand: strokes beyond counting, then a gap, then five short rows, each ending in a cross but the first, which ends in the doubled path | *Told: the count of the readers' returns. The first, many, and came again. The others: not.* | M8; the closing line |
+| 16 | 1 | The Hold's sealed shelf | A Builder's inventory-tablet: "all of ours" (OF, ALL) | — | **OF, ALL** |
+| 16 | 2 | The Hold, the stone cloth | The fourth reader's face, not old; ECHO's blank beside the shape | — | E6 (above it) |
+| 16 | 3 | The Hold, a shelf | The Surveyor's level's twin, and the Engineer's log's back half (E-pages for months 4–5) | (wordless / paper) | V; E |
+| 16 | 4 | The book, second margin | C2 | — | C2 |
+| 16 | 5 | Salt Gallery, a deep niche | S10 | — | S10 |
+| 17 | 1 | The Builders' quarters' door | The count on the quarters' door | — | B1 |
+| 17 | 2 | The Reading Room's second tablet | A device-mark beside a picture of a lift; QUESTION+GIVE beside a picture of a mouth and a raised hand | — | **device-mark, ASK** |
+| 17 | 3 | The book, third margin | C3 | — | C3 |
+| 17 | 4 | The quarters, a sleeping-niche | A stone pillow twice a man's length, hollowed by an age of one head | (wordless) | the Builders |
+| 17 | 5 | The Hold, a drawer | The heel of the Salt-Cutter's bread, gone to stone, on a cloth | *Told: the first's bread. I ate not. I kept it.* | S2; he keeps everything |
+| 18 | 1 | The quarters' star-tablet | A drop with nothing under it beside a picture of the sky | — | **FAR** |
+| 18 | 2 | The Council Gallery's door | The count on the Council's door | — | X-answerer |
+| 18 | 3 | The quarters, a niche | B3 (read next week) | — | B3 |
+| 18 | 4 | The book, a bound slip | The patron's receipt | (paper, in the book) | X-patron |
+| 18 | 5 | The quarters, a wall-recess | A Builder's stylus and a half-cut lesson: a flame, and the beginning of a lamp, unfinished by a hand that stopped | *Told: a child's lesson. The child went still before the lamp.* | the quietening |
+| 19 | 1 | The Council's lectern | A device-tablet: a fork over a sleeper beside a picture of a lift rising | — | **WAKE** |
+| 19 | 2 | The binders' wall's sealed panel | B4 first sight | — | B4 |
+| 19 | 3 | Her folder (camp), third pocket | The library catalogue entry | (paper) | X-librarian |
+| 19 | 4 | The Council, floor | Two rods, one on each side of the gallery, laid down and never picked up | *Told: theirs. The two who argued last. They laid them down together.* | the split |
+| 19 | 5 | The quarters | B2's second wall (the lamps cut "everywhere": a hall where every cell is the lamp-mark) | (wordless; the app: "the same mark, thousands of times") | B2 |
+| 20 | 1 | The Warning Hall's floor-tablet | The RETURN mark beside a picture of a figure going out and coming back; an open cell beside a raised hand | — | **QUESTION, AGAIN** |
+| 20 | 2 | The memorial walls' first niche | S11 | — | S11 |
+| 20 | 3 | The square gallery, the order's stone copy | The overseer's told line | *Told: the works are shut. The second's last marks came not to me.* | X-overseer |
+| 20 | 4 | The Warning Hall, a recess | A Builder's copy of the warning in small, with three strokes beside it and a fourth begun | *Told: the times the rock went still. Three. The fourth was the last.* | B4; the quietening |
+| 20 | 5 | Salt Gallery, the last niche | S12 (told by the daughter) | — | S12 |
+| 21 | 1 | The memorial walls, a niche | The wife's ring, cut a third time, beside a picture of a comb | *Told: hers. Three times. Every hall.* | S11; the rings' rule |
+| 21 | 2 | Her folder (camp), fourth pocket | The farmer's photograph | (paper) | X-farmer |
+| 21 | 3 | The Council, the answerers' wall's foot | A Builder's tally of the two halves: eight and eight and four; eight and eight and four | *Told: even. They were even. The doors were drawn by one more.* | the split; his casting vote |
+| 21 | 4 | The memorial walls, a recess | A rod, worn to half its length | (wordless; the app: "worn by cutting") | his ages of cutting |
+| 21 | 5 | The memorial walls, the sharp ring's niche | A told line beside the unfinished ring | *Told: not finished.* | K2's twin; month 7–9 |
+| 22 | 1 | The Landing's sealed stone | KEEP under his ring, cut large, with a lamp-picture | — | **KEEP** |
+| 22 | 2 | The Landing, a recess | L15a (her first cut note) | — | L15a |
+| 22 | 3 | The Landing, floor | The troughs again: two, a stride apart, and the wall polished to a long shoulder | (wordless) | C-04a's twin |
+| 22 | 4 | The first counting door | The count begins to fill (several weeks) | — | the doors |
+| 22 | 5 | The Hold, a last drawer | The Engineer's spectacles, one lens cracked | *Told: the fourth's. He read the book with these.* | E; the misreading |
+| 23 | 1 | The Landing's second stone | SHUT beside a picture of a door with a cross; STILL beside a picture of water with a cross | — | **SHUT, STILL** |
+| 23 | 2 | The Loud Room, the ledge (re-read) | K3: "Kept." | — | K3 |
+| 23 | 3 | The side gallery, the door (re-read) | V6: "I shut the door." | — | V6 |
+| 23 | 4 | The Landing, a niche | The Salt-Cutter's second lamp's twin: the lamp he brought in old age, found here, unlit | *Told: the first's second lamp. He left it lit. It went out when he went out.* | the lamps rule |
+| 23 | 5 | The Landing, a wall-slot | A Builder's plan of the Landing: where the corridor turns, a figure drawn standing, twice the height of the doors | (wordless) | the face |
+| 24 | 1 | The low passage's lintel | HOLD's blank (a word) | — | W5 |
+| 24 | 2 | The workshop's drawer | A tablet of directions: a pointed drop beside a picture of a road with an arrow | — | **TOWARD** |
+| 24 | 3 | The workshop's rack | A second rod (not needed) | (wordless) | X-tool's twin |
+| 24 | 4 | The workshop, a shelf | Five small stones, each cut with one reader's number, in a row, and a sixth uncut | *Told: the count. One to five. The sixth is not yet.* | the reader-count; the empty ring |
+| 24 | 5 | The workshop, the wall | K5 seen (REMAIN) | — | K5 |
+| 25 | 1 | The first counting door | The count fills: the door opens for Dan | — | region 4 begins |
+| 25 | 2 | The second counting door | The count begins | — | |
+| 25 | 3 | Between the doors, a niche | B6 first sight | — | B6 |
+| 25 | 4 | Between the doors, a wall | X-door-plan first sight | — | X-door-plan |
+| 25 | 5 | Between the doors, floor | A line in his hand, alone, cut where he stands: *Here.* (HERE {h}) | *Here.* | his furthest point |
+| 26 | 1 | The second counting door | The count fills | — | |
+| 26 | 2 | The third counting door | The count fills over the week | — | |
+| 26 | 3 | The Deep's first hall, the reading-tables | L16 first sight | — | L16 |
+| 26 | 4 | The Deep's first hall, a niche | The floor-stone for SEED (month 7's first sign) | — | **SEED** (month 7) |
+| 26 | 5 | The Deep's first hall, a wall | Bare stone: no rings. The app describes the absence. | (wordless) | the ring gradient |
