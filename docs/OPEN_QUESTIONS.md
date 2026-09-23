@@ -7,8 +7,10 @@
 - What makes him stop playing games?
 - Which fictional worlds and tones reliably interest him?
 - Which reward structures motivate him, and which quickly become meaningless? *(Round 1: new abilities strongly motivate; grinding doesn't.)*
-- Does he prefer clear good-vs-evil or morally complex conflict, and how does that fit with unreliable history?
-- Dead civilisations (ruins) vs living alien cultures?
+- How far can revisionist history ("the evil side had a point") go before it spoils the good-vs-evil stakes he likes? *(Round 2: villain depth is wanted.)*
+- Dead civilisations (ruins) vs living alien cultures? *(Round 2: likes discovering living alien life too.)*
+- What makes a goal feel "visible"?
+- How dark should the tone be: wonder, dread, or both?
 
 ## Behaviour
 - What causes initiation vs avoidance for him, specifically?
@@ -22,6 +24,8 @@
 - How many core daily actions (if any fixed number) define a complete day?
 - Does collection/rarity motivate him in practice, and how to prevent farming?
 - Do bosses for large projects amplify or trivialise real achievement?
+- Could a composable ability system (Eternal Darkness-style runes) be the core progression, with real-world effort earning components?
+- Is creative building worth its cost here, or is it a separate game?
 
 ## Narrative
 - Which world direction? (Deliberately undecided; do not anchor on the "arrival in an abandoned world" premise.)

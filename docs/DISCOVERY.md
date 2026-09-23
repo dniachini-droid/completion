@@ -30,3 +30,15 @@ Pacing (D-004): combine or skip topics once answers make them redundant. Target 
 - Dislike: grinding and repetition.
 - **Design tension surfaced:** real-life inputs repeat daily, and Dan dislikes repetition. The world's response has to vary and escalate even when the input is the same.
 - Answers were short. Round 2 probes the *why* behind each.
+
+### Round 2 findings (why)
+- **"Repetition is fine so long as it's for a goal that I can see."** The most design-relevant line so far, and it reframes the repetition tension: daily inputs are fine if each one visibly advances toward something specific.
+- **"Everything was related."** The Temple moment works because the sword links the hero, the temples and the history. Interconnection is a core pleasure.
+- **Ganondorf was the highlight.** A powerful, imposing, mysterious villain with depth.
+- **Eternal Darkness runes.** Composable spell-crafting is a candidate model for "new mysterious abilities".
+- **Mass Effect loved.** Alien civilisations, life and futuristic powers.
+- Builds for fun (confirmed) and loved BotW, so exploration without heavy story also works for him.
+- Still missing: what makes him stop playing, tone/darkness, companions, other media.
+
+### Emerging synthesis (for Dan to correct at the next checkpoint)
+Mysterious, ancient or alien power; a world where everything is connected; an imposing antagonist with depth; progress felt as new abilities rather than numbers; repetition tolerated when aimed at a visible goal.

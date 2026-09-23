@@ -17,7 +17,7 @@ Build an accurate, evidence-based model of Dan as a player and as a person tryin
 
 ## Current session focus
 
-Interview round 2: follow-ups on round 1 (the *why* behind OoT, abilities, good vs evil, space games, repetition). Round 1 covered game experiences that completely captured Dan's attention — what he was doing and feeling, what made him want one more hour, which rewards he anticipated, which discoveries stuck, which systems became compulsive and which became chores.
+Interview round 3: Eternal Darkness and Mass Effect specifics, why he stops playing games, tone, and other media. Earlier rounds covered game experiences that completely captured Dan's attention — what he was doing and feeling, what made him want one more hour, which rewards he anticipated, which discoveries stuck, which systems became compulsive and which became chores.
 
 ## Do NOT work on yet
 
@@ -51,7 +51,7 @@ We can articulate with reasonable confidence — and Dan explicitly agrees the p
 ## Completed milestones
 
 - 2026-09-23 — Repository initialised with documentation skeleton, `CLAUDE.md`, and `MASTER_BRIEF.md`.
-- 2026-09-23 — Interview round 1 answered; player model updated.
+- 2026-09-23 — Interview rounds 1–2 answered; player model updated.
 - 2026-09-23 — Pacing decision D-004 recorded (pragmatic Phases 0–5; first playable prioritised; deep narrative continues in parallel).
 
 ## Unresolved blockers
@@ -61,4 +61,4 @@ We can articulate with reasonable confidence — and Dan explicitly agrees the p
 
 ## Recommended next action
 
-**Dan answers the round-2 follow-up questions; Claude then updates the player model and moves toward other media and real-life motivation.**
+**Dan answers round 3; Claude then gives a first synthesis checkpoint and moves to real-life motivation and days.**
