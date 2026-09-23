@@ -29,7 +29,7 @@ _Written 2026-09-23._
 | the makers | **the makers** | The people who cut the Quiet, in a hand older than anything | |
 | the name-ring | **a ring** | A ring around marks: a person's name | Recognisable before readable |
 | the hand-mark | **a hand** | A small mark in a cell's corner: who cut this | |
-| the rod | **the rod** | The cutting tool Dan uses to cut words | Found in the first hall |
+| the rod | **the rod** | The cutting tool Dan uses to cut words | On a shelf in the side gallery where the last explorer camped |
 | the lamp | **the lamp** | The clay lamp on the ledge in the first hall, lit | Camp is beside it |
 | camp | **camp** | The evening close, by the lamp | |
 | deep push | **a deep push** | A High-day route to places a Normal day doesn't reach | |

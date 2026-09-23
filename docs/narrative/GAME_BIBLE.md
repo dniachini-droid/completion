@@ -9,17 +9,17 @@ _Written 2026-09-23._
 
 ## The world in one paragraph
 
-Somewhere under our own world there is a quiet place that was not made by us. Its halls are long and high and rounded like the inside of a shell, its side passages low, and every surface within reach of a hand is cut with a script. The script does things when it is read. People have found the place before, in different ages, by accident: a salt-cutter after an earthquake; a surveyor sent to run a road tunnel; an engineer blasting for a railway; a woman who read about the place in the engineer's log and came to see. Each learned a few marks. Each met the same tall figure, who has been there in every age under a different name. You are the latest to come down. The lamp is already lit.
+Somewhere under our own world there is a quiet place that was not made by us. Its halls are long and high and rounded like the inside of a shell, its side passages low, and every surface within reach of a hand is cut with a script. The script does things when it is read. People have found the place before, in different ages, by accident: a salt-cutter after an earthquake; a surveyor sent to run a road tunnel; an engineer blasting for a railway; a woman who read about the place in the engineer's log and came to see. Each learned a few marks. Each met the same tall figure, who has been there in every age under a different name. Long ago the makers heard something, and began an answer that would take longer than any age to finish. You are the latest to come down. The lamp is already lit. It was lit when you came down, and there is no oil in it.
 
 ## Setting
 
 - **Our world, unnamed ages.** No country, city, century or date is ever named. The records speak in bronze sickles, measuring cords, blasting powder and field notebooks, and you work out the age from the objects. This is deliberate: the ages are *felt*, not labelled.
 - **The place** (working name: **the Quiet**). A dry, cut-stone descent under a hill. Lamps cut into the walls that wake when the right word is cut nearby. Doors that answer words. Locks that fill with time. A long stair. Still water. Air that moves slowly from below. Nothing rots; nothing waits. The bottom is somewhere no one in the records reached.
-- **Three ways in, from three ages.** A salt crack, a road tunnel, a railway blast. You come in by a fourth: a capped ventilation shaft that someone recently cut open.
+- **Four ways in, from four ages.** A salt crack, a road tunnel, a railway blast, and a capped ventilation shaft that someone recently cut open. You come in by the last.
 
 ## Tone
 
-Dark, cosmic, patient. The register of *Eternal Darkness* and *The Three-Body Problem*: vast timescales, a civilisation that ended, something listening. But the dread lives in specific rooms and specific records; the rest is grandeur and melancholy, and the people in the records are ordinary, concrete and often funny. The place is never cruel to *you*. The app's voice to you is plain and warm (P14). The fiction can go as dark as the story needs; the darkness is in what the readers found and what it cost them, never in how the game treats you.
+Dark, cosmic, patient. The register of *Eternal Darkness* and *The Three-Body Problem*: vast timescales, a civilisation that ended, something listening. But the dread lives in specific rooms and specific records; the rest is grandeur and melancholy, and the people in the records are ordinary, concrete and often funny. The place is never cruel to *you*. The game itself is never harsh with you. The fiction can go as dark as the story needs; the darkness is in what the readers found and what it cost them, never in how the game treats you.
 
 ## Themes (what the story is about, without saying what happens)
 
@@ -30,7 +30,7 @@ Dark, cosmic, patient. The register of *Eternal Darkness* and *The Three-Body Pr
 
 ## The shape of the story
 
-You know roughly what's coming; the details are the surprise (player model). Roughly:
+You'll know roughly what's coming. The details are the surprise. Roughly:
 
 1. **The place answers.** You learn your first marks from a wall that teaches them, cut your first word, and the hall lights up.
 2. **Everyone met him.** As you read further, the same figure appears in every age's records, under a different name.
@@ -46,11 +46,11 @@ The story is finished when it is finished. It has a fixed ending, decided before
 - **Names are ringed.** You recognise a recurring name before you can read a single mark.
 - **Words are two to four marks cut together, and a word is a power** because the place obeys it: light, open, wake, hold, and later stranger things.
 - **Cutting a word is a short fixed ritual**, like a dialling sequence: mark, mark, the word locks, the door answers. The same steps in week two and in month twelve.
-- **Guessing, not typing.** A new mark arrives with a context (a picture, a name, a known neighbour) and three or four candidate meanings. Pick one; it shows with a question mark in every record that contains it; the place confirms it later, when a word works or a second record agrees. Never "wrong" at the moment of guessing. A rejected guess is a small story beat.
+- **Guessing, not typing.** A new mark arrives with a context (a picture, a name, a known neighbour) and three or four candidate meanings. Pick one; it shows with a question mark in every record that contains it; the place confirms it later, when a word works or a second record agrees. You're never told you're wrong when you guess. When the place later disagrees with you, that's a small moment in the story, not a mistake.
 - **You can try things.** Small blank cells on the walls take any two marks you like. The place answers with one line (a lamp dims, the hall hums, nothing). Never progress, never a punishment: a language you can speak, not only read.
 - **Old records re-read.** Learning a mark changes what earlier records say. Some marks change a great deal at once. The app shows you which old record changed most and lets you reopen it.
 - **The first word comes in week two or three** and opens something. After that, marks arrive at one or two a week, words about one a month.
-- **Big days can give you part of a mark** (an element or a category), completed by the next Key (D-013).
+- **A big day can give you half a mark.** Your next Key finishes it.
 
 ## The records and the people in them
 
@@ -67,7 +67,7 @@ The story is finished when it is finished. It has a fixed ending, decided before
 - Each visit is under a minute: a step, sometimes a small choice (which way; which record; which words to try on a gate), sometimes a fragment.
 - Forks lead to different lives' records first; both ways are always reachable eventually.
 - Camp is by the lamp in the first hall. Bedtime by your chosen time means something small is waiting there in the morning.
-- Absence: "where you were", and one small step. Dust, not decay.
+- If you've been away, the place shows you where you were and offers one small step. Dust has settled. Nothing has broken.
 
 ## What the first playable will contain (D-004, D-013)
 
