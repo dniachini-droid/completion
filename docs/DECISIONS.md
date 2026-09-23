@@ -151,3 +151,12 @@
 - **Rationale:** Dan plays for the story and to be surprised. A long story needs a fixed destination to avoid "going nowhere".
 - **Consequences:** Dan's control over the story is at the level of the pitch, the tone and morning questions. The sealed folder must stay internally consistent, because Dan won't catch contradictions in it. Each Phase 3 run includes an adversarial self-review for that reason.
 - **Reversible:** Yes. Dan can open the sealed folder at any time; that can't be undone for him.
+
+## D-016 — Provisional story pitch: *The Long Answer* (Pitch 1)
+- **Date:** 2026-09-23 (overnight run; **awaiting Dan's confirmation**)
+- **Context:** Stage 2 of `docs/narrative/PHASE3_PLAN.md`. Three pitches were written (`docs/narrative/PITCHES.md`): 1 *The Long Answer* (a quiet cut-stone place under our own world, built to finish something over ages; a figure present in every age), 2 *The Unmade* (a fallen thing taken apart into a language inside a mountain), 3 *The Last Run* (an engine under the world that restarts the ages). Dan was asleep; D-015 allows a provisional choice.
+- **Decision:** Develop Pitch 1 fully in `docs/narrative/sealed/`. The other two stay short.
+- **Alternatives:** Pitches 2 and 3; developing two pitches thinly.
+- **Rationale:** Pitch 1 is the one whose ending is latent in its premise (NARRATIVE_RULES 10), whose lives are pieces of one thing rather than episodes, whose antagonist can be revealed by staircase over a year, and whose fiction never makes Dan's progress feel like damage (P8, P14). Full reasons in `PITCHES.md`.
+- **Consequences:** Sealed docs are written against Pitch 1. Working in-world names (the place "the Quiet", the script "the Cut") are provisional and listed as morning questions. If Dan chooses another pitch, the sealed work is kept on the branch and a later session develops the chosen one.
+- **Reversible:** Yes, until clues are planted in a playable.
