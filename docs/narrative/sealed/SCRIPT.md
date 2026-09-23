@@ -100,6 +100,7 @@ Later signs (months 8–9, rare): TEACH (give+mark), LEARN (take+mark), ONE-WHO 
 | F7 | AGAIN / RETURN | a path-bar doubling back | m 5 | The counting doors are marked with it |
 | F8 | TOWARD | a pointed drop | m 6 | |
 | F9 | **LOUD / GREAT** (intensifier) | a fork set over the whole sign | **m 8** | Before a verb: the word *carries*. The danger sign |
+| F10 | ME / I | a drop with a small hook at its foot (the self, as a thing held) | wk 2 | The Salt-Cutter and the Linguist use it; the Surveyor never does ("this one") |
 
 ### 3.3 Determinatives (5)
 
@@ -128,7 +129,7 @@ Words are commands: verb + object (+ modifier). Forming one is the fixed ritual 
 | # | Word | Signs | Effect in the Site | Arrives | Opens (first use) |
 |---|---|---|---|---|---|
 | W1 | **LIGHT** | FIRE-GIVE | Wakes laced lamps and lamp-lines nearby; the map reveals routes; hidden word-doors show their lintels | **wk 2–3** | The Lamp Door in the first hall |
-| W2 | OPEN-WAY | PATH-OPEN | Opens the class of word-doors | m 2 | The door at the head of the Counting Stair |
+| W2 | OPEN-WAY | PATH-OPEN | Opens the class of word-doors | m 2 | The lintel at the foot of the Stair's second flight; the same word, with a Key, opens the Lower Door |
 | W3 | MOVE-STONE | STONE-MOVE | Clears falls; shifts blocks; opens routes the readers' collapses closed | m 3–4 | The Salt Gallery's fallen roof |
 | W4 | ECHO | SEE-ONCE | Shows an impression the stone kept of a loud moment in this room: a short *scene* rather than a fragment. Its first blank is behind the Loud Room's fall, exposed by MOVE-STONE | m 4–5 | The Loud Room (the Engineer's chamber) |
 | W5 | HOLD | KEEP-STONE | Holds a collapse, holds a door open, holds a device | m 6 | The Builders' Hold |
@@ -185,7 +186,7 @@ Signs are earned by Keys (one per weekly target met) and occasionally by an arri
 | 6 | OPEN; EAT; HOME (compositional); place-bar | | |
 | 7 | UP/OUT; STONE; CHILD | **OPEN-WAY** (PATH-OPEN) | |
 | 8 | SEE; COUNT; DAY; number bundle | | The readers are *numbered*: the Salt-Cutter is ONE, the Surveyor is TWO (V1's formula). The double notation: his count beside the reader's |
-| 9 | **NOT** | | Her glossed "he stopped me" / "he stopped us" take the cross: "…[not]" in S4 and V2; S2 "he ate [not]"; the lintels show "voice [ ]" → "voice not" |
+| 9 | **NOT** | | Her glossed "he held me" / "he held us" take the cross: "…[not]" in S4 and V2; S2 "he ate [not]"; the lintels show "voice [ ]" → "voice not" |
 | 10 | MOVE; WATER | | |
 | 11 | VOICE; SLEEP | | The lintels read in full: "[ ] voice-not"; V4 "the Guest's voice" |
 | 12 | TAKE; HAND; GOOD | | |
@@ -199,7 +200,7 @@ Signs are earned by Keys (one per weekly target met) and occasionally by an arri
 | 5 | FAR, WAKE; QUESTION, AGAIN/RETURN | **ECHO** (SEE-ONCE) | The counting doors are marked RETURN; the readers' records end with "returned not" |
 | 6 | **KEEP**, SHUT, STILL; TOWARD | **HOLD** (KEEP-STONE) | **Mid-point.** His ring reads KEEP-ONE; lintels read KEEP VOICE-NOT ("keep silent"); the Salt-Cutter's "he [ ] my lamp" → "he kept my lamp"; the Builders' "the [ ]-work" → "the keeping-work" |
 | 7 | SEED, BREATH | **WAKE** | "The stone that came already cut" → "the seed"; the readers' "the bottom" is the Seed-place |
-| 8 | NAME, BUILD; **LOUD** | | The warning becomes fully readable: LOUD VOICE → FOUND. Every "[ ] cut" was "loud cut". The rings are *names* |
+| 8 | NAME, BUILD; **LOUD** | | The warning becomes fully readable: LOUD VOICE → TAKE. Every "[ ] cut" was "loud cut". The names in the rings become readable |
 | 9 | TEACH, LEARN; ONE-WHO | **QUIET** (VOICE-NOT) | GIVE resolved (month 9): give = send = answer, "to put out from oneself"; the first word was always also "fire-answer". "He taught me" / "I learned" separate in every record for the first time |
 | 10 | (none new; the last rare signs are in the Deep's no-hand records) | **OPEN-WAY, LOUD** | The two prepared words at the Seed are readable: KEEP-ALL and VOICE-GIVE-FAR. The last door |
 | 11 | (no new sign: a new **reading**) | | **The finest cut.** With the lamp at the Seed, the smooth surface is dense text no Builder could read by touch: the Speakers' last line about themselves, *what is put out is not asked back*. It is made only of signs Dan has held for months |
@@ -214,7 +215,7 @@ RESEARCH lesson 16, made concrete.
 3. **Week 2, first Key: GIVE.** The sign has been visible since day one, on the lesson-wall's example word and on the lintel on the hall's side wall beside FIRE; now it is *learnable*: candidates *give, send, answer, open*. (Any of the first three is "provisionally right"; the contest is the story.)
 4. **Week 2–3: the word.** The lintel shows the two signs with a blank cut between them the shape of the rod's edge, and only stone beneath the lintel. Dan forms the word: FIRE, GIVE, lock. The lamps along the hall wake; the map fills; the stone under the lintel opens. **The place answering is the confirmation** of both guesses (Heaven's Vault's lagged confirmation, delivered by the world).
 5. The lesson-wall was made by the Linguist for the next reader. Dan learns that in week 5–6 (the formula's absence, her hand-mark, and L8), and its last line in month 9, meant in full at month 12.
-6. **The candidates.** "Open" is the tempting wrong candidate for GIVE, and the world's answer (a door opens) seems to confirm it. It dies in week 5: S5 ("the mark for giving") and the pencilled gloss on the shelf both say *give*; the app rejects "open" then, as a one-line beat. A wrong gloss can survive a working word; that is deliberate, and it is the only time it happens in the first playable.
+6. **The candidates.** "Open" is the tempting wrong candidate for GIVE, and the world's answer (a door opens) seems to confirm it. It dies in week 5: her pencilled gloss on the shelf says *give*, and S5 shows the same sign in a set of three with no door anywhere near it; the app rejects "open" then, as a one-line beat. A wrong gloss can survive a working word; that is deliberate, and it is the only time it happens in the first playable.
 
 ## 8. Partial signs (D-013)
 
@@ -222,7 +223,7 @@ A partial sign is **structural, never a hint** (RESEARCH lesson 13): one element
 
 ## 8.1 The three reading layers
 
-A record shows its signs. Over them: the app's voice (describes what is physically there, never translates, never suggests an age); **her layer** (the Linguist's partial, honest, sometimes wrong glosses from loose glossary sheets dated Days 1–15, before she learned the cross, shown in her hand where she got them: the bilingual that bootstraps week 1); and **Dan's layer** (his learned signs, guesses with question marks). Where the two layers disagree, both show, and the difference is a beat. Dan's NOT applies to spans she glossed, so her "he stopped me" becomes "he stopped me [not]" the week he learns the cross. Full description in `LIVES.md` §0.
+A record shows its signs. Over them: the app's voice (describes what is physically there, never translates, never suggests an age); **her layer** (the Linguist's partial, honest, sometimes wrong glosses from loose glossary sheets dated Days 1–15, before she learned the cross, shown in her hand where she got them: the bilingual that bootstraps week 1); and **Dan's layer** (his learned signs, guesses with question marks). Where the two layers disagree, both show, and the difference is a beat. Dan's NOT applies to spans she glossed, so her "he held me" becomes "he held me [not]" the week he learns the cross. Full description in `LIVES.md` §0.
 
 ## 8.2 The authoring unit: a Cut record is a sign string
 
@@ -255,13 +256,13 @@ A record's *voice* comes from what it counts and compares, its formula, its unit
 | # | Sign | When | What turns |
 |---|---|---|---|
 | 1 | ONCE | wk 5 | All transcriptions are retrospective; the Linguist's are not. The "oldest-looking" record is the newest |
-| 2 | NOT | wk 9 | Her "he stopped me" (S4) and "he stopped us" (V2) take the cross; "he ate [not]" (S2); "voice not" on the lintels. Three records and every deep door, at once |
+| 2 | NOT | wk 9 | Her "he held me" (S4) and "he held us" (V2) take the cross; "he ate [not]" (S2); "voice not" on the lintels. Three records and every deep door, at once |
 | 3 | VOICE | wk 11 | The lintels' "[ ] voice-not" complete; V4's "the Guest's voice"; the Reading Room is a hall built for sound not to leave |
 | 4 | LONG-SLEEP (+NOT) | wk 13 | The Surveyor "long-slept not" when the door was shut: shut in alive |
 | 5 | **KEEP** | m 6 | His name; "keep silent" over every deep door; "he kept my lamp"; "the keeping-work" |
 | 6 | SEED | m 7 | "The stone that came already cut" is the origin of everything; the bottom is the Seed-place |
 | 7 | LOUD | m 8 | The warning; every loud use in the records lines up with an anomaly |
-| 8 | NAME | m 8 | The rings are names; the hand-mark on every ring is his |
+| 8 | NAME | m 8 | The names in the rings become readable: hundreds, repeated hall by hall, and none of them a reader's; the hand-mark on every ring is his |
 | 9 | GIVE (resolved) | m 9 | Give = answer; the first word and the forbidden word share a sign |
 | 10 | ALL | m 4 → m 12 | KEEP-ALL was readable from month 6; its meaning only lands at the Seed |
 | 11 | (light, not a sign) | m 11 | The Seed's smooth surface, by lamplight, is the finest cut: the message was never a question. Every sign in it is old. The pivot is the lamp, which is why the lamp was the first object |

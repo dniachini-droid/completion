@@ -18,9 +18,9 @@ _Written 2026-09-23. Derived from `REVELATION_MAP.md` and `MYSTERIES.md`._
 ## Intended state by stage
 
 ### End of week 4 (the first playable's test)
-**Knows:** the place is made and obeys words (he cut one). A salt-cutter came in after an earthquake, met a tall figure with four long fingers who did not eat, was taught the word for light, and left his lamp because "someone will need it." A woman came down a ventilation shaft a few years ago, met the same figure, learned the word, and left a rod and a notebook. The lamp on the ledge is lit and was lit for both of them. Nearly every record is in one hand; hers is another. Something very large stood at the hall's corner for a very long time. The little chamber she called open is shut to him.
+**Knows:** the place is made and obeys words (he cut one). A salt-cutter came in after an earthquake, met a tall figure with four long fingers who did not eat, was taught the word for light, and left his lamp when the figure asked for it. A woman came down a ventilation shaft a few years ago, met the same figure, learned the word, and left a rod and a notebook. The lamp on the ledge is lit and was lit for both of them. Nearly every record is in one hand; hers is another. Something very large stood at the hall's corner for a very long time. The little chamber she called open is shut to him.
 **Suspects:** that the figure is still here (the lamp; the word on its base in the same hand as the records). That the lesson-wall is hers.
-**Wrongly believes (sufficient):** that "he stopped me" (S4, her layer) means the figure stopped the salt-cutter; that the lesson-wall is ancient; that the thousands of rings are the makers' signatures (he knows a ring is a name).
+**Wrongly believes (sufficient):** that "he held me" (S4, her sheet) means the figure held the salt-cutter back; that the lesson-wall is ancient; that the thousands of rings are the makers' signatures (he knows a ring is a name).
 **Can name the promise:** many came down; one figure met them all; she wrote to whoever came next.
 
 ### End of month 3
@@ -35,7 +35,7 @@ _Written 2026-09-23. Derived from `REVELATION_MAP.md` and `MYSTERIES.md`._
 
 ### End of month 9
 **Knows:** the memoir is his; he is the last. The Builders ended after loud use; the warning: what speaks loud is found. The anomalies were real. He shut the Surveyor's door to protect the work. He wants Dan to reach the bottom and answer. He cannot pass the counting doors because he never leaves, and the bottom locks to the count; the doors opened no further for the readers who stopped going up, and would open again for anyone who went out. The Linguist stopped going up, and chose. GIVE = ANSWER.
-**Suspects:** that the Linguist remained; that the rings are names.
+**Suspects:** that the Linguist remained; that the rings are the Builders' names, not signatures.
 **Wrongly believes:** nothing load-bearing. Open: what the Listeners are (declared unanswerable by L18).
 
 ### End of month 12

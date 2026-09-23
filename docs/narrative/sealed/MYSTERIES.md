@@ -40,10 +40,10 @@ Any question Dan can ask attaches to one of these. If a new question arises in l
 - The readers ONE–FOUR: a name for him, a few words, their own end.
 - The Speakers' text: the warning, in its own terms.
 
-**Misleading evidence (honest, planted).** The rings look decorative. The Custodian's formula makes every life read as *told by the reader*. The lesson-wall looks ancient. The Engineer's log calls him "the Inspector" (a *company* man). The counting doors look like they want a key-shaped *object*.
+**Misleading evidence (honest, planted).** The rings look like signatures. The Custodian's formula makes every life read as *told by the reader*. The lesson-wall looks ancient. The Engineer's log calls him "the Inspector" (a *company* man). The counting doors look like they want a key-shaped *object*.
 
 **Clues.**
-- *Early (months 1–3):* the lamp is lit; "someone will need it"; every reader met him; "he stopped me not"; the lintels' "voice not"; the one hand.
+- *Early (months 1–3):* the lamp is lit; every reader met him; "he held me not"; the lintels' "voice not"; the one hand.
 - *Middle (months 4–8):* "keep silent"; his ring; the Warning Hall; "we made them against ourselves"; the memoir's "I"; the Surveyor's door; the anomalies line up with loud use.
 - *Late (months 9–12):* the Linguist's "the way down is by going out"; the two words side by side; the safeguard and the Seed rule (the door-maker's plan); the no-hand records; the finest cut by lamplight (month 11: the message was never a question); the list.
 
@@ -101,7 +101,7 @@ Any question Dan can ask attaches to one of these. If a new question arises in l
 **Misleading evidence.** There are thousands; they are everywhere; they look alike; the readers are never named in their records (act first), so nothing links a ring to a life.
 **Early clue.** Week 2: the wife's ring, cut while the Salt-Cutter watched. Week 4: every ring carries the *same* hand-mark. Week 5: a ring on the Stair cut sharp-edged among thousands polished smooth by touch (he is still cutting).
 **Middle.** Month 7: below the three doors the rings stop ("whoever cut these never came down here"). Month 8: NAME; the memoir's "fewer in the count each cutting"; the wife's name read aloud in S's late fragments.
-**Late.** Month 11: one ring unfinished, where a Builder went quiet mid-cut. Month 12: the list on the door.
+**Late.** Months 7–9: one ring unfinished, sharp, his current cutting (understood month 11). Month 12: the list on the door.
 **Trigger.** Month 12, the list: KEEP-ONE at the head; the names of his people; every given name; then *Hamun, Sertor, Alditha, Fenwick, Ines Halloran*; then a ring, empty.
 **Consequences.** The "that was there the entire time": every wall Dan passed was grief, and the whole year has an index. The empty ring is the story's one direct gesture at the reader, and it is gratitude, not a demand: he began Dan's record and could not name him. The head of the list is the antagonist's nature in one image: a job where a name should be.
 
@@ -193,7 +193,7 @@ Any question Dan can ask attaches to one of these. If a new question arises in l
 
 ## M14 — What did the Linguist choose? (rung 6)
 
-**Answer.** She didn't. She copied out both words, wrote "I do not know if he is right," and remained to see. The next reader decides. The last line of the story is hers.
+**Answer.** She didn't. She copied out both words, wrote "I do not know if he is right," and remained. The next reader decides. The last line of the story is hers.
 **Trigger.** Month 10 (her last camp) and month 12 (the coda).
 
 ---
