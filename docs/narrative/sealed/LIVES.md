@@ -328,3 +328,34 @@ Notation as §0.1. Renderings are what the app shows when every sign is held. Co
 - X-mule-driver (wk 14): VOICE: [mule] GO DEEP NOT; ME MAKE NOT {h}. *Told: the mules went not in; I made them not.*
 - X-overseer (wk 20): VOICE: PATH STONE SHUT; MARK OF TWO TOWARD ME AGAIN NOT {h}. *Told: the works are shut. The second's last marks came not to me.*
 - S12 (wk 22): VOICE CHILD: ONE COUNT TOWARD LONG-SLEEP; VOICE: [owl] KEEP LAMP {h}. *The child's voice: he counted to the end. He said: the owl keeps the lamp.*
+
+## 13. Months 7–12 records (below the doors, the last camp, the Seed)
+
+Ids and weeks follow `REVELATION_MAP.md` weeks 27–52. Her cut notes carry no formula and her hand-mark; Z-texts carry no hand-mark at all; Builder-age tablets carry a maker's mark.
+
+| Id | Week | Where / hand | Cut (signs) | Rendering / telling |
+|---|---|---|---|---|
+| L16 | 27 | the first reading-table, hers | PATH DEEP: GO UP · ME GO UP NOT · DOOR ALL GIVE ME UP; DOOR OPEN TOWARD ME AGAIN NOT, GO UP NOT · UP: 8+8+8+8+8+8+8+8+8+8+8+2 [metre], [field] {h} | *The way down: go out. I went out not. The doors give me up; they open not further for me unless I go out; out is ninety metres and a field.* Telling: as §2. |
+| X-door-plan | 27 (seen wk 25) | beside the three doors, a maker's hand | [plan] AGAIN COUNT · DOOR OPEN TOWARD COUNT · DEEP KEEP TOWARD COUNT · ONE-WHO HERE ALL: COUNT NOT {h: maker} | *The door opens to the count. The bottom locks to the count. What lives only here has no count.* (ONE-WHO reads month 9.) |
+| Z1 | 28 | the quiet approach, no hand | PERSON ALL MAKE HERE ALL: GIVE; TAKE; KEEP | *We divide the world thus: what is put out; what is taken in; what is kept.* |
+| X-quiet | 28 | the quiet chambers' lintel, a maker's hand | HERE VOICE GIVE; TOWARD FAR NOT {h: maker} | *Here a word is said and carries not.* |
+| L17 | 29 | the first table's drawer, hers | VOICE OF ONE (ME SEE?): PERSON ALL OF ONE TAKE UP · UP VOICE LOUD AGAIN ALL; TAKE · ONE: ASK ONE ALL: MAKE; GOOD? · ME SEE NOT; ME SEE NOT {h} | *His voice (I think): his people were taken up. The surface: louder each age; taken. He says the one thing left: to do it; on purpose. I see not. I see not.* Telling: as §2. |
+| B7 | 29 | the memoir's last wall, KEEP-ONE hand-mark | (as §12) | *We cut. The count in the upper halls: none… Cut by one. I.* |
+| Z3 | 30 | the second level, no hand | TAKE: GIVE AGAIN NOT · KEEP: READ | *What is taken in is not given back. What is kept is read.* |
+| L18 | 30 | second-level niche, hers | ONE ALL SEE NOT, AGAIN ALL: [it] · SEE: MAKE OF [it] · ME MAKE MARK; ME ASK NOT AGAIN {h} | *No one will ever see what it is. Only what it does. I cut this so I stop asking.* |
+| X-lift | 30 | a device-tablet, a maker's hand | [lift] WAKE: COUNT PERSON UP DEEP {h: maker} | *The lift wakes; it counts who goes up and down.* |
+| V7 | 31 | the shut chamber, Sertor's hand | (as §12) | |
+| X-Builder-ring | 33 | the deep works, another Builder's hand | ring(a Builder's name) {h: other} | (one of the few rings below the doors; not his hand) |
+| told: "Not finished." | 33 | beside the unfinished ring, his hand | MAKE NOT ALL {h} | *Not finished.* |
+| L19 | 34 | a quiet-chamber table, hers | MARK ALL OF PERSON ALL: OF ONE · MARK ONE: ME · HAND OF ONE: ring(KEEP-ONE) · ME ASK; ONE: GOOD · ONE: ONE ALL, ONE · ME READ MARK OF ONE, DAY ALL; ME VOICE: [old] STONE {h} | *The makers' record is his. The last mark: "I". The hand on it: keep-one. I asked; he said yes. He is the last of all of them. I have read his record for many days and called it old stone.* |
+| L18a | 35 | the inner blank's table, hers | GIVE = VOICE GIVE AGAIN · PERSON ALL: VOICE GIVE AGAIN, GIVE NOT: MARK NOT · ME READ FIRE-GIVE: [light], DAY ALL; FIRE-GIVE: [fire-answer] {h} | *Give is answer. They had no word for a reply that was not a gift. I have read the first word as light for a year; it is also fire-answer.* |
+| L20 | 37 | the top of the last stair, hers | ME TAKE LAMP UP, DAY; GO UP: DOOR ALL ASK · [field] ONE [hour], LAMP [bag] · GO DEEP AGAIN: 8+8+8+8+8 [minute] · ONE GO TOWARD DOOR ALL, TOWARD NOT; ONE GO UP, ME · ME ASK: KEEP FIRE · ONE VOICE: KEEP FIRE ONCE, ONE · ME: TOWARD ME {h} | *I carried the lamp up today, and went out: the doors ask it. An hour in the field, the lamp in a bag. Down again, forty minutes. He came to the doors he can come to, and walked me up. I asked: keep it lit. He said: kept lit since the first. I said: for me, then.* |
+| K5 | 38 (seen wk 24) | the workshop wall, his hand | KEEP ONE HERE {h} | *Keep-one-here.* (REMAIN) |
+| L21 | 39 | the last landing / her camp, hers | MARK KEEP ONE HERE: STONE OF ONE, MAKE ONCE ONE · ME MAKE MARK AGAIN, ONCE, GO DEEP · HAND OF ONE HERE STONE, [wrist]; MAKE HAND [right] · ME: MARK THREE ALL · UP 8+8+8+8+8+8+8+8+8+8+8+2 [metre]; ME GO UP NOT, [spring] · ME MAKE · [despair]? SEE HAND: MOVE NOT · ME KEEP HERE: STONE GOOD, PERSON HERE NOT GOOD {h} | *The word keep-one-here: on his wall, where he first cut it. I copied it before I came down. His hand is in the stone there, to the wrist; he cut with the right. I have all three marks. Ninety metres up; I have not gone up since spring. I will cut it. If that reads as despair, see the hand: it moves not. I keep here: better a wall in this than a person anywhere.* |
+| L22 | 40 | her camp, hers | (as §2) | |
+| X-tool | 41–43 | the last binders' tool-room, a maker's hand | [rod] TOWARD ONE-WHO AGAIN {h: maker} | *A rod for the one who returns.* |
+| Z-pieces | 41–43 | the Deep's last niches, no hand | GIVE; TAKE; KEEP; PERSON ALL HERE | *What is put out. What is taken in. What is kept. All of us, here.* |
+| Z2 | 46 | the Seed-place, by lamplight, no hand | GIVE PERSON ALL · ASK AGAIN NOT · KEEP: ONE-WHO READ · HERE PERSON ALL · READ | *Put out, we. Not asked back. Kept by the one who reads. This is all of us. Read.* |
+| ECHO-Seed | 46 | the Seed's wall (SEE-ONCE) | (a scene, not a record) | A hall of tall figures going still one cutting at a time; one figure in the deep, cutting; the lamp-line lit to the bottom. |
+| the speech | 51 | his voice, down the lacing | (spoken) | §7 |
+| K4 | 52 | the face of the three doors, his hand | ring(KEEP-ONE) · rings ×hundreds · rings (given names) · ring(Hamun) ring(Sertor) ring(Alditha) ring(Fenwick) ring(Ines Halloran) · ring( ) {h} | The list. |

@@ -16,7 +16,7 @@ Create the story the game runs on. It must be unique and connected, and it must 
 
 ## Current session focus
 
-**The overnight run (2026-09-23) is done: stages 0–5 of `docs/narrative/PHASE3_PLAN.md`.** Everything is on the branch `claude/phase-3-story-overnight`, not yet merged. **Next: Dan reads the briefing below and answers its questions.**
+**The overnight run (2026-09-23): stages 0–5 of `docs/narrative/PHASE3_PLAN.md` are done, and the run is continuing to its minimum time (21:30 UTC) with the deepening list in that file** (beat-level map for the whole year, deeper secondary lives, sign-authored records, a fair-play audit, a final consistency pass). Everything is on the branch `claude/phase-3-story-overnight`, not yet merged. **Next: Dan reads the briefing below and answers its questions.**
 
 ## Morning briefing for Dan
 

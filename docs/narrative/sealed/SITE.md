@@ -110,18 +110,18 @@ The place obeys words (R1). Two lives, one lamp, one figure who does not eat and
 
 | Place | What is there |
 |---|---|
-| **The quiet chambers** | Where words act without carrying; QUIET learned. The rings stop. |
-| **The seed's text** | Z1 and other no-hand records, on the way down. |
+| **The quiet chambers** | Where words act without carrying (a maker's lintel: *here a word is said and carries not*); an inner lintel with VOICE and NOT beside a blank (QUIET, month 9); a rule-stone with ONE-WHO. The rings stop. |
+| **The seed's text** | Z1, Z3 and the Z-pieces: no-hand records, on the way down, in sealed niches. |
 | **B7** | On a wall by the last lift, in his hand: the last thing he cut before he came up. |
-| **The Builders' deep works** | Lifts (WAKE), the reading-tables, the last binders' tools. The Linguist's cut notes on the reading-tables (L16–L19). |
+| **The Builders' deep works** | The lift and its device-panel (WAKE, month 7; a device-tablet says it counts who goes up and down); the reading-tables with drawers (counts) holding her cut notes (L16–L19); the tool-room (NAME's shelf; the rod-plan *a rod for the one who returns*); a ring in another Builder's hand, one of the few down here. |
 | **Her last camp** (dark room, and the kindest) | Against the last door. Her cut notes (L20–L22); the two words side by side; the wall that is her: a woman's outline in the stone, the rod in the wall to the wrist, her hand-mark beside it; nothing in it waits. |
 
 ## Region 5 — The Seed (months 10–12)
 
 | Place | What is there |
 |---|---|
-| **The last door** | The largest Key (a great real milestone) and OPEN-WAY LOUD, with QUIET first. The lintel: *be loud here and not be heard.* |
-| **The Seed-place** | Fused glassy stone cut so densely it reads as smooth. The two prepared words, each beside its own blank. By lamplight only, the finest cut (Z2, month 11). ECHO shows the quietening, once. He is not here; his voice is. VOICE-GIVE-FAR cut here locks and does not carry (QUIET was cast to enter); KEEP-ALL closes the Seed. After the binding: quiet. |
+| **The last door** | Its count fills only with the largest Key (a great real milestone). QUIET is cut on the sill first; then OPEN-WAY LOUD on the blank; the rod rings; nothing carries; it opens. The lintel: *be loud here and not be heard.* Once opened it knows Dan and opens freely. |
+| **The Seed-place** | Fused glassy stone cut so densely it reads as smooth. The two prepared words, each beside its own blank, and a count between them that fills with the year's last Keys (the Seed locks to the count). By lamplight only, the finest cut (Z2, month 11). ECHO shows the quietening, once. He is not here; when the count fills, his voice is. VOICE-GIVE-FAR cut here locks and does not carry (QUIET was cast to enter); KEEP-ALL closes the Seed. After the binding: quiet. |
 | **The way up** | Through the last door and the Deep to the three doors. The wall there has taken his outline. The list (K4) is on the door's face. |
 
 ---
