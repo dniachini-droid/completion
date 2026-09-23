@@ -1,11 +1,11 @@
 # Phase 4 — The long visual run: working brief
 
 > The operating brief for the unattended run in `PHASE4_PLAN.md` Part 2 (D-022, D-027). **Spoiler-free: Dan may read this.**
-> Started 2026-09-23 23:36 UTC, on branch `claude/phase-4-long-visual-run-08v7pn`.
+> Started 2026-09-23 23:36 UTC (Thursday 24 Sep, 9:36 am Sydney), on branch `claude/phase-4-long-visual-run-08v7pn`.
 
 ## Minimum run time
 
-Dan wants 6–8 hours of real depth. **Do not treat the work as finished, and do not delete the keep-alive Routine, before 05:45 UTC on 2026-09-24** (check with `date -u`). Hard stop around 07:45 UTC.
+Dan wants 6–8 hours of real depth. **Do not treat the work as finished, and do not delete the keep-alive Routine, before 05:45 UTC on 2026-09-24** (3:45 pm Thursday, Sydney; check with `date -u`). Hard stop around 07:45 UTC (5:45 pm Sydney). Dan is in Sydney: give him times in Sydney time.
 
 ## Stages (commit and push after each)
 
