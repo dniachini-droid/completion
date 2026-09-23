@@ -22,6 +22,8 @@ The app's first job is to get Dan started. Opening it shows one obvious next thi
 
 Anything beyond that is a bonus, never a debt.
 
+**Low floor, high ceiling** (added 2026-09-23, D-011). The small "enough" is the *floor*, not the design target. On high-capacity days the game must be able to make Dan **very** productive: more jobs, bigger pushes, richer rewards, with no cap that makes extra real effort pointless. The app is built for Dan at full strength as much as for Dan on a low day.
+
 **3. Low days can fully succeed.**
 Capacity is Low, Normal or High.
 - It is **pre-set from last night's bedtime**, and Dan can change it with one tap.

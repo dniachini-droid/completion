@@ -3,7 +3,7 @@
 > Phase 2. Candidate core loops for Dan to compare, then (once chosen) the full daily, weekly and long-term loops.
 > Built on `DESIGN_PRINCIPLES.md` (P1–P15) and `ANTI_FEATURES.md`. The fiction is kept abstract on purpose: names in *italics* are placeholders, not setting choices (the setting is Phase 3).
 
-_Status: **draft, presented to Dan 2026-09-23. Not chosen.**_
+_Status: **Dan chose a blend (D-010), 2026-09-23.** Parts 1–3 are kept as the record of the options. The design now lives in Part 4, which overrides Part 1 wherever they differ._
 
 ---
 
@@ -26,7 +26,7 @@ So: Part 1 is the shared chassis (proposals where Phase 1 left gaps, marked **[p
 Farming is prevented by **structure**, not by policing:
 1. **Rewards attach to slots, not entries.** The day has 3 main-job slots (2 on a low day). Typing ten tiny jobs earns nothing extra: only what fills a slot counts.
 2. **"Day complete" is the big reward.** It comes once per day, whatever the day's size.
-3. **Bonus effort is time, not entries.** After day complete, extra *focus sessions* feed one optional bonus find per day, then stop. Time can't be split into cheaper pieces, and the cap keeps the course from crowding out avoided jobs (P5).
+3. **Bonus effort is time, not entries.** After day complete, extra *focus sessions* keep earning. Time can't be split into cheaper pieces. ~~Capped at one bonus find per day~~: removed by D-011 (low floor, high ceiling). See Part 4 → "High days".
 4. **Avoided jobs are worth more, quietly.** When the app suggests the day, it leans towards what Dan avoids (P5). If an avoided job is done, its reward is richer (a better reveal, not a bigger number). Dan never scores anything.
 
 ### The day
@@ -185,7 +185,15 @@ The candidates aren't exclusive. The most natural blend is **B's skeleton with A
 
 Claude's honest view, for Dan to push against: a blend like that is probably the strongest *eventual* game, and **A is the cheapest thing that could test the core hypothesis first.** A first playable could start as A inside a small corner of B, and grow. But Dan's gut reaction matters more than this analysis: this is a taste call (rule 20).
 
-## Open questions for Dan (sent 2026-09-23)
+## Dan's answers (2026-09-23)
+1. **A blend** of all three: "the best way to do it."
+2. After a job: **a blend** again.
+3. C's paused life pulling towards Spanish: **"probably a nag."** That mechanism is dropped.
+4. Small in-game decisions: **yes**, "super fun."
+5. No XP/levels/HP/MP: "whatever you think is best." Claude's call: keep them out (Part 4).
+6. The chassis is too focused on the minimum: **"when I'm at capacity I want the app to be able to make me super productive. So don't make it just for crippled me."** Led to D-011.
+
+## Questions sent 2026-09-23
 1. Which fantasy gives you the "I want to see what happens" feeling? Rank A, B, C.
 2. Just after finishing a real job, which do you want most: 30 seconds of **reading/decoding**, a **step and a small choice** on a map, or a **short scene** from someone's life?
 3. C: would "the Spanish life is paused on a mystery" pull you toward Spanish, or feel like a nag?
@@ -193,6 +201,98 @@ Claude's honest view, for Dan to push against: a blend like that is probably the
 5. Proposal check: **no XP, levels or HP/MP numbers**; progress shown only through new abilities and a changing world. OK, or do you miss numbers?
 6. Anything in the shared chassis (Part 1) that feels wrong?
 
-## Chosen loop
+---
 
-_Not yet chosen._
+## Part 4 — The chosen loop: *Explore · Decode · Connect* (D-010)
+
+_Working name only. Draft for Dan's review._
+
+### The fantasy
+"Every real hour takes me further into a sealed place, and what I find there is written in a script only I am learning. The records are the lives of people from different ages, and slowly I see they are one story."
+
+- **B gives the skeleton:** a place to explore, with gates you can see and routes to choose.
+- **A gives the finds and the powers:** records in an unknown script; signs you learn; signs that combine into *words* that act as powers.
+- **C gives the content:** the records are fragments of **linked lives across eras**. Which life you learn about next depends on where you go.
+- **Dropped from C:** life areas no longer drive particular characters, and no life ever "waits on" Dan (Dan: "probably a nag"). Lives are found, never neglected.
+
+### The core loop
+```
+real job done ─► a step into the Site ─► something is there (a passage, a gate, a record)
+      ▲                                              │
+      │                                    a small choice (which way; which record;
+      │                                    which words to try on a gate)
+      │                                              │
+ want the next real action ◄─ a new question ◄─ decode ► a fragment of a life ► it connects to another
+      ▲                                                                                │
+      └──────────── a gate ahead you can see, and roughly what it needs ◄──────────────┘
+```
+Each return to the app takes **under a minute**, and every one ends by showing something ahead that Dan can see but not yet reach.
+
+### Three sizes of reward
+| Size | Earned by | What Dan gets |
+|---|---|---|
+| **Step** | each main job, and each focus session after day complete | the map extends; often a small find or a line of script |
+| **Arrival** | day complete | a place worth arriving at: a chamber, a view, a record whose fragment you can decode |
+| **Key** | each weekly target met; avoided jobs; major milestones | opens something **already seen and sealed**: a gate, a sealed record, a new sign |
+
+Avoided jobs (admin, Spanish, housework, costly one-offs) always turn a step into a **find**: never just a corridor. This is the "aim at what's avoided" pull (P5), done through reward, not pressure.
+
+### Small in-game decisions (Dan: "super fun")
+Kept small, one tap each, and never required to progress:
+- **Route:** at a fork, which way. It changes which life's records you find next.
+- **Which record to decode** when there are several.
+- **Words on a gate:** try a combination of known signs on a sealed gate or device. A light puzzle, not a test. A wrong guess gives a clue; nothing is lost.
+- **Re-read:** a newly learned sign marks old records that now read differently. Dan chooses whether to look now.
+
+### Capacity: low floor, high ceiling (D-011)
+| Day | Main jobs | What the game offers |
+|---|---|---|
+| **Low** | 2 (outside + a real meal) | A short, safe push that still **arrives** somewhere. "That was enough. I still moved forward." |
+| **Normal** | about 3 | A full arrival. |
+| **High** | up to 5, plus open-ended sessions | Dan can call a **deep push** in the morning: a route to places a normal day doesn't reach (deeper chambers, rarer records, harder gates). |
+
+- **After day complete, effort keeps counting.** Every further focus session is another step. There is **no daily cap**.
+- **Anti-farming on high days** is gentle, and all of it is automatic:
+  - time can't be split into cheaper pieces;
+  - after about 2 extra hours of the *same* kind of work, steps come slower. Switching to another kind of job makes them full again. This keeps the course from crowding out Spanish and admin (P5) without punishing a long course day.
+- **A deep push that falls short loses nothing.** Every step taken is kept. The deep route is still there tomorrow.
+- **Growing into it:** if Dan's weeks are mostly Normal and High for a while, the app **offers** (never imposes) to raise the size of a normal day. A low day stays a complete day forever.
+
+### The daily loop
+| Moment | What happens |
+|---|---|
+| **Morning** | Capacity is already set from bedtime (one tap to change). Screen: where you stand in the Site, the next gate you can see, and **one** suggested first job (the other two beneath). Accept or swap from a short menu. On a High day: an offer of a deep push. |
+| **Doing a job** | Optional 25-minute timer. Dan leaves the app and does the thing. |
+| **Coming back** | Tap done → the step plays (≈20–40 s) → at most one small choice → out. |
+| **"I can't start"** | A **teaser from just ahead** (a line of script one sign short of meaning, a sound behind the gate). Then one tiny physical step. Then an offer to continue, never a demand. The teaser's payoff is on the other side of the job. |
+| **Day complete** | The arrival. The day is explicitly **enough**. On High days, a quiet "keep going?" with the deep route shown. |
+| **Opening late (4 pm)** | No comment on the time. The day shrinks to what fits and can still complete. |
+| **Life happens** | An appointment added afterwards counts as a main job. |
+| **Evening close** | **Camp.** A short wind-down scene. Going to bed by the chosen time → something is waiting at camp in the morning (a decoded line, a map mark). Missing it removes nothing. Bedtime sets tomorrow's capacity. |
+| **Rest day** | A camp day: a scene, no step, no cost, no score. |
+
+### The weekly loop
+- Weekly targets fill themselves from completed jobs. Each target met is a **Key**, so a good week opens up to five sealed things Dan has already seen.
+- **Beyond the target:** gym a 5th time, Spanish past the hour, more course hours. It all counts as steps, and a strongly exceeded target can open a sealed thing on the deep route.
+- **The week closes itself** Sunday night → Monday morning: a 20-second recap ("this week you went through the lower gate; three records decoded; one of them names the other") and a glimpse of next week's biggest sealed thing. **No planning. No Sunday admin meeting.**
+- Missed targets: nothing carries over. The gate is still there, still sealed, no worse.
+
+### The long-term loop
+Systems unfold gradually (MASTER_BRIEF §262), so week one is simple:
+| When | New to Dan |
+|---|---|
+| Week 1 | The Site, steps, arrivals, one record, one gate he can see. |
+| Weeks 2–4 | The first signs; decoding; the first Key opens a gate. Route choices begin. |
+| Month 2 | Enough signs to try **words** on gates. The first time two records turn out to be about the same event, from different ages. |
+| Month 3 | Re-reading: a new sign changes an old record's meaning. Deep pushes lead somewhere important. |
+| Months 4–6 | A second region that reframes the first. The first major revelation about who the lives were. |
+| Months 6–12+ | The lives converge on the central mystery. Big real milestones (finishing the course) open the largest gates. |
+
+### Large projects
+A big real project (the 24-week Claude course, a module of it, restarting Spanish lessons) is a **great gate** visible from far off. Its parts open as real milestones are reached. Dan confirms the milestone with one tap ("finished module 3"): the only "approval" in the system. The fiction amplifies the real achievement; it never makes it look small (MASTER_BRIEF §15).
+
+### Absence
+After days away: a short "where you were" (last place, the gate you were looking at, one unfinished record), and one small welcoming step. No counts, no summary of what was missed.
+
+### Content load
+Better than any single candidate. The Site gives **systemic** beats (passages, gates, routes) that need design but little prose. Records need **authored** prose, but only at arrivals and Keys, not every step. Rough year: ~250 arrivals, of which perhaps half carry a record fragment. Phase 3 plans the writing around that rate.

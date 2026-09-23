@@ -3,7 +3,7 @@
 > **Authoritative project-progress tracker.** Read at the start of every session; update before ending every substantial session.
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 
-_Last updated: 2026-09-23 (Session 3: Phase 2 started; candidate core loops sent to Dan)_
+_Last updated: 2026-09-23 (Session 3: loop chosen; full Phase 2 drafts awaiting Dan's review)_
 
 ## Current phase
 
@@ -15,18 +15,11 @@ Design the core game: how real-life action moves the game, and why Dan would wan
 
 ## Current session focus
 
-**Session 3:** step 1 done. Three candidate loops (A *Decipherment*, B *Expedition*, C *Linked Lives*) on a shared chassis are in `game/CORE_LOOPS.md`, with six questions to Dan. Waiting for his reactions before converging.
-
-Suggested order:
-1. ✅ **2–3 candidate core loops**, deliberately different, each with its player fantasy and its daily, weekly and long-term loops, plus how it handles failure, rest, the story and real life (`game/CORE_LOOPS.md`). Present them to Dan and don't converge immediately. Keep the fiction abstract: use placeholders, not a chosen setting (that is Phase 3).
-2. Converge with Dan on one loop.
-3. For the chosen loop, write:
-   - the **daily loop**: morning start, the 3 main jobs, "I can't start", evening close, opening at 4 pm;
-   - the **weekly loop**: no Sunday admin meeting;
-   - **progression**: capabilities over numbers; does XP even exist? (`game/PROGRESSION.md`);
-   - a **minimal economy** (`game/ECONOMY.md`);
-   - the **quest system**: how a real action becomes a quest, and how anti-farming works without admin (`game/QUEST_SYSTEM.md`).
-4. Decide what the **first playable** needs from all this. Keep it thin.
+**Session 3 (2026-09-23):**
+- ✅ Three candidate loops written and compared (`game/CORE_LOOPS.md` Parts 1–3).
+- ✅ Dan chose **a blend** (D-010) and asked that the game also serve him at full capacity (D-011, P2 amended).
+- ✅ Drafted for Dan's review: the chosen loop with daily, weekly and long-term loops (`CORE_LOOPS.md` Part 4), `PROGRESSION.md`, `ECONOMY.md`, `QUEST_SYSTEM.md`, and first-playable needs (`GAME_DESIGN.md`). No XP, levels, HP/MP or currencies (D-012).
+- ⏳ Waiting for Dan's review of those drafts.
 
 ## Do NOT work on yet
 
@@ -37,13 +30,16 @@ Suggested order:
 
 ## Phase 2 exit criteria
 
-- [ ] 2–3 candidate core loops written and compared (✅ written, 2026-09-23); Dan has chosen one (or a blend).
-- [ ] Daily loop defined, including low days, "I can't start", and the morning and evening moments.
-- [ ] Weekly and long-term loops defined (how the game sustains months; systems unfold gradually).
-- [ ] Progression defined; every axis names the meaningful change it creates, and meaningless numbers are deleted.
-- [ ] Economy defined with the fewest possible resources (source, sink and purpose for each).
-- [ ] Quest system and anti-farming defined, with no admin for Dan.
-- [ ] What the first playable needs is listed.
+`[~]` = drafted, awaiting Dan's review.
+
+
+- [x] 2–3 candidate core loops written and compared; Dan has chosen one (or a blend). (D-010)
+- [~] Daily loop defined, including low days, "I can't start", and the morning and evening moments.
+- [~] Weekly and long-term loops defined (how the game sustains months; systems unfold gradually).
+- [~] Progression defined; every axis names the meaningful change it creates, and meaningless numbers are deleted.
+- [~] Economy defined with the fewest possible resources (source, sink and purpose for each).
+- [~] Quest system and anti-farming defined, with no admin for Dan.
+- [~] What the first playable needs is listed.
 - [ ] Dan agrees to move to Phase 3 (Narrative and world).
 
 ## Completed milestones
@@ -54,7 +50,7 @@ Suggested order:
 - 2026-09-23 — Working agreement D-006 (Claude saves work, handles PRs, directs the build).
 - 2026-09-23 — **Phase 1 complete.** Two interview rounds; problem statement agreed; `DESIGN_PRINCIPLES.md` and `ANTI_FEATURES.md` approved by Dan (D-007, D-009).
 - 2026-09-23 — D-008: the story gets dedicated deep, research-led sessions in Phase 3.
-- 2026-09-23 — Phase 2: three candidate core loops drafted and sent to Dan (`game/CORE_LOOPS.md`).
+- 2026-09-23 — Phase 2: three candidate core loops compared; Dan chose a blend (D-010); low floor, high ceiling (D-011); no XP/levels/HP/MP/currencies (D-012).
 
 ## Unresolved blockers
 
@@ -63,4 +59,4 @@ Suggested order:
 
 ## Recommended next action
 
-**Get Dan's answers to the six questions in `game/CORE_LOOPS.md`, then converge on one loop (or a blend) and record it as a decision.**
+**Dan reviews the Phase 2 drafts (`game/GAME_DESIGN.md` is the entry point); revise, then ask whether to close Phase 2 and move to Phase 3.**
