@@ -74,7 +74,7 @@ _Written 2026-09-23._
 |---|---|---|---|---|
 | 4.1 | step | The top flight, down to its first turn. Below it, a second flight, and on it a small door with a count. | — | — |
 | 4.2 | step | The notebook, Day 9. | — | **L6** |
-| 4.A | **arrival** | **The tally's end of the first stretch.** With her sheet: "…go home… he held me… go… lamp… gave… went up… salt… stones…" With your marks: the lamp, the fire, the giving-mark, me, one; and a wedge, upside down, that you don't have. | Guess the wedge | **DEEP** (from the Stair's second niche, Key); **S4** (her sheet) |
+| 4.A | **arrival** | **The tally's end of the first stretch.** With her sheet: "…go home… he held me… go… lamp… gave… went up… salt… stones…" With your marks: the lamp, the fire, the giving-mark, me, one; and marks you don't have. | Open the Stair's second niche (Key): a wedge beside a picture of a well | **DEEP** (from the Stair's second niche, Key); **S4** (her sheet) |
 | 4.3 | step | The small hook in the corner of every record along the tally. And on the lamp. And on the sheet's marks, she has drawn it and written: *signature?* On the wall by the lamp, the corner has a different hook: the one on the rod's handle. | — | **hand-mark** (D4); C-28 |
 | 4.B | **arrival** | **The salt block.** In a niche past the split: a block of salt with a mark in it that is not a tool-mark, and a short line cut beside it in the tally's hand. | — | **X-neighbour** |
 | 4.C | **arrival** | **The Lower Door, close.** At the far end of the hall, the great door: a count with empty strokes and, beside a blank, two marks: the bar-with-a-drop, and two drops parted. You have neither. Under the count, a mark like a path doubling back. | — | C-05, C-23 (RETURN seen) |

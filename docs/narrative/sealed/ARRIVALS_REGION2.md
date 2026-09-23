@@ -54,7 +54,7 @@ _Written 2026-09-23._
 | 9.A | **arrival** | **The Reading Room.** Across the Water: a hall of benches too high to sit on, lesson-tablets set into every wall at the height of a long hand, and a lintel over the inner door: a hook enclosing a drop, then the sideways fork, then a cross. On the nearest tablet: a flame beside a mark; a lamp beside a mark; the flame's mark and the hook-and-drop joined. The same lesson as the wall by your lamp, in a hand you have not seen, its cuts worn round, and its corner carries a hook you have not seen. | — | **B0**; C-42 ("[ ] [ ] not"), C-43 |
 | 9.1 | step | The tablet for the cross: a lamp lit, then the cross, beside the same lamp dark. | Guess | Key → **NOT** |
 | 9.B | **arrival (the turn)** | **Not.** The app surfaces the salt tally: her sheet's *he held me* with, after it, the cross: *he held me [not]*. Then *he ate [not]*. Then the square gallery: *he held us [not]*. Then the lintel over the inner door: *[ ] [ ] not*. | Reopen S4 / S2 / V2 | **R4**; C-26, C-11, C-34 |
-| 9.2 | step | The tally's newest stretch: an old man, a new lamp, and lit here again. | — | **S7** |
+| 9.2 | step | The tally's newest stretch: an old man, a lamp, and lit here. | — | **S7** |
 | 9.C | **arrival** | **The child's tablet.** A small lesson-tablet on a low bench: a flame; an open cell, a cut that does not close; and, in a smaller, newer cut, an answer: *deep; fire not.* | — | **X-binder-child** ("because it is dark") |
 | 9.3 | step | A stylus on a bench, stone, shaped for four long fingers. | — | (niche) |
 | camp | bedtime | The lamp. Every cross you have passed this year is in a different place now. | — | (morning) the lintels' last mark, the cross, highlighted on the map, three of them |
@@ -70,7 +70,7 @@ _Written 2026-09-23._
 | 10.2 | step | The square gallery's deep end: V5. | — | **V5** ("This one [ ] nine days. The road [ ] not.") |
 | 10.B | **arrival** | **The blast scar.** A wall torn open in one piece, the stone beyond it rounded and unhurt; a watch on the ledge, stopped at 4.10; a tin plate. | — | C-39b (the watch); the niche objects |
 | 10.3 | step | The notebook, Day 31. | — | **L11** ("from the fourth"; the timetable line) |
-| camp | bedtime | The lamp. A fourth hand now, and it wrote in pencil. | — | (morning) S1 re-rendered with MOVE: "The hill's stone moved." |
+| camp | bedtime | The lamp. Another hand, and it wrote in pencil. | — | (morning) S1 re-rendered with MOVE: "The hill's stone moved." |
 | I can't start | teaser | Someone cut into this hall with powder. The stone still smells of it. | | |
 | week close | glimpse | On the ledge there is a book that is not from this age, open at a page about angels. | | |
 
@@ -84,7 +84,7 @@ _Written 2026-09-23._
 | 11.B | **arrival** | **The lintels, in full.** With VOICE: over the Reading Room's inner door, and on the map's two lintels below, the same three marks: *[ ] voice not.* And the channel's record, in the cramped hand: *voice [ ] one…* | Reopen V4 | pivot 3 (SCRIPT §10) |
 | 11.3 | step | The notebook, Day 33: "…he counts her anyway." | — | **L12** (the kind line) |
 | 11.C | **arrival** | **The powder-man's note.** In a crack: a coiled fuse and a scrap of the company's paper: *Not going back down for any wage. The sky made a noise. Tell him he can keep the book.* | — | **X-powder-man** |
-| camp | bedtime | The lamp. Three ways to meet him: in the hill, in a book, never. | — | (morning) C2's margin unlocked as the next Key-thing |
+| camp | bedtime | The lamp. Three ways to meet him: in the hill, in a book, never. | — | (morning) the book's second margin marked on the map; its count is not yet fillable |
 | I can't start | teaser | There's a book on the ledge that is not from this age, and it is open at a page about angels. | | |
 | week close | glimpse | The log's next page has a date and a well in it. | | |
 
@@ -111,7 +111,7 @@ _Written 2026-09-23._
 | 13.2 | step | The notebook, Day 38: "…eleven paces by seven, and the rest… I've moved the cot to the wall furthest from the stair." | — | **L14** |
 | 13.B | **arrival (the word)** | **MOVE-STONE.** In the square gallery, the roof-fall: a blank on the standing stone beside the wedge-on-bar and the rising drop. Stone; move. The rod rings; the fall lifts, hangs, and settles to the sides like a curtain drawn; the lower gallery beyond is thirty paces long and ends at a wall of rounded stone. | — | W3; V5's "thirty paces" |
 | 13.3 | step | A recess in the side gallery: a wax ledger of days, nine strokes and then four in a child's hand, and a line beside it. | — | (told line: "the child counted the days after him": CHILD COUNT DAY, ONE AGAIN NOT; at wk 13 *the child counted the days; he [ ] not*) |
-| 13.C | **arrival** | **The Reading Room's second bench.** A tally in the old hand of readers-of-the-tablet: eight and eight and eight, a gap, and a single stroke in the round hand. Beside it: *[ ] not; one.* | — | (told line; his loneliness) |
+| 13.C | **arrival** | **The Reading Room's second bench.** A tally in the old hand of readers-of-the-tablet: eight and eight and eight, a gap, and a single stroke in the round hand. Beside it: *count [ ] not; one.* | — | (told line; his loneliness) |
 | camp | bedtime | The lamp. Two verbs on a door, and the tablets for them are somewhere below. | — | (morning) S8 surfaced: "four and four, long." |
 | I can't start | teaser | The door was shut from this side. The mark on it says whose hand. | | |
 | week close | glimpse | The two ways down meet below the Water, and beyond them the stone is rounded again, and higher. | | |

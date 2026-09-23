@@ -8,13 +8,13 @@ _Written 2026-09-23._
 | Wk | # | Where | What the count opens | Told line (his hand) or description | Ties to |
 |---|---|---|---|---|---|
 | 1 | 1 | Salt Gallery, inner count | The stretch of tally beyond S1 (S2 next week) | — | S2 |
-| 1 | 2 | Salt Gallery, the pick niche | A salt-pick, bronze, the edge worn to a curve; the handle wrapped in cord gone black | *Told: my pick. The handle my father wound.* | S (the tool that cut with his hand over it) |
+| 1 | 2 | Salt Gallery, the pick niche | A salt-pick, bronze, the edge worn to a curve; the handle wrapped in cord gone black | *Told: my pick. The handle my father wound.* (at wk 1: *[ ] [ ] [ ]: [a pick] [ ] [ ]; [ ] [a cord] [ ], [a father].*) | S (the tool that cut with his hand over it) |
 | 1 | 3 | The Lamp Hall, a low niche under the ledge | A clay saucer, the twin of the lamp's foot, empty | (wordless) | The lamp: it once sat in this |
 | 1 | 4 | The Survey Cut, under the cot | (seen, not sealed: in the open at ARR1 1.C) Her boots, laced, dry, side by side | (wordless; the app: "side by side, as if for the morning") | L15 (she went down in other shoes) |
 | 1 | 5 | The Mouth, a recess in the shaft wall | A railway company's brass tag, stamped with a shaft number, hung on a nail | (wordless) | X-padlock; the trial shaft |
 | 2 | 1 | The Survey Cut, her sealed box | The glossary sheet for GIVE, PERSON, ONE, ME; notebook pages for weeks 3–4 | — | **GIVE, PERSON, ONE, ME** |
-| 2 | 2 | Salt Gallery, the tally-stick niche | The daughter's tally-stick, notched in fives | *Told by the child: father counts at night; four and four; the owl's feet.* | X-daughter |
-| 2 | 3 | Salt Gallery, a crack above the wife's ring | A bone comb, two teeth gone | *Told: hers. I did not ask for it. He left it under the ring.* | S2, the wife's ring |
+| 2 | 2 | Salt Gallery, the tally-stick niche | The daughter's tally-stick, notched in fives | *The child's voice: father counts at night; four and four; the owl's feet.* | X-daughter |
+| 2 | 3 | Salt Gallery, a crack above the wife's ring | A bone comb, two teeth gone | *Hers. I asked not for it. He left it under the ring.* (at wk 2, GIVE still a guess: *[a comb] [ ] [ring]. I [ ] [ ]. He [give?] [ ] [ ]; [ ] [ring].*) | S2, the wife's ring |
 | 2 | 4 | The Lamp Hall, the corner | A smooth place on the polished wall where the marks are rubbed to nothing, at the height of a long hand | (wordless; the app: "rubbed by touch, not by tools") | C-04a |
 | 2 | 5 | The Survey Cut, the stove's box | A tin of tea, a spoon, a candle stub; a shopping list in her hand: batteries, batteries, tape | (wordless) | L5 |
 | 3 | 1 | The head of the Stair, the niche | The Salt-Cutter's second lamp (unlit, newer clay) and a lesson-tablet: a doorway beside a mark, a bar beside a mark | — | **HERE, DOOR**; S7 |
@@ -26,21 +26,21 @@ _Written 2026-09-23._
 | 4 | 2 | Salt Gallery, past the split | The salt block with a mark in it | *Told: found in the face past the split; not for sale.* | X-neighbour |
 | 4 | 3 | The Survey Cut, the pinned page | (seen, not sealed: pinned in the open at ARR1 1.C) The printed email (X-colleague): "Come home. Nobody's going to fund this. The department's asked where you are." | (paper) | the institute |
 | 4 | 4 | The Lamp Hall, the far end | The Lower Door's count, close: the strokes, the RETURN mark | (the app describes; nothing opens yet) | C-05, C-23 |
-| 4 | 5 | Salt Gallery, a hollow in the salt | A child's clay animal, a sheep, one leg mended with salt | *Told: my daughter's. She left it for the owl.* | S6, X-daughter |
+| 4 | 5 | Salt Gallery, a hollow in the salt | A child's clay animal, a sheep, one leg mended with salt | *Told: my child's. She left it for the [owl].* (at wk 4: *[ ] [ ] one: [a sheep] [ ] [ ] [ ] me; [ ] gave [ ] here [ ] [an owl].*) | S6, X-daughter |
 | 5 | 1 | The second-flight chamber | A lesson-tablet: a bar-with-a-tick beside a setting sun; a bar-with-a-drop beside a road; a path with the drop at the far end | — | **ONCE, PATH, GO** |
 | 5 | 2 | Salt Gallery, the sealed record | S5 behind a salt crust | — | S5 |
-| 5 | 3 | The Stair, the gap's sill | Wax crumbs and a broken stylus | *Told: the child's. He copied from here, through the gap.* | X-boy |
+| 5 | 3 | The Stair, the gap's sill | Wax crumbs and a broken stylus | *Told: the child's. He cut the marks again here, through [the gap].* (at wk 5: *[ ] [ ] [ ]: [a stylus] [ ] [ ] · [ ] [ ] [ ] [ ] here, [a gap].*) | X-boy |
 | 5 | 4 | The Survey Cut, the notebook's back pocket | A folded map of the hill with the shaft marked in pen and, in another pen, the words SALT? and TUNNEL? | (paper) | the three intrusions |
-| 5 | 5 | The Lamp Hall, the ledge's underside | A ring cut small where no one would look, with the wife's name, a second time | *Hers again. I cut it where he would not see me do it.* | S11 (he cuts every name in every hall) |
+| 5 | 5 | The Lamp Hall, the ledge's underside | A ring cut small where no one would look, with the wife's name, a second time | *Hers again. I cut it here; he saw me not.* | S11 (he cuts every name in every hall) |
 | 6 | 1 | Salt Gallery, the last hidden stretch | A lesson-tablet: two drops parted beside a doorway; a hook-over-bar beside a picture of bread; the S6 stretch | — | **OPEN, EAT**; S6 (read wk 7) |
-| 6 | 2 | The Surveyor's upper gallery, a niche | The foreman's pay tablet | *Told: he opened not the hill; we were not paid; the second came not up.* | X-foreman |
+| 6 | 2 | The Surveyor's upper gallery, a niche | The foreman's pay tablet | *Told: he opened not the hill; we were not paid; the second came not up.* (at wk 6: *[ ]: one door here open [ ]; give person [ ] [ ]; [ ] [ ] [ ].*) | X-foreman |
 | 6 | 3 | The Surveyor's gallery, a wall-shelf | A surveyor's level, bronze, the bubble long dry | (wordless) | V; the Hold has its twin |
-| 6 | 4 | The Surveyor's gallery, floor | A mule-shoe, and beside it a stone with a halter's rub on it | *Told: the mules went not in.* | X-mule-driver (full line month 4) |
+| 6 | 4 | The Surveyor's gallery, floor | (seen, not sealed: on the floor at ARR2 6.3) A mule-shoe, and beside it a stone with a halter's rub on it | (a line beside it, at wk 6 *[ ]: [mule] went in [ ]*; full at wk 14, NICHES 14.4) | X-mule-driver (full line month 4) |
 | 6 | 5 | Her folder (camp), the first pocket | The council's letter about the shaft ("monitored") and the farmer's note from her windscreen: "Your car's been here nine days. Ring me." | (paper) | L8 |
 | 7 | 1 | The Surveyor's gallery, a niche | A lesson-tablet: an inverted wedge beside a picture of the sky; a wedge-on-bar beside a picture of a block; a small person beside a child's tablet | — | **UP, STONE, CHILD** |
 | 7 | 2 | The Surveyor's gallery, the crew's wall | The boy's wax tablet | (see X-boy) | X-boy |
 | 7 | 3 | The Stair, the rail's recess | The shape in the stone where a long hand rested (the app describes: four fingers, and long) | (wordless) | C-36 |
-| 7 | 4 | The Surveyor's gallery, a cache | Twelve bronze coins and one clay token, in a leather bag gone hard | *Once, the second gave me [a bag]: the twelve's and the child's, thirteen days. The door was shut; the day came not. I kept it.* (at wk 7: *Once, [ ] gave me [a bag]: [ ] person [ ], child one; [ ] [ ]. [ ] door once, [ ] [ ]. I [ ] it.*) | X-foreman; the kind line |
+| 7 | 4 | The Surveyor's gallery, a cache | Twelve bronze coins and one clay token, in a leather bag gone hard | *Once, the second gave me [a bag]: the twelve's and the child's, thirteen days. The door was shut; the day came not. I kept it.* (at wk 7: *Once, [ ] gave me [a bag]: [ ] person [ ], child one; [ ] [ ]. [ ] door once, [ ] [ ] [ ]. I [ ] it.*) | X-foreman; the kind line |
 | 7 | 5 | The Lower Door | With OPEN-WAY and a Key: the makers' straight descent | — | Region 2 |
 | 8 | 1 | The Water's niche | A lesson-tablet: a diamond beside an eye; strokes in a row beside a hand; an inverted wedge with a fork beside the sun; the number bundle | — | **SEE, COUNT, DAY, numbers** |
 | 8 | 2 | The Water's edge | (seen, not sealed: in the open at ARR2 8.A) The Surveyor's own-hand record, V4, cut low on the channel's lip | — | V4 |
@@ -64,7 +64,7 @@ _Written 2026-09-23._
 | 11 | 5 | The Loud Room, floor | (seen wk 12, not sealed: on the floor at ARR2 12.A) The well-keeper's bucket, the lid's inside pencilled | (object) | X-well-keeper |
 | 12 | 1 | The Water's far shore, a niche | A lesson-tablet: a hook closing on a drop beside a hand taking bread; a hook beside a hand; a full cell beside a picture of a lamb standing | — | **TAKE, HAND, GOOD** |
 | 12 | 2 | The far shore | S8 | — | S8 |
-| 12 | 3 | The Loud Room, beside the book | K3 ("Kept."), the count on the ledge's lip | — | K3 |
+| 12 | 3 | The Loud Room, beside the book | K3 ("[ ] once" at wk 12; "Kept." from wk 22), the count on the ledge's lip | — | K3 |
 | 12 | 4 | The Loud Room, the company's box | An empty dispatch box with the company's name, water-stained | (wordless) | X-company (wk 15) |
 | 12 | 5 | The Surveyor's deep side gallery, the approach | The shut door seen close: his hand-mark; LONG-SLEEP NOT | (the app describes) | V6 (wk 13) |
 | 12 | 6 | The Loud Room, a shelf | A child's pocket compass, the needle stuck toward the hill | (wordless; the app: "it points at the hill") | E3 (the compasses) |
@@ -72,7 +72,7 @@ _Written 2026-09-23._
 | 13 | 2 | The side gallery | V6 on the door | — | V6 |
 | 13 | 3 | The side gallery, a recess | The Surveyor's wax-tablet ledger of days: nine strokes, then four more in a different hand (the boy's) | *Told: the child counted the days; he [ ] not.* (VOICE: CHILD COUNT DAY, ONE AGAIN NOT; AGAIN wk 20) | V5, V7 (thirteen days) |
 | 13 | 4 | The Surveyor's gallery, the roof-fall | With MOVE-STONE: the way to the lower gallery | — | region 2 |
-| 13 | 5 | The Reading Room, a second bench | A Builder's tally of readers-of-the-tablet: eight and eight and eight, then a gap, then a single stroke in his hand | *[ ] not; one.* at wk 13 (AGAIN wk 20); *Again not; one.* when held | the fifth; his loneliness |
+| 13 | 5 | The Reading Room, a second bench | A Builder's tally of readers-of-the-tablet: eight and eight and eight, then a gap, then a single stroke in his hand | *count [ ] not; one.* at wk 13 (AGAIN wk 20); *Count again not; one.* when held | the fifth; his loneliness |
 
 ## Rules
 
@@ -93,12 +93,12 @@ _Written 2026-09-23._
 | 15 | 2 | The lower way's first recess | A Builder's lamp-cup, loose, laced stone, the size of a bucket | (wordless; the app: "a lamp for a long hand") | the Builders' scale |
 | 15 | 3 | The Hold's door | The count on the Hold's door | — | region 3 |
 | 15 | 4 | The notebook's last page (camp) | L15 | — | L15 |
-| 15 | 5 | The lower way, a floor-stone | A tally of returns in his hand: strokes beyond counting, then a gap, then five short rows, each ending in a cross but the first, which ends in the doubled path | *The count of the readers' returns. The first, many, and came again. The others: not.* | M8; the closing line |
+| 15 | 5 | The lower way, a floor-stone | A tally of returns in his hand: strokes beyond counting, then a gap, then five short rows, each ending in a cross but the first, which ends in the doubled path | *The count of the readers' returns. The first, many, and came again. The others: not.* (at wk 15: *count [ ] [ ] person [ ] read: one, [ ], [ ]; [ ] [ ] not*) | M8; the closing line |
 | 16 | 1 | The Hold's sealed shelf | A Builder's inventory-tablet: "all of ours" (OF, ALL) | — | **OF, ALL** |
 | 16 | 2 | The Hold, the stone cloth | The fourth reader's face, not old; ECHO's blank beside the shape | — | E6 (above it) |
 | 16 | 3 | The Hold, a shelf | The Surveyor's level's twin, and the Engineer's log's back half (E-pages for months 4–5) | (wordless / paper) | V; E |
 | 16 | 4 | The book, second margin | C2 | — | C2 |
-| 16 | 5 | Salt Gallery, a deep niche | S10 | — | S10 |
+| 16 | 5 | Salt Gallery, a deep niche | (sealed; opens wk 18, ARR3 18.C) S10 | — | S10 (wk 18) |
 | 17 | 1 | The Builders' quarters' door | The count on the quarters' door | — | B1 |
 | 17 | 2 | The Reading Room's second tablet | A device-mark beside a picture of a lift; QUESTION+GIVE beside a picture of a mouth and a raised hand | — | **device-mark, ASK** |
 | 17 | 3 | The book, third margin | C3 | — | C3 |
@@ -106,7 +106,7 @@ _Written 2026-09-23._
 | 17 | 5 | The Hold, a drawer | The heel of the Salt-Cutter's bread, gone to stone, on a cloth | *The first's bread. I ate not. I [ ] it.* (KEEP wk 22) | S2; he keeps everything |
 | 18 | 1 | The quarters' star-tablet | A drop with nothing under it beside a picture of the sky | — | **FAR** |
 | 18 | 2 | The Council Gallery's door | The count on the Council's door | — | X-answerer |
-| 18 | 3 | The Council Gallery's left wall, a sealed panel | B3 first sight (read next week, ARR3 19.A) | — | B3 |
+| 18 | 3 | The Council Gallery's left wall | (seen, not sealed at wk 19: ARR3 19.A) B3 first sight (read next week) | — | B3 |
 | 18 | 4 | The book, a bound slip | The patron's receipt | (paper, in the book) | X-patron |
 | 18 | 5 | The quarters, a wall-recess | A Builder's stylus and a half-cut lesson: a flame, and the beginning of a lamp, unfinished by a hand that stopped | *A child's mark; the child slept before the lamp.* | the quietening |
 | 19 | 1 | The Council's lectern | A device-tablet: a fork over a sleeper beside a picture of a lift rising | — | **WAKE** |
@@ -117,9 +117,9 @@ _Written 2026-09-23._
 | 20 | 1 | The Warning Hall's floor-tablet | The RETURN mark beside a picture of a figure going out and coming back; an open cell beside a raised hand | — | **QUESTION, AGAIN** |
 | 20 | 2 | Salt Gallery, a niche past the split | S11 | — | S11 |
 | 20 | 3 | The square gallery, the order's stone copy | The overseer's told line | *Told: the works are [ ]. The second's marks [ ] me again not.* at wk 20 (SHUT wk 23, TOWARD wk 24); *Told: the works are shut. The second's last marks came not to me.* when held | X-overseer |
-| 20 | 4 | The Warning Hall, a recess | A Builder's copy of the warning in small, with three strokes beside it and a fourth begun | *The times the rock moved not. Three. The fourth: the last.* (STONE MOVE NOT ONCE: THREE; FOUR: ONCE ALL; all held wk 20) | B4; the quietening |
+| 20 | 4 | The Warning Hall, a recess | A Builder's copy of the warning in small, with three strokes beside it and a fourth begun | *The times the rock moved not: three. The fourth: the last.* (STONE MOVE NOT ONCE: COUNT 3; 4: ONCE ALL; all held wk 20) | B4; the quietening |
 | 20 | 5 | Salt Gallery, the last niche | S12 (told by the daughter) | — | S12 |
-| 21 | 1 | The memorial walls, a niche | The wife's ring, cut a third time, beside a picture of a comb | *Hers. Again. Every hall.* | S11; the rings' rule |
+| 21 | 1 | The memorial walls, a niche | The wife's ring, cut again, beside a picture of a comb | *Hers. Again. Every hall.* | S11; the rings' rule |
 | 21 | 2 | Her folder (camp), fourth pocket | The farmer's photograph: the shaft cap at night with light coming up round its rim | (paper) | X-farmer |
 | 21 | 3 | The Council, the answerers' wall's foot | A Builder's tally of the two halves: eight and eight and four; eight and eight and four | *Twenty; twenty. Not one more. The doors were cut: one, and one.* | the split; his casting vote |
 | 21 | 4 | The memorial walls, a recess | A rod, worn to half its length | (wordless; the app: "worn by cutting") | his ages of cutting |
@@ -198,7 +198,7 @@ Keys are fewer below the doors (the year's later targets are the same weekly one
 | 40 | 1 | Her last camp, the wall | L22 in full | — | L22 |
 | 40 | 2 | The last door's sill | The place where QUIET must be cut first (a blank with the sideways fork and the cross) | — | W7 at the door |
 | 40 | 3 | The last door's lintel | *Be loud here and not be heard.* (LOUD PATH-OPEN beside the blank; the quiet-signs above) | — | W8 |
-| 41–43 | 1 | The first counting door's face (re-surfaced weekly) | (seen; not a Key) Dan's own record, one mark longer each week: AGAIN. AGAIN. | (his hand; no ring) | K6 |
+| 41–43 | 1 | The first counting door's face (re-surfaced weekly) | (seen; not a Key) Dan's own record, one mark longer each week: AGAIN. AGAIN. Beside it, on the three doors' faces, rings, a few more each week (seen) | (his hand; no ring) | K6; K4 (its rings, begun) |
 | 41–43 | 2 | The Deep's last niches | Z-pieces: *what is put out; what is taken in; what is kept; all of us, here* | (no hand) | Z |
 | 41–43 | 3 | The last door's count | Fills only with the great milestone's Key | — | the ending's gate |
 | 44 | 1 | The last door | QUIET on the sill; OPEN-WAY LOUD on the blank; it opens | — | W8 |
@@ -209,7 +209,7 @@ Keys are fewer below the doors (the year's later targets are the same weekly one
 | 46 | 1 | The Seed-place, by lamplight | The smooth surface under the lamp: dense text (Z2) | — | R9.5 |
 | 46 | 2 | ECHO at the Seed | The quietening, once | — | ECHO-Seed |
 | 46 | 3 | The Seed's count | Begins to fill | — | the ending |
-| 47–50 | 1 | The first door's face (weekly) | Dan's record, longer than any in the Site | (his hand) | K6 |
+| 47–50 | 1 | The first door's face (weekly) | Dan's record, longer than any in the Site; the rings beside it on the doors' faces past counting (seen) | (his hand) | K6; K4 (its rings) |
 | 47–50 | 2 | Re-reads surfaced by the app | The lesson-wall's last line; S2; S11; B5; C1; E1 | — | the year re-read |
 | 47–50 | 3 | The Seed's count | Fills with the year's last Keys | — | the ending |
 | 51 | 1 | The Seed-place | The count full; his voice down the lacing; the speech | — | LIVES §7 |

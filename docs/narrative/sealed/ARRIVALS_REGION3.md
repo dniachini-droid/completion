@@ -12,8 +12,8 @@ _Written 2026-09-23._
 | 14.1 | step | The cupboard: a lesson-tablet the Engineer never opened (an inverted wedge on a bar beside the sun over ground; a reversed hook beside an ear). | Guess | Key → **WORLD, HEAR** |
 | 14.2 | step | The log, next page: *Cut the hold-mark on the roof above the props; it held… The Inspector says the mark is not "hold". Would not say what it is. Said: you will read it. A distinction for a man with no roof to lose.* | — | **E4** |
 | 14.B | **arrival** | **The lower way.** From the Loud Room, a passage going down and in, rounded again, lamps lit already, and a line of cold air. | — | (the way to the Hold) |
-| 14.4 | step | The square gallery, the mule-shoe's stone, its count filled: *Told: the mules went not in. I [ ] them not.* | — | **X-mule-driver** |
-| 14.3 | step | Salt Gallery, a deep niche: the tally, a stretch about lambs and salt and a donkey. | — | **S9** |
+| 14.3 | step | The square gallery, the mule-shoe's stone, its count filled: *Told: the mules went not in. I [ ] them not.* | — | **X-mule-driver** |
+| 14.4 | step | Salt Gallery, a deep niche: the tally, a stretch about lambs and salt and a donkey. | — | **S9** |
 | camp | bedtime | The lamp. The Engineer was told he had read one mark wrong, and the roof held anyway. | — | (morning) S4's "he held me [not]" surfaced with her sheet's *held* beside the Engineer's *hold* |
 | I can't start | teaser | There is a blank on the blast wall the shape of the rod. It wants two marks you already have. | | |
 | week close | glimpse | The lower way ends at a door with a count, and the stone past it is high and rounded, and the lamps are lit. | | |
@@ -25,7 +25,7 @@ _Written 2026-09-23._
 | 15.1 | step | The log: *The hill answered. I have it in the sound and in the well. Louder will open it. Ordered six kegs on my own account; the company will not.* | — | **E5** |
 | 15.A | **arrival** | **Her folder, second pocket.** At camp, a Key: a lesson-sheet in her hand, drawn for whoever came next: a hand-and-mark beside a picture of a chisel; an eye-and-mark beside a picture of a page. And a bundle of the company's letters: *…the works are closed as of the 26th… You are instructed to come up.* | Guess | Key → **MAKE, READ**; **X-company** |
 | 15.2 | step | The notebook, Day 40: *Moving down. Taking the rod and the lamp and everything the car held. Leaving this here. I'm going to write on the walls from now on. They last.* The last page. | — | **L15** |
-| 15.B | **arrival** | **The Hold's door.** At the lower way's end, a high door with a count on it and, beside it on the floor, a tally in the round hand: strokes past counting, a gap, five short rows. Four of the rows end in a cross. The first ends in a path that doubles back. | — | (the count of the readers' returns, in his hand; wordless) |
+| 15.B | **arrival** | **The Hold's door.** At the lower way's end, a high door with a count on it and, beside it on the floor, a tally in the round hand: strokes past counting, a gap, five short rows. Four of the rows end in a cross. The first ends in a path that doubles back. | — | (the returns tally; its line in his hand at wk 15: *count [ ] [ ] person [ ] read: one, [ ], [ ]; [ ] [ ] not*) |
 | 15.3 | step | A loose lamp-cup in a recess, laced stone, the size of a bucket: a lamp for a long hand. | — | (niche) |
 | camp | bedtime | The lamp. Her notebook stops at Day 40. The walls don't. | — | (morning) every transcription's last line shows a new word: *cut* |
 | I can't start | teaser | Past the Hold's door the lamps are lit, and no one you have read lit them. | | |
@@ -53,8 +53,8 @@ _Written 2026-09-23._
 | 17.B | **arrival** | **The makers' quarters.** Through the Hold's far door: halls higher than any yet, sleeping-niches twice a man's length, and lesson-walls in the old hand everywhere. On the first wall, a record with no head-ring and no closing line, and in its corner a hook that is not the round hand's: *We cut. We found the [ ] stone already cut. We read it with hands for eight eights of [ ]; [ ] voice give.* | — | **B1** (his Builder-age hand-mark: C-55; no closing line: C-53) |
 | 17.2 | step | The book, third margin: *…the report ends without ending. The surveyor's last is not in the collection. I have left the page blank after the names of the men, in case.* | — | **C3** |
 | 17.3 | step | On the Hold's shelf, the heel of the first reader's bread on a cloth, and beside it a line: *The first's bread. I ate not. I [ ] it.* | — | (niche) |
-| 17.4 | step | The Hold, the blank beside the shape: the diamond, the bar-with-a-tick. The room is the room with the cloth off, and a tall figure lifting a man onto the shelf as you would lift a child onto a wall, and setting a book beside him. Then the cloth. | — | ECHO (the laying); E6 |
-| camp | bedtime | The lamp. A people who read with their hands, for eight eights of something, before the stone answered. | — | (morning) S4 re-surfaced: "He asked for the lamp" now reads, with ASK |
+| 17.4 | step | The Hold, the blank beside the shape: the diamond, the bar-with-a-tick. The room is the room with the cloth off, and a tall figure lifting a man onto the shelf as you would lift a child onto a wall. Then the cloth. | — | ECHO (the laying); E6 |
+| camp | bedtime | The lamp. A people who read with their hands, for eight eights of something, before the stone gave a voice. | — | (morning) S4 re-surfaced: "He asked for the lamp" now reads, with ASK |
 | I can't start | teaser | The stone on the blast wall remembers one loud moment. Two marks and it will show you. | | |
 | week close | glimpse | The makers' quarters go on, and one of the walls is nothing but the lamp-mark, thousands of times. | | |
 
@@ -76,7 +76,7 @@ _Written 2026-09-23._
 
 | Visit | Kind | The line / scene | Choice | Carries |
 |---|---|---|---|---|
-| 19.A | **arrival** | **The Council Gallery.** Two walls facing, in two hands. On the left, in the hand of the makers' first wall: *We cut. We cut the deep. We moved the hill. [ ], because glad.* On the right, in another: *What is [ ] is deep. What is given is heard. We were given, once. We: see.* And under the right-hand wall, a word cut large: the sideways fork, the hook-and-drop, the drop with nothing under it. Voice; give; far. | Read left / read right | **B3**; **X-answerer**; VOICE-GIVE-FAR readable |
+| 19.A | **arrival** | **The Council Gallery.** Two walls facing, in two hands. On the left, in the hand of the makers' first wall: *We cut. We cut the deep. We moved the hill. voice [ ]; good.* On the right, in another: *What is [ ] is deep. What is given is heard. We were given, once. We: see.* And under the right-hand wall, a word cut large: the sideways fork, the hook-and-drop, the drop with nothing under it. Voice; give; far. | Read left / read right | **B3**; **X-answerer**; VOICE-GIVE-FAR readable |
 | 19.1 | step | The lectern: a device-tablet, a fork over a sleeper beside a picture of a lift rising. | Guess | Key → **WAKE** |
 | 19.2 | step | Her folder, third pocket: a library catalogue card: *A book of the old road, with gold. Missing since the railway.* | — | **X-librarian** |
 | 19.B | **arrival** | **Two rods.** On the Council's floor, one on each side, two rods laid down and never picked up, and a line between them: *Two. Voices not good. The last time.* | — | (niche) |
@@ -91,11 +91,11 @@ _Written 2026-09-23._
 |---|---|---|---|---|
 | 20.A | **arrival** | **The Warning Hall.** One wall, one sentence, cut large enough to read from the door: the sideways fork with a fork set over it, then a hook closing on a drop. You have the fork; you have the taking. The mark set over is not yours. *[ ] voice; taken.* | — | the warning, half readable |
 | 20.1 | step | The floor-tablet: a path doubling back beside a figure going out and coming in; an open cell beside a raised hand. | Guess | Key → **QUESTION, AGAIN** |
-| 20.B | **arrival (the turn)** | **Came again.** With *again*: every transcription's closing line completes. The first reader's: *cut by [the hook], from the voice of the first; came again.* The second's: *came again not.* And on the great doors below, the same doubled path. | Reopen S8 / V1 / E6 | pivot: the closing line; the doors' mark |
+| 20.B | **arrival (the turn)** | **Came again.** With *again*: every transcription's closing line completes. The first reader's: *cut by [the hook], from the voice of the first; came again.* The second's: *came again not.* And on the great doors below, the same doubled path. | Reopen S8 / V1 / V2 | pivot: the closing line; the doors' mark |
 | 20.2 | step | The left-hand wall's panel: *We cut. Late, we read the last of the stone. It said: what is [ ] is taken. The rock moved not under our hands, three times. We asked not.* | — | **B4** |
 | 20.3 | step | The square gallery, a stone copy of an order, and a line: *Told: the works are [ ]. The second's marks [ ] me again not.* | — | **X-overseer** |
 | 20.C | **arrival** | **The salt-cutter's last stretch.** Beside the daughter's tally-stick, in the round hand: *The child's voice: he counted [ ] long-sleep. He said: the [owl] [ ] the lamp.* | — | **S12** |
-| camp | bedtime | The lamp. He counted to the end. The owl and the lamp are in the same line, with one mark between them you do not have. | — | (morning) the map marks the doors below with the doubled path |
+| camp | bedtime | The lamp. He counted, and the line ends in the long-sleep mark. The owl and the lamp are in the same line, with one mark between them you do not have. | — | (morning) the map marks the doors below with the doubled path |
 | I can't start | teaser | Every record ends with the same two marks. One of them you learned today, and it changes who came home. | | |
 | week close | glimpse | Below the Warning Hall, the walls turn to rings, so many the stone looks woven. | | |
 
@@ -105,7 +105,7 @@ _Written 2026-09-23._
 |---|---|---|---|---|
 | 21.A | **arrival** | **The memorial walls.** A hall where the marks give out and the rings begin: rings so dense the stone looks woven, the same rings again and again, hall after hall, and among them, at a long hand's height, one ring cut sharp among ten thousand polished smooth, with half a name in it. In the corner of every ring, the small hook. | — | the unfinished ring (K2's twin) |
 | 21.1 | step | Salt Gallery niche, the tally: *Once, the first. My child went to another's home. I said [ring] here again; he cut it again here.* | — | **S11** |
-| 21.B | **arrival** | **The left-hand wall, in full.** *We cut. Half: [ ] it; [ ] it; make a place. Half: it was given to us; give. [ ] [ ] cut the doors: the make-[ ]. Against ourselves; against what we could not see we would be.* | — | **B5** |
+| 21.B | **arrival** | **The left-hand wall, in full.** *We cut. Half: [ ] it; [ ] it; make a place. Half: it was given, once, [ ] us; give. [ ] [ ] cut the doors: the make-[ ]. [ ] ourselves not; we saw not what we would be [ ].* | — | **B5** |
 | 21.2 | step | Her folder, fourth pocket: a photograph, night, the shaft cap on the hilltop, and light coming up round its rim from below. On the back: *took this from the top field. Not a torch.* | — | **X-farmer** |
 | 21.3 | step | At the answerers' wall's foot, a tally in the old hand: eight and eight and four; eight and eight and four. And beside it, in the round hand: *Twenty; twenty. Not one more. The doors were cut: one, and one.* | — | (the tie-break; pays month 12) |
 | 21.C | **arrival** | **A worn rod.** In a recess of the memorial walls, a rod worn to half its length, the edge gone round. | — | (niche: his ages of cutting) |
@@ -133,7 +133,7 @@ _Written 2026-09-23._
 | 23.A | **arrival (the face)** | **He is there.** Where the corridor turns, at the polished wall, standing: taller than the lintels, pale as the inside of a shell, the eyes large and unfocused, one long hand flat against the stone, and the stone around the hand risen to it. He does not move while you look. Then, in English, one sentence: *You have kept coming back. Good. Most of them stopped.* Then he goes along a low passage you cannot take, and the wall where he stood keeps his shoulder for a breath and lets it go. | — | **R6** (part 2): the face; the Landing line |
 | 23.1 | step | The Landing's second stone: a cross over a doorway beside a picture of a door with a cross; a crossed fork beside a picture of water with a cross. | Guess | Key → **SHUT, STILL** |
 | 23.B | **arrival (the turn)** | **Shut.** Two things at once. Her note on the Landing wall: *Note. His ring: keep; one. Not a [ ]. It is what he does, in a ring. I had it wrong a hundred days.* And the door in the side gallery, re-surfaced: *I shut the door. He long-slept not when I shut it.* | Reopen V6 | **L15a**; V6 complete |
-| 23.2 | step | A niche on the Landing: a Builder's lamp-cup, cracked, the crack packed with clay from above, and a line: *Mended. The first's clay.* | — | (niche) |
+| 23.2 | step | A niche on the Landing: a lamp-cup in laced stone, cracked, the crack packed with clay from above, and a line: *Mended. The first's clay.* | — | (niche) |
 | 23.3 | step | A wall-slot: a makers' plan of the Landing, and drawn on it where the corridor turns, a figure standing, as tall as the doors. | — | (niche) |
 | camp | bedtime | The lamp. He said most of them stopped. He did not say stopped what. | — | (morning) L15a surfaced, one mark short |
 | I can't start | teaser | He was standing where the corridor turns. You took him for a pillar. | | |
