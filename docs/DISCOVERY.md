@@ -78,7 +78,7 @@ Pacing (D-004): combine or skip topics once answers make them redundant. Target 
 - Couch moment: a waiting story reveal **and** a sub-minute starter both appeal.
 - No additional hard nos beyond the brief.
 
-## Phase 0 synthesis (presented 2026-09-23, awaiting Dan's confirmation)
+## Phase 0 synthesis (presented and **confirmed by Dan** 2026-09-23: "This is fantastic. Yes.")
 
 | # | Exit criterion | Current answer | Confidence |
 |---|---|---|---|

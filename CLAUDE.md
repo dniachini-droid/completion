@@ -5,15 +5,23 @@ It is a genuine game, not a productivity app with an RPG skin. Provisional name:
 
 ## Current phase
 
-**PHASE 0 — PLAYER DISCOVERY** (started 2026-09-23)
+**PHASE 1 — PRODUCT DISCOVERY** (started 2026-09-23; Phase 0 closed with Dan's agreement, D-005)
 
-No application code. Interview Dan (5–10 concrete questions per round), follow up on what he actually says, and keep `docs/PLAYER_MODEL.md`, `docs/DISCOVERY.md` and `docs/OPEN_QUESTIONS.md` current. Exit criteria: `docs/MASTER_BRIEF.md` §29–38. Phase changes require Dan's explicit agreement.
+Define the real-life behavioural problem before any game mechanics (MASTER_BRIEF §39–41). No application code. Keep it short (D-004): about 1–2 interview rounds, then write `docs/DESIGN_PRINCIPLES.md` and review `docs/ANTI_FEATURES.md`. Details and exit criteria: `docs/CURRENT_STATE.md`. Phase changes require Dan's explicit agreement.
 
 Phase order: 0 Player discovery → 1 Product discovery → 2 Game design → 3 Narrative/world → 4 Experience/art/UX → 5 Concept synthesis → 6 MVP → 7 Technical architecture → 8 Prototype → 9 First playable → 10 Personal alpha → 11 Iteration.
 
 ## Pacing (D-004)
 
 Phases 0–5 are **thorough but pragmatic**: do enough discovery to understand Dan and settle the core game concept, not to design the whole eventual game. Then get a **small but beautiful first playable** into Dan's hands quickly. Deep worldbuilding and narrative continue in parallel after the core loop is proven. Before the first playable, narrative work covers only the thematic core, the central mystery's truth, and the truth behind any clue the playable actually plants. Rule 6 still applies: nothing is planted without a predetermined answer.
+
+## Working agreement with Dan (D-006)
+
+Dan has no coding background and has asked Claude to **direct the build and keep the work safe**. So Claude, without being asked:
+- **Commits and pushes** after every meaningful step (each interview round, each doc change, each working feature). Work is never left only in the container.
+- At the end of each phase or build slice, once Dan has approved it, **opens a pull request into `main` and merges it**, so `main` always holds the latest agreed state. Nothing is merged before Dan's approval. Force-pushes and history rewrites are never used on `main`.
+- **Tells Dan when to start a new session**: at phase or slice boundaries, or when a conversation grows long. Gives him the exact sentence to paste to resume.
+- Explains technical matters in plain language and makes routine technical choices itself (recorded in `DECISIONS.md`). It asks Dan only about taste, priorities and things only he knows.
 
 ## Session start
 

@@ -3,62 +3,61 @@
 > **Authoritative project-progress tracker.** Read at the start of every session; update before ending every substantial session.
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 
-_Last updated: 2026-09-23 (Session 1)_
+_Last updated: 2026-09-23 (end of Session 1)_
 
 ## Current phase
 
-**PHASE 0 — PLAYER DISCOVERY**
+**PHASE 1 — PRODUCT DISCOVERY** (Phase 0 closed 2026-09-23, D-005)
 
 ## Current objective
 
-Build an accurate, evidence-based model of Dan as a player and as a person trying to initiate things — in `PLAYER_MODEL.md` — good enough to satisfy the Phase 0 exit criteria.
-
-**Pacing (D-004):** thorough but pragmatic. Aim for enough understanding to establish the core game concept, not an exhaustive profile. The project-level goal after Phase 5 is a small but beautiful first playable, soon.
+Define the real-life behavioural problem the product solves, and the product rules that follow from it, **before** designing game mechanics. Pacing (D-004): short. About 1–2 interview rounds, then write the principles.
 
 ## Current session focus
 
-Phase 0 synthesis presented (`DISCOVERY.md`). Awaiting Dan's confirmation or corrections before closing Phase 0 and starting Phase 1 (Product Discovery).
+Not started. The first Phase 1 interview round should cover (MASTER_BRIEF §39, sharpened by the player model):
+- What counts as a **complete day**, and how that changes with **capacity** (good vs low days).
+- What **"I can't start"** should give him (sub-minute starters, timers, the Pomodoro unit).
+- Which activities are **in the system** and which stay **outside** it (rest, leisure).
+- How **recurring activities** (Spanish, gym, meals, admin, housework, sleep) and **large projects** (Claude course) work.
+- **Planning vs control:** how much the app picks vs how much Dan picks; manual task entry.
+- **Disappearing for a week**; unexpected obligations; the Spanish restart (20 prepaid lessons).
+- **Routine:** bed by 11, up 7–8, and whether the app should anchor the day.
 
 ## Do NOT work on yet
 
 - Application code, scaffolding, frameworks, `package.json`, databases, tech stack (Phase 7+).
-- Game mechanics design: loops, economy, XP/HP/MP decisions, quest system (Phase 2).
+- Game mechanics: loops, economy, XP/HP/MP, quest system, abilities design (Phase 2).
 - Worldbuilding, lore, world truth, characters, choosing a setting (Phase 3).
 - Art direction and visual design proposals (Phase 4).
-- Product principles and feature decisions beyond capturing hypotheses (Phase 1).
 - Product naming.
 
-Ideas on these topics that come up during discovery are **captured** (in `OPEN_QUESTIONS.md` or as hypotheses), not developed.
+Game ideas that come up (e.g. Stargate-style "dialling" to start a session, rune-like abilities) are **captured** in `OPEN_QUESTIONS.md`, not developed.
 
-## Phase 0 exit criteria
+## Phase 1 exit criteria
 
-We can articulate with reasonable confidence — and Dan explicitly agrees the player model is accurate enough:
-
-- [x] 1. What game experiences genuinely absorb Dan. *(rounds 1–3; pending Dan's confirmation)*
-- [x] 2. What commonly makes him stop playing games. *(the story ends)*
-- [x] 3. Which reward structures motivate him. *(new abilities; story progress; visible-but-uncertain goals)*
-- [x] 4. Which reward structures rapidly become meaningless. *(grinding; stat/cosmetic loot)*
-- [x] 5. What causes him to initiate real-world activities. *(mood/energy; bounded timers; curiosity; external structure like lessons)*
-- [x] 6. What causes avoidance. *(low mood; boredom; phone/YouTube easier; pile-up)*
-- [x] 7. What "a good day" actually means to him. *(several things done, incl. gym/admin/meals; pending confirmation)*
-- [x] 8. What level of structure helps. *(wants a routine; Pomodoro; weekly lessons; activity scheduling)*
-- [x] 9. What level of structure becomes oppressive. *(low confidence: long lists on low days, pile-up; rest to be tested in use)*
-- [x] 10. What types of fictional worlds reliably interest him. *(dark cosmic science-fantasy; pending confirmation)*
-- [x] 11. What UX aesthetics he responds to. *(phone; intentional beauty; ancient tech + dark sci-fi; Stargate dialling)*
-- [x] 12. What he strongly does not want. *(brief's anti-goals; nothing added)*
-- [ ] Dan confirms the player model.
+- [ ] The core behavioural problem is stated in one or two sentences, and Dan agrees.
+- [ ] A definition of a **complete day**, including low-capacity days.
+- [ ] How capacity is expressed and what it changes.
+- [ ] What **"I can't start"** does.
+- [ ] What is tracked and what is deliberately **not** tracked (including rest and leisure).
+- [ ] How recurring activities, large projects, missed days and absences behave (non-punitive).
+- [ ] How much the app decides vs Dan decides; how tasks get in with minimal admin.
+- [ ] `docs/DESIGN_PRINCIPLES.md` written; `docs/ANTI_FEATURES.md` reviewed with reasons.
+- [ ] Dan agrees to move to Phase 2 (Game Design).
 
 ## Completed milestones
 
-- 2026-09-23 — Repository initialised with documentation skeleton, `CLAUDE.md`, and `MASTER_BRIEF.md`.
-- 2026-09-23 — Interview rounds 1–6 answered; player model updated; Phase 0 synthesis presented.
-- 2026-09-23 — Pacing decision D-004 recorded (pragmatic Phases 0–5; first playable prioritised; deep narrative continues in parallel).
+- 2026-09-23 — Repository initialised with documentation skeleton, `CLAUDE.md`, `MASTER_BRIEF.md`.
+- 2026-09-23 — Pacing decision D-004 (pragmatic Phases 0–5; first playable prioritised).
+- 2026-09-23 — **Phase 0 complete.** Six interview rounds; player model confirmed by Dan (D-005). Summary: `DISCOVERY.md` → "Phase 0 synthesis".
+- 2026-09-23 — Working agreement D-006 (Claude saves work, handles PRs, directs the build).
 
 ## Unresolved blockers
 
-- None blocking discovery.
-- Housekeeping (non-blocking): decide later whether to rename the GitHub repo. (Privacy verified: private, 2026-09-23.)
+- None.
+- Housekeeping (non-blocking): rename the GitHub repo once a product name exists. (Privacy verified: private.)
 
 ## Recommended next action
 
-**Dan confirms (or corrects) the Phase 0 synthesis; on confirmation, close Phase 0 in `CLAUDE.md`/here and begin Phase 1 (Product Discovery).**
+**Start a new session and begin Phase 1, interview round 1 (topics above).**
