@@ -14,9 +14,9 @@ For Claude: the canonical hidden truth lives here. Never quote or summarise it o
 | `CHARACTERS.md` | The Custodian in depth; the six readers; the Builders; the Speakers; the chorus | — |
 | `FACTIONS.md` | Binders / answerers / readers; human institutions as pressure | — |
 | `MYSTERIES.md` | The capped question ladder; M0–M14 with answers, false explanations, clues, triggers | — |
-| `REVELATION_MAP.md` | Ten model-changing reveals on the calendar; antagonist staircase; arcs for year 1; beat level for weeks 1–13 | — |
+| `REVELATION_MAP.md` | Ten model-changing reveals on the calendar; antagonist staircase; arcs for year 1; beat level for all 52 weeks | — |
 | `SITE.md` | Five regions, places, gates and what they need, forks, camp; the first playable's region in full | — |
-| `LIVES.md` | The reading layers; the fragment template; full fragment text for the two playable lives (weeks 1–13) and everything else those weeks touch; the Custodian's speech; the chorus | — |
+| `LIVES.md` | The reading layers; the fragment rules; sign strings and tellings for the two playable lives and everything the first quarter touches; months 4–12 records; the Custodian's speech; the chorus | — |
 | `CLUE_LEDGER.md` | Every clue the first playable plants, with its truth | — |
 | `PLAYER_KNOWLEDGE.md` | Intended player-known state by stage; later, the actual log | — |
 | `FAIR_PLAY.md` | Per reveal: the earlier clues, the half-guess, the sufficient wrong reading, the verdict; two clues added | — |
