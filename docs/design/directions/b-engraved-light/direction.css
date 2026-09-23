@@ -1,0 +1,247 @@
+/* ==========================================================================
+   B — Engraved Light
+   An instrument cut in dark basalt. Cold light lives in fine, exact lines;
+   warm is rare: the clay lamp, and the one thing to press.
+   Shared tokens and pieces for all nine screens.
+   ========================================================================== */
+
+:root{
+  /* stone: dark basalt-blue, polished */
+  --void:#03060a;
+  --stone-0:#060b11;
+  --stone-1:#0a121a;
+  --stone-2:#0f1b26;
+  --stone-3:#162635;
+  --stone-4:#1f3445;
+
+  /* cold light: the place and the interface */
+  --light:#bfefff;                     /* the engraved line at full */
+  --light-hi:#effbff;
+  --light-a:rgba(191,239,255,.62);
+  --light-b:rgba(191,239,255,.36);
+  --light-c:rgba(191,239,255,.20);
+  --light-d:rgba(191,239,255,.10);
+  --glow-cold:rgba(140,215,245,.35);
+
+  /* text on stone */
+  --ink:#e8f5fb;
+  --ink-2:#b4cbd7;
+  --ink-3:#86a2b1;
+
+  /* warm: rare and precious. The lamp, and the next action. Nothing else. */
+  --warm:#f5ab5c;
+  --warm-hi:#ffdcad;
+  --warm-deep:#b9652a;
+  --warm-a:rgba(245,171,92,.55);
+  --warm-b:rgba(245,171,92,.22);
+
+  /* type */
+  --carve:'Cinzel',Georgia,serif;                 /* titles, buttons, numerals */
+  --book:'EB Garamond',Georgia,serif;              /* sentences and lists */
+
+  /* grid: 8px base, 20px gutter */
+  --u:8px;
+  --gutter:20px;
+  --tick:10px;
+
+  /* exact curves */
+  --ease:cubic-bezier(.22,.8,.16,1);
+  --ease-in-out:cubic-bezier(.65,0,.25,1);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--void);overflow-x:hidden}
+body{
+  color:var(--ink);font-family:var(--book);font-size:18px;line-height:1.4;
+  -webkit-font-smoothing:antialiased;display:flex;justify-content:center;
+}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+/* the phone ---------------------------------------------------------------- */
+.phone{
+  position:relative;width:390px;max-width:100%;height:100vh;min-height:720px;max-height:844px;
+  overflow:hidden;
+  background:
+    radial-gradient(120% 60% at 50% 0%,#0c1822 0%,transparent 70%),
+    linear-gradient(180deg,var(--stone-1) 0%,var(--stone-0) 55%,var(--void) 100%);
+}
+/* painted grain over everything: polished stone, not flat colour */
+.phone::after{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:50;opacity:.11;mix-blend-mode:screen;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .6  0 0 0 0 .8  0 0 0 0 .9  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* the top rail: every screen's way home ----------------------------------- */
+.rail{
+  position:absolute;z-index:20;top:0;left:0;right:0;height:92px;padding:40px 12px 0;
+  display:grid;grid-template-columns:auto 1fr auto;align-items:center;
+}
+.rail .mid{
+  text-align:center;font-family:var(--carve);font-size:12px;font-weight:500;letter-spacing:.32em;
+  text-transform:uppercase;color:var(--ink-3);padding-left:.32em;
+}
+.home{
+  height:44px;min-width:44px;padding:0 12px 0 8px;display:flex;align-items:center;gap:8px;
+  font-family:var(--carve);font-size:12px;font-weight:500;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-2);
+}
+.home svg{width:16px;height:16px;stroke:var(--light-a);fill:none;stroke-width:1.2}
+.home:hover{color:var(--ink)}
+.icon-btn{
+  width:44px;height:44px;display:grid;place-items:center;position:relative;
+}
+.icon-btn svg{width:22px;height:22px;stroke:var(--light-a);fill:none;stroke-width:1.1;stroke-linecap:round;stroke-linejoin:round}
+.icon-btn:hover svg{stroke:var(--light)}
+
+/* labels: carved, small, widely spaced ------------------------------------ */
+.label{
+  font-family:var(--carve);font-size:12px;font-weight:500;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-3);
+  display:flex;align-items:center;gap:12px;
+}
+.label.rule::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--light-c),transparent)}
+.label.warm{color:var(--warm)}
+.label.warm.rule::after{background:linear-gradient(90deg,var(--warm-b),transparent)}
+
+h1,.title{
+  font-family:var(--carve);font-weight:500;letter-spacing:.06em;line-height:1.15;color:var(--ink);
+  text-shadow:0 0 18px rgba(191,239,255,.18);
+}
+.book{font-family:var(--book);font-size:18px;line-height:1.4;color:var(--ink-2)}
+.book em,.guess{font-style:italic}
+
+/* the plate: a framed panel with hairline border and corner ticks ---------- */
+.plate{
+  position:relative;
+  border:1px solid var(--light-d);
+  background:linear-gradient(180deg,rgba(22,38,53,.55),rgba(8,14,21,.72));
+  box-shadow:inset 0 1px 0 rgba(191,239,255,.05),0 20px 40px rgba(0,0,0,.35);
+}
+.ticks{position:relative}
+.ticks::before{
+  content:"";position:absolute;inset:-1px;pointer-events:none;
+  --tc:var(--light-a);--tl:var(--tick);
+  background:
+    linear-gradient(var(--tc),var(--tc)) left top/var(--tl) 1px no-repeat,
+    linear-gradient(var(--tc),var(--tc)) left top/1px var(--tl) no-repeat,
+    linear-gradient(var(--tc),var(--tc)) right top/var(--tl) 1px no-repeat,
+    linear-gradient(var(--tc),var(--tc)) right top/1px var(--tl) no-repeat,
+    linear-gradient(var(--tc),var(--tc)) left bottom/var(--tl) 1px no-repeat,
+    linear-gradient(var(--tc),var(--tc)) left bottom/1px var(--tl) no-repeat,
+    linear-gradient(var(--tc),var(--tc)) right bottom/var(--tl) 1px no-repeat,
+    linear-gradient(var(--tc),var(--tc)) right bottom/1px var(--tl) no-repeat;
+}
+
+/* the viewport: the world, seen through the instrument --------------------- */
+.viewport{
+  position:relative;overflow:hidden;
+  border:1px solid var(--light-c);
+  background:var(--void);
+}
+.viewport > svg{display:block;width:100%;height:100%}
+.viewport .scale{ /* graticule ticks along an edge */
+  position:absolute;left:0;right:0;bottom:0;height:6px;pointer-events:none;
+  background:repeating-linear-gradient(90deg,var(--light-c) 0 1px,transparent 1px 14px);
+  -webkit-mask:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);
+          mask:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);
+}
+.viewport .scale.v{
+  left:0;top:0;bottom:0;right:auto;width:6px;height:auto;
+  background:repeating-linear-gradient(180deg,var(--light-c) 0 1px,transparent 1px 14px);
+  -webkit-mask:linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent);
+          mask:linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent);
+}
+.viewport .cap{
+  position:absolute;left:12px;top:10px;font-family:var(--carve);font-size:11px;font-weight:500;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--ink-3);
+}
+
+/* buttons -------------------------------------------------------------------- */
+.btn{
+  position:relative;height:56px;display:flex;align-items:center;justify-content:center;gap:10px;
+  font-family:var(--carve);font-size:15px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;padding:0 18px 0 calc(18px + .24em);
+  transition:transform .22s var(--ease),box-shadow .35s var(--ease),background .35s var(--ease);
+  -webkit-tap-highlight-color:transparent;
+}
+.btn:active{transform:scale(.975)}
+.btn::before{ /* corner brackets sit just outside the plate */
+  content:"";position:absolute;inset:-5px;pointer-events:none;
+  --tc:var(--light-b);--tl:9px;
+  background:
+    linear-gradient(var(--tc),var(--tc)) left top/var(--tl) 1px no-repeat,
+    linear-gradient(var(--tc),var(--tc)) left top/1px var(--tl) no-repeat,
+    linear-gradient(var(--tc),var(--tc)) right top/var(--tl) 1px no-repeat,
+    linear-gradient(var(--tc),var(--tc)) right top/1px var(--tl) no-repeat,
+    linear-gradient(var(--tc),var(--tc)) left bottom/var(--tl) 1px no-repeat,
+    linear-gradient(var(--tc),var(--tc)) left bottom/1px var(--tl) no-repeat,
+    linear-gradient(var(--tc),var(--tc)) right bottom/var(--tl) 1px no-repeat,
+    linear-gradient(var(--tc),var(--tc)) right bottom/1px var(--tl) no-repeat;
+  transition:inset .3s var(--ease);
+}
+.btn:hover::before{inset:-7px}
+
+/* the one warm thing to press */
+.btn.warm{
+  color:var(--warm-hi);
+  border:1px solid rgba(255,196,130,.85);
+  background:
+    radial-gradient(90% 140% at 50% 130%,rgba(245,171,92,.42),rgba(245,171,92,.08) 70%),
+    linear-gradient(180deg,#24180e,#150d07);
+  box-shadow:
+    0 0 0 1px rgba(245,171,92,.14),
+    0 0 26px rgba(245,171,92,.30),
+    inset 0 0 22px rgba(245,171,92,.20),
+    inset 0 1px 0 rgba(255,220,173,.35);
+  text-shadow:0 0 12px rgba(245,171,92,.65);
+}
+.btn.warm::before{--tc:var(--warm-a)}
+.btn.warm:hover{box-shadow:0 0 0 1px rgba(245,171,92,.2),0 0 36px rgba(245,171,92,.42),inset 0 0 26px rgba(245,171,92,.26),inset 0 1px 0 rgba(255,220,173,.4)}
+
+/* cold, secondary */
+.btn.cold{
+  color:var(--ink);
+  border:1px solid var(--light-c);
+  background:linear-gradient(180deg,rgba(22,38,53,.7),rgba(8,14,21,.8));
+  box-shadow:inset 0 0 18px rgba(191,239,255,.05);
+}
+.btn.cold::before{--tc:var(--light-c)}
+.btn.cold svg{width:16px;height:16px;stroke:var(--light-a);fill:none;stroke-width:1.2}
+
+/* quiet text action */
+.quiet{
+  min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  font-family:var(--book);font-style:italic;font-size:18px;color:var(--ink-2);
+}
+.quiet span{border-bottom:1px solid var(--light-c);padding-bottom:1px}
+
+/* a list row on a hairline ---------------------------------------------------- */
+.row{
+  display:grid;grid-template-columns:28px 1fr auto;align-items:center;gap:14px;
+  min-height:56px;border-top:1px solid var(--light-d);
+}
+.row:last-child{border-bottom:1px solid var(--light-d)}
+.row .t{font-family:var(--book);font-size:19px;color:var(--ink);line-height:1.2}
+.row .s{font-family:var(--book);font-style:italic;font-size:16px;color:var(--ink-3)}
+
+/* a hairline divider with a centre point */
+.divider{height:9px;background:
+  radial-gradient(circle at 50% 50%,var(--light-a) 0 1.4px,transparent 2px),
+  linear-gradient(90deg,transparent,var(--light-c) 25%,var(--light-c) 75%,transparent) center/100% 1px no-repeat}
+
+/* motion: lines draw themselves in; plates arrive on an exact curve ---------- */
+@keyframes arrive{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes draw{to{stroke-dashoffset:0}}
+.arrive{animation:arrive .8s var(--ease) both}
+.d1{animation-delay:.08s}.d2{animation-delay:.16s}.d3{animation-delay:.24s}.d4{animation-delay:.32s}.d5{animation-delay:.4s}.d6{animation-delay:.48s}
+.drawn{stroke-dasharray:var(--len,1000);stroke-dashoffset:var(--len,1000);animation:draw 1.4s var(--ease) both}
+
+@keyframes breathe{0%,100%{opacity:.85}50%{opacity:1}}
+@keyframes flicker{0%,100%{transform:scale(1,1)}35%{transform:scale(.95,1.07)}70%{transform:scale(1.04,.96)}}
+.breathe{animation:breathe 5s ease-in-out infinite}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.001s!important;animation-delay:0s!important;animation-iteration-count:1!important;
+    transition:none!important;
+  }
+}
