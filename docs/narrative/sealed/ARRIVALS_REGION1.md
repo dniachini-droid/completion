@@ -38,7 +38,7 @@ _Written 2026-09-23._
 
 | Visit | Kind | The line / scene | Choice | Carries |
 |---|---|---|---|---|
-| 2.1 | step | Her sealed box, on the cot: the count on it fills and the lid lifts. Inside, more sheets, and one sheet with three marks drawn large and a word under each in pencil, the last with a question mark. | — | Key → **GIVE** (candidates: give, send, answer, open), **PERSON**, **ONE** |
+| 2.1 | step | Her sealed box, on the cot: the count on it fills and the lid lifts. Inside, more sheets, and one sheet with three marks drawn large and a word under each in pencil, the last with a question mark. | — | Key → **GIVE** (candidates: give, send, answer, open), **PERSON**, **ONE**, **ME** |
 | 2.2 | step | The lintel on the side wall, close. Two marks beside a blank the shape of the rod's edge. One is the flame's mark. The other is the hook and the drop: the one she marked with a question. Beneath the lintel there is no door, only stone. | Guess GIVE | **GIVE** (guess) |
 | 2.A | **arrival** | **The Salt Gallery, further in.** Past the inner count, the tally goes on. The hand is the same. Above it, alone, a single ring, larger than the others. Her sheets stop halfway along this stretch. | Read the tally / look at the ring | **S2** (her sheet: "…he ate…"); the wife's ring (C-12) |
 | 2.3 | step | The notebook, Day 3. | — | **L3** |

@@ -87,7 +87,7 @@ Later signs (months 8–9, rare): TEACH (give+mark), LEARN (take+mark), ONE-WHO 
 
 **Hand-marks by age (D4).** Every Builder-age record carries its maker's hand-mark (B0, the lesson-tablets, the Council walls, the door-plan). The memoir B1–B6 carries *his Builder-age mark*, the one he used before he took the name KEEP-ONE; only B7 carries the tiny KEEP-ONE. The change of mark is the clue that the memoir is his, and it reads only with NAME (month 8). The seed's own text (Z) carries no hand-mark at all: the only records that don't.
 
-### 3.2 Function signs (9)
+### 3.2 Function signs (10)
 
 | # | Sign | Cut | Arrives | Effect |
 |---|---|---|---|---|
@@ -130,9 +130,9 @@ Words are commands: verb + object (+ modifier). Forming one is the fixed ritual 
 |---|---|---|---|---|---|
 | W1 | **LIGHT** | FIRE-GIVE | Wakes laced lamps and lamp-lines nearby; the map reveals routes; hidden word-doors show their lintels | **wk 2–3** | The Lamp Door in the first hall |
 | W2 | OPEN-WAY | PATH-OPEN | Opens the class of word-doors | m 2 | The lintel at the foot of the Stair's second flight; the same word, with a Key, opens the Lower Door |
-| W3 | MOVE-STONE | STONE-MOVE | Clears falls; shifts blocks; opens routes the readers' collapses closed | m 3–4 | The Salt Gallery's fallen roof |
+| W3 | MOVE-STONE | STONE-MOVE | Clears falls; shifts blocks; opens routes the readers' collapses closed | m 3–4 | The roof-fall in the Surveyor's gallery |
 | W4 | ECHO | SEE-ONCE | Shows an impression the stone kept of a loud moment in this room: a short *scene* rather than a fragment. Its first blank is behind the Loud Room's fall, exposed by MOVE-STONE | m 4–5 | The Loud Room (the Engineer's chamber) |
-| W5 | HOLD | KEEP-STONE | Holds a collapse, holds a door open, holds a device | m 6 | The Builders' Hold |
+| W5 | HOLD | KEEP-STONE | Holds a collapse, holds a door open, holds a device | m 6 | The fallen lintel of the low passage to his workshop (week 24) |
 | W6 | WAKE | (device-mark) WAKE | Wakes Builder devices: lifts, the counting-lock displays, the reading-tables | m 7 | The lift to the Deep |
 | W7 | QUIET | VOICE-NOT | Stills an area so a word can be used there without carrying; also the binding's root | m 8–9 | The quiet chambers beyond the memorial walls |
 | W8 | OPEN-WAY, LOUD | LOUD PATH-OPEN | The last counting door, which opens only to a loud word that does not carry: QUIET first, then this. Its lintel says why: *be loud here and not be heard*, the binders' last test that the reader has learned the whole lesson | m 10–11 | The last door |
@@ -172,14 +172,14 @@ Words that exist, can be read, and are never cut by the player:
 
 Signs are earned by Keys (one per weekly target met) and occasionally by an arrival or a record; the *order* is authored and cannot be skipped (D-013). If Dan earns Keys faster than the schedule, sealed things ahead in the Site absorb the extra Keys first (gates, niches, sealed records); the next sign is always the next in this order. If slower, the schedule stretches; nothing waits.
 
-**A Key always opens something already seen and sealed** (CORE_LOOPS). So every Key-delivered sign in weeks 1–13 is *inside* a sealed thing Dan has seen: her sealed box (week 2: the glossary sheet for GIVE, PERSON, ONE), the Stair niche (week 3: a lesson-tablet with HERE and DOOR beside the second lamp), the second-flight chamber (week 5: the tablet for ONCE and PATH/GO), the Salt Gallery's sealed record (week 6: OPEN, EAT), the Surveyor's niche (week 7: UP, STONE, CHILD), the Water niche (week 8: SEE, COUNT, DAY, numbers), the Reading Room tablets (week 9: NOT), and so on down the Site. The sign is the thing in the box.
+**A Key always opens something already seen and sealed** (CORE_LOOPS). So every Key-delivered sign in weeks 1–13 is *inside* a sealed thing Dan has seen: her sealed box (week 2: the glossary sheet for GIVE, PERSON, ONE, ME), the Stair niche (week 3: a lesson-tablet with HERE and DOOR beside the second lamp), the second-flight chamber (week 5: the tablet for ONCE and PATH/GO), the Salt Gallery's sealed record (week 6: OPEN, EAT), the Surveyor's niche (week 7: UP, STONE, CHILD), the Water niche (week 8: SEE, COUNT, DAY, numbers), the Reading Room tablets (week 9: NOT), and so on down the Site. The sign is the thing in the box.
 
 ### Beat level: the first three months
 
 | Week | Signs and marks | Word | What re-reads |
 |---|---|---|---|
 | 1 | Name-ring recognised; LAMP; FIRE. (High day partial: the hook element of GIVE) | | |
-| 2 | GIVE (contested), PERSON, ONE | **LIGHT assembled** (FIRE-GIVE) by the end of wk 2 or during wk 3 | |
+| 2 | GIVE (contested), PERSON, ONE, ME | **LIGHT assembled** (FIRE-GIVE) by the end of wk 2 or during wk 3 | |
 | 3 | HERE, DOOR | LIGHT confirmed: the Lamp Door opens | |
 | 4 | DEEP; hand-mark | | Every record now shows *whose hand* cut it; almost all one hand |
 | 5 | ONCE; PATH, GO | | Records open with the formula: all told after the life. Her cut pieces carry no formula: present tense, recent |

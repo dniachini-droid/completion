@@ -24,7 +24,7 @@ _Written 2026-09-23. Derived from `REVELATION_MAP.md` and `MYSTERIES.md`._
 **Can name the promise:** many came down; one figure met them all; she wrote to whoever came next.
 
 ### End of month 3
-**Knows:** five readers, numbered, each with a name for him (the tall one, the Guest, the Tenant; the Inspector arrives week 10; the Copyist "never came"). He has never stopped anyone (NOT, week 9: three records and every deep door turn, and the Linguist's own "I think it's emphasis" turns with them). The lintels say "voice not". Loud use is followed by something in every age. The Surveyor was alive when the door was shut; the hand-mark on the door is the figure's (inferred; the verb SHUT is read in month 6).
+**Knows:** five readers, numbered, each with a name for him (the tall one, the Guest, the Tenant; the Inspector arrives week 11; the Copyist "never came"). He has never stopped anyone (NOT, week 9: three records and every deep door turn, and the Linguist's own "I think it's emphasis" turns with them). The lintels say "voice not". Loud use is followed by something in every age. The Surveyor was alive when the door was shut; the hand-mark on the door is the figure's (inferred; the verb SHUT is read in month 6).
 **Suspects:** that the figure is one being across all ages; that the records were told to him and cut by him (S7 "he cut them as I said them"; the fives converted to eights); that the place was built to keep something quiet.
 **Wrongly believes:** that it is a tomb; that the figure is a guardian keeping something *in*; that the Copyist's angel reading is quaint rather than half-right; possibly (her guess) that the salt-cutter learned to count in eights.
 

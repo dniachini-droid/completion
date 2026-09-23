@@ -12,7 +12,7 @@ _Written 2026-09-23._
 | 1 | 3 | The Lamp Hall, a low niche under the ledge | A clay saucer, the twin of the lamp's foot, empty | (wordless) | The lamp: it once sat in this |
 | 1 | 4 | The Survey Cut, under the cot | Her boots, laced, dry, side by side | (wordless; the app: "side by side, as if for the morning") | L15 (she went down in other shoes) |
 | 1 | 5 | The Mouth, a recess in the shaft wall | A railway company's brass tag, stamped with a shaft number, hung on a nail | (wordless) | X-padlock; the trial shaft |
-| 2 | 1 | The Survey Cut, her sealed box | The glossary sheet for GIVE, PERSON, ONE; notebook pages for weeks 3–4 | — | **GIVE, PERSON, ONE** |
+| 2 | 1 | The Survey Cut, her sealed box | The glossary sheet for GIVE, PERSON, ONE, ME; notebook pages for weeks 3–4 | — | **GIVE, PERSON, ONE, ME** |
 | 2 | 2 | Salt Gallery, the tally-stick niche | The daughter's tally-stick, notched in fives | *Told by the child: father counts at night; four and four; the owl's feet.* | X-daughter |
 | 2 | 3 | Salt Gallery, a crack above the wife's ring | A bone comb, two teeth gone | *Told: hers. I did not ask for it. He left it under the ring.* | S2, the wife's ring |
 | 2 | 4 | The Lamp Hall, the corner | A smooth place on the polished wall where the marks are rubbed to nothing, at the height of a long hand | (wordless; the app: "rubbed by touch, not by tools") | C-04a |
@@ -140,9 +140,9 @@ _Written 2026-09-23._
 | 24 | 5 | The workshop, the wall | K5 seen (REMAIN) | — | K5 |
 | 25 | 1 | The first counting door | The count fills: the door opens for Dan | — | region 4 begins |
 | 25 | 2 | The second counting door | The count begins | — | |
-| 25 | 3 | Between the doors, a niche | B6 first sight | — | B6 |
-| 25 | 4 | Between the doors, a wall | X-door-plan first sight | — | X-door-plan |
-| 25 | 5 | Between the doors, floor | A line in his hand, alone, cut where he stands: *Here.* (HERE {h}) | *Here.* | his furthest point |
+| 25 | 3 | The doors' approach, the last wall | B6 first sight | — | B6 |
+| 25 | 4 | The doors' approach, a wall | X-door-plan first sight | — | X-door-plan |
+| 25 | 5 | The first door's threshold, floor | A line in his hand, alone, cut where he stands: *Here.* (HERE {h}) | *Here.* | his furthest point |
 | 26 | 1 | The second counting door | The count fills | — | |
 | 26 | 2 | The third counting door | The count fills over the week | — | |
 | 26 | 3 | The Deep's first hall, the reading-tables | L16 first sight | — | L16 |

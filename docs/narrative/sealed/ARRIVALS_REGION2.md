@@ -64,10 +64,10 @@ _Written 2026-09-23._
 | Visit | Kind | The line / scene | Choice | Carries |
 |---|---|---|---|---|
 | 10.1 | step | The approach's niche: a lesson-tablet (a drop with a rising bar beside a lifted block; three bars beside water). | Guess | Key → **MOVE, WATER** |
-| 10.A | **arrival** | **The Loud Room's door.** A lintel with path and open beside a blank, and a count; the word and a Key; the stone goes; powder-smell, thick. Inside, on a ledge, a paper log open at a page, the pencil pressed hard: *Broke into a chamber at 61 yards. Not ours…* | Read the log / look at the room | **E1** ("A tall man with a lamp asked what I was cutting… He said: everything does, here.") |
+| 10.A | **arrival** | **The Loud Room's door.** A lintel with path and open beside a blank, and a count; the word and a Key; the stone goes; powder-smell, thick. Inside, on a ledge, a paper log open at a page, the pencil pressed hard: *Broke into a chamber at 61 yards. Not ours…* | Read the log / look at the room | **E1** ("A tall man with a lamp asked what I was cutting… He said: everything does, here."; "the Inspector" is next week's page) |
 | 10.2 | step | The square gallery's deep end: V5. | — | **V5** ("This one held nine days. The road holds not.") |
 | 10.B | **arrival** | **The blast scar.** A wall torn open in one piece, the stone beyond it rounded and unhurt; a watch on the ledge, stopped at 4.10; boots; a tin plate. | — | C-39b (the watch); the niche objects |
-| 10.3 | step | The notebook, Day 31. | — | **L11** ("from the fourth") |
+| 10.3 | step | The notebook, Day 31. | — | **L11** ("from the fourth"; the timetable line) |
 | camp | bedtime | The lamp. Four readers now, and the fourth wrote in pencil. | — | (morning) V1 re-rendered with MOVE: "the tunnel met…" |
 | I can't start | teaser | Someone cut into this hall with powder. The stone still smells of it. | | |
 | week close | glimpse | On the ledge there is a book that is not from this age, open at a page about angels. | | |

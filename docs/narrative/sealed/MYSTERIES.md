@@ -181,6 +181,11 @@ Any question Dan can ask attaches to one of these. If a new question arises in l
 **Answer on the page.** Three theories, none confirmed: a gathering mind (the Custodian); a hunger (the Builders); a process with no one in it (the Linguist). Declared unanswerable *up front and loudly* by the Linguist's note in month 8 ("No one will ever know what it is. Only what it does."), so that it is never the question progress is measured by (RESEARCH, *The Leftovers* rule).
 **Authorial truth.** The Linguist is right. Not for the page.
 
+## M14 — What did the Linguist choose? (rung 6)
+
+**Answer.** She didn't. She copied out both words, wrote "I do not know if he is right," and remained. The next reader decides. The last line of the story is hers.
+**Trigger.** Month 10 (her last camp) and month 12 (the coda).
+
 ## M15 — What does the finest cut say? (rung 6)
 
 **Answer.** The Speakers' last line about themselves, cut so fine that touch reads it as smooth: *what is put out is not asked back.* The message was never a question. No Builder read it; the Custodian never could.
@@ -190,11 +195,6 @@ Any question Dan can ask attaches to one of these. If a new question arises in l
 **Middle.** "Read all of it" (L1, L22).
 **Trigger.** Month 11, the lamp at the Seed.
 **Consequences.** The Custodian's cure is answered before he asks: a gift is not a question. Dan is the first reader who could read *all of it*.
-
-## M14 — What did the Linguist choose? (rung 6)
-
-**Answer.** She didn't. She copied out both words, wrote "I do not know if he is right," and remained. The next reader decides. The last line of the story is hers.
-**Trigger.** Month 10 (her last camp) and month 12 (the coda).
 
 ---
 

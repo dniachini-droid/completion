@@ -88,7 +88,7 @@ The place obeys words (R1). Two lives, one lamp, one figure who does not eat and
 |---|---|---|
 | **The Counting Stair** | Long flights with landings; counts on niches and sealed records; a lintel at the foot of the second flight (OPEN-WAY, month 2). On the rail, the stone itself has taken the shape of a long four-fingered hand where it rested an age (week 7). The dropped measuring cord. | V1–V5, S6–S8, L9–L11 |
 | **The Surveyor's galleries** | Where the road tunnel met the Site: square-cut stone meeting rounded stone; a roof-fall (MOVE-STONE); the crew's names cut by the boy, three re-cut correctly beside them; the abandonment order's stone copy. | V3, X-foreman, X-boy, X-mule-driver, X-overseer |
-| **The Water** | The standing water of the works' channel, which stopped when the Surveyor made his great cut and never moved again: a still lake at the Stair's foot. The Reading Room's lintel across it; the Loud Room's approach below. The Lower Door's descent arrives here. | L9, E1 first sight |
+| **The Water** | The standing water of the works' channel, which stopped when the Surveyor made his second great cut and never moved again: a still lake at the Stair's foot. The Reading Room's lintel across it; the Loud Room's approach below. The Lower Door's descent arrives here. | L9, E1 first sight |
 | **The Reading Room** | The Builders' first lesson-hall: lesson-tablets in their hand (B0), the lintel KEEP VOICE-NOT (half readable at week 9). | B0, X-binder-child |
 | **The Loud Room** (dark room) | The railway blast scar; the Copyist's book on a ledge, open at a page about angels; the Engineer's watch, stopped at 4.10, the minute of the blast; the powder smell kept in the stone. K3 beside the book ("Kept.", cut when he laid the Engineer in the Hold). ECHO plays the blast here (month 4–5). | E1–E3, C1–C3, X-powder-man, X-well-keeper |
 | **The Surveyor's deep side gallery** | A door shut from outside with the Custodian's hand-mark and LONG-SLEEP NOT (week 13). Opens month 8–9 with HOLD and a Key. | V6, V7 |
@@ -102,7 +102,7 @@ The place obeys words (R1). Two lives, one lamp, one figure who does not eat and
 | **The Council Gallery** | Two facing walls: the binders' rule and the answerers' argument ("we were sent; we are the proof"), in two hands. Copies of both prepared words. VOICE-GIVE-FAR first read here (month 5). |
 | **The Warning Hall** | The seed's warning copied large by the Builders: LOUD VOICE → TAKE ("what speaks loud is taken"). Half readable until month 8. |
 | **The Builders' quarters** | Where the memoir B1–B6 is cut, first person plural. |
-| **The memorial walls** | The approach to the Landing: rings so dense the stone looks woven; the same names repeated hall by hall (hundreds of names, thousands of rings). One ring unfinished: his current cutting, in his hand (seen months 7–9, understood month 11). NAME learned here (month 8). |
+| **The memorial walls** | The approach to the Landing: rings so dense the stone looks woven; the same names repeated hall by hall (hundreds of names, thousands of rings). One ring unfinished: his current cutting, in his hand (seen week 21, understood month 11). Re-read with NAME (learned in the deep works' tool-room, month 8). The last wall before the three doors carries B6. |
 | **The Landing** | Where the corridor turns and he stands. First meeting (month 6). |
 | **The three counting doors** | At the region's foot. Tally and RETURN on each. The door-maker's plan (X-door-plan) on the wall beside them: the count, and the Seed rule. He is always on the near side. This is where, at the end, his voice comes from, and where the list is found. |
 
@@ -113,7 +113,7 @@ The place obeys words (R1). Two lives, one lamp, one figure who does not eat and
 | **The quiet chambers** | Where words act without carrying (a maker's lintel: *here a word is said and carries not*); an inner lintel with VOICE and NOT beside a blank (QUIET, month 9); a rule-stone with ONE-WHO. The rings stop. |
 | **The seed's text** | Z1, Z3 and the Z-pieces: no-hand records, on the way down, in sealed niches. |
 | **B7** | On a wall by the last lift, in his hand: the last thing he cut before he came up. |
-| **The Builders' deep works** | The lift and its device-panel (WAKE, month 7; a device-tablet says it counts who goes up and down); the reading-tables with drawers (counts) holding her cut notes (L16–L19); the tool-room (NAME's shelf; the rod-plan *a rod for the one who returns*); a ring in another Builder's hand, one of the few down here. |
+| **The Builders' deep works** | Three levels joined by one lift and its device-panel (WAKE, month 7; a device-tablet says it counts who goes up and down); B7 on the wall beside the lift; the reading-tables with drawers (counts) holding her cut notes (L16–L19); the tool-room (NAME's shelf; the rod-plan *a rod for the one who returns*; a second rod, not needed); a sealed lintel-stone with LOUD (month 8); a ring in another Builder's hand, one of the few down here. |
 | **Her last camp** (dark room, and the kindest) | Against the last door. Her cut notes (L20–L22); the two words side by side; the wall that is her: a woman's outline in the stone, the rod in the wall to the wrist, her hand-mark beside it; nothing in it waits. |
 
 ## Region 5 — The Seed (months 10–12)
