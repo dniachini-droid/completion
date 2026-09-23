@@ -69,3 +69,8 @@ Plus two hard checks: the brief (`ART_DIRECTION.md` → "Brief for the direction
 - **The satchel:** "Sort the flat before the visit": *hoover the hall*, *clear the desk*, *wash the bedding*, *take the bottles out*, *fix the shelf bracket*, and more folded away. No counts shown.
 - **A delve:** 25 minutes, 14:12 left, on *Course: one hour* (the first of two). **Dan's ask (D-028): a circular ring that slowly fills with glow as time passes, with the number (time left) inside it; not a bar.** Each direction draws the ring its own way. The expedition still visibly moves in the world around it; the phone can be put away.
 - **A daybook page (week 2, plain English, written for Dan):** "Gym four times, the sauna after each. The Spanish lesson booked for next Tuesday. Two hours on the course. You went down the ladder and found the lamp already lit. The wall taught you two marks. Next week: the lintel on the side wall is still waiting for a word." No numbers-as-scores, no charts.
+
+## Progress log (Sydney time, 24 Sep)
+- 9:36 am — Setup done; keep-alive Routine hourly.
+- 9:55 am — Stage 1 done: model comparison, reviewers 2–1 for the default model (D-029, provisional until Dan picks). Dan asked for the delve timer as a glowing ring with the number inside (D-028).
+- 10:00 am — Stage 2 done: three directions written (`ART_DIRECTION.md`). Stage 3 started: three builders working in parallel, one per direction.
