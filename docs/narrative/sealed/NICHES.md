@@ -18,7 +18,7 @@ _Written 2026-09-23._
 | 2 | 4 | The Lamp Hall, the corner | A smooth place on the polished wall where the marks are rubbed to nothing, at the height of a long hand | (wordless; the app: "rubbed by touch, not by tools") | C-04a |
 | 2 | 5 | The Survey Cut, the stove's box (the stove's first sight; it is not in ARR1 1.C) | A tin of tea, a spoon, a candle stub; a shopping list in her hand: batteries, batteries, tape | (wordless) | L5 |
 | 3 | 1 | The head of the Stair, the niche | The Salt-Cutter's second lamp (clay, unlit, its glaze unchipped) and, on the lid, a lesson-tablet: a doorway beside a mark, a bar beside a mark | — | **HERE, DOOR**; S7 |
-| 3 | 2 | Salt Gallery, next stretch | The tally continues (S3) | — | S3 |
+| 3 | 2 | Salt Gallery, next stretch | (seen, not sealed: in the open at ARR1 3.1) The tally continues (S3) | — | S3 |
 | 3 | 3 | The Stair's first turn, a recess | A coil of measuring cord, knotted every ten paces, the knots stiff | *The second's cord. Dropped here; he came not back for it.* | V (the cord) |
 | 3 | 4 | The Lamp Hall, behind the lesson-wall's foot | A stub of her stone pencil (a broken rod-edge) and a scatter of chips | (wordless; the app: "the wall was cut with this") | L1 |
 | 3 | 5 | The Survey Cut, a ledge | A box of tape cassettes (their first sight; not in ARR1 1.C), three labelled in her hand: DAY 3 (HIM), DAY 6 (IT WORKS), DAY 14 | (wordless; dead) | L3, L5, L7 |
@@ -198,9 +198,8 @@ Keys are fewer below the doors (the year's later targets are the same weekly one
 | 40 | 1 | Her last camp, the wall | L22 in full | — | L22 |
 | 40 | 2 | The last door's sill | The place where QUIET must be cut first (a blank with the sideways fork and the cross) | — | W7 at the door |
 | 40 | 3 | The last door's lintel | *Be loud here and not be heard.* (LOUD PATH-OPEN beside the blank; the quiet-signs above) | — | W8 |
-| 41 | 1 | The first counting door's face (re-surfaced weekly, wks 41–50) | (seen; not a Key) Dan's own record, begun: AGAIN. One mark longer each week | (his hand; no ring; no closing line) | K6 |
+| 41 | 1 | The first counting door's face (re-surfaced weekly, wks 41–50) | (seen; not a Key) Dan's own record, begun: AGAIN. One mark longer each time Dan comes back down | (his hand; no ring; no closing line) | K6 |
 | 41 | 2 | The Hold's door, the floor (re-surfaced beside K6) | (seen; a re-surface, not a Key) The returns tally: strokes, a gap, five short rows; the app sets it beside K6 and says nothing | (his hand) | the returns tally (wk 15); K6 |
-| 41 | 3 | The last door's lintel, close | *Be loud here and not be heard.* (LOUD PATH-OPEN beside the blank; the quiet-signs above) | — | W8 |
 | 42 | 1 | The lift's panel (re-surfaced) | (seen) *Count down: many, and one.* Re-read now that Dan has read who the one was | (a maker's hand) | X-lift-count; B7 |
 | 42 | 2 | The tool-room's last recess | The last binders' rod-plan: *a rod for a counted hand* | (a maker's hand) | X-tool |
 | 42 | 3 | The last door's count | A great day fills it at once; many days fill it | — | the ending's gate |
