@@ -20,4 +20,13 @@ Pacing (D-004): combine or skip topics once answers make them redundant. Target 
 ## Session 1 — 2026-09-23
 
 - Repository initialised; founding brief captured in `MASTER_BRIEF.md`.
-- Round 1 questions sent (game experiences that absorbed him). Awaiting answers.
+- Round 1 questions sent (game experiences that absorbed him).
+
+### Round 1 findings (games)
+- Anchor game: **Ocarina of Time**. Draw: deep story, the Zelda / Ganondorf / Link relationships, lore.
+- Anchor moment: **Temple of Time → Master Sword → time travel**. "Magical", "grand", and tied to temples across Hyrule.
+- **Progression = new mysterious abilities**, raised independently three times. This is the clearest signal so far.
+- Other loves: TotK Zonai building; space games with alien worlds and civilisations.
+- Dislike: grinding and repetition.
+- **Design tension surfaced:** real-life inputs repeat daily, and Dan dislikes repetition. The world's response has to vary and escalate even when the input is the same.
+- Answers were short. Round 2 probes the *why* behind each.

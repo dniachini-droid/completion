@@ -6,7 +6,9 @@
 - Which specific game experiences genuinely absorb Dan, and why?
 - What makes him stop playing games?
 - Which fictional worlds and tones reliably interest him?
-- Which reward structures motivate him, and which quickly become meaningless?
+- Which reward structures motivate him, and which quickly become meaningless? *(Round 1: new abilities strongly motivate; grinding doesn't.)*
+- Does he prefer clear good-vs-evil or morally complex conflict, and how does that fit with unreliable history?
+- Dead civilisations (ruins) vs living alien cultures?
 
 ## Behaviour
 - What causes initiation vs avoidance for him, specifically?
@@ -16,6 +18,7 @@
 
 ## Game design
 - Do HP/MP add real meaning, or are they convention?
+- If capabilities beat numbers for Dan, what is XP even for? How do daily repetitive inputs unlock *new verbs* often enough without inflation?
 - How many core daily actions (if any fixed number) define a complete day?
 - Does collection/rarity motivate him in practice, and how to prevent farming?
 - Do bosses for large projects amplify or trivialise real achievement?
