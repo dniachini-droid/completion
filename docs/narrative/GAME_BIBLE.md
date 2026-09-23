@@ -50,7 +50,7 @@ The story is finished when it is finished. It has a fixed ending, decided before
 - **You can try things.** Small blank cells on the walls take any two marks you like. The place answers with one line (a lamp dims, the hall hums, nothing). Never progress, never a punishment: a language you can speak, not only read.
 - **Old records re-read.** Learning a mark changes what earlier records say. Some marks change a great deal at once. The app shows you which old record changed most and lets you reopen it.
 - **The first word comes in week two or three** and opens something. After that, marks arrive at one or two a week, words about one a month.
-- **A big day can give you half a mark.** Your next Key finishes it.
+- **A big day can give you half a mark.** The next thing you open finishes it.
 
 ## The records and the people in them
 
