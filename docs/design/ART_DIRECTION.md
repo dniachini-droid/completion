@@ -54,6 +54,9 @@ Reactions to rough sketches on a sample page (`design/taste/samples.html`). Unma
 ### The delve timer (Dan, during the run)
 - "A circular timer that slowly fills up as the time increases. With glow. And the number inside it. Rather than just a task bar." (D-028)
 
+### The model-test screens (during the run)
+- Shown two morning screens blind: one with a warm lamp and a warm main button, one with a cold main button. **"I like the warm one. It's awesome."** A signal for warm on what's yours and what you're about to do (direction A's reading); B and C stay in the run as the comparison.
+
 ### 10. Sound
 - Yes to sound; he leaves the choice to Claude's recommendation. (Audio is later; recommendation recorded below.)
 

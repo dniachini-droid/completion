@@ -7,3 +7,5 @@ The same morning screen, built from one identical prompt by two models. Reviewer
 - **Result: X, two to one.** Caveat: two of the reviewers were the same model family as X, so a self-preference bias can't be ruled out; the non-Opus reviewer picked Y.
 - What the reviewers liked, to carry into all directions: X's deep painted hall and warm = you (lamp → Begin button; lit cups for jobs done); Y's clean grouping of the next job and its painterly lamp.
 - What they disliked: X's cramped lintel sign and heavy capacity chip; Y's muddy illustration, always-visible Low/Normal/High tabs, and generic card-and-pill look.
+
+**Dan's pick:** "I like the warm one. It's awesome." → X. Confirms D-029. Also a taste signal: warm light on the thing you're about to do, warm for what's yours.

@@ -301,11 +301,12 @@
 - **Consequences:** `TOOLS.md` §1, `ART_DIRECTION.md`, `PHASE4_RUN.md` updated.
 - **Reversible:** Yes.
 
-## D-029 — The visual run uses the default model (provisional; Dan may override)
+## D-029 — The visual run uses the default model (confirmed by Dan)
 - **Date:** 2026-09-24
 - **Context:** D-027's model comparison. The default model (Opus 5.5) and Fable 5.1 built the same morning screen from one prompt. Dan was shown both, blind; three blind reviewers judged them (`design/model-test/RESULT.md`).
 - **Decision:** Reviewers picked the default model's screen two to one, so it builds the rest of the run. Provisional until Dan gives his own pick; if he prefers the other, the run switches from that point on.
 - **Alternatives:** Fable (picked by one reviewer); waiting for Dan before building (would stall an unattended run).
 - **Rationale:** D-027's rule: blind reviewers decide if Dan is away. Caveat recorded: two reviewers shared a model family with the winner.
 - **Consequences:** The directions and screens are built by the default model.
+- **Dan's pick (same morning):** "I like the warm one. It's awesome." That is X, with the warm lamp and warm Begin button: the default model's screen. The result stands, now confirmed by Dan.
 - **Reversible:** Yes.
