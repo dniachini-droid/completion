@@ -205,8 +205,8 @@ Dan's own vocabulary is the rubric: "everything was related"; "imposing" evil "w
 28. **Conversations, not monologues**: at least a third of fragments have two voices disagreeing on the record.
 29. **Choose 8–12 recurring objects at the outset**; each passes through at least three hands across ages.
 30. **Reveal the antagonist by staircase**: effect (month 1), presence (month 2), face (mid-point), reason (last third), nature (end). Plant the nature hardest.
-31. **Give the antagonist a record in his own hand, early, unrecognised as his**, read sympathetically before the player knows whose it is.
-32. **Make the antagonist right about the problem and wrong about the cure**, so the fixed ending is the protagonist's alternative answer to a correctly posed question.
+31. **Plant the antagonist's depth in the records, not in a speech**: when his reason arrives it should re-read something the player has already read and liked.
+32. **Make the antagonist right about something.** One who is only wrong is a monster; one who is partly right is a rival thesis, and the ending has to answer him.
 33. **Consider a human accomplice with a comprehensible grief** among the lives: the most dangerous record-writer is one Dan half-agrees with.
 
 **Tone and the player**

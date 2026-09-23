@@ -25,17 +25,17 @@ Dark, cosmic, patient. The register of *Eternal Darkness* and *The Three-Body Pr
 
 - **What one age leaves for the next.** Every person in the records did something unfinished that a later person picked up without knowing. You are reading all of them.
 - **Reading as an act.** What it means to read people who cannot answer. The story takes that seriously.
-- **Keeping.** A place built to keep something. A figure who has been keeping it for longer than there have been people. What keeping is for, and what it costs.
-- **The way down.** The deeper doors of the place want something from you that has nothing to do with cleverness.
+- **Patience.** A place that has outlasted every age that found it, and a figure who has outlasted them with it. What that patience is for, and what it costs.
+- **The doors.** The deeper doors of the place want something from you that has nothing to do with cleverness.
 
 ## The shape of the story
 
 You know roughly what's coming; the details are the surprise (player model). Roughly:
 
 1. **The place answers.** You learn your first marks from a wall that teaches them, cut your first word, and the hall lights up.
-2. **Everyone met him.** As you read further, the same figure appears in every age's records, under a different name, and he has never once tried to stop anyone reading.
-3. **A school with a warning.** The people who made the place left lessons, a rule, and an argument they had with each other.
-4. **What he wants.** The figure's own story, and why he has been teaching.
+2. **Everyone met him.** As you read further, the same figure appears in every age's records, under a different name.
+3. **What the makers left.** Lessons in a hand older than anything, a rule, and the two sides of a disagreement.
+4. **What he wants.** Why the figure has been teaching, and what it costs to find out.
 5. **The bottom.** A door that needs the most from you (it fills at once on a great day, or slowly with steady weeks), and what is behind it.
 
 The story is finished when it is finished. It has a fixed ending, decided before any clue was planted, and every thread connects to it.
@@ -56,7 +56,7 @@ The story is finished when it is finished. It has a fixed ending, decided before
 
 - **Five or so lives across the ages**, each with its own kind of record: a tally-song, reports to an overseer, a copyist's margins, a blasting log, field notes. Each names the place and the figure differently. Each holds a piece the others lacked.
 - **A chorus of single witnesses**: a daughter's tally-stick, a foreman's pay tablet, a well-keeper's bucket. One fragment each.
-- **The figure**, present in every age. Tall. Does not eat. Very good at waiting. Courteous. Answers questions; doesn't volunteer.
+- **The figure**, present in every age. Tall. Very good at waiting. Courteous. Answers questions; doesn't volunteer.
 - **The makers**, who left lessons in a hand older than anything.
 - **A family of objects** that passes from hand to hand across the ages and ends in yours: a clay lamp, a measuring cord, a copied book, a cutting rod.
 - **All of them are finished.** Nothing in the records is happening now. Nobody waits on you. Progress is excavation: you find, read, learn, understand. You never rescue anyone, and nothing gets worse while you're away.
