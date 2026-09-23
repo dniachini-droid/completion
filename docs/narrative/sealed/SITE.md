@@ -44,7 +44,7 @@ Human intrusions come in from four sides at three depths: the salt crack (high, 
 ## Gate rules (D-013, made concrete)
 
 - **Lintels** (word-doors): a doorway-shape with marks beside a rod-shaped blank and only stone beneath. Need a word; they show which by the signs already cut.
-- **Counts** (counting locks): a tally that fills; on niches, sealed records, small chambers, falls that a lock holds shut. Need a Key. In fiction they count returns from the surface. These are how up to ~250 sealed things a year are supplied: each holds a record, an object or a chorus fragment, authored against `LIVES.md` and `CHARACTERS.md`.
+- **Counts** (counting locks): a tally that fills; on niches, sealed records, small chambers, side doors, falls that a lock holds shut. Need a Key. In fiction they count returns from the surface, and they know their maker: he passes any lock in his domain; only the four counting doors do not know him. These are how up to ~250 sealed things a year are supplied: each holds a record, an object or a chorus fragment, authored against `LIVES.md` and `CHARACTERS.md`.
 - **Great doors** (both): the Lower Door in the Lamp Hall (a shortcut descent; month 2), and the region boundaries from 3 down.
 - **Counting doors** (passage; the safeguard): exactly four. Three at the foot of the Builders' halls (months 6–7) and the last door before the Seed (months 10–11). They know their bearer, open freely to anyone going up, and are shut to a new bearer whatever anyone before did. **The Custodian cannot pass them and has not been below them since his people ended.**
 - **Falls and blocks**: need MOVE-STONE or HOLD (a word).
