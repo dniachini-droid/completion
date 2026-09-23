@@ -55,7 +55,7 @@ _Written 2026-09-23._
 | C-36 | The stone of the rail has taken the shape of a long four-fingered hand | wk 7 | Water wear | Him; where he rested a hand for an age, the stone took it | Month 6 (the face) |
 | C-37 | The boy's wax tablet; three marks re-cut beside it in another hand | wk 7 | A child's copying | How the marks left the hill (→ the Copyist); the Custodian *correcting* | Month 3 (C1) |
 | C-38 | S6: "It does not eat and it does not sleep and it counts" | wk 7 | An owl | The Custodian's three facts; "counts" = the readers, the returns, the names | Weeks 8, 13; month 12 |
-| C-39 | L9: the fives converted to eights, with her two guesses | wk 8 | The salt-cutter learned to count in eights (her first guess) | The hand that cut his words isn't his: the records are transcriptions | Month 4 (R5) |
+| C-39 | L9: the fives converted to eights, with her two guesses; in the Cut, the row of small strokes beside the hand-sign (S1, S3: a hand-sign with five strokes beside it, seen at ARR2 8.B before L9) and two hand-signs with a bar and two strokes beside them (S8) | wk 8 | The salt-cutter learned to count in eights (her first guess) | The hand that cut his words isn't his: the records are transcriptions | Month 4 (R5) |
 | C-39a | The Water at the Stair's foot is perfectly still | wk 8 | A cave lake | The works' channel, still since the Surveyor's great cut: the first anomaly, still happening | Week 8 (V4); month 8 (LOUD) |
 | C-39b | The Engineer's watch, stopped at 4.10 | wk 11 | A dropped watch | Stopped at the blast, the same hour the well stopped | Week 12 (E3, X-well-keeper) |
 | C-40 | V4 in a *different* hand from V1–V3 | wk 8 | A second scribe | The Surveyor's own hand; only two of his are | Month 8–9 (V7) |
@@ -68,8 +68,9 @@ _Written 2026-09-23._
 | C-47 | C1: "the Guest was an angel who closed the hill to keep men out" | wk 11 | Quaint | Half right: he did close a door, to keep the *work* whole | Week 13; month 8–9 |
 | C-48 | X-powder-man: "Tell him he can keep the book" | wk 11 | A joke | The book stayed; he kept it; he keeps everything | Week 11 (L12) |
 | C-49 | E3: the well, the compasses, the sound | wk 12 | Folklore | The anomaly; the Listeners' effect | Month 8 |
-| C-50 | L13: the table; "the memoir, I think" | wk 12 | A note | The pairing is real; the memoir exists | Month 5 (B1); month 8 |
+| C-50 | L13: the table; "the memoir, I think" (the memoir's first naming: she has read Builder walls by Day 35) | wk 12 | A note | The pairing is real; the memoir exists | Month 5 (B1); month 8 |
 | C-51 | V6: "I shut the door. He long-slept not when I shut it." | wk 13 | A confession | His one act of stopping a *carrying*; the darkest room; consistent with his thesis | Month 8–9 (V7) |
+| C-51a | Stone chips on the near side of the shut door's foot (ARR2 12.C) | wk 12 | Rubble from the cutting | The door was cut shut from outside, by the hand whose mark is on it; the one physical clue for "from this side", handed over once and never stated | Month 6 (SHUT); month 8–9 (V7) |
 | C-52 | L14: "I asked him about the second reader. He answered. I'm not writing it down tonight." | wk 13 | She was frightened | She was told the truth and it was worse than fear: he *records* his own worst act | Month 8–9 |
 
 | C-53 | The memoir carries no closing line, unlike every transcription | Builders' quarters, from wk 17 (legible from month 5) | A different convention for the makers' texts | It was not told to him; it is his own | Month 7–8 (R7) |

@@ -43,31 +43,31 @@ _Written 2026-09-23._
 | 7 | 4 | The Surveyor's gallery, a cache | Twelve bronze coins and one clay token, in a leather bag gone hard | *Once, the second gave me [a bag]: the twelve's and the child's, thirteen days. The door was shut; the day came not. I kept it.* (at wk 7: *Once, [ ] gave me [a bag]: [ ] person [ ], child one; [ ] [ ]. [ ] door once, [ ] [ ] [ ]. I [ ] it.*) | X-foreman; the kind line |
 | 7 | 5 | The Lower Door | With OPEN-WAY and a Key: the makers' straight descent | — | Region 2 |
 | 8 | 1 | The Water's niche | A lesson-tablet: a diamond beside an eye; strokes in a row beside a hand; an inverted wedge with a fork beside the sun; the number bundle | — | **SEE, COUNT, DAY, numbers** |
-| 8 | 2 | The Water's edge | (seen, not sealed: in the open at ARR2 8.A) The Surveyor's own-hand record, V4, cut low on the channel's lip | — | V4 |
+| 8 | 2 | The Water's edge | (seen, not sealed: in the open at ARR2 8.2) The Surveyor's own-hand record, V4, cut low on the channel's lip | — | V4 |
 | 8 | 3 | The Water, a submerged step | A bronze plumb-bob on a cord, hanging perfectly still in water that does not move | (wordless) | the Water; the anomaly |
-| 8 | 4 | The Water's far shore, a record-niche | E1's first sight (the Loud Room is below) | — | E1 |
+| 8 | 4 | The Water's far shore, a record-niche | E1's first sight, through the niche's open back: the book on the ledge below, unread (ARR2 8.C; the Loud Room is below; read wk 10 at the ledge) | — | E1 |
 | 8 | 5 | The Reading Room's outer niche | A Builder's lesson-tablet for a child: a flame, a question mark, and a small answer | (see X-binder-child, read wk 9) | X-binder-child |
 | 9 | 1 | The Reading Room's tablets | The tablet for NOT: a cross after a picture of a lamp lit, beside a picture of the same lamp dark | — | **NOT** |
 | 9 | 2 | The Reading Room | (seen, not sealed: in the open at ARR2 9.A) B0 | — | B0 |
 | 9 | 3 | The Reading Room, a bench | A reading-table's stylus, stone, for a hand with four long fingers | (wordless) | the Builders |
 | 9 | 4 | The Reading Room, a floor-stone | The lintel's rule copied small: KEEP VOICE NOT ("[ ] [ ] not" at wk 9; VOICE wk 11) | — | C-42 |
-| 9 | 5 | The Loud Room's approach | A powder-tin, the company's name on it, empty | (wordless) | E |
-| 10 | 1 | The Loud Room's approach, a niche | A lesson-tablet: a drop with a rising bar beside a lifted block; three short bars beside water | — | **MOVE, WATER** |
-| 10 | 2 | The Loud Room's door | With OPEN-WAY and a Key | — | E1–E3 |
+| 9 | 5 | Below the Water, the approach (the Loud Room's) | A powder-tin, the company's name on it, empty | (wordless) | E |
+| 10 | 1 | Below the Water, the approach's niche | A lesson-tablet: a drop with a rising bar beside a lifted block; three short bars beside water | — | **MOVE, WATER** |
+| 10 | 2 | The door below the Water (the Loud Room's door) | With OPEN-WAY and a Key | — | E1–E3 |
 | 10 | 3 | The Surveyor's gallery, deep end | V5 | — | V5 |
-| 10 | 4 | The Loud Room, the ledge | The Engineer's watch, stopped at 4.10 | (wordless; the app gives the time) | C-39b |
-| 10 | 5 | The Loud Room, a shelf | A tin plate with a knife | (wordless; the app: "he took his meals down") | E3 |
-| 11 | 1 | The Loud Room's cupboard | A lesson-tablet: a fork open sideways beside a mouth; a bar over a bar beside a sleeper | — | **VOICE, SLEEP** |
-| 11 | 2 | The Loud Room, the ledge | The Copyist's book, open (C1) | — | C1 |
-| 11 | 3 | The Loud Room, the book's other margins | Two more margins, gilded, their counts not yet fillable (seen) | — | C2 (wk 16), C3 (wk 17) |
-| 11 | 4 | The Loud Room, a crack | The powder-man's note and a coiled fuse | (paper) | X-powder-man |
-| 11 | 5 | The Loud Room, floor | (seen wk 12, not sealed: on the floor at ARR2 12.A) The well-keeper's bucket, the lid's inside pencilled | (object) | X-well-keeper |
+| 10 | 4 | The blast room (the Loud Room), the ledge | The Engineer's watch, stopped at 4.10 | (wordless; the app gives the time) | C-39b |
+| 10 | 5 | The blast room, a shelf | A tin plate with a knife | (wordless; the app: "a tin plate with a knife on it") | E3 |
+| 11 | 1 | The blast room's cupboard | A lesson-tablet: a fork open sideways beside a mouth; a bar over a bar beside a sleeper | — | **VOICE, SLEEP** |
+| 11 | 2 | The blast room, the ledge | The Copyist's book, open (C1) | — | C1 |
+| 11 | 3 | The blast room, the book's other margins | Two more margins, gilded, their counts not yet fillable (seen) | — | C2 (wk 16), C3 (wk 17) |
+| 11 | 4 | The blast room, a crack | The powder-man's note and a coiled fuse | (paper) | X-powder-man |
+| 11 | 5 | The blast room, floor | (seen wk 12, not sealed: on the floor at ARR2 12.A) The well-keeper's bucket, the lid's inside pencilled | (object) | X-well-keeper |
 | 12 | 1 | The Water's far shore, a niche | A lesson-tablet: a hook closing on a drop beside a hand taking bread; a hook beside a hand; a full cell beside a picture of a lamb standing | — | **TAKE, HAND, GOOD** |
-| 12 | 2 | The far shore | S8 | — | S8 |
-| 12 | 3 | The Loud Room, beside the book | K3 ("[ ] once" at wk 12; "Kept." from wk 22), the count on the ledge's lip | — | K3 |
-| 12 | 4 | The Loud Room, the company's box | An empty dispatch box with the company's name, water-stained | (wordless) | X-company (wk 15) |
-| 12 | 5 | The Surveyor's deep side gallery, the approach | The shut door seen close: his hand-mark; LONG-SLEEP NOT | (the app describes) | V6 (wk 13) |
-| 12 | 6 | The Loud Room, a shelf | A child's pocket compass, the needle stuck toward the hill | (wordless; the app: "it points at the hill") | E3 (the compasses) |
+| 12 | 2 | Salt Gallery, the last count on the wall (the tally's end; LIVES §1) | S8 | — | S8 |
+| 12 | 3 | The blast room, the ledge's lip beside the book | K3 ("[ ] once" at wk 12; "Kept." from wk 22), the count on the ledge's lip | — | K3 |
+| 12 | 4 | The blast room, the company's box | An empty dispatch box with the company's name, water-stained | (wordless) | X-company (wk 15) |
+| 12 | 5 | The Surveyor's deep side gallery, the approach | The shut door seen close: his hand-mark; LONG-SLEEP NOT; stone chips on the near side of its foot (C-51a) | (the app describes; ARR2 12.C) | V6 (wk 13) |
+| 12 | 6 | The blast room, a shelf | A child's pocket compass, the needle stuck toward the hill | (wordless; the app: "it points at the hill") | E3 (the compasses) |
 | 13 | 1 | The side gallery, a niche | A lesson-tablet: three stacked bars beside a picture of a mound; a divided cell beside a picture of a cut | — | **LONG-SLEEP, MARK** |
 | 13 | 2 | The side gallery | V6 on the door | — | V6 |
 | 13 | 3 | The side gallery, a recess | The Surveyor's wax-tablet ledger of days: nine strokes, then four more in a different hand (the boy's) | *Told: the child counted the days; he [ ] not.* (VOICE: CHILD COUNT DAY, ONE AGAIN NOT; AGAIN wk 20) | V5, V7 (thirteen days) |
@@ -79,7 +79,7 @@ _Written 2026-09-23._
 - A niche's told line is in his hand with his hand-mark, always; the app never says "he wrote this". Dan learns whose hand it is in week 4.
 - Objects from pre-paper ages carry no writing of their own (rule 4: the Site never lies).
 - Nothing in a niche is required for the story; nothing in the story is *only* in a niche.
-- App names by week (`SITE.md`, region 3): the Hold is "the shelf room" until week 22 and "the Hold" after; the memorial walls are "the walls of rings" until B6 reads in full with NAME. The *Where* column uses the app's name for the week; the sealed name follows in brackets at first use.
+- App names by week (`SITE.md`, regions 2–3): the Loud Room is "the door below the Water" until the blast scar is seen (ARR2 10.C) and "the blast room" after; the Hold is "the shelf room" until week 22 and "the Hold" after; the memorial walls are "the walls of rings" until B6 reads in full with NAME. The *Where* column uses the app's name for the week; the sealed name follows in brackets at first use.
 
 ## Weeks 14–26 (months 4–6)
 
