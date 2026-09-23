@@ -12,7 +12,7 @@ A descent. Long high halls rounded at the edges like the inside of a shell, and 
 
 **The Mouth.** A capped ventilation shaft from the railway age, its padlock on the ground, cut clean. Two notices on the cap, one old and one new. Eleven metres of ladder. Then a dry passage cut true, and not by the railway.
 
-**The Lamp Hall.** A long high hall. On a ledge, a clay lamp, lit. It has been lit since before you came. On the wall at eye height, a lesson someone left: a carved lamp beside a mark, a carved flame beside a mark, a word, and a line you can't read yet. Rings cut on every surface. On the side wall, a lintel with two marks beside a rod-shaped blank, and only stone beneath it. At the far end, a great door with a count that has not filled and a blank that wants a word. **Camp is here**, by the lamp.
+**The Lamp Hall.** A long high hall. On a ledge, a clay lamp, lit. It has been lit since before you came. On the wall at eye height, a short wall that teaches: a carved lamp beside a mark, a carved flame beside a mark, a word, and a line you can't read yet. Rings cut on every surface. On the side wall, a lintel with two marks beside a rod-shaped blank, and only stone beneath it. At the far end, a great door with a count that has not filled and a blank that wants a word. **Camp is here**, by the lamp.
 
 **The Salt Gallery.** A gallery where the hill's rock salt meets the cut stone. The salt face is split from the top to about knee height, and the split has been sealed from the *other* side with stones and salt. Along the wall, a long tally in one hand, and above it a single ring on its own. A salt-pick in a niche.
 
