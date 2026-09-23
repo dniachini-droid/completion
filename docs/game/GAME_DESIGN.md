@@ -12,7 +12,7 @@ _Status: **agreed with Dan** 2026-09-23 (D-010–D-013)._
 - Progression → `PROGRESSION.md`
 - Economy → `ECONOMY.md`
 - Quests and anti-farming → `QUEST_SYSTEM.md`
-- Productivity tools inside the world (timer, lists, plotting, calendar, runs, Chronicle) → `TOOLS.md` (D-016, draft)
+- Productivity tools inside the world (timer, lists, plotting, calendar, the trail, Chronicle) → `TOOLS.md` (D-020, D-023, agreed)
 
 ## What the first playable needs (draft)
 Thin, complete and beautiful (D-004, rule 13). Enough to test: *does wanting to go further in make Dan start real things?*
@@ -27,13 +27,13 @@ Thin, complete and beautiful (D-004, rule 13). Enough to test: *does wanting to 
 - The first few signs, decoding, and **one word** that opens something.
 - A few records from **two** lives that connect, planted with known truths (D-004, rule 6).
 - Absence handling ("where you were").
-- From `TOOLS.md`: the delve (timer in the world), the satchel (lists), daily runs with lamps and a first relic, a simple Chronicle page.
+- From `TOOLS.md`: the delve (timer in the world, with a 10-minute first delve and a self-ending break), the satchel (lists), the trail with its first relic, and the Chronicle as the week close.
 
 **The first word arrives in week 2–3** so the test reaches the best part (D-013).
 
 **The test (D-013):**
-- **Length:** 3–4 weeks of normal use.
+- **Length:** 5–6 weeks of normal use (D-023; was 3–4). Don't judge on week 4 alone: the novelty of game features usually dips around then.
 - **What the app notes by itself** (no admin for Dan): which jobs he started and when, whether avoided jobs got done more often, how often "I can't start" was used and whether a job followed, and whether he came back after low days or gaps.
 - **Then a short chat**: did wanting to go further in make you start real things? What felt like a chore? That answers rule 14 and decides what to build next.
 
-**Out (for later):** plotting and waypoints, the calendar link (after the Phase 7 check), weekly runs, deep pushes to far places, re-reading at scale, great gates beyond one, more lives, audio, AI-written anything, notifications (test separately).
+**Out (for later):** plotting and waypoints, the calendar link (after the Phase 7 check), company at work during a delve, satchel groups, deep pushes to far places, re-reading at scale, great gates beyond one, more lives, audio, AI-written anything, notifications (test separately).

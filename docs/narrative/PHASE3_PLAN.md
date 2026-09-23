@@ -70,3 +70,20 @@ Record the critique and the fixes in `sealed/REVIEW.md`.
 - No code, no tech stack, no art direction (Phase 4), no product name. Visual notes only as flavour.
 - **Keep going.** If you are about to end a turn before stage 5 is done, first schedule a check-in to yourself with `send_later` (about 30–60 min) that says to continue this plan. A backup hourly Routine named **"Phase 3 overnight keep-alive"** also wakes the session. When stage 5 is done, find that Routine with `list_triggers` and delete it, and cancel any pending check-ins.
 - If something blocks you (a tool is missing, a decision can't be made provisionally), record it in `CURRENT_STATE.md` and carry on with whatever is not blocked.
+
+## Minimum run time (added 2026-09-23 15:28 UTC via the keep-alive Routine, from Dan's review session)
+
+Dan wants 6–8 hours of real depth, not a fast first draft. The run started 14:26 UTC. **Do not treat the work as finished, and do not delete the keep-alive Routine, before 21:30 UTC** (check with `date -u`). Hard stop around 23:00 UTC in any case.
+
+If stages 0–5 are done before 21:30 UTC, keep deepening the chosen story in roughly this order, committing and pushing after each item and refreshing the morning briefing at the end:
+1. ~~A second, independent critique by a fresh subagent that reads only the sealed docs (plot holes, contradictions, clichés, threads that go nowhere, reveals that don't pay off, weak antagonist motivation). Fix everything it finds.~~ Done (third quality pass; `sealed/REVIEW.md` §8).
+2. ~~The revelation map at beat level for months 4–6, not just arc level.~~ Done, and extended to all 52 weeks.
+3. ~~The secondary linked lives in more depth: desires, secrets, how each one's thread turns the central story.~~ Done (`sealed/CHARACTERS.md` §10).
+4. ~~The script: the full sign inventory, the combination rules, each word's effect and place in the truth; re-reading moments planned for the first 6 months.~~ Done (`sealed/SCRIPT.md`).
+5. ~~More sample record fragments in the chosen voice (sealed), including one for each key reveal in the first 3 months.~~ Done: every record for the first quarter, and the told lines, are written as sign strings with renderings (`sealed/LIVES.md` §11–13).
+6. ~~A "fair play" audit: for each major reveal, list the earlier clues that let a sharp player half-guess it; add clues where a reveal would feel unearned.~~ Done twice: against the map (`sealed/FAIR_PLAY.md`) and again against the visit-by-visit text; three clues added and every leak closed.
+7. ~~A final consistency pass across every sealed file.~~ Done: two fresh passes over the visit-by-visit files (3 blockers, 25 should-fixes, 39 nits, all applied), then a verification pass over the fixes.
+
+Status at 19:30 UTC: all seven items done. After them, four fresh critics read the year as Dan would play it (weeks 1–5, 6–13, 14–26, 27–52) and each region's visit-by-visit file was rewritten to that reading; a final verification pass closes the run.
+
+Only when it is past 21:30 UTC and everything above is done or clearly past the point of useful returns: delete the Routine (`list_triggers` then `delete_trigger`), cancel pending `send_later` check-ins, and reply "done" with a short spoiler-free summary.

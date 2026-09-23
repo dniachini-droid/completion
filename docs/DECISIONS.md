@@ -152,7 +152,56 @@
 - **Consequences:** Dan's control over the story is at the level of the pitch, the tone and morning questions. The sealed folder must stay internally consistent, because Dan won't catch contradictions in it. Each Phase 3 run includes an adversarial self-review for that reason.
 - **Reversible:** Yes. Dan can open the sealed folder at any time; that can't be undone for him.
 
-## D-016 — Productivity tools, built into the world
+## D-016 — Provisional story pitch: *The Long Answer* (Pitch 1)
+- **Date:** 2026-09-23 (overnight run; **awaiting Dan's confirmation**)
+- **Context:** Stage 2 of `docs/narrative/PHASE3_PLAN.md`. Three pitches were written (`docs/narrative/PITCHES.md`): 1 *The Long Answer* (a quiet cut-stone place under our own world, built to finish something over ages; a figure present in every age), 2 *The Unmade* (a fallen thing taken apart into a language inside a mountain), 3 *The Last Run* (an engine under the world that restarts the ages). Dan was asleep; D-015 allows a provisional choice.
+- **Decision:** Develop Pitch 1 fully in `docs/narrative/sealed/`. The other two stay short.
+- **Alternatives:** Pitches 2 and 3; developing two pitches thinly.
+- **Rationale:** Pitch 1 is the one whose ending is latent in its premise (NARRATIVE_RULES 10), whose lives are pieces of one thing rather than episodes, whose central figure can be revealed by staircase over a year, and whose fiction never makes Dan's progress feel like damage (P8, P14). Full reasons in `PITCHES.md`.
+- **Consequences:** Sealed docs are written against Pitch 1. Working in-world names (the place "the Quiet", the script "the Cut") are provisional and listed as morning questions. If Dan chooses another pitch, the sealed work is kept on the branch and a later session develops the chosen one.
+- **Reversible:** Yes, until clues are planted in a playable.
+
+## D-017 — Overnight taste calls for the story (provisional; Dan confirms or redirects)
+- **Date:** 2026-09-23 (overnight run, stages 3–5; D-015 allows provisional choices)
+- **Context:** Developing Pitch 1 fully required several choices that are matters of taste. Each was made with a reason and is listed as a morning question in `docs/CURRENT_STATE.md`.
+- **Decision (all provisional):**
+  1. **Our own world, ages unnamed.** The records are set in our past, but no country, century or date is ever named; objects, trades and units carry the era. Alternative: a secondary world with invented ages (more work, less resonance; rejected for now).
+  2. **One fixed ending, no branching.** The story ends one way (NARRATIVE_RULES 10). Small in-game choices (routes, which record, which words to try) never change the ending.
+  3. **The central figure is a single figure present in every age**, revealed by staircase over the year (effect → presence → face → reason → nature), with one late speech and a reason a sane person could hold.
+  4. **Five major lives plus a chorus of single witnesses**, each life with its own document form and voice rules; the first playable uses two lives in full.
+  5. **A previous reader's partial translations bootstrap week 1.** The most recent reader left an English notebook; her partial (and sometimes wrong) translations are shown in her hand, and Dan reads past them as he learns. Alternative: pure sign-by-sign decoding from nothing (the research shows it stalls in the first hour).
+  6. **Working names:** the place is *the Quiet*, the script *the Cut*, a sign *a mark*, a power *a word*. Alternatives are listed in `narrative/GAME_BIBLE.md`.
+  7. **The script:** about 50 concept-signs by the end of year 1, sharing visual elements; nine words in twelve months; the first in week 2–3 (D-013); a fixed "cutting" ritual for every word.
+- **Alternatives:** see each item.
+- **Rationale:** each choice follows a binding lesson in `narrative/RESEARCH.md` or a Phase 2 decision; none is load-bearing for the truth, so any can be reversed without a retcon.
+- **Consequences:** open docs (`GAME_BIBLE.md`, `TERMINOLOGY.md`, `LOCATIONS.md`) use the working names; sealed docs are written against these choices.
+- **Reversible:** Yes, before the first playable is built. Renaming is free; changing item 1 or 5 would need a sealed revision pass.
+
+## D-018 — Story review outcomes (provisional; overnight run, stage 4)
+- **Date:** 2026-09-23
+- **Context:** The sealed story was put through an adversarial self-review (two independent passes plus Claude's own; `narrative/sealed/REVIEW.md`). Several findings needed decisions rather than fixes.
+- **Decision (all provisional, spoiler-free wording):**
+  1. **Records are authored as sign strings.** Every record in the script is a short string of learnable marks (plus small carved pictures) with a terse rendering; richer prose exists only where the fiction allows it (a recent reader's paper notebook) and as the author's reference. The app never "secretly translates" beyond the marks Dan holds.
+  2. **Words are cut only where the place names them.** A power word can only be cut into a blank that shows its marks; small "open cells" on the walls accept any two-mark experiment and answer with one line and no progress. This keeps the authored order without the place ever refusing a valid word.
+  3. **The ending is fixed.** Whatever else Dan tries at the end, the place answers honestly and the ending does not change.
+  4. **Nothing waits on Dan, in the letter as well as the spirit.** Locks never shut for good; the fiction never makes a character wait for the player; no record gives real-life advice.
+  5. **Every Key opens something already seen.** Each learnable mark is delivered inside a sealed thing Dan has already seen, never as a bare reward.
+- **Alternatives:** free-text or fully rendered translations (rejected: breaks the "place never lies" rule); a branching ending (rejected: NARRATIVE_RULES 10); locks that penalise absence (rejected: P7, P8).
+- **Rationale:** the review showed each of these as a place where the story's logic and the game's rules could come apart; the decisions close them.
+- **Consequences:** `narrative/sealed/` revised accordingly; `GAME_BIBLE.md` and `LOCATIONS.md` aligned. Later narrative sessions sign-author every record before it is planted.
+- **Reversible:** Yes, before the first playable is built.
+
+## D-019 — The story's largest gate never waits on one real-life milestone alone
+
+- **Date:** 2026-09-23
+- **Context:** The sealed revelation map had the story's last great door open only on the largest Key (a great real-life milestone). A fresh-eyes review of the ending pointed out that a real project's milestone can be months away, so the story could stall in its last act, against the rule that nothing waits on Dan (P7, P8, D-018 item 4).
+- **Decision (provisional):** the last door's count can be filled two ways: a great milestone fills it at once, and ordinary weeks of play fill it slowly. The milestone accelerates the ending and never gates it. In the same review the ending was spread over more visits (the last four beats no longer share one week), the figure's one speech was shortened and softened, and the case where Dan does nothing at the story's last gate is now written (the place stays as it is; no nudge).
+- **Alternatives:** keep the milestone-only gate (rejected: stalls); drop the milestone from the gate (rejected: the largest Key should still open the largest door).
+- **Rationale:** the ending must be reachable by steady play and made sooner by a great day, never the reverse.
+- **Consequences:** `narrative/sealed/` revised (site, truth, map, visit tables, pacing). The exact counts belong to the Key economy in Phase 6.
+- **Reversible:** Yes, before the first playable is built.
+
+## D-020 — Productivity tools, built into the world
 - **Date:** 2026-09-23
 - **Context:** After Phase 2 closed, Dan asked for "the functionality of some of the best productivity apps", integrated into the game, "not just plonked into the app". He chose: the timer inside the story, the Chronicle, a calendar link, **lists**, **a scheduler** "if that won't be crazy to do", and **streaks** that feed the story or the collection. Lists, planning and streaks were limited or excluded in Phase 1 (P6, P7, anti-features) because of pile-up and punitive streaks, so this reverses part of that.
 - **Decision:** Add `game/TOOLS.md`:
@@ -168,7 +217,7 @@
 - **Consequences:** More to build. The first playable adds the delve, the satchel, daily runs and a simple Chronicle; plotting and the calendar come later. Phase 3 names the delve, satchel, lamps, relics and Chronicle in the chosen world, a small addition that doesn't change the story work.
 - **Reversible:** Yes. Any tool that creates pressure in use is cut or softened.
 
-## D-017 — App name brought forward into Phase 3
+## D-021 — App name brought forward into Phase 3
 - **Date:** 2026-09-23
 - **Context:** Product naming was deferred until later in the plan. Dan asked for an app name now.
 - **Decision:** Deliberate deviation from the sequence. The overnight Phase 3 run proposes 5–8 candidate names drawn from the chosen world in `narrative/NAMES.md`, each checked for clashes with existing products. No name may hint at sealed truth. Dan chooses **whenever he's ready, with no rush**, at the latest in Phase 5. Dan: "We can name it later if appropriate."
@@ -177,7 +226,7 @@
 - **Consequences:** Once chosen, the GitHub repo can be renamed (housekeeping item in `CURRENT_STATE.md`).
 - **Reversible:** Yes, until the name is used publicly or in code.
 
-## D-018 — Phase 4 gets its own long, visual run
+## D-022 — Phase 4 gets its own long, visual run
 - **Date:** 2026-09-23
 - **Context:** Dan wants the app to "look stunning" and asked whether a long Fable session would help.
 - **Decision:** Phase 4 starts with a short taste session with Dan (20–30 min, reacting to visual references), after the Phase 3 world is chosen. Then comes a long, unattended Fable run (about 6–8 h, set up like the Phase 3 run: keep-alive, minimum run time). It produces **three genuinely distinct visual directions as real, viewable screens**: the morning screen, the timer (delve), the map, reading a record, day complete, camp. Each goes through repeated rounds of critique and revision. Dan picks or blends one. The first playable later gets a dedicated visual polish pass.
@@ -185,3 +234,32 @@
 - **Rationale:** Beauty is a stated core want (player model). Long runs pay off most when they can iterate on real screens. Taste has to come from Dan first (rule 20).
 - **Consequences:** When Phase 3 closes, Claude sets up the taste session, then the long run.
 - **Reversible:** Yes.
+
+## D-023 — Tools revised with the overnight research
+- **Date:** 2026-09-24
+- **Context:** `game/TOOLS_RESEARCH.md` stress-tested the tools draft (D-020) against productivity apps and ADHD research and proposed ten changes. Dan approved all ten.
+- **Decision:** `game/TOOLS.md` revised:
+  1. During the day only main jobs move the world; the delve is how you do them. Satchel items move the expedition only once accepted as a main job, or after day complete. P16 gains a third test: no tool lets an easy thing stand in for the avoided thing.
+  2. Streaks become a **trail**: each day complete adds a marker; relics come from markers in total, not days in a row; after a gap the trail branches instead of restarting. (Streaks no longer use lamps, because in the chosen world a lamp means a word woke something.)
+  3. No weekly runs.
+  4. The camp break ends itself, with "next delve" as the obvious button.
+  5. The Chronicle is the week close; no "best run"; a thin week gets a different kind of page, not a shorter one.
+  6. A deep delve allows gaps of up to about 20 minutes.
+  7. The satchel shows a handful of items; *someday* has no count; groups later; an item swapped away twice rests for a week.
+  8. "10 minutes?" as the first delve after "I can't start".
+  9. **The playable test runs 5–6 weeks, not 3–4** (amends D-013), and isn't judged on week 4 alone.
+  10. Plotting (later): "move it?" only when Dan opens the app; only the next 7 days of waypoints show.
+  Also noted for later: company at work during a delve (weak evidence, worth a try).
+- **Alternatives:** keep the draft as written; keep days-in-a-row streaks as the main display (Dan chose totals).
+- **Rationale:** the research (see `TOOLS_RESEARCH.md`): visibly broken streaks lower effort most for people who blame themselves; easy lists replace avoided jobs; the break is where the phone wins; novelty dips around week 4.
+- **Consequences:** `TOOLS.md`, `GAME_DESIGN.md`, `CORE_LOOPS.md`, `COLLECTIONS.md`, `DESIGN_PRINCIPLES.md`, `OPEN_QUESTIONS.md` updated. The first playable needs about six weeks of content; the sealed year already has it, and the sealed clue ledger is flagged for completion of week 6 before the build.
+- **Reversible:** Yes. The trail is tested in use (`OPEN_QUESTIONS.md`).
+
+## D-024 — Dan confirms the story and approves the game bible
+- **Date:** 2026-09-24
+- **Context:** The morning briefing's seven questions (`CURRENT_STATE.md`, 2026-09-23). Dan: "I like everything you wrote so let's go with that."
+- **Decision:** All provisional story decisions are confirmed: *The Long Answer* (D-016); our own world with ages never named, the notebook left by the last reader, the working names *the Quiet* and *the Cut* (D-017); the review outcomes (D-018); the last door filled by a great day or by steady weeks (D-019); the fiction as dark as it needs, the game's voice always kind. `narrative/GAME_BIBLE.md` is approved.
+- **Alternatives:** Pitches 2 and 3 (kept, short, in `PITCHES.md`).
+- **Rationale:** Dan's answer.
+- **Consequences:** The Phase 3 exit criteria for the pitch and the bible are met. Renaming stays free until the first playable.
+- **Reversible:** Yes, before clues are planted in a playable.
