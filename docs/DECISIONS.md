@@ -54,3 +54,38 @@
 - **Rationale:** Removes admin from Dan (anti productivity theatre) and keeps continuity in the repo rather than in chat.
 - **Consequences:** `main` is the source of truth between sessions. Feature branches are short-lived.
 - **Reversible:** Yes.
+
+## D-007 — Product rules from Phase 1 discovery
+- **Date:** 2026-09-23
+- **Context:** Phase 1 rounds 1–2. Dan answered directly on a complete day, capacity, "I can't start", planning, absences and weekly targets.
+- **Decision:** Adopt `DESIGN_PRINCIPLES.md` (15 principles) and the reviewed `ANTI_FEATURES.md`. Key rules:
+  - About 3 main jobs make a normal day; outside + a real meal makes a low day.
+  - Capacity is pre-set from bedtime and changeable with one tap.
+  - "I can't start" = a story reveal, then one tiny physical step.
+  - Weekly targets that reset fresh; no backlog.
+  - 1 h of course work = done.
+  - The app suggests and Dan chooses; one-offs are typed as one line.
+  - Rest is acknowledged, not scored.
+  - The app rewards bedtime behaviour, not sleep outcomes.
+- **Alternatives:** More interview rounds, or leaving these open until Phase 2.
+- **Rationale:** Dan's answers were clear and consistent with the player model. The remaining unknowns (notifications, the exact number of jobs, tone on low days) are better tested in use (D-004, D-005).
+- **Consequences:** Phase 2 mechanics must fit these principles. The course's 4 h/day ambition is a ceiling, not a target.
+- **Reversible:** Yes. Change a principle through a new decision entry.
+- **Status:** Approved by Dan, 2026-09-23.
+
+## D-008 — The story gets dedicated, deep, research-led sessions
+- **Date:** 2026-09-23
+- **Context:** During Phase 1, Dan asked that when story work begins, it be treated as a major effort, not a side task: "a huge long session, even multiple sessions… deep research what makes the best story… like 5–7 hours overnight to really truly make something special."
+- **Decision:** When Phase 3 (narrative and world) starts, Claude plans one or more long dedicated sessions of 5–7 hours or more, which can run unattended overnight, for the story alone. They begin with deep research into what makes great stories and mysteries: craft, structure, foreshadowing, and the works Dan loves (OoT, Eternal Darkness, Three-Body, Stargate, Mass Effect, Arrival). Only then does Claude develop the story.
+- **Alternatives:** Treat narrative as a quick pass inside normal sessions.
+- **Rationale:** The story is Dan's retention engine: he stops playing when the story ends (player model). Its quality matters more than any other single piece of content.
+- **Consequences:** This covers depth of effort, not scope. D-004 still limits what must be written *before* the first playable (thematic core, the central mystery's truth, and the truth behind planted clues). That core gets this deep treatment, and later arcs get it too as they're developed. The research and the reasoning behind choices are recorded in `docs/narrative/`.
+- **Reversible:** Yes.
+
+## D-009 — Phase 1 closed; Phase 2 begins
+- **Date:** 2026-09-23
+- **Context:** Two interview rounds; all Phase 1 exit criteria met. Dan approved `DESIGN_PRINCIPLES.md` and `ANTI_FEATURES.md` and agreed to move on ("Yes. Yes.").
+- **Alternatives:** A third round on notifications, the number of main jobs, and tone on low days.
+- **Rationale:** These are better answered in use (D-004, D-005). They are listed under "Still to test in use" in `DESIGN_PRINCIPLES.md`.
+- **Consequences:** Phase 2 (Game Design) starts. Mechanics must fit the approved principles.
+- **Reversible:** Discovery can be reopened if the principles prove wrong in use.

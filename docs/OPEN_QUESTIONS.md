@@ -14,18 +14,18 @@
 
 ## Behaviour
 - What causes initiation vs avoidance for him, specifically?
-- What does "a good day" actually mean to him?
-- How does his capacity vary (injury, energy, mood), and can he reliably self-report it?
-- Is initiation the main problem, or are prioritisation / "what counts as enough" equally important? *(Round 4: initiation gated by mood/energy looks primary.)*
+- ~~What does "a good day" actually mean to him?~~ About 3 main jobs; low day = outside + a real meal (Phase 1; `DESIGN_PRINCIPLES.md` P2).
+- ~~How does his capacity vary, and can he self-report it?~~ He can tell from last night's bedtime; one-tap Low/Normal/High, pre-set from bedtime (P3). Whether bedtime reliably predicts capacity: test in use.
+- ~~Is initiation the main problem?~~ Yes: starting, not choosing (Phase 1 round 1). "Enough" is defined in P2.
 - ~~Why are admin, housework and Spanish avoided?~~ Boredom, easier alternatives (phone/YouTube), pile-up; Spanish lapsed with 20 prepaid lessons unused (round 5).
 - How can the app beat YouTube at the couch moment?
-- Can the game help with sleep (Dan's idea) without creating sleep anxiety? Reward behaviour, not outcome?
+- ~~Can the game help with sleep without creating sleep anxiety?~~ Reward winding down and bedtime, never hours slept (P11).
 - Is Pomodoro the natural unit of effort?
 
 ## Game design
 - Do HP/MP add real meaning, or are they convention?
 - If capabilities beat numbers for Dan, what is XP even for? How do daily repetitive inputs unlock *new verbs* often enough without inflation?
-- How many core daily actions (if any fixed number) define a complete day?
+- ~~How many core daily actions define a complete day?~~ About 3 main jobs (P2). Test in use.
 - Does collection/rarity motivate him in practice, and how to prevent farming?
 - Do bosses for large projects amplify or trivialise real achievement?
 - Could a composable ability system (Eternal Darkness-style runes) be the core progression, with real-world effort earning components?
@@ -38,7 +38,7 @@
 
 ## Productivity
 - What in his past tool history worked, and why did he stop using things?
-- Where should the boundary lie between life inside and outside the system?
+- ~~Where is the boundary between inside and outside the system?~~ Chosen hobbies may appear; rest acknowledged, never scored (P12).
 - Do reminders/notifications help at all? *(Dan unsure. Test in the prototype.)*
 - What should happen when he misses an expected time? *(Dan unsure. Test in the prototype.)*
 

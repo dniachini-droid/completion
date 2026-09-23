@@ -5,9 +5,9 @@ It is a genuine game, not a productivity app with an RPG skin. Provisional name:
 
 ## Current phase
 
-**PHASE 1 — PRODUCT DISCOVERY** (started 2026-09-23; Phase 0 closed with Dan's agreement, D-005)
+**PHASE 2 — GAME DESIGN** (started 2026-09-23; Phase 1 closed with Dan's agreement, D-009)
 
-Define the real-life behavioural problem before any game mechanics (MASTER_BRIEF §39–41). No application code. Keep it short (D-004): about 1–2 interview rounds, then write `docs/DESIGN_PRINCIPLES.md` and review `docs/ANTI_FEATURES.md`. Details and exit criteria: `docs/CURRENT_STATE.md`. Phase changes require Dan's explicit agreement.
+Design the core game on top of the approved `docs/DESIGN_PRINCIPLES.md` and `docs/ANTI_FEATURES.md` (MASTER_BRIEF §42–50). Develop 2–3 candidate core loops before converging. No application code; no setting or lore yet (Phase 3). Details and exit criteria: `docs/CURRENT_STATE.md`. Phase changes require Dan's explicit agreement.
 
 Phase order: 0 Player discovery → 1 Product discovery → 2 Game design → 3 Narrative/world → 4 Experience/art/UX → 5 Concept synthesis → 6 MVP → 7 Technical architecture → 8 Prototype → 9 First playable → 10 Personal alpha → 11 Iteration.
 
