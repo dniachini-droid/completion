@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-23 (Phase 3 opened; overnight story run launched)_
+_Last updated: 2026-09-23 (overnight story run complete; awaiting Dan's morning review)_
 
 ## Current phase
 
@@ -16,11 +16,35 @@ Create the story the game runs on. It must be unique and connected, and it must 
 
 ## Current session focus
 
-**Overnight run (2026-09-23 → 24), Claude Fable 5.1, unattended.** Work order: `docs/narrative/PHASE3_PLAN.md`. Research → three pitches → Claude picks one and develops it fully (sealed) → adversarial self-review → spoiler-free morning briefing below.
+**The overnight run (2026-09-23) is done: stages 0–5 of `docs/narrative/PHASE3_PLAN.md`.** Everything is on the branch `claude/phase-3-story-overnight`, not yet merged. **Next: Dan reads the briefing below and answers its questions.**
 
 ## Morning briefing for Dan
 
-_To be written by the overnight run at stage 5._
+Good morning. Here is what happened while you slept, with no answers given away.
+
+**Research first** (`narrative/RESEARCH.md`). What makes long mysteries work and why some go nowhere (planned endings vs improvised ones: *Babylon 5*, *Dark* and *Fullmetal Alchemist* against *Lost* and *The X-Files*); how decipherment games teach a script (*Heaven's Vault*, *Chants of Sennaar*, *Outer Wilds*, *Obra Dinn*, *Tunic*, and how real scripts were cracked); what exactly makes your favourites hit (*Eternal Darkness*, *Three-Body*, *Arrival*, *Mass Effect*, *Ocarina*, Stargate, Star Wars); and how to tell a story in fragments without anyone waiting on you. It ends in 41 binding lessons.
+
+**Three pitches** (`narrative/PITCHES.md`), genuinely different:
+1. **The Long Answer.** A quiet cut-stone place under our own world; a script that does things when read; people from different ages who each learned a few marks and each met the same tall figure; a work the makers began that takes longer than an age to finish.
+2. **The Unmade.** A mountain hollowed by a people who caught something that fell and could not kill it, so they wrote it down: the script *is* the thing, taken apart; anyone who learned a word could do what it was.
+3. **The Last Run.** An engine under the world that restarts the ages; the records are minds it kept from each run; the script is its control language; the one who decides when the next run begins has decided yours is nearly over.
+
+**Chosen: The Long Answer (D-016, provisional).** It is the pitch whose ending is built into its premise, whose lives are pieces of one thing rather than episodes, whose antagonist can be revealed slowly over a year and has a reason a sane person could hold, and whose fiction never makes your progress feel like damage. It is also the least like any single one of your favourites while touching all of them.
+
+**What now exists (sealed, in `narrative/sealed/`; you don't read it):** the full hidden truth and a fixed ending, written first; a capped question ladder with every mystery's answer, false explanations and clues; a twelve-month revelation map (ten model-changing reveals on the calendar, week-by-week beats for the first thirteen weeks); the complete script system (about 50 marks by year end, how they combine, nine words that are powers, the first in week 2–3, partial marks, and ten planned moments where an old record re-reads); the place's geography and every gate's needs; the antagonist in depth; five lives across the ages plus a chorus, with the first playable's two lives fully written; a clue ledger with the truth behind every clue the first playable plants; and an adversarial review (two independent passes plus mine) with the fixes applied. About 40,000 words in total.
+
+**What you can read now (open, spoiler-free):** `narrative/RESEARCH.md`, `narrative/PITCHES.md`, `narrative/GAME_BIBLE.md` (the world, tone, themes and the shape of the story as the box would tell it), `narrative/TERMINOLOGY.md`, `narrative/LOCATIONS.md` (the first region), and decisions D-016 to D-018.
+
+**Questions that need your taste** (answer in a line each; "fine" is a complete answer):
+1. **The pitch.** Confirm *The Long Answer*, or would you rather have *The Unmade* or *The Last Run* developed instead? (Read all three in `PITCHES.md` first.)
+2. **Our world, unnamed ages.** The records are set in our own past (bronze sickle, blasting powder, field notebook) with no country or century ever named. Or would you prefer an invented world with invented ages?
+3. **Working names.** The place is *the Quiet*, the script is *the Cut*, a learned sign is *a mark*, a power is *a word*. Keep, or pick from the alternatives in `GAME_BIBLE.md`?
+4. **A previous explorer's voice from day one.** Someone came down a few years before you and left a paper notebook and a lesson on a wall; her partial (sometimes wrong) translations are how you start reading in week 1, and you read past her as you learn. Happy with that, or would you rather start from nothing?
+5. **Darkness check.** The fiction includes a courteous figure who once did one terrible thing, and people who chose not to come back up. The app's voice to you stays warm throughout. Dark enough? Too dark?
+
+**Want a different pitch instead?** Say so, and a later session develops it fully; the work for Pitch 1 stays on the branch either way.
+
+**Then:** approve `GAME_BIBLE.md` (or ask for changes), and I'll open the pull request into `main`, merge it, and tell you the sentence to paste for the next session.
 
 ## Do NOT work on yet
 
@@ -31,14 +55,14 @@ _To be written by the overnight run at stage 5._
 
 ## Phase 3 exit criteria
 
-- [ ] Research into what makes long mysteries work, and what Dan's favourite works do (`narrative/RESEARCH.md`).
-- [ ] Three pitches written; one chosen and **confirmed by Dan** (`narrative/PITCHES.md`).
-- [ ] Hidden truth, ending, and revelation map to the end (sealed).
-- [ ] Script, signs and words system, including the first word in week 2–3 (sealed).
-- [ ] Linked lives defined; the first playable's two in full (sealed).
-- [ ] Every clue the first playable plants has a recorded truth (`sealed/CLUE_LEDGER.md`).
-- [ ] Adversarial review done; no contradictions (`sealed/REVIEW.md`).
-- [ ] Player-safe `GAME_BIBLE.md` written, and Dan has approved it.
+- [x] Research into what makes long mysteries work, and what Dan's favourite works do (`narrative/RESEARCH.md`).
+- [ ] Three pitches written; one chosen and **confirmed by Dan** (`narrative/PITCHES.md`). _Written and provisionally chosen; awaiting Dan._
+- [x] Hidden truth, ending, and revelation map to the end (sealed).
+- [x] Script, signs and words system, including the first word in week 2–3 (sealed).
+- [x] Linked lives defined; the first playable's two in full (sealed).
+- [x] Every clue the first playable plants has a recorded truth (`sealed/CLUE_LEDGER.md`).
+- [x] Adversarial review done; no contradictions (`sealed/REVIEW.md`). _Open items listed there are outside the first playable._
+- [ ] Player-safe `GAME_BIBLE.md` written, and Dan has approved it. _Written; awaiting approval._
 - [ ] Dan agrees to move to Phase 4 (Experience and art).
 
 ## Completed milestones
@@ -52,12 +76,13 @@ _To be written by the overnight run at stage 5._
 - 2026-09-23 — Phase 2: three candidate core loops compared; Dan chose a blend (D-010); low floor, high ceiling (D-011); no XP/levels/HP/MP/currencies (D-012).
 - 2026-09-23 — Phase 2 drafts reviewed and agreed (D-013).
 - 2026-09-23 — **Phase 2 complete** (D-014). Phase 3 opened; story answers sealed from Dan (D-015).
+- 2026-09-23 — **Overnight story run complete:** research, three pitches, one developed fully and reviewed (D-016 to D-018). Awaiting Dan's confirmation.
 
 ## Unresolved blockers
 
-- None.
+- None. (Dan's confirmation of the pitch and approval of the bible are the next inputs, not blockers.)
 - Housekeeping (non-blocking): rename the GitHub repo once a product name exists. (Privacy verified: private.)
 
 ## Recommended next action
 
-**Morning: Dan reads the briefing above, confirms or changes the chosen pitch, and answers its spoiler-free questions.**
+**Dan: read the morning briefing above, then answer its five questions in a new session with:** "Read docs/CURRENT_STATE.md. Here are my answers to the morning questions: …"

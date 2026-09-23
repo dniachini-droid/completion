@@ -33,7 +33,7 @@ Dark, cosmic, patient. The register of *Eternal Darkness* and *The Three-Body Pr
 You know roughly what's coming; the details are the surprise (player model). Roughly:
 
 1. **The place answers.** You learn your first marks from a lesson someone left on a wall, cut your first word, and the hall lights up.
-2. **Everyone met him.** As you read further, the same figure appears in every age's records, under a different name, and he has never once tried to stop anyone.
+2. **Everyone met him.** As you read further, the same figure appears in every age's records, under a different name, and he has never once tried to stop anyone reading.
 3. **A school with a warning.** The people who made the place left lessons, a rule, and an argument they had with each other.
 4. **What he wants.** The figure's own story, and why he has been teaching.
 5. **The bottom.** A door that needs the most from you, and what is behind it.
