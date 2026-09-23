@@ -17,7 +17,7 @@ Build an accurate, evidence-based model of Dan as a player and as a person tryin
 
 ## Current session focus
 
-Interview round 4: real-life motivation: initiation, avoidance, absorption, good and bad days, the injury's effect, structure, and tool history. The game-taste rounds (1–3) are sufficient for now; synthesis checkpoint 1 is recorded in `DISCOVERY.md`.
+Interview round 5: why specific tasks are avoided, daily rhythm, Pomodoro, lists, the loot test, sleep, and clinician context. Rounds 1–3 covered game taste (checkpoint 1 in `DISCOVERY.md`); round 4 covered real-life motivation. Still to cover: visual/UX taste (criterion 11) and structure limits (8–9).
 
 ## Do NOT work on yet
 
@@ -38,9 +38,9 @@ We can articulate with reasonable confidence — and Dan explicitly agrees the p
 - [x] 2. What commonly makes him stop playing games. *(the story ends)*
 - [ ] 3. Which reward structures motivate him.
 - [ ] 4. Which reward structures rapidly become meaningless.
-- [ ] 5. What causes him to initiate real-world activities.
-- [ ] 6. What causes avoidance.
-- [ ] 7. What "a good day" actually means to him.
+- [ ] 5. What causes him to initiate real-world activities. *(partial: mood/energy; Pomodoro; curiosity in coding/tank)*
+- [ ] 6. What causes avoidance. *(partial: low mood; reasons for specific tasks unknown)*
+- [x] 7. What "a good day" actually means to him. *(several things done, incl. gym/admin/meals; pending confirmation)*
 - [ ] 8. What level of structure helps.
 - [ ] 9. What level of structure becomes oppressive.
 - [x] 10. What types of fictional worlds reliably interest him. *(dark cosmic science-fantasy; pending confirmation)*
@@ -51,14 +51,15 @@ We can articulate with reasonable confidence — and Dan explicitly agrees the p
 ## Completed milestones
 
 - 2026-09-23 — Repository initialised with documentation skeleton, `CLAUDE.md`, and `MASTER_BRIEF.md`.
-- 2026-09-23 — Interview rounds 1–3 answered; player model updated; synthesis checkpoint 1 given.
+- 2026-09-23 — Interview rounds 1–4 answered; player model updated; synthesis checkpoint 1 given.
 - 2026-09-23 — Pacing decision D-004 recorded (pragmatic Phases 0–5; first playable prioritised; deep narrative continues in parallel).
 
 ## Unresolved blockers
 
 - None blocking discovery.
-- Housekeeping (non-blocking): confirm the GitHub repo `dniachini-droid/completion` is private; decide later whether to rename it.
+- Housekeeping (non-blocking): decide later whether to rename the GitHub repo. (Privacy verified: private, 2026-09-23.)
+- Pending: Dan's comfort with health details being recorded in the repo.
 
 ## Recommended next action
 
-**Dan corrects synthesis checkpoint 1 (if needed) and answers round 4 (real-life motivation).**
+**Dan answers round 5.**

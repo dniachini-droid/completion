@@ -16,7 +16,10 @@
 - What causes initiation vs avoidance for him, specifically?
 - What does "a good day" actually mean to him?
 - How does his capacity vary (injury, energy, mood), and can he reliably self-report it?
-- Is initiation the main problem, or are prioritisation / "what counts as enough" equally important?
+- Is initiation the main problem, or are prioritisation / "what counts as enough" equally important? *(Round 4: initiation gated by mood/energy looks primary.)*
+- Why are admin, housework and Spanish avoided specifically?
+- Can the game help with sleep (Dan's idea) without creating sleep anxiety? Reward behaviour, not outcome?
+- Is Pomodoro the natural unit of effort?
 
 ## Game design
 - Do HP/MP add real meaning, or are they convention?
@@ -45,5 +48,6 @@
 - _(deferred to Phase 7)_
 
 ## Ethics / privacy
-- What personal data is acceptable to store, and where?
+- What personal data is acceptable to store, and where? *(Now concrete: mental-health context and sleep. Design docs should record only what's needed.)*
+- The game supports recovery but is not treatment. Should it align with any clinician's approach?
 - What should any AI component be allowed to see?

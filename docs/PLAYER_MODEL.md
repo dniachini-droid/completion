@@ -3,13 +3,15 @@
 > Living model of the player. Updated after each discovery round.
 > Rule: only things Dan has actually said go under *Explicitly stated*. Inferences go under hypotheses, and stay there until confirmed.
 
-_Last updated: 2026-09-23 — after interview round 3 (story structure, stopping, tone, other media). First synthesis checkpoint given._
+_Last updated: 2026-09-23 — after interview round 4 (real-life motivation)._
+
+> **Sensitivity note:** this file contains health information Dan shared for design purposes. Keep it to what the design needs. The repo is private (verified 2026-09-23); Dan has been asked whether he's comfortable with this level of detail.
 
 ## Explicitly stated facts / preferences
 
 - 39. Currently not working; far more unstructured time than in most of adult life.
 - Work used to supply structure (deadlines, meetings, expectations, people depending on him, reasons to start at particular times); that is now largely absent.
-- Recovering from an injury. Motivation and capacity vary day to day.
+- Recovering from a psychological injury from work (see round 4). Motivation and capacity vary day to day.
 - Usually knows what he should do; difficulty is **initiating**.
 - Current activity candidates: Spanish, Claude Code / AI / software course, gym, cooking, meal prep, groceries, life admin, home maintenance, technical and creative projects, hobbies, learning. Aquarium mentioned in passing.
 - Loves games; particularly likes discovery, progression, exploration, rich systems, collecting, mystery, beautiful worlds, interesting characters, meaningful long-term development.
@@ -53,6 +55,18 @@ _Last updated: 2026-09-23 — after interview round 3 (story structure, stopping
 - **Ancient technology that looks like magic** is a good blend.
 - **Was "addicted to" the Stargate series** (volunteered after round 3).
 
+*From round 4 (real life):*
+- **Recent real-life absorption: coding.** "All this cool amazing stuff to learn… I could do anything with it… so much knowledge to uncover." **Same with his saltwater tank**: "such a complex thing to learn and master."
+- **Avoids:** admin (puts it off), **Spanish** (puts it off), **housework** ("particularly bad"). **Gym is inconsistent**: sometimes really good, sometimes bad.
+- **What gets him started is mostly mood and energy.**
+- **Has ADHD. Goes to sleep late because of it.** Would like the game to help with sleep, e.g. discovering or unlocking something by going to sleep earlier or getting 8 hours.
+- **Good day:** "accomplished a lot", ticked off things that needed doing. **Bad day:** procrastinated on the couch and "felt sorry for myself".
+- **The injury is psychological,** from his work: a trauma-related disorder with anxious distress. **Feels down a lot, which is why it's hard to do things.** No longer working; recovering.
+- **The gym makes him feel better,** but it's hard to get motivated to go.
+- **"Enough" = several things done**, e.g. gym, admin, meals. That makes him happier.
+- **External structure from the game:** open to exploring it, unsure how good it would be.
+- **Pomodoro (25 min focus / 5 min break) "has been incredible"**, used at work and loved.
+
 ## Strong hypotheses
 
 - **Capabilities beat numbers.** Progression that grants a new *verb* (spell, power, tool) motivates him far more than stat or level increases. Supported by Q3, Q4 and Q8 independently. Implication to test: a visible XP/level number may be weak or irrelevant for him.
@@ -61,6 +75,10 @@ _Last updated: 2026-09-23 — after interview round 3 (story structure, stopping
 - **Interconnection is a core pleasure.** "Everything was related": the central act matters because it links the hero, the temples and the history. Promoted from weak.
 - **A powerful, imposing, mysterious antagonist with depth** is a primary hook. Ganondorf was the highlight of his favourite game. Morally complex, not cartoonish, but still genuinely threatening.
 - **Mysterious power systems.** Arcane (runes, spells) or alien/futuristic (Mass Effect). Eternal Darkness suggests he enjoys *composable* magic: collecting parts and combining them.
+- **His real-life absorptions are the same pleasure as his games:** a large, complex body of knowledge to uncover and master (coding, reef tank). Discovery and mastery work in real life too.
+- **Spanish is avoided *like grinding*.** It's learning, which he normally loves, but drilling a language rarely shows visible progress toward a goal. Round 2 suggested that's exactly what makes repetition boring. The game could supply the visible goal. Needs confirming (how he studies).
+- **He waits for mood and energy before starting, but action improves his mood** (the gym). Initiation that doesn't depend on mood (the "I can't start" idea) may be the single most valuable thing the product does.
+- **Time-boxed focus units work for him** (Pomodoro, proven at work). A strong candidate unit of effort, and it also helps against task farming. Candidate, not decision.
 - **Anticipation with partial knowledge.** Goals should be foreshadowed (he knows roughly what's coming) but not fully specified (the details surprise). Progress bars alone are not the model.
 - **Multiple linked stories across eras** (Eternal Darkness, and Three-Body's centuries-spanning structure) is a favourite narrative structure, not just a liked one.
 - **Dark, cosmic, science-fantasy register.** Eternal Darkness, Three-Body, Arrival, Mass Effect and Star Wars together point to vast timescales, alien or ancient intelligences, dread, and power that looks like magic.
@@ -79,6 +97,9 @@ _Last updated: 2026-09-23 — after interview round 3 (story structure, stopping
 - **Loot, collecting and rarity** (suspected motivators in the founding brief) have not come up once in three rounds of unprompted answers. Needs a direct test.
 - **Stargate fits the whole pattern:** ancient aliens posing as gods, a network of gates linking worlds (compare the temples linked to the Temple of Time), a linguist-archaeologist decoding lost languages, and ancient technology read as magic. Which of these hooked him is still unknown.
 - **Language as power** (Arrival, and Daniel Jackson in Stargate) *might* give Spanish study a meaningful fictional resonance. A design idea to test later, not a finding.
+- **Ticking things off feels good, while a long list feels daunting.** Possibly both true: completing is rewarding, seeing everything at once is not. Needs probing.
+- A good day is **several varied things, including life maintenance** (gym, admin, meals), not one big thing. Challenges any "one hero task" model and fits "a few core quests".
+- **Sleep could be a real-life input** (his own idea). Design caution: reward what he controls (e.g. winding down or in bed by a time) rather than outcomes he can't fully control (8 hours of sleep), especially with anxiety and ADHD.
 - A long list of tasks reads as a "field of obligations" and increases avoidance (Dan's own hypothesis; untested).
 - A small number of core actions defining "day complete" may work better than open-ended lists (Dan's hypothesis).
 - Explicit permission to stop (e.g. MP depletion) may be valuable.
@@ -91,6 +112,10 @@ _Last updated: 2026-09-23 — after interview round 3 (story structure, stopping
 - Discovering worlds, civilisations, alien life and their powers (stated).
 - An imposing, mysterious villain (stated).
 - A visible goal that repetition moves toward (stated).
+- Big complex things to learn and master: coding, the reef tank (stated).
+- Getting several things done (stated).
+- Pomodoro time-boxing (stated).
+- The gym improves his mood (stated).
 - Composable spell systems, e.g. Eternal Darkness runes (stated).
 - Wanting to know what happens next in the story (stated: it's why he keeps playing).
 - Knowing roughly what's coming but not exactly (stated).
@@ -101,10 +126,15 @@ _Last updated: 2026-09-23 — after interview round 3 (story structure, stopping
 - Maintenance overhead / administering the system (stated).
 - Grinding: repetition **without a visible goal** (refined in round 2).
 - The story ending: when it's over, he stops (stated).
+- Low mood and low energy (stated main barrier).
+- Admin, housework, Spanish: avoided (stated; reasons not yet known).
 
 ## Behavioural patterns
 
 - Engagement is variable: some days very engaged, other days ordinary tasks hard to begin (stated).
+- Starting depends on mood and energy (stated).
+- Late bedtimes, attributed to ADHD (stated).
+- Bad days: the couch, procrastination, self-pity (stated). The app must not add to self-criticism.
 
 ## Game preferences
 
@@ -131,6 +161,9 @@ _Last updated: 2026-09-23 — after interview round 3 (story structure, stopping
 ## Uncertainties
 
 - Does loot/collecting/rarity actually motivate him?
+- Why exactly admin, housework and Spanish are avoided (boredom, overwhelm, anxiety, invisible progress?).
+- His daily rhythm: wake time, best hours, when the couch pulls hardest.
+- Whether he's working with a clinician whose approach the game should fit with.
 - How a dark fictional tone coexists with a warm, non-shaming relationship to *him* (dark world ≠ harsh app).
 - Visual taste (not yet explored).
 - What specifically makes him stop playing games.

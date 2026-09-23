@@ -50,6 +50,17 @@ Pacing (D-004): combine or skip topics once answers make them redundant. Target 
 - Mass Effect: galaxy and aliens, **not** the squad → companions look low priority.
 - Volunteered afterwards: **addicted to Stargate.** It strongly reinforces the pattern: ancient aliens as false gods, a gate network, lost languages, technology that looks like magic.
 
+### Round 4 findings (real life)
+- **Real absorption = a big complex thing to uncover and master** (coding, reef tank). The same pleasure as his games.
+- **Avoided:** admin, Spanish, housework. Gym inconsistent.
+- **Starting depends on mood and energy.** Psychological injury from work (trauma-related, anxious distress, low mood). The gym helps his mood but is hard to start.
+- **ADHD → late sleep.** He *wants* sleep in the game (his idea).
+- **Good day = several things done, including life maintenance.** Bad day = couch and self-pity.
+- **Pomodoro was "incredible"** at work.
+- Structure from the game: open but unsure.
+- Observations: Spanish may be avoided *because* it's grind-like with no visible goal; mood-independent starting may be the core product value; reward controllable sleep behaviour, not sleep outcomes.
+- Repo privacy verified: private.
+
 ### Synthesis checkpoint 1 (given to Dan after round 3)
 Dan is drawn to dark, cosmic science-fantasy: vast timescales, ancient or alien intelligences, and power that looks like magic but is really technology. The story is the engine, above all mystery, interconnection ("everything was related"), and an imposing antagonist with depth. Progression he cares about means new mysterious abilities, not numbers. Repetition is fine if it aims at a goal he can roughly see but not fully predict.
 
