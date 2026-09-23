@@ -100,7 +100,7 @@ The place obeys words (R1). Two lives, one lamp, one figure who does not eat and
 | **The Hold** | Where the Builders kept things, and where he laid the Engineer: a long chamber, the readers' objects on shelves (the Engineer's log and boots; the Surveyor's level; the heel of the Salt-Cutter's bread, gone to stone). ECHO shows the Engineer being laid here. |
 | **His workshop** | Beside the Hold. Rods in a rack. REMAIN cut on the wall where he first cut it, the print of his left hand beside it in the stone to the wrist. |
 | **The Council Gallery** | Two facing walls: the binders' rule and the answerers' argument ("we were sent; we are the proof"), in two hands. Copies of both prepared words. VOICE-GIVE-FAR first read here (month 5). |
-| **The Warning Hall** | The seed's warning copied large by the Builders: LOUD VOICE → [found]. Half readable until month 8. |
+| **The Warning Hall** | The seed's warning copied large by the Builders: LOUD VOICE → TAKE ("what speaks loud is taken"). Half readable until month 8. |
 | **The Builders' quarters** | Where the memoir B1–B6 is cut, first person plural. |
 | **The memorial walls** | The approach to the Landing: rings so dense the stone looks woven; the same names repeated hall by hall (hundreds of names, thousands of rings). One ring unfinished: his current cutting, in his hand (seen months 7–9, understood month 11). NAME learned here (month 8). |
 | **The Landing** | Where the corridor turns and he stands. First meeting (month 6). |

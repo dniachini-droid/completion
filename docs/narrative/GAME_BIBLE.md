@@ -9,7 +9,7 @@ _Written 2026-09-23._
 
 ## The world in one paragraph
 
-Somewhere under our own world there is a quiet place that was not made by us. Its halls are long and low and rounded like the inside of a shell, and every surface within reach of a hand is cut with a script. The script does things when it is read. People have found the place before, in different ages, by accident: a salt-cutter after an earthquake; a surveyor sent to run a road tunnel; an engineer blasting for a railway; a woman who read about the place in the engineer's log and came to see. Each learned a few marks. Each met the same tall figure, who has been there in every age under a different name. You are the latest to come down. The lamp is already lit.
+Somewhere under our own world there is a quiet place that was not made by us. Its halls are long and high and rounded like the inside of a shell, its side passages low, and every surface within reach of a hand is cut with a script. The script does things when it is read. People have found the place before, in different ages, by accident: a salt-cutter after an earthquake; a surveyor sent to run a road tunnel; an engineer blasting for a railway; a woman who read about the place in the engineer's log and came to see. Each learned a few marks. Each met the same tall figure, who has been there in every age under a different name. You are the latest to come down. The lamp is already lit.
 
 ## Setting
 
