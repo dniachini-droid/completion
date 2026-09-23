@@ -3,7 +3,7 @@
 > Living model of the player. Updated after each discovery round.
 > Rule: only things Dan has actually said go under *Explicitly stated*. Inferences go under hypotheses, and stay there until confirmed.
 
-_Last updated: 2026-09-23 — after interview round 5 (reasons behind avoidance, Pomodoro, lists, loot, treatment context)._
+_Last updated: 2026-09-23 — after interview round 6 (look, feel, limits). Phase 0 synthesis presented for confirmation; see `DISCOVERY.md`._
 
 > **Sensitivity note:** this file contains health information Dan shared for design purposes. Keep it to what the design needs. The repo is private (verified 2026-09-23). Dan was offered a reduction in detail and raised no objection.
 
@@ -77,6 +77,16 @@ _Last updated: 2026-09-23 — after interview round 5 (reasons behind avoidance,
 - **Sleep target:** unsure, willing to try.
 - **Working with a psychologist, who has recommended trying an activity scheduler.**
 
+*From round 6:*
+- **Phone only.** Would use it **at all times of the day**.
+- **Favourite interface moment: the Stargate dialling sequence.** "It was epic."
+- Visual direction: likes both **(a) ancient stone and glowing glyphs** and **(b) sleek dark sci-fi screens**. "Pick one or combine."
+- Likes apps that **look beautiful and are intentionally designed**.
+- Doesn't know why the Spanish lessons stopped, or what should happen when he misses an expected time.
+- Notifications: "we could try."
+- In the couch moment, **both** a waiting story reveal **and** a short under-a-minute starter would help.
+- No hard nos: "I'm open to everything." (The brief's anti-goals still stand.)
+
 ## Strong hypotheses
 
 - **Capabilities beat numbers.** Progression that grants a new *verb* (spell, power, tool) motivates him far more than stat or level increases. Supported by Q3, Q4 and Q8 independently. Implication to test: a visible XP/level number may be weak or irrelevant for him.
@@ -90,6 +100,9 @@ _Last updated: 2026-09-23 — after interview round 5 (reasons behind avoidance,
 - **Pile-up is a trigger for avoidance** (stated). The product must never show an accumulating backlog.
 - **The real competitor is the phone and YouTube** at the couch moment, not other productivity tools. The app has to be easier and more appealing than YouTube in that moment.
 - **Pomodoro works through bounded commitment plus an external decision-maker:** only 25 minutes, and the timer decides when to stop. This fits a mood-independent way of starting.
+- **A ceremonial activation ritual may work for starting** (Stargate dialling: sequential, mechanical, anticipation building to a moment). Could give beginning a focus session weight and pleasure. Design idea only.
+- **The ancient-tech aesthetic** (stone, glyphs, glowing machinery) sits exactly where his two preferred visual directions meet, and matches "ancient technology that looks like magic". Direction, not decision (Phase 4).
+- **Interview answers are now low-signal on structure, notifications and failure handling** ("don't know", "we could try"). These are better tested by use than by asking.
 - **The right amount of work depends on his state.** Long lists work on good days and are useless on low days. Strong support for a capacity mechanic.
 - **The product's core function coincides with his psychologist's recommendation:** an activity scheduler. Designing it as a game-shaped activity scheduler aligns with treatment rather than cutting across it. We are not clinicians; the game should complement that guidance, and Dan may want to show it to his psychologist.
 - **He waits for mood and energy before starting, but action improves his mood** (the gym). Initiation that doesn't depend on mood (the "I can't start" idea) may be the single most valuable thing the product does.
@@ -180,10 +193,9 @@ _Last updated: 2026-09-23 — after interview round 5 (reasons behind avoidance,
 
 ## Uncertainties
 
-- Why the Spanish lessons stopped.
-- Visual and UX taste (not yet explored).
-- When structure turns into pressure; attitude to notifications.
-- Platform: phone?
+- Why the Spanish lessons stopped (he doesn't know).
+- When structure turns into pressure; whether notifications help. **Test in the prototype.**
+- Whether a dark tone lifts him or weighs on him when he's low. **Test in use.**
 - How a dark fictional tone coexists with a warm, non-shaming relationship to *him* (dark world ≠ harsh app).
 - Visual taste (not yet explored).
 - What specifically makes him stop playing games.

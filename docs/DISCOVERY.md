@@ -70,6 +70,37 @@ Pacing (D-004): combine or skip topics once answers make them redundant. Target 
 - **Loot test:** gear only if it grants powers; collectibles are mild. The brief's rarity/collecting assumption is largely not confirmed.
 - **His psychologist recommended an activity scheduler.** This project is essentially a game-shaped activity scheduler, so the two align.
 
+### Round 6 findings (look, feel, limits)
+- Phone only; used at any time of day.
+- **Stargate dialling sequence** = favourite interface moment.
+- Visual: **ancient stone and glyphs + sleek dark sci-fi**, combinable. Wants intentional, beautiful design.
+- Structure, notifications, missed expectations: **unsure ("we could try")**. These are left for the prototype to answer.
+- Couch moment: a waiting story reveal **and** a sub-minute starter both appeal.
+- No additional hard nos beyond the brief.
+
+## Phase 0 synthesis (presented 2026-09-23, awaiting Dan's confirmation)
+
+| # | Exit criterion | Current answer | Confidence |
+|---|---|---|---|
+| 1 | What absorbs him in games | Deep, interconnected story and lore; an imposing antagonist with depth; discovering ancient/alien civilisations; gaining new mysterious abilities; multiple linked stories across eras | High |
+| 2 | What makes him stop | The story ends. Also grinding with no visible goal | High |
+| 3 | Rewards that motivate | New abilities and powers; story progress and reveals; goals he can roughly see but whose details surprise; gear only if it has powers | High |
+| 4 | Rewards that go meaningless | Grinding; stat or cosmetic loot; collecting for its own sake (mild at best) | Medium–high |
+| 5 | What gets him started in real life | Mood and energy (the main gate); bounded commitments with a timer (Pomodoro); curiosity about deep subjects (coding, reef tank); external structure (weekly lesson) | Medium–high |
+| 6 | What causes avoidance | Low mood (psychological injury); boredom; the phone and YouTube being easier; things piling up | High |
+| 7 | A good day | Several things done, including maintenance: gym, admin, meals | Medium–high |
+| 8 | Structure that helps | Wants a routine (bed by 11, up 7–8); Pomodoro; scheduled lessons worked; psychologist recommends activity scheduling | Medium |
+| 9 | Structure that oppresses | Long lists on low days; visible pile-up. Beyond that he doesn't know. Test in use | Low–medium |
+| 10 | Worlds that interest him | Dark, cosmic science-fantasy: ancient/alien tech that looks like magic, vast timescales (Stargate, Three-Body, Eternal Darkness, Mass Effect, Zelda) | High |
+| 11 | UX aesthetics | Phone; beautiful, intentional design; ancient stone/glyphs plus dark sci-fi; the Stargate dialling sequence as a model moment | Medium |
+| 12 | Strong don'ts | The brief's anti-goals (shame, streak punishment, admin, farming, clutter); nothing extra | Medium |
+
+**What surprised us:** loot and rarity matter much less than the brief assumed; companions barely register; his real-life absorptions (coding, reef tank) are the same pleasure as his games; and the brief is effectively the activity scheduler his psychologist recommended.
+
+**Contradictions and tensions:** repetitive real-life inputs vs dislike of repetition (resolved by visible goals); dark tone vs a kind app; story-driven retention vs the limited rate of writing authored story; good-day lists vs low-day overwhelm.
+
+**Why close Phase 0 now (D-004):** the recent answers ("don't know", "we could try", "open to everything") show that interviewing has reached diminishing returns on the remaining questions. Structure, notifications and failure handling are better answered by watching him use a prototype.
+
 ### Synthesis checkpoint 1 (given to Dan after round 3)
 Dan is drawn to dark, cosmic science-fantasy: vast timescales, ancient or alien intelligences, and power that looks like magic but is really technology. The story is the engine, above all mystery, interconnection ("everything was related"), and an imposing antagonist with depth. Progression he cares about means new mysterious abilities, not numbers. Repetition is fine if it aims at a goal he can roughly see but not fully predict.
 

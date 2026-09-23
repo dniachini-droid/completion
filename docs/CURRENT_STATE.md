@@ -17,7 +17,7 @@ Build an accurate, evidence-based model of Dan as a player and as a person tryin
 
 ## Current session focus
 
-Interview round 6: visual/UX taste (criterion 11), limits of structure and notifications (8–9), the YouTube moment, and hard nos (12). Plan: after round 6, give a full synthesis and ask Dan to confirm closing Phase 0.
+Phase 0 synthesis presented (`DISCOVERY.md`). Awaiting Dan's confirmation or corrections before closing Phase 0 and starting Phase 1 (Product Discovery).
 
 ## Do NOT work on yet
 
@@ -41,17 +41,17 @@ We can articulate with reasonable confidence — and Dan explicitly agrees the p
 - [x] 5. What causes him to initiate real-world activities. *(mood/energy; bounded timers; curiosity; external structure like lessons)*
 - [x] 6. What causes avoidance. *(low mood; boredom; phone/YouTube easier; pile-up)*
 - [x] 7. What "a good day" actually means to him. *(several things done, incl. gym/admin/meals; pending confirmation)*
-- [ ] 8. What level of structure helps. *(partial: wants a routine; Pomodoro; weekly lessons worked)*
-- [ ] 9. What level of structure becomes oppressive.
+- [x] 8. What level of structure helps. *(wants a routine; Pomodoro; weekly lessons; activity scheduling)*
+- [x] 9. What level of structure becomes oppressive. *(low confidence: long lists on low days, pile-up; rest to be tested in use)*
 - [x] 10. What types of fictional worlds reliably interest him. *(dark cosmic science-fantasy; pending confirmation)*
-- [ ] 11. What UX aesthetics he responds to.
-- [ ] 12. What he strongly does not want.
+- [x] 11. What UX aesthetics he responds to. *(phone; intentional beauty; ancient tech + dark sci-fi; Stargate dialling)*
+- [x] 12. What he strongly does not want. *(brief's anti-goals; nothing added)*
 - [ ] Dan confirms the player model.
 
 ## Completed milestones
 
 - 2026-09-23 — Repository initialised with documentation skeleton, `CLAUDE.md`, and `MASTER_BRIEF.md`.
-- 2026-09-23 — Interview rounds 1–5 answered; player model updated; synthesis checkpoint 1 given.
+- 2026-09-23 — Interview rounds 1–6 answered; player model updated; Phase 0 synthesis presented.
 - 2026-09-23 — Pacing decision D-004 recorded (pragmatic Phases 0–5; first playable prioritised; deep narrative continues in parallel).
 
 ## Unresolved blockers
@@ -61,4 +61,4 @@ We can articulate with reasonable confidence — and Dan explicitly agrees the p
 
 ## Recommended next action
 
-**Dan answers round 6; Claude then presents the full Phase 0 synthesis for confirmation.**
+**Dan confirms (or corrects) the Phase 0 synthesis; on confirmation, close Phase 0 in `CLAUDE.md`/here and begin Phase 1 (Product Discovery).**

@@ -39,11 +39,12 @@
 ## Productivity
 - What in his past tool history worked, and why did he stop using things?
 - Where should the boundary lie between life inside and outside the system?
-- Do reminders/notifications help at all?
+- Do reminders/notifications help at all? *(Dan unsure. Test in the prototype.)*
+- What should happen when he misses an expected time? *(Dan unsure. Test in the prototype.)*
 
 ## UX
-- What visual references does he respond to?
-- Phone, desktop, both?
+- ~~What visual references?~~ Ancient stone/glyphs + dark sci-fi; the Stargate dialling sequence (round 6). Refine in Phase 4.
+- ~~Phone, desktop?~~ Phone only (round 6).
 
 ## Technology
 - _(deferred to Phase 7)_
