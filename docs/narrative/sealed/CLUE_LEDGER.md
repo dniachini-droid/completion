@@ -24,7 +24,7 @@ _Written 2026-09-23._
 | C-11a | The transcription writes his count beside the reader's: HAND HAND and then 8+2 (S1's "one hand" of oil; S3's "a hand" of lamps) | Salt Gallery, weeks 1–3, legible week 8 | A tally with two notations | The transcriber counts in eights: the records are his, translated | COUNT, numbers (wk 8) | Week 8 (L9); month 4 (R5) | no |
 | C-14a | Loose glossary sheets dated Days 1–15 in her camp: her first glosses, never revised | Survey Cut, week 1 | A previous explorer's notes | Her layer: honest, partial, wrong in two places ("he ate", "he held me"), made before she learned the cross | none | Weeks 1–9 | no |
 | C-12 | A single ring above the tally, alone (S2: "he cut her name in the wall while I watched") | Salt Gallery, week 2 | The salt-cutter's own mark | The Salt-Cutter's wife's name, cut by the Custodian: he keeps every name he is given | NAME (month 8); S-outline (the wife's name said aloud) | Month 8; month 12 (the list ends with the readers) | no |
-| C-13 | The tally-stick: "Father counts at night. Four and four. He says it is the owl's feet." (X-daughter) | Salt Gallery niche, week 2 | A child's note about a superstitious father | Eight fingers; "the owl" is the daughter's word for the figure (S6); the Salt-Cutter lived and went home | S6 (wk 7) | Week 7 | no |
+| C-13 | The tally-stick: "Father counts at night. Four and four. He says it is the owl's feet." (X-daughter) | Salt Gallery niche, week 2 (two pictures show; the line reads with HAND, week 12) | A child's note about a superstitious father | Eight fingers; "the owl" is the daughter's word for the figure (S6); the Salt-Cutter lived and went home | S6 (wk 7); HAND (wk 12) | Week 12 | no |
 | C-14 | Her camp: dead tapes, a stove, a pinned email, a notebook | Survey Cut, week 2 | An abandoned dig | She lived here for forty days and then moved *down*; the tapes died so she cut things in stone | L5 (wk 3), L15 (month 4) | Week 3; month 4; month 10 | no |
 | C-15 | The rod on the shelf with a pencilled line: "For the next one. Cut the two marks on the lintel. Don't be precious about it." (L4) | Survey Cut, week 2 | A tool and a note left by a previous explorer | A Builder's cutting rod, given to her by him, left by her, allowed by him; a bilingual (the same line is in the Cut on the handle) | none; the Cut version needs ONE-WHO, AGAIN, MAKE, DOOR (month 9) | Week 2–3 (the word); month 9 (compare the two) | no |
 | C-16 | The Lamp Door's lintel: FIRE and GIVE beside a rod-shaped blank | Lamp Hall, week 2 | A password slot | A word-door; GIVE is the contested sign (give/send/answer) | GIVE (wk 2) | Week 2–3 (R1); month 9–10 (GIVE = ANSWER) | no |
@@ -33,7 +33,7 @@ _Written 2026-09-23._
 | C-19 | "Then he asked if he could write me down." (L3) | notebook, week 2 | Odd courtesy | He records every reader; the archive's curator | S7 (wk 9), MAKE/READ (month 4) | Month 4 (R5) | no |
 | C-20 | The lamps wake in sequence when the word is cut; the Lamp Door's lintel appears | week 2–3 | Magic; a hidden mechanism | The Cut is technology; laced stone obeys | none | Week 3 (R1) | no |
 | C-21 | S3: "he put his hand over my hand on the pick and we cut two marks by the door" | Salt Gallery, week 3 | A folk memory of the same trick | The first word is always the same lesson, taught by the same hand; the Builders' first lesson (B0) | B0 (wk 9) | Week 9 (the same lesson in a hand older than anything) | no |
-| C-22 | "He stood and counted" (S3) beside "He waited. He is very good at waiting." (L3) | weeks 2–3 | Two people describing patience | The same being, an age apart, doing the same thing (Dan's first "same figure" rhyme, in fact not cadence) | none | Week 3 (noticed); month 2 (R3) | no |
+| C-22 | "He stood and counted" (S3) beside "He waited. He is very good at waiting." (L3) | weeks 2–3 (planted; S3's "counted" reads with COUNT, week 8) | Two people describing patience | The same being, an age apart, doing the same thing (Dan's first "same figure" rhyme, in fact not cadence) | COUNT (wk 8) | Week 8 (noticed); month 2 (R3) | no |
 | C-23 | The count on the niche at the Stair's head, and the Lower Door's count: a tally and a mark (RETURN) | week 3–4 | A lock wanting a key | The safeguard: returns from the surface; the same count the bottom locks to | RETURN (month 5); B (month 6); the door-plan (month 7); L16 (month 9) | Month 9 (R8) | no |
 | C-24 | L6: "The door on the second flight is open. I'm not going down yet. Rule: go up every night." | notebook, week 4 | Sensible caution | The chamber is shut *to Dan* (counts know their bearer); her rule is the safeguard she later broke | week 5 (shut to him); L8 (wk 6); L16 (month 9) | Week 5; month 9 | no |
 | C-25 | L6: "he has never once asked me for anything" | notebook, week 4 | He is harmless | He wants only one thing and never asks for it until the Seed | L17 (month 8); the speech | Month 9; month 12 | no |
@@ -43,13 +43,13 @@ _Written 2026-09-23._
 | C-29 | K2 on the Stair's second flight: a ring cut sharp-edged among thousands polished smooth by touch, in his hand | week 5 | A recent visitor's signature | He is still cutting names; the rings are his work and it is not finished | NAME (month 8) | Month 8; month 12 (the list) | no |
 | C-30 | L7: "the manner of someone who has been here longer than the lease, so I'm calling him the Tenant" | notebook, week 5 | A dry nickname | Wrong by inversion: he is not the tenant but the keeper; her cut notes correct it the month KEEP arrives | KEEP (month 6); L15a | Month 6 (R6) | no |
 | C-31 | The formula's reader-number: the Salt-Cutter is ONE | Salt Gallery, week 5 (ONCE + ONE) | A chapter number | He counts readers; Dan is the sixth; the list ends with an empty ring | COUNT (wk 8); L11 (wk 10) | Week 8; month 12 | no |
-| C-32 | S5: "the first one is always light" / "because it is dark" | Salt Gallery, week 5 | A pleasing line | The Builders' first word, and their lesson to their children (X-binder-child: "because it is dark"); the reason the lamp matters to him | B0, X-binder-child (wk 9) | Week 9; month 12 (the speech: "because it is dark") | no |
+| C-32 | S5: "the first one is always light" / "because it is dark" | Salt Gallery, week 5 (planted); "it is dark" reads week 9 (NOT), "the first is always light" week 16 (ALL) | A pleasing line | The Builders' first word, and their lesson to their children (X-binder-child: "because it is dark"); the reason the lamp matters to him | B0, X-binder-child (wk 9) | Week 9; month 12 (the speech: "because it is dark") | no |
 
 ## Weeks 6–13 (beyond the first playable; listed so the map stays honest)
 
 | Id | Clue | When | Surface | Truth | Payoff |
 |---|---|---|---|---|---|
-| C-33 | "The Guest" (V1, V2) | wk 5–6 | A different figure | The same one | Month 2 (R3) |
+| C-33 | "The Guest" (C1; V1 and V2 carry only ONE, "one other") | wk 11 | A different figure | The same one | Month 2 (R3) |
 | C-34 | "He held us not" glossed as "he held us" (V2, her sheet) | wk 6 | The Guest held the crew back | NOT | Week 9 |
 | C-35 | L8: "I've stopped going up every day" | wk 6 | A practical note | She broke the safeguard | Month 9 |
 | C-36 | The stone of the rail has taken the shape of a long four-fingered hand | wk 7 | Water wear | Him; where he rested a hand for an age, the stone took it | Month 6 (the face) |
@@ -60,7 +60,7 @@ _Written 2026-09-23._
 | C-39b | The Engineer's watch, stopped at 4.10 | wk 11 | A dropped watch | Stopped at the blast, the same hour the well stopped | Week 12 (E3, X-well-keeper) |
 | C-40 | V4 in a *different* hand from V1–V3 | wk 8 | A second scribe | The Surveyor's own hand; only two of his are | Month 8–9 (V7) |
 | C-41 | "The Guest said this was to be expected after a great cut" (V4) | wk 8 | Superstition | Loud use draws something; he knew | Month 8 (LOUD) |
-| C-42 | The lintel KEEP VOICE-NOT, half readable ("voice not") | wk 9 | "Silence" (a library rule) | "Keep silent": the binders' rule; his name's first sign | Month 6 (R6) |
+| C-42 | The lintel KEEP VOICE-NOT, half readable ("[ ] [ ] not" at wk 9; "[ ] voice not" from wk 11) | wk 9–11 | "Silence" (a library rule) | "Keep silent": the binders' rule; his name's first sign | Month 6 (R6) |
 | C-43 | B0: the same lesson as hers, in the oldest hand | wk 9 | The makers' alphabet | The lesson chain: Builders → him → her → Dan | Week 9; month 9 (L20) |
 | C-44 | E1: "a tall man with a lamp"; "everything does, here" (E2, wk 11: "the Inspector") | wk 10–11 | A company man | Him; "through" is the whole argument (keep/send) in one word | Month 6; month 12 |
 | C-45 | E2: "The book has it in gold as a rank. Took it for a rating." (the LOUD sign) | wk 11 | A misread label | LOUD is a warning; the Copyist's gold (C1) is why he misread it; the boy's orphaned fork (X-boy) is why she did | Month 8 (LOUD); the chain boy → book → blast |
@@ -73,7 +73,8 @@ _Written 2026-09-23._
 | C-52 | L14: "I asked him about the second reader. He answered. I'm not writing it down tonight." | wk 13 | She was frightened | She was told the truth and it was worse than fear: he *records* his own worst act | Month 8–9 |
 
 | C-53 | The memoir carries no closing line, unlike every transcription | Builders' quarters, from wk 17 (legible from month 5) | A different convention for the makers' texts | It was not told to him; it is his own | Month 7–8 (R7) |
-| C-54 | L22: "He read the bottom with his hands. I don't think he has ever seen it." | Her last camp, month 10 | An aside about a blind reader | The finest cut is read by light; no Builder ever read it | Month 11 (R9.5) |
+| C-54 | L22, her cut note: "He read the bottom by hand, once. He has seen it not." (ONE READ DEEP HAND ONCE; ONE SEE DEEP NOT) | Her last camp, month 10 | An aside about a blind reader | The finest cut is read by light; no Builder ever read it | Month 11 (R9.5) |
+| C-55 | The hook in B1's corner is not the round hand's; B7's is the one Dan knows | Builders' quarters, from wk 17 (17.B); B7 at wk 29 | The makers' first walls were signed by a different maker | The same hand in two ages: his Builder-age mark, then KEEP-ONE; the memoir is his | Month 7–8 (R7) |
 
 ## Rules for this ledger
 
