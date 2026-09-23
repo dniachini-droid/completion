@@ -3,7 +3,7 @@
 > Living model of the player. Updated after each discovery round.
 > Rule: only things Dan has actually said go under *Explicitly stated*. Inferences go under hypotheses, and stay there until confirmed.
 
-_Last updated: 2026-09-23 — after interview round 6 (look, feel, limits). Phase 0 synthesis presented for confirmation; see `DISCOVERY.md`._
+_Last updated: 2026-09-23 — after Phase 1 round 1 (product). Phase 0 synthesis confirmed; see `DISCOVERY.md`._
 
 > **Sensitivity note:** this file contains health information Dan shared for design purposes. Keep it to what the design needs. The repo is private (verified 2026-09-23). Dan was offered a reduction in detail and raised no objection.
 
@@ -86,6 +86,18 @@ _Last updated: 2026-09-23 — after interview round 6 (look, feel, limits). Phas
 - Notifications: "we could try."
 - In the couch moment, **both** a waiting story reveal **and** a short under-a-minute starter would help.
 - No hard nos: "I'm open to everything." (The brief's anti-goals still stand.)
+
+*From Phase 1 round 1 (product):*
+- Agrees with the problem statement: starting, not choosing, is the problem.
+- **Normal day: about 3 main jobs** is good. Example: order the cat's medication (put off; he buys it monthly from the vet at a higher cost instead) plus the gym.
+- **Low day: a short walk and a real meal is enough**, especially getting outside.
+- **Knows each morning what kind of day it will be from whether he had an early or late night.**
+- Capacity: would tap Low/Normal/High **and** have the app infer it.
+- "I can't start": **story reveal, then one tiny physical step.**
+- Nothing he'd hate the app touching ("it's all ok").
+- Weekly targets: Spanish 1 lesson + 1 h study; gym 4× with sauna after; meal prep Sundays, cooking 2–3×, breakfast most days; Claude Code course (24 weeks) ideally 4 h/day "like a job", but "even 1 hour a day is good"; he finds it interesting, not a chore.
+- Planning: the app suggests the day's few things; he accepts or swaps from a short menu.
+- Likes a morning start moment and an evening close moment that rewards winding down.
 
 ## Strong hypotheses
 

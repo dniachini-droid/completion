@@ -124,4 +124,27 @@ Nine questions covering: the draft problem statement (below), a complete day and
 **Draft problem statement put to Dan (hypothesis, not agreed):**
 > Dan usually knows what would make a day good, but starting depends on mood and energy, and on low days the couch and phone win. The product's job is to get him *started* on meaningful things at a size that fits the day, and to let a day count as enough, without guilt or admin.
 
-Awaiting answers.
+### Round 1 findings (product problem)
+- **Problem statement: Dan agrees** ("That's right. True."). Starting, not choosing, is the problem.
+- **Complete day = about 3 "main jobs".** Example: ordering the cat's medication (a small admin job he keeps putting off, which costs him money because he buys it monthly from the vet instead) plus the gym would make him happy.
+- **Low day:** a short walk plus one real meal would be enough, especially **getting outside**.
+- **Capacity:** tap Low/Normal/High **and** let the app infer it. He can tell in the morning from **whether he had an early or late night**. So sleep and capacity are linked.
+- **"I can't start":** a **story reveal first, then one tiny physical step** (options d + a).
+- **Outside the system:** "No, it's all ok." Nothing he'd hate the app touching. (Ambiguous; clarify in round 2.)
+- **Weekly targets he set himself:**
+  - Spanish: 1 lesson + 1 hour of study a week.
+  - Gym: 4 times a week, sauna after.
+  - Food: meal prep on Sundays; cooking 2–3 times a week; making breakfast most days.
+  - Claude Code course: 24 weeks. Wants **4 hours a day, "like a job"**. Finds it interesting, not a chore. **"Even 1 hour a day is good."**
+- **Planning:** the app suggests the day's few things; he accepts or swaps from a short menu (a + b). How he adds one-off jobs is still unanswered.
+- **Absences and interruptions:** "I'll take your suggestion." No concrete suggestion had been made yet, so one is proposed in round 2.
+- **Shape of the day:** likes a morning start moment and an evening close moment that rewards winding down.
+
+**Observations (Claude):**
+- The weekly targets add up to a lot (gym 4×, course 5–20 h, Spanish, cooking, meal prep, plus one-off admin), while a complete day is only 3 main jobs. The plan must treat the **1-hour course day as full success** and anything above it as bonus. A 4-hour target is a daily failure waiting to happen on low days.
+- The course is his *absorbing* activity (curiosity-driven, like the reef tank). It probably needs little help starting and may crowd out the avoided jobs (admin, Spanish). The app's value lies mostly with the avoided jobs.
+- One-off admin (the cat's medication) is the clearest case of avoidance that has a real cost. It needs to be quick to add.
+- Evening close → bedtime → next day's capacity forms a natural daily chain.
+
+### Round 2 sent (clarifiers)
+Six short questions: whether "it's all ok" means leisure may be counted or may be left alone; the proposed Claude course baseline (1 h = done, more = bonus); whether breakfast and cooking are main jobs or part of the day's rhythm; how to add one-off jobs; the proposed behaviour after absences and interruptions; and using bedtime to set tomorrow's capacity.

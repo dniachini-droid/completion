@@ -3,7 +3,7 @@
 > **Authoritative project-progress tracker.** Read at the start of every session; update before ending every substantial session.
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 
-_Last updated: 2026-09-23 (Session 2: Phase 1 round 1 sent)_
+_Last updated: 2026-09-23 (Session 2: Phase 1 round 1 answered, round 2 sent)_
 
 ## Current phase
 
@@ -15,7 +15,7 @@ Define the real-life behavioural problem the product solves, and the product rul
 
 ## Current session focus
 
-**Round 1 questions sent; awaiting Dan's answers** (see `DISCOVERY.md` → Phase 1). Round 1 covers (MASTER_BRIEF §39, sharpened by the player model):
+**Round 1 answered; short round 2 (clarifiers) sent** (see `DISCOVERY.md` → Phase 1). Round 1 covered (MASTER_BRIEF §39, sharpened by the player model):
 - What counts as a **complete day**, and how that changes with **capacity** (good vs low days).
 - What **"I can't start"** should give him (sub-minute starters, timers, the Pomodoro unit).
 - Which activities are **in the system** and which stay **outside** it (rest, leisure).
@@ -36,7 +36,7 @@ Game ideas that come up (e.g. Stargate-style "dialling" to start a session, rune
 
 ## Phase 1 exit criteria
 
-- [ ] The core behavioural problem is stated in one or two sentences, and Dan agrees.
+- [x] The core behavioural problem is stated in one or two sentences, and Dan agrees. (Round 1)
 - [ ] A definition of a **complete day**, including low-capacity days.
 - [ ] How capacity is expressed and what it changes.
 - [ ] What **"I can't start"** does.
@@ -60,4 +60,4 @@ Game ideas that come up (e.g. Stargate-style "dialling" to start a session, rune
 
 ## Recommended next action
 
-**Dan answers Phase 1 round 1** (in this session). Then capture the answers, and either run a short round 2 or draft `DESIGN_PRINCIPLES.md`.
+**Dan answers Phase 1 round 2** (short clarifiers). Then draft `DESIGN_PRINCIPLES.md` and review `ANTI_FEATURES.md` for his approval.
