@@ -78,7 +78,7 @@ There are four kinds of thing in the story's universe. Only two of them are ever
 
 **What is the answer, and what does the player do?** At the Seed-place, the last door needs the largest Key and a word. The Custodian is there. He asks, once, without force, for the answering word. Dan cuts the binding word, KEEP-ALL, prepared by the Builders and never cut. The Seed goes quiet for good: nothing cut in the Site will ever carry again. Everything inside remains readable; every word Dan learned still works there. The Custodian, bound to the place by REMAIN, is bound quiet with it. He does not fight. In the walls of the Seed-place, after, in his own hand, is his last record: not a curse but a list, the names of his people, and at the end of the list, the Salt-Cutter's, the Surveyor's, the Copyist's, the Engineer's, the Linguist's, and a ring left empty.
 
-**The coda.** The Linguist's first lesson-wall, the one that taught Dan the word for light in week two, re-read with the full script. Its last line, unreadable for a year: *"He lit it for me. I have left it lit for you. Read all of it. Then decide."*
+**The coda.** The Linguist's first lesson-wall, the one that taught Dan the word for light in week two, re-read at the end. Its last line is not fully readable until month 9 (it needs the agentive sign ONE-WHO and the RETURN mark) and not fully *meant* until the Seed: *"He lit it for me. I have lit it for you, the one who returns. Read all of it. Then cut."* "The one who returns" is the only kind of reader the binders' doors were made for, and Dan is the first who was.
 
 ## 7. The Custodian (summary; full treatment in `CHARACTERS.md`)
 
@@ -122,7 +122,7 @@ Written first; nothing above or in any other sealed file may contradict it.
 4. **Dan cuts KEEP-ALL.** The ritual is the same one he has done for a year: mark, mark, the word locks, the place answers. The Seed goes quiet. Every lamp in the Site stays lit.
 5. **What it costs.** The Custodian is kept quiet with the place. He is not destroyed; he becomes what he made. His last record appears in the Seed-place wall: the list of names, ending with the readers, and one empty ring.
 6. **What Dan keeps.** Every word, every record, every route. The Site is his to read. Nothing in it will ever carry. The lamp is lit.
-7. **The coda.** The lesson-wall re-read: *"He lit it for me. I have left it lit for you. Read all of it. Then decide."* The last line of the story is the first thing Dan ever read.
+7. **The coda.** The lesson-wall re-read: *"He lit it for me. I have lit it for you, the one who returns. Read all of it. Then cut."* The last line of the story is the first thing Dan ever read.
 
 Why this ending: it is latent in the premise (a place built to finish a binding must end with the binding cut); it is the protagonist's alternative answer to a question the antagonist posed correctly; it is a re-reading of the whole year (the names, the lesson, the lamp); it costs something true; it is dark and kind at once; and it is complete, because Dan stops when the story ends.
 

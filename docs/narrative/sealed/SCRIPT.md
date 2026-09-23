@@ -179,6 +179,10 @@ RESEARCH lesson 16, made concrete.
 
 A partial sign is **structural, never a hint** (RESEARCH lesson 13): one element of the next sign in the schedule (the hook, the wedge), or its category (a determinative: "this is a name", "this is a device"). It already lets Dan read a little more (the element colours every sign that contains it), and it narrows the candidates when the full sign arrives. The next Key completes it. Partial signs never come from ahead of the authored order.
 
+## 8.1 The three reading layers
+
+A record shows its signs. Over them: the app's voice (describes what is physically there, never translates); **her layer** (the Linguist's partial, honest, sometimes wrong translations from her English notebook, shown in her hand where she got them: the bilingual that bootstraps week 1); and **Dan's layer** (his learned signs, guesses with question marks). Where the two translation layers disagree, both show, and the difference is a beat. Full description in `LIVES.md` §0.
+
 ## 9. Guessing and confirmation (RESEARCH lessons 17, 6)
 
 - Every new sign arrives with a context (a picture, a name, a known neighbour) and three or four candidates, one *tempting but wrong* so later re-reading has bite. Never free text; never "wrong" at guess time.
