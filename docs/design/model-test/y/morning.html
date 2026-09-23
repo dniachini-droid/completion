@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Morning — the Lamp Hall</title>
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<style>
+  :root{
+    --ground:#070a0e;
+    --stone-0:#0b1016;
+    --stone-1:#121a23;
+    --stone-2:#1b2631;
+    --stone-3:#2a3946;
+    --ink:#ece7dc;
+    --ink-dim:#b7b2a6;
+    --ink-faint:#7c7a72;
+    --cold:#8fd6e4;
+    --cold-deep:#4f9db0;
+    --warm:#f2b46a;
+    --warm-deep:#c97a2c;
+    --carved:"Cinzel", "Marcellus", Georgia, serif;
+    --voice:"Cormorant Garamond", "EB Garamond", Georgia, serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--ground);color:var(--ink);-webkit-font-smoothing:antialiased}
+  body{font-family:var(--voice);font-size:18px;line-height:1.35;overflow-x:hidden}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+
+  .phone{position:relative;width:100%;max-width:390px;min-height:844px;height:100dvh;margin:0 auto;overflow:hidden;background:var(--ground);display:flex;flex-direction:column}
+
+  /* ---------- the scene ---------- */
+  .scene{position:absolute;inset:0 0 auto 0;height:470px;overflow:hidden}
+  .scene svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .scene .fade{position:absolute;left:0;right:0;bottom:0;height:180px;background:linear-gradient(180deg,rgba(7,10,14,0) 0%,rgba(7,10,14,.55) 45%,var(--ground) 100%)}
+  .grain{position:absolute;inset:0;opacity:.28;mix-blend-mode:overlay;pointer-events:none}
+
+  /* lamp breath */
+  .lamp-glow{transform-origin:294px 318px;animation:breathe 4.8s ease-in-out infinite}
+  .lamp-flame{transform-origin:294px 300px;animation:flame 2.9s ease-in-out infinite}
+  .halo-floor{animation:breatheO 4.8s ease-in-out infinite}
+  @keyframes breathe{0%,100%{transform:scale(1);opacity:.92}50%{transform:scale(1.06);opacity:1}}
+  @keyframes breatheO{0%,100%{opacity:.55}50%{opacity:.7}}
+  @keyframes flame{0%,100%{transform:scaleY(1) skewX(0)}30%{transform:scaleY(1.08) skewX(-2deg)}60%{transform:scaleY(.96) skewX(2deg)}}
+  .door-glow{animation:doorPulse 9s ease-in-out infinite}
+  @keyframes doorPulse{0%,100%{opacity:.7}50%{opacity:1}}
+  .mote{fill:#cfeaf1;opacity:0;animation:drift 12s linear infinite}
+  .mote:nth-child(2){animation-delay:-3s;animation-duration:15s}
+  .mote:nth-child(3){animation-delay:-7s;animation-duration:13s}
+  .mote:nth-child(4){animation-delay:-10s;animation-duration:17s}
+  .mote:nth-child(5){animation-delay:-5s;animation-duration:14s}
+  @keyframes drift{0%{transform:translate(0,0);opacity:0}15%{opacity:.5}85%{opacity:.35}100%{transform:translate(-14px,-38px);opacity:0}}
+
+  /* ---------- top line ---------- */
+  .top{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:baseline;padding:58px 22px 0}
+  .where{font-family:var(--carved);font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-dim);text-shadow:0 0 14px rgba(143,214,228,.25)}
+  .where b{font-weight:600;color:var(--ink)}
+  .maplink{font-family:var(--carved);font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--cold);padding:6px 0 6px 12px;text-shadow:0 0 12px rgba(143,214,228,.55)}
+
+  /* ---------- ahead ---------- */
+  .ahead{position:absolute;z-index:2;left:22px;right:22px;top:352px;display:flex;align-items:center;gap:12px;padding:10px 0;color:var(--ink-dim)}
+  .ahead .rule{flex:0 0 22px;height:1px;background:linear-gradient(90deg,var(--cold),rgba(143,214,228,0))}
+  .ahead .t{font-size:17.5px;line-height:1.25}
+  .ahead .t b{font-weight:500;color:var(--ink)}
+  .ahead .t i{color:var(--cold);font-style:italic}
+
+  /* ---------- the day ---------- */
+  .day{position:relative;z-index:2;margin-top:auto;padding:0 22px 26px;display:flex;flex-direction:column;gap:14px}
+
+  .capacity{display:flex;align-items:baseline;justify-content:space-between;padding:0 2px}
+  .capacity .lbl{font-size:17px;color:var(--ink-faint)}
+  .seg{display:flex;gap:4px}
+  .seg button{font-family:var(--carved);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);padding:8px 10px;border-radius:999px;position:relative;transition:color .25s}
+  .seg button.on{color:var(--ink);text-shadow:0 0 12px rgba(143,214,228,.7)}
+  .seg button.on::after{content:"";position:absolute;left:12px;right:12px;bottom:3px;height:1px;background:var(--cold);box-shadow:0 0 8px var(--cold)}
+
+  .job{position:relative;border-radius:16px;padding:22px 22px 20px;
+       background:linear-gradient(180deg,rgba(27,38,49,.72),rgba(14,20,27,.85));
+       border:1px solid rgba(143,214,228,.22);
+       box-shadow:0 0 0 1px rgba(7,10,14,.6) inset, 0 18px 40px -20px rgba(0,0,0,.9), 0 0 44px -10px rgba(143,214,228,.22);
+       backdrop-filter:blur(6px)}
+  .job::before{content:"";position:absolute;inset:-1px;border-radius:17px;pointer-events:none;
+       background:radial-gradient(120% 80% at 50% -10%,rgba(143,214,228,.16),rgba(143,214,228,0) 60%)}
+  .job .kicker{font-family:var(--carved);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--cold);text-shadow:0 0 12px rgba(143,214,228,.6)}
+  .job h1{font-family:var(--carved);font-weight:500;font-size:25px;line-height:1.22;letter-spacing:.01em;color:var(--ink);margin-top:10px;text-wrap:balance}
+  .job .note{margin-top:8px;font-size:17.5px;color:var(--ink-dim);font-style:italic}
+  .job .note em{font-style:normal;color:var(--warm);text-shadow:0 0 10px rgba(242,180,106,.5)}
+  .acts{display:flex;gap:10px;margin-top:18px}
+  .btn{flex:1;height:52px;border-radius:12px;font-family:var(--carved);font-size:15px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;
+       display:flex;align-items:center;justify-content:center;transition:transform .15s ease, box-shadow .3s ease}
+  .btn:active{transform:scale(.97)}
+  .btn.go{color:#0a1319;background:linear-gradient(180deg,#b9ecf5,#7fcbdb);box-shadow:0 0 22px -2px rgba(143,214,228,.55), 0 1px 0 rgba(255,255,255,.35) inset}
+  .btn.alt{flex:0 0 112px;color:var(--ink-dim);border:1px solid rgba(236,231,220,.16)}
+
+  .others{display:flex;flex-direction:column}
+  .row{display:flex;align-items:center;gap:14px;padding:12px 4px;border-top:1px solid rgba(236,231,220,.08)}
+  .row:first-child{border-top:0}
+  .row .dot{flex:0 0 10px;width:10px;height:10px;border-radius:50%;border:1px solid rgba(236,231,220,.35)}
+  .row.done .dot{border-color:transparent;background:var(--warm);box-shadow:0 0 10px 2px rgba(242,180,106,.45)}
+  .row .t{flex:1;font-size:18.5px;color:var(--ink)}
+  .row.done .t{color:var(--ink-faint);text-decoration:line-through;text-decoration-color:rgba(242,180,106,.45);text-decoration-thickness:1px}
+  .row .m{font-size:16px;color:var(--ink-faint);font-style:italic}
+
+  .cant{align-self:center;font-family:var(--carved);font-size:13.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-dim);padding:12px 18px;border-radius:999px;border:1px solid rgba(236,231,220,.12);margin-top:2px}
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <!-- ===================== THE LAMP HALL ===================== -->
+  <div class="scene" aria-hidden="true">
+    <svg viewBox="0 0 390 470" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="2.2"/></filter>
+        <filter id="softer" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="9"/></filter>
+        <filter id="glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="3"/></filter>
+        <filter id="grainF"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 .6  0 0 0 0 .65  0 0 0 0 .7  0 0 0 .45 0"/></filter>
+
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#0a1016"/><stop offset=".6" stop-color="#121c26"/><stop offset="1" stop-color="#0b1117"/>
+        </linearGradient>
+        <radialGradient id="far" cx=".5" cy=".5" r=".5">
+          <stop offset="0" stop-color="#a9dfe9" stop-opacity=".9"/><stop offset=".35" stop-color="#4f8f9f" stop-opacity=".55"/><stop offset="1" stop-color="#0b1117" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="warmG" cx=".5" cy=".5" r=".5">
+          <stop offset="0" stop-color="#ffd9a0" stop-opacity=".95"/><stop offset=".25" stop-color="#f2a85a" stop-opacity=".55"/><stop offset=".6" stop-color="#b4602a" stop-opacity=".16"/><stop offset="1" stop-color="#7a3d15" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="warmFloor" cx=".5" cy=".5" r=".5">
+          <stop offset="0" stop-color="#e59b4c" stop-opacity=".55"/><stop offset="1" stop-color="#e59b4c" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="wallL" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#0c1219"/><stop offset="1" stop-color="#1f2c38"/>
+        </linearGradient>
+        <linearGradient id="wallR" x1="1" y1="0" x2="0" y2="0">
+          <stop offset="0" stop-color="#0e151c"/><stop offset="1" stop-color="#22303d"/>
+        </linearGradient>
+        <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#1a2531"/><stop offset="1" stop-color="#0a0f14"/>
+        </linearGradient>
+        <linearGradient id="vault" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#0a0f15"/><stop offset="1" stop-color="#1c2833"/>
+        </linearGradient>
+      </defs>
+
+      <rect width="390" height="470" fill="url(#sky)"/>
+
+      <!-- the hall: rounded like the inside of a shell, receding -->
+      <g filter="url(#soft)">
+        <!-- vault -->
+        <path d="M-40 470 V190 A235 235 0 0 1 430 190 V470 Z" fill="url(#vault)"/>
+        <!-- side walls -->
+        <path d="M-40 470 L150 320 V236 L-40 120 Z" fill="url(#wallL)" opacity=".9"/>
+        <path d="M430 470 L240 320 V236 L430 120 Z" fill="url(#wallR)" opacity=".9"/>
+        <!-- floor -->
+        <path d="M-40 470 L150 320 H240 L430 470 Z" fill="url(#floor)"/>
+        <!-- arches going away -->
+        <g fill="none" stroke="#3b5261" stroke-linecap="round">
+          <path d="M-20 470 V200 A215 215 0 0 1 410 200 V470" stroke-width="3" opacity=".35"/>
+          <path d="M60 420 V232 A135 135 0 0 1 330 232 V420" stroke-width="2.2" opacity=".4"/>
+          <path d="M112 372 V252 A83 83 0 0 1 278 252 V372" stroke-width="1.6" opacity=".45"/>
+          <path d="M145 338 V262 A50 50 0 0 1 245 262 V338" stroke-width="1.2" opacity=".5"/>
+        </g>
+      </g>
+
+      <!-- the great door at the far end: cold, sealed -->
+      <g class="door-glow">
+        <ellipse cx="195" cy="300" rx="64" ry="54" fill="url(#far)" filter="url(#softer)"/>
+      </g>
+      <g filter="url(#soft)">
+        <path d="M168 322 V284 A27 27 0 0 1 222 284 V322 Z" fill="#0a1218"/>
+        <path d="M168 322 V284 A27 27 0 0 1 222 284 V322" fill="none" stroke="#9fd9e6" stroke-width="1.4" opacity=".8"/>
+        <!-- the count that has not filled, and a blank for a word -->
+        <g stroke="#9fd9e6" stroke-width="1.1" opacity=".75" stroke-linecap="round">
+          <path d="M181 296 v6 M186 296 v6 M191 296 v6"/>
+          <path d="M199 296 v6 M204 296 v6 M209 296 v6" opacity=".3"/>
+          <rect x="185" y="307" width="20" height="4" rx="2" fill="none"/>
+        </g>
+      </g>
+
+      <!-- the script on the walls: faint cold cuts, mostly unreadable from here -->
+      <g stroke="#7fc4d3" stroke-width="1" stroke-linecap="round" opacity=".28" fill="none" filter="url(#soft)">
+        <path d="M22 232 h9 M36 236 v8 M48 240 l5 6 M14 268 h7 M28 275 v6 M42 281 h8 M58 290 l4 -6"/>
+        <path d="M74 258 h6 M84 262 v7 M96 268 l-4 6 M70 300 h9 M88 306 v6 M104 312 h6"/>
+        <path d="M112 280 h5 M120 284 v6 M128 288 h6 M118 316 h6 M130 322 v5"/>
+        <path d="M368 232 h-9 M354 236 v8 M342 240 l-5 6 M376 268 h-7 M362 275 v6 M348 281 h-8 M332 290 l-4 -6"/>
+        <path d="M316 258 h-6 M306 262 v7 M294 268 l4 6 M320 300 h-9 M302 306 v6 M286 312 h-6"/>
+        <path d="M278 280 h-5 M270 284 v6 M262 288 h-6 M272 316 h-6 M260 322 v5"/>
+        <!-- rings: names, cut everywhere -->
+        <circle cx="52" cy="255" r="5"/><circle cx="96" cy="292" r="4"/><circle cx="338" cy="255" r="5"/><circle cx="294" cy="292" r="4"/><circle cx="126" cy="304" r="3"/>
+      </g>
+
+      <!-- cups along the walls, dark -->
+      <g fill="#050809" stroke="#2c3d4a" stroke-width=".8" opacity=".9">
+        <path d="M30 212 a8 5 0 0 0 16 0 z"/><path d="M78 240 a6 4 0 0 0 12 0 z"/><path d="M112 262 a5 3 0 0 0 10 0 z"/><path d="M136 276 a4 2.5 0 0 0 8 0 z"/>
+        <path d="M344 212 a8 5 0 0 0 16 0 z"/><path d="M300 240 a6 4 0 0 0 12 0 z"/><path d="M268 262 a5 3 0 0 0 10 0 z"/><path d="M246 276 a4 2.5 0 0 0 8 0 z"/>
+      </g>
+
+      <!-- the lintel on the side wall: two marks beside a rod-shaped blank -->
+      <g filter="url(#soft)">
+        <path d="M306 236 l30 -14 v70 l-30 20 z" fill="#0a1117"/>
+        <path d="M306 236 l30 -14" fill="none" stroke="#9fd9e6" stroke-width="1.6" opacity=".85"/>
+        <g fill="none" stroke="#9fd9e6" stroke-width="1.3" stroke-linecap="round" opacity=".9">
+          <circle cx="313" cy="228" r="3.2"/><path d="M321 226 v-7 M318 222 h6"/>
+          <rect x="326" y="216" width="8" height="2.6" rx="1.3" opacity=".45"/>
+        </g>
+        <ellipse cx="318" cy="238" rx="26" ry="20" fill="#7fc4d3" opacity=".12" filter="url(#softer)"/>
+      </g>
+
+      <!-- the lamp on its ledge: the one warm thing -->
+      <g class="halo-floor"><ellipse cx="290" cy="360" rx="120" ry="46" fill="url(#warmFloor)" filter="url(#softer)"/></g>
+      <g class="lamp-glow"><circle cx="294" cy="318" r="86" fill="url(#warmG)" filter="url(#softer)"/></g>
+      <g>
+        <!-- ledge -->
+        <path d="M262 336 l60 -8 v8 l-60 10 z" fill="#2a2c2c"/>
+        <path d="M262 336 l60 -8" stroke="#6b5a48" stroke-width="1" fill="none" opacity=".6"/>
+        <!-- clay lamp body -->
+        <path d="M278 330 q16 -12 34 -4 q-2 10 -16 12 q-14 1 -18 -8 z" fill="#5a3c2a"/>
+        <path d="M280 329 q14 -9 30 -3" stroke="#a46a3c" stroke-width="1.1" fill="none" opacity=".8"/>
+        <!-- flame -->
+        <g class="lamp-flame">
+          <ellipse cx="294" cy="316" rx="7" ry="9" fill="#f2a85a" opacity=".5" filter="url(#glow)"/>
+          <path d="M294 306 q5 8 1 15 q-6 -2 -5 -8 q0 -4 4 -7 z" fill="#ffe4b3"/>
+          <path d="M294 309 q3 5 .5 10 q-3.5 -1.5 -3 -5 q.2 -2.5 2.5 -5 z" fill="#fff8ea"/>
+        </g>
+      </g>
+
+      <!-- dust in the lamp's light -->
+      <g>
+        <circle class="mote" cx="270" cy="352" r="1"/><circle class="mote" cx="318" cy="330" r=".9"/><circle class="mote" cx="250" cy="300" r=".8"/><circle class="mote" cx="304" cy="366" r="1.1"/><circle class="mote" cx="286" cy="290" r=".7"/>
+      </g>
+
+      <!-- painted grain -->
+      <rect class="grain" width="390" height="470" filter="url(#grainF)"/>
+    </svg>
+    <div class="fade"></div>
+  </div>
+
+  <!-- ===================== TOP LINE ===================== -->
+  <header class="top">
+    <div class="where">Thursday · <b>The Lamp Hall</b></div>
+    <button class="maplink" type="button">Map</button>
+  </header>
+
+  <!-- ===================== AHEAD ===================== -->
+  <button class="ahead" type="button">
+    <span class="rule"></span>
+    <span class="t">Ahead, on the side wall: <b>the lintel</b>. <i>It needs a word.</i></span>
+  </button>
+
+  <!-- ===================== THE DAY ===================== -->
+  <main class="day">
+
+    <div class="capacity">
+      <span class="lbl">A normal day, from last night’s bedtime.</span>
+      <div class="seg" role="radiogroup" aria-label="Capacity">
+        <button type="button" role="radio" aria-checked="false">Low</button>
+        <button type="button" role="radio" aria-checked="true" class="on">Normal</button>
+        <button type="button" role="radio" aria-checked="false">High</button>
+      </div>
+    </div>
+
+    <section class="job" aria-label="Suggested next job">
+      <div class="kicker">Next</div>
+      <h1>Order the cat’s medication</h1>
+      <p class="note">You’ve been walking round this one. <em>There’s something in the step after it.</em></p>
+      <div class="acts">
+        <button class="btn go" type="button">Begin</button>
+        <button class="btn alt" type="button">Swap</button>
+      </div>
+    </section>
+
+    <section class="others" aria-label="The rest of the day">
+      <div class="row done"><span class="dot"></span><span class="t">Gym, then the sauna</span><span class="m">this morning</span></div>
+      <div class="row"><span class="dot"></span><span class="t">Course: one hour</span><span class="m">two delves</span></div>
+    </section>
+
+    <button class="cant" type="button">I can’t start</button>
+  </main>
+</div>
+
+<script>
+  // Capacity: one tap to change (mock; no state beyond the screen).
+  document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.seg button').forEach(x => { x.classList.remove('on'); x.setAttribute('aria-checked','false'); });
+    b.classList.add('on'); b.setAttribute('aria-checked','true');
+    const lbl = document.querySelector('.capacity .lbl');
+    lbl.textContent = { Low:'A low day. Outside, and a real meal, is enough.', Normal:'A normal day, from last night’s bedtime.', High:'A high day. There’s a deep push if you want it.' }[b.textContent];
+  }));
+</script>
+</body>
+</html>
