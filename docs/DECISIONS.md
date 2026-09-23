@@ -190,3 +190,14 @@
 - **Rationale:** the review showed each of these as a place where the story's logic and the game's rules could come apart; the decisions close them.
 - **Consequences:** `narrative/sealed/` revised accordingly; `GAME_BIBLE.md` and `LOCATIONS.md` aligned. Later narrative sessions sign-author every record before it is planted.
 - **Reversible:** Yes, before the first playable is built.
+
+## D-019 — The story's largest gate never waits on one real-life milestone alone
+
+- **Date:** 2026-09-23
+- **Context:** The sealed revelation map had the story's last great door open only on the largest Key (a great real-life milestone). A fresh-eyes review of the ending pointed out that a real project's milestone can be months away, so the story could stall in its last act, against the rule that nothing waits on Dan (P7, P8, D-018 item 4).
+- **Decision (provisional):** the door counts "the world on the hand": a great milestone fills it at once, and ordinary returns fill it slowly. The milestone accelerates the ending and never gates it. In the same review the ending was spread over more visits (the last four beats no longer share one week), the antagonist's one speech was cut by a third with its two lines of reproach removed, and the case where Dan simply cuts nothing at the end is now written (the place stays as it is; no nudge).
+- **Alternatives:** keep the milestone-only gate (rejected: stalls); drop the milestone from the gate (rejected: the largest Key should still open the largest door).
+- **Rationale:** the ending must be reachable by steady play and made sooner by a great day, never the reverse.
+- **Consequences:** `narrative/sealed/` revised (site, truth, map, visit tables, pacing). The exact counts belong to the Key economy in Phase 6.
+- **Reversible:** Yes, before the first playable is built.
+
