@@ -30,8 +30,8 @@
   .scene .fade{position:absolute;left:0;right:0;bottom:0;height:230px;background:linear-gradient(180deg,rgba(7,10,14,0) 0%,rgba(7,10,14,.6) 50%,var(--ground) 100%)}
   .grain{opacity:.22;mix-blend-mode:overlay}
 
-  .lamp-glow{transform-origin:286px 222px;animation:breathe 5.2s ease-in-out infinite}
-  .lamp-flame{transform-origin:286px 208px;animation:flame 3.1s ease-in-out infinite}
+  .lamp-glow{transform-origin:316px 226px;animation:breathe 5.2s ease-in-out infinite}
+  .lamp-flame{transform-origin:316px 214px;animation:flame 3.1s ease-in-out infinite}
   .halo-floor{animation:breatheO 5.2s ease-in-out infinite}
   .door-glow{animation:doorPulse 10s ease-in-out infinite}
   @keyframes breathe{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(1.07);opacity:1}}
@@ -63,7 +63,7 @@
   .ahead i{color:var(--cold)}
 
   .capacity{display:flex;align-items:center;justify-content:space-between;padding:0 0 0 2px}
-  .capacity .lbl{font-size:16.5px;color:var(--ink-faint);font-style:italic}
+  .capacity .lbl{font-size:16px;color:var(--ink-faint);font-style:italic;opacity:.8}
   .seg{display:flex;gap:2px;margin-left:-10px}
   .seg button{font-family:var(--carved);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);padding:10px 10px;position:relative;transition:color .25s}
   .seg button.on{color:var(--ink);text-shadow:0 0 12px rgba(143,214,228,.75)}
@@ -125,6 +125,7 @@
         <radialGradient id="warmFloor" cx=".5" cy=".5" r=".5">
           <stop offset="0" stop-color="#e59b4c" stop-opacity=".5"/><stop offset="1" stop-color="#e59b4c" stop-opacity="0"/>
         </radialGradient>
+        <linearGradient id="topfade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#070a0e" stop-opacity=".9"/><stop offset=".45" stop-color="#070a0e" stop-opacity=".45"/><stop offset="1" stop-color="#070a0e" stop-opacity="0"/></linearGradient>
         <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stop-color="#22313d"/><stop offset=".5" stop-color="#121b23"/><stop offset="1" stop-color="#070a0e"/>
         </linearGradient>
@@ -167,6 +168,7 @@
       <g class="door-glow">
         <ellipse cx="195" cy="318" rx="80" ry="64" fill="url(#far)" filter="url(#wide)" opacity=".8"/>
         <ellipse cx="195" cy="318" rx="34" ry="30" fill="url(#far)" filter="url(#softer)"/>
+        <ellipse cx="195" cy="372" rx="70" ry="22" fill="url(#far)" filter="url(#wide)" opacity=".5"/>
       </g>
       <!-- the great door: a count that has not filled, a blank for a word -->
       <g filter="url(#soft)">
@@ -201,38 +203,44 @@
 
       <!-- the lintel on the side wall: two marks beside a rod-shaped blank, only stone beneath -->
       <g>
-        <ellipse cx="318" cy="262" rx="30" ry="24" fill="#7fc4d3" opacity=".14" filter="url(#softer)"/>
+        <ellipse cx="72" cy="262" rx="30" ry="24" fill="#7fc4d3" opacity=".16" filter="url(#softer)"/>
         <g filter="url(#soft)">
-          <path d="M304 262 l30 -16 v74 l-30 22 z" fill="#0b141b"/>
-          <path d="M302 261 l34 -18" fill="none" stroke="#a8e0eb" stroke-width="1.8" opacity=".9"/>
+          <path d="M86 262 l-30 -16 v74 l30 22 z" fill="#0b141b"/>
+          <path d="M88 261 l-34 -18" fill="none" stroke="#a8e0eb" stroke-width="1.8" opacity=".9"/>
           <g fill="none" stroke="#a8e0eb" stroke-width="1.3" stroke-linecap="round" opacity=".95">
-            <circle cx="310" cy="252" r="3.4"/><path d="M319 250 v-8 M316 246 h6"/>
-            <rect x="325" y="240" width="9" height="2.8" rx="1.4" opacity=".4"/>
+            <circle cx="80" cy="252" r="3.4"/><path d="M71 250 v-8 M68 246 h6"/>
+            <rect x="56" y="240" width="9" height="2.8" rx="1.4" opacity=".4"/>
           </g>
         </g>
       </g>
 
+      <g transform="translate(-34 4)">
       <!-- the lamp on its ledge: the one warm thing in the hall -->
-      <g class="halo-floor"><ellipse cx="282" cy="352" rx="150" ry="54" fill="url(#warmFloor)" filter="url(#wide)"/></g>
-      <g class="lamp-glow"><circle cx="286" cy="306" r="104" fill="url(#warmG)" filter="url(#softer)"/></g>
+      <g class="halo-floor"><ellipse cx="330" cy="360" rx="160" ry="60" fill="url(#warmFloor)" filter="url(#wide)"/></g>
+      <g class="lamp-glow"><circle cx="350" cy="306" r="110" fill="url(#warmG)" filter="url(#softer)"/></g>
       <g>
-        <path d="M250 330 l70 -10 v9 l-70 12 z" fill="#25282a"/>
-        <path d="M250 330 l70 -10" stroke="#8c6a48" stroke-width="1" fill="none" opacity=".7"/>
-        <path d="M268 324 q18 -14 38 -5 q-2 12 -18 14 q-16 1 -20 -9 z" fill="#5c3d2a"/>
-        <path d="M270 323 q16 -11 34 -4" stroke="#b47a46" stroke-width="1.2" fill="none" opacity=".85"/>
+        <!-- a stone bracket cut from the wall -->
+        <path d="M322 332 L400 318 V324 L322 340 Z" fill="#2a2d2f"/>
+        <path d="M322 340 L400 324 L400 330 L330 346 Z" fill="#15181a"/>
+        <path d="M322 332 L400 318" stroke="#a37a4e" stroke-width="1" fill="none" opacity=".75"/>
+        <!-- clay lamp -->
+        <path d="M332 326 q18 -14 38 -5 q-2 12 -18 14 q-16 1 -20 -9 z" fill="#5c3d2a"/>
+        <path d="M334 325 q16 -11 34 -4" stroke="#b47a46" stroke-width="1.2" fill="none" opacity=".85"/>
         <g class="lamp-flame">
-          <ellipse cx="286" cy="308" rx="8" ry="10" fill="#f2a85a" opacity=".55" filter="url(#glow)"/>
-          <path d="M286 296 q6 9 1 17 q-7 -2 -6 -9 q0 -4 5 -8 z" fill="#ffe4b3"/>
-          <path d="M286 300 q3.5 5.5 .5 11 q-4 -1.5 -3.5 -5.5 q.2 -3 3 -5.5 z" fill="#fff8ea"/>
+          <ellipse cx="350" cy="310" rx="8" ry="10" fill="#f2a85a" opacity=".55" filter="url(#glow)"/>
+          <path d="M350 298 q6 9 1 17 q-7 -2 -6 -9 q0 -4 5 -8 z" fill="#ffe4b3"/>
+          <path d="M350 302 q3.5 5.5 .5 11 q-4 -1.5 -3.5 -5.5 q.2 -3 3 -5.5 z" fill="#fff8ea"/>
         </g>
+      </g>
       </g>
 
       <!-- dust, lit -->
       <g>
-        <circle class="mote" cx="262" cy="346" r="1"/><circle class="mote" cx="318" cy="322" r=".9"/><circle class="mote" cx="240" cy="296" r=".8"/><circle class="mote" cx="300" cy="360" r="1.1"/><circle class="mote" cx="278" cy="282" r=".7"/><circle class="mote" cx="330" cy="344" r=".8"/>
+        <circle class="mote" cx="322" cy="350" r="1"/><circle class="mote" cx="372" cy="322" r=".9"/><circle class="mote" cx="300" cy="300" r=".8"/><circle class="mote" cx="356" cy="366" r="1.1"/><circle class="mote" cx="336" cy="284" r=".7"/><circle class="mote" cx="386" cy="350" r=".8"/>
       </g>
 
       </g>
+      <rect width="390" height="240" fill="url(#topfade)"/>
       <rect class="grain" width="390" height="520" filter="url(#grainF)"/>
     </svg>
     <div class="fade"></div>
