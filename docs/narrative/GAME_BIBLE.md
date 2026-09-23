@@ -47,6 +47,7 @@ The story is finished when it is finished. It has a fixed ending, decided before
 - **Words are two to four marks cut together, and a word is a power** because the place obeys it: light, open, wake, hold, and later stranger things.
 - **Cutting a word is a short fixed ritual**, like a dialling sequence: mark, mark, the word locks, the door answers. The same steps in week two and in month twelve.
 - **Guessing, not typing.** A new mark arrives with a context (a picture, a name, a known neighbour) and three or four candidate meanings. Pick one; it shows with a question mark in every record that contains it; the place confirms it later, when a word works or a second record agrees. Never "wrong" at the moment of guessing. A rejected guess is a small story beat.
+- **You can try things.** Small blank cells on the walls take any two marks you like. The place answers with one line (a lamp dims, the hall hums, nothing). Never progress, never a punishment: a language you can speak, not only read.
 - **Old records re-read.** Learning a mark changes what earlier records say. Some marks change a great deal at once. The app shows you which old record changed most and lets you reopen it.
 - **The first word comes in week two or three** and opens something. After that, marks arrive at one or two a week, words about one a month.
 - **Big days can give you part of a mark** (an element or a category), completed by the next Key (D-013).

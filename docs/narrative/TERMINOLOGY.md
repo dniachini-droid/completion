@@ -19,6 +19,8 @@ _Written 2026-09-23._
 | a sealed thing | **sealed** | A gate, niche, record or chamber that shows what it needs | Key, word, or both |
 | a word-door | **a lintel** | A doorway whose lintel shows marks beside a rod-shaped blank | Needs a word |
 | a counting lock | **a count** | A tally that fills | Needs a Key |
+| an open cell | **an open cell** | A small blank cell on a wall where any two marks can be tried | The place answers with one line; never progress, never a refusal |
+| a told line | (the app shows it; no name) | A short line cut on the wall beside an object, in one hand | Objects from before paper carry no writing of their own |
 | a great gate | **a great door** | Needs both | One per region boundary |
 | a record | **a record** | A cut text from one life | Read a fragment at a time |
 | a fragment | **a line** (app) / fragment (design) | The under-a-minute piece of a record shown at one visit | |
