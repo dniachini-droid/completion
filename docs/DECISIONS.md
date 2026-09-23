@@ -71,7 +71,7 @@
 - **Rationale:** Dan's answers were clear and consistent with the player model. The remaining unknowns (notifications, the exact number of jobs, tone on low days) are better tested in use (D-004, D-005).
 - **Consequences:** Phase 2 mechanics must fit these principles. The course's 4 h/day ambition is a ceiling, not a target.
 - **Reversible:** Yes. Change a principle through a new decision entry.
-- **Status:** Principles pending Dan's final approval at the end of Phase 1.
+- **Status:** Approved by Dan, 2026-09-23.
 
 ## D-008 — The story gets dedicated, deep, research-led sessions
 - **Date:** 2026-09-23
@@ -81,3 +81,11 @@
 - **Rationale:** The story is Dan's retention engine: he stops playing when the story ends (player model). Its quality matters more than any other single piece of content.
 - **Consequences:** This covers depth of effort, not scope. D-004 still limits what must be written *before* the first playable (thematic core, the central mystery's truth, and the truth behind planted clues). That core gets this deep treatment, and later arcs get it too as they're developed. The research and the reasoning behind choices are recorded in `docs/narrative/`.
 - **Reversible:** Yes.
+
+## D-009 — Phase 1 closed; Phase 2 begins
+- **Date:** 2026-09-23
+- **Context:** Two interview rounds; all Phase 1 exit criteria met. Dan approved `DESIGN_PRINCIPLES.md` and `ANTI_FEATURES.md` and agreed to move on ("Yes. Yes.").
+- **Alternatives:** A third round on notifications, the number of main jobs, and tone on low days.
+- **Rationale:** These are better answered in use (D-004, D-005). They are listed under "Still to test in use" in `DESIGN_PRINCIPLES.md`.
+- **Consequences:** Phase 2 (Game Design) starts. Mechanics must fit the approved principles.
+- **Reversible:** Discovery can be reopened if the principles prove wrong in use.

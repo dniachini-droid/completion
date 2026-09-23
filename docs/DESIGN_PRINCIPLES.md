@@ -3,7 +3,7 @@
 > The product's rules, taken from discovery (`PLAYER_MODEL.md`, `DISCOVERY.md` → Phase 1). Every later mechanic must fit these. If it breaks one, change the principle deliberately, with an entry in `DECISIONS.md`. Do not work around it quietly.
 > Game mechanics (XP, HP/MP, quests, abilities) belong to Phase 2. These principles say what those mechanics must achieve, not what they are.
 
-_Status: **draft for Dan's approval** (2026-09-23, after Phase 1 rounds 1–2)._
+_Status: **approved by Dan** 2026-09-23 (D-007)._
 
 ## The problem
 
