@@ -359,3 +359,10 @@ Ids and weeks follow `REVELATION_MAP.md` weeks 27–52. Her cut notes carry no f
 | ECHO-Seed | 46 | the Seed's wall (SEE-ONCE) | (a scene, not a record) | A hall of tall figures going still one cutting at a time; one figure in the deep, cutting; the lamp-line lit to the bottom. |
 | the speech | 51 | his voice, down the lacing | (spoken) | §7 |
 | K4 | 52 | the face of the three doors, his hand | ring(KEEP-ONE) · rings ×hundreds · rings (given names) · ring(Hamun) ring(Sertor) ring(Alditha) ring(Fenwick) ring(Ines Halloran) · ring( ) {h} | The list. |
+
+### 13.1 Two more told lines in the deep (month 7; PACING work list 2)
+
+| Id | Week | Where / hand | Cut | Rendering |
+|---|---|---|---|---|
+| X-table | 27 | a reading-table's edge, a maker's hand | READ HAND; SEE NOT; GOOD {h: maker} | *Read with the hand; see not; good.* (A binder's instruction: the tables were for touch. Pays R9.5.) |
+| X-lift-count | 29 | the lift's panel, a maker's hand | COUNT UP: 8×8×8; COUNT DEEP: 8×8×8, ONE {h: maker} | *Count up: many. Count down: many, and one.* (The lift's tally: the last one down was one, and he did not come up by it. Pays R7.) |

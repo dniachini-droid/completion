@@ -33,7 +33,7 @@ _Written 2026-09-23._
 ## Work list (next narrative session)
 
 1. ~~Month 4: add the Engineer's face (a Key opens the cloth) as a second beat.~~ Done (REVELATION_MAP wk 16).
-2. Month 7: two more told lines in the deep works.
+2. ~~Month 7: two more told lines in the deep works.~~ Done (LIVES §13.1).
 3. Sign-author everything in `LIVES.md` §10's "before planting" list that months 4–6 use (V2–V5 done; C's transcription, E4–E6 paper, B1–B6 done; S9–S12; told lines done).
-4. Author the ~120 unlisted niche contents as a table (object, told line, week) against `CHARACTERS.md` §9.
+4. ~~Author the niche contents as a table.~~ Weeks 1–13 done (`NICHES.md`); weeks 14–52 remain.
 5. Arrival scenes for regions 2–5 in the manner of `ARRIVALS_REGION1.md`, region by region, as each is built.
