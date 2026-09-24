@@ -449,3 +449,12 @@
 - **Rationale:** Dan's taste (taste session: smooth, quiet everyday motion); D-030 (jobs are Dan's to edit); rule 12 (one setting per job, no modes).
 - **Consequences:** `design/UX_PRINCIPLES.md`, `design/INTERACTION_NOTES.md`, `game/TOOLS.md`, `game/CORE_LOOPS.md`, `DESIGN_PRINCIPLES.md` (P9); the D mock-ups (`ambient.js`, `direction.css`, `stair.html`, and eight screens load `ambient.js`).
 - **Reversible:** Yes.
+
+## D-042 — Phase 5 synthesises the chosen concept; no new concepts
+- **Date:** 2026-09-24
+- **Context:** MASTER_BRIEF §59 asks Phase 5 for 3–4 substantially different concepts to choose from. The concept was already chosen piece by piece: loop (D-010), story (D-024), tools (D-020, D-023), look (D-032, D-040). Dan: "No need to invent other new concepts. I think that's wasting time given how much work has gone into this one."
+- **Decision:** A deliberate deviation from §59. Phase 5 writes **one** synthesis of the chosen concept (`product/CONCEPT.md`, under §59's headings), stress-tests it against the principles, sets the numbers the build needs (D-035, D-037), and lists the first playable's contents. Work order: `product/PHASE5_PLAN.md`.
+- **Alternatives:** generate fresh concepts as §59 says (costs time and risks unsettling agreed work for no expected gain).
+- **Rationale:** D-004 (thorough but pragmatic; get a small, beautiful first playable into Dan's hands quickly); the comparison §59 wants already happened in Phase 2 (`game/CORE_LOOPS.md` Parts 2–3).
+- **Consequences:** `CLAUDE.md`, `CURRENT_STATE.md`, new `product/PHASE5_PLAN.md`.
+- **Reversible:** Yes.
