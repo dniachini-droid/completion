@@ -19,7 +19,7 @@ So: Part 1 is the shared chassis (proposals where Phase 1 left gaps, marked **[p
 
 ### The unit of effort
 - A **main job** is the unit the game rewards. A normal day has about 3, a low day has 2 (outside + a real meal). (P2)
-- Jobs are finished either by a **real-world completion** (went to the gym, booked the Spanish lesson, ordered the cat's medication) or by **focus sessions**: a bounded 25-minute timer, the Pomodoro unit that already works for Dan (P13). One hour of course work = 2 sessions = the job is done (P5).
+- Jobs are finished either by a **real-world completion** (went to the gym, booked the Spanish lesson, ordered the cat's medication) or by **focus sessions**: a bounded 25-minute timer, the Pomodoro unit that already works for Dan (P13). One hour of course work = 2 sessions = the job is done (P5). **Distance comes from time (D-037):** one step = 25 minutes of effort, and a job done without a timer counts by its usual length (the gym's hour = 2.4 steps).
 - Dan taps "done". There is no proof, no verification, no anti-cheat to run. [proposal]
 
 ### Anti-farming without admin [proposal]
@@ -231,8 +231,8 @@ Each return to the app takes **under a minute** (a decode included: a record fra
 ### Three sizes of reward
 | Size | Earned by | What Dan gets |
 |---|---|---|
-| **Step** | each main job, and each focus session after day complete | the map extends; often a small find or a line of script |
-| **Arrival** | day complete | a place worth arriving at: a chamber, a view, a record whose fragment you can decode |
+| **Step** | every 25 minutes of real effort, in proportion (D-037): delves, and jobs without a timer by their usual length | the map extends; often a small find or a line of script. Named places are about a working day apart. |
+| **Arrival** | day complete | wherever the day's steps reached: a named place on a long day, a camp with a view on a short one; a record whose fragment you can decode |
 | **Key** | each weekly target met; major milestones | opens something **already seen and sealed**: a gate, a sealed record, a new sign |
 
 **What opens what (D-013).** Every sealed thing shows what it needs: a **Key** (earned by living the week) or a **word** (earned by learning). The largest gates need both. Dan can always see which, so the goal is clear.
@@ -249,7 +249,7 @@ Kept small, one tap each, and never required to progress:
 ### Capacity: low floor, high ceiling (D-011)
 | Day | Main jobs | What the game offers |
 |---|---|---|
-| **Low** | 2 (outside + a real meal) | A short, safe push that still **arrives** somewhere. "That was enough. I still moved forward." |
+| **Low** | 2 (by default outside + a real meal; swappable, D-038) | A short, safe push that still **arrives** somewhere. "That was enough. I still moved forward." |
 | **Normal** | about 3 | A full arrival. |
 | **High** | up to 5, plus open-ended sessions | Dan can call a **deep push** in the morning: a route to places a normal day doesn't reach (deeper chambers, rarer records, harder gates, and sometimes **part of a sign**, D-013). |
 
@@ -263,11 +263,11 @@ Kept small, one tap each, and never required to progress:
 ### The daily loop
 | Moment | What happens |
 |---|---|
-| **Morning** | Capacity is already set from bedtime (one tap to change). Screen: where you stand in the Site, the next gate you can see, and **one** suggested first job (the other two beneath). Accept or swap from a short menu. On a High day: an offer of a deep push. |
-| **Doing a job** | Optional 25-minute timer. Dan leaves the app and does the thing. |
+| **Morning** | Capacity is already suggested from bedtime (one tap to change). Screen: where you stand in the Site, the next gate you can see, and **one** suggested first job (the day's other jobs beneath; only today's, never a backlog, D-038). Accept or swap from a short menu. On a High day: an offer of a deep push. |
+| **Doing a job** | A delve job runs as a delve; any job can be one, Dan's choice (D-041). A job that isn't (gym, cooking, errands, unless he makes them delves) has no timer: Dan goes, and taps Done on return (D-038). |
 | **Coming back** | Tap done → the step plays (≈20–40 s) → at most one small choice → out. |
 | **"I can't start"** | A **teaser from just ahead** (a line of script one sign short of meaning, a sound behind the gate). Then one tiny physical step. Then an offer to continue, never a demand. The teaser's payoff is on the other side of the job. |
-| **Day complete** | The arrival. The day is explicitly **enough**. On High days, a quiet "keep going?" with the deep route shown. |
+| **Day complete** | The arrival. The day is explicitly **enough**, and its success is locked in. Rest is the main offer; a quiet "keep going" is there on every day (on High days, with the deep route shown) (D-038). |
 | **Opening late (4 pm)** | No comment on the time. The day shrinks to what fits and can still complete. |
 | **Life happens** | An appointment added afterwards counts as a main job. |
 | **Evening close** | **Camp.** A short wind-down scene. Going to bed by the chosen time → something is waiting at camp in the morning (a decoded line, a map mark). Missing it removes nothing. Bedtime sets tomorrow's capacity. |

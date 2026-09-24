@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Morning — the Lamp Hall</title>
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<style>
+  :root{
+    --ground:#070a0e;
+    --ink:#ece7dc;
+    --ink-dim:#b4afa3;
+    --ink-faint:#7d7b74;
+    --cold:#8fd6e4;
+    --cold-soft:rgba(143,214,228,.55);
+    --warm:#f2b46a;
+    --carved:"Cinzel", "Marcellus", Georgia, serif;
+    --voice:"Cormorant Garamond", "EB Garamond", Georgia, serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--ground);color:var(--ink);-webkit-font-smoothing:antialiased}
+  body{font-family:var(--voice);font-size:18px;line-height:1.35;overflow-x:hidden}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent;text-align:left}
+
+  .phone{position:relative;width:100%;max-width:390px;height:844px;height:100dvh;min-height:760px;margin:0 auto;overflow:hidden;background:var(--ground);display:flex;flex-direction:column}
+
+  /* ---------- the scene (painted, behind everything) ---------- */
+  .scene{position:absolute;left:0;top:0;width:100%;height:520px;overflow:hidden;pointer-events:none}
+  .scene svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .scene .fade{position:absolute;left:0;right:0;bottom:0;height:230px;background:linear-gradient(180deg,rgba(7,10,14,0) 0%,rgba(7,10,14,.6) 50%,var(--ground) 100%)}
+  .grain{opacity:.22;mix-blend-mode:overlay}
+
+  .lamp-glow{transform-origin:316px 226px;animation:breathe 5.2s ease-in-out infinite}
+  .lamp-flame{transform-origin:316px 214px;animation:flame 3.1s ease-in-out infinite}
+  .halo-floor{animation:breatheO 5.2s ease-in-out infinite}
+  .door-glow{animation:doorPulse 10s ease-in-out infinite}
+  @keyframes breathe{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(1.07);opacity:1}}
+  @keyframes breatheO{0%,100%{opacity:.6}50%{opacity:.8}}
+  @keyframes flame{0%,100%{transform:scaleY(1) skewX(0)}30%{transform:scaleY(1.09) skewX(-2.5deg)}60%{transform:scaleY(.95) skewX(2deg)}}
+  @keyframes doorPulse{0%,100%{opacity:.75}50%{opacity:1}}
+  .mote{fill:#ffe2b8;opacity:0;animation:drift 13s linear infinite}
+  .mote:nth-child(2){animation-delay:-3s;animation-duration:16s;fill:#cfeaf1}
+  .mote:nth-child(3){animation-delay:-7s;animation-duration:12s}
+  .mote:nth-child(4){animation-delay:-10s;animation-duration:18s}
+  .mote:nth-child(5){animation-delay:-5s;animation-duration:15s;fill:#cfeaf1}
+  .mote:nth-child(6){animation-delay:-1s;animation-duration:14s}
+  @keyframes drift{0%{transform:translate(0,0);opacity:0}15%{opacity:.55}85%{opacity:.3}100%{transform:translate(-12px,-40px);opacity:0}}
+  @media (prefers-reduced-motion: reduce){.lamp-glow,.lamp-flame,.halo-floor,.door-glow,.mote{animation:none}.mote{opacity:.3}}
+
+  /* ---------- top line ---------- */
+  .top{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:baseline;padding:56px 22px 0}
+  .where{font-family:var(--carved);font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-dim);text-shadow:0 0 14px rgba(143,214,228,.25)}
+  .where b{font-weight:600;color:var(--ink)}
+  .maplink{font-family:var(--carved);font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--cold);padding:6px 0 6px 14px;text-shadow:0 0 12px var(--cold-soft)}
+
+  /* ---------- the day (flows up from the bottom) ---------- */
+  .day{position:relative;z-index:2;margin-top:auto;padding:0 22px 24px;display:flex;flex-direction:column;gap:12px}
+
+  .ahead{display:flex;flex-direction:column;gap:3px;padding:6px 2px 4px;color:var(--ink-dim);font-size:18px;line-height:1.3;width:100%}
+  .ahead .k{font-family:var(--carved);font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--cold);text-shadow:0 0 12px var(--cold-soft)}
+  .ahead .s{text-wrap:balance}
+  .ahead b{font-weight:500;color:var(--ink)}
+  .ahead i{color:var(--cold)}
+
+  .capacity{display:flex;align-items:center;justify-content:space-between;padding:0 0 0 2px}
+  .capacity .lbl{font-size:16px;color:var(--ink-faint);font-style:italic;opacity:.8}
+  .seg{display:flex;gap:2px;margin-left:-10px}
+  .seg button{font-family:var(--carved);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);padding:10px 10px;position:relative;transition:color .25s}
+  .seg button.on{color:var(--ink);text-shadow:0 0 12px rgba(143,214,228,.75)}
+  .seg button.on::after{content:"";position:absolute;left:10px;right:10px;bottom:4px;height:1px;background:var(--cold);box-shadow:0 0 8px var(--cold)}
+
+  .job{position:relative;border-radius:16px;padding:20px 22px 20px;
+       background:linear-gradient(180deg,rgba(24,35,46,.78),rgba(12,18,25,.9));
+       border:1px solid rgba(143,214,228,.24);
+       box-shadow:0 22px 44px -22px rgba(0,0,0,.95), 0 0 48px -12px rgba(143,214,228,.28);
+       backdrop-filter:blur(8px)}
+  .job::before{content:"";position:absolute;inset:0;border-radius:16px;pointer-events:none;
+       background:radial-gradient(120% 70% at 50% -10%,rgba(143,214,228,.18),rgba(143,214,228,0) 60%)}
+  .job .kicker{font-family:var(--carved);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--cold);text-shadow:0 0 12px rgba(143,214,228,.6)}
+  .job h1{font-family:var(--carved);font-weight:500;font-size:24.5px;line-height:1.22;letter-spacing:.01em;color:var(--ink);margin-top:9px;text-wrap:balance}
+  .job .note{margin-top:8px;font-size:17.5px;line-height:1.3;color:var(--ink-dim);font-style:italic}
+  .job .note em{font-style:italic;color:var(--warm);text-shadow:0 0 10px rgba(242,180,106,.45)}
+  .acts{display:flex;gap:10px;margin-top:18px}
+  .btn{flex:1;height:52px;border-radius:12px;font-family:var(--carved);font-size:15px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;
+       display:flex;align-items:center;justify-content:center;transition:transform .15s ease}
+  .btn:active{transform:scale(.97)}
+  .btn.go{color:#0a1319;background:linear-gradient(180deg,#bdeef6,#7fcbdb);box-shadow:0 0 24px -2px rgba(143,214,228,.6), 0 1px 0 rgba(255,255,255,.4) inset}
+  .btn.alt{flex:0 0 108px;color:var(--ink-dim);border:1px solid rgba(236,231,220,.16)}
+
+  .others{display:flex;flex-direction:column;padding:0 2px}
+  .row{display:flex;align-items:center;gap:14px;padding:11px 2px;border-top:1px solid rgba(236,231,220,.08)}
+  .row:first-child{border-top:0}
+  .row .dot{flex:0 0 9px;width:9px;height:9px;border-radius:50%;border:1px solid rgba(236,231,220,.4)}
+  .row.done .dot{border-color:transparent;background:var(--warm);box-shadow:0 0 10px 2px rgba(242,180,106,.5)}
+  .row .t{flex:1;font-size:18.5px;color:var(--ink)}
+  .row.done .t{color:var(--ink-dim)}
+  .row .m{font-size:16px;color:var(--ink-faint);font-style:italic}
+  .row.done .m{color:var(--warm);opacity:.85}
+
+  .cant{align-self:center;font-family:var(--carved);font-size:13.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-dim);padding:13px 20px;border-radius:999px;border:1px solid rgba(236,231,220,.12);margin-top:4px}
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <!-- ===================== THE LAMP HALL ===================== -->
+  <div class="scene" aria-hidden="true">
+    <svg viewBox="0 0 390 520" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="1.8"/></filter>
+        <filter id="softer" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="10"/></filter>
+        <filter id="wide" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="22"/></filter>
+        <filter id="glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="3"/></filter>
+        <filter id="grainF"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 .6  0 0 0 0 .65  0 0 0 0 .7  0 0 0 .5 0"/></filter>
+
+        <radialGradient id="vault" cx=".5" cy=".46" r=".8">
+          <stop offset="0" stop-color="#22323f"/><stop offset=".45" stop-color="#131d26"/><stop offset="1" stop-color="#05080b"/>
+        </radialGradient>
+        <radialGradient id="far" cx=".5" cy=".5" r=".5">
+          <stop offset="0" stop-color="#b6e6ef" stop-opacity=".95"/><stop offset=".3" stop-color="#5aa0b0" stop-opacity=".55"/><stop offset="1" stop-color="#0b1117" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="warmG" cx=".5" cy=".5" r=".5">
+          <stop offset="0" stop-color="#ffd9a0" stop-opacity=".95"/><stop offset=".22" stop-color="#f2a85a" stop-opacity=".5"/><stop offset=".55" stop-color="#b4602a" stop-opacity=".14"/><stop offset="1" stop-color="#7a3d15" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="warmFloor" cx=".5" cy=".5" r=".5">
+          <stop offset="0" stop-color="#e59b4c" stop-opacity=".5"/><stop offset="1" stop-color="#e59b4c" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="topfade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#070a0e" stop-opacity=".9"/><stop offset=".45" stop-color="#070a0e" stop-opacity=".45"/><stop offset="1" stop-color="#070a0e" stop-opacity="0"/></linearGradient>
+        <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#22313d"/><stop offset=".5" stop-color="#121b23"/><stop offset="1" stop-color="#070a0e"/>
+        </linearGradient>
+        <linearGradient id="wallL" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#0a1016"/><stop offset=".7" stop-color="#1b2833"/><stop offset="1" stop-color="#26364433"/>
+        </linearGradient>
+        <linearGradient id="wallR" x1="1" y1="0" x2="0" y2="0">
+          <stop offset="0" stop-color="#0c131a"/><stop offset=".7" stop-color="#1d2b37"/><stop offset="1" stop-color="#26364433"/>
+        </linearGradient>
+      </defs>
+
+      <!-- vault: rounded like the inside of a shell -->
+      <rect width="390" height="520" fill="url(#vault)"/>
+      <g transform="translate(0 -84)">
+
+      <!-- the receding hall, painted as soft bands -->
+      <g filter="url(#soft)">
+        <path d="M-30 620 V210 A225 225 0 0 1 420 210 V620 Z" fill="#0e161e" opacity=".85"/>
+        <path d="M22 470 V228 A173 173 0 0 1 368 228 V470 Z" fill="#131d26"/>
+        <path d="M66 430 V244 A129 129 0 0 1 324 244 V430 Z" fill="#182430"/>
+        <path d="M104 396 V256 A91 91 0 0 1 286 256 V396 Z" fill="#1c2a36"/>
+        <path d="M134 370 V265 A61 61 0 0 1 256 265 V370 Z" fill="#203040"/>
+        <path d="M156 352 V272 A39 39 0 0 1 234 272 V352 Z" fill="#243646"/>
+        <!-- floor -->
+        <path d="M-60 560 L160 340 H230 L450 560 Z" fill="url(#floor)"/>
+        <!-- walls -->
+        <path d="M-60 560 L160 340 V232 L-60 140 Z" fill="url(#wallL)" opacity=".85"/>
+        <path d="M450 560 L230 340 V232 L450 140 Z" fill="url(#wallR)" opacity=".85"/>
+      </g>
+      <!-- the rib lines of the vault, faint -->
+      <g fill="none" stroke="#5b7a8a" stroke-linecap="round" filter="url(#soft)">
+        <path d="M22 470 V228 A173 173 0 0 1 368 228 V470" stroke-width="1.6" opacity=".22"/>
+        <path d="M66 430 V244 A129 129 0 0 1 324 244 V430" stroke-width="1.3" opacity=".26"/>
+        <path d="M104 396 V256 A91 91 0 0 1 286 256 V396" stroke-width="1.1" opacity=".3"/>
+        <path d="M134 370 V265 A61 61 0 0 1 256 265 V370" stroke-width="1" opacity=".34"/>
+        <path d="M156 352 V272 A39 39 0 0 1 234 272 V352" stroke-width=".9" opacity=".4"/>
+      </g>
+
+      <!-- cold haze from the far end -->
+      <g class="door-glow">
+        <ellipse cx="195" cy="318" rx="80" ry="64" fill="url(#far)" filter="url(#wide)" opacity=".8"/>
+        <ellipse cx="195" cy="318" rx="34" ry="30" fill="url(#far)" filter="url(#softer)"/>
+        <ellipse cx="195" cy="372" rx="70" ry="22" fill="url(#far)" filter="url(#wide)" opacity=".5"/>
+      </g>
+      <!-- the great door: a count that has not filled, a blank for a word -->
+      <g filter="url(#soft)">
+        <path d="M172 342 V300 A23 23 0 0 1 218 300 V342 Z" fill="#081015"/>
+        <path d="M172 342 V300 A23 23 0 0 1 218 300 V342" fill="none" stroke="#a8e0eb" stroke-width="1.3" opacity=".85"/>
+        <g stroke="#a8e0eb" stroke-width="1.1" stroke-linecap="round" fill="none">
+          <path d="M183 312 v6 M188 312 v6 M193 312 v6" opacity=".85"/>
+          <path d="M198 312 v6 M203 312 v6 M208 312 v6" opacity=".28"/>
+          <rect x="186" y="324" width="18" height="3.6" rx="1.8" opacity=".55"/>
+        </g>
+      </g>
+
+      <!-- the script: cut into every surface, mostly beyond reading from here -->
+      <g stroke="#7fc4d3" stroke-width="1" stroke-linecap="round" opacity=".26" fill="none" filter="url(#soft)">
+        <path d="M18 246 h9 M32 250 v8 M44 254 l5 6 M10 282 h7 M24 289 v6 M38 295 h8 M54 304 l4 -6 M14 322 h10 M30 330 v7 M46 336 h6"/>
+        <path d="M70 272 h6 M80 276 v7 M92 282 l-4 6 M66 314 h9 M84 320 v6 M100 326 h6 M76 350 h8 M92 356 v5"/>
+        <path d="M108 294 h5 M116 298 v6 M124 302 h6 M114 330 h6 M126 336 v5 M118 358 h7"/>
+        <circle cx="48" cy="269" r="5"/><circle cx="92" cy="306" r="4"/><circle cx="122" cy="318" r="3"/><circle cx="34" cy="352" r="4"/>
+      </g>
+      <!-- near the lamp the cuts take its colour -->
+      <g stroke="#d9a468" stroke-width="1" stroke-linecap="round" opacity=".38" fill="none" filter="url(#soft)">
+        <path d="M372 246 h-9 M358 250 v8 M346 254 l-5 6 M380 282 h-7 M366 289 v6 M352 295 h-8 M336 304 l-4 -6 M376 322 h-10 M360 330 v7"/>
+        <path d="M282 294 h-5 M274 298 v6 M266 302 h-6 M276 330 h-6 M264 336 v5 M272 358 h-7 M252 318 h-6 M258 346 v5"/>
+        <circle cx="342" cy="269" r="5"/><circle cx="268" cy="318" r="3"/><circle cx="356" cy="352" r="4"/>
+      </g>
+
+      <!-- cups along the walls, dark -->
+      <g fill="#04070a" stroke="#31434f" stroke-width=".8">
+        <path d="M24 226 a9 5.5 0 0 0 18 0 z"/><path d="M76 254 a7 4.5 0 0 0 14 0 z"/><path d="M112 276 a5.5 3.5 0 0 0 11 0 z"/><path d="M138 290 a4 2.5 0 0 0 8 0 z"/>
+        <path d="M348 226 a9 5.5 0 0 0 18 0 z"/><path d="M300 254 a7 4.5 0 0 0 14 0 z"/><path d="M267 276 a5.5 3.5 0 0 0 11 0 z"/><path d="M244 290 a4 2.5 0 0 0 8 0 z"/>
+      </g>
+
+      <!-- the lintel on the side wall: two marks beside a rod-shaped blank, only stone beneath -->
+      <g>
+        <ellipse cx="72" cy="262" rx="30" ry="24" fill="#7fc4d3" opacity=".16" filter="url(#softer)"/>
+        <g filter="url(#soft)">
+          <path d="M86 262 l-30 -16 v74 l30 22 z" fill="#0b141b"/>
+          <path d="M88 261 l-34 -18" fill="none" stroke="#a8e0eb" stroke-width="1.8" opacity=".9"/>
+          <g fill="none" stroke="#a8e0eb" stroke-width="1.3" stroke-linecap="round" opacity=".95">
+            <circle cx="80" cy="252" r="3.4"/><path d="M71 250 v-8 M68 246 h6"/>
+            <rect x="56" y="240" width="9" height="2.8" rx="1.4" opacity=".4"/>
+          </g>
+        </g>
+      </g>
+
+      <g transform="translate(-34 4)">
+      <!-- the lamp on its ledge: the one warm thing in the hall -->
+      <g class="halo-floor"><ellipse cx="330" cy="360" rx="160" ry="60" fill="url(#warmFloor)" filter="url(#wide)"/></g>
+      <g class="lamp-glow"><circle cx="350" cy="306" r="110" fill="url(#warmG)" filter="url(#softer)"/></g>
+      <g>
+        <!-- a stone bracket cut from the wall -->
+        <path d="M322 332 L400 318 V324 L322 340 Z" fill="#2a2d2f"/>
+        <path d="M322 340 L400 324 L400 330 L330 346 Z" fill="#15181a"/>
+        <path d="M322 332 L400 318" stroke="#a37a4e" stroke-width="1" fill="none" opacity=".75"/>
+        <!-- clay lamp -->
+        <path d="M332 326 q18 -14 38 -5 q-2 12 -18 14 q-16 1 -20 -9 z" fill="#5c3d2a"/>
+        <path d="M334 325 q16 -11 34 -4" stroke="#b47a46" stroke-width="1.2" fill="none" opacity=".85"/>
+        <g class="lamp-flame">
+          <ellipse cx="350" cy="310" rx="8" ry="10" fill="#f2a85a" opacity=".55" filter="url(#glow)"/>
+          <path d="M350 298 q6 9 1 17 q-7 -2 -6 -9 q0 -4 5 -8 z" fill="#ffe4b3"/>
+          <path d="M350 302 q3.5 5.5 .5 11 q-4 -1.5 -3.5 -5.5 q.2 -3 3 -5.5 z" fill="#fff8ea"/>
+        </g>
+      </g>
+      </g>
+
+      <!-- dust, lit -->
+      <g>
+        <circle class="mote" cx="322" cy="350" r="1"/><circle class="mote" cx="372" cy="322" r=".9"/><circle class="mote" cx="300" cy="300" r=".8"/><circle class="mote" cx="356" cy="366" r="1.1"/><circle class="mote" cx="336" cy="284" r=".7"/><circle class="mote" cx="386" cy="350" r=".8"/>
+      </g>
+
+      </g>
+      <rect width="390" height="240" fill="url(#topfade)"/>
+      <rect class="grain" width="390" height="520" filter="url(#grainF)"/>
+    </svg>
+    <div class="fade"></div>
+  </div>
+
+  <!-- ===================== TOP LINE ===================== -->
+  <header class="top">
+    <div class="where">Thursday · <b>The Lamp Hall</b></div>
+    <button class="maplink" type="button">Map</button>
+  </header>
+
+  <!-- ===================== THE DAY ===================== -->
+  <main class="day">
+
+    <button class="ahead" type="button">
+      <span class="k">Ahead</span>
+      <span class="s"><b>The lintel</b>, on the side wall. <i>It needs a word.</i></span>
+    </button>
+
+    <div class="capacity">
+      <div class="seg" role="radiogroup" aria-label="Capacity">
+        <button type="button" role="radio" aria-checked="false">Low</button>
+        <button type="button" role="radio" aria-checked="true" class="on">Normal</button>
+        <button type="button" role="radio" aria-checked="false">High</button>
+      </div>
+      <span class="lbl">from last night’s bedtime</span>
+    </div>
+
+    <section class="job" aria-label="Suggested next job">
+      <div class="kicker">Next</div>
+      <h1>Order the cat’s medication</h1>
+      <p class="note"><em>There’s something in the step after this one.</em></p>
+      <div class="acts">
+        <button class="btn go" type="button">Begin</button>
+        <button class="btn alt" type="button">Swap</button>
+      </div>
+    </section>
+
+    <section class="others" aria-label="The rest of the day">
+      <div class="row done"><span class="dot"></span><span class="t">Gym, then the sauna</span><span class="m">done this morning</span></div>
+      <div class="row"><span class="dot"></span><span class="t">Course: one hour</span><span class="m">two delves</span></div>
+    </section>
+
+    <button class="cant" type="button">I can’t start</button>
+  </main>
+</div>
+
+<script>
+  // Capacity: one tap to change (mock; the label follows).
+  const notes = { Low:'outside, and a real meal, is enough', Normal:'from last night’s bedtime', High:'a deep push is open if you want it' };
+  document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.seg button').forEach(x => { x.classList.remove('on'); x.setAttribute('aria-checked','false'); });
+    b.classList.add('on'); b.setAttribute('aria-checked','true');
+    document.querySelector('.capacity .lbl').textContent = notes[b.textContent.trim()];
+  }));
+</script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+/* ==========================================================================
+   Direction A — Lamp and Stone
+   Cold is the place. Warm is you, and what you've earned.
+   Carved letters everywhere: Cinzel for place names and small labels,
+   Marcellus (a carved face with lower case) for jobs, sentences, times, the daybook.
+   The world is the screen; a few words sit in its darkest part.
+   No cards, no boxes, no lines of light. One warm thing to press.
+   ========================================================================== */
+
+:root{
+  /* stone: painted blue-grey, cold */
+  --stone-0:#05080b;
+  --stone-1:#0a1015;
+  --stone-2:#111a21;
+  --stone-3:#1b262e;
+
+  /* ink: carved letters catching light */
+  --ink:#edf2f4;
+  --ink-2:#c3d0d6;
+  --ink-3:#98abb4;
+
+  /* cold: the place, the far end, sealed things, marks not yet known */
+  --cold:#9fc4d8;
+  --cold-hi:#dcf0f8;
+  --cold-dim:#6d8fa0;
+
+  /* warm: you, the lamp, the thing you're about to press, what you've earned */
+  --warm:#f0a24a;
+  --warm-hi:#ffd9a0;
+  --warm-deep:#b5602a;
+
+  /* type */
+  --carve:'Cinzel', 'Marcellus', Georgia, serif;
+  --voice:'Marcellus', 'Cinzel', Georgia, serif;
+
+  /* rhythm */
+  --gutter:24px;
+  --top:max(40px, env(safe-area-inset-top));
+
+  /* motion */
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --slow:cubic-bezier(.45,.05,.2,1);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--stone-0);overflow-x:hidden}
+body{color:var(--ink);font-family:var(--voice);font-size:17px;line-height:1.4;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:inherit;text-decoration:none;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+
+/* ---------- the phone: fills the viewport; the painting is cropped, never squashed ---------- */
+.screen{position:relative;width:100%;max-width:440px;height:100vh;height:100svh;min-height:620px;margin:0 auto;overflow:hidden;background:var(--stone-0);isolation:isolate}
+.scene{position:absolute;inset:0;z-index:0}
+.scene svg{display:block;width:100%;height:100%}
+.motes{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+/* UI sits in flow over the painting: header at the top, the day anchored to the bottom */
+.ui{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;padding:var(--top) var(--gutter) 0}
+.grow{flex:1 1 auto;min-height:8px}
+.pin{position:absolute;z-index:3} /* words placed on the painting, in % of the screen */
+
+/* ---------- carved letters ---------- */
+.eyebrow{font-family:var(--carve);font-size:13px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);text-shadow:0 1px 3px #000}
+.eyebrow.cold{color:var(--cold)}
+.eyebrow.warm{color:var(--warm)}
+.place{font-family:var(--carve);font-weight:500;font-size:30px;line-height:1.1;letter-spacing:.035em;color:var(--ink);text-shadow:0 1px 0 rgba(0,0,0,.9),0 0 22px rgba(159,196,216,.3)}
+.title{font-family:var(--voice);font-weight:400;font-size:26px;line-height:1.2;color:#f7f3ec;text-shadow:0 1px 2px rgba(0,0,0,.9),0 0 22px rgba(0,0,0,.6)}
+.say{font-family:var(--voice);font-size:18px;line-height:1.42;color:var(--ink-2);text-shadow:0 1px 3px rgba(0,0,0,.9)}
+.say .w{color:var(--warm-hi)}
+.say .c{color:var(--cold-hi)}
+.small{font-family:var(--voice);font-size:16px;color:var(--ink-3);text-shadow:0 1px 3px #000}
+.numerals{font-family:var(--voice);font-weight:400;font-variant-numeric:lining-nums tabular-nums;letter-spacing:.02em}
+
+/* ---------- the one warm thing to press: carved letters in a pool of lamp light, no hard edge ---------- */
+.warm-btn{
+  position:relative;display:flex;align-items:center;justify-content:center;gap:10px;
+  min-height:60px;padding:0 30px;border-radius:40px;isolation:isolate;
+  font-family:var(--carve);font-weight:700;font-size:17px;letter-spacing:.22em;text-transform:uppercase;color:#fff4de;
+  text-shadow:0 0 12px rgba(255,190,110,.9),0 0 2px rgba(120,50,10,.9),0 1px 1px rgba(60,20,0,.8);
+  transition:transform .2s var(--ease);
+}
+.warm-btn::before{ /* the pool of light the letters sit in */
+  content:"";position:absolute;inset:-6px -10px;z-index:-1;border-radius:50%;
+  background:
+    radial-gradient(ellipse 50% 40% at 50% 54%, rgba(255,214,150,.75), rgba(255,214,150,0) 70%),
+    radial-gradient(ellipse 50% 50% at 50% 50%, rgba(214,120,44,.85) 0%, rgba(196,104,38,.62) 45%, rgba(150,70,24,.28) 72%, rgba(120,50,16,0) 100%);
+  filter:blur(3px);
+  animation:lampbreath 5.6s ease-in-out infinite;
+}
+.warm-btn::after{ /* a short carved slot beneath the letters, lit from within */
+  content:"";position:absolute;left:35%;right:35%;bottom:13px;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,rgba(255,220,170,0),rgba(255,226,180,.5),rgba(255,220,170,0));
+  filter:blur(.6px);
+}
+.warm-btn:active{transform:scale(.97)}
+.warm-btn:active::before{animation:swell .5s var(--ease)}
+@keyframes lampbreath{0%,100%{opacity:.88;transform:scale(1)}50%{opacity:1;transform:scale(1.04)}}
+@keyframes swell{from{opacity:1;transform:scale(1.18)}to{opacity:.9;transform:scale(1)}}
+
+/* ---------- quiet words you can tap (cold: the place's own light) ---------- */
+.quiet-btn{
+  display:inline-flex;align-items:center;gap:9px;min-height:48px;padding:0 6px;
+  font-family:var(--voice);font-size:18px;color:var(--cold);letter-spacing:.01em;
+  text-shadow:0 0 14px rgba(159,196,216,.4),0 1px 3px #000;transition:color .3s;
+}
+.quiet-btn:active{color:var(--cold-hi)}
+.quiet-btn svg{width:16px;height:16px;flex:none}
+
+/* ---------- points of light (no lines, no boxes) ---------- */
+.pt{position:relative;width:20px;height:20px;flex:none;display:inline-block}
+.pt::before{content:"";position:absolute;inset:5px;border-radius:50%}
+.pt::after{content:"";position:absolute;inset:-8px;border-radius:50%}
+.pt.warm::before{background:radial-gradient(circle at 50% 45%, #fff3dc, #ffc877 45%, #e38d3c 100%)}
+.pt.warm::after{background:radial-gradient(closest-side, rgba(240,162,74,.55), rgba(240,162,74,0))}
+.pt.cold::before{inset:3px;border:1.6px solid rgba(159,196,216,.75);box-shadow:0 0 8px rgba(159,196,216,.45)}
+.pt.cold::after{background:radial-gradient(closest-side, rgba(159,196,216,.18), rgba(159,196,216,0))}
+
+/* ---------- way back: small, top-left ---------- */
+.home{display:inline-flex;align-items:center;gap:8px;height:44px;margin-left:-10px;padding:0 10px;align-self:flex-start;
+  font-family:var(--voice);font-size:16px;color:var(--ink-2);text-shadow:0 1px 3px #000}
+.home svg{width:14px;height:14px}
+
+/* ---------- the way-finder: four carved words, in flow at the bottom ---------- */
+.nav{display:flex;justify-content:space-between;margin:0 calc(-1 * var(--gutter));padding:4px 8px max(10px, env(safe-area-inset-bottom));
+  background:linear-gradient(to bottom, rgba(5,8,11,0), rgba(5,8,11,.9) 40%)}
+.nav a{position:relative;flex:1;display:flex;align-items:center;justify-content:center;height:50px;
+  font-family:var(--voice);font-size:16px;color:var(--ink-3);transition:color .3s}
+.nav a.here{color:var(--ink)}
+.nav a.here::before{content:"";position:absolute;top:4px;left:50%;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:#f4f8fa;box-shadow:0 0 8px 2px rgba(220,235,245,.4)}
+.nav a:active{color:var(--warm-hi)}
+
+/* ---------- entrance: quiet ---------- */
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.rise{animation:rise .9s var(--ease) both}
+.d1{animation-delay:.08s}.d2{animation-delay:.2s}.d3{animation-delay:.34s}.d4{animation-delay:.5s}.d5{animation-delay:.66s}
+
+/* the lamp breathes (SVG groups; never put these on an element that has its own opacity) */
+.breathe{transform-box:fill-box;transform-origin:50% 60%;animation:breathe 5.6s ease-in-out infinite}
+.flicker{transform-box:fill-box;transform-origin:50% 100%;animation:flicker 2.8s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:.84;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
+@keyframes flicker{0%,100%{transform:scale(1,1)}28%{transform:scale(.95,1.07)}55%{transform:scale(1.04,.94)}78%{transform:scale(.98,1.03)}}
+.hum{animation:hum 7s ease-in-out infinite}
+@keyframes hum{0%,100%{opacity:.72}50%{opacity:1}}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;animation-delay:0s!important;transition-duration:.01ms!important}
+  .motes{display:none}
+}

@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>A record · The long tally</title>
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<link rel="stylesheet" href="direction.css">
+<style>
+
+.head .title{margin-top:6px}
+.line{display:flex;justify-content:space-between;align-items:flex-start;margin:0}
+.mk{position:relative;display:flex;flex-direction:column;align-items:center;width:16.6%;min-width:48px;padding:4px 0 2px;border-radius:16px}
+.mk svg{width:48px;height:48px;overflow:visible}
+.mk.ring svg{width:58px;height:58px;margin:-5px 0}
+.mk .g{margin-top:6px;min-height:24px;font-family:var(--voice);font-size:16px;white-space:nowrap;text-shadow:0 1px 3px #000,0 0 10px #000}
+.g.guess{color:#f3c68c}
+.g.known{color:#ffe0b2;text-shadow:0 0 12px rgba(240,162,74,.5),0 1px 3px #000}
+.g.name{color:var(--cold)}
+.g.unk{color:var(--ink-3)}
+.mk.invite::after,.mk[aria-pressed=true]::after{content:"";position:absolute;left:50%;bottom:-8px;width:0;height:0;margin-left:-6px;border:6px solid transparent;border-bottom-color:#f0a24a;filter:drop-shadow(0 0 4px rgba(240,162,74,.8));transform:rotate(180deg) translateY(-100%)}
+.mk.invite::before,.mk[aria-pressed=true]::before{content:"";position:absolute;left:50%;top:28px;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;
+  background:radial-gradient(closest-side, rgba(240,162,74,.26), rgba(240,162,74,0));animation:breathe 3.6s ease-in-out infinite;pointer-events:none}
+.mk[aria-pressed=true] .g{color:var(--warm-hi)}
+.ask{margin-top:18px;text-align:left;min-height:120px;padding-left:calc(16.6% - 30px)}
+.cands{justify-content:flex-start!important;margin-left:-12px}
+.ask .q{font-family:var(--voice);font-size:17px;color:var(--ink-2);text-shadow:0 1px 3px #000}
+.cands{display:flex;justify-content:center;flex-wrap:wrap;gap:4px 8px;margin-top:6px}
+.cand{position:relative;min-height:48px;padding:0 12px;font-family:var(--voice);font-size:20px;color:#f6d3a3;text-shadow:0 1px 3px #000;transition:transform .25s var(--ease),color .25s}
+.cand::after{content:"";position:absolute;left:50%;bottom:8px;width:3px;height:3px;margin-left:-1.5px;border-radius:50%;background:#f0a24a}
+.cand.picked{transform:scale(1.12);color:#fff0d8;text-shadow:0 0 12px rgba(255,190,110,.8),0 1px 2px #000}
+.ask .small{margin-top:4px}
+.appline{text-align:center;margin-top:22px}
+.appline .say{font-size:19px;color:var(--ink)}
+.done{display:flex;justify-content:center;margin:6px 0 max(16px, env(safe-area-inset-bottom))}
+
+</style>
+</head>
+<body>
+<main class="screen">
+
+<div class="scene"><svg viewBox="0 0 390 844" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>
+  <filter id="grain" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="33"/>
+    <feColorMatrix values="0 0 0 0 .62  0 0 0 0 .72  0 0 0 0 .78  0 0 0 .6 0"/>
+  </filter>
+  <filter id="clouds" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".011 .014" numOctaves="4" seed="37"/>
+    <feColorMatrix values="0 0 0 0 .52  0 0 0 0 .64  0 0 0 0 .72  0 0 0 1 -.3"/>
+  </filter>
+  <filter id="speck" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".06 .09" numOctaves="3" seed="42"/>
+    <feColorMatrix values="0 0 0 0 .6  0 0 0 0 .7  0 0 0 0 .78  0 0 0 1.4 -.72"/>
+  </filter>
+  <filter id="paint" x="-15%" y="-15%" width="130%" height="130%">
+    <feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="3" seed="35" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="7" xChannelSelector="R" yChannelSelector="G" result="d"/>
+    <feGaussianBlur in="d" stdDeviation="1.3"/>
+  </filter>
+  <filter id="paintS" x="-15%" y="-15%" width="130%" height="130%">
+    <feTurbulence type="fractalNoise" baseFrequency=".06" numOctaves="2" seed="38" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="3" xChannelSelector="R" yChannelSelector="G" result="d"/>
+    <feGaussianBlur in="d" stdDeviation=".6"/>
+  </filter>
+  <filter id="b1" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="1"/></filter>
+  <filter id="b2" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="2.4"/></filter>
+  <filter id="b4" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="4.5"/></filter>
+  <filter id="b8" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="9"/></filter>
+  <filter id="b16" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="18"/></filter>
+  <filter id="b30" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="30"/></filter>
+  <filter id="glowC" x="-100%" y="-100%" width="300%" height="300%">
+    <feGaussianBlur stdDeviation="2.2" result="b"/><feGaussianBlur in="SourceGraphic" stdDeviation="6" result="b2"/>
+    <feMerge><feMergeNode in="b2"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="relief" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency=".022 .03" numOctaves="5" seed="44" result="n"/>
+    <feDiffuseLighting in="n" surfaceScale="5" diffuseConstant="1.1" lighting-color="#c9d6dc" result="l"><feDistantLight azimuth="210" elevation="38"/></feDiffuseLighting>
+    <feComposite in="l" in2="SourceGraphic" operator="in"/>
+  </filter>
+  <filter id="reliefFine" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency=".09 .12" numOctaves="3" seed="46" result="n"/>
+    <feDiffuseLighting in="n" surfaceScale="2.2" diffuseConstant="1" lighting-color="#c9d6dc" result="l"><feDistantLight azimuth="210" elevation="45"/></feDiffuseLighting>
+    <feComposite in="l" in2="SourceGraphic" operator="in"/>
+  </filter>
+  <radialGradient id="flameG" cx=".5" cy=".72" r=".62">
+    <stop offset="0" stop-color="#fffaf0"/><stop offset=".42" stop-color="#ffd690"/><stop offset=".8" stop-color="#f39a3c" stop-opacity=".6"/><stop offset="1" stop-color="#e57a24" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="warmPool" cx=".5" cy=".5" r=".5">
+    <stop offset="0" stop-color="#ffd28e" stop-opacity=".85"/><stop offset=".14" stop-color="#f0a24a" stop-opacity=".45"/>
+    <stop offset=".5" stop-color="#9c5424" stop-opacity=".16"/><stop offset="1" stop-color="#3a1c0c" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="coldPool" cx=".5" cy=".5" r=".5">
+    <stop offset="0" stop-color="#e2f3fa" stop-opacity=".9"/><stop offset=".12" stop-color="#9fc4d8" stop-opacity=".5"/>
+    <stop offset=".45" stop-color="#3e5a69" stop-opacity=".2"/><stop offset="1" stop-color="#0e161c" stop-opacity="0"/>
+  </radialGradient>
+  <filter id="clayGrain" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2" seed="3" result="n"/>
+    <feColorMatrix in="n" values="0 0 0 0 .2  0 0 0 0 .1  0 0 0 0 .05  0 0 0 1.8 -.7" result="g"/>
+    <feComposite in="g" in2="SourceGraphic" operator="in"/>
+  </filter>
+  <linearGradient id="clay" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#b07a4e"/><stop offset=".45" stop-color="#7a4f31"/><stop offset="1" stop-color="#2e1c11"/>
+  </linearGradient>
+
+  <linearGradient id="wall" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#1c2830"/><stop offset=".5" stop-color="#131c22"/><stop offset="1" stop-color="#070b0e"/>
+  </linearGradient>
+  <radialGradient id="rake" cx="30" cy="700" r="520" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#f0a24a" stop-opacity=".36"/><stop offset=".35" stop-color="#8a5328" stop-opacity=".12"/><stop offset="1" stop-color="#2a160a" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="coldwash" cx="300" cy="180" r="460" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#bfe0ee" stop-opacity=".3"/><stop offset=".5" stop-color="#9fc4d8" stop-opacity=".1"/><stop offset="1" stop-color="#9fc4d8" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="topFade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#05080b" stop-opacity=".92"/><stop offset="1" stop-color="#05080b" stop-opacity="0"/></linearGradient>
+  <linearGradient id="botFade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#05080b" stop-opacity="0"/><stop offset=".5" stop-color="#05080b" stop-opacity=".85"/><stop offset="1" stop-color="#05080b"/></linearGradient>
+  <filter id="salt" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".5" numOctaves="2" seed="12"/>
+    <feColorMatrix values="0 0 0 0 .86  0 0 0 0 .92  0 0 0 0 .95  0 0 0 3 -2.1"/>
+  </filter>
+  <mask id="saltMask"><rect width="390" height="844" fill="#000"/><path d="M230 -20 Q330 120 420 160 L420 -20 Z" fill="#fff" filter="url(#b16)"/></mask>
+</defs>
+<rect width="390" height="844" fill="url(#wall)"/>
+<rect width="390" height="844" fill="#000" filter="url(#relief)" opacity=".75" style="mix-blend-mode:overlay"/>
+<rect width="390" height="844" fill="url(#coldwash)"/>
+<rect width="390" height="844" filter="url(#salt)" mask="url(#saltMask)" opacity=".35"/>
+<!-- dressed stone: courses and joints, soft, no outlines -->
+<g opacity=".5" filter="url(#b4)">
+  <rect x="-10" y="150" width="410" height="5" fill="#000"/><rect x="-10" y="296" width="410" height="5" fill="#000"/><rect x="-10" y="640" width="410" height="5" fill="#000"/>
+  <rect x="120" y="155" width="5" height="141" fill="#000"/><rect x="286" y="155" width="5" height="141" fill="#000"/>
+  <rect x="70" y="301" width="5" height="339" fill="#000" opacity=".5"/><rect x="330" y="301" width="5" height="339" fill="#000" opacity=".5"/>
+</g>
+<g opacity=".4"><rect x="-10" y="301" width="410" height="2" fill="#cfe3ec" opacity=".3"/><rect x="-10" y="155" width="410" height="2" fill="#cfe3ec" opacity=".25"/></g>
+<!-- the long tally runs on above and below: all one hand, out of focus -->
+<g filter="url(#b1)"><g transform="translate(4 288.4) scale(1.45)" opacity="0.48" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 -3 Q-7 -8 -2 -8 M-7 -3 Q-7 4 0 4 Q7 4 7 -3 M0 4 V8" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-7 -3 Q-7 -8 -2 -8 M-7 -3 Q-7 4 0 4 Q7 4 7 -3 M0 4 V8" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-7 -3 Q-7 -8 -2 -8 M-7 -3 Q-7 4 0 4 Q7 4 7 -3 M0 4 V8" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g><g transform="translate(50.4 290.9) scale(1.45)" opacity="0.48" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 6 Q-3 -9 2 -2 Q6 3 7 -7 M-3 7.5 H3" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-7 6 Q-3 -9 2 -2 Q6 3 7 -7 M-3 7.5 H3" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-7 6 Q-3 -9 2 -2 Q6 3 7 -7 M-3 7.5 H3" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g><g transform="translate(99.2 289) scale(1.45)" opacity="0.48" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g><g transform="translate(144.4 290.3) scale(1.45)" opacity="0.48" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 -3 Q-7 -8 -2 -8 M-7 -3 Q-7 4 0 4 Q7 4 7 -3 M0 4 V8" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-7 -3 Q-7 -8 -2 -8 M-7 -3 Q-7 4 0 4 Q7 4 7 -3 M0 4 V8" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-7 -3 Q-7 -8 -2 -8 M-7 -3 Q-7 4 0 4 Q7 4 7 -3 M0 4 V8" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g><g transform="translate(189.2 290.6) scale(1.45)" opacity="0.48" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-5.5 -7 L-3.5 7 M-1 -7 L1 7 M3.5 -7 L5.5 7 M-8 1 H8" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-5.5 -7 L-3.5 7 M-1 -7 L1 7 M3.5 -7 L5.5 7 M-8 1 H8" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-5.5 -7 L-3.5 7 M-1 -7 L1 7 M3.5 -7 L5.5 7 M-8 1 H8" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g><g transform="translate(239.1 291.8) scale(1.45)" opacity="0.48" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 6.5 L-5.5 -4 L0.5 -7.5 L7 -2.5 L6 6.5 Z M-2.5 -1 L1.5 2.5" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-7 6.5 L-5.5 -4 L0.5 -7.5 L7 -2.5 L6 6.5 Z M-2.5 -1 L1.5 2.5" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-7 6.5 L-5.5 -4 L0.5 -7.5 L7 -2.5 L6 6.5 Z M-2.5 -1 L1.5 2.5" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g><g transform="translate(287 290) scale(1.45)" opacity="0.48" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 4 Q0 10 7 4 M-4.5 3.5 L-7 -5 M0 3.5 V-8 M4.5 3.5 L7 -5" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-7 4 Q0 10 7 4 M-4.5 3.5 L-7 -5 M0 3.5 V-8 M4.5 3.5 L7 -5" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-7 4 Q0 10 7 4 M-4.5 3.5 L-7 -5 M0 3.5 V-8 M4.5 3.5 L7 -5" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g><g transform="translate(337.7 289.5) scale(1.45)" opacity="0.48" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 -3 Q-7 -8 -2 -8 M-7 -3 Q-7 4 0 4 Q7 4 7 -3 M0 4 V8" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-7 -3 Q-7 -8 -2 -8 M-7 -3 Q-7 4 0 4 Q7 4 7 -3 M0 4 V8" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-7 -3 Q-7 -8 -2 -8 M-7 -3 Q-7 4 0 4 Q7 4 7 -3 M0 4 V8" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g><g transform="translate(388.7 289.7) scale(1.45)" opacity="0.48" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-5.5 -7 L-3.5 7 M-1 -7 L1 7 M3.5 -7 L5.5 7 M-8 1 H8" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-5.5 -7 L-3.5 7 M-1 -7 L1 7 M3.5 -7 L5.5 7 M-8 1 H8" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-5.5 -7 L-3.5 7 M-1 -7 L1 7 M3.5 -7 L5.5 7 M-8 1 H8" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g></g>
+<g filter="url(#b1)"><g transform="translate(-2 530.4) scale(1.45)" opacity="0.35200000000000004" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 -6 L0 7 L7 -6 M-3 -6 H3" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-7 -6 L0 7 L7 -6 M-3 -6 H3" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-7 -6 L0 7 L7 -6 M-3 -6 H3" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g><g transform="translate(42.5 529.9) scale(1.45)" opacity="0.35200000000000004" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 1.5 Q0 9.5 7 1.5 M0 -1.2 Q-3 -4.8 0 -9 Q3 -4.8 0 -1.2" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-7 1.5 Q0 9.5 7 1.5 M0 -1.2 Q-3 -4.8 0 -9 Q3 -4.8 0 -1.2" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-7 1.5 Q0 9.5 7 1.5 M0 -1.2 Q-3 -4.8 0 -9 Q3 -4.8 0 -1.2" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g><g transform="translate(90.7 528.1) scale(1.45)" opacity="0.35200000000000004" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 1.5 Q0 9.5 7 1.5 M0 -1.2 Q-3 -4.8 0 -9 Q3 -4.8 0 -1.2" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-7 1.5 Q0 9.5 7 1.5 M0 -1.2 Q-3 -4.8 0 -9 Q3 -4.8 0 -1.2" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-7 1.5 Q0 9.5 7 1.5 M0 -1.2 Q-3 -4.8 0 -9 Q3 -4.8 0 -1.2" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g><g transform="translate(140.9 530.2) scale(1.45)" opacity="0.35200000000000004" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g><g transform="translate(185.9 530.2) scale(1.45)" opacity="0.35200000000000004" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 4 Q0 10 7 4 M-4.5 3.5 L-7 -5 M0 3.5 V-8 M4.5 3.5 L7 -5" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-7 4 Q0 10 7 4 M-4.5 3.5 L-7 -5 M0 3.5 V-8 M4.5 3.5 L7 -5" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-7 4 Q0 10 7 4 M-4.5 3.5 L-7 -5 M0 3.5 V-8 M4.5 3.5 L7 -5" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g><g transform="translate(233.8 530.6) scale(1.45)" opacity="0.35200000000000004" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-5.5 -7 L-3.5 7 M-1 -7 L1 7 M3.5 -7 L5.5 7 M-8 1 H8" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-5.5 -7 L-3.5 7 M-1 -7 L1 7 M3.5 -7 L5.5 7 M-8 1 H8" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-5.5 -7 L-3.5 7 M-1 -7 L1 7 M3.5 -7 L5.5 7 M-8 1 H8" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g><g transform="translate(278.5 528.6) scale(1.45)" opacity="0.35200000000000004" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7.5 4.5 Q0 -5 7.5 4.5 M0 -1 V-9 M-3 8 H3" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-7.5 4.5 Q0 -5 7.5 4.5 M0 -1 V-9 M-3 8 H3" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-7.5 4.5 Q0 -5 7.5 4.5 M0 -1 V-9 M-3 8 H3" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g><g transform="translate(329.4 531) scale(1.45)" opacity="0.35200000000000004" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-5.5 -7 L-3.5 7 M-1 -7 L1 7 M3.5 -7 L5.5 7 M-8 1 H8" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-5.5 -7 L-3.5 7 M-1 -7 L1 7 M3.5 -7 L5.5 7 M-8 1 H8" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-5.5 -7 L-3.5 7 M-1 -7 L1 7 M3.5 -7 L5.5 7 M-8 1 H8" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g><g transform="translate(378.3 528.6) scale(1.45)" opacity="0.35200000000000004" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-6.5 7 Q-6.5 -6 0 -6 Q6.5 -6 6.5 7 M0 -6 V2" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-6.5 7 Q-6.5 -6 0 -6 Q6.5 -6 6.5 7 M0 -6 V2" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-6.5 7 Q-6.5 -6 0 -6 Q6.5 -6 6.5 7 M0 -6 V2" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g></g>
+<g filter="url(#b2)"><g transform="translate(6 589.2) scale(1.25)" opacity="0.24" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 -6 L0 7 L7 -6 M-3 -6 H3" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-7 -6 L0 7 L7 -6 M-3 -6 H3" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-7 -6 L0 7 L7 -6 M-3 -6 H3" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g><g transform="translate(49.3 588.6) scale(1.25)" opacity="0.24" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 4 Q0 10 7 4 M-4.5 3.5 L-7 -5 M0 3.5 V-8 M4.5 3.5 L7 -5" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-7 4 Q0 10 7 4 M-4.5 3.5 L-7 -5 M0 3.5 V-8 M4.5 3.5 L7 -5" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-7 4 Q0 10 7 4 M-4.5 3.5 L-7 -5 M0 3.5 V-8 M4.5 3.5 L7 -5" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g><g transform="translate(87.3 590.2) scale(1.25)" opacity="0.24" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-5.5 -7 L-3.5 7 M-1 -7 L1 7 M3.5 -7 L5.5 7 M-8 1 H8" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-5.5 -7 L-3.5 7 M-1 -7 L1 7 M3.5 -7 L5.5 7 M-8 1 H8" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-5.5 -7 L-3.5 7 M-1 -7 L1 7 M3.5 -7 L5.5 7 M-8 1 H8" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g><g transform="translate(127.1 588.9) scale(1.25)" opacity="0.24" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 -3 Q-7 -8 -2 -8 M-7 -3 Q-7 4 0 4 Q7 4 7 -3 M0 4 V8" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-7 -3 Q-7 -8 -2 -8 M-7 -3 Q-7 4 0 4 Q7 4 7 -3 M0 4 V8" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-7 -3 Q-7 -8 -2 -8 M-7 -3 Q-7 4 0 4 Q7 4 7 -3 M0 4 V8" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g><g transform="translate(168.9 591.1) scale(1.25)" opacity="0.24" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g><g transform="translate(213 588.9) scale(1.25)" opacity="0.24" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g><g transform="translate(257.9 591.2) scale(1.25)" opacity="0.24" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7.5 4.5 Q0 -5 7.5 4.5 M0 -1 V-9 M-3 8 H3" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-7.5 4.5 Q0 -5 7.5 4.5 M0 -1 V-9 M-3 8 H3" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-7.5 4.5 Q0 -5 7.5 4.5 M0 -1 V-9 M-3 8 H3" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g><g transform="translate(301.8 588.7) scale(1.25)" opacity="0.24" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 -6 L0 7 L7 -6 M-3 -6 H3" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-7 -6 L0 7 L7 -6 M-3 -6 H3" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-7 -6 L0 7 L7 -6 M-3 -6 H3" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g><g transform="translate(341.7 588.3) scale(1.25)" opacity="0.24" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g><g transform="translate(384 589.6) scale(1.25)" opacity="0.24" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7.5 4.5 Q0 -5 7.5 4.5 M0 -1 V-9 M-3 8 H3" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-7.5 4.5 Q0 -5 7.5 4.5 M0 -1 V-9 M-3 8 H3" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-7.5 4.5 Q0 -5 7.5 4.5 M0 -1 V-9 M-3 8 H3" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g></g>
+<!-- a single ring above the tally, on its own -->
+<g transform="translate(250 230)"><g opacity="0.5">
+  <circle cx="0" cy="0" r="19" fill="#cfe8f3" opacity=".10" filter="url(#b8)"/>
+  <circle cx="0" cy="0" r="13" fill="none" stroke="#020406" stroke-width="3.6" opacity=".7" transform="translate(.5 .8)"/>
+  <circle cx="0" cy="0" r="13" fill="none" stroke="#cfe8f3" stroke-width="5" opacity=".25" filter="url(#b2)"/>
+  <circle cx="0" cy="0" r="13" fill="none" stroke="#eaf6fb" stroke-width="1.6" opacity=".9" filter="url(#b1)"/>
+</g><g transform="translate(0 0) scale(0.75)" opacity="1.0" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#020406" stroke-width="3.2" opacity=".85"/>
+  <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#cfe6f0" stroke-width="1.8" opacity=".18" transform="translate(.35 .7)"/>
+  <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#cfe6f0" stroke-width="0.8" opacity=".6" filter="url(#b1)"/>
+</g></g>
+<ellipse cx="195" cy="400" rx="230" ry="70" fill="#9fc4d8" opacity=".08" filter="url(#b16)"/>
+<rect width="390" height="844" fill="url(#rake)"/>
+<rect width="390" height="200" fill="url(#topFade)"/>
+<rect y="600" width="390" height="244" fill="url(#botFade)"/>
+<rect width="390" height="844" filter="url(#grain)" opacity="0.16" style="mix-blend-mode:overlay"/>
+</svg></div>
+<canvas class="motes" aria-hidden="true" data-n="30" data-lights='[[30, 700, 300, "w", 0.6], [195, 400, 220, "c", 0.6]]'></canvas>
+<div class="ui">
+  <a class="home" href="complete.html" aria-label="Back to The Salt Gallery"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2.5 L4 7 L8.5 11.5"/></svg><span>The Salt Gallery</span></a>
+  <header class="head rise d1">
+    <div class="eyebrow">A record · one line</div>
+    <h1 class="title">The long tally</h1>
+  </header>
+  <div class="grow"></div>
+  <div class="line rise d2" role="group" aria-label="This line of the record"><button class="mk guess" data-i="0" data-c="stone|wall|salt" aria-label="Your guess: stone?. Tap to see what it might be."><svg viewBox="-15 -15 30 30" aria-hidden="true"><g transform="translate(0 0) scale(1.3)" opacity="1" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 6.5 L-5.5 -4 L0.5 -7.5 L7 -2.5 L6 6.5 Z M-2.5 -1 L1.5 2.5" stroke="#010203" stroke-width="3.7" opacity=".8" transform="translate(-.35 -.6)" filter="url(#b1)"/>
+  <path d="M-7 6.5 L-5.5 -4 L0.5 -7.5 L7 -2.5 L6 6.5 Z M-2.5 -1 L1.5 2.5" stroke="#0a1117" stroke-width="2.3"/>
+  <path d="M-7 6.5 L-5.5 -4 L0.5 -7.5 L7 -2.5 L6 6.5 Z M-2.5 -1 L1.5 2.5" stroke="#bfe0ee" stroke-width="6.0" opacity="0.4" filter="url(#b2)"/>
+  <path d="M-7 6.5 L-5.5 -4 L0.5 -7.5 L7 -2.5 L6 6.5 Z M-2.5 -1 L1.5 2.5" stroke="#e8f6fc" stroke-width="1.2000000000000002" opacity="0.95" filter="url(#b1)"/>
+</g></svg><span class="g guess">stone?</span></button><button class="mk unknown invite" data-i="1" data-c="rope|bread|morning" aria-label="A mark you have not guessed yet. Tap to see what it might be."><svg viewBox="-15 -15 30 30" aria-hidden="true"><g transform="translate(0 0) scale(1.3)" opacity="0.85" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 -3 Q-7 -8 -2 -8 M-7 -3 Q-7 4 0 4 Q7 4 7 -3 M0 4 V8" stroke="#010203" stroke-width="3.7" opacity=".8" transform="translate(-.35 -.6)" filter="url(#b1)"/>
+  <path d="M-7 -3 Q-7 -8 -2 -8 M-7 -3 Q-7 4 0 4 Q7 4 7 -3 M0 4 V8" stroke="#0a1117" stroke-width="2.3"/>
+  <path d="M-7 -3 Q-7 -8 -2 -8 M-7 -3 Q-7 4 0 4 Q7 4 7 -3 M0 4 V8" stroke="#bfe0ee" stroke-width="6.0" opacity="0.4" filter="url(#b2)"/>
+  <path d="M-7 -3 Q-7 -8 -2 -8 M-7 -3 Q-7 4 0 4 Q7 4 7 -3 M0 4 V8" stroke="#e8f6fc" stroke-width="1.2000000000000002" opacity="0.95" filter="url(#b1)"/>
+</g></svg><span class="g unk">·</span></button><span class="mk known" role="img" aria-label="Known: hand. Confirmed."><svg viewBox="-15 -15 30 30" aria-hidden="true"><g transform="translate(0 0) scale(1.3)" opacity="1" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 4 Q0 10 7 4 M-4.5 3.5 L-7 -5 M0 3.5 V-8 M4.5 3.5 L7 -5" stroke="#010203" stroke-width="3.7" opacity=".8" transform="translate(-.35 -.6)" filter="url(#b1)"/>
+  <path d="M-7 4 Q0 10 7 4 M-4.5 3.5 L-7 -5 M0 3.5 V-8 M4.5 3.5 L7 -5" stroke="#0a1117" stroke-width="2.3"/>
+  <path d="M-7 4 Q0 10 7 4 M-4.5 3.5 L-7 -5 M0 3.5 V-8 M4.5 3.5 L7 -5" stroke="#bfe0ee" stroke-width="6.0" opacity="0.4" filter="url(#b2)"/>
+  <path d="M-7 4 Q0 10 7 4 M-4.5 3.5 L-7 -5 M0 3.5 V-8 M4.5 3.5 L7 -5" stroke="#e8f6fc" stroke-width="1.2000000000000002" opacity="0.95" filter="url(#b1)"/>
+</g></svg><span class="g known">hand</span></span><button class="mk ring" data-i="3" data-c="" aria-label="A ring: a name."><svg viewBox="-30 -30 60 60" aria-hidden="true"><g opacity="1.0">
+  <circle cx="0" cy="0" r="30" fill="#cfe8f3" opacity=".10" filter="url(#b8)"/>
+  <circle cx="0" cy="0" r="24" fill="none" stroke="#020406" stroke-width="3.6" opacity=".7" transform="translate(.5 .8)"/>
+  <circle cx="0" cy="0" r="24" fill="none" stroke="#cfe8f3" stroke-width="5" opacity=".25" filter="url(#b2)"/>
+  <circle cx="0" cy="0" r="24" fill="none" stroke="#eaf6fb" stroke-width="1.6" opacity=".9" filter="url(#b1)"/>
+</g><g transform="translate(-8 0) scale(0.9)" opacity="1.0" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 -6 L0 7 L7 -6 M-3 -6 H3" stroke="#010203" stroke-width="3.7" opacity=".8" transform="translate(-.35 -.6)" filter="url(#b1)"/>
+  <path d="M-7 -6 L0 7 L7 -6 M-3 -6 H3" stroke="#0a1117" stroke-width="2.3"/>
+  <path d="M-7 -6 L0 7 L7 -6 M-3 -6 H3" stroke="#bfe0ee" stroke-width="6.0" opacity="0.4" filter="url(#b2)"/>
+  <path d="M-7 -6 L0 7 L7 -6 M-3 -6 H3" stroke="#e8f6fc" stroke-width="1.2000000000000002" opacity="0.95" filter="url(#b1)"/>
+</g><g transform="translate(8 0) scale(0.9)" opacity="1.0" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 6 Q-3 -9 2 -2 Q6 3 7 -7 M-3 7.5 H3" stroke="#010203" stroke-width="3.7" opacity=".8" transform="translate(-.35 -.6)" filter="url(#b1)"/>
+  <path d="M-7 6 Q-3 -9 2 -2 Q6 3 7 -7 M-3 7.5 H3" stroke="#0a1117" stroke-width="2.3"/>
+  <path d="M-7 6 Q-3 -9 2 -2 Q6 3 7 -7 M-3 7.5 H3" stroke="#bfe0ee" stroke-width="6.0" opacity="0.4" filter="url(#b2)"/>
+  <path d="M-7 6 Q-3 -9 2 -2 Q6 3 7 -7 M-3 7.5 H3" stroke="#e8f6fc" stroke-width="1.2000000000000002" opacity="0.95" filter="url(#b1)"/>
+</g></svg><span class="g name">name</span></button><button class="mk unknown" data-i="4" data-c="water|road|song" aria-label="A mark you have not guessed yet. Tap to see what it might be."><svg viewBox="-15 -15 30 30" aria-hidden="true"><g transform="translate(0 0) scale(1.3)" opacity="0.85" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#010203" stroke-width="3.7" opacity=".8" transform="translate(-.35 -.6)" filter="url(#b1)"/>
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#0a1117" stroke-width="2.3"/>
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#6f8f9f" stroke-width="6.0" opacity="0.4" filter="url(#b2)"/>
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#9db8c5" stroke-width="1.2000000000000002" opacity="0.6" filter="url(#b1)"/>
+</g></svg><span class="g unk">·</span></button><button class="mk guess" data-i="5" data-c="count|many|days" aria-label="Your guess: count?. Tap to see what it might be."><svg viewBox="-15 -15 30 30" aria-hidden="true"><g transform="translate(0 0) scale(1.3)" opacity="1" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-5.5 -7 L-3.5 7 M-1 -7 L1 7 M3.5 -7 L5.5 7 M-8 1 H8" stroke="#010203" stroke-width="3.7" opacity=".8" transform="translate(-.35 -.6)" filter="url(#b1)"/>
+  <path d="M-5.5 -7 L-3.5 7 M-1 -7 L1 7 M3.5 -7 L5.5 7 M-8 1 H8" stroke="#0a1117" stroke-width="2.3"/>
+  <path d="M-5.5 -7 L-3.5 7 M-1 -7 L1 7 M3.5 -7 L5.5 7 M-8 1 H8" stroke="#bfe0ee" stroke-width="6.0" opacity="0.4" filter="url(#b2)"/>
+  <path d="M-5.5 -7 L-3.5 7 M-1 -7 L1 7 M3.5 -7 L5.5 7 M-8 1 H8" stroke="#e8f6fc" stroke-width="1.2000000000000002" opacity="0.95" filter="url(#b1)"/>
+</g></svg><span class="g guess">count?</span></button></div>
+  <div class="ask rise d3" aria-live="polite">
+    <p class="q" id="q">This one is new. What might it be?</p>
+    <div class="cands" id="cands"><button class="cand">rope</button><button class="cand">bread</button><button class="cand">morning</button></div>
+    <p class="small" id="hint">Pick one. It shows with a question mark until the place agrees.</p>
+  </div>
+  <div class="appline rise d4"><p class="say">The same hand cut all of this.</p></div>
+  <div class="grow"></div>
+  <div class="done rise d5"><a class="quiet-btn" href="camp.html">Back to camp</a></div>
+</div>
+
+</main>
+<script>
+/* Dust in the light: few, slow, lit only near a light source. Motion only.
+   Light positions are in the painting's 390x844 space; the painting is cropped to fill the screen. */
+(function(){
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var c=document.querySelector('canvas.motes'); if(!c) return;
+  var V=!!c.dataset.violet, L=JSON.parse(c.dataset.lights||'[]'), N=+(c.dataset.n||30), W=390, H=844, x=c.getContext('2d'), k=1, ox=0, oy=0;
+  function size(){ var w=c.clientWidth, h=c.clientHeight; c.width=w*2; c.height=h*2; k=Math.max(w/W,h/H); ox=(w-W*k)/2; oy=(h-H*k)/2; x.setTransform(2*k,0,0,2*k,2*ox,2*oy); }
+  size(); addEventListener('resize', size);
+  var R=Math.random, m=[];
+  for(var i=0;i<N;i++) m.push({x:R()*W,y:R()*H,r:.35+R()*1.1,vx:(R()-.5)*.05,vy:-.02-R()*.06,p:R()*6.3});
+  var last=performance.now();
+  function fr(t){
+    var dt=Math.min(50,t-last); last=t; x.clearRect(-ox/k,-oy/k,W+2*ox/k,H+2*oy/k);
+    for(var i=0;i<m.length;i++){ var q=m[i];
+      q.x+=q.vx*dt*.06; q.y+=q.vy*dt*.06; q.p+=dt*.001;
+      if(q.y<-4){q.y=H+4;q.x=R()*W} if(q.x<-4)q.x=W+4; if(q.x>W+4)q.x=-4;
+      var best=0,col=null;
+      for(var j=0;j<L.length;j++){var l=L[j],d=Math.hypot(q.x-l[0],q.y-l[1]),a=Math.max(0,1-d/l[2])*l[4]; if(a>best){best=a;col=l[3]}}
+      var a=best*(.5+.4*Math.sin(q.p)); if(a<.02) continue;
+      x.fillStyle=col==='w'?'rgba(255,214,150,'+a+')':(V?'rgba(214,218,252,'+a+')':'rgba(214,238,248,'+a+')');
+      x.beginPath(); x.arc(q.x,q.y,q.r,0,6.283); x.fill();
+    }
+    requestAnimationFrame(fr);
+  }
+  requestAnimationFrame(fr);
+})();
+</script>
+<script>
+/* Reading and guessing: tap a mark to see its candidate meanings; tap one to guess. (Prototype interaction.) */
+(function(){
+  var marks=[].slice.call(document.querySelectorAll('.mk')), q=document.getElementById('q'), cands=document.getElementById('cands'), hint=document.getElementById('hint'), cur=marks[1];
+  function select(m){
+    marks.forEach(function(x){ x.removeAttribute('aria-pressed'); x.classList.remove('invite'); });
+    cur=m; m.setAttribute('aria-pressed','true');
+    var c=m.dataset.c, g=m.querySelector('.g');
+    cands.innerHTML='';
+    if(m.classList.contains('ring')){ q.textContent='A ring: someone’s name. You’ll know it before you can read it.'; hint.textContent=''; return; }
+    if(!c){ q.textContent='You know this one: '+g.textContent+'.'; hint.textContent=''; return; }
+    q.textContent = m.classList.contains('unknown') ? 'This one is new. What might it be?' : 'Your guess is '+g.textContent+' Change it?';
+    hint.textContent='Pick one. It shows with a question mark until the place agrees.';
+    c.split('|').forEach(function(w){ var b=document.createElement('button'); b.className='cand'; b.textContent=w; b.onclick=function(){ guess(w, b); }; cands.appendChild(b); });
+  }
+  function guess(w, btn){ if(btn){ btn.classList.add('picked'); }
+   setTimeout(function(){ doGuess(w); }, 260); }
+  function doGuess(w){
+    var g=cur.querySelector('.g'); g.textContent=w+'?'; g.className='g guess';
+    cur.classList.remove('unknown'); cur.classList.add('guess');
+    q.textContent='Noted: '+w+'?'; cands.innerHTML=''; hint.textContent='The place will say, in time.';
+  }
+  marks.forEach(function(m){ m.addEventListener('click', function(){ select(m); }); });
+  [].forEach.call(cands.querySelectorAll('.cand'), function(b){ b.onclick=function(){ guess(b.textContent, b); }; });
+})();
+</script>
+</body>
+</html>

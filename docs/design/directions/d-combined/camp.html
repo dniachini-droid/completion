@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07061a">
+<title>Camp · The Lamp Hall</title>
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<link rel="stylesheet" href="direction.css">
+<style>
+
+body { --pool-x: 78%; --pool-y: 53%; --scrim-top-h: 330px; --scrim-bottom-h: 46%; }
+body.s-evening { --a1: .16; --aw: 40%; --ah: 20%; --a2: .08; --h2: 12%; }  /* less gold: the warmth stays by the lamp */
+.warmth { animation: breathe 5s ease-in-out infinite; }
+.head { margin-top: 18px; }
+.head .soft { display:block; margin-top: 6px; }
+.today { margin-top: 18px; font-family: var(--life); font-size: 17px; line-height: 1.5; color: var(--ink-2); max-width: 32ch; }
+.bottom { padding-bottom: 4px; }
+.bed { display:grid; grid-template-columns: 1fr auto; align-items:center; margin-top: 14px; }
+.bed .t { font-family: var(--life); font-weight: 300; font-size: 50px; line-height: 1; color: #fff4e2; font-variant-numeric: lining-nums tabular-nums;
+  text-shadow: 0 0 26px rgba(var(--gold-rgb), .45); }
+.promise { margin: 14px 0 26px; font-family: var(--life); font-size: 17.5px; line-height: 1.45; color: var(--ink); }
+.label-line.gold { color: #e8cf9f; }
+@media (max-height: 800px) { .today { margin-top: 12px; } .bed .t { font-size: 44px; } .promise { margin: 10px 0 20px; } }
+
+</style>
+</head>
+<body class="s-evening">
+<main class="phone">
+
+<div class="paint" id="hall" aria-hidden="true"></div>
+<div class="pool" aria-hidden="true"></div>
+<div class="fog" aria-hidden="true"><i class="drift-a"></i><i class="drift-b"></i></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+<div class="scrim-top" aria-hidden="true"></div>
+<div class="scrim-bottom" aria-hidden="true"></div>
+<div class="ui">
+  <header class="topbar col rise"><a class="home" href="morning.html#done"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5"/></svg><span>Today</span></a><span></span><a class="icon-link" href="map.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="17" r="2"/><circle cx="12" cy="6.5" r="2"/><circle cx="19" cy="14.5" r="2"/><path d="M6.1 15.2 10.9 8.3M13.5 8 17.6 12.9" stroke-opacity=".75"/></svg><span>Map</span></a></header>
+  <section class="col head rise d1">
+    <h1 class="carve lg">The Lamp Hall</h1>
+    <span class="soft on-scene">Camp, by the lamp.</span>
+    <p class="today on-scene">Today: the gym and the sauna, the cat’s medication, an hour of the course. You reached the Salt Gallery.</p>
+  </section>
+  <div class="mid"></div>
+  <section class="bottom col rise d3">
+    <div class="label-line gold">Bedtime</div>
+    <div class="bed"><span class="t">23:00</span><button class="btn-quiet"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19l1-4L16 5l3 3L9 18z"/><path d="M14 7l3 3"/></svg><span>Change</span></button></div>
+    <p class="promise on-scene">In bed by then, and something small will be waiting here in the morning.</p>
+    <a class="btn" href="morning.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.5 14.5A7 7 0 0 1 9.5 5.5a7 7 0 1 0 9 9z"/></svg><span>Goodnight</span></a>
+  </section>
+</div>
+
+</main>
+<!-- cool violet dust only: warm specks at cup height read as lit cups (CRITIQUE-2 SF3) -->
+<canvas class="sc-motes" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none"></canvas>
+<script>
+(function(){
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var c = document.querySelector('canvas.sc-motes'), x = c.getContext('2d'), W, H, dpr = Math.min(2, window.devicePixelRatio || 1), P = [];
+  function size(){ W = c.clientWidth; H = c.clientHeight; c.width = W*dpr; c.height = H*dpr; x.setTransform(dpr,0,0,dpr,0,0); }
+  size(); addEventListener('resize', size);
+  for (var i = 0; i < 18; i++) P.push({ x: Math.random()*W, y: H*(0.4 + Math.random()*(0.72-0.4)), r: .5 + Math.random()*1.3, a: .15 + Math.random()*.45, vx: (Math.random()-.5)*.08, vy: -.02 - Math.random()*.06, p: Math.random()*6.28 });
+  var last = 0;
+  function tick(t){
+    requestAnimationFrame(tick);
+    if (t - last < 33) return; last = t;
+    x.clearRect(0,0,W,H);
+    for (var i = 0; i < P.length; i++) {
+      var q = P[i]; q.x += q.vx + Math.sin(t/3000 + q.p)*.05; q.y += q.vy; q.p += .002;
+      if (q.y < H*0.4 - 10) { q.y = H*0.72; q.x = Math.random()*W; }
+      var al = q.a * (.6 + .4*Math.sin(t/1400 + q.p*3));
+      x.beginPath(); x.arc(q.x, q.y, q.r, 0, 6.283); x.fillStyle = 'rgba(206,210,255,' + (al*.8).toFixed(3) + ')'; x.fill();
+    }
+  }
+  requestAnimationFrame(tick);
+})();
+</script>
+<script src="lamp.js"></script>
+<script src="hall.js"></script>
+<script>
+/* camp: by the lamp, looking down the hall. The lamp sits whole in the right third; its gold stays near it. */
+Hall.draw(document.getElementById('hall'), { cam: { x: .6, y: 1.55, z: 2.6, f: .6, cx: .44, cy: .52 }, gold: .6 });
+</script>
+<script>
+/* the light blooms where you tap (motion only) */
+(function(){
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('.btn, .btn-quiet, .tap').forEach(function(el){
+    el.addEventListener('pointerdown', function(e){
+      var r = el.getBoundingClientRect(), b = document.createElement('span');
+      b.className = 'bloom'; b.style.left = (e.clientX - r.left) + 'px'; b.style.top = (e.clientY - r.top) + 'px';
+      if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+      el.style.overflow = 'hidden'; el.appendChild(b);
+      setTimeout(function(){ b.remove(); }, 950);
+    });
+  });
+})();
+</script>
+<script src="ambient.js" data-drift></script>
+</body>
+</html>

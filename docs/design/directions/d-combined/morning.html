@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06070f">
+<title>Morning · The Lamp Hall</title>
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<link rel="stylesheet" href="direction.css">
+<style>
+
+body { --pool-x: 34%; --pool-y: 52%; --scrim-top-h: 330px; --scrim-bottom-h: 58%; }
+.aim { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; opacity: 0;
+  animation: aim-in 1.2s var(--ease) 1.6s forwards, aim-breathe 5s ease-in-out 2.8s infinite; filter: drop-shadow(0 0 2px rgba(var(--violet-rgb), .8)); }
+@keyframes aim-in { from { opacity: 0; } to { opacity: .4; } }
+@keyframes aim-breathe { 0%,100% { opacity: .4; } 50% { opacity: .22; } }
+h1.carve { margin-top: 2px; }
+.seg { margin-top: 12px; }
+.seg-note { text-align: left; margin-top: 4px; }
+.ahead { margin-top: 12px; }
+.ahead p { font-size: 17.5px; line-height: 1.38; margin-top: 6px; }
+.bottom { padding-top: 8px; }
+.next h2 { margin: 8px 0 4px; }
+.next .soft { margin-bottom: 18px; }
+.cant { display: flex; justify-content: center; margin-top: 4px; }
+.rows { margin-top: 2px; }
+.nav-row { margin-top: 2px; }
+.st { display: none; }
+body.v-early .st.early, body.v-later .st.later, body.v-done .st.done { display: revert; }
+body.v-early .st.early.g, body.v-later .st.later.g, body.v-done .st.done.g { display: grid; }
+.row .s svg { width: 12px; height: 12px; margin-left: 6px; vertical-align: -1px; fill: none; stroke: var(--edge-2); stroke-width: 1.4; }
+a.row:hover .t { color: #fff; }
+/* D-036: a held delve is the first offer (#held-<job>-N) */
+.next.carry { display: none; }
+body.h-held .next.carry { display: block; }
+body.h-held .next.st.early.later { display: none; }
+.next.carry .btn-row.lead { grid-template-columns: 1.25fr 1fr; }
+.next.carry .btn-quiet { padding: 0 10px 0 calc(10px + .14em); letter-spacing: .14em; }
+@media (max-height: 800px) {
+  .seg { margin-top: 10px; } .ahead { margin-top: 8px; } .ahead p { margin-top: 4px; } .next .soft { margin-bottom: 14px; }
+  .row { min-height: 44px; }
+}
+
+</style>
+</head>
+<body class="s-day v-early">
+<main class="phone">
+
+<div class="paint" id="hall" aria-hidden="true"></div>
+<div class="pool" aria-hidden="true"></div>
+<div class="fog " aria-hidden="true"><i class="drift-a"></i><i class="drift-b"></i></div>
+<div class="fog warm" aria-hidden="true"><i class="drift-a"></i><i class="drift-b"></i></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+<svg class="aim" id="aim" aria-hidden="true"></svg>
+<div class="scrim-top" aria-hidden="true"></div>
+<div class="scrim-bottom" aria-hidden="true"></div>
+<div class="ui">
+  <header class="top col">
+    <div class="topbar rise"><span class="day">Thursday</span><span></span><a class="icon-link" href="map.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="17" r="2"/><circle cx="12" cy="6.5" r="2"/><circle cx="19" cy="14.5" r="2"/><path d="M6.1 15.2 10.9 8.3M13.5 8 17.6 12.9" stroke-opacity=".75"/></svg><span>Map</span></a></div>
+    <h1 class="carve lg rise">The Lamp Hall</h1>
+    <div class="seg rise d1" role="group" aria-label="How big today is">
+      <button aria-pressed="false">Low</button><button aria-pressed="true">Normal</button><button aria-pressed="false">High</button>
+    </div>
+    <p class="seg-note rise d1">suggested by last night’s bedtime</p>
+    <section class="ahead rise d2">
+      <div class="label-line">Ahead</div>
+      <p class="say on-scene">The lintel, on the side wall.<br>It needs a word.</p>
+    </section>
+  </header>
+  <div class="mid"></div>
+  <section class="bottom col rise d3">
+    <div class="next st early later">
+      <div class="label-line lit">Next</div>
+      <h2 class="say-lg st early">Order the cat’s medication</h2>
+      <h2 class="say-lg st later">Course: the second delve</h2>
+      <p class="soft st early">There’s something in the step after this one.</p>
+      <p class="soft st later">One more, and the day is done.</p>
+      <div class="btn-row lead">
+        <a class="btn st early g" href="delve.html#cat-25">Begin</a>
+        <a class="btn st later g" href="delve.html#second">Begin</a>
+        <button class="btn-quiet" aria-label="Swap for another job"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 5h9.5L10 2.5M13 11H3.5L6 13.5"/></svg><span>Swap</span></button>
+      </div>
+      <div class="cant"><button class="text-link"><span>I can’t start</span></button></div>
+    </div>
+    <div class="next carry">
+      <div class="label-line lit">Next</div>
+      <h2 class="say-lg">Carry on: <span id="carryjob">Course</span></h2>
+      <p class="soft" id="carryleft">13 minutes left in this delve</p>
+      <div class="btn-row lead">
+        <a class="btn" id="carrygo" href="delve.html#resume-course-13">Carry on</a>
+        <a class="btn-quiet" id="carryfresh" href="delve-set.html"><span>Start afresh</span></a>
+      </div>
+      <div class="cant"><button class="text-link"><span>I can’t start</span></button></div>
+    </div>
+    <div class="next st done">
+      <div class="label-line gold">Today</div>
+      <h2 class="say-lg">That’s the day. Enough.</h2>
+      <p class="soft">You reached the Salt Gallery. Camp is by the lamp tonight.</p>
+      <div class="btn-row lead"><a class="btn gold resting" href="camp.html">To camp</a><a class="btn-quiet" href="delve-set.html"><span>Keep going</span></a></div>
+      <div style="height:12px"></div>
+    </div>
+    <div class="rows">
+      <div class="row done"><span class="pip done"></span><span class="t">Gym, then the sauna</span><span class="s">done this morning</span></div>
+      <a class="row st early g" href="delve-set.html"><span class="pip"></span><span class="t">Course: one hour</span><span class="s">two delves<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5"/></svg></span></a>
+      <div class="row done st later done g"><span class="pip done"></span><span class="t">Order the cat’s medication</span><span class="s">done</span></div>
+      <div class="row done st done g"><span class="pip done"></span><span class="t">Course: one hour</span><span class="s">done</span></div>
+    </div>
+    <nav class="nav-row" aria-label="Elsewhere">
+      <a class="icon-link" href="satchel.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9.5h14v9.5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1z"/><path d="M4.6 9.5c2-2.2 12.8-2.2 14.8 0l-.4 5c-4 1.6-10 1.6-14 0z"/><path d="M12 13v3"/><path d="M5.5 9C5 4 19 4 18.5 9" stroke-opacity=".6"/></svg><span>Satchel</span></a>
+      <a class="icon-link" href="daybook.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.5c-2.5-1.6-5.5-1.8-8-1v13c2.5-.8 5.5-.6 8 1 2.5-1.6 5.5-1.8 8-1v-13c-2.5-.8-5.5-.6-8 1z"/><path d="M12 6.5v13"/></svg><span>Daybook</span></a>
+      <a class="icon-link" href="camp.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 16.5c1-2.6 4-3.6 8-3.6s7 .6 8.6 2.2l-2 1.6c-2 1-10.6 1.6-14.6-.2z"/><path d="M18.6 13c.5-1.7.4-3.2-.1-4.8.8 1.5 1.6 2.8.1 4.8z" stroke-opacity=".85"/></svg><span>Camp</span></a>
+    </nav>
+  </section>
+</div>
+<canvas class="motes" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none"></canvas>
+<script>
+(function(){
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var c = document.querySelector('canvas.motes'), x = c.getContext('2d'), W, H, dpr = Math.min(2, window.devicePixelRatio || 1), P = [];
+  function size(){ W = c.clientWidth; H = c.clientHeight; c.width = W*dpr; c.height = H*dpr; x.setTransform(dpr,0,0,dpr,0,0); }
+  size(); addEventListener('resize', size);
+  for (var i = 0; i < 22; i++) P.push({ x: Math.random()*W, y: H*(0.36 + Math.random()*(0.56-0.36)), r: .5 + Math.random()*1.3, a: .15 + Math.random()*.45, vx: (Math.random()-.5)*.08, vy: -.02 - Math.random()*.06, p: Math.random()*6.28 });
+  var last = 0;
+  function tick(t){
+    requestAnimationFrame(tick);
+    if (t - last < 33) return; last = t;
+    x.clearRect(0,0,W,H);
+    for (var i = 0; i < P.length; i++) {
+      var q = P[i]; q.x += q.vx + Math.sin(t/3000 + q.p)*.05; q.y += q.vy; q.p += .002;
+      if (q.y < H*0.36 - 10) { q.y = H*0.56; q.x = Math.random()*W; }
+      var al = q.a * (.6 + .4*Math.sin(t/1400 + q.p*3));
+      x.beginPath(); x.arc(q.x, q.y, q.r, 0, 6.283); x.fillStyle = 'rgba(206,210,255,' + al.toFixed(3) + ')'; x.fill();
+    }
+  }
+  requestAnimationFrame(tick);
+})();
+</script>
+</main>
+<script>
+/* the light blooms where you tap (motion only) */
+(function(){
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('.btn, .btn-quiet, .seg > button, .tap').forEach(function(el){
+    el.addEventListener('pointerdown', function(e){
+      var r = el.getBoundingClientRect(), b = document.createElement('span');
+      b.className = 'bloom'; b.style.left = (e.clientX - r.left) + 'px'; b.style.top = (e.clientY - r.top) + 'px';
+      if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+      el.style.overflow = 'hidden'; el.appendChild(b);
+      setTimeout(function(){ b.remove(); el.style.overflow = ''; }, 950);
+    });
+  });
+})();
+</script>
+<script src="lamp.js"></script>
+<script src="hall.js"></script>
+<script>
+/* Low / Normal / High: selectable boxes */
+document.querySelectorAll('.seg > button').forEach(function(b){
+  b.addEventListener('click', function(){
+    b.parentNode.querySelectorAll('button').forEach(function(o){ o.setAttribute('aria-pressed', o === b ? 'true' : 'false'); });
+  });
+});
+/* one morning, three moments: morning.html (early), #later (the cat's medication and first delve done), #done (the day complete) */
+(function(){
+  /* D-036: #held-course-13 | #held-second-13 | #held-cat-13-of-30 (a delve stepped away from, N min left).
+     D-037: a delve held inside a run carries the run: #held-course-13-run-3-25-d2 (the second of three delves of 25). */
+  var CARRY = { course: ['Course', 'delve-set.html'], second: ['Course', 'delve.html#second'], cat: ['the cat’s medication', 'delve.html#cat-25'] };
+  function held(){ return location.hash.match(/held-(course|second|cat)-(\d+)(-of-(?:25|30|45|60))?(-run-[1-8]-(?:25|30|45|60)-d[1-8])?/); }
+  function view(){ var h = location.hash, k = held(); return k ? ((k[1] === 'second' || /-d[2-8]$/.test(k[4] || '')) ? 'later' : 'early') : (/done/.test(h) ? 'done' : (/later/.test(h) ? 'later' : 'early')); }
+  function apply(){
+    var v = view(), k = held();
+    var b = document.body; b.classList.remove('v-early','v-later','v-done','s-day','s-day2','s-done','h-held');
+    b.classList.add('v-' + v, v === 'early' ? 's-day' : (v === 'later' ? 's-day2' : 's-done'));
+    if (k) {
+      var n = Math.max(1, +k[2]);
+      b.classList.add('h-held');
+      document.getElementById('carryjob').textContent = CARRY[k[1]][0];
+      document.getElementById('carryleft').textContent = n + (n === 1 ? ' minute' : ' minutes') + ' left in this delve';
+      document.getElementById('carrygo').setAttribute('href', 'delve.html#resume-' + k[1] + '-' + n + (k[3] || '') + (k[4] || ''));
+      document.getElementById('carryfresh').setAttribute('href', CARRY[k[1]][1]);
+    }
+  }
+  /* the hall: the lintel on the left wall ahead, the lamp on its ledge to the right */
+  var GOLD = { early: .12, later: .4, done: .85 }, drawn = null;
+  function paint(){
+    var v = view();
+    if (drawn === v) return; drawn = v;
+    var h = Hall.draw(document.getElementById('hall'), { cam: { x: .2, y: 1.6, z: 1.5, f: .62, cx: .5, cy: .47 }, gold: GOLD[v] });
+    /* fine, faint brackets on the lintel ("Ahead") */
+    var pts = [h.onBeam(0, 0), h.onBeam(0, .85), h.onBeam(2.6, 0), h.onBeam(2.6, .85)].filter(Boolean);
+    var x0 = Math.min.apply(0, pts.map(function(p){ return p[0]; })) - 7, x1 = Math.max.apply(0, pts.map(function(p){ return p[0]; })) + 7;
+    var y0 = Math.min.apply(0, pts.map(function(p){ return p[1]; })) - 7, y1 = Math.max.apply(0, pts.map(function(p){ return p[1]; })) + 7, k = 7;
+    var a = document.getElementById('aim');
+    a.setAttribute('viewBox', '0 0 ' + h.W + ' ' + h.H);
+    a.innerHTML = '<path fill="none" stroke="#e6e3ff" stroke-width=".8" d="M' + x0 + ' ' + (y0 + k) + 'V' + y0 + 'H' + (x0 + k) + 'M' + (x1 - k) + ' ' + y0 + 'H' + x1 + 'V' + (y0 + k) + 'M' + x1 + ' ' + (y1 - k) + 'V' + y1 + 'H' + (x1 - k) + 'M' + (x0 + k) + ' ' + y1 + 'H' + x0 + 'V' + (y1 - k) + '"/>';
+  }
+  apply(); paint(); addEventListener('hashchange', function(){ apply(); paint(); });
+})();
+</script>
+<script src="ambient.js" data-drift></script>
+</body>
+</html>

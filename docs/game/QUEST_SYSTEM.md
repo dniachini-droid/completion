@@ -21,7 +21,7 @@ Story beats are **not** quests. They arrive through steps, arrivals and Keys; Da
 
 ## How a real action becomes a quest
 1. **The pool** holds weekly targets still open this week, typed one-offs, great-gate milestones and rhythm things the app notices (never as main jobs, P11).
-2. **Each morning** the app proposes the day's jobs for the capacity: first the job most likely to be avoided that matters this week, then a mix. One is shown first (P1).
+2. **Each morning** the app proposes the day's jobs for the capacity: first the job most likely to be avoided that matters this week, then a mix. One is shown first (P1). **No catch-up avalanche (D-038):** the day's size comes from capacity alone; open weekly targets never add jobs, and late in the week they are suggested no harder than early on. A disrupted week becomes a lighter week unless Dan asks to catch up.
 3. **Dan accepts or swaps** from a short menu. No estimating, tagging or scoring (P9).
 4. **The app learns** quietly from what gets swapped, when things get done and which suggestions work. Dan never configures it.
 

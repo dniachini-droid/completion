@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Daybook · Engraved Light</title>
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<link rel="stylesheet" href="direction.css">
+<style>
+.page{position:relative;flex:0 1 auto;display:flex;flex-direction:column;margin-top:4px;padding:20px 18px 18px 34px;overflow:hidden;
+  background:
+    repeating-linear-gradient(180deg,transparent 0 31px,rgba(191,239,255,.045) 31px 32px),
+    linear-gradient(180deg,#122130,#0b1620 60%,#09131b);
+}
+/* paper, not stone: a fine fibre over the page */
+.page::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.22;mix-blend-mode:screen;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='f'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' seed='9'/><feColorMatrix values='0 0 0 0 .75  0 0 0 0 .88  0 0 0 0 .95  0 0 0 .4 -.1'/></filter><rect width='100%' height='100%' filter='url(%23f)'/></svg>")}
+.page .margin{position:absolute;left:18px;top:0;bottom:0;width:4px;border-left:1px solid var(--light-c);border-right:1px solid var(--light-d)}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.top .title{font-size:26px;margin-top:6px}
+.top .sub{font-family:var(--book);font-style:italic;font-size:16px;color:var(--ink-3);margin-top:2px}
+.top svg{width:92px;height:92px;flex:none;margin-top:-4px;margin-right:-4px;overflow:visible}
+.text{margin-top:14px}
+.text p{font-family:var(--book);font-size:19px;line-height:1.5;color:var(--ink)}
+.text p + p{margin-top:12px}
+.next{margin-top:8px;padding-top:14px;border-top:1px solid var(--light-c)}
+.next p{font-family:var(--book);font-size:19px;line-height:1.45;color:var(--ink);margin-top:6px}
+.next p i{color:var(--light);text-shadow:0 0 10px rgba(191,239,255,.3)}
+.route{margin:16px 0 14px}
+.route svg{display:block;width:100%;max-width:330px;height:auto;overflow:visible}
+.rl{font-family:'Cinzel',serif;font-size:14px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;fill:#b4cbd7}
+.rs{font-family:'EB Garamond',serif;font-style:italic;font-size:16.5px;fill:#86a2b1}
+.acts{position:absolute;left:var(--gutter);right:var(--gutter);bottom:30px}
+.acts .btn{width:100%}
+</style>
+</head>
+<body>
+<main class="phone">
+
+  <header class="rail arrive">
+    <a class="home" href="morning.html" aria-label="Back to today"><svg viewBox="0 0 16 16"><path d="M10 3 5 8l5 5"/></svg>Today</a>
+    <div class="mid">The daybook</div>
+    <span></span>
+  </header>
+
+  <article class="page plate ticks arrive d1" aria-label="The daybook, week two">
+    <div class="margin"></div>
+    <div class="top">
+      <div>
+        <div class="label">Last week</div>
+        <h1 class="title">Week two</h1>
+        <div class="sub">written for you, Sunday night</div>
+      </div>
+
+    </div>
+    <div class="text">
+      <p>Gym four times, the sauna after each. The Spanish lesson booked for next Tuesday. Two hours on the course.</p>
+      <p>You went down the ladder and found the lamp already lit. The wall taught you two marks.</p>
+    </div>
+    <figure class="route" aria-label="Where you went: from the Mouth, down the ladder, to the Lamp Hall">
+      <svg viewBox="0 0 310 150">
+        <defs>
+          <filter id="gs" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.1" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <radialGradient id="wg"><stop offset="0" stop-color="#ffd9a0" stop-opacity=".9"/><stop offset=".4" stop-color="#f5ab5c" stop-opacity=".3"/><stop offset="1" stop-color="#f5ab5c" stop-opacity="0"/></radialGradient>
+        </defs>
+        <g fill="none" stroke="#bfefff" stroke-width="1" filter="url(#gs)">
+          <path d="M22 26 L22 70 L136 70" stroke-opacity=".6"/>
+          <path d="M150 76 L214 122" stroke-opacity=".45" stroke-dasharray="2 4"/>
+          <rect x="214" y="114" width="26" height="16" stroke-opacity=".7"/>
+          <rect x="220" y="119.5" width="14" height="5" rx="2.5" stroke-opacity=".8"/>
+          <path d="M16 34h12M16 42h12M16 50h12M16 58h12" stroke-opacity=".4"/>
+          <circle cx="22" cy="20" r="5" stroke-opacity=".8"/>
+          <circle cx="144" cy="70" r="8" stroke-opacity=".9"/>
+        </g>
+        <circle cx="144" cy="70" r="16" fill="url(#wg)"/>
+        <circle cx="144" cy="70" r="2.6" fill="#ffe3b3"/>
+        <text x="36" y="24" class="rl">The Mouth</text>
+        <text x="36" y="44" class="rs">the ladder</text>
+        <text x="162" y="62" class="rl">The Lamp Hall</text>
+        <text x="162" y="80" class="rs">camp, by the lamp</text>
+        <text x="206" y="146" class="rs">the lintel</text>
+      </svg>
+    </figure>
+    <div class="next">
+      <div class="label">Next week</div>
+      <p>The lintel on the side wall is <i>still waiting for a word.</i></p>
+    </div>
+  </article>
+
+
+</main>
+</body>
+</html>

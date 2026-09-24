@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06070f">
+<title>The head of the stair</title>
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<link rel="stylesheet" href="direction.css">
+<style>
+
+.scrim-top { --scrim-top-h: 250px; }
+.scrim-bottom { --scrim-bottom-h: 30%; }
+.push { position: absolute; inset: 0; transform-origin: 50% 40%; animation: push 3.2s cubic-bezier(.2,.7,.1,1) both; }
+@keyframes push { from { transform: scale(1.1); opacity: 0; } 30% { opacity: 1; } to { transform: none; opacity: 1; } }
+.head { margin-top: 12px; }
+.head .carve { margin-top: 12px; }
+.head .say { margin-top: 10px; font-size: 18px; line-height: 1.4; max-width: 28ch; }
+.bottom .soft { text-align: center; margin-bottom: 18px; }
+.bottom .nav-row { margin-top: 10px; }
+/* the stair moves (Dan, D-041): the view drifts slowly down towards the well; light wakes down the treads,
+   then a slow pulse keeps running down them into the mist, "this way" */
+#hall { animation: stair-drift 26s ease-in-out 3.2s infinite alternate; transform-origin: 62% 55%; }
+@keyframes stair-drift { from { transform: none; } to { transform: scale(1.045) translate(-.6%, 1.2%); } }
+.tread-glow line { stroke: #dcd8ff; stroke-linecap: round; fill: none; }
+.tread-glow .base { opacity: 0; transition: opacity 1.4s var(--ease); transition-delay: calc(1.6s + var(--n) * .16s); }
+.tread-glow.awake .base { opacity: var(--o); }
+.tread-glow .pulse { opacity: 0; animation: tread-pulse 7s linear infinite; animation-delay: calc(5.5s + var(--n) * .13s); }
+@keyframes tread-pulse { 0% { opacity: 0; } 4% { opacity: var(--p); } 14% { opacity: 0; } 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { #hall { animation: none; } .tread-glow .pulse { display: none; } .tread-glow .base { transition: none; } }
+
+</style>
+</head>
+<body class="s-day">
+<main class="phone">
+<div class="push" aria-hidden="true"><div class="paint" id="hall"></div></div>
+<div class="fog fast" aria-hidden="true"><i class="drift-a"></i><i class="drift-b"></i></div>
+<canvas class="motes" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none"></canvas>
+<script>
+(function(){
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var c = document.querySelector('canvas.motes'), x = c.getContext('2d'), W, H, dpr = Math.min(2, window.devicePixelRatio || 1), P = [];
+  function size(){ W = c.clientWidth; H = c.clientHeight; c.width = W*dpr; c.height = H*dpr; x.setTransform(dpr,0,0,dpr,0,0); }
+  size(); addEventListener('resize', size);
+  for (var i = 0; i < 40; i++) P.push({ x: Math.random()*W, y: H*(0.2 + Math.random()*(0.75-0.2)), r: .5 + Math.random()*1.3, a: .15 + Math.random()*.45, vx: (Math.random()-.5)*.08, vy: -.02 - Math.random()*.06, p: Math.random()*6.28 });
+  var last = 0;
+  function tick(t){
+    requestAnimationFrame(tick);
+    if (t - last < 33) return; last = t;
+    x.clearRect(0,0,W,H);
+    for (var i = 0; i < P.length; i++) {
+      var q = P[i]; q.x += q.vx + Math.sin(t/3000 + q.p)*.05; q.y += q.vy; q.p += .002;
+      if (q.y < H*0.2 - 10) { q.y = H*0.75; q.x = Math.random()*W; }
+      var al = q.a * (.6 + .4*Math.sin(t/1400 + q.p*3));
+      x.beginPath(); x.arc(q.x, q.y, q.r, 0, 6.283); x.fillStyle = 'rgba(214,210,255,' + al.toFixed(3) + ')'; x.fill();
+    }
+  }
+  requestAnimationFrame(tick);
+})();
+</script>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+<div class="scrim-top" aria-hidden="true"></div>
+<div class="scrim-bottom" aria-hidden="true"></div>
+
+<div class="ui">
+  <header class="topbar col rise">
+    <a class="home" href="morning.html"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg><span>Today</span></a>
+    <span></span>
+    <a class="icon-link" href="map.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="17" r="2"/><circle cx="12" cy="6.5" r="2"/><circle cx="19" cy="14.5" r="2"/><path d="M6.1 15.2 10.9 8.3M13.5 8 17.6 12.9" stroke-opacity=".75"/></svg><span>Map</span></a>
+  </header>
+  <div class="top col head rise d2">
+    <div class="label-line lit">Beyond the lintel</div>
+    <h1 class="carve lg">The head<br>of the stair</h1>
+    <p class="say on-scene">A landing, and the top of a long stair going down.</p>
+  </div>
+  <div class="mid"></div>
+  <section class="bottom col rise d4">
+    <p class="soft on-scene">Every delve from here takes you further down.</p>
+    <div class="btn-row lead"><a class="btn" href="delve-set.html">Go down</a><a class="btn-quiet" href="morning.html"><span>Today</span></a></div>
+  </section>
+</div>
+</main>
+<script src="lamp.js"></script>
+<script src="hall.js"></script>
+<script>
+/* the head of the stair: you stand on the landing beside the stair's open side;
+   it goes down step by step into a bank of lit mist. Same hand as the Lamp Hall. */
+var H = Hall.draw(document.getElementById('hall'), { scene: 'stair', cam: { x: -1.05, y: 1.7, z: .3, pitch: -28, f: .6, cx: .42, cy: .4 } });
+/* light on the treads' front edges (the stair's geometry from hall.js: lip at z 1.05, tread .34, riser .31, open side at x −.3) */
+(function(){
+  var NS = 'http://www.w3.org/2000/svg', g = document.createElementNS(NS, 'g');
+  g.setAttribute('class', 'tread-glow'); g.style.mixBlendMode = 'screen';
+  var fl = document.createElementNS(NS, 'filter'); fl.id = 'treadSoft'; fl.setAttribute('x', '-20%'); fl.setAttribute('y', '-200%'); fl.setAttribute('width', '140%'); fl.setAttribute('height', '500%');
+  fl.innerHTML = '<feGaussianBlur stdDeviation="1.6"/>'; H.svg.querySelector('defs').appendChild(fl);
+  g.setAttribute('filter', 'url(#treadSoft)');
+  for (var n = 1; n <= 22; n++) {
+    /* the nosing of each step: where a tread meets the drop to the next (n = 1 is the landing's lip); the stair runs from its open side (x −.3) to the right wall */
+    var m = n - 1, y = -.31 * m, z = 1.05 + m * .34, a = H.project(-.28, y, z), b = H.project(1.62, y, z);
+    if (!a || !b) continue;
+    var w = Math.max(.5, 5 / (z + .6)), fade = Math.exp(-n / 8);
+    ['base', 'pulse'].forEach(function(k){
+      var l = document.createElementNS(NS, 'line');
+      l.setAttribute('x1', a[0]); l.setAttribute('y1', a[1]); l.setAttribute('x2', b[0]); l.setAttribute('y2', b[1]);
+      l.setAttribute('stroke-width', (k === 'pulse' ? w * 2.4 : w).toFixed(2)); l.setAttribute('class', k);
+      l.style.setProperty('--n', n); l.style.setProperty('--o', (.55 * fade + .08).toFixed(3)); l.style.setProperty('--p', Math.min(1, 1.2 * fade + .25).toFixed(3));
+      g.appendChild(l);
+    });
+  }
+  H.svg.appendChild(g);
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ g.classList.add('awake'); }); });
+})();
+</script>
+</body>
+</html>

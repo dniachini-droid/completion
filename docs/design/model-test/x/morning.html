@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Morning · The Lamp Hall</title>
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<style>
+:root{
+  --stone-0:#05080b; --stone-1:#0a1015; --stone-2:#121b22; --stone-3:#1c2831;
+  --ink:#e9eef0; --ink-2:#aebcc3; --ink-3:#7d8f98;
+  --cold:#a9d6e4; --cold-hi:#dff4fa; --cold-dim:#5f8796;
+  --warm:#f4b56a; --warm-hi:#ffe0ad; --warm-deep:#b8662a;
+  --carve:'Cinzel',Georgia,serif; --book:'EB Garamond','Cormorant Garamond',Georgia,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--stone-0);overflow-x:hidden}
+body{color:var(--ink);font-family:var(--book);-webkit-font-smoothing:antialiased;display:flex;justify-content:center}
+.phone{position:relative;width:390px;max-width:100%;height:844px;overflow:hidden;background:var(--stone-0)}
+
+/* ---------- the hall ---------- */
+.hall{position:absolute;inset:0 0 auto 0;height:470px}
+.hall svg{display:block;width:100%;height:100%}
+.lampglow{transform-origin:90px 340px;animation:breathe 5.2s ease-in-out infinite}
+.flame{transform-origin:97px 340px;animation:flick 2.6s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:.86;transform:scale(1)}50%{opacity:1;transform:scale(1.045)}}
+@keyframes flick{0%,100%{transform:scale(1,1)}30%{transform:scale(.96,1.06)}60%{transform:scale(1.03,.95)}}
+.seal{animation:seal 6.5s ease-in-out infinite}
+@keyframes seal{0%,100%{opacity:.78}50%{opacity:1}}
+canvas.motes{position:absolute;inset:0;width:390px;height:470px;pointer-events:none}
+
+/* ---------- top bar ---------- */
+.top{position:absolute;top:0;left:0;right:0;padding:50px 22px 0}
+.row{display:flex;justify-content:space-between;align-items:center}
+.where .day{font-family:var(--carve);font-size:13px;letter-spacing:.22em;color:var(--ink-3);text-transform:uppercase}
+.where h1{font-family:var(--carve);font-weight:500;font-size:31px;letter-spacing:.03em;line-height:1.1;margin-top:6px;color:var(--ink);text-shadow:0 0 18px rgba(169,214,228,.25),0 1px 0 #000}
+.cap{appearance:none;border:1px solid rgba(169,214,228,.28);background:rgba(8,14,19,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  color:var(--ink);border-radius:999px;height:44px;padding:0 14px 0 12px;display:flex;align-items:center;gap:9px;cursor:pointer;
+  font-family:var(--carve);font-size:14px;letter-spacing:.1em;box-shadow:0 0 20px rgba(169,214,228,.08) inset}
+.cap{height:48px;padding:0 14px 0 13px}
+.cl{display:flex;flex-direction:column;align-items:flex-start;line-height:1.05}
+.cv{font-family:var(--carve);font-size:14.5px;letter-spacing:.12em;text-transform:uppercase}
+.cs{font-family:var(--book);font-style:italic;font-size:13px;letter-spacing:0;color:var(--ink-3);margin-top:2px}
+.cap .tide{width:18px;height:18px}
+.cap .chev{width:9px;height:9px;opacity:.6}
+.cap-note{font-family:var(--book);font-style:italic;font-size:14px;color:var(--ink-3);margin-left:auto;margin-right:10px}
+
+/* ahead tag */
+.ahead{position:absolute;right:70px;top:252px;width:170px;text-align:right}
+.ahead .k{font-family:var(--carve);font-size:11.5px;letter-spacing:.24em;color:var(--cold);text-transform:uppercase;opacity:.9}
+.ahead .v{font-family:var(--book);font-style:italic;font-size:16px;color:var(--ink-2);line-height:1.2;margin-top:3px}
+
+/* ---------- the day ---------- */
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.day-panel,.top,.ahead,.cant{animation:rise .9s cubic-bezier(.2,.8,.2,1) both}
+.top{animation-delay:.05s}.ahead{animation-delay:.35s}.day-panel{animation-delay:.2s}.cant{animation-delay:.5s}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+.day-panel{position:absolute;left:0;right:0;top:404px;bottom:0;padding:0 22px}
+.eyebrow{display:flex;align-items:center;gap:10px;font-family:var(--carve);font-size:12.5px;letter-spacing:.28em;color:var(--warm);text-transform:uppercase}
+.eyebrow::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(244,181,106,.45),rgba(244,181,106,0))}
+.job{font-family:var(--carve);font-weight:500;font-size:28px;line-height:1.16;letter-spacing:.015em;margin-top:12px;color:#f6f1ea;
+  text-shadow:0 0 22px rgba(244,181,106,.18)}
+.why{font-family:var(--book);font-style:italic;font-size:18px;color:var(--ink-2);margin-top:8px;line-height:1.3}
+.why b{font-weight:500;font-style:italic;color:var(--warm-hi)}
+.acts{display:flex;gap:10px;margin-top:18px}
+.btn{appearance:none;border:0;cursor:pointer;height:56px;border-radius:14px;font-family:var(--carve);font-size:16px;letter-spacing:.16em;text-transform:uppercase;
+  display:flex;align-items:center;justify-content:center;gap:10px;transition:transform .18s cubic-bezier(.2,.8,.2,1),box-shadow .3s}
+.btn:active{transform:scale(.97)}
+.go{flex:1;color:#2a1605;font-weight:600;
+  background:radial-gradient(120% 140% at 50% 0%,#ffe3b3 0%,#f6bb72 45%,#d98a3f 100%);
+  box-shadow:0 0 0 1px rgba(255,224,173,.55) inset,0 -6px 14px rgba(150,70,20,.35) inset,0 0 28px rgba(244,181,106,.42),0 10px 30px rgba(244,140,60,.2)}
+.swap{width:104px;color:var(--ink);background:rgba(18,27,34,.7);box-shadow:0 0 0 1px rgba(169,214,228,.26) inset,0 0 18px rgba(169,214,228,.07)}
+.swap svg{width:15px;height:15px}
+
+.rule{height:14px;margin:22px 0 4px;background:
+  radial-gradient(circle at 50% 50%,rgba(169,214,228,.5) 0 1.6px,transparent 2.2px),
+  linear-gradient(90deg,transparent,rgba(169,214,228,.22) 30%,rgba(169,214,228,.22) 70%,transparent) center/100% 1px no-repeat}
+.rest{list-style:none}
+.rest li{display:flex;align-items:center;gap:14px;min-height:58px}
+.cup{width:30px;height:22px;flex:none}
+.rest .t{font-family:var(--book);font-size:19px;color:var(--ink);line-height:1.2}
+.rest .s{font-family:var(--book);font-style:italic;font-size:15px;color:var(--ink-3);margin-top:1px}
+.rest li.done .t{color:var(--ink-2)}
+.rest li.done .s{color:#c9a57c}
+
+.cant{position:absolute;left:0;right:0;bottom:22px;display:flex;justify-content:center}
+.cant button{appearance:none;background:none;border:0;cursor:pointer;height:48px;padding:0 20px;display:flex;align-items:center;gap:10px;
+  font-family:var(--book);font-size:19px;color:var(--cold);letter-spacing:.01em}
+.cant button span{border-bottom:1px solid rgba(169,214,228,.35);padding-bottom:1px}
+.cant svg{width:16px;height:16px}
+</style>
+</head>
+<body>
+<main class="phone">
+
+  <!-- The Lamp Hall, painted -->
+  <div class="hall" aria-hidden="true">
+    <svg viewBox="0 0 390 470" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <radialGradient id="farGlow" cx="200" cy="214" r="230" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#cfeef7" stop-opacity=".95"/>
+          <stop offset=".08" stop-color="#8fbccb" stop-opacity=".6"/>
+          <stop offset=".35" stop-color="#2f4a57" stop-opacity=".45"/>
+          <stop offset="1" stop-color="#0a1116" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="doorStone" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#1b2830"/><stop offset=".6" stop-color="#101920"/><stop offset="1" stop-color="#080d11"/>
+        </linearGradient>
+        <linearGradient id="farDoor" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#2c4450"/><stop offset="1" stop-color="#0d171d"/>
+        </linearGradient>
+        <linearGradient id="ledge" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1a1714" stop-opacity=".4"/><stop offset=".6" stop-color="#2c241d"/><stop offset="1" stop-color="#1c1814"/></linearGradient>
+        <linearGradient id="ledgeTop" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c08850" stop-opacity=".1"/><stop offset=".65" stop-color="#e0a468" stop-opacity=".7"/><stop offset="1" stop-color="#c08850" stop-opacity=".3"/></linearGradient>
+        <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#0c1419"/><stop offset=".55" stop-color="#101a21"/><stop offset="1" stop-color="#05080b"/>
+        </linearGradient>
+        <linearGradient id="ribGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#b58a62"/><stop offset=".35" stop-color="#6d8e9c"/><stop offset=".8" stop-color="#8fb3c1"/><stop offset="1" stop-color="#4e6a76"/>
+        </linearGradient>
+        <radialGradient id="warm" cx="92" cy="336" r="250" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#ffd79a" stop-opacity=".9"/>
+          <stop offset=".1" stop-color="#f0a457" stop-opacity=".5"/>
+          <stop offset=".45" stop-color="#9a5a2a" stop-opacity=".2"/>
+          <stop offset="1" stop-color="#3a2010" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="flameG" cx=".5" cy=".7" r=".6">
+          <stop offset="0" stop-color="#fffaf0"/><stop offset=".45" stop-color="#ffd48a"/><stop offset="1" stop-color="#f08a2c" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#05080b" stop-opacity="0"/><stop offset=".55" stop-color="#05080b" stop-opacity=".75"/><stop offset="1" stop-color="#05080b"/>
+        </linearGradient>
+        <linearGradient id="topFade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#05080b" stop-opacity=".85"/><stop offset="1" stop-color="#05080b" stop-opacity="0"/>
+        </linearGradient>
+        <filter id="paint" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence type="fractalNoise" baseFrequency=".03 .03" numOctaves="3" seed="7" result="n"/>
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="4" xChannelSelector="R" yChannelSelector="G" result="d"/>
+          <feGaussianBlur in="d" stdDeviation="1.1"/>
+        </filter>
+        <linearGradient id="ff" x1="0" y1="0" x2="0" y2="1"><stop offset=".6" stop-color="#fff"/><stop offset=".86" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <mask id="floorFade" maskUnits="userSpaceOnUse" x="0" y="0" width="390" height="470"><rect width="390" height="470" fill="url(#ff)"/></mask>
+        <filter id="soft"><feGaussianBlur stdDeviation="7"/></filter>
+        <filter id="soft1"><feGaussianBlur stdDeviation=".9"/></filter>
+        <filter id="soft2"><feGaussianBlur stdDeviation="2.2"/></filter>
+        <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
+          <feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="grain" x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="3"/>
+          <feColorMatrix values="0 0 0 0 .6  0 0 0 0 .7  0 0 0 0 .75  0 0 0 .55 0"/>
+        </filter>
+        <filter id="clouds" x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency=".012 .012" numOctaves="4" seed="11"/>
+          <feColorMatrix values="0 0 0 0 .55  0 0 0 0 .68  0 0 0 0 .74  0 0 0 .9 -.28"/>
+        </filter>
+      </defs>
+
+      <rect width="390" height="470" fill="url(#bg)"/>
+      <!-- painted stone mottling -->
+      <rect width="390" height="470" filter="url(#clouds)" opacity=".35"/>
+      <!-- light from the far end -->
+      <rect width="390" height="470" fill="url(#farGlow)"/>
+
+      <!-- painted wall washes -->
+      <path d="M-20 60 Q60 150 150 214 L150 250 Q60 330 -20 470 Z" fill="#3c4e58" opacity=".22" filter="url(#soft)"/>
+      <path d="M410 60 Q330 150 250 214 L250 250 Q330 330 410 470 Z" fill="#5d8595" opacity=".16" filter="url(#soft)"/>
+      <ellipse cx="200" cy="120" rx="150" ry="60" fill="#8fb6c4" opacity=".07" filter="url(#soft)"/>
+      <!-- floor -->
+      <g filter="url(#soft2)"><path d="M200 232 L-200 460" stroke="#8fb0bd" stroke-opacity=".05" stroke-width="1"/><path d="M200 232 L-40 460" stroke="#8fb0bd" stroke-opacity=".05" stroke-width="1"/><path d="M200 232 L104 460" stroke="#8fb0bd" stroke-opacity=".05" stroke-width="1"/><path d="M200 232 L248 460" stroke="#8fb0bd" stroke-opacity=".05" stroke-width="1"/><path d="M200 232 L392 460" stroke="#8fb0bd" stroke-opacity=".05" stroke-width="1"/><path d="M200 232 L561.6 460" stroke="#8fb0bd" stroke-opacity=".05" stroke-width="1"/></g>
+      <ellipse cx="200" cy="214" rx="210" ry="18" transform="translate(0 150)" fill="#9cc3d0" opacity=".06" filter="url(#soft)"/>
+
+      <!-- vault ribs, painted -->
+      <g filter="url(#soft1)"><path d="M-42.8 520 L-42.8 182.3 Q-42.8 -41 180.6 -41 L219.4 -41 Q442.8 -41 442.8 182.3 L442.8 520" fill="none" stroke="url(#ribGrad)" stroke-width="7.1" opacity="0.55"/><path d="M-42.8 520 L-42.8 182.3 Q-42.8 -41 180.6 -41 L219.4 -41 Q442.8 -41 442.8 182.3 L442.8 520" fill="none" stroke="#cdeaf3" stroke-width="1.3" opacity="0.28" transform="translate(3 3.2) scale(.985)"/><path d="M-42.8 520 L-42.8 182.3 Q-42.8 -41 180.6 -41 L219.4 -41 Q442.8 -41 442.8 182.3 L442.8 520" fill="none" stroke="#04070a" stroke-width="12.8" opacity="0.50" transform="translate(-4.1 3.1)"/><path d="M23.9 436 L23.9 191 Q23.9 29 185.9 29 L214.1 29 Q376.1 29 376.1 191 L376.1 436" fill="none" stroke="url(#ribGrad)" stroke-width="5.2" opacity="0.51"/><path d="M23.9 436 L23.9 191 Q23.9 29 185.9 29 L214.1 29 Q376.1 29 376.1 191 L376.1 436" fill="none" stroke="#cdeaf3" stroke-width="1" opacity="0.26" transform="translate(3 3.2) scale(.985)"/><path d="M23.9 436 L23.9 191 Q23.9 29 185.9 29 L214.1 29 Q376.1 29 376.1 191 L376.1 436" fill="none" stroke="#04070a" stroke-width="9.4" opacity="0.46" transform="translate(-3 2.2)"/><path d="M71.5 376 L71.5 197.2 Q71.5 79 189.7 79 L210.3 79 Q328.5 79 328.5 197.2 L328.5 376" fill="none" stroke="url(#ribGrad)" stroke-width="3.8" opacity="0.46"/><path d="M71.5 376 L71.5 197.2 Q71.5 79 189.7 79 L210.3 79 Q328.5 79 328.5 197.2 L328.5 376" fill="none" stroke="#cdeaf3" stroke-width="0.7" opacity="0.24" transform="translate(3 3.2) scale(.985)"/><path d="M71.5 376 L71.5 197.2 Q71.5 79 189.7 79 L210.3 79 Q328.5 79 328.5 197.2 L328.5 376" fill="none" stroke="#04070a" stroke-width="6.8" opacity="0.42" transform="translate(-2.2 1.6)"/><path d="M104.8 334 L104.8 201.6 Q104.8 114 192.4 114 L207.6 114 Q295.2 114 295.2 201.6 L295.2 334" fill="none" stroke="url(#ribGrad)" stroke-width="2.8" opacity="0.42"/><path d="M104.8 334 L104.8 201.6 Q104.8 114 192.4 114 L207.6 114 Q295.2 114 295.2 201.6 L295.2 334" fill="none" stroke="#cdeaf3" stroke-width="0.5" opacity="0.22" transform="translate(3 3.2) scale(.985)"/><path d="M104.8 334 L104.8 201.6 Q104.8 114 192.4 114 L207.6 114 Q295.2 114 295.2 201.6 L295.2 334" fill="none" stroke="#04070a" stroke-width="5" opacity="0.38" transform="translate(-1.6 1.2)"/><path d="M128.6 304 L128.6 204.7 Q128.6 139 194.3 139 L205.7 139 Q271.4 139 271.4 204.7 L271.4 304" fill="none" stroke="url(#ribGrad)" stroke-width="2.1" opacity="0.37"/><path d="M128.6 304 L128.6 204.7 Q128.6 139 194.3 139 L205.7 139 Q271.4 139 271.4 204.7 L271.4 304" fill="none" stroke="#cdeaf3" stroke-width="0.4" opacity="0.20" transform="translate(3 3.2) scale(.985)"/><path d="M128.6 304 L128.6 204.7 Q128.6 139 194.3 139 L205.7 139 Q271.4 139 271.4 204.7 L271.4 304" fill="none" stroke="#04070a" stroke-width="3.8" opacity="0.34" transform="translate(-1.2 0.9)"/><path d="M146.4 281.5 L146.4 207 Q146.4 157.8 195.7 157.8 L204.3 157.8 Q253.6 157.8 253.6 207 L253.6 281.5" fill="none" stroke="url(#ribGrad)" stroke-width="1.6" opacity="0.33"/><path d="M146.4 281.5 L146.4 207 Q146.4 157.8 195.7 157.8 L204.3 157.8 Q253.6 157.8 253.6 207 L253.6 281.5" fill="none" stroke="#cdeaf3" stroke-width="0.4" opacity="0.18" transform="translate(3 3.2) scale(.985)"/><path d="M146.4 281.5 L146.4 207 Q146.4 157.8 195.7 157.8 L204.3 157.8 Q253.6 157.8 253.6 207 L253.6 281.5" fill="none" stroke="#04070a" stroke-width="2.9" opacity="0.30" transform="translate(-0.9 0.7)"/><path d="M159.5 265 L159.5 208.7 Q159.5 171.5 196.8 171.5 L203.2 171.5 Q240.5 171.5 240.5 208.7 L240.5 265" fill="none" stroke="url(#ribGrad)" stroke-width="1.2" opacity="0.28"/><path d="M159.5 265 L159.5 208.7 Q159.5 171.5 196.8 171.5 L203.2 171.5 Q240.5 171.5 240.5 208.7 L240.5 265" fill="none" stroke="#cdeaf3" stroke-width="0.4" opacity="0.16" transform="translate(3 3.2) scale(.985)"/><path d="M159.5 265 L159.5 208.7 Q159.5 171.5 196.8 171.5 L203.2 171.5 Q240.5 171.5 240.5 208.7 L240.5 265" fill="none" stroke="#04070a" stroke-width="2.2" opacity="0.26" transform="translate(-0.7 0.5)"/><path d="M169.1 253 L169.1 210 Q169.1 181.5 197.5 181.5 L202.5 181.5 Q230.9 181.5 230.9 210 L230.9 253" fill="none" stroke="url(#ribGrad)" stroke-width="0.9" opacity="0.24"/><path d="M169.1 253 L169.1 210 Q169.1 181.5 197.5 181.5 L202.5 181.5 Q230.9 181.5 230.9 210 L230.9 253" fill="none" stroke="#cdeaf3" stroke-width="0.4" opacity="0.14" transform="translate(3 3.2) scale(.985)"/><path d="M169.1 253 L169.1 210 Q169.1 181.5 197.5 181.5 L202.5 181.5 Q230.9 181.5 230.9 210 L230.9 253" fill="none" stroke="#04070a" stroke-width="1.6" opacity="0.22" transform="translate(-0.5 0.4)"/><path d="M176.2 244 L176.2 210.9 Q176.2 189 198.1 189 L201.9 189 Q223.8 189 223.8 210.9 L223.8 244" fill="none" stroke="url(#ribGrad)" stroke-width="0.7" opacity="0.19"/><path d="M176.2 244 L176.2 210.9 Q176.2 189 198.1 189 L201.9 189 Q223.8 189 223.8 210.9 L223.8 244" fill="none" stroke="#cdeaf3" stroke-width="0.4" opacity="0.12" transform="translate(3 3.2) scale(.985)"/><path d="M176.2 244 L176.2 210.9 Q176.2 189 198.1 189 L201.9 189 Q223.8 189 223.8 210.9 L223.8 244" fill="none" stroke="#04070a" stroke-width="1.3" opacity="0.18" transform="translate(-0.4 0.3)"/></g>
+
+      <!-- the cups, dark -->
+      <g filter="url(#soft2)" opacity=".9"><path d="M-13 240.4 Q-4.2 253.1 4.6 240.4 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.42" stroke-width="1.2"/><path d="M395.4 240.4 Q404.2 253.1 413 240.4 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.42" stroke-width="1.2"/><path d="M45.1 233.2 Q51.5 242.4 57.9 233.2 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.38" stroke-width="0.9"/><path d="M86.3 228.1 Q91 234.9 95.7 228.1 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.34" stroke-width="0.7"/><path d="M304.3 228.1 Q309 234.9 313.7 228.1 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.34" stroke-width="0.7"/><path d="M115.3 224.5 Q118.8 229.5 122.3 224.5 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.30" stroke-width="0.5"/><path d="M277.7 224.5 Q281.2 229.5 284.7 224.5 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.30" stroke-width="0.5"/><path d="M136.5 221.9 Q139.1 225.7 141.7 221.9 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.26" stroke-width="0.5"/><path d="M258.3 221.9 Q260.9 225.7 263.5 221.9 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.26" stroke-width="0.5"/><path d="M152.2 219.9 Q154.2 222.8 156.2 219.9 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.22" stroke-width="0.5"/><path d="M243.8 219.9 Q245.8 222.8 247.8 219.9 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.22" stroke-width="0.5"/><path d="M163.7 218.5 Q165.2 220.7 166.7 218.5 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.18" stroke-width="0.5"/><path d="M233.3 218.5 Q234.8 220.7 236.3 218.5 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.18" stroke-width="0.5"/><path d="M172.2 217.4 Q173.3 219.1 174.5 217.4 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.14" stroke-width="0.5"/><path d="M225.5 217.4 Q226.7 219.1 227.8 217.4 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.14" stroke-width="0.5"/></g>
+      <g><path d="M-13 240.4 Q-4.2 253.1 4.6 240.4 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.42" stroke-width="1.2"/><path d="M395.4 240.4 Q404.2 253.1 413 240.4 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.42" stroke-width="1.2"/><path d="M45.1 233.2 Q51.5 242.4 57.9 233.2 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.38" stroke-width="0.9"/><path d="M86.3 228.1 Q91 234.9 95.7 228.1 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.34" stroke-width="0.7"/><path d="M304.3 228.1 Q309 234.9 313.7 228.1 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.34" stroke-width="0.7"/><path d="M115.3 224.5 Q118.8 229.5 122.3 224.5 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.30" stroke-width="0.5"/><path d="M277.7 224.5 Q281.2 229.5 284.7 224.5 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.30" stroke-width="0.5"/><path d="M136.5 221.9 Q139.1 225.7 141.7 221.9 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.26" stroke-width="0.5"/><path d="M258.3 221.9 Q260.9 225.7 263.5 221.9 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.26" stroke-width="0.5"/><path d="M152.2 219.9 Q154.2 222.8 156.2 219.9 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.22" stroke-width="0.5"/><path d="M243.8 219.9 Q245.8 222.8 247.8 219.9 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.22" stroke-width="0.5"/><path d="M163.7 218.5 Q165.2 220.7 166.7 218.5 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.18" stroke-width="0.5"/><path d="M233.3 218.5 Q234.8 220.7 236.3 218.5 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.18" stroke-width="0.5"/><path d="M172.2 217.4 Q173.3 219.1 174.5 217.4 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.14" stroke-width="0.5"/><path d="M225.5 217.4 Q226.7 219.1 227.8 217.4 Z" fill="#05080b" stroke="#a9d6e4" stroke-opacity="0.14" stroke-width="0.5"/></g>
+
+      <!-- the great door, far end: a count not filled, a blank for a word -->
+      <g transform="translate(200 214)">
+        <ellipse cx="0" cy="-2" rx="30" ry="36" fill="#cfeef7" opacity=".22" filter="url(#soft)"/>
+        <path d="M-11 22 V-8 Q-11 -24 0 -24 Q11 -24 11 -8 V22 Z" fill="url(#farDoor)" stroke="#dff4fa" stroke-opacity=".7" stroke-width=".7" filter="url(#soft2)" opacity=".95"/>
+        <path d="M-11 22 V-8 Q-11 -24 0 -24 Q11 -24 11 -8 V22" fill="none" stroke="#e8f8fc" stroke-opacity=".55" stroke-width=".6"/>
+        <g stroke="#e8f8fc" stroke-width=".6" stroke-linecap="round"><path d="M-6 -14v3.5M-3.6 -14v3.5M-1.2 -14v3.5" opacity=".9"/><path d="M1.2 -14v3.5M3.6 -14v3.5M6 -14v3.5" opacity=".25"/></g>
+        <rect x="-5" y="-4" width="10" height="2.2" rx="1.1" fill="none" stroke="#e8f8fc" stroke-width=".45" stroke-dasharray="1 .8" opacity=".7"/>
+      </g>
+
+      <!-- the lintel on the side wall: two marks and a rod-shaped blank -->
+      <g class="seal" mask="url(#floorFade)">
+        <ellipse cx="352.3" cy="197.4" rx="34" ry="16" fill="#bfe6f2" opacity=".28" filter="url(#soft)"/>
+        <path d="M369 427 L369 206.9 L335.7 208.3 L335.7 385 Z" fill="url(#doorStone)" stroke="#8fb9c8" stroke-opacity=".45" stroke-width="1.1"/>
+        <path d="M372 203.9 L372 185.6 L334.7 191.2 L334.7 205.3 Z" fill="#16222a" stroke="#a9d6e4" stroke-opacity=".6" stroke-width=".9"/>
+        <g transform="translate(352.3 197.4) scale(1.2)" filter="url(#glow)" fill="none" stroke="#dff4fa" stroke-width="1.3" stroke-linecap="round">
+          <circle cx="-11" cy="-1" r="2.6"/><path d="M-11 1.6 v3"/>
+          <path d="M-4.5 4 v-4 l-2 -3.5 M-4.5 0 l2 -3.5"/>
+          <rect x="3.5" y="-1.6" width="11" height="3.2" rx="1.6" stroke-dasharray="1.6 1.4" stroke-width=".9" opacity=".9"/>
+        </g>
+      </g>
+      <!-- leader from tag to lintel -->
+      <path d="M324 256 Q334 236 338 210" fill="none" stroke="#a9d6e4" stroke-opacity=".4" stroke-width=".8" stroke-dasharray="2 3"/>
+
+      <!-- warm lamp light on the near wall and floor -->
+      <g class="lampglow">
+        <rect width="390" height="470" fill="url(#warm)"/>
+      </g>
+      <!-- the ledge and the clay lamp -->
+      <g filter="url(#paint)">
+        <path d="M-10 364 L128 359 L134 370 L-10 378 Z" fill="url(#ledge)"/>
+        <path d="M-10 359 L128 355 L129 360 L-10 365 Z" fill="url(#ledgeTop)"/>
+      </g>
+      <g transform="translate(0 2)">
+        <ellipse cx="58" cy="357" rx="30" ry="3" fill="#000" opacity=".5" filter="url(#soft2)"/>
+        <path d="M30 350 Q26 344 32 341" stroke="#5a3c28" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M32 352 Q30 338 54 337 Q74 336 82 342 L96 339 Q101 343 95 348 Q80 356 58 357 Q34 358 32 352 Z" fill="#6e4b33"/>
+        <path d="M36 344 Q54 336 80 342" stroke="#f0b879" stroke-width="1.4" fill="none" opacity=".85"/>
+        <path d="M84 343 L96 340" stroke="#ffd59a" stroke-width="1.2" opacity=".9"/>
+        <ellipse cx="55" cy="341" rx="6" ry="1.8" fill="#1a0f08"/>
+      </g>
+      <g class="flame">
+        <ellipse cx="97" cy="328" rx="12" ry="20" fill="#ffb45a" opacity=".4" filter="url(#soft2)"/>
+        <path d="M97 340 C89 332 93 322 97 311 C101 322 105 332 97 340 Z" fill="url(#flameG)"/>
+        <path d="M97 338 C94 334 95 329 97 324 C99 329 100 334 97 338 Z" fill="#fffdf6" opacity=".9"/>
+      </g>
+
+      <!-- grain + fades -->
+      <rect width="390" height="470" filter="url(#grain)" opacity=".16" style="mix-blend-mode:overlay"/>
+      <rect width="390" height="150" fill="url(#topFade)"/>
+      <rect y="300" width="390" height="170" fill="url(#fade)"/>
+    </svg>
+    <canvas class="motes" width="780" height="940"></canvas>
+  </div>
+
+  <header class="top">
+    <div class="row where">
+      <div class="day">Thursday</div>
+      <button class="cap" aria-label="Today is a normal day. Tap to change.">
+        <svg class="tide" viewBox="0 0 18 18" fill="none" stroke="#a9d6e4" stroke-width="1.3" stroke-linecap="round"><circle cx="9" cy="9" r="7.2" opacity=".35"/><path d="M4.2 10.4 Q6.6 7.6 9 10.4 T13.8 10.4"/></svg>
+        <span class="cl"><span class="cv">Normal</span><span class="cs">from bedtime</span></span>
+        <svg class="chev" viewBox="0 0 10 10" fill="none" stroke="#e9eef0" stroke-width="1.4"><path d="M2 3.5 L5 6.5 L8 3.5"/></svg>
+      </button>
+    </div>
+    <div class="where"><h1>The Lamp Hall</h1></div>
+  </header>
+
+  <div class="ahead">
+    <div class="k">Ahead</div>
+    <div class="v">The lintel wants a word</div>
+  </div>
+
+  <section class="day-panel">
+    <div class="eyebrow">Next</div>
+    <h2 class="job">Order the cat’s medication</h2>
+    <p class="why">Do this one and today’s step turns up <b>a find</b>.</p>
+    <div class="acts">
+      <button class="btn go">Begin</button>
+      <button class="btn swap" aria-label="Swap for another job">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h9l-2.5-2.5M13 11H4l2.5 2.5"/></svg>
+        Swap
+      </button>
+    </div>
+
+    <div class="rule" aria-hidden="true"></div>
+    <ul class="rest">
+      <li>
+        <svg class="cup" viewBox="0 0 30 22" aria-hidden="true"><path d="M5 8 Q15 20 25 8 Z" fill="#070b0e" stroke="#7fa5b4" stroke-width="1.2" stroke-opacity=".7"/></svg>
+        <div><div class="t">Course: one hour</div><div class="s">two delves</div></div>
+      </li>
+      <li class="done">
+        <svg class="cup" viewBox="0 0 30 22" aria-hidden="true">
+          <defs><radialGradient id="cupg" cx=".5" cy=".6" r=".6"><stop offset="0" stop-color="#ffcf8a" stop-opacity=".9"/><stop offset="1" stop-color="#f4a24a" stop-opacity="0"/></radialGradient></defs>
+          <ellipse cx="15" cy="7" rx="14" ry="9" fill="url(#cupg)" opacity=".7"/>
+          <path d="M5 8 Q15 20 25 8 Z" fill="#2a1a0e" stroke="#f4b56a" stroke-width="1.2"/>
+          <path d="M15 8.5 C12.6 6 13.8 3.6 15 .8 C16.2 3.6 17.4 6 15 8.5 Z" fill="#ffe0ad"/>
+        </svg>
+        <div><div class="t">Gym, then the sauna</div><div class="s">done this morning</div></div>
+      </li>
+    </ul>
+  </section>
+
+  <div class="cant">
+    <button>
+      <span>I can’t start</span>
+    </button>
+  </div>
+</main>
+
+<script>
+/* Dust in the lamp light: slow, few, subtle. */
+(function(){
+  const c=document.querySelector('canvas.motes'); if(!c) return;
+  const x=c.getContext('2d'); x.scale(2,2);
+  const R=Math.random, motes=[];
+  for(let i=0;i<26;i++) motes.push({x:R()*390,y:120+R()*330,r:.4+R()*1.1,vx:(R()-.5)*.06,vy:-.04-R()*.08,p:R()*6.28});
+  let last=performance.now();
+  function frame(t){
+    const dt=Math.min(50,t-last); last=t;
+    x.clearRect(0,0,390,470);
+    for(const m of motes){
+      m.x+=m.vx*dt*.06; m.y+=m.vy*dt*.06; m.p+=dt*.0012;
+      if(m.y<100){m.y=450;m.x=R()*390}
+      const dl=Math.hypot(m.x-97,m.y-330), dc=Math.hypot(m.x-200,m.y-214);
+      const warm=Math.max(0,1-dl/200), cold=Math.max(0,1-dc/170);
+      const a=(Math.max(warm,cold*.8))*(.45+.35*Math.sin(m.p));
+      if(a<=.01) continue;
+      x.fillStyle=warm>cold?`rgba(255,214,150,${a})`:`rgba(210,240,250,${a})`;
+      x.beginPath(); x.arc(m.x,m.y,m.r,0,6.283); x.fill();
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

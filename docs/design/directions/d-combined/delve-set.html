@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06070f">
+<title>Set the delves · Course: one hour</title>
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<link rel="stylesheet" href="direction.css">
+<style>
+/* delve-set: the moment after Begin. Dan chose the dial (D-033; the three tried are in delve-set-variants.html).
+   Four stops only: 25, 30, 45, 60, on a 60-minute face: the ring fills in proportion (25 = 5/12, 30 = half, 45 = three quarters,
+   60 = full), each stop label at its own angle, 60 at the top where the ring starts and ends. Research: design/research/DELVE_TIMER_CONTROLS.md
+   One centre axis: the dial, its number, the stops, the route, the words and the button all share the column's centre.
+   D-037: under the dial, one route line. Time = distance: each delve in the run is a lit segment in proportion to its minutes,
+   the Salt Gallery sits at its real distance (about 7 delves of 25), the count is set on the line itself. */
+
+body { --scrim-top-h: 300px; --scrim-bottom-h: 52%; }
+.dimwash { display: none; }   /* Dan: the hall lit as in delve-set-variants A (no dim wash over the painting) */
+.hall .hall-far { animation: none; opacity: .5; }
+
+.job { margin-top: 6px; }
+.job h1 { margin-top: 8px; }
+
+/* the stage: the dial on the centre line, the route under it */
+.stage { position: relative; }
+.stage-in { position:absolute; inset: 0 var(--gutter); }
+
+.num { font-family: var(--life); font-weight: 300; line-height: 1; color: #f6f5ff; font-variant-numeric: tabular-nums lining-nums;
+  text-shadow: 0 0 24px rgba(var(--violet-rgb), .85), 0 0 64px rgba(var(--violet-rgb), .45); display:inline-block; }
+.unit { font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink-2); }
+.num.tick { animation: numtick .42s var(--ease); }
+@keyframes numtick { 0% { transform: scale(1); } 30% { transform: scale(1.09); text-shadow: 0 0 20px #fff, 0 0 44px rgba(var(--violet-rgb), 1), 0 0 90px rgba(var(--violet-rgb), .7); } 100% { transform: scale(1); } }
+
+/* the dial: the delve's own ring. --R is its diameter; the stops sit --gap outside it. */
+.dialwrap { position:absolute; left:50%; top: 50%; width:0; height:0; }
+.dial { --R: min(236px, 60vw, 29vh); position:absolute; left: calc(var(--R) / -2); top: calc(var(--R) / -2); width:var(--R); height:var(--R);
+  touch-action:none; cursor:grab; border-radius:50%; }
+.dial:active { cursor:grabbing; }
+.dial:focus-visible { outline:none; }
+.dial:focus-visible .track { background: rgba(210,210,255,.3); }
+.dial .band { position:absolute; inset:0; border-radius:50%;
+  -webkit-mask: radial-gradient(circle closest-side, transparent 90.5%, #000 91.5%, #000 96.5%, transparent 97.5%);
+          mask: radial-gradient(circle closest-side, transparent 90.5%, #000 91.5%, #000 96.5%, transparent 97.5%); }
+.dial .track { background: rgba(190,196,255,.14); }
+.dial .fill { background: conic-gradient(from 0deg, rgba(var(--violet-rgb),.35) 0, rgba(190,184,255,.95) calc(var(--p) * 1turn - 3deg), #fff calc(var(--p) * 1turn), transparent calc(var(--p) * 1turn + .5deg)); }
+.dial .glow { position:absolute; inset:-14%; filter: blur(10px); mix-blend-mode:screen; pointer-events:none; }
+.dial .glow .band { inset:12.3%; -webkit-mask: radial-gradient(circle closest-side, transparent 84%, #000 90%, #000 98%, transparent 104%); mask: radial-gradient(circle closest-side, transparent 84%, #000 90%, #000 98%, transparent 104%); }
+.dial .glow.wide { filter: blur(24px); opacity:.9; }
+.dial .disc { position:absolute; inset:5%; border-radius:50%; pointer-events:none;
+  background: radial-gradient(circle, rgba(200,196,255,calc(.05 + var(--p)*.16)), rgba(var(--violet-rgb),calc(.03 + var(--p)*.08)) 60%, transparent 72%); }
+.dial .halo { position:absolute; inset:-22%; border-radius:50%; pointer-events:none;
+  background: radial-gradient(circle, transparent 42%, rgba(var(--violet-rgb),calc(.06 + var(--p) * .26)) 50%, transparent 66%); }
+.dial .notch { position:absolute; left:50%; top:50%; width:2px; height:12px; margin:-6px 0 0 -1px; border-radius:1px; background: var(--edge-2);
+  transform: rotate(var(--a)) translateY(calc(var(--R) * -.47)); transition: background .3s var(--ease), box-shadow .3s var(--ease); pointer-events:none; }
+.dial .notch.lit { background: #fff; box-shadow: 0 0 8px rgba(var(--violet-rgb), 1); }
+.dial .handle { position:absolute; left:50%; top:50%; width:48px; height:48px; margin:-24px 0 0 -24px; pointer-events:none;
+  transform: rotate(calc(var(--p) * 1turn)) translateY(calc(var(--R) * -.47)); }
+.dial .handle::before { content:""; position:absolute; inset:14px; border-radius:50%;
+  background: radial-gradient(circle, #fff 0 32%, rgba(217,214,255,.9) 45%, rgba(var(--violet-rgb),.5) 62%, transparent 72%);
+  box-shadow: 0 0 20px 6px rgba(var(--violet-rgb), .7), 0 0 44px 10px rgba(var(--violet-rgb), .3); transition: transform .25s var(--ease); }
+.dial.dragging .handle::before { transform: scale(1.35); }
+.dial .inner { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none; }
+.dial .num { font-size: calc(var(--R) * .34); }
+.dial .unit { margin-top: 4px; }
+.dial .pulse { position:absolute; left:50%; top:50%; width:30px; height:30px; margin:-15px 0 0 -15px; border-radius:50%; pointer-events:none; opacity:0;
+  transform: rotate(var(--a, 0deg)) translateY(calc(var(--R) * -.47));
+  background: radial-gradient(circle, rgba(255,255,255,.9), rgba(var(--violet-rgb),.5) 45%, transparent 70%); }
+.dial .pulse.go { animation: pulse .6s var(--ease); }
+@keyframes pulse { 0% { opacity:.95; scale: .6; } 100% { opacity:0; scale: 2.8; } }
+
+/* the stops: at their minutes on a 60-minute face (25 at 150°, 30 at 180°, 45 at 270°, 60 at the top), all the same distance out (tap them, too) */
+.stop { position:absolute; left:0; top:0; width:48px; height:44px; margin:-22px 0 0 -24px; display:flex; align-items:center; justify-content:center;
+  font-family: var(--life); font-size: 17px; color: var(--ink-3); font-variant-numeric: tabular-nums lining-nums;
+  transform: rotate(var(--a)) translateY(calc((var(--R) / 2 + 30px) * -1)) rotate(calc(var(--a) * -1));
+  transition: color .3s var(--ease), text-shadow .3s var(--ease); }
+.stop.on { color: #fff; text-shadow: 0 0 12px rgba(var(--violet-rgb), .95); }
+.stop.past { color: var(--ink-2); }
+.stop:focus-visible { outline: 1px solid var(--edge); outline-offset: -4px; }
+.stops { --R: min(236px, 60vw, 29vh); position:absolute; left:0; top:0; }
+
+/* the run (D-037): headline, the route line, the count and one plain fact line */
+.run { text-align:center; margin-top: 6px; }
+.run h2 { font-size: 19px; letter-spacing: .12em; padding-left: .12em; color: #eceaff; white-space: nowrap;
+  text-shadow: 0 -1px 0 rgba(0,0,0,.9), 0 0 16px rgba(var(--violet-rgb), .7), 0 0 44px rgba(var(--violet-rgb), .35);
+  transition: color .4s var(--ease), text-shadow .4s var(--ease); }
+.run.there h2 { color: #f4f2ff; text-shadow: 0 -1px 0 rgba(0,0,0,.9), 0 0 22px rgba(var(--violet-rgb), .95), 0 0 60px rgba(var(--violet-rgb), .5); }
+.route { position: relative; height: 68px; margin-top: 4px; touch-action: none; cursor: pointer; }
+.route:focus-visible { outline: 1px solid var(--edge-2); outline-offset: 2px; }
+.route svg { position:absolute; inset:0; width:100%; height:100%; overflow:visible; display:block; }
+.route text { font-family: var(--life); font-style: italic; font-size: 13.5px; }
+.count { display:grid; grid-template-columns: 44px 1fr 44px; align-items:center; margin-top: 2px; }
+.count button { width:44px; height:44px; display:flex; align-items:center; justify-content:center; border-radius: 50%; color: var(--ink-2);
+  transition: color .25s var(--ease), opacity .25s var(--ease); }
+.count button svg { width: 18px; height: 18px; fill:none; stroke: var(--edge); stroke-width: 1.3; stroke-linecap: round; }
+.count button:hover svg, .count button:focus-visible svg { stroke: #fff; }
+.count button[disabled] { opacity: .3; cursor: default; }
+.count .n { font-family: var(--life); font-size: 18px; color: var(--ink); line-height: 1.25; font-variant-numeric: tabular-nums lining-nums; }
+.count .n b { font-weight: 500; }
+.count .when { font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink-2); line-height: 1.3; }
+
+.go { margin-top: 14px; }
+
+@media (max-height: 800px) {
+  .job h1 { font-size: 24px; }
+  .run h2 { font-size: 17px; }
+  .route { height: 62px; }
+  .go { margin-top: 10px; }
+}
+@media (max-width: 370px) { .run h2 { font-size: 17px; letter-spacing: .1em; } }
+</style>
+</head>
+<body class="s-day">
+<main class="phone">
+
+<div class="paint" id="hall"></div>
+<div class="fog" aria-hidden="true"><i class="drift-a"></i><i class="drift-b"></i></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+<div class="dimwash" aria-hidden="true"></div>
+<div class="scrim-top" aria-hidden="true"></div>
+<div class="scrim-bottom" aria-hidden="true"></div>
+
+<div class="ui">
+  <header class="top col">
+    <div class="topbar rise">
+      <a class="home" href="morning.html"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg><span>Today</span></a>
+      <span></span><span></span>
+    </div>
+    <section class="job rise d1">
+      <div class="label-line lit">Delves</div>
+      <h1 class="say-lg">Course: one hour</h1>
+    </section>
+  </header>
+
+  <div class="mid stage col rise d2" id="stage">
+    <div class="stage-in">
+      <div class="dialwrap">
+        <div class="dial" id="dial" role="slider" tabindex="0" aria-label="Length of each delve" aria-valuemin="25" aria-valuemax="60" aria-valuenow="25" style="--p:.4167">
+          <div class="halo"></div><div class="disc"></div>
+          <div class="band track"></div>
+          <div class="glow wide"><div class="band fill"></div></div>
+          <div class="glow"><div class="band fill"></div></div>
+          <div class="band fill"></div>
+          <i class="notch" data-m="25" style="--a:150deg"></i><i class="notch" data-m="30" style="--a:180deg"></i><i class="notch" data-m="45" style="--a:270deg"></i><i class="notch" data-m="60" style="--a:360deg"></i>
+          <div class="pulse"></div>
+          <div class="handle"></div>
+          <div class="inner"><span class="num">25</span><span class="unit">minutes</span></div>
+        </div>
+        <div class="stops">
+          <button class="stop" type="button" data-m="60" style="--a:0deg" aria-label="60 minutes">60</button>
+          <button class="stop" type="button" data-m="25" style="--a:150deg" aria-label="25 minutes">25</button>
+          <button class="stop" type="button" data-m="30" style="--a:180deg" aria-label="30 minutes">30</button>
+          <button class="stop" type="button" data-m="45" style="--a:270deg" aria-label="45 minutes">45</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="bottom col">
+    <div class="run rise d3" id="run">
+      <h2 class="carve" id="head">Towards the Salt Gallery</h2>
+      <div class="route" id="routebox" role="slider" tabindex="0" aria-label="How many delves" aria-valuemin="1" aria-valuemax="8" aria-valuenow="2">
+        <svg id="route" aria-hidden="true"></svg>
+      </div>
+      <div class="count">
+        <button type="button" id="less" aria-label="One delve fewer"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M4 9h10"/></svg></button>
+        <div aria-live="polite"><div class="n" id="cn"><b>2 delves</b> of 25</div><div class="when" id="when">done around 11:25</div></div>
+        <button type="button" id="more" aria-label="One more delve"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M4 9h10M9 4v10"/></svg></button>
+      </div>
+    </div>
+    <div class="go rise d4">
+      <a class="btn" id="start" href="delve.html#run-2-25">Begin</a>
+    </div>
+  </section>
+</div>
+</main>
+
+<script src="lamp.js"></script>
+<script src="hall.js"></script>
+<script>
+/* the light blooms where you tap (motion only) */
+(function(){
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('.btn, .btn-quiet').forEach(function(el){
+    el.addEventListener('pointerdown', function(e){
+      var r = el.getBoundingClientRect(), b = document.createElement('span');
+      b.className = 'bloom'; b.style.left = (e.clientX - r.left) + 'px'; b.style.top = (e.clientY - r.top) + 'px';
+      if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+      el.style.overflow = 'hidden'; el.appendChild(b);
+      setTimeout(function(){ b.remove(); el.style.overflow = ''; }, 950);
+    });
+  });
+})();
+</script>
+<script>
+(function(){
+  'use strict';
+  var STOPS = [25, 30, 45, 60];
+  var ANG = { 25: 150, 30: 180, 45: 270, 60: 360 };   /* a 60-minute face: 6° a minute, from the top */
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var NS = 'http://www.w3.org/2000/svg';
+  var state = { v: 25, snap: 25 };
+
+  function clamp(x, a, b) { return x < a ? a : x > b ? b : x; }
+  function nearest(v) { var b = STOPS[0]; STOPS.forEach(function (s) { if (Math.abs(s - v) < Math.abs(b - v)) b = s; }); return b; }
+  function magnet(v) { var d = nearest(v), k = Math.abs(v - d); return k < 2.5 ? v + (d - v) * (1 - k / 2.5) * .6 : v; }
+  function el(tag, attrs, parent) { var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+  function buzz(ms) { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {} }
+  function retrigger(node, cls) { node.classList.remove(cls); void node.offsetWidth; node.classList.add(cls); }
+  /* minutes ↔ angle: 6° a minute */
+  function angOf(v) { return v * 6; }
+  function minOf(a) { return a / 6; }
+
+  /* the painted hall behind */
+  try { Hall.draw(document.getElementById('hall'), { cam: { y: 1.7, pitch: -3, f: .9, cy: .4 }, cups: 'dark', lintel: 'sealed', gold: .1, res: .75 }); } catch (e) {}
+
+  var dial = document.getElementById('dial');
+  var stopEls = Array.prototype.slice.call(document.querySelectorAll('.stop'));
+  stopEls.forEach(function (b) { b.addEventListener('click', function () { settle(+b.dataset.m, true); }); });
+
+  /* D-037: the route. One line; time = distance. From "here" (the gold point), each delve of the run is a lit segment in
+     proportion to its minutes, with a short gap for each breather. The Salt Gallery sits at its real distance: about seven
+     delves of 25 (175 minutes of work). The line always shows room for one more delve; past 8 × 25 it compresses gently.
+     Four or more delves in one sitting (a long delve) show a side chamber off the line near the run's end: a pull, never a target. */
+  var GALLERY = 175, MAXN = 8, BREATH = 5;
+  var route = document.getElementById('route'), routebox = document.getElementById('routebox');
+  var run = { n: 2 }, vis = { n: 2, span: 215, side: 0 }, visAnim = null;
+  function spanFor(n, len) { return Math.max(215, Math.min(MAXN, n + 1) * len); }
+  function geo() {
+    var W = routebox.clientWidth, H = routebox.clientHeight;
+    return { W: W, H: H, y: Math.round(H * .5) + .5, x0: 8, x1: W - 3 };
+  }
+  function drawRoute() {
+    var g = geo(), len = state.v, span = vis.span, n = vis.n, y = g.y;
+    function px(m) { return g.x0 + (g.x1 - g.x0) * m / span; }
+    route.setAttribute('viewBox', '0 0 ' + g.W + ' ' + g.H);
+    var endM = n * len, xe = px(endM), s = [];
+    s.push('<defs><linearGradient id="beyond" gradientUnits="userSpaceOnUse" x1="' + g.x0 + '" x2="' + g.x1 + '" y1="0" y2="0"><stop offset="0" stop-color="#babaff" stop-opacity=".34"/><stop offset=".7" stop-color="#babaff" stop-opacity=".2"/><stop offset="1" stop-color="#babaff" stop-opacity="0"/></linearGradient>' +
+      '<linearGradient id="seg" gradientUnits="userSpaceOnUse" x1="' + g.x0 + '" x2="' + Math.max(xe, g.x0 + 1) + '" y1="0" y2="0"><stop offset="0" stop-color="#8f86ff" stop-opacity=".45"/><stop offset="1" stop-color="#f1efff"/></linearGradient>' +
+      '<radialGradient id="rn"><stop offset="0" stop-color="#fff"/><stop offset=".4" stop-color="#b9b3ff" stop-opacity=".7"/><stop offset="1" stop-color="#8f86ff" stop-opacity="0"/></radialGradient></defs>');
+    /* the way on, dim, fading out beyond */
+    s.push('<path d="M' + g.x0 + ' ' + y + 'H' + g.x1 + '" stroke="url(#beyond)" stroke-width="1"/>');
+    /* the run: one segment a delve, a small gap for each breather */
+    var d = '', gap = 2.5;
+    for (var i = 0; i < Math.ceil(n - 1e-3); i++) {
+      var a = px(i * len) + (i ? gap : 0), b = px(Math.min(i + 1, n) * len) - (i + 1 < n ? gap : 0);
+      if (b > a + .5) d += 'M' + a.toFixed(1) + ' ' + y + 'H' + b.toFixed(1);
+    }
+    s.push('<path d="' + d + '" stroke="url(#seg)" stroke-width="2" stroke-linecap="round" style="filter:drop-shadow(0 0 4px rgba(143,134,255,.95))"/>');
+    /* the Salt Gallery, at its real distance; it lights when the run reaches it */
+    var xg = px(GALLERY), k = Math.max(0, Math.min(1, (xe - xg + 6) / 8));
+    var ARCH = 'M-6 8 V-1 Q-6 -8 0 -8 Q6 -8 6 -1 V8';
+    s.push('<g transform="translate(' + xg.toFixed(1) + ' ' + y + ')" opacity="' + (.42 + .58 * k).toFixed(2) + '"' + (k > .5 ? ' style="filter:drop-shadow(0 0 5px rgba(143,134,255,1))"' : '') + '>' +
+      '<path d="' + ARCH + ' Z" fill="#0b0b1c"/><path d="' + ARCH + '" fill="none" stroke="#ece9ff" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></g>');
+    var ga = xg + 58 > g.W ? 'end' : (xg - 58 < 0 ? 'start' : 'middle'), gx = ga === 'end' ? g.W : (ga === 'start' ? 0 : xg);
+    s.push('<text x="' + gx.toFixed(1) + '" y="' + (y + 25) + '" text-anchor="' + ga + '" fill="' + (k > .5 ? '#eceaff' : '#a3a6cc') + '">the Salt Gallery</text>');
+    /* here */
+    s.push('<circle cx="' + g.x0 + '" cy="' + y + '" r="3.4" fill="#ffd27a" style="filter:drop-shadow(0 0 5px #f2c170)"/>');
+    s.push('<text x="' + (g.x0 - 5) + '" y="' + (y + 25) + '" fill="#a3a6cc">here</text>');
+    /* a side chamber: a long delve (4 or more) reaches one, just off the line near the run's end */
+    if (vis.side > .01) {
+      var seg = px(len) - px(0), xb = xe - Math.min(18, seg * .45);
+      if (Math.abs(xb - xg) < 12) xb = xg - 12;                        /* never on top of the Gallery's arch */
+      var left = xb + 20 + 9 + 98 > g.W, dir = left ? -1 : 1, cx = xb + dir * 20, cy = y - 19;
+      s.push('<g opacity="' + (vis.side * .85).toFixed(2) + '">' +
+        '<path d="M' + xb.toFixed(1) + ' ' + y + ' C' + (xb + dir * 3).toFixed(1) + ' ' + (y - 9) + ' ' + (xb + dir * 9).toFixed(1) + ' ' + (y - 15) + ' ' + (cx - dir * 5).toFixed(1) + ' ' + (cy + 2) + '" fill="none" stroke="#c9c5ff" stroke-width="1" stroke-dasharray="2 2.5"/>' +
+        '<g transform="translate(' + cx.toFixed(1) + ' ' + cy + ') scale(.62)"><path d="' + ARCH + ' Z" fill="#0b0b1c"/><path d="' + ARCH + '" fill="none" stroke="#d9d6ff" stroke-width="1.8" stroke-linecap="round"/></g>' +
+        '<text x="' + (cx + dir * 9).toFixed(1) + '" y="' + (cy + 4) + '" text-anchor="' + (left ? 'end' : 'start') + '" fill="#c7c9e6">a side chamber</text></g>');
+    }
+    /* the run's lit end */
+    s.push('<circle cx="' + xe.toFixed(1) + '" cy="' + y + '" r="10" fill="url(#rn)"/>');
+    route.innerHTML = s.join('');
+  }
+  function tweenRoute() {
+    var tn = run.n, ts = spanFor(run.n, state.v), tside = run.n >= 4 ? 1 : 0;
+    cancelAnimationFrame(visAnim);
+    if (reduce) { vis.n = tn; vis.span = ts; vis.side = tside; drawRoute(); return; }
+    (function f() {
+      vis.n += (tn - vis.n) * .2; vis.span += (ts - vis.span) * .2; vis.side += (tside - vis.side) * .15;
+      var done = Math.abs(tn - vis.n) < .002 && Math.abs(ts - vis.span) < .05 && Math.abs(tside - vis.side) < .01;
+      if (done) { vis.n = tn; vis.span = ts; vis.side = tside; }
+      drawRoute();
+      if (!done) visAnim = requestAnimationFrame(f);
+    })();
+  }
+  /* the count, the one fact line, the headline and where Begin goes */
+  var head = document.getElementById('head'), runEl = document.getElementById('run');
+  var cn = document.getElementById('cn'), when = document.getElementById('when'), less = document.getElementById('less'), more = document.getElementById('more');
+  var at = /at-(\d\d)(\d\d)/.exec(location.hash || '');   /* #…at-0930 fixes "now" (for pictures) */
+  function clock(addMin) {
+    var d = new Date(); if (at) d.setHours(+at[1], +at[2], 0, 0);
+    var t = d.getHours() * 60 + d.getMinutes() + addMin; t = Math.round(t / 5) * 5; t = ((t % 1440) + 1440) % 1440;
+    var h = Math.floor(t / 60), m = t % 60; return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
+  }
+  function setCount(n) {
+    n = clamp(n, 1, MAXN); if (n !== run.n) buzz(6);
+    run.n = n; words(); tweenRoute();
+  }
+  function words() {
+    var n = run.n, len = state.snap, there = n * len >= GALLERY;
+    cn.innerHTML = '<b>' + n + (n === 1 ? ' delve' : ' delves') + '</b> of ' + len;
+    when.textContent = 'done around ' + clock(n * len + (n - 1) * BREATH);
+    head.textContent = there ? 'To the Salt Gallery' : 'Towards the Salt Gallery';
+    runEl.classList.toggle('there', there);
+    less.disabled = n <= 1; more.disabled = n >= MAXN;
+    routebox.setAttribute('aria-valuenow', n);
+    routebox.setAttribute('aria-valuetext', n + (n === 1 ? ' delve' : ' delves') + ' of ' + len + ' minutes, done around ' + clock(n * len + (n - 1) * BREATH) + (there ? ', to the Salt Gallery' : ''));
+    start.href = 'delve.html#run-' + n + '-' + len;
+  }
+  less.addEventListener('click', function () { setCount(run.n - 1); });
+  more.addEventListener('click', function () { setCount(run.n + 1); });
+  /* tap or drag along the line: the run reaches to where you touch */
+  function countAt(e) {
+    var g = geo(), r = routebox.getBoundingClientRect(), x = e.clientX - r.left;
+    var m = (x - g.x0) / (g.x1 - g.x0) * spanFor(run.n, state.snap);
+    return Math.ceil(Math.max(1, m) / state.snap - .02);
+  }
+  routebox.addEventListener('pointerdown', function (e) {
+    routebox.setPointerCapture(e.pointerId); setCount(countAt(e));
+    function mv(ev) { setCount(countAt(ev)); }
+    function up() { routebox.removeEventListener('pointermove', mv); routebox.removeEventListener('pointerup', up); routebox.removeEventListener('pointercancel', up); }
+    routebox.addEventListener('pointermove', mv); routebox.addEventListener('pointerup', up); routebox.addEventListener('pointercancel', up);
+    e.preventDefault();
+  });
+  routebox.addEventListener('keydown', function (e) {
+    var k = e.key, n = run.n;
+    if (k === 'ArrowRight' || k === 'ArrowUp' || k === '+' || k === '=') n++;
+    else if (k === 'ArrowLeft' || k === 'ArrowDown' || k === '-') n--;
+    else if (k === 'Home') n = 1; else if (k === 'End') n = MAXN; else return;
+    e.preventDefault(); setCount(n);
+  });
+
+  var nums = document.querySelectorAll('.num'), start = document.getElementById('start');
+  var shownSnap = 25;
+  function render() {
+    var v = state.v, s = nearest(v);
+    dial.style.setProperty('--p', (angOf(v) / 360).toFixed(4));
+    dial.querySelectorAll('.notch').forEach(function (n) { n.classList.toggle('lit', +n.dataset.m <= v + .01); });
+    if (s !== shownSnap) { shownSnap = s; state.snap = s; tick(s); }
+    stopEls.forEach(function (b) { var m = +b.dataset.m; b.classList.toggle('on', m === s); b.classList.toggle('past', m < s); });
+    tweenRoute();
+  }
+  function tick(s) {
+    nums.forEach(function (n) { n.textContent = s; retrigger(n, 'tick'); });
+    var pulse = dial.querySelector('.pulse'); pulse.style.setProperty('--a', ANG[s] + 'deg'); retrigger(pulse, 'go');
+    buzz(8);
+    dial.setAttribute('aria-valuenow', s); dial.setAttribute('aria-valuetext', s + ' minutes each');
+    words();
+  }
+
+  /* settle: ease to a stop, with a small overshoot, like a detent */
+  var anim = null;
+  function settle(target, fromTap) {
+    cancelAnimationFrame(anim);
+    state.snap = target;
+    if (reduce) { state.v = target; render(); return; }
+    var from = state.v, t0 = null, dur = fromTap ? 520 : 380;
+    function back(k) { var c1 = 1.2, c3 = c1 + 1; return 1 + c3 * Math.pow(k - 1, 3) + c1 * Math.pow(k - 1, 2); }
+    function f(ts) {
+      if (t0 == null) t0 = ts;
+      var k = clamp((ts - t0) / dur, 0, 1);
+      state.v = clamp(from + (target - from) * back(k), 24, 61);
+      render();
+      if (k < 1) anim = requestAnimationFrame(f); else { state.v = target; render(); }
+    }
+    anim = requestAnimationFrame(f);
+  }
+
+  /* drag round the ring. The empty arc from the top to 25 (0°–150°) is a stop, so it never jumps across the top. */
+  function angleAt(e) {
+    var r = dial.getBoundingClientRect(), dx = e.clientX - r.left - r.width / 2, dy = e.clientY - r.top - r.height / 2;
+    var a = Math.atan2(dx, -dy) * 180 / Math.PI; if (a < 0) a += 360;
+    return { a: a, d: Math.hypot(dx, dy), w: r.width };
+  }
+  dial.addEventListener('pointerdown', function (e) {
+    var p0 = angleAt(e);
+    if (p0.d < p0.w * .28) return;   /* the ring and a wide margin, not the number */
+    cancelAnimationFrame(anim);
+    dial.setPointerCapture(e.pointerId); dial.classList.add('dragging');
+    function mv(ev) {
+      var a = angleAt(ev).a, lastA = angOf(state.v);
+      if (a < 150) a = lastA > 255 ? 360 : 150;    /* in the empty arc: hold at whichever end you came from */
+      if (Math.abs(a - lastA) > 120) a = lastA;
+      state.v = magnet(clamp(minOf(a), 25, 60)); render();
+    }
+    function up() { dial.classList.remove('dragging'); dial.removeEventListener('pointermove', mv); dial.removeEventListener('pointerup', up); dial.removeEventListener('pointercancel', up); settle(nearest(state.v)); }
+    dial.addEventListener('pointermove', mv); dial.addEventListener('pointerup', up); dial.addEventListener('pointercancel', up);
+    mv(e); e.preventDefault();
+  });
+  dial.addEventListener('keydown', function (e) {
+    var i = STOPS.indexOf(state.snap), k = e.key;
+    if (k === 'ArrowRight' || k === 'ArrowUp' || k === '+' || k === '=') i++;
+    else if (k === 'ArrowLeft' || k === 'ArrowDown' || k === '-') i--;
+    else if (k === 'Home') i = 0; else if (k === 'End') i = 3; else return;
+    e.preventDefault(); settle(STOPS[clamp(i, 0, 3)], true);
+  });
+
+  /* #45 opens at that length; #4-25 or #run-4-25 opens a run of 4 delves of 25 (for pictures). Default: the Course's hour, 2 × 25. */
+  var h = location.hash || '', mr = /(\d+)-(\d+)/.exec(h), m1 = /#(\d+)/.exec(h);
+  var n = mr ? +mr[2] : (m1 ? +m1[1] : 25), c = mr ? +mr[1] : 2;
+  if (STOPS.indexOf(n) < 0) n = 25;
+  state.v = n; state.snap = n; shownSnap = n; run.n = clamp(c, 1, MAXN);
+  vis.n = run.n; vis.span = spanFor(run.n, n); vis.side = run.n >= 4 ? 1 : 0;
+  nums.forEach(function (x) { x.textContent = n; });
+  dial.setAttribute('aria-valuenow', n); dial.setAttribute('aria-valuetext', n + ' minutes each');
+  words();
+  function layout() { render(); drawRoute(); }
+  layout(); addEventListener('resize', layout);
+})();
+</script>
+<script src="ambient.js" data-drift></script>
+</body>
+</html>

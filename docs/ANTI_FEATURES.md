@@ -22,7 +22,7 @@
 | Excluded | Why | Evidence / principle |
 |---|---|---|
 | Overdue counters, red badges, a backlog on the opening screen | Pile-up is a stated trigger for avoidance. Lists on request are allowed (D-020). | Round 5; P7 |
-| Carry-over of missed weekly targets | Each week starts fresh; debt makes restarting harder. | Round 2 (Q5); P6 |
+| Carry-over of missed weekly targets, or catch-up crammed into the rest of the week | Each week starts fresh; debt makes restarting harder. A disrupted week becomes a lighter week unless Dan asks (D-038). | Round 2 (Q5); P6 |
 | A daily quota that makes 1 hour of course work feel like failure | 4 h/day is the ceiling, not the bar; 1 h = done. | Round 2 (Q2); P5 |
 | Scoring sleep outcomes (hours slept, sleep quality) | He can't fully control them, and with ADHD and anxiety this risks sleep anxiety. Bedtime and winding down are rewarded instead. | Round 4; P11 |
 | Scoring rest, or treating rest as a shortfall | Rest is acknowledged, never measured. | Round 2 (Q1); P12 |

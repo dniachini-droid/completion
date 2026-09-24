@@ -291,3 +291,161 @@
 - **Rationale:** Rule 20 (ask Dan about taste); the forced choices discriminate, the lists did not.
 - **Consequences:** Phase 4 exit criterion 1 met. `PHASE4_PLAN.md` Part 2 updated.
 - **Reversible:** Yes. Dan picks or blends at the end of the run.
+
+## D-028 — The delve timer is a glowing ring with the number inside
+- **Date:** 2026-09-24
+- **Context:** During the visual run, Dan asked for "a circular timer that slowly fills up as the time increases. With glow. And the number inside it. Rather than just a task bar." `TOOLS.md` §1 had said the delve "is not a number counting down".
+- **Decision:** The delve shows a circular ring that fills with glow as the minutes pass, with the time left in the middle. The expedition still moves in the world around it, and the phone can still be put away. Each of the three directions draws the ring in its own style.
+- **Alternatives:** keep the delve as a moving scene with no number (the earlier line); a bar (Dan: no).
+- **Rationale:** Dan's taste (rule 20). A ring and a number don't conflict with the reason for the earlier line, which was that the world should visibly move, not only a count.
+- **Consequences:** `TOOLS.md` §1, `ART_DIRECTION.md`, `PHASE4_RUN.md` updated.
+- **Reversible:** Yes.
+
+## D-029 — The visual run uses the default model (confirmed by Dan)
+- **Date:** 2026-09-24
+- **Context:** D-027's model comparison. The default model (Opus 5.5) and Fable 5.1 built the same morning screen from one prompt. Dan was shown both, blind; three blind reviewers judged them (`design/model-test/RESULT.md`).
+- **Decision:** Reviewers picked the default model's screen two to one, so it builds the rest of the run. Provisional until Dan gives his own pick; if he prefers the other, the run switches from that point on.
+- **Alternatives:** Fable (picked by one reviewer); waiting for Dan before building (would stall an unattended run).
+- **Rationale:** D-027's rule: blind reviewers decide if Dan is away. Caveat recorded: two reviewers shared a model family with the winner.
+- **Consequences:** The directions and screens are built by the default model.
+- **Dan's pick (same morning):** "I like the warm one. It's awesome." That is X, with the warm lamp and warm Begin button: the default model's screen. The result stands, now confirmed by Dan.
+- **Reversible:** Yes.
+
+## D-030 — Jobs and weekly targets are Dan's to edit; none are hard-coded
+- **Date:** 2026-09-24
+- **Context:** Seeing the mock-ups, Dan checked that "the course", "gym", "Spanish" and so on are examples: "they are things I want to do but it can't be how the app is hard coded." The docs implied this (P6 "Dan set them himself", P9 "typing one line") but never said it outright. He asked for it to be recorded.
+- **Decision:** Every kind of job and every weekly target is Dan's data. He can add, change, rename or remove them at any time. The ones named in the docs and on the mock-ups are his current set, used as examples. Rules that depend on a kind of job (leaning towards what's avoided, P5; "one hour of course work counts as done") apply to whatever he sets, not to fixed names.
+- **Alternatives:** none considered; this makes explicit what was always intended.
+- **Rationale:** P9 (the app suggests, Dan chooses); his life and goals will change over a year of play.
+- **Consequences:** `DESIGN_PRINCIPLES.md` (P6, P9) and `technical/DATA_MODEL.md` updated. Phase 7 designs the data this way. How Dan edits targets without it becoming admin (P15, "no productivity theatre") is a Phase 5–6 UX question.
+- **Reversible:** No need; it is a baseline requirement.
+
+## D-031 — A language pass on the app's voice is a recorded job
+- **Date:** 2026-09-24
+- **Context:** Seeing the Phase 4 screens, Dan said some lines ("The lintel needs a word") sound AI-generated and stilted: "at one point we need to go over it and fix. Not now, since it's visual pass but we do need to record it as a job to do."
+- **Decision:** Before the first playable, every line the app itself says gets a dedicated language pass so it reads like a person wrote it: natural rhythm, contractions, variety, no clipped formula lines. Dan reviews a sample. The Phase 4 mock-up copy is placeholder and is not the voice.
+- **Alternatives:** fixing copy during the visual run (Dan: not now).
+- **Rationale:** P14 (a plain, warm, honest voice); Dan knows how AI sounds and it breaks the spell.
+- **Consequences:** Listed as a job in `OPEN_QUESTIONS.md` → UX, and in the Phase 4 handover. Suggested slot: Phase 5 or 6, before copy is fixed in the build.
+- **Reversible:** Yes.
+
+## D-032 — Dan combines the directions into one look
+- **Date:** 2026-09-24
+- **Context:** Dan walked through the three directions screen by screen on his phone and dictated what he liked (`ART_DIRECTION.md` → "Dan's walkthrough").
+- **Decision:** Build a fourth, combined direction, **D**: C's purple world, full screen and never framed; B's interface (boxed buttons, labels with a line, selectable Low/Normal/High, line icons); A's map layout with B's animation and tap-to-select descriptions; B's cutting-a-word animation made full screen and purple; C's day complete, camp (with more depth), satchel (more realistic, gently glowing) and daybook. Spec: `ART_DIRECTION.md` → "D — The combined look".
+- **Alternatives:** pick one of A, B or C whole (Dan preferred parts of each).
+- **Rationale:** Dan's taste (rule 20). It also answers the two open questions: glow is purple for the place and the day, turning gold as the day completes; carved capitals set buttons and labels, plain print carries sentences.
+- **Consequences:** The rest of the run builds D and puts it through critique. A, B and C stay in the repo as the record. Phase 4's "Dan picks or blends one" is met once he approves D.
+- **Reversible:** Yes.
+
+## D-033 — The delve length is adjustable, with a beautiful control
+- **Date:** 2026-09-24
+- **Context:** Dan, on seeing direction D: the Pomodoro is central for him. He wants to set the focus time by how he feels (25 by default, up to 30, 45 or 60 minutes; breaks stay 5), to keep going when in flow, and to skip the break without penalty. The control must be beautiful (a dial, a slider, the lamp's flame), not typed. As the time rises, the screen should hint that he'll go further and reach somewhere new. He asked for light research into beautiful ways to do this.
+- **Decision:** Adopted. `TOOLS.md` §1 amended. The visual run researches duration controls briefly and builds the setting screen in direction D with two or three variants for Dan to try. Rewards stay time-based: a longer delve moves further in proportion, and the existing anti-farming slow-down after about two extra hours of the same kind of work still applies (P13).
+- **Alternatives:** keep 25/5 fixed (the original draft); a free number field (Dan: no).
+- **Rationale:** Dan's taste and self-knowledge (rule 20); P13 (real effort outweighs trivial input); P1 (starting stays one tap: the default needs no setting).
+- **Risks noted:** a visible "you'd reach further" must never read as pressure on a low day (P3, P8): it appears only as he raises the time, never as a default nag. Skipping breaks during hyperfocus is his call; the app doesn't lecture.
+- **Reversible:** Yes.
+
+## D-034 — An outside review of the sealed story, by ChatGPT
+- **Date:** 2026-09-24
+- **Context:** Dan wants a second opinion on whether the story is deep, interesting, connected and flows well, from a different AI company. He accepted the spoiler risk and gave explicit permission to send the sealed files out.
+- **Decision:** Claude made one bundle of the sealed story files with a warning to Dan at the top and instructions for ChatGPT inside: a spoiler-free verdict in chat for Dan, and a detailed critique as a separate file that Dan hands back to Claude unopened. Claude then judges the feedback and changes the story only with Dan's agreement, following the retcon procedure (MASTER_BRIEF §55), describing any change without spoilers.
+- **Alternatives:** a fresh Claude critic with no spoiler risk (offered; Dan chose the outside review).
+- **Risks:** Dan sees the story by accident; ChatGPT leaks detail into its chat reply. Mitigated by the warning and the instructions, not eliminated.
+- **Reversible:** The review is; a spoiler is not.
+
+## D-035 — Acting on the outside story review (plan only; spoiler-free)
+- **Date:** 2026-09-24
+- **Context:** ChatGPT's review of the sealed story (D-034) came back; Dan pasted it without reading. Detail and Claude's item-by-item verdicts: `narrative/sealed/REVIEW_EXTERNAL_1.md`.
+- **Decision:** Claude agrees with nearly all of it (one point only in part). No rewrite. The fixes fall in three places: **a short sealed story session** before the first playable is built (a handful of precision fixes to the late story's presentation, one character's reasoning, how one mechanism is explained in the fiction, one location detail, and wording of two internal rules); **Phase 5–6 product design** (a formal memory and recap system so a year-long story delivered in small pieces stays remembered, a clear before/after for re-reading, a guaranteed reward rhythm, and high-energy days always unlocking something real); and **the first playable's test plan** (does Dan remember what he learns, and does it feel like discovery rather than homework). A second small story pass follows the playtest.
+- **Top priority of the story session (confirmed 2026-09-24):** the late game must never appear to promise a meaningful choice that the fixed story cannot honour. The fixed ending and existing canon stay; the fix is in presentation and interaction, not branching.
+- **Mark pacing:** the authored order of core marks and reveals stays fixed unless the playtest shows a real retention problem. High-energy days get meaningful side content instead (exploration, experiments, extra records, finds), never marks ahead of order.
+- **Alternatives:** make every change now (not needed before the playable, and pacing changes should wait for the playtest); ignore it (the points are well founded).
+- **Consequences:** Listed in `CURRENT_STATE.md` for the next phases. One line of the open game bible about how the doors fill may be reworded, without changing anything Dan already knows.
+- **Reversible:** Yes, until clues are planted in the playable.
+
+## D-036 — Stepping away from a delve: it is held, not paused
+- **Date:** 2026-09-24
+- **Context:** Dan, reviewing D: what happens when a delve is interrupted (a phone call, the toilet, or a longer absence)? He proposed jumping straight to the breather, keeping the minutes done, and carrying on the same delve afterwards; and, for a long absence, coming back later to the same job.
+- **Decision:** Adopted, with one simplification (Claude's, agreed by Dan):
+  1. During a delve, a quiet **"Step away"** replaces "Stop for now". It keeps the minutes done (they count towards the job at once), **holds** the delve with its time left, and goes straight into the breather.
+  2. In the breather the main button is **"Back to the delve · N min left"**: the same delve carries on. The pieces add up to one delve and earn exactly what an unbroken one would.
+  3. If the interruption runs long, nothing is needed: the breather ends as usual and the delve waits, with no countdown and no "you've been gone". Whenever Dan next opens Today that day, its first offer is **"Carry on: <job> · N min left"**, with starting afresh as the quieter option.
+  4. The hold belongs to the job, not the screen: Dan can go anywhere in the app, or close it, and the spot is kept. A running delve also keeps running while he looks at other screens.
+  5. Only one thing is ever held: starting a delve on another job closes the held one quietly (its minutes stay counted). A held delve closes at the end of the day; tomorrow starts fresh, with nothing owed.
+  6. Fairness: a delve's reward still needs its full length in total, however many pieces; time stepped away never counts against a long delve's gaps.
+  7. **Amended the same day (Dan): stopping is separate from stepping away.** The delve shows two quiet options: "Step away" (above) and **"Finish here"**. Finish here ends the delve now and every minute done counts at once. For a job measured in time (the Course's hour) nothing is asked. For a done-or-not job (the cat's medication) one question follows, "Is it done?" (Done / Not yet): Done completes the job and moves the world as usual; Not yet keeps the minutes. Finishing early is never shown as falling short (no unused minutes, no half-empty ring).
+  8. **Kept simple (Dan: "make sure we aren't building in lots of ways to end it").** Only two ideas, always in the same words: "Step away" and "Finish here" (which also replaces "Done for now"). Each delve state has at most one main button and one quiet "Finish here". "Skip the breather" is dropped: "Next delve" during the breather starts it at once. The held breather has no separate "Back to today" (the Today link at the top does it, and offers Carry on). The mock-up's hidden tap-the-ring shortcut is removed.
+- **Alternatives:** a pause button (a frozen timer waiting for you reads as an unfinished debt); asking at the moment of interruption whether it is short or long (a decision at the worst time).
+- **Rationale:** interruptions are normal with ADHD (`TOOLS_RESEARCH.md`, proposal 6); failure is information, not punishment (rule 9); one button covers both cases, so nothing needs deciding mid-interruption (P1); pieces can't out-earn a whole (rule 10).
+- **Consequences:** `game/TOOLS.md` §1, `design/INTERACTION_NOTES.md` (the delve) and the D mock-up (`delve.html`, `morning.html`) updated.
+- **Reversible:** Yes.
+
+## D-037 — Distance comes from time; runs of delves; places a working day apart
+- **Date:** 2026-09-24
+- **Context:** Dan, reviewing the delve-length dial: he usually works for a few hours or more, as runs of 25-minute delves with 5-minute breathers, and wants to set the run at the start. Four delves should take him four times as far as one, and getting somewhere must not be easy. The dial built for D-033 promised two named places in one hour, and the Phase 2 rule "one main job = one step" meant four hours on the course moved him barely more than one.
+- **Decision (agreed by Dan):**
+  1. **One step = 25 minutes of real effort**, in proportion: a 45-minute delve is 1.8 steps; four delves of 25 are 4 steps. A job done without a timer counts by **its usual length**, which is part of the job and Dan's to edit (D-030): the gym's hour = 2.4 steps, the sauna's 20 minutes = 0.8. The Course's hour is 2 steps (was 1). Only real time moves the expedition, so nothing can be split to earn more.
+  2. **Named places are about a full working day apart** (roughly 6–8 delves; a starting guess, tuned in play). Every delve still shows something small (a passage, a line of script, a sound behind a wall). A short day ends at a camp between places ("a camp with a view"); a long day reaches the next named place. The arrival at day complete is wherever the day's steps reached.
+  3. **Time speeds the Site, never the story.** Records, signs and words stay paced by days and Keys (unchanged). Four or more delves in one sitting (a long delve) reach a side chamber a single delve can't.
+  4. **The open route before each seal is long enough for Dan's real hours** (side passages, deeper routes): a Phase 5–6 authoring requirement, so time is never wasted while a word is awaited.
+  5. The existing slowdown stays: after about 2 extra hours of the same kind of work, steps come slower; switching jobs restores them. Slots still apply to jobs without timers (ten tiny jobs earn nothing extra).
+  5a. **Finishing early never costs anything** (Dan, same day). A job finished before its delve ends (Finish here → Done) counts as done in full: it fills its slot, counts towards day complete, and an avoided job still brings its find. Distance follows the minutes actually spent. A delve's length is a limit, not a target.
+  6. **Runs of delves.** The delve-length screen also sets **how many delves** (a run). The route ahead is one line: each delve adds a segment in proportion to its minutes, the next named place sits at its real distance and lights when the run reaches it, a long delve shows its side chamber, and one plain line gives the finish time ("4 delves of 25 · done around 13:55"). No debt numbers. **When a breather ends, the next delve starts by itself** (Dan's choice over waiting for a tap); Step away and Finish here (D-036) work across the run, and Finish here ends the whole run.
+- **Alternatives:** keep one step per job (time beyond the job barely counts, and the dial's promises stay dishonest); a fixed step per non-timed job regardless of length (the gym's hour and a 5-minute call would count the same); next delve waits for a tap (Dan: it should start by itself).
+- **Rationale:** rule 10 and P13 (real effort outweighs trivial input); Dan's actual working pattern (hours, not single sessions); story pacing protected (D-013, rule 6); one honest picture of time = distance on the one screen that sets it.
+- **Consequences:** `game/CORE_LOOPS.md` (unit of effort, reward sizes), `game/ECONOMY.md`, `game/PROGRESSION.md`, `game/TOOLS.md` §1, `design/INTERACTION_NOTES.md` and the D mock-up (`delve-set.html`, `delve.html`, `morning.html`) updated. Supersedes D-033's destination list (a single delve no longer names far places).
+- **Reversible:** Yes; the numbers are provisional until the first playable.
+
+## D-038 — Reconciling the outside review of the principles
+- **Date:** 2026-09-24
+- **Context:** ChatGPT reviewed `design/PRINCIPLES_FOR_REVIEW.md` (15 points: 4 blockers, 7 should-fix, 4 nits). Dan asked for a reconciliation pass against the repo, not a blind implementation: a consistency and pressure-risk pass before approving Phase 4, not new design.
+- **Decision:** Each point checked against the source docs. Verdicts: **accepted** 1, 2, 9, 10, 11, 12, 14, 15; **accepted as a wording fix** (the design already said it) 3, 6, 8, 13; **modified** 4, 7; **no design change** 5 (wording only). Changes, all in the source docs:
+  1. **Day complete locks the day's success in.** Rest stays the main offer; a quiet "Keep going" is there on every day (with the deep route on a High day). Fixes a drift in the Phase 4 drafts, which had dropped the "keep going" of `CORE_LOOPS.md` Part 4 and D-011. Mock-ups: `complete.html`, `morning.html#done`.
+  2. **The opening screen shows only today's jobs** (the 2–5 accepted main jobs), never satchel items, *someday*, what's left of a weekly target, or counts. P7 now says "no backlog" instead of "no list".
+  3. **"I can't start" gives a teaser, never new story**: a line from just ahead, a sound, or something already found; the payoff comes after the job; the same teaser returns if tapped again that day. (`CORE_LOOPS.md` Part 4 already said this; P4's "story reveal" was loose.)
+  4. **Not every job is a delve.** A job done away from the phone (gym, cooking, errands, appointments) has no ring: Begin marks it under way, Done on return plays its steps by the job's usual length (D-037). The app picks the way from the kind of job; one tap switches it if wrong. *Modified:* the review's three named execution modes were not adopted; the existing two kinds (timed desk work and jobs with a usual length, D-036/D-037) already cover gym, appointments and errands, so only the Begin rule needed writing down.
+  5. **The breather:** no contradiction in the design. Inside a run Dan set, the next delve starts by itself (Dan's own choice, D-037); "Start it now" skips the breather early. Added: after a single delve nothing starts by itself. Stale button names fixed ("Next delve", "done for now").
+  6. **Rest is never scored or counted against Dan.** The breather's 5 minutes run in the background: a gentle cue, at most a faint line, no numbers.
+  7. **The low day is a default, not a fixed rule.** Outside + a real meal stays the default (Dan's own definition); Swap works as on any day. The app never asks what the meal was. *Modified:* no list of approved substitutions is added.
+  8. **Capacity is a suggestion from bedtime** (the wording now says so; one-tap change was already there).
+  9. **Dated items don't drift to *someday*.** Suggested as the date nears, no countdown or red; after the date, one question on opening: Done / New date / Let it go.
+  10. **No catch-up avalanche.** Open weekly targets never add jobs or raise the day's size, and aren't pushed harder late in the week. A disrupted week becomes a lighter week unless Dan asks.
+  11. **Using a tool alone earns nothing** (adding, sorting, planning); the world moves only for real action. P16 and the tool rule clarified.
+  12. **The trail shows only placed markers**: no calendar, empty slots, ghost markers, or count of days in a row. *This reverses one detail of D-023* (a days-in-a-row count as a quiet detail), which already contradicted the "no streak numbers" rule in the Phase 4 drafts.
+  13. **The course hour = two delves of 25** (the hour on the clock with the breather; any 50 delve minutes).
+  14. **Nothing cinematic delays starting.** Begin starts at once; big moments come after action and a tap settles them.
+  15. **Readability beats diegesis.** Dense screens (satchel, daybook) set text as a steady column on a strong scrim; a scrim is not a frame.
+- **Alternatives:** implement the review as written (adds an execution-mode system and substitution rules nobody needs yet); change nothing (leaves real contradictions: the missing keep-going, the streak count, the list wording).
+- **Rationale:** most points were wording drift between Phase 1–2 docs and the Phase 4 drafts; the real gaps (keep going, dated items, catch-up, non-desk jobs, the streak count) each close with one rule and no new system (rule 12). No sealed or story content touched.
+- **Consequences:** `DESIGN_PRINCIPLES.md` (P2–P7, P16), `ANTI_FEATURES.md`, `game/TOOLS.md`, `game/CORE_LOOPS.md`, `game/QUEST_SYSTEM.md`, `design/UX_PRINCIPLES.md`, `design/INTERACTION_NOTES.md`, `design/DESIGN_SYSTEM.md`, the D mock-ups `complete.html` and `morning.html`. `design/PRINCIPLES_FOR_REVIEW.md` stays as the snapshot that was reviewed.
+- **Reversible:** Yes. Point 12 needs Dan's nod, since it changes a detail he approved in D-023.
+
+## D-039 — No dead ends for effort
+- **Date:** 2026-09-24
+- **Context:** Approving D, Dan asked about the stair screen ("The stair will keep. You can go down another day.", with only "Back to today"): "I want to be able to keep going if I want. Especially if I am feeling motivated. Shouldn't be punished for doing more work. Should be rewarded."
+- **Decision:** Effort is never turned away. Every screen that ends something offers a way on when Dan wants it: quiet after day complete (D-038), the main button at a newly opened place. More real work always moves him further and brings more (Site, finds, records). The only thing paced is the order of the story's core marks (D-035); extra effort meets side content, never a wall or a "come back another day". The stair screen now reads "Every delve from here takes you further down", with **Go down** (opens the run screen) as the main button and a quiet "Today".
+- **Alternatives:** keep the stair as a natural stopping point (it reads as being sent home at the moment of most motivation).
+- **Rationale:** D-011 (low floor, high ceiling: "don't make it just for crippled me"); D-035 (high-energy days always unlock something real); rule 10 (real effort must be rewarded).
+- **Consequences:** `DESIGN_PRINCIPLES.md` (P2), `design/UX_PRINCIPLES.md` (12), the D mock-up `stair.html`. Phase 5–6 authoring: the route past every newly opened place must hold Dan's real hours (already required by D-037).
+- **Reversible:** Yes.
+
+## D-040 — Phase 4 closed; Phase 5 (Concept synthesis) opened
+- **Date:** 2026-09-24
+- **Context:** Dan agreed with every verdict of the principles reconciliation (D-038, including removing the days-in-a-row count), raised the stair (D-039), and said "we are ready to move to phase 5".
+- **Decision:** Direction D (D-032, with the motion pass of D-041), `design/UX_PRINCIPLES.md`, `design/DESIGN_SYSTEM.md` and `design/INTERACTION_NOTES.md` approved. Phase 4 closed; the work merged into `main`. Phase 5 opens. The zoomed-out whole-Site map mock-up is left for later (optional).
+- **Alternatives:** mock the whole-Site map first (not needed to approve the look).
+- **Consequences:** `CLAUDE.md` and `CURRENT_STATE.md` move to Phase 5. Phase 5 must set region sizes and step pacing numbers (D-037) and take in the product items from D-035.
+- **Reversible:** Phase changes need Dan's agreement either way.
+
+## D-041 — Every screen keeps moving; any job can be a delve
+- **Date:** 2026-09-24
+- **Context:** Before moving to Phase 5, Dan: the stair looks static; "all screens should look as beautiful as that but have some movement or reveal". A measurement of the D mock-ups confirmed it: once settled, only the delve and the word-cutting visibly moved. Separately, Dan: "I should be able to state what jobs I want to make delve jobs … I could even put gym as a delve job … If it locks me into what I've just told you, it wouldn't function very well."
+- **Decision:**
+  1. **The world is always alive** (UX 19). A shared `ambient.js` gives every screen a little life after it settles: scene screens drift slowly like a breathing camera (their light moves with them); fog drifts visibly faster; light motes rise (gold after day complete); the map sends a spark along walked routes and pulses "you are here". The stair lights its steps one by one going down, then a pulse keeps running down them into the mist. Reading screens never move the words (UX 17, D-038 point 15). Reduced motion turns all of it off.
+  2. **Delve or not is Dan's to set, for any job** (amends D-038 point 4). One-offs, weekly targets, daily jobs and satchel items can all be delves, including the gym or reading. It's set when adding or editing a job and switchable for today with one tap; the app's first guess for a new job is only a default, and Dan's choice is kept.
+- **Alternatives:** leave the reading screens as still as before (Dan asked for life everywhere); let the app decide delve-or-not with overrides (Dan: that would lock him in).
+- **Rationale:** Dan's taste (taste session: smooth, quiet everyday motion); D-030 (jobs are Dan's to edit); rule 12 (one setting per job, no modes).
+- **Consequences:** `design/UX_PRINCIPLES.md`, `design/INTERACTION_NOTES.md`, `game/TOOLS.md`, `game/CORE_LOOPS.md`, `DESIGN_PRINCIPLES.md` (P9); the D mock-ups (`ambient.js`, `direction.css`, `stair.html`, and eight screens load `ambient.js`).
+- **Reversible:** Yes.

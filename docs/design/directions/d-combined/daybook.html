@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07061a">
+<title>The daybook · Week two</title>
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<link rel="stylesheet" href="direction.css">
+<style>
+
+/* screen layers not in direction.css: a tinted fog built per screen (C's technique) */
+.sc-fog { position:absolute; inset:0; z-index:1; pointer-events:none; overflow:hidden;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.3) 0%, #000 30%, #000 70%, rgba(0,0,0,.4) 100%);
+          mask-image: linear-gradient(180deg, rgba(0,0,0,.3) 0%, #000 30%, #000 70%, rgba(0,0,0,.4) 100%); }
+.sc-fog img { position:absolute; top:0; left:0; width:200%; height:100%; will-change:transform; }
+.sc-fog .a { animation: drift 60s ease-in-out infinite alternate; opacity:.42; }
+.sc-fog .b { animation: drift 95s ease-in-out infinite alternate-reverse; opacity:.3; }
+.sc-fog.warm { opacity: var(--warmth);
+  -webkit-mask-image: linear-gradient(180deg, transparent 45%, #000 80%);
+          mask-image: linear-gradient(180deg, transparent 45%, #000 80%); }
+
+
+body { --scrim-top-h: 62%; --scrim-bottom-h: 22%; }
+.scrim-top { background: linear-gradient(180deg, rgba(6,5,16,.78) 0%, rgba(6,5,16,.55) 60%, rgba(6,5,16,0) 100%); }
+.mid { overflow-y: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.mid::-webkit-scrollbar { display: none; }
+.page { padding-top: 14px; padding-bottom: 12px; }
+.wk { margin-top: 10px; text-shadow: 0 0 22px rgba(var(--gold-rgb), .3), 0 1px 14px rgba(4,4,12,.9); }
+.wk-sub { display:block; margin-top: 8px; }
+.page p { font-family: var(--life); font-size: 18.5px; line-height: 1.55; color: #f4ecf0; margin-top: 14px; }
+.marks { display:flex; gap: 22px; margin-top: 14px; }
+.marks figure { display:flex; flex-direction:column; align-items:center; gap: 2px; filter: drop-shadow(0 0 6px rgba(var(--gold-rgb), .5)); }
+.marks figcaption { font-family: var(--life); font-style: italic; font-size: 16px; color: #ead8bf; }
+.next { margin-top: 22px; }
+.next .label-line { margin-bottom: 2px; }
+.next p { margin-top: 8px; }
+.nav { padding-top: 10px; }
+.nav .btn-quiet span { padding-left: .2em; }
+@media (max-height: 800px) { .page p { font-size: 18px; margin-top: 10px; line-height: 1.5; } .next { margin-top: 16px; } }
+
+</style>
+</head>
+<body class="s-evening">
+<main class="phone">
+
+<div class="paint"><img class="pimg" alt="" aria-hidden="true" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzOTAgODQ0IiB3aWR0aD0iMzkwIiBoZWlnaHQ9Ijg0NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQgc2xpY2UiPgo8ZGVmcz4KICA8ZmlsdGVyIGlkPSJicnVzaCIgeD0iLTUlIiB5PSItNSUiIHdpZHRoPSIxMTAlIiBoZWlnaHQ9IjExMCUiPgogICAgPGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9Ii4wMyAuMDUiIG51bU9jdGF2ZXM9IjMiIHNlZWQ9IjExIiByZXN1bHQ9InQiLz4KICAgIDxmZURpc3BsYWNlbWVudE1hcCBpbj0iU291cmNlR3JhcGhpYyIgaW4yPSJ0IiBzY2FsZT0iMyIgeENoYW5uZWxTZWxlY3Rvcj0iUiIgeUNoYW5uZWxTZWxlY3Rvcj0iRyIgcmVzdWx0PSJkIi8+CiAgICA8ZmVHYXVzc2lhbkJsdXIgaW49ImQiIHN0ZERldmlhdGlvbj0iLjQ1Ii8+CiAgPC9maWx0ZXI+CiAgPGZpbHRlciBpZD0iZ3JpdCIgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSI+CiAgICA8ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjUgLjM1IiBudW1PY3RhdmVzPSIzIiBzZWVkPSI0Ii8+CiAgICA8ZmVDb2xvck1hdHJpeCB2YWx1ZXM9IjAgMCAwIDAgLjA1ICAwIDAgMCAwIC4wNiAgMCAwIDAgMCAuMDggIDAgMCAwIDEuMSAtLjQ1Ii8+CiAgPC9maWx0ZXI+CiAgPGZpbHRlciBpZD0ibW90dGxlIiB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj4KICAgIDxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuMDIgLjAzIiBudW1PY3RhdmVzPSI0IiBzZWVkPSI5Ii8+CiAgICA8ZmVDb2xvck1hdHJpeCB2YWx1ZXM9IjAgMCAwIDAgLjcgIDAgMCAwIDAgLjc2ICAwIDAgMCAwIC44OCAgMCAwIDAgLjkgLS4zNSIvPgogIDwvZmlsdGVyPgogIDxmaWx0ZXIgaWQ9InJlbGllZiIgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSI+CiAgICA8ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjAzNSAuMDUiIG51bU9jdGF2ZXM9IjQiIHNlZWQ9IjE3IiByZXN1bHQ9Im4iLz4KICAgIDxmZURpZmZ1c2VMaWdodGluZyBpbj0ibiIgc3VyZmFjZVNjYWxlPSIzLjIiIGRpZmZ1c2VDb25zdGFudD0iMSIgbGlnaHRpbmctY29sb3I9InJnYigyMDAsMTk2LDI1NSkiIHJlc3VsdD0ibCI+PGZlRGlzdGFudExpZ2h0IGF6aW11dGg9IjIxMCIgZWxldmF0aW9uPSIzOCIvPjwvZmVEaWZmdXNlTGlnaHRpbmc+CiAgICA8ZmVDb2xvck1hdHJpeCBpbj0ibCIgdmFsdWVzPSIxIDAgMCAwIDAgIDAgMSAwIDAgMCAgMCAwIDEgMCAwICAwIDAgMCAwIDEiLz4KICA8L2ZpbHRlcj4KICA8ZmlsdGVyIGlkPSJibHVyMSIgeD0iLTIwJSIgeT0iLTIwJSIgd2lkdGg9IjE0MCUiIGhlaWdodD0iMTQwJSI+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMS4yIi8+PC9maWx0ZXI+CiAgPGZpbHRlciBpZD0iYmx1cjMiIHg9Ii0zMCUiIHk9Ii0zMCUiIHdpZHRoPSIxNjAlIiBoZWlnaHQ9IjE2MCUiPjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjMiLz48L2ZpbHRlcj4KICA8ZmlsdGVyIGlkPSJibHVyOCIgeD0iLTUwJSIgeT0iLTUwJSIgd2lkdGg9IjIwMCUiIGhlaWdodD0iMjAwJSI+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iOCIvPjwvZmlsdGVyPgogIDxmaWx0ZXIgaWQ9ImJsdXIyMCIgeD0iLTgwJSIgeT0iLTgwJSIgd2lkdGg9IjI2MCUiIGhlaWdodD0iMjYwJSI+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMjAiLz48L2ZpbHRlcj4KICA8cmFkaWFsR3JhZGllbnQgaWQ9ImZhckJsb29tIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9InJnYigyMjYsMjMyLDI1NSkiIHN0b3Atb3BhY2l0eT0iLjk1Ii8+PHN0b3Agb2Zmc2V0PSIuMjUiIHN0b3AtY29sb3I9InJnYigxNTAsMTY2LDIyNikiIHN0b3Atb3BhY2l0eT0iLjQ1Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSJyZ2IoMTIwLDEzNiwyMDApIiBzdG9wLW9wYWNpdHk9IjAiLz48L3JhZGlhbEdyYWRpZW50PgogIDxyYWRpYWxHcmFkaWVudCBpZD0iZmxhbWVIYWxvIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmZmRjYTAiIHN0b3Atb3BhY2l0eT0iLjk1Ii8+PHN0b3Agb2Zmc2V0PSIuMjUiIHN0b3AtY29sb3I9IiNmNGEyNGMiIHN0b3Atb3BhY2l0eT0iLjQ1Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZjRhMjRjIiBzdG9wLW9wYWNpdHk9IjAiLz48L3JhZGlhbEdyYWRpZW50PgogIDxyYWRpYWxHcmFkaWVudCBpZD0ibGFtcExpZ2h0Ij48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmZmM0N2EiIHN0b3Atb3BhY2l0eT0iLjU1Ii8+PHN0b3Agb2Zmc2V0PSIuNCIgc3RvcC1jb2xvcj0iI2QwNzgyZSIgc3RvcC1vcGFjaXR5PSIuMTgiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkMDc4MmUiIHN0b3Atb3BhY2l0eT0iMCIvPjwvcmFkaWFsR3JhZGllbnQ+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJmbGFtZSIgeDE9IjAiIHkxPSIwIiB4Mj0iMCIgeTI9IjEiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2ZmZjJjOCIgc3RvcC1vcGFjaXR5PSIuMTUiLz48c3RvcCBvZmZzZXQ9Ii4zNSIgc3RvcC1jb2xvcj0iI2ZmZDI3YSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2YwOGEyYyIvPjwvbGluZWFyR3JhZGllbnQ+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJjbGF5IiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYjg3NDRhIi8+PHN0b3Agb2Zmc2V0PSIuNSIgc3RvcC1jb2xvcj0iIzZlM2MyNCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzJhMTQwYyIvPjwvbGluZWFyR3JhZGllbnQ+CiAgPHJhZGlhbEdyYWRpZW50IGlkPSJjdXBGbGFtZSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZmZmMGM0Ii8+PHN0b3Agb2Zmc2V0PSIuMiIgc3RvcC1jb2xvcj0iI2ZmYzc2NiIgc3RvcC1vcGFjaXR5PSIuODUiLz48c3RvcCBvZmZzZXQ9Ii41NSIgc3RvcC1jb2xvcj0iI2YwOGEzNCIgc3RvcC1vcGFjaXR5PSIuMjIiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNmMDhhMzQiIHN0b3Atb3BhY2l0eT0iMCIvPjwvcmFkaWFsR3JhZGllbnQ+CgogIDxmaWx0ZXIgaWQ9ImFzaGxhciIgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgY29sb3ItaW50ZXJwb2xhdGlvbi1maWx0ZXJzPSJzUkdCIj4KICAgIDwhLS0gcm91Z2ggdGhlIGJsb2NrIGVkZ2VzLCBzb2Z0ZW4gdGhlbSBpbnRvIGJldmVscyAtLT4KICAgIDxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuMDUiIG51bU9jdGF2ZXM9IjMiIHNlZWQ9IjMiIHJlc3VsdD0idCIvPgogICAgPGZlRGlzcGxhY2VtZW50TWFwIGluPSJTb3VyY2VBbHBoYSIgaW4yPSJ0IiBzY2FsZT0iNyIgeENoYW5uZWxTZWxlY3Rvcj0iUiIgeUNoYW5uZWxTZWxlY3Rvcj0iRyIgcmVzdWx0PSJyb3VnaCIvPgogICAgPGZlR2F1c3NpYW5CbHVyIGluPSJyb3VnaCIgc3RkRGV2aWF0aW9uPSIzIiByZXN1bHQ9ImJldiIvPgogICAgPCEtLSBjaGlzZWw6IHNob3J0IHBhcmFsbGVsIHRvb2xpbmcgbWFya3MsIGFuZCBicm9hZCB1bmV2ZW5uZXNzIGluIGVhY2ggZmFjZSAtLT4KICAgIDxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuMDIyIC4wMyIgbnVtT2N0YXZlcz0iNCIgc2VlZD0iNyIgcmVzdWx0PSJicm9hZCIvPgogICAgPGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9Ii4zNSAuMTIiIG51bU9jdGF2ZXM9IjIiIHNlZWQ9IjEyIiByZXN1bHQ9InRvb2wiLz4KICAgIDxmZUNvbXBvc2l0ZSBpbj0iYnJvYWQiIGluMj0idG9vbCIgb3BlcmF0b3I9ImFyaXRobWV0aWMiIGsyPSIuODUiIGszPSIuMTgiIHJlc3VsdD0iZmFjZSIvPgogICAgPGZlQ29tcG9zaXRlIGluPSJiZXYiIGluMj0iZmFjZSIgb3BlcmF0b3I9ImFyaXRobWV0aWMiIGsyPSIxIiBrMz0iLjQ1IiBrND0iLS4yIiByZXN1bHQ9ImhlaWdodCIvPgogICAgPGZlRGlmZnVzZUxpZ2h0aW5nIGluPSJoZWlnaHQiIHN1cmZhY2VTY2FsZT0iNSIgZGlmZnVzZUNvbnN0YW50PSIxLjI1IiBsaWdodGluZy1jb2xvcj0iI2ZmZiIgcmVzdWx0PSJsaXQiPgogICAgICA8ZmVQb2ludExpZ2h0IHg9IjIwNSIgeT0iNzYwIiB6PSIxNTAiLz48L2ZlRGlmZnVzZUxpZ2h0aW5nPgogICAgPGZlRmxvb2QgZmxvb2QtY29sb3I9IiM0NjQyN2MiIHJlc3VsdD0ic3RvbmUiLz4KICAgIDxmZUNvbXBvc2l0ZSBpbj0ibGl0IiBpbjI9InN0b25lIiBvcGVyYXRvcj0iYXJpdGhtZXRpYyIgazE9IjEuMjUiIGsyPSIwIiBrMz0iLjEyIiBrND0iMCIgcmVzdWx0PSJjb2wiLz4KICAgIDxmZUNvbXBvc2l0ZSBpbj0iY29sIiBpbjI9ImJldiIgb3BlcmF0b3I9ImluIi8+CiAgPC9maWx0ZXI+CiAgPGZpbHRlciBpZD0iY2hpcyIgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSI+PGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9Ii42IC4zIiBudW1PY3RhdmVzPSIyIiBzZWVkPSI2Ii8+PGZlQ29sb3JNYXRyaXggdmFsdWVzPSIwIDAgMCAwIDAgIDAgMCAwIDAgMCAgMCAwIDAgMCAwICAwIDAgMCAxIC0uNTUiLz48L2ZpbHRlcj4KICA8cmFkaWFsR3JhZGllbnQgaWQ9InZpZyIgY3g9Ii41IiBjeT0iLjQyIiByPSIuOCI+PHN0b3Agb2Zmc2V0PSIuNDUiIHN0b3AtY29sb3I9IiMwNTA0MTAiIHN0b3Atb3BhY2l0eT0iMCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzA1MDQxMCIgc3RvcC1vcGFjaXR5PSIuODUiLz48L3JhZGlhbEdyYWRpZW50Pgo8L2RlZnM+CjxyZWN0IHdpZHRoPSIzOTAiIGhlaWdodD0iODQ0IiBmaWxsPSIjMDcwNjFhIi8+CjxnIGZpbHRlcj0idXJsKCNhc2hsYXIpIiBmaWxsPSIjZmZmIj48cmVjdCB4PSItMTAwLjYiIHk9Ii0zNy44IiB3aWR0aD0iMjIxLjgiIGhlaWdodD0iMTMxLjUiIHJ4PSI1Ii8+PHJlY3QgeD0iMTI1LjYiIHk9Ii0zNy44IiB3aWR0aD0iMjAzLjEiIGhlaWdodD0iMTMxLjUiIHJ4PSI1Ii8+PHJlY3QgeD0iMzMzLjEiIHk9Ii0zNy44IiB3aWR0aD0iMTcxLjUiIGhlaWdodD0iMTMxLjUiIHJ4PSI1Ii8+PHJlY3QgeD0iLTExNC43IiB5PSI5OC4xIiB3aWR0aD0iMjA3LjEiIGhlaWdodD0iMTYxLjYiIHJ4PSI1Ii8+PHJlY3QgeD0iOTYuOCIgeT0iOTguMSIgd2lkdGg9IjIwNi4yIiBoZWlnaHQ9IjE2MS42IiByeD0iNSIvPjxyZWN0IHg9IjMwNy40IiB5PSI5OC4xIiB3aWR0aD0iMTczLjkiIGhlaWdodD0iMTYxLjYiIHJ4PSI1Ii8+PHJlY3QgeD0iLTYyLjMiIHk9IjI2NC4yIiB3aWR0aD0iMjE1LjgiIGhlaWdodD0iMTIzLjgiIHJ4PSI1Ii8+PHJlY3QgeD0iMTU3LjkiIHk9IjI2NC4yIiB3aWR0aD0iMTUzLjkiIGhlaWdodD0iMTIzLjgiIHJ4PSI1Ii8+PHJlY3QgeD0iMzE2LjIiIHk9IjI2NC4yIiB3aWR0aD0iMjQwLjkiIGhlaWdodD0iMTIzLjgiIHJ4PSI1Ii8+PHJlY3QgeD0iLTQ1LjciIHk9IjM5Mi4zIiB3aWR0aD0iMTUwLjciIGhlaWdodD0iMTM0LjciIHJ4PSI1Ii8+PHJlY3QgeD0iMTA5LjQiIHk9IjM5Mi4zIiB3aWR0aD0iMjY1LjMiIGhlaWdodD0iMTM0LjciIHJ4PSI1Ii8+PHJlY3QgeD0iMzc5LjEiIHk9IjM5Mi4zIiB3aWR0aD0iMjM0LjIiIGhlaWdodD0iMTM0LjciIHJ4PSI1Ii8+PHJlY3QgeD0iLTkxLjciIHk9IjUzMS41IiB3aWR0aD0iMTQ5LjciIGhlaWdodD0iMTY1LjYiIHJ4PSI1Ii8+PHJlY3QgeD0iNjIuNCIgeT0iNTMxLjUiIHdpZHRoPSIxODUuMSIgaGVpZ2h0PSIxNjUuNiIgcng9IjUiLz48cmVjdCB4PSIyNTEuOSIgeT0iNTMxLjUiIHdpZHRoPSIyMDUuMyIgaGVpZ2h0PSIxNjUuNiIgcng9IjUiLz48cmVjdCB4PSItMTMyLjAiIHk9IjcwMS41IiB3aWR0aD0iMTg5LjgiIGhlaWdodD0iMTI5LjIiIHJ4PSI1Ii8+PHJlY3QgeD0iNjIuMiIgeT0iNzAxLjUiIHdpZHRoPSIxNjQuMiIgaGVpZ2h0PSIxMjkuMiIgcng9IjUiLz48cmVjdCB4PSIyMzAuOCIgeT0iNzAxLjUiIHdpZHRoPSIyNDMuNyIgaGVpZ2h0PSIxMjkuMiIgcng9IjUiLz48cmVjdCB4PSItMTI5LjIiIHk9IjgzNS4wIiB3aWR0aD0iMjAwLjAiIGhlaWdodD0iMTI5LjYiIHJ4PSI1Ii8+PHJlY3QgeD0iNzUuMiIgeT0iODM1LjAiIHdpZHRoPSIyMTEuOCIgaGVpZ2h0PSIxMjkuNiIgcng9IjUiLz48cmVjdCB4PSIyOTEuNSIgeT0iODM1LjAiIHdpZHRoPSIxODYuOCIgaGVpZ2h0PSIxMjkuNiIgcng9IjUiLz48L2c+CjxyZWN0IHdpZHRoPSIzOTAiIGhlaWdodD0iODQ0IiBmaWx0ZXI9InVybCgjbW90dGxlKSIgb3BhY2l0eT0iLjE0Ii8+CjxyZWN0IHdpZHRoPSIzOTAiIGhlaWdodD0iODQ0IiBmaWxsPSJ1cmwoI3ZpZykiLz4KPHBhdGggZD0iTTgwIDczMy44IEwzMTIgNzMzLjggTDMxMiA3ODcuOCBMODAgNzg3LjggWiIgZmlsbD0iIzA1MDQwYyIgb3BhY2l0eT0iLjciIGZpbHRlcj0idXJsKCNibHVyOCkiLz48cGF0aCBkPSJNOTAgNzE3LjggTDMwMCA3MTcuOCBMMzA2IDczMS44IEw4NCA3MzEuOCBaIiBmaWxsPSIjMmUyYzU2Ii8+PHBhdGggZD0iTTg0IDczMS44IEwzMDYgNzMxLjggTDMwNiA3NDcuOCBMODQgNzQ3LjggWiIgZmlsbD0iIzE1MTQyZSIvPgo8L3N2Zz4="></div>
+<div class="sc-fog" aria-hidden="true"><img class="a" alt="" aria-hidden="true" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3ODAgODQ0IiB3aWR0aD0iNzgwIiBoZWlnaHQ9Ijg0NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgICA8ZmlsdGVyIGlkPSJmb2dBIiB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC4wMDQgMC4wMDgiIG51bU9jdGF2ZXM9IjQiIHNlZWQ9IjMxIi8+CiAgICAgIDxmZUNvbG9yTWF0cml4IHZhbHVlcz0iMCAwIDAgMCAwLjYyNyAgMCAwIDAgMCAwLjU4OCAgMCAwIDAgMCAwLjk0MSAgMCAwIDAgMS4yIC0wLjc4Ii8+PC9maWx0ZXI+CiAgICA8cmVjdCB3aWR0aD0iNzgwIiBoZWlnaHQ9Ijg0NCIgZmlsdGVyPSJ1cmwoI2ZvZ0EpIi8+PC9zdmc+"><img class="b" alt="" aria-hidden="true" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3ODAgODQ0IiB3aWR0aD0iNzgwIiBoZWlnaHQ9Ijg0NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgICA8ZmlsdGVyIGlkPSJmb2dCIiB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC4wMDkgMC4wMiIgbnVtT2N0YXZlcz0iMyIgc2VlZD0iOSIvPgogICAgICA8ZmVDb2xvck1hdHJpeCB2YWx1ZXM9IjAgMCAwIDAgMC42MjcgIDAgMCAwIDAgMC41ODggIDAgMCAwIDAgMC45NDEgIDAgMCAwIDEuMDggLTAuODMiLz48L2ZpbHRlcj4KICAgIDxyZWN0IHdpZHRoPSI3ODAiIGhlaWdodD0iODQ0IiBmaWx0ZXI9InVybCgjZm9nQikiLz48L3N2Zz4="></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<div class="paint over"><svg class="dyn" viewBox="0 0 390 844" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>
+  <filter id="brush" x="-5%" y="-5%" width="110%" height="110%">
+    <feTurbulence type="fractalNoise" baseFrequency=".03 .05" numOctaves="3" seed="11" result="t"/>
+    <feDisplacementMap in="SourceGraphic" in2="t" scale="3" xChannelSelector="R" yChannelSelector="G" result="d"/>
+    <feGaussianBlur in="d" stdDeviation=".45"/>
+  </filter>
+  <filter id="grit" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".5 .35" numOctaves="3" seed="4"/>
+    <feColorMatrix values="0 0 0 0 .05  0 0 0 0 .06  0 0 0 0 .08  0 0 0 1.1 -.45"/>
+  </filter>
+  <filter id="mottle" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".02 .03" numOctaves="4" seed="9"/>
+    <feColorMatrix values="0 0 0 0 .7  0 0 0 0 .76  0 0 0 0 .88  0 0 0 .9 -.35"/>
+  </filter>
+  <filter id="relief" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".035 .05" numOctaves="4" seed="17" result="n"/>
+    <feDiffuseLighting in="n" surfaceScale="3.2" diffuseConstant="1" lighting-color="rgb(200,196,255)" result="l"><feDistantLight azimuth="210" elevation="38"/></feDiffuseLighting>
+    <feColorMatrix in="l" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0 1"/>
+  </filter>
+  <filter id="blur1" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="1.2"/></filter>
+  <filter id="blur3" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3"/></filter>
+  <filter id="blur8" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="8"/></filter>
+  <filter id="blur20" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="20"/></filter>
+  <radialGradient id="farBloom"><stop offset="0" stop-color="rgb(226,232,255)" stop-opacity=".95"/><stop offset=".25" stop-color="rgb(150,166,226)" stop-opacity=".45"/><stop offset="1" stop-color="rgb(120,136,200)" stop-opacity="0"/></radialGradient>
+  <radialGradient id="flameHalo"><stop offset="0" stop-color="#ffdca0" stop-opacity=".95"/><stop offset=".25" stop-color="#f4a24c" stop-opacity=".45"/><stop offset="1" stop-color="#f4a24c" stop-opacity="0"/></radialGradient>
+  <radialGradient id="lampLight"><stop offset="0" stop-color="#ffc47a" stop-opacity=".55"/><stop offset=".4" stop-color="#d0782e" stop-opacity=".18"/><stop offset="1" stop-color="#d0782e" stop-opacity="0"/></radialGradient>
+  <linearGradient id="flame" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff2c8" stop-opacity=".15"/><stop offset=".35" stop-color="#ffd27a"/><stop offset="1" stop-color="#f08a2c"/></linearGradient>
+  <linearGradient id="clay" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b8744a"/><stop offset=".5" stop-color="#6e3c24"/><stop offset="1" stop-color="#2a140c"/></linearGradient>
+  <radialGradient id="cupFlame"><stop offset="0" stop-color="#fff0c4"/><stop offset=".2" stop-color="#ffc766" stop-opacity=".85"/><stop offset=".55" stop-color="#f08a34" stop-opacity=".22"/><stop offset="1" stop-color="#f08a34" stop-opacity="0"/></radialGradient>
+</defs>
+<radialGradient id="pageLight" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffc982" stop-opacity=".42"/><stop offset=".4" stop-color="#e8954a" stop-opacity=".13"/><stop offset="1" stop-color="#e8954a" stop-opacity="0"/></radialGradient>
+<ellipse class="breathe" cx="205.4" cy="684" rx="300" ry="420" fill="url(#pageLight)" style="mix-blend-mode:screen"/>
+<g><g><g style="transform-origin:205.4px 700.8px;animation:breathe 4.6s ease-in-out infinite"><circle cx="205.4" cy="690.6" r="78.2" fill="url(#flameHalo)"/></g><g id="clayLamp"></g><g style="transform-origin:205.4px 700.8px;animation:flicker 2.8s ease-in-out infinite"><path d="M205.4 666.8 Q213.9 687.2 210.5 695.7 Q205.4 702.5 201.2 695.7 Q198.6 685.5 205.4 666.8 z" fill="url(#flame)"/><ellipse cx="205.7" cy="692.3" rx="2.7" ry="6" fill="#fffaf0"/></g></g></g></svg></div>
+<div class="scrim-top" aria-hidden="true"></div>
+<div class="ui">
+  <header class="topbar col rise"><a class="home" href="morning.html"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5"/></svg><span>Today</span></a><span></span><span></span></header>
+  <div class="mid">
+    <article class="col page rise d1" id="wk2">
+      <div class="label-line">The daybook</div>
+      <h1 class="carve lg wk">Week two</h1>
+      <span class="soft wk-sub on-scene">written for you, Sunday night</span>
+      <p class="on-scene">Gym four times, the sauna after each. The Spanish lesson booked for next Tuesday. Two hours on the course.</p>
+      <p class="on-scene">You went down the ladder and found the lamp already lit. The wall taught you two marks.</p>
+      <div class="marks"><figure><svg viewBox="0 0 40 40" width="38" height="38" aria-hidden="true"><path d="M8 25 H32 M9 25 Q20 35 31 25 M20 23 Q13.5 16 21 7 Q20 13 24.5 17 Q24 21 20 23" fill="none" stroke="#ffe6c0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><figcaption>lamp</figcaption></figure><figure><svg viewBox="0 0 40 40" width="38" height="38" aria-hidden="true"><path d="M11 30 Q20 36 29 30 M13 28 L12 15 M20 30 V9 M27 28 L28 16" fill="none" stroke="#ffe6c0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><figcaption>hand</figcaption></figure></div>
+      <section class="next">
+        <div class="label-line gold">Next week</div>
+        <p class="on-scene">The lintel on the side wall is still waiting for a word.</p>
+      </section>
+    </article>
+    <article class="col page" id="wk1" hidden>
+      <div class="label-line">The daybook</div>
+      <h1 class="carve lg wk">Week one</h1>
+      <span class="soft wk-sub on-scene">written for you, Sunday night</span>
+      <p class="on-scene">Week one’s page would be here. This mock-up shows only week two.</p>
+    </article>
+  </div>
+  <nav class="bottom col nav rise d2"><div class="btn-row"><a class="btn-quiet" href="#week-one" id="prev"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6 8.5 12l6 6"/></svg><span>Week one</span></a><a class="btn-quiet" href="morning.html"><span>Close</span></a></div></nav>
+</div>
+
+</main>
+<script>
+(function(){
+  var w1 = document.getElementById('wk1'), w2 = document.getElementById('wk2'), prev = document.getElementById('prev');
+  function show(){ var one = location.hash === '#week-one'; w1.hidden = !one; w2.hidden = one;
+    prev.href = one ? '#' : '#week-one'; prev.querySelector('span').textContent = one ? 'Week two' : 'Week one';
+    prev.querySelector('svg').style.transform = one ? 'scaleX(-1)' : ''; }
+  show(); addEventListener('hashchange', show);
+})();
+</script><script>
+/* the light blooms where you tap (motion only) */
+(function(){
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('.btn, .btn-quiet, .tap').forEach(function(el){
+    el.addEventListener('pointerdown', function(e){
+      var r = el.getBoundingClientRect(), b = document.createElement('span');
+      b.className = 'bloom'; b.style.left = (e.clientX - r.left) + 'px'; b.style.top = (e.clientY - r.top) + 'px';
+      if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+      el.style.overflow = 'hidden'; el.appendChild(b);
+      setTimeout(function(){ b.remove(); }, 950);
+    });
+  });
+})();
+</script>
+<script src="lamp.js"></script>
+<script>ClayLamp.draw(document.getElementById('clayLamp'), { x: 205.4, y: 701.5, size: 76 });</script>
+<script src="ambient.js"></script>
+</body>
+</html>

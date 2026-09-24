@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>The satchel</title>
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<link rel="stylesheet" href="direction.css">
+<style>
+
+.top{flex:0 0 32%}
+.head .title{margin-top:6px;text-wrap:balance}
+.list{list-style:none;margin-top:8px}
+.list li{display:flex;align-items:center;gap:8px;min-height:46px}
+.list button{display:flex;align-items:center;justify-content:center;width:44px;height:44px;margin-left:-14px;flex:none}
+.list .t{font-family:var(--voice);font-size:18.5px;color:var(--ink);text-shadow:0 1px 3px #000}
+.list li.done .t{color:var(--ink-3)}
+.morerow{display:flex;justify-content:space-between;align-items:center}
+.more{padding-left:30px;font-family:var(--voice);font-size:16px;color:var(--ink-3)}
+.act{margin-top:10px}
+.act .warm-btn{width:100%;font-size:15.5px;letter-spacing:.16em}
+
+</style>
+</head>
+<body>
+<main class="screen">
+
+<div class="scene"><svg viewBox="0 0 390 844" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>
+  <filter id="grain" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="71"/>
+    <feColorMatrix values="0 0 0 0 .62  0 0 0 0 .72  0 0 0 0 .78  0 0 0 .6 0"/>
+  </filter>
+  <filter id="clouds" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".011 .014" numOctaves="4" seed="75"/>
+    <feColorMatrix values="0 0 0 0 .52  0 0 0 0 .64  0 0 0 0 .72  0 0 0 1 -.3"/>
+  </filter>
+  <filter id="speck" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".06 .09" numOctaves="3" seed="80"/>
+    <feColorMatrix values="0 0 0 0 .6  0 0 0 0 .7  0 0 0 0 .78  0 0 0 1.4 -.72"/>
+  </filter>
+  <filter id="paint" x="-15%" y="-15%" width="130%" height="130%">
+    <feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="3" seed="73" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="7" xChannelSelector="R" yChannelSelector="G" result="d"/>
+    <feGaussianBlur in="d" stdDeviation="1.3"/>
+  </filter>
+  <filter id="paintS" x="-15%" y="-15%" width="130%" height="130%">
+    <feTurbulence type="fractalNoise" baseFrequency=".06" numOctaves="2" seed="76" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="3" xChannelSelector="R" yChannelSelector="G" result="d"/>
+    <feGaussianBlur in="d" stdDeviation=".6"/>
+  </filter>
+  <filter id="b1" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="1"/></filter>
+  <filter id="b2" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="2.4"/></filter>
+  <filter id="b4" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="4.5"/></filter>
+  <filter id="b8" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="9"/></filter>
+  <filter id="b16" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="18"/></filter>
+  <filter id="b30" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="30"/></filter>
+  <filter id="glowC" x="-100%" y="-100%" width="300%" height="300%">
+    <feGaussianBlur stdDeviation="2.2" result="b"/><feGaussianBlur in="SourceGraphic" stdDeviation="6" result="b2"/>
+    <feMerge><feMergeNode in="b2"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="relief" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency=".022 .03" numOctaves="5" seed="82" result="n"/>
+    <feDiffuseLighting in="n" surfaceScale="5" diffuseConstant="1.1" lighting-color="#c9d6dc" result="l"><feDistantLight azimuth="210" elevation="38"/></feDiffuseLighting>
+    <feComposite in="l" in2="SourceGraphic" operator="in"/>
+  </filter>
+  <filter id="reliefFine" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency=".09 .12" numOctaves="3" seed="84" result="n"/>
+    <feDiffuseLighting in="n" surfaceScale="2.2" diffuseConstant="1" lighting-color="#c9d6dc" result="l"><feDistantLight azimuth="210" elevation="45"/></feDiffuseLighting>
+    <feComposite in="l" in2="SourceGraphic" operator="in"/>
+  </filter>
+  <radialGradient id="flameG" cx=".5" cy=".72" r=".62">
+    <stop offset="0" stop-color="#fffaf0"/><stop offset=".42" stop-color="#ffd690"/><stop offset=".8" stop-color="#f39a3c" stop-opacity=".6"/><stop offset="1" stop-color="#e57a24" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="warmPool" cx=".5" cy=".5" r=".5">
+    <stop offset="0" stop-color="#ffd28e" stop-opacity=".85"/><stop offset=".14" stop-color="#f0a24a" stop-opacity=".45"/>
+    <stop offset=".5" stop-color="#9c5424" stop-opacity=".16"/><stop offset="1" stop-color="#3a1c0c" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="coldPool" cx=".5" cy=".5" r=".5">
+    <stop offset="0" stop-color="#e2f3fa" stop-opacity=".9"/><stop offset=".12" stop-color="#9fc4d8" stop-opacity=".5"/>
+    <stop offset=".45" stop-color="#3e5a69" stop-opacity=".2"/><stop offset="1" stop-color="#0e161c" stop-opacity="0"/>
+  </radialGradient>
+  <filter id="clayGrain" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2" seed="3" result="n"/>
+    <feColorMatrix in="n" values="0 0 0 0 .2  0 0 0 0 .1  0 0 0 0 .05  0 0 0 1.8 -.7" result="g"/>
+    <feComposite in="g" in2="SourceGraphic" operator="in"/>
+  </filter>
+  <linearGradient id="clay" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#b07a4e"/><stop offset=".45" stop-color="#7a4f31"/><stop offset="1" stop-color="#2e1c11"/>
+  </linearGradient>
+
+  <linearGradient id="sbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0c1318"/><stop offset=".35" stop-color="#18232a"/><stop offset=".6" stop-color="#0a0f13"/><stop offset="1" stop-color="#05080b"/></linearGradient>
+  <linearGradient id="nicheIn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#030507"/><stop offset=".7" stop-color="#0d1419"/><stop offset="1" stop-color="#2a2420"/></linearGradient>
+  <linearGradient id="topFade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#05080b" stop-opacity=".9"/><stop offset="1" stop-color="#05080b" stop-opacity="0"/></linearGradient>
+  <linearGradient id="botFade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#05080b" stop-opacity="0"/><stop offset=".3" stop-color="#05080b" stop-opacity=".9"/><stop offset="1" stop-color="#05080b"/></linearGradient>
+</defs>
+<rect width="390" height="844" fill="url(#sbg)"/>
+<rect width="390" height="844" filter="url(#clouds)" opacity=".3"/>
+<rect width="390" height="844" filter="url(#speck)" opacity=".12"/>
+<!-- faint marks cut on every surface within reach of a hand -->
+<g opacity=".5"><g transform="translate(40 150) scale(0.9)" opacity="1.0" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#010203" stroke-width="3.9000000000000004" opacity=".8" transform="translate(-.35 -.6)" filter="url(#b1)"/>
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#0a1117" stroke-width="2.5"/>
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#000" stroke-width="6.2" opacity="0" filter="url(#b2)"/>
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#27343c" stroke-width="1.36" opacity="0.0" filter="url(#b1)"/>
+</g><g transform="translate(350 140) scale(0.9)" opacity="1.0" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-6.5 7 Q-6.5 -6 0 -6 Q6.5 -6 6.5 7 M0 -6 V2" stroke="#010203" stroke-width="3.9000000000000004" opacity=".8" transform="translate(-.35 -.6)" filter="url(#b1)"/>
+  <path d="M-6.5 7 Q-6.5 -6 0 -6 Q6.5 -6 6.5 7 M0 -6 V2" stroke="#0a1117" stroke-width="2.5"/>
+  <path d="M-6.5 7 Q-6.5 -6 0 -6 Q6.5 -6 6.5 7 M0 -6 V2" stroke="#000" stroke-width="6.2" opacity="0" filter="url(#b2)"/>
+  <path d="M-6.5 7 Q-6.5 -6 0 -6 Q6.5 -6 6.5 7 M0 -6 V2" stroke="#27343c" stroke-width="1.36" opacity="0.0" filter="url(#b1)"/>
+</g><g transform="translate(140 120) scale(0.7)" opacity="1.0" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#010203" stroke-width="3.9000000000000004" opacity=".8" transform="translate(-.35 -.6)" filter="url(#b1)"/>
+  <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#0a1117" stroke-width="2.5"/>
+  <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#000" stroke-width="6.2" opacity="0" filter="url(#b2)"/>
+  <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#27343c" stroke-width="1.36" opacity="0.0" filter="url(#b1)"/>
+</g><g transform="translate(262 118) scale(0.7)" opacity="1.0" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 6 Q-3 -9 2 -2 Q6 3 7 -7 M-3 7.5 H3" stroke="#010203" stroke-width="3.9000000000000004" opacity=".8" transform="translate(-.35 -.6)" filter="url(#b1)"/>
+  <path d="M-7 6 Q-3 -9 2 -2 Q6 3 7 -7 M-3 7.5 H3" stroke="#0a1117" stroke-width="2.5"/>
+  <path d="M-7 6 Q-3 -9 2 -2 Q6 3 7 -7 M-3 7.5 H3" stroke="#000" stroke-width="6.2" opacity="0" filter="url(#b2)"/>
+  <path d="M-7 6 Q-3 -9 2 -2 Q6 3 7 -7 M-3 7.5 H3" stroke="#27343c" stroke-width="1.36" opacity="0.0" filter="url(#b1)"/>
+</g></g>
+<ellipse cx="195" cy="250" rx="220" ry="90" fill="#f0a24a" opacity=".08" filter="url(#b30)"/>
+<g opacity="0.95">
+  <path d="M45 268 V213 Q45 180 78 180 Q111 180 111 213 V268 Z" fill="#000" opacity=".6" filter="url(#b4)" transform="translate(0 3)"/>
+  <path d="M45 268 V213 Q45 180 78 180 Q111 180 111 213 V268 Z" fill="url(#nicheIn)"/>
+  <ellipse cx="78" cy="268" rx="36.3" ry="48.4" fill="#f0a24a" opacity=".32" filter="url(#b8)"/>
+  <ellipse cx="78" cy="266" rx="25.1" ry="4" fill="#ffd9a0" opacity=".5" filter="url(#b2)"/>
+  <g transform="translate(78 264)">
+  <rect x="-20" y="-16" width="40" height="16" rx="2.5" fill="#5d666d"/>
+  <rect x="-21" y="-21" width="42" height="7" rx="2" fill="#7a848b"/>
+  <rect x="-21" y="-14.5" width="42" height="1.4" fill="#232a2f"/>
+  <g fill="#232a2f"><rect x="-15.0" y="-20" width="1.3" height="4.6" rx=".5"/><rect x="-10.8" y="-20" width="1.3" height="4.6" rx=".5"/><rect x="-6.6" y="-20" width="1.3" height="4.6" rx=".5"/><rect x="-2.4" y="-20" width="1.3" height="4.6" rx=".5"/><rect x="1.8" y="-20" width="1.3" height="4.6" rx=".5"/><rect x="6.0" y="-20" width="1.3" height="4.6" rx=".5"/><rect x="10.2" y="-20" width="1.3" height="4.6" rx=".5"/></g>
+  <rect x="-20" y="-3" width="40" height="3" fill="#ffcf8e" opacity=".5" filter="url(#b1)"/>
+</g>
+  <rect x="45" y="267" width="66" height="1.6" fill="#ffd9a0" opacity=".45" filter="url(#b1)"/>
+  <path d="M45 268 V213 Q45 180 78 180 Q111 180 111 213 V268 Z" fill="none" stroke="#8fb0bf" stroke-width="1" opacity=".22" filter="url(#b1)"/>
+</g>
+<g opacity="1.0">
+  <path d="M143 270 V202 Q143 150 195 150 Q247 150 247 202 V270 Z" fill="#000" opacity=".6" filter="url(#b4)" transform="translate(0 3)"/>
+  <path d="M143 270 V202 Q143 150 195 150 Q247 150 247 202 V270 Z" fill="url(#nicheIn)"/>
+  <ellipse cx="195" cy="270" rx="57.2" ry="66" fill="#f0a24a" opacity=".32" filter="url(#b8)"/>
+  <ellipse cx="195" cy="268" rx="39.5" ry="4" fill="#ffd9a0" opacity=".5" filter="url(#b2)"/>
+  <g transform="translate(195 268)">
+  <!-- the strap falls to one side and loops on the ledge -->
+  <path d="M26 -30 C44 -26 50 -8 46 2 L40 2 C43 -8 38 -22 24 -24 Z" fill="#3e2718"/>
+  <path d="M-30 -2 C-50 0 -60 4 -52 6 C-40 7 -30 5 -28 3 Z" fill="#3e2718"/>
+  <!-- the body: soft, sagging leather, worn pale at the corners -->
+  <path d="M-38 -1 C-41 -18 -38 -32 -30 -35 C-12 -38 12 -38 30 -35 C38 -32 41 -18 38 -1 C26 4 -26 4 -38 -1 Z" fill="#5e3c27"/>
+  <ellipse cx="-30" cy="-6" rx="8" ry="5" fill="#9a6a45" opacity=".45" filter="url(#b2)"/>
+  <ellipse cx="30" cy="-6" rx="8" ry="5" fill="#9a6a45" opacity=".45" filter="url(#b2)"/>
+  <!-- a flat flap over the top half, with a worn edge and a small buckle -->
+  <path d="M-34 -35 C-12 -40 12 -40 34 -35 L35 -16 C20 -13 -20 -13 -35 -16 Z" fill="#4a2e1c"/>
+  <path d="M-35 -16 C-20 -13 20 -13 35 -16 L35 -14 C20 -11 -20 -11 -35 -14 Z" fill="#d49a60" opacity=".55"/>
+  <rect x="-5" y="-17" width="10" height="7" rx="1.5" fill="#b08654"/><rect x="-3" y="-15.5" width="6" height="4" rx="1" fill="#4a2e1c"/>
+  <path d="M-38 -2 C-24 3 24 3 38 -2 L38 1 C24 6 -24 6 -38 1 Z" fill="#ffcf8e" opacity=".55" filter="url(#b1)"/>
+</g>
+  <rect x="143" y="269" width="104" height="1.6" fill="#ffd9a0" opacity=".45" filter="url(#b1)"/>
+  <path d="M143 270 V202 Q143 150 195 150 Q247 150 247 202 V270 Z" fill="none" stroke="#8fb0bf" stroke-width="1" opacity=".22" filter="url(#b1)"/>
+</g>
+<g opacity="0.95">
+  <path d="M279 268 V213 Q279 180 312 180 Q345 180 345 213 V268 Z" fill="#000" opacity=".6" filter="url(#b4)" transform="translate(0 3)"/>
+  <path d="M279 268 V213 Q279 180 312 180 Q345 180 345 213 V268 Z" fill="url(#nicheIn)"/>
+  <ellipse cx="312" cy="268" rx="36.3" ry="48.4" fill="#f0a24a" opacity=".32" filter="url(#b8)"/>
+  <ellipse cx="312" cy="266" rx="25.1" ry="4" fill="#ffd9a0" opacity=".5" filter="url(#b2)"/>
+  <g transform="translate(312 262)">
+  <rect x="-24" y="-9" width="48" height="8" rx="4" fill="#5f686d"/>
+  <rect x="-23" y="-8.5" width="46" height="2.4" rx="1.2" fill="#c9d4d9" opacity=".7"/>
+  <rect x="-24" y="-3.5" width="48" height="2.5" rx="1.2" fill="#ffcf8e" opacity=".55" filter="url(#b1)"/>
+  <path d="M22 -9 L27 -5 L22 -1 Z" fill="#8a959a"/>
+</g>
+  <rect x="279" y="267" width="66" height="1.6" fill="#ffd9a0" opacity=".45" filter="url(#b1)"/>
+  <path d="M279 268 V213 Q279 180 312 180 Q345 180 345 213 V268 Z" fill="none" stroke="#8fb0bf" stroke-width="1" opacity=".22" filter="url(#b1)"/>
+</g>
+<!-- the ledge below the niches -->
+<path d="M-10 272 H400 V284 H-10 Z" fill="#1c262c" filter="url(#paint)"/>
+<rect x="-10" y="271.5" width="410" height="1.2" fill="#b9cfd8" opacity=".18" filter="url(#b1)"/>
+<rect width="390" height="120" fill="url(#topFade)"/>
+<rect y="300" width="390" height="544" fill="url(#botFade)"/>
+<rect width="390" height="844" filter="url(#grain)" opacity="0.14" style="mix-blend-mode:overlay"/>
+</svg></div>
+<canvas class="motes" aria-hidden="true" data-n="24" data-lights='[[195, 250, 180, "w", 0.7], [78, 240, 60, "c", 0.5], [312, 240, 60, "c", 0.5]]'></canvas>
+<div class="ui">
+  <div class="top"></div>
+  <header class="head rise d1">
+    <div class="eyebrow">The satchel</div>
+    <h1 class="title">Sort the flat before the visit</h1>
+  </header>
+  <ul class="list rise d2"><li class=""><button aria-label="Tick: Hoover the hall"><span class="pt cold"></span></button><span class="t">Hoover the hall</span></li><li class=""><button aria-label="Tick: Clear the desk"><span class="pt cold"></span></button><span class="t">Clear the desk</span></li><li class=""><button aria-label="Tick: Wash the bedding"><span class="pt cold"></span></button><span class="t">Wash the bedding</span></li><li class="done"><button aria-label="Ticked: Take the bottles out"><span class="pt warm"></span></button><span class="t">Take the bottles out</span></li><li class=""><button aria-label="Tick: Fix the shelf bracket"><span class="pt cold"></span></button><span class="t">Fix the shelf bracket</span></li></ul>
+  <div class="morerow rise d3"><p class="more">and more, folded away</p><button class="quiet-btn">Add a line</button></div>
+  <div class="grow"></div>
+  <div class="act rise d4">
+    <button class="warm-btn">Take one into today</button>
+  </div>
+  <nav class="nav" aria-label="Places in the app"><a href="morning.html">Today</a><a href="map.html">Map</a><a href="satchel.html" class="here" aria-current="page">Satchel</a><a href="daybook.html">Daybook</a></nav>
+</div>
+
+</main>
+<script>
+/* Dust in the light: few, slow, lit only near a light source. Motion only.
+   Light positions are in the painting's 390x844 space; the painting is cropped to fill the screen. */
+(function(){
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var c=document.querySelector('canvas.motes'); if(!c) return;
+  var V=!!c.dataset.violet, L=JSON.parse(c.dataset.lights||'[]'), N=+(c.dataset.n||30), W=390, H=844, x=c.getContext('2d'), k=1, ox=0, oy=0;
+  function size(){ var w=c.clientWidth, h=c.clientHeight; c.width=w*2; c.height=h*2; k=Math.max(w/W,h/H); ox=(w-W*k)/2; oy=(h-H*k)/2; x.setTransform(2*k,0,0,2*k,2*ox,2*oy); }
+  size(); addEventListener('resize', size);
+  var R=Math.random, m=[];
+  for(var i=0;i<N;i++) m.push({x:R()*W,y:R()*H,r:.35+R()*1.1,vx:(R()-.5)*.05,vy:-.02-R()*.06,p:R()*6.3});
+  var last=performance.now();
+  function fr(t){
+    var dt=Math.min(50,t-last); last=t; x.clearRect(-ox/k,-oy/k,W+2*ox/k,H+2*oy/k);
+    for(var i=0;i<m.length;i++){ var q=m[i];
+      q.x+=q.vx*dt*.06; q.y+=q.vy*dt*.06; q.p+=dt*.001;
+      if(q.y<-4){q.y=H+4;q.x=R()*W} if(q.x<-4)q.x=W+4; if(q.x>W+4)q.x=-4;
+      var best=0,col=null;
+      for(var j=0;j<L.length;j++){var l=L[j],d=Math.hypot(q.x-l[0],q.y-l[1]),a=Math.max(0,1-d/l[2])*l[4]; if(a>best){best=a;col=l[3]}}
+      var a=best*(.5+.4*Math.sin(q.p)); if(a<.02) continue;
+      x.fillStyle=col==='w'?'rgba(255,214,150,'+a+')':(V?'rgba(214,218,252,'+a+')':'rgba(214,238,248,'+a+')');
+      x.beginPath(); x.arc(q.x,q.y,q.r,0,6.283); x.fill();
+    }
+    requestAnimationFrame(fr);
+  }
+  requestAnimationFrame(fr);
+})();
+</script>
+
+</body>
+</html>
