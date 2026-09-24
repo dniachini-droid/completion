@@ -74,3 +74,15 @@ The two affordances the review asked for exist: lamplight changes the wall (45.1
 ### Left for later, as the review planned
 
 S4 and 10.1–10.6 were product work (done in Phases 5–6). S6 (month 5 and weeks 40–48 cadence) and the Engineer's ordinary moments are Story session B, after playable feedback.
+
+---
+
+## 2. Week 6 of the clue ledger (D-023)
+
+- **Done.** `CLUE_LEDGER.md` now has week 6 in full columns: C-34 and C-35 brought up from the short list, and eleven new rows, C-56 to C-66, one for every thing week 6 plants (ARR2 week 6, NICHES week 6), each with its surface reading, its predetermined answer, its prerequisites, its payoff and a tag (clue / character / world / tutorial, as the outside review asked). The fair-play re-test is `FAIR_PLAY.md` → "Week 6".
+- **One creative call.** The bronze level on the square gallery's shelf (NICHES 6.3) had no stated owner, and the shelf room has "its twin". Chosen: it is the crew foreman's, left where the crew stopped at the light; the Surveyor's own is the one he kept. Reason: V1 already says the men would not go past the light, and "he keeps a reader's things and leaves the rest where it fell" is consistent with every object in the Hold. World texture, not a reveal.
+- **Two drift corrections**, recorded under §55 because they touch the sign schedule (not the order of any core sign, and no rendering changes):
+  1. HOME was listed at week 6 as compositional (PLACE + OF + ONE), but OF arrives in month 4 and no week 6 record uses HOME. Options: teach OF early (breaks the order), leave it (a sign in the schedule that nothing delivers), or move HOME to month 4 with OF. **Moved** (SCRIPT §3.1, §6).
+  2. The place-bar (D2) was listed at week 6, but no record in weeks 1–13 carries a place-name. **Moved** to arrive with the first place-name (SCRIPT §3.3, §6).
+  The week 6 Key therefore carries OPEN and EAT only, as ARR2 6.2 and NICHES 6.1 already said.
+- **REVELATION_MAP's week 6 row** named things week 6 does not show (the cord is week 3's, the roof-fall week 10's); rewritten to what the visits actually carry.

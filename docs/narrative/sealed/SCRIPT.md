@@ -78,7 +78,7 @@ Added for the tellings the core lives need (RESEARCH lesson 1: the inventory mus
 | 35 | EAT / TAKE-IN | hook closing on a drop, over a bar (taking, at rest) | wk 6 | "He ate not" (S2) reads by week 9 |
 | 36 | GO / LEAVE | PATH with the drop at the far end | wk 5 (with PATH) | "He said: go" |
 | 37 | CHILD | small PERSON | wk 7 | The daughter; "a child's hand" |
-| 38 | HOME | PLACE + OF + ONE | wk 6 (compositional, no new element) | "I went home" |
+| 38 | HOME | PLACE + OF + ONE | m 4, with OF (compositional, no new element) | "I went home". Moved from wk 6 by the story job: it needs OF, and no week 6 record uses it (S4's *go home* renders with the rest of S4) |
 | 39 | DAY / SUN | inverted wedge with a fork above (the surface's fire) | wk 8 | Units of time in every age |
 | 40 | GOOD / WHOLE | a full cell (bar, drop, bar: a thing on ground under a roof) | wk 12 | "They were good" |
 | 41 | ASK | QUESTION + GIVE (compositional) | m 4 | "I asked why" |
@@ -107,7 +107,7 @@ Later signs (months 8–9, rare): TEACH (give+mark), LEARN (take+mark), ONE-WHO 
 | # | Mark | Arrives | Meaning |
 |---|---|---|---|
 | D1 | **Name-ring** | wk 1 (recognised, not read) | A ring around a sign-group: a person's name. Dan sees rings on every wall from day one |
-| D2 | Place-bar | wk 6 | A bar under a group: a place-name |
+| D2 | Place-bar | with the first place-name (not in weeks 1–13) | A bar under a group: a place-name. (Listed at wk 6 in the first draft; no week 6 record uses it, so it arrives where one does: story job §2) |
 | D3 | Device-mark | m 4 | Small wedge-and-fork above a group: a made thing |
 | D4 | **Hand-mark** | wk 4 | A small hook in the cell's corner: *cut by*. A signature. The Custodian's hand-mark is a tiny KEEP-ONE (the app's fixed name for it: *a hook closed on a dot*). The Surveyor's and the Linguist's differ (hers, the app: *a hook with a tail*) |
 | D5 | Number bundle | wk 8 | The Builders count in eights (four long fingers a hand): strokes to seven, a bar across for eight, a wedge for sixty-four |
@@ -183,7 +183,7 @@ Signs are earned by Keys (one per weekly target met) and occasionally by an arri
 | 3 | HERE, DOOR | LIGHT confirmed: the Lamp Door opens | |
 | 4 | DEEP; hand-mark | | Every record now shows *whose hand* cut it; almost all one hand |
 | 5 | ONCE; PATH, GO | | Records open with the formula: all told after the life. Her cut pieces carry no formula: present tense, recent |
-| 6 | OPEN; EAT; HOME (compositional); place-bar | | |
+| 6 | OPEN; EAT | | S2 and V2's *ate [ ]* rhyme (the cross reads at wk 9) |
 | 7 | UP/OUT; STONE; CHILD | **OPEN-WAY** (PATH-OPEN) | |
 | 8 | SEE; COUNT; DAY; number bundle | | The readers are *numbered*: the Salt-Cutter is ONE, the Surveyor is TWO (V1's formula). The double notation: his count beside the reader's |
 | 9 | **NOT** | | Her glossed "he held me" / "he held us" take the cross: "…[not]" in S4 and V2; S2 "he ate [not]"; the lintels show "[ ] [ ] [ ]" → "[ ] [ ] not" (VOICE arrives week 11) |
