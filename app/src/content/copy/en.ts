@@ -35,7 +35,7 @@ export const copy = {
   'row.delves': '{n} of {len}',
   'row.delve': 'a delve',
   'row.about': 'about {len}',
-  'nav.proto': 'Prototype',
+  'nav.proto': 'Trial',
 
   /* the run set-up (the dial) */
   'set.label': 'Delves',
