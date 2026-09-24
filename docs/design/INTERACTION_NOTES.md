@@ -23,6 +23,12 @@ The glowing ring fills with the time left in the middle (D-028); the destination
 ## The map
 Routes draw themselves in, then settle to dust. Tap a place: a crosshair closes on it and its description rises in a box underneath. Places you've walked are warm-lit; places seen but not reached are dim; the unknown is dark.
 
+**At scale (the map keeps growing: about one named place per working day, D-037).** One map, three zoom levels (pinch, or tap in and out):
+1. **Close:** the stretch you're in: today's steps, passages between two named places, small finds, a long delve's side chamber.
+2. **Region** (the everyday view, the mock-up above): named places as lights joined by routes; sealed things marked by what they need.
+3. **The Site:** the whole descent as a cross-section, regions stacked downward like constellations; walked regions glow, glimpsed ones are dim, the rest is dark. A year's progress at a glance.
+It always opens centred on where you are, at Region level, with a "back to here" control. Old routes settle to dust and landmarks stay, so it never becomes a tangle. When a new word or Key arrives, every sealed place it can now open pulses across the map, in old regions too; tap one to go there (going back takes seconds). Waypoints show only for the next 7 days. Region sizes are set in Phase 5: the first region is small for the playable; later ones hold the route Dan's real hours need.
+
 ## Reading a record
 The line of marks sits in a clean band on the stone and **never moves**. Tap a mark: corner ticks close round it; below, a fixed area says what you know of it. An unknown mark offers a few guesses as boxes; choosing one writes it under the mark with a question mark. Re-reading (later): a minimal before → now.
 
