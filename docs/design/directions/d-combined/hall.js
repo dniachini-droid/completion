@@ -27,6 +27,8 @@
      h.openStone(ms)                     // 'opening' only: the slab sinks and the light spills
      h.wake()                            // cups wake one by one, near to far (CSS: .hall.cups-waking)
 
+   The clay lamp's body comes from lamp.js (load it first); the flame is drawn here.
+
    Sample world. Every mark on the lintel is an invented sample shape.
    ========================================================================== */
 (function (global) {
@@ -621,15 +623,13 @@
       var s = o.cam.f * W / Math.max(.5, L.z - o.cam.z), g = o.gold || 0;
       var lg = svgEl('g', { 'class': 'hall-lamp' }, svg);
       svgEl('ellipse', { cx: pl[0], cy: pl[1] - s * .1, rx: s * (1.3 + g * 1.4), ry: s * (1.05 + g * 1.1), fill: 'url(#hlWarm)', 'class': 'hall-lamplight', style: 'mix-blend-mode:screen' }, lg);
-      /* the dish: a small, heavy clay bowl with a pinched spout toward the hall */
-      var dw = s * .2, dh = s * .075;
-      svgEl('ellipse', { cx: pl[0] + dw * .1, cy: pl[1] + dh * .5, rx: dw * 1.15, ry: dh * .6, fill: '#0a0610', opacity: .55, filter: 'url(#hlSoft)' }, lg);
-      svgEl('path', { d: 'M' + (pl[0] - dw) + ' ' + (pl[1] - dh * .2) + ' Q' + (pl[0] - dw * .95) + ' ' + (pl[1] + dh * 1.1) + ' ' + pl[0] + ' ' + (pl[1] + dh * 1.05) + ' Q' + (pl[0] + dw * .9) + ' ' + (pl[1] + dh) + ' ' + (pl[0] + dw * 1.35) + ' ' + (pl[1] - dh * .45) + ' L' + (pl[0] + dw * .9) + ' ' + (pl[1] - dh * .3) + ' Z', fill: 'url(#hlClay)' }, lg);
-      svgEl('ellipse', { cx: pl[0] - dw * .05, cy: pl[1] - dh * .25, rx: dw * .92, ry: dh * .38, fill: '#1c0d07' }, lg);
-      svgEl('path', { d: 'M' + (pl[0] - dw * .9) + ' ' + (pl[1] - dh * .3) + ' Q' + pl[0] + ' ' + (pl[1] - dh * .85) + ' ' + (pl[0] + dw * .85) + ' ' + (pl[1] - dh * .35), stroke: '#f6b877', 'stroke-width': Math.max(.6, s * .012), fill: 'none', opacity: .8 }, lg);
-      var fx = pl[0] + dw * 1.05, fy = pl[1] - dh * .45, fs = s * .16;
+      /* the clay lamp itself: one hand for every screen (lamp.js); the flame sits at its nozzle */
+      var fx = pl[0] + s * .21, fy = pl[1] - s * .005, fs = s * .16;
+      /* the halo glows in the air behind the lamp, so it lights the clay without washing it out */
+      var fh = svgEl('g', { 'class': 'hall-flame', style: 'transform-origin:' + fx + 'px ' + fy + 'px' }, lg);
+      svgEl('circle', { cx: fx, cy: fy - fs * .4, r: s * .55, fill: 'url(#hlHalo)', 'class': 'hall-halo' }, fh);
+      if (global.ClayLamp) global.ClayLamp.draw(lg, { x: fx, y: fy, size: s * .4, pool: .6 + .4 * g });
       var fl = svgEl('g', { 'class': 'hall-flame', style: 'transform-origin:' + fx + 'px ' + fy + 'px' }, lg);
-      svgEl('circle', { cx: fx, cy: fy - fs * .4, r: s * .55, fill: 'url(#hlHalo)', 'class': 'hall-halo' }, fl);
       svgEl('path', { d: 'M' + fx + ' ' + (fy - fs * 1.15) + ' Q' + (fx + fs * .36) + ' ' + (fy - fs * .35) + ' ' + (fx + fs * .18) + ' ' + (fy - fs * .05) + ' Q' + fx + ' ' + (fy + fs * .1) + ' ' + (fx - fs * .2) + ' ' + (fy - fs * .05) + ' Q' + (fx - fs * .3) + ' ' + (fy - fs * .4) + ' ' + fx + ' ' + (fy - fs * 1.15) + 'Z', fill: 'url(#hlFlame)' }, fl);
       svgEl('ellipse', { cx: fx, cy: fy - fs * .22, rx: fs * .08, ry: fs * .2, fill: '#fffaf0' }, fl);
       H2.lamp = { x: pl[0], y: pl[1], s: s };

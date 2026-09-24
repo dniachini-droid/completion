@@ -1,7 +1,7 @@
 # UX Principles
 
 > Deep system, simple moment-to-moment interaction; the next action always obvious (MASTER_BRIEF §57–58, rule 16, P1).
-> **Draft, 2026-09-24**, from the Phase 4 visual run: what held true across all three directions and six rounds of critique (`directions/*/CRITIQUE-*.md`). These are direction-independent; the chosen direction adds its own look on top. Dan confirms at the end of Phase 4.
+> **Draft, 2026-09-24**, from the Phase 4 visual run: what held true across the directions and every round of critique (`directions/*/CRITIQUE-*.md`), plus Dan's walkthrough. Direction-independent; the chosen look (D) is in `DESIGN_SYSTEM.md` and `INTERACTION_NOTES.md`. Dan confirms at the end of Phase 4.
 
 ## The screen
 1. **One primary action per screen**, and it is the most visually loud thing on it. Everything else is quieter by design, not by accident.
@@ -32,6 +32,12 @@
 ## Flow
 12. **Every screen has an obvious way back to today**, and each screen's exits go somewhere that makes sense in the day (a delve ends in a breather, the last delve of the day leads to the arrival, the arrival leads to camp).
 13. **Big moments are cinematic and short** (cutting a word, an arrival): a few seconds, then settle. They are done by you (a tap), not only watched.
+
+## Dan's own rules (from his walkthrough)
+15. **Never frame the world.** No scene in a box or window; the painting fills the phone.
+16. **Interface precise and aligned**: one grid, truly centred.
+17. **Things that you read stay still**: selecting something never moves the rest of the screen (the record strip).
+18. **Text on a surface in the scene follows that surface's perspective** (marks on the lintel).
 
 ## Copy
 14. Mock-up copy is placeholder. **A language pass on every line is a recorded job** (D-031): natural, human, not clipped formula lines.
