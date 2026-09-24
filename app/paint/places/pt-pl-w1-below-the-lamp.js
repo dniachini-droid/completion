@@ -15,7 +15,7 @@ export default {
   bloom: { alpha: .1 },
   glow: { threshold: .6, k: .7 },
   blur: { px: 1, d0: 1.6, d1: 4, k: .6 },
-  gold: 1, grain: .3, shadowJitter: 1, amb: .5, ambC: [.75, .72, 1.9], expo: 1.85,
+  gold: 1, grain: .3, shadowJitter: 1, amb: .5, ambC: [.75, .72, 1.9], expo: 1.7,
   lights: [
     { p: [2.26, 1.55, 5.6], c: [1, .72, .36], k: .7, r: .8, shadow: 1 },           /* the clay lamp on the ledge, above and out of frame */
     { p: [2.6, .03, 5.6], c: [1, .72, .36], k: .2, r: .3 },                      /* its light on the floor at the wall's foot, glowing back up */
