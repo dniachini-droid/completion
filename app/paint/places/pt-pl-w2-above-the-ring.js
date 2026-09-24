@@ -7,7 +7,7 @@ export default {
   id: 'pt-pl-w2-above-the-ring',
   name: 'Above the ring',
   line: '',
-  cam: { x: -1.2, y: 1.3, z: ZR - .12, pitch: 26, yaw: -90, f: .78, cx: .5, cy: .56 },
+  cam: { x: -1.15, y: 1.5, z: ZR - .06, pitch: 20, yaw: -94, f: .8, cx: .5, cy: .5 },
   far: 20, fogK: 1 / 22, hazeFar: [.08, .07, .2],
   bloomAt: [-2.3, 2.15, ZR + .02], bloomPow: 40, bloomC: [.1, .09, .2],
   glow: { threshold: .6, k: .7 },
@@ -16,7 +16,7 @@ export default {
   salt: { pink: 0 },
   lights: [
     { p: [-1.45, 2.3, ZR + 1.6], c: [.62, .58, 1.2], k: 2.4, r: 1.1, shadow: 1 },   /* the gallery's light, raking across the salt from the left */
-    { p: [-2.22, 2.12, ZR + .03], c: [.62, .58, 1.2], k: .004, r: .06 },            /* the little of it that gets far into the crack, onto the pale thing */
+    { p: [-2.18, 2.34, ZR + .02], c: [.62, .58, 1.2], k: .03, r: .06 },            /* the little of it that gets far into the crack, onto the pale thing */
     { p: [-.5, 1.4, ZR - 3], c: [.3, .28, .66], k: .3, r: 2.5 },                    /* faint fill from behind */
   ],
   glsl: /* glsl */ `
@@ -26,19 +26,19 @@ export default {
     float wl = smoothstep(1.4, 1.9, abs(p.x)) * (1. - smoothstep(2.4, 3.2, p.y));
     d.x += wl * rough(p, .05, 5.);
     d.yzw = vec3(p.y < .05 && abs(p.x) < 1.8 ? M_FLOOR : (p.y < 3.2 ? M_SALT : M_ROCK), NOUV);
-    gTint = vec3(1. - .6 * smoothstep(2.4, 3.1, p.y));
+    gTint = vec3(1. - .6 * smoothstep(2.4, 3.1, p.y)) * mix(.3, 1., smoothstep(1.15, 1.75, p.y));   /* dark below, where the light doesn't reach */
     /* the lone ring below */
     vec2 rq = vec2(p.z - ZR, p.y - 1.66);
     if (p.x < -1.6) { float rr = abs(length(rq) - .12); d.x += engrave(rr, .017, .016); if (rr < .018) gPolish = .6; }
     /* the crack: two fingers wide, wandering up from over the ring, going back into the dark */
     float cz = ZR + .02 + (fbm(vec2(p.y * 5., 3.), 3) - .5) * .06 + (p.y - 1.9) * .03;
-    float w = (.02 + .008 * fbm(vec2(p.y * 14., 7.), 2)) * smoothstep(1.82, 1.9, p.y) * (1. - smoothstep(2.45, 2.62, p.y));
-    float crack = min(w - abs(p.z - cz), -2.42 - p.x + .5);
-    d = A(d, vec4(min(crack, min(p.y - 1.8, 2.66 - p.y)), M_SALT, NOUV));
+    float w = (.028 + .012 * fbm(vec2(p.y * 14., 7.), 2)) * smoothstep(1.8, 1.88, p.y) * (1. - smoothstep(2.8, 3.1, p.y)) * (1. + .6 * smoothstep(2., 2.8, p.y));
+    float crack = min(w - abs(p.z - cz), p.x + 2.42);
+    d = A(d, vec4(min(crack, min(p.y - 1.78, 3.1 - p.y)), M_SALT, NOUV));
     if (p.x < -2.03 && abs(p.z - cz) < w + .01) gTint = vec3(mix(.35, .05, smoothstep(-2.03, -2.3, p.x)));   /* dark as it goes in */
     /* far back in it, something pale, too far in to reach */
-    vec4 pale = box(p, vec3(-2.36, 2.13, cz), vec3(.012, .045, .006), M_PAPER); pale.x -= .003;
-    if (pale.x < d.x) { d = pale; gTint = vec3(1.15, 1.12, 1.05); }
+    vec4 pale = box(p, vec3(-2.3, 2.3, cz), vec3(.01, .034, .008), M_PAPER); pale.x -= .003;
+    if (pale.x < d.x) { d = pale; gTint = vec3(1.2, 1.17, 1.1); gPolish = .6; }
     /* beside the crack, a count, cut small */
     if (p.x < -1.7 && abs(p.y - 2.08) < .04 && p.z > ZR + .07 && p.z < ZR + .2) {
       float k = floor((p.z - ZR - .07) / .025), sz = p.z - ZR - .07 - (k + .5) * .025;
@@ -47,8 +47,8 @@ export default {
     return d;
   }`,
   anchors: {
-    glints: [[-2.35, 2.15, ZR + .02], [-1.97, 1.78, ZR + .12], [-1.96, 2.3, ZR - .2], [-1.97, 1.55, ZR - .3]].map(p => ({ p })),
-    beam: [{ p: [-1.6, 2.2, ZR + .5], w: .2 }],
+    glints: [[-2.3, 2.32, ZR + .02], [-1.97, 1.78, ZR + .12], [-1.96, 2.05, ZR - .2], [-1.97, 1.95, ZR - .3]].map(p => ({ p })),
+    beam: [{ p: [-1.75, 2.1, ZR + .25], w: .2 }],
   },
   live: { motes: 'violet' },
 };

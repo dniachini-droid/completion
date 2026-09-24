@@ -42,8 +42,8 @@ export default {
     d.x += wl * rough(p, .05, 5.);
     d.yzw = vec3(p.y < .05 && abs(p.x) < 1.8 ? M_FLOOR : (p.y < 3.2 ? M_SALT : M_ROCK), NOUV);
     gTint = vec3(1. - .72 * smoothstep(1.8, 3., p.y));                                  /* the salt goes dark as it rises; the roof darker */
-    if (p.y < 1.2 && p.x < -1.7) gTint *= mix(.5, 1., smoothstep(.2, 1.2, p.y));        /* under the band, in its shadow */
-    if (p.y < .05) gTint *= mix(.55, 1., smoothstep(2., 6., p.z));                      /* the near floor, out of the light */
+    if (p.y < 1.2 && p.x < -1.7) gTint *= mix(.35, 1., smoothstep(.2, 1.2, p.y));        /* under the band, in its shadow */
+    if (p.y < .05) gTint *= mix(.4, 1., smoothstep(2., 7., p.z));                      /* the near floor, out of the light */
     /* the band that carries the tally: cut stone, a hand's width proud of the salt, at a man's chest */
     float by = 1.28 + .015 * sin(p.z * .7);
     vec4 band = box(p, vec3(-1.93, by, 20.), vec3(.1, .065, 40.), M_DRESSED); band.x -= .008;

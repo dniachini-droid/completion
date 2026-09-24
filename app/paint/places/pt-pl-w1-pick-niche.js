@@ -8,7 +8,7 @@ export default {
   id: 'pt-pl-w1-pick-niche',
   name: 'The pick niche',
   line: '',
-  cam: { x: 1.0, y: .5, z: ZN - .8, pitch: -9, yaw: 40, f: .64, cx: .5, cy: .5 },
+  cam: { x: 1.0, y: .5, z: ZN - .8, pitch: -12, yaw: 40, f: .64, cx: .5, cy: .5 },
   far: 45, fogK: 1 / 30, hazeFar: [.1, .09, .26],
   bloomAt: [-.3, 1.2, ZN + 34], bloomPow: 14, bloomC: [.44, .41, .82],
   glow: { threshold: .62, k: .7 },
@@ -19,7 +19,7 @@ export default {
     { p: [-1.1, 1.1, ZN + 7.5], c: [.62, .58, 1.2], k: 8, r: 4, shadow: 1 },   /* the gallery's light, raking along the wall from the left */
     { p: [-.3, 1.5, ZN + 32], c: [.62, .58, 1.2], k: 40, r: 9 },                 /* far down the gallery */
     { p: [1.62, .34, ZN + .5], c: [.62, .58, 1.2], k: .3, r: .22, shadow: 1 },      /* the same light, low from the front-left, raking the lip and its strokes */
-    { p: [2.15, .35, ZN], c: [.4, .37, .85], k: .02, r: .25 },                    /* a trace of it at the niche's back */
+    { p: [2.15, .36, ZN], c: [.4, .37, .85], k: .1, r: .25 },                    /* a trace of it at the niche's back */
     { p: [0, 1.4, ZN - 5], c: [.3, .28, .66], k: .4, r: 3 },                        /* faint fill from behind */
     { p: [.6, 1.5, ZN + 1.2], c: [.36, .33, .8], k: .12, r: 1.2 },                   /* a little of it up under the low roof, so the roof has form */
   ],
@@ -43,16 +43,18 @@ export default {
     if (q.x > .06) gTint = vec3(mix(.6, .2, smoothstep(.06, .4, q.x)));                    /* the slot goes dark inside */
     /* its lip: the slot's floor carried out as a band of cut stone set flush in the salt, its arris worn round
        by hands; its ends feathered into the salt */
-    float foot = -.105 + (fbm(vec2(m.x * 34., 1.), 3) - .5) * .016, end = .41 + (fbm(vec2(m.y * 30., 3.), 3) - .5) * .05;   /* ragged where it meets the salt */
-    float band = (1. - smoothstep(end - .03, end + .03, abs(m.x))) * smoothstep(foot - .012, foot + .012, m.y) * step(m.y, .01);
-    if (band > .5 && q.x < .06) { d.yzw = vec3(M_DRESSED, NOUV); gTint = vec3(.92); }
-    d.x -= .008 * band * smoothstep(.06, -.02, q.x);                                     /* barely proud, and only at its face */
+    /* the lip: the slot's floor carried out as a rounded sill of the same stone, darker than the salt, its ends buried in it */
+    float pr = .016 * (1. - smoothstep(.28, .44, abs(m.x)));
+    vec4 lip = box(q, vec3(.01 - pr, -.04, 0), vec3(.02, .035, .44), M_CUT_SMALL); lip.x -= .016; lip.x += rough(p, .004, 20.);
+    float wall = d.x;
+    d.x = smin(d.x, lip.x, .03);
+    if (lip.x < wall + .005) { d.yzw = vec3(M_CUT_SMALL, NOUV); gTint = vec3(.72); }
     /* on its face, a row of empty strokes: hand-cut, uneven, tapering to the foot */
-    if (q.x < .01 && q.x > -.09 && m.y < 0. && m.y > -.09) {
+    if (q.x < .02 && q.x > -.09 && m.y < 0. && m.y > -.09) {
       float k = floor((m.x + .25) / .1), c0 = -.25 + (k + .5) * .1 + (h2(vec2(k, 7.)) - .5) * .03;
       float t = clamp((m.y + .07) / .05, 0., 1.);
       float ln = length(vec2(m.x - c0 + (h2(vec2(k, 2.)) - .5) * .01 * t, max(abs(m.y + .045) - .022 - .006 * h2(vec2(k, 5.)), 0.)));
-      if (k >= 0. && k < 5.) d.x += engrave(ln, .007 + .006 * t, .01);
+      if (k >= 0. && k < 5.) d.x += engrave(ln, .009, .007);
     }
     /* score marks in the salt beside it: short blade cuts, all one way */
     vec2 w = vec2(m.x - .72, m.y - .25); float kk = floor(w.x / .12);
