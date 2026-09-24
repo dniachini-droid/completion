@@ -46,6 +46,16 @@
 .ring.rest { animation: none; }
 .ring.ended .halo { animation: ringbloom 2.4s var(--ease) forwards; }
 @keyframes ringbloom { 0% { transform: scale(.9); opacity: 1; } 40% { transform: scale(1.25); opacity: 1; background: radial-gradient(circle, rgba(220,228,255,.55) 20%, rgba(143,168,255,.3) 50%, transparent 70%); } 100% { transform: scale(1.1); opacity: .8; } }
+/* revision 1: the filled arc is thicker than the track; its bloom and the wash inside the ring grow as it fills (D-028) */
+.ring > .band.fill {
+  -webkit-mask: radial-gradient(circle closest-side, transparent 88.4%, #000 89.6%, #000 97.8%, transparent 99%);
+          mask: radial-gradient(circle closest-side, transparent 88.4%, #000 89.6%, #000 97.8%, transparent 99%); }
+.ring .glow { opacity: calc(.4 + var(--p) * .8); }
+.ring .glow.wide { opacity: calc(.3 + var(--p) * .95); }
+.ring .disc { background: radial-gradient(circle, rgba(200,208,255,calc(.05 + var(--p)*.28)), rgba(143,168,255,calc(.03 + var(--p)*.15)) 60%, transparent 72%); }
+/* the nearest ribs read a little stronger, so "going through" reads at a glance */
+.flow { filter: blur(2.1px); opacity: .82; }
+@keyframes pass { 0% { transform: scale(.05); opacity: 0; } 18% { opacity: .35; } 62% { opacity: .95; } 82% { opacity: 1; } 100% { transform: scale(1.6); opacity: 0; } }
 .fog-front { position:absolute; inset:-20%; pointer-events:none; opacity:.5; z-index:3;
   -webkit-mask: radial-gradient(circle closest-side, #000 30%, transparent 75%); mask: radial-gradient(circle closest-side, #000 30%, transparent 75%); }
 .fog-front img { position:absolute; top:0; left:0; width:200%; height:100%; animation: drift 60s ease-in-out infinite alternate; }

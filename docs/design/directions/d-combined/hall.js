@@ -70,7 +70,7 @@
   }
   /* right half, floor to apex (metres). Swells to its widest a little under half height,
      then curves in to a slightly pointed crown: about 2.8 times taller than wide. */
-  var HALL_HALF = [[2.45, 0], [2.47, 1.2], [2.52, 2.4], [2.6, 3.6], [2.68, 4.8], [2.72, 6.0], [2.68, 7.2], [2.55, 8.4],
+  var HALL_HALF = [[2.3, 0], [2.45, 1.2], [2.56, 2.4], [2.64, 3.6], [2.69, 4.8], [2.7, 6.0], [2.65, 7.2], [2.53, 8.4],
     [2.3, 9.6], [1.95, 10.8], [1.48, 11.9], [.92, 12.8], [.4, 13.4], [0, 13.75]];
 
   function buildSection(half, scale, bottom) {
@@ -149,41 +149,45 @@
     var S = { stair: o.scene === 'stair' };
     if (S.stair) {
       S.sec = buildSection(HALL_HALF, [.72, .72], -90);
-      S.zFar = 90; S.zLip = 1.05; S.tread = .3; S.riser = .26;
+      S.zFar = 90; S.zLip = 1.05; S.tread = .38; S.riser = .3;
       S.lights = [
-        { x: 0, y: -26, z: 34, c: [.78, .72, 1.25], k: 330, r: 9 },     /* light from below, far down the stair */
-        { x: 0, y: -8, z: 12, c: [.55, .5, 1], k: 26, r: 4 },
-        { x: .4, y: 3.2, z: -2.5, c: [.36, .34, .72], k: 5.5, r: 3 }       /* the lintel's light behind you */
+        { x: 0, y: -26, z: 31, c: [.78, .72, 1.25], k: 260, r: 9 },     /* light from below, far down the stair */
+        { x: 0, y: -9, z: 12, c: [.6, .55, 1.1], k: 22, r: 4 },
+        { x: .3, y: 3.2, z: -.6, c: [.5, .47, .95], k: 2.6, r: 2.2 }       /* the lintel's light behind you, falling on the treads */
       ];
-      S.fogK = 1 / 26; S.boxes = []; S.niches = []; S.door = null;
+      S.fogK = 1 / 30; S.boxes = []; S.niches = []; S.door = null;
     } else {
       S.sec = buildSection(HALL_HALF, [1, 1], null);
       S.zFar = 66;
       var g = o.gold || 0;
-      S.lamp = { x: 2.2, y: 1.42, z: 5.6 };
+      S.lamp = { x: 2.36, y: 1.4, z: 5.6 };
       S.lights = [
-        { x: 0, y: 5.5, z: 60, c: [.66, .6, 1.2], k: 150, r: 26 },       /* the far end: the great door's light */
-        { x: 0, y: 10, z: 22, c: [.34, .32, .72], k: 20, r: 14 },         /* haze high in the vault */
-        { x: S.lamp.x, y: S.lamp.y + .12, z: S.lamp.z, c: [1, .6, .26], k: 2.2 + 5 * g, r: 1.2 + 1.6 * g, warm: 1 }
+        { x: 0, y: 5.5, z: 58, c: [.62, .58, 1.25], k: 420, r: 36 },      /* the far end: the great door's light */
+        { x: 0, y: 9, z: 20, c: [.36, .33, .8], k: 26, r: 12 },           /* haze high in the vault */
+        { x: 0, y: 7, z: -4, c: [.3, .28, .66], k: 5, r: 7 },             /* soft fill from behind you */
+        { x: S.lamp.x - .1, y: S.lamp.y + .14, z: S.lamp.z, c: [1, .58, .24], k: 1.1 + 4 * g, r: .75 + 1.5 * g, warm: 1 }
       ];
       S.fogK = 1 / 34;
       /* the lamp's ledge */
-      S.boxes = [{ b: [2.02, 2.8, 1.2, 1.34, 5.05, 6.15], kind: 'ledge' }];
+      S.boxes = [{ b: [2.2, 2.9, 1.12, 1.32, 5.22, 5.98], kind: 'ledge' }];
       /* the lintel: a heavy beam on the left wall over a sealed blank */
-      S.door = { z0: 9.3, z1: 10.7, y1: 2.35, side: -1 };
-      S.beam = [-2.85, -2.3, 2.35, 3.2, 8.75, 11.25];
+      S.door = { z0: 6.55, z1: 8.05, y1: 2.4, side: -1 };
+      S.beam = [-2.98, -2.4, 2.4, 3.25, 6.0, 8.6];
       S.boxes.push({ b: S.beam, kind: 'beam' });
       /* wall-cups: recesses on both walls, a third of the way up */
       S.niches = [];
       for (var k = 0; k < 20; k++) {
         var zc = 2.2 + k * 3.1;
-        S.niches.push({ side: 1, z0: zc - .3, z1: zc + .3, y0: 3.55, y1: 4.35, zc: zc });
-        S.niches.push({ side: -1, z0: zc + 1.25, z1: zc + 1.85, y0: 3.55, y1: 4.35, zc: zc + 1.55 });
+        S.niches.push({ side: 1, z0: zc - .34, z1: zc + .34, y0: 3.5, y1: 4.5, zc: zc });
+        S.niches.push({ side: -1, z0: zc + 1.21, z1: zc + 1.89, y0: 3.5, y1: 4.5, zc: zc + 1.55 });
       }
-      if (o.lintel === 'open') S.lights.push({ x: -2.7, y: -.6, z: 10, c: [.72, .66, 1.25], k: 9, r: 2.2, spill: 1 });
+      if (o.lintel === 'open') S.lights.push({ x: -2.8, y: -.8, z: 7.3, c: [.72, .66, 1.25], k: 10, r: 2.2, spill: 1 });
+      S.lights.push({ x: 1.2, y: 2.6, z: 6.5, c: [.4, .37, .85], k: 3.2, r: 3.2 });   /* the hall's own glow on the lintel wall */
     }
     return S;
   }
+
+  function archTop(N, z) { var r = (N.z1 - N.z0) / 2, dz = z - (N.z0 + r); return N.y1 - r + Math.sqrt(Math.max(0, r * r - dz * dz)); }
 
   /* ---------- the renderer ---------- */
   function render(canvas, W, H, dpr, o, S) {
@@ -195,6 +199,16 @@
     var pr = (cam.pitch || 0) * Math.PI / 180, cp = Math.cos(pr), sp = Math.sin(pr);
     var Ox = cam.x, Oy = cam.y, Oz = cam.z;
     var sec = S.sec, E = sec.E, NT = 16384, T = angleTable(sec, Ox, Oy, NT);
+    var shm = S.stair ? S.riser / S.tread : 0, TS = S.stair ? angleTable(sec, Ox, Oy + shm * (Oz - S.zLip), NT) : null;
+    var LK_i = 0, LK_f = 0, LK_t = 0;
+    function look(Tb, ax, ay) {
+      var l2 = Math.sqrt(ax * ax + ay * ay);
+      var th = Math.atan2(ay, ax), kf = (th + Math.PI) / (2 * Math.PI) * NT - .5, k0 = Math.floor(kf), fr = kf - k0;
+      var ka = (k0 + NT) % NT, kb = (k0 + 1) % NT;
+      var ei = Tb.I[ka], r2d = Tb.R[ka], efr = Tb.F[ka];
+      if (Tb.I[kb] === ei) { r2d += (Tb.R[kb] - r2d) * fr; efr += (Tb.F[kb] - efr) * fr; }
+      LK_i = ei; LK_f = efr; LK_t = r2d / l2;
+    }
     var open = o.lintel === 'open', gold = o.gold || 0;
     var lights = S.lights, nl = lights.length;
     /* screen boxes for the solid objects, for a cheap test */
@@ -214,11 +228,12 @@
       return [cx + f * X / zc, cy - f * yc / zc];
     }
     var farDir = (function () { var X = 0 - Ox, Y = 4.5 - Oy, Z = S.zFar - Oz, L = Math.hypot(X, Y, Z); return [X / L, Y / L, Z / L]; })();
+    if (S.stair) { var mL = Math.hypot(1, shm); farDir = [0, -shm / mL, 1 / mL]; }
     var col = [0, 0, 0];
 
     function lightAt(x, y, z, nx, ny, nz, alb, out, wrap) {
       /* ambient: violet, a little more from above */
-      var am = .018 + .014 * (ny * .5 + .5);
+      var am = .016 + .012 * (ny * .5 + .5);
       var r = alb[0] * am * .9, g = alb[1] * am * .85, b = alb[2] * am * 1.9;
       for (var i = 0; i < nl; i++) {
         var L = lights[i], lx = L.x - x, ly = L.y - y, lz = L.z - z, d2 = lx * lx + ly * ly + lz * lz, d = Math.sqrt(d2);
@@ -233,12 +248,12 @@
       out[0] = r; out[1] = g; out[2] = b;
     }
 
-    var alb = [0, 0, 0];
+    var alb = [0, 0, 0], JD = S.stair ? .4 : .62;
     /* stone: blocks with bevelled joints, chisel texture and stain */
     function stone(u, v, fp, courseH, blockL, seed, out, fpv) {
     if (fpv == null) fpv = fp;
       /* hand-cut: the joints wander a little */
-      var wu = u + (vn(u * .7 + seed, v * .7) - .5) * .06, wv = v + (vn(u * .6, v * .6 + seed) - .5) * .05;
+      var wu = u + (vn(u * .9 + seed, v * .9) - .5) * .1, wv = v + (vn(u * .8, v * .8 + seed) - .5) * .08;
       var row = Math.floor(wv / courseH), off = h2(row, seed) * blockL, bl = blockL * (.8 + .5 * h2(row, seed + 7));
       var col = Math.floor((wu + off) / bl), fu = (wu + off) / bl - col, fv = wv / courseH - row;
       var du = Math.min(fu, 1 - fu) * bl, dv = Math.min(fv, 1 - fv) * courseH, dj = Math.min(du, dv);
@@ -247,6 +262,7 @@
       var tone = .82 + .3 * br;
       var fq = Math.min(fp, fpv * 2), detail = fq < .04 ? 1 - fq / .04 : 0;
       var m = fbm(u * .45 + seed, v * .45, 3);                      /* large stain */
+      var streak = vn(u * 1.3 + seed, v * .12);                     /* water has run down it */
       var chis = detail > 0 ? (fbm(u * 9, v * 9, 3) - .5) * detail : 0;  /* chisel */
       var t = tone * (.78 + .44 * m) * (1 + .38 * chis);
       /* bevel: the arris toward each joint turns away from the face */
@@ -256,7 +272,7 @@
       /* each block's face is slightly out of true */
       tiltU += (h2(col, row + seed) - .5) * .18 + chis * .25;
       tiltV += (h2(row, col + seed * 3) - .5) * .18 + chis * .2;
-      out[0] = t * (.35 + .65 * j); out[1] = tiltU * j; out[2] = tiltV * j;
+      out[0] = t * (JD + (1 - JD) * j) * (.8 + .4 * streak); out[1] = tiltU * j; out[2] = tiltV * j;
       out[3] = j;
     }
     var st = [0, 0, 0, 0];
@@ -267,15 +283,16 @@
         var vx = (pxi + .5 - cx) / f, vy = -(py + .5 - cy) / f;
         var dx = vx, dy = vy * cp + sp, dz = -vy * sp + cp;
         var dl = Math.sqrt(dx * dx + dy * dy + dz * dz), ndx = dx / dl, ndy = dy / dl, ndz = dz / dl;
-        var l2 = Math.sqrt(dx * dx + dy * dy);
-        var th = Math.atan2(dy, dx), kf = (th + Math.PI) / (2 * Math.PI) * NT - .5, k0 = Math.floor(kf), fr = kf - k0;
-        var ka = (k0 + NT) % NT, kb = (k0 + 1) % NT;
-        var ei = T.I[ka], r2d = T.R[ka], efr = T.F[ka];
-        if (T.I[kb] === ei) { r2d += (T.R[kb] - r2d) * fr; efr += (T.F[kb] - efr) * fr; }
-        var t = r2d / l2, kind = 1, nx, ny, nz, u = 0, v = 0, e = E[ei];
+        look(T, dx, dy);
+        var ei = LK_i, efr = LK_f, t = LK_t, kind = 1, nx, ny, nz, u = 0, v = 0, e = E[ei], sheared = false;
         var zh = Oz + t * dz;
+        if (TS && zh > S.zLip) {
+          /* beyond the lip the whole passage tilts down with the stair (a sheared section) */
+          look(TS, dx, dy + shm * dz);
+          ei = LK_i; efr = LK_f; t = LK_t; e = E[ei]; zh = Oz + t * dz; sheared = true;
+        }
         if (e.floor) kind = 2;
-        if (zh > S.zFar || dz <= 0) { t = (S.zFar - Oz) / dz; kind = 3; }
+        if (dz <= .02) { t = 1e9; kind = 3; } else if (zh > S.zFar) { t = (S.zFar - Oz) / dz; kind = 3; }
         /* the stair */
         if (S.stair) {
           var hitS = -1, tS = 1e9, sn = 0;
@@ -306,18 +323,19 @@
         }
         var X = Ox + t * dx, Y = Oy + t * dy, Z = Oz + t * dz, dist = t * dl;
         var fp = dist / f * 1.2, fpv = null, ao = 1, glowAdd = 0, extra = null;
-        var albR = .58, albG = .56, albB = .66;
+        var albR = .5, albG = .5, albB = .62;
 
         if (kind === 1) {
           /* wall or vault */
-          nx = e.n0x + (e.n1x - e.n0x) * efr; ny = e.n0y + (e.n1y - e.n0y) * efr; var nL = Math.hypot(nx, ny); nx = -nx / nL; ny = -ny / nL; nz = 0;
+          nx = e.n0x + (e.n1x - e.n0x) * efr; ny = e.n0y + (e.n1y - e.n0y) * efr; nz = sheared ? shm * ny : 0;
+          var nL = Math.sqrt(nx * nx + ny * ny + nz * nz); nx = -nx / nL; ny = -ny / nL; nz = -nz / nL;
           u = Z; v = e.s0 + efr * e.L;
           var cosI = Math.abs(nx * ndx + ny * ndy); fpv = dist / f; fp = fpv / Math.max(.12, cosI);
           /* recesses: the wall-cups and the lintel's blank */
           var rec = null, side = X < 0 ? -1 : 1;
-          if (Y > 3.3 && Y < 4.6 && S.niches.length) {
+          if (Y > 3.4 && Y < 4.6 && S.niches.length) {
             for (var ni = 0; ni < S.niches.length; ni++) { var Nn = S.niches[ni];
-              if (Nn.side === side && Z > Nn.z0 && Z < Nn.z1 && Y > Nn.y0 && Y < Nn.y1) { rec = Nn; break; } }
+              if (Nn.side === side && Z > Nn.z0 && Z < Nn.z1 && Y > Nn.y0 && Y < archTop(Nn, Z)) { rec = Nn; break; } }
           }
           var D = S.door, isDoor = false;
           if (!rec && D && side === D.side && Z > D.z0 && Z < D.z1 && Y < D.y1) { rec = { z0: D.z0, z1: D.z1, y0: 0, y1: D.y1, depth: open ? .55 : .13 }; isDoor = true; }
@@ -326,7 +344,8 @@
             var zb = Oz + tb * dz, yb = Oy + tb * dy, tt;
             if (dz > 0 && zb > rec.z1) { tt = (rec.z1 - Oz) / dz; if (tt < tj) { tj = tt; jn = [0, 0, -1]; } }
             if (dz < 0 && zb < rec.z0) { tt = (rec.z0 - Oz) / dz; if (tt < tj) { tj = tt; jn = [0, 0, 1]; } }
-            if (dy > 0 && yb > rec.y1) { tt = (rec.y1 - Oy) / dy; if (tt < tj) { tj = tt; jn = [0, -1, 0]; } }
+            var ytop = rec.zc != null ? archTop(rec, clamp(zb, rec.z0, rec.z1)) : rec.y1;
+            if (dy > 0 && yb > ytop) { tt = (ytop - Oy) / dy; if (tt < tj) { tj = tt; jn = [0, -1, 0]; } }
             if (dy < 0 && yb < rec.y0) { tt = (rec.y0 - Oy) / dy; if (tt < tj) { tj = tt; jn = [0, 1, 0]; } }
             if (tj < tb) {
               t = tj; X = Ox + t * dx; Y = Oy + t * dy; Z = Oz + t * dz; nx = jn[0]; ny = jn[1]; nz = jn[2];
@@ -336,7 +355,7 @@
               if (isDoor && open) { kind = 8; }
               else if (isDoor) { kind = 9; ao = .72; u = Z * 1.3 + 40; v = Y * 1.3; }
               else {
-                kind = 7; ao = .32;
+                kind = 7; ao = .5;
                 /* the cup: a small dark clay bowl sitting on the sill */
                 var zl2 = Z - rec.zc, yl = Y - rec.y0;
                 var ex = zl2 / .17, ey = (yl - .15) / .13;
@@ -362,7 +381,7 @@
         /* albedo and relief */
         var tiltU = 0, tiltV = 0, jmask = 1;
         if (kind === 1 || kind === 6 || kind === 7 || kind === 9) {
-          stone(u, v, fp, kind === 9 ? .7 : 1.05, kind === 9 ? 1.4 : 2.3, 11, st, fpv);
+          stone(u, v, fp, kind === 9 ? .7 : 1.3, kind === 9 ? 1.4 : 2.9, 11, st, fpv);
           var tone = st[0]; tiltU = st[1]; tiltV = st[2]; jmask = st[3];
           albR *= tone; albG *= tone; albB *= tone;
         } else if (kind === 2 || kind === 4) {
@@ -414,7 +433,9 @@
         if (kind === 4 && S.stair) {
           /* the tread's front edge catches the light from below */
           var edge = (sn - Z);
-          if (sn && edge < .035) glowAdd = .5 * (1 - edge / .035);
+          if (sn && edge < .03) glowAdd = .22 * (1 - edge / .03);
+          /* the inside corner under the tread above is in shadow: bright edge, then a drop */
+          if (sn) ao = .3 + .7 * sstep(0, S.tread * .55, Z - (sn - S.tread));
         }
 
         /* perturb the normal: tangent frame on the surface */
@@ -435,26 +456,25 @@
           R = .015 + .55 * glow; G = .014 + .5 * glow; Bc = .05 + 1.05 * glow;
         } else {
           alb[0] = albR; alb[1] = albG; alb[2] = albB;
-          lightAt(X, Y, Z, nx, ny, nz, alb, col);
+          lightAt(X, Y, Z, nx, ny, nz, alb, col, (kind === 6 || kind === 7 || kind === 9) ? 1 : null);
           R = col[0] * ao; G = col[1] * ao; Bc = col[2] * ao;
           if (kind === 2 || kind === 4) {
             /* a worn sheen on the floor toward the far light */
             var rx = ndx, ry = -ndy, rz = ndz, sp2 = rx * farDir[0] + ry * farDir[1] + rz * farDir[2];
             if (sp2 > 0) { var sh = Math.pow(sp2, 14) * .22 * (S.stair ? .4 : 1); R += sh * .55; G += sh * .52; Bc += sh * 1.0; }
           }
-          if (extra === 'cup') { R = R * .25 + .012; G = G * .22 + .008; Bc = Bc * .25 + .012; }
-          else if (extra === 'rim') { R *= 1.6; G *= 1.5; Bc *= 1.5; }
+          if (extra === 'cup') { R = R * .5 + .006; G = G * .36 + .004; Bc = Bc * .3 + .006; }
+          else if (extra === 'rim') { R *= 2.2; G *= 1.9; Bc *= 1.7; }
           if (glowAdd) { R += glowAdd * .5; G += glowAdd * .46; Bc += glowAdd * .95; }
-          if (jmask < 1 && kind !== 5) { var jd = .55 + .45 * jmask; R *= jd; G *= jd; Bc *= jd; }
+          if (jmask < 1 && kind !== 5) { var jd = .8 + .2 * jmask; R *= jd; G *= jd; Bc *= jd; }
         }
 
-        if (o.debug && (kind === 1)) { R = G = Bc = st[3] * .5 + (v % 2 < 1 ? .2 : 0); }
         /* haze: deeper and brighter toward the far end; a gold bank near the lamp's floor */
         var fz = 1 - Math.exp(-dist * S.fogK), bl = ndx * farDir[0] + ndy * farDir[1] + ndz * farDir[2];
         var bloom = Math.pow(Math.max(0, bl), 30), fR, fG, fB;
         if (S.stair) {
-          var down = sstep(-.15, -.75, ndy);
-          fR = .09 + .38 * down; fG = .08 + .34 * down; fB = .24 + .72 * down;
+          var down = sstep(-.3, -.8, ndy), dd4 = clamp(dist / 40, 0, 1);
+          fR = .025 + .12 * dd4 + .1 * down + .7 * bloom; fG = .022 + .11 * dd4 + .09 * down + .64 * bloom; fB = .07 + .3 * dd4 + .22 * down + 1.0 * bloom;
         } else {
           var dd2 = clamp(dist / S.zFar, 0, 1), dd3 = dd2 * dd2;
           fR = .03 + .16 * dd3 + .6 * bloom; fG = .027 + .15 * dd3 + .56 * bloom; fB = .085 + .38 * dd3 + .9 * bloom;
@@ -594,7 +614,8 @@
     H2.onRod = function (u, v) { return project(B[1], B[2] + .2 + v * .44, B[4] + 1.4 + u * .9); };
     H2.onBeam = function (u, v) { return project(B[1], B[2] + v, B[4] + u); };
     var dm = S.door;
-    H2.door = [project(-2.47, 0, dm.z0), project(-2.47, dm.y1, dm.z0), project(-2.5, dm.y1, dm.z1), project(-2.47, 0, dm.z1)];
+    var wa = S.sec.wallAt;
+    H2.door = [project(-wa(0), 0, dm.z0), project(-wa(dm.y1), dm.y1, dm.z0), project(-wa(dm.y1), dm.y1, dm.z1), project(-wa(0), 0, dm.z1)];
     H2.mapPath = function (d, u0, u1) {
       /* map a mark drawn in a 40×40 box onto the rod blank between u0 and u1 (absolute M/L/Q/Z only) */
       return d.replace(/(-?[\d.]+)[ ,](-?[\d.]+)/g, function (_, a, b) {
