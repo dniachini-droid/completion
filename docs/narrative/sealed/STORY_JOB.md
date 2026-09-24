@@ -131,3 +131,13 @@ Everything the six story weeks and the run-ahead need, against `product/MVP.md`'
 ## 5. Painting briefs (`PAINTING_BRIEFS.md`)
 
 48 briefs: every named place (33) and camp view (15) in `MVP_CONTENT.md`, each with forms and scale, material, the one light source, camera and vanishing point, the one thing to look at, what moves, and a signature no neighbour shares. Calls made: the approved hall painting is the first scene, unchanged; the hall has a dark and a lit state (before and after the word) and every hall scene Dan can see in both is baked twice; no figure anywhere before week 8; the only daylight in the MVP is the square of sky at the ladder's foot; the only painted English words are hers (HILL, DAY 1) and the shaft-sinkers' chalk (40 FT); the lamp's flame never gutters. A week-by-week list of what the kit gains keeps the places from becoming one room renumbered. A note for month 11 holds the fair-play requirement for the Seed's painting.
+
+---
+
+## 6. Shaped for the build
+
+Every item in `MVP_CONTENT.md` has a stable id, a DATA_MODEL type and a *when* (story week, order, prerequisites); §0 gives the id scheme and the rules, §13 the type mapping, the two small data-model additions Phase 9 will want (a story-beat type; a stretch field), what never ships, and the tests the content implies.
+
+## 7. The open game bible's one line (D-035)
+
+`GAME_BIBLE.md` → "The shape of the story", item 5: *(it fills at once on a great day, or slowly with steady weeks)* → *(it fills as you live your weeks)*. Nothing Dan knows changes: since D-049 (approved, D-051) Keys are capped at five a week and milestone Keys fill only their own project's door, so "at once on a great day" was already not how the numbers work. The new wording is also the fiction's (the doors count returns: the world on the hand), and it no longer suggests that an ancient door grades a day's output (outside review S3).

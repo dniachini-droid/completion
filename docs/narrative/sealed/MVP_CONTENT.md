@@ -602,3 +602,29 @@ Always **from just ahead**, a thing Dan can see and not yet reach; never a conse
 | Painted scenes | 30–35 + camp and views | **33 places + 15 camp views = 48 briefs** | `PAINTING_BRIEFS.md` |
 
 **The story clock holds:** everything above is ordered by story week; no mark, record or word appears before its week; places run at most one week ahead; the two partial signs are the only ones (weeks 1 and 3, High days); the first word lands in week 2–3.
+
+---
+
+## 13. Shaping it for the build (Phase 9)
+
+**Type mapping** (`technical/DATA_MODEL.md` → "Authored content"):
+| This file | DATA_MODEL type | Fields to fill |
+|---|---|---|
+| `b-` arrival, `pl-` | Place | name, line, painting id (`pt-…`), route position (`w`, `o`), thing to look at (§2 "In view after it") |
+| `cv-` | Camp with a view | the view (name + line), the thing to look at (a find id or a re-surfaced line), painting id, stretch, `w` |
+| `rec-`, `tl-` | Record fragment | life, sign string with each sign aligned to its English, the full rendering (the check), her-sheet gloss where there is one, first beat |
+| `b-` step, camp, morning, week close glimpse | Copy (keyed by beat id) + the beat's trigger (job return / bedtime / morning / week close) | as ARR's Kind column says |
+| `seal-` | Sealed thing | where, what it opens or gives (a mark tablet, a record stretch, a find, a place), its NICHES order, its line |
+| `mk-` | Sign / mark | shape (SCRIPT §2 elements), candidates, the true meaning, the confirming beat, the rejection line |
+| `wd-` | Word | marks, blank location, the four tap lines, the cinematic beats and painting states |
+| `fd-` | Find | line, stretch, `w`/`req`, told line id if any, the truth clause (kept out of the app) |
+| `ps-` | Passage line | stretch, condition, order |
+| `tz-`, `b-…tz` | Teaser | condition (after / until), line |
+| `wc-`, `sf-` | Week-close lines | the beat it needs (`wc-`), or the week it closes (`sf-`) |
+| `pt-` | Painting | the brief (`PAINTING_BRIEFS.md`), states, live layers |
+
+**Two small additions the build will want** (spoiler-free, for the data model when Phase 9 opens it): a **story beat** type for the ARR step / camp / morning rows (id, week, order, trigger, copy key, what it carries), and a **stretch** field on places, finds and passage lines (§0.3).
+
+**What never ships:** every column in this file headed *Truth*, *Ties* or *Carries*, and every `STORY_JOB.md`, `WORLD_TRUTH.md` or ledger text (ARCHITECTURE → "Story and what Dan may see"). The app receives only lines, names, sign strings with their English, conditions and order.
+
+**Tests this file implies** (`technical/TEST_STRATEGY.md`, story unlocks): no mark renders in English before its `mk-` week; no `b-`, `pl-` or `rec-` item is visible before its `w` (places: at most `w − 1` on a deep push, never a sign or record); every `req` chain resolves (no deadlock) for a Low, a Normal and a High week and after a two-week absence; every `(Key)` step reads correctly when its sealed thing was not seen first; passage lines never repeat within a stretch until the list is used; a teaser whose condition is false never shows.
