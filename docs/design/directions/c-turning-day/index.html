@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06070f">
+<title>The Turning Day</title>
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<link rel="stylesheet" href="direction.css">
+<style>
+
+body { background: var(--night); }
+.phone { height:auto; min-height:100vh; overflow:visible; background:
+  linear-gradient(180deg, #0a0c22 0%, #141236 30%, #2a1c30 62%, #3a2214 88%, #1a0e08 100%); }
+.wrap { position:relative; z-index:5; padding:64px var(--gutter) 48px; }
+.eyebrow { font-family:var(--life); font-style:italic; font-size:16px; color:var(--ink-3); }
+h1 { font-family:var(--place); font-weight:400; font-size:44px; line-height:1.02; margin-top:6px;
+  background: linear-gradient(90deg, #cdd7ff 0%, #b6c0ff 35%, #f3d7a6 70%, #f4c877 100%); -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter: drop-shadow(0 0 18px rgba(200,190,255,.25)); }
+.band { height:3px; margin:18px 0 20px; border-radius:2px; background: linear-gradient(90deg, #8fa8ff, #c4a6e8 50%, #f4c877); box-shadow: 0 0 18px rgba(196,166,232,.6); }
+.summary p { font-family:var(--life); font-size:17px; line-height:1.5; color:var(--ink-2); margin-bottom:10px; }
+.summary .pl { font-family:var(--place); font-size:18px; color:var(--cold-hi); }
+ol { list-style:none; margin-top:26px; }
+li a { display:flex; gap:14px; align-items:center; padding:10px 0; border-top:1px solid rgba(200,190,255,.12); min-height:44px; }
+li:first-child a { border-top:0; }
+li img { width:64px; height:138px; object-fit:cover; border-radius:10px; flex:none; box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 8px 24px rgba(0,0,0,.5); background:#111; }
+li .t { font-family:var(--life); font-weight:500; font-size:20px; color:var(--ink); }
+li .c { font-family:var(--life); font-size:16px; line-height:1.4; color:var(--ink-2); margin-top:2px; }
+li .n { font-family:var(--place-caps); font-size:12px; letter-spacing:.22em; color:var(--ink-3); }
+.foot { font-family:var(--life); font-style:italic; font-size:15px; color:var(--ink-3); margin-top:26px; }
+
+</style>
+</head>
+<body class="t-cold">
+<main class="phone">
+
+<div class="wrap">
+  <div class="eyebrow">Direction C</div>
+  <h1>The Turning Day</h1>
+  <div class="band" aria-hidden="true"></div>
+  <div class="summary">
+    <p>The glow follows the day. Morning and delves are cold blue-violet; the arrival turns everything gold; camp is fully warm. Warm light is what a finished day earns.</p>
+    <p>Two voices: the place speaks in carved letters (<span class="pl">the Lamp Hall</span>, the marks, the records); your own life speaks in plain print (jobs, times, buttons, the satchel, the daybook).</p>
+    <p>Full-bleed paintings of stone half lost in luminous fog, and one card of light carrying the one thing to do.</p>
+  </div>
+  <ol><li><a href="morning.html"><img src="shots/morning.png" alt=""><div><div class="n">01</div><div class="t">The morning</div><div class="c">Cold, clear light in the Lamp Hall; one card carries the next job.</div></div></a></li><li><a href="delve.html"><img src="shots/delve.png" alt=""><div><div class="n">02</div><div class="t">A delve</div><div class="c">A soft ring of cold light fills as the minutes pass; the passage keeps moving.</div></div></a></li><li><a href="map.html"><img src="shots/map.png" alt=""><div><div class="n">03</div><div class="t">The map</div><div class="c">The first region from above, through drifting fog that thins where you have walked.</div></div></a></li><li><a href="record.html"><img src="shots/record.png" alt=""><div><div class="n">04</div><div class="t">A record</div><div class="c">One line of the long tally floats across the fog, your guesses beneath it.</div></div></a></li><li><a href="cut.html"><img src="shots/cut.png" alt=""><div><div class="n">05</div><div class="t">Cutting a word</div><div class="c">Two marks cut in order, the word locks, and the lamps wake down the hall.</div></div></a></li><li><a href="complete.html"><img src="shots/complete.png" alt=""><div><div class="n">06</div><div class="t">Day complete</div><div class="c">The Salt Gallery: the whole screen turns from cold to gold. Enough.</div></div></a></li><li><a href="camp.html"><img src="shots/camp.png" alt=""><div><div class="n">07</div><div class="t">Camp</div><div class="c">Fully warm now. The lamp, the bedtime, and what waits in the morning.</div></div></a></li><li><a href="satchel.html"><img src="shots/satchel.png" alt=""><div><div class="n">08</div><div class="t">The satchel</div><div class="c">A list, on request, in plain print. Nothing counted.</div></div></a></li><li><a href="daybook.html"><img src="shots/daybook.png" alt=""><div><div class="n">09</div><div class="t">The daybook</div><div class="c">Week 2 on warm paper, written for you in plain English.</div></div></a></li></ol>
+  <p class="foot">Static mock-ups at 390 × 844. Cutting a word and day complete play on open; tap “Again” to replay.</p>
+</div>
+</main>
+<script>
+/* the light blooms where you tap (motion only) */
+(function(){
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) return;
+  document.querySelectorAll('.btn, .quiet, .tap').forEach(function(el){
+    el.addEventListener('pointerdown', function(e){
+      var r = el.getBoundingClientRect(), b = document.createElement('span');
+      b.className = 'bloom'; b.style.left = (e.clientX - r.left) + 'px'; b.style.top = (e.clientY - r.top) + 'px';
+      if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+      el.style.overflow = 'hidden'; el.appendChild(b);
+      setTimeout(function(){ b.remove(); }, 950);
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

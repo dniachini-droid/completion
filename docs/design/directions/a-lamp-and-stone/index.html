@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>Lamp and Stone</title>
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<link rel="stylesheet" href="direction.css">
+<style>
+
+body{display:block}
+.wrap{position:relative;max-width:430px;margin:0 auto;min-height:100vh;background:var(--stone-0);overflow:hidden}
+.hero{position:relative;height:360px}
+.hero svg{display:block;width:100%;height:100%}
+.hero .motes{height:360px}
+.intro{position:relative;z-index:2;margin-top:-96px;padding:0 var(--gutter)}
+.intro .place{font-size:34px}
+.intro .say{margin-top:14px;font-size:17.5px;line-height:1.55}
+.intro .say + .say{margin-top:10px}
+.intro .say b{font-weight:400;color:var(--warm-hi)}
+.intro .say i{font-style:normal;color:var(--cold-hi)}
+ol{list-style:none;padding:12px var(--gutter) 56px}
+ol a{display:flex;align-items:flex-start;gap:16px;padding:14px 0;min-height:64px}
+ol .pt{margin-top:7px}
+.txt{display:flex;flex-direction:column;gap:3px}
+.nm{font-family:var(--carve);font-weight:500;font-size:17px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink)}
+.cp{font-family:var(--voice);font-size:16.5px;line-height:1.4;color:var(--ink-3)}
+ol a:active .nm{color:var(--warm-hi)}
+.foot{padding:0 var(--gutter) 40px;font-family:var(--voice);font-size:15px;color:#6f838d}
+
+</style>
+</head>
+<body>
+<main>
+<div class="wrap">
+<div class="hero"><svg viewBox="0 0 390 360" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>
+  <filter id="grain" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="91"/>
+    <feColorMatrix values="0 0 0 0 .62  0 0 0 0 .72  0 0 0 0 .78  0 0 0 .6 0"/>
+  </filter>
+  <filter id="clouds" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".011 .014" numOctaves="4" seed="95"/>
+    <feColorMatrix values="0 0 0 0 .52  0 0 0 0 .64  0 0 0 0 .72  0 0 0 1 -.3"/>
+  </filter>
+  <filter id="speck" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".06 .09" numOctaves="3" seed="100"/>
+    <feColorMatrix values="0 0 0 0 .6  0 0 0 0 .7  0 0 0 0 .78  0 0 0 1.4 -.72"/>
+  </filter>
+  <filter id="paint" x="-15%" y="-15%" width="130%" height="130%">
+    <feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="3" seed="93" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="7" xChannelSelector="R" yChannelSelector="G" result="d"/>
+    <feGaussianBlur in="d" stdDeviation="1.3"/>
+  </filter>
+  <filter id="paintS" x="-15%" y="-15%" width="130%" height="130%">
+    <feTurbulence type="fractalNoise" baseFrequency=".06" numOctaves="2" seed="96" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="3" xChannelSelector="R" yChannelSelector="G" result="d"/>
+    <feGaussianBlur in="d" stdDeviation=".6"/>
+  </filter>
+  <filter id="b1" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="1"/></filter>
+  <filter id="b2" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="2.4"/></filter>
+  <filter id="b4" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="4.5"/></filter>
+  <filter id="b8" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="9"/></filter>
+  <filter id="b16" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="18"/></filter>
+  <filter id="b30" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="30"/></filter>
+  <filter id="glowC" x="-100%" y="-100%" width="300%" height="300%">
+    <feGaussianBlur stdDeviation="2.2" result="b"/><feGaussianBlur in="SourceGraphic" stdDeviation="6" result="b2"/>
+    <feMerge><feMergeNode in="b2"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <radialGradient id="flameG" cx=".5" cy=".72" r=".62">
+    <stop offset="0" stop-color="#fffaf0"/><stop offset=".42" stop-color="#ffd690"/><stop offset=".8" stop-color="#f39a3c" stop-opacity=".6"/><stop offset="1" stop-color="#e57a24" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="warmPool" cx=".5" cy=".5" r=".5">
+    <stop offset="0" stop-color="#ffd28e" stop-opacity=".85"/><stop offset=".14" stop-color="#f0a24a" stop-opacity=".45"/>
+    <stop offset=".5" stop-color="#9c5424" stop-opacity=".16"/><stop offset="1" stop-color="#3a1c0c" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="coldPool" cx=".5" cy=".5" r=".5">
+    <stop offset="0" stop-color="#e2f3fa" stop-opacity=".9"/><stop offset=".12" stop-color="#9fc4d8" stop-opacity=".5"/>
+    <stop offset=".45" stop-color="#3e5a69" stop-opacity=".2"/><stop offset="1" stop-color="#0e161c" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="clay" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#b07a4e"/><stop offset=".45" stop-color="#7a4f31"/><stop offset="1" stop-color="#2e1c11"/>
+  </linearGradient>
+
+  <radialGradient id="ibg" cx="195" cy="210" r="300" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#1a262e"/><stop offset="1" stop-color="#05080b"/></radialGradient>
+  <linearGradient id="fadeb" x1="0" y1="0" x2="0" y2="1"><stop offset=".45" stop-color="#05080b" stop-opacity="0"/><stop offset="1" stop-color="#05080b"/></linearGradient>
+</defs>
+<rect width="390" height="360" fill="url(#ibg)"/>
+<rect width="390" height="360" filter="url(#clouds)" opacity=".4"/>
+<ellipse cx="300" cy="120" rx="120" ry="80" fill="#9fc4d8" opacity=".08" filter="url(#b30)"/>
+<g opacity=".7"><g transform="translate(320 110) scale(1.4)" opacity="1.0" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-6.5 7 Q-6.5 -6 0 -6 Q6.5 -6 6.5 7 M0 -6 V2" stroke="#010203" stroke-width="3.9000000000000004" opacity=".8" transform="translate(-.35 -.6)" filter="url(#b1)"/>
+  <path d="M-6.5 7 Q-6.5 -6 0 -6 Q6.5 -6 6.5 7 M0 -6 V2" stroke="#0a1117" stroke-width="2.5"/>
+  <path d="M-6.5 7 Q-6.5 -6 0 -6 Q6.5 -6 6.5 7 M0 -6 V2" stroke="#6f8f9f" stroke-width="6.2" opacity="0.4" filter="url(#b2)"/>
+  <path d="M-6.5 7 Q-6.5 -6 0 -6 Q6.5 -6 6.5 7 M0 -6 V2" stroke="#9db8c5" stroke-width="1.36" opacity="0.6" filter="url(#b1)"/>
+  <path d="M-6.5 7 Q-6.5 -6 0 -6 Q6.5 -6 6.5 7 M0 -6 V2" stroke="#9fb6c1" stroke-width=".5" opacity="0" transform="translate(.3 .7)"/>
+</g><g transform="translate(352 150) scale(1.1)" opacity="0.6" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#010203" stroke-width="3.9000000000000004" opacity=".8" transform="translate(-.35 -.6)" filter="url(#b1)"/>
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#0a1117" stroke-width="2.5"/>
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#6f8f9f" stroke-width="6.2" opacity="0.4" filter="url(#b2)"/>
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#9db8c5" stroke-width="1.36" opacity="0.6" filter="url(#b1)"/>
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#9fb6c1" stroke-width=".5" opacity="0" transform="translate(.3 .7)"/>
+</g><g transform="translate(290 160) scale(1.0)" opacity="0.5" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#010203" stroke-width="3.9000000000000004" opacity=".8" transform="translate(-.35 -.6)" filter="url(#b1)"/>
+  <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#0a1117" stroke-width="2.5"/>
+  <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#6f8f9f" stroke-width="6.2" opacity="0.4" filter="url(#b2)"/>
+  <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#9db8c5" stroke-width="1.36" opacity="0.6" filter="url(#b1)"/>
+  <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#9fb6c1" stroke-width=".5" opacity="0" transform="translate(.3 .7)"/>
+</g></g>
+<path d="M-10 262 L250 254 L256 272 L-10 280 Z" fill="#3a3a38" filter="url(#paint)"/>
+<path d="M-10 262 L250 254" stroke="#f0b477" stroke-width="1.6" opacity=".55" filter="url(#b1)"/>
+<g>
+  <g class="breathe"><circle cx="153" cy="234" r="220" fill="url(#warmPool)" opacity="1.0"/></g>
+  <g transform="translate(120 246) scale(1.5)">
+    <ellipse cx="4" cy="11" rx="40" ry="4" fill="#000" opacity=".6" filter="url(#b2)"/>
+    <path d="M-27 -1 C-36 -4 -37 7 -27 6" stroke="#6a4630" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M-28 2 C-28 -9 -14 -12 -2 -12 C10 -12 18 -9 22 -6 L37 -9 C44 -10 46 -3 42 1 C38 5 27 5 19 8 C8 12 -18 13 -25 8 C-28 6 -28 4 -28 2 Z" fill="url(#clay)" filter="url(#paintS)"/>
+    <path d="M-22 -6 C-12 -11.5 6 -11.5 19 -7 L36 -9.5" stroke="#f8c78e" stroke-width="1.5" fill="none" opacity=".9" filter="url(#b1)"/>
+    <path d="M-24 7 C-10 12 10 10 20 6" stroke="#1a0d05" stroke-width="2.4" fill="none" opacity=".45" filter="url(#b1)"/>
+    <ellipse cx="-5" cy="-9" rx="6.5" ry="1.9" fill="#1a0e06"/>
+    <ellipse cx="-5" cy="-9.6" rx="6.5" ry="1.2" fill="none" stroke="#e7a769" stroke-width=".6" opacity=".6"/>
+    <ellipse cx="39" cy="-8.6" rx="3" ry="1" fill="#2a1508"/>
+  </g>
+  <g transform="translate(178.5 232.5) scale(1.5)">
+    <ellipse cx="0" cy="-14" rx="16" ry="26" fill="#ffb45a" opacity=".45" filter="url(#b4)"/>
+    <g class="flicker"><path d="M0 0 C-9 -9 -5 -21 0 -34 C5 -21 9 -9 0 0 Z" fill="url(#flameG)"/>
+    <path d="M0 -2 C-3.2 -6 -2.4 -12 0 -18 C2.4 -12 3.2 -6 0 -2 Z" fill="#fffdf6" opacity=".95"/></g>
+  </g>
+</g>
+<rect width="390" height="360" fill="url(#fadeb)"/>
+<rect width="390" height="360" filter="url(#grain)" opacity="0.15" style="mix-blend-mode:overlay"/>
+</svg><canvas class="motes" style="height:360px" aria-hidden="true" data-n="24" data-lights='[[200, 230, 200, "w", 0.9]]'></canvas></div>
+<header class="intro">
+  <div class="eyebrow rise">Direction A</div>
+  <h1 class="place rise d1" style="margin-top:8px">Lamp and Stone</h1>
+  <p class="say rise d2">You, in a vast cold hall, holding the only warm thing. <i>Cold is the place</i>; <b>warm is you</b> and what you’ve earned.</p>
+  <p class="say rise d3">Each screen is a painted view of a place, with a few carved words in its darkest part. Carved letters set everything. No cards, no boxes, no lines of light: soft points, haze and one warm button.</p>
+</header>
+<ol><li class="rise" style="animation-delay:0.10s"><a href="morning.html">
+  <span class="pt warm"></span>
+  <span class="txt"><span class="nm">The morning</span><span class="cp">The Lamp Hall, the next job, and one warm button.</span></span>
+</a></li><li class="rise" style="animation-delay:0.15s"><a href="delve.html">
+  <span class="pt cold"></span>
+  <span class="txt"><span class="nm">A delve</span><span class="cp">A warm ring slowly fills around the time left while the light moves down the passage.</span></span>
+</a></li><li class="rise" style="animation-delay:0.20s"><a href="map.html">
+  <span class="pt cold"></span>
+  <span class="txt"><span class="nm">The map</span><span class="cp">Places like lamps in the dark: warm where you’ve been, cold where you’ve only seen.</span></span>
+</a></li><li class="rise" style="animation-delay:0.25s"><a href="record.html">
+  <span class="pt cold"></span>
+  <span class="txt"><span class="nm">A record</span><span class="cp">The long tally. Cold marks in the stone, your guesses beneath them in warm.</span></span>
+</a></li><li class="rise" style="animation-delay:0.30s"><a href="cut.html">
+  <span class="pt warm"></span>
+  <span class="txt"><span class="nm">Cutting a word</span><span class="cp">The big moment. Two marks cut, the word locks, and the lamps wake down the hall.</span></span>
+</a></li><li class="rise" style="animation-delay:0.35s"><a href="complete.html">
+  <span class="pt warm"></span>
+  <span class="txt"><span class="nm">Day complete</span><span class="cp">Arriving at the Salt Gallery. A cairn is stacked. “That’s the day. Enough.”</span></span>
+</a></li><li class="rise" style="animation-delay:0.40s"><a href="camp.html">
+  <span class="pt warm"></span>
+  <span class="txt"><span class="nm">Camp</span><span class="cp">The evening close, by the lamp, with bedtime set for 23:00.</span></span>
+</a></li><li class="rise" style="animation-delay:0.45s"><a href="satchel.html">
+  <span class="pt cold"></span>
+  <span class="txt"><span class="nm">The satchel</span><span class="cp">A list you asked for, below niches lit from beneath. No counts.</span></span>
+</a></li><li class="rise" style="animation-delay:0.50s"><a href="daybook.html">
+  <span class="pt cold"></span>
+  <span class="txt"><span class="nm">The daybook</span><span class="cp">Week two, written for you, under the ladder you came down.</span></span>
+</a></li></ol>
+<p class="foot">Nine static screens, drawn for a 390 × 844 phone. The two big moments (cutting a word, day complete) play once as you open them.</p>
+</div>
+</main>
+<script>
+/* Dust in the light: few, slow, lit only near a light source. Motion only. */
+(function(){
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var c=document.querySelector('canvas.motes'); if(!c) return;
+  var L=JSON.parse(c.dataset.lights||'[]'), N=+(c.dataset.n||30), W=390, H=844;
+  var x=c.getContext('2d'); c.width=W*2; c.height=H*2; x.scale(2,2);
+  var R=Math.random, m=[];
+  for(var i=0;i<N;i++) m.push({x:R()*W,y:R()*H,r:.35+R()*1.1,vx:(R()-.5)*.05,vy:-.02-R()*.06,p:R()*6.3});
+  var last=performance.now();
+  function fr(t){
+    var dt=Math.min(50,t-last); last=t; x.clearRect(0,0,W,H);
+    for(var i=0;i<m.length;i++){ var q=m[i];
+      q.x+=q.vx*dt*.06; q.y+=q.vy*dt*.06; q.p+=dt*.001;
+      if(q.y<-4){q.y=H+4;q.x=R()*W} if(q.x<-4)q.x=W+4; if(q.x>W+4)q.x=-4;
+      var best=0,col=null;
+      for(var j=0;j<L.length;j++){var l=L[j],d=Math.hypot(q.x-l[0],q.y-l[1]),a=Math.max(0,1-d/l[2])*l[4]; if(a>best){best=a;col=l[3]}}
+      var a=best*(.5+.4*Math.sin(q.p)); if(a<.02) continue;
+      x.fillStyle=col==='w'?'rgba(255,214,150,'+a+')':'rgba(214,238,248,'+a+')';
+      x.beginPath(); x.arc(q.x,q.y,q.r,0,6.283); x.fill();
+    }
+    requestAnimationFrame(fr);
+  }
+  requestAnimationFrame(fr);
+})();
+</script>
+
+</body>
+</html>

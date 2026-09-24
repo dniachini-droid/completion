@@ -10,19 +10,19 @@
 <style>
 
 .paint { filter: blur(5px) brightness(.8) saturate(1.1); transform: scale(1.05); }
-.head { position:absolute; top:100px; left:var(--gutter); right:var(--gutter); z-index:6; display:flex; align-items:baseline; justify-content:space-between; }
+.head { position:absolute; top:104px; left:var(--gutter); right:var(--gutter); z-index:6; display:flex; align-items:baseline; justify-content:space-between; }
 .head .k { font-family:var(--life); font-style:italic; font-size:17px; color:var(--ink-warm-2); }
 
-.page { position:absolute; left:14px; right:14px; top:144px; bottom:112px; z-index:6; border-radius:22px; padding:28px 26px 22px;
+.page { position:absolute; left:14px; right:14px; top:158px; z-index:6; border-radius:22px; padding:28px 26px 22px;
   background:
-    radial-gradient(120% 70% at 30% 0%, rgba(255,246,228,.98), rgba(247,232,204,.96) 55%, rgba(236,214,178,.95) 100%);
+    radial-gradient(120% 70% at 30% 0%, rgba(250,236,210,.97), rgba(238,219,186,.95) 55%, rgba(222,196,156,.94) 100%);
   color:#2e1d10;
   box-shadow: 0 0 0 1px rgba(255,240,210,.5) inset, 0 0 60px rgba(244,200,119,.35), 0 0 140px rgba(244,180,100,.25), 0 30px 60px -20px rgba(0,0,0,.7); }
 .page::after { content:""; position:absolute; inset:0; border-radius:22px; pointer-events:none; opacity:.35; mix-blend-mode:multiply;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' seed='5'/><feColorMatrix values='0 0 0 0 .55  0 0 0 0 .42  0 0 0 0 .3  0 0 0 .6 0'/></filter><rect width='300' height='300' filter='url(%23p)'/></svg>"); }
 .page .wk { font-family:var(--life); font-weight:400; font-size:34px; line-height:1; color:#2a180b; }
 .page .wk small { display:block; font-style:italic; font-size:16px; color:#8a6a4c; margin-top:6px; }
-.page p { font-family:var(--life); font-size:18.5px; line-height:1.55; color:#3a2616; margin-top:16px; }
+.page p { font-family:var(--life); font-size:19px; line-height:1.55; color:#3a2616; margin-top:16px; }
 .page .pl { font-family:var(--place); font-size:19.5px; letter-spacing:.01em; color:#5a3014; }
 .page .marks { display:flex; gap:14px; align-items:center; margin-top:10px; }
 .page .marks figure { display:flex; flex-direction:column; align-items:center; gap:0; }
