@@ -70,7 +70,7 @@
   });
 </script>
 
-<div class="dv" bind:this={root}>
+<div class="dv" class:told={!!end && (doneSeq !== null || v.runFinds.length > 0)} bind:this={root}>
   {@html tunnel}
   <div class="ui">
     <header class="top col">
@@ -143,7 +143,7 @@
             {:else if end.how === 'finishedHere' && end.minutes > 0}{t('delve.finished', { min: minutesWords(end.minutes), job: end.job.name })}
             {:else}{end.count > 1 ? t('delve.doneRun') : t('delve.doneOne')}{/if}
           </h2>
-          {#if doneSeq !== null}<Return {doneSeq} extraFinds={v.runFinds} />
+          {#if doneSeq !== null}<Return {doneSeq} extraFinds={v.runFinds} {go} />
           {:else}<p class="say">{end.enough ? t('delve.enoughSay') : v.passage}</p><Return doneSeq={null} extraFinds={v.runFinds} />{/if}
           {#if end.completedDay || game.view.arrival}
             <button class="btn" onclick={() => leave('arrival')}>{t('delve.see')}</button>
@@ -158,6 +158,8 @@
 
 <style>
   .dv { display: contents; }
+  /* when the end carries the story, the ring steps back to make room for it */
+  .dv.told :global(.ring) { --R: min(170px, 44vw, 22vh); }
   .gone { opacity: 0; transition: opacity 1s var(--ease); }
   h2.m { margin-top: 10px; }
   .dv :global(.bottom p.say) { margin: 6px 0 20px; font-size: 17px; color: var(--ink-2); }

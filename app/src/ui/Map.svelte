@@ -21,7 +21,7 @@
   const LINKS: [StretchId, StretchId][] = [['st-mouth', 'st-hall'], ['st-hall', 'st-camp'], ['st-hall', 'st-salt'], ['st-hall', 'st-stair'], ['st-stair', 'st-flight2'], ['st-flight2', 'st-square']];
 
   const placed = $derived(s.beats.filter(b => (b.kind === 'arrival' || b.kind === 'arrivalKey' || b.kind === 'word') && v.story.played.has(b.id)));
-  const walkedOn = $derived(new Set<StretchId>([v.here.stretch, ...placed.map(b => b.stretch)]));
+  const walkedOn = $derived(new Set<StretchId>([s.stretches[0].id, v.here.stretch, ...placed.map(b => b.stretch)]));   /* the way in is always walked */
   /* the stretch the next place is on: a faint star, unnamed */
   const aheadOn = $derived.by(() => {
     for (const rw of s.route) for (const p of rw.places) {
@@ -39,6 +39,8 @@
   const closeHere = $derived(placed.filter(b => b.stretch === v.here.stretch));
   const cx = (i: number) => (i % 2 ? 270 : 110) + ((i * 37) % 30) - 15;
   const cy = (i: number) => 70 + i * 78;
+  /* the sky's height in the drawing's units; labels are placed in % of it, so they sit on their stars at any width */
+  const H = $derived(level === 'region' ? 520 : Math.max(420, cy(closeHere.length + sealedHere.length) + 40));
 </script>
 
 <Scene painting={v.here.painting} blur />
@@ -56,7 +58,8 @@
   </header>
 
   <div class="sky rise d1">
-    <svg viewBox="0 0 390 {level === 'region' ? 520 : Math.max(420, cy(closeHere.length + sealedHere.length) + 40)}" preserveAspectRatio="xMidYMin meet" aria-hidden="true">
+   <div class="frame" style="aspect-ratio: 390 / {H}">
+    <svg viewBox="0 0 390 {H}" aria-hidden="true">
       {#if level === 'region'}
         {#each LINKS as [a, b]}
           {#if walkedOn.has(a) && (walkedOn.has(b) || b === aheadOn)}
@@ -94,18 +97,19 @@
       {/each}
     {:else}
       {#each closeHere as b, i (b.id)}
-        <div class="tag" class:right={cx(i) > 200} style="left:{(cx(i) / 390) * 100}%;top:{cy(i)}px">
+        <div class="tag" class:right={cx(i) > 200} style="left:{(cx(i) / 390) * 100}%;top:{(cy(i) / H) * 100}%">
           <span class="carve sm">{b.name}</span>
           {#if b.id === v.here.id}<em class="here">{t('map.here')}</em>{/if}
         </div>
       {/each}
       {#each sealedHere as x, j (x.id)}
         {@const i = closeHere.length + j}
-        <div class="tag" class:right={cx(i) > 200} style="left:{(cx(i) / 390) * 100}%;top:{cy(i)}px">
+        <div class="tag" class:right={cx(i) > 200} style="left:{(cx(i) / 390) * 100}%;top:{(cy(i) / H) * 100}%">
           <em class="sealed-t">{x.where}</em><em>{t('map.sealed')}</em>
         </div>
       {/each}
     {/if}
+   </div>
   </div>
 
   <section class="bottom col">
@@ -121,7 +125,9 @@
   .lv { margin: 0; width: auto; }
   .lv button { padding: 6px 12px; font-size: 13px; }
   .sky { position: relative; flex: 1; min-height: 0; overflow-y: auto; margin: 6px 0; }
-  .sky svg { width: 100%; display: block; }
+  .frame { position: relative; width: 100%; }
+  .sky svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .top { position: relative; z-index: 3; }
   .link { fill: none; stroke: rgba(222,218,255,.55); stroke-width: 1.2; filter: drop-shadow(0 0 3px rgba(143,134,255,.9)); }
   .link.faint { stroke: rgba(222,218,255,.2); stroke-dasharray: 2 5; filter: none; }
   .star { fill: #f1efff; filter: drop-shadow(0 0 6px rgba(143,134,255,1)) drop-shadow(0 0 14px rgba(143,134,255,.7)); }

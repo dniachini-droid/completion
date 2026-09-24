@@ -363,6 +363,8 @@ export interface Arrival {
   /** A word cut in four taps: one line per tap. */
   taps?: string[];
   choice?: [string, string];
+  /** Records this place brought (a choice opens them to read). */
+  records: string[];
   /** Marks offered for a guess here. */
   guess: string[];
   /** A camp's one thing to look at. */
@@ -371,7 +373,7 @@ export interface Arrival {
 }
 /** What a job's return shows: the story's step (or a Key's sealed thing opening), else a passage line; and any finds. */
 export interface Return {
-  beat: string | null; line: string; key: boolean; guess: string[]; choice?: [string, string];
+  beat: string | null; line: string; key: boolean; guess: string[]; choice?: [string, string]; records: string[];
   finds: string[];
 }
 /** Where Dan stands. */
@@ -423,26 +425,26 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
   if (f.kind === 'place') {
     const b = S.beatOf(c.story, f.id)!;
     return { seq: f.seq, kind: 'place', id: b.id, name: b.name ?? '', line: b.line ?? '', taps: b.taps, choice: b.choice,
-      guess: b.carries?.guess ?? [], look: null, stretch: b.stretch, painting: STAND_IN[b.stretch], completedDay, byKey: f.how === 'key' };
+      records: b.carries?.records ?? [], guess: b.carries?.guess ?? [], look: null, stretch: b.stretch, painting: STAND_IN[b.stretch], completedDay, byKey: f.how === 'key' };
   }
   const k = c.story.camps.find(x => x.id === f.id)!;
   const find = all.find(g => g.type === 'findGiven' && g.why === 'camp' && g.seq > f.seq && g.seq <= f.seq + 1) as FactOf<'findGiven'> | undefined;
   const look = find ? c.story.finds.find(x => x.id === find.id)?.line ?? null : 'line' in k.look ? k.look.line : null;
-  return { seq: f.seq, kind: 'camp', id: k.id, name: k.name, line: k.line, guess: [], look, stretch: k.stretch, painting: STAND_IN[k.stretch], completedDay, byKey: false };
+  return { seq: f.seq, kind: 'camp', id: k.id, name: k.name, line: k.line, records: [], guess: [], look, stretch: k.stretch, painting: STAND_IN[k.stretch], completedDay, byKey: false };
 }
 
 /** What a job's return (a jobDone fact) shows. */
 export function returnOf(c: Content, facts: Fact[], doneSeq: number): Return {
   const beat = facts.find(f => f.type === 'beatPlayed' && f.job === doneSeq) as FactOf<'beatPlayed'> | undefined;
   const finds = facts.filter((f): f is FactOf<'findGiven'> => f.type === 'findGiven' && f.job === doneSeq).map(f => f.id);
-  if (!beat) return { beat: null, line: '', key: false, guess: [], finds };
-  if (beat.id === 'passage') return { beat: null, line: c.story.passages.find(p => p.id === beat.passage)?.line ?? '', key: false, guess: [], finds };
+  if (!beat) return { beat: null, line: '', key: false, guess: [], records: [], finds };
+  if (beat.id === 'passage') return { beat: null, line: c.story.passages.find(p => p.id === beat.passage)?.line ?? '', key: false, guess: [], records: [], finds };
   const seal = S.sealOf(c.story, beat.id);
-  if (seal) return { beat: seal.id, line: seal.line ?? '', key: true, guess: seal.carries?.guess ?? [], finds };
+  if (seal) return { beat: seal.id, line: seal.line ?? '', key: true, guess: seal.carries?.guess ?? [], records: seal.carries?.records ?? [], finds };
   const b = S.beatOf(c.story, beat.id)!;
   const viaSeal = b.seal ? S.sealOf(c.story, b.seal) : undefined;
   const guess = [...new Set([...(b.carries?.guess ?? []), ...(viaSeal?.carries?.guess ?? [])])];
-  return { beat: b.id, line: b.line ?? '', key: b.kind === 'stepKey', guess, choice: b.choice, finds };
+  return { beat: b.id, line: b.line ?? '', key: b.kind === 'stepKey', guess, choice: b.choice, records: [...(b.carries?.records ?? []), ...(viaSeal?.carries?.records ?? [])], finds };
 }
 
 export function see(facts: Fact[], c: Content, now: Moment): View {
@@ -505,7 +507,8 @@ export function see(facts: Fact[], c: Content, now: Moment): View {
   const view = S.inView(c.story, st);
   return {
     day, capacity, suggested: 'normal', size, order, slate, done, underWay, complete, next, run, runEnd, arrival,
-    here, ahead: view ? view.where : null, walked: w, toNext: nextAt !== null ? Math.max(0, nextAt - w) : null, nextAt,
+    /* ahead: the sealed thing in view; before any, the way in (the first morning), then a line from just ahead */
+    here, ahead: view ? view.where : here.id === null ? here.line || S.teaser(c.story, st) : S.teaser(c.story, st), walked: w, toNext: nextAt !== null ? Math.max(0, nextAt - w) : null, nextAt,
     lastArrival: lastArr, story: S.storyState(facts, c.story), teaser: S.teaser(c.story, st), runFinds,
     passage: c.story.passages.find(p => p.id === S.nextPassage(c.story, st))?.line ?? '',
   };

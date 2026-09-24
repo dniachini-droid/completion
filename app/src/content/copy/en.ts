@@ -106,6 +106,7 @@ export const copy = {
   'records.title': 'What you’ve found',
   'records.none': 'Nothing yet. Records turn up as you go further in.',
   'records.her': 'Her sheet',
+  'records.read': 'Read it',
   'records.nav': 'Records',
   'map.nav': 'Map',
   'map.label': 'The map',

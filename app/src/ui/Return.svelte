@@ -7,21 +7,26 @@
   import { t } from '../content/copy/en';
   import Guess from './Guess.svelte';
 
-  let { doneSeq, extraFinds = [] }: { doneSeq: number | null; extraFinds?: string[] } = $props();
+  import type { Go } from './nav';
+  let { doneSeq, extraFinds = [], go }: { doneSeq: number | null; extraFinds?: string[]; go?: Go } = $props();
+  const cap = (x: string) => x.charAt(0).toUpperCase() + x.slice(1);
+  /* a small choice never gates anything: each option opens what it names (the record here), then comes back */
+  function pick(i: number) { if (!r?.beat) return; game.do({ do: 'choose', beat: r.beat, pick: i }); if (r.records.length && go) go('records', r.records[Math.min(i, r.records.length - 1)]); }
   const r = $derived(doneSeq !== null ? returnOf(content, game.facts, doneSeq) : null);
   const finds = $derived([...(r?.finds ?? []), ...extraFinds].map(id => content.story.finds.find(f => f.id === id)).filter(f => !!f));
-  const picked = $derived(r?.beat ? game.facts.find(f => f.type === 'choiceMade' && f.beat === r.beat) : undefined);
 </script>
 
 {#if r && r.line}
   {#if r.key}<div class="label-line centred lit key">{t('step.key')}</div>{/if}
   <p class="say story on-scene">{r.line}</p>
   {#each r.guess as mark (mark)}<Guess {mark} />{/each}
-  {#if r.choice && r.beat && !picked}
+  {#if r.records.length && go}
     <div class="choice">
-      {#each r.choice as c, i}
-        <button class="text-link" onclick={() => game.do({ do: 'choose', beat: r.beat!, pick: i })}><span>{c}</span></button>
-      {/each}
+      {#if r.choice}
+        {#each r.choice as c, i}<button class="text-link" onclick={() => pick(i)}><span>{cap(c)}</span></button>{/each}
+      {:else}
+        <button class="text-link" onclick={() => go('records', r.records[0])}><span>{t('records.read')}</span></button>
+      {/if}
     </div>
   {/if}
 {/if}

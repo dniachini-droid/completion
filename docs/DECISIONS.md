@@ -704,3 +704,10 @@
 - **Alternatives:** a hand-typed rendering per week for each record (rejected by the story job's build rule: renderings are computed from sign strings); showing all Keys' results on a separate screen (rejected: a Key is felt as the job's return, UX 6).
 - **Consequences:** the heart's throwaway content (invented places, stand-in job list) is gone; the prototype save starts afresh (save version 2). Dan's starting set is preloaded with its rhythms.
 - **Reversible:** Yes (all numbers are starting guesses, tuned in play).
+
+## D-069 — A fresh session for each slice, started by Claude (Dan's request)
+- **Date:** 2026-09-24
+- **Context:** Dan: "Shouldn't we move to a new window for each slice? Can you do that automatically to prevent context rot."
+- **Decision:** each build slice runs in its own session. When a slice is done (tests pass, the flow walked at phone size, committed, pushed, the web link updated), Claude updates `CURRENT_STATE.md` with everything the next session needs, then **starts the next session itself** (the cloud session tool), on the same working branch, with a one-line resume message, and gives Dan its link. The repository, not the chat, carries continuity (CLAUDE.md). Merging into `main` still waits for Dan's approval at the end of the phase (D-006).
+- **Consequences:** background helpers (transcription, painting) report to the session that started them, so a slice session waits for its own helpers before handing over. The painting of real places continues as its own thread across slices.
+- **Reversible:** Yes.

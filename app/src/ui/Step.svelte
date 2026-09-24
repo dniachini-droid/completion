@@ -45,7 +45,7 @@
       {/if}
       <circle cx={px(v.walked)} cy={y} r="3.4" fill="#ffd27a" />
     </svg>
-    <div class="rise d3"><Return doneSeq={fact && fact.type === 'jobDone' ? seq : null} /></div>
+    <div class="rise d3"><Return doneSeq={fact && fact.type === 'jobDone' ? seq : null} {go} /></div>
     <div class="go rise d3">
       {#if completedDay && v.arrival}
         <button class="btn" onclick={leave}>{t('delve.see')}</button>

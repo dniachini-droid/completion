@@ -54,15 +54,15 @@
 <Scene painting={v.here.painting} framed bottom="50%" />
 <div class="ui">
   <header class="top col">
-    <div class="topbar rise">
+    <div class="topbar bar rise">
       <span class="day">{weekday}</span>
       <span class="navs">
         <button class="icon-link" onclick={() => go('map')}><span>{t('map.nav')}</span></button>
         {#if v.story.records.length}<button class="icon-link" onclick={() => go('records')}><span>{t('records.nav')}</span></button>{/if}
-      </span>
       <button class="icon-link proto" onclick={() => go('proto')}>
         {#if game.proto.rehearsal}<span class="badge">{t('proto.badge')}</span>{:else}<span>{t('nav.proto')}</span>{/if}
       </button>
+      </span>
     </div>
     <h1 class="carve lg rise">{v.here.name}</h1>
     <div class="seg rise d1" role="group" aria-label={t('today.capacity')}>
@@ -162,8 +162,10 @@
   button.row { width: 100%; text-align: left; }
   button.row:disabled { cursor: default; }
   .proto span { font-size: 14px; letter-spacing: .16em; color: var(--ink-3); }
-  .navs { display: flex; gap: 14px; justify-content: center; }
-  .navs span { font-size: 14px; letter-spacing: .16em; color: var(--ink-2); }
+  /* the day on the left; the map, records and the prototype's own link together on the right */
+  .bar { display: flex; justify-content: space-between; }
+  .navs { display: flex; gap: 4px; align-items: center; margin-right: -10px; }
+  .navs span { font-size: 13px; letter-spacing: .14em; color: var(--ink-2); }
   .proto .badge { color: var(--gold); }
   @media (max-height: 800px) {
     .seg { margin-top: 10px; } .ahead { margin-top: 8px; } .ahead p { margin-top: 4px; } .next .soft { margin-bottom: 14px; }

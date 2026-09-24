@@ -196,8 +196,8 @@ export const mayAdvance = (s: Story, st: StoryState, day: string) =>
 export function inView(s: Story, st: StoryState): Seal | null {
   const ids: string[] = [];
   for (const b of s.beats) if (st.played.has(b.id)) ids.push(...(b.carries?.inView ?? []));
-  for (let i = ids.length - 1; i >= 0; i--) if (!st.opened.has(ids[i])) return sealOf(s, ids[i]) ?? null;
-  return nextSeal(s, st);
+  for (let i = ids.length - 1; i >= 0; i--) { const x = sealOf(s, ids[i]); if (x && !x.seenOnly && !st.opened.has(x.id)) return x; }
+  return null;   /* nothing named before it has been seen */
 }
 
 export function teaser(s: Story, st: StoryState): string | null {

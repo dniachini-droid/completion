@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-24 (Phase 8 closed; Phase 9 opened, D-065)_
+_Last updated: 2026-09-24 (Phase 9: slice 2 built, D-068; a session per slice, D-069)_
 
 ## Current phase
 
@@ -15,11 +15,16 @@ _Last updated: 2026-09-24 (Phase 8 closed; Phase 9 opened, D-065)_
 Build the whole MVP (`product/MVP.md` → build order): **slice 2** the Quiet answers (the map at two levels, records, a sealed thing in view, rhythms and Keys, finds), **slice 3** learning the Cut (signs and guessing, the first word, the cutting cinematic, the stair), **slice 4** the week and the gaps (the planner, the satchel, camp and bedtime, the daybook week close, absence). Each slice thin, complete and good-feeling before the next (rule 13), on the heart as built. The sealed story job is **done** (D-066, D-067), so each slice loads the real content for six story weeks from `narrative/sealed/` as it is built (never shown to Dan outside the game), and the real places' paintings are made from its briefs with the painting kit. Dan sees each slice on the web link as it lands, then on TestFlight.
 
 ## Resume here (next session)
-1. **Claude:** build slice 2 with the real content (read `game/GAME_DESIGN.md`, `game/BALANCING.md`, `game/TOOLS.md` and the D mock-ups `map.html`, `record.html` first); publish it on the web link for Dan.
-2. **The real places' paintings:** from the sealed painting briefs (D-067) with the kit, about 5 a week, alongside the slices; Dan judges them on his phone (paintings show places, not the story's answers).
-3. **Waiting on Dan (whenever he's at a computer):** Apple setup sitting 2 (`technical/APPLE_SETUP.md`), then "Apple setup done"; Claude starts the TestFlight build; Dan does sitting 3 (the two ten-minute checks, trials b and c).
+**Each slice runs in its own session, started by the previous one (D-069).** The working branch is `claude/phase-8-continuation-ttngwy` (everything since Phase 8's merge; not yet merged into `main`).
+1. **Claude: build slice 3, learning the Cut** (`product/MVP.md` → build order): the marks screen (every mark seen, its guess or meaning, a struck guess as one line, SCRIPT §9), the confirming beats (a guess settling when its place confirms it), the words as the real cutting cinematic (the story job's §7: `wd-light` at the lintel, the hall's cups waking; the stair's "Go down", D-039), the partial signs of a deep push, and the Cut's own lettering for the marks (replacing the stand-in `ui/Glyph.svelte`). Read first: `game/CORE_LOOPS.md` (decode), the D mock-ups `cut.html`, `record.html`, `stair.html`, `technical/PROTOTYPE_NOTES.md`, and D-068 (how slice 2 runs the story). Sealed sources for the builder only: `narrative/sealed/SCRIPT.md`, `MVP_CONTENT.md` §6–7, `LIVES.md`. Then, per D-069: tests, the flow walk at 440 × 956 and 360 × 780, commit, push, publish the web link (`npm run build:link`, then the Artifact at the same link, below), update this file and start the slice 4 session.
+2. **The real paintings** (D-067): week 1's five places were painted from the briefs in `app/paint/places/` (sealed); the app still shows stand-ins until they are wired in (`ui/paintings.ts`, by place id, falling back to the stretch's stand-in). Continue about 5 a week alongside the slices.
+3. **Waiting on Dan (whenever he's at a computer):** Apple setup sitting 2 (`technical/APPLE_SETUP.md`), then "Apple setup done"; then sitting 3 (trials b and c).
+4. **The web link:** https://claude.ai/artifact/TcH91A1SxeEvEnLJbRE4pi (private; one link, updated in place each slice).
 
-## Last session (2026-09-24, Phase 8 close)
+## Last session (2026-09-24, Phase 9, slice 2)
+Slice 2, the Quiet answers, built on the real sealed content (D-068): the story transcribed into typed data (`app/src/content/sealed/`: the route, 78 story moments, 40 sealed things, 38 records, 48 marks, 72 finds, 160 passage lines, camps, teasers, week-close lines), the story's rules (`app/src/core/story.ts`: the story clock, places by effort, Keys from rhythms with the weekly floor, a job's return, finds), and the screens (Today's "Ahead", the step and the delve's end carrying the story, arrivals with the word's four taps, the map in two levels, records with computed readings, guessing a mark). 39 rule tests pass, including six simulated weeks (Normal, Low, High, an absence). The whole flow walked at 440 × 956 and 360 × 780: no errors, no network. Dan asked for a fresh session per slice, started automatically (D-069).
+
+## Earlier (2026-09-24, Phase 8 close)
 Dan asked Claude to check the story job from another session was done: it was (D-066, D-067: the review's fixes, week 6 of the ledger, before → now not needed for weeks 1–6, the MVP's content in full, 48 painting briefs), on `claude/story-job` and never merged; now merged with this phase's work, its decision numbers moved to D-066/D-067. Dan on the heart: it "ran beautifully", looked beautiful, "was great"; too small to test much (only the timer), so no more changes: build the app (D-065). Phase 8 closed with trials (b)–(d) carried into Phase 9 for the first TestFlight build. Before that, the app build was readied for them: the save is kept by the phone (Capacitor Preferences, not the browser's storage), a rehearsal now also brings the locked-phone alert 60 times sooner, and Dan's phone checklist is `APPLE_SETUP.md` → Sitting 3.
 
 ## Earlier (2026-09-24, Phase 8, the heart)
@@ -59,7 +64,7 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 
 ## Phase 9 exit criteria
 
-- [ ] Slices 2, 3 and 4 built on the heart, each felt by Dan on his phone (`product/MVP.md` → build order).
+- [ ] Slices 2, 3 and 4 built on the heart (`product/MVP.md` → build order). Slice 2 built (D-068).
 - [ ] Carried from Phase 8 (D-065): trials (b) the delve's end with the phone locked, (c) real-app feel, (d) a build through TestFlight.
 - [x] The sealed story job done (D-066, D-067).
 - [ ] The real content for six story weeks loaded, and its paintings made from the briefs (`product/MVP.md` → budget).
@@ -150,4 +155,4 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 
 ## Recommended next action
 
-**Claude:** build slice 2 (the Quiet answers) with the real sealed content. **Dan:** Apple setup when at a computer. To resume this build in a new session, paste: "Read CLAUDE.md and docs/CURRENT_STATE.md on branch claude/phase-8-continuation-ttngwy, then continue Phase 9."
+**Claude:** slice 3 (learning the Cut), in its own session (D-069). **Dan:** nothing needed; look at the web link whenever curious; Apple setup when at a computer. To resume by hand, paste: "Read CLAUDE.md and docs/CURRENT_STATE.md on branch claude/phase-8-continuation-ttngwy, then continue Phase 9."

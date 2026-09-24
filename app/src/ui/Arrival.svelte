@@ -25,7 +25,8 @@
   let tap = $state(0);
   const taps = $derived(a?.taps ?? []);
   const cutting = $derived(fresh && taps.length > 0 && tap < taps.length);
-  const picked = $derived(a ? game.facts.find(f => f.type === 'choiceMade' && f.beat === a.id) : undefined);
+  const cap = (x: string) => x.charAt(0).toUpperCase() + x.slice(1);
+  function pick(i: number) { if (!a) return; game.do({ do: 'choose', beat: a.id, pick: i }); go('records', a.records[Math.min(i, a.records.length - 1)]); }
   function next() { tap++; void platform.haptics.tick(); }
 
   function leave(to: 'today' | 'set') {
@@ -65,9 +66,10 @@
           </div>
         {:else}
           {#each a.guess as mark (mark)}<Guess {mark} />{/each}
-          {#if a.choice && !picked && fresh}
+          {#if a.records.length}
             <div class="choice">
-              {#each a.choice as c, i}<button class="text-link" onclick={() => game.do({ do: 'choose', beat: a.id, pick: i })}><span>{c}</span></button>{/each}
+              {#if a.choice}{#each a.choice as c, i}<button class="text-link" onclick={() => pick(i)}><span>{cap(c)}</span></button>{/each}
+              {:else}<button class="text-link" onclick={() => go('records', a.records[0])}><span>{t('records.read')}</span></button>{/if}
             </div>
           {/if}
           {#if a.completedDay}
