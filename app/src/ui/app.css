@@ -1,0 +1,7 @@
+/* App-only additions to direction D. "Feels like a real app" (TECH_DECISIONS.md → Risks, trial 3):
+   no bounce, no text selection, no callouts or tap flashes, safe areas respected. */
+html, body { overscroll-behavior: none; overflow: hidden; position: fixed; inset: 0; width: 100%; }
+body { touch-action: manipulation; }
+* { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }
+img { -webkit-user-drag: none; }
+.phone { max-width: none; }

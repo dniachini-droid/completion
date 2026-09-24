@@ -1,0 +1,425 @@
+/* Ported unchanged from docs/design/directions/d-combined/direction.css (approved, D-040). App-only additions live in app.css. */
+/* ==========================================================================
+   D — The combined look · shared tokens and pieces
+   (Dan's walkthrough, ART_DIRECTION.md → "D — The combined look", D-032)
+
+   The world is C's: full-bleed violet-lit painting, nebula fog, deep halls.
+   Never a scene in a box or window.
+   The interface is B's, on top of it: crisp boxes with fine light edges,
+   "NEXT ——" labels, selectable boxes, line icons. All on one grid:
+   a single centred column with a 24px gutter, 8px rhythm.
+   The main button is purple and glowing; it turns gold only when the day
+   has turned (body.s-done, body.s-evening, or .btn.gold).
+   Content (text, records, marks) sits in the open on the scene.
+
+   Screens: link ../../fonts/fonts.css, then this file. Put screen-only CSS
+   in a <style> in the screen. This file is only ever added to, never renamed.
+   ========================================================================== */
+
+:root {
+  /* the stone: violet-lit, cold, never tinted warm (from C) */
+  --night: #05050c;
+  --stone-0: #08081a;
+  --stone-1: #0f1026;
+  --stone-2: #1a1c3a;
+  --stone-3: #2b2e56;
+  --stone-lit: #cdd0ee;            /* pale cut stone catching light */
+
+  /* violet: the light of the working day, the interface, the main button */
+  --violet: #8f86ff;               /* the main button's light */
+  --violet-hi: #d9d6ff;
+  --violet-deep: #5b4fd6;
+  --violet-rgb: 143, 134, 255;
+  --cold: #8fa8ff;                 /* blue-violet fog and glow (C) */
+  --cold-hi: #d6deff;
+  --cold-rgb: 143, 168, 255;
+
+  /* fine light edges (B's hairlines, in violet) */
+  --edge: rgba(206, 204, 255, .62);      /* a lit edge */
+  --edge-2: rgba(196, 194, 255, .36);    /* a quiet box */
+  --edge-3: rgba(186, 186, 255, .20);    /* rules, dividers */
+  --edge-4: rgba(186, 186, 255, .10);    /* the faintest hairline */
+
+  /* gold: only as the day turns (arrival, camp). The clay lamp is always warm. */
+  --gold: #f2c170;
+  --gold-hi: #ffe6b8;
+  --gold-rgb: 242, 193, 112;
+  --amber: #e8954a;
+  --flame: #ffc766;
+
+  /* ink */
+  --ink: #f2f3fb;
+  --ink-2: #c7c9e6;
+  --ink-3: #a3a6cc;                /* smallest labels; still ≥ 4.5:1 on the dark */
+  --btn-ink: #0d0b26;              /* text on the lit main button */
+
+  /* the light of the moment (set by the day's state) */
+  --glow: var(--violet);
+  --glow-hi: var(--violet-hi);
+  --glow-rgb: var(--violet-rgb);
+  --warmth: 0;                     /* 0 morning … 1 evening */
+
+  /* type: B's carved capitals for labels and buttons; C's plain print for sentences and jobs */
+  --carve: 'Cinzel', 'Forum', Georgia, serif;     /* labels, buttons, place names */
+  --place: 'Cinzel', 'Forum', Georgia, serif;     /* alias: the stone speaks */
+  --life: 'Spectral', Georgia, serif;             /* sentences, jobs, times */
+
+  /* the grid: one centred column, 8px rhythm */
+  --u: 8px;
+  --gutter: 24px;
+  --col: 390px;                    /* the column never grows past a phone */
+  --gap: 12px;                     /* between boxes in a row */
+  --tick: 9px;                     /* corner-tick length */
+  --btn-h: 56px;
+  --ctl-h: 48px;                   /* secondary boxes and selectable boxes */
+
+  --ease: cubic-bezier(.22, .8, .24, 1);
+  --ease-in-out: cubic-bezier(.65, 0, .25, 1);
+  --safe-b: max(20px, env(safe-area-inset-bottom));
+  --safe-t: max(36px, env(safe-area-inset-top));
+}
+
+@media (max-width: 370px) { :root { --gutter: 20px; --gap: 10px; } }
+@media (max-height: 800px) { :root { --safe-t: max(22px, env(safe-area-inset-top)); --btn-h: 54px; } }
+
+/* the day's state: gold arrives through the day (from C) ------------------ */
+body.s-dawn    { --warmth: 0; }
+body.s-day     { --warmth: .12; }
+body.s-day2    { --warmth: .4; }
+body.s-done    { --warmth: .9;  --glow: var(--gold); --glow-hi: var(--gold-hi); --glow-rgb: var(--gold-rgb); --btn-ink: #2a1705; }
+body.s-evening { --warmth: 1;   --glow: var(--gold); --glow-hi: var(--gold-hi); --glow-rgb: var(--gold-rgb); --btn-ink: #2a1705; }
+
+/* base ------------------------------------------------------------------ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; background: var(--night); }
+body {
+  color: var(--ink); font-family: var(--life); font-size: 17px; line-height: 1.45;
+  -webkit-font-smoothing: antialiased; display: flex; justify-content: center; overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 1px solid var(--edge); outline-offset: 3px; }
+
+/* the phone: always full-bleed. The painting fills it edge to edge. */
+.phone {
+  position: relative; width: 100%; max-width: 430px;
+  height: 100vh; height: 100dvh; min-height: 600px;
+  overflow: hidden; background: var(--stone-0); isolation: isolate;
+}
+
+/* the painting (layers, back to front) ----------------------------------- */
+.paint { position: absolute; inset: 0; z-index: 0; }
+.paint > svg, .paint > img, .paint > canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.paint > img { object-fit: cover; }
+.paint.over { z-index: 2; pointer-events: none; }
+
+/* gold light pooling in the scene as the day is earned (from C) */
+.pool {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    radial-gradient(var(--aw) var(--ah) at var(--pool-x, 45%) var(--pool-y, 70%), rgba(255, 170, 64, var(--a1)) 0%, rgba(250, 138, 34, calc(var(--a1) * .62)) 38%, rgba(240, 130, 30, 0) 72%),
+    linear-gradient(0deg, rgba(244, 136, 36, var(--a2)) 0%, rgba(244, 136, 36, calc(var(--a2) * .5)) var(--h2), rgba(244, 136, 36, 0) calc(var(--h2) * 2.1));
+}
+body            { --a1: 0;   --aw: 30%;  --ah: 12%; --a2: 0;   --h2: 10%; }
+body.s-day      { --a1: .16; --aw: 30%;  --ah: 12%; }
+body.s-day2     { --a1: .45; --aw: 90%;  --ah: 30%; --a2: .25; --h2: 16%; }
+body.s-done     { --a1: .62; --aw: 115%; --ah: 44%; --a2: .48; --h2: 24%; }
+body.s-evening  { --a1: .5;  --aw: 120%; --ah: 44%; --a2: .38; --h2: 22%; }
+
+/* nebula fog: two drifting layers. Markup:
+   <div class="fog"><i class="drift-a"></i><i class="drift-b"></i></div>
+   Add .warm for the gold bank low down (opacity follows --warmth), .fast for a visibly moving cloud. */
+.fog { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.35) 0%, #000 28%, #000 72%, rgba(0,0,0,.45) 100%);
+          mask-image: linear-gradient(180deg, rgba(0,0,0,.35) 0%, #000 28%, #000 72%, rgba(0,0,0,.45) 100%); }
+.fog > i, .fog > img { position: absolute; top: 0; left: 0; width: 200%; height: 100%; display: block; will-change: transform;
+  background-size: 100% 100%; background-repeat: no-repeat; }
+.fog .drift-a { animation: drift 40s ease-in-out infinite alternate; opacity: .42;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 780 844' width='780' height='844' preserveAspectRatio='none'><filter id='f' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='0.004 0.008' numOctaves='4' seed='4'/><feColorMatrix values='0 0 0 0 0.60  0 0 0 0 0.58  0 0 0 0 1.000  0 0 0 1.3 -0.6'/></filter><rect width='780' height='844' filter='url(%23f)'/></svg>"); }
+.fog .drift-b { animation: drift 64s ease-in-out infinite alternate-reverse; opacity: .3;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 780 844' width='780' height='844' preserveAspectRatio='none'><filter id='f' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='0.009 0.02' numOctaves='3' seed='9'/><feColorMatrix values='0 0 0 0 0.62  0 0 0 0 0.60  0 0 0 0 1.000  0 0 0 1.17 -0.65'/></filter><rect width='780' height='844' filter='url(%23f)'/></svg>"); }
+.fog.warm { opacity: var(--warmth);
+  -webkit-mask-image: linear-gradient(180deg, transparent 45%, #000 80%);
+          mask-image: linear-gradient(180deg, transparent 45%, #000 80%); }
+.fog.warm .drift-a { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 780 844' width='780' height='844' preserveAspectRatio='none'><filter id='f' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='0.004 0.01' numOctaves='4' seed='19'/><feColorMatrix values='0 0 0 0 1.000  0 0 0 0 0.659  0 0 0 0 0.314  0 0 0 1.3 -0.55'/></filter><rect width='780' height='844' filter='url(%23f)'/></svg>"); }
+.fog.warm .drift-b { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 780 844' width='780' height='844' preserveAspectRatio='none'><filter id='f' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='0.009 0.02' numOctaves='3' seed='9'/><feColorMatrix values='0 0 0 0 1.000  0 0 0 0 0.659  0 0 0 0 0.314  0 0 0 1.17 -0.60'/></filter><rect width='780' height='844' filter='url(%23f)'/></svg>"); }
+.fog.fast .drift-a { animation-duration: 26s; }
+.fog.fast .drift-b { animation-duration: 38s; }
+@keyframes drift { from { transform: translate3d(0,0,0); } to { transform: translate3d(-44%, -1.5%, 0); } }
+
+.grain { position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: .14; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 1.1 -.2'/></filter><rect width='220' height='220' filter='url(%23n)'/></svg>"); }
+.vignette { position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  background: radial-gradient(120% 80% at 50% 45%, transparent 55%, rgba(2, 3, 6, .6) 100%); }
+/* darkening washes so words read on the painting. Not panels: no edges, they fade into the scene. */
+.scrim-top { position: absolute; left: 0; right: 0; top: 0; height: var(--scrim-top-h, 300px); z-index: 4; pointer-events: none;
+  background: linear-gradient(180deg, rgba(6,5,16,.84) 0%, rgba(6,5,16,.6) 55%, rgba(6,5,16,0) 100%); }
+.scrim-bottom { position: absolute; left: 0; right: 0; bottom: 0; height: var(--scrim-bottom-h, 58%); z-index: 4; pointer-events: none;
+  background: linear-gradient(0deg, rgba(6,5,16,.94) 0%, rgba(6,5,16,.86) 48%, rgba(6,5,16,.5) 75%, rgba(6,5,16,0) 100%); }
+
+/* the interface: a flex column over the painting ------------------------- */
+.ui { position: absolute; inset: 0; z-index: 5; display: flex; flex-direction: column; padding-top: var(--safe-t); padding-bottom: var(--safe-b); }
+/* .col: the one grid. Everything the interface draws sits inside a .col so all edges line up. */
+.col { width: 100%; max-width: var(--col); margin: 0 auto; padding: 0 var(--gutter); }
+.top { flex: none; }
+.mid { flex: 1 1 auto; min-height: 0; position: relative; }
+.bottom { flex: none; position: relative; }
+.stack > * + * { margin-top: calc(var(--u) * 2); }
+.center { text-align: center; }
+
+/* ONE RULE for the top of every screen (critique round 1, should-fix 4):
+   · The top bar is [back-to-Today, or the day on the morning] · [nothing] · [Map, with morning's map icon, or nothing].
+     It never carries a title, a replay control, or any other link.
+   · The screen's heading (h1) is the place or object name in carved capitals: <h1 class="carve lg">.
+   · A sentence the app says to Dan sits under it in plain print (.say-lg for a headline sentence, .soft for a note),
+     never as the h1 and never in carved capitals. ("THE LINTEL" / "The lintel answered.", "WEEK TWO" / the dates.)
+   · Carved labels are never smaller than 14px.
+   Markup: <header class="topbar col"><a class="home" href="morning.html">…Today</a><span></span><a class="icon-link" href="map.html">…Map</a></header>
+   Either side may be an empty <span></span>. */
+.topbar { flex: none; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; min-height: 48px; }
+.topbar > :first-child { justify-self: start; margin-left: -10px; }
+.topbar > :last-child { justify-self: end; margin-right: -10px; }
+.topbar .title { visibility: hidden; } /* the rule: no titles in the top bar (the h1 below names the place) */
+.topbar .day { font-family: var(--carve); font-size: 15px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-2);
+  padding: 0 10px; min-height: 44px; display: inline-flex; align-items: center; }
+.home { height: 44px; min-width: 44px; padding: 0 10px; display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--carve); font-size: 15px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); }
+.home svg { width: 16px; height: 16px; fill: none; stroke: var(--edge); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.home:hover, .home:focus-visible { color: var(--ink); }
+
+/* icon-link: a small line icon and a carved word. Icon box is fixed so a row of them aligns.
+   Markup: <a class="icon-link" href="map.html"><svg viewBox="0 0 24 24">…</svg><span>Map</span></a> */
+.icon-link { height: 44px; min-width: 44px; padding: 0 10px; display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+  font-family: var(--carve); font-size: 15px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2);
+  white-space: nowrap; transition: color .3s var(--ease); }
+.icon-link > span { padding-left: .16em; } /* optical: letter-spacing trails; balance it */
+.icon-link svg { width: 20px; height: 20px; flex: none; fill: none; stroke: var(--edge); stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round;
+  filter: drop-shadow(0 0 4px rgba(var(--violet-rgb), .45)); transition: stroke .3s var(--ease); }
+.icon-link:hover, .icon-link:focus-visible { color: var(--ink); }
+.icon-link:hover svg { stroke: var(--violet-hi); }
+/* a row of icon-links: the first sits on the column's left edge, the last on its right edge,
+   equal gaps between. Symmetric on the grid at any width. */
+.nav-row { display: flex; justify-content: space-between; align-items: center; }
+.nav-row .icon-link { padding: 0; gap: 7px; font-size: 15px; letter-spacing: .1em; }
+.nav-row .icon-link > span { padding-left: 0; margin-right: -.1em; } /* trailing letter-space hangs outside so the last glyph meets the edge */
+.nav-row .icon-link svg { width: 19px; height: 19px; }
+
+/* voices ------------------------------------------------------------------ */
+/* the stone: carved capitals (place names, marks, what the walls say) */
+.carve {
+  font-family: var(--place); font-weight: 600; text-transform: uppercase;
+  letter-spacing: .14em; line-height: 1.15; color: var(--stone-lit);
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, .9), 0 1px 0 rgba(225, 232, 255, .28), 0 0 22px rgba(var(--cold-rgb), .3);
+}
+.carve.xl { font-size: 30px; letter-spacing: .12em; }
+.carve.lg { font-size: 25px; letter-spacing: .12em; }
+.carve.md { font-size: 18px; }
+.carve.sm { font-size: 14px; letter-spacing: .2em; color: #b8badf; }
+/* your own life: plain print, sentence case */
+.say { font-family: var(--life); font-weight: 400; font-size: 17px; color: var(--ink); }
+.say-lg { font-family: var(--life); font-weight: 500; font-size: 27px; line-height: 1.15; letter-spacing: -.005em; color: #fff;
+  text-shadow: 0 1px 18px rgba(4, 4, 12, .9); }
+.soft { font-family: var(--life); font-style: italic; font-size: 16.5px; color: var(--ink-2); }
+.say, .say-lg, .soft, p { text-wrap: pretty; }
+.on-scene { text-shadow: 0 1px 14px rgba(4, 4, 12, .95), 0 0 2px rgba(4, 4, 12, .8); } /* words sitting straight on the painting */
+
+/* label-with-line (B): "NEXT ——". Markup: <div class="label-line">Next</div>. Add .short for a fixed short rule. */
+.label-line { display: flex; align-items: center; gap: 14px;
+  font-family: var(--carve); font-size: 14px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-3); }
+.label-line::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--edge-2), rgba(var(--violet-rgb), 0)); }
+.label-line.short::after { flex: none; width: 48px; }
+.label-line.lit { color: var(--violet-hi); }
+.label-line.gold { color: var(--gold); }
+.label-line.gold::after { background: linear-gradient(90deg, rgba(var(--gold-rgb), .45), rgba(var(--gold-rgb), 0)); }
+.label-line.centred { justify-content: center; }
+.label-line.centred::before { content: ""; flex: none; width: 48px; height: 1px; background: linear-gradient(270deg, var(--edge-2), rgba(var(--violet-rgb), 0)); }
+.label-line.centred::after { flex: none; width: 48px; }
+.label { font-family: var(--carve); font-size: 14px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-3); }
+
+/* corner ticks (B), for any box: add .ticks. Colour via --tc. */
+.ticks { position: relative; }
+.ticks::before {
+  content: ""; position: absolute; inset: -1px; pointer-events: none;
+  --tl: var(--tick);
+  background:
+    linear-gradient(var(--tc, var(--edge)), var(--tc, var(--edge))) left top/var(--tl) 1px no-repeat,
+    linear-gradient(var(--tc, var(--edge)), var(--tc, var(--edge))) left top/1px var(--tl) no-repeat,
+    linear-gradient(var(--tc, var(--edge)), var(--tc, var(--edge))) right top/var(--tl) 1px no-repeat,
+    linear-gradient(var(--tc, var(--edge)), var(--tc, var(--edge))) right top/1px var(--tl) no-repeat,
+    linear-gradient(var(--tc, var(--edge)), var(--tc, var(--edge))) left bottom/var(--tl) 1px no-repeat,
+    linear-gradient(var(--tc, var(--edge)), var(--tc, var(--edge))) left bottom/1px var(--tl) no-repeat,
+    linear-gradient(var(--tc, var(--edge)), var(--tc, var(--edge))) right bottom/var(--tl) 1px no-repeat,
+    linear-gradient(var(--tc, var(--edge)), var(--tc, var(--edge))) right bottom/1px var(--tl) no-repeat;
+}
+
+/* a box of light: a fine-edged, see-through frame for the few things Dan asked to see boxed
+   (the map's description, the cut's word). Never used to hold a scene. */
+.box { position: relative; padding: 16px 18px; border: 1px solid var(--edge-3);
+  background: linear-gradient(180deg, rgba(20, 18, 52, .5), rgba(8, 7, 24, .62));
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  box-shadow: inset 0 1px 0 rgba(217, 214, 255, .06), 0 0 40px rgba(var(--violet-rgb), .08); }
+.box.lit { border-color: var(--edge-2); box-shadow: inset 0 0 24px rgba(var(--violet-rgb), .1), 0 0 32px rgba(var(--violet-rgb), .16); }
+
+/* buttons ------------------------------------------------------------------ */
+/* .btn: THE main action. A crisp box of purple light with a fine bright edge, corner brackets
+   just outside, carved capitals. Glows and breathes. Gold only when the day has turned. */
+.btn {
+  position: relative; display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; min-height: var(--btn-h); padding: 0 18px 0 calc(18px + .22em); border-radius: 2px;
+  font-family: var(--carve); font-weight: 700; font-size: 16px; letter-spacing: .22em; text-transform: uppercase; white-space: nowrap;
+  color: var(--btn-ink);
+  border: 1px solid rgba(236, 234, 255, .92);
+  background:
+    radial-gradient(70% 140% at 50% 125%, rgba(235, 232, 255, .75), rgba(var(--glow-rgb), 0) 70%),
+    linear-gradient(180deg, #a9a2ff 0%, var(--violet) 48%, #7466f0 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .55),
+    inset 0 0 18px rgba(236, 234, 255, .35),
+    0 0 0 1px rgba(var(--glow-rgb), .18),
+    0 0 26px rgba(var(--glow-rgb), .5),
+    0 0 70px rgba(var(--glow-rgb), .26);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, .25);
+  animation: btn-breathe 4.8s ease-in-out infinite;
+  transition: transform .22s var(--ease);
+}
+.btn::before { /* corner brackets, just outside the box */
+  content: ""; position: absolute; inset: -6px; pointer-events: none;
+  --tc: rgba(var(--glow-rgb), .7); --tl: 9px;
+  background:
+    linear-gradient(var(--tc), var(--tc)) left top/var(--tl) 1px no-repeat,
+    linear-gradient(var(--tc), var(--tc)) left top/1px var(--tl) no-repeat,
+    linear-gradient(var(--tc), var(--tc)) right top/var(--tl) 1px no-repeat,
+    linear-gradient(var(--tc), var(--tc)) right top/1px var(--tl) no-repeat,
+    linear-gradient(var(--tc), var(--tc)) left bottom/var(--tl) 1px no-repeat,
+    linear-gradient(var(--tc), var(--tc)) left bottom/1px var(--tl) no-repeat,
+    linear-gradient(var(--tc), var(--tc)) right bottom/var(--tl) 1px no-repeat,
+    linear-gradient(var(--tc), var(--tc)) right bottom/1px var(--tl) no-repeat;
+  transition: inset .3s var(--ease);
+}
+.btn:hover::before { inset: -8px; }
+.btn:active { transform: scale(.985); }
+.btn svg { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+@keyframes btn-breathe {
+  0%, 100% { box-shadow: inset 0 1px 0 rgba(255,255,255,.55), inset 0 0 18px rgba(236,234,255,.35), 0 0 0 1px rgba(var(--glow-rgb),.18), 0 0 22px rgba(var(--glow-rgb),.44), 0 0 60px rgba(var(--glow-rgb),.22); }
+  50%      { box-shadow: inset 0 1px 0 rgba(255,255,255,.6),  inset 0 0 22px rgba(236,234,255,.45), 0 0 0 1px rgba(var(--glow-rgb),.24), 0 0 34px rgba(var(--glow-rgb),.62), 0 0 90px rgba(var(--glow-rgb),.32); }
+}
+/* the day has turned: gold (arrival, camp). Automatic under body.s-done / s-evening, or add .gold. */
+.btn.gold, body.s-done .btn:not(.violet), body.s-evening .btn:not(.violet) {
+  --glow-rgb: var(--gold-rgb); color: #2a1705; border-color: rgba(255, 238, 205, .95);
+  background:
+    radial-gradient(70% 140% at 50% 125%, rgba(255, 244, 220, .8), rgba(var(--gold-rgb), 0) 70%),
+    linear-gradient(180deg, #ffd999 0%, var(--gold) 50%, #e3a24f 100%);
+}
+/* a resting main button: still the loudest thing, but not pulling (low days, "rest here") */
+.btn.resting { animation: none; }
+
+/* .btn-quiet: secondary. The same box, unlit: a fine edge on dark glass, carved word, optional line icon. */
+.btn-quiet {
+  position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: var(--ctl-h); padding: 0 16px 0 calc(16px + .2em); border-radius: 2px;
+  font-family: var(--carve); font-weight: 600; font-size: 14px; letter-spacing: .2em; text-transform: uppercase; white-space: nowrap;
+  color: var(--ink); border: 1px solid var(--edge-2);
+  background: linear-gradient(180deg, rgba(26, 24, 64, .55), rgba(10, 9, 28, .7));
+  box-shadow: inset 0 0 18px rgba(var(--violet-rgb), .07), inset 0 1px 0 rgba(217, 214, 255, .08);
+  transition: border-color .3s var(--ease), box-shadow .3s var(--ease), transform .22s var(--ease);
+}
+.btn-quiet:hover, .btn-quiet:focus-visible { border-color: var(--edge); box-shadow: inset 0 0 22px rgba(var(--violet-rgb), .14), 0 0 18px rgba(var(--violet-rgb), .14); }
+.btn-quiet:active { transform: scale(.98); }
+.btn-quiet svg { width: 16px; height: 16px; flex: none; fill: none; stroke: var(--edge); stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+.btn-quiet.full { display: flex; width: 100%; }
+
+/* rows of buttons on the grid: equal columns, one gap */
+.btn-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: var(--gap); }
+.btn-row.lead { grid-template-columns: 1.7fr 1fr; } /* main + one quiet beside it */
+
+/* .text-link: the quietest action (e.g. "I can't start"). Plain print, a fine underline. */
+.text-link { min-height: 44px; padding: 0 8px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: var(--life); font-style: italic; font-size: 17px; color: var(--ink-2); }
+.text-link > span { border-bottom: 1px solid var(--edge-3); padding-bottom: 1px; }
+.text-link:hover, .text-link:focus-visible { color: var(--ink); }
+
+/* .seg: selectable boxes (Low / Normal / High). Markup:
+   <div class="seg" role="group"><button aria-pressed="false">Low</button><button aria-pressed="true">Normal</button>…</div>
+   Equal columns on the grid. The chosen one is a lit box; the others are faint boxes. */
+.seg { display: grid; grid-auto-columns: 1fr; grid-auto-flow: column; gap: 8px; }
+.seg > button, .seg > a {
+  position: relative; min-height: 44px; display: flex; align-items: center; justify-content: center; padding: 0 6px 0 calc(6px + .16em);
+  font-family: var(--carve); font-weight: 600; font-size: 14px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3);
+  border: 1px solid var(--edge-4); border-radius: 2px; background: rgba(8, 7, 24, .28);
+  transition: color .3s var(--ease), border-color .3s var(--ease), background .3s var(--ease), box-shadow .3s var(--ease);
+}
+.seg > button:hover { color: var(--ink-2); border-color: var(--edge-3); }
+.seg > [aria-pressed="true"], .seg > [aria-selected="true"], .seg > .on {
+  color: #fff; border-color: var(--edge);
+  background: linear-gradient(180deg, rgba(var(--violet-rgb), .22), rgba(var(--violet-rgb), .08));
+  box-shadow: inset 0 0 16px rgba(var(--violet-rgb), .2), 0 0 18px rgba(var(--violet-rgb), .22);
+  text-shadow: 0 0 10px rgba(var(--violet-rgb), .8);
+}
+.seg-note { margin-top: 6px; font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink-3); text-align: center; }
+
+/* rows: the day's other jobs, on hairlines, in the open (no panel) */
+.rows { border-bottom: 1px solid var(--edge-4); }
+.row { display: grid; grid-template-columns: 20px 1fr auto; align-items: center; column-gap: 12px;
+  min-height: 48px; border-top: 1px solid var(--edge-4); }
+.row .mk { width: 12px; height: 12px; justify-self: center; }
+.row .t { font-family: var(--life); font-size: 17px; color: var(--ink); line-height: 1.25; }
+.row .s { font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink-2); text-align: right; }
+.row.done .t { color: var(--ink-2); }
+.row.done .s { color: #ecc890; }
+/* the row marker: a small diamond. Hollow = waiting; lit gold = done (earned warmth). */
+.pip { width: 10px; height: 10px; transform: rotate(45deg); border: 1.2px solid rgba(var(--violet-rgb), .75); justify-self: center; }
+.pip.done { border: 0; background: radial-gradient(circle, #fff0cc, #f2c170 55%, #e8954a); box-shadow: 0 0 10px #f2c170, 0 0 22px rgba(242, 193, 112, .5); }
+
+/* a hairline with a centre point */
+.divider { height: 9px; background:
+  radial-gradient(circle at 50% 50%, var(--edge) 0 1.4px, transparent 2px),
+  linear-gradient(90deg, transparent, var(--edge-3) 25%, var(--edge-3) 75%, transparent) center/100% 1px no-repeat; }
+
+/* tap bloom (from C). JS adds <span class="bloom"> at the tap point. */
+.bloom { position: absolute; border-radius: 50%; pointer-events: none; width: 16px; height: 16px; margin: -8px 0 0 -8px; z-index: 0;
+  background: radial-gradient(circle, rgba(255,255,255,.8), rgba(var(--glow-rgb), .5) 40%, transparent 70%);
+  animation: bloom .9s var(--ease) forwards; }
+@keyframes bloom { from { transform: scale(1); opacity: .9; } to { transform: scale(22); opacity: 0; } }
+
+/* motion ------------------------------------------------------------------ */
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+@keyframes breathe { 0%,100% { opacity: .85; } 50% { opacity: 1; } }
+@keyframes flicker { 0%,100% { transform: scale(1,1); } 30% { transform: scale(.94,1.07); } 62% { transform: scale(1.04,.95); } }
+.rise { animation: rise .9s var(--ease) both; }
+.fade { animation: fadein 1s var(--ease) both; }
+.d1 { animation-delay: .1s; } .d2 { animation-delay: .2s; } .d3 { animation-delay: .3s; }
+.d4 { animation-delay: .4s; } .d5 { animation-delay: .5s; } .d6 { animation-delay: .6s; }
+/* B: lines draw themselves in. Set --len to the path length (or pathLength="1" and --len:1). */
+.drawn { stroke-dasharray: var(--len, 1000); stroke-dashoffset: var(--len, 1000); animation: draw 1.6s var(--ease-in-out) both; }
+.breathe { animation: breathe 5s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001s !important; animation-iteration-count: 1 !important; animation-delay: 0s !important; transition: none !important; }
+}
+
+/* ==========================================================================
+   The hall (hall.js): the one painted Lamp Hall, shared by morning, cut, camp and stair.
+   Markup: <div class="paint" id="hall"></div> then Hall.draw(el, {...}).
+   ========================================================================== */
+.hall { position: absolute; inset: 0; overflow: hidden; }
+.hall > canvas, .hall > svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.hall-paint { animation: fadein 1.2s var(--ease) both; }
+.hall-lamplight { animation: breathe 4.6s ease-in-out infinite; }
+.hall-flame { animation: flicker 2.8s ease-in-out infinite; }
+.hall-far { animation: breathe 7s ease-in-out infinite; }
+/* wall-cups are dark; they wake only during the cut */
+.hall-cup { opacity: 0; transition: opacity 1.2s var(--ease); }
+.hall.cups-lit .hall-cup { opacity: 1; }
+.hall.cups-waking .hall-cup { opacity: 1; transition-delay: calc(var(--i) * .09s); }
+.hall-spill { opacity: 0; transition: opacity 2.4s var(--ease) .6s; }
+.hall.opened .hall-spill { opacity: 1; }
+.hall-open { animation: none; }
+
+/* ambient.js (D-041): the scene's layers drift together, slowly, like a camera breathing; the interface stays still */
+.world-drift { position: absolute; inset: 0; z-index: 0; pointer-events: none; transform-origin: 50% 45%;
+  animation: world-drift 28s ease-in-out 3s infinite alternate; }
+.world-drift > * { pointer-events: none; }
+@keyframes world-drift { from { transform: none; } to { transform: scale(1.04) translate(-.5%, .9%); } }
+@media (prefers-reduced-motion: reduce) { .world-drift { animation: none; } }
