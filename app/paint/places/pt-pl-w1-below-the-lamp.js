@@ -26,6 +26,7 @@ export default {
   glsl: /* glsl */ `
   vec4 scene(vec3 p) {
     vec4 d = hallAir(p, 2.7, 6., 12.47, -10., 66., M_CUT);
+    if (p.y < .03 && p.x < 2.3) gTint = vec3(.8);                                 /* the near floor, out of the lamp's reach */
     vec3 q = p - vec3(2.7, .3, 5.6); vec2 m = vec2(q.z, q.y);
     /* the recess: low and a little wider than high, its corners worn round */
     vec2 e = abs(m - vec2(0, .14)) - vec2(.16, .1) + .03;
