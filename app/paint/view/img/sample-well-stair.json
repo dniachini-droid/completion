@@ -1,0 +1,41 @@
+{
+ "id": "sample-well-stair",
+ "name": "The Well Stair",
+ "line": "The stair goes down round the wall, into the light.",
+ "width": 1290,
+ "height": 2796,
+ "live": {
+  "mist": "below",
+  "motes": "violet"
+ },
+ "anchors": {
+  "flame": [
+   {
+    "p": [
+     5.7,
+     -15,
+     -4
+    ],
+    "size": 1,
+    "u": 0.8414,
+    "v": 0.5979,
+    "s": 0.0477
+   }
+  ],
+  "fog": [
+   {
+    "p": [
+     0,
+     -30,
+     0
+    ],
+    "w": 1.15,
+    "h": 0.7,
+    "a": 0.9,
+    "u": 0.5067,
+    "v": 0.6244,
+    "s": 0.0264
+   }
+  ]
+ }
+}

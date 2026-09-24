@@ -42,6 +42,7 @@ export default {
   }`,
   anchors: {
     flame: [{ p: [5.7, -15.0, -4.0], size: 1 }],
+    fog: [{ p: [0, -30, 0], w: 1.15, h: .7, a: .9 }],
   },
   live: { mist: 'below', motes: 'violet' },
 };
