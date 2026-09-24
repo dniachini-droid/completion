@@ -141,3 +141,13 @@ Every item in `MVP_CONTENT.md` has a stable id, a DATA_MODEL type and a *when* (
 ## 7. The open game bible's one line (D-035)
 
 `GAME_BIBLE.md` → "The shape of the story", item 5: *(it fills at once on a great day, or slowly with steady weeks)* → *(it fills as you live your weeks)*. Nothing Dan knows changes: since D-049 (approved, D-051) Keys are capped at five a week and milestone Keys fill only their own project's door, so "at once on a great day" was already not how the numbers work. The new wording is also the fiction's (the doors count returns: the world on the hand), and it no longer suggests that an ancient door grades a day's output (outside review S3).
+
+### Review round on job 4 (pacing and voice)
+
+A fresh reviewer read `MVP_CONTENT.md` against BALANCING, the MVP and the visit tables. Fixed:
+- **Stalls.** The route had a "waiting on a Key" fallback that a blanket prerequisite cancelled, and week 5 began on a Key-gated arrival. Now a place whose `req` is unmet is skipped for now and plays when met; Key-gated arrivals are marked; week 5 opens on two places without a Key; the new places need only physical access, so a **deep push has real places to reach** a week ahead.
+- **Steps follow places:** a step beat waits for the nearest arrival above it in its ARR table. **A day's places all play** at day complete (a High day that reached three gets three). Keys open the first sealed thing in view; floor Keys at week close open on the week close page, a Key *arrival* then playing next day.
+- **Passage lines were short** for the main line's first weeks: 40 more (160), plus **script glimpses** computed from records Dan has seen, alternating with them, so a Normal week's unbeaten steps last about four weeks before a line repeats. When every find pool is used up, a find source re-surfaces an old record instead.
+- **"So far"** anchored to months of play, each line shown by its beat; **"where you were"** gets six authored open questions.
+- **Canon slips:** the rail's height (her note now 1.3 m; "at your chest" throughout), the step height (50 cm, a knee), the second flight's steps, a doubled lamp niche in the square gallery.
+- **Voice:** duplicates of place and camp lines removed from the passage list; the inference in two place lines cut ("deep enough to hold a tool", "something small was kept in it"); an order to the player removed; the repeated "a line beside it in the tally's hand" and "Not X." formulas varied; a triad and an address to the player in the second "so far" replaced; portent lines rewritten.
