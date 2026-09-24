@@ -64,7 +64,7 @@ function sizeOn(facts: Fact[], day: string) {
 
 const doneOn = (facts: Fact[], day: string) => new Set(ofType(onDay(facts, day), 'jobDone').map(f => f.job));
 const completedOn = (facts: Fact[], day: string) => onDay(facts, day).some(f => f.type === 'dayCompleted');
-const delveMinutesOn = (facts: Fact[], day: string, job: string) =>
+export const delveMinutesOn = (facts: Fact[], day: string, job: string) =>
   ofType(onDay(facts, day), 'stepsGained').filter(f => f.job === job && f.run !== undefined).reduce((a, f) => a + f.minutes, 0);
 
 /** Today's jobs in order: the content's order, changed by Swap. */
@@ -278,7 +278,7 @@ export interface View {
   done: Set<string>;
   underWay: string | null;
   complete: boolean;
-  next: { job: string; mode: 'begin' | 'underWay' | 'carry' } | null;
+  next: { job: string; mode: 'begin' | 'underWay' | 'carry' | 'running' } | null;
   run: RunView | null;
   runEnd: RunEnd | null;
   arrival: Arrival | null;
@@ -341,10 +341,13 @@ export function see(facts: Fact[], c: Content, now: Moment): View {
 
   let next: View['next'] = null;
   if (run?.phase === 'held') next = { job: run.job.id, mode: 'carry' };
+  else if (run) next = { job: run.job.id, mode: 'running' };
   else if (underWay) next = { job: underWay, mode: 'underWay' };
   else if (!complete) { const id = slate.find(x => !done.has(x)); if (id) next = { job: id, mode: 'begin' }; }
 
-  const here = herePlace(c, facts), ahead = nextPlace(c, facts), w = walked(facts);
+  /* an arrival not yet seen isn't where Dan stands yet: it is revealed on its own screen */
+  const shown = arrival ? facts.filter(f => f.seq !== arrival.seq) : facts;
+  const here = herePlace(c, shown), ahead = nextPlace(c, shown), w = walked(facts);
   const steps = ofType(facts, 'stepsGained').length;
   return {
     day, capacity, suggested: 'normal', size, order, slate, done, underWay, complete, next, run, runEnd, arrival,

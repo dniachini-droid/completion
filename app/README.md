@@ -11,5 +11,5 @@ Shape and rules: `docs/technical/ARCHITECTURE.md`, `DATA_MODEL.md`, `TEST_STRATE
 | `paint/` | the painting kit | `kit/` (shared hand), `samples/` (invented places, not story), `regression/` (the hall repainted by the kit: bake and compare after any kit change), `view/` (the sample viewer), `bake.mjs`, `check.mjs`. Real places' scene files will live in a marked sealed folder |
 | `tests/` | the tests | Vitest now; Playwright flows come with the screens |
 
-Commands (from `app/`): `npm test`, `npm run typecheck`, `npm run paint` (bake the samples; needs Playwright's Chromium: `NODE_PATH=$(npm root -g)`), `npm run paint:check`.
+Commands (from `app/`): `npm test`, `npm run build:link` (the web link: one self-contained page, `dist-link/heart.html`; a second path argument to `scripts/single-page.mjs` writes the body for a claude.ai link), `tests/flows/heart-walk.mjs` (the heart walked at phone size with pictures; see its header), `npm run typecheck`, `npm run paint` (bake the samples; needs Playwright's Chromium: `NODE_PATH=$(npm root -g)`), `npm run paint:check`.
 Sample viewer for the phone: `sh paint/view/pack.sh <dir> <zip>` → drag the zip onto app.netlify.com/drop.

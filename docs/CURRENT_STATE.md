@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-24 (Phase 8: trial (a) passed, D-062; pipeline ready, waiting on Dan's secrets, D-063)_
+_Last updated: 2026-09-24 (Phase 8: the heart slice built as a web link while Apple setup waits, D-064)_
 
 ## Current phase
 
@@ -15,13 +15,19 @@ _Last updated: 2026-09-24 (Phase 8: trial (a) passed, D-062; pipeline ready, wai
 Prototype the central interaction on the agreed stack (MASTER_BRIEF §67; `technical/TECH_DECISIONS.md`): feel, clarity, reward timing, friction, beauty. **First the five trials** (`TECH_DECISIONS.md` → "Risks"), then **the heart** (`product/MVP.md` → build order, slice 1) on throwaway data, as a web link on Dan's phone and then through TestFlight. Placeholders are fine; any temporary ugliness is recorded so it never becomes permanent by accident.
 
 ## Resume here (next session)
-1. **Waiting on Dan:** Apple setup sitting 2 (`technical/APPLE_SETUP.md`, A–E; the key at **Admin**, four secrets including the Team ID). Then he says "Apple setup done."
-2. Then Claude starts the TestFlight workflow (by hand, or a commit marked `[testflight]`) and watches it. If Apple refuses cloud signing, fall back to fastlane match or Codemagic (D-063).
-3. On Dan's phone, from TestFlight, the trials screen: (b) begin the one-minute delve, lock the phone: heard? Then on silent, then in a Focus. (c) no bounce, no selection, safe areas, the tick, smooth painting. Record results in `technical/PROTOTYPE_NOTES.md`.
-4. Then the heart slice (`product/MVP.md` → build order, slice 1) on throwaway data, replacing the trials screen.
+1. **Dan:** play the heart on the web link: https://claude.ai/artifact/TcH91A1SxeEvEnLJbRE4pi (private; open it on the phone). Use it on real jobs for a day or two. To feel a whole day in a few minutes, tap **Prototype → Start a rehearsal** (minutes pass 60 times faster, on a separate save). Then tell Claude, in any words: what felt good, what felt like a chore, what was unclear, and whether wanting to reach the next place made starting any easier.
+2. **Waiting on Dan (whenever he's at a computer):** Apple setup sitting 2 (`technical/APPLE_SETUP.md`, A–E; the key at **Admin**, four secrets including the Team ID). Then he says "Apple setup done", and Claude starts the TestFlight workflow and watches it (fallback: fastlane match or Codemagic, D-063).
+3. Then, from TestFlight: trials (b) the delve's end with the phone locked, on silent, in a Focus, and (c) the feel, now on the heart itself. Record results in `technical/PROTOTYPE_NOTES.md`.
+4. Claude, after Dan's notes: one round of fixes to the heart; then Phase 8 can close (exit criteria below).
 5. **The sealed story-fix session** (D-035, D-060), in its own session: after the prototype, before the first playable's content goes in.
 
-## Last session (2026-09-24, Phase 8 start)
+## Last session (2026-09-24, Phase 8, the heart)
+Apple setup blocked (the developer pages don't work on Dan's phone), so Dan asked for the heart slice first, as a web link (D-064). Built on the agreed stack: the rules as pure code over a fact log (a run of delves worked out from timestamps, so a locked phone or a closed app loses nothing; steps, day complete and the arrival written once when they happen), with 28 rule tests; the screens ported from direction D (Today, the dial and run line, the delve with the approved tunnel and ring, the step, day complete and the arrival, "I can't start"); throwaway content on the three invented sample places. The whole flow was walked at 390 × 844 and 360 × 780 with pictures of every screen: no errors, no network requests. Published as one self-contained page at a private claude.ai link. Compromises (no locked-phone alert on the web, browser storage, stand-in job list, no camp or map yet) are in `technical/PROTOTYPE_NOTES.md`.
+
+## Earlier (2026-09-24, Phase 8 start, second)
+Capacitor wrapper, trials screen and the TestFlight pipeline (D-063); Dan approved the three sample paintings (D-062).
+
+## Earlier (2026-09-24, Phase 8 start)
 Trial (a), the painting kit: the approved hall's method made reusable (`app/paint/kit/`: GPU ray-marching with the hall's own stone, light, haze, blur, bloom; one short scene file per place; bake, automatic checks, live layers). Three invented sample places: **The Well Stair, The Rib Gallery, The Pool Dome**. A critic (a second Claude) scored the first round 4, 6 and 5 of 10 against the hall (`app/paint/CRITIQUE-1.md`: the gold was gone, the darks washed out, focal lights hard-edged); one revision round addressed its blockers. The kit repaints the approved hall itself almost exactly (a regression scene), so it is the same hand. `app/` skeleton created with the first rule (the 04:00 day edge) and its tests. Dan's Apple steps written (`technical/APPLE_SETUP.md`). D-061.
 
 ## Session before (2026-09-24, Phase 7)
@@ -56,7 +62,7 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 - [ ] The five trials done (`TECH_DECISIONS.md` → "Risks"); any failure answered (fallback: option C).
 - [x] The painting kit's three invented sample places approved by Dan on his phone (D-062).
 - [ ] Dan's Apple setup done; a build reaches his phone through TestFlight. (Membership active; pipeline written, D-063; sitting 2 pending.)
-- [ ] The heart (slice 1) prototyped and felt on Dan's phone: open → one job → Begin → delve → back → Done → the step → day complete → arrival; state survives a restart.
+- [ ] The heart (slice 1) prototyped and felt on Dan's phone: open → one job → Begin → delve → back → Done → the step → day complete → arrival; state survives a restart. (Built and on the web link, D-064; waiting on Dan's play.)
 - [ ] Compromises recorded (`technical/PROTOTYPE_NOTES.md`, kept current); Dan agrees to move to Phase 9 (first playable).
 
 ## Phase 7 (closed) exit criteria
@@ -121,6 +127,7 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 - 2026-09-24 — **Phase 7 complete** (D-060). Merged into `main`. Phase 8 opened.
 - 2026-09-24 — Phase 8: the painting kit and three sample places; `app/` skeleton; Apple steps for Dan (D-061).
 - 2026-09-24 — Trial (a) passed: Dan approves the samples; iPhone 16 Pro Max (D-062). Capacitor wrapper, trials screen, TestFlight pipeline (D-063).
+- 2026-09-24 — The heart slice built and published as a web link while Apple setup waits (D-064).
 
 ## Unresolved blockers
 
@@ -131,4 +138,4 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 
 ## Recommended next action
 
-**Dan:** Apple setup sitting 2 (`technical/APPLE_SETUP.md`, steps A–E), then say "Apple setup done." In a new session, paste: "Read CLAUDE.md and docs/CURRENT_STATE.md, then continue Phase 8. Apple setup is done."
+**Dan:** play the heart on the web link (above), then tell Claude how it felt. In a new session, paste: "Read CLAUDE.md and docs/CURRENT_STATE.md on branch claude/heart-slice-web-link-npmuhq, then continue Phase 8. Here's how the heart felt: …" (and, once done at a computer, "Apple setup is done.")

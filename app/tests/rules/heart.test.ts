@@ -66,6 +66,7 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     expect(v.complete).toBe(true);
     expect(v.walked).toBe(135);
     expect(v.arrival).toMatchObject({ kind: 'place', name: 'The Rib Gallery', completedDay: true });
+    expect(v.here.name).toBe('The Well Stair');   /* revealed on the arrival's own screen, not before */
     p.do({ do: 'seen', what: 'arrival', ref: v.arrival!.seq });
     expect(p.view().here.name).toBe('The Rib Gallery');
     expect(p.view().next).toBeNull();
