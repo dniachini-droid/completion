@@ -423,18 +423,12 @@ body.v-c .hall .hall-lamp { opacity: 0; }
       '<linearGradient id="fl" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#6d5ff0"/><stop offset=".28" stop-color="#b3acff"/><stop offset=".55" stop-color="#ffe6b8"/><stop offset=".85" stop-color="#f2c170"/><stop offset="1" stop-color="#f2a24c" stop-opacity=".2"/></linearGradient>' +
       '<linearGradient id="core" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".2"/><stop offset=".3" stop-color="#fff"/><stop offset="1" stop-color="#fff4dc" stop-opacity="0"/></linearGradient>' +
       '<radialGradient id="halo"><stop offset="0" stop-color="#ffe2b0" stop-opacity=".55"/><stop offset=".3" stop-color="#b3acff" stop-opacity=".28"/><stop offset="1" stop-color="#8f86ff" stop-opacity="0"/></radialGradient>' +
-      '<radialGradient id="clayC" cx=".4" cy=".2" r=".9"><stop offset="0" stop-color="#d49060"/><stop offset=".45" stop-color="#8a4a2a"/><stop offset="1" stop-color="#2a130b"/></radialGradient>' +
-      '<radialGradient id="warm"><stop offset="0" stop-color="#ffc47a" stop-opacity=".4"/><stop offset="1" stop-color="#d0782e" stop-opacity="0"/></radialGradient>' +
-      '<filter id="fsoft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.4"/></filter>';
+      '<radialGradient id="warm"><stop offset="0" stop-color="#ffc47a" stop-opacity=".4"/><stop offset="1" stop-color="#d0782e" stop-opacity="0"/></radialGradient>';
     var cx = W / 2, by = H - 42;   /* the wick */
     var halo = el('ellipse', { cx: cx, fill: 'url(#halo)', style: 'mix-blend-mode:screen' }, lsvg);
     el('ellipse', { cx: cx, cy: by + 12, rx: 90, ry: 26, fill: 'url(#warm)', style: 'mix-blend-mode:screen' }, lsvg);
-    /* the dish: small heavy clay bowl, pinched spout toward the flame */
-    var g = el('g', {}, lsvg);
-    el('ellipse', { cx: cx - 8, cy: by + 20, rx: 50, ry: 6, fill: '#05040a', opacity: .7, filter: 'url(#fsoft)' }, g);
-    el('path', { d: 'M' + (cx - 52) + ' ' + (by + 2) + ' Q' + (cx - 50) + ' ' + (by + 20) + ' ' + (cx - 10) + ' ' + (by + 19) + ' Q' + (cx + 14) + ' ' + (by + 18) + ' ' + (cx + 8) + ' ' + (by + 4) + ' L' + (cx + 4) + ' ' + (by + 2) + ' Z', fill: 'url(#clayC)' }, g);
-    el('ellipse', { cx: cx - 22, cy: by + 2, rx: 30, ry: 5, fill: '#1c0d07' }, g);
-    el('path', { d: 'M' + (cx - 50) + ' ' + (by + 1) + ' Q' + (cx - 22) + ' ' + (by - 5) + ' ' + (cx + 4) + ' ' + (by + 1), stroke: '#f6b877', 'stroke-width': 1, fill: 'none', opacity: .8 }, g);
+    /* the clay lamp: the same body as every other screen (lamp.js), its wick under this flame */
+    if (window.ClayLamp) ClayLamp.draw(lsvg, { x: cx + 6, y: by - 2, size: 84, pool: 0 });
     var fg = el('g', { 'class': 'flicker' }, lsvg);
     var outer = el('path', { fill: 'url(#fl)', style: 'filter:drop-shadow(0 0 10px rgba(143,134,255,.8)) drop-shadow(0 0 22px rgba(242,193,112,.35))' }, fg);
     var core = el('path', { fill: 'url(#core)' }, fg);

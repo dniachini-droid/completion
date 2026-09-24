@@ -40,17 +40,17 @@
     var d = el('defs', {}, g), U = ' gradientUnits="userSpaceOnUse"';
     d.innerHTML =
       /* the side wall: the flame above the nozzle lights it from the upper right */
-      '<radialGradient id="' + id + 'side"' + U + ' cx="-6" cy="-24" r="104"><stop offset="0" stop-color="#e9a874"/><stop offset=".28" stop-color="#bb6c3e"/><stop offset=".6" stop-color="#733a21"/><stop offset="1" stop-color="#2d150c"/></radialGradient>' +
+      '<radialGradient id="' + id + 'side"' + U + ' cx="-6" cy="-24" r="104"><stop offset="0" stop-color="#e59a60"/><stop offset=".28" stop-color="#b4602f"/><stop offset=".6" stop-color="#692e17"/><stop offset="1" stop-color="#26100a"/></radialGradient>' +
       '<linearGradient id="' + id + 'foot"' + U + ' x1="0" y1="2" x2="0" y2="21"><stop offset="0" stop-color="#1a0a06" stop-opacity=".1"/><stop offset=".5" stop-color="#1a0a06" stop-opacity=".45"/><stop offset="1" stop-color="#12070a" stop-opacity=".9"/></linearGradient>' +
       /* the top: nearest the flame, brightest */
-      '<radialGradient id="' + id + 'top"' + U + ' cx="-14" cy="-9" r="80"><stop offset="0" stop-color="#f2b47c"/><stop offset=".3" stop-color="#c47845"/><stop offset=".66" stop-color="#7e4024"/><stop offset="1" stop-color="#4a2314"/></radialGradient>' +
+      '<radialGradient id="' + id + 'top"' + U + ' cx="-14" cy="-9" r="80"><stop offset="0" stop-color="#f0a86c"/><stop offset=".3" stop-color="#bf6c38"/><stop offset=".66" stop-color="#76361a"/><stop offset="1" stop-color="#42200f"/></radialGradient>' +
       /* the sunken centre: its far wall faces the light, its near wall falls away */
       '<linearGradient id="' + id + 'dish"' + U + ' x1="0" y1="-7.6" x2="0" y2="5.2"><stop offset="0" stop-color="#cd8550"/><stop offset=".45" stop-color="#8a4726"/><stop offset="1" stop-color="#3b1b0f"/></linearGradient>' +
-      '<radialGradient id="' + id + 'spout"' + U + ' cx="-3" cy="-7" r="24"><stop offset="0" stop-color="#ffd3a0"/><stop offset=".5" stop-color="#d88e58"/><stop offset="1" stop-color="#a45a33"/></radialGradient>' +
+      '<radialGradient id="' + id + 'spout"' + U + ' cx="-3" cy="-7" r="24"><stop offset="0" stop-color="#ffc98e"/><stop offset=".5" stop-color="#d0804a"/><stop offset="1" stop-color="#9a4f28"/></radialGradient>' +
       /* soot at the nozzle */
-      '<radialGradient id="' + id + 'soot"' + U + ' cx="-3" cy="-1" r="17"><stop offset="0" stop-color="#0b0504" stop-opacity=".95"/><stop offset=".45" stop-color="#140806" stop-opacity=".6"/><stop offset="1" stop-color="#140806" stop-opacity="0"/></radialGradient>' +
+      '<radialGradient id="' + id + 'soot"' + U + ' cx="-3" cy="-1" r="17"><stop offset="0" stop-color="#1a0a06" stop-opacity=".7"/><stop offset=".45" stop-color="#1c0b07" stop-opacity=".38"/><stop offset="1" stop-color="#140806" stop-opacity="0"/></radialGradient>' +
       /* the hall's violet, from the side away from the flame */
-      '<linearGradient id="' + id + 'amb"' + U + ' x1="-104" y1="0" x2="-46" y2="0"><stop offset="0" stop-color="#9d92ff" stop-opacity=".34"/><stop offset=".4" stop-color="#8f86ff" stop-opacity=".1"/><stop offset="1" stop-color="#8f86ff" stop-opacity="0"/></linearGradient>' +
+      '<linearGradient id="' + id + 'amb"' + U + ' x1="-104" y1="0" x2="-46" y2="0"><stop offset="0" stop-color="#9d92ff" stop-opacity=".2"/><stop offset=".4" stop-color="#8f86ff" stop-opacity=".08"/><stop offset="1" stop-color="#8f86ff" stop-opacity="0"/></linearGradient>' +
       '<linearGradient id="' + id + 'rim"' + U + ' x1="-88" y1="0" x2="-24" y2="0"><stop offset="0" stop-color="#ffd9aa" stop-opacity=".12"/><stop offset=".6" stop-color="#ffd9aa" stop-opacity=".5"/><stop offset="1" stop-color="#ffe6c2" stop-opacity=".85"/></linearGradient>' +
       '<radialGradient id="' + id + 'pool"><stop offset="0" stop-color="#ffc47e" stop-opacity=".6"/><stop offset=".4" stop-color="#e88c3e" stop-opacity=".22"/><stop offset="1" stop-color="#d0782e" stop-opacity="0"/></radialGradient>' +
       '<clipPath id="' + id + 'clip"><path d="' + SIL + '"/><path d="' + LUG + '"/></clipPath>' +
@@ -72,10 +72,11 @@
 
     /* the masses */
     el('path', { d: LUG, fill: u('side') }, g);
+    el('path', { d: LUG, fill: '#1c0b07', opacity: .35 }, g);
     el('path', { d: SIL, fill: u('side') }, g);
     el('path', { d: SIL, fill: u('foot') }, g);
     el('path', { d: TOP, fill: u('top') }, g);
-    el('path', { d: SPOUT, fill: u('spout') }, g);
+    el('path', { d: SPOUT, fill: u('spout'), filter: u('b1') }, g);
     el('ellipse', { cx: -57, cy: -1.3, rx: 22, ry: 6.3, fill: u('dish') }, g);
     /* the lug's hole */
     el('ellipse', { cx: -98.6, cy: -2.4, rx: 2.1, ry: 1.9, fill: '#100705' }, g);
