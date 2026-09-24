@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-24 (Phase 8 started: trial (a) ready for Dan, D-061)_
+_Last updated: 2026-09-24 (Phase 8: trial (a) passed, D-062; pipeline ready, waiting on Dan's secrets, D-063)_
 
 ## Current phase
 
@@ -15,10 +15,10 @@ _Last updated: 2026-09-24 (Phase 8 started: trial (a) ready for Dan, D-061)_
 Prototype the central interaction on the agreed stack (MASTER_BRIEF §67; `technical/TECH_DECISIONS.md`): feel, clarity, reward timing, friction, beauty. **First the five trials** (`TECH_DECISIONS.md` → "Risks"), then **the heart** (`product/MVP.md` → build order, slice 1) on throwaway data, as a web link on Dan's phone and then through TestFlight. Placeholders are fine; any temporary ugliness is recorded so it never becomes permanent by accident.
 
 ## Resume here (next session)
-1. **Waiting on Dan:** (a) judge the three sample paintings on his phone against the approved hall (the Netlify zip from `app/paint/view/pack.sh`); (b) Apple setup sitting 1 (`technical/APPLE_SETUP.md`), then sitting 2 once Apple approves; (c) his iPhone model.
-2. When Dan has judged the samples: revise the kit if needed (the bar, D-058). Keep `app/paint/regression/lamp-hall.js` as the regression: after any kit change, bake it and compare it with the hall.
-3. When Apple approves and the secrets are in: add Capacitor (appId `com.dniachini.rlrpg`), the GitHub Actions macOS + fastlane pipeline, and a first TestFlight build carrying trial (b) (the delve alert, locked, silent, Focus) and trial (c) (smoothness, real-app feel).
-4. Then the heart slice (`product/MVP.md` → build order, slice 1) on throwaway data.
+1. **Waiting on Dan:** Apple setup sitting 2 (`technical/APPLE_SETUP.md`, A–E; the key at **Admin**, four secrets including the Team ID). Then he says "Apple setup done."
+2. Then Claude starts the TestFlight workflow (by hand, or a commit marked `[testflight]`) and watches it. If Apple refuses cloud signing, fall back to fastlane match or Codemagic (D-063).
+3. On Dan's phone, from TestFlight, the trials screen: (b) begin the one-minute delve, lock the phone: heard? Then on silent, then in a Focus. (c) no bounce, no selection, safe areas, the tick, smooth painting. Record results in `technical/PROTOTYPE_NOTES.md`.
+4. Then the heart slice (`product/MVP.md` → build order, slice 1) on throwaway data, replacing the trials screen.
 5. **The sealed story-fix session** (D-035, D-060), in its own session: after the prototype, before the first playable's content goes in.
 
 ## Last session (2026-09-24, Phase 8 start)
@@ -54,10 +54,10 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 ## Phase 8 exit criteria
 
 - [ ] The five trials done (`TECH_DECISIONS.md` → "Risks"); any failure answered (fallback: option C).
-- [ ] The painting kit's three invented sample places approved by Dan on his phone. (Kit built, critiqued, revised; waiting on Dan.)
-- [ ] Dan's Apple setup done; a build reaches his phone through TestFlight.
+- [x] The painting kit's three invented sample places approved by Dan on his phone (D-062).
+- [ ] Dan's Apple setup done; a build reaches his phone through TestFlight. (Membership active; pipeline written, D-063; sitting 2 pending.)
 - [ ] The heart (slice 1) prototyped and felt on Dan's phone: open → one job → Begin → delve → back → Done → the step → day complete → arrival; state survives a restart.
-- [ ] Compromises recorded; Dan agrees to move to Phase 9 (first playable).
+- [ ] Compromises recorded (`technical/PROTOTYPE_NOTES.md`, kept current); Dan agrees to move to Phase 9 (first playable).
 
 ## Phase 7 (closed) exit criteria
 
@@ -120,6 +120,7 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 - 2026-09-24 — Phase 7: Dan's answers (D-056); the stack and the painting kit agreed (D-057, D-058); the four technical docs written (D-059).
 - 2026-09-24 — **Phase 7 complete** (D-060). Merged into `main`. Phase 8 opened.
 - 2026-09-24 — Phase 8: the painting kit and three sample places; `app/` skeleton; Apple steps for Dan (D-061).
+- 2026-09-24 — Trial (a) passed: Dan approves the samples; iPhone 16 Pro Max (D-062). Capacitor wrapper, trials screen, TestFlight pipeline (D-063).
 
 ## Unresolved blockers
 
@@ -130,4 +131,4 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 
 ## Recommended next action
 
-**Dan:** open the sample viewer on your phone and say how the three places compare with the hall; start Apple setup sitting 1; tell Claude your iPhone model. Then continue in this session, or start a new one with: "Read CLAUDE.md and docs/CURRENT_STATE.md, then continue Phase 8."
+**Dan:** Apple setup sitting 2 (`technical/APPLE_SETUP.md`, steps A–E), then say "Apple setup done." In a new session, paste: "Read CLAUDE.md and docs/CURRENT_STATE.md, then continue Phase 8. Apple setup is done."
