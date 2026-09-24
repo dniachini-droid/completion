@@ -82,7 +82,7 @@ The place obeys words (R1). Two lives, one lamp, one figure who does not eat and
 
 ---
 
-**The square stone** (the road-works' gallery, week 6 on) is cut in the hill's own rock, and the hill's rock is laced, so it holds counts; it has no lamp-cups, because the makers did not cut it, and its light comes in from the round stone.
+**The square stone** (the road-works' gallery, week 6 on) is cut into rock close round the Site, where the lacing still runs, so it holds counts (further out the Cut is dead); it has no lamp-cups, because the makers did not cut it, and its light comes in from the round stone.
 
 ## Region 2 — The Stair (months 2–3)
 
