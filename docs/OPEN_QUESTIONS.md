@@ -49,7 +49,7 @@
 ## UX
 - ~~What visual references?~~ Ancient stone/glyphs + dark sci-fi; the Stargate dialling sequence (round 6). Refine in Phase 4.
 - ~~Phone, desktop?~~ Phone only (round 6).
-- **Job to do: a language pass on every line the app says** (Dan, 2026-09-24, D-031). Lines on the Phase 4 mock-ups such as "The lintel needs a word" read as stilted, AI-sounding English. Before the first playable, rewrite the app's own voice so it sounds like a person: plain, natural, varied, not clipped. Not during the visual pass. Owner: Claude, with Dan reviewing a sample page of lines. Suggested slot: Phase 5 or 6, before any copy is fixed in the build.
+- **Job to do: a language pass on every line the app says** (Dan, 2026-09-24, D-031). Lines on the Phase 4 mock-ups such as "The lintel needs a word" read as stilted, AI-sounding English. Before the first playable, rewrite the app's own voice so it sounds like a person: plain, natural, varied, not clipped. Not during the visual pass. Owner: Claude, with Dan reviewing a sample page of lines. ~~Suggested slot: Phase 5 or 6.~~ **Moved (Dan, D-046): after he has played the first playable for 3–4 weeks.** He wants to see the app working first. All copy until then is placeholder, and the build keeps it easy to change.
 
 ## Technology
 - _(deferred to Phase 7)_

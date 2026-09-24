@@ -79,7 +79,7 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 ## Unresolved blockers
 
 - None.
-- **Jobs queued for later phases:** the language pass on every line the app says (D-031, Phase 5–6); the sealed story-fix session (D-035, before the first playable); a memory and recap system, a before → now re-read view, a guaranteed reward rhythm and high-day extras (D-035, Phase 5–6); jobs and targets as editable data (D-030, Phase 7); week 6 of the sealed clue ledger (D-023).
+- **Jobs queued for later phases:** the language pass on every line the app says (**after Dan has played the first playable for 3–4 weeks**, D-046; nothing before it is final wording); the sealed story-fix session (D-035, before the first playable); a memory and recap system, a before → now re-read view, a guaranteed reward rhythm and high-day extras (D-035, Phase 5–6); jobs and targets as editable data (D-030, Phase 7); week 6 of the sealed clue ledger (D-023).
 - Housekeeping (non-blocking): rename the GitHub repo once a product name exists (`narrative/NAMES.md`). (Privacy verified: private.)
 - Open for Dan whenever he likes: the app name (`narrative/NAMES.md`).
 

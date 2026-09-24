@@ -490,3 +490,13 @@
 - **Rationale:** Dan's request; planning *when and where* is the best-evidenced tool in the design (`TOOLS_RESEARCH.md` §3) and is the activity scheduling his psychologist recommended; P1, P3, P6, P7, P9 and P16 are kept by the four rules.
 - **Consequences:** new `game/PLANNER.md`, `product/SCHEDULER_REVIEW.md`; `TOOLS.md` §3 points to it; three new D mock-ups. Once approved: fold rhythms into `QUEST_SYSTEM.md`, `CORE_LOOPS.md` and P6/P16, add the step to `PHASE5_PLAN.md`, and step 3 sets the Key numbers.
 - **Reversible:** Yes.
+
+## D-046 — The language pass comes after 3–4 weeks of play
+- **Date:** 2026-09-24
+- **Context:** Reading the planner review file, Dan: the language is "very AI like". He confirmed the language pass (D-031) must happen, and said: "I want to see the app before the language pass so build it in after my 3-4 week test."
+- **Decision:** The language pass on every line the app says moves from "Phase 5–6, before copy is fixed in the build" to **after Dan has played the first playable for 3–4 weeks**. Until then all copy (mock-ups, first playable) is placeholder. The first playable must keep every line easy to change in one place (a Phase 7 requirement), so the pass needs no rebuild.
+- **Note:** the behaviour test was set at 5–6 weeks (D-023), so the pass may land inside it. That's fine as long as it's recorded, since changed wording is one more thing that changes during the test.
+- **Alternatives:** do the pass before the build (D-031's slot; Dan wants to see the app first).
+- **Rationale:** Dan's choice; wording is judged best on real screens in real use.
+- **Consequences:** `CURRENT_STATE.md`, `OPEN_QUESTIONS.md`, `design/UX_PRINCIPLES.md`. Phase 7 records the one-place copy requirement. Supersedes D-031's suggested slot.
+- **Reversible:** Yes.
