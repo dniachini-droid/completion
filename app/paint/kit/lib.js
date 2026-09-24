@@ -176,7 +176,8 @@ vec4 stone(vec2 uv, float fp, float fpv, float courseH, float blockL, float seed
 export const MAIN = /* glsl */ `
 uniform vec2 uRes;
 uniform vec3 uCam; uniform float uPitch, uYaw, uF; uniform vec2 uC;
-uniform int uN; uniform vec3 uLp[8]; uniform vec3 uLc[8]; uniform float uLk[8], uLr[8], uLair[8], uLsh[8];
+uniform int uN; uniform vec3 uLp[8]; uniform vec3 uLc[8]; uniform float uLk[8], uLr[8], uLair[8], uLsh[8], uLwarm[8];
+uniform vec3 uGrade;
 uniform float uFogK, uFar, uBloomPow, uAmb, uExpo, uAO, uWrap, uSheen;
 uniform vec3 uHazeBase, uHazeFar, uBloomC, uBloomDir, uAmbC;
 uniform vec4 uMist; uniform vec3 uMistC, uMistDeep;       /* mist bank: (y, thickness, depth scale, on) */
@@ -235,6 +236,13 @@ vec3 lightAt(vec3 p, vec3 n, vec3 alb, float wrap) {
     float att = uLk[i] / (1. + d2 / r2) / r2;
     float sh = uLsh[i] > 0. ? mix(1., softShadow(p + n * .03, L / dd, dd), uLsh[i]) : 1.;
     c += alb * uLc[i] * ndl * att * sh;
+  }
+  /* a lamp's warmth lies on the stone around it as gold, as in the hall (added, not tinted by the violet) */
+  for (int i = 0; i < 8; i++) {
+    if (i >= uN) break;
+    if (uLwarm[i] <= 0.) continue;
+    vec3 L = uLp[i] - p; float ld = dot(L, L);
+    c += vec3(1., .55, .2) * uLwarm[i] / (1. + ld / (uLr[i] * uLr[i] * 1.6));
   }
   return c;
 }
@@ -318,9 +326,13 @@ vec3 haze(vec3 c, vec3 o, vec3 d, float t) {
     if (disc > 0. && a > 1e-6) {
       float sq = sqrt(disc), t0 = max((-b - sq) / a, 0.), t1 = min((-b + sq) / a, t);
       if (t1 > t0) {
-        float ym = o.y + d.y * (t0 + t1) * .5, fall = smoothstep(uBeamTop, uBeamTop - 10., ym) * .3 + .7;
-        fall *= smoothstep(-1., 2., ym);
-        c += uBeamC * uBeam.w * (t1 - t0) / (2. * uBeam.z) * fall;
+        float tm = (t0 + t1) * .5, ym = o.y + d.y * tm;
+        /* soft at its edges: how close the ray passes to the beam's axis */
+        vec2 cq = oc + dv * (-b / a);
+        float edge = 1. - smoothstep(0., uBeam.z, length(cq));
+        float dens = .55 + .9 * fbm(vec2(ym * .35, length(cq) * 1.5 + 4.), 3);
+        float fall = smoothstep(-1., 2., ym) * (.75 + .25 * smoothstep(uBeamTop, 0., ym));
+        c += uBeamC * uBeam.w * (t1 - t0) / (2. * uBeam.z) * edge * edge * dens * fall * 1.6;
       }
     }
   }
@@ -350,13 +362,17 @@ void main() {
       if (h2x > 0.) { vec3 p2 = q + rd * t2; vec4 hs2 = scene(p2); rc = floor(hs2.y + .5) == M_WATER ? vec3(0) : shade(p2, rd, t + t2, normalAt(p2, max(.0015, (t + t2) * .0008)), hs2, f); }
       else rc = vec3(0);
       rc = haze(rc, q, rd, t2);
-      float fr = .25 + .6 * pow(1. - max(dot(-d, wn), 0.), 4.);
+      float fr = .4 + .5 * pow(1. - max(dot(-d, wn), 0.), 4.);
       c = mix(vec3(.004, .004, .014), rc, fr);
+      /* a long streak of the far light down the water */
+      float sw = max(dot(rd, uBloomDir), 0.);
+      c += (pow(sw, 60.) * .5 + pow(sw, 8.) * .06) * uBloomC;
     } else {
       c = shade(p, d, t, n, hs, f);
     }
   } else c = vec3(0);
   c = haze(c, o, d, t);
+  c *= uGrade;
   c = 1. - exp(-c * uExpo);
   c = pow(c, vec3(.92));
   outColor = vec4(c, t);

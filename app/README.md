@@ -8,7 +8,7 @@ Shape and rules: `docs/technical/ARCHITECTURE.md`, `DATA_MODEL.md`, `TEST_STRATE
 | `src/content/` | authored data | `copy/` (every line the app says), `world/`; story content will live in a marked sealed folder (D-015) |
 | `src/platform/` | the phone's services | `web/` (prototype, tests) and `native/` (Capacitor) behind one interface |
 | `src/ui/` | the screens | Svelte; direction D ported from `docs/design/directions/d-combined/` |
-| `paint/` | the painting kit | `kit/` (shared hand), `samples/` (invented places, not story), `view/` (the sample viewer), `bake.mjs`, `check.mjs`. Real places' scene files will live in a marked sealed folder |
+| `paint/` | the painting kit | `kit/` (shared hand), `samples/` (invented places, not story), `regression/` (the hall repainted by the kit: bake and compare after any kit change), `view/` (the sample viewer), `bake.mjs`, `check.mjs`. Real places' scene files will live in a marked sealed folder |
 | `tests/` | the tests | Vitest now; Playwright flows come with the screens |
 
 Commands (from `app/`): `npm test`, `npm run typecheck`, `npm run paint` (bake the samples; needs Playwright's Chromium: `NODE_PATH=$(npm root -g)`), `npm run paint:check`.

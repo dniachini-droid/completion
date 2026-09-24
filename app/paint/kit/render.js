@@ -22,7 +22,8 @@ const DEFAULTS = {
   fogK: 1 / 34,
   hazeBase: [.03, .027, .085], hazeFar: [.16, .15, .38], bloomC: [.6, .56, .9], bloomPow: 30,
   bloomAt: [0, 4.5, 66],
-  ambC: [.9, .85, 1.9], amb: 1, expo: 1.7, ao: .9, wrap: .25, sheen: .22,
+  ambC: [.9, .85, 1.9], amb: 1, expo: 1.7, ao: .5, wrap: .25, sheen: .22, grade: [1, 1, 1],
+  glow: null,
   mist: null, beam: null,
   lights: [],
   steps: 220, stepK: .8,
@@ -82,6 +83,7 @@ export async function paint(canvas, sceneIn, opts = {}) {
     gl.uniform1fv(u('uLr'), L.map(l => l.r));
     gl.uniform1fv(u('uLair'), L.map(l => l.air || 0));
     gl.uniform1fv(u('uLsh'), L.map(l => l.shadow || 0));
+    gl.uniform1fv(u('uLwarm'), L.map(l => l.warm || 0));
   }
   gl.uniform1f(u('uFogK'), S.fogK); gl.uniform1f(u('uFar'), S.far);
   gl.uniform3fv(u('uHazeBase'), S.hazeBase); gl.uniform3fv(u('uHazeFar'), S.hazeFar);
@@ -89,7 +91,7 @@ export async function paint(canvas, sceneIn, opts = {}) {
   const bd = [S.bloomAt[0] - c.x, S.bloomAt[1] - c.y, S.bloomAt[2] - c.z], bl = Math.hypot(...bd);
   gl.uniform3f(u('uBloomDir'), bd[0] / bl, bd[1] / bl, bd[2] / bl);
   gl.uniform3fv(u('uAmbC'), S.ambC); gl.uniform1f(u('uAmb'), S.amb);
-  gl.uniform1f(u('uExpo'), S.expo); gl.uniform1f(u('uAO'), S.ao); gl.uniform1f(u('uWrap'), S.wrap); gl.uniform1f(u('uSheen'), S.sheen);
+  gl.uniform1f(u('uExpo'), S.expo); gl.uniform1f(u('uAO'), S.ao); gl.uniform1f(u('uWrap'), S.wrap); gl.uniform1f(u('uSheen'), S.sheen); gl.uniform3fv(u('uGrade'), S.grade);
   const m = S.mist;
   gl.uniform4f(u('uMist'), m ? m.y : 0, m ? m.thick : 1, m ? m.deep : 1, m ? 1 : 0);
   gl.uniform3fv(u('uMistC'), m ? m.c : [0, 0, 0]); gl.uniform3fv(u('uMistDeep'), m ? m.cDeep : [0, 0, 0]);
@@ -146,6 +148,20 @@ export async function paint(canvas, sceneIn, opts = {}) {
   /* bloom: the haze glows over the stone */
   ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = S.bloom.alpha;
   ctx.filter = 'blur(' + (S.bloom.px * scale).toFixed(0) + 'px)'; ctx.drawImage(canvas, 0, 0); ctx.restore();
+  /* glow: only what is bright bleeds into the air around it, at three sizes */
+  if (S.glow) {
+    const g = S.glow, bp = document.createElement('canvas'); bp.width = W; bp.height = H;
+    const bx = bp.getContext('2d', { willReadFrequently: true }), src2 = ctx.getImageData(0, 0, W, H), bd2 = bx.createImageData(W, H);
+    for (let i = 0; i < W * H * 4; i += 4) {
+      const L = (.2126 * src2.data[i] + .7152 * src2.data[i + 1] + .0722 * src2.data[i + 2]) / 255;
+      const k = Math.max(0, (L - g.threshold) / (1 - g.threshold));
+      bd2.data[i] = src2.data[i] * k; bd2.data[i + 1] = src2.data[i + 1] * k; bd2.data[i + 2] = src2.data[i + 2] * k; bd2.data[i + 3] = 255;
+    }
+    bx.putImageData(bd2, 0, 0);
+    ctx.save(); ctx.globalCompositeOperation = 'screen';
+    for (const [px, a] of [[8, .5], [24, .45], [64, .4]]) { ctx.globalAlpha = a * g.k; ctx.filter = 'blur(' + (px * scale).toFixed(0) + 'px)'; ctx.drawImage(bp, 0, 0); }
+    ctx.restore();
+  }
 
   /* where things fall on the image */
   const pr = c.pitch * Math.PI / 180, yr = c.yaw * Math.PI / 180, cp = Math.cos(pr), sp = Math.sin(pr);
