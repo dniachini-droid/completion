@@ -211,7 +211,9 @@ uniform vec3 uHazeBase, uHazeFar, uBloomC, uBloomDir, uAmbC;
 uniform vec4 uMist; uniform vec3 uMistC, uMistDeep;       /* mist bank: (y, thickness, depth scale, on) */
 uniform vec4 uBeam; uniform vec3 uBeamC; uniform float uBeamTop; /* a shaft of light: (x, z, radius, strength) */
 uniform int uSteps; uniform float uStepK;
-uniform float uSaltPink;                                   /* how much the salt's band edges go pink (0: grey and white only) */
+uniform float uSaltPink;
+uniform float uGrain;
+uniform float uShJit;                                      /* 1: finer soft shadows for close views (0: as the hall) */                                      /* close views: the pick marks in cut stone (0: the hall's long-view stone) */                                   /* how much the salt's band edges go pink (0: grey and white only) */
 out vec4 outColor;
 
 float map(vec3 p) { return scene(p).x; }
@@ -231,11 +233,15 @@ float march(vec3 o, vec3 d, float tMax, out float tHit) {
   tHit = tMax; return 0.;
 }
 float softShadow(vec3 o, vec3 d, float tMax) {
-  float res = 1., t = .05;
-  for (int i = 0; i < 48; i++) {
+  /* uShJit 1 (close views, where soft shadows band): finer steps, and a scattered start for what banding is left */
+  bool fine = uShJit > 0.;
+  float res = 1., t = .05 + (fine ? h2(gl_FragCoord.xy) * .015 : 0.);
+  int n = fine ? 140 : 48; float lo = fine ? .008 : .03;
+  for (int i = 0; i < 140; i++) {
+    if (i >= n) break;
     float h = map(o + d * t);
     res = min(res, 10. * h / t);
-    t += clamp(h * .8, .03, .6);
+    t += clamp(h * .8, lo, .6);
     if (res < .02 || t > tMax - .3) break;
   }
   return clamp(res, 0., 1.);
@@ -315,11 +321,11 @@ vec3 shade(vec3 p, vec3 d, float t, vec3 n, vec4 hs, float fpx) {
     /* beds of salt laid down one on another: grey, white, with thin dark seams between; crystals in each bed */
     float b = p.y * 1.7 + (fbm3(p * vec3(.3, .5, .3), 3) - .5) * 3.2 + (fbm3(p * 2.5, 2) - .5) * .25, bi = floor(b), bf = b - bi;
     float bed = h2(vec2(bi, 71.)), white = smoothstep(.25, .65, bed) * (.7 + .3 * fbm3(p * 3., 2));
-    vec3 grey = vec3(.34, .34, .39) * (.75 + .35 * h2(vec2(bi, 5.))), wh = vec3(.8, .79, .84);
+    vec3 grey = vec3(.27, .27, .31) * (.7 + .45 * h2(vec2(bi, 5.))), wh = vec3(.9, .89, .93);
     alb = mix(grey, wh, white);
     float bd = min(bf, 1. - bf);
     alb = mix(alb, vec3(.82, .6, .64), (1. - smoothstep(0., .2, bd)) * uSaltPink * (.4 + .6 * white));   /* pink only at the edges of the beds */
-    alb *= 1. - .5 * (1. - smoothstep(0., .03, bd)) * h2(vec2(bi, 17.));                    /* a thin dark seam under some beds */
+    alb *= 1. - .35 * (1. - smoothstep(0., .025, bd)) * h2(vec2(bi, 17.));                   /* a thin dark seam under some beds */
     vec3 sd; vec3 cl = cells3(p * 28., sd);
     float grain = smoothstep(0., .1, cl.y - cl.x);                                           /* the boundary between crystals */
     float fade = 1. - smoothstep(.01, .035, fp);                                             /* crystals only where they can be seen */
@@ -327,7 +333,8 @@ vec3 shade(vec3 p, vec3 d, float t, vec3 n, vec4 hs, float fpx) {
     alb *= .88 + .24 * fbm3(p * 1.4, 3);
     vec3 cn = vec3(h2(sd.xy), h2(sd.yz + 3.), h2(sd.zx + 7.)) - .5;
     nb = (cn - n * dot(cn, n)) * .3 * fade + (vec3(fbm3(p * 4., 2), fbm3(p * 4. + 7., 2), fbm3(p * 4. + 13., 2)) - .5) * .6;
-    float glint = step(.86, h2(sd.xz + sd.y * 3.1)) * fade;
+    vec3 gs; vec3 gc = cells3(p * 70. + 3.7, gs);                                              /* glints: a few small faces, finer than the crystals */
+    float glint = step(.9, h2(gs.xz + gs.y * 3.1)) * (1. - smoothstep(.25, .45, gc.x)) * fade;
     specK = .12 + 2.2 * glint; specP = mix(24., 140., glint); wrap = max(wrap, .45);    /* light goes a little into salt */
   } else if (m == M_CLOTH) {
     alb = vec3(.46, .42, .35) * (.8 + .35 * fbm3(p * 3., 3));
@@ -354,6 +361,17 @@ vec3 shade(vec3 p, vec3 d, float t, vec3 n, vec4 hs, float fpx) {
   } else if (m == M_SLATE) {
     alb = vec3(.15, .155, .18) * (.85 + .3 * fbm3(p * 20., 3));
     specK = .45; specP = 22.;
+  }
+  /* seen close, cut stone shows the tool: the shallow dents of a pick, close set */
+  if (uGrain > 0. && m <= M_DRESSED && m != M_ROCK && !floorLike) {            /* floors are worn smooth */
+    float cd = (1. - smoothstep(.0015, .01, fp)) * uGrain;
+    if (cd > 0.) {
+      vec3 sd; vec3 cl = cells3(vec3(uv * 19., .5), sd);
+      vec2 r = sd.xy - uv * 19.;                                                 /* toward the mark's centre */
+      float pit = (1. - smoothstep(.15, .55, cl.x)) * step(.3, cl.z) * (.6 + .4 * h2(sd.xy));
+      tU -= r.x * pit * .8 * cd; tV -= r.y * pit * .8 * cd;
+      alb *= 1. + (-pit * .1 + (fbm(uv * 45., 2) - .5) * .1) * cd;
+    }
   }
   alb *= tint;
   /* polish: the grain and the chisel rubbed away, the stone paler and shining */

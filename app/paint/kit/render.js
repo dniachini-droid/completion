@@ -26,6 +26,8 @@ const DEFAULTS = {
   glow: null,
   mist: null, beam: null,
   salt: { pink: 0 },                          /* rock salt's band edges: 0 grey and white; up to 1 pink (only where a brief says) */
+  grain: 0,                                   /* close views: pick marks in cut stone within a few metres (0: the hall's long-view stone) */
+  shadowJitter: 0,                            /* 1: close views, where soft shadows band: finer shadow steps */
   lights: [],
   steps: 220, stepK: .8,
   blur: { px: 2.2, d0: 9, d1: 30, k: .9 },
@@ -101,6 +103,8 @@ export async function paint(canvas, sceneIn, opts = {}) {
   gl.uniform3fv(u('uBeamC'), b ? b.c : [0, 0, 0]); gl.uniform1f(u('uBeamTop'), b ? b.top : 0);
   gl.uniform1i(u('uSteps'), S.steps); gl.uniform1f(u('uStepK'), S.stepK);
   gl.uniform1f(u('uSaltPink'), S.salt && S.salt.pink || 0);
+  gl.uniform1f(u('uGrain'), S.grain || 0);
+  gl.uniform1f(u('uShJit'), S.shadowJitter || 0);
 
   /* paint into a float target, a strip at a time so the GPU is never held long */
   const tex = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tex);

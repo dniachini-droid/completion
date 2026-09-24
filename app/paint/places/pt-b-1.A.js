@@ -35,7 +35,7 @@ export default {
     vec2 w = vec2(p.z, p.y) / .55, c = floor(w), f = fract(w) - .5;
     float pick = h2(c + (p.x > 0. ? 7. : 0.));
     float rr = .2 + .12 * h2(c + 3.);
-    float g = abs(length(f) - rr) * .55 - .007;
+    float g = abs(length(f) - rr) * .55 - .012;
     return pick < .32 && p.y > .35 && p.y < 2.3 ? -g : -1.;
   }
   vec4 scene(vec3 p) {
@@ -43,7 +43,7 @@ export default {
     vec4 d = hallAir(p, 2.7, 6., 12.47, -10., 66., M_CUT);
     d = A(d, cups(p, 1., 2.2));
     d = A(d, cups(p, -1., 3.75));
-    d = A(d, vec4(min(rings(p), min(2.712 - ax, ax - 2.5)), M_CUT, NOUV));
+    d = A(d, vec4(min(rings(p), min(2.718 - ax, ax - 2.5)), M_CUT, NOUV));
     d = A(d, vec4(min(min(p.z - 6.55, 8.05 - p.z), min(min(2.4 - p.y, p.y), min(2.83 + p.x, -2.5 - p.x))), M_CUT_SMALL, NOUV));  /* the lintel's sealed blank */
     /* the great door: most of the far wall, a darker leaf set back in a pointed arch */
     float dr = archOpening2(vec2(p.x, p.y), 2.1, 6.2);
