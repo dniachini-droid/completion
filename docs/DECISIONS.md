@@ -364,3 +364,18 @@
 - **Alternatives:** make every change now (not needed before the playable, and pacing changes should wait for the playtest); ignore it (the points are well founded).
 - **Consequences:** Listed in `CURRENT_STATE.md` for the next phases. One line of the open game bible about how the doors fill may be reworded, without changing anything Dan already knows.
 - **Reversible:** Yes, until clues are planted in the playable.
+
+## D-036 — Stepping away from a delve: it is held, not paused
+- **Date:** 2026-09-24
+- **Context:** Dan, reviewing D: what happens when a delve is interrupted (a phone call, the toilet, or a longer absence)? He proposed jumping straight to the breather, keeping the minutes done, and carrying on the same delve afterwards; and, for a long absence, coming back later to the same job.
+- **Decision:** Adopted, with one simplification (Claude's, agreed by Dan):
+  1. During a delve, a quiet **"Step away"** replaces "Stop for now". It keeps the minutes done (they count towards the job at once), **holds** the delve with its time left, and goes straight into the breather.
+  2. In the breather the main button is **"Back to the delve · N min left"**: the same delve carries on. The pieces add up to one delve and earn exactly what an unbroken one would.
+  3. If the interruption runs long, nothing is needed: the breather ends as usual and the delve waits, with no countdown and no "you've been gone". Whenever Dan next opens Today that day, its first offer is **"Carry on: <job> · N min left"**, with starting afresh as the quieter option.
+  4. The hold belongs to the job, not the screen: Dan can go anywhere in the app, or close it, and the spot is kept. A running delve also keeps running while he looks at other screens.
+  5. Only one thing is ever held: starting a delve on another job closes the held one quietly (its minutes stay counted). A held delve closes at the end of the day; tomorrow starts fresh, with nothing owed.
+  6. Fairness: a delve's reward still needs its full length in total, however many pieces; time stepped away never counts against a long delve's gaps.
+- **Alternatives:** a pause button (a frozen timer waiting for you reads as an unfinished debt); asking at the moment of interruption whether it is short or long (a decision at the worst time).
+- **Rationale:** interruptions are normal with ADHD (`TOOLS_RESEARCH.md`, proposal 6); failure is information, not punishment (rule 9); one button covers both cases, so nothing needs deciding mid-interruption (P1); pieces can't out-earn a whole (rule 10).
+- **Consequences:** `game/TOOLS.md` §1, `design/INTERACTION_NOTES.md` (the delve) and the D mock-up (`delve.html`, `morning.html`) updated.
+- **Reversible:** Yes.

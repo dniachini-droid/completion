@@ -20,6 +20,7 @@ The 25/5 Pomodoro that already works for Dan, made into a moment in the world.
 - **In flow, keep going.** When a delve ends he can carry straight on, and he can **skip the breather**. Nothing is lost either way: minutes count the same.
 - **A deep delve** is four delves in one sitting, with gaps of up to about 20 minutes allowed between them. It reaches somewhere a single one can't: a deeper chamber, or a find. Long focus is rewarded in kind, not with bigger numbers. An interruption doesn't cost the deep chamber.
 - Stopping early loses nothing. Minutes done still count towards the job's hour.
+- **Stepping away (D-036).** An interruption is handled with one quiet button, **"Step away"**: the minutes done are kept, the delve is **held** with its time left, and the breather starts. "Back to the delve · N min left" carries the same delve on; if the interruption runs long, Today offers "Carry on: <job> · N min left" whenever Dan returns that day. The hold belongs to the job, not the screen. Only one delve is held at a time, and it closes at the day's end. The pieces add up to one delve and earn no more than an unbroken one.
 - Anti-farming is unchanged: only time earns, and it slows after about 2 extra hours of the same kind of work.
 - **Later: company at work.** While a delve runs, someone in the world is visibly working alongside the expedition (body doubling without people). Evidence is weak, so it is a thing to try, not a promise. Who that is gets decided with the story.
 
