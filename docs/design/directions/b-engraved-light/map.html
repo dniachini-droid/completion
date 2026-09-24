@@ -15,12 +15,13 @@
 .spin{animation:spin 60s linear infinite;transform-box:fill-box;transform-origin:center}
 @keyframes spin{to{transform:rotate(360deg)}}
 .reticle{transition:transform .5s var(--ease)}
-.nn{font-family:'Cinzel',serif;font-size:15.5px;font-weight:600;letter-spacing:.12em;fill:#e8f5fb;paint-order:stroke;stroke:#04080d;stroke-width:4px;stroke-linejoin:round}
-.ns{font-family:'EB Garamond',serif;font-style:italic;font-size:17.5px;fill:#b4cbd7;paint-order:stroke;stroke:#04080d;stroke-width:4px}
-.nn.dim,.ns.dim{fill:#6f8795;opacity:.8}
+.nn{font-family:'Cinzel',serif;font-size:15.5px;font-weight:600;letter-spacing:.12em;fill:#e8f5fb;filter:url(#halo)}
+.ns{font-family:'EB Garamond',serif;font-style:italic;font-size:17.5px;fill:#b4cbd7;filter:url(#halo)}
+.nn.tight{letter-spacing:.05em}
+.nn.dim,.ns.dim{fill:#8ea6b3}
 .node{cursor:pointer}
 .node:focus{outline:none}
-.card{flex:none;margin-top:14px;padding:14px 16px 16px;min-height:150px}
+.card{flex:none;margin-top:14px;padding:14px 16px 16px;min-height:120px}
 .card .title{font-size:21px;margin-top:6px}
 .card p{margin-top:4px}
 .card .btn{margin-top:12px}
@@ -37,7 +38,7 @@
   </header>
 
   <section class="view viewport ticks" aria-label="Map of the first region">
-    <svg viewBox="0 0 350 420" preserveAspectRatio="xMidYMid meet">
+    <svg viewBox="0 0 350 440" preserveAspectRatio="xMidYMid meet">
       <defs>
   <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
     <feGaussianBlur stdDeviation="2.2" result="b1"/><feGaussianBlur in="SourceGraphic" stdDeviation="7" result="b2"/>
@@ -75,12 +76,51 @@
   </filter>
   <filter id="bloomBlur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5"/></filter>
 
+  <filter id="soft1" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation=".45"/></filter>
+  <filter id="soft2" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="1.1"/></filter>
+  <filter id="soft3" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="2"/></filter>
+  <filter id="relief" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".035 .06" numOctaves="4" seed="17" result="t"/>
+    <feDiffuseLighting in="t" surfaceScale="2.6" lighting-color="#9fc0d0" result="d"><feDistantLight azimuth="250" elevation="42"/></feDiffuseLighting>
+    <feComposite in="d" in2="SourceGraphic" operator="in"/>
+  </filter>
+  <filter id="relief2" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency=".03 .05" numOctaves="4" seed="17" result="t"/>
+    <feDiffuseLighting in="t" surfaceScale="3" lighting-color="#ffffff"><feDistantLight azimuth="250" elevation="40"/></feDiffuseLighting>
+  </filter>
+  <filter id="pits" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".6" numOctaves="2" seed="4"/>
+    <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.6 .9"/>
+  </filter>
+  <radialGradient id="cupShade2" cx=".5" cy=".35" r=".65"><stop offset="0" stop-color="#010203"/><stop offset=".8" stop-color="#04080b"/><stop offset="1" stop-color="#0a1318" stop-opacity="0"/></radialGradient>
+  <radialGradient id="lampPool"><stop offset="0" stop-color="#ffbe78" stop-opacity=".55"/><stop offset=".3" stop-color="#f09a4c" stop-opacity=".22"/><stop offset=".7" stop-color="#a45a24" stop-opacity=".06"/><stop offset="1" stop-color="#a45a24" stop-opacity="0"/></radialGradient>
+  <radialGradient id="farHaze"><stop offset="0" stop-color="#d6f1ff" stop-opacity=".75"/><stop offset=".25" stop-color="#8fc6e0" stop-opacity=".35"/><stop offset=".6" stop-color="#3f7390" stop-opacity=".1"/><stop offset="1" stop-color="#1b3a4d" stop-opacity="0"/></radialGradient>
+
+  <filter id="clayTex" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".55" numOctaves="3" seed="8" result="n"/>
+    <feDiffuseLighting in="n" surfaceScale="1.4" lighting-color="#ffd2a0" result="l"><feDistantLight azimuth="20" elevation="50"/></feDiffuseLighting>
+    <feComposite in="l" in2="SourceGraphic" operator="in"/>
+  </filter>
+  <linearGradient id="clay2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b36a38"/><stop offset=".45" stop-color="#7a4221"/><stop offset="1" stop-color="#2a140a"/></linearGradient>
+  <radialGradient id="clayLit" cx=".85" cy=".2" r=".7"><stop offset="0" stop-color="#ffc07a" stop-opacity=".75"/><stop offset=".5" stop-color="#e08a44" stop-opacity=".2"/><stop offset="1" stop-color="#e08a44" stop-opacity="0"/></radialGradient>
+
+  <filter id="saltRough" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency=".07" numOctaves="3" seed="12" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="9" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <filter id="saltGrain" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feTurbulence type="turbulence" baseFrequency=".5" numOctaves="2" seed="3" result="n"/>
+    <feSpecularLighting in="n" surfaceScale="2.2" specularConstant="1.1" specularExponent="22" lighting-color="#eef8ff" result="s"><fePointLight x="120" y="-60" z="160"/></feSpecularLighting>
+    <feComposite in="s" in2="SourceGraphic" operator="in"/>
+  </filter>
+
   <radialGradient id="warmGlow"><stop offset="0" stop-color="#ffc98a" stop-opacity=".75"/><stop offset=".22" stop-color="#f5ab5c" stop-opacity=".4"/><stop offset=".55" stop-color="#b9652a" stop-opacity=".13"/><stop offset="1" stop-color="#b9652a" stop-opacity="0"/></radialGradient>
   <radialGradient id="coldFog"><stop offset="0" stop-color="#bfefff" stop-opacity=".55"/><stop offset=".3" stop-color="#6fb4d4" stop-opacity=".22"/><stop offset="1" stop-color="#1b3a4d" stop-opacity="0"/></radialGradient>
   <linearGradient id="bowl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e79a5a"/><stop offset=".35" stop-color="#9c5a2e"/><stop offset="1" stop-color="#2a150a"/></linearGradient>
   <radialGradient id="flame" cx=".5" cy=".75" r=".6"><stop offset="0" stop-color="#fffbe8"/><stop offset=".35" stop-color="#ffe0a3"/><stop offset=".75" stop-color="#f5ab5c"/><stop offset="1" stop-color="#d9772f" stop-opacity="0"/></radialGradient>
 </defs>
-      <rect x="-200" y="-200" width="750" height="820" fill="#04080d"/>
+      <filter id="halo" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur in="SourceAlpha" stdDeviation="3" result="b"/><feFlood flood-color="#03070b" flood-opacity=".95"/><feComposite in2="b" operator="in" result="s"/><feMerge><feMergeNode in="s"/><feMergeNode in="s"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <rect x="-200" y="-200" width="750" height="840" fill="#04080d"/>
       <g filter="url(#blur30)">
         <ellipse cx="175" cy="190" rx="120" ry="90" fill="#1b3a4f" opacity=".5"/>
         <ellipse cx="80" cy="270" rx="70" ry="50" fill="#27465a" opacity=".35"/>
@@ -165,13 +205,13 @@
 <path d="M380.2 160 L387.2 159.4" stroke-opacity=".18"/></g>
         <g fill="none" stroke="#bfefff" filter="url(#glowSoft)">
           <path class="drawn" d="M175 48 L175 178" stroke-opacity="0.7" stroke-width="1.2" style="--len:130;animation-delay:0.1s"/>
-          <path class="drawn" d="M175 178 L300 112" stroke-opacity="0.6" stroke-width="1.1" style="--len:141.4;animation-delay:0.35s"/>
+          <path class="drawn" d="M175 178 L318 152" stroke-opacity="0.6" stroke-width="1.1" style="--len:145.3;animation-delay:0.35s"/>
           <path class="drawn" d="M175 178 L58 262" stroke-opacity="0.5" stroke-width="1.1" style="--len:144;animation-delay:0.5s"/>
           <path class="drawn" d="M175 178 L286 262" stroke-opacity="0.5" stroke-width="1.1" style="--len:139.2;animation-delay:0.6s"/>
           <path class="drawn" d="M175 178 L175 330" stroke-opacity="0.5" stroke-width="1.1" style="--len:152;animation-delay:0.7s"/>
         </g>
         <g fill="none" stroke="#bfefff" stroke-width="1">
-          <path id="stairline" d="M286 276 L304 362" stroke-opacity=".22" stroke-dasharray="2 5"/>
+          <path id="stairline" d="M286 276 L300 378" stroke-opacity=".22" stroke-dasharray="2 5"/>
           <path d="M175 352 L175 420" stroke-opacity="0.14" stroke-width="1" stroke-dasharray="2 6"/>
         </g>
         <g stroke="#bfefff" stroke-opacity=".4" stroke-width=".8">
@@ -179,17 +219,17 @@
         </g>
         <!-- one small cairn beside each walked route -->
         <g fill="#0d1a24" stroke="#bfefff" stroke-opacity=".75" stroke-width=".9">
-          <g transform="translate(235.5 135) scale(1)"><path d="M-6 0 Q0 -3 6 0 Q0 2 -6 0Z"/><path d="M-4.2 -3.4 Q0 -6 4.4 -3.4 Q0 -1.6 -4.2 -3.4Z"/><path d="M-2.4 -6.6 Q0 -8.8 2.6 -6.6 Q0 -5.2 -2.4 -6.6Z"/></g>
-          <g transform="translate(194 128) scale(1)"><path d="M-6 0 Q0 -3 6 0 Q0 2 -6 0Z"/><path d="M-4.2 -3.4 Q0 -6 4.4 -3.4 Q0 -1.6 -4.2 -3.4Z"/><path d="M-2.4 -6.6 Q0 -8.8 2.6 -6.6 Q0 -5.2 -2.4 -6.6Z"/></g>
+          <g transform="translate(246.5 168) scale(0.8)"><path d="M-6 0 Q0 -3 6 0 Q0 2 -6 0Z"/><path d="M-4.2 -3.4 Q0 -6 4.4 -3.4 Q0 -1.6 -4.2 -3.4Z"/><path d="M-2.4 -6.6 Q0 -8.8 2.6 -6.6 Q0 -5.2 -2.4 -6.6Z"/></g>
+          <g transform="translate(175 146) scale(0.8)"><path d="M-6 0 Q0 -3 6 0 Q0 2 -6 0Z"/><path d="M-4.2 -3.4 Q0 -6 4.4 -3.4 Q0 -1.6 -4.2 -3.4Z"/><path d="M-2.4 -6.6 Q0 -8.8 2.6 -6.6 Q0 -5.2 -2.4 -6.6Z"/></g>
         </g>
 
         <!-- the Mouth: reached -->
         <circle cx="175" cy="48" r="5" fill="#dff7ff" filter="url(#glow)"/>
         <circle cx="175" cy="48" r="11" fill="none" stroke="#bfefff" stroke-opacity=".5"/>
         <!-- the Survey Cut: reached -->
-        <circle cx="300" cy="112" r="22" fill="url(#coldFog)"/>
-        <circle cx="300" cy="112" r="4.5" fill="#dff7ff" filter="url(#glow)"/>
-        <circle cx="300" cy="112" r="10" fill="none" stroke="#bfefff" stroke-opacity=".5"/>
+        <circle cx="318" cy="152" r="22" fill="url(#coldFog)"/>
+        <circle cx="318" cy="152" r="4.5" fill="#dff7ff" filter="url(#glow)"/>
+        <circle cx="318" cy="152" r="10" fill="none" stroke="#bfefff" stroke-opacity=".5"/>
         <!-- the Salt Gallery: seen -->
         <circle cx="58" cy="262" r="8" fill="#08121a" stroke="#bfefff" stroke-opacity=".75" stroke-width="1.1"/>
         <!-- the Lamp Hall: you are here; the lamp is the one warm point -->
@@ -210,27 +250,27 @@
           <rect class="rodblank" x="-8" y="-2.5" width="16" height="5" rx="2.5" fill="none" stroke="#dff7ff" stroke-width=".9"/>
         </g>
         <!-- the head of the stair: not yet reached; the dimmest thing here -->
-        <g id="stairnode" transform="translate(304 372)" stroke="#bfefff" stroke-opacity=".25" fill="none" stroke-width=".9">
+        <g id="stairnode" transform="translate(300 388)" stroke="#bfefff" stroke-opacity=".25" fill="none" stroke-width=".9">
           <path d="M-12 8 h6 v-5 h6 v-5 h6 v-5 h6"/>
         </g>
 
         <!-- labels, inside the chart so they scale with it -->
         <text x="160" y="46" text-anchor="end" class="nn ">THE MOUTH</text><text x="160" y="65" text-anchor="end" class="ns ">the ladder</text>
         <text x="154" y="170" text-anchor="end" class="nn ">THE LAMP HALL</text><text x="154" y="189" text-anchor="end" class="ns ">you are here</text>
-        <text x="342" y="84" text-anchor="end" class="nn ">THE SURVEY CUT</text>
+        <text x="344" y="130" text-anchor="end" class="nn tight">THE SURVEY CUT</text>
         <text x="10" y="292" text-anchor="start" class="nn ">THE SALT GALLERY</text><text x="10" y="311" text-anchor="start" class="ns ">seen</text>
-        <text x="286" y="296" text-anchor="middle" class="nn ">THE LINTEL</text><text x="286" y="315" text-anchor="middle" class="ns ">needs a word</text>
+        <text x="286" y="296" text-anchor="middle" class="nn ">THE LINTEL</text><text id="lintelsub" x="286" y="315" text-anchor="middle" class="ns">needs a word</text>
         <text x="175" y="368" text-anchor="middle" class="nn ">THE GREAT DOOR</text>
-        <text id="stairlabel" x="342" y="402" text-anchor="end" class="ns dim">the head of the stair</text>
+        <text id="stairlabel" x="342" y="428" text-anchor="end" class="ns dim">the head of the stair</text>
 
         <!-- the selector -->
         <g class="reticle" id="reticle" style="transform:translate(175px,178px)">
-          <g class="spin"><circle cx="0" cy="0" r="30" fill="none" stroke="#bfefff" stroke-opacity=".5" stroke-dasharray="14 8"/></g>
-          <path d="M-32 -32 h8 M-32 -32 v8 M32 -32 h-8 M32 -32 v8 M-32 32 h8 M-32 32 v-8 M32 32 h-8 M32 32 v-8" fill="none" stroke="#dff7ff" stroke-opacity=".9" stroke-width="1.1"/>
+          <g class="spin"><circle cx="0" cy="0" r="24" fill="none" stroke="#bfefff" stroke-opacity=".5" stroke-dasharray="14 8"/></g>
+          <path d="M-27 -27 h7 M-27 -27 v7 M27 -27 h-7 M27 -27 v7 M-27 27 h7 M-27 27 v-7 M27 27 h-7 M27 27 v-7" fill="none" stroke="#dff7ff" stroke-opacity=".9" stroke-width="1.1"/>
         </g>
         <!-- tap targets -->
         <g fill="transparent">
-          <circle class="node" data-n="mouth" cx="175" cy="48" r="28" tabindex="0" role="button" aria-label="mouth"/><circle class="node" data-n="hall" cx="175" cy="178" r="28" tabindex="0" role="button" aria-label="hall"/><circle class="node" data-n="salt" cx="58" cy="262" r="28" tabindex="0" role="button" aria-label="salt"/><circle class="node" data-n="survey" cx="300" cy="112" r="28" tabindex="0" role="button" aria-label="survey"/><circle class="node" data-n="lintel" cx="286" cy="262" r="28" tabindex="0" role="button" aria-label="lintel"/><circle class="node" data-n="stair" cx="304" cy="372" r="28" tabindex="0" role="button" aria-label="stair"/><circle class="node" data-n="door" cx="175" cy="330" r="28" tabindex="0" role="button" aria-label="door"/>
+          <circle class="node" data-n="mouth" cx="175" cy="48" r="28" tabindex="0" role="button" aria-label="mouth"/><circle class="node" data-n="hall" cx="175" cy="178" r="28" tabindex="0" role="button" aria-label="hall"/><circle class="node" data-n="salt" cx="58" cy="262" r="28" tabindex="0" role="button" aria-label="salt"/><circle class="node" data-n="survey" cx="318" cy="152" r="28" tabindex="0" role="button" aria-label="survey"/><circle class="node" data-n="lintel" cx="286" cy="262" r="28" tabindex="0" role="button" aria-label="lintel"/><circle class="node" data-n="stair" cx="300" cy="388" r="28" tabindex="0" role="button" aria-label="stair"/><circle class="node" data-n="door" cx="175" cy="330" r="28" tabindex="0" role="button" aria-label="door"/>
         </g>
       </g>
     </svg>
@@ -238,17 +278,17 @@
   </section>
 
   <section class="card plate ticks arrive d3" aria-live="polite">
-    <div class="label rule" id="cl">You are here</div>
-    <h2 class="title" id="ct">The Lamp Hall</h2>
-    <p class="book" id="cp">The lamp is lit. Camp is here, beside it.</p>
+    <div class="label rule" id="cl">Tap a place</div>
+    <h2 class="title" id="ct" hidden></h2>
+    <p class="book" id="cp">The lamp is lit. Camp is here.</p>
     <a class="btn cold" id="cb" href="cut.html" hidden>Look closer</a>
   </section>
 </main>
 <script>
 (function(){
-  var N={"mouth":[175,48],"hall":[175,178],"salt":[58,262],"survey":[300,112],"lintel":[286,262],"stair":[304,372],"door":[175,330]};
+  var N={"mouth":[175,48],"hall":[175,178],"salt":[58,262],"survey":[318,152],"lintel":[286,262],"stair":[300,388],"door":[175,330]};
   var C={
-    hall:['You are here','The Lamp Hall','The lamp is lit. Camp is here, beside it.',null],
+    hall:['Tap a place',null,'The lamp is lit. Camp is here.',null],
     mouth:['Reached','The Mouth','The capped shaft, and eleven metres of ladder. The way you came in.',null],
     survey:['Reached','The Survey Cut','Someone’s camp. More of it comes to light as you come back.',null],
     salt:['Seen','The Salt Gallery','Seen from the hall. Not reached yet.',null],
@@ -257,16 +297,18 @@
     stair:['Not reached','The head of the stair','Beyond the lintel.',null]
   };
   if(location.hash==='#stair'){
-    C.lintel=['Open','The lintel','The stone under it has opened.',null];
+    C.lintel=['Opened','The lintel','The stone under it has opened.',null];
+    document.getElementById('lintelsub').textContent='opened';
+    document.getElementById('lintelnode').setAttribute('opacity','.9');
     C.stair=['Open now','The head of the stair','Beyond the lintel: a landing, and the top of a long stair going down.',null];
     document.getElementById('stairnode').setAttribute('stroke-opacity','.8');
     document.getElementById('stairline').setAttribute('stroke-opacity','.6');
-    document.getElementById('stairlabel').setAttribute('class','ns');
+    document.getElementById('stairlabel').setAttribute('class','ns'); document.getElementById('stairnode').setAttribute('stroke-width','1.3');
   }
   var ret=document.getElementById('reticle');
   function sel(k){
     var c=C[k]; ret.style.transform='translate('+N[k][0]+'px,'+N[k][1]+'px)';
-    document.getElementById('cl').textContent=c[0]; document.getElementById('ct').textContent=c[1];
+    document.getElementById('cl').textContent=c[0]; var ct=document.getElementById('ct'); if(c[1]){ct.hidden=false;ct.textContent=c[1]}else ct.hidden=true;
     document.getElementById('cp').textContent=c[2];
     var b=document.getElementById('cb'); if(c[3]){b.hidden=false;b.textContent=c[3]}else b.hidden=true;
   }

@@ -1,0 +1,212 @@
+<title>Three Ways Down</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Spectral:ital,wght@0,400;0,500;1,400&display=swap">
+<style>
+/* Deliberately single dark theme: the screens under review are all dark, and a light frame would distort them. */
+:root{
+  color-scheme: dark;
+  --ground:#0c0e13; --panel:#151922; --panel-2:#1c2130; --line:#2a3040;
+  --ink:#ece8df; --dim:#a3a8b4; --faint:#6f7584;
+  --love:#f0a24a; --yes:#b9c6e8; --maybe:#8f95a3; --no:#5a6070;
+  --violet:#9d8cff;
+  --display:"Marcellus", "Cinzel", Georgia, serif;
+  --text:"Spectral", Georgia, "Times New Roman", serif;
+}
+html,body{background:var(--ground);color:var(--ink)}
+body{font-family:var(--text);font-size:17px;line-height:1.5;padding-inline:16px;padding-block:0 72px}
+.wrap{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+header.top{padding-block:28px 4px;display:flex;flex-direction:column;gap:10px;max-width:640px}
+h1{font-family:var(--display);font-weight:400;font-size:30px;letter-spacing:.02em;margin:0;text-wrap:balance}
+header.top p{margin:0;color:var(--dim)}
+.how{font-size:15px;color:var(--dim)}
+.how b{color:var(--ink);font-weight:500}
+
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:linear-gradient(var(--ground) 80%,rgba(12,14,19,0));padding-block:10px 14px;display:flex;gap:8px}
+nav.tabs button{flex:1;font:inherit;font-family:var(--display);font-size:15px;letter-spacing:.04em;color:var(--dim);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 6px;cursor:pointer;min-height:48px;display:flex;flex-direction:column;align-items:center;gap:2px}
+nav.tabs button small{font-family:var(--text);font-size:12px;letter-spacing:0;color:var(--faint)}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-color:var(--dim);background:var(--panel-2)}
+nav.tabs button:focus-visible,.chips button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid var(--yes);outline-offset:2px}
+
+section.dir{display:flex;flex-direction:column;gap:22px}
+.dirhead{display:flex;flex-direction:column;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+.dirhead h2{font-family:var(--display);font-weight:400;font-size:24px;margin:0}
+.dirhead .lede{margin:0;color:var(--dim)}
+.dirhead ul{margin:0;padding-left:18px;color:var(--dim);font-size:15.5px;display:flex;flex-direction:column;gap:4px}
+.dirhead .overall{font-size:14px;color:var(--faint);letter-spacing:.06em;text-transform:uppercase;margin-top:6px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:22px}
+.card{display:flex;flex-direction:column;gap:12px}
+.shot{position:relative;display:block;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#000;aspect-ratio:390/844;max-width:100%}
+.shot img{width:100%;height:100%;object-fit:cover;display:block}
+.card h3{font-family:var(--display);font-weight:400;font-size:19px;margin:0;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.card h3 .tag{font-family:var(--text);font-size:13px;color:var(--violet);letter-spacing:.02em}
+.card .cap{margin:0;color:var(--dim);font-size:15px}
+.card .live{font-size:14.5px;color:var(--yes);text-decoration:none;border-bottom:1px solid rgba(185,198,232,.35);align-self:flex-start;padding-block:4px}
+
+.chips{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.chips button{font:inherit;font-size:15px;min-height:46px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--dim);cursor:pointer;padding:6px 4px}
+.chips button[aria-pressed="true"][data-v="love"]{background:var(--love);border-color:var(--love);color:#1b1206}
+.chips button[aria-pressed="true"][data-v="yes"]{background:var(--yes);border-color:var(--yes);color:#10131b}
+.chips button[aria-pressed="true"][data-v="maybe"]{background:var(--maybe);border-color:var(--maybe);color:#10131b}
+.chips button[aria-pressed="true"][data-v="no"]{background:var(--no);border-color:var(--dim);color:var(--ink)}
+textarea{font:inherit;font-size:16px;width:100%;box-sizing:border-box;min-height:48px;resize:vertical;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+textarea::placeholder{color:var(--faint)}
+.saved{font-size:13px;color:var(--faint);min-height:1.2em}
+
+.final{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:10px}
+.final h2{font-family:var(--display);font-weight:400;font-size:22px;margin:0}
+.final p{margin:0;color:var(--dim);font-size:15.5px}
+.status{font-size:14px;color:var(--faint)}
+.status.warn{color:var(--love)}
+
+dialog{border:0;padding:0;background:transparent;max-width:min(430px,100vw);max-height:100vh}
+dialog::backdrop{background:rgba(0,0,0,.85)}
+dialog img{display:block;width:100%;height:auto;max-height:92vh;object-fit:contain;border-radius:14px}
+dialog button{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);right:12px;font:inherit;background:var(--panel-2);color:var(--ink);border:1px solid var(--line);border-radius:999px;min-width:48px;min-height:48px;cursor:pointer}
+@media (prefers-reduced-motion: no-preference){ .chips button{transition:background .15s,border-color .15s,color .15s} }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <h1>Three ways down</h1>
+    <p>The same Thursday in the Quiet, drawn three different ways. Nine screens each, after two rounds of harsh review.</p>
+    <p class="how">Tap a picture to see it large, or <b>Open the live screen</b> to see it move. Then mark each one <b>Love</b>, <b>Yes</b>, <b>Maybe</b> or <b>No</b>, and add a few words if you like. Everything saves as you go, and I read it straight from here.</p>
+    <p class="status" id="status">Connecting…</p>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Directions">
+    <button role="tab" id="tab-a" aria-controls="dir-a" aria-selected="true" data-dir="a">A<small>Lamp and Stone</small></button>
+    <button role="tab" id="tab-b" aria-controls="dir-b" aria-selected="false" data-dir="b">B<small>Engraved Light</small></button>
+    <button role="tab" id="tab-c" aria-controls="dir-c" aria-selected="false" data-dir="c">C<small>Turning Day</small></button>
+  </nav>
+
+  <div id="dirs"></div>
+
+  <section class="final">
+    <h2>Anything else</h2>
+    <p>Mixes you'd like ("A's hall with C's purple"), things that bother you across all three, or which one you'd pick today.</p>
+    <textarea id="note-general" data-key="general" placeholder="Write anything here"></textarea>
+    <div class="saved" data-saved="general"></div>
+  </section>
+</div>
+
+<dialog id="big"><button type="button" id="close" aria-label="Close">✕</button><img id="bigimg" alt=""></dialog>
+
+<script>
+const DIRS = [
+  { id:"a", folder:"a-lamp-and-stone", name:"A · Lamp and Stone",
+    lede:"You carry the only warm thing in a cold hall.",
+    points:["Cold light is the place. Warm light is you: the lamp, the button you're about to press, jobs done.",
+            "Carved letters for everything, including buttons and times.",
+            "No boxes or cards: a few words sit on the painting. Tabs at the bottom."],
+    extra:[{s:"morning-violet", t:"Morning, violet", tag:"variant", c:"The same morning with the place's cold light leaning purple. Warm still means you."}] },
+  { id:"b", folder:"b-engraved-light", name:"B · Engraved Light",
+    lede:"An ancient instrument you are learning to operate.",
+    points:["Almost all cold. Warm is rare: only the clay lamp and the one next action.",
+            "Fine lines of light, but only on carved things: marks, the lintel, the door's count, the panels.",
+            "Carved letters for titles and buttons, a quiet book serif for sentences. A strict grid, like Destiny's menus."],
+    extra:[] },
+  { id:"c", folder:"c-turning-day", name:"C · The Turning Day",
+    lede:"The day travels from cold to gold.",
+    points:["Purple-blue light all day. Gold pools up from the floor as the day goes: a trace in the morning, the salt face at the arrival, the hall at camp.",
+            "Two voices: the place speaks in carved capitals, your own life in plain print.",
+            "One thing at a time: a single card of light, the rest a tap away."],
+    extra:[] },
+];
+const SCREENS = [
+  {s:"morning",  t:"Morning",       c:"Opening the app: where you are, what's ahead, the one next job."},
+  {s:"delve",    t:"A delve",       c:"The timer running: your glowing ring, the time left inside it."},
+  {s:"map",      t:"The map",       c:"The first region as places of light."},
+  {s:"record",   t:"A record",      c:"Reading one line of the tally, with marks and your guesses."},
+  {s:"cut",      t:"Cutting a word",c:"The big moment: the word locks and the lintel answers. Animated."},
+  {s:"complete", t:"Day complete",  c:"The arrival at the Salt Gallery. Enough for today. Animated."},
+  {s:"camp",     t:"Camp",          c:"The evening, by the lamp. Bedtime."},
+  {s:"satchel",  t:"The satchel",   c:"A list, on request. No counts."},
+  {s:"daybook",  t:"The daybook",   c:"Last week, written for you."},
+];
+const CHOICES = [["love","Love"],["yes","Yes"],["maybe","Maybe"],["no","No"]];
+
+const host = document.getElementById("dirs");
+function el(tag, attrs={}, kids=[]){ const e=document.createElement(tag); for(const [k,v] of Object.entries(attrs)){ if(k==="text") e.textContent=v; else e.setAttribute(k,v);} for(const k of kids) e.append(k); return e; }
+function reactBlock(key, label){
+  const chips = el("div",{class:"chips",role:"group","aria-label":label});
+  for(const [v,l] of CHOICES) chips.append(el("button",{type:"button","data-v":v,"data-key":key,"aria-pressed":"false",text:l}));
+  const ta = el("textarea",{id:"note-"+key,"data-key":key,placeholder:"A few words (optional)",rows:"1"});
+  return [chips, ta, el("div",{class:"saved","data-saved":key})];
+}
+DIRS.forEach((d,i)=>{
+  const sec = el("section",{class:"dir",id:"dir-"+d.id,role:"tabpanel","aria-labelledby":"tab-"+d.id});
+  if(i) sec.hidden = true;
+  const head = el("div",{class:"dirhead"},[
+    el("h2",{text:d.name}), el("p",{class:"lede",text:d.lede}),
+    el("ul",{},d.points.map(p=>el("li",{text:p}))),
+    el("div",{class:"overall",text:"This direction overall"}),
+    ...reactBlock(d.id+"__overall", d.name+" overall")
+  ]);
+  const grid = el("div",{class:"grid"});
+  const list = SCREENS.slice(0,1).concat(d.extra.map(x=>({s:x.s,t:x.t,c:x.c,tag:x.tag})), SCREENS.slice(1));
+  for(const sc of list){
+    const src = `directions/${d.folder}/shots/${sc.s}.jpg`;
+    const shot = el("a",{class:"shot",href:src,"data-big":src,"aria-label":"See "+sc.t+" large"},[el("img",{src,alt:d.name+", "+sc.t,loading:"lazy"})]);
+    const h3 = el("h3",{text:sc.t}); if(sc.tag) h3.append(el("span",{class:"tag",text:sc.tag}));
+    grid.append(el("article",{class:"card"},[
+      shot, h3, el("p",{class:"cap",text:sc.c}),
+      el("a",{class:"live",href:`directions/${d.folder}/${sc.s}.html`,target:"_blank",rel:"noopener",text:"Open the live screen"}),
+      ...reactBlock(`${d.id}__${sc.s}`, d.name+", "+sc.t)
+    ]));
+  }
+  sec.append(head, grid); host.append(sec);
+});
+
+// tabs
+const tabs=[...document.querySelectorAll('nav.tabs button')];
+function showDir(id){ tabs.forEach(t=>t.setAttribute("aria-selected", String(t.dataset.dir===id))); DIRS.forEach(d=>document.getElementById("dir-"+d.id).hidden = d.id!==id); try{localStorage.setItem("tab",id)}catch(e){} }
+tabs.forEach(t=>t.addEventListener("click",()=>{showDir(t.dataset.dir); window.scrollTo({top:0})}));
+try{ const t=localStorage.getItem("tab"); if(t && DIRS.some(d=>d.id===t)) showDir(t); }catch(e){}
+
+// lightbox
+const dlg=document.getElementById("big"), bigimg=document.getElementById("bigimg");
+document.addEventListener("click",e=>{ const a=e.target.closest("[data-big]"); if(!a) return; e.preventDefault(); bigimg.src=a.dataset.big; bigimg.alt=a.querySelector("img").alt; try{dlg.showModal()}catch(_){dlg.setAttribute("open","")} });
+document.getElementById("close").addEventListener("click",()=>dlg.close());
+dlg.addEventListener("click",e=>{ if(e.target===dlg) dlg.close(); });
+
+// state + saving
+const state = {};  // key -> {choice, note}
+function paint(key){
+  const s=state[key]||{};
+  document.querySelectorAll(`.chips button[data-key="${key}"]`).forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.v===s.choice)));
+  const ta=document.querySelector(`textarea[data-key="${key}"]`); if(ta && document.activeElement!==ta) ta.value=s.note||"";
+}
+const statusEl=document.getElementById("status");
+let db=null, readOnly=false;
+function mark(key,text){ const e=document.querySelector(`[data-saved="${key}"]`); if(e) e.textContent=text; }
+async function save(key){
+  const s=state[key]||{};
+  if(!db){ mark(key,"Not saved: this view can't reach the store. Tell Claude in chat instead."); return; }
+  if(readOnly){ mark(key,"This view is read-only."); return; }
+  try{ await db.doc("reactions/"+key).set({choice:s.choice||"", note:s.note||"", at:new Date().toISOString()}); mark(key,"Saved"); }
+  catch(e){ if(e && e.code==="invalid_argument"){ readOnly=true; mark(key,"This view is read-only."); } else mark(key,"Couldn't save just now. Try again in a moment."); }
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest(".chips button"); if(!b) return;
+  const k=b.dataset.key; state[k]=state[k]||{};
+  state[k].choice = state[k].choice===b.dataset.v ? "" : b.dataset.v;
+  paint(k); save(k);
+});
+const timers={};
+document.addEventListener("input",e=>{
+  const ta=e.target.closest("textarea[data-key]"); if(!ta) return;
+  const k=ta.dataset.key; state[k]=state[k]||{}; state[k].note=ta.value; mark(k,"…");
+  clearTimeout(timers[k]); timers[k]=setTimeout(()=>save(k),800);
+});
+
+(async()=>{
+  try{ db = await window.claude?.use?.("db"); }catch(e){ db=null; }
+  if(!db){ statusEl.textContent="Your marks can't be saved in this view. Open it from the claude.ai link to save them."; statusEl.classList.add("warn"); return; }
+  statusEl.textContent="Your marks save automatically.";
+  db.collection("reactions").onSnapshot(snap=>{
+    for(const d of snap.docs){ const v=d.data()||{}; state[d.id]={choice:v.choice||"", note:v.note||""}; paint(d.id); }
+  }, ()=>{ statusEl.textContent="Live updates paused. Your marks still save."; });
+})();
+</script>

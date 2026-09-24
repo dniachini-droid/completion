@@ -319,3 +319,12 @@
 - **Rationale:** P9 (the app suggests, Dan chooses); his life and goals will change over a year of play.
 - **Consequences:** `DESIGN_PRINCIPLES.md` (P6, P9) and `technical/DATA_MODEL.md` updated. Phase 7 designs the data this way. How Dan edits targets without it becoming admin (P15, "no productivity theatre") is a Phase 5–6 UX question.
 - **Reversible:** No need; it is a baseline requirement.
+
+## D-031 — A language pass on the app's voice is a recorded job
+- **Date:** 2026-09-24
+- **Context:** Seeing the Phase 4 screens, Dan said some lines ("The lintel needs a word") sound AI-generated and stilted: "at one point we need to go over it and fix. Not now, since it's visual pass but we do need to record it as a job to do."
+- **Decision:** Before the first playable, every line the app itself says gets a dedicated language pass so it reads like a person wrote it: natural rhythm, contractions, variety, no clipped formula lines. Dan reviews a sample. The Phase 4 mock-up copy is placeholder and is not the voice.
+- **Alternatives:** fixing copy during the visual run (Dan: not now).
+- **Rationale:** P14 (a plain, warm, honest voice); Dan knows how AI sounds and it breaks the spell.
+- **Consequences:** Listed as a job in `OPEN_QUESTIONS.md` → UX, and in the Phase 4 handover. Suggested slot: Phase 5 or 6, before copy is fixed in the build.
+- **Reversible:** Yes.
