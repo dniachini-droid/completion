@@ -43,9 +43,9 @@ Each fact: `seq` (order), `at` (timestamp with the phone's time zone), `gameDay`
 |---|---|
 | `capacityChosen` | Low / Normal / High, suggested value |
 | `jobBegun` | job, from: *app* (Begin) or *record* (Done without Begin; the test's sharpest line) |
-| `delveStarted` | job, minutes, run position |
+| `delveStarted` | job, minutes, how many delves in the run (the later ones start by themselves and are worked out, not written; D-064) |
 | `delveHeld` / `delveResumed` | job, minutes done, minutes left |
-| `delveEnded` | job, minutes counted, how: *ran out* / *finished here* |
+| `delveEnded` | job, minutes counted, how: *ran out* / *finished here*, the run it ends |
 | `breatherSkipped` | — |
 | `jobDone` | job, minutes (if timed) |
 | `cantStartUsed` | job; whether a job began within 30 minutes is worked out, not stored |
@@ -56,12 +56,14 @@ Each fact: `seq` (order), `at` (timestamp with the phone's time zone), `gameDay`
 | `markCut`, `signGuessed` | mark, guess |
 | `opened` | the app was opened (no screen tracking beyond the test's list) |
 | `worldItemOpened` / `worldItemSkipped` | arrival or record id (test: opened or skipped past) |
+| `seen` | a step or an arrival looked at (the heart slice's form of the above, D-064) |
 | `passedDateAnswered` | item, Done / New date / Let it go |
 
 **What the world gave** (worked out once, then kept)
 | Type | Fields |
 |---|---|
-| `stepsGained` | count, from what |
+| `stepsGained` | minutes (a step is 25), the job, the run if from a delve. A run's steps belong to the game day the run began |
+| `dayCompleted` | — (the day's lock-in, written once; D-064) |
 | `arrived` | place or camp id |
 | `recordShown` | fragment id |
 | `keyEarned` | rhythm met or the floor; `keySpent` | sealed thing id |

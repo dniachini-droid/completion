@@ -4,25 +4,37 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-24 (Phase 7 closed, D-060; Phase 8 opens next session)_
+_Last updated: 2026-09-24 (Phase 8 closed; Phase 9 opened, D-065)_
 
 ## Current phase
 
-**PHASE 8 — PROTOTYPE** (Phase 7 closed 2026-09-24, D-060)
+**PHASE 9 — FIRST PLAYABLE** (Phase 8 closed 2026-09-24, D-065)
 
 ## Current objective
 
-Prototype the central interaction on the agreed stack (MASTER_BRIEF §67; `technical/TECH_DECISIONS.md`): feel, clarity, reward timing, friction, beauty. **First the five trials** (`TECH_DECISIONS.md` → "Risks"), then **the heart** (`product/MVP.md` → build order, slice 1) on throwaway data, as a web link on Dan's phone and then through TestFlight. Placeholders are fine; any temporary ugliness is recorded so it never becomes permanent by accident.
+Build the whole MVP (`product/MVP.md` → build order): **slice 2** the Quiet answers (the map at two levels, records, a sealed thing in view, rhythms and Keys, finds), **slice 3** learning the Cut (signs and guessing, the first word, the cutting cinematic, the stair), **slice 4** the week and the gaps (the planner, the satchel, camp and bedtime, the daybook week close, absence). Each slice thin, complete and good-feeling before the next (rule 13), on the heart as built, first on **throwaway content and invented places**; the real story content and paintings go in only after the sealed story-fix session. Dan sees each slice on the web link as it lands, then on TestFlight.
 
 ## Resume here (next session)
-1. Start Phase 8: read `technical/` (all five), then set up `app/` as `ARCHITECTURE.md` describes and run the trials in this order: (a) the painting kit's three invented sample places, judged by Dan on his phone against the approved hall; (b) the delve alert with the phone locked, on silent and in Focus; (c) smoothness and real-app feel; (d) the cloud-Mac pipeline to TestFlight. Give Dan the Apple setup steps early (membership approval can take a day or two). Ask Dan his iPhone model.
-2. **The sealed story-fix session** (D-035, D-060), in its own session: **after the prototype, before the first playable's content goes in** (Phase 9). It includes week 6 of the clue ledger, the authoring list in `game/BALANCING.md` (D-049), the content budget in `product/MVP.md`, and whether weeks 1–6 need the before → now view (D-053). The real places' paintings follow it.
-3. Whenever convenient: Dan looks at the planner screens on his phone (D-047).
+1. **Claude:** build slice 2 on throwaway content (read `game/GAME_DESIGN.md`, `game/BALANCING.md`, `game/TOOLS.md` and the D mock-ups `map.html`, `record.html` first); publish it on the web link for Dan.
+2. **The sealed story-fix session** (D-035, D-060): in its **own** session, any time now, and before real content goes in. Dan starts it by pasting: "Read CLAUDE.md and docs/CURRENT_STATE.md on branch main, then run the sealed story-fix session (D-035). Keep everything sealed from me." Claude in that session never shows Dan the story.
+3. **Waiting on Dan (whenever he's at a computer):** Apple setup sitting 2 (`technical/APPLE_SETUP.md`), then "Apple setup done"; Claude starts the TestFlight build; Dan does sitting 3 (the two ten-minute checks, trials b and c).
 
-## Last session (2026-09-24, Phase 7)
+## Last session (2026-09-24, Phase 8 close)
+Dan on the heart: it "ran beautifully", looked beautiful, "was great"; too small to test much (only the timer), so no more changes: build the app (D-065). Phase 8 closed with trials (b)–(d) carried into Phase 9 for the first TestFlight build. Before that, the app build was readied for them: the save is kept by the phone (Capacitor Preferences, not the browser's storage), a rehearsal now also brings the locked-phone alert 60 times sooner, and Dan's phone checklist is `APPLE_SETUP.md` → Sitting 3.
+
+## Earlier (2026-09-24, Phase 8, the heart)
+Apple setup blocked (the developer pages don't work on Dan's phone), so Dan asked for the heart slice first, as a web link (D-064). Built on the agreed stack: the rules as pure code over a fact log (a run of delves worked out from timestamps, so a locked phone or a closed app loses nothing; steps, day complete and the arrival written once when they happen), with 28 rule tests; the screens ported from direction D (Today, the dial and run line, the delve with the approved tunnel and ring, the step, day complete and the arrival, "I can't start"); throwaway content on the three invented sample places. The whole flow was walked at 390 × 844 and 360 × 780 with pictures of every screen: no errors, no network requests. Published as one self-contained page at a private claude.ai link. Compromises (no locked-phone alert on the web, browser storage, stand-in job list, no camp or map yet) are in `technical/PROTOTYPE_NOTES.md`.
+
+## Earlier (2026-09-24, Phase 8 start, second)
+Capacitor wrapper, trials screen and the TestFlight pipeline (D-063); Dan approved the three sample paintings (D-062).
+
+## Earlier (2026-09-24, Phase 8 start)
+Trial (a), the painting kit: the approved hall's method made reusable (`app/paint/kit/`: GPU ray-marching with the hall's own stone, light, haze, blur, bloom; one short scene file per place; bake, automatic checks, live layers). Three invented sample places: **The Well Stair, The Rib Gallery, The Pool Dome**. A critic (a second Claude) scored the first round 4, 6 and 5 of 10 against the hall (`app/paint/CRITIQUE-1.md`: the gold was gone, the darks washed out, focal lights hard-edged); one revision round addressed its blockers. The kit repaints the approved hall itself almost exactly (a regression scene), so it is the same hand. `app/` skeleton created with the first rule (the 04:00 day edge) and its tests. Dan's Apple steps written (`technical/APPLE_SETUP.md`). D-061.
+
+## Session before (2026-09-24, Phase 7)
 Dan's answers (D-056): **iPhone, staying; no computer; up to ~$99 a year is fine; paintings stay code-painted.** `technical/TECH_DECISIONS.md` compared five options and recommended **web code in a real iPhone app** (TypeScript, Svelte, Capacitor), packaged by a cloud Mac and installed through TestFlight, everything on the phone, no server, no AI (D-057). The paintings: a **painting kit** from the approved hall's method, one short scene file per place, baked in the cloud with live layers on top, checked and critiqued, one painting session a week; Dan judges **three invented sample places** first. **Dan agreed** (D-058). Then the four technical docs (D-059): `ARCHITECTURE.md` (five parts, one-way dependencies, a log of facts as the source of truth, gifts recorded once, timers as timestamps, screens see only what's unlocked, all copy in one file), `DATA_MODEL.md`, `SECURITY_PRIVACY.md` (nothing leaves the phone; notifications the only permission), `TEST_STRATEGY.md`. Dan closed Phase 7 (D-060) and noted the story job still to do: it comes after the prototype and before the first playable's content, not after the MVP (the MVP carries the story's first six weeks).
 
-## Session before (2026-09-24, Phase 6)
+## Earlier (2026-09-24, Phase 6)
 `product/MVP.md` drafted (D-053). The first playable was already cut hard in Phase 5, so the MVP keeps it whole except a few second doors: the map's whole-Site zoom, forecast waypoints on the map, the morning deep push, and before → now unless the story needs it. The real size is in paintings and words: one painted scene per area proposed, and a content budget for six story weeks. Build order in four slices; the test starts only when all four are in. The central test is written: it measures **starting** (above all avoided jobs; started from the app vs logged afterwards), with a baseline chat and predictions before day 1, notes kept on the phone, three short chats, evidence for and against, what not to overinterpret, and what each answer leads to.
 Dan's answers (D-054): a painting for **every** named place (Phase 7 must find how to make about 5 a week); map waypoints and the morning deep push stay; test notes stay on the phone, shared only if he chooses. Dan approved the MVP and closed Phase 6 (D-055).
 
@@ -40,19 +52,28 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 
 ## Do NOT work on yet
 
-- Real story content or real places' paintings in the prototype: it uses throwaway data and invented places until the story-fix session (D-060).
-- Features beyond the heart slice before the trials pass (rule 13).
+- Real story content or real places' paintings: throwaway content and invented places until the sealed story-fix session is done (D-060).
+- A slice before the one before it feels good (rule 13); anything in `product/FIRST_PLAYABLE.md` → "Out".
 - Showing any sealed story content on a screen or in Dan-facing docs (D-015).
 - More story depth beyond what the playable needs (D-004). Pending: the sealed story-fix session (D-035, after the prototype and before the first playable's content, D-060; top priority: the late-game choice must never look like a promise the fixed story can't keep); week 6 of the sealed clue ledger (D-023); the "company at work" during a delve (later).
 - Optional, later: the zoomed-out whole-Site map mock-up.
 
-## Phase 8 exit criteria
+## Phase 9 exit criteria
 
-- [ ] The five trials done (`TECH_DECISIONS.md` → "Risks"); any failure answered (fallback: option C).
-- [ ] The painting kit's three invented sample places approved by Dan on his phone.
-- [ ] Dan's Apple setup done; a build reaches his phone through TestFlight.
-- [ ] The heart (slice 1) prototyped and felt on Dan's phone: open → one job → Begin → delve → back → Done → the step → day complete → arrival; state survives a restart.
-- [ ] Compromises recorded; Dan agrees to move to Phase 9 (first playable).
+- [ ] Slices 2, 3 and 4 built on the heart, each felt by Dan on his phone (`product/MVP.md` → build order).
+- [ ] Carried from Phase 8 (D-065): trials (b) the delve's end with the phone locked, (c) real-app feel, (d) a build through TestFlight.
+- [ ] The sealed story-fix session done (D-035, D-060); the real content for six story weeks and its paintings loaded (`product/MVP.md` → budget).
+- [ ] SQLite save with snapshot and migrations; the flow tests in CI (`TEST_STRATEGY.md`; `PROTOTYPE_NOTES.md` emptied of anything that must not reach the test).
+- [ ] MASTER_BRIEF §67–70's bar: persists state, survives restart, real quest flow, game consequence, genuine narrative, a discovery, basic failure and recovery, usable repeatedly. Claude tests technically, then Dan uses it.
+- [ ] Dan agrees to move to Phase 10 (personal alpha: the central test, on a fresh save).
+
+## Phase 8 (closed) exit criteria
+
+- [~] The five trials: (a) passed; (b)–(d) carried into Phase 9 (D-065).
+- [x] The painting kit's three invented sample places approved by Dan on his phone (D-062).
+- [~] TestFlight: membership active, pipeline written (D-063); sitting 2 pending, carried into Phase 9 (D-065).
+- [ ] The heart (slice 1) prototyped and felt on Dan's phone: open → one job → Begin → delve → back → Done → the step → day complete → arrival; state survives a restart. (Dan: "great", D-065.)
+- [x] Compromises recorded (`technical/PROTOTYPE_NOTES.md`); Dan agrees to move to Phase 9 (D-065).
 
 ## Phase 7 (closed) exit criteria
 
@@ -114,6 +135,10 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 - 2026-09-24 — **Phase 6 complete** (D-055). Merged into `main`. Phase 7 opened.
 - 2026-09-24 — Phase 7: Dan's answers (D-056); the stack and the painting kit agreed (D-057, D-058); the four technical docs written (D-059).
 - 2026-09-24 — **Phase 7 complete** (D-060). Merged into `main`. Phase 8 opened.
+- 2026-09-24 — Phase 8: the painting kit and three sample places; `app/` skeleton; Apple steps for Dan (D-061).
+- 2026-09-24 — Trial (a) passed: Dan approves the samples; iPhone 16 Pro Max (D-062). Capacitor wrapper, trials screen, TestFlight pipeline (D-063).
+- 2026-09-24 — The heart slice built and published as a web link while Apple setup waits (D-064).
+- 2026-09-24 — **Phase 8 complete** (D-065): the heart felt great; trials (b)–(d) carried into Phase 9. Merged into `main`. Phase 9 opened.
 
 ## Unresolved blockers
 
@@ -124,4 +149,4 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 
 ## Recommended next action
 
-**Dan: start a new session and paste:** "Read CLAUDE.md and docs/CURRENT_STATE.md, then start Phase 8."
+**Claude:** build slice 2 (the Quiet answers) on throwaway content. **Dan, in parallel:** start the sealed story-fix session in its own session (sentence above), and Apple setup when at a computer. To resume this build in a new session, paste: "Read CLAUDE.md and docs/CURRENT_STATE.md on branch claude/phase-8-continuation-ttngwy, then continue Phase 9."

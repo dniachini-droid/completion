@@ -1,0 +1,6 @@
+/* What makes web code feel like an app (trial c): no bounce, no selection, no tap flash; the phone's safe areas. */
+html, body { overflow: hidden; overscroll-behavior: none; }
+body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; }
+button { touch-action: manipulation; }
+#app { width: 100%; display: flex; justify-content: center; }
+.phone { max-width: none; }

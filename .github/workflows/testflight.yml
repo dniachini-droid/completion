@@ -1,0 +1,63 @@
+# Build the app on a cloud Mac and send it to TestFlight (TECH_DECISIONS.md, ARCHITECTURE.md → Build and release).
+# Runs when started by hand, or on a push whose commit message contains [testflight] (Mac minutes are scarce).
+# Signing: Xcode's cloud-managed distribution certificate, reached with the App Store Connect API key
+# (secrets ASC_KEY_P8, ASC_KEY_ID, ASC_ISSUER_ID, APPLE_TEAM_ID; technical/APPLE_SETUP.md). No certificate files.
+name: TestFlight
+on:
+  workflow_dispatch:
+  push:
+    branches: ['claude/**', main]
+    paths: ['app/**', '.github/workflows/testflight.yml']
+  schedule:
+    - cron: '0 6 1 * *'   # monthly, so a fresh build is always inside TestFlight's 90 days
+concurrency: { group: testflight, cancel-in-progress: false }
+jobs:
+  testflight:
+    if: github.event_name != 'push' || contains(github.event.head_commit.message, '[testflight]')
+    runs-on: macos-latest
+    timeout-minutes: 45
+    defaults: { run: { working-directory: app } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: app/package-lock.json }
+      - run: npm ci
+      - run: npm test
+      - run: npx vite build
+      - run: npx cap sync ios
+      - name: Use the newest Xcode
+        run: |
+          X=$(ls -d /Applications/Xcode_*.app | sort -V | tail -1); sudo xcode-select -s "$X"; xcodebuild -version
+      - name: Key for App Store Connect
+        env: { ASC_KEY_P8: '${{ secrets.ASC_KEY_P8 }}' }
+        run: printf '%s\n' "$ASC_KEY_P8" > "$RUNNER_TEMP/AuthKey.p8"
+      - name: Archive (unsigned; signed on export)
+        run: |
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Release \
+            -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/App.xcarchive" \
+            CURRENT_PROJECT_VERSION=${{ github.run_number }} \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" archive
+      - name: Sign and upload to TestFlight
+        env:
+          TEAM: '${{ secrets.APPLE_TEAM_ID }}'
+          KEY_ID: '${{ secrets.ASC_KEY_ID }}'
+          ISSUER: '${{ secrets.ASC_ISSUER_ID }}'
+        run: |
+          cat > "$RUNNER_TEMP/export.plist" <<PLIST
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict>
+            <key>method</key><string>app-store-connect</string>
+            <key>destination</key><string>upload</string>
+            <key>teamID</key><string>$TEAM</string>
+            <key>signingStyle</key><string>automatic</string>
+            <key>uploadSymbols</key><true/>
+            <key>manageAppVersionAndBuildNumber</key><false/>
+          </dict></plist>
+          PLIST
+          xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/App.xcarchive" \
+            -exportOptionsPlist "$RUNNER_TEMP/export.plist" -exportPath "$RUNNER_TEMP/out" \
+            -allowProvisioningUpdates -authenticationKeyPath "$RUNNER_TEMP/AuthKey.p8" \
+            -authenticationKeyID "$KEY_ID" -authenticationKeyIssuerID "$ISSUER"
+      - if: always()
+        run: rm -f "$RUNNER_TEMP/AuthKey.p8"

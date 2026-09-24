@@ -1,0 +1,7 @@
+/* Direction D's two faces, vendored (open licence): Cinzel for the stone, Spectral for your own life. */
+@font-face { font-family: 'Cinzel'; font-weight: 600; font-display: block; src: url('./fonts/Cinzel-600.woff2') format('woff2'); }
+@font-face { font-family: 'Cinzel'; font-weight: 700; font-display: block; src: url('./fonts/Cinzel-700.woff2') format('woff2'); }
+@font-face { font-family: 'Spectral'; font-weight: 300; font-display: block; src: url('./fonts/Spectral-300.woff2') format('woff2'); }
+@font-face { font-family: 'Spectral'; font-weight: 400; font-display: block; src: url('./fonts/Spectral-400.woff2') format('woff2'); }
+@font-face { font-family: 'Spectral'; font-weight: 400; font-style: italic; font-display: block; src: url('./fonts/Spectral-400i.woff2') format('woff2'); }
+@font-face { font-family: 'Spectral'; font-weight: 500; font-display: block; src: url('./fonts/Spectral-500.woff2') format('woff2'); }

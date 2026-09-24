@@ -1,0 +1,83 @@
+.rs body{ --scrim-top-h: 300px; --scrim-bottom-h: 52%; }
+.rs .dimwash{ display: none; }
+.rs .hall .hall-far{ animation: none; opacity: .5; }
+.rs .job{ margin-top: 6px; }
+.rs .job h1{ margin-top: 8px; }
+.rs .stage{ position: relative; }
+.rs .stage-in{ position:absolute; inset: 0 var(--gutter); }
+.rs .num{ font-family: var(--life); font-weight: 300; line-height: 1; color: #f6f5ff; font-variant-numeric: tabular-nums lining-nums;
+  text-shadow: 0 0 24px rgba(var(--violet-rgb), .85), 0 0 64px rgba(var(--violet-rgb), .45); display:inline-block; }
+.rs .unit{ font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink-2); }
+.rs .num.tick{ animation: numtick .42s var(--ease); }
+@keyframes numtick{ 0% { transform: scale(1); } 30% { transform: scale(1.09); text-shadow: 0 0 20px #fff, 0 0 44px rgba(var(--violet-rgb), 1), 0 0 90px rgba(var(--violet-rgb), .7); } 100% { transform: scale(1); } }
+.rs .dialwrap{ position:absolute; left:50%; top: 50%; width:0; height:0; }
+.rs .dial{ --R: min(236px, 60vw, 29vh); position:absolute; left: calc(var(--R) / -2); top: calc(var(--R) / -2); width:var(--R); height:var(--R);
+  touch-action:none; cursor:grab; border-radius:50%; }
+.rs .dial:active{ cursor:grabbing; }
+.rs .dial:focus-visible{ outline:none; }
+.rs .dial:focus-visible .track{ background: rgba(210,210,255,.3); }
+.rs .dial .band{ position:absolute; inset:0; border-radius:50%;
+  -webkit-mask: radial-gradient(circle closest-side, transparent 90.5%, #000 91.5%, #000 96.5%, transparent 97.5%);
+          mask: radial-gradient(circle closest-side, transparent 90.5%, #000 91.5%, #000 96.5%, transparent 97.5%); }
+.rs .dial .track{ background: rgba(190,196,255,.14); }
+.rs .dial .fill{ background: conic-gradient(from 0deg, rgba(var(--violet-rgb),.35) 0, rgba(190,184,255,.95) calc(var(--p) * 1turn - 3deg), #fff calc(var(--p) * 1turn), transparent calc(var(--p) * 1turn + .5deg)); }
+.rs .dial .glow{ position:absolute; inset:-14%; filter: blur(10px); mix-blend-mode:screen; pointer-events:none; }
+.rs .dial .glow .band{ inset:12.3%; -webkit-mask: radial-gradient(circle closest-side, transparent 84%, #000 90%, #000 98%, transparent 104%); mask: radial-gradient(circle closest-side, transparent 84%, #000 90%, #000 98%, transparent 104%); }
+.rs .dial .glow.wide{ filter: blur(24px); opacity:.9; }
+.rs .dial .disc{ position:absolute; inset:5%; border-radius:50%; pointer-events:none;
+  background: radial-gradient(circle, rgba(200,196,255,calc(.05 + var(--p)*.16)), rgba(var(--violet-rgb),calc(.03 + var(--p)*.08)) 60%, transparent 72%); }
+.rs .dial .halo{ position:absolute; inset:-22%; border-radius:50%; pointer-events:none;
+  background: radial-gradient(circle, transparent 42%, rgba(var(--violet-rgb),calc(.06 + var(--p) * .26)) 50%, transparent 66%); }
+.rs .dial .notch{ position:absolute; left:50%; top:50%; width:2px; height:12px; margin:-6px 0 0 -1px; border-radius:1px; background: var(--edge-2);
+  transform: rotate(var(--a)) translateY(calc(var(--R) * -.47)); transition: background .3s var(--ease), box-shadow .3s var(--ease); pointer-events:none; }
+.rs .dial .notch.lit{ background: #fff; box-shadow: 0 0 8px rgba(var(--violet-rgb), 1); }
+.rs .dial .handle{ position:absolute; left:50%; top:50%; width:48px; height:48px; margin:-24px 0 0 -24px; pointer-events:none;
+  transform: rotate(calc(var(--p) * 1turn)) translateY(calc(var(--R) * -.47)); }
+.rs .dial .handle::before{ content:""; position:absolute; inset:14px; border-radius:50%;
+  background: radial-gradient(circle, #fff 0 32%, rgba(217,214,255,.9) 45%, rgba(var(--violet-rgb),.5) 62%, transparent 72%);
+  box-shadow: 0 0 20px 6px rgba(var(--violet-rgb), .7), 0 0 44px 10px rgba(var(--violet-rgb), .3); transition: transform .25s var(--ease); }
+.rs .dial.dragging .handle::before{ transform: scale(1.35); }
+.rs .dial .inner{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none; }
+.rs .dial .num{ font-size: calc(var(--R) * .34); }
+.rs .dial .unit{ margin-top: 4px; }
+.rs .dial .pulse{ position:absolute; left:50%; top:50%; width:30px; height:30px; margin:-15px 0 0 -15px; border-radius:50%; pointer-events:none; opacity:0;
+  transform: rotate(var(--a, 0deg)) translateY(calc(var(--R) * -.47));
+  background: radial-gradient(circle, rgba(255,255,255,.9), rgba(var(--violet-rgb),.5) 45%, transparent 70%); }
+.rs .dial .pulse.go{ animation: pulse .6s var(--ease); }
+@keyframes pulse{ 0% { opacity:.95; scale: .6; } 100% { opacity:0; scale: 2.8; } }
+.rs .stop{ position:absolute; left:0; top:0; width:48px; height:44px; margin:-22px 0 0 -24px; display:flex; align-items:center; justify-content:center;
+  font-family: var(--life); font-size: 17px; color: var(--ink-3); font-variant-numeric: tabular-nums lining-nums;
+  transform: rotate(var(--a)) translateY(calc((var(--R) / 2 + 30px) * -1)) rotate(calc(var(--a) * -1));
+  transition: color .3s var(--ease), text-shadow .3s var(--ease); }
+.rs .stop.on{ color: #fff; text-shadow: 0 0 12px rgba(var(--violet-rgb), .95); }
+.rs .stop.past{ color: var(--ink-2); }
+.rs .stop:focus-visible{ outline: 1px solid var(--edge); outline-offset: -4px; }
+.rs .stops{ --R: min(236px, 60vw, 29vh); position:absolute; left:0; top:0; }
+.rs .run{ text-align:center; margin-top: 6px; }
+.rs .run h2{ font-size: 19px; letter-spacing: .12em; padding-left: .12em; color: #eceaff; white-space: nowrap;
+  text-shadow: 0 -1px 0 rgba(0,0,0,.9), 0 0 16px rgba(var(--violet-rgb), .7), 0 0 44px rgba(var(--violet-rgb), .35);
+  transition: color .4s var(--ease), text-shadow .4s var(--ease); }
+.rs .run.there h2{ color: #f4f2ff; text-shadow: 0 -1px 0 rgba(0,0,0,.9), 0 0 22px rgba(var(--violet-rgb), .95), 0 0 60px rgba(var(--violet-rgb), .5); }
+.rs .route{ position: relative; height: 68px; margin-top: 4px; touch-action: none; cursor: pointer; }
+.rs .route:focus-visible{ outline: 1px solid var(--edge-2); outline-offset: 2px; }
+.rs .route svg{ position:absolute; inset:0; width:100%; height:100%; overflow:visible; display:block; }
+.rs .route text{ font-family: var(--life); font-style: italic; font-size: 13.5px; }
+.rs .count{ display:grid; grid-template-columns: 44px 1fr 44px; align-items:center; margin-top: 2px; }
+.rs .count button{ width:44px; height:44px; display:flex; align-items:center; justify-content:center; border-radius: 50%; color: var(--ink-2);
+  transition: color .25s var(--ease), opacity .25s var(--ease); }
+.rs .count button svg{ width: 18px; height: 18px; fill:none; stroke: var(--edge); stroke-width: 1.3; stroke-linecap: round; }
+.rs .count button:hover svg, .rs .count button:focus-visible svg{ stroke: #fff; }
+.rs .count button[disabled]{ opacity: .3; cursor: default; }
+.rs .count .n{ font-family: var(--life); font-size: 18px; color: var(--ink); line-height: 1.25; font-variant-numeric: tabular-nums lining-nums; }
+.rs .count .n b{ font-weight: 500; }
+.rs .count .when{ font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink-2); line-height: 1.3; }
+.rs .go{ margin-top: 14px; }
+@media (max-height: 800px){.rs .job h1{ font-size: 24px; }
+.rs .run h2{ font-size: 17px; }
+.rs .route{ height: 62px; }
+.rs .go{ margin-top: 10px; }
+
+}
+@media (max-width: 370px){.rs .run h2{ font-size: 17px; letter-spacing: .1em; }
+ }
+

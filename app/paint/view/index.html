@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#05050c">
+<title>Painting kit: three sample places</title>
+<!-- Phase 8, trial (a): Dan judges the painting kit's three invented sample places
+     against the approved hall, on his phone. Assembled by pack.sh; not app code. -->
+<style>
+  @font-face { font-family: Cinzel; src: url(fonts/Cinzel-500.woff2) format('woff2'); font-weight: 500; }
+  @font-face { font-family: Spectral; src: url(fonts/Spectral-400.woff2) format('woff2'); font-weight: 400; }
+  @font-face { font-family: Spectral; src: url(fonts/Spectral-400i.woff2) format('woff2'); font-weight: 400; font-style: italic; }
+  :root { --night: #05050c; --ink: #f2f3fb; --ink-2: #c7c9e6; --ink-3: #a3a6cc; --edge: rgba(217,214,255,.62); --edge-3: rgba(217,214,255,.22); }
+  html, body { margin: 0; height: 100%; background: var(--night); overflow: hidden; overscroll-behavior: none; }
+  body { -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; }
+  .deck { position: fixed; inset: 0; display: flex; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior: contain; }
+  .deck::-webkit-scrollbar { display: none; }
+  .slide { position: relative; flex: 0 0 100%; height: 100%; scroll-snap-align: center; overflow: hidden; background: var(--night); }
+  .scene { position: absolute; inset: 0; overflow: hidden; }
+  .scene img.paint { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .scene .hall canvas, .scene .hall svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .hall-cup { opacity: 0; }
+  .hall-flame { animation: fl 2.8s ease-in-out infinite; }
+  @keyframes fl { 0%,100% { transform: scale(1,1); } 30% { transform: scale(.94,1.07); } 62% { transform: scale(1.04,.95); } }
+  .scrim { position: absolute; left: 0; right: 0; top: 0; height: 34%; background: linear-gradient(rgba(5,5,12,.72), rgba(5,5,12,0)); pointer-events: none; transition: opacity .6s; }
+  .words { position: absolute; left: 24px; right: 24px; top: calc(env(safe-area-inset-top) + 44px); color: var(--ink); transition: opacity .6s; pointer-events: none; }
+  .kicker { font: 500 14px/1 Cinzel, serif; letter-spacing: .22em; color: var(--ink-2); display: flex; align-items: center; gap: 12px; }
+  .kicker::after { content: ''; flex: 1; height: 1px; background: var(--edge-3); }
+  h1 { font: 500 30px/1.15 Cinzel, serif; letter-spacing: .12em; margin: 14px 0 10px; text-transform: uppercase; text-shadow: 0 1px 14px rgba(5,5,12,.8); }
+  p.line { font: italic 400 19px/1.4 Spectral, serif; color: var(--ink-2); margin: 0; text-shadow: 0 1px 10px rgba(5,5,12,.9); }
+  .foot { position: absolute; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom) + 22px); text-align: center; transition: opacity .6s; pointer-events: none; }
+  .dots { display: flex; justify-content: center; gap: 10px; margin-bottom: 12px; }
+  .dots i { width: 7px; height: 7px; border: 1px solid var(--edge); transform: rotate(45deg); }
+  .dots i.on { background: var(--ink); border-color: var(--ink); box-shadow: 0 0 10px rgba(217,214,255,.8); }
+  .hint { font: italic 400 16px/1.3 Spectral, serif; color: var(--ink-3); text-shadow: 0 1px 8px rgba(5,5,12,.9); }
+  body.bare .words, body.bare .scrim, body.bare .foot { opacity: 0; }
+  .wait { position: absolute; inset: 0; display: grid; place-items: center; font: italic 400 17px Spectral, serif; color: var(--ink-3); }
+</style>
+</head>
+<body>
+<div class="deck" id="deck"></div>
+<div class="foot"><div class="dots" id="dots"></div><div class="hint">Swipe to compare. Tap to hide the words.</div></div>
+<script src="lamp.js"></script>
+<script src="hall.js"></script>
+<script type="module">
+  import { live } from './live.js';
+  const SAMPLES = ['sample-well-stair', 'sample-rib-gallery', 'sample-pool-dome'];
+  const deck = document.getElementById('deck'), dots = document.getElementById('dots');
+
+  function slide(kicker, name, line) {
+    const s = document.createElement('section'); s.className = 'slide';
+    s.innerHTML = `<div class="scene"></div><div class="scrim"></div>
+      <div class="words"><div class="kicker">${kicker}</div><h1>${name}</h1><p class="line">${line}</p></div>`;
+    deck.appendChild(s); dots.appendChild(document.createElement('i'));
+    return s.querySelector('.scene');
+  }
+
+  /* 1. the bar: the approved hall, painted live exactly as in Phase 4 */
+  const hallHost = slide('The approved hall', 'The Lamp Hall', 'The bar the kit has to reach.');
+  const hallEl = document.createElement('div'); hallEl.style.cssText = 'position:absolute;inset:0'; hallHost.appendChild(hallEl);
+  requestAnimationFrame(() => Hall.draw(hallEl, { cam: { x: .2, y: 1.6, z: 1.5, f: .62, cx: .5, cy: .47 }, gold: .15 }));
+
+  /* 2–4. the kit's three invented places, baked, with their live layers */
+  for (const [i, id] of SAMPLES.entries()) {
+    const meta = await (await fetch(`img/${id}.json`)).json();
+    const host = slide(`Sample ${i + 1} of 3 · invented`, meta.name, meta.line);
+    const img = new Image(); img.className = 'paint'; img.alt = ''; img.decoding = 'async';
+    img.src = `img/${id}.webp`;
+    host.appendChild(img);
+    img.decode().then(() => live(host, meta)).catch(() => live(host, meta));
+  }
+
+  const all = [...dots.children];
+  const mark = () => { const k = Math.round(deck.scrollLeft / deck.clientWidth); all.forEach((d, i) => d.classList.toggle('on', i === k)); };
+  deck.addEventListener('scroll', mark, { passive: true }); mark();
+  deck.addEventListener('click', () => document.body.classList.toggle('bare'));
+  const start = +(new URLSearchParams(location.search).get('s') || 0);
+  if (start) deck.scrollLeft = start * deck.clientWidth;
+  document.title = 'Painting kit: three sample places';
+  window.ready = true;
+</script>
+</body>
+</html>

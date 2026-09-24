@@ -1,0 +1,4 @@
+node_modules/
+dist/
+paint/out/
+dist-link

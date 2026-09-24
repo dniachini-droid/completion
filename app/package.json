@@ -1,0 +1,30 @@
+{
+  "name": "real-life-rpg",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:link": "vite build --mode link && node scripts/single-page.mjs",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "paint": "node paint/bake.mjs --out paint/view/img paint/samples/*.js",
+    "paint:check": "node paint/check.mjs paint/view/img/*.json"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.5.2",
+    "@sveltejs/vite-plugin-svelte": "7.3.1",
+    "svelte": "5.57.1",
+    "typescript": "7.0.2",
+    "vite": "8.3.0",
+    "vitest": "5.0.1"
+  },
+  "dependencies": {
+    "@capacitor/core": "8.5.2",
+    "@capacitor/haptics": "8.0.2",
+    "@capacitor/ios": "8.5.2",
+    "@capacitor/local-notifications": "8.3.1",
+    "@capacitor/preferences": "8.0.1"
+  }
+}

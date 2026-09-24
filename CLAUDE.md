@@ -5,9 +5,9 @@ It is a genuine game, not a productivity app with an RPG skin. Provisional name:
 
 ## Current phase
 
-**PHASE 8 — PROTOTYPE** (opened 2026-09-24; Phase 7 closed with Dan's agreement, D-060)
+**PHASE 9 — FIRST PLAYABLE** (opened 2026-09-24; Phase 8 closed with Dan's agreement, D-065)
 
-Prototype the central interaction on the agreed stack (`docs/technical/TECH_DECISIONS.md`, D-057, D-058) under MASTER_BRIEF §67: feel, clarity, reward timing, friction, beauty. First the five trials (the delve alert with the phone locked, smoothness, real-app feel, the cloud-Mac pipeline to TestFlight, the painting kit's three invented sample places), then the heart slice on throwaway data. Code follows `docs/technical/ARCHITECTURE.md` and `TEST_STRATEGY.md`. The story **stays sealed from Dan** (`docs/narrative/sealed/`, D-015); the sealed story-fix session (D-035) runs in its own session after the prototype and **before the first playable's content goes in** (D-060). Details and exit criteria: `docs/CURRENT_STATE.md`. Phase changes require Dan's explicit agreement.
+Build the whole MVP (`docs/product/MVP.md` → build order, slices 2–4 on top of the heart) on the agreed stack, following `docs/technical/ARCHITECTURE.md` and `TEST_STRATEGY.md`, first on throwaway content and invented places. Carried over from Phase 8: trials (b)–(d) on the first TestFlight build once Dan's Apple setup is done (D-065). The story **stays sealed from Dan** (`docs/narrative/sealed/`, D-015); the sealed story-fix session (D-035) runs in its own session and **must happen before the first playable's real content goes in** (D-060). Details and exit criteria: `docs/CURRENT_STATE.md`. Phase changes require Dan's explicit agreement.
 
 Phase order: 0 Player discovery → 1 Product discovery → 2 Game design → 3 Narrative/world → 4 Experience/art/UX → 5 Concept synthesis → 6 MVP → 7 Technical architecture → 8 Prototype → 9 First playable → 10 Personal alpha → 11 Iteration.
 

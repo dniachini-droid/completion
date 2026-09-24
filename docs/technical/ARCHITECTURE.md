@@ -65,7 +65,7 @@ Every line the app says comes from one copy file, looked up by a key. No sentenc
 2. Every push runs the tests (Linux).
 3. A release build runs on a cloud Mac (GitHub Actions macOS + fastlane): paintings baked, app packaged, signed with the App Store Connect key held in the repository's secrets, uploaded to TestFlight.
 4. A scheduled monthly rebuild keeps TestFlight's 90-day limit away.
-5. Phase 8's prototype: the same ui and core, with web platform, zipped for Netlify Drop as in Phase 4.
+5. Phase 8's prototype: the same ui and core, with web platform, folded into one self-contained page (`npm run build:link`) and published as a private claude.ai link (D-064).
 
 ## Where things will live (Phase 8 creates them)
 ```
