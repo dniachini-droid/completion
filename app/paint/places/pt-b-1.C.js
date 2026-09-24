@@ -13,7 +13,7 @@ export default {
   bloom: { alpha: .2 },
   glow: { threshold: .7, k: .6 },
   blur: { px: 1.4, d0: 3.5, d1: 7, k: .6 },
-  expo: 1.8, ambC: [.7, .66, 1.5],
+  expo: 1.95, ambC: [.7, .66, 1.5],
   lights: [
     { p: [-.45, 1.2, -2.9], c: [1, .6, .28], k: 52, r: 2, warm: .02, shadow: 1 },   /* the clay lamp, in the passage behind you */
     { p: [-1.35, .7, 3.9], c: [.4, .37, .85], k: .5, r: .8 },                           /* violet in the dark corners */
