@@ -56,7 +56,7 @@ export default {
       { p: [-2.11, -11.5, -6.52], size: 1, body: true },
       { p: [5.6, -14.94, -3.94], size: 1, body: true },
     ],
-    fog: [{ p: [0, -28, 0], w: 1.2, h: .75, a: .9 }, { p: [0, -17, 0], w: 1.3, h: .8, a: .45, speed: .6 }],
+    fog: [{ p: [0, -28, 0], w: 1.2, h: .75, a: .3 }, { p: [0, -17, 0], w: 1.3, h: .8, a: .18, speed: .6 }],
   },
   live: { mist: 'below', motes: 'violet' },
 };
