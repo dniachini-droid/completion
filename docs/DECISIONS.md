@@ -580,3 +580,43 @@
 - **Decision (Dan):** "Proceed." The MVP and its test are approved; Phase 6 is closed and merged into `main`; Phase 7 (MASTER_BRIEF §62–66) opens in a new session.
 - **Carried into Phase 7:** the requirements in `FIRST_PLAYABLE.md` (the delve's end heard or felt with the phone locked; state survives restarts; all copy in one place, D-046; jobs and rhythms as data, D-030; planned / moved / done kept, never shown, D-045); the test notes on the phone only, with a summary Dan may share (D-054); **how a painting per named place is made at about 5 a week in direction D** (D-054). Still pending in parallel: the sealed story-fix session (D-035) with the MVP's content budget; Dan's phone check of the planner screens (D-047).
 - **Reversible:** Phase changes need Dan's agreement.
+
+## D-056 — Dan's answers for the technical choice
+- **Date:** 2026-09-24
+- **Context:** Phase 7 opens (D-055). Four things only Dan knows decide the stack (MASTER_BRIEF §62).
+- **Decision (Dan):** **iPhone, staying** (no Android); **no computer at home**; **up to about $99 a year** is fine (Apple's developer membership); the paintings stay **code-painted, as in the mock-ups** (not AI images, not a hired artist).
+- **Consequences:** build for iPhone only; nothing depends on Dan running a Mac (a cloud Mac packages the app); TestFlight is the install route; the painting kit (D-057) extends the method of `design/directions/d-combined/hall.js`.
+- **Reversible:** Yes (a new phone or computer reopens the choice; the paintings' method can be revisited if the kit can't reach the bar).
+
+## D-057 — The stack: web code in a real iPhone app; the painting kit (draft for Dan)
+- **Date:** 2026-09-24
+- **Context:** Phase 7 (MASTER_BRIEF §62–66). Requirements from `FIRST_PLAYABLE.md` → "What must exist before the build", `product/MVP.md`, `design/DESIGN_SYSTEM.md` and D-056.
+- **Decision (draft; Claude's recommendation, Dan to agree):** `technical/TECH_DECISIONS.md`. Option B: **TypeScript + Svelte + Vite inside Capacitor**, built in a Linux container, packaged by a cloud Mac (GitHub Actions + fastlane; Codemagic fallback), installed through **TestFlight**. Local only: SQLite on the phone, no server, account, analytics or AI. The delve's end is a **local notification** scheduled at Begin; timers are worked out from the clock. The Phase 8 prototype runs the same code as a web link. **Paintings:** a reusable painting kit (ray-cast lit masses, shared stone, forms, light and live layers), one short scene file per place, baked in the cloud to an image with live layers on top, automatic checks plus a critique round, one sealed-aware painting session a week; Dan judges three invented sample places before the build.
+- **Alternatives:** A, home-screen web app (no locked-phone alert without a server; storage can be cleared; kept as the Phase 8 prototype route); C, React Native with Expo (easiest no-Mac builds, but direction D rebuilt and screens judged through an imitation); D, native Swift (best on iPhone, but with no Mac Claude builds blind); E, Flutter (C's rebuild cost without its no-Mac ease). For paintings: AI images or an artist (Dan chose code-painted, D-056).
+- **Rationale:** reuses the approved look exactly (D-040); meets the locked-phone requirement with no server; every screen checked at true size before Dan sees it; nothing leaves the phone (§63); fastest build for the MVP (D-004, rule 13).
+- **Consequences:** Dan's one-time setup on his phone (membership, app record, a key for the cloud Mac, TestFlight), started during Phase 8. A scheduled monthly rebuild so TestFlight's 90-day expiry never bites. Five early trials open Phase 8 (locked-phone alert, smoothness, real-app feel, the pipeline, the kit's sample places); option C is the fallback if the first or third fails badly. Next: `ARCHITECTURE.md`, `DATA_MODEL.md`, `SECURITY_PRIVACY.md`, `TEST_STRATEGY.md`.
+- **Reversible:** Yes, until Phase 8 builds on it; the game rules and data would carry over to C.
+
+## D-058 — Dan agrees to the stack and the painting plan
+- **Date:** 2026-09-24
+- **Context:** `technical/TECH_DECISIONS.md` (D-057).
+- **Decision (Dan):** "Yes, proceed." Option B (web code in a real iPhone app, via TestFlight) and the painting kit, with three invented sample places for Dan to judge first.
+- **Consequences:** `TECH_DECISIONS.md` marked agreed; the four remaining technical docs are written on this stack (D-059).
+- **Reversible:** Yes, until Phase 8 builds on it (fallback: option C).
+
+## D-059 — Architecture, data model, privacy and test strategy (Claude's routine calls, D-006)
+- **Date:** 2026-09-24
+- **Context:** Phase 7's remaining exit criterion (MASTER_BRIEF §63–64, §72–74), for the MVP on the agreed stack (D-058).
+- **Decision:** `technical/ARCHITECTURE.md`: five parts (core, content, platform, ui, paint) with one-way dependencies; the source of truth is an append-only **log of facts** (what Dan did, and what the world gave, recorded once so later rule changes never take anything back), with a rebuildable snapshot; timers are timestamps; the 04:00 day edge in one function; the clock passed in; screens receive only a "can see now" view; canon never shipped; all copy in one file; content shipped per build, a week ahead. `technical/DATA_MODEL.md`: Dan's data, the fact types, authored content types with stable ids, save and content versions, migrations with a backup first, sample saves for every version. `technical/SECURITY_PRIVACY.md`: no network at all (enforced), notifications the only permission, Apple the only outside service, the test summary shared only if Dan exports it. `technical/TEST_STRATEGY.md`: six layers, including story order and locked-information tests over generated states, scripted weeks against `BALANCING.md` §8, time edge cases, and the direction D "Never" list checked automatically.
+- **Alternatives:** storing only current state (simpler, but rule changes could silently rewrite the past, and the test's notes would need separate tracking); working out the world's gifts on every open (a rules change would replay the story differently); a state library or server (premature).
+- **Rationale:** rules 9, 13, 18; D-015, D-030, D-045, D-046; MASTER_BRIEF §64's principles; the MVP's no-tracking test notes.
+- **Consequences:** Phase 8 creates `app/` in this shape. Story content and painting scene files live in marked sealed folders.
+- **Reversible:** Yes.
+
+## D-060 — Phase 7 closed; Phase 8 (prototype) opened; when the story job happens
+- **Date:** 2026-09-24
+- **Context:** Phase 7's exit criteria met: the stack and the painting kit agreed (D-057, D-058), the four technical docs written (D-059).
+- **Decision (Dan):** "Yes, proceed." Phase 7 closed and merged into `main`; Phase 8 (MASTER_BRIEF §67) opens in a new session. Dan also noted the sealed story-fix session (D-035) is still to do, "assuming it can come after the MVP".
+- **Claude's answer on timing:** not after the MVP, because the MVP carries the story's first six weeks and its places' paintings, and the test can't start without them. It **can** come after the prototype: Phase 8 uses throwaway data and invented places. So it runs in its own session **after the prototype and before the first playable's content goes in** (Phase 9), and the real places' paintings follow it.
+- **Consequences:** `CLAUDE.md` and `CURRENT_STATE.md` move to Phase 8 with its exit criteria (five trials, the sample paintings approved, TestFlight working, the heart slice felt on Dan's phone). The story job is placed in the plan.
+- **Reversible:** Phase changes need Dan's agreement; the story job's timing can move earlier at any time.
