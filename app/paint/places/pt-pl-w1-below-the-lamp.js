@@ -12,11 +12,11 @@ export default {
   hazeBase: [.02, .018, .05], hazeFar: [.05, .045, .12],
   bloomAt: [-2, 3, 30], bloomPow: 30, bloomC: [.2, .18, .4],
   glow: { threshold: .62, k: .8 },
-  blur: { px: 1.6, d0: .2, d1: .7, k: 1 },
+  blur: { px: .8, d0: .2, d1: .7, k: 1 },
   expo: 1.8,
   lights: [
     { p: [2.23, 1.55, 5.6], c: [1, .58, .24], k: 2.6, r: .9, shadow: 1 },              /* the clay lamp on the ledge, above */
-    { p: [2.05, .3, 5.6], c: [1, .6, .3], k: .2, r: .4, warm: .015 },                  /* its light off the floor, back up */
+    { p: [2.05, .3, 5.6], c: [1, .6, .3], k: .15, r: .4, warm: .015 },                  /* its light off the floor, back up */
     { p: [-1, 4, 7], c: [.36, .33, .8], k: 3, r: 4 },                                 /* the hall's violet, from behind */
   ],
   glsl: /* glsl */ `
@@ -28,9 +28,9 @@ export default {
     float oil = (1. - smoothstep(.17, .36, rr)) * .95;
     if (q.x > -.02 && h2(floor(m / .0012)) < oil) d.yzw = vec3(M_DARK, NOUV);
     d = A(d, vec4(min(archOpening2(m, .15, .17), .28 - q.x), M_CUT_SMALL, NOUV));    /* the niche */
-    /* a row of cut strokes over it */
-    float sz = mod(q.z + .13, .052) - .026;
-    if (abs(q.z) < .13 && q.x > -.03) d.x = max(d.x, -max(max(abs(sz) - .006, abs(q.y - .47) - .04), q.x - .012));
+    /* a row of cut strokes under its mouth, clean stone in the dark */
+    float sz = mod(q.z + .13, .052) - .026, st = max(abs(sz) - .0045, abs(q.y + .07) - .032);
+    if (abs(q.z) < .13 && q.x > -.03) { d.x = max(d.x, -max(st, q.x - .012)); if (st < .004) d.yzw = vec3(M_CUT_SMALL, NOUV); }
     d = U(d, box(p, vec3(2.55, 1.22, 5.6), vec3(.35, .1, .38), M_CUT));              /* the lamp's ledge */
     return d;
   }`,
