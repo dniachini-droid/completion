@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-24 (Phase 6 closed, D-055; Phase 7 opens next session)_
+_Last updated: 2026-09-24 (Phase 7 started: Dan's answers D-056; stack recommended, D-057, draft)_
 
 ## Current phase
 
@@ -15,15 +15,18 @@ _Last updated: 2026-09-24 (Phase 6 closed, D-055; Phase 7 opens next session)_
 Choose the technology for the approved MVP (`product/MVP.md`), MASTER_BRIEF §62–66: compare credible options (iPhone-only vs multi-platform, native vs cross-platform, offline-first, local data, backups, the delve timer with the phone locked, painted and moving scenes, content size), recommend one, and explain the trade-offs in plain words. Also: how a painting for every named place is made at about 5 a week in direction D (D-054). Outputs: `technical/TECH_DECISIONS.md`, `technical/ARCHITECTURE.md`, `technical/DATA_MODEL.md`, `technical/SECURITY_PRIVACY.md`, `technical/TEST_STRATEGY.md`. No application code yet (Phase 8).
 
 ## Resume here (next session)
-1. Start Phase 7: read `product/MVP.md`, `product/FIRST_PLAYABLE.md` → "What must exist before the build", `design/DESIGN_SYSTEM.md` and MASTER_BRIEF §62–66, then draft `technical/TECH_DECISIONS.md` with a recommendation. Ask Dan only about things only he knows (his phone, what he's willing to pay for, how he'd install it).
+1. If Dan has agreed to `technical/TECH_DECISIONS.md` (D-057): write `technical/ARCHITECTURE.md`, `DATA_MODEL.md`, `SECURITY_PRIVACY.md` and `TEST_STRATEGY.md` for the MVP on that stack (no premature enterprise architecture). If he hasn't, answer his questions first.
 2. In its own session, before any build: the sealed story-fix session (D-035), including week 6 of the clue ledger, the authoring list from `game/BALANCING.md` (D-049), the content budget in `product/MVP.md`, and whether weeks 1–6 need the before → now view (D-053).
 3. Whenever convenient: Dan looks at the planner screens on his phone (D-047).
 
-## Last session (2026-09-24, Phase 6)
+## This session (2026-09-24, Phase 7 started)
+Dan's answers (D-056): **iPhone, staying; no computer; up to ~$99 a year is fine; paintings stay code-painted.** Claude drafted `technical/TECH_DECISIONS.md` (D-057): five options compared; recommended **web code in a real iPhone app** (TypeScript, Svelte, Capacitor), packaged by a cloud Mac and installed through TestFlight; everything on the phone, no server, no AI; the delve's end is an alert the phone schedules itself. The paintings: a **painting kit** built from the approved hall's method, one short scene file per place, baked in the cloud with live layers on top, checked and critiqued, one painting session a week; Dan judges **three invented sample places** first. Waiting on Dan's agreement.
+
+## Session before (2026-09-24, Phase 6)
 `product/MVP.md` drafted (D-053). The first playable was already cut hard in Phase 5, so the MVP keeps it whole except a few second doors: the map's whole-Site zoom, forecast waypoints on the map, the morning deep push, and before → now unless the story needs it. The real size is in paintings and words: one painted scene per area proposed, and a content budget for six story weeks. Build order in four slices; the test starts only when all four are in. The central test is written: it measures **starting** (above all avoided jobs; started from the app vs logged afterwards), with a baseline chat and predictions before day 1, notes kept on the phone, three short chats, evidence for and against, what not to overinterpret, and what each answer leads to.
 Dan's answers (D-054): a painting for **every** named place (Phase 7 must find how to make about 5 a week); map waypoints and the morning deep push stay; test notes stay on the phone, shared only if he chooses. Dan approved the MVP and closed Phase 6 (D-055).
 
-## Session before (2026-09-24, planner reconciliation)
+## Earlier (2026-09-24, planner reconciliation)
 ChatGPT's second planner review reconciled (D-047): 6 accepted, 1 modified, 8 already resolved. Dan decided the Course day counts at its first hour; the run now has its own "enough" moment, then Continue or Back to today with equal weight. Each job counts at its own enough (not "one hour" for everything). New invariant: more rhythms never mean more Keys. Copy fixed (forecast words, "A lighter day.", "Stop repeating"). Screens checked at true phone size. Dan approved; the planner is locked and rhythms are folded into the docs (D-048). Then step 3, the numbers (two clocks: time moves the Site, the story keeps its order; 5 Keys a week with a floor of 2; D-049), and step 4, the first playable's contents (D-050).
 
 ## Earlier (2026-09-24, late night, second)
@@ -44,8 +47,8 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 
 ## Phase 7 exit criteria
 
-- [ ] `technical/TECH_DECISIONS.md`: credible options compared, one recommended, trade-offs explained; Dan agrees.
-- [ ] How the paintings are made at about 5 a week, in direction D (D-054).
+- [ ] `technical/TECH_DECISIONS.md`: credible options compared, one recommended, trade-offs explained (drafted, D-057); Dan agrees.
+- [ ] How the paintings are made at about 5 a week, in direction D (D-054): the painting kit, drafted in `TECH_DECISIONS.md` (D-057); Dan agrees.
 - [ ] `technical/ARCHITECTURE.md`, `DATA_MODEL.md`, `SECURITY_PRIVACY.md`, `TEST_STRATEGY.md` written for the MVP (no premature enterprise architecture).
 - [ ] Dan agrees to move to Phase 8 (prototype).
 
@@ -110,4 +113,4 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 
 ## Recommended next action
 
-**Dan: start a new session and paste:** "Read CLAUDE.md and docs/CURRENT_STATE.md, then start Phase 7."
+**Dan:** read `technical/TECH_DECISIONS.md` (or Claude's summary in chat) and say whether you agree. Then Claude writes the other four technical docs in this session, or in a new one with: "Read CLAUDE.md and docs/CURRENT_STATE.md, then continue Phase 7."
