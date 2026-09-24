@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-24, night (Phase 5 set up: one concept, no new ones, D-042)_
+_Last updated: 2026-09-24, late night (Phase 5 step 1: `product/CONCEPT.md` written)_
 
 ## Current phase
 
@@ -15,11 +15,14 @@ _Last updated: 2026-09-24, night (Phase 5 set up: one concept, no new ones, D-04
 Write the chosen game up as one clear concept, stress-test it, and set the numbers the build needs. **No new concepts** (Dan, D-042). Work order: `product/PHASE5_PLAN.md`; output: `product/CONCEPT.md`.
 
 ## Resume here (next session)
-1. Follow `product/PHASE5_PLAN.md` from step 1 (write `product/CONCEPT.md`), then steps 2–4. Commit and push after each step.
+1. Step 1 is done: `product/CONCEPT.md` is written. Continue `product/PHASE5_PLAN.md` at **step 2** (stress-test it; the page's last section lists the known gaps), then steps 3–4. Commit and push after each step.
 2. Bring Dan the concept page and the numbers to review (step 5). Ask him only about taste and priorities.
 3. The sealed story-fix session (D-035) runs in its own session, before the first playable is built.
 
-## Last session (2026-09-24, night)
+## Last session (2026-09-24, late night)
+Phase 5 step 1: `product/CONCEPT.md` written, one page under MASTER_BRIEF §59's headings, pulled only from agreed docs (nothing new invented; player-safe, from the open game bible). It ends with the known gaps for steps 2–3.
+
+## Session before (2026-09-24, night)
 ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verdict). No dead ends for effort: the stair screen now offers "Go down" (D-039). Every screen keeps moving once settled, and the stair lights its steps going down (D-041); any job can be a delve, Dan's choice (D-041). Dan approved direction D and the three design docs; Phase 4 closed and merged into `main` (D-040).
 
 ## Do NOT work on yet
@@ -32,7 +35,7 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 ## Phase 5 exit criteria
 
 - [x] Dan agrees how Phase 5 runs: one synthesis of the chosen concept, no new concepts (D-042).
-- [ ] `product/CONCEPT.md` written and stress-tested against the principles.
+- [ ] `product/CONCEPT.md` written (done) and stress-tested against the principles (step 2).
 - [ ] The numbers set (as starting guesses, tuned in play): `product/PHASE5_PLAN.md` step 3.
 - [ ] The first playable's contents list written (step 4).
 - [ ] Dan agrees to move to Phase 6 (MVP).
@@ -67,6 +70,7 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 - 2026-09-24 — Outside review of the principles reconciled (D-038); no dead ends for effort (D-039); every screen keeps moving, any job can be a delve (D-041).
 - 2026-09-24 — **Phase 4 complete** (D-040). Direction D and the design docs approved; merged into `main`. Phase 5 opened.
 - 2026-09-24 — Phase 5 set up: one synthesis of the chosen concept, no new concepts (D-042); work order `product/PHASE5_PLAN.md`.
+- 2026-09-24 — Phase 5 step 1: `product/CONCEPT.md` written.
 
 ## Unresolved blockers
 
@@ -77,4 +81,4 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 
 ## Recommended next action
 
-**Dan: start a new session and paste:** "Read CLAUDE.md and docs/CURRENT_STATE.md, then continue Phase 5 from 'Resume here': write product/CONCEPT.md following docs/product/PHASE5_PLAN.md."
+**Dan: start a new session and paste:** "Read CLAUDE.md and docs/CURRENT_STATE.md, then continue Phase 5 from 'Resume here': stress-test product/CONCEPT.md (step 2 of docs/product/PHASE5_PLAN.md)."
