@@ -1,6 +1,6 @@
 # Direction A: Lamp and Stone (notes)
 
-Revised after critique round 1: see `REVISION-1.md` for what changed.
+Revised after critique rounds 1 and 2: see `REVISION-1.md` and `REVISION-2.md`. The morning also has a violet variant, `morning-violet.html`, in which the place's cold light leans violet.
 
 Nine static screens and `index.html`, built to the spec in `../../ART_DIRECTION.md` → "A — Lamp and Stone", using the shared day in `../../PHASE4_RUN.md`. Phone-size pictures are in `shots/`.
 
@@ -30,7 +30,10 @@ Nine static screens and `index.html`, built to the spec in `../../ART_DIRECTION.
 - **Stroked "lit cups" for jobs done** (the model test's idea) conflicts with the rule that the cups are dark until the word is cut. Done jobs are shown as a warm point of light instead.
 - **Invented marks that looked like letters** (X, π, N, E, a warning triangle, a smiley) were redrawn as curves and hooks.
 
+## Proposals (not decisions)
+- **Candidate meanings on the record screen.** Tapping a mark offers three possible meanings; you pick one and it shows with a question mark. This follows the Game Bible's "guessing, not typing", but no game doc defines the exact picker. It is a design proposal for this mock-up, not a settled mechanic.
+
 ## Known weak spots
-- The Salt Gallery's end wall still reads a little like large brickwork.
+- The lintel on the morning screen still reads a little like a plate.
 - The painted scenes are heavy to render: the cut screen takes a few seconds to paint on a laptop, and phones may be slower.
 - On the map, the Mouth, the Survey Cut and the great door are tap targets but have no screen behind them yet.

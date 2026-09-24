@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="direction.css">
 <style>
 
-.flow { filter: blur(2.2px); opacity:.75; }
+.flow { filter: blur(4px); opacity:.55; }
 .rib { transform-box: view-box; transform-origin: 292px 250px; animation: pass 46s cubic-bezier(.62,.02,.93,.55) infinite; opacity:0; }
 @keyframes pass { 0% { transform: scale(.05); opacity: 0; } 18% { opacity: .35; } 70% { opacity: .9; } 100% { transform: scale(1.6); opacity: 0; } }
 .top { text-align:center; }
@@ -34,6 +34,9 @@
 .ring .time { font-family:var(--life); font-weight:300; font-size:calc(var(--R) * .27); line-height:1; color:#f6f7ff; font-variant-numeric: tabular-nums lining-nums; text-shadow: 0 0 24px rgba(143,168,255,.8), 0 0 60px rgba(143,168,255,.4); }
 .ring .left { font-family:var(--life); font-style:italic; font-size:16px; color:var(--ink-2); margin-top:6px; }
 .ring.ended .fill { background: rgba(230,236,255,.95); }
+.ring.rest .inner, .ring.rest .tip { opacity:0; transition: opacity 1.2s var(--ease); }
+.ring.rest .disc { background: radial-gradient(circle, rgba(220,226,255,.35), rgba(143,168,255,.12) 55%, transparent 72%); }
+.ring.rest { animation: none; }
 .ring.ended .halo { animation: ringbloom 2.4s var(--ease) forwards; }
 @keyframes ringbloom { 0% { transform: scale(.9); opacity: 1; } 40% { transform: scale(1.25); opacity: 1; background: radial-gradient(circle, rgba(220,228,255,.55) 20%, rgba(143,168,255,.3) 50%, transparent 70%); } 100% { transform: scale(1.1); opacity: .8; } }
 .fog-front { position:absolute; inset:-20%; pointer-events:none; opacity:.5; z-index:3;
@@ -54,6 +57,7 @@
 .breather h2 { margin-top:4px; }
 .breather p { font-family:var(--life); font-size:17px; color:var(--ink-2); margin:6px 0 14px; }
 .breather .row2 { display:flex; justify-content:center; }
+.breather .row2.two { justify-content:space-around; }
 .second-only { display:none; }
 
 </style>
@@ -102,11 +106,9 @@
     </div>
     <div class="breather">
       <div class="first-only">
-        <span class="soft">A breather: five minutes, then it ends by itself.</span>
         <h2>That’s the first delve.</h2>
-        <p>The passage opens out ahead.</p>
-        <a class="btn" href="delve.html#second">Next delve</a>
-        <div class="row2"><a class="quiet" href="morning.html#later"><span class="u">Done for now</span></a></div>
+        <p>The passage opens out ahead. Rest a little; there’s nothing to watch.</p>
+        <div class="row2 two"><a class="quiet" href="morning.html#later"><span class="u">Done for now</span></a><a class="quiet" href="delve.html#second"><span class="u">Next delve</span></a></div>
       </div>
       <div class="second-only">
         <span class="soft">An hour on the course.</span>
@@ -142,7 +144,7 @@
   document.querySelectorAll('.first-only').forEach(function(e){ e.style.display = second ? 'none' : ''; });
   if (second) left = 21*60 + 40;
   function draw(){ var m = Math.floor(left/60), s = left % 60; t.textContent = m + ':' + (s < 10 ? '0' : '') + s; ring.style.setProperty('--p', ((total - left) / total).toFixed(4)); }
-  function end(){ left = 0; draw(); ring.classList.add('ended'); setTimeout(function(){ t.textContent = '5:00'; document.querySelector('.ring .left').textContent = 'a breather'; }, 1200); setTimeout(function(){ ui.classList.remove('stopping'); ui.classList.add('breathing'); }, 900); }
+  function end(){ left = 0; draw(); ring.classList.add('ended'); setTimeout(function(){ ring.classList.add('rest'); }, 1200); setTimeout(function(){ ui.classList.remove('stopping'); ui.classList.add('breathing'); }, 900); }
   draw();
   if (!frozen) requestAnimationFrame(function(){ requestAnimationFrame(function(){ setTimeout(function(){ setInterval(function(){ if (left > 0) { left--; draw(); if (!left) end(); } }, 1000); }, 3000); }); });
   ring.addEventListener('click', end);   /* a preview of the end: tap the ring */

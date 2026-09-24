@@ -67,6 +67,16 @@ ol a:active .nm{color:var(--warm-hi)}
     <feGaussianBlur stdDeviation="2.2" result="b"/><feGaussianBlur in="SourceGraphic" stdDeviation="6" result="b2"/>
     <feMerge><feMergeNode in="b2"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
   </filter>
+  <filter id="relief" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency=".022 .03" numOctaves="5" seed="102" result="n"/>
+    <feDiffuseLighting in="n" surfaceScale="5" diffuseConstant="1.1" lighting-color="#c9d6dc" result="l"><feDistantLight azimuth="210" elevation="38"/></feDiffuseLighting>
+    <feComposite in="l" in2="SourceGraphic" operator="in"/>
+  </filter>
+  <filter id="reliefFine" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency=".09 .12" numOctaves="3" seed="104" result="n"/>
+    <feDiffuseLighting in="n" surfaceScale="2.2" diffuseConstant="1" lighting-color="#c9d6dc" result="l"><feDistantLight azimuth="210" elevation="45"/></feDiffuseLighting>
+    <feComposite in="l" in2="SourceGraphic" operator="in"/>
+  </filter>
   <radialGradient id="flameG" cx=".5" cy=".72" r=".62">
     <stop offset="0" stop-color="#fffaf0"/><stop offset=".42" stop-color="#ffd690"/><stop offset=".8" stop-color="#f39a3c" stop-opacity=".6"/><stop offset="1" stop-color="#e57a24" stop-opacity="0"/>
   </radialGradient>
@@ -98,38 +108,40 @@ ol a:active .nm{color:var(--warm-hi)}
   <path d="M-6.5 7 Q-6.5 -6 0 -6 Q6.5 -6 6.5 7 M0 -6 V2" stroke="#0a1117" stroke-width="2.5"/>
   <path d="M-6.5 7 Q-6.5 -6 0 -6 Q6.5 -6 6.5 7 M0 -6 V2" stroke="#6f8f9f" stroke-width="6.2" opacity="0.4" filter="url(#b2)"/>
   <path d="M-6.5 7 Q-6.5 -6 0 -6 Q6.5 -6 6.5 7 M0 -6 V2" stroke="#9db8c5" stroke-width="1.36" opacity="0.6" filter="url(#b1)"/>
-  <path d="M-6.5 7 Q-6.5 -6 0 -6 Q6.5 -6 6.5 7 M0 -6 V2" stroke="#9fb6c1" stroke-width=".5" opacity="0" transform="translate(.3 .7)"/>
 </g><g transform="translate(352 150) scale(1.1)" opacity="0.6" fill="none" stroke-linecap="round" stroke-linejoin="round" >
   <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#010203" stroke-width="3.9000000000000004" opacity=".8" transform="translate(-.35 -.6)" filter="url(#b1)"/>
   <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#0a1117" stroke-width="2.5"/>
   <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#6f8f9f" stroke-width="6.2" opacity="0.4" filter="url(#b2)"/>
   <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#9db8c5" stroke-width="1.36" opacity="0.6" filter="url(#b1)"/>
-  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#9fb6c1" stroke-width=".5" opacity="0" transform="translate(.3 .7)"/>
 </g><g transform="translate(290 160) scale(1.0)" opacity="0.5" fill="none" stroke-linecap="round" stroke-linejoin="round" >
   <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#010203" stroke-width="3.9000000000000004" opacity=".8" transform="translate(-.35 -.6)" filter="url(#b1)"/>
   <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#0a1117" stroke-width="2.5"/>
   <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#6f8f9f" stroke-width="6.2" opacity="0.4" filter="url(#b2)"/>
   <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#9db8c5" stroke-width="1.36" opacity="0.6" filter="url(#b1)"/>
-  <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#9fb6c1" stroke-width=".5" opacity="0" transform="translate(.3 .7)"/>
 </g></g>
 <path d="M-10 262 L250 254 L256 272 L-10 280 Z" fill="#3a3a38" filter="url(#paint)"/>
 <path d="M-10 262 L250 254" stroke="#f0b477" stroke-width="1.6" opacity=".55" filter="url(#b1)"/>
 <g>
-  <g class="breathe"><circle cx="153" cy="234" r="220" fill="url(#warmPool)" opacity="1.0"/></g>
+  <g class="breathe"><circle cx="165" cy="228" r="220" fill="url(#warmPool)" opacity="1.0"/></g>
   <g transform="translate(120 246) scale(1.5)">
-    <ellipse cx="4" cy="11" rx="40" ry="4" fill="#000" opacity=".6" filter="url(#b2)"/>
-    <path d="M-27 -1 C-36 -4 -37 7 -27 6" stroke="#6a4630" stroke-width="3" fill="none" stroke-linecap="round"/>
-    <path d="M-28 2 C-28 -9 -14 -12 -2 -12 C10 -12 18 -9 22 -6 L37 -9 C44 -10 46 -3 42 1 C38 5 27 5 19 8 C8 12 -18 13 -25 8 C-28 6 -28 4 -28 2 Z" fill="url(#clay)" filter="url(#paintS)"/>
-    <path d="M-22 -6 C-12 -11.5 6 -11.5 19 -7 L36 -9.5" stroke="#f8c78e" stroke-width="1.5" fill="none" opacity=".9" filter="url(#b1)"/>
-    <path d="M-24 7 C-10 12 10 10 20 6" stroke="#1a0d05" stroke-width="2.4" fill="none" opacity=".45" filter="url(#b1)"/>
-    <ellipse cx="-5" cy="-9" rx="6.5" ry="1.9" fill="#1a0e06"/>
-    <ellipse cx="-5" cy="-9.6" rx="6.5" ry="1.2" fill="none" stroke="#e7a769" stroke-width=".6" opacity=".6"/>
-    <path d="M-28 2 C-28 -9 -14 -12 -2 -12 C10 -12 18 -9 22 -6 L37 -9 C44 -10 46 -3 42 1 C38 5 27 5 19 8 C8 12 -18 13 -25 8 C-28 6 -28 4 -28 2 Z" fill="#000" filter="url(#clayGrain)" opacity=".35"/>
-    <path d="M31 -8 C36 -9.5 41 -9 43 -5 C42 -2 38 -1 34 -2 Z" fill="#1a0c05" opacity=".75" filter="url(#b1)"/>
-    <path d="M6 -11.6 l2.2 1.6 l2.4 -1.2" fill="#2a1508" stroke="#2a1508" stroke-width=".6"/>
-    <ellipse cx="39" cy="-8.6" rx="3" ry="1" fill="#2a1508"/>
+    <defs><clipPath id="lampClip"><path d="M-30 4 C-31 -7 -19 -13 -4 -13 C8 -13 16 -10 21 -6 C25 -6.5 29 -8.5 34 -9.2 C41 -10 45 -6 42.5 -2 C40.5 1.2 35 1.6 29 2 C24 6.5 15 11 -4 11 C-20 11 -30 9.5 -30 4 Z"/></clipPath></defs>
+    <ellipse cx="4" cy="11.5" rx="40" ry="3.6" fill="#000" opacity=".65" filter="url(#b2)"/>
+    <path d="M-29 -2.5 C-38 -4 -39 7.5 -29 6.5 L-29 3.8 C-34.5 4.4 -34 -1 -29 .2 Z" fill="#5a3a24"/>
+    <path d="M-30 4 C-31 -7 -19 -13 -4 -13 C8 -13 16 -10 21 -6 C25 -6.5 29 -8.5 34 -9.2 C41 -10 45 -6 42.5 -2 C40.5 1.2 35 1.6 29 2 C24 6.5 15 11 -4 11 C-20 11 -30 9.5 -30 4 Z" fill="#7c5236"/>
+    <g clip-path="url(#lampClip)">
+      <ellipse cx="-14" cy="9" rx="26" ry="9" fill="#2a170c" opacity=".85" filter="url(#b4)"/>
+      <ellipse cx="14" cy="-9" rx="26" ry="7" fill="#e8a868" opacity=".75" filter="url(#b4)"/>
+      <ellipse cx="30" cy="-8" rx="10" ry="4" fill="#ffd29a" opacity=".7" filter="url(#b2)"/>
+      <rect x="-32" y="-15" width="80" height="30" fill="#000" filter="url(#clayGrain)" opacity=".4"/>
+      <ellipse cx="36" cy="-7.5" rx="7" ry="3.2" fill="#140a04" opacity=".85" filter="url(#b1)"/>
+    </g>
+    <path d="M-22 -11.2 L-19 -8.6 L-15.5 -12.2 Z" fill="#1a0d06"/>
+    <path d="M-19 -8.6 L-15.5 -12.2 L-15 -11 Z" fill="#f2b67a" opacity=".6"/>
+    <ellipse cx="-4" cy="-10.6" rx="7" ry="2.2" fill="#e6a468" opacity=".55"/>
+    <ellipse cx="-4" cy="-10" rx="6.4" ry="1.9" fill="#150b05"/>
+    <ellipse cx="39.5" cy="-8.4" rx="2.4" ry=".9" fill="#0e0703"/>
   </g>
-  <g transform="translate(178.5 232.5) scale(1.5)">
+  <g transform="translate(179.2 232.5) scale(1.5)">
     <ellipse cx="0" cy="-14" rx="16" ry="26" fill="#ffb45a" opacity=".45" filter="url(#b4)"/>
     <g class="flicker"><path d="M0 0 C-9 -9 -5 -21 0 -34 C5 -21 9 -9 0 0 Z" fill="url(#flameG)"/>
     <path d="M0 -2 C-3.2 -6 -2.4 -12 0 -18 C2.4 -12 3.2 -6 0 -2 Z" fill="#fffdf6" opacity=".95"/></g>
@@ -147,28 +159,31 @@ ol a:active .nm{color:var(--warm-hi)}
 <ol><li class="rise" style="animation-delay:0.10s"><a href="morning.html">
   <span class="pt warm"></span>
   <span class="txt"><span class="nm">The morning</span><span class="cp">The Lamp Hall, the next job, and one warm button.</span></span>
-</a></li><li class="rise" style="animation-delay:0.15s"><a href="delve.html">
+</a></li><li class="rise" style="animation-delay:0.15s"><a href="morning-violet.html">
+  <span class="pt cold"></span>
+  <span class="txt"><span class="nm">The morning, violet variant</span><span class="cp">The same screen with the place’s cold light leaning violet. Warm still means you.</span></span>
+</a></li><li class="rise" style="animation-delay:0.20s"><a href="delve.html">
   <span class="pt cold"></span>
   <span class="txt"><span class="nm">A delve</span><span class="cp">A warm ring slowly fills around the time left while the light moves down the passage.</span></span>
-</a></li><li class="rise" style="animation-delay:0.20s"><a href="map.html">
+</a></li><li class="rise" style="animation-delay:0.25s"><a href="map.html">
   <span class="pt cold"></span>
   <span class="txt"><span class="nm">The map</span><span class="cp">Places like lamps in the dark: warm where you’ve been, cold where you’ve only seen.</span></span>
-</a></li><li class="rise" style="animation-delay:0.25s"><a href="record.html">
+</a></li><li class="rise" style="animation-delay:0.30s"><a href="record.html">
   <span class="pt cold"></span>
   <span class="txt"><span class="nm">A record</span><span class="cp">The long tally. Cold marks in the stone, your guesses beneath them in warm.</span></span>
-</a></li><li class="rise" style="animation-delay:0.30s"><a href="cut.html">
+</a></li><li class="rise" style="animation-delay:0.35s"><a href="cut.html">
   <span class="pt warm"></span>
   <span class="txt"><span class="nm">Cutting a word</span><span class="cp">The big moment. Two marks cut, the word locks, and the lamps wake down the hall.</span></span>
-</a></li><li class="rise" style="animation-delay:0.35s"><a href="complete.html">
+</a></li><li class="rise" style="animation-delay:0.40s"><a href="complete.html">
   <span class="pt warm"></span>
   <span class="txt"><span class="nm">Day complete</span><span class="cp">Arriving at the Salt Gallery. A cairn is stacked. “That’s the day. Enough.”</span></span>
-</a></li><li class="rise" style="animation-delay:0.40s"><a href="camp.html">
+</a></li><li class="rise" style="animation-delay:0.45s"><a href="camp.html">
   <span class="pt warm"></span>
   <span class="txt"><span class="nm">Camp</span><span class="cp">The evening close, by the lamp, with bedtime set for 23:00.</span></span>
-</a></li><li class="rise" style="animation-delay:0.45s"><a href="satchel.html">
+</a></li><li class="rise" style="animation-delay:0.50s"><a href="satchel.html">
   <span class="pt cold"></span>
   <span class="txt"><span class="nm">The satchel</span><span class="cp">A list you asked for, below niches lit from beneath. No counts.</span></span>
-</a></li><li class="rise" style="animation-delay:0.50s"><a href="daybook.html">
+</a></li><li class="rise" style="animation-delay:0.55s"><a href="daybook.html">
   <span class="pt cold"></span>
   <span class="txt"><span class="nm">The daybook</span><span class="cp">Week two, written for you, under the ladder you came down.</span></span>
 </a></li></ol>
@@ -181,7 +196,7 @@ ol a:active .nm{color:var(--warm-hi)}
 (function(){
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   var c=document.querySelector('canvas.motes'); if(!c) return;
-  var L=JSON.parse(c.dataset.lights||'[]'), N=+(c.dataset.n||30), W=390, H=844, x=c.getContext('2d'), k=1, ox=0, oy=0;
+  var V=!!c.dataset.violet, L=JSON.parse(c.dataset.lights||'[]'), N=+(c.dataset.n||30), W=390, H=844, x=c.getContext('2d'), k=1, ox=0, oy=0;
   function size(){ var w=c.clientWidth, h=c.clientHeight; c.width=w*2; c.height=h*2; k=Math.max(w/W,h/H); ox=(w-W*k)/2; oy=(h-H*k)/2; x.setTransform(2*k,0,0,2*k,2*ox,2*oy); }
   size(); addEventListener('resize', size);
   var R=Math.random, m=[];
@@ -195,7 +210,7 @@ ol a:active .nm{color:var(--warm-hi)}
       var best=0,col=null;
       for(var j=0;j<L.length;j++){var l=L[j],d=Math.hypot(q.x-l[0],q.y-l[1]),a=Math.max(0,1-d/l[2])*l[4]; if(a>best){best=a;col=l[3]}}
       var a=best*(.5+.4*Math.sin(q.p)); if(a<.02) continue;
-      x.fillStyle=col==='w'?'rgba(255,214,150,'+a+')':'rgba(214,238,248,'+a+')';
+      x.fillStyle=col==='w'?'rgba(255,214,150,'+a+')':(V?'rgba(214,218,252,'+a+')':'rgba(214,238,248,'+a+')');
       x.beginPath(); x.arc(q.x,q.y,q.r,0,6.283); x.fill();
     }
     requestAnimationFrame(fr);
