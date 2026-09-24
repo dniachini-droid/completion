@@ -149,11 +149,11 @@
     var S = { stair: o.scene === 'stair' };
     if (S.stair) {
       S.sec = buildSection(HALL_HALF, [.72, .72], -90);
-      S.zFar = 90; S.zLip = 1.05; S.tread = .34; S.riser = .31; S.mistY = -2.4; S.xs0 = -.35;
+      S.zFar = 90; S.zLip = 1.05; S.tread = .34; S.riser = .31; S.mistY = -3.3; S.xs0 = -.3;
       S.lights = [
-        { x: 0, y: -30, z: 30, c: [.78, .72, 1.25], k: 420, r: 10 },    /* light from below, far down the stair */
-        { x: 0, y: -12, z: 12, c: [.6, .55, 1.1], k: 40, r: 5 },
-        { x: 0, y: -4.5, z: 5, c: [.5, .46, 1], k: 5, r: 2.4 },
+        { x: -1, y: -26, z: 28, c: [.78, .72, 1.25], k: 160, r: 6 },     /* light from below, down the well */
+        { x: -1.1, y: -9, z: 11, c: [.62, .56, 1.15], k: 34, r: 3 },
+        { x: -1.15, y: -3.4, z: 5, c: [.55, .5, 1.1], k: 7, r: 1.6 },
         { x: .3, y: 3.2, z: -.6, c: [.5, .47, .95], k: 2.6, r: 2.2 }       /* the lintel's light behind you, falling on the treads */
       ];
       S.fogK = 1 / 30; S.boxes = []; S.niches = []; S.door = null;
@@ -239,7 +239,7 @@
       for (var i = 0; i < nl; i++) {
         var L = lights[i], lx = L.x - x, ly = L.y - y, lz = L.z - z, d2 = lx * lx + ly * ly + lz * lz, d = Math.sqrt(d2);
         var ndl = (nx * lx + ny * ly + nz * lz) / d;
-        var wr = wrap != null ? wrap : .25;
+        var wr = wrap != null ? wrap : WRAP;
         ndl = (ndl + wr) / (1 + wr); if (ndl <= 0) continue;
         var att = L.k / (1 + d2 / (L.r * L.r)) / (L.r * L.r) * 1.0;
         if (L.warm) att *= 1;
@@ -249,7 +249,7 @@
       out[0] = r; out[1] = g; out[2] = b;
     }
 
-    var alb = [0, 0, 0], JD = S.stair ? .4 : .62;
+    var alb = [0, 0, 0], JD = S.stair ? .4 : .62, WRAP = S.stair ? .04 : .25;
     /* stone: blocks with bevelled joints, chisel texture and stain */
     function stone(u, v, fp, courseH, blockL, seed, out, fpv) {
     if (fpv == null) fpv = fp;
@@ -273,7 +273,7 @@
       /* each block's face is slightly out of true */
       tiltU += (h2(col, row + seed) - .5) * .18 + chis * .25;
       tiltV += (h2(row, col + seed * 3) - .5) * .18 + chis * .2;
-      out[0] = t * (JD + (1 - JD) * j) * (.8 + .4 * streak); out[1] = tiltU * j; out[2] = tiltV * j;
+      out[0] = t * (JD + (1 - JD) * j) * (.88 + .24 * streak); out[1] = tiltU * j; out[2] = tiltV * j;
       out[3] = j;
     }
     var st = [0, 0, 0, 0];
@@ -538,7 +538,7 @@
       }
       ctx.putImageData(sd, 0, 0);
       /* bloom: the haze glows over the stone so no line-work shows */
-      ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = .34;
+      ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = S.stair ? .26 : .34;
       ctx.filter = 'blur(' + (16 * dpr).toFixed(0) + 'px)'; ctx.drawImage(canvas, 0, 0); ctx.restore();
     } catch (err) { /* filters unsupported: the sharp painting stands */ }
     return { proj: proj };
