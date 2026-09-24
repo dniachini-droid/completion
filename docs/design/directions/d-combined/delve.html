@@ -70,7 +70,6 @@
 .bottom h2 { font-family:var(--life); font-weight:500; font-size:24px; color:#fff; }
 .bottom .of { font-size:17px; margin-top:2px; }
 .bottom .away { font-size:17px; color:var(--ink-2); margin:12px 0 18px; }
-.stopbtn { min-width: 220px; }
 .breather, .held { display:none; }
 .breathing .normal, .holding .normal { display:none; } .breathing .breather, .holding .held { display:block; }
 /* D-036: stepped away. The ring keeps its fill; the count inside goes quiet. */
@@ -78,6 +77,17 @@
 .ring.hold .inner, .ring.hold .tip { opacity:0; transition: opacity 1.2s var(--ease); }
 .held p { font-size:17px; color:var(--ink-2); margin:6px 0 20px; }
 .held .cant { display:flex; justify-content:center; margin-top: 8px; }
+/* D-036 (7): two quiet ways out of a running delve, side by side, equal weight */
+.two-quiet { display:grid; grid-template-columns: 1fr 1fr; gap: var(--gap); max-width: 340px; margin: 0 auto; }
+.two-quiet .btn-quiet { padding: 0 10px 0 calc(10px + .14em); letter-spacing: .14em; }
+.held .cant.two { align-items:center; gap: 2px; } .held .cant .dot { color: var(--ink-3); }
+/* Finish here: the delve closes on what was done */
+.fin, .fin > div { display:none; }
+.finishing .normal, .finishing .held { display:none; } .finishing .fin { display:block; }
+.finishing .breath-hide { opacity:0; transition: opacity 1s var(--ease); }
+.fin[data-f="course"] .fin-course, .fin[data-f="ask"] .fin-ask, .fin[data-f="yes"] .fin-yes, .fin[data-f="no"] .fin-no { display:block; }
+.fin p { font-size:17px; color:var(--ink-2); margin:6px 0 20px; }
+.fin .btn-row { max-width: 340px; margin: 0 auto; }
 #back { flex-direction: column; gap: 3px; padding-top: 10px; padding-bottom: 10px; line-height: 1.1; }
 #back .tail { font-family: var(--life); font-style: italic; font-weight: 500; font-size: 17px; letter-spacing: .01em; text-transform: none; }
 .breather p { font-size:17px; color:var(--ink-2); margin:6px 0 20px; }
@@ -125,22 +135,48 @@
       <p class="soft of first-only">the first of two delves</p>
       <p class="soft of second-only">the second of two delves</p>
       <p class="say away">Put the phone away. You’ll hear it end.</p>
-      <button class="btn-quiet stopbtn" id="step"><span>Step away</span></button>
+      <div class="two-quiet"><button class="btn-quiet" id="step"><span>Step away</span></button><button class="btn-quiet" id="finish"><span>Finish here</span></button></div>
     </div>
     <div class="held">
       <div class="label-line centred">A breather</div>
       <h2 style="margin-top:10px" id="heldjob">Course: one hour</h2>
       <p class="say">Your minutes are kept.<br>It’ll wait for you, even if you leave.</p>
       <button class="btn resting" id="back"><span>Back to the delve</span><span class="tail"><span id="heldmin">13</span> min left</span></button>
-      <div class="cant"><a class="text-link" id="heldtoday" href="morning.html#held-course-13"><span>Back to today</span></a></div>
+      <div class="cant"><button class="text-link" id="heldfinish"><span>Finish here</span></button></div>
+    </div>
+    <div class="fin" data-f="course">
+      <div class="fin-course">
+        <div class="label-line centred">The delve</div>
+        <h2 style="margin-top:10px"><span class="donemin">25 minutes</span> on the Course.</h2>
+        <p class="say">The passage opens out ahead.</p>
+        <a class="btn resting" href="morning.html#later">Back to today</a>
+      </div>
+      <div class="fin-ask">
+        <div class="label-line centred">The delve</div>
+        <h2 style="margin-top:10px">Is it done?</h2>
+        <p class="say">Order the cat’s medication</p>
+        <div class="btn-row"><button class="btn resting" id="isdone">Done</button><button class="btn-quiet" id="notyet"><span>Not yet</span></button></div>
+      </div>
+      <div class="fin-yes">
+        <div class="label-line centred">The delve</div>
+        <h2 style="margin-top:10px">Ordered. The day moves on.</h2>
+        <p class="say">The passage opens out ahead.</p>
+        <a class="btn resting" href="morning.html#later">Back to today</a>
+      </div>
+      <div class="fin-no">
+        <div class="label-line centred">The delve</div>
+        <h2 style="margin-top:10px"><span class="donemin">22 minutes</span> kept.</h2>
+        <p class="say">It’ll be there when you come back to it.</p>
+        <a class="btn resting" href="morning.html">Back to today</a>
+      </div>
     </div>
     <div class="breather">
       <div class="first-only">
         <div class="label-line centred">A breather</div>
         <h2 style="margin-top:10px">That’s the first delve.</h2>
-        <p class="say">The passage opens out ahead. Rest a little; there’s nothing to watch.</p>
+        <p class="say">The passage opens out ahead. Rest a little, or start the next one whenever you like.</p>
         <a class="btn resting" href="delve.html#second">Next delve</a>
-        <div class="cant two"><a class="text-link" href="delve.html#second"><span>Skip the breather</span></a><span class="dot" aria-hidden="true">·</span><a class="text-link" href="morning.html#later"><span>Done for now</span></a></div>
+        <div class="cant"><a class="text-link" href="morning.html#later"><span>Finish here</span></a></div>
       </div>
       <div class="cat-only" style="display:none">
         <div class="label-line centred">The delve</div>
@@ -202,25 +238,46 @@
   if (/stepped/.test(location.hash)) left = 13*60;   /* a sample: stepped away with 13 min left */
   ring.setAttribute('aria-label', 'Time left of ' + Math.round(total / 60) + ' minutes');
   function draw(){ var m = Math.floor(left/60), s = left % 60; t.textContent = m + ':' + (s < 10 ? '0' : '') + s; ring.style.setProperty('--p', ((total - left) / total).toFixed(4)); }
-  var held = false;
-  function end(){ held = false; ui.classList.remove('holding'); ring.classList.remove('hold'); left = 0; draw(); ring.classList.add('ended'); setTimeout(function(){ ring.classList.add('rest'); }, 1200); setTimeout(function(){ ui.classList.add('breathing'); }, 900); }
+  var held = false, finished = false;
+  function end(){ if (finished) return; held = false; ui.classList.remove('holding'); ring.classList.remove('hold'); left = 0; draw(); ring.classList.add('ended'); setTimeout(function(){ ring.classList.add('rest'); }, 1200); setTimeout(function(){ ui.classList.add('breathing'); }, 900); }
   /* D-036: step away. The minutes done are kept, the delve is held with its time left, and the breather starts at once. */
   function stepAway(){
     held = true;
     var m = Math.max(1, Math.floor(left / 60)), tail = job + '-' + m + (job === 'cat' ? '-of-' + (total / 60) : '');
     document.getElementById('heldmin').textContent = m;
     document.getElementById('heldjob').textContent = document.getElementById('job').textContent;
-    document.getElementById('heldtoday').setAttribute('href', 'morning.html#held-' + tail);
+    document.querySelector('.topbar .home').setAttribute('href', 'morning.html#held-' + tail);   /* Today, while held, offers Carry on */
     ring.classList.add('hold'); ui.classList.add('holding');
   }
-  function backToDelve(){ held = false; ring.classList.remove('hold'); ui.classList.remove('holding'); }
+  function backToDelve(){ document.querySelector('.topbar .home').setAttribute('href', 'morning.html'); held = false; ring.classList.remove('hold'); ui.classList.remove('holding'); }
   draw();
-  if (!frozen) requestAnimationFrame(function(){ requestAnimationFrame(function(){ setTimeout(function(){ setInterval(function(){ if (left > 0 && !held) { left--; draw(); if (!left) end(); } }, 1000); }, 3000); }); });
-  ring.addEventListener('click', function(){ if (!held) end(); });   /* a preview of the end: tap the ring */
+  if (!frozen) requestAnimationFrame(function(){ requestAnimationFrame(function(){ setTimeout(function(){ setInterval(function(){ if (left > 0 && !held && !finished) { left--; draw(); if (!left) end(); } }, 1000); }, 3000); }); });
+  /* D-036 (7): Finish here. Every minute done counts; the ring closes gently on what was done (no unused minutes shown). */
+  function finish(){
+    if (finished) return;
+    var m = Math.max(1, Math.floor((total - left) / 60)), words = m + (m === 1 ? ' minute' : ' minutes');
+    finished = true; held = false;
+    document.querySelectorAll('.donemin').forEach(function(e){ e.textContent = words; });
+    ui.classList.remove('holding'); ring.classList.add('hold');
+    var from = (total - left) / total, t0 = null;
+    function step(ts){ if (t0 === null) t0 = ts; var k = Math.min(1, (ts - t0) / 1100), e = 1 - Math.pow(1 - k, 3);
+      ring.style.setProperty('--p', (from + (1 - from) * e).toFixed(4));
+      if (k < 1) requestAnimationFrame(step); else { ring.classList.add('ended'); setTimeout(function(){ ring.classList.add('rest'); }, 1200); } }
+    requestAnimationFrame(step);
+    document.querySelector('.fin').setAttribute('data-f', job === 'cat' ? 'ask' : 'course');
+    ui.classList.add('finishing');
+  }
+  function answer(f){ document.querySelector('.fin').setAttribute('data-f', f); }
   document.getElementById('step').addEventListener('click', stepAway);
   document.getElementById('back').addEventListener('click', backToDelve);
+  document.getElementById('finish').addEventListener('click', finish);
+  document.getElementById('heldfinish').addEventListener('click', finish);
+  document.getElementById('isdone').addEventListener('click', function(){ answer('yes'); });
+  document.getElementById('notyet').addEventListener('click', function(){ answer('no'); });
   if (/breather|end/.test(location.hash)) end();
   if (/stepped/.test(location.hash)) stepAway();
+  /* samples: #finished (the Course, 25 minutes done), #cat-60-finish (the question, 22 minutes done) */
+  if (/finish/.test(location.hash)) { left = cat ? Math.max(0, total - 22*60) : 0; draw(); finish(); }
 })();
 </script>
 </body>
