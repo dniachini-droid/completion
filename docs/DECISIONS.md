@@ -337,3 +337,12 @@
 - **Rationale:** Dan's taste (rule 20). It also answers the two open questions: glow is purple for the place and the day, turning gold as the day completes; carved capitals set buttons and labels, plain print carries sentences.
 - **Consequences:** The rest of the run builds D and puts it through critique. A, B and C stay in the repo as the record. Phase 4's "Dan picks or blends one" is met once he approves D.
 - **Reversible:** Yes.
+
+## D-033 — The delve length is adjustable, with a beautiful control
+- **Date:** 2026-09-24
+- **Context:** Dan, on seeing direction D: the Pomodoro is central for him. He wants to set the focus time by how he feels (25 by default, up to 30, 45 or 60 minutes; breaks stay 5), to keep going when in flow, and to skip the break without penalty. The control must be beautiful (a dial, a slider, the lamp's flame), not typed. As the time rises, the screen should hint that he'll go further and reach somewhere new. He asked for light research into beautiful ways to do this.
+- **Decision:** Adopted. `TOOLS.md` §1 amended. The visual run researches duration controls briefly and builds the setting screen in direction D with two or three variants for Dan to try. Rewards stay time-based: a longer delve moves further in proportion, and the existing anti-farming slow-down after about two extra hours of the same kind of work still applies (P13).
+- **Alternatives:** keep 25/5 fixed (the original draft); a free number field (Dan: no).
+- **Rationale:** Dan's taste and self-knowledge (rule 20); P13 (real effort outweighs trivial input); P1 (starting stays one tap: the default needs no setting).
+- **Risks noted:** a visible "you'd reach further" must never read as pressure on a low day (P3, P8): it appears only as he raises the time, never as a default nag. Skipping breaks during hyperfocus is his call; the app doesn't lecture.
+- **Reversible:** Yes.
