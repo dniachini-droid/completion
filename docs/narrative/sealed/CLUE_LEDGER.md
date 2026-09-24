@@ -65,6 +65,16 @@ Visit ids are `ARRIVALS_REGION2.md` week 6 and `NICHES.md` week 6. Signs held du
 | C-65 | Her folder's first pocket: the council's letter about the shaft (*monitored*) and the farmer's note from her windscreen, *Your car's been here nine days. Ring me.* | her camp, NICHES 6.5 (Key) | Locals noticed an explorer | Her car stayed in the field; she never drove home: at Day 40 she went down with everything it held (L15); the farmer's later photograph shows light round the cap from below (X-farmer, wk 21: the lamps stay lit while a bearer is inside) | none | Month 4 (L15); month 5 (X-farmer) | character | no |
 | C-66 | The tablet's first pair, two drops parted beside a doorway, makes the Lower Door's second mark and the lintel at the foot of the second flight half-readable: *path… open* | Salt Gallery tablet, 6.2 (Key); week close | A password: "path open" | OPEN-WAY, the word the Builders cut most (the shape of the whole place is this word repeated); the great door also counts returns (C-05, C-23) | none for the word (wk 7); RETURN (m5) for the count | Week 7 (W2 at the lintel, then the great door with a Key) | tutorial | no |
 
+### MVP content added by the story job (`MVP_CONTENT.md`)
+
+The fifteen new places, fifteen camp views, 72 finds, eight told lines, 120 passage lines and 18 teasers plant **one** new clue; everything else either restates a clue above (the id is in its Ties column) or is texture whose truth is stated in its row there.
+
+| Id | Clue | Where / when | Surface meaning (sufficient) | True relation | Prerequisites | Payoff | Tag | Met? |
+|---|---|---|---|---|---|---|---|---|
+| C-67 | At the head of the top flight, one ring set apart from the rest and cut deeper (`fd-e07`, also `cv-10`'s thing to look at) | the Stair's landing, from week 3 (a find: may or may not be delivered) | A grand name at the top of a stair: a founder's | The first ring of the Stair, and the first of the halls' rings he copies onto the first door's face in the halls' order (K4's body, 43.2): the list's order can be checked against the walls | NAME (m8) for what a ring is; nothing for the shape | Week 43 (43.2: the first ring on the door is this one); week 51 (the list) | clue | no |
+
+Being optional, C-67 is never a prerequisite: 43.2 describes the ring on the Stair itself.
+
 ## Weeks 7–13 (beyond the first playable; listed so the map stays honest)
 
 | Id | Clue | When | Surface | Truth | Payoff |
