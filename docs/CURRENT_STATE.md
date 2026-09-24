@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-24, afternoon (visual run done; Dan's combined look D in final polish)_
+_Last updated: 2026-09-24, evening (D's final fix round done; Dan reviewing the Netlify zip)_
 
 ## Current phase
 
@@ -16,7 +16,7 @@ Find how the game looks, moves and feels (MASTER_BRIEF §57–58). First a live 
 
 ## Current session focus
 
-**2026-09-24, the long visual run** (`design/PHASE4_RUN.md` has the full log). Branch: `claude/phase-4-long-visual-run-08v7pn` (not yet merged; merge only after Dan approves).
+**2026-09-24, the long visual run** (`design/PHASE4_RUN.md` has the full log). Branch: `claude/phase-4-direction-d-4jifz4` (carries all of `claude/phase-4-long-visual-run-08v7pn`; not yet merged; merge only after Dan approves).
 
 What happened:
 - **Model test** (D-029): the default model's morning screen won; Dan agreed ("the warm one").
@@ -27,13 +27,12 @@ What happened:
 - Drafts written for Dan's approval: `design/DESIGN_SYSTEM.md`, `design/INTERACTION_NOTES.md`, `design/UX_PRINCIPLES.md`.
 
 **Resume here (next session), in order:**
-1. **Check the working tree is clean and pushed** (`git status`, `git log --oneline | head`). If the last builder's work on D (record strip fixed in place, lintel marks in perspective, the new clay lamp everywhere) is present, it is done; look at `design/directions/d-combined/shots/`.
-2. **Run the prepared final fix round for D**: `design/tools/NEXT_FIX_ROUND_D.md` (Dan overruled three critic points: keep the hall, the stair and the Salt Gallery as they are). Use the tools in `design/tools/`.
-3. **Build a fresh Netlify zip** (`design/tools/README.md`) and send it to Dan; he walks through D once more and dictates notes. Apply them.
-4. **Dan approves D**, the design system, the interaction notes and the UX principles → tick the Phase 4 exit criteria.
-5. **Open a PR into `main` and merge it** (D-006), once Dan says yes.
-6. **Ask Dan to agree to Phase 5** (Concept synthesis), then start it in a new session.
-7. In parallel with Phase 5, before the first playable is built: **the sealed story-fix session** (D-035; its item list is in the sealed folder; top priority: the late-game choice must never look like a promise the fixed story can't keep). Keep Dan's view spoiler-free.
+1. ~~Final fix round for D~~ **done** (`design/directions/d-combined/REVISION-2.md`). Not done on purpose: the record band's deeper rework and the daybook's stone (both low value, risky on screens Dan likes).
+2. ~~Netlify zip~~ **sent to Dan** (`sh docs/design/tools/netlify_zip.sh out.zip`). **Now:** Dan walks through D once more and dictates notes; apply them.
+3. **Dan approves D**, the design system, the interaction notes and the UX principles → tick the Phase 4 exit criteria.
+4. **Open a PR into `main` and merge it** (D-006), once Dan says yes.
+5. **Ask Dan to agree to Phase 5** (Concept synthesis), then start it in a new session.
+6. In parallel with Phase 5, before the first playable is built: **the sealed story-fix session** (D-035; its item list is in the sealed folder; top priority: the late-game choice must never look like a promise the fixed story can't keep). Keep Dan's view spoiler-free.
 
 ## Do NOT work on yet
 
