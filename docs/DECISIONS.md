@@ -727,7 +727,7 @@
 - **Consequences:** new screens `Marks`, `Cut`, `Stair`; the painted hall (`ui/scene/hall.js`, from the approved mock-up) now ships in the app; the haptics gain a long "ring" for the word locking. Save version unchanged (all new state is computed from facts already written).
 - **Reversible:** Yes.
 
-## D-070 — The app is called The Long Answer (Dan)
+## D-071 — The app is called The Long Answer (Dan)
 - **Date:** 2026-09-24
 - **Context:** "We really need to change the name." The shortlist (`narrative/NAMES.md`, D-021), each name checked privately against the sealed truth.
 - **Decision (Dan):** **The Long Answer**, Claude's recommendation. Under the icon it reads **Long Answer** (the full name is too long for the label).

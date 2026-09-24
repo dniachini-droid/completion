@@ -6,7 +6,7 @@
 |---|---|---|
 | Its words (`content/copy/en.ts`) | Placeholder, like all copy before the language pass (D-046) | The language pass |
 | The app icon | A crop of an invented sample painting | When the app has its name (`narrative/NAMES.md`) |
-| The App Store Connect record may still be called "Real Life RPG (Dan)" | Dan renames it there if he likes (D-070) | Before anything is public |
+| The App Store Connect record may still be called "Real Life RPG (Dan)" | Dan renames it there if he likes (D-071) | Before anything is public |
 | The delve alert uses the phone's default sound | The delve's own sound isn't made yet | Heart slice or later, if play shows sound matters |
 | The fact log is saved as one text value: the browser's own storage on the web link, the phone's app settings (Capacitor Preferences, kept by iOS and backed up by iCloud) in the TestFlight build; no snapshot, no migrations yet | Enough for a prototype's small log, with nothing new to trust | SQLite, the snapshot and migrations before the first playable |
 | Screens checked in Chromium at phone size, not WebKit | The container has only Chromium; TEST_STRATEGY asks for WebKit | Dan's phone checks each build; add WebKit to CI when the flow tests arrive |

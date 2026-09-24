@@ -3,7 +3,7 @@
 > **Open document** (D-021). Candidate names for the app, drawn from the chosen world. Each one has been checked privately against the sealed truth so that no name gives anything away. Dan chooses **whenever he's ready**, at the latest in Phase 5. Choosing none of these is also fine.
 > Clash check: a quick web search for games and apps with the same name, on 2026-09-24. This is not a trademark search; do a proper one before anything goes public.
 
-_Written 2026-09-24. **Chosen: The Long Answer** (Dan, D-070)._
+_Written 2026-09-24. **Chosen: The Long Answer** (Dan, D-071)._
 
 ## Candidates
 
