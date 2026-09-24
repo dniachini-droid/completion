@@ -473,7 +473,7 @@
           R = .008 + .5 * glow; G = .008 + .46 * glow; Bc = .03 + 1.0 * glow;
         } else {
           alb[0] = albR; alb[1] = albG; alb[2] = albB;
-          lightAt(X, Y, Z, nx, ny, nz, alb, col, (kind === 6 || kind === 7 || kind === 9) ? 1 : null);
+          lightAt(X, Y, Z, nx, ny, nz, alb, col, (kind === 6 || kind === 7 || kind === 9 || (kind === 5 && bxk.kind === 'ledge')) ? 1 : null);
           R = col[0] * ao; G = col[1] * ao; Bc = col[2] * ao;
           if (kind === 2 || kind === 4) {
             /* a worn sheen on the floor toward the far light */

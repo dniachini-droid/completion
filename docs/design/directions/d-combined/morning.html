@@ -155,7 +155,7 @@ document.querySelectorAll('.seg > button').forEach(function(b){
   function paint(){
     var v = /done/.test(location.hash) ? 'done' : (/later/.test(location.hash) ? 'later' : 'early');
     if (drawn === v) return; drawn = v;
-    var h = Hall.draw(document.getElementById('hall'), { cam: { x: .2, y: 1.6, z: .5, f: .62, cx: .5, cy: .5 }, gold: GOLD[v] });
+    var h = Hall.draw(document.getElementById('hall'), { cam: { x: .2, y: 1.6, z: 1.5, f: .62, cx: .5, cy: .47 }, gold: GOLD[v] });
     /* fine, faint brackets on the lintel ("Ahead") */
     var pts = [h.onBeam(0, 0), h.onBeam(0, .85), h.onBeam(2.6, 0), h.onBeam(2.6, .85)].filter(Boolean);
     var x0 = Math.min.apply(0, pts.map(function(p){ return p[0]; })) - 7, x1 = Math.max.apply(0, pts.map(function(p){ return p[0]; })) + 7;

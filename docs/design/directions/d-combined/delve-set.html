@@ -244,7 +244,7 @@ body { --scrim-top-h: 300px; --scrim-bottom-h: 52%; }
     else x = xs[2] + (xs[3] - xs[2]) * (v - 45) / 15;
     R.lit.setAttribute('d', 'M' + xs[0] + ' ' + R.y + ' H' + x.toFixed(1));
     R.spark.setAttribute('cx', x.toFixed(1));
-    R.dim.setAttribute('opacity', clamp((v - 27) / 10, 0, 1).toFixed(2));
+    R.dim.setAttribute('opacity', (.6 + .4 * clamp((v - 27) / 10, 0, 1)).toFixed(2));   /* the whole bar always shows, so it reads centred; only the places wait */
     R.g45.setAttribute('opacity', clamp((v - 33) / 10, 0, 1).toFixed(2));
     R.g60.setAttribute('opacity', clamp((v - 48) / 12, 0, 1).toFixed(2));
   }
