@@ -15,10 +15,10 @@ export default {
   bloom: { alpha: .12 },
   glow: { threshold: .66, k: .6 },
   blur: { px: 1.4, d0: 2.4, d1: 6, k: .6 },
-  gold: 1, grain: .3, shadowJitter: 1, amb: .55, expo: 2.1, ambC: [.75, .7, 1.7],
+  gold: 1, grain: .3, shadowJitter: 1, amb: .42, expo: 2.1, ambC: [.8, .72, 1.45],
   lights: [
-    { p: [-.3, 1.6, -3.4], c: [1, .7, .34], k: 11, r: 1.2, warm: .006, shadow: 1 },   /* the clay lamp, in the passage behind you */
-    { p: [.4, .3, 1.0], c: [1, .7, .34], k: .1, r: .3 },                             /* its light ending on the boots' toes */
+    { p: [-.3, 1.6, -3.4], c: [1, .7, .34], k: 12, r: 1.2, warm: .01, shadow: 1 },   /* the clay lamp, in the passage behind you */
+    { p: [.45, .22, 1.12], c: [1, .7, .34], k: .12, r: .2 },                             /* its light ending on the boots' toes */
     { p: [-1.3, 1.9, 3.6], c: [.4, .37, .85], k: 1.1, r: 1.2 },                        /* violet in the far corners */
     { p: [1.35, 1.9, 3.7], c: [.4, .37, .85], k: .8, r: 1 },
     { p: [-.9, 1.5, 3.3], c: [.44, .41, .9], k: .25, r: .5 },                          /* a violet rim along the rod */
@@ -30,16 +30,16 @@ export default {
     vec3 q = p - at; q.x += q.y * lean;
     /* the leg: a flattened tube, open at the top, slumped a little; its top folded over into a cuff */
     vec2 r2 = q.xz * vec2(1., 1.25);
-    float leg = max(length(r2) - .055 - .004 * q.y, max(q.y - .32, -q.y));
+    float leg = max(length(r2 * vec2(1., 1.15)) - .052 + .03 * q.y, max(q.y - .3, -q.y));     /* oval, tapering up */
     leg = max(leg, -max(length(r2) - .044, .29 - q.y));
-    float cuff = length(vec2(length(r2) - .058, q.y - .3)) - .014;
+    float cuff = length(vec2(length(r2 * vec2(1., 1.15)) - .045, q.y - .29)) - .009 + max(0., q.z) * .2;   /* a thin cuff, folded on one side */
     /* the foot: toes out, rounded, turned up a little at the toe */
     vec3 f = q - vec3(-.1, .05 + .02 * smoothstep(-.08, -.2, q.x), 0);
-    float foot = length(max(abs(f) - vec3(.11, .02, .028), 0.)) - .036;
+    float foot = length(max(abs(f) - vec3(.11, .014, .03), 0.)) - .032;
     float b = smin(min(leg, cuff), foot, .035);
     /* the lacing: small cuts across the front of the leg and the instep */
     float lace = abs(fract((q.y + .01) / .035) - .5) * .035;
-    if (q.x < -.03 && q.y > .06 && q.y < .28) b += engrave(lace, .003, .003);
+    if (q.x < -.035 && abs(q.z) < .02 && q.y > .06 && q.y < .26) b += engrave(lace, .003, .003);
     vec4 bt = vec4(b, M_LEATHER, NOUV);
     if (b < .01) gTint = vec3(.7);
     vec4 sole = vec4(length(max(abs(q - vec3(-.09, .008, 0)) - vec3(.13, .004, .032), 0.)) - .01, M_LEATHER, NOUV);
@@ -70,12 +70,12 @@ export default {
     if (bl.x < .01) gTint = vec3(.55, .54, .66);
     d = U(d, bl);
     /* the boots, side by side under the cot's edge, toes out, as if for the morning */
-    d = U(d, boot(p, vec3(.58, 0, 1.24), .04));
-    d = U(d, boot(p, vec3(.6, 0, 1.42), .1));
+    d = U(d, boot(p, vec3(.58, 0, 1.25), -.12));                                     /* leaning on its pair */
+    d = U(d, boot(p, vec3(.6, 0, 1.42), .02));
     /* on the cot: the notebook, open, its pencil across the page; the tin box with a slate on its lid */
-    d = U(d, box(p, vec3(.86, .452 - .13, 1.62), vec3(.105, .006, .15), M_CLOTH));
-    d = U(d, box(p, vec3(.86, .459 - .13, 1.62), vec3(.098, .004, .142), M_PAPER));
-    vec3 pq = p - vec3(.85, .47 - .13, 1.6); float pa = .5, pc = cos(pa), ps = sin(pa);
+    d = U(d, box(p, vec3(.86, .358, 1.62), vec3(.105, .006, .15), M_CLOTH));
+    d = U(d, box(p, vec3(.86, .365, 1.62), vec3(.098, .004, .142), M_PAPER));
+    vec3 pq = p - vec3(.85, .374, 1.6); float pa = .5, pc = cos(pa), ps = sin(pa);
     vec2 pxz = vec2(pc * pq.x - ps * pq.z, ps * pq.x + pc * pq.z);
     d = U(d, vec4(length(vec2(pxz.x, pq.y)) - .006 + max(0., abs(pxz.y) - .085), M_WOOD, NOUV));
     d = U(d, box(p, vec3(1.08, .5 - .1, 2.2), vec3(.1, .05, .065), M_TIN));

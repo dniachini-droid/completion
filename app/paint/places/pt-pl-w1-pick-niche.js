@@ -16,9 +16,9 @@ export default {
   expo: 1.75, grade: [1.1, 1, .9], grain: .4, shadowJitter: 1,
   salt: { pink: 0 },
   lights: [
-    { p: [-1.1, .45, ZN + 7.5], c: [.62, .58, 1.2], k: 40, r: 4, shadow: 1 },   /* the gallery's light, raking along the wall from the left */
-    { p: [-.3, 1.5, ZN + 32], c: [.62, .58, 1.2], k: 60, r: 9 },                 /* far down the gallery */
-    { p: [1.55, .12, ZN + .9], c: [.62, .58, 1.2], k: .25, r: .35, shadow: 1 },       /* the same light, low along the lip */
+    { p: [-1.1, 1.1, ZN + 7.5], c: [.62, .58, 1.2], k: 11, r: 4, shadow: 1 },   /* the gallery's light, raking along the wall from the left */
+    { p: [-.3, 1.5, ZN + 32], c: [.62, .58, 1.2], k: 40, r: 9 },                 /* far down the gallery */
+    { p: [1.75, .1, ZN + .7], c: [.62, .58, 1.2], k: .7, r: .3, shadow: 1 },       /* the same light, low along the lip */
     { p: [2.15, .35, ZN], c: [.4, .37, .85], k: .02, r: .25 },                    /* a trace of it at the niche's back */
     { p: [0, 1.4, ZN - 5], c: [.3, .28, .66], k: .4, r: 3 },                        /* faint fill from behind */
   ],
@@ -38,12 +38,15 @@ export default {
     float head = .12 + .04 * (1. - (m.x / .38) * (m.x / .38));
     float slot = min(min(.38 - abs(m.x), head - m.y), m.y);
     d = A(d, vec4(min(slot, .55 - q.x), M_CUT_SMALL, NOUV));
-    if (q.x > -.12 && abs(m.x) < .43 + .02 * vn(vec2(m.y * 20., 1.)) && m.y > -.08 - .015 * vn(vec2(m.x * 25., 3.)) && m.y < .005) d.yzw = vec3(M_DRESSED, NOUV);   /* only the lip is cut stone */
-    /* its lip: a row of empty strokes, V-cut, spaced by hand */
-    if (q.x > -.12 && m.y < 0. && m.y > -.08) {
-      float k = floor((m.x + .3) / .1), c0 = -.3 + (k + .5) * .1 + (h2(vec2(k, 7.)) - .5) * .024;
-      float ln = length(vec2(m.x - c0, max(abs(m.y + .04) - .022, 0.)));
-      if (k >= 0. && k < 6.) d.x += engrave(ln, .012, .014);
+    /* its lip: a worn sill of cut stone, a little proud of the salt, its arris rounded by hands */
+    vec4 lip = box(q, vec3(-.03, -.045, 0), vec3(.06, .035, .43), M_DRESSED); lip.x -= .012; lip.x += rough(p, .006, 20.);
+    d = U(d, lip);
+    /* on its face, a row of empty strokes: hand-cut, uneven, tapering to the foot */
+    if (q.x < -.05 && q.x > -.14 && m.y < 0. && m.y > -.09) {
+      float k = floor((m.x + .25) / .1), c0 = -.25 + (k + .5) * .1 + (h2(vec2(k, 7.)) - .5) * .03;
+      float t = clamp((m.y + .07) / .05, 0., 1.);
+      float ln = length(vec2(m.x - c0 + (h2(vec2(k, 2.)) - .5) * .01 * t, max(abs(m.y + .045) - .022 - .006 * h2(vec2(k, 5.)), 0.)));
+      if (k >= 0. && k < 5.) d.x += engrave(ln, .007 + .006 * t, .01);
     }
     /* score marks in the salt beside it: short blade cuts, all one way */
     vec2 w = vec2(m.x - .72, m.y - .25); float kk = floor(w.x / .12);

@@ -332,13 +332,13 @@ vec3 shade(vec3 p, vec3 d, float t, vec3 n, vec4 hs, float fpx) {
     float bd = min(bf, 1. - bf);
     alb = mix(alb, vec3(.82, .6, .64), (1. - smoothstep(0., .2, bd)) * uSaltPink * (.4 + .6 * white));   /* pink only at the edges of the beds */
     alb *= 1. - .15 * (1. - smoothstep(0., .025, bd)) * h2(vec2(bi, 17.));                   /* a thin dark seam under some beds */
-    vec3 sd; vec3 cl = cells3(p * 28., sd);
+    vec3 sd; vec3 cl = cells3(p * 45., sd);
     float grain = smoothstep(0., .1, cl.y - cl.x);                                           /* the boundary between crystals */
     float fade = 1. - smoothstep(.01, .035, fp);                                             /* crystals only where they can be seen */
     alb *= mix(1., (.96 + .08 * cl.z) * (.95 + .05 * grain), fade);
     alb *= .88 + .24 * fbm3(p * 1.4, 3);
     vec3 cn = vec3(h2(sd.xy), h2(sd.yz + 3.), h2(sd.zx + 7.)) - .5;
-    nb = (cn - n * dot(cn, n)) * .3 * fade + (vec3(fbm3(p * 4., 2), fbm3(p * 4. + 7., 2), fbm3(p * 4. + 13., 2)) - .5) * .6;
+    nb = (cn - n * dot(cn, n)) * .1 * fade + (vec3(fbm3(p * 4., 2), fbm3(p * 4. + 7., 2), fbm3(p * 4. + 13., 2)) - .5) * .6;
     vec3 gs; vec3 gc = cells3(p * 70. + 3.7, gs);                                              /* glints: a few small faces, finer than the crystals */
     float glint = step(.9, h2(gs.xz + gs.y * 3.1)) * (1. - smoothstep(.25, .45, gc.x)) * fade;
     specK = .12 + 2.2 * glint; specP = mix(24., 140., glint); wrap = max(wrap, .45);    /* light goes a little into salt */

@@ -21,12 +21,13 @@ export default {
     { p: [2.6, .03, 5.6], c: [1, .72, .36], k: .2, r: .3 },                      /* its light on the floor at the wall's foot, glowing back up */
     { p: [2.66, .38, 5.6], c: [1, .72, .36], k: .003, r: .1 },                     /* a trace of it inside the recess, on its back */
     { p: [.6, 2.6, 2.4], c: [.4, .37, .85], k: 9, r: 3.6, shadow: .6 },            /* the hall's violet, from behind on the left */
-    { p: [2.5, .55, 4.5], c: [.4, .37, .85], k: .35, r: .6 },                      /* the same, grazing along the wall */
+    { p: [2.5, .45, 5.05], c: [.4, .37, .85], k: .35, r: .45 },                      /* the same, grazing along the wall */
   ],
   glsl: /* glsl */ `
   vec4 scene(vec3 p) {
     vec4 d = hallAir(p, 2.7, 6., 12.47, -10., 66., M_CUT);
-    if (p.y < .03 && p.x < 2.3) gTint = vec3(.8);                                 /* the near floor, out of the lamp's reach */
+    if (p.y < .03 && p.x < 2.3) gTint = vec3(.62);
+    if (p.x > 2.6) gTint *= 1. - .65 * smoothstep(.85, 1.1, p.y) * smoothstep(.2, .45, abs(p.z - 5.6));   /* beside and above the ledge's ends: one dark band */                                 /* the near floor, out of the lamp's reach */
     vec3 q = p - vec3(2.7, .3, 5.6); vec2 m = vec2(q.z, q.y);
     /* the recess: low and a little wider than high, its corners worn round */
     vec2 e = abs(m - vec2(0, .14)) - vec2(.16, .1) + .03;
@@ -34,13 +35,14 @@ export default {
     if (q.x > -.06) {
       /* the oil: a ring round the mouth, wiped clean at the very edge, heaviest at the sill and low sides */
       float nz = (fbm(m * 3. + 2., 4) - .5) * .12;
-      float ring = smoothstep(.0, .025, sd) * (1. - smoothstep(.08, .24, sd + nz));
+      float ring = smoothstep(-.005, .006, sd) * (1. - smoothstep(.08, .24, sd + nz));   /* the oil starts at the very edge */
       ring *= mix(.45, 1., smoothstep(.3, .02, m.y));
       gStain = .88 * ring; gPolish = .3 * ring;
       /* a row of cut strokes over it, V-cut, clean stone */
-      float k = floor((q.z + .125) / .05), sz = q.z + .125 - (k + .5) * .05;
-      float ln = length(vec2(sz, max(abs(q.y - .34) - .026, 0.)));
-      if (k >= 0. && k < 5.) d.x += engrave(ln, .011, .012);
+      float k = floor((q.z + .125) / .05), sz = q.z + .125 - (k + .5) * .05 + (h2(vec2(k, 3.)) - .5) * .01;
+      float t = clamp((q.y - .31) / .06, 0., 1.), tilt = (h2(vec2(k, 8.)) - .5) * .25;
+      float ln = length(vec2(sz + (q.y - .34) * tilt, max(abs(q.y - .34 - .004 * h2(vec2(k, 1.))) - .024 - .006 * h2(vec2(k, 4.)), 0.)));
+      if (k >= 0. && k < 5.) d.x += engrave(ln, .005 + .006 * t, .01);             /* hand-cut, uneven, tapering to the foot */
     }
     d = A(d, vec4(min(-sd, .45 - q.x), M_CUT_SMALL, NOUV));
     if (q.x > .03 && sd < .01) gTint = vec3(.3);                                    /* inside, the dark of a hand's depth */
