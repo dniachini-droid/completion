@@ -34,8 +34,9 @@ button:focus-visible{outline:2px solid #b9c6e8;outline-offset:2px}
 const D={d:"d-combined",a:"a-lamp-and-stone",b:"b-engraved-light",c:"c-turning-day"};
 const N={d:"D · The combined look",a:"A · Lamp and Stone",b:"B · Engraved Light",c:"C · The Turning Day"};
 const BASE=[["morning","Morning"],["delve","A delve (timer)"],["map","The map"],["record","Reading a record"],["cut","Cutting a word (animated)"],["complete","Day complete (animated)"],["camp","Camp"],["satchel","The satchel"],["daybook","The daybook"]];
+const PLANNER=[["week","This week (planner, draft)"],["week#empty","No plan yet: Plan my week"],["rhythms","What repeats (draft)"],["today-planned","Today, from the plan (draft)"],["today-planned#low","Today from the plan, on a Low day"]];
 const EXTRA={d:[[1,"delve-set","Setting the run (the dial and the route line)"],[1,"delve-set-variants","Delve length: try B and C (switch at the top)"],[2,"delve#breather","The end of a delve (the breather)"],[5,"stair","The head of the stair"]],a:[[1,"morning-violet","Morning, violet version"]],b:[[5,"stair","The head of the stair"]],c:[]};
-function list(d){const l=BASE.slice();for(const [i,s,t] of EXTRA[d].slice().reverse()) l.splice(i,0,[s,t]);return l}
+function list(d){const l=BASE.slice();if(d==="d")l.push(...PLANNER);for(const [i,s,t] of EXTRA[d].slice().reverse()) l.splice(i,0,[s,t]);return l}
 let d="d",i=0;
 try{const h=location.hash.slice(1).split("-");if(D[h[0]]){d=h[0];i=Math.max(0,+h[1]||0)}}catch(e){}
 const f=document.getElementById("f");

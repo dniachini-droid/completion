@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-24, late night (Phase 5 step 2: the concept stress-tested, D-043)_
+_Last updated: 2026-09-24 (the week planner reconciled and mocked up, D-045, draft for Dan)_
 
 ## Current phase
 
@@ -15,7 +15,7 @@ _Last updated: 2026-09-24, late night (Phase 5 step 2: the concept stress-tested
 Write the chosen game up as one clear concept, stress-test it, and set the numbers the build needs. **No new concepts** (Dan, D-042). Work order: `product/PHASE5_PLAN.md`; output: `product/CONCEPT.md`.
 
 ## Resume here (next session)
-0. **First: the week planner (scheduler).** Dan asked for one (2026-09-24); proposal in `product/SCHEDULER_PROPOSAL.md`, not yet agreed. Dan is taking it to ChatGPT for review. Next: reconcile the review against the agreed docs, get Dan's agreement (a decision), add it to `PHASE5_PLAN.md`, mock up the planner in D. Only then step 3.
+0. **First: the week planner (scheduler).** ChatGPT's review is reconciled (`product/SCHEDULER_REVIEW.md`, D-045, draft). Draft rules: `game/PLANNER.md`. Mock-ups: `design/directions/d-combined/week.html`, `rhythms.html`, `today-planned.html`. **Waiting on Dan:** approve the rules and mock-ups, and one question (does a 3-hour course day count at its first hour?). Then fold rhythms into `QUEST_SYSTEM.md`, `CORE_LOOPS.md`, P6/P16 and `PHASE5_PLAN.md`, and carry on with step 3.
 1. Steps 1–2 are done: `product/CONCEPT.md` is written and stress-tested (`product/STRESS_TEST.md`, D-043). Continue `product/PHASE5_PLAN.md` at **step 3** (the numbers; `STRESS_TEST.md` §5 adds seven inputs, including a weekly floor), then step 4. Commit and push after each step.
 2. Bring Dan the concept page and the numbers to review (step 5). Ask him only about taste and priorities. (The two stress-test points are already answered, D-044.)
 3. The sealed story-fix session (D-035) runs in its own session, before the first playable is built.
@@ -85,4 +85,4 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 
 ## Recommended next action
 
-**Dan: start a new session and paste:** "Read CLAUDE.md and docs/CURRENT_STATE.md, then continue Phase 5 from 'Resume here': reconcile ChatGPT's review of product/SCHEDULER_PROPOSAL.md (I'll paste it below)."
+**Dan: start a new session and paste:** "Read CLAUDE.md and docs/CURRENT_STATE.md, then continue Phase 5 from 'Resume here': lock the week planner (game/PLANNER.md) with my answers below, then set the numbers (step 3)."

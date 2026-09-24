@@ -19,3 +19,9 @@ No figure; wall-cups dark (the morning painting is C's, with dark cups); the cla
 ## Weak spots
 - The lintel in the morning painting still reads a little like a sign (carried over from C).
 - The map's lines are B-bright. If Dan wants it closer to A's softness, the next step is to dim them to dust once they have drawn in.
+
+## The week planner (draft, 2026-09-24, D-045)
+Three new screens for `game/PLANNER.md`, in D's reading-screen style (the hall blurred behind a veil and scrims; words still):
+- **`week.html`**: This week. The days run down a thin route line, gold where done and dashed ahead; the past shows only what was done; forecast places ("if the plan holds") sit on the line. Tap a job for the sheet (day, time, "Not this week"). `#empty` shows "Plan my week", which lays the week out with a rise; `#next` shows next week.
+- **`rhythms.html`**: What repeats. Dan's own rhythms, each with how often, each time, time and delve-or-not. `#edit` (Spanish study), `#add`.
+- **`today-planned.html`**: the morning screen started from the plan, with a fourth nav link, Week. `#low`: the appointment stays and the course is released, with one quiet line.
