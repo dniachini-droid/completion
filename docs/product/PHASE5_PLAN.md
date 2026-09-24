@@ -11,6 +11,7 @@ Dan (2026-09-24): no new concepts. The game is the one already chosen and built 
 ## Steps (in order)
 1. **Write `product/CONCEPT.md`** from the agreed docs (`game/`, `design/`, `DESIGN_PRINCIPLES.md`, the game bible). Nothing new invented.
 2. **Stress-test it**: every mechanic against the principles, the anti-features and the §71 checklist; walk through a low day, a normal day, a high day, an interrupted delve, a week away, and a disrupted week. Fix any gap with the smallest rule that works and log it.
+2a. **The week planner** (added at Dan's request, D-045): proposed, reviewed twice by ChatGPT, reconciled (D-047) and approved by Dan (D-048). Rules: `game/PLANNER.md`. Done.
 3. **Settle the numbers** (starting guesses, tuned in play):
    - region sizes, how far apart named places are, and step pacing (D-037), with enough route past every opened place for Dan's real hours (D-037, D-039);
    - the reward rhythm: what Dan is guaranteed to get per delve, per day, per week (D-035);

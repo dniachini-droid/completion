@@ -22,7 +22,8 @@ Thin, complete and beautiful (D-004, rule 13). Enough to test: *does wanting to 
 - The day: main jobs, the 25-minute timer, day complete, High-day extra steps.
 - "I can't start" with a real teaser and a tiny step.
 - Evening camp and bedtime.
-- Weekly targets that fill themselves, and the automatic week close.
+- Weekly targets that fill themselves (now rhythms), and the automatic week close.
+- **The week planner** (D-045, D-048): rhythms, This week with Plan my week, Today from the plan with capacity on top, the forecast line and map waypoints (`PLANNER.md` → First playable). No Google Calendar yet.
 - One small region of the Site: a handful of routes, a few gates, one gate visible from the start.
 - The first few signs, decoding, and **one word** that opens something.
 - A few records from **two** lives that connect, planted with known truths (D-004, rule 6).
@@ -36,4 +37,4 @@ Thin, complete and beautiful (D-004, rule 13). Enough to test: *does wanting to 
 - **What the app notes by itself** (no admin for Dan): which jobs he started and when, whether avoided jobs got done more often, how often "I can't start" was used and whether a job followed, and whether he came back after low days or gaps.
 - **Then a short chat**: did wanting to go further in make you start real things? What felt like a chore? That answers rule 14 and decides what to build next.
 
-**Out (for later):** plotting and waypoints, the calendar link (after the Phase 7 check), company at work during a delve, satchel groups, deep pushes to far places, re-reading at scale, great gates beyond one, more lives, audio, AI-written anything, notifications (test separately).
+**Out (for later):** the calendar link (after the Phase 7 check), company at work during a delve, satchel groups, deep pushes to far places, re-reading at scale, great gates beyond one, more lives, audio, AI-written anything, notifications (test separately).

@@ -34,7 +34,7 @@ Capacity is Low, Normal or High.
 "I can't start" gives **a story teaser first, then one tiny physical step** (e.g. "put your gym shoes on"). Afterwards it *offers* to continue and never demands. Steps are concrete and real, with no cheerleading, so they don't feel patronising. *Clarified (D-038):* the teaser is never new story. It is a line from just ahead, a sound behind a door, or something already found; its payoff comes only after the real job (`game/CORE_LOOPS.md` Part 4). Tapping it again the same day brings back the same teaser, so it can't be farmed.
 
 **5. Aim the help at what's avoided.**
-Suggestions lean towards what Dan puts off: admin, Spanish, housework, and one-off jobs with a real cost (the cat's medication). The Claude Code course is absorbing, so it needs less pushing. **One hour of course work counts as done** (two delves of 25, which with the breather is the hour on the clock; any 50 minutes of delves do it, D-038). More is a bonus, so the course can't crowd out the avoided jobs.
+Suggestions lean towards what Dan puts off: admin, Spanish, housework, and one-off jobs with a real cost (the cat's medication). The Claude Code course is absorbing, so it needs less pushing. **One hour of course work counts as done** (two delves of 25, which with the breather is the hour on the clock; any 50 minutes of delves do it, D-038). More is a bonus, so the course can't crowd out the avoided jobs. *Clarified 2026-09-24 (D-047, Dan):* a Course day planned for 3 hours still counts at its first hour; the rest is room, never owed. Other jobs count at their own enough (`game/PLANNER.md`).
 
 **6. Weekly rhythm, not streaks.**
 Recurring targets are weekly, and Dan set them himself:
@@ -45,6 +45,8 @@ Recurring targets are weekly, and Dan set them himself:
 - Course: 1 h/day baseline
 
 Each week starts fresh. Misses never carry over. *Clarified (D-038):* nor do they pile into the rest of the same week. The day's size comes from capacity alone; open targets never add jobs or raise it, and late in the week they are suggested no harder than early on. A disrupted week becomes a lighter week unless Dan asks to catch up.
+
+*Amended 2026-09-24 (D-045, D-048):* weekly targets are now **rhythms**: *N a week*, *on set days* or *every 2 weeks*, each with an optional length, enough and time. Dan's starting set is in `game/PLANNER.md`. An optional **week planner** lays them out ("Plan my week"); the plan is a forecast, never a promise, and Today works exactly the same without it.
 
 *Clarified 2026-09-24 (D-030):* **these are Dan's current targets, not built into the app.** Dan can add, change, rename or remove any recurring target, and any kind of job, at any time. Every job name anywhere in the docs or mock-ups (gym, Spanish, the course, the cat's medication) is an example.
 
@@ -81,7 +83,7 @@ The fiction can be as dark as Dan likes. The app's voice *towards Dan* is plain,
 Sessions in the app are short: in, started, out. The app must never become the thing he does instead. It complements, and does not replace, the activity scheduling his psychologist recommended. It is not treatment.
 
 **16. Every tool is part of the world** (added 2026-09-23, D-020).
-Productivity features (timer, lists, scheduling, calendar, the trail, record of progress) are in, but each one must move or reveal something in the game, must never create a pile, a debt or a red number, and must never let an easy thing stand in for the avoided thing (P5; D-023). Planning stays optional: starting beats planning (P1). *Clarified (D-038):* tools help real action happen; using a tool on its own (adding, sorting, planning, ticking an item that isn't one of the day's jobs) earns nothing. The world moves only for real action.
+Productivity features (timer, lists, scheduling, calendar, the trail, record of progress) are in, but each one must move or reveal something in the game, must never create a pile, a debt or a red number, and must never let an easy thing stand in for the avoided thing (P5; D-023). Planning stays optional: starting beats planning (P1). *Clarified (D-038):* tools help real action happen; using a tool on its own (adding, sorting, planning, ticking an item that isn't one of the day's jobs) earns nothing. The world moves only for real action. *Added 2026-09-24 (D-048):* **the plan is a forecast, not a promise. Planning predicts progress; action creates it.** Keeping to a plan earns nothing extra, and doing a job off-plan earns the same in full.
 
 ## Still to test in use (not settled)
 

@@ -11,7 +11,7 @@ _Status: **agreed with Dan** 2026-09-23. "Quest" is a design word here; what the
 | **Main job** | One of the day's 2–5 real things | Suggested by the app from the pool below; Dan accepts or swaps | Step (a find if it's an avoided job) |
 | **Day complete** | All the day's main jobs done | Automatic | Arrival |
 | **Extra session** | Any delve beyond what the day's jobs need; before or after day complete, on any job (D-043) | Dan starts the timer on a job (one tap), so the app knows its kind without tagging | Step per 25 min, never slowed; a find for switching kinds after a long stretch (D-044); never fills a slot or completes the day |
-| **Weekly target** | Dan's own weekly commitments (gym 4×, Spanish, cooking, meal prep, course) | Set once in Phase 1; changed only when Dan wants | Key |
+| **Rhythm** (was weekly target) | Dan's own repeating commitments: *N a week*, *on set days*, *every 2 weeks* (gym 4×, Spanish, course, tank clean…; `PLANNER.md`) | Dan's to add, change or stop at any time; a new number counts from the next period | Key, within the week's bounded supply (`ECONOMY.md`, D-047) |
 | **One-off** | A typed line ("order the cat's medication") | Dan types one line | Becomes a main job candidate; avoided one-offs are suggested early |
 | **Great gate** | A large real project and its milestones (the course, restarting Spanish lessons) | Set up once with Dan | Key per milestone; the great gate opens at the end |
 | **Starter** | "I can't start": a teaser then one tiny physical step | One tap | The teaser's payoff after the job |
@@ -21,7 +21,7 @@ Story beats are **not** quests. They arrive through steps, arrivals and Keys; Da
 
 ## How a real action becomes a quest
 1. **The pool** holds weekly targets still open this week, typed one-offs, great-gate milestones and rhythm things the app notices (never as main jobs, P11).
-2. **Each morning** the app proposes the day's jobs for the capacity: first the job most likely to be avoided that matters this week, then a mix. One is shown first (P1). **No catch-up avalanche (D-038):** the day's size comes from capacity alone; open weekly targets never add jobs, and late in the week they are suggested no harder than early on. A disrupted week becomes a lighter week unless Dan asks to catch up.
+2. **Each morning** the app proposes the day's jobs for the capacity, **starting from today's plan if Dan has one** (`PLANNER.md`; capacity overrides it): first the job most likely to be avoided that matters this week, then a mix. One is shown first (P1). **No catch-up avalanche (D-038):** the day's size comes from capacity alone; open weekly targets never add jobs, and late in the week they are suggested no harder than early on. A disrupted week becomes a lighter week unless Dan asks to catch up.
 3. **Dan accepts or swaps** from a short menu. No estimating, tagging or scoring (P9).
 4. **The app learns** quietly from what gets swapped, when things get done and which suggestions work. Dan never configures it.
 

@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-24 (the second planner review reconciled, D-047; planner ready for Dan's approval)_
+_Last updated: 2026-09-24 (week planner approved and locked, D-048; step 3 under way)_
 
 ## Current phase
 
@@ -15,13 +15,13 @@ _Last updated: 2026-09-24 (the second planner review reconciled, D-047; planner 
 Write the chosen game up as one clear concept, stress-test it, and set the numbers the build needs. **No new concepts** (Dan, D-042). Work order: `product/PHASE5_PLAN.md`; output: `product/CONCEPT.md`.
 
 ## Resume here (next session)
-0. **First: Dan approves the week planner.** Both ChatGPT reviews are reconciled (`product/SCHEDULER_REVIEW.md`, D-045, D-047). Rules: `game/PLANNER.md` (ready for approval). Mock-ups: `design/directions/d-combined/week.html`, `rhythms.html` (`#course`), `today-planned.html` (`#low`, `#enough`), and the Course day in `delve-set.html#plan-6` and `delve.html#run-2-25-d2-plan-6-breather`. Dan checks them on his own phone (quiet text easy to read half-awake). Once he approves: lock `PLANNER.md`, fold rhythms into `QUEST_SYSTEM.md`, `CORE_LOOPS.md`, P6/P16 and `PHASE5_PLAN.md`, and carry on with step 3 (which now includes the bounded weekly Key supply, `ECONOMY.md`).
+0. The week planner is **approved and locked** (D-048; `game/PLANNER.md`). Rhythms are folded into the game docs.
 1. Steps 1–2 are done: `product/CONCEPT.md` is written and stress-tested (`product/STRESS_TEST.md`, D-043). Continue `product/PHASE5_PLAN.md` at **step 3** (the numbers; `STRESS_TEST.md` §5 adds seven inputs, including a weekly floor), then step 4. Commit and push after each step.
 2. Bring Dan the concept page and the numbers to review (step 5). Ask him only about taste and priorities. (The two stress-test points are already answered, D-044.)
 3. The sealed story-fix session (D-035) runs in its own session, before the first playable is built.
 
 ## Last session (2026-09-24, planner reconciliation)
-ChatGPT's second planner review reconciled (D-047): 6 accepted, 1 modified, 8 already resolved. Dan decided the Course day counts at its first hour; the run now has its own "enough" moment, then Continue or Back to today with equal weight. Each job counts at its own enough (not "one hour" for everything). New invariant: more rhythms never mean more Keys. Copy fixed (forecast words, "A lighter day.", "Stop repeating"). Screens checked at true phone size.
+ChatGPT's second planner review reconciled (D-047): 6 accepted, 1 modified, 8 already resolved. Dan decided the Course day counts at its first hour; the run now has its own "enough" moment, then Continue or Back to today with equal weight. Each job counts at its own enough (not "one hour" for everything). New invariant: more rhythms never mean more Keys. Copy fixed (forecast words, "A lighter day.", "Stop repeating"). Screens checked at true phone size. Dan approved; the planner is locked and rhythms are folded into the docs (D-048).
 
 ## Session before (2026-09-24, late night, second)
 Phase 5 step 2: the concept stress-tested against the principles, the anti-features and the §71 checklist, with six walkthroughs (`product/STRESS_TEST.md`). It holds; 16 small gaps closed with one rule each (D-043), folded into `CONCEPT.md` and the game docs. The biggest: the day ends at about 4 am; capacity works all day; every delve minute counts on any job; the return after a week away never opens on a pile. Two points wait for Dan; seven numbers go to step 3.
@@ -43,6 +43,7 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 
 - [x] Dan agrees how Phase 5 runs: one synthesis of the chosen concept, no new concepts (D-042).
 - [x] `product/CONCEPT.md` written and stress-tested against the principles (`product/STRESS_TEST.md`, D-043).
+- [x] The week planner designed, reviewed and approved (D-045, D-047, D-048).
 - [ ] The numbers set (as starting guesses, tuned in play): `product/PHASE5_PLAN.md` step 3.
 - [ ] The first playable's contents list written (step 4).
 - [ ] Dan agrees to move to Phase 6 (MVP).

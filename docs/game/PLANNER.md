@@ -2,7 +2,7 @@
 
 > The scheduler Dan asked for (D-020, made central 2026-09-24). Built from `product/SCHEDULER_PROPOSAL.md` and two outside reviews (`product/SCHEDULER_REVIEW.md`, D-045, D-047). Mock-ups: `design/directions/d-combined/week.html`, `rhythms.html`, `today-planned.html`, and the Course run in `delve-set.html` / `delve.html`. Spoiler-free.
 
-_Status: **reconciled after the second review, ready for Dan's approval** (2026-09-24). Locks when Dan approves these rules and the mock-ups._
+_Status: **locked: approved by Dan** (2026-09-24, D-048). Changes follow the usual rule: a new decision in `DECISIONS.md`._
 
 **In one breath:** the plan is a forecast; action creates progress; enough is real; more remains valuable. A three-hour Course plan never makes one good hour feel like failure.
 
@@ -85,4 +85,4 @@ Planned, moved and done are kept internally, so the planner can improve later an
 **In:** rhythms (N a week, set days, every 2 weeks, optional length, enough and time); This week with Plan my week; tap to move, set a time or remove; add a one-off or appointment; Today from the plan with capacity on top; the forecast line and map waypoints; the Sunday offer.
 **Later:** drag and drop (if Phase 7 finds it cheap, sooner), monthly rhythms, advanced recurrence, Google Calendar (read, then write), learning from how Dan edits, planning beyond next week, adherence analytics (probably never), an "explain why".
 
-**Before it locks:** Dan opens the mock-ups on his own phone and checks the quiet text (done, one-off, times, italic lines, the footer, the forecast) is easy to read half-awake at normal distance. At true size in the browser (360×780 and 390×844) it is, and every quiet colour measures 6:1 or better against the scene (D-047).
+**Readability:** Dan opens the mock-ups on his own phone and checks the quiet text (done, one-off, times, italic lines, the footer, the forecast) is easy to read half-awake at normal distance. At true size in the browser (360×780 and 390×844) it is, and every quiet colour measures 6:1 or better against the scene (D-047).

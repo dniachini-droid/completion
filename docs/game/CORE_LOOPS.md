@@ -42,7 +42,7 @@ Farming is prevented by **structure**, not by policing:
 | **Rest** | "Rested today" can be marked. It is acknowledged in the fiction, never scored. (P12) |
 
 ### The week [proposal]
-- Weekly targets (gym 4×, Spanish lesson + 1 h, cooking 2–3×, Sunday meal prep, course) are **filled in automatically** from the jobs Dan completes. No weekly planning.
+- Weekly targets (gym 4×, Spanish lesson + 1 h, cooking 2–3×, Sunday meal prep, course) are **filled in automatically** from the jobs Dan completes. No weekly planning. *Amended 2026-09-24 (D-045, D-048):* targets are now **rhythms**, and an optional week planner lays them out (`PLANNER.md`); they still fill themselves from what Dan does, on plan or off.
 - The week closes itself (Sunday night → Monday morning) with a short, automatic recap and one thing to look forward to. **No Sunday admin meeting.**
 - **Targets reset; the story waits.** Missed targets don't carry over (P6). Story progress, abilities and the world never go backwards (P8). An unmet goal simply stays where it was.
 
@@ -275,9 +275,9 @@ Kept small, one tap each, and never required to progress:
 | **Rest day** | A camp day: a scene, no step, no cost, no score. |
 
 ### The weekly loop
-- Weekly targets fill themselves from completed jobs. Each target met is a **Key**, so a good week opens up to five sealed things Dan has already seen.
+- Weekly targets (rhythms, `PLANNER.md`) fill themselves from completed jobs. Each target met is a **Key**, so a good week opens up to five sealed things Dan has already seen. *Amended (D-047):* the week's Key supply is bounded by the game, so adding rhythms never raises it (`ECONOMY.md`); step 3 sets it.
 - **Beyond the target:** gym a 5th time, Spanish past the hour, more course hours. It all counts as steps, and a strongly exceeded target can open a sealed thing on the deep route.
-- **The week closes itself** Sunday night → Monday morning: a 20-second recap ("this week you went through the lower gate; three records decoded; one of them names the other") and a glimpse of next week's biggest sealed thing. **No planning. No Sunday admin meeting.** This recap is the Chronicle's weekly page (`TOOLS.md` §6, D-023).
+- **The week closes itself** Sunday night → Monday morning: a 20-second recap ("this week you went through the lower gate; three records decoded; one of them names the other") and a glimpse of next week's biggest sealed thing. **No planning required. No Sunday admin meeting.** This recap is the Chronicle's weekly page (`TOOLS.md` §6, D-023). *Amended (D-045):* it may end with one quiet offer, "Plan next week? · Plan it for me · Not now", never repeated and never needed.
 - Missed targets: nothing carries over. The gate is still there, still sealed, no worse.
 
 ### The long-term loop

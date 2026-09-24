@@ -53,7 +53,7 @@ A normal day, as it plays (detail: `game/CORE_LOOPS.md` Part 4 → "The daily lo
 
 **Rest day:** a camp day. A scene, no step, no cost, never scored (P12).
 
-**Sunday night → Monday:** the week closes itself. The **daybook** writes a short page from what he actually did, and shows next week's biggest sealed thing. No planning, no Sunday meeting (`game/TOOLS.md` §6).
+**Sunday night → Monday:** the week closes itself. The **daybook** writes a short page from what he actually did, and shows next week's biggest sealed thing. No planning needed, no Sunday meeting (`game/TOOLS.md` §6); one quiet "Plan next week?" offer at most. **Planning the week is optional** (`game/PLANNER.md`, D-048): "Plan my week" lays out Dan's rhythms, he changes what looks wrong, and Today starts from the plan with capacity on top. The plan is a forecast, not a promise.
 
 ---
 
@@ -82,7 +82,7 @@ real job done ─► a step into the Quiet ─► something is there (a passage,
 
 **Time speeds the place, never the story** (D-037). Steps come from minutes; marks, words and the core reveals come in a fixed, authored order, paced by days and Keys (D-035). Extra effort always meets more place and side content (passages, finds, extra records), never a wall.
 
-**Anti-farming is structural, never admin** (`game/QUEST_SYSTEM.md`): every delve minute moves Dan, on any job, but only today's jobs fill the day and complete it; a job without a timer moves him only as one of today's jobs, so ten tiny entries earn nothing extra; time can't be split; nothing ever slows: staying on one job keeps full progress, and switching kinds after about 2 hours on one brings a find (D-044); Keys come only from Dan's own weekly targets and one-tap milestones; a change to a target applies from next week. No verification: the honour system is enough.
+**Anti-farming is structural, never admin** (`game/QUEST_SYSTEM.md`): every delve minute moves Dan, on any job, but only today's jobs fill the day and complete it; a job without a timer moves him only as one of today's jobs, so ten tiny entries earn nothing extra; time can't be split; nothing ever slows: staying on one job keeps full progress, and switching kinds after about 2 hours on one brings a find (D-044); Keys come only from Dan's own rhythms and one-tap milestones, and more rhythms never raise the week's Key supply (D-047); a change to a target applies from next week. No verification: the honour system is enough.
 
 **Keys are never held** (D-043): each opens something the moment it's earned (the sealed thing Dan last looked at, or the nearest on his route), and one that takes a Key is always in view.
 
@@ -147,7 +147,7 @@ Real action is the main input, and the only thing that moves the world (rule 8, 
 - **"Enough" is small and defined** (P2): about 3 main jobs on a normal day, 2 on a low day. Day complete locks the day in.
 - **Capacity sizes the day, never whether it can succeed** (P3). Suggested from bedtime; one tap to change.
 - **Aimed at what's avoided** (P5): the morning suggestion leans towards admin, Spanish, housework and costly one-offs, and those bring richer rewards. One hour of course work counts as done, so the absorbing thing can't crowd out the avoided ones.
-- **Weekly rhythm, not streaks** (P6): Dan's weekly targets (currently gym 4×, Spanish lesson + 1 h, cooking 2–3×, Sunday meal prep, course 1 h/day) fill themselves from completed jobs; each met is a Key. Weeks start fresh. **No catch-up avalanche**: open targets never add jobs or raise the day's size (D-038).
+- **Weekly rhythm, not streaks** (P6): Dan's rhythms (currently gym 4×, Spanish study 2× plus the Thursday lesson, course 4× with 3 hours of room and enough at 1, tank clean fortnightly, Sunday meal prep; `game/PLANNER.md`) fill themselves from completed jobs, on plan or off; each met is a Key, within the week's bounded supply (D-047). Weeks start fresh. **No catch-up avalanche**: open targets never add jobs or raise the day's size (D-038).
 - **Everything about jobs is Dan's to edit**: kinds of job, targets, usual lengths, which jobs are delves. The names in these docs are examples (D-030, D-041). **Editing never becomes admin** (D-043): only on request, never prompted; only a name is required; every field has a default (a usual length of 25 minutes, one step); a job is edited from its own row; the first playable starts preloaded with Dan's current jobs and targets.
 - **Tools inside the world** (`game/TOOLS.md`): the **delve** (the focus timer), the **satchel** (lists, on request, never on the opening screen; untouched items sink to the bottom quietly; dated items are suggested as the date nears), **cairns** (the non-punitive trail), the **daybook** (the week close). Later: waypoints (light plotting) and a read-only calendar link. Using a tool on its own earns nothing (D-038).
 - **Absence:** "where you were" (last place, the door he was looking at, one unfinished record) and one small welcoming step, a real job suggested at Low size; doing it plays the welcome (D-043). No counts, no summary of what was missed, no daybook page for an empty week, and at most one passed-date question a day, none on the first day back. Dust has settled; nothing has broken.

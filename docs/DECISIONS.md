@@ -515,3 +515,11 @@
 - **Rationale:** P2, P5, P7, P9, rule 10 (trivial or multiplied inputs must not out-earn real effort), rule 11, UX 6.
 - **Consequences:** `game/PLANNER.md` (reconciled, ready for Dan's approval), `game/ECONOMY.md`, `product/PHASE5_PLAN.md` (step 3 input), `product/SCHEDULER_REVIEW.md`, `design/INTERACTION_NOTES.md`, mock-ups `today-planned.html`, `week.html`, `rhythms.html`, `delve-set.html`, `delve.html` and their `NOTES.md`. Answers D-045's open question.
 - **Reversible:** Yes.
+
+## D-048 — The week planner approved and locked
+- **Date:** 2026-09-24
+- **Context:** Dan reviewed the reconciliation of the second review (D-047), the revised rules and the changed screens.
+- **Decision (Dan):** "Yes. Proceed." `game/PLANNER.md` is locked. Weekly targets become rhythms throughout the docs; the planner is in the first playable (without Google Calendar). P16 gains the planner's line: *the plan is a forecast, not a promise; planning predicts progress, action creates it.*
+- **Alternatives:** none open; D-045 and D-047 hold them.
+- **Consequences:** `game/PLANNER.md` (locked), `DESIGN_PRINCIPLES.md` (P5, P6, P16 clarified), `game/QUEST_SYSTEM.md`, `game/CORE_LOOPS.md`, `game/TOOLS.md`, `game/GAME_DESIGN.md` (planner in the first playable; plotting no longer "later"), `product/CONCEPT.md`, `product/PHASE5_PLAN.md` (step 2a). Phase 5 continues at step 3; readability on Dan's own phone is still worth a look whenever convenient.
+- **Reversible:** Yes, by a new decision.
