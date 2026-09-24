@@ -39,6 +39,9 @@ class Game {
     document.addEventListener('visibilitychange', () => { if (!document.hidden) this.tick(); });
   }
 
+  /** A job as Dan has it now (his edits and satchel lines included). */
+  job(id: string) { return this.view.content.jobs.find(j => j.id === id); }
+
   get saveKey() { return this.proto.rehearsal ? 'save.rehearsal' : 'save.v1'; }
 
   /** The phone's clock, or the rehearsal's quick one. */

@@ -3,7 +3,7 @@
      Two levels (MVP.md: Close and Region). Only what has been seen is named; the way ahead is a faint star, unnamed.
      Sealed things in view are marked. Never a count of what's left (UX 6). */
   import { game, content } from './game.svelte';
-  import { t } from '../content/copy/en';
+  import { t, dayName } from '../content/copy/en';
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
   import type { StretchId } from '../core/story-types';
@@ -40,7 +40,10 @@
   const cx = (i: number) => (i % 2 ? 270 : 110) + ((i * 37) % 30) - 15;
   const cy = (i: number) => 70 + i * 78;
   /* the sky's height in the drawing's units; labels are placed in % of it, so they sit on their stars at any width */
-  const H = $derived(level === 'region' ? 520 : Math.max(420, cy(closeHere.length + sealedHere.length) + 40));
+  /* the plan's forecast (PLANNER → the forecast): where the next places would be reached, as waypoints on the way ahead,
+     marked forecast; never named before they are reached, and gone the moment the plan changes */
+  const ahead = $derived(v.forecast.slice(0, 2));
+  const H = $derived(level === 'region' ? 520 : Math.max(420, cy(closeHere.length + sealedHere.length + ahead.length) + 40));
 </script>
 
 <Scene painting={v.here.painting} blur />
@@ -82,6 +85,12 @@
           <path d="M{cx(Math.max(0, closeHere.length - 1))} {cy(Math.max(0, closeHere.length - 1))}L{cx(i)} {cy(i)}" class="link faint" />
           <rect x={cx(i) - 4} y={cy(i) - 4} width="8" height="8" transform="rotate(45 {cx(i)} {cy(i)})" class="sealed" />
         {/each}
+        {#each ahead as day, j (day + j)}
+          {@const i = closeHere.length + sealedHere.length + j}
+          {@const p = Math.max(0, i - 1)}
+          <path d="M{cx(p)} {cy(p)}Q{(cx(p) + cx(i)) / 2} {cy(i) - 50} {cx(i)} {cy(i)}" class="link faint" />
+          <circle cx={cx(i)} cy={cy(i)} r="3" class="waypoint" />
+        {/each}
       {/if}
     </svg>
     <!-- labels as text over the sky, so they wrap and scale like the rest of the words -->
@@ -106,6 +115,12 @@
         {@const i = closeHere.length + j}
         <div class="tag" class:right={cx(i) > 200} style="left:{(cx(i) / 390) * 100}%;top:{(cy(i) / H) * 100}%">
           <em class="sealed-t">{x.where}</em><em>{t('map.sealed')}</em>
+        </div>
+      {/each}
+      {#each ahead as day, j (day + j)}
+        {@const i = closeHere.length + sealedHere.length + j}
+        <div class="tag" class:right={cx(i) > 200} style="left:{(cx(i) / 390) * 100}%;top:{(cy(i) / H) * 100}%">
+          <em class="fc">{t('map.forecast', { day: dayName(day) })}</em>
         </div>
       {/each}
     {/if}
@@ -134,6 +149,8 @@
   .star.here { fill: #ffe2a8; filter: drop-shadow(0 0 8px rgba(242,193,112,1)) drop-shadow(0 0 20px rgba(242,193,112,.6)); }
   .star.faint { fill: rgba(222,218,255,.5); filter: none; }
   .sealed { fill: none; stroke: #cfcaff; stroke-width: 1.2; }
+  .waypoint { fill: none; stroke: rgba(242,193,112,.8); stroke-width: 1.2; stroke-dasharray: 2 2.4; }
+  .tag em.fc { color: var(--gold); opacity: .9; }
   .tag { position: absolute; transform: translate(12px, -50%); display: flex; flex-direction: column; max-width: 58%; pointer-events: none; }
   .tag.right { transform: translate(calc(-100% - 12px), -50%); align-items: flex-end; text-align: right; }
   .tag em { font-family: var(--life); font-size: 15px; color: var(--ink-2); }

@@ -65,7 +65,7 @@
   });
 
   function down() {
-    const job = v.order.find(x => !v.done.has(x) && content.jobs.find(j => j.id === x)?.delve) ?? content.jobs.find(j => j.delve)?.id;
+    const job = v.order.find(x => !v.done.has(x) && game.job(x)?.delve) ?? content.jobs.find(j => j.delve)?.id;
     if (job) go('set', job); else go('today');
   }
   function today() { go(v.arrival ? 'arrival' : 'today'); }

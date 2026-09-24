@@ -71,22 +71,26 @@ export function items(facts: Fact[], day: string): Item[] {
 
 /* ---------- the plan ---------- */
 
-/** The plan Dan made for a week (Monday), with his changes; null if he never made one. */
+/** The plan for a week (Monday): what "Plan my week" laid out (made again, it replaces that part), what Dan added
+    himself, and his changes; null if there is nothing planned at all. */
 export function planOf(facts: Fact[], week: string): PlanEntry[] | null {
-  let entries: PlanEntry[] | null = null;
+  let made: PlanEntry[] = [], any = false;
+  const added: PlanEntry[] = [];
   for (const f of facts) {
-    if (f.type === 'planMade' && f.week === week) entries = f.entries.map(e => ({ ...e }));
-    else if (f.type === 'planAdded' && calendarWeek(f.entry.day) === week) (entries ??= []).push({ ...f.entry });
-    else if (f.type === 'planChanged' && entries) {
-      const i = entries.findIndex(e => e.id === f.entry);
-      if (i < 0) continue;
-      if (f.day === null) { entries.splice(i, 1); continue; }
-      entries[i].day = f.day;
-      if (f.time === null) delete entries[i].time; else if (f.time) entries[i].time = f.time;
+    if (f.type === 'planMade' && f.week === week) { made = f.entries.map(e => ({ ...e })); any = true; }
+    else if (f.type === 'planAdded' && calendarWeek(f.entry.day) === week) { added.push({ ...f.entry }); any = true; }
+    else if (f.type === 'planChanged') {
+      const e = made.find(x => x.id === f.entry) ?? added.find(x => x.id === f.entry);
+      if (!e) continue;
+      if (f.day === null) { made = made.filter(x => x !== e); added.splice(added.indexOf(e), 1); continue; }
+      e.day = f.day;
+      if (f.time === null) delete e.time; else if (f.time) e.time = f.time;
     }
   }
-  return entries;
+  return any ? made.concat(added).sort((a, b) => a.day.localeCompare(b.day)) : null;
 }
+/** Whether "Plan my week" has laid this week out (the week offers it until then). */
+export const planMade = (facts: Fact[], week: string) => facts.some(f => f.type === 'planMade' && f.week === week);
 
 const doneIn = (facts: Fact[], week: string) => ofType(facts, 'jobDone').filter(f => calendarWeek(f.day) === week);
 const sameFortnight = (a: string, b: string) => Math.floor(Date.parse(a) / (14 * 864e5)) === Math.floor(Date.parse(b) / (14 * 864e5));

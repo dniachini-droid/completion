@@ -42,7 +42,7 @@
       if (more && to === 'today') { go('arrival', more.seq); return; }
     }
     if (to === 'set') {
-      const job = v.order.find(x => !v.done.has(x) && content.jobs.find(j => j.id === x)?.delve) ?? 'course';
+      const job = v.order.find(x => !v.done.has(x) && game.job(x)?.delve) ?? 'course';
       go('set', job);
     } else go('today');
   }

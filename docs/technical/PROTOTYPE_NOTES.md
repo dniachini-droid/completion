@@ -4,7 +4,7 @@
 
 | What | Why it's like this | Fixed when |
 |---|---|---|
-| Its words (`content/copy/en.ts`) | Placeholder, like all copy before the language pass (D-046) | The language pass |
+| Its words (`content/copy/en.ts`) | First pass in the told-tale voice Dan asked for (D-073); the story's own sealed lines get theirs in a separate session | The language pass (brought forward, D-073) |
 | The app icon | A crop of an invented sample painting | When the app has its name (`narrative/NAMES.md`) |
 | The App Store Connect record may still be called "Real Life RPG (Dan)" | Dan renames it there if he likes (D-071) | Before anything is public |
 | The delve alert uses the phone's default sound | The delve's own sound isn't made yet | Heart slice or later, if play shows sound matters |
@@ -14,15 +14,14 @@
 | Trials (b) and (c) run on the heart itself, in a rehearsal (alerts come 60 times sooner there); Dan's checklist is `APPLE_SETUP.md` → Sitting 3 | The trials screen was removed when the heart came first (D-064) | Done once, on the first TestFlight build |
 | On the web link the delve's end can't sound with the phone locked: it chimes only while the page is open, and shows when Dan comes back | Web pages can't schedule alerts | The TestFlight build (local notifications are already wired) |
 | The chime is a synthesised bell | The delve's own sound isn't made | When sound gets its pass |
-| Dan's starting set is preloaded (jobs and rhythms) but not yet editable; Today's jobs follow a fixed order, with rhythms met this week last | Editing jobs and the planner are slice 4 | Slice 4 |
-| Capacity is always suggested Normal ("a suggestion") | Bedtime and absence set the suggestion in slice 4 | Slice 4 |
-| Confirmations due "the morning after" a camp wait for that morning (the story waits; nothing is lost) | Camp, bedtime and the morning are slice 4 | Slice 4 |
-| The deep push plays on any High day once a Normal day's jobs are done (one deep beat a day); it can't yet be called in the morning | Calling it belongs to the morning and the planner | Slice 4 |
 | The word's cutting scene uses the approved painted Lamp Hall (`ui/scene/hall.js`) for every word, including the run-ahead's second word at another lintel | The first word's own hall is what the MVP's weeks meet; the second is in the run-ahead | When the run-ahead's places are painted |
 | Places show a stand-in painting for their stretch (one of the three samples) | Week 1's first round (`paint/places/`) fell short of the hall; the kit needs materials before real places reach the bar | As each place is painted at the hall's level |
-| The map's layout is hand-placed for the first region; no forecast waypoints | Waypoints come with the planner | Slice 4 |
-| After day complete the main button is "See where you are" (the arrival again), not "To camp" | Camp is slice 4 | Slice 4 |
 | Camps with a view reuse their stretch's stand-in painting | Camp paintings follow the places | The painting weeks |
 | The "Prototype" link on Today, and rehearsal mode (×60, separate save) | To feel a whole day in minutes | Removed before the test starts |
 | The single-page web link inlines everything (≈ 0.6 MB) | A private claude.ai link, nothing for Dan to upload | Replaced by TestFlight |
 | The flow walk (`app/tests/flows/heart-walk.mjs`) runs in Chromium by hand, not in CI | Playwright isn't in the app's dependencies yet | Add to CI with WebKit when the flow tests grow |
+| The map's layout is hand-placed for the first region | One region in the MVP | The second region |
+| Satchel lines have no dates yet ("renew the passport by 3 Nov"); no passed-date question | Dated lines need a date typed and read back; Dan's list is short for now | If the test shows he needs them |
+| The trail (a marker for each day complete, relics at the 7th, 15th…) is not built | Not in the MVP's slice 4 list; Keys and the daybook already reward the week | After the test, if wanted |
+| The week close is written at the first opening of the next week, not on Sunday night | One reliable moment, with the weekly floor's counts on it | If Dan wants it on Sunday evening |
+| Goodnight is the only sign of bedtime: kept if tapped from three hours before bedtime to fifteen minutes after | The phone can't know when Dan is in bed | If play shows it doesn't fit his evenings |
