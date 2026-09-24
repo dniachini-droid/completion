@@ -2,7 +2,7 @@
 
 > Phase 5 step 3 (`product/PHASE5_PLAN.md`, D-049). Every number the first playable needs, as a **starting guess tuned in play**. Rules come from the agreed docs; this file only sizes them. Spoiler-free: Dan reads it. The sealed story was checked against these numbers privately (`narrative/sealed/PACING.md`).
 
-_Status: **draft for Dan** (2026-09-24), with the concept page at step 5._
+_Status: **approved by Dan** (2026-09-24, D-051). Starting guesses, tuned in play._
 
 ## The idea in one paragraph
 There are **two clocks**. **Time moves the Site:** every real minute moves Dan, uncapped. **The story keeps its order:** records, signs and words arrive in a fixed sequence at a steady pace, however big the week. When Dan's hours run ahead of the story, the extra goes to places, side chambers, finds and the deep route, never to a wall and never to story out of order (D-035, D-037, D-039).

@@ -2,7 +2,7 @@
 
 > Phase 5 step 4 (`product/PHASE5_PLAN.md`, D-050). What is in and what is out, sized for the **5–6 week test** (D-023). It feeds Phase 6 (MVP), which cuts it to the smallest true version if needed. Built from `game/GAME_DESIGN.md` → "What the first playable needs", `game/TOOLS.md`, `game/PLANNER.md`, `game/BALANCING.md` and the D mock-ups. Spoiler-free.
 
-_Status: **draft for Dan** (2026-09-24), with the concept page and the numbers at step 5._
+_Status: **approved by Dan** (2026-09-24, D-051)._
 
 ## What it is for
 One question (rule 14): **does wanting to go further in make Dan start real things?** Everything below either helps answer it or makes the answer honest. Small, complete and beautiful (D-004, rule 13).
@@ -61,4 +61,4 @@ Today (`morning.html`, `today-planned.html`) · the run (`delve-set.html`) · th
 - **After 3–4 weeks of play:** the language pass (D-046).
 
 ## For Dan at step 5 (taste and priorities)
-- **Great doors for big projects** (the Course's modules opening part of a great door with one tap): in the first playable, or later? Claude's lean: later. The Course already counts in full every day, and six weeks is short for a door that needs several milestones. But it's your biggest project, so it's your call.
+- ~~Great doors for big projects in the first playable?~~ **Answered (Dan, D-051): later.** The Course already counts in full every day.

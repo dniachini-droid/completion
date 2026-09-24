@@ -542,3 +542,10 @@
 - **Alternatives:** the Phase 2 draft as it stood (predates the planner, runs, the enough moment and the numbers).
 - **Consequences:** new `product/FIRST_PLAYABLE.md`; `game/GAME_DESIGN.md` and `game/TOOLS.md` point to it; `product/PHASE5_PLAN.md`.
 - **Reversible:** Yes; Phase 6 may cut it further.
+
+## D-051 — Step 5: Dan approves the numbers and the first playable's contents
+- **Date:** 2026-09-24
+- **Context:** Phase 5 step 5. Dan heard a three-point summary (the numbers, the contents list, one question) and answered by voice.
+- **Decision (Dan):** "The numbers feel right" (`game/BALANCING.md`, D-049, approved). "Nothing is missing" (`product/FIRST_PLAYABLE.md`, D-050, approved). Great doors for big projects (the Course's modules) come **later**: "it already counts" every day.
+- **Consequences:** both docs marked approved; `PHASE5_PLAN.md` step 5 done. Remaining for Phase 5: Dan's agreement to close it and move to Phase 6 (step 6). Still pending in parallel: the sealed story-fix session (D-035) and Dan's look at the planner screens on his phone (D-047).
+- **Reversible:** Yes.

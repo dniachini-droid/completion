@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-24 (planner locked, D-048; steps 3–4 drafted, D-049, D-050; step 5 next)_
+_Last updated: 2026-09-24 (step 5 done: Dan approved the numbers and the contents, D-051; closing Phase 5 next)_
 
 ## Current phase
 
@@ -16,7 +16,7 @@ Write the chosen game up as one clear concept, stress-test it, and set the numbe
 
 ## Resume here (next session)
 0. The week planner is **approved and locked** (D-048; `game/PLANNER.md`). Rhythms are folded into the game docs.
-1. Steps 1–4 are done: `product/CONCEPT.md`, `product/STRESS_TEST.md` (D-043), the numbers `game/BALANCING.md` (D-049, draft), the contents list `product/FIRST_PLAYABLE.md` (D-050, draft). Next: **step 5**, Dan reviews the concept page, the numbers and the contents list.
+1. Steps 1–5 are done; Dan approved the numbers and the first playable's contents (D-051). Next: **step 6**, Dan agrees to close Phase 5; then open a PR into `main`, merge it, and open Phase 6 (MVP) in a new session.
 2. Bring Dan the concept page and the numbers to review (step 5). Ask him only about taste and priorities. (The two stress-test points are already answered, D-044.)
 3. The sealed story-fix session (D-035) runs in its own session, before the first playable is built.
 
@@ -90,4 +90,4 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 
 ## Recommended next action
 
-**Dan:** step 5. Read `game/BALANCING.md` (the numbers) and `product/FIRST_PLAYABLE.md` (what's in the first playable), with `product/CONCEPT.md` if you want the whole picture, and answer the one question at the end of the contents list. If it's in a new session, paste: "Read CLAUDE.md and docs/CURRENT_STATE.md, then continue Phase 5 from 'Resume here': step 5, my review of the numbers and the first playable is …"
+**Dan:** say whether Phase 5 can close. Once you agree, Claude merges it into `main`, and Phase 6 (MVP) starts in a new session.

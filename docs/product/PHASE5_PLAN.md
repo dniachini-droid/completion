@@ -19,7 +19,7 @@ Dan (2026-09-24): no new concepts. The game is the one already chosen and built 
    - high-energy days: what extra effort always unlocks (D-035, D-011);
    - memory and recap, so a story told in small pieces stays remembered, and the before → now view for re-reading (D-035).
 4. *Done, draft for Dan: `product/FIRST_PLAYABLE.md` (D-050).* **Write the first playable's contents list**: what's in and what's out, from the draft in `game/GAME_DESIGN.md`, sized for 5–6 weeks of play (D-023). This feeds Phase 6 (MVP).
-5. **Dan reviews** the concept page and the numbers. Claude asks him only about taste and priorities.
+5. *Done (D-051): Dan approved the numbers and the contents list; great doors for big projects come later.* **Dan reviews** the concept page and the numbers. Claude asks him only about taste and priorities.
 6. **Close Phase 5** with Dan's agreement: merge into `main`; Phase 6 opens in a new session.
 
 **In parallel, in its own session (before the first playable is built):** the sealed story-fix session (D-035). Claude does it alone; Dan's view stays spoiler-free.
