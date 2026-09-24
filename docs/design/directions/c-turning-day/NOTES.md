@@ -1,5 +1,7 @@
 # C — The Turning Day: notes
 
+> **Revised in round 1.** See `REVISION-1.md`. The stone now stays violet-lit on every screen, and the day's warmth arrives as gold light inside the scene rather than as a tint over the whole screen. The place's voice is carved Cinzel capitals, and the "card" is now a bank of light. Where the notes below say otherwise, `REVISION-1.md` is current.
+
 Nine static screens, `direction.css` (shared tokens and pieces), `index.html`, and phone-size pictures in `shots/`. Spec: `design/ART_DIRECTION.md` → "C — The Turning Day".
 
 ## Key design choices
