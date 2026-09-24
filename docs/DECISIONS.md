@@ -346,3 +346,11 @@
 - **Rationale:** Dan's taste and self-knowledge (rule 20); P13 (real effort outweighs trivial input); P1 (starting stays one tap: the default needs no setting).
 - **Risks noted:** a visible "you'd reach further" must never read as pressure on a low day (P3, P8): it appears only as he raises the time, never as a default nag. Skipping breaks during hyperfocus is his call; the app doesn't lecture.
 - **Reversible:** Yes.
+
+## D-034 — An outside review of the sealed story, by ChatGPT
+- **Date:** 2026-09-24
+- **Context:** Dan wants a second opinion on whether the story is deep, interesting, connected and flows well, from a different AI company. He accepted the spoiler risk and gave explicit permission to send the sealed files out.
+- **Decision:** Claude made one bundle of the sealed story files with a warning to Dan at the top and instructions for ChatGPT inside: a spoiler-free verdict in chat for Dan, and a detailed critique as a separate file that Dan hands back to Claude unopened. Claude then judges the feedback and changes the story only with Dan's agreement, following the retcon procedure (MASTER_BRIEF §55), describing any change without spoilers.
+- **Alternatives:** a fresh Claude critic with no spoiler risk (offered; Dan chose the outside review).
+- **Risks:** Dan sees the story by accident; ChatGPT leaks detail into its chat reply. Mitigated by the warning and the instructions, not eliminated.
+- **Reversible:** The review is; a spoiler is not.
