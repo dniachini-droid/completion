@@ -58,6 +58,9 @@ Reactions to rough sketches on a sample page (`design/taste/samples.html`). Unma
 - Shown two morning screens blind: one with a warm lamp and a warm main button, one with a cold main button. **"I like the warm one. It's awesome."** A signal for warm on what's yours and what you're about to do (direction A's reading); B and C stay in the run as the comparison.
 - Then: **"I also like the information written on the blue one. But in terms of style I do like them both … They both look good. But yes, let's have options."** Y's information carries into all three morning screens: the plain "Ahead" sentence ("The lintel, on the side wall. It needs a word."), a map link at the top, Low / Normal / High visible with "from last night's bedtime", the teaser line under the next job, and the other jobs with their state on the right.
 
+### The first builds (during the run)
+- On direction C's first screens: **"I really love the purple light. That looks awesome."** The blue-violet light (morning, delve, record, satchel) is a strong yes. It can carry into whichever direction he picks.
+
 ### 10. Sound
 - Yes to sound; he leaves the choice to Claude's recommendation. (Audio is later; recommendation recorded below.)
 
