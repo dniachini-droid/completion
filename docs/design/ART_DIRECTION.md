@@ -78,6 +78,8 @@ _Verbatim, lightly trimmed of filler words. A = Lamp and Stone, B = Engraved Lig
 - "Honestly, everything that I've seen for D is very good. Continue with the fixes that you've identified. I really like all of it, like the way that you've incorporated the map is really nice as well. Reading a record is good."
 - **Record:** "The background has the lines, like five-bar tallies crossed out. That's really nice, I like that. But the symbols on top look like they're just printed on top of those scratched lines. Either have one line where there's no scratches and centre the symbols in it, so it looks intentional. And the text that says stone, new, hand, a name, count: it's not in a straight line. The symbols you're decoding need to be in a straight line."
 
+- **Setting the delve's length (D-033):** of three versions (dial, hall slider, flame) Dan picked **the dial**: "I like A option for the delve timer. Make sure the bar is centred though and well aligned." He still wants to try B and C (kept in `delve-set-variants.html`).
+
 ### 10. Sound
 - Yes to sound; he leaves the choice to Claude's recommendation. (Audio is later; recommendation recorded below.)
 
