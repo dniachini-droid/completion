@@ -1,243 +1,184 @@
 /* ==========================================================================
-   C — The Turning Day · shared tokens and pieces
-   The glow follows the day: cold blue-violet for work, turning gold at the
-   arrival, fully warm at camp. Two voices: the place speaks in carved letters
-   (Forum, Cinzel); your own life speaks in plain print (Spectral).
+   C — The Turning Day · shared tokens and pieces (revision 1)
+
+   The stone is always cold blue-grey cut stone. The day turns through LIGHT
+   inside the scene: cold violet fog at dawn; gold pooling on the floor, warm
+   fog and the lamp's spreading glow as the day is done.
+   The state of the day (not the screen) sets the light: body.s-dawn,
+   s-day, s-done, s-evening.
+
+   Two voices: the place speaks in carved capitals (Cinzel, incised);
+   your own life speaks in plain Spectral, sentence case.
    ========================================================================== */
 
 :root {
-  /* the night stone (cool, violet-leaning) */
-  --night: #06070f;
-  --stone-0: #090b18;
-  --stone-1: #0f1226;
-  --stone-2: #181c3a;
-  --stone-3: #272d58;
+  /* the stone: cold blue-grey, never tinted */
+  --night: #05070a;
+  --stone-0: #080a0f;
+  --stone-1: #0f131a;
+  --stone-2: #1a212b;
+  --stone-3: #2b3441;
+  --stone-lit: #c3ccd9;           /* pale cut stone catching light */
 
-  /* cold light: the working day */
+  /* cold light: fog and glow of the working day */
   --cold: #8fa8ff;
-  --cold-hi: #d4ddff;
-  --cold-mid: #6a7fe0;
-  --cold-dim: #4a5596;
-  --cold-deep: #232a66;
+  --cold-hi: #d6deff;
+  --cold-rgb: 143, 168, 255;
 
-  /* warm light: the reward of a finished day */
-  --gold: #f4c877;
-  --gold-hi: #ffe9bd;
-  --amber: #ec9d4c;
-  --ember: #b9642c;
-  --dusk: #3a2230;
+  /* warm light: earned by the day */
+  --gold: #f2c170;
+  --gold-hi: #ffe6b8;
+  --gold-rgb: 242, 193, 112;
+  --amber: #e8954a;
 
   /* ink */
-  --ink: #f1f2ff;
-  --ink-2: #bfc5ec;
-  --ink-3: #8f95c4;
-  --ink-warm: #fff3e0;
-  --ink-warm-2: #ecd3ae;
-  --ink-warm-3: #bfa27c;
+  --ink: #f2f4f8;
+  --ink-2: #c4cad6;
+  --ink-3: #9aa3b4;
 
-  /* the day's temperature, set per screen by body class */
+  /* the light of the moment (set by the day's state) */
   --glow: var(--cold);
   --glow-hi: var(--cold-hi);
-  --glow-rgb: 143, 168, 255;
-  --text: var(--ink);
-  --text-2: var(--ink-2);
-  --text-3: var(--ink-3);
-  --btn-ink: #0c0f2e;
+  --glow-rgb: var(--cold-rgb);
+  --btn-ink: #0b0f22;
+  --warmth: 0;                    /* 0 dawn … 1 evening: gold on the floor, warm fog */
 
   /* two voices */
-  --place: 'Forum', 'Cinzel', Georgia, serif;          /* the stone speaks */
-  --place-caps: 'Cinzel', 'Forum', Georgia, serif;     /* small carved labels */
-  --life: 'Spectral', Georgia, serif;                  /* your own life */
+  --place: 'Cinzel', 'Forum', Georgia, serif;   /* the stone speaks: carved capitals */
+  --life: 'Spectral', Georgia, serif;          /* your own life: plain print */
 
-  /* spacing */
   --gutter: 22px;
-  --r-card: 28px;
-  --r-btn: 18px;
   --ease: cubic-bezier(.22, .8, .24, 1);
+  --safe-b: max(22px, env(safe-area-inset-bottom));
+  --safe-t: max(40px, env(safe-area-inset-top));
 }
 
-/* temperatures ---------------------------------------------------------- */
-body.t-dusk {
-  --glow: #c4a6e8;
-  --glow-hi: #efe2ff;
-  --glow-rgb: 196, 166, 232;
-}
-body.t-warm {
-  --glow: var(--gold);
-  --glow-hi: var(--gold-hi);
-  --glow-rgb: 244, 200, 119;
-  --text: var(--ink-warm);
-  --text-2: var(--ink-warm-2);
-  --text-3: var(--ink-warm-3);
-  --btn-ink: #2a1606;
-}
+/* the day's state ------------------------------------------------------- */
+body.s-dawn    { --warmth: 0; }
+body.s-day     { --warmth: .38; }
+body.s-done    { --warmth: .9;  --glow: var(--gold); --glow-hi: var(--gold-hi); --glow-rgb: var(--gold-rgb); --btn-ink: #2a1705; }
+body.s-evening { --warmth: 1;   --glow: var(--gold); --glow-hi: var(--gold-hi); --glow-rgb: var(--gold-rgb); --btn-ink: #2a1705; }
 
-/* base ------------------------------------------------------------------- */
+/* base ---------------------------------------------------------------- */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; background: var(--night); }
 body {
-  color: var(--text);
-  font-family: var(--life);
-  font-size: 17px;
-  line-height: 1.45;
-  -webkit-font-smoothing: antialiased;
-  display: flex;
-  justify-content: center;
-  overflow-x: hidden;
+  color: var(--ink); font-family: var(--life); font-size: 17px; line-height: 1.45;
+  -webkit-font-smoothing: antialiased; display: flex; justify-content: center; overflow-x: hidden;
 }
 a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; }
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 
 .phone {
-  position: relative;
-  width: 390px;
-  max-width: 100%;
-  height: 100vh;
-  height: 100dvh;
-  min-height: 700px;
-  overflow: hidden;
-  background: var(--stone-0);
-  isolation: isolate;
+  position: relative; width: 100%; max-width: 430px;
+  height: 100vh; height: 100dvh; min-height: 560px;
+  overflow: hidden; background: var(--stone-0); isolation: isolate;
 }
 
-/* the painting ------------------------------------------------------------ */
+/* the painting -------------------------------------------------------- */
 .paint { position: absolute; inset: 0; z-index: 0; }
 .paint > svg, .paint > img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.paint > img { object-fit: cover; object-position: 50% 50%; }
+.paint > img { object-fit: cover; }
+.paint.over { z-index: 2; pointer-events: none; }
 
-/* drifting fog: turbulence rendered once, moved slowly */
-.fog { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
-.fog img, .fog svg { position: absolute; top: 0; left: 0; width: 200%; height: 100%; will-change: transform; }
-.fog {
-  -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.25) 0%, #000 30%, #000 62%, rgba(0,0,0,.35) 100%);
-          mask-image: linear-gradient(180deg, rgba(0,0,0,.25) 0%, #000 30%, #000 62%, rgba(0,0,0,.35) 100%);
+/* light inside the scene: gold pooling on the floor as the day is earned */
+.pool {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  opacity: var(--warmth); mix-blend-mode: screen;
+  background:
+    radial-gradient(70% 22% at var(--pool-x, 50%) var(--pool-y, 92%), rgba(255, 196, 110, .55), rgba(232, 149, 74, .18) 55%, transparent 80%),
+    radial-gradient(90% 40% at var(--pool-x, 50%) 100%, rgba(232, 149, 74, .22), transparent 75%);
+  transition: opacity 1.2s var(--ease);
 }
+
+/* fog: cold violet above; a warm bank low down that grows with the day */
+.fog { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.3) 0%, #000 30%, #000 70%, rgba(0,0,0,.4) 100%);
+          mask-image: linear-gradient(180deg, rgba(0,0,0,.3) 0%, #000 30%, #000 70%, rgba(0,0,0,.4) 100%); }
+.fog img { position: absolute; top: 0; left: 0; width: 200%; height: 100%; will-change: transform; }
 .fog .drift-a { animation: drift 70s ease-in-out infinite alternate; opacity: .42; }
 .fog .drift-b { animation: drift 110s ease-in-out infinite alternate-reverse; opacity: .3; }
-@keyframes drift { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-44%, -1.5%, 0); } }
+.fog.warm { opacity: var(--warmth);
+  -webkit-mask-image: linear-gradient(180deg, transparent 45%, #000 80%);
+          mask-image: linear-gradient(180deg, transparent 45%, #000 80%); }
+@keyframes drift { from { transform: translate3d(0,0,0); } to { transform: translate3d(-44%, -1.5%, 0); } }
 
-/* grain over everything painted */
-.grain {
-  position: absolute; inset: 0; z-index: 2; pointer-events: none;
-  opacity: .16; mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 1.1 -.2'/></filter><rect width='220' height='220' filter='url(%23n)'/></svg>");
-}
-/* soft vignette */
-.vignette {
-  position: absolute; inset: 0; z-index: 2; pointer-events: none;
-  background: radial-gradient(120% 80% at 50% 45%, transparent 55%, rgba(3, 4, 10, .55) 100%);
-}
+.grain { position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: .14; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 1.1 -.2'/></filter><rect width='220' height='220' filter='url(%23n)'/></svg>"); }
+.vignette { position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  background: radial-gradient(120% 80% at 50% 45%, transparent 55%, rgba(2, 3, 6, .6) 100%); }
 
-/* the interface layer */
-.ui { position: absolute; inset: 0; z-index: 5; }
+/* the interface: a flex column (top · middle · bottom) ------------------ */
+.ui { position: absolute; inset: 0; z-index: 5; display: flex; flex-direction: column; padding-top: var(--safe-t); }
+.top { flex: none; padding: 0 var(--gutter); }
+.mid { flex: 1 1 auto; min-height: 0; position: relative; }
+.bottom { flex: none; position: relative; }
 
-/* the way home: small, top-left ----------------------------------------- */
-.home {
-  position: absolute; top: 44px; left: 10px; z-index: 20;
-  height: 44px; padding: 0 14px 0 10px;
-  display: inline-flex; align-items: center; gap: 8px;
-  font-family: var(--life); font-size: 16px; color: var(--text-2);
-  border-radius: 22px;
-  transition: color .3s var(--ease), background .3s var(--ease);
-}
-.home svg { width: 18px; height: 18px; }
-.home:hover, .home:focus-visible { color: var(--text); background: rgba(var(--glow-rgb), .08); outline: none; }
+.bar { flex: none; display: flex; align-items: center; justify-content: space-between; padding: 0 10px; min-height: 44px; }
+.link { height: 44px; padding: 0 12px; display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--life); font-size: 16px; color: var(--ink-2); border-radius: 22px; }
+.link svg { width: 18px; height: 18px; }
+.link:hover, .link:focus-visible { color: var(--ink); outline: none; }
+.replay { font-size: 13.5px; letter-spacing: .04em; color: var(--ink-3); height: 44px; padding: 0 12px; }
 
-/* two voices ------------------------------------------------------------ */
-.place-name {
-  font-family: var(--place);
-  font-weight: 400;
-  color: var(--glow-hi);
-  letter-spacing: .01em;
-  line-height: 1.05;
-  text-shadow: 0 0 22px rgba(var(--glow-rgb), .55), 0 0 60px rgba(var(--glow-rgb), .25);
+/* voice 1: the stone. Carved capitals, incised */
+.carve {
+  font-family: var(--place); font-weight: 600; text-transform: uppercase;
+  letter-spacing: .14em; line-height: 1.15; color: var(--stone-lit);
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, .9), 0 1px 0 rgba(225, 232, 255, .28), 0 0 22px rgba(var(--cold-rgb), .28);
 }
-.place-caps {
-  font-family: var(--place-caps);
-  font-weight: 500;
-  font-size: 13px;
-  letter-spacing: .26em;
-  text-transform: uppercase;
-  color: var(--glow);
-}
-.life-eyebrow {
-  font-family: var(--life);
-  font-style: italic;
-  font-size: 16px;
-  color: var(--text-3);
-}
+.carve.lg { font-size: 25px; letter-spacing: .12em; }
+.carve.md { font-size: 17px; }
+.carve.sm { font-size: 13.5px; letter-spacing: .2em; color: #aeb8ca; }
 
-/* the card of light -------------------------------------------------------- */
-.card {
-  position: absolute; left: 14px; right: 14px;
-  border-radius: var(--r-card);
-  padding: 24px 22px 18px;
+/* voice 2: your own life. Plain print, sentence case */
+.say { font-family: var(--life); font-weight: 400; color: var(--ink); }
+.say-lg { font-family: var(--life); font-weight: 500; font-size: 27px; line-height: 1.15; letter-spacing: -.005em; color: #fff; }
+.soft { font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink-2); }
+
+/* the bank of light: C's one card. A lit fog bank, no border, pinned low */
+.bank {
+  position: relative; padding: 34px var(--gutter) var(--safe-b);
   background:
-    radial-gradient(130% 70% at 50% -10%, rgba(var(--glow-rgb), .22), rgba(var(--glow-rgb), .06) 55%, rgba(var(--glow-rgb), .03) 100%),
-    linear-gradient(180deg, rgba(20, 24, 56, .30), rgba(8, 10, 26, .55));
-  backdrop-filter: blur(22px) saturate(1.25);
-  -webkit-backdrop-filter: blur(22px) saturate(1.25);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, .16),
-    inset 0 0 0 1px rgba(var(--glow-rgb), .10),
-    0 0 90px -20px rgba(var(--glow-rgb), .45),
-    0 40px 80px -30px rgba(0, 0, 0, .6);
+    radial-gradient(80% 60% at 50% 18%, rgba(var(--glow-rgb), .20), transparent 70%),
+    linear-gradient(180deg, rgba(8, 10, 15, 0) 0%, rgba(8, 10, 15, .74) 22%, rgba(7, 9, 13, .9) 100%);
 }
-.card::before {
-  /* the halo the card floats in */
-  content: ""; position: absolute; inset: -40px -10px; z-index: -1; border-radius: 60px;
-  background: radial-gradient(60% 50% at 50% 40%, rgba(var(--glow-rgb), .20), transparent 70%);
-  filter: blur(18px); pointer-events: none;
+.bank::before { /* the light the bank floats in, bleeding up into the fog */
+  content: ""; position: absolute; left: 0; right: 0; top: -70px; height: 140px; pointer-events: none;
+  background: radial-gradient(60% 50% at 50% 70%, rgba(var(--glow-rgb), .16), transparent 70%);
 }
+.bank > * { position: relative; }
 
-/* buttons ----------------------------------------------------------------- */
+/* buttons: a flat fill of the moment's light, soft bloom, no gloss */
 .btn {
   position: relative; overflow: hidden;
   display: flex; align-items: center; justify-content: center; gap: 10px;
-  width: 100%; height: 62px;
-  border-radius: var(--r-btn);
-  font-family: var(--life); font-weight: 500; font-size: 20px; letter-spacing: .01em;
-  color: var(--btn-ink);
-  background:
-    radial-gradient(120% 140% at 50% -20%, #ffffff, var(--glow-hi) 45%, var(--glow) 100%);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, .35) inset,
-    0 0 26px rgba(var(--glow-rgb), .65),
-    0 0 70px rgba(var(--glow-rgb), .35);
+  width: 100%; min-height: 58px; border-radius: 14px;
+  font-family: var(--life); font-weight: 500; font-size: 20px;
+  color: var(--btn-ink); background: var(--glow);
+  box-shadow: 0 0 28px rgba(var(--glow-rgb), .45), 0 0 80px rgba(var(--glow-rgb), .22);
   transition: transform .25s var(--ease), box-shadow .4s var(--ease);
 }
 .btn:active { transform: scale(.985); }
-.btn:hover { box-shadow: 0 0 0 1px rgba(255,255,255,.45) inset, 0 0 34px rgba(var(--glow-rgb), .8), 0 0 90px rgba(var(--glow-rgb), .45); }
+.btn:hover { box-shadow: 0 0 34px rgba(var(--glow-rgb), .6), 0 0 90px rgba(var(--glow-rgb), .3); }
 
-.quiet {
-  min-height: 44px; padding: 0 6px;
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  font-family: var(--life); font-size: 17px; color: var(--text-2);
-  transition: color .3s var(--ease);
-}
-.quiet:hover, .quiet:focus-visible { color: var(--text); outline: none; }
-.quiet .u { border-bottom: 1px solid rgba(var(--glow-rgb), .35); padding-bottom: 1px; }
+.quiet { min-height: 44px; padding: 0 6px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: var(--life); font-size: 17px; color: var(--ink-2); }
+.quiet .u { border-bottom: 1px solid rgba(var(--glow-rgb), .4); padding-bottom: 1px; }
+.quiet:hover, .quiet:focus-visible { color: var(--ink); outline: none; }
 
-/* the light blooms where you tap */
-.bloom {
-  position: absolute; border-radius: 50%; pointer-events: none;
-  width: 16px; height: 16px; margin: -8px 0 0 -8px;
-  background: radial-gradient(circle, rgba(255,255,255,.9), rgba(var(--glow-rgb), .5) 40%, transparent 70%);
-  animation: bloom .9s var(--ease) forwards;
-}
+.bloom { position: absolute; border-radius: 50%; pointer-events: none; width: 16px; height: 16px; margin: -8px 0 0 -8px;
+  background: radial-gradient(circle, rgba(255,255,255,.8), rgba(var(--glow-rgb), .5) 40%, transparent 70%);
+  animation: bloom .9s var(--ease) forwards; }
 @keyframes bloom { from { transform: scale(1); opacity: .9; } to { transform: scale(22); opacity: 0; } }
 
-/* gentle arrival of the interface */
 @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
 .rise { animation: rise 1.1s var(--ease) both; }
-.d1 { animation-delay: .15s; } .d2 { animation-delay: .3s; } .d3 { animation-delay: .45s; } .d4 { animation-delay: .6s; }
-
-/* small flame, used by the clay lamp everywhere */
+.d1 { animation-delay: .15s; } .d2 { animation-delay: .3s; } .d3 { animation-delay: .45s; }
 @keyframes flicker { 0%,100% { transform: scale(1,1); } 30% { transform: scale(.94,1.07); } 62% { transform: scale(1.04,.95); } }
 @keyframes breathe { 0%,100% { opacity: .85; } 50% { opacity: 1; } }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001s !important; animation-iteration-count: 1 !important; animation-delay: 0s !important; transition: none !important; }
-  .fog .drift-a, .fog .drift-b { animation: none !important; }
 }
