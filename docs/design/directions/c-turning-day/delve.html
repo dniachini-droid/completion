@@ -9,151 +9,113 @@
 <link rel="stylesheet" href="direction.css">
 <style>
 
-.rib { transform-box: view-box; transform-origin: 195px 368px; animation: pass 44s cubic-bezier(.62,.02,.93,.55) infinite; opacity:0; }
-@keyframes pass {
-  0% { transform: scale(.05); opacity: 0; }
-  18% { opacity: .35; }
-  70% { opacity: .95; }
-  100% { transform: scale(1.55); opacity: 0; }
-}
-.where { position:absolute; top:104px; left:0; right:0; text-align:center; z-index:6; }
-.where .k { font-family:var(--life); font-style:italic; font-size:16px; color:var(--ink-3); }
-.where .pl { font-size:26px; margin-top:2px; }
-
-.ring { position:absolute; left:50%; top:368px; width:262px; height:262px; margin:-131px 0 0 -131px; z-index:4; border-radius:50%; cursor:pointer; }
-.ring .track, .ring .fill, .ring .fill-glow, .ring .fill-wide {
-  position:absolute; inset:0; border-radius:50%;
-  -webkit-mask: radial-gradient(circle, transparent 116px, #000 117.5px, #000 124px, transparent 125.5px);
-          mask: radial-gradient(circle, transparent 116px, #000 117.5px, #000 124px, transparent 125.5px);
-}
-.ring .track { background: rgba(170,185,255,.14); }
-.ring .fill {
-  background: conic-gradient(from 0deg, rgba(143,168,255,.45) 0, rgba(205,216,255,.95) calc(var(--p) * 1turn - 2deg), #fff calc(var(--p) * 1turn), transparent calc(var(--p) * 1turn + .5deg));
-}
-.ring .fill-glow { background: inherit; }
-.ring .glowwrap { position:absolute; inset:-30px; filter: blur(9px); opacity:1; mix-blend-mode:screen; }
-.ring .glowwrap.wide { filter: blur(26px); opacity:.95; }
-.ring .glowwrap .fill { inset:30px;
-  -webkit-mask: radial-gradient(circle, transparent 100px, #000 114px, #000 128px, transparent 142px);
-          mask: radial-gradient(circle, transparent 100px, #000 114px, #000 128px, transparent 142px); }
-.ring .halo { position:absolute; inset:-60px; border-radius:50%; background: radial-gradient(circle, rgba(143,168,255,0) 42%, rgba(143,168,255,calc(.10 + var(--p) * .30)) 50%, rgba(143,168,255,0) 68%); }
+.flow { filter: blur(2.2px); opacity:.75; }
+.rib { transform-box: view-box; transform-origin: 292px 250px; animation: pass 46s cubic-bezier(.62,.02,.93,.55) infinite; opacity:0; }
+@keyframes pass { 0% { transform: scale(.05); opacity: 0; } 18% { opacity: .35; } 70% { opacity: .9; } 100% { transform: scale(1.6); opacity: 0; } }
+.top { text-align:center; }
+.top .soft { display:block; }
+.top .carve { margin-top:4px; }
+.mid { display:flex; align-items:center; justify-content:center; }
+.ring { --R: min(250px, 66vw, 36vh); position:relative; width:var(--R); height:var(--R); border-radius:50%; cursor:pointer; flex:none; }
+.ring .band { position:absolute; inset:0; border-radius:50%;
+  -webkit-mask: radial-gradient(circle closest-side, transparent 90.5%, #000 91.5%, #000 96.5%, transparent 97.5%);
+          mask: radial-gradient(circle closest-side, transparent 90.5%, #000 91.5%, #000 96.5%, transparent 97.5%); }
+.ring .track { background: rgba(190,196,255,.15); }
+.ring .fill { background: conic-gradient(from 0deg, rgba(143,168,255,.35) 0, rgba(206,214,255,.95) calc(var(--p) * 1turn - 2deg), #fff calc(var(--p) * 1turn), transparent calc(var(--p) * 1turn + .5deg)); }
+.ring .glow { position:absolute; inset:-14%; filter: blur(10px); mix-blend-mode:screen; }
+.ring .glow .band { inset:12.3%; -webkit-mask: radial-gradient(circle closest-side, transparent 84%, #000 90%, #000 98%, transparent 104%); mask: radial-gradient(circle closest-side, transparent 84%, #000 90%, #000 98%, transparent 104%); }
+.ring .glow.wide { filter: blur(24px); opacity:.9; }
+.ring .halo { position:absolute; inset:-22%; border-radius:50%; background: radial-gradient(circle, transparent 42%, rgba(143,168,255,calc(.08 + var(--p) * .3)) 50%, transparent 66%); }
+.ring .disc { position:absolute; inset:5%; border-radius:50%; background: radial-gradient(circle, rgba(200,208,255,calc(.04 + var(--p)*.14)), rgba(143,168,255,calc(.03 + var(--p)*.07)) 60%, transparent 72%); }
 .ring .tip { position:absolute; left:50%; top:50%; width:14px; height:14px; margin:-7px 0 0 -7px; border-radius:50%;
-  background: radial-gradient(circle, #fff, rgba(210,220,255,.8) 40%, transparent 70%);
-  box-shadow: 0 0 18px 6px rgba(190,205,255,.55);
-  transform: rotate(calc(var(--p) * 1turn)) translateY(-121.5px); }
+  background: radial-gradient(circle, #fff, rgba(210,220,255,.8) 40%, transparent 70%); box-shadow: 0 0 18px 6px rgba(190,205,255,.55);
+  transform: rotate(calc(var(--p) * 1turn)) translateY(calc(var(--R) * -.47)); }
 .ring .inner { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-.ring .time { font-family:var(--life); font-weight:300; font-size:70px; line-height:1; letter-spacing:.01em; color:#f6f7ff; font-variant-numeric: tabular-nums lining-nums; text-shadow: 0 0 24px rgba(143,168,255,.8), 0 0 60px rgba(143,168,255,.4); }
-.ring .left { font-family:var(--life); font-style:italic; font-size:17px; color:var(--ink-2); margin-top:8px; }
+.ring .time { font-family:var(--life); font-weight:300; font-size:calc(var(--R) * .27); line-height:1; color:#f6f7ff; font-variant-numeric: tabular-nums lining-nums; text-shadow: 0 0 24px rgba(143,168,255,.8), 0 0 60px rgba(143,168,255,.4); }
+.ring .left { font-family:var(--life); font-style:italic; font-size:16px; color:var(--ink-2); margin-top:6px; }
 .ring.ended .fill { background: rgba(230,236,255,.95); }
 .ring.ended .halo { animation: ringbloom 2.4s var(--ease) forwards; }
 @keyframes ringbloom { 0% { transform: scale(.9); opacity: 1; } 40% { transform: scale(1.25); opacity: 1; background: radial-gradient(circle, rgba(220,228,255,.55) 20%, rgba(143,168,255,.3) 50%, transparent 70%); } 100% { transform: scale(1.1); opacity: .8; } }
+.fog-front { position:absolute; inset:-20%; pointer-events:none; opacity:.5; z-index:3;
+  -webkit-mask: radial-gradient(circle closest-side, #000 30%, transparent 75%); mask: radial-gradient(circle closest-side, #000 30%, transparent 75%); }
+.fog-front img { position:absolute; top:0; left:0; width:200%; height:100%; animation: drift 60s ease-in-out infinite alternate; }
 
-.ring .disc { position:absolute; inset:6px; border-radius:50%; background: radial-gradient(circle, rgba(200,212,255,calc(.04 + var(--p)*.14)) 0, rgba(143,168,255,calc(.03 + var(--p)*.08)) 60%, transparent 72%); }
-.fog-front { position:absolute; inset:0; z-index:5; pointer-events:none; opacity:.55;
-  -webkit-mask: radial-gradient(60% 30% at 50% 368px, #000 30%, transparent 70%); mask: radial-gradient(60% 30% at 50% 368px, #000 30%, transparent 70%); }
-.fog-front svg { position:absolute; top:0; left:0; width:200%; height:100%; animation: drift 60s ease-in-out infinite alternate; }
-.job { position:absolute; top:528px; left:0; right:0; text-align:center; z-index:6; }
-.job h2 { font-family:var(--life); font-weight:500; font-size:25px; color:var(--ink); }
-.job p { font-family:var(--life); font-style:italic; font-size:17px; color:var(--ink-2); margin-top:2px; }
-
-.away { position:absolute; left:var(--gutter); right:var(--gutter); bottom:40px; z-index:6; text-align:center; }
-.away p { font-family:var(--life); font-size:17px; color:var(--ink-2); line-height:1.4; margin-bottom:14px; }
-.away .quiet { height:52px; padding:0 28px; border-radius:26px; background:rgba(143,168,255,.07); box-shadow: inset 0 0 0 1px rgba(143,168,255,.22); color:var(--ink); }
-.away small { display:block; font-family:var(--life); font-style:italic; font-size:16px; color:var(--ink-3); margin-top:10px; }
+.bank { text-align:center; }
+.bank h2 { font-family:var(--life); font-weight:500; font-size:24px; color:#fff; }
+.bank .of { font-family:var(--life); font-style:italic; font-size:17px; color:var(--ink-2); margin-top:2px; }
+.bank .away { font-family:var(--life); font-size:17px; color:var(--ink-2); margin:14px 0 10px; }
+.stopbtn { height:50px; padding:0 26px; border-radius:25px; background:rgba(143,168,255,.07); box-shadow: inset 0 0 0 1px rgba(143,168,255,.24); color:var(--ink); font-family:var(--life); font-size:17px; }
+.confirm, .breather { display:none; }
+.stopping .normal { display:none; } .stopping .confirm { display:block; }
+.confirm p { font-family:var(--life); font-size:18px; color:var(--ink); margin:12px 0 12px; }
+.confirm .row2 { display:flex; gap:10px; }
+.confirm .row2 > * { flex:1; }
+.breathing .normal, .breathing .confirm { display:none; } .breathing .breather { display:block; }
+.breather h2 { margin-top:4px; }
+.breather p { font-family:var(--life); font-size:17px; color:var(--ink-2); margin:6px 0 14px; }
+.breather .row2 { display:flex; justify-content:center; }
+.second-only { display:none; }
 
 </style>
 </head>
-<body class="t-cold">
+<body class="s-day">
 <main class="phone">
 
-<div class="paint"><svg viewBox="0 0 390 844" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-  <defs>
-    <radialGradient id="dg" cx="0.500" cy="0.436" r=".8" gradientTransform="translate(0.500 0.436) scale(1 0.462) translate(-0.500 -0.436)">
-      <stop offset="0" stop-color="#dfe5ff"/>
-      <stop offset=".06" stop-color="#8fa3f6" stop-opacity=".95"/>
-      <stop offset=".2" stop-color="#252c6c"/>
-      <stop offset=".55" stop-color="#0c0f2a"/>
-      <stop offset="1" stop-color="#05060f"/>
-    </radialGradient>
-    <linearGradient id="dfloor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a3274"/><stop offset="1" stop-color="#04050c"/></linearGradient>
-    <filter id="dtex" x="0" y="0" width="100%" height="100%">
-      <feTurbulence type="fractalNoise" baseFrequency=".014 .06" numOctaves="4" seed="5"/>
-      <feColorMatrix values="0 0 0 0 .5  0 0 0 0 .55  0 0 0 0 .95  0 0 0 .9 -.3"/>
-    </filter>
-    <filter id="dsoft"><feGaussianBlur stdDeviation="1.2"/></filter><filter id="dfl" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="8"/></filter>
-  </defs>
-  <rect width="390" height="844" fill="url(#dg)"/>
-  <rect width="390" height="844" filter="url(#dtex)" opacity=".3" style="mix-blend-mode:soft-light"/>
-  <path d="M-40 738 L181 386 L209 386 L430 738 Z" fill="url(#dfloor)" opacity=".55" filter="url(#dfl)"/>
-  <g class="ribs" filter="url(#dsoft)">
-    <g class="rib" style="animation-delay:0.00s">
-      <path d="M-35 698 C-58 353 15.6 68 195 68 C374.4 68 448 353 425 698" fill="none" stroke="#04050d" stroke-width="38"/>
-      <path d="M-24.6 683.1 C-46.6 353.7 23.7 81.5 195 81.5 C366.3 81.5 436.6 353.7 414.6 683.1" fill="none" stroke="#a9b8ff" stroke-width="2.2" opacity="0.45"/>
-    </g><g class="rib" style="animation-delay:-4.40s">
-      <path d="M-35 698 C-58 353 15.6 68 195 68 C374.4 68 448 353 425 698" fill="none" stroke="#04050d" stroke-width="24"/>
-      <path d="M-24.6 683.1 C-46.6 353.7 23.7 81.5 195 81.5 C366.3 81.5 436.6 353.7 414.6 683.1" fill="none" stroke="#a9b8ff" stroke-width="2.2" opacity="0.22"/>
-    </g><g class="rib" style="animation-delay:-8.80s">
-      <path d="M-35 698 C-58 353 15.6 68 195 68 C374.4 68 448 353 425 698" fill="none" stroke="#04050d" stroke-width="38"/>
-      <path d="M-24.6 683.1 C-46.6 353.7 23.7 81.5 195 81.5 C366.3 81.5 436.6 353.7 414.6 683.1" fill="none" stroke="#a9b8ff" stroke-width="2.2" opacity="0.45"/>
-    </g><g class="rib" style="animation-delay:-13.20s">
-      <path d="M-35 698 C-58 353 15.6 68 195 68 C374.4 68 448 353 425 698" fill="none" stroke="#04050d" stroke-width="24"/>
-      <path d="M-24.6 683.1 C-46.6 353.7 23.7 81.5 195 81.5 C366.3 81.5 436.6 353.7 414.6 683.1" fill="none" stroke="#a9b8ff" stroke-width="2.2" opacity="0.22"/>
-    </g><g class="rib" style="animation-delay:-17.60s">
-      <path d="M-35 698 C-58 353 15.6 68 195 68 C374.4 68 448 353 425 698" fill="none" stroke="#04050d" stroke-width="38"/>
-      <path d="M-24.6 683.1 C-46.6 353.7 23.7 81.5 195 81.5 C366.3 81.5 436.6 353.7 414.6 683.1" fill="none" stroke="#a9b8ff" stroke-width="2.2" opacity="0.45"/>
-    </g><g class="rib" style="animation-delay:-22.00s">
-      <path d="M-35 698 C-58 353 15.6 68 195 68 C374.4 68 448 353 425 698" fill="none" stroke="#04050d" stroke-width="24"/>
-      <path d="M-24.6 683.1 C-46.6 353.7 23.7 81.5 195 81.5 C366.3 81.5 436.6 353.7 414.6 683.1" fill="none" stroke="#a9b8ff" stroke-width="2.2" opacity="0.22"/>
-    </g><g class="rib" style="animation-delay:-26.40s">
-      <path d="M-35 698 C-58 353 15.6 68 195 68 C374.4 68 448 353 425 698" fill="none" stroke="#04050d" stroke-width="38"/>
-      <path d="M-24.6 683.1 C-46.6 353.7 23.7 81.5 195 81.5 C366.3 81.5 436.6 353.7 414.6 683.1" fill="none" stroke="#a9b8ff" stroke-width="2.2" opacity="0.45"/>
-    </g><g class="rib" style="animation-delay:-30.80s">
-      <path d="M-35 698 C-58 353 15.6 68 195 68 C374.4 68 448 353 425 698" fill="none" stroke="#04050d" stroke-width="24"/>
-      <path d="M-24.6 683.1 C-46.6 353.7 23.7 81.5 195 81.5 C366.3 81.5 436.6 353.7 414.6 683.1" fill="none" stroke="#a9b8ff" stroke-width="2.2" opacity="0.22"/>
-    </g><g class="rib" style="animation-delay:-35.20s">
-      <path d="M-35 698 C-58 353 15.6 68 195 68 C374.4 68 448 353 425 698" fill="none" stroke="#04050d" stroke-width="38"/>
-      <path d="M-24.6 683.1 C-46.6 353.7 23.7 81.5 195 81.5 C366.3 81.5 436.6 353.7 414.6 683.1" fill="none" stroke="#a9b8ff" stroke-width="2.2" opacity="0.45"/>
-    </g><g class="rib" style="animation-delay:-39.60s">
-      <path d="M-35 698 C-58 353 15.6 68 195 68 C374.4 68 448 353 425 698" fill="none" stroke="#04050d" stroke-width="24"/>
-      <path d="M-24.6 683.1 C-46.6 353.7 23.7 81.5 195 81.5 C366.3 81.5 436.6 353.7 414.6 683.1" fill="none" stroke="#a9b8ff" stroke-width="2.2" opacity="0.22"/>
-    </g>
-  </g>
-</svg></div>
+<div class="paint"><img class="pimg" alt="" aria-hidden="true" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzOTAgODQ0IiB3aWR0aD0iMzkwIiBoZWlnaHQ9Ijg0NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQgc2xpY2UiPgo8ZGVmcz4KICA8cmFkaWFsR3JhZGllbnQgaWQ9ImRnIiBjeD0iMC43NDkiIGN5PSIwLjI5NiIgcj0iLjg1IiBncmFkaWVudFRyYW5zZm9ybT0idHJhbnNsYXRlKDAuNzQ5IDAuMjk2KSBzY2FsZSgxIDAuNDYyKSB0cmFuc2xhdGUoLTAuNzQ5IC0wLjI5NikiPgogICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZTJlNGZmIi8+PHN0b3Agb2Zmc2V0PSIuMDYiIHN0b3AtY29sb3I9IiM5YWEyZjAiIHN0b3Atb3BhY2l0eT0iLjk1Ii8+PHN0b3Agb2Zmc2V0PSIuMiIgc3RvcC1jb2xvcj0iIzJhMmM2ZSIvPjxzdG9wIG9mZnNldD0iLjU1IiBzdG9wLWNvbG9yPSIjMGUwZTJjIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMDUwNTBlIi8+CiAgPC9yYWRpYWxHcmFkaWVudD4KICA8ZmlsdGVyIGlkPSJkdGV4IiB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjAxNCAuMDYiIG51bU9jdGF2ZXM9IjQiIHNlZWQ9IjUiLz48ZmVDb2xvck1hdHJpeCB2YWx1ZXM9IjAgMCAwIDAgLjU1ICAwIDAgMCAwIC41NSAgMCAwIDAgMCAuOTUgIDAgMCAwIC45IC0uMyIvPjwvZmlsdGVyPgo8L2RlZnM+CjxyZWN0IHdpZHRoPSIzOTAiIGhlaWdodD0iODQ0IiBmaWxsPSJ1cmwoI2RnKSIvPgo8cmVjdCB3aWR0aD0iMzkwIiBoZWlnaHQ9Ijg0NCIgZmlsdGVyPSJ1cmwoI2R0ZXgpIiBvcGFjaXR5PSIuMyIgc3R5bGU9Im1peC1ibGVuZC1tb2RlOnNvZnQtbGlnaHQiLz4KPC9zdmc+"></div>
+<div class="paint over" style="z-index:1"><svg class="dyn flow" viewBox="0 0 390 844" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g><g class="rib" style="animation-delay:0.00s"><path d="M42 610 C17 233.5 97 -80 292 -80 C487 -80 567 233.5 542 610" fill="none" stroke="#050512" stroke-width="40"/><path d="M53.2 593.8 C29.4 234.2 105.8 -65.1 292 -65.1 C478.2 -65.1 554.6 234.2 530.8 593.8" fill="none" stroke="#a6aef0" stroke-width="2" opacity="0.28"/></g><g class="rib" style="animation-delay:-4.60s"><path d="M42 610 C17 233.5 97 -80 292 -80 C487 -80 567 233.5 542 610" fill="none" stroke="#050512" stroke-width="26"/><path d="M53.2 593.8 C29.4 234.2 105.8 -65.1 292 -65.1 C478.2 -65.1 554.6 234.2 530.8 593.8" fill="none" stroke="#a6aef0" stroke-width="2" opacity="0.14"/></g><g class="rib" style="animation-delay:-9.20s"><path d="M42 610 C17 233.5 97 -80 292 -80 C487 -80 567 233.5 542 610" fill="none" stroke="#050512" stroke-width="40"/><path d="M53.2 593.8 C29.4 234.2 105.8 -65.1 292 -65.1 C478.2 -65.1 554.6 234.2 530.8 593.8" fill="none" stroke="#a6aef0" stroke-width="2" opacity="0.28"/></g><g class="rib" style="animation-delay:-13.80s"><path d="M42 610 C17 233.5 97 -80 292 -80 C487 -80 567 233.5 542 610" fill="none" stroke="#050512" stroke-width="26"/><path d="M53.2 593.8 C29.4 234.2 105.8 -65.1 292 -65.1 C478.2 -65.1 554.6 234.2 530.8 593.8" fill="none" stroke="#a6aef0" stroke-width="2" opacity="0.14"/></g><g class="rib" style="animation-delay:-18.40s"><path d="M42 610 C17 233.5 97 -80 292 -80 C487 -80 567 233.5 542 610" fill="none" stroke="#050512" stroke-width="40"/><path d="M53.2 593.8 C29.4 234.2 105.8 -65.1 292 -65.1 C478.2 -65.1 554.6 234.2 530.8 593.8" fill="none" stroke="#a6aef0" stroke-width="2" opacity="0.28"/></g><g class="rib" style="animation-delay:-23.00s"><path d="M42 610 C17 233.5 97 -80 292 -80 C487 -80 567 233.5 542 610" fill="none" stroke="#050512" stroke-width="26"/><path d="M53.2 593.8 C29.4 234.2 105.8 -65.1 292 -65.1 C478.2 -65.1 554.6 234.2 530.8 593.8" fill="none" stroke="#a6aef0" stroke-width="2" opacity="0.14"/></g><g class="rib" style="animation-delay:-27.60s"><path d="M42 610 C17 233.5 97 -80 292 -80 C487 -80 567 233.5 542 610" fill="none" stroke="#050512" stroke-width="40"/><path d="M53.2 593.8 C29.4 234.2 105.8 -65.1 292 -65.1 C478.2 -65.1 554.6 234.2 530.8 593.8" fill="none" stroke="#a6aef0" stroke-width="2" opacity="0.28"/></g><g class="rib" style="animation-delay:-32.20s"><path d="M42 610 C17 233.5 97 -80 292 -80 C487 -80 567 233.5 542 610" fill="none" stroke="#050512" stroke-width="26"/><path d="M53.2 593.8 C29.4 234.2 105.8 -65.1 292 -65.1 C478.2 -65.1 554.6 234.2 530.8 593.8" fill="none" stroke="#a6aef0" stroke-width="2" opacity="0.14"/></g><g class="rib" style="animation-delay:-36.80s"><path d="M42 610 C17 233.5 97 -80 292 -80 C487 -80 567 233.5 542 610" fill="none" stroke="#050512" stroke-width="40"/><path d="M53.2 593.8 C29.4 234.2 105.8 -65.1 292 -65.1 C478.2 -65.1 554.6 234.2 530.8 593.8" fill="none" stroke="#a6aef0" stroke-width="2" opacity="0.28"/></g><g class="rib" style="animation-delay:-41.40s"><path d="M42 610 C17 233.5 97 -80 292 -80 C487 -80 567 233.5 542 610" fill="none" stroke="#050512" stroke-width="26"/><path d="M53.2 593.8 C29.4 234.2 105.8 -65.1 292 -65.1 C478.2 -65.1 554.6 234.2 530.8 593.8" fill="none" stroke="#a6aef0" stroke-width="2" opacity="0.14"/></g></g></svg></div>
 <div class="fog" aria-hidden="true">
-  <img class="drift-a" alt="" aria-hidden="true" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3ODAgODQ0IiB3aWR0aD0iNzgwIiBoZWlnaHQ9Ijg0NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgICA8ZmlsdGVyIGlkPSJmb2dBIiB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC4wMDQgMC4wMDgiIG51bU9jdGF2ZXM9IjQiIHNlZWQ9IjIxIi8+CiAgICAgIDxmZUNvbG9yTWF0cml4IHZhbHVlcz0iMCAwIDAgMCAwLjYyNyAgMCAwIDAgMCAwLjY5MCAgMCAwIDAgMCAxLjAwMCAgMCAwIDAgMS4zIC0wLjU2Ii8+PC9maWx0ZXI+CiAgICA8cmVjdCB3aWR0aD0iNzgwIiBoZWlnaHQ9Ijg0NCIgZmlsdGVyPSJ1cmwoI2ZvZ0EpIi8+PC9zdmc+">
-  <img class="drift-b" alt="" aria-hidden="true" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3ODAgODQ0IiB3aWR0aD0iNzgwIiBoZWlnaHQ9Ijg0NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgICA8ZmlsdGVyIGlkPSJmb2dCIiB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC4wMDkgMC4wMiIgbnVtT2N0YXZlcz0iMyIgc2VlZD0iOSIvPgogICAgICA8ZmVDb2xvck1hdHJpeCB2YWx1ZXM9IjAgMCAwIDAgMC42MjcgIDAgMCAwIDAgMC42OTAgIDAgMCAwIDAgMS4wMDAgIDAgMCAwIDEuMTcgLTAuNjEiLz48L2ZpbHRlcj4KICAgIDxyZWN0IHdpZHRoPSI3ODAiIGhlaWdodD0iODQ0IiBmaWx0ZXI9InVybCgjZm9nQikiLz48L3N2Zz4=">
+  <img class="drift-a" alt="" aria-hidden="true" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3ODAgODQ0IiB3aWR0aD0iNzgwIiBoZWlnaHQ9Ijg0NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgICA8ZmlsdGVyIGlkPSJmb2dBIiB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC4wMDQgMC4wMDgiIG51bU9jdGF2ZXM9IjQiIHNlZWQ9IjIxIi8+CiAgICAgIDxmZUNvbG9yTWF0cml4IHZhbHVlcz0iMCAwIDAgMCAwLjYyNyAgMCAwIDAgMCAwLjY1OSAgMCAwIDAgMCAxLjAwMCAgMCAwIDAgMS4zIC0wLjU2Ii8+PC9maWx0ZXI+CiAgICA8cmVjdCB3aWR0aD0iNzgwIiBoZWlnaHQ9Ijg0NCIgZmlsdGVyPSJ1cmwoI2ZvZ0EpIi8+PC9zdmc+">
+  <img class="drift-b" alt="" aria-hidden="true" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3ODAgODQ0IiB3aWR0aD0iNzgwIiBoZWlnaHQ9Ijg0NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgICA8ZmlsdGVyIGlkPSJmb2dCIiB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC4wMDkgMC4wMiIgbnVtT2N0YXZlcz0iMyIgc2VlZD0iOSIvPgogICAgICA8ZmVDb2xvck1hdHJpeCB2YWx1ZXM9IjAgMCAwIDAgMC42MjcgIDAgMCAwIDAgMC42NTkgIDAgMCAwIDAgMS4wMDAgIDAgMCAwIDEuMTcgLTAuNjEiLz48L2ZpbHRlcj4KICAgIDxyZWN0IHdpZHRoPSI3ODAiIGhlaWdodD0iODQ0IiBmaWx0ZXI9InVybCgjZm9nQikiLz48L3N2Zz4=">
 </div>
 <div class="grain" aria-hidden="true"></div>
 <div class="vignette" aria-hidden="true"></div>
 
-<div class="ui">
-  <a class="home" href="morning.html"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Today</span></a>
-
-  <div class="where rise">
-    <div class="k">The expedition is moving</div>
-    <div class="place-name pl">Towards the Salt Gallery</div>
+<div class="ui" id="ui">
+  <div class="bar rise"><a class="link" href="morning.html"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Today</span></a><span></span></div>
+  <header class="top rise">
+    <span class="soft">The expedition is moving towards</span>
+    <h1 class="carve md">The Salt Gallery</h1>
+  </header>
+  <div class="mid">
+    <div class="ring rise d1" id="ring" style="--p:.432" role="timer" aria-label="14 minutes 12 seconds left of 25">
+      <div class="halo"></div><div class="disc"></div>
+      <div class="band track"></div>
+      <div class="glow wide"><div class="band fill"></div></div>
+      <div class="glow"><div class="band fill"></div></div>
+      <div class="band fill"></div>
+      <div class="tip"></div>
+      <div class="fog-front" aria-hidden="true"><img class="" alt="" aria-hidden="true" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3ODAgODQ0IiB3aWR0aD0iNzgwIiBoZWlnaHQ9Ijg0NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGZpbHRlciBpZD0iZmYiIHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuMDA2IC4wMTIiIG51bU9jdGF2ZXM9IjMiIHNlZWQ9IjMzIi8+PGZlQ29sb3JNYXRyaXggdmFsdWVzPSIwIDAgMCAwIC43NSAgMCAwIDAgMCAuNzggIDAgMCAwIDAgMSAgMCAwIDAgMS40IC0uNiIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSI3ODAiIGhlaWdodD0iODQ0IiBmaWx0ZXI9InVybCgjZmYpIi8+PC9zdmc+"></div>
+      <div class="inner"><div class="time" id="time">14:12</div><div class="left">left of 25 minutes</div></div>
+    </div>
   </div>
-
-  <div class="ring rise d1" id="ring" style="--p:.432" role="timer" aria-label="14 minutes 12 seconds left of 25">
-    <div class="halo"></div><div class="disc"></div>
-    <div class="track"></div>
-    <div class="glowwrap wide"><div class="fill"></div></div><div class="glowwrap"><div class="fill"></div></div>
-    <div class="fill"></div>
-    <div class="tip"></div>
-    <div class="inner"><div class="time" id="time">14:12</div><div class="left">left of 25 minutes</div></div>
-  </div>
-
-  <div class="fog-front" aria-hidden="true"><svg viewBox="0 0 780 844" preserveAspectRatio="none"><filter id="ff" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".006 .012" numOctaves="3" seed="33"/><feColorMatrix values="0 0 0 0 .75  0 0 0 0 .8  0 0 0 0 1  0 0 0 1.4 -.6"/></filter><rect width="780" height="844" filter="url(#ff)"/></svg></div>
-  <div class="job rise d2">
-    <h2>Course: one hour</h2>
-    <p>the first of two delves</p>
-  </div>
-
-  <div class="away rise d3">
-    <p>You can put the phone away.<br>You’ll hear it when the delve ends.</p>
-    <a class="quiet" href="morning.html">Stop for now</a>
-    <small>Every minute done still counts.</small>
-  </div>
+  <section class="bottom bank rise d2">
+    <div class="normal">
+      <h2>Course: one hour</h2>
+      <p class="of first-only">the first of two delves</p>
+      <p class="of second-only">the second of two delves</p>
+      <p class="away">Put the phone away. You’ll hear it end.</p>
+      <button class="stopbtn tap" id="stop">Stop for now</button>
+    </div>
+    <div class="confirm">
+      <p>Stop here? Every minute done still counts.</p>
+      <div class="row2"><a class="btn" href="morning.html">Stop</a><button class="quiet" id="keep"><span class="u">Keep going</span></button></div>
+    </div>
+    <div class="breather">
+      <div class="first-only">
+        <span class="soft">A breather: five minutes, then it ends by itself.</span>
+        <h2>That’s the first delve.</h2>
+        <p>The passage opens out ahead.</p>
+        <a class="btn" href="delve.html#second">Next delve</a>
+        <div class="row2"><a class="quiet" href="morning.html#later"><span class="u">Done for now</span></a></div>
+      </div>
+      <div class="second-only">
+        <span class="soft">An hour on the course.</span>
+        <h2>That was the last one.</h2>
+        <p>The passage opens out ahead.</p>
+        <a class="btn" href="complete.html">See where you are</a>
+      </div>
+    </div>
+  </section>
 </div>
 </main>
 <script>
@@ -173,18 +135,20 @@
 })();
 </script>
 <script>
-/* the ring fills slowly with light as the minutes pass (motion only) */
 (function(){
-  var total = 25*60, left = 14*60 + 12, ring = document.getElementById('ring'), t = document.getElementById('time');
-  function draw(){
-    var m = Math.floor(left/60), s = left % 60;
-    t.textContent = m + ':' + (s < 10 ? '0' : '') + s;
-    ring.style.setProperty('--p', ((total - left) / total).toFixed(4));
-  }
+  var total = 25*60, left = 14*60 + 12, ring = document.getElementById('ring'), t = document.getElementById('time'), ui = document.getElementById('ui');
+  var second = /second/.test(location.hash), frozen = /t=/.test(location.hash);
+  document.querySelectorAll('.second-only').forEach(function(e){ e.style.display = second ? 'block' : 'none'; });
+  document.querySelectorAll('.first-only').forEach(function(e){ e.style.display = second ? 'none' : ''; });
+  if (second) left = 21*60 + 40;
+  function draw(){ var m = Math.floor(left/60), s = left % 60; t.textContent = m + ':' + (s < 10 ? '0' : '') + s; ring.style.setProperty('--p', ((total - left) / total).toFixed(4)); }
+  function end(){ left = 0; draw(); ring.classList.add('ended'); setTimeout(function(){ t.textContent = '5:00'; document.querySelector('.ring .left').textContent = 'a breather'; }, 1200); setTimeout(function(){ ui.classList.remove('stopping'); ui.classList.add('breathing'); }, 900); }
   draw();
-  requestAnimationFrame(function(){ requestAnimationFrame(function(){ setTimeout(function(){ setInterval(function(){ if (left > 0) { left--; draw(); if (!left) ring.classList.add('ended'); } }, 1000); }, 3000); }); });
-  /* a preview of the end: tap the ring to see it bloom */
-  ring.addEventListener('click', function(){ left = 0; draw(); ring.classList.add('ended'); t.textContent = '0:00'; });
+  if (!frozen) requestAnimationFrame(function(){ requestAnimationFrame(function(){ setTimeout(function(){ setInterval(function(){ if (left > 0) { left--; draw(); if (!left) end(); } }, 1000); }, 3000); }); });
+  ring.addEventListener('click', end);   /* a preview of the end: tap the ring */
+  document.getElementById('stop').addEventListener('click', function(){ ui.classList.add('stopping'); });
+  document.getElementById('keep').addEventListener('click', function(){ ui.classList.remove('stopping'); });
+  if (/breather/.test(location.hash)) end();
 })();
 </script>
 </body>

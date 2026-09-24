@@ -9,23 +9,21 @@
 <link rel="stylesheet" href="direction.css">
 <style>
 
-.head{top:52px;left:var(--gutter);right:var(--gutter)}
-.lbl{position:absolute;z-index:3;font-family:var(--carve);font-size:13.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);
+.lbl{position:absolute;z-index:3;display:flex;flex-direction:column;justify-content:center;min-height:44px;padding:4px 0;
+  font-family:var(--carve);font-size:13.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);
   text-shadow:0 1px 3px #000,0 0 12px #000;white-space:nowrap;line-height:1.2}
-.lbl small{display:block;font-family:var(--voice);font-size:15.5px;letter-spacing:0;text-transform:none;color:var(--ink-3);margin-top:3px}
-.lbl.w{color:#f6dcb6}
-.lbl.w small{color:#d7ae80}
+.lbl small{display:inline-flex;align-items:center;gap:6px;font-family:var(--voice);font-size:16px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--ink-3);margin-top:3px}
+.lbl.w{color:#f8e2c2}
+.lbl.here small{color:#e8bd88}
 .lbl.c{color:var(--cold-hi)}
-.lbl.c small{color:#93b5c6}
-.lbl.here{color:#fff2dc;font-size:15px}
-.lbl.faint{color:#6d8591}
-.lbl.faint small{color:#5f7682}
-.need{display:inline-flex;align-items:center;gap:6px}
+.lbl.c small{color:#a9c8d6}
+.lbl.here{color:#fff4e2;font-size:15px}
+.lbl.faint small{color:var(--ink-3)}
+.lbl.cen{margin-left:-110px;width:220px;align-items:center;text-align:center}
 .need svg{width:22px;height:10px}
-.next{left:var(--gutter);right:var(--gutter);top:634px}
-.next .row{display:flex;align-items:center;gap:16px;margin-top:10px}
-.next .t{flex:1;font-family:var(--carve);font-weight:500;font-size:19px;line-height:1.2;color:#f5f1ea}
-.next .warm-btn{height:52px;padding:0 26px;font-size:15px}
+.next .row{display:flex;align-items:center;gap:12px;margin-top:8px}
+.next .t{flex:1;font-family:var(--voice);font-size:21px;line-height:1.25;color:#f7f3ec;text-shadow:0 1px 3px #000}
+.next .warm-btn{padding:0 24px}
 
 </style>
 </head>
@@ -76,6 +74,11 @@
     <stop offset="0" stop-color="#e2f3fa" stop-opacity=".9"/><stop offset=".12" stop-color="#9fc4d8" stop-opacity=".5"/>
     <stop offset=".45" stop-color="#3e5a69" stop-opacity=".2"/><stop offset="1" stop-color="#0e161c" stop-opacity="0"/>
   </radialGradient>
+  <filter id="clayGrain" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2" seed="3" result="n"/>
+    <feColorMatrix in="n" values="0 0 0 0 .2  0 0 0 0 .1  0 0 0 0 .05  0 0 0 1.8 -.7" result="g"/>
+    <feComposite in="g" in2="SourceGraphic" operator="in"/>
+  </filter>
   <linearGradient id="clay" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0" stop-color="#b07a4e"/><stop offset=".45" stop-color="#7a4f31"/><stop offset="1" stop-color="#2e1c11"/>
   </linearGradient>
@@ -178,42 +181,44 @@
 <rect y="600" width="390" height="244" fill="url(#botFade)"/>
 <rect width="390" height="844" filter="url(#grain)" opacity="0.15" style="mix-blend-mode:overlay"/>
 </svg></div>
-<canvas class="motes" aria-hidden="true" data-n="30" data-lights='[[196, 318, 150, "w", 0.8], [170, 540, 120, "c", 0.6], [74, 420, 100, "c", 0.5]]'></canvas>
-<header class="layer head rise d1">
-  <div class="eyebrow">The first region</div>
-  <h1 class="place" style="margin-top:8px">The Quiet</h1>
-</header>
-
-<span class="lbl w rise d2" style="left:24px;top:136px;width:146px;text-align:right">The Mouth<small>the ladder down</small></span>
-<a class="lbl w here rise d2" href="morning.html" style="left:96px;top:350px;text-align:center;width:200px">The Lamp Hall<small>you are here</small></a>
-<span class="lbl w rise d3" style="left:196px;top:170px;width:170px;text-align:right">The Survey Cut<small>someone’s camp</small></span>
-<span class="lbl c rise d3" style="left:40px;top:448px">The Salt Gallery<small>seen, not reached</small></span>
-<span class="lbl c rise d3" style="left:228px;top:458px;text-align:right;width:140px">The lintel<small class="need">needs a word <svg viewBox="0 0 22 10" aria-hidden="true"><rect x="1" y="2" width="20" height="6" rx="3" fill="none" stroke="#bfe0ee" stroke-width="1" stroke-dasharray="2 1.6"/></svg></small></span>
-<span class="lbl c rise d4" style="left:96px;top:574px;text-align:left">The great door<small class="need">a Key and a word <svg viewBox="0 0 22 10" aria-hidden="true"><g fill="#bfe0ee"><circle cx="3" cy="5" r="1.4"/><circle cx="8" cy="5" r="1.4"/><circle cx="13" cy="5" r="1.4" opacity=".35"/><circle cx="18" cy="5" r="1.4" opacity=".35"/></g></svg><svg viewBox="0 0 22 10" aria-hidden="true"><rect x="1" y="2" width="20" height="6" rx="3" fill="none" stroke="#bfe0ee" stroke-width="1" stroke-dasharray="2 1.6"/></svg></small></span>
-<span class="lbl faint rise d4" style="left:262px;top:556px;text-align:right;width:104px"><small>further down</small></span>
-
-<section class="layer next rise d4">
-  <div class="eyebrow warm">Next</div>
-  <div class="row">
-    <div class="t">Order the cat’s medication</div>
-    <a class="warm-btn" href="delve.html">Begin</a>
-  </div>
-</section>
-<nav class="nav" aria-label="Places in the app"><a href="morning.html">Today</a><a href="map.html" class="here" aria-current="page">Map</a><a href="satchel.html">Satchel</a><a href="daybook.html">Daybook</a></nav>
+<canvas class="motes" aria-hidden="true" data-n="34" data-lights='[[196, 318, 150, "w", 0.8], [170, 540, 120, "c", 0.6], [74, 420, 100, "c", 0.5], [302, 432, 90, "c", 0.5]]'></canvas>
+<button class="lbl w rise d2" style="right:54.9%;top:15.2%;text-align:right">The Mouth</button>
+<a class="lbl w here cen rise d2" href="morning.html" style="left:50.3%;top:40.0%">The Lamp Hall<small>you are here</small></a>
+<button class="lbl w rise d3" style="right:6.2%;top:21.1%;text-align:right">The Survey Cut</button>
+<a class="lbl c rise d3" href="complete.html" style="left:8.7%;top:52.1%">The Salt Gallery</a>
+<a class="lbl c rise d3" href="cut.html" style="right:6.2%;top:53.6%;text-align:right">The lintel<small class="need">needs a word <svg viewBox="0 0 22 10" aria-hidden="true"><rect x="1" y="2" width="20" height="6" rx="3" fill="#0c141a" stroke="#bfe0ee" stroke-width="1"/></svg></small></a>
+<button class="lbl c rise d4" style="left:10.3%;top:68.0%;text-align:left;align-items:flex-start">The great door<small class="need">a Key and a word <svg viewBox="0 0 22 10" aria-hidden="true"><g fill="#bfe0ee"><circle cx="3" cy="5" r="1.4"/><circle cx="8" cy="5" r="1.4"/><circle cx="13" cy="5" r="1.4" opacity=".35"/><circle cx="18" cy="5" r="1.4" opacity=".35"/></g></svg><svg viewBox="0 0 22 10" aria-hidden="true"><rect x="1" y="2" width="20" height="6" rx="3" fill="#0c141a" stroke="#bfe0ee" stroke-width="1"/></svg></small></button>
+<div class="ui">
+  <header class="rise d1">
+    <div class="eyebrow">The first region</div>
+    <h1 class="place" style="margin-top:6px">The Quiet</h1>
+  </header>
+  <div class="grow"></div>
+  <section class="next rise d4">
+    <div class="eyebrow warm">Next</div>
+    <div class="row">
+      <div class="t">Order the cat’s medication</div>
+      <a class="warm-btn" href="delve.html?job=cat">Begin</a>
+    </div>
+  </section>
+  <nav class="nav" aria-label="Places in the app"><a href="morning.html">Today</a><a href="map.html" class="here" aria-current="page">Map</a><a href="satchel.html">Satchel</a><a href="daybook.html">Daybook</a></nav>
+</div>
 
 </main>
 <script>
-/* Dust in the light: few, slow, lit only near a light source. Motion only. */
+/* Dust in the light: few, slow, lit only near a light source. Motion only.
+   Light positions are in the painting's 390x844 space; the painting is cropped to fill the screen. */
 (function(){
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   var c=document.querySelector('canvas.motes'); if(!c) return;
-  var L=JSON.parse(c.dataset.lights||'[]'), N=+(c.dataset.n||30), W=390, H=844;
-  var x=c.getContext('2d'); c.width=W*2; c.height=H*2; x.scale(2,2);
+  var L=JSON.parse(c.dataset.lights||'[]'), N=+(c.dataset.n||30), W=390, H=844, x=c.getContext('2d'), k=1, ox=0, oy=0;
+  function size(){ var w=c.clientWidth, h=c.clientHeight; c.width=w*2; c.height=h*2; k=Math.max(w/W,h/H); ox=(w-W*k)/2; oy=(h-H*k)/2; x.setTransform(2*k,0,0,2*k,2*ox,2*oy); }
+  size(); addEventListener('resize', size);
   var R=Math.random, m=[];
   for(var i=0;i<N;i++) m.push({x:R()*W,y:R()*H,r:.35+R()*1.1,vx:(R()-.5)*.05,vy:-.02-R()*.06,p:R()*6.3});
   var last=performance.now();
   function fr(t){
-    var dt=Math.min(50,t-last); last=t; x.clearRect(0,0,W,H);
+    var dt=Math.min(50,t-last); last=t; x.clearRect(-ox/k,-oy/k,W+2*ox/k,H+2*oy/k);
     for(var i=0;i<m.length;i++){ var q=m[i];
       q.x+=q.vx*dt*.06; q.y+=q.vy*dt*.06; q.p+=dt*.001;
       if(q.y<-4){q.y=H+4;q.x=R()*W} if(q.x<-4)q.x=W+4; if(q.x>W+4)q.x=-4;

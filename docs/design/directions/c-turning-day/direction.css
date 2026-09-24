@@ -1,9 +1,10 @@
 /* ==========================================================================
    C — The Turning Day · shared tokens and pieces (revision 1)
 
-   The stone is always cold blue-grey cut stone. The day turns through LIGHT
-   inside the scene: cold violet fog at dawn; gold pooling on the floor, warm
-   fog and the lamp's spreading glow as the day is done.
+   The stone is violet-lit cut stone on every screen (Dan: "I really love the
+   purple light"). The day turns through LIGHT inside the scene: gold pooling
+   on the floor, a warm fog bank and the lamp's spreading glow, against the
+   violet. Nothing is ever tinted brown or sepia.
    The state of the day (not the screen) sets the light: body.s-dawn,
    s-day, s-done, s-evening.
 
@@ -12,13 +13,13 @@
    ========================================================================== */
 
 :root {
-  /* the stone: cold blue-grey, never tinted */
-  --night: #05070a;
-  --stone-0: #080a0f;
-  --stone-1: #0f131a;
-  --stone-2: #1a212b;
-  --stone-3: #2b3441;
-  --stone-lit: #c3ccd9;           /* pale cut stone catching light */
+  /* the stone: violet-lit, never tinted warm */
+  --night: #05050c;
+  --stone-0: #08081a;
+  --stone-1: #0f1026;
+  --stone-2: #1a1c3a;
+  --stone-3: #2b2e56;
+  --stone-lit: #cdd0ee;           /* pale cut stone catching light */
 
   /* cold light: fog and glow of the working day */
   --cold: #8fa8ff;
@@ -33,8 +34,8 @@
 
   /* ink */
   --ink: #f2f4f8;
-  --ink-2: #c4cad6;
-  --ink-3: #9aa3b4;
+  --ink-2: #c3c7e2;
+  --ink-3: #9da1c4;
 
   /* the light of the moment (set by the day's state) */
   --glow: var(--cold);
@@ -55,7 +56,8 @@
 
 /* the day's state ------------------------------------------------------- */
 body.s-dawn    { --warmth: 0; }
-body.s-day     { --warmth: .38; }
+body.s-day     { --warmth: .22; }
+body.s-day2    { --warmth: .55; }
 body.s-done    { --warmth: .9;  --glow: var(--gold); --glow-hi: var(--gold-hi); --glow-rgb: var(--gold-rgb); --btn-ink: #2a1705; }
 body.s-evening { --warmth: 1;   --glow: var(--gold); --glow-hi: var(--gold-hi); --glow-rgb: var(--gold-rgb); --btn-ink: #2a1705; }
 
@@ -129,7 +131,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 }
 .carve.lg { font-size: 25px; letter-spacing: .12em; }
 .carve.md { font-size: 17px; }
-.carve.sm { font-size: 13.5px; letter-spacing: .2em; color: #aeb8ca; }
+.carve.sm { font-size: 13.5px; letter-spacing: .2em; color: #b4b8dc; }
 
 /* voice 2: your own life. Plain print, sentence case */
 .say { font-family: var(--life); font-weight: 400; color: var(--ink); }
@@ -140,14 +142,18 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .bank {
   position: relative; padding: 34px var(--gutter) var(--safe-b);
   background:
-    radial-gradient(80% 60% at 50% 18%, rgba(var(--glow-rgb), .20), transparent 70%),
-    linear-gradient(180deg, rgba(8, 10, 15, 0) 0%, rgba(8, 10, 15, .74) 22%, rgba(7, 9, 13, .9) 100%);
+    radial-gradient(closest-side at 50% 22%, rgba(var(--glow-rgb), .18), transparent),
+    linear-gradient(180deg, rgba(8, 8, 22, 0) 0%, rgba(8, 8, 22, .74) 22%, rgba(7, 7, 18, .9) 100%);
 }
 .bank::before { /* the light the bank floats in, bleeding up into the fog */
   content: ""; position: absolute; left: 0; right: 0; top: -70px; height: 140px; pointer-events: none;
-  background: radial-gradient(60% 50% at 50% 70%, rgba(var(--glow-rgb), .16), transparent 70%);
+  background: radial-gradient(closest-side at 50% 62%, rgba(var(--glow-rgb), .15), transparent);
 }
-.bank > * { position: relative; }
+.bank::after { /* gold arriving in the bank as the day is earned */
+  content: ""; position: absolute; inset: -40px 0 0 0; pointer-events: none; opacity: var(--warmth);
+  background: radial-gradient(closest-side at 50% 30%, rgba(var(--gold-rgb), .22), transparent);
+}
+.bank > * { position: relative; z-index: 1; }
 
 /* buttons: a flat fill of the moment's light, soft bloom, no gloss */
 .btn {

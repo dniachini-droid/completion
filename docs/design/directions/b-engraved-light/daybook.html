@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="../../fonts/fonts.css">
 <link rel="stylesheet" href="direction.css">
 <style>
-.page{position:absolute;left:var(--gutter);right:var(--gutter);top:94px;bottom:108px;padding:22px 20px 20px 34px;overflow:hidden;
+.page{position:relative;flex:1 1 auto;display:flex;flex-direction:column;margin-top:4px;padding:20px 18px 18px 34px;overflow:hidden;
   background:
     repeating-linear-gradient(180deg,transparent 0 31px,rgba(191,239,255,.045) 31px 32px),
     linear-gradient(180deg,#122130,#0b1620 60%,#09131b);
@@ -21,15 +21,15 @@
 .top .sub{font-family:var(--book);font-style:italic;font-size:16px;color:var(--ink-3);margin-top:2px}
 .top svg{width:92px;height:92px;flex:none;margin-top:-4px;margin-right:-4px;overflow:visible}
 .text{margin-top:14px}
-.text p{font-family:var(--book);font-size:19px;line-height:1.55;color:var(--ink)}
+.text p{font-family:var(--book);font-size:19px;line-height:1.5;color:var(--ink)}
 .text p + p{margin-top:12px}
-.next{position:absolute;left:34px;right:20px;bottom:20px;padding-top:14px;border-top:1px solid var(--light-c)}
+.next{margin-top:auto;padding-top:14px;border-top:1px solid var(--light-c)}
 .next p{font-family:var(--book);font-size:19px;line-height:1.45;color:var(--ink);margin-top:6px}
 .next p i{color:var(--light);text-shadow:0 0 10px rgba(191,239,255,.3)}
-.route{margin-top:22px}
-.route svg{width:100%;height:150px;overflow:visible}
-.rl{font-family:'Cinzel',serif;font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;fill:#b4cbd7}
-.rs{font-family:'EB Garamond',serif;font-style:italic;font-size:15px;fill:#86a2b1}
+.route{margin:16px 0 14px}
+.route svg{display:block;width:100%;max-width:300px;height:auto;overflow:visible}
+.rl{font-family:'Cinzel',serif;font-size:14px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;fill:#b4cbd7}
+.rs{font-family:'EB Garamond',serif;font-style:italic;font-size:16.5px;fill:#86a2b1}
 .acts{position:absolute;left:var(--gutter);right:var(--gutter);bottom:30px}
 .acts .btn{width:100%}
 </style>
@@ -40,7 +40,7 @@
   <header class="rail arrive">
     <a class="home" href="morning.html" aria-label="Back to today"><svg viewBox="0 0 16 16"><path d="M10 3 5 8l5 5"/></svg>Today</a>
     <div class="mid">The daybook</div>
-    <span style="width:44px"></span>
+    <span></span>
   </header>
 
   <article class="page plate ticks arrive d1" aria-label="The daybook, week two">
@@ -87,7 +87,7 @@
     </div>
   </article>
 
-  <div class="acts arrive d3"><a class="btn warm" href="morning.html">Back to this week</a></div>
+
 </main>
 </body>
 </html>

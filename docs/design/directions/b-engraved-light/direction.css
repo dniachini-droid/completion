@@ -26,7 +26,7 @@
   /* text on stone */
   --ink:#e8f5fb;
   --ink-2:#b4cbd7;
-  --ink-3:#86a2b1;
+  --ink-3:#93aebc;
 
   /* warm: rare and precious. The lamp, and the next action. Nothing else. */
   --warm:#f5ab5c;
@@ -60,8 +60,9 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 
 /* the phone ---------------------------------------------------------------- */
 .phone{
-  position:relative;width:390px;max-width:100%;height:100vh;min-height:720px;max-height:844px;
-  overflow:hidden;
+  position:relative;width:100%;max-width:430px;height:100vh;height:100dvh;min-height:640px;
+  overflow:hidden;display:flex;flex-direction:column;
+  padding:0 var(--gutter) calc(16px + env(safe-area-inset-bottom));
   background:
     radial-gradient(120% 60% at 50% 0%,#0c1822 0%,transparent 70%),
     linear-gradient(180deg,var(--stone-1) 0%,var(--stone-0) 55%,var(--void) 100%);
@@ -74,28 +75,31 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 
 /* the top rail: every screen's way home ----------------------------------- */
 .rail{
-  position:absolute;z-index:20;top:0;left:0;right:0;height:92px;padding:40px 12px 0;
-  display:grid;grid-template-columns:auto 1fr auto;align-items:center;
+  position:relative;z-index:20;flex:none;margin:0 calc(-1 * var(--gutter));
+  padding:calc(26px + env(safe-area-inset-top)) 8px 6px;min-height:76px;
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
 }
+.rail > :first-child{justify-self:start}
+.rail > :last-child{justify-self:end}
 .rail .mid{
-  text-align:center;font-family:var(--carve);font-size:12px;font-weight:500;letter-spacing:.32em;
-  text-transform:uppercase;color:var(--ink-3);padding-left:.32em;
+  text-align:center;font-family:var(--carve);font-size:13px;font-weight:600;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--ink-2);padding-left:.18em;white-space:nowrap;
 }
 .home{
-  height:44px;min-width:44px;padding:0 12px 0 8px;display:flex;align-items:center;gap:8px;
-  font-family:var(--carve);font-size:12px;font-weight:500;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-2);
+  height:44px;min-width:44px;padding:0 6px 0 4px;display:flex;align-items:center;gap:5px;
+  font-family:var(--carve);font-size:14px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);
 }
-.home svg{width:16px;height:16px;stroke:var(--light-a);fill:none;stroke-width:1.2}
+.home svg{width:16px;height:16px;stroke:var(--light-a);fill:none;stroke-width:1.3}
 .home:hover{color:var(--ink)}
 .icon-btn{
-  width:44px;height:44px;display:grid;place-items:center;position:relative;
+  min-width:44px;height:44px;display:grid;place-items:center;position:relative;
 }
 .icon-btn svg{width:22px;height:22px;stroke:var(--light-a);fill:none;stroke-width:1.1;stroke-linecap:round;stroke-linejoin:round}
 .icon-btn:hover svg{stroke:var(--light)}
 
 /* labels: carved, small, widely spaced ------------------------------------ */
 .label{
-  font-family:var(--carve);font-size:12px;font-weight:500;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-3);
+  font-family:var(--carve);font-size:13px;font-weight:600;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-3);
   display:flex;align-items:center;gap:12px;
 }
 .label.rule::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--light-c),transparent)}
@@ -133,11 +137,11 @@ h1,.title{
 
 /* the viewport: the world, seen through the instrument --------------------- */
 .viewport{
-  position:relative;overflow:hidden;
+  position:relative;overflow:hidden;flex:1 1 0;min-height:150px;
   border:1px solid var(--light-c);
   background:var(--void);
 }
-.viewport > svg{display:block;width:100%;height:100%}
+.viewport > svg{position:absolute;inset:0;display:block;width:100%;height:100%}
 .viewport .scale{ /* graticule ticks along an edge */
   position:absolute;left:0;right:0;bottom:0;height:6px;pointer-events:none;
   background:repeating-linear-gradient(90deg,var(--light-c) 0 1px,transparent 1px 14px);
@@ -150,15 +154,12 @@ h1,.title{
   -webkit-mask:linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent);
           mask:linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent);
 }
-.viewport .cap{
-  position:absolute;left:12px;top:10px;font-family:var(--carve);font-size:11px;font-weight:500;letter-spacing:.3em;
-  text-transform:uppercase;color:var(--ink-3);
-}
+
 
 /* buttons -------------------------------------------------------------------- */
 .btn{
   position:relative;height:56px;display:flex;align-items:center;justify-content:center;gap:10px;
-  font-family:var(--carve);font-size:15px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;padding:0 18px 0 calc(18px + .24em);
+  font-family:var(--carve);font-size:15px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;padding:0 16px 0 calc(16px + .2em);white-space:nowrap;
   transition:transform .22s var(--ease),box-shadow .35s var(--ease),background .35s var(--ease);
   -webkit-tap-highlight-color:transparent;
 }
@@ -222,7 +223,7 @@ h1,.title{
 }
 .row:last-child{border-bottom:1px solid var(--light-d)}
 .row .t{font-family:var(--book);font-size:19px;color:var(--ink);line-height:1.2}
-.row .s{font-family:var(--book);font-style:italic;font-size:16px;color:var(--ink-3)}
+.row .s{font-family:var(--book);font-style:italic;font-size:16px;color:var(--ink-2)}
 
 /* a hairline divider with a centre point */
 .divider{height:9px;background:

@@ -106,8 +106,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webki
 .quiet-btn svg{width:16px;height:16px;flex:none}
 
 /* ---------- points of light (no lines, no boxes) ---------- */
-.pt{position:relative;width:16px;height:16px;flex:none;display:inline-block}
-.pt::before{content:"";position:absolute;inset:4px;border-radius:50%}
+.pt{position:relative;width:20px;height:20px;flex:none;display:inline-block}
+.pt::before{content:"";position:absolute;inset:5px;border-radius:50%}
 .pt::after{content:"";position:absolute;inset:-8px;border-radius:50%}
 .pt.warm::before{background:radial-gradient(circle at 50% 45%, #fff3dc, #ffc877 45%, #e38d3c 100%)}
 .pt.warm::after{background:radial-gradient(closest-side, rgba(240,162,74,.55), rgba(240,162,74,0))}
