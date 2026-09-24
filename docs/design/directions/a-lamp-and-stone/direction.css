@@ -76,7 +76,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webki
 .say .w{color:var(--warm-hi)}
 .say .c{color:var(--cold-hi)}
 .small{font-family:var(--voice);font-size:16px;color:var(--ink-3)}
-.numerals{font-family:var(--carve);font-weight:400;font-variant-numeric:lining-nums tabular-nums;letter-spacing:.04em}
+.numerals{font-family:var(--voice);font-weight:400;font-variant-numeric:lining-nums tabular-nums;letter-spacing:.02em}
 
 /* ---------- the one warm button: lamp light you can press ---------- */
 .warm-btn{

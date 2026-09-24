@@ -257,7 +257,7 @@
 (function(){
   var total=1500, left=852, C=728.849, cx=195, cy=408;
   var t=document.getElementById('t'), arcs=document.querySelectorAll('.arc'), bead=document.querySelector('.bead');
-  var start=performance.now()+3000;
+  var start=performance.now()+5000;
   function draw(now){
     var l=Math.min(left,Math.max(0,left-(now-start)/1000)), fr=1-l/total;
     var m=Math.floor(l/60), s=Math.floor(l%60);
