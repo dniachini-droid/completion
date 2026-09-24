@@ -726,3 +726,10 @@
 - **Alternatives:** guesses locked after one tap (rejected: the approved mock-up offers changing, and a first wrong tap shouldn't cost the pleasure of a considered guess); a separate "confirmed" screen (rejected: a confirmation is a beat on the place's own screen, SCRIPT §9); a generated lettering from elements (rejected: hand-drawn cells read as one script).
 - **Consequences:** new screens `Marks`, `Cut`, `Stair`; the painted hall (`ui/scene/hall.js`, from the approved mock-up) now ships in the app; the haptics gain a long "ring" for the word locking. Save version unchanged (all new state is computed from facts already written).
 - **Reversible:** Yes.
+
+## D-070 — The app is called The Long Answer (Dan)
+- **Date:** 2026-09-24
+- **Context:** "We really need to change the name." The shortlist (`narrative/NAMES.md`, D-021), each name checked privately against the sealed truth.
+- **Decision (Dan):** **The Long Answer**, Claude's recommendation. Under the icon it reads **Long Answer** (the full name is too long for the label).
+- **Consequences:** the app's name, the page title and the icon label change now; the bundle id `com.dniachini.rlrpg` stays (Apple never shows it and it can't change without a new app record). Dan may rename the App Store Connect record (App Information → Name) whenever he likes; TestFlight shows that record's name. The GitHub repository keeps its name for now (renaming it mid-build would disturb the sessions working on it; housekeeping after the build). A proper trademark search before anything goes public (NAMES.md).
+- **Reversible:** Yes, until the app is public.

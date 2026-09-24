@@ -150,8 +150,8 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 
 - None.
 - **Jobs queued for later phases:** the language pass on every line the app says (**after Dan has played the first playable for 3–4 weeks**, D-046; nothing before it is final wording); a memory and recap system, a before → now re-read view, a guaranteed reward rhythm and high-day extras (D-035, Phase 5–6); jobs and targets as editable data (D-030, now in `technical/DATA_MODEL.md`).
-- Housekeeping (non-blocking): rename the GitHub repo once a product name exists (`narrative/NAMES.md`). (Privacy verified: private.)
-- Open for Dan whenever he likes: the app name (`narrative/NAMES.md`).
+- Housekeeping (non-blocking): rename the GitHub repo to the product name (D-070) once no session is building on it. (Privacy verified: private.)
+- The app's name: **The Long Answer** (D-070). Rename the GitHub repo after the build.
 
 ## Recommended next action
 
