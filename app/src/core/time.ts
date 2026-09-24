@@ -29,3 +29,24 @@ export function gameDay(at: Moment): string {
   if (h < DAY_EDGE_HOUR) day.setUTCDate(day.getUTCDate() - 1);
   return day.toISOString().slice(0, 10);
 }
+
+/** The instant a moment names, in milliseconds since 1970 (for durations; never for which day it is). */
+export function epochOf(at: Moment): number {
+  const ms = Date.parse(at);
+  if (Number.isNaN(ms)) throw new Error(`not a moment: ${at}`);
+  return ms;
+}
+
+/** A moment from an instant and the phone's offset from UTC in minutes (e.g. +60 for British Summer Time). */
+export function momentOf(ms: number, offsetMinutes: number): Moment {
+  const wall = new Date(ms + offsetMinutes * 60_000).toISOString().slice(0, 19);
+  const sign = offsetMinutes < 0 ? '-' : '+', a = Math.abs(offsetMinutes);
+  return `${wall}${sign}${String(Math.floor(a / 60)).padStart(2, '0')}:${String(a % 60).padStart(2, '0')}`;
+}
+
+/** The phone's offset carried by a moment, in minutes. */
+export function offsetOf(at: Moment): number {
+  const z = /(Z|([+-])(\d{2}):(\d{2}))$/.exec(at);
+  if (!z || z[1] === 'Z') return 0;
+  return (z[2] === '-' ? -1 : 1) * (+z[3] * 60 + +z[4]);
+}
