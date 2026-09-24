@@ -620,3 +620,18 @@
 - **Claude's answer on timing:** not after the MVP, because the MVP carries the story's first six weeks and its places' paintings, and the test can't start without them. It **can** come after the prototype: Phase 8 uses throwaway data and invented places. So it runs in its own session **after the prototype and before the first playable's content goes in** (Phase 9), and the real places' paintings follow it.
 - **Consequences:** `CLAUDE.md` and `CURRENT_STATE.md` move to Phase 8 with its exit criteria (five trials, the sample paintings approved, TestFlight working, the heart slice felt on Dan's phone). The story job is placed in the plan.
 - **Reversible:** Phase changes need Dan's agreement; the story job's timing can move earlier at any time.
+
+## D-061 — Phase 8 started: the app set up, the trial build, the pipeline (Claude's routine calls)
+- **Date:** 2026-09-24
+- **Context:** Phase 8's first session. Dan: **iPhone 16 Pro Max**; Apple membership **approved**; the rest of the Apple setup and TestFlight not yet done. `app/` did not exist.
+- **Decision (Claude's routine technical calls, D-006):**
+  1. **Order of the trials:** the three technical trials (the delve alert with the phone locked, smoothness, real-app feel) go into **one trial build**, built first, so the cloud Mac pipeline (trial 4) can be proven the moment Dan's Apple steps are done. The painting kit's three sample places (trial 5) follow in their own session. Same trials, same exit criteria; only the order changed, because Apple's steps are Dan's to do and can run alongside.
+  2. **`app/`** created as `ARCHITECTURE.md` describes (Svelte 5, TypeScript, Vite; Capacitor 8 with its iOS project in `app/ios/`, Swift Package Manager). core starts with the 04:00 day edge and delves worked out from timestamps, tested (clock changes included). All copy in `src/content/copy/en.ts`.
+  3. **Paintings are baked:** `app/paint/bake.mjs` renders the approved hall (`hall.js`, unchanged) to a 1320 × 2868 image (iPhone Pro Max, 125 KB); fog, drift and motes move on top. This is the painting plan's step 3, tried early.
+  4. **Signing and upload without fastlane:** Xcode's own automatic signing with the App Store Connect key (`xcodebuild -allowProvisioningUpdates`), then export with upload to TestFlight. Fewer moving parts than fastlane and no certificates stored anywhere. Runner: GitHub's macOS 26 with the latest stable Xcode (Apple requires the current SDK). Builds run on a `[testflight]` commit, by hand, and monthly.
+  5. **Bundle id `com.dniachini.rpg`** (permanent once registered); home-screen name **"Lamp Hall"**, provisional until the app has a name (`narrative/NAMES.md`). iPhone only, portrait only; the app declares no encryption so TestFlight asks no export question.
+  6. **Flow tests run in Chromium in the cloud container** (WebKit isn't installed there); WebKit remains the target and Dan's phone is the real check. Recorded in `technical/PROTOTYPE_NOTES.md`.
+  7. The trials store the running delve in the phone's simple key-value store; the fact log in SQLite arrives with the heart slice.
+- **Alternatives:** keep the written order (painting kit first; leaves the pipeline untested until later, when Dan's Apple steps may long be done); fastlane (more tooling for the same result); Codemagic now (kept as the fallback).
+- **Consequences:** new `app/`, `.github/workflows/app-tests.yml` and `testflight.yml`, `technical/APPLE_SETUP.md` (Dan's remaining steps), `technical/PROTOTYPE_NOTES.md`; `TECH_DECISIONS.md` and `ARCHITECTURE.md` notes on fastlane.
+- **Reversible:** Yes, all of it (the bundle id only until the app record exists).

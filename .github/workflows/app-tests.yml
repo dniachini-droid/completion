@@ -1,0 +1,23 @@
+# Every push: the rules, the flows at true phone size, types (TEST_STRATEGY.md). Linux; free.
+name: app tests
+on:
+  push:
+    paths: ['app/**', '.github/workflows/app-tests.yml']
+  pull_request:
+    paths: ['app/**']
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: app } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: app/package-lock.json }
+      - run: npm ci
+      - run: npm run check
+      - run: npm test
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:flows
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: shots, path: app/shots, if-no-files-found: ignore }

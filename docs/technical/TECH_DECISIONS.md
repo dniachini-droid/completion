@@ -95,7 +95,7 @@ Recorded so later sessions don't re-decide them. Dan doesn't need to review thes
 - **Storage:** SQLite on the phone (a small database that doesn't half-write); the browser's own storage for the web prototype. One storage interface, two versions.
 - **Game rules:** plain TypeScript with no screen code in it, deterministic, with the clock passed in, so every rule can be tested at any time of day, any date, any clock change.
 - **Tests:** Vitest for rules and story unlocks; Playwright for whole flows and true-size screenshots in a Safari-like browser (WebKit).
-- **Cloud build:** GitHub Actions on a macOS runner with fastlane; Codemagic as the fallback.
+- **Cloud build:** GitHub Actions on a macOS runner, signing and uploading with Xcode's own tools and the App Store Connect key (D-061; fastlane not needed); Codemagic as the fallback.
 - **No server, no account, no analytics, no crash-reporting service, no AI.** TestFlight's own crash reports (Apple) are the only thing that can leave the phone, and only if Dan chooses to send them.
 - Details: `ARCHITECTURE.md`, `DATA_MODEL.md`, `SECURITY_PRIVACY.md`, `TEST_STRATEGY.md` (D-059).
 

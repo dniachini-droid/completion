@@ -2,7 +2,7 @@
 
 A single-player RPG for one player — Dan — in which meaningful real-life action is the controller.
 
-**Status:** Phase 0 — Player Discovery. Documentation only; no application code yet.
+**Status:** Phase 8 — Prototype. See `docs/CURRENT_STATE.md`.
 
 ## Where to start
 
@@ -22,7 +22,7 @@ docs/product/    product spec, flows, MVP, roadmap
 docs/design/     art direction, UX, design system, interaction notes
 docs/technical/  architecture, data model, privacy, testing, tech decisions (Phase 7+)
 research/        reference material and notes
-src/             application code (empty until Phase 8)
+app/             the app (Svelte + TypeScript + Capacitor; see docs/technical/ARCHITECTURE.md)
 ```
 
 > `docs/narrative/sealed/` holds the story's hidden truth. **Dan has chosen not to read it** (D-015).
