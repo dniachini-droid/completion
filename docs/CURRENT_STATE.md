@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-24 (Phase 9: slice 4 built, D-073; the whole first playable sent to TestFlight; the language pass brought forward)_
+_Last updated: 2026-09-24 (Phase 9: slice 4 built, D-073; the whole first playable sent to TestFlight; the language pass done, D-074)_
 
 ## Current phase
 
@@ -17,7 +17,7 @@ Build the whole MVP (`product/MVP.md` → build order): **slice 2** the Quiet an
 ## Resume here (next session)
 **Each slice runs in its own session, started by the previous one (D-069).** The working branch is `claude/phase-8-continuation-ttngwy` (everything since Phase 8's merge; not yet merged into `main`).
 1. **Dan: play the first playable on TestFlight** (all four slices, D-073), and do Apple setup sitting 3 (trials b and c, `technical/APPLE_SETUP.md` → Sitting 3). Tell Claude anything broken, confusing or hard to read. Then Phase 10 (the personal alpha, on a fresh save) once Dan agrees.
-2. **The language pass, brought forward (Dan, D-073):** every line in the voice of a told tale ("think J. R. R. Tolkien"): whole sentences, a joy to read. The app's own lines (`app/src/content/copy/en.ts`) had a first pass in the slice 4 session; the story's sealed lines (`app/src/content/sealed/`, `narrative/sealed/`) are rewritten in their own session, never shown to Dan outside the game (D-015). Dan judges the voice on his phone.
+2. **The language pass: done (D-073, D-074).** The app's own lines had their first pass in the slice 4 session; the story's own lines were rewritten in their own session (D-074: every line as whole sentences in the voice of a told tale, facts and ids unchanged, a critic and one revision, the sealed docs kept in step). **Dan judges the voice on his phone** in the next TestFlight build, and says what still reads badly.
 3. **The real paintings** (D-067, D-072): the painting kit gained materials (rock salt, cloth, leather, tin, paper, wood, slate), polish, a flat stain, close-view stone, a gold correction, a still flame, carved marks and stricter automatic checks, all opt-in: the approved hall and the three samples re-bake pixel-identical. Week 1's five were repainted over three critiqued rounds (a separate critic each round, `app/paint/places/CRITIQUE-W1-2…4.md`, sealed). **One reached the bar and is in the app: the Lamp Hall (`pt-b-1.A`).** Still short, and on their stand-ins: `pt-b-1.B` 7/10 and `pt-b-1.C` 7/10 (each one focused scene change from 8, per CRITIQUE-W1-4), the pick niche 6/10, below the lamp 5/10 (close views of small cut things are the kit's weak spot). Next painting session: those four from CRITIQUE-W1-4's "What is still short", then week 2's five (they reuse week 1's settings), ~5 a week alongside the slices. Painted places are listed in `core/game.ts` (PAINTED) and carried in `ui/paintings.ts`; a test keeps the two in step.
 4. **TestFlight:** Dan finished Apple setup sitting 2 (all four secrets in; TestFlight installed). **The first build reached Apple** (workflow run 36011344034, 2026-09-24: signed in the cloud and uploaded in under 4 minutes): trial (d), the pipeline, passes. It carried slices 1–2. **The whole first playable reached Apple** (run 36021450486, 2026-09-24, started by hand: a commit touching no app files does not start the workflow). Dan does sitting 3 (trials b and c) when he tests, and reports.
 5. **The web link:** https://claude.ai/artifact/TcH91A1SxeEvEnLJbRE4pi (private; one link, updated in place each slice).
@@ -157,10 +157,10 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 ## Unresolved blockers
 
 - None.
-- **Jobs queued for later phases:** the language pass on every line the app says (**after Dan has played the first playable for 3–4 weeks**, D-046; nothing before it is final wording); a memory and recap system, a before → now re-read view, a guaranteed reward rhythm and high-day extras (D-035, Phase 5–6); jobs and targets as editable data (D-030, now in `technical/DATA_MODEL.md`).
+- **Jobs queued for later phases:** a further language pass after Dan has played for 3–4 weeks (D-046; the first one was brought forward, D-073, D-074); a memory and recap system, a before → now re-read view, a guaranteed reward rhythm and high-day extras (D-035, Phase 5–6); jobs and targets as editable data (D-030, now in `technical/DATA_MODEL.md`).
 - Housekeeping (non-blocking): rename the GitHub repo to the product name (D-071) once no session is building on it. (Privacy verified: private.)
 - The app's name: **The Long Answer** (D-071). Rename the GitHub repo after the build.
 
 ## Recommended next action
 
-**Dan:** when the build arrives in TestFlight, install it and play; do Sitting 3 (`technical/APPLE_SETUP.md`); say what is broken, confusing or hard to read. **Claude:** the language pass on the sealed story lines (its own session), then the real paintings. To resume by hand, paste: "Read CLAUDE.md and docs/CURRENT_STATE.md on branch claude/phase-8-continuation-ttngwy, then continue Phase 9."
+**Dan:** when the build arrives in TestFlight, install it and play; do Sitting 3 (`technical/APPLE_SETUP.md`); say what is broken, confusing or hard to read. **Claude:** the real paintings, and a further language pass on anything Dan still finds hard to read. To resume by hand, paste: "Read CLAUDE.md and docs/CURRENT_STATE.md on branch claude/phase-8-continuation-ttngwy, then continue Phase 9."

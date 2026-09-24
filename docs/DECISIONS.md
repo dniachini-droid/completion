@@ -768,3 +768,15 @@
 - **Alternatives:** Sunday-evening week close (kept for later: one reliable moment first); bedtime kept by any Goodnight before bedtime (rejected: a tap at noon would earn a find, rule 10); a plan made by "Plan my week" wiping lines Dan added himself (rejected: they are kept beside it).
 - **Consequences:** new screens Camp, Morning, Welcome, Daybook, Week, Rhythms, Satchel, and a foot on Today (Satchel · Week · Daybook · Camp); 33 new rule tests (84 in all); the flow walk now runs through camp, a morning, the week close with its plan, the satchel, the rhythms and a return after days away. PROTOTYPE_NOTES updated.
 - **Reversible:** Yes.
+
+## D-074 — The language pass on the story's own lines (Claude's routine calls, D-006; Dan's brief, D-073)
+- **Date:** 2026-09-24
+- **Context:** Dan asked for every line to read like a told tale (D-073: "written like a story", "full sentences that are a joy to read", "think J. R. R. Tolkien"). The app's own lines had their first pass in the slice 4 session; the story's sealed lines (what the places, steps, counts, finds, camps, passages, "I can't start" and the week close say) had theirs in a separate session, so Dan never sees them outside the game (D-015).
+- **Decision (Claude, routine):**
+  1. **How, never what.** Every line kept its id, condition, order and facts; quoted record text, anything a character wrote, the names of places and the fixed names of the marks are unchanged. Only the saying changed: whole sentences with their verbs, no clipped lists or chains of colons and semicolons, plain words with rhythm, never fake-archaic. Present tense stays for what is in front of Dan.
+  2. **A critic, then one revision.** After the first pass (261 of 420 lines rewritten), a second Claude read every line against Dan's brief (first pass 6.5/10, the old lines 3/10) and pushed back on a repeated sentence shape, template-like lines, stiff long-winded phrasing and a few remaining fragments; the revision took about 90 of its notes and refused the few that would have changed a fact.
+  3. **The sealed docs stay the authority:** the story docs were changed to match line for line, their voice rules rewritten for the new voice, and lines that had been composed by a rule are now written out there.
+  4. One unused app line that hinted at the place's age was removed.
+- **Alternatives:** past-tense narration throughout (rejected for now: the lines show where Dan is at this moment and many recur; the told-tale feel comes from whole sentences and rhythm); rewriting the characters' own writing too (rejected: it is theirs, and some of it is evidence).
+- **Consequences:** the new words go to Dan's phone in the next TestFlight build. **Dan judges the voice on his phone**; anything still hard to read goes into the next pass. The later story weeks, not yet in the app, keep the old voice until they are built.
+- **Reversible:** Yes (the old lines are in the history).
