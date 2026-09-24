@@ -80,6 +80,8 @@ _Verbatim, lightly trimmed of filler words. A = Lamp and Stone, B = Engraved Lig
 
 - **Setting the delve's length (D-033):** of three versions (dial, hall slider, flame) Dan picked **the dial**: "I like A option for the delve timer. Make sure the bar is centred though and well aligned." He still wants to try B and C (kept in `delve-set-variants.html`).
 
+- **Second look at D:** "Reading a record is better. But the strip moves up and down depending on which one you select, because it changes the amount of text at the bottom. And there's a lot of empty space at the top of the screen. Move the symbols further up, so whatever you select, the strip doesn't jump. It stays static." / "I absolutely love the cutting of a word. The only thing: when the symbols appear on the door, because the door is 3D and we're looking down a hallway, the symbols shouldn't be printed flat. They should look slanted, rendered as if they're actually on the door." / "The head of the stair is just amazing. It is so good. It is beautiful. I like stuff like that." / "Arrived at the Salt Gallery looks really beautiful as well." / "The lamp, in all of them, does look a little cheap. The flame looks good. Not critical, but something I notice."
+
 ### 10. Sound
 - Yes to sound; he leaves the choice to Claude's recommendation. (Audio is later; recommendation recorded below.)
 
