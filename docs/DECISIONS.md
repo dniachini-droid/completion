@@ -310,3 +310,12 @@
 - **Consequences:** The directions and screens are built by the default model.
 - **Dan's pick (same morning):** "I like the warm one. It's awesome." That is X, with the warm lamp and warm Begin button: the default model's screen. The result stands, now confirmed by Dan.
 - **Reversible:** Yes.
+
+## D-030 — Jobs and weekly targets are Dan's to edit; none are hard-coded
+- **Date:** 2026-09-24
+- **Context:** Seeing the mock-ups, Dan checked that "the course", "gym", "Spanish" and so on are examples: "they are things I want to do but it can't be how the app is hard coded." The docs implied this (P6 "Dan set them himself", P9 "typing one line") but never said it outright. He asked for it to be recorded.
+- **Decision:** Every kind of job and every weekly target is Dan's data. He can add, change, rename or remove them at any time. The ones named in the docs and on the mock-ups are his current set, used as examples. Rules that depend on a kind of job (leaning towards what's avoided, P5; "one hour of course work counts as done") apply to whatever he sets, not to fixed names.
+- **Alternatives:** none considered; this makes explicit what was always intended.
+- **Rationale:** P9 (the app suggests, Dan chooses); his life and goals will change over a year of play.
+- **Consequences:** `DESIGN_PRINCIPLES.md` (P6, P9) and `technical/DATA_MODEL.md` updated. Phase 7 designs the data this way. How Dan edits targets without it becoming admin (P15, "no productivity theatre") is a Phase 5–6 UX question.
+- **Reversible:** No need; it is a baseline requirement.

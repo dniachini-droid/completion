@@ -45,6 +45,8 @@ Recurring targets are weekly, and Dan set them himself:
 
 Each week starts fresh. Misses never carry over.
 
+*Clarified 2026-09-24 (D-030):* **these are Dan's current targets, not built into the app.** Dan can add, change, rename or remove any recurring target, and any kind of job, at any time. Every job name anywhere in the docs or mock-ups (gym, Spanish, the course, the cat's medication) is an example.
+
 *Amended 2026-09-23 (D-020):* **a non-punitive trail** is allowed alongside the weekly rhythm: each day complete adds a marker, relics come from markers in total, and after a gap the trail branches rather than restarting, so nothing ever visibly breaks (`game/TOOLS.md` §5; revised by D-023). Punitive streaks stay excluded.
 
 **7. Nothing piles up.**
@@ -54,7 +56,7 @@ No overdue counts, no red badges, and no list on the opening screen. *Amended 20
 When something is missed, the job waits, shrinks or changes route, or the app asks what happened. No lost progress, no shame, no guilt language (MASTER_BRIEF §16).
 
 **9. The app suggests, Dan chooses.**
-The app proposes the day's main jobs. Dan accepts them or swaps from a short menu. He adds one-off jobs by **typing one line**. No estimating, tagging or scoring. The app learns over time; Dan doesn't administer it.
+The app proposes the day's main jobs. Dan accepts them or swaps from a short menu. He adds one-off jobs by **typing one line**. The kinds of job and the weekly targets are his to edit (D-030); nothing about them is hard-coded. No estimating, tagging or scoring. The app learns over time; Dan doesn't administer it.
 
 **10. Life happens, and it counts.**
 A real unplanned obligation (e.g. an appointment) can be added afterwards as one of the day's main jobs. The rest of the day shrinks to fit.
