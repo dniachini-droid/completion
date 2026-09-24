@@ -77,7 +77,7 @@ body.h-held .next.st.early.later { display: none; }
       <p class="soft st early">There’s something in the step after this one.</p>
       <p class="soft st later">One more, and the day is done.</p>
       <div class="btn-row lead">
-        <a class="btn st early g" href="delve-set.html">Begin</a>
+        <a class="btn st early g" href="delve.html#cat-25">Begin</a>
         <a class="btn st later g" href="delve.html#second">Begin</a>
         <button class="btn-quiet" aria-label="Swap for another job"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 5h9.5L10 2.5M13 11H3.5L6 13.5"/></svg><span>Swap</span></button>
       </div>
@@ -89,7 +89,7 @@ body.h-held .next.st.early.later { display: none; }
       <p class="soft" id="carryleft">13 minutes left in this delve</p>
       <div class="btn-row lead">
         <a class="btn" id="carrygo" href="delve.html#resume-course-13">Carry on</a>
-        <a class="btn-quiet" id="carryfresh" href="delve.html"><span>Start afresh</span></a>
+        <a class="btn-quiet" id="carryfresh" href="delve-set.html"><span>Start afresh</span></a>
       </div>
       <div class="cant"><button class="text-link"><span>I can’t start</span></button></div>
     </div>
@@ -102,7 +102,7 @@ body.h-held .next.st.early.later { display: none; }
     </div>
     <div class="rows">
       <div class="row done"><span class="pip done"></span><span class="t">Gym, then the sauna</span><span class="s">done this morning</span></div>
-      <a class="row st early g" href="delve.html"><span class="pip"></span><span class="t">Course: one hour</span><span class="s">two delves<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5"/></svg></span></a>
+      <a class="row st early g" href="delve-set.html"><span class="pip"></span><span class="t">Course: one hour</span><span class="s">two delves<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5"/></svg></span></a>
       <div class="row done st later done g"><span class="pip done"></span><span class="t">Order the cat’s medication</span><span class="s">done</span></div>
       <div class="row done st done g"><span class="pip done"></span><span class="t">Course: one hour</span><span class="s">done</span></div>
     </div>
@@ -163,10 +163,11 @@ document.querySelectorAll('.seg > button').forEach(function(b){
 });
 /* one morning, three moments: morning.html (early), #later (the cat's medication and first delve done), #done (the day complete) */
 (function(){
-  /* D-036: #held-course-13 | #held-second-13 | #held-cat-13-of-30 (a delve stepped away from, N min left) */
-  var CARRY = { course: ['Course', 'delve.html'], second: ['Course', 'delve.html#second'], cat: ['the cat’s medication', 'delve-set.html'] };
-  function held(){ return location.hash.match(/held-(course|second|cat)-(\d+)(-of-(?:25|30|45|60))?/); }
-  function view(){ var h = location.hash, k = held(); return k ? (k[1] === 'second' ? 'later' : 'early') : (/done/.test(h) ? 'done' : (/later/.test(h) ? 'later' : 'early')); }
+  /* D-036: #held-course-13 | #held-second-13 | #held-cat-13-of-30 (a delve stepped away from, N min left).
+     D-037: a delve held inside a run carries the run: #held-course-13-run-3-25-d2 (the second of three delves of 25). */
+  var CARRY = { course: ['Course', 'delve-set.html'], second: ['Course', 'delve.html#second'], cat: ['the cat’s medication', 'delve.html#cat-25'] };
+  function held(){ return location.hash.match(/held-(course|second|cat)-(\d+)(-of-(?:25|30|45|60))?(-run-[1-8]-(?:25|30|45|60)-d[1-8])?/); }
+  function view(){ var h = location.hash, k = held(); return k ? ((k[1] === 'second' || /-d[2-8]$/.test(k[4] || '')) ? 'later' : 'early') : (/done/.test(h) ? 'done' : (/later/.test(h) ? 'later' : 'early')); }
   function apply(){
     var v = view(), k = held();
     var b = document.body; b.classList.remove('v-early','v-later','v-done','s-day','s-day2','s-done','h-held');
@@ -176,7 +177,7 @@ document.querySelectorAll('.seg > button').forEach(function(b){
       b.classList.add('h-held');
       document.getElementById('carryjob').textContent = CARRY[k[1]][0];
       document.getElementById('carryleft').textContent = n + (n === 1 ? ' minute' : ' minutes') + ' left in this delve';
-      document.getElementById('carrygo').setAttribute('href', 'delve.html#resume-' + k[1] + '-' + n + (k[3] || ''));
+      document.getElementById('carrygo').setAttribute('href', 'delve.html#resume-' + k[1] + '-' + n + (k[3] || '') + (k[4] || ''));
       document.getElementById('carryfresh').setAttribute('href', CARRY[k[1]][1]);
     }
   }
