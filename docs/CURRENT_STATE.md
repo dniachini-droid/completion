@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-24 (week planner approved and locked, D-048; step 3 under way)_
+_Last updated: 2026-09-24 (planner locked, D-048; step 3 numbers drafted, D-049)_
 
 ## Current phase
 
@@ -16,7 +16,7 @@ Write the chosen game up as one clear concept, stress-test it, and set the numbe
 
 ## Resume here (next session)
 0. The week planner is **approved and locked** (D-048; `game/PLANNER.md`). Rhythms are folded into the game docs.
-1. Steps 1–2 are done: `product/CONCEPT.md` is written and stress-tested (`product/STRESS_TEST.md`, D-043). Continue `product/PHASE5_PLAN.md` at **step 3** (the numbers; `STRESS_TEST.md` §5 adds seven inputs, including a weekly floor), then step 4. Commit and push after each step.
+1. Steps 1–3 are done: `product/CONCEPT.md`, `product/STRESS_TEST.md` (D-043), the numbers in `game/BALANCING.md` (D-049, draft). Next: **step 4**, the first playable's contents list. Commit and push after each step.
 2. Bring Dan the concept page and the numbers to review (step 5). Ask him only about taste and priorities. (The two stress-test points are already answered, D-044.)
 3. The sealed story-fix session (D-035) runs in its own session, before the first playable is built.
 
@@ -44,7 +44,7 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 - [x] Dan agrees how Phase 5 runs: one synthesis of the chosen concept, no new concepts (D-042).
 - [x] `product/CONCEPT.md` written and stress-tested against the principles (`product/STRESS_TEST.md`, D-043).
 - [x] The week planner designed, reviewed and approved (D-045, D-047, D-048).
-- [ ] The numbers set (as starting guesses, tuned in play): `product/PHASE5_PLAN.md` step 3.
+- [x] The numbers set (as starting guesses, tuned in play): `game/BALANCING.md` (D-049; draft, Dan reviews at step 5).
 - [ ] The first playable's contents list written (step 4).
 - [ ] Dan agrees to move to Phase 6 (MVP).
 

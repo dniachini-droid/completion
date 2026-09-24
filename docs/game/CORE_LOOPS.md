@@ -276,7 +276,7 @@ Kept small, one tap each, and never required to progress:
 
 ### The weekly loop
 - Weekly targets (rhythms, `PLANNER.md`) fill themselves from completed jobs. Each target met is a **Key**, so a good week opens up to five sealed things Dan has already seen. *Amended (D-047):* the week's Key supply is bounded by the game, so adding rhythms never raises it (`ECONOMY.md`); step 3 sets it.
-- **Beyond the target:** gym a 5th time, Spanish past the hour, more course hours. It all counts as steps, and a strongly exceeded target can open a sealed thing on the deep route.
+- **Beyond the target:** gym a 5th time, Spanish past the hour, more course hours. It all counts as steps. ~~a strongly exceeded target can open a sealed thing on the deep route~~ *Replaced (D-049):* it pays in steps and finds; sealed things come only from the week's bounded Key supply (`BALANCING.md` §3).
 - **The week closes itself** Sunday night → Monday morning: a 20-second recap ("this week you went through the lower gate; three records decoded; one of them names the other") and a glimpse of next week's biggest sealed thing. **No planning required. No Sunday admin meeting.** This recap is the Chronicle's weekly page (`TOOLS.md` §6, D-023). *Amended (D-045):* it may end with one quiet offer, "Plan next week? · Plan it for me · Not now", never repeated and never needed.
 - Missed targets: nothing carries over. The gate is still there, still sealed, no worse.
 

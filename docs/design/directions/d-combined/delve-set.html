@@ -220,10 +220,10 @@ body { --scrim-top-h: 300px; --scrim-bottom-h: 52%; }
   stopEls.forEach(function (b) { b.addEventListener('click', function () { settle(+b.dataset.m, true); }); });
 
   /* D-037: the route. One line; time = distance. From "here" (the gold point), each delve of the run is a lit segment in
-     proportion to its minutes, with a short gap for each breather. The Salt Gallery sits at its real distance: about seven
-     delves of 25 (175 minutes of work). The line always shows room for one more delve; past 8 × 25 it compresses gently.
+     proportion to its minutes, with a short gap for each breather. The Salt Gallery sits at its real distance: about eight
+     delves of 25 (200 minutes of work, D-049). The line always shows room for one more delve; past 8 × 25 it compresses gently.
      Four or more delves in one sitting (a long delve) show a side chamber off the line near the run's end: a pull, never a target. */
-  var GALLERY = 175, MAXN = 8, BREATH = 5;
+  var GALLERY = 200, MAXN = 8, BREATH = 5;
   /* D-047: the Course's enough (its hour: 50 minutes of delves) is a small gold mark on the line. Past it is more, never owed.
      #plan-P (from Today on a planned Course day) is passed on to the delve, so Continue can offer the day's room after the hour. */
   var ENOUGH = 50, plan = /plan-([1-8])/.exec(location.hash || '');

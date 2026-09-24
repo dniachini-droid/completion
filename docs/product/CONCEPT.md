@@ -230,7 +230,7 @@ Honest shape, for Phase 6–7 (no tech choices here; D-004, CLAUDE.md).
 
 ## Known gaps, for steps 3–4
 
-Step 2 is done (`product/STRESS_TEST.md`, D-043). Still open:
+Step 2 is done (`product/STRESS_TEST.md`, D-043). Step 3 is drafted: items 1–4 below are set in `game/BALANCING.md` (D-049). Still open:
 1. The numbers: region sizes, distance between named places, route length past each opened place (D-037, D-039); the day's edge and what counts as an absence.
 2. The guaranteed reward rhythm per delve, day and week, **including a weekly floor** so a week with no target met still opens something (D-035, D-043).
 3. What extra effort always unlocks on a high day, and how often a long delve's side chamber holds an authored find (D-035, D-011).

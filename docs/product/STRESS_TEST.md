@@ -127,6 +127,8 @@ The questions: what problem it solves (player / game); does it support the loop;
 
 ## 5. For step 3 (the numbers)
 
+*All seven set in `game/BALANCING.md` (D-049).*
+
 1. The day's edge: about 4 am (F1).
 2. What counts as an absence (how many days) (F9).
 3. When opening late shrinks the day, and by how much (`CORE_LOOPS.md`, "opening late").
