@@ -43,3 +43,13 @@
 - **morning.** The cat job's Begin goes to `delve.html#cat-25`, and the Course row opens `delve-set.html`. Carry on keeps the run suffix, and Start afresh goes to the dial (Course) or `#cat-25` (cat).
 - **delve-set-variants.** Sealed-past places are gone: A/B/C all read *Towards the Salt Gallery*, the stair and "somewhere unlit" glyphs are removed, and the route and hall light reach the Gallery only in proportion (175 min).
 - Shots regenerated: `delve-set`, `delve`.
+
+## Delve: more light (Dan: "more purple light, bright… sparkles, make it pop")
+
+- **Scene.** The painting is lifted out of dark navy into a luminous violet with a touch of magenta and blue. The far opening is now a bright white-violet mouth of light with a soft bloom and slow faint rays, and a gentle pulse of light every 7.5 s. The arches' inner edges catch light that spills down from the top. Brighter nebula haze.
+- **Sparkles.** One cheap canvas: about 46 motes of dust drift in the light, brighter near the opening, and a few twinkle with a small four-point glint. About 14 more come down the tunnel towards you.
+- **Ring.** It is drawn on a canvas now: a faint lit track, a glowing violet-to-white arc with bloom, and a comet tip with a short glow trail. The tip sheds a few sparks and breathes slowly. At a tiny fill the tip is a clean round point (the clipped "D" is gone). A full ring is one even light with no seam. There is a soft lens of light inside the ring, and the arc layer is cached so it only redraws when the fill changes.
+- **Legibility.** Soft edgeless scrims sit behind the heading, the subtitle and the lower text. Measured against the brightest background pixels behind each line, everything is ≥ 4.5:1 at 390 and 360 px.
+- **Reduced motion.** Nothing drifts, pulses or sheds. The arches stand still, spaced down the tunnel (before, they disappeared).
+- **Job label.** In a run (`#run-N-L`) the job reads **Course**, and "the first of six delves" carries the count. "Course: one hour" stays for the no-hash 2 × 25 sample.
+- Checked: running, no hash, `#stepped`, `#run-3-25-breather`, `#finished`, `#cat-60-finish`, 390 × 844 and 360 × 780. Shot regenerated: `delve`.

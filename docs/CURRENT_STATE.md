@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-24, evening (D's final fix round done; Dan reviewing the Netlify zip)_
+_Last updated: 2026-09-24, late evening (D polished; delve rules D-036/D-037; ChatGPT review of the principles waiting)_
 
 ## Current phase
 
@@ -26,13 +26,16 @@ What happened:
 - Also decided today: the delve timer is a glowing ring (D-028); jobs and targets are Dan's to edit (D-030); a language pass on all app copy is a job (D-031); the delve length is adjustable with a dial, 25/30/45/60 (D-033, Dan picked the dial); an outside review of the sealed story (D-034, D-035).
 - Drafts written for Dan's approval: `design/DESIGN_SYSTEM.md`, `design/INTERACTION_NOTES.md`, `design/UX_PRINCIPLES.md`.
 
+**This session (2026-09-24, evening, branch `claude/phase-4-direction-d-4jifz4`):** D's final fix round done (`design/directions/d-combined/REVISION-2.md`); stepping away and finishing a delve (D-036); distance comes from time, runs of delves set on the dial screen, places a working day apart (D-037); the delve screen relit (bright violet, sparkles); how the map scales written into `design/INTERACTION_NOTES.md`; all principles bundled for an outside review (`design/PRINCIPLES_FOR_REVIEW.md`). Zip: `sh docs/design/tools/netlify_zip.sh out.zip`.
+
 **Resume here (next session), in order:**
-1. ~~Final fix round for D~~ **done** (`design/directions/d-combined/REVISION-2.md`). Not done on purpose: the record band's deeper rework and the daybook's stone (both low value, risky on screens Dan likes).
-2. ~~Netlify zip~~ **sent to Dan** (rebuilt with "Step away", D-036) (`sh docs/design/tools/netlify_zip.sh out.zip`). **Now:** Dan walks through D once more and dictates notes; apply them.
-3. **Dan approves D**, the design system, the interaction notes and the UX principles → tick the Phase 4 exit criteria.
-4. **Open a PR into `main` and merge it** (D-006), once Dan says yes.
-5. **Ask Dan to agree to Phase 5** (Concept synthesis), then start it in a new session.
-6. In parallel with Phase 5, before the first playable is built: **the sealed story-fix session** (D-035; its item list is in the sealed folder; top priority: the late-game choice must never look like a promise the fixed story can't keep). Keep Dan's view spoiler-free.
+1. **ChatGPT's review of `design/PRINCIPLES_FOR_REVIEW.md`** (Dan pastes it). Sort each point into act on / decline with reasons; apply what Dan agrees to, in the source docs (`DESIGN_PRINCIPLES.md`, `ANTI_FEATURES.md`, `design/UX_PRINCIPLES.md`, `design/INTERACTION_NOTES.md`, `design/DESIGN_SYSTEM.md`), then rebuild the bundle if useful. Record decisions.
+2. Any last notes from Dan on the latest zip; apply them; send a fresh zip.
+3. Optional (offered to Dan): mock the zoomed-out whole-Site map view.
+4. **Dan approves D**, the design system, the interaction notes and the UX principles → tick the Phase 4 exit criteria.
+5. **Open a PR into `main` and merge it** (D-006), once Dan says yes.
+6. **Ask Dan to agree to Phase 5** (Concept synthesis), then start it in a new session. Phase 5 must set region sizes and step pacing numbers (D-037).
+7. In parallel with Phase 5, before the first playable is built: **the sealed story-fix session** (D-035; its item list is in the sealed folder; top priority: the late-game choice must never look like a promise the fixed story can't keep). Keep Dan's view spoiler-free.
 
 ## Do NOT work on yet
 
@@ -66,6 +69,7 @@ What happened:
 - 2026-09-24 — **Phase 3 complete** (D-026). Phase 4 opened.
 - 2026-09-24 — Taste session done; brief for the three directions written (D-027).
 - 2026-09-24 — Long visual run: three directions built and critiqued; Dan's combined look D built (D-028 to D-033); outside story review planned (D-034, D-035).
+- 2026-09-24 — D's final polish; delve interruptions and finishing (D-036); distance from time and runs of delves (D-037).
 
 ## Unresolved blockers
 
@@ -76,4 +80,4 @@ What happened:
 
 ## Recommended next action
 
-**Dan: start a new session and paste:** "Read CLAUDE.md and docs/CURRENT_STATE.md, then continue Phase 4 from 'Resume here': finish direction D, give me the Netlify zip to review, and guide me through approving it."
+**Dan: start a new session and paste:** "Read CLAUDE.md and docs/CURRENT_STATE.md, then continue Phase 4 from 'Resume here'. Here is ChatGPT's review of docs/design/PRINCIPLES_FOR_REVIEW.md: sort each point into act on / decline (with reasons), apply the ones I agree to, then guide me through approving D." (then paste the review)
