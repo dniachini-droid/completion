@@ -2,7 +2,7 @@
 
 > Phase 5 step 4 (`product/PHASE5_PLAN.md`, D-050). What is in and what is out, sized for the **5–6 week test** (D-023). It feeds Phase 6 (MVP), which cuts it to the smallest true version if needed. Built from `game/GAME_DESIGN.md` → "What the first playable needs", `game/TOOLS.md`, `game/PLANNER.md`, `game/BALANCING.md` and the D mock-ups. Spoiler-free.
 
-_Status: **approved by Dan** (2026-09-24, D-051)._
+_Status: **approved by Dan** (2026-09-24, D-051). Phase 6 cut it to the MVP (`product/MVP.md`, D-053, D-054): the map's whole-Site zoom level waits for a second region; before → now only if the story's weeks 1–6 need it._
 
 ## What it is for
 One question (rule 14): **does wanting to go further in make Dan start real things?** Everything below either helps answer it or makes the answer honest. Small, complete and beautiful (D-004, rule 13).

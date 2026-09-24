@@ -565,3 +565,11 @@
 - **Rationale:** rule 13, rule 14, D-004 (small but beautiful, quickly), D-023 (5–6 weeks), MASTER_BRIEF §61 (qualitative, no invasive analytics).
 - **Consequences:** `product/MVP.md` (new content); `CURRENT_STATE.md`. On Dan's answers: `FIRST_PLAYABLE.md`, `PLANNER.md`, `INTERACTION_NOTES.md` note the cuts. The story-fix session (D-035) gains two jobs: say whether weeks 1–6 need before → now, and supply the content budget.
 - **Reversible:** Yes.
+
+## D-054 — Dan's four answers on the MVP
+- **Date:** 2026-09-24
+- **Context:** the four points in `product/MVP.md` (D-053).
+- **Decision (Dan):** **a painting for every named place** (not one per area, reused); **forecast waypoints on the map stay**; **the morning deep push stays**; **the test notes stay on the phone**, and Dan decides at the end whether to share the summary.
+- **Claude's note, said once:** a painting per place means about 30–35 before the test and about 5 a week after it (about 260 in a year). It is Dan's call on beauty, and it moves the biggest cost of the build into art production.
+- **Consequences:** `product/MVP.md` updated: the MVP now differs from the first playable only by the whole-Site zoom level (out until a second region) and before → now (only if the story needs it). **Phase 7** must choose how the paintings are made at that rate while keeping direction D (D-040). The start of the test moves later accordingly. `FIRST_PLAYABLE.md` and `INTERACTION_NOTES.md` note the zoom cut.
+- **Reversible:** Yes.

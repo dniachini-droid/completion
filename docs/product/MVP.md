@@ -2,10 +2,10 @@
 
 > Phase 6 (MASTER_BRIEF §60–61, D-052). Cut from the approved contents list (`product/FIRST_PLAYABLE.md`, D-051), with the central test written out. **Spoiler-free: Dan reads this.** Numbers come from `game/BALANCING.md`; nothing here changes a rule.
 
-_Status: **draft for Dan** (2026-09-24). Four points wait for him (end of page)._
+_Status: **draft for Dan's approval** (2026-09-24). His four answers are in (D-054)._
 
 ## In one breath
-The MVP is the first playable minus a handful of second doors and extras. Phase 5 already cut the features hard; what is left is the loop itself and what Dan meets in the test's six weeks. **The real size of the build is in paintings and words, not features**, so that is where this page cuts and budgets. The test asks one thing: does wanting to go further in make Dan **start** real things, especially the ones he avoids?
+The MVP is the first playable almost whole. Phase 5 already cut the features hard; what is left is the loop itself and what Dan meets in the test's six weeks. **The real size of the build is in paintings and words, not features**, so that is where this page budgets. The test asks one thing: does wanting to go further in make Dan **start** real things, especially the ones he avoids?
 
 ## What "true" means (the bar for every item)
 An item is in the MVP if **any** answer is yes:
@@ -22,15 +22,15 @@ The thin, complete slice (MASTER_BRIEF §66), exactly as `CONCEPT.md` §2 plays 
 If a later cut ever threatens one link in this chain, the cut loses.
 
 ## The MVP
-Everything in `FIRST_PLAYABLE.md` → "In" stays, **except**:
+Everything in `FIRST_PLAYABLE.md` → "In" stays, except the whole-Site zoom level (out) and before → now (only if needed). Dan's answers (D-054) are in the table.
 
 | Item | MVP | Why |
 |---|---|---|
 | **The map's third zoom level** (the whole Site as a cross-section) | **Out.** Close and Region only | With one region it shows one region. It earns its place with the second (bar 1–4: no) |
-| **Forecast waypoints on the map** | **Out.** The forecast line on the week and Today stays | Same information, said once in words (bar: a second door). *Changes a locked planner item (D-048): Dan's call* |
-| **The deep push called in the morning** | **Out.** "Keep going" after day complete leads to the same deep route, on any day (D-043) | A second door to the same place. The high ceiling (D-011) is untouched: effort is still never turned away. *Dan's call* |
+| **Forecast waypoints on the map** | **In** (Dan, D-054) | Claude proposed dropping them as a second door to the forecast line; Dan keeps the planner as approved (D-048) |
+| **The deep push called in the morning** | **In** (Dan, D-054) | Claude proposed leaving "Keep going" as the only door; Dan keeps both |
 | **Before → now on re-reads** | **Only if** the story's weeks 1–6 change an old reading. The sealed story-fix session says yes or no | No point building a view with nothing to show in the test |
-| **Paintings for places** | **One painted scene per area** (the way in, the first hall, two side galleries, the door, the head of the stair, camp): about 7. Named places inside an area reuse its painting with their own view, light, name and line | About 30 named places arrive in six weeks (≈ 5 a week). A painting each would double the art and delay the start. *Dan's call: this is about beauty* |
+| **Paintings for places** | **A painting for every named place** (Dan, D-054), each alive (D-041) | Claude proposed one per area, reused. Dan chose beauty: about 30–35 paintings for six weeks, and about 5 a week after that. How they are made at that rate is a Phase 7 question |
 
 Also confirmed out, as already listed in `FIRST_PLAYABLE.md` → "Out": the open cells (two marks → one line) wait for a later slice; the test needs guessing and the first word, not a conversation with the walls.
 
@@ -51,7 +51,7 @@ Sized for **six story weeks** from `BALANCING.md` §2–5, plus a little run-ahe
 | Passage lines for the open route | about 120 | `BALANCING.md` §5 |
 | Week close: "learned" lines; the month's "so far" | 18; 2 | §7 |
 | Teasers for "I can't start" | about 30 | one from just ahead, never new story |
-| Painted scenes | about 7, each alive (D-041) | above |
+| Painted scenes | 30–35 (one per named place) plus camp and the areas' views | D-054 |
 
 All of it comes from the sealed story, fixed first (D-035). **Week 7 onward** is drafted during the test, so a good test never ends on an empty Quiet.
 
@@ -132,8 +132,8 @@ Chores are asked about **before** favourites, so politeness doesn't bury the pro
 
 ---
 
-## For Dan (taste and priorities)
-1. **Paintings:** one painted scene per area, reused with a new view and light for each named place in it (quicker to build), or a painting for every named place (more beautiful, much later start)?
-2. **Forecast waypoints on the map:** drop them for the MVP? The forecast line still says where the plan points. (This unlocks a planner item you approved.)
-3. **The morning deep push:** drop it for the MVP? "Keep going" after day complete goes to the same place on any day.
-4. **Your test notes:** kept on the phone, with you deciding at the end whether to share a summary with Claude. All right?
+## Dan's answers (D-054)
+1. **Paintings:** a painting for every named place. Consequence: the art is the biggest single job before the test, and a steady one after it (about 5 a week). Phase 7 must find a way to make them at that rate without losing direction D.
+2. **Forecast waypoints on the map:** kept.
+3. **The morning deep push:** kept.
+4. **Test notes:** on the phone; Dan decides at the end whether to share the summary.
