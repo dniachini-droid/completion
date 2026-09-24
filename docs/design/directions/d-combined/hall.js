@@ -149,10 +149,11 @@
     var S = { stair: o.scene === 'stair' };
     if (S.stair) {
       S.sec = buildSection(HALL_HALF, [.72, .72], -90);
-      S.zFar = 90; S.zLip = 1.05; S.tread = .38; S.riser = .3;
+      S.zFar = 90; S.zLip = 1.05; S.tread = .34; S.riser = .31; S.mistY = -2.4; S.xs0 = -.35;
       S.lights = [
-        { x: 0, y: -26, z: 31, c: [.78, .72, 1.25], k: 260, r: 9 },     /* light from below, far down the stair */
-        { x: 0, y: -9, z: 12, c: [.6, .55, 1.1], k: 22, r: 4 },
+        { x: 0, y: -30, z: 30, c: [.78, .72, 1.25], k: 420, r: 10 },    /* light from below, far down the stair */
+        { x: 0, y: -12, z: 12, c: [.6, .55, 1.1], k: 40, r: 5 },
+        { x: 0, y: -4.5, z: 5, c: [.5, .46, 1], k: 5, r: 2.4 },
         { x: .3, y: 3.2, z: -.6, c: [.5, .47, .95], k: 2.6, r: 2.2 }       /* the lintel's light behind you, falling on the treads */
       ];
       S.fogK = 1 / 30; S.boxes = []; S.niches = []; S.door = null;
@@ -306,12 +307,25 @@
                 var k = Math.max(0, Math.floor((zs - S.zLip) / S.tread) - 1);
                 for (var kk = k; kk < k + 4; kk++) {
                   var hk = -S.riser * (kk + 1), ze = S.zLip + (kk + 1) * S.tread, te = (ze - Oz) / dz;
-                  if (Oy + te * dy <= hk) { tS = (hk - Oy) / dy; hitS = kk + 1; sn = ze; break; }
+                  if (Oy + te * dy <= hk) {
+                    var tq2 = (hk - Oy) / dy;
+                    if (Ox + tq2 * dx >= S.xs0) { tS = tq2; hitS = kk + 1; sn = ze; }
+                    break;
+                  }
                 }
               }
             }
           }
-          if (tS < t) { t = tS; kind = 4; }
+          /* the stair's open side: a sawtooth edge over the lit well */
+          var sideHit = false;
+          if (dx > 0 && Ox < S.xs0 && dz > 0) {
+            var tx = (S.xs0 - Ox) / dx, zx = Oz + tx * dz, yx = Oy + tx * dy;
+            if (zx > S.zLip && tx < tS) {
+              var kx = Math.floor((zx - S.zLip) / S.tread), htop = -S.riser * (kx + 1);
+              if (yx < htop && yx > htop - 1.1) { tS = tx; sideHit = true; hitS = -2; sn = S.zLip + (kx + 1) * S.tread; }
+            }
+          }
+          if (tS < t) { t = tS; kind = sideHit ? 10 : 4; }
         }
         /* solid things: the beam, the ledge */
         var bxk = null, bh = null;
@@ -372,6 +386,8 @@
           nx = 0; ny = 0; nz = -1; u = X + 30; v = Y;
         } else if (kind === 4) {
           nx = 0; ny = 1; nz = 0; u = Z; v = X + 20; fp = dist / f / Math.max(.08, Math.abs(ndy));
+        } else if (kind === 10) {
+          nx = -1; ny = 0; nz = 0; u = Z; v = Y + 40; fpv = dist / f; fp = fpv / Math.max(.1, Math.abs(ndx));
         } else if (kind === 5) {
           nx = bh[1]; ny = bh[2]; nz = bh[3];
           u = nz ? Y * 2 : Z; v = ny ? X * 2 : Y;
@@ -380,7 +396,7 @@
 
         /* albedo and relief */
         var tiltU = 0, tiltV = 0, jmask = 1;
-        if (kind === 1 || kind === 6 || kind === 7 || kind === 9) {
+        if (kind === 1 || kind === 6 || kind === 7 || kind === 9 || kind === 10) {
           stone(u, v, fp, kind === 9 ? .7 : 1.3, kind === 9 ? 1.4 : 2.9, 11, st, fpv);
           var tone = st[0]; tiltU = st[1]; tiltV = st[2]; jmask = st[3];
           albR *= tone; albG *= tone; albB *= tone;
@@ -441,7 +457,7 @@
         /* perturb the normal: tangent frame on the surface */
         if (tiltU || tiltV) {
           var tux, tuy, tuz, tvx, tvy, tvz;
-          if (kind === 1 || kind === 7 || kind === 9) { tux = 0; tuy = 0; tuz = 1; tvx = ny; tvy = -nx; tvz = 0; }
+          if (kind === 1 || kind === 7 || kind === 9 || kind === 10) { tux = 0; tuy = 0; tuz = 1; tvx = ny; tvy = -nx; tvz = 0; }
           else if (kind === 2 || kind === 4) { tux = 0; tuy = 0; tuz = 1; tvx = 1; tvy = 0; tvz = 0; }
           else if (kind === 5) { if (nx) { tux = 0; tuy = 0; tuz = 1; tvx = 0; tvy = 1; tvz = 0; } else if (nz) { tux = 0; tuy = 1; tuz = 0; tvx = 1; tvy = 0; tvz = 0; } else { tux = 0; tuy = 0; tuz = 1; tvx = 1; tvy = 0; tvz = 0; } }
           else { tux = 0; tuy = 1; tuz = 0; tvx = 1; tvy = 0; tvz = 0; }
@@ -471,10 +487,10 @@
 
         /* haze: deeper and brighter toward the far end; a gold bank near the lamp's floor */
         var fz = 1 - Math.exp(-dist * S.fogK), bl = ndx * farDir[0] + ndy * farDir[1] + ndz * farDir[2];
-        var bloom = Math.pow(Math.max(0, bl), 30), fR, fG, fB;
+        var bloom = Math.pow(Math.max(0, bl), S.stair ? 9 : 30), fR, fG, fB;
         if (S.stair) {
           var down = sstep(-.3, -.8, ndy), dd4 = clamp(dist / 40, 0, 1);
-          fR = .025 + .12 * dd4 + .1 * down + .7 * bloom; fG = .022 + .11 * dd4 + .09 * down + .64 * bloom; fB = .07 + .3 * dd4 + .22 * down + 1.0 * bloom;
+          fR = .02 + .06 * dd4 + .05 * down + .12 * bloom; fG = .018 + .055 * dd4 + .045 * down + .11 * bloom; fB = .06 + .16 * dd4 + .12 * down + .22 * bloom;
         } else {
           var dd2 = clamp(dist / S.zFar, 0, 1), dd3 = dd2 * dd2;
           fR = .03 + .16 * dd3 + .6 * bloom; fG = .027 + .15 * dd3 + .56 * bloom; fB = .085 + .38 * dd3 + .9 * bloom;
@@ -486,6 +502,15 @@
           R += warm * 1.0; G += warm * .55; Bc += warm * .2;
         }
         R = R * (1 - fz) + fR * fz; G = G * (1 - fz) + fG * fz; Bc = Bc * (1 - fz) + fB * fz;
+        if (S.stair && dy < 0) {
+          /* a level bank of lit mist lies in the stairwell: the stair goes down into it */
+          var yM = S.mistY, te2 = (yM - Oy) / dy;
+          if (t > te2) {
+            var inl = (t - te2) * dl, mf = 1 - Math.exp(-inl / 3.2), deep = clamp(-(Y - yM) / 6, 0, 1);
+            var mr = .2 + .3 * deep, mg = .18 + .27 * deep, mb = .5 + .55 * deep;
+            R = R * (1 - mf) + mr * mf; G = G * (1 - mf) + mg * mf; Bc = Bc * (1 - mf) + mb * mf;
+          }
+        }
 
         /* tone: soft shoulder, then display gamma */
         var ex2 = 1.7;

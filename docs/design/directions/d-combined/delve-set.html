@@ -292,7 +292,7 @@ body.v-c .hall .hall-lamp { opacity: 0; }
   function placeDialStops() {
     var box = document.querySelector('.var.a .stops');
     box.innerHTML = ''; stopEls = stopEls.filter(function (s) { return !box.contains(s); });
-    var st = document.getElementById('stage').getBoundingClientRect(), r = dial.getBoundingClientRect();
+    var st = document.querySelector('.var.a').getBoundingClientRect(), r = dial.getBoundingClientRect();
     var cx = r.left - st.left + r.width / 2, cy = r.top - st.top + r.height / 2, R = r.width / 2 + 38;
     box.style.cssText = 'position:absolute;inset:0;pointer-events:none';
     makeStops(box, function (b, m) {
@@ -355,7 +355,7 @@ body.v-c .hall .hall-lamp { opacity: 0; }
 
   /* ---------- B: light down the painted hall ---------- */
   var fx = document.getElementById('hallfx'), fxParts = null;
-  var Z = { start: 3.0, 25: 9, 30: 10.6, 45: 15.5, 60: 25 };
+  var Z = { start: 2.6, 25: 6.2, 30: 7.2, 45: 10.5, 60: 17 };
   function zOf(v) {
     if (v <= 30) return Z[25] + (Z[30] - Z[25]) * (v - 25) / 5;
     if (v <= 45) return Z[30] + (Z[45] - Z[30]) * (v - 30) / 15;
@@ -375,21 +375,22 @@ body.v-c .hall .hall-lamp { opacity: 0; }
       '<radialGradient id="pool"><stop offset="0" stop-color="#b9b3ff" stop-opacity=".55"/><stop offset="1" stop-color="#8f86ff" stop-opacity="0"/></radialGradient>' +
       '<filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2"/></filter>';
     var g = el('g', { style: 'mix-blend-mode:screen' }, fx);
-    var band = el('path', { fill: '#a49cff', opacity: .38, filter: 'url(#soft)' }, g);
-    var trail = el('path', { fill: 'none', stroke: '#b9b3ff', 'stroke-width': 3, 'stroke-linecap': 'round', opacity: .8, filter: 'url(#soft)' }, g);
-    var trailCore = el('path', { fill: 'none', stroke: '#fff', 'stroke-width': 1, 'stroke-linecap': 'round', opacity: .8 }, g);
-    function mark(z, kind) {
-      var p = proj(0, 0, z), s = Math.max(.35, 7 / z);
+    var bg = el('linearGradient', { id: 'bandg', gradientUnits: 'userSpaceOnUse', x1: 0, x2: 0, y1: H, y2: 0 }, d);
+    var s0 = el('stop', { offset: 0, 'stop-color': '#8f86ff', 'stop-opacity': 0 }, bg), s1 = el('stop', { offset: 1, 'stop-color': '#d9d6ff', 'stop-opacity': .75 }, bg);
+    var band = el('path', { fill: 'url(#bandg)', filter: 'url(#soft)' }, g);
+    var trail = el('path', { fill: 'none', stroke: 'none' }, g), trailCore = el('path', { fill: 'none', stroke: 'none' }, g);
+    function mark(z, kind, x) {
+      var p = proj(x || 0, 0, z), s = Math.max(.45, 8 / z);
       var m = el('g', { transform: 'translate(' + p[0].toFixed(1) + ' ' + p[1].toFixed(1) + ') scale(' + s.toFixed(3) + ')' }, fx);
       if (kind === 'arch') el('path', { d: 'M-14 0 V-18 Q-14 -34 0 -36 Q14 -34 14 -18 V0', fill: 'none', stroke: '#ece9ff', 'stroke-width': 2 / s * .6 }, m);
       if (kind === 'stair') el('path', { d: 'M-18 -10 H-8 V-3 H2 V4 H12 V10', fill: 'none', stroke: '#ece9ff', 'stroke-width': 2 / s * .6, 'stroke-linejoin': 'round' }, m);
       if (kind === 'unlit') { el('path', { d: 'M-16 0 V-22 Q-16 -40 0 -42 Q16 -40 16 -22 V0', fill: 'none', stroke: 'rgba(226,224,255,.8)', 'stroke-width': 2 / s * .5, 'stroke-dasharray': (4 / s * .5) + ' ' + (5 / s * .5) }, m); }
       return m;
     }
-    var m25 = mark(Z[25], 'arch'), m45 = mark(Z[45], 'stair'), m60 = mark(Z[60], 'unlit');
+    var m25 = mark(Z[25], 'arch', -.75), m45 = mark(Z[45], 'stair', .8), m60 = mark(Z[60], 'unlit', 0);
     var pool = el('ellipse', { fill: 'url(#pool)' }, g);
     var orb = el('circle', { fill: 'url(#orb)' }, g);
-    fxParts = { band: band, trail: trail, core: trailCore, orb: orb, pool: pool, m25: m25, m45: m45, m60: m60 };
+    fxParts = { bandg: bg, band: band, trail: trail, core: trailCore, orb: orb, pool: pool, m25: m25, m45: m45, m60: m60 };
   }
   function renderHall(v) {
     if (!fxParts) return;
@@ -400,13 +401,15 @@ body.v-c .hall .hall-lamp { opacity: 0; }
     fxParts.trail.setAttribute('d', dd);
     var Lp = [], Rp = [];
     for (var zz = Z.start; zz <= z1 + .01; zz += Math.max(.3, (z1 - Z.start) / 30)) { var a = proj(-.32, .02, zz), b = proj(.32, .02, zz); Lp.push(a[0].toFixed(1) + ' ' + a[1].toFixed(1)); Rp.unshift(b[0].toFixed(1) + ' ' + b[1].toFixed(1)); }
-    fxParts.band.setAttribute('d', 'M' + Lp.concat(Rp).join(' L') + ' Z'); fxParts.core.setAttribute('d', dd);
+    fxParts.band.setAttribute('d', 'M' + Lp.concat(Rp).join(' L') + ' Z');
+    var pn = proj(0, .02, Z.start);
+    fxParts.bandg.setAttribute('y1', pn[1].toFixed(1)); fxParts.bandg.setAttribute('y2', pe[1].toFixed(1)); fxParts.core.setAttribute('d', dd);
     var po = proj(0, .5, z1), s = Math.max(10, 260 / z1);
     fxParts.orb.setAttribute('cx', po[0]); fxParts.orb.setAttribute('cy', po[1]); fxParts.orb.setAttribute('r', s * 1.3);
     fxParts.pool.setAttribute('cx', pe[0]); fxParts.pool.setAttribute('cy', pe[1]); fxParts.pool.setAttribute('rx', s * 4); fxParts.pool.setAttribute('ry', s * 1.2);
     fxParts.m25.setAttribute('opacity', .95);
     fxParts.m45.setAttribute('opacity', clamp((v - 33) / 10, 0, 1).toFixed(2));
-    fxParts.m60.setAttribute('opacity', (clamp((v - 48) / 12, 0, 1) * .85).toFixed(2));
+    fxParts.m60.setAttribute('opacity', clamp((v - 48) / 12, 0, 1).toFixed(2));
   }
 
   /* ---------- C: the clay lamp and its flame ---------- */
