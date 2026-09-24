@@ -14,10 +14,13 @@
   transition: transform 3.2s cubic-bezier(.45, 0, .2, 1); will-change: transform; }
 body.answer .stage { transform: translate(var(--tx, 0px), var(--ty, 0px)) scale(1.42); }
 .stage .paint { position: absolute; inset: 0; }
-.lintel-cuts { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; overflow: visible; }
+/* the marks are drawn flat on the lintel's own face (metres × 400), then that face is laid onto the painted
+   beam with a perspective (homography) transform, so strokes, grooves and glow all foreshorten with the stone */
+.lintel-cuts { position: absolute; left: 0; top: 0; z-index: 2; pointer-events: none; overflow: visible; transform-origin: 0 0; backface-visibility: hidden; }
+.lintel-cuts svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; display: block; }
 .cutm { stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 0; transition: stroke-dashoffset .9s var(--ease-in-out), opacity .1s; }
 body.c1 .cutm.c1, body.c2 .cutm.c2 { stroke-dashoffset: 0; opacity: 1; }
-.cutm.lit { filter: drop-shadow(0 0 2px rgba(var(--violet-rgb), 1)) drop-shadow(0 0 6px rgba(var(--violet-rgb), .8)); transition: stroke-dashoffset .9s var(--ease-in-out), opacity .1s, stroke 2s var(--ease) .6s; }
+.cutm.lit { filter: drop-shadow(0 0 8px rgba(var(--violet-rgb), 1)) drop-shadow(0 0 26px rgba(var(--violet-rgb), .8)); transition: stroke-dashoffset .9s var(--ease-in-out), opacity .1s, stroke 2s var(--ease) .6s; }
 body.answer .cutm.lit { stroke: #ffe3a8; }
 .lockflash { opacity: 0; }
 body.lock .lockflash { animation: flash 1.4s ease-out forwards; }
@@ -94,7 +97,7 @@ body.settled .go { opacity: 1; transform: none; pointer-events: auto; }
 <main class="phone">
 <div class="stage" id="stage">
   <div class="paint" id="hall" aria-hidden="true"></div>
-  <svg class="lintel-cuts" id="cuts" aria-hidden="true"></svg>
+  <div class="lintel-cuts" id="cuts" aria-hidden="true"></div>
 </div>
 <div class="fog" aria-hidden="true"><i class="drift-a"></i><i class="drift-b"></i></div>
 <div class="grain" aria-hidden="true"></div>
@@ -163,15 +166,34 @@ body.settled .go { opacity: 1; transform: none; pointer-events: auto; }
   /* the two marks, cut into the rod-shaped blank on the lintel itself (sample shapes) */
   var WAKE = 'M7 22 Q20 9 33 22 M12 27 Q20 32 28 27 M20 20 L20 20.1', STONE = 'M10 28 L14 13 L27 10 L31 25 Z M16 21 L25 18';
   var cuts = document.getElementById('cuts'), W = h.W, H = h.H;
-  cuts.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
-  var p1 = h.mapPath(WAKE, .04, .48), p2 = h.mapPath(STONE, .52, .96);
-  var r0 = h.onRod(0, 0), r1 = h.onRod(0, 1), r2 = h.onRod(1, 1), r3 = h.onRod(1, 0);
-  cuts.innerHTML =
-    '<path class="lockflash" d="M' + r0 + 'L' + r1 + 'L' + r2 + 'L' + r3 + 'Z" fill="rgba(228,226,255,.75)" style="filter:blur(3px)"/>' +
-    '<path class="cutm c1" pathLength="1" d="' + p1 + '" fill="none" stroke="#0e0c1e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>' +
-    '<path class="cutm c1 lit" pathLength="1" d="' + p1 + '" fill="none" stroke="#f0eeff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>' +
-    '<path class="cutm c2" pathLength="1" d="' + p2 + '" fill="none" stroke="#0e0c1e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>' +
-    '<path class="cutm c2 lit" pathLength="1" d="' + p2 + '" fill="none" stroke="#f0eeff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>';
+  /* the beam's face in its own plane: u along the beam (2.6 m, near → far), v down from its top (0.85 m); 400 units a metre */
+  var K = 400, FW = 2.6 * K, FH = .85 * K;
+  var q0 = h.onBeam(0, .85), q1 = h.onBeam(2.6, .85), q2 = h.onBeam(2.6, 0), q3 = h.onBeam(0, 0);
+  (function homography(){ /* unit square → the beam's four corners on screen, as a CSS matrix3d */
+    var x0 = q0[0], y0 = q0[1], x1 = q1[0], y1 = q1[1], x2 = q2[0], y2 = q2[1], x3 = q3[0], y3 = q3[1];
+    var dx1 = x1 - x2, dx2 = x3 - x2, dx3 = x0 - x1 + x2 - x3, dy1 = y1 - y2, dy2 = y3 - y2, dy3 = y0 - y1 + y2 - y3;
+    var den = dx1 * dy2 - dx2 * dy1, g = (dx3 * dy2 - dx2 * dy3) / den, hh = (dx1 * dy3 - dx3 * dy1) / den;
+    var a = x1 - x0 + g * x1, bb = x3 - x0 + hh * x3, d = y1 - y0 + g * y1, e = y3 - y0 + hh * y3;
+    cuts.style.width = FW + 'px'; cuts.style.height = FH + 'px';
+    cuts.style.transform = 'matrix3d(' + [a / FW, d / FW, 0, g / FW, bb / FH, e / FH, 0, hh / FH, 0, 0, 1, 0, x0, y0, 0, 1].join(',') + ')';
+  })();
+  /* the rod blank on the face: 0.27–1.17 m along, 0.21–0.63 m up from the underside (as hall.js onRod) */
+  function glyph(d, u0, u1, cls, stroke, sw){
+    var x = (.27 + .9 * u0) * K, w = .9 * (u1 - u0) * K, y = (.85 - .63) * K, hgt = .42 * K;
+    return '<g transform="translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ') scale(' + (w / 40).toFixed(3) + ' ' + (hgt / 40).toFixed(3) + ')">' +
+      '<path class="' + cls + '" pathLength="1" d="' + d + '" fill="none" stroke="' + stroke + '" stroke-width="' + (sw / 4.1).toFixed(2) + '" stroke-linecap="round" stroke-linejoin="round"/></g>';
+  }
+  var rx = .27 * K, ry = (.85 - .63) * K, rw = .9 * K, rh = .42 * K;
+  cuts.innerHTML = '<svg viewBox="0 0 ' + FW + ' ' + FH + '" preserveAspectRatio="none">' +
+    '<rect class="lockflash" x="' + rx + '" y="' + ry + '" width="' + rw + '" height="' + rh + '" rx="' + (rh * .5) + '" fill="rgba(228,226,255,.75)" style="filter:blur(12px)"/>' +
+    /* each mark: the lower lip catching light, the dark groove, then the lit cut in it */
+    glyph(WAKE, .04, .48, 'cutm c1', 'rgba(214,210,255,.35)', 17).replace('translate(', 'translate(0 5) translate(') +
+    glyph(WAKE, .04, .48, 'cutm c1', '#0e0c1e', 14) +
+    glyph(WAKE, .04, .48, 'cutm c1 lit', '#f0eeff', 8) +
+    glyph(STONE, .52, .96, 'cutm c2', 'rgba(214,210,255,.35)', 17).replace('translate(', 'translate(0 5) translate(') +
+    glyph(STONE, .52, .96, 'cutm c2', '#0e0c1e', 14) +
+    glyph(STONE, .52, .96, 'cutm c2 lit', '#f0eeff', 8) +
+    '</svg>';
 
   /* the camera: down the hall toward the opening */
   var d = h.door, dx = (d[0][0] + d[3][0]) / 2, dy = (d[1][1] + d[0][1]) / 2, vp = h.project(0, 1.65, 60);
