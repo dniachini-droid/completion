@@ -183,7 +183,7 @@ Any question Dan can ask attaches to one of these. If a new question arises in l
 
 ## M14 — What did the Linguist choose? (rung 6)
 
-**Answer.** She didn't. She copied out both words, wrote "I do not know if he is right," and remained. The next reader decides. The last line of the story is hers.
+**Answer.** She didn't. She copied out both words, wrote "I do not know if he is right," and remained. She left both for the next reader to read, and wrote that the next one cuts. The last line of the story is hers.
 **Trigger.** Month 10 (her last camp) and month 12 (the coda).
 
 ## M15 — What does the finest cut say? (rung 6)

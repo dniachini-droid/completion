@@ -660,6 +660,29 @@
 - **Context:** Dan played the heart on the web link (D-064). His words: it "ran beautifully"; how it looked "was beautiful"; the slice "was great". Only the timer could be used, so it was too small to test the game's functions. "We don't need to make any more changes. I think we just need to actually build the app now."
 - **Decision (Dan):** no fix round on the heart; close Phase 8 and build the whole app (the MVP's slices 2–4, `product/MVP.md` → build order).
 - **Deviation (recorded, rule 18):** Phase 8's exit criteria asked for all five trials first. Trials (a) and the heart's feel pass; **trials (b) the delve's end with the phone locked, (c) real-app feel and (d) the cloud-Mac pipeline are carried into Phase 9**, done on the first TestFlight build as soon as Dan's Apple setup is finished (`technical/APPLE_SETUP.md`, sittings 2 and 3). The build is already prepared for them: the save is kept by the phone in the app, and a rehearsal brings the delve's alert in seconds. If (b) or (c) fails badly, the option C fallback (D-057) still applies; the rules and data carry over unchanged.
-- **The story (D-035, D-060) is unchanged:** the sealed story-fix session still comes before the first playable's **content** goes in. Slices 2–4 are built now on throwaway content and invented places, so the story session can run in its own session at any point alongside; real content is loaded only after it.
+- **The story (D-035, D-060):** the sealed story job had in fact already run in its own session (D-066, D-067, on `claude/story-job`, not yet merged); Dan asked Claude to check it was done. It was, and it is merged with this phase's work (its decisions renumbered from D-061/D-062, which Phase 8 had also used).
 - **Consequences:** `CLAUDE.md` and `CURRENT_STATE.md` move to Phase 9; the Phase 8 work is merged into `main`. The heart stays as built (the critic's pass was stopped unread).
 - **Reversible:** Yes; the trials still gate the personal alpha (Phase 10).
+
+## D-066 — The story job runs now, in its own session, done before the first playable
+- **Date:** 2026-09-24
+- **Context:** D-060 placed the sealed story-fix session after the prototype. Dan: "Set up the story job to complete before the first playable. Might as well do it properly. Enough with the questions. You have enough now. Just get it done."
+- **Decision:** the story job starts now, in a separate session, in parallel with Phase 8, from a spoiler-free work order (`narrative/sealed/STORY_FIX_BRIEF.md`): the outside review's fixes (the late-choice promise first), week 6 of the clue ledger, the before → now answer, the MVP's full content budget for six story weeks, a painting brief for every named place and camp view, all shaped with ids and conditions for the build. It asks Dan nothing; creative calls are made and recorded in sealed files. It ends with a spoiler-free pull request that Dan approves.
+- **Alternatives:** wait until after the prototype (D-060; slower, and the prototype doesn't need it, but nothing is gained by waiting); run it in this session (Dan follows this chat, so sealed content would be in front of him).
+- **Consequences:** Phase 9 can start straight after Phase 8 without waiting on the story. The painting kit's real places can start as soon as the briefs are merged.
+- **Reversible:** Yes.
+
+## D-067 — The sealed story job is done (spoiler-free)
+- **Date:** 2026-09-24
+- **Context:** D-035, D-066: the story job ran in its own session from the sealed work order, asking Dan nothing ("Enough with the questions… Just get it done."). Every creative call and its reasoning is in the sealed record (`narrative/sealed/STORY_JOB.md`); this entry says only what was done.
+- **Decision (Claude's calls, D-006, D-066):**
+  1. **The outside review's fixes** (D-035), top priority first: the late game's presentation and interaction were changed so it never looks like a promise the fixed story can't keep; then the precision fixes (one character's reasoning, how one mechanism is described in the fiction, one location detail, the wording of two internal rules, and a few smaller ones). The fixed ending and the canon are unchanged; each change followed the retcon procedure (MASTER_BRIEF §55). A fresh reviewer checked them; its findings were fixed.
+  2. **Week 6 of the clue ledger** is complete, every clue with its predetermined answer (rule 6), with fair-play checks.
+  3. **Before → now:** not needed for story weeks 1–6 (the reason is sealed); the sealed notes say which later week first needs it.
+  4. **The MVP's content, written in full** for six story weeks plus a week of run-ahead, meeting every line of `product/MVP.md`'s budget: 33 named places, 15 camps with a view, 30 sealed things (5 a week), the marks with their candidate meanings, the first two words with their cutting cinematics, 72 finds, 160 passage lines, 18 "learned" lines and 2 "so far"s, 30 teasers. The marks come to 14 in six weeks against the MVP's estimate of 8–12; kept, because the story's order puts the first word in week 2–3.
+  5. **48 painting briefs**, one for every named place and camp view, for the painting kit (D-057, D-058).
+  6. **Shaped for the build:** every item has a stable id, a data-model type and when it may appear. Phase 9 will want two small additions to `technical/DATA_MODEL.md`: a "story beat" type and a "stretch" (where on the map) field.
+  7. **One line of `narrative/GAME_BIBLE.md` reworded** (how the deepest door fills: "it fills as you live your weeks"), matching the numbers Dan approved in D-049/D-051. Nothing he already knew changes.
+- **Alternatives:** ask Dan the taste questions (he asked not to be asked); wait for the playtest (only the cadence audit of the later months waits for that, as planned in D-035).
+- **Consequences:** Phase 9 can turn the story into app content without re-deciding anything; the painting kit can start on the real places once this is merged. `CURRENT_STATE.md` and `product/MVP.md` note the answers.
+- **Reversible:** Yes, until clues are planted in the playable.

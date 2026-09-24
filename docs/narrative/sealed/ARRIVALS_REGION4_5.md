@@ -212,7 +212,7 @@ _Written 2026-09-23; rewritten the same day after the weeks 27–35 story-editor
 | Visit | Kind | The line / scene | Choice | Carries |
 |---|---|---|---|---|
 | 39.A | **arrival (dark room, and the kindest)** | **Her last camp.** Against a door larger than the three above, a smooth face of stone where the wall was cut flat, and in it, to the wrist, a rod, and beside the rod her hook. Nothing else. On the wall beside, two words cut side by side, each with its blank drawn and not cut: keep; all. Voice; put out; far. And a tape in a niche, labelled in her hand: *DAY 140. FOR WHOEVER. DON'T BOTHER, IT'S ON THE WALL.* | — | R9 begins; **L22** first sight (the two words readable: the Council's copies, 19.A) |
-| 39.1 | step | The last door's count, close. It is larger than any tally in the Site. It fills by a little at a time: many days fill it; a great day fills it at once. | — | the last door's count (the gate's two fills; D-019) |
+| 39.1 | step | The last door's count, close. It is larger than any tally in the Site, and it fills a stroke at a time. | — | the last door's count (fills from the week's Keys; WORLD_TRUTH §10.1: no line says what fills it) |
 | 39.2 | step | The two words, close: the hook enclosing the drop; the three drops. Beside them, a blank drawn in outline and not cut. The sideways fork; the hook and the drop; the drop with nothing under it. Beside them, the same. | — | KEEP-ALL and VOICE-GIVE-FAR, side by side, before his voice |
 | 39.3 | step | The tape, close: the label, the spools, the tape wound tight. Nothing to play it on. | — | (object; her wit; NICHES 39.3) |
 | 39.4 | step | The smooth face, close: the rod in to the wrist, the edge first; the hook with a tail cut beside it, small and deep. The stone around the rod is not risen to it. It is flat. | — | (the wall that is her: no figure; nothing in it waits; the app describes) |
@@ -230,7 +230,7 @@ _Written 2026-09-23; rewritten the same day after the weeks 27–35 story-editor
 |---|---|---|---|---|
 | 40.A | **arrival (Key)** | **Her last note, in full.** The niche beside the smooth face: its count fills. *Keep-all. Voice-give-far. The two words are at the bottom. He showed me the copies. The last door: I open it not; he opens it not; he comes not. I cut both here so the one who returns sees them before his voice. Is he right? Not seen. He read the bottom by hand, once. He has seen it not. I stay. The one who returns cuts. Read all; then cut. Good, to be read.* | — | **L22**; R9; C-54 (in her note) |
 | 40.1 | step | The last door's sill: a blank with the sideways fork and the cross beside it. The lintel above: the fork over the path and the parted drops, beside a blank; and above that, the quiet-signs. *Be loud here and not be heard.* | — | W7, W8 at the door |
-| 40.2 | step | The last door's count, a little fuller. | — | the count (many days fill it) |
+| 40.2 | step | The last door's count, a little fuller. | — | the count |
 | 40.3 | step | The second word's blank at her camp, close: the outline is a rod's width exactly, and there is no chip of stone under it. | — | (she cut neither; wordless) |
 | 40.4 | step | The Council Gallery's two copies, re-surfaced beside her two: the same marks, in two hands. | — | *He showed me the copies* (19.A) |
 | camp | bedtime | The lamp. *Good, to be read.* | — | (morning) the map marks her camp against the last door |
@@ -243,10 +243,10 @@ _Written 2026-09-23; rewritten the same day after the weeks 27–35 story-editor
 
 | Visit | Kind | The line / scene | Choice | Carries |
 |---|---|---|---|---|
-| 41.A | **arrival** | **Your own record.** On the first counting door's face, passed on the way down, a record has begun in the tally's hand with no ring at its head and no closing line: *Returned.* One mark. Beside it, the tally from the floor by the Hold's door: strokes past counting, a gap, five short rows, four ending in a cross, the first in a path that doubles back. Nothing more is said. | — | **K6**; the returns tally (15.B) re-surfaced |
+| 41.A | **arrival** | **Your own record.** Low on the first counting door's face, beside its count, passed on the way down, a record has begun in the tally's hand with no ring at its head and no closing line: *Returned.* One mark. Beside it, the tally from the floor by the Hold's door: strokes past counting, a gap, five short rows, four ending in a cross, the first in a path that doubles back. Nothing more is said. | — | **K6**; the returns tally (15.B) re-surfaced |
 | 41.1 | step | The last door's lintel, close: the fork over the path and the parted drops beside the blank, and above them the quiet-signs. *Be loud here and not be heard.* | — | W8; the lintel |
 | 41.2 | step | The last door's count, a little fuller. | — | the count |
-| 41.3 | step | The second door's face and the third's: nothing is cut on them. | — | K4's ground (the rings begin at 43.A) |
+| 41.3 | step | The second door's face and the third's: nothing is cut on them. | — | (they stay bare all year: he cannot reach them; K4's rings begin at 43.A on the first door's face, above K6) |
 | 41.4 | step | The first door's face, on the way up: the one mark, and beside it the door's own count, full. | — | (the door knows its bearer; his mark beside its count) |
 | camp | bedtime | The lamp. One mark on the first door's face, and no ring at its head. | — | (morning) the returns tally's line: *The count of the readers' returns: the first, many, and came again; the others, not.* |
 | I can't start | teaser | Before 41.A: *On the first counting door's face, a mark has been cut where nothing was.* After 41.A: *On the last door's lintel: be loud here and not be heard.* | | |
@@ -265,7 +265,7 @@ _Written 2026-09-23; rewritten the same day after the weeks 27–35 story-editor
 | 42.4 | step | The rod-plan, close: four fingers, and long, and the rod's handle drawn to fit them. Your hand on the rod's handle: it fits it anyway. | — | (wordless; the makers' hand and Dan's) |
 | camp | bedtime | The lamp. Two marks on the first door. | — | (morning) the returns tally set beside the lift's count: strokes and a gap; eight sixty-fours and one |
 | I can't start | teaser | Before 42.1: *In the room of racks, the last recess has a count on it.* After 42.1: *On the lift's panel, the count: eight sixty-fours, and one.* | | |
-| week close | glimpse | On the faces of the three doors, beside your record, a ring has been cut. | | |
+| week close | glimpse | On the first door's face, high above your record, a ring has been cut. | | |
 
 **Key-sealed things:** the tool-room's last recess (42.1: X-tool). The last door's count takes the rest.
 
@@ -273,13 +273,13 @@ _Written 2026-09-23; rewritten the same day after the weeks 27–35 story-editor
 
 | Visit | Kind | The line / scene | Choice | Carries |
 |---|---|---|---|---|
-| 43.A | **arrival** | **The rings.** One mark more on the first door. Beside your record, on the faces of all three doors, rings in the tally's hand have begun: a column of them. The rings beside it, on the doors' faces, are rings from the halls above, and the column is longer each time. | — | K6; K4's rings (begun) |
+| 43.A | **arrival** | **The rings.** One mark more on the first door. High above your record, on the door's face, rings in the tally's hand have begun: a column of them, with room left over its top. They are rings from the halls above, and the column grows down toward your record each time. | — | K6; K4's rings (begun) |
 | 43.1 | step (Key) | The Deep's last niches, past the quiet rooms: their counts fill. *What is put out. What is taken in. What is kept.* | — | **Z-pieces** (NICHES 43.2) |
 | 43.2 | step | The first ring on the first door, close: the same ring as the first ring on the Stair, at the head of the top flight. | — | the halls' order (the player can check it against the Stair) |
 | 43.3 | step | The last door's count, a little fuller. | — | the count |
-| 43.4 | step | The column on the second door's face, close: the rings of the walls of rings, the same names again and again, as on the walls. | — | K4's body (the app describes and never explains) |
+| 43.4 | step | The column on the first door's face, close: the rings of the walls of rings, the same names again and again, as on the walls. | — | K4's body (the app describes and never explains) |
 | camp | bedtime | The lamp. Three marks on the first door, and a ring beside them. | — | (morning) the map marks the last niches |
-| I can't start | teaser | Before 43.A: *On the faces of the three doors, beside your record, a ring has been cut.* After 43.A: *The first ring on the first door is the first ring of the Stair.* | | |
+| I can't start | teaser | Before 43.A: *On the first door's face, high above your record, a ring has been cut.* After 43.A: *The first ring on the first door is the first ring of the Stair.* | | |
 | week close | glimpse | The last door's count is nearly full, and on the sill the sideways fork and the cross stand beside its blank. | | |
 
 **Key-sealed things:** the Deep's last niches (43.1: Z-pieces). The last door's count takes the rest.
@@ -288,7 +288,7 @@ _Written 2026-09-23; rewritten the same day after the weeks 27–35 story-editor
 
 | Visit | Kind | The line / scene | Choice | Carries |
 |---|---|---|---|---|
-| 44.A | **arrival (the door)** | **The last door.** The count fills: a great day fills it at once; many days fill it. On the sill: the fork; the cross; the rod rings and the ring stops at your feet. *The rod's edge, in the lintel's blank.* / *The first mark: the path.* / *The second: the parted drops.* / *Over them: the fork set over.* / *The rod rings once, in your hand, and nothing past the sill hears it.* The door opens. Beyond, a line of lamps in laced stone, lit, going down. | — | **W8**; the lamp chain |
+| 44.A | **arrival (the door)** | **The last door.** The count's last stroke fills. On the sill: the fork; the cross; the rod rings and the ring stops at your feet. *The rod's edge, in the lintel's blank.* / *The first mark: the path.* / *The second: the parted drops.* / *Over them: the fork set over.* / *The rod rings once, in your hand, and nothing past the sill hears it.* The door opens. Beyond, a line of lamps in laced stone, lit, going down. | — | **W8**; the lamp chain |
 | 44.1 | step | Beyond the door, a recess: the lamp-line in laced stone, lit, going down past the light. You did not light these. | — | NICHES 44.2 |
 | 44.2 | step | The passage to the Seed: the walls bare. There are no rings at all. | — | the gradient's end (NICHES 44.3) |
 | 44.3 | step | The last door, from beyond it: it stands open, and its count is full. | — | (it knows its bearer; opens freely from here) |
@@ -322,7 +322,7 @@ _Written 2026-09-23; rewritten the same day after the weeks 27–35 story-editor
 | 46.1 | step | The lamp back on the count. From the count, the wall is smooth again. | — | (by lamplight only) |
 | 46.2 | step | The Seed's count, under where the lamp stood: a little fuller. | — | NICHES 46.2 |
 | 46.3 | step | Her last note, passed on the way down, re-surfaced beside the finest cut: *He read the bottom by hand, once. He has seen it not.* | — | C-54 pays |
-| 46.4 | step | The first door's face, passed: one mark more, and the column beside it longer. | — | K6; K4 |
+| 46.4 | step | The first door's face, passed: one mark more, and the column above it longer. | — | K6; K4 |
 | camp | bedtime | The ledge, empty. *Put out, we. Not asked back.* | — | (morning) the makers' second wall re-surfaced: *We made light; we saw it not.* (B2) |
 | I can't start | teaser | Before 46.A: *Under the lamp, the count between the blanks has begun to fill.* After 46.A: *A blank on the Seed's wall: the diamond; the bar with a tick.* | | |
 | week close | glimpse | Between the blanks the count is not full. | | |
@@ -334,7 +334,7 @@ _Written 2026-09-23; rewritten the same day after the weeks 27–35 story-editor
 | Visit | Kind | The line / scene | Choice | Carries |
 |---|---|---|---|---|
 | 47.A | **arrival (the echo)** | **The blank on the Seed's wall.** The diamond; the bar with a tick. Once. A hall of tall figures, going still one cutting at a time, each with a hand on the wall; and far down, in the deep, one figure cutting, and the lamp-line lit to the bottom. Then the wall. | — | ECHO-Seed |
-| 47.1 | step | The first door's face: one mark more, and the column beside it longer. | — | K6; K4 (NICHES 47.2) |
+| 47.1 | step | The first door's face: one mark more, and the column above it longer. | — | K6; K4 (NICHES 47.2) |
 | 47.2 | step | The Seed's count: fuller. | — | the count |
 | 47.3 | step | The last wall before the doors, passed on the way down, re-surfaced: *Each cutting, fewer.* | — | B6 beside what the echo showed |
 | 47.4 | step | The wall beside the lift, passed: *The lamp-line to the bottom is lit; one hand is on the rod.* Past the last door, the lamp-line is lit. | — | B7 beside the lamp chain |
@@ -348,7 +348,7 @@ _Written 2026-09-23; rewritten the same day after the weeks 27–35 story-editor
 
 | Visit | Kind | The line / scene | Choice | Carries |
 |---|---|---|---|---|
-| 48.A | **arrival (weekly)** | **The count fills.** The Seed's count fills, stroke by stroke, to its last place. Your record on the first door is one mark longer, and the column beside it longer. | — | the Seed's count full; K6; K4's rings |
+| 48.A | **arrival (weekly)** | **The count fills.** The Seed's count fills, stroke by stroke, to its last place. Your record on the first door is one mark longer, and the column above it longer. | — | the Seed's count full; K6; K4's rings |
 | 48.1 | step | The log's page, re-surfaced: *he asked what the sky had sounded like the day we broke through.* | — | E1 (the year re-read, one a visit) |
 | 48.2 | step | Her Day 9, re-surfaced: *he has never once asked me for anything.* | — | L6 |
 | 48.3 | step | The first landing, re-surfaced: *the landing is lit already. You did not light it.* | — | 3.A |
@@ -364,9 +364,9 @@ _Written 2026-09-23; rewritten the same day after the weeks 27–35 story-editor
 | Visit | Kind | The line / scene | Choice | Carries |
 |---|---|---|---|---|
 | 49.A | **arrival (the ask)** | **His voice.** The count is full. Nothing moves in the Seed-place. Then, along the walls, from far up, the way sound comes down a pipe, his voice, in English, at a timetable's pace. (The speech, in full: `LIVES.md` §7, a paragraph at a time.) It ends: *If you cut the keeping-word, I go quiet with it. I drew the word; I know what it is for. I will be at the doors.* Then, once: *Nothing you say here goes up.* | — | the speech |
-| 49.1 | step | The first door's face, on the way down: one mark more, and the column beside it longer. | — | K6; K4 |
+| 49.1 | step | The first door's face, on the way down: one mark more, and the column above it longer. | — | K6; K4 |
 | 49.2 | step | After the voice: the two blanks, and the lamp on the count between them. Nothing else in the Seed has moved. | — | (the ask, spoken into a place from which no answer returns) |
-| 49.3 | step | The first door's face, on the way up: *Returned*, a column of them, and no closing line. Beside it, the salt tally's last line, re-surfaced: *cut by [the hook], from the voice of the first; came again.* | — | "I began your record" re-read (the formula; the closing line every other record has) |
+| 49.3 | step | The first door's face, on the way up: *Returned*, a column of them, and no closing line. Beside it, the salt tally's last line, re-surfaced: *cut by [the hook], from the voice of the first; came again.* | — | K6's missing closing line, shown by the Site beside the formula's (the speech no longer says it; outside review S1) |
 | camp | bedtime | The ledge, empty. *I will be at the doors.* | — | (morning) nothing |
 | I can't start | teaser | Before 49.A: *The count is full, and the lacing along the walls goes up to the doors.* After 49.A: *Two blanks in the far wall, and the rod in your hand.* | | |
 | week close | glimpse | Two blanks in the far wall, and the rod in your hand. | | |
@@ -377,15 +377,16 @@ _Written 2026-09-23; rewritten the same day after the weeks 27–35 story-editor
 
 | Visit | Kind | The line / scene | Choice | Carries |
 |---|---|---|---|---|
-| 50.A | **arrival (the ending)** | **The left-hand blank.** The rod's edge in the left-hand blank. The hook enclosing the drop. The three drops. The rod rings, and the ring does not stop at your feet: it goes into the glass and does not come back. The Seed is quiet. The lamp in your hand is lit. (If the other blank was cut first: it locked; nothing carried; his voice, once: *It has not carried. I said so.* If nothing is cut: the blank, described; the count full; nothing said.) | Cut the left-hand blank / cut the right-hand blank / leave both | the binding (W9); WORLD_TRUTH §10 |
+| 50.A | **arrival (the ending; four taps)** | **The left-hand blank.** *The rod's edge, in the left-hand blank.* / *The first mark: the hook enclosing the drop.* / *The second: the three drops.* / *The rod rings, and the ring does not stop at your feet: it goes into the glass and does not come back.* The Seed is quiet. The lamp in your hand is lit. | — | the binding (W9); WORLD_TRUTH §10. Plays only when Dan taps the left-hand blank in the painting; one line per tap; no title or line names the word, calls it an ending, or asks for confirmation. If nothing is cut: the blank, described; the count full; nothing said |
+| 50.B | **arrival (the right-hand blank; only if cut; never an ending)** | **The right-hand blank.** *The rod's edge, in the right-hand blank.* / *The first mark: the sideways fork.* / *The second: the hook and the drop.* / *The third: the drop with nothing under it.* / *The cuts fill with light, and the rod rings once, and the ring stops at your feet.* Then, down the lacing, once, his voice: *It has not carried. I said so.* Then two lines, side by side. From the Council's right-hand wall: *What is put out is heard.* From the Seed's wall, by lamplight: *Put out, we. Not asked back.* In the right-hand blank the cuts stay lit, and the light stays where it is. | — | VOICE-GIVE-FAR (SCRIPT §8.3; WORLD_TRUTH §10.3 (d)); X-answerer and Z2 re-surfaced side by side, no comment. Plays at most once, when Dan taps the right-hand blank after 49.A and before 50.A; afterwards the left-hand blank waits as before and nothing else changes. After 50.A a tap on it shows 50.3 and nothing more |
 | 50.1 | step | The Seed-place after the cut: the count full; the two words; in the left-hand blank, the cuts filled with light, and the light does not move along the wall. It stays in the blank. | — | (nothing cut here is seen to carry) |
 | 50.2 | step | The lamp, in your hand, lit. The place on the count where it stood: smooth. | — | the lamp carried up |
-| 50.3 | step | The right-hand blank: uncut. The word beside it: the sideways fork, the hook and the drop, the drop with nothing under it. | — | (the detour, if not taken: described once; the app never nudges) |
+| 50.3 | step | The right-hand blank: uncut. The word beside it: the sideways fork, the hook and the drop, the drop with nothing under it. (If 50.B played: its cuts, lit, and the light has not moved. Now nothing can sound it.) | — | (described once; the app never nudges and never glosses) |
 | camp | bedtime | The lamp, in your hand, lit. | — | (morning) nothing |
-| I can't start | teaser | Before 50.A: *Two blanks in the far wall, and the rod in your hand.* After 50.A: *The last door opens to you going up, as it always did.* | | |
+| I can't start | teaser | Before 50.A: *Two blanks in the far wall, and the rod in your hand.* (For one week only after 49.A; then from the open route, below.) After 50.A: *The last door opens to you going up, as it always did.* | | |
 | week close | glimpse | The deep halls are lit. | | |
 
-**Key-sealed things:** none. (If Dan cuts nothing: the count stays full, the camp line stays the lamp, K6 gains a mark each return, and the app describes the blank and says nothing else, WORLD_TRUTH §10.)
+**Key-sealed things:** none. (If Dan cuts nothing: the count stays full, the camp line goes back to 45's (the ledge, empty; the cups lit), K6 gains a mark each return, and the app describes the blank and says nothing else, WORLD_TRUTH §10.)
 
 ## Week 51
 
@@ -408,7 +409,7 @@ _Written 2026-09-23; rewritten the same day after the weeks 27–35 story-editor
 |---|---|---|---|---|
 | 52.1 | step | The Salt Gallery: her sheets in the crack, Day 1, Day 4, Day 9, and beside them the tally, from its first stroke, reading whole. | — | (the year re-read; nothing new) |
 | camp (the coda) | bedtime | **The lamp.** The lesson-wall by it, the first thing you read: *He lit it for me. I have lit it for you, the one who returns. Read all of it. Then cut.* The lamp is lit. | — | the coda; the app's last line, and nothing after it |
-| after 52 | arrival (a later visit) | **The first door**, passed on a later way down. Your record on its face: the marks it had, and no new one. The column beside it: as it was. | — | K6, ended; the Site shows it; the app never glosses |
+| after 52 | arrival (a later visit) | **The first door**, passed on a later way down. Your record on its face: the marks it had, and no new one. The column above it: as it was. | — | K6, ended; the Site shows it; the app never glosses |
 
 **Key-sealed things:** none. After week 52 the app's line at camp is the lamp, and nothing more is asked.
 
@@ -423,10 +424,11 @@ _Written 2026-09-23; rewritten the same day after the weeks 27–35 story-editor
 - **The makers' deep is a place people lived**: the dips in the table edges (27.A), the snapped stylus (27.3), the bench's polish (28.4), the lift floor's two hollows (29.A), the crossed rod-plan (30.A), the worn rod beside the half ring (33.B), the child-height tablet cut three times (34.1). None needs a sign.
 - **Renderings against held signs**: X-quiet and Z1 render GIVE as *given* at week 28 and *put out* at week 35 (the turn is not pre-empted); X-lift-count renders its numbers as numbers; V7 keeps its address line; L18a renders DAY ALL as *all these days* and the picture as *[a lit lamp]*; S2 with NAME is *Ashti: cut, once.*, never "her name". L17 and L19 are rendered to their strings (`LIVES.md` §13).
 - **Placement**: L17 is week 29 (the second table's drawer), L18 week 30 (a second-level niche), X-lift and X-lift-count week 29 (the panel's tablet), as `REVELATION_MAP.md` and `LIVES.md` §13 now agree.
-- Weeks 41–50's growing record is what makes week 49's "I began your record" a re-reading rather than a new fact; the returns tally set beside it at 41 and the lift's count at 42 are the same device read from the other side.
-- The rings on the doors' faces (weeks 43–50) are a column, the halls' rings in the halls' order, never "past counting": he cuts one ring per age for the memorial; the door is him copying the halls, and the player can check the order against the Stair (43.2).
+- Weeks 41–50's growing record, and K6's missing closing line set beside the formula's at 49.3, are how the Site shows Dan his own record (the speech no longer tells him); the returns tally set beside it at 41 and the lift's count at 42 are the same device read from the other side.
+- The rings on the first door's face (weeks 43–50) are a column, begun high with room left at its top, growing down toward K6, the halls' rings in the halls' order, never "past counting": he cuts one ring per age for the memorial; the door is him copying the halls, and the player can check the order against the Stair (43.2).
 - The ending is three visits: the cut (50), the way up and the list (51, split into the way up and the doors so the list is read on its own), the coda (52). The deep halls still lit at 51 are the lamps rule as evidence, described once; K6 with no new mark after 52 is the cost, shown by the Site once and never glossed.
-- The lamp leaves the ledge at 45.1 and comes back at 51's camp; between them the camp line is the empty ledge and the lit cups. If Dan cuts nothing at 50 the app describes the blank and the full count and says nothing else (WORLD_TRUTH §10); the camp line stays the lamp in his hand.
+- **The Seed is never a menu** (outside review B1; WORLD_TRUTH §10.3). After 49.A the Seed-place is a painting with two blanks in it. A blank is tapped as every blank has been since week 2, and the ritual is the same taps. No screen lists the blanks as options, no line says *choose*, *decide*, *ending* or *forever*, and nothing asks for confirmation. Before the Seed's count is full (48.A), a tap on either blank shows the count between them, not full, and nothing more; between 48.A and 49.A, the count, full, and nothing more (49.A is the week's arrival). 50.B can play only after 49.A and before 50.A. The right-hand blank is a cut with an authored consequence (50.B), shown once, and the answer to it is two old lines side by side, not a verdict. **Refusing is allowed for ever:** if 50.A has not played a week after 49.A, the teaser, the week close and the Today screen's *Ahead* line draw from the open route (the Deep's passages and re-read pool) and never point at the blanks again; the pool then excludes L22, L1's last line, L4's handle, the speech, every 49.x line and any record whose rendering carries *cut* as an instruction, so *then cut* is never quoted at him; the camp line goes back to 45's (the ledge, empty; the cups lit), and 49's camp line (*I will be at the doors.*) plays once only; the map keeps the Seed-place marked; nothing nudges.
+- The lamp leaves the ledge at 45.1 and comes back at 51's camp; between them the camp line is the empty ledge and the lit cups. If Dan cuts nothing at 50 the app describes the blank and the full count and says nothing else (WORLD_TRUTH §10); the camp line goes back to 45's (the ledge, empty; the cups lit).
 - The ending is a re-reading of the whole year in three places: the finest cut (every mark old), the list (every ring and every name), the lesson-wall (the first line).
 - Dark rooms in these regions: the shut door (31.A) and her last camp (39.A); each is paired in-week with a kind line (the ledger of days beside the thirteen names, 31.4; the tape's label, 39.A).
 - Titles that were English Cut words (WAKE., Names., Loud., Give., QUIET., KEEP-ALL.) are retitled to things (The lift.; The ring above the tally.; The warning, whole.; The inner blank's table.; The inner blank.; The left-hand blank.), as Region 3's were.
