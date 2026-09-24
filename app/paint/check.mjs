@@ -3,12 +3,12 @@
    For each baked painting:
      - no red: nothing reads as red (direction D: "No red anywhere"). Calibrated on the approved
        hall: the lamp's warm light on violet stone (dusky rust-mauve) is part of D and passes
-     - within the palette: hues stay in D's violet-to-gold family. Calibrated on the approved hall (D-070):
+     - within the palette: hues stay in D's violet-to-gold family. Calibrated on the approved hall (D-072):
        blue-violet (200–300°), gold and amber (20–60°), and the dusky mauve-rose between them where the
        lamp's gold meets violet stone (300–20°, not vivid) are all D; what is off is green or cyan
-       (60–200°) and vivid pink or magenta. Before D-070 the hall itself failed at 4.7%
+       (60–200°) and vivid pink or magenta. Before D-072 the hall itself failed at 4.7%
      - cold stone: of the coloured pixels, at least half are blue-violet (the hall: about 90%); the gold
-       is the lamp's, never the whole room (D-070)
+       is the lamp's, never the whole room (D-072)
      - words stay readable: the brightest part of the top band (where the place
        name sits, under its scrim) keeps ink text at 4.5:1 or better
      - size: the image stays under the budget (0.7 MB)

@@ -733,3 +733,17 @@
 - **Decision (Dan):** **The Long Answer**, Claude's recommendation. Under the icon it reads **Long Answer** (the full name is too long for the label).
 - **Consequences:** the app's name, the page title and the icon label change now; the bundle id `com.dniachini.rlrpg` stays (Apple never shows it and it can't change without a new app record). Dan may rename the App Store Connect record (App Information → Name) whenever he likes; TestFlight shows that record's name. The GitHub repository keeps its name for now (renaming it mid-build would disturb the sessions working on it; housekeeping after the build). A proper trademark search before anything goes public (NAMES.md).
 - **Reversible:** Yes, until the app is public.
+
+## D-072 — The painting kit v1: more than one material (Claude's routine calls, D-006)
+- **Date:** 2026-09-24
+- **Context:** Phase 9, the real places' paintings (D-067). The first round of week 1's five, painted from their briefs with the kit as it stood, scored 5–7 of 10 against the approved hall: flat, beige, and every material the same stone. The briefs ask for rock salt, cloth, leather, tin, paper, stone polished by touch and a dark stain, none of which the kit could paint. Spoiler-free: this entry names the kit's tools, never what they paint.
+- **Decision (Claude, routine):**
+  1. **Materials beyond the stone,** each with its own colour, grain and shine: rock salt (beds of grey and white, thin seams, crystals, small glints; pink only at the beds' edges where a brief asks, `salt.pink`), cloth, leather, tin, paper, old wood, slate. Under the Site's violet they stay muted; only the lamp warms them.
+  2. **Marks a scene sets on any surface:** polish (stone rubbed smooth by touch: paler, no chisel, a shine that catches the light and the far haze), a flat dark stain (no relief, no shine), and a tint.
+  3. **Close views:** the pick's dents in cut stone within a few metres (`grain`), and finer soft shadows where close shadows banded (`shadowJitter`). Both off by default, so the hall's long-view stone is untouched.
+  4. **A still flame** in the live layers: a flame that does not gutter, only breathes (`live.flame: 'still'` or a flame's `still`).
+  5. **The automatic palette check recalibrated on the approved hall,** which itself failed the old check (4.7% "off"): the dusky mauve-rose where the lamp's gold meets violet stone is part of direction D; what fails is green or cyan and vivid pink. A new check, **cold stone**: at least half the colour is blue-violet (the hall: 95%), so no painting turns beige.
+  6. **Regression:** after every kit change the regression hall and the three approved samples are re-baked and compared; all four came out pixel-identical. A materials swatch (`paint/regression/materials.js`) and the approved hall's reference picture (`paint/regression/hall-ref.jpg`) join the regression set.
+- **Alternatives:** tinting the one stone per scene (rejected: that is how round 1 went beige); new materials that also changed the hall's stone (rejected: the hall and samples are approved; the new tools are opt-in).
+- **Consequences:** week 1 repainted with the new kit and critiqued each round by a separate critic until 8/10 or three rounds; only paintings at the bar are wired into the app (`core/game.ts` PAINTED, `ui/paintings.ts`; the rest keep their stretch's stand-in).
+- **Reversible:** Yes.

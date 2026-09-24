@@ -29,7 +29,7 @@ export const LIB = /* glsl */ `
 #define M_GLOW 6.
 #define M_DARK 7.
 #define M_FLOOR 8.
-/* materials that are not the Site's stone (kit v1, D-070): each its own colour, grain and shine */
+/* materials that are not the Site's stone (kit v1, D-072): each its own colour, grain and shine */
 #define M_SALT 9.      /* rock salt: banded grey and white (pink at the band edges: the scene's salt.pink), crystalline, glinting */
 #define M_CLOTH 10.    /* canvas, wool: matt, a fine weave */
 #define M_LEATHER 11.  /* dark brown, creased, a low sheen */

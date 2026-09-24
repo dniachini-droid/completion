@@ -1,4 +1,4 @@
-/* Regression, not a place: the kit's materials side by side (D-070), so a kit change that alters one shows.
+/* Regression, not a place: the kit's materials side by side (D-072), so a kit change that alters one shows.
    Back wall, left to right: rock salt (pink edges at .5), cut stone polished by touch in a band, a flat dark stain.
    On a cut-stone floor: cloth, leather, tin, paper, wood, slate. Violet light from the left, a clay lamp at the right. */
 export default {
