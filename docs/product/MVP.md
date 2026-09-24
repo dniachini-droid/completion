@@ -2,7 +2,7 @@
 
 > Phase 6 (MASTER_BRIEF §60–61, D-052). Cut from the approved contents list (`product/FIRST_PLAYABLE.md`, D-051), with the central test written out. **Spoiler-free: Dan reads this.** Numbers come from `game/BALANCING.md`; nothing here changes a rule.
 
-_Status: **draft for Dan's approval** (2026-09-24). His four answers are in (D-054)._
+_Status: **approved by Dan** (2026-09-24, D-055), with his four answers (D-054)._
 
 ## In one breath
 The MVP is the first playable almost whole. Phase 5 already cut the features hard; what is left is the loop itself and what Dan meets in the test's six weeks. **The real size of the build is in paintings and words, not features**, so that is where this page budgets. The test asks one thing: does wanting to go further in make Dan **start** real things, especially the ones he avoids?

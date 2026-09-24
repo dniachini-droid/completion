@@ -573,3 +573,10 @@
 - **Claude's note, said once:** a painting per place means about 30–35 before the test and about 5 a week after it (about 260 in a year). It is Dan's call on beauty, and it moves the biggest cost of the build into art production.
 - **Consequences:** `product/MVP.md` updated: the MVP now differs from the first playable only by the whole-Site zoom level (out until a second region) and before → now (only if the story needs it). **Phase 7** must choose how the paintings are made at that rate while keeping direction D (D-040). The start of the test moves later accordingly. `FIRST_PLAYABLE.md` and `INTERACTION_NOTES.md` note the zoom cut.
 - **Reversible:** Yes.
+
+## D-055 — The MVP approved; Phase 6 closed; Phase 7 (technical architecture) opened
+- **Date:** 2026-09-24
+- **Context:** Phase 6's exit criteria: `product/MVP.md` written (D-053), the central test written in it, Dan's four answers folded in (D-054).
+- **Decision (Dan):** "Proceed." The MVP and its test are approved; Phase 6 is closed and merged into `main`; Phase 7 (MASTER_BRIEF §62–66) opens in a new session.
+- **Carried into Phase 7:** the requirements in `FIRST_PLAYABLE.md` (the delve's end heard or felt with the phone locked; state survives restarts; all copy in one place, D-046; jobs and rhythms as data, D-030; planned / moved / done kept, never shown, D-045); the test notes on the phone only, with a summary Dan may share (D-054); **how a painting per named place is made at about 5 a week in direction D** (D-054). Still pending in parallel: the sealed story-fix session (D-035) with the MVP's content budget; Dan's phone check of the planner screens (D-047).
+- **Reversible:** Phase changes need Dan's agreement.
