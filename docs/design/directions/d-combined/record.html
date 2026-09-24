@@ -16,7 +16,11 @@
 
 /* the reading band: a strip of the face cut smooth and polished, so the line of marks sits in a
    deliberate channel, with the tally scratches running on above and below it (Dan's note) */
-.band { position: relative; margin-top: 8px; padding: 22px 0 16px; }
+.phone { --band-top: 226px; --band-h: 130px; }
+/* the strip never moves (Dan, second look): it is pinned to the screen at a fixed height from the top,
+   and the header above it sits in a fixed-height block, so nothing below can push it */
+.upper { flex: none; height: calc(var(--band-top) + var(--band-h) - var(--safe-t)); }
+.band { position: absolute; left: 0; right: 0; top: var(--band-top); height: var(--band-h); margin: 0; padding: 22px 0 16px; }
 .band::before { content: ""; position: absolute; inset: 0; pointer-events: none;
   background:
     radial-gradient(60% 90% at 50% 45%, rgba(206, 202, 255, .16), rgba(206, 202, 255, 0) 70%),
@@ -69,9 +73,12 @@
 /* what you know of the chosen mark: out in the open */
 .readout { margin: 12px 0 28px; }
 .readout .label-line { margin-bottom: 10px; }
-.readout .know { font-family: var(--life); font-size: 18px; line-height: 1.4; color: var(--ink); min-height: 50px; }
+.readout .know { font-family: var(--life); font-size: 18px; line-height: 1.4; color: var(--ink); height: calc(18px * 1.4 * 3); overflow: hidden; }
 .readout .know em { font-style: italic; color: var(--violet-hi); }
-.choices { margin-top: 14px; grid-auto-flow: row; grid-template-columns: 1fr 1fr; gap: 12px var(--gap); }
+.choices { margin-top: 14px; grid-auto-flow: row; grid-template-columns: 1fr 1fr; grid-template-rows: 54px 54px; align-content: start; gap: 12px var(--gap); }
+/* the answer area is one fixed size, sized for its longest state (three lines, two rows of guesses) */
+.readout { flex: none; }
+.choices { height: calc(54px * 2 + 12px); }
 /* the guesses are the screen's action: lit boxes, the chosen one full of light */
 .choices > button { min-height: 54px; font-family: var(--life); font-style: italic; font-size: 19px; letter-spacing: 0; text-transform: none; color: var(--ink);
   border-color: var(--edge-2); padding: 0 8px; background: linear-gradient(180deg, rgba(var(--violet-rgb), .16), rgba(var(--violet-rgb), .05));
@@ -82,9 +89,9 @@
   box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 0 26px rgba(var(--violet-rgb), .5); }
 .bottom { display: flex; justify-content: center; }
 .bottom .text-link { min-height: 48px; }
-.choices:empty { display: none; }
+.choices:empty { visibility: hidden; }
 .readout .fade-in { animation: fadein .45s var(--ease) both; }
-@media (max-height: 800px) { .band { padding: 18px 0 12px; } .readout { margin-bottom: 22px; } .divider { margin-top: 12px; } .readout .know { min-height: 0; } }
+@media (max-height: 800px) { .phone { --band-top: 206px; --band-h: 122px; } .band { padding: 18px 0 12px; } .readout { margin-bottom: 22px; } .divider { margin-top: 12px; } }
 
 </style>
 </head>
@@ -98,6 +105,7 @@
 <div class="scrim-bottom" aria-hidden="true"></div>
 
 <div class="ui">
+  <div class="upper">
   <header class="topbar col rise">
     <a class="home" href="morning.html#later"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg><span>Today</span></a>
     <span></span>
@@ -108,20 +116,20 @@
     <h1 class="carve lg">The long tally</h1>
     <p class="soft on-scene">One hand, read a line at a time.</p>
   </div>
+  </div>
 
-  <div class="mid" style="flex-grow:1"></div>
   <section class="band rise d2" aria-label="One line of the tally">
     <div class="col"><div class="strip" id="strip"><button class="cell" data-i="0" aria-pressed="false" aria-label="Mark 1"><span class="gw"><svg viewBox="0 0 80 80" class="glyph" aria-hidden="true"><g transform="translate(6 6) scale(1.700)" ><path d="M10 28 L14 13 L27 10 L31 25 Z M16 21 L25 18" transform="translate(.9 1.1)" fill="none" stroke="#05040c" stroke-opacity=".75" stroke-width="3.00" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 28 L14 13 L27 10 L31 25 Z M16 21 L25 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></g></svg></span><span class="cap guess" id="cap0">stone<span class="q">?</span></span></button><button class="cell sel" data-i="1" aria-pressed="true" aria-label="Mark 2"><span class="gw"><svg viewBox="0 0 80 80" class="glyph" aria-hidden="true"><g transform="translate(6 6) scale(1.700)" ><path d="M20 7 L31 20 L20 33 L9 20 Z M20 15 V25" transform="translate(.9 1.1)" fill="none" stroke="#05040c" stroke-opacity=".75" stroke-width="3.00" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 7 L31 20 L20 33 L9 20 Z M20 15 V25" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></g></svg></span><span class="cap new" id="cap1">new</span></button><button class="cell" data-i="2" aria-pressed="false" aria-label="Mark 3"><span class="gw"><svg viewBox="0 0 80 80" class="glyph" aria-hidden="true"><g transform="translate(6 6) scale(1.700)" ><path d="M11 30 Q20 36 29 30 M13 28 L12 15 M20 30 V9 M27 28 L28 16" transform="translate(.9 1.1)" fill="none" stroke="#05040c" stroke-opacity=".75" stroke-width="3.00" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 30 Q20 36 29 30 M13 28 L12 15 M20 30 V9 M27 28 L28 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></g></svg></span><span class="cap known" id="cap2">hand</span></button><button class="cell" data-i="3" aria-pressed="false" aria-label="Mark 4"><span class="gw"><svg viewBox="0 0 80 80" class="glyph" aria-hidden="true"><circle cx="40.9" cy="41.1" r="25" fill="none" stroke="#05040c" stroke-opacity=".75" stroke-width="2.75"/><circle cx="40" cy="40" r="25" fill="none" stroke="currentColor" stroke-width="2.2"/><g transform="translate(23 23) scale(0.850)" ><path d="M8 30 Q14 12 20 20 Q26 28 32 10 M14 8 H26" transform="translate(.9 1.1)" fill="none" stroke="#05040c" stroke-opacity=".75" stroke-width="3.25" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 30 Q14 12 20 20 Q26 28 32 10 M14 8 H26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></g></svg></span><span class="cap name" id="cap3">a name</span></button><button class="cell" data-i="4" aria-pressed="false" aria-label="Mark 5"><span class="gw"><svg viewBox="0 0 80 80" class="glyph" aria-hidden="true"><g transform="translate(6 6) scale(1.700)" ><path d="M11 11 V29 M17 11 V29 M23 11 V29 M29 11 V29 M7 25 L33 15" transform="translate(.9 1.1)" fill="none" stroke="#05040c" stroke-opacity=".75" stroke-width="3.00" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 11 V29 M17 11 V29 M23 11 V29 M29 11 V29 M7 25 L33 15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></g></svg></span><span class="cap guess" id="cap4">count<span class="q">?</span></span></button><button class="cell" data-i="5" aria-pressed="false" aria-label="Mark 6"><span class="gw"><svg viewBox="0 0 80 80" class="glyph" aria-hidden="true"><g transform="translate(6 6) scale(1.700)" ><path d="M10 20 H30 M16 12 V28 M24 12 Q30 20 24 28" transform="translate(.9 1.1)" fill="none" stroke="#05040c" stroke-opacity=".75" stroke-width="3.00" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 20 H30 M16 12 V28 M24 12 Q30 20 24 28" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></g></svg></span><span class="cap unk" id="cap5">—</span></button></div></div>
   </section>
   <div class="col rise d2"><p class="say said on-scene" style="margin-top:16px">The same hand cut all of this.</p></div>
 
-  <div class="mid" style="flex-grow:.3"></div>
   <section class="col readout rise d3" aria-live="polite">
     <div class="label-line lit">This mark</div>
     <p class="know on-scene" id="know"></p>
     <div class="seg choices" id="choices" role="group" aria-label="Your guess"></div>
   </section>
 
+  <div class="mid"></div>
   <section class="bottom col rise d4">
     <a class="text-link" href="morning.html#later"><span>Done reading</span></a>
   </section>
