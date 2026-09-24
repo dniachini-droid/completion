@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-24 (taste session done; long visual run next)_
+_Last updated: 2026-09-24, afternoon (visual run done; Dan's combined look D in final polish)_
 
 ## Current phase
 
@@ -16,9 +16,24 @@ Find how the game looks, moves and feels (MASTER_BRIEF §57–58). First a live 
 
 ## Current session focus
 
-**2026-09-24, afternoon.** Taste session done (D-027). Dan answered the ten prompts, reacted to a sample page of light, line, type, map and motion (`design/taste/samples.html`), and answered three follow-ups. The result is a brief in `design/ART_DIRECTION.md`: dark cool stone with glow everywhere, mostly cold with some warm; painted and atmospheric; a carved serif; clean, precise layout; smooth everyday motion with cinematic big moments; a map of lit places on dark. Two questions stay open and will be tested visually: how cold and warm glow are balanced, and whether carved letters set the whole interface.
+**2026-09-24, the long visual run** (`design/PHASE4_RUN.md` has the full log). Branch: `claude/phase-4-long-visual-run-08v7pn` (not yet merged; merge only after Dan approves).
 
-**Next: the long visual run** (`design/PHASE4_PLAN.md` Part 2), starting with a quick model comparison (D-027).
+What happened:
+- **Model test** (D-029): the default model's morning screen won; Dan agreed ("the warm one").
+- **Three directions** (A Lamp and Stone, B Engraved Light, C The Turning Day), nine screens each, two rounds of harsh critique and revision each (`design/directions/a-*`, `b-*`, `c-*`).
+- **Dan walked through all three on his phone** and dictated picks screen by screen (`ART_DIRECTION.md` → "Dan's walkthrough"). He asked for a combination: **direction D, the combined look** (D-032): C's purple world, full screen, never framed; B's interface; A's map; B's word-cutting animation; C's arrival, camp, satchel, daybook.
+- **D** is built (`design/directions/d-combined/`, eleven screens including the stair and the delve-length dial), critiqued twice, revised once. Dan: "everything that I've seen for D is very good."
+- Also decided today: the delve timer is a glowing ring (D-028); jobs and targets are Dan's to edit (D-030); a language pass on all app copy is a job (D-031); the delve length is adjustable with a dial, 25/30/45/60 (D-033, Dan picked the dial); an outside review of the sealed story (D-034, D-035).
+- Drafts written for Dan's approval: `design/DESIGN_SYSTEM.md`, `design/INTERACTION_NOTES.md`, `design/UX_PRINCIPLES.md`.
+
+**Resume here (next session), in order:**
+1. **Check the working tree is clean and pushed** (`git status`, `git log --oneline | head`). If the last builder's work on D (record strip fixed in place, lintel marks in perspective, the new clay lamp everywhere) is present, it is done; look at `design/directions/d-combined/shots/`.
+2. **Run the prepared final fix round for D**: `design/tools/NEXT_FIX_ROUND_D.md` (Dan overruled three critic points: keep the hall, the stair and the Salt Gallery as they are). Use the tools in `design/tools/`.
+3. **Build a fresh Netlify zip** (`design/tools/README.md`) and send it to Dan; he walks through D once more and dictates notes. Apply them.
+4. **Dan approves D**, the design system, the interaction notes and the UX principles → tick the Phase 4 exit criteria.
+5. **Open a PR into `main` and merge it** (D-006), once Dan says yes.
+6. **Ask Dan to agree to Phase 5** (Concept synthesis), then start it in a new session.
+7. In parallel with Phase 5, before the first playable is built: **the sealed story-fix session** (D-035; its item list is in the sealed folder; top priority: the late-game choice must never look like a promise the fixed story can't keep). Keep Dan's view spoiler-free.
 
 ## Do NOT work on yet
 
@@ -29,9 +44,9 @@ Find how the game looks, moves and feels (MASTER_BRIEF §57–58). First a live 
 ## Phase 4 exit criteria
 
 - [x] Taste session done; answers in `design/ART_DIRECTION.md` (D-027).
-- [ ] Three directions with real screens, critiqued and revised.
-- [ ] Dan picks or blends one.
-- [ ] `design/UX_PRINCIPLES.md`, `design/DESIGN_SYSTEM.md`, `design/INTERACTION_NOTES.md` filled in enough for Phase 5.
+- [x] Three directions with real screens, critiqued and revised (A, B, C: two rounds each).
+- [ ] Dan picks or blends one. **Blend chosen (D-032); awaiting his approval of the finished D.**
+- [ ] `design/UX_PRINCIPLES.md`, `design/DESIGN_SYSTEM.md`, `design/INTERACTION_NOTES.md` filled in enough for Phase 5. **Drafted; awaiting Dan.**
 - [ ] Dan agrees to move to Phase 5 (Concept synthesis).
 
 ## Completed milestones
@@ -51,13 +66,15 @@ Find how the game looks, moves and feels (MASTER_BRIEF §57–58). First a live 
 - 2026-09-24 — Tools named in the world (D-025); app-name shortlist written (`narrative/NAMES.md`).
 - 2026-09-24 — **Phase 3 complete** (D-026). Phase 4 opened.
 - 2026-09-24 — Taste session done; brief for the three directions written (D-027).
+- 2026-09-24 — Long visual run: three directions built and critiqued; Dan's combined look D built (D-028 to D-033); outside story review planned (D-034, D-035).
 
 ## Unresolved blockers
 
 - None.
+- **Jobs queued for later phases:** the language pass on every line the app says (D-031, Phase 5–6); the sealed story-fix session (D-035, before the first playable); a memory and recap system, a before → now re-read view, a guaranteed reward rhythm and high-day extras (D-035, Phase 5–6); jobs and targets as editable data (D-030, Phase 7); week 6 of the sealed clue ledger (D-023).
 - Housekeeping (non-blocking): rename the GitHub repo once a product name exists (`narrative/NAMES.md`). (Privacy verified: private.)
 - Open for Dan whenever he likes: the app name (`narrative/NAMES.md`).
 
 ## Recommended next action
 
-**Dan: start a new session and paste:** "Read CLAUDE.md and docs/CURRENT_STATE.md, then start the Phase 4 long visual run from docs/design/PHASE4_PLAN.md Part 2, beginning with the model comparison in D-027."
+**Dan: start a new session and paste:** "Read CLAUDE.md and docs/CURRENT_STATE.md, then continue Phase 4 from 'Resume here': finish direction D, give me the Netlify zip to review, and guide me through approving it."
