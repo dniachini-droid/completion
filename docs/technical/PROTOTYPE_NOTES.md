@@ -16,9 +16,10 @@
 | The chime is a synthesised bell | The delve's own sound isn't made | When sound gets its pass |
 | Dan's starting set is preloaded (jobs and rhythms) but not yet editable; Today's jobs follow a fixed order, with rhythms met this week last | Editing jobs and the planner are slice 4 | Slice 4 |
 | Capacity is always suggested Normal ("a suggestion") | Bedtime and absence set the suggestion in slice 4 | Slice 4 |
-| Marks are guessed where offered, but there is no marks screen, no confirmation beat shown and no word-cutting cinematic yet (the word plays as four lines) | Slice 3 | Slice 3 |
+| Confirmations due "the morning after" a camp wait for that morning (the story waits; nothing is lost) | Camp, bedtime and the morning are slice 4 | Slice 4 |
+| The deep push plays on any High day once a Normal day's jobs are done (one deep beat a day); it can't yet be called in the morning | Calling it belongs to the morning and the planner | Slice 4 |
+| The word's cutting scene uses the approved painted Lamp Hall (`ui/scene/hall.js`) for every word, including the run-ahead's second word at another lintel | The first word's own hall is what the MVP's weeks meet; the second is in the run-ahead | When the run-ahead's places are painted |
 | Places show a stand-in painting for their stretch (one of the three samples) | Week 1's first round (`paint/places/`) fell short of the hall; the kit needs materials before real places reach the bar | As each place is painted at the hall's level |
-| Mark glyphs are drawn from their elements by a simple stand-in (`ui/Glyph.svelte`) | The Cut's own lettering is part of slice 3 | Slice 3 |
 | The map's layout is hand-placed for the first region; no forecast waypoints | Waypoints come with the planner | Slice 4 |
 | After day complete the main button is "See where you are" (the arrival again), not "To camp" | Camp is slice 4 | Slice 4 |
 | Camps with a view reuse their stretch's stand-in painting | Camp paintings follow the places | The painting weeks |

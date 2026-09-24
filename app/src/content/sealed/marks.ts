@@ -29,7 +29,7 @@ export const marks: Mark[] = [
     id: 'mk-give', sign: 'GIVE', w: 2, elements: ['hook-open', 'drop-leaving'], shape: 'a hook, and a drop leaving it',
     guessAt: 'b-2.2', context: 'the lintel, beside the flame\'s mark; her box sheet has only a question mark',
     candidates: ['give', 'send', 'answer', 'open'], right: ['give', 'send', 'answer'],
-    tempting: 'open', confirmedBy: 'b-5.3',
+    tempting: 'open', confirmedBy: 'b-5.3', provisional: true,
     struck: 'Not open. Here it stands with the lamp\'s mark and the flame\'s, and there is no door near it.',
   },
   {

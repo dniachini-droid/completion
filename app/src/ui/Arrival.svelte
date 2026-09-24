@@ -4,9 +4,11 @@
      "Keep going" is always there (D-038, D-039). A tap anywhere settles the motion at once. */
   import { game, content } from './game.svelte';
   import { t } from '../content/copy/en';
-  import { platform } from '../platform';
   import Scene from './Scene.svelte';
   import Guess from './Guess.svelte';
+  import Settled from './Settled.svelte';
+  import Cut from './Cut.svelte';
+  import { beatOf } from '../core/story';
   import type { Go } from './nav';
 
   let { go }: { go: Go } = $props();
@@ -21,13 +23,16 @@
     if ((e.target as HTMLElement).closest('button')) return;
     root.getAnimations({ subtree: true }).forEach(x => { try { x.finish(); } catch { /* endless */ } });
   }
-  /* a word is cut in four taps, one line each (the story job's §7); the scene's own line comes after the fourth */
-  let tap = $state(0);
-  const taps = $derived(a?.taps ?? []);
-  const cutting = $derived(fresh && taps.length > 0 && tap < taps.length);
+  /* a word is cut on its own screen, the first time it plays (Cut.svelte) */
+  const word = fresh && !!game.view.arrival && beatOf(content.story, game.view.arrival.id)?.kind === 'word';
   const cap = (x: string) => x.charAt(0).toUpperCase() + x.slice(1);
   function pick(i: number) { if (!a) return; game.do({ do: 'choose', beat: a.id, pick: i }); go('records', a.records[Math.min(i, a.records.length - 1)]); }
-  function next() { tap++; void platform.haptics.tick(); }
+  /* after the cut: through the lintel to the stair (D-039), back to today, or later (the cut waits, unseen) */
+  function cutLeave(to: 'through' | 'today' | 'later') {
+    if (to === 'later') { go('today'); return; }
+    if (to === 'through' && v.arrival) { game.do({ do: 'seen', what: 'arrival', ref: v.arrival.seq }); go('stair'); return; }
+    leave('today');
+  }
 
   function leave(to: 'today' | 'set') {
     if (v.arrival) {
@@ -43,7 +48,9 @@
   }
 </script>
 
-{#if a}
+{#if a && word}
+  <Cut {a} leave={cutLeave} />
+{:else if a}
   <div class="arr" class:fresh bind:this={root} onpointerdown={settleNow} role="presentation">
     <Scene painting={a.painting} top="260px" bottom="34%" />
     <div class="facelight" aria-hidden="true"></div>
@@ -55,16 +62,12 @@
       <section class="col head">
         <div class="label-line gold">{a.kind === 'place' ? t('arrive.label') : t('arrive.camp')}</div>
         <h1 class="carve lg">{a.name}</h1>
-        {#if taps.length && (a.byKey || !cutting)}<span class="soft on-scene">{a.line}</span>{/if}
-        {#if !taps.length}<span class="soft on-scene">{a.line}</span>{/if}
+        <span class="soft on-scene">{a.line}</span>
         {#if a.look}<span class="soft on-scene look">{a.look}</span>{/if}
       </section>
       <div class="mid col">
-        {#if cutting}
-          <div class="taps">
-            {#each taps.slice(0, tap + 1) as line, i (i)}<p class="say on-scene tapline">{line}</p>{/each}
-          </div>
-        {:else}
+        {#if a.id}
+          <Settled beat={fresh ? a.id : null} />
           {#each a.guess as mark (mark)}<Guess {mark} />{/each}
           {#if a.records.length}
             <div class="choice">
@@ -77,14 +80,10 @@
           {/if}
         {/if}
       </div>
-      {#if cutting}
-        <section class="bottom col"><button class="btn" onclick={next}>{t('arrive.cut')}</button></section>
-      {:else}
       <section class="bottom col">
         <button class="btn resting" onclick={() => leave('today')}>{a.completedDay ? t('arrive.rest') : t('arrive.onward')}</button>
         <div class="btn-row"><button class="btn-quiet" onclick={() => leave('set')}><span>{t('today.keepGoing')}</span></button></div>
       </section>
-      {/if}
     </div>
   </div>
 {/if}
@@ -100,8 +99,6 @@
   .head .label-line { margin-bottom: 12px; }
   .head .soft { display: block; margin-top: 6px; }
   .head .look { color: var(--gold-hi); margin-top: 12px; }
-  .taps { width: 100%; padding-bottom: 18px; }
-  .tapline { text-align: center; font-size: 19px; line-height: 1.4; margin-top: 12px; animation: rise 1s var(--ease) both; }
   .choice { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; margin-bottom: 14px; }
   .topbar { animation: rise 1.2s .2s var(--ease) both; }
   .mid { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding-bottom: 18px; }

@@ -2,6 +2,7 @@
   /* The screens, one at a time, inside the phone. On opening, the next action is obvious (rule 16):
      a delve that ended while away shows its end; a run in progress shows the ring; an unseen arrival shows itself. */
   import { game } from './game.svelte';
+  import { moment } from './moment.svelte';
   import type { Go, Screen } from './nav';
   import Today from './Today.svelte';
   import RunSet from './RunSet.svelte';
@@ -12,6 +13,8 @@
   import Proto from './Proto.svelte';
   import Map from './Map.svelte';
   import Records from './Records.svelte';
+  import Marks from './Marks.svelte';
+  import Stair from './Stair.svelte';
 
   function first(): Screen {
     const v = game.view;
@@ -29,7 +32,7 @@
 
   /* the day's light: gold once the day has turned (DESIGN_SYSTEM → colour) */
   $effect(() => {
-    const gold = screen === 'arrival' || (screen === 'today' && game.view.complete);
+    const gold = (screen === 'arrival' && !moment.cutting) || (screen === 'today' && game.view.complete);
     document.body.className = gold ? 's-done' : game.view.done.size ? 's-day2' : 's-day';
   });
 </script>
@@ -44,6 +47,8 @@
     {:else if screen === 'cant'}<CantStart {go} jobId={String(arg)} />
     {:else if screen === 'proto'}<Proto {go} />
     {:else if screen === 'map'}<Map {go} />
-    {:else if screen === 'records'}<Records {go} id={typeof arg === 'string' ? arg : undefined} />{/if}
+    {:else if screen === 'records'}<Records {go} id={typeof arg === 'string' ? arg : undefined} />
+    {:else if screen === 'marks'}<Marks {go} id={typeof arg === 'string' ? arg : undefined} />
+    {:else if screen === 'stair'}<Stair {go} />{/if}
   {/key}
 </main>

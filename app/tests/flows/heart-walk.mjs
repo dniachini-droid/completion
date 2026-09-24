@@ -1,8 +1,8 @@
 // The first playable walked on a fake clock at phone size, with a picture of every screen (TEST_STRATEGY.md → layer 5).
 // Fails on any page error or any request leaving the app. Usage (from app/, with a build served):
 //   PLAYWRIGHT=$(npm root -g)/playwright/index.mjs node tests/flows/heart-walk.mjs http://localhost:4173/ <out-dir> [width height]
-// Day 1 (a Thursday): the Course, the gym, Spanish study → the first place; the map; records. Then two more days,
-// so steps, a sealed thing opening and a guess play. No story text is asserted.
+// Day 1 (a Thursday): the Course, the gym, Spanish study → the first place; the map; records. Then more days (one High,
+// for a deep push) until the first word is cut (slice 3): the cut, the stair, the marks. No story text is asserted.
 const { chromium } = await import(process.env.PLAYWRIGHT ?? 'playwright');
 const [,, url, out, w = '390', h = '844'] = process.argv;
 const browser = await chromium.launch();
@@ -23,15 +23,49 @@ const guessIfAny = async (name) => {
   const opts = page.locator('.opts .btn-quiet');
   if (await opts.count()) { await shot(name + '-guess', 800); await opts.first().click(); await shot(name + '-guessed', 800); }
 };
+/** The word, cut (slice 3): the rod, the two marks, the lock; the place answers; through to the stair. */
+let cut = false;
+const cutIfAny = async (name) => {
+  if (!(await page.locator('button.rodbtn').count())) return false;
+  await page.clock.runFor(2500); await page.waitForTimeout(1500); await shot(name + '-cut-0', 500);
+  await page.locator('button.rodbtn').click(); await shot(name + '-cut-1', 1200);
+  await page.locator('button.key.ready').click(); await shot(name + '-cut-2', 1200);
+  await page.locator('button.key.ready').click(); await shot(name + '-cut-3', 1200);
+  await page.locator('button.rodbtn').click(); await shot(name + '-cut-lock', 1000);
+  await shot(name + '-cut-answer', 2500);
+  await shot(name + '-cut-settled', 6000);
+  await tap('Go through'); await page.clock.runFor(800); await page.waitForTimeout(1500); await shot('stair', 4000);
+  await tap('Today'); await page.clock.runFor(1500);
+  cut = true;
+  return true;
+};
 /** Play each arrival in turn, back to Today. */
 const arrivals = async (name) => {
   for (let k = 0; k < 6; k++) {
+    if (await cutIfAny(`${name}-${k}`)) continue;
     if (!(await page.locator('.arr').count())) return;
-    while (await has('Go on')) { await tap('Go on'); await page.clock.runFor(600); }
     await shot(`${name}-${k}`, 6000); await guessIfAny(`${name}-${k}`);
     if (await has('Rest here for today')) await tap('Rest here for today'); else await tap('Back to today');
     await page.clock.runFor(1500);
   }
+};
+/** Today's next job without pictures (the days between), answering guesses and playing arrivals. */
+const quiet = async () => {
+  if (await has('Done')) await tap('Done');
+  else { await tap('Begin'); await page.clock.runFor(900); if (await has('Begin')) await tap('Begin'); await ff(75 * 60_000); if (await has('Done')) await tap('Done'); }
+  await page.clock.runFor(2500);
+  const opts = page.locator('.opts .btn-quiet'); if (await opts.count()) await opts.first().click();
+  if (await has('See where you are')) {
+    await tap('See where you are'); await page.clock.runFor(1500);
+    for (let k = 0; k < 6; k++) {
+      if (await cutIfAny(`word`)) return;
+      if (!(await page.locator('.arr').count())) break;
+      await page.clock.runFor(6000);
+      const o = page.locator('.opts .btn-quiet'); if (await o.count()) await o.first().click();
+      if (await has('Rest here for today')) await tap('Rest here for today'); else await tap('Back to today');
+      await page.clock.runFor(1500);
+    }
+  } else if (await has('Back to today')) { await tap('Back to today'); await page.clock.runFor(1500); }
 };
 /** Do today's next job, whatever it is, and show its return. */
 const doNext = async (name) => {
@@ -64,10 +98,26 @@ if (await has('Records')) {
   if (await r.count()) { await r.click(); await shot('record', 1200); await tap('Records'); await page.clock.runFor(500); }
   await tap('Today'); await page.clock.runFor(2500);
 }
-for (const d of [2, 3]) {
-  await ff(24 * 3600_000); await page.reload(); await shot(`d${d}-today`, 2500);
-  for (let k = 0; k < 3; k++) { if (!(await has('Begin')) && !(await has('Done'))) break; await doNext(`d${d}-${k}`); }
+for (let d = 2; d <= 24 && !cut; d++) {
+  await ff(24 * 3600_000); await page.reload(); await page.clock.runFor(1500);
+  if (await cutIfAny(`d${d}-open`)) break;
+  const high = d === 3;
+  if (high) await tap('High');
+  const loud = d <= 3 || high;
+  if (loud) await shot(`d${d}-today`, 2500);
+  for (let k = 0; k < (high ? 5 : 3); k++) {
+    if (!(await has('Begin')) && !(await has('Done'))) break;
+    if (loud) await doNext(`d${d}-${k}`); else await quiet();
+    if (cut) break;
+  }
 }
+if (!cut) errors.push('the first word was never cut');
+await tap('Records'); await page.clock.runFor(800); await tap('Marks'); await shot('marks', 1500);
+const openMark = page.locator('.cell .cap.new').first();
+if (await openMark.count()) { await openMark.click(); await shot('marks-open', 800); }
+const held = page.locator('.cell .cap.known').first();
+if (await held.count()) { await held.click(); await shot('marks-held', 800); }
+await tap('Today'); await page.clock.runFor(1500);
 await ff(24 * 3600_000); await page.reload(); await page.clock.runFor(2000);
 if (await has('I can’t start')) { await tap('I can’t start'); await shot('cant-start', 2000); }
 if (errors.length) { console.error(errors); process.exitCode = 1; } else console.log('walk: ' + i + ' screens, no errors, no network');

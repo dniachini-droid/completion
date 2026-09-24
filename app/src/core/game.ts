@@ -208,10 +208,14 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string) {
     if (S.keysIn(w.all, day) < S.KEYS_A_WEEK) keyed = !!landKey(w, c, r.id, at, day, done.seq);
     else if (!ofType(w.all, 'findGiven').some(f => f.why === 'surplus' && calendarWeek(f.day) === calendarWeek(day))) giveFind(w, c, 'surplus', at, day, done.seq);
   }
-  /* the return: the story's next step, else a line of the passage */
+  /* the return: on a High day past a Normal day's size, the deep push's next beat (once a day); else the story's next
+     step; else a line of the passage */
   if (!keyed) {
     const st = S.storyState(w.all, c.story), step = S.nextStep(c.story, st);
-    if (step) { w.put({ type: 'beatPlayed', id: step.id, job: done.seq }, at, day); show(w, c, step.carries?.records, at, day); }
+    const deep = capacityOn(w.all, day) === 'high' && doneOn(w.all, day).size > DAY_SIZE.normal
+      && !ofType(onDay(w.all, day), 'beatPlayed').some(f => S.beatOf(c.story, f.id)?.kind === 'deep') ? S.nextDeep(c.story, st) : null;
+    if (deep) { w.put({ type: 'beatPlayed', id: deep.id, job: done.seq }, at, day); show(w, c, deep.carries?.records, at, day); }
+    else if (step) { w.put({ type: 'beatPlayed', id: step.id, job: done.seq }, at, day); show(w, c, step.carries?.records, at, day); }
     else { const p = S.nextPassage(c.story, st); if (p) w.put({ type: 'beatPlayed', id: 'passage', passage: p, job: done.seq }, at, day); }
   }
   /* an avoided job always brings a find (P5) */
@@ -273,10 +277,14 @@ export function act(facts: Fact[], c: Content, cmd: Command, now: Moment): Fact[
   const day = gameDay(now), v = see(w.all, c, now);
   switch (cmd.do) {
     case 'open': w.put({ type: 'opened' }); storyClock(w, c, now, day); floor(w, c, now, day); break;
-    case 'guess':
-      /* a guess, once; the place confirms it later (never "wrong" at guess time) */
-      if (!S.storyState(w.all, c.story).guessed.has(cmd.mark)) { w.put({ type: 'markGuessed', mark: cmd.mark, guess: cmd.guess }); gifts(w, c, now, day); }
+    case 'guess': {
+      /* a guess, never "wrong" at guess time; it may change until the place confirms it (SCRIPT §9; mock-up record.html) */
+      const st = S.storyState(w.all, c.story), m = S.markOf(c.story, cmd.mark);
+      if (!m?.candidates?.includes(cmd.guess) || st.guessed.get(cmd.mark) === cmd.guess) break;
+      if (st.guessed.has(cmd.mark) && !S.mayGuess(c.story, st, cmd.mark)) break;
+      w.put({ type: 'markGuessed', mark: cmd.mark, guess: cmd.guess }); gifts(w, c, now, day);
       break;
+    }
     case 'choose': w.put({ type: 'choiceMade', beat: cmd.beat, pick: cmd.pick }); break;
     case 'read': w.put({ type: 'recordOpened', id: cmd.record }); break;
     case 'capacity':
@@ -375,6 +383,8 @@ export interface Arrival {
 export interface Return {
   beat: string | null; line: string; key: boolean; guess: string[]; choice?: [string, string]; records: string[];
   finds: string[];
+  /** A partial sign found on a deep push: its element, and the mark it belongs to (SCRIPT §8). */
+  part?: { el: string; mark: string };
 }
 /** Where Dan stands. */
 export interface Here { id: string | null; name: string; line: string; stretch: StretchId; painting: string; }
@@ -444,7 +454,8 @@ export function returnOf(c: Content, facts: Fact[], doneSeq: number): Return {
   const b = S.beatOf(c.story, beat.id)!;
   const viaSeal = b.seal ? S.sealOf(c.story, b.seal) : undefined;
   const guess = [...new Set([...(b.carries?.guess ?? []), ...(viaSeal?.carries?.guess ?? [])])];
-  return { beat: b.id, line: b.line ?? '', key: b.kind === 'stepKey', guess, choice: b.choice, records: [...(b.carries?.records ?? []), ...(viaSeal?.carries?.records ?? [])], finds };
+  const part = b.carries?.partial && b.carries.seen?.[0] ? { el: b.carries.partial, mark: b.carries.seen[0] } : undefined;
+  return { beat: b.id, line: b.line ?? '', key: b.kind === 'stepKey', guess, choice: b.choice, records: [...(b.carries?.records ?? []), ...(viaSeal?.carries?.records ?? [])], finds, ...(part ? { part } : {}) };
 }
 
 export function see(facts: Fact[], c: Content, now: Moment): View {

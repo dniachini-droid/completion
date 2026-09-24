@@ -6,6 +6,9 @@
   import { returnOf } from '../core/game';
   import { t } from '../content/copy/en';
   import Guess from './Guess.svelte';
+  import Glyph from './Glyph.svelte';
+  import Settled from './Settled.svelte';
+  import type { CopyKey } from '../content/copy/en';
 
   import type { Go } from './nav';
   let { doneSeq, extraFinds = [], go }: { doneSeq: number | null; extraFinds?: string[]; go?: Go } = $props();
@@ -19,6 +22,14 @@
 {#if r && r.line}
   {#if r.key}<div class="label-line centred lit key">{t('step.key')}</div>{/if}
   <p class="say story on-scene">{r.line}</p>
+  {#if r.part}
+    <div class="part">
+      <div class="label-line centred">{t('part.label')}</div>
+      <Glyph part={r.part.el} size={46} />
+      <p class="soft">{t(`part.${r.part.el}` as CopyKey)}</p>
+    </div>
+  {/if}
+  <Settled beat={r.beat} />
   {#each r.guess as mark (mark)}<Guess {mark} />{/each}
   {#if r.records.length && go}
     <div class="choice">
@@ -42,5 +53,8 @@
   .story { font-size: 18px; line-height: 1.42; margin: 10px 0 12px; }
   .choice { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; margin: -2px 0 8px; }
   .find { margin: 10px 0 6px; }
+  .part { text-align: center; margin: 4px 0 10px; }
+  .part .label-line { margin-bottom: 8px; }
+  .part .soft { margin-top: 4px; }
   .find p { font-size: 17px; line-height: 1.4; margin-top: 8px; color: var(--ink-2); }
 </style>

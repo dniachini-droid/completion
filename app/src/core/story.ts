@@ -205,19 +205,41 @@ export function teaser(s: Story, st: StoryState): string | null {
   return ok.length ? ok[ok.length - 1].line : null;
 }
 
-/* ---------- reading: a record rendered at the marks Dan holds ---------- */
+/* ---------- reading: the marks Dan holds (SCRIPT §8.2, §9; the story job's §6) ---------- */
 
-export interface MarkHeld { guess: string; right: boolean; confirmed: boolean; struck: boolean; }
+/**
+ * A mark as Dan holds it. A guess reads with a question mark until the place confirms it. When the confirming beat
+ * plays, a right guess holds; the tempting wrong one is struck (one line on the marks screen) and the mark reads as
+ * what it is; a mark never guessed is learned from the place all the same (failure is information, rule 9).
+ * A provisional mark's confirming beat only strikes the tempting guess: its right ones stay guesses (SCRIPT §7.6).
+ */
+export interface MarkHeld {
+  /** Dan's guess, if he made one. */
+  guess: string | null;
+  right: boolean;
+  confirmed: boolean;
+  struck: boolean;
+  /** What it reads as now, in a list of marks (the guess, or its meaning once confirmed). */
+  word: string;
+  /** Still a guess: shown with a question mark. */
+  asGuess: boolean;
+}
+
+export function markHeld(m: Mark, st: StoryState): MarkHeld | null {
+  const guess = st.guessed.get(m.id) ?? null;
+  const confirmed = !!m.confirmedBy && met(st, m.confirmedBy);
+  if (guess === null && !confirmed) return null;
+  const right = guess === null || !m.right || m.right.includes(guess);
+  const struck = confirmed && guess !== null && !right;
+  const truth = m.candidates?.[0] ?? m.sign.toLowerCase();
+  if (!confirmed) return { guess, right, confirmed, struck, word: guess!, asGuess: true };
+  if (m.provisional) return { guess, right, confirmed, struck, word: right && guess ? guess : truth, asGuess: true };
+  return { guess, right, confirmed, struck, word: right && guess ? guess : truth, asGuess: false };
+}
 
 export function marksHeld(s: Story, st: StoryState): Map<string, MarkHeld> {
   const out = new Map<string, MarkHeld>();
-  for (const [id, guess] of st.guessed) {
-    const m = markOf(s, id);
-    if (!m) continue;
-    const right = !m.right || m.right.includes(guess);
-    const confirmed = !!m.confirmedBy && met(st, m.confirmedBy);
-    out.set(id, { guess, right, confirmed, struck: confirmed && !right });
-  }
+  for (const m of s.marks) { const h = markHeld(m, st); if (h) out.set(m.id, h); }
   return out;
 }
 
@@ -226,17 +248,97 @@ export type Rendered = { t: 'word'; text: string; guess: boolean } | { t: 'glyph
 /** Each token as Dan can read it now: a held sign as its English (a guess with a question mark), otherwise its glyph. */
 export function render(tokens: Token[], held: Map<string, MarkHeld>, s: Story): Rendered[] {
   return tokens.map((tk): Rendered => {
-    if ('ring' in tk) return tk.en && tk.s?.every(x => held.get(x)?.right) ? { t: 'word', text: tk.en, guess: false } : { t: 'ring' };
+    if ('ring' in tk) return tk.en && tk.s?.every(x => { const h = held.get(x); return h && h.right && !h.asGuess; }) ? { t: 'word', text: tk.en, guess: false } : { t: 'ring' };
     if ('s' in tk) {
       const h = held.get(tk.s);
-      if (!h || h.struck) return { t: 'glyph', mark: tk.s };
-      /* a right guess reads as this record's own English; a wrong one as the guess itself, until it is struck */
-      return h.right ? { t: 'word', text: tk.en, guess: !h.confirmed } : { t: 'word', text: h.guess, guess: true };
+      if (!h) return { t: 'glyph', mark: tk.s };
+      /* a right guess, or a confirmed mark, reads as this record's own English; an unconfirmed wrong guess as itself */
+      return h.right || h.confirmed ? { t: 'word', text: tk.en, guess: h.asGuess } : { t: 'word', text: h.guess!, guess: true };
     }
     if ('pic' in tk) return { t: 'pic', text: tk.pic };
     if ('hand' in tk) return { t: 'hand', who: tk.hand };
     return { t: 'p', text: tk.p };
   });
+}
+
+/* ---------- the marks screen: every mark seen (SCRIPT §9; mock-up record.html) ---------- */
+
+export interface MarkSeen {
+  id: string;
+  /** held: confirmed; guess: guessed, not yet confirmed; open: may be guessed now; seen: not known yet; name: a ring;
+      part: only an element of it has been seen (a deep push's partial sign). */
+  state: 'held' | 'guess' | 'open' | 'seen' | 'name' | 'part';
+  held: MarkHeld | null;
+  /** The element seen alone, if a partial sign of it was found. */
+  part: string | null;
+  /** The struck line, if Dan's guess was struck. */
+  struck: string | null;
+}
+
+/** Where each mark was first offered for a guess, and the partial signs and marks seen, from what has played. */
+function carriedMarks(s: Story, st: StoryState) {
+  const offered = new Set<string>(), seen = new Set<string>(), partOf = new Map<string, string>();
+  const take = (c: Carries | undefined) => {
+    c?.guess?.forEach(m => offered.add(m));
+    c?.seen?.forEach(m => { seen.add(m); if (c.partial) partOf.set(m, c.partial); });
+  };
+  for (const b of s.beats) if (st.played.has(b.id)) take(b.carries);
+  for (const x of s.seals) if (st.opened.has(x.id)) take(x.carries);
+  return { offered, seen, partOf };
+}
+
+/** Every mark Dan has met, in the order he met it: in a record shown, offered for a guess, seen, or a part of it. */
+export function marksSeen(s: Story, st: StoryState): MarkSeen[] {
+  const { offered, seen, partOf } = carriedMarks(s, st);
+  const order: string[] = [];
+  const add = (id: string) => { if (!order.includes(id) && markOf(s, id)) order.push(id); };
+  for (const r of st.records) {
+    const rec = recordOf(s, r);
+    for (const line of rec?.cut ?? []) for (const tk of line) {
+      if ('ring' in tk) add('mk-ring');
+      else if ('s' in tk) add(tk.s);
+      else if ('hand' in tk) add('mk-hand');
+    }
+  }
+  for (const m of s.marks) if (offered.has(m.id) || seen.has(m.id) || st.guessed.has(m.id)) add(m.id);
+  return order.map((id): MarkSeen => {
+    const m = markOf(s, id)!, held = markHeld(m, st);
+    const struck = held?.struck ? m.struck ?? null : null;
+    const part = !held && !offered.has(id) ? partOf.get(id) ?? null : null;
+    let state: MarkSeen['state'];
+    if (m.recognised) state = 'name';
+    else if (held) state = held.asGuess ? 'guess' : 'held';
+    else if (offered.has(id) && m.candidates?.length) state = 'open';
+    else if (part) state = 'part';
+    else state = 'seen';
+    return { id, state, held, part, struck };
+  });
+}
+
+/** May Dan guess (or change his guess at) this mark now? Offered, has candidates, and not yet confirmed. */
+export function mayGuess(s: Story, st: StoryState, id: string): boolean {
+  const m = markOf(s, id);
+  if (!m?.candidates?.length || (m.confirmedBy && met(st, m.confirmedBy))) return false;
+  return carriedMarks(s, st).offered.has(id) || st.guessed.has(id);
+}
+
+/** The marks a beat (or a sealed thing's step) settles when it plays: each guess held, or struck with its line. */
+export function settledBy(s: Story, st: StoryState, beat: string): { mark: string; held: MarkHeld; struck: string | null }[] {
+  return s.marks.filter(m => m.confirmedBy === beat).flatMap(m => {
+    const h = markHeld(m, st);
+    if (!h || h.guess === null) return [];   /* only a guess settles; a mark never guessed is simply learned */
+    if (m.provisional && !h.struck) return [];
+    return [{ mark: m.id, held: h, struck: h.struck ? m.struck ?? null : null }];
+  });
+}
+
+/* ---------- the deep push (a High day): places a normal day doesn't reach, sometimes part of a sign ---------- */
+
+/** The next deep beat that may play: this story week's, in order, its req met. */
+export function nextDeep(s: Story, st: StoryState): Beat | null {
+  const deep = s.beats.filter(b => b.kind === 'deep' && !st.played.has(b.id) && b.w <= st.week && allMet(st, b.req));
+  deep.sort((a, b) => a.w - b.w || a.o - b.o);
+  return deep[0] ?? null;
 }
 
 /** Everything a beat, seal or find carries, as ids (for writing `recordShown` once). */

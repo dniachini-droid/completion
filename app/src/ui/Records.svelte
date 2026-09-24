@@ -24,7 +24,13 @@
   <header class="top col">
     <div class="topbar rise">
       <button class="home" onclick={() => (open ? go('records') : go('today'))}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{open ? t('records.label') : t('delve.today')}</span></button>
-      <span></span><span></span>
+      <span></span>
+      {#if !open}
+        <div class="seg lv" role="group" aria-label={t('records.label')}>
+          <button aria-pressed="true">{t('records.nav')}</button>
+          <button aria-pressed="false" onclick={() => go('marks')}>{t('marks.nav')}</button>
+        </div>
+      {:else}<span></span>{/if}
     </div>
     {#if !open}
       <div class="label-line rise">{t('records.label')}</div>
@@ -52,8 +58,8 @@
             {#if tk.t === 'glyph'}<span class="g"><Glyph mark={tk.mark} size={24} /></span>
             {:else if tk.t === 'word'}<span class="w" class:guess={tk.guess}>{tk.text}{tk.guess ? '?' : ''}</span>
             {:else if tk.t === 'pic'}<span class="pic">[{tk.text}]</span>
-            {:else if tk.t === 'ring'}<span class="g ring" aria-hidden="true">◯</span>
-            {:else if tk.t === 'hand'}<span class="hand" aria-hidden="true">˥</span>
+            {:else if tk.t === 'ring'}<span class="g"><Glyph mark="mk-ring" size={24} /></span>
+            {:else if tk.t === 'hand'}<span class="g"><Glyph mark="mk-hand" size={24} /></span>
             {:else}<span class="p">{tk.text}</span>{/if}
           {/each}
         </p>
@@ -77,8 +83,8 @@
   .w.guess { color: var(--ink-2); font-style: italic; }
   .pic { color: var(--ink-2); font-style: italic; }
   .p { margin-left: -6px; color: var(--ink-2); }
-  .ring { font-size: 20px; color: #d9d6ff; }
-  .hand { color: #d9d6ff; }
+  .lv { margin: 0; width: auto; }
+  .lv button { padding: 6px 12px; font-size: 13px; }
   .sheet { margin-top: 18px; }
   .her { font-family: var(--life); font-style: italic; font-size: 17.5px; line-height: 1.5; color: var(--ink-2); margin-top: 8px; }
   button.home { color: var(--ink-2); }

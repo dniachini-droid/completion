@@ -78,6 +78,8 @@ export interface Mark {
   confirmedBy?: string;
   /** The line shown on the marks screen if the tempting guess is struck. */
   struck?: string;
+  /** Its right candidates stay guesses after `confirmedBy` (that beat only strikes the tempting one; SCRIPT §7.6). */
+  provisional?: boolean;
 }
 
 /** A word: marks cut into a blank with the rod, four taps (the story job's §7). */
