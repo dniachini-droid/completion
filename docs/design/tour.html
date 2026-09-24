@@ -6,7 +6,7 @@ html,body{margin:0;height:100%;background:var(--ground);color:var(--ink);font-fa
 body{display:flex;flex-direction:column;height:100dvh;overflow:hidden}
 .bar{display:flex;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 8px}
 .dirs{display:flex;gap:6px;flex:1}
-.dirs button{flex:1;font:inherit;font-family:"Marcellus",Georgia,serif;font-size:15px;min-height:40px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--dim);cursor:pointer}
+.dirs button{flex:1;font:inherit;font-family:"Marcellus",Georgia,serif;font-size:13px;min-height:40px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--dim);cursor:pointer}
 .dirs button[aria-pressed="true"]{color:var(--ink);border-color:var(--dim);background:#1f2433}
 .stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:4px 0}
 .phone{position:relative;width:390px;height:844px;transform-origin:center center;border-radius:28px;overflow:hidden;box-shadow:0 0 0 1px #2a3040,0 20px 60px rgba(0,0,0,.6)}
@@ -23,7 +23,7 @@ iframe{border:0;width:390px;height:844px;display:block;background:#000}
 button:focus-visible{outline:2px solid #b9c6e8;outline-offset:2px}
 </style></head><body>
 <div class="bar"><div class="dirs" role="group" aria-label="Direction">
-<button data-d="a">A · Lamp</button><button data-d="b">B · Engraved</button><button data-d="c">C · Turning</button></div></div>
+<button data-d="d">D · Combined</button><button data-d="a">A · Lamp</button><button data-d="b">B · Engraved</button><button data-d="c">C · Turning</button></div></div>
 <div class="stage" id="stage"><div class="phone" id="phone"><iframe id="f" title="Screen"></iframe></div></div>
 <div class="foot">
 <div class="name" id="name"></div>
@@ -31,12 +31,12 @@ button:focus-visible{outline:2px solid #b9c6e8;outline-offset:2px}
 <div class="ctrl"><button id="prev">‹ Back</button><button id="replay" title="Play this screen again">↻ Replay</button><button id="next" class="next">Next ›</button></div>
 </div>
 <script>
-const D={a:"a-lamp-and-stone",b:"b-engraved-light",c:"c-turning-day"};
-const N={a:"A · Lamp and Stone",b:"B · Engraved Light",c:"C · The Turning Day"};
+const D={d:"d-combined",a:"a-lamp-and-stone",b:"b-engraved-light",c:"c-turning-day"};
+const N={d:"D · The combined look",a:"A · Lamp and Stone",b:"B · Engraved Light",c:"C · The Turning Day"};
 const BASE=[["morning","Morning"],["delve","A delve (timer)"],["map","The map"],["record","Reading a record"],["cut","Cutting a word (animated)"],["complete","Day complete (animated)"],["camp","Camp"],["satchel","The satchel"],["daybook","The daybook"]];
-const EXTRA={a:[[1,"morning-violet","Morning, violet version"]],b:[[6,"stair","The head of the stair"]],c:[]};
+const EXTRA={d:[[6,"stair","The head of the stair"]],a:[[1,"morning-violet","Morning, violet version"]],b:[[6,"stair","The head of the stair"]],c:[]};
 function list(d){const l=BASE.slice();for(const [i,s,t] of EXTRA[d].slice().reverse()) l.splice(i,0,[s,t]);return l}
-let d="a",i=0;
+let d="d",i=0;
 try{const h=location.hash.slice(1).split("-");if(D[h[0]]){d=h[0];i=Math.max(0,+h[1]||0)}}catch(e){}
 const f=document.getElementById("f");
 function fit(){const st=document.getElementById("stage");const s=Math.min(st.clientWidth/390,st.clientHeight/844,1.2);document.getElementById("phone").style.transform=`scale(${s})`;document.getElementById("phone").style.margin=`${(844*s-844)/2}px ${(390*s-390)/2}px`}
