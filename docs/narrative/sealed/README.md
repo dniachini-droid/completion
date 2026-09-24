@@ -27,6 +27,9 @@ For Claude: the canonical hidden truth lives here. Never quote or summarise it o
 | `NICHES.md` | The Key-sealed niches' contents for weeks 1–52: tablets, objects, told lines | — |
 | `PACING.md` | Content counts by month against the Phase 2 rate; where the year is thin | — |
 | `REVIEW.md` | The adversarial self-review (three passes plus a final verification) and the fixes it forced | — |
+| `STORY_JOB.md` | The story job's record (D-061): the outside review's fixes, the week 6 ledger, before → now, and every creative call made without asking Dan | — |
+| `MVP_CONTENT.md` | The MVP's content for story weeks 1–6 plus the run-ahead, with stable ids and when each item may appear | — |
+| `PAINTING_BRIEFS.md` | A painting brief for every named place and camp view in the MVP | — |
 
 Order to read for a new session: `WORLD_TRUTH` → `SCRIPT` → `TIMELINE` → `CHARACTERS` → `MYSTERIES` → `REVELATION_MAP` → `SITE` → `LIVES` → `CLUE_LEDGER` → `FAIR_PLAY` → `ARRIVALS_REGION1` → `PACING` → `REVIEW`.
 

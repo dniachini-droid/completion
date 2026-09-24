@@ -26,6 +26,9 @@
 | 10.2 | Pacing bands instead of hard calendar walls. | **Partly.** The sign order stays fixed (mystery integrity, D-013), but high days must always unlock something real: side niches, character fragments, experiments, re-reads, routes. Deep pushes already do some of this; make it a guarantee. | Phase 6 |
 | 10.6 | Re-read UI: before → now, minimal. | **Agree.** | Phase 5–6 UX |
 
+## Status (2026-09-24)
+Story session A is **done** by the story job (D-061): B1, S1, S2, S3, S5, S7, N1, N2, N3, N4, the split sentence and the ending-tone check, each recorded with its reasoning in `STORY_JOB.md` §1. Story session B (S6, the Engineer's texture) still waits for playable feedback.
+
 ## Plan
 - **Story session A** (short, sealed, before the first playable is built; can run in parallel with Phase 5): S2, S3, S5, B1, S1, S7, N1, N2, N4, builder-split sentence, cleanup of PACING, ending-tone check; then a consistency pass across the sealed files and affected ARRIVALS; retcon procedure MASTER_BRIEF §55; spoiler-free record in DECISIONS.
 - **Phase 5–6:** memory/resurfacing system, re-read UI, reward cadence and high-day unlock guarantee in the MVP spec; collection tagging.

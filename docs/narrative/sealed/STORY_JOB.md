@@ -1,0 +1,76 @@
+# The story job (D-035, D-061): the record — SPOILERS
+
+> **Sealed (D-015). Dan must not read this.** What the sealed story job changed, why, and the creative calls it made without asking Dan (his instruction: "Enough with the questions… Just get it done."). Work order: `STORY_FIX_BRIEF.md`. Every change to canon follows MASTER_BRIEF §55: the conflict, why it matters, the options, the choice, the files updated. The fixed ending, the truth and the sign order are unchanged throughout.
+
+_Written 2026-09-24._
+
+---
+
+## 1. The outside review's fixes (`REVIEW_EXTERNAL_1.md`, "Story session A")
+
+### B1 — the late game must never look like a choice the story can't honour (top priority)
+
+- **Conflict.** Week 50's visit row offered three one-tap options (*Cut the left-hand blank / cut the right-hand blank / leave both*): an ending menu, in a game with one ending. L22's telling said "The next one decides… cut whichever you cut", and the late story had no rule about how the Seed is shown. A reader who finds out that one "option" is a dead end feels cheated, and in a game about reading honestly that breaks trust in everything before it.
+- **Options.** (a) Make the answering word a real second ending (rejected: NARRATIVE_RULES 10, D-017 item 2, the fixed ending). (b) Remove the answering word's blank (rejected: it is canon since the first review, and his ask needs something real to ask for). (c) Keep both words, and change **presentation and interaction** so the agency is in the reading, not in picking an ending. **Chosen: (c).**
+- **What changed.**
+  1. **No menu.** The Seed-place after the speech is a painting with two blanks in it. A blank is tapped as every blank has been since week 2; the ritual is the same taps. No screen lists the blanks as options; no line says *choose, decide, ending, forever*; no confirmation. (WORLD_TRUTH §10.3; ARR45 50.A notes; SCRIPT §8.3; SITE region 5.)
+  2. **The answering word is a real cut with an authored, informative consequence**, a visit of its own (ARR45 **50.B**): the lock; the ring stopping at Dan's feet, as it did on the last door's sill (44.A: nothing carries past a quiet sill); his voice once (*It has not carried. I said so.*, unchanged canon); then two old lines side by side, no comment: the answerers' *What is put out is heard* and the Speakers' *Put out, we. Not asked back.* Its cuts stay lit in the blank. After the binding they stay lit and can never be sounded (50.3, described once): the cost of the keeping-word made visible without a word of gloss. It is information, never failure (rule 9).
+  3. **The agency is epistemic.** What the late game asks is *is he right?*, and every piece of evidence is already on the walls (Z2, X-answerer, L17, L18, L22's doubt). The cut follows understanding; the app never presents it as a verdict and never says he was wrong (see "ending tone" below).
+  4. **Refusing is allowed for ever, and costs nothing.** One week after the speech, the teaser, the week close and the Today screen's *Ahead* line stop pointing at the blanks and draw from the open route; the map keeps the Seed marked; nothing nudges (ARR45 notes). Before the Seed's count is full, a tap on a blank shows only the count, not full.
+  5. **L22's telling:** "The next one decides… cut whichever you cut" → "I have left both. The next one cuts. Read all of it first. Then cut." Its Cut rendering (*The one who returns cuts*) was already right. MYSTERIES M-Linguist and REVELATION_MAP wk 40 aligned.
+- **Why this and not less.** The review's own test: both words present, not equal buttons; the answering word substantial and informative; refusal indefinite. Each is now a written rule with a place in the visit tables, so Phase 9 builds it without re-deciding.
+
+### S1 — the speech no longer pre-explains R10
+
+- **Conflict.** "Yours too. I have no name to send you under." and the paragraph "I began your record… It has no closing line. Every other one has." told Dan, a week early and in words, what the door shows at week 51 (the empty ring; K6 as his record).
+- **Chosen.** Both cut. "The count is all I have of you." stays and now carries the paragraph. K6's missing closing line is still shown, by the Site, at 49.3 (the salt tally's closing line set beside it), which is description, not speech. FAIR_PLAY R10's pre-reveal holdings re-listed: still earned (K6 on the door for ten weeks; the returns tally; 49.3; the rings' hand-mark; the email's header).
+
+### S7 — the speech trimmed
+
+438 → 393 words (−10%), still one speech, tapped through a paragraph at a time, no dialogue tree, no reply (LIVES §7). Cuts: "Two words.", "to anyone", "and he went", "I did not ask your days" (the fact stays in WORLD_TRUTH), the surface-noise sentence (S2), the two S1 cuts; "the last of the stone we could read, and it said" → "the stone said"; "so that nothing that lived only in the dark could open the bottom" → "against anything that lived only in the dark".
+
+### S2 — his argument, made stronger and native to the chain
+
+- **Conflict.** "The surface grows louder every age; it will be found anyway" was weak against the truth (only the Cut carries; the surface's noise draws nothing) and a clever reader could dismiss him with it.
+- **Chosen (the review's suggestion, made concrete).** Every age of readers carries more of the Cut than the last, and they come sooner: a boy copied the marks without knowing them, a copyist spread them in gold, an engineer put powder behind them, a linguist read them. One day someone will be loud with all of it by accident, and it will come piecemeal, one man or one gallery at a time; so the only question is whether it is done on purpose, whole. It is true about the chain (it is the story's own chain, CHARACTERS §10), and it is still wrong about the cure: the keeping-word he drew ends every carrying, whoever comes next, and outside the laced stone the Cut was always dead. He never claims the keeping-word would fail; he says it would end the only hope there is. The "gaps shorten" point is his to make because he counts (salt → road → copying → powder → living memory), and he states no number of years.
+- **Files.** WORLD_TRUTH §6; CHARACTERS §1 (wants, reason, belief table, speech summary); LIVES §2 L17 telling and §13 L17 **re-signed** (the chain in pictures: *the child cut the marks; one made [a book]; one, [a keg]; I read. One day, one cuts loud with all of it, seeing not: taken, one, one, one*; LOUD a glyph until week 32); the speech ¶4; "a louder age may sound it" → "a later reader may sound it" (WORLD_TRUTH §10.3, LIVES §7, REVELATION_MAP 49).
+- **Consistency check of "louder" across the files.** E5 ("Louder will open it") is the Engineer's own belief and stays. S10 and E1 (he asks every reader what the sky sounded like) read better now: he is listening for loud cuts, the chain's accidents, not for traffic. SCRIPT's *listen* open cell ("louder than usual") is air, not belief. No other early clue depended on the surface-noise version.
+
+### S3 — the ancient door no longer judges productivity
+
+- **Conflict.** "A great day fills it at once; many days fill it" (WORLD_TRUTH §10.1, SITE, REVELATION_MAP, NICHES, and two app lines, ARR45 39.1 and 44.A) made a door older than humans grade a day's output.
+- **Chosen.** Fiction: the last door counts returns from the surface, stroke by stroke; it is the largest count in the Site. System (never said by the app): it fills from the week's Keys, story counts first, and opens by story week 44. The two app lines now say *it fills a stroke at a time* and *the count's last stroke fills*.
+- **The milestone accelerator.** D-019 (Dan agreed, D-024) said a great milestone fills the last door at once. D-049 (Dan approved, D-051) later made milestone Keys fill only their own project's great door, and "great doors for big projects" moved to later (D-051). The two already disagreed; the story no longer depends on either. Recorded as an economy question for when milestone Keys return (month 10 is far past the MVP), not settled here. The open game bible's one line is reworded in job 7.
+
+### S5 — where K4 and K6 are cut
+
+- **Conflict.** Several files put the list and the rings on "the faces of the three doors", but he cannot pass the first door, so he cannot reach the second's or third's faces.
+- **Chosen.** Both are on the **first door's upper face and the wall beside its jamb**. The second and third doors' faces stay bare all year, which is now a quiet physical clue shown twice (26.1, 41.3) and never explained. Files: WORLD_TRUTH §10.5, LIVES §6/§13 (K4, K6), SITE region 3/5, REVELATION_MAP 43/49/51, NICHES 43/51, ARR3 26.1, ARR45 41.3, wk 42 close, 43.A, 43.4, wk 43 teaser. His voice at week 49 comes "from the first door".
+
+### N1, N2 — the wording of two internal rules
+
+- WORLD_TRUTH rule 5: "Nothing waits on Dan" now says precisely what it means: **no state deteriorates while he is away; no one suffers or waits in distress; the Custodian keeps and counts regardless and never marks an absence as lateness.** "Every writer is finished" → **"every life narrated in the records is finished"** (he is the one writer still writing during play, K4/K6, and that is keeping, not waiting). REVELATION_MAP's absence rule reworded to match.
+
+### N4 — how he learned the first reader's tongue
+
+He had the sound of it from listening through the rock, not the speaking: with the Salt-Cutter his words were few and "nearly ours" (S2's telling already says so), and he learned fast from him. CHARACTERS §1, TIMELINE. Consistent with V2 ("good in the hill people's tongue") and L11.
+
+### The Builders' split, one canonical sentence
+
+Even to the last voice: twenty for keeping, twenty for sending, and the chief binder, who spoke last, the one more. WORLD_TRUTH §5.5, CHARACTERS §7 (matches NICHES 21.3's tie-break line and the speech).
+
+### N3 — PACING's work list
+
+Items 3 and 6 were already done in the files and are marked so; the step-3 authoring list is marked done by this job (§4).
+
+### Ending tone
+
+Checked 50.A–52 and the coda: no line says or implies that the binding proves him factually wrong. Added to WORLD_TRUTH §10: the ending completes the purpose the place was built for, against a hope that cannot be proved either way; nothing on the page settles the Listeners (§11). 50.B's two lines side by side are the Site's own words, not the app's verdict.
+
+### Fair play for R9.5, noted for the build (month 11)
+
+The two affordances the review asked for exist: lamplight changes the wall (45.1 → 46.A; 46.1 "from the count, the wall is smooth again") and a record separates touch from sight (X-table, *Read with the hand; see not; good.*, week 27; B2). The Seed's painting brief, when written, must make the lamp's light the live layer that reveals the fine cut. No motive clues added (the review said not to).
+
+### Left for later, as the review planned
+
+S4 and 10.1–10.6 were product work (done in Phases 5–6). S6 (month 5 and weeks 40–48 cadence) and the Engineer's ordinary moments are Story session B, after playable feedback.

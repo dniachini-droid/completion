@@ -199,7 +199,7 @@ Keys are fewer below the doors (the year's later targets are the same weekly one
 | 39 | 1 | Her last camp | (seen) The wall: a smooth face, the rod to the wrist, her hand-mark; the stone flat, not risen (ARR45 39.A, 39.4) | (the app describes; nothing opens) | L22 |
 | 39 | 2 | Her last camp, the wall beside | (seen, not sealed) The two words copied side by side, each with its blank drawn but not cut (ARR45 39.2) | — | L22 |
 | 39 | 3 | Her last camp, a niche | (seen, not sealed) Her last tape, unplayable, labelled: *DAY 140. FOR WHOEVER. DON'T BOTHER, IT'S ON THE WALL.* (ARR45 39.A, 39.3) | (object) | L22; her wit |
-| 39 | 4 | The last door's count | Takes the week's Keys: it fills by a little at a time; many days fill it; a great day fills it at once (ARR45 39.1) | — | the ending's gate (D-019) |
+| 39 | 4 | The last door's count | Takes the week's Keys, stroke by stroke; the largest count in the Site (ARR45 39.1) | — | the ending's gate (WORLD_TRUTH §10.1) |
 | 40 | 1 | Her last camp, the niche beside the wall | L22 in full (ARR45 40.A) | — | L22 |
 | 40 | 2 | The last door's sill | (seen, not sealed) The place where QUIET must be cut first (a blank with the sideways fork and the cross) (ARR45 40.1) | — | W7 at the door |
 | 40 | 3 | The last door's lintel | (seen, not sealed) *Be loud here and not be heard.* (LOUD PATH-OPEN beside the blank; the quiet-signs above) (ARR45 40.1, 41.1) | — | W8 |
@@ -210,9 +210,9 @@ Keys are fewer below the doors (the year's later targets are the same weekly one
 | 42 | 1 | The lift's panel (re-surfaced) | (seen) *Count down: eight sixty-fours, and one.* Re-read now that Dan has read who the one was (ARR45 42.A) | (a maker's hand) | X-lift-count; B7 |
 | 42 | 2 | The tool-room's last recess | The makers' rod-plan: *a rod for a counted hand*; beside it the rack (ARR3 24.B) re-surfaced (ARR45 42.1, 42.3) | (a maker's hand) | X-tool; *For the sixth.* |
 | 42 | 3 | The last door's count | Takes the week's Keys (ARR45 42.2) | — | the ending's gate |
-| 43 | 1 | The three doors' faces (re-surfaced weekly, wks 43–50) | (seen; not a Key) Rings in his hand beside K6: the halls' rings, in the halls' order; a column, longer each week; the first ring on the first door is the Stair's first (ARR45 43.A, 43.2) | (his hand) | K4 (its body, begun) |
+| 43 | 1 | The first door's face and the wall beside its jamb (re-surfaced weekly, wks 43–50) | (seen; not a Key) Rings in his hand beside K6: the halls' rings, in the halls' order; a column, longer each week; the first ring on the first door is the Stair's first (ARR45 43.A, 43.2) | (his hand) | K4 (its body, begun) |
 | 43 | 2 | The Deep's last niches, past the quiet rooms | Z-pieces: *what is put out; what is taken in; what is kept* (ARR45 43.1) | (no hand) | Z |
-| 43 | 3 | The last door's count | A great day fills it at once; many days fill it (by wk 44 at the latest) (ARR45 43.3) | — | the ending's gate |
+| 43 | 3 | The last door's count | Takes the week's Keys (fills by wk 44 at the latest) (ARR45 43.3) | — | the ending's gate |
 | 44 | 1 | The last door | QUIET on the sill; OPEN-WAY LOUD on the blank; it opens (ARR45 44.A) | — | W8 |
 | 44 | 2 | Beyond the door, a recess | The last binders' lamp-line, laced stone, lit to the bottom (ARR45 44.1) | (wordless; the app: "you did not light these") | the lamp chain |
 | 44 | 3 | The passage to the Seed | (seen) The rings' last count: none (ARR45 44.2) | — | the gradient's end |
@@ -228,8 +228,8 @@ Keys are fewer below the doors (the year's later targets are the same weekly one
 | 48 | 3 | The first door's face (weekly) | (seen) K6, one mark longer; the column beside it (ARR45 48.A) | (his hand) | K6; K4 |
 | 49 | 1 | The Seed-place | The count full; his voice down the lacing; the speech; then the app, once: *Nothing you say here goes up.* (ARR45 49.A) | — | LIVES §7 |
 | 50 | 1 | The Seed-place, the left-hand blank | KEEP-ALL cut; the ring into the glass and not back; the Seed quiet; the lamp in hand lit (ARR45 50.A) | — | the ending |
-| 50 | 2 | The Seed-place, the other blank | (if cut first) VOICE-GIVE-FAR locks; nothing carries; *It has not carried. I said so.* (if nothing is cut: the blank, described; nothing nudges) (ARR45 50.A, 50.3) | — | WORLD_TRUTH §10 |
+| 50 | 2 | The Seed-place, the right-hand blank | (if cut; its own visit, never an ending) VOICE-GIVE-FAR locks; the ring stops at Dan's feet; *It has not carried. I said so.*; the answerers' line and the finest cut re-surfaced side by side; its cuts stay lit (ARR45 50.B). If nothing is cut: the blank, described; nothing nudges (50.3) | — | WORLD_TRUTH §10.3 |
 | 51 | 1 | The Deep, on the way up | (seen) The halls lit as they were (ARR45 51.A) | (wordless; described once, no gloss) | the lamps rule |
-| 51 | 2 | The three doors, on the way up | The wall's outline (a hand to the wrist, the shoulder, the head against the door, as the corner was); the list on the door's face (K4), read slowly; the email's header set beside the fifth name; K6 under the empty ring, ended (ARR45 51.B, 51.1–51.2) | — | R10 |
+| 51 | 2 | The first door, on the way up | The wall's outline (a hand to the wrist, the shoulder, the head against the door, as the corner was); the list on the door's face and the wall beside it (K4), read slowly; the email's header set beside the fifth name; K6 under the empty ring, ended (ARR45 51.B, 51.1–51.2) | — | R10 |
 | 52 | 1 | Camp | The lesson-wall's last line; the app's last line: *The lamp is lit.*; nothing after it (ARR45 52 camp) | — | the coda |
 | 52 | 2 | The first door's face, a later visit | (seen) K6 with no new mark; the column as it was (ARR45 after 52) | (his hand; ended) | K6 ended; the Site shows it |
