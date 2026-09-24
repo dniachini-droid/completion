@@ -15,7 +15,7 @@ _Last updated: 2026-09-24 (the week planner reconciled and mocked up, D-045, dra
 Write the chosen game up as one clear concept, stress-test it, and set the numbers the build needs. **No new concepts** (Dan, D-042). Work order: `product/PHASE5_PLAN.md`; output: `product/CONCEPT.md`.
 
 ## Resume here (next session)
-0. **First: the week planner (scheduler).** ChatGPT's review is reconciled (`product/SCHEDULER_REVIEW.md`, D-045, draft). Draft rules: `game/PLANNER.md`. Mock-ups: `design/directions/d-combined/week.html`, `rhythms.html`, `today-planned.html`. **Waiting on Dan:** approve the rules and mock-ups, and one question (does a 3-hour course day count at its first hour?). Then fold rhythms into `QUEST_SYSTEM.md`, `CORE_LOOPS.md`, P6/P16 and `PHASE5_PLAN.md`, and carry on with step 3.
+0. **First: the week planner (scheduler).** ChatGPT's review is reconciled (`product/SCHEDULER_REVIEW.md`, D-045, draft). Draft rules: `game/PLANNER.md`. Mock-ups: `design/directions/d-combined/week.html`, `rhythms.html`, `today-planned.html`. **A second ChatGPT review is under way** (Dan sent it one file with the verdicts and the draft rules, plus the screenshots). Next session: reconcile that review against the repo (accept / modify / reject / already resolved), then Dan approves the rules and mock-ups and answers one question (does a 3-hour course day count at its first hour?). Then fold rhythms into `QUEST_SYSTEM.md`, `CORE_LOOPS.md`, P6/P16 and `PHASE5_PLAN.md`, and carry on with step 3.
 1. Steps 1–2 are done: `product/CONCEPT.md` is written and stress-tested (`product/STRESS_TEST.md`, D-043). Continue `product/PHASE5_PLAN.md` at **step 3** (the numbers; `STRESS_TEST.md` §5 adds seven inputs, including a weekly floor), then step 4. Commit and push after each step.
 2. Bring Dan the concept page and the numbers to review (step 5). Ask him only about taste and priorities. (The two stress-test points are already answered, D-044.)
 3. The sealed story-fix session (D-035) runs in its own session, before the first playable is built.
@@ -85,4 +85,4 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 
 ## Recommended next action
 
-**Dan: start a new session and paste:** "Read CLAUDE.md and docs/CURRENT_STATE.md, then continue Phase 5 from 'Resume here': lock the week planner (game/PLANNER.md) with my answers below, then set the numbers (step 3)."
+**Dan: start a new session and paste:** "Read CLAUDE.md and docs/CURRENT_STATE.md, then continue Phase 5 from 'Resume here': reconcile ChatGPT's second review of the week planner (below), then lock game/PLANNER.md with my answers." Then paste the review, and your answers.
