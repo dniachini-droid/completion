@@ -125,3 +125,9 @@ Everything the six story weeks and the run-ahead need, against `product/MVP.md`'
 8. **Learned lines** state facts in the world's words and only for beats that played that week; the two "so far"s are the promise restated as things, not questions to answer.
 9. **Marks**: each got four candidates with one tempting wrong (the cup for LAMP, the lintel for DOOR, the road for PATH…), the event that confirms it, and a one-line rejection in the app's voice. The count of marks (14 in six weeks) is over the MVP's estimate of 8–12, and stays: the order is canon and is what puts the first word in week 2–3.
 10. **The words' cinematics** add only beats, timing and painting states to the four-tap lines already written.
+
+---
+
+## 5. Painting briefs (`PAINTING_BRIEFS.md`)
+
+48 briefs: every named place (33) and camp view (15) in `MVP_CONTENT.md`, each with forms and scale, material, the one light source, camera and vanishing point, the one thing to look at, what moves, and a signature no neighbour shares. Calls made: the approved hall painting is the first scene, unchanged; the hall has a dark and a lit state (before and after the word) and every hall scene Dan can see in both is baked twice; no figure anywhere before week 8; the only daylight in the MVP is the square of sky at the ladder's foot; the only painted English words are hers (HILL, DAY 1) and the shaft-sinkers' chalk (40 FT); the lamp's flame never gutters. A week-by-week list of what the kit gains keeps the places from becoming one room renumbered. A note for month 11 holds the fair-play requirement for the Seed's painting.
