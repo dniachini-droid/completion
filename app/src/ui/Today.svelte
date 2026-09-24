@@ -55,7 +55,11 @@
 <div class="ui">
   <header class="top col">
     <div class="topbar rise">
-      <span class="day">{weekday}</span><span></span>
+      <span class="day">{weekday}</span>
+      <span class="navs">
+        <button class="icon-link" onclick={() => go('map')}><span>{t('map.nav')}</span></button>
+        {#if v.story.records.length}<button class="icon-link" onclick={() => go('records')}><span>{t('records.nav')}</span></button>{/if}
+      </span>
       <button class="icon-link proto" onclick={() => go('proto')}>
         {#if game.proto.rehearsal}<span class="badge">{t('proto.badge')}</span>{:else}<span>{t('nav.proto')}</span>{/if}
       </button>
@@ -70,7 +74,7 @@
     {#if v.ahead}
       <section class="ahead rise d2">
         <div class="label-line">{t('today.ahead')}</div>
-        <p class="say on-scene">{v.here.ahead}</p>
+        <p class="say on-scene">{v.ahead}</p>
       </section>
     {/if}
   </header>
@@ -158,6 +162,8 @@
   button.row { width: 100%; text-align: left; }
   button.row:disabled { cursor: default; }
   .proto span { font-size: 14px; letter-spacing: .16em; color: var(--ink-3); }
+  .navs { display: flex; gap: 14px; justify-content: center; }
+  .navs span { font-size: 14px; letter-spacing: .16em; color: var(--ink-2); }
   .proto .badge { color: var(--gold); }
   @media (max-height: 800px) {
     .seg { margin-top: 10px; } .ahead { margin-top: 8px; } .ahead p { margin-top: 4px; } .next .soft { margin-bottom: 14px; }

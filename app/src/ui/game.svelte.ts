@@ -5,13 +5,13 @@
 import { act, alertsAfter, see, settle, type Command } from '../core/game';
 import { epochOf, momentOf, type Moment } from '../core/time';
 import type { Fact } from '../core/types';
-import { prototype as content } from '../content/world/prototype';
+import { content } from '../content/world';
 import { platform } from '../platform';
 import { t } from '../content/copy/en';
 
 export { content };
 
-const SAVE_VERSION = 1;
+const SAVE_VERSION = 2;   /* 2: the story (slice 2); older prototype saves start afresh */
 interface Save { version: number; content: string; facts: Fact[]; }
 
 /* ---- the prototype's rehearsal: minutes pass 60 times faster, on a separate throwaway save (PROTOTYPE_NOTES.md) ---- */

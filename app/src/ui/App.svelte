@@ -10,6 +10,8 @@
   import Arrival from './Arrival.svelte';
   import CantStart from './CantStart.svelte';
   import Proto from './Proto.svelte';
+  import Map from './Map.svelte';
+  import Records from './Records.svelte';
 
   function first(): Screen {
     const v = game.view;
@@ -40,6 +42,8 @@
     {:else if screen === 'step'}<Step {go} seq={Number(arg)} />
     {:else if screen === 'arrival'}<Arrival {go} />
     {:else if screen === 'cant'}<CantStart {go} jobId={String(arg)} />
-    {:else if screen === 'proto'}<Proto {go} />{/if}
+    {:else if screen === 'proto'}<Proto {go} />
+    {:else if screen === 'map'}<Map {go} />
+    {:else if screen === 'records'}<Records {go} id={typeof arg === 'string' ? arg : undefined} />{/if}
   {/key}
 </main>

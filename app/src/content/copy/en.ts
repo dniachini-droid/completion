@@ -43,6 +43,7 @@ export const copy = {
   'set.towards': 'Towards {place}',
   'set.to': 'To {place}',
   'set.onward': 'Further in',
+  'set.nextPlace': 'the next place',
   'set.count': '{n} of {len}',
   'set.ends': 'ends around {end}',
   'set.enoughAt': 'enough around {at}',
@@ -96,6 +97,23 @@ export const copy = {
   /* the step, for a job done away from the phone */
   'step.label': 'Done',
   'step.done': '{job}.',
+  'step.key': 'A count fills',
+  'find.label': 'A find',
+  'guess.label': 'A mark',
+  'guess.ask': 'What might it mean?',
+  'guess.kept': 'Your guess: {guess}. The place will tell you.',
+  'records.label': 'Records',
+  'records.title': 'What you’ve found',
+  'records.none': 'Nothing yet. Records turn up as you go further in.',
+  'records.her': 'Her sheet',
+  'records.nav': 'Records',
+  'map.nav': 'Map',
+  'map.label': 'The map',
+  'map.close': 'Close',
+  'map.region': 'Region',
+  'map.here': 'you are here',
+  'map.sealed': 'sealed',
+  'map.ahead': 'ahead',
 
   /* day complete and the arrival */
   'arrive.label': 'Arrived',
@@ -105,17 +123,19 @@ export const copy = {
   'arrive.enough2': 'Enough.',
   'arrive.rest': 'Rest here for today',
   'arrive.onward': 'Back to today',
+  'arrive.cut': 'Go on',
 
   /* I can't start */
   'cant.label': 'Just ahead',
   'cant.first': 'One small thing first:',
   'cant.ten': '10 minutes?',
   'cant.notNow': 'Not now',
+  'cant.fallback': 'The passage goes on, and there is a draught from further in.',
 
   /* the prototype's own controls (temporary; PROTOTYPE_NOTES.md) */
   'proto.label': 'Prototype',
-  'proto.title': 'The heart, on throwaway data',
-  'proto.about': 'Invented places, not the story. Nothing here is kept after the prototype.',
+  'proto.title': 'The first playable, being built',
+  'proto.about': 'This save is a trial run: it starts afresh when the test begins. The paintings are stand-ins until each place is painted.',
   'proto.rehearsal': 'Rehearsal: minutes pass 60 times faster',
   'proto.rehearsal.on': 'Rehearsal is on. A 25-minute delve takes 25 seconds. It has its own save, which starts afresh each time.',
   'proto.rehearsal.off': 'Real time. Use it on real jobs.',

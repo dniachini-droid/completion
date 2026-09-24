@@ -2,6 +2,7 @@
  * The shapes the rules work with (DATA_MODEL.md). Content types only: no content lives here.
  */
 import type { Moment } from './time';
+import type { Story } from './story-types';
 
 export type Capacity = 'low' | 'normal' | 'high';
 
@@ -23,30 +24,26 @@ export interface Job {
   firstStep?: string;
 }
 
-/** A named place on the route (DATA_MODEL.md → Place). `at` is where it sits, in minutes of effort from the start. */
-export interface Place {
+/** What repeats (PLANNER.md → Rhythms; DATA_MODEL.md → Rhythm). Dan's own data; editing arrives with the planner (slice 4). */
+export interface Rhythm {
   id: string;
-  name: string;
-  line: string;
-  /** One plain sentence about the sealed thing ahead, shown on Today while this is where Dan stands. */
-  ahead: string;
-  painting: string;
-  at: number;
+  /** The job each session is. */
+  job: string;
+  /** N a week… */
+  times?: number;
+  /** …or on set weekdays (0 Sunday … 6 Saturday)… */
+  days?: number[];
+  /** …or once every 2 weeks. */
+  every?: 2;
+  /** An appointment's time, "18:00". */
+  time?: string;
 }
-
-/** A camp with a view: a short day's arrival, always with one thing to look at (BALANCING §4). */
-export interface Camp { id: string; name: string; look: string; }
 
 export interface Content {
   version: string;
   jobs: Job[];
-  /** In order down the route; the first is where Dan starts. */
-  route: Place[];
-  camps: Camp[];
-  /** Short lines shown as a step plays; reused in turn (the open route, BALANCING §5). */
-  passages: string[];
-  /** "I can't start": a line from just ahead, never new story (P4). */
-  teasers: string[];
+  rhythms: Rhythm[];
+  story: Story;
 }
 
 /** One entry in the fact log (ARCHITECTURE.md → How state works). Appended, never edited. */
@@ -69,6 +66,17 @@ export type FactBody =
   /* what the world gave (worked out once, then kept) */
   | { type: 'stepsGained'; minutes: number; job: string; run?: number }
   | { type: 'dayCompleted' }
-  | { type: 'arrived'; kind: 'place' | 'camp'; id: string };
+  | { type: 'arrived'; kind: 'place' | 'camp'; id: string; how?: 'foot' | 'key' }
+  /* the story (slice 2): each written once, when it happens */
+  | { type: 'beatPlayed'; id: string; job?: number; passage?: string }
+  | { type: 'keyEarned'; rhythm: string }
+  | { type: 'sealOpened'; seal: string }
+  | { type: 'findGiven'; id: string; why: 'avoided' | 'switching' | 'chamber' | 'camp' | 'surplus'; job?: number }
+  | { type: 'recordShown'; id: string }
+  | { type: 'storyWeekBegan'; w: number }
+  /* Dan's small choices on a beat (never gating) and his guesses at marks */
+  | { type: 'markGuessed'; mark: string; guess: string }
+  | { type: 'choiceMade'; beat: string; pick: number }
+  | { type: 'recordOpened'; id: string }
 
 export type FactOf<T extends FactBody['type']> = Fact & Extract<FactBody, { type: T }>;

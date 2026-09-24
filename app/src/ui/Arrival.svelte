@@ -4,7 +4,9 @@
      "Keep going" is always there (D-038, D-039). A tap anywhere settles the motion at once. */
   import { game, content } from './game.svelte';
   import { t } from '../content/copy/en';
+  import { platform } from '../platform';
   import Scene from './Scene.svelte';
+  import Guess from './Guess.svelte';
   import type { Go } from './nav';
 
   let { go }: { go: Go } = $props();
@@ -19,8 +21,20 @@
     if ((e.target as HTMLElement).closest('button')) return;
     root.getAnimations({ subtree: true }).forEach(x => { try { x.finish(); } catch { /* endless */ } });
   }
+  /* a word is cut in four taps, one line each (the story job's §7); the scene's own line comes after the fourth */
+  let tap = $state(0);
+  const taps = $derived(a?.taps ?? []);
+  const cutting = $derived(fresh && taps.length > 0 && tap < taps.length);
+  const picked = $derived(a ? game.facts.find(f => f.type === 'choiceMade' && f.beat === a.id) : undefined);
+  function next() { tap++; void platform.haptics.tick(); }
+
   function leave(to: 'today' | 'set') {
-    if (v.arrival) game.do({ do: 'seen', what: 'arrival', ref: v.arrival.seq });
+    if (v.arrival) {
+      game.do({ do: 'seen', what: 'arrival', ref: v.arrival.seq });
+      /* a big day reached more than one place: each plays in turn */
+      const more = game.view.arrival;
+      if (more && to === 'today') { go('arrival', more.seq); return; }
+    }
     if (to === 'set') {
       const job = v.order.find(x => !v.done.has(x) && content.jobs.find(j => j.id === x)?.delve) ?? 'course';
       go('set', job);
@@ -30,7 +44,7 @@
 
 {#if a}
   <div class="arr" class:fresh bind:this={root} onpointerdown={settleNow} role="presentation">
-    <Scene painting={a.place ? a.place.painting : v.here.painting} top="260px" bottom="34%" />
+    <Scene painting={a.painting} top="260px" bottom="34%" />
     <div class="facelight" aria-hidden="true"></div>
     <div class="ui">
       <header class="topbar col">
@@ -40,18 +54,35 @@
       <section class="col head">
         <div class="label-line gold">{a.kind === 'place' ? t('arrive.label') : t('arrive.camp')}</div>
         <h1 class="carve lg">{a.name}</h1>
-        <span class="soft on-scene">{a.line}</span>
-        {#if a.kind === 'place' && a.first && fresh}<span class="soft on-scene first">{t('arrive.first')}</span>{/if}
+        {#if taps.length && (a.byKey || !cutting)}<span class="soft on-scene">{a.line}</span>{/if}
+        {#if !taps.length}<span class="soft on-scene">{a.line}</span>{/if}
+        {#if a.look}<span class="soft on-scene look">{a.look}</span>{/if}
       </section>
       <div class="mid col">
-        {#if a.completedDay}
-          <p class="enough">{t('arrive.enough')} <em>{t('arrive.enough2')}</em></p>
+        {#if cutting}
+          <div class="taps">
+            {#each taps.slice(0, tap + 1) as line, i (i)}<p class="say on-scene tapline">{line}</p>{/each}
+          </div>
+        {:else}
+          {#each a.guess as mark (mark)}<Guess {mark} />{/each}
+          {#if a.choice && !picked && fresh}
+            <div class="choice">
+              {#each a.choice as c, i}<button class="text-link" onclick={() => game.do({ do: 'choose', beat: a.id, pick: i })}><span>{c}</span></button>{/each}
+            </div>
+          {/if}
+          {#if a.completedDay}
+            <p class="enough">{t('arrive.enough')} <em>{t('arrive.enough2')}</em></p>
+          {/if}
         {/if}
       </div>
+      {#if cutting}
+        <section class="bottom col"><button class="btn" onclick={next}>{t('arrive.cut')}</button></section>
+      {:else}
       <section class="bottom col">
         <button class="btn resting" onclick={() => leave('today')}>{a.completedDay ? t('arrive.rest') : t('arrive.onward')}</button>
         <div class="btn-row"><button class="btn-quiet" onclick={() => leave('set')}><span>{t('today.keepGoing')}</span></button></div>
       </section>
+      {/if}
     </div>
   </div>
 {/if}
@@ -66,7 +97,10 @@
   .head { margin-top: 14px; animation: rise 1.4s .4s var(--ease) both; }
   .head .label-line { margin-bottom: 12px; }
   .head .soft { display: block; margin-top: 6px; }
-  .head .first { color: var(--gold-hi); }
+  .head .look { color: var(--gold-hi); margin-top: 12px; }
+  .taps { width: 100%; padding-bottom: 18px; }
+  .tapline { text-align: center; font-size: 19px; line-height: 1.4; margin-top: 12px; animation: rise 1s var(--ease) both; }
+  .choice { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; margin-bottom: 14px; }
   .topbar { animation: rise 1.2s .2s var(--ease) both; }
   .mid { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding-bottom: 18px; }
   .enough { font-family: var(--life); font-size: min(31px, 8vw); line-height: 1.15; color: #fff; text-align: center;

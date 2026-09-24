@@ -686,3 +686,21 @@
 - **Alternatives:** ask Dan the taste questions (he asked not to be asked); wait for the playtest (only the cadence audit of the later months waits for that, as planned in D-035).
 - **Consequences:** Phase 9 can turn the story into app content without re-deciding anything; the painting kit can start on the real places once this is merged. `CURRENT_STATE.md` and `product/MVP.md` note the answers.
 - **Reversible:** Yes, until clues are planted in the playable.
+
+## D-068 — Slice 2 (the Quiet answers): how the story runs in the app (Claude's routine calls, D-006)
+- **Date:** 2026-09-24
+- **Context:** Phase 9, slice 2 (`product/MVP.md` → build order): the map, records, a sealed thing in view, rhythms and Keys, finds, on the real sealed content (D-067). Spoiler-free: this entry names rules, never story.
+- **Decision (Claude, routine):**
+  1. **The story as data.** The sealed content is transcribed into typed data in `app/src/content/sealed/` (a marked sealed folder; ids only in commits and PRs, D-015). Tests check that every id a rule reads exists and that every mark offered has four candidates.
+  2. **The story clock** (BALANCING §2): the first story week begins at the first opening; the next begins at the first opening in a later calendar week (Monday to Sunday), once this week's places and ordered steps have all played. An absence pauses it.
+  3. **Places:** the first named place is 75 minutes of effort from the start (so a first Normal day arrives somewhere, as in the heart), then 8 steps (200 minutes) apart. Places reached during a day play at day complete, in order, one screen each; after day complete they play as reached. A day short of the next place ends at a camp with a view and its one thing to look at.
+  4. **Keys:** a rhythm met in its week lands a Key at once, up to 5 a week; the Key opens the next sealed thing in the story's order, and that opening is the job's return (the line says the count fills, never "Key"). Past the 5, a rhythm met gives one find a week. **The floor:** a week with a day complete that brought fewer than 2 Keys is topped up to 2 at the first opening of the next week.
+  5. **Each job's return** plays the story's next step in order, else a line of the passage for where Dan is (never repeating on a stretch until its list is used). An avoided job always brings a find; a side chamber (the 4th delve in one sitting) and switching jobs after 100 minutes on one bring one each (BALANCING §1, §5).
+  6. **Guessing a mark** is offered where the story offers it (one tap, four candidates, never "wrong"), already in slice 2, because the first word needs it; the marks screen itself is slice 3.
+  7. **Today's order:** a rhythm already met this week drops to the end; a set-day rhythm (the Thursday lesson, Sunday meal prep) is offered only on its day; a one-off leaves once done. The full planner is slice 4.
+  8. **The map** has two levels, as stars on the dark like the mock-up: Region (the stretches Dan has walked, the way ahead a faint unnamed star) and Close (this stretch's places and the sealed things in view). **Records** list what has been found; a record in the script shows each mark Dan holds as his guess or its meaning, the rest as marks, and her sheet in her hand.
+  9. **Names are revealed on arrival:** the delve and the run set-up say "Further in" and "the next place", never the next place's name.
+  10. **Paintings:** each place shows a stand-in painting for its stretch until its own is painted from its brief with the kit; week 1's are being painted first.
+- **Alternatives:** a hand-typed rendering per week for each record (rejected by the story job's build rule: renderings are computed from sign strings); showing all Keys' results on a separate screen (rejected: a Key is felt as the job's return, UX 6).
+- **Consequences:** the heart's throwaway content (invented places, stand-in job list) is gone; the prototype save starts afresh (save version 2). Dan's starting set is preloaded with its rhythms.
+- **Reversible:** Yes (all numbers are starting guesses, tuned in play).

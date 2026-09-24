@@ -10,8 +10,7 @@
   let { go, jobId }: { go: Go; jobId: string } = $props();
   const v = $derived(game.view);
   const job = $derived(content.jobs.find(j => j.id === jobId)!);
-  const uses = game.facts.filter(f => f.type === 'cantStartUsed').length;
-  const teaser = content.teasers[Math.max(0, uses - 1) % content.teasers.length];
+  const teaser = game.view.teaser ?? t('cant.fallback');
 
   function ten() {
     platform.sound.unlock();

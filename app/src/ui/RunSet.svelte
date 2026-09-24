@@ -29,7 +29,7 @@
   /* what's left of the job's enough today (a gold mark on the line; past it is more, never owed) */
   const enoughLeft = $derived(v.done.has(jobId) || job.doneBy !== 'enough' ? null
     : Math.max(0, enoughOf(job) - delveMinutesOn(game.facts, v.day, jobId)) || null);
-  const place = $derived(v.ahead);
+  const place = $derived(v.toNext !== null ? { name: t('set.nextPlace') } : null);
   const toPlace = $derived(v.toNext);
   const there = $derived(toPlace !== null && n * snap >= toPlace);
 

@@ -4,6 +4,7 @@
   import { game, content } from './game.svelte';
   import { t } from '../content/copy/en';
   import Scene from './Scene.svelte';
+  import Return from './Return.svelte';
   import type { Go } from './nav';
 
   let { go, seq }: { go: Go; seq: number } = $props();
@@ -15,9 +16,9 @@
 
   /* the route: from where Dan was to where he is, towards the next place */
   const W = 300, y = 20;
-  const target = $derived(v.ahead ? v.ahead.at : v.walked + 200);
+  const target = $derived(v.nextAt ?? v.walked + 200);
   const from = $derived(Math.max(0, v.walked - gained));
-  const startAt = $derived(v.ahead ? Math.max(0, v.ahead.at - 400) : from - 50);
+  const startAt = $derived(v.nextAt !== null ? Math.max(0, v.nextAt - 400) : from - 50);
   const px = (m: number) => 8 + (W - 16) * Math.min(1, Math.max(0, (m - startAt) / Math.max(1, target - startAt)));
 
   function leave() { go(completedDay && v.arrival ? 'arrival' : 'today'); }
@@ -39,12 +40,12 @@
       <path d="M8 {y}H{W - 8}" stroke="rgba(186,186,255,.22)" stroke-width="1" />
       <path d="M8 {y}H{px(from)}" stroke="rgba(242,193,112,.55)" stroke-width="1.5" />
       <path class="drawn" style="--len:{Math.max(1, px(v.walked) - px(from))}" d="M{px(from)} {y}H{px(v.walked)}" stroke="#f1efff" stroke-width="2" stroke-linecap="round" filter="drop-shadow(0 0 4px rgba(143,134,255,.95))" />
-      {#if v.ahead}
-        <g transform="translate({px(v.ahead.at)} {y})"><path d="M-6 8 V-1 Q-6 -8 0 -8 Q6 -8 6 -1 V8 Z" fill="#0b0b1c" /><path d="M-6 8 V-1 Q-6 -8 0 -8 Q6 -8 6 -1 V8" fill="none" stroke="#ece9ff" stroke-width="1.3" /></g>
+      {#if v.nextAt !== null}
+        <g transform="translate({px(v.nextAt)} {y})"><path d="M-6 8 V-1 Q-6 -8 0 -8 Q6 -8 6 -1 V8 Z" fill="#0b0b1c" /><path d="M-6 8 V-1 Q-6 -8 0 -8 Q6 -8 6 -1 V8" fill="none" stroke="#ece9ff" stroke-width="1.3" /></g>
       {/if}
       <circle cx={px(v.walked)} cy={y} r="3.4" fill="#ffd27a" />
     </svg>
-    <p class="say on-scene rise d3">{v.passage}</p>
+    <div class="rise d3"><Return doneSeq={fact && fact.type === 'jobDone' ? seq : null} /></div>
     <div class="go rise d3">
       {#if completedDay && v.arrival}
         <button class="btn" onclick={leave}>{t('delve.see')}</button>
