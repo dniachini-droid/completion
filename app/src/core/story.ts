@@ -306,7 +306,8 @@ export function marksSeen(s: Story, st: StoryState): MarkSeen[] {
     const struck = held?.struck ? m.struck ?? null : null;
     const part = !held && !offered.has(id) ? partOf.get(id) ?? null : null;
     let state: MarkSeen['state'];
-    if (m.recognised) state = 'name';
+    /* a recognised mark is named once the story points it out (the ring, from the first); until then it is a shape */
+    if (m.recognised && (id === 'mk-ring' || seen.has(id) || offered.has(id))) state = 'name';
     else if (held) state = held.asGuess ? 'guess' : 'held';
     else if (offered.has(id) && m.candidates?.length) state = 'open';
     else if (part) state = 'part';

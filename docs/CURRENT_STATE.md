@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-24 (Phase 9: slice 2 built, D-068; a session per slice, D-069)_
+_Last updated: 2026-09-24 (Phase 9: slice 3 built, D-070; slice 4 next, in its own session, D-069)_
 
 ## Current phase
 
@@ -16,12 +16,15 @@ Build the whole MVP (`product/MVP.md` → build order): **slice 2** the Quiet an
 
 ## Resume here (next session)
 **Each slice runs in its own session, started by the previous one (D-069).** The working branch is `claude/phase-8-continuation-ttngwy` (everything since Phase 8's merge; not yet merged into `main`).
-1. **Claude: build slice 3, learning the Cut** (`product/MVP.md` → build order): the marks screen (every mark seen, its guess or meaning, a struck guess as one line, SCRIPT §9), the confirming beats (a guess settling when its place confirms it), the words as the real cutting cinematic (the story job's §7: `wd-light` at the lintel, the hall's cups waking; the stair's "Go down", D-039), the partial signs of a deep push, and the Cut's own lettering for the marks (replacing the stand-in `ui/Glyph.svelte`). Read first: `game/CORE_LOOPS.md` (decode), the D mock-ups `cut.html`, `record.html`, `stair.html`, `technical/PROTOTYPE_NOTES.md`, and D-068 (how slice 2 runs the story). Sealed sources for the builder only: `narrative/sealed/SCRIPT.md`, `MVP_CONTENT.md` §6–7, `LIVES.md`. Then, per D-069: tests, the flow walk at 440 × 956 and 360 × 780, commit, push, publish the web link (`npm run build:link`, then the Artifact at the same link, below), update this file and start the slice 4 session.
+1. **Claude: build slice 4, the week and the gaps** (`product/MVP.md` → build order), in its own session, then send the whole first playable to TestFlight: the planner (`game/PLANNER.md`, D-045–D-048: rhythms editable, the week's plan, forecast waypoints on the map, D-054), the satchel (`game/TOOLS.md`), camp and bedtime (bedtime kept → something waiting in the morning; bedtime sets tomorrow's suggested capacity; the deep push called in the morning, D-054), the daybook week close (the "learned" lines, the month's "so far", the one open question; the quiet "Plan next week?" offer, D-045), and absence (the return never opens on a pile, D-043). Two hand-overs from slice 3 (D-070): **the morning after a camp must write `beatPlayed` with the id `b-wN.morning`** (N = the story week of that camp beat, `b-wN.camp`): several guesses are confirmed by it (`confirmedBy` in `content/sealed/marks.ts`) and simply stay guesses until it plays; and **the deep push** currently plays on any High day after a Normal day's jobs (`core/game.ts`, `markDoneIn`): calling it in the morning replaces or joins that rule. Read first: `game/PLANNER.md`, `game/TOOLS.md`, `game/BALANCING.md` §6–7, the D mock-ups `camp.html`, `daybook.html`, `satchel.html`, `week.html`, `rhythms.html`, `today-planned.html`, `technical/PROTOTYPE_NOTES.md` (the slice 4 rows), D-068 and D-070. Sealed sources for the builder only: `narrative/sealed/MVP_CONTENT.md` §3 and §10, and the camp, morning and close beats in `app/src/content/sealed/beats.ts`. Then: tests, `npm run typecheck`, the flow walk at 440 × 956 and 360 × 780 (extend `app/tests/flows/heart-walk.mjs` through camp, a morning and a week close), commit, push, publish the web link, update this file, and **push a commit whose message contains `[testflight]`** so the whole first playable goes to TestFlight; watch that workflow run to success (fix and re-run on failure) and tell Dan the build is on its way.
 2. **The real paintings** (D-067): round 1 of week 1's five places is in `app/paint/places/` (sealed), scored 5–7/10 against the hall by its painter; Claude judged them below the bar (flat, beige, every material the same stone) and **did not put them in the app**: stand-ins stay. Next, in its own painting session: kit upgrades (per-material colour for salt, cloth, leather, tin, paper; a sheen on polished stone; a dark stain; rock salt; a still flame in `live.js`; the palette check recalibrated against the hall), then repaint week 1 with a critic (a second Claude, as `paint/CRITIQUE-1.md`), and only paintings at the hall's level are wired in (`ui/paintings.ts`, by place id, falling back to the stretch's stand-in).
-3. **TestFlight:** Dan finished Apple setup sitting 2 (all four secrets in; TestFlight installed). **The first build reached Apple** (workflow run 36011344034, 2026-09-24: signed in the cloud and uploaded in under 4 minutes): trial (d), the pipeline, passes. It carries slices 1–2. Dan does sitting 3 (trials b and c) when he tests, and reports.
+3. **TestFlight:** Dan finished Apple setup sitting 2 (all four secrets in; TestFlight installed). **The first build reached Apple** (workflow run 36011344034, 2026-09-24: signed in the cloud and uploaded in under 4 minutes): trial (d), the pipeline, passes. It carries slices 1–2; the slice 4 session sends the whole first playable. Dan does sitting 3 (trials b and c) when he tests, and reports.
 4. **The web link:** https://claude.ai/artifact/TcH91A1SxeEvEnLJbRE4pi (private; one link, updated in place each slice).
 
-## Last session (2026-09-24, Phase 9, slice 2)
+## Last session (2026-09-24, Phase 9, slice 3)
+Slice 3, learning the Cut, built (D-070): the marks screen beside Records (every mark met, known, guessed with its question mark, new to guess, seen, a name, or only part of it; a guess can change until the place answers); the place confirming guesses on its own screen (a guess that held, or the tempting one struck with its one line; a mark never guessed is simply learned); the first word as its own screen on the approved painted Lamp Hall (four taps, the cups waking down the hall, the stone going, then the arrival and "Go through"); the head of the stair ("Go down" · Today); the Cut's own lettering for every mark (straight cuts in a square cell, the ring the only curve); a High day's deep push with its partial sign. 51 rule tests pass (12 new), typecheck clean; the flow walk now goes on day by day until the first word is cut, then the stair and the marks: 44 screens at 440 × 956 and 360 × 780, no errors, no network. The web link is updated (version 3). Meanwhile another session named the app (D-071) and worked on the painting kit.
+
+## Earlier (2026-09-24, Phase 9, slice 2)
 Slice 2, the Quiet answers, built on the real sealed content (D-068): the story transcribed into typed data (`app/src/content/sealed/`: the route, 78 story moments, 40 sealed things, 38 records, 48 marks, 72 finds, 160 passage lines, camps, teasers, week-close lines), the story's rules (`app/src/core/story.ts`: the story clock, places by effort, Keys from rhythms with the weekly floor, a job's return, finds), and the screens (Today's "Ahead", the step and the delve's end carrying the story, arrivals with the word's four taps, the map in two levels, records with computed readings, guessing a mark). 39 rule tests pass, including six simulated weeks (Normal, Low, High, an absence). The whole flow walked at 440 × 956 and 360 × 780: no errors, no network. Dan asked for a fresh session per slice, started automatically (D-069).
 
 ## Earlier (2026-09-24, Phase 8 close)
@@ -64,7 +67,7 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 
 ## Phase 9 exit criteria
 
-- [ ] Slices 2, 3 and 4 built on the heart (`product/MVP.md` → build order). Slice 2 built (D-068).
+- [ ] Slices 2, 3 and 4 built on the heart (`product/MVP.md` → build order). Slice 2 built (D-068); slice 3 built (D-070).
 - [ ] Carried from Phase 8 (D-065): trials (b) the delve's end with the phone locked, (c) real-app feel; (d) a build through TestFlight **passed** (2026-09-24).
 - [x] The sealed story job done (D-066, D-067).
 - [ ] The real content for six story weeks loaded, and its paintings made from the briefs (`product/MVP.md` → budget).
@@ -145,6 +148,7 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 - 2026-09-24 — The heart slice built and published as a web link while Apple setup waits (D-064).
 - 2026-09-24 — **The sealed story job done** in its own session (D-066, D-067); merged at Phase 9's start.
 - 2026-09-24 — **Phase 8 complete** (D-065): the heart felt great; trials (b)–(d) carried into Phase 9. Merged into `main`. Phase 9 opened.
+- 2026-09-24 — Phase 9: slice 2, the Quiet answers (D-068); slice 3, learning the Cut (D-070).
 
 ## Unresolved blockers
 
@@ -155,4 +159,4 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 
 ## Recommended next action
 
-**Claude:** slice 3 (learning the Cut), in its own session (D-069). **Dan:** nothing needed; look at the web link whenever curious; Apple setup when at a computer. To resume by hand, paste: "Read CLAUDE.md and docs/CURRENT_STATE.md on branch claude/phase-8-continuation-ttngwy, then continue Phase 9."
+**Claude:** slice 4 (the week and the gaps), in its own session (D-069), ending with the whole first playable sent to TestFlight. **Dan:** nothing needed; the web link shows slice 3 now; the TestFlight build follows slice 4. To resume by hand, paste: "Read CLAUDE.md and docs/CURRENT_STATE.md on branch claude/phase-8-continuation-ttngwy, then continue Phase 9."

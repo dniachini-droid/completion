@@ -94,7 +94,7 @@
         <section class="readout">
           <div class="label-line lit">{t('marks.this')}</div>
           {#if current.struck}
-            <p class="know"><s>{t('marks.struck', { word: current.held?.guess ?? '' })}</s></p>
+            <p class="know">{@html t('marks.struck', { word: `<s>${current.held?.guess ?? ''}</s>` })}</p>
             <p class="know">{current.struck}</p>
           {/if}
           {#if current.state === 'held'}
@@ -166,7 +166,7 @@
   .readout .label-line { margin-bottom: 10px; }
   .know { font-family: var(--life); font-size: 18px; line-height: 1.45; color: var(--ink); margin: 0 0 8px; }
   .know :global(em) { color: #fff; }
-  .know s { color: var(--ink-3); }
+  .know :global(s) { color: var(--ink-3); }
   .ctx { margin: 0 0 6px; }
   .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
   .choices .btn-quiet { justify-content: center; min-height: 46px; }
