@@ -596,3 +596,19 @@
 - **Rationale:** reuses the approved look exactly (D-040); meets the locked-phone requirement with no server; every screen checked at true size before Dan sees it; nothing leaves the phone (§63); fastest build for the MVP (D-004, rule 13).
 - **Consequences:** Dan's one-time setup on his phone (membership, app record, a key for the cloud Mac, TestFlight), started during Phase 8. A scheduled monthly rebuild so TestFlight's 90-day expiry never bites. Five early trials open Phase 8 (locked-phone alert, smoothness, real-app feel, the pipeline, the kit's sample places); option C is the fallback if the first or third fails badly. Next: `ARCHITECTURE.md`, `DATA_MODEL.md`, `SECURITY_PRIVACY.md`, `TEST_STRATEGY.md`.
 - **Reversible:** Yes, until Phase 8 builds on it; the game rules and data would carry over to C.
+
+## D-058 — Dan agrees to the stack and the painting plan
+- **Date:** 2026-09-24
+- **Context:** `technical/TECH_DECISIONS.md` (D-057).
+- **Decision (Dan):** "Yes, proceed." Option B (web code in a real iPhone app, via TestFlight) and the painting kit, with three invented sample places for Dan to judge first.
+- **Consequences:** `TECH_DECISIONS.md` marked agreed; the four remaining technical docs are written on this stack (D-059).
+- **Reversible:** Yes, until Phase 8 builds on it (fallback: option C).
+
+## D-059 — Architecture, data model, privacy and test strategy (Claude's routine calls, D-006)
+- **Date:** 2026-09-24
+- **Context:** Phase 7's remaining exit criterion (MASTER_BRIEF §63–64, §72–74), for the MVP on the agreed stack (D-058).
+- **Decision:** `technical/ARCHITECTURE.md`: five parts (core, content, platform, ui, paint) with one-way dependencies; the source of truth is an append-only **log of facts** (what Dan did, and what the world gave, recorded once so later rule changes never take anything back), with a rebuildable snapshot; timers are timestamps; the 04:00 day edge in one function; the clock passed in; screens receive only a "can see now" view; canon never shipped; all copy in one file; content shipped per build, a week ahead. `technical/DATA_MODEL.md`: Dan's data, the fact types, authored content types with stable ids, save and content versions, migrations with a backup first, sample saves for every version. `technical/SECURITY_PRIVACY.md`: no network at all (enforced), notifications the only permission, Apple the only outside service, the test summary shared only if Dan exports it. `technical/TEST_STRATEGY.md`: six layers, including story order and locked-information tests over generated states, scripted weeks against `BALANCING.md` §8, time edge cases, and the direction D "Never" list checked automatically.
+- **Alternatives:** storing only current state (simpler, but rule changes could silently rewrite the past, and the test's notes would need separate tracking); working out the world's gifts on every open (a rules change would replay the story differently); a state library or server (premature).
+- **Rationale:** rules 9, 13, 18; D-015, D-030, D-045, D-046; MASTER_BRIEF §64's principles; the MVP's no-tracking test notes.
+- **Consequences:** Phase 8 creates `app/` in this shape. Story content and painting scene files live in marked sealed folders.
+- **Reversible:** Yes.

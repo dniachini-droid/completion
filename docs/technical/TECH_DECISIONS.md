@@ -2,7 +2,7 @@
 
 > Phase 7 (MASTER_BRIEF §62–66, D-055). How the MVP (`product/MVP.md`) gets built, and why. Plain words first; the technical names are in brackets for later sessions. **Spoiler-free: Dan reads this.**
 
-_Status: **draft for Dan** (D-057). Built on Dan's four answers (D-056)._
+_Status: **agreed by Dan** (2026-09-24, D-058). Built on Dan's four answers (D-056)._
 
 ## In one breath
 Build the game as **web code inside a real iPhone app** (TypeScript, Svelte and Capacitor). Claude builds and tests it in the cloud, a cloud Mac packages it, and it arrives on Dan's iPhone through **TestFlight**, Apple's app for testing. Everything lives **on the phone only**: no account, no server, no tracking, no AI. The paintings stay **code-painted, as in the mock-ups**, made with a shared painting kit so about 5 a week is steady work, not heroics.
@@ -97,7 +97,7 @@ Recorded so later sessions don't re-decide them. Dan doesn't need to review thes
 - **Tests:** Vitest for rules and story unlocks; Playwright for whole flows and true-size screenshots in a Safari-like browser (WebKit).
 - **Cloud build:** GitHub Actions on a macOS runner with fastlane; Codemagic as the fallback.
 - **No server, no account, no analytics, no crash-reporting service, no AI.** TestFlight's own crash reports (Apple) are the only thing that can leave the phone, and only if Dan chooses to send them.
-- Details: `ARCHITECTURE.md`, `DATA_MODEL.md`, `SECURITY_PRIVACY.md`, `TEST_STRATEGY.md` (next, once Dan agrees to this page).
+- Details: `ARCHITECTURE.md`, `DATA_MODEL.md`, `SECURITY_PRIVACY.md`, `TEST_STRATEGY.md` (D-059).
 
 ## Answers to MASTER_BRIEF §62's list
 | Question | Answer |
@@ -125,5 +125,5 @@ Checked with small trials at the start of Phase 8, before any real building:
 5. **The painting kit** reaches the approved hall's quality in three invented places.
 If 1 or 3 fails badly, option C is the fallback; the game rules and data carry over unchanged.
 
-## For Dan
-Do you agree with **B, web code in a real iPhone app, via TestFlight**, and with the painting plan (a kit, a weekly painting session, three invented sample places for you to judge first)?
+## Dan's answer
+**"Yes, proceed"** (D-058): option B via TestFlight, and the painting plan.

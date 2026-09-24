@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-24 (Phase 7 started: Dan's answers D-056; stack recommended, D-057, draft)_
+_Last updated: 2026-09-24 (Phase 7: stack agreed D-058; the four technical docs written D-059; waiting on Dan to close the phase)_
 
 ## Current phase
 
@@ -15,12 +15,12 @@ _Last updated: 2026-09-24 (Phase 7 started: Dan's answers D-056; stack recommend
 Choose the technology for the approved MVP (`product/MVP.md`), MASTER_BRIEF §62–66: compare credible options (iPhone-only vs multi-platform, native vs cross-platform, offline-first, local data, backups, the delve timer with the phone locked, painted and moving scenes, content size), recommend one, and explain the trade-offs in plain words. Also: how a painting for every named place is made at about 5 a week in direction D (D-054). Outputs: `technical/TECH_DECISIONS.md`, `technical/ARCHITECTURE.md`, `technical/DATA_MODEL.md`, `technical/SECURITY_PRIVACY.md`, `technical/TEST_STRATEGY.md`. No application code yet (Phase 8).
 
 ## Resume here (next session)
-1. If Dan has agreed to `technical/TECH_DECISIONS.md` (D-057): write `technical/ARCHITECTURE.md`, `DATA_MODEL.md`, `SECURITY_PRIVACY.md` and `TEST_STRATEGY.md` for the MVP on that stack (no premature enterprise architecture). If he hasn't, answer his questions first.
-2. In its own session, before any build: the sealed story-fix session (D-035), including week 6 of the clue ledger, the authoring list from `game/BALANCING.md` (D-049), the content budget in `product/MVP.md`, and whether weeks 1–6 need the before → now view (D-053).
+1. If Dan has agreed to close Phase 7: open the PR into `main` and merge it, then Phase 8 opens with the five trials in `technical/TECH_DECISIONS.md` → "Risks" (the delve alert with the phone locked, smoothness, real-app feel, the cloud-Mac pipeline, the painting kit's three invented sample places), and Dan's one-time Apple setup (Claude writes the steps).
+2. In its own session, before the first playable's build: the sealed story-fix session (D-035), including week 6 of the clue ledger, the authoring list from `game/BALANCING.md` (D-049), the content budget in `product/MVP.md`, and whether weeks 1–6 need the before → now view (D-053). The Phase 8 prototype's throwaway data doesn't need it.
 3. Whenever convenient: Dan looks at the planner screens on his phone (D-047).
 
-## This session (2026-09-24, Phase 7 started)
-Dan's answers (D-056): **iPhone, staying; no computer; up to ~$99 a year is fine; paintings stay code-painted.** Claude drafted `technical/TECH_DECISIONS.md` (D-057): five options compared; recommended **web code in a real iPhone app** (TypeScript, Svelte, Capacitor), packaged by a cloud Mac and installed through TestFlight; everything on the phone, no server, no AI; the delve's end is an alert the phone schedules itself. The paintings: a **painting kit** built from the approved hall's method, one short scene file per place, baked in the cloud with live layers on top, checked and critiqued, one painting session a week; Dan judges **three invented sample places** first. Waiting on Dan's agreement.
+## This session (2026-09-24, Phase 7)
+Dan's answers (D-056): **iPhone, staying; no computer; up to ~$99 a year is fine; paintings stay code-painted.** `technical/TECH_DECISIONS.md` compared five options and recommended **web code in a real iPhone app** (TypeScript, Svelte, Capacitor), packaged by a cloud Mac and installed through TestFlight, everything on the phone, no server, no AI (D-057). The paintings: a **painting kit** from the approved hall's method, one short scene file per place, baked in the cloud with live layers on top, checked and critiqued, one painting session a week; Dan judges **three invented sample places** first. **Dan agreed** (D-058). Then the four technical docs (D-059): `ARCHITECTURE.md` (five parts, one-way dependencies, a log of facts as the source of truth, gifts recorded once, timers as timestamps, screens see only what's unlocked, all copy in one file), `DATA_MODEL.md`, `SECURITY_PRIVACY.md` (nothing leaves the phone; notifications the only permission), `TEST_STRATEGY.md`.
 
 ## Session before (2026-09-24, Phase 6)
 `product/MVP.md` drafted (D-053). The first playable was already cut hard in Phase 5, so the MVP keeps it whole except a few second doors: the map's whole-Site zoom, forecast waypoints on the map, the morning deep push, and before → now unless the story needs it. The real size is in paintings and words: one painted scene per area proposed, and a content budget for six story weeks. Build order in four slices; the test starts only when all four are in. The central test is written: it measures **starting** (above all avoided jobs; started from the app vs logged afterwards), with a baseline chat and predictions before day 1, notes kept on the phone, three short chats, evidence for and against, what not to overinterpret, and what each answer leads to.
@@ -47,9 +47,9 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 
 ## Phase 7 exit criteria
 
-- [ ] `technical/TECH_DECISIONS.md`: credible options compared, one recommended, trade-offs explained (drafted, D-057); Dan agrees.
-- [ ] How the paintings are made at about 5 a week, in direction D (D-054): the painting kit, drafted in `TECH_DECISIONS.md` (D-057); Dan agrees.
-- [ ] `technical/ARCHITECTURE.md`, `DATA_MODEL.md`, `SECURITY_PRIVACY.md`, `TEST_STRATEGY.md` written for the MVP (no premature enterprise architecture).
+- [x] `technical/TECH_DECISIONS.md`: credible options compared, one recommended, trade-offs explained; Dan agrees (D-057, D-058).
+- [x] How the paintings are made at about 5 a week, in direction D (D-054): the painting kit (D-057, D-058).
+- [x] `technical/ARCHITECTURE.md`, `DATA_MODEL.md`, `SECURITY_PRIVACY.md`, `TEST_STRATEGY.md` written for the MVP (no premature enterprise architecture) (D-059).
 - [ ] Dan agrees to move to Phase 8 (prototype).
 
 ## Phase 6 (closed) exit criteria
@@ -103,14 +103,15 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 - 2026-09-24 — **Phase 5 complete** (D-052). Merged into `main`. Phase 6 opened.
 - 2026-09-24 — Phase 6: the MVP and its central test written (D-053); Dan: a painting for every named place, waypoints and the morning deep push kept, test notes on the phone (D-054).
 - 2026-09-24 — **Phase 6 complete** (D-055). Merged into `main`. Phase 7 opened.
+- 2026-09-24 — Phase 7: Dan's answers (D-056); the stack and the painting kit agreed (D-057, D-058); the four technical docs written (D-059).
 
 ## Unresolved blockers
 
 - None.
-- **Jobs queued for later phases:** the language pass on every line the app says (**after Dan has played the first playable for 3–4 weeks**, D-046; nothing before it is final wording); the sealed story-fix session (D-035, before the first playable); a memory and recap system, a before → now re-read view, a guaranteed reward rhythm and high-day extras (D-035, Phase 5–6); jobs and targets as editable data (D-030, Phase 7); week 6 of the sealed clue ledger (D-023).
+- **Jobs queued for later phases:** the language pass on every line the app says (**after Dan has played the first playable for 3–4 weeks**, D-046; nothing before it is final wording); the sealed story-fix session (D-035, before the first playable); a memory and recap system, a before → now re-read view, a guaranteed reward rhythm and high-day extras (D-035, Phase 5–6); jobs and targets as editable data (D-030, now in `technical/DATA_MODEL.md`); week 6 of the sealed clue ledger (D-023).
 - Housekeeping (non-blocking): rename the GitHub repo once a product name exists (`narrative/NAMES.md`). (Privacy verified: private.)
 - Open for Dan whenever he likes: the app name (`narrative/NAMES.md`).
 
 ## Recommended next action
 
-**Dan:** read `technical/TECH_DECISIONS.md` (or Claude's summary in chat) and say whether you agree. Then Claude writes the other four technical docs in this session, or in a new one with: "Read CLAUDE.md and docs/CURRENT_STATE.md, then continue Phase 7."
+**Dan:** say whether Phase 7 can close and Phase 8 (prototype) can open. Claude then merges Phase 7 into `main` and tells you the sentence for the new session.
