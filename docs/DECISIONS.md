@@ -549,3 +549,10 @@
 - **Decision (Dan):** "The numbers feel right" (`game/BALANCING.md`, D-049, approved). "Nothing is missing" (`product/FIRST_PLAYABLE.md`, D-050, approved). Great doors for big projects (the Course's modules) come **later**: "it already counts" every day.
 - **Consequences:** both docs marked approved; `PHASE5_PLAN.md` step 5 done. Remaining for Phase 5: Dan's agreement to close it and move to Phase 6 (step 6). Still pending in parallel: the sealed story-fix session (D-035) and Dan's look at the planner screens on his phone (D-047).
 - **Reversible:** Yes.
+
+## D-052 — Phase 5 closed; Phase 6 (MVP) opened
+- **Date:** 2026-09-24
+- **Context:** Phase 5's exit criteria are met: one concept (D-042), written and stress-tested (D-043, D-044), the week planner added and locked (D-045, D-047, D-048), the numbers set (D-049) and the first playable's contents listed (D-050), both approved (D-051).
+- **Decision (Dan):** "Yes." Phase 5 is closed and merged into `main`. Phase 6 (MVP, MASTER_BRIEF §60–61) opens in a new session.
+- **Carried into Phase 6:** the sealed story-fix session with week 6 and the new authoring list (D-035, D-049), before the build; Dan's phone check of the planner screens (D-047); the language pass after 3–4 weeks of play (D-046).
+- **Reversible:** Phase changes need Dan's agreement.
