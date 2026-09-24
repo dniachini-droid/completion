@@ -182,7 +182,7 @@
     ring.style.setProperty('--p', ((total - left) / total).toFixed(4));
   }
   draw();
-  window.addEventListener('load', function(){ setTimeout(function(){ setInterval(function(){ if (left > 0) { left--; draw(); if (!left) ring.classList.add('ended'); } }, 1000); }, 3400); });
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ setTimeout(function(){ setInterval(function(){ if (left > 0) { left--; draw(); if (!left) ring.classList.add('ended'); } }, 1000); }, 3000); }); });
   /* a preview of the end: tap the ring to see it bloom */
   ring.addEventListener('click', function(){ left = 0; draw(); ring.classList.add('ended'); t.textContent = '0:00'; });
 })();
