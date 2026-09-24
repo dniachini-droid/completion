@@ -95,7 +95,9 @@
 .breather .cant.two { align-items:center; gap: 2px; } .breather .cant .dot { color: var(--ink-3); }
 /* D-037: the breather in a run (mid), the run's end (last), the single cat delve (cat) */
 .breather > div { display:none; }
-.breather[data-b="mid"] .br-mid, .breather[data-b="last"] .br-last, .breather[data-b="cat"] .br-cat { display:block; }
+.breather[data-b="mid"] .br-mid, .breather[data-b="last"] .br-last, .breather[data-b="cat"] .br-cat, .breather[data-b="enough"] .br-enough { display:block; }
+/* D-047: the Course's enough. Its own moment, then two equal choices; continuing is never the default */
+.br-enough .two-quiet { margin-top: 4px; }
 .finishing .breather { display:none; }
 /* the breather's only sign of time: a faint hairline that fills while you rest. No numbers: rest is never timed pressure. */
 .breath-line { position:relative; width: 88px; height: 1px; margin: -6px auto 22px; background: var(--edge-4); overflow:hidden; }
@@ -228,7 +230,7 @@
       <div class="fin-course">
         <div class="label-line centred">The delve</div>
         <h2 style="margin-top:10px"><span class="donemin">25 minutes</span> on the Course.</h2>
-        <p class="say">The passage opens out ahead.</p>
+        <p class="say" id="finsay">The passage opens out ahead.</p>
         <a class="btn resting" href="morning.html#later">Back to today</a>
       </div>
       <div class="fin-ask">
@@ -254,7 +256,7 @@
       <div class="br-mid">
         <div class="label-line centred">A breather</div>
         <h2 style="margin-top:10px" id="brdone">That’s the first delve.</h2>
-        <p class="say">The passage opens out ahead.<br>Rest a little. The next starts by itself.</p>
+        <p class="say" id="brsay">The passage opens out ahead.<br>Rest a little. The next starts by itself.</p>
         <div class="breath-line" id="bline" aria-hidden="true"><i></i></div>
         <button class="btn resting" id="nextnow">Start it now</button>
         <div class="cant"><button class="text-link" id="brfinish"><span>Finish here</span></button></div>
@@ -265,10 +267,16 @@
         <p class="say">The passage opens out ahead.</p>
         <a class="btn resting" href="morning.html#later">Back to today</a>
       </div>
+      <div class="br-enough">
+        <div class="label-line centred lit">Enough</div>
+        <h2 style="margin-top:10px">Course session complete.</h2>
+        <p class="say">Enough for today.<br>Anything more is extra.</p>
+        <div class="two-quiet"><button class="btn-quiet" id="continue"><span>Continue</span></button><a class="btn-quiet" href="today-planned.html#enough"><span>Back to today</span></a></div>
+      </div>
       <div class="br-last">
-        <div class="label-line centred">The last delve</div>
+        <div class="label-line centred" id="lastlabel">The last delve</div>
         <h2 style="margin-top:10px" id="rundone">That’s the run done.</h2>
-        <p class="say">The passage opens out ahead.</p>
+        <p class="say" id="lastsay">The passage opens out ahead.</p>
         <a class="btn" href="complete.html">See where you are</a>
         <div class="cant"><a class="text-link" href="delve-set.html"><span>Keep going</span></a></div>
       </div>
@@ -296,7 +304,11 @@
   /* D-037: a run of delves. #run-N-L = N delves of L minutes (N 1–8, L 25|30|45|60), from the first, just begun.
      Add -dK to open on delve K, -breather to open on the breather after it (the demo moves on to the next delve by itself).
      No hash: the Course's hour (2 × 25), mid-way through the first delve. #second = its second delve.
-     #cat-L: the cat's medication, a single delve of L. D-036 samples: #stepped, #finished, #cat-60-finish, #resume-… (below). */
+     #cat-L: the cat's medication, a single delve of L. D-036 samples: #stepped, #finished, #cat-60-finish, #resume-… (below).
+     D-047, the Course's enough: its first hour (50 minutes of delves) is enough for the day. Add -plan-P for a planned Course day
+     with room for P delves (#run-2-25-plan-6: a 3-hour Course day, begun as its hour). The delve that reaches enough ends in its
+     own moment ("Course session complete. Enough for today."): if the run Dan set ends there, it waits for Continue or Back to today;
+     if he set a longer run himself, it says so and carries on by itself (D-037). Past enough the line says "more", never "of six". */
   var ORD = ['', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth'];
   var CARD = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight'];
   var GALLERY = 175;                 /* minutes of work from here to the Salt Gallery (about a working day) */
@@ -307,11 +319,14 @@
   var job = 'course', N = 2, L = 25, k = 1, left = 14*60 + 12, sample = true;
   var mr = h.match(/run-([1-8])-(25|30|45|60)(?:-d([1-8]))?/);
   var cat = h.match(/cat-(25|30|45|60)\b/);
+  var ENOUGH = 50, pl = h.match(/plan-([1-8])/);    /* the Course's hour: two delves of 25 with the breather; any 50 minutes of delves */
   /* D-036: carrying on a held delve, from Today: #resume-course-13[-run-3-25-d2] | #resume-second-13 | #resume-cat-13-of-30 */
   var resume = h.match(/resume-(course|second|cat)-(\d+)(?:-of-(25|30|45|60))?/);
   if (mr) { N = +mr[1]; L = +mr[2]; k = Math.min(N, +(mr[3] || 1)); sample = false; }
   if (/second/.test(h) && !mr) { k = 2; left = 21*60 + 40; }
   if (cat || (resume && resume[1] === 'cat')) { job = 'cat'; N = 1; k = 1; L = cat ? +cat[1] : +(resume[3] || 25); sample = false; }
+  var P = pl ? Math.max(N, +pl[1]) : N;           /* the planned room for the day; only reachable by choosing Continue */
+  var kE = Math.ceil(ENOUGH / L);                  /* the delve in which the Course reaches enough */
   var total = L * 60;
   if (!sample) left = total;
   if (resume) left = Math.min(total, Math.max(1, +resume[2]) * 60);
@@ -325,8 +340,13 @@
   document.querySelector('.head .label-line').textContent = (job !== 'cat' && N * L >= GALLERY) ? 'To' : 'Towards';
   document.querySelector('.ring .left').textContent = 'left of ' + L + ' minutes';
   function ofWords() {
-    document.getElementById('of').textContent = N === 1 ? (job === 'cat' ? '' : 'a single delve') : 'the ' + ORD[k] + ' of ' + CARD[N] + ' delves';
-    ring.setAttribute('aria-label', 'Time left of ' + L + ' minutes' + (N > 1 ? ', the ' + ORD[k] + ' of ' + CARD[N] + ' delves' : ''));
+    var w;
+    if (job === 'cat') w = '';
+    else if (k > kE) w = 'more · the ' + ORD[k] + ' delve';                 /* past enough: more, never "of six" */
+    else if (Math.min(N, kE) === 1) w = N === 1 ? 'a single delve' : 'enough after this one';
+    else w = 'the ' + ORD[k] + ' of ' + CARD[kE] + ' delves';               /* up to enough, the count is the enough */
+    document.getElementById('of').textContent = w;
+    ring.setAttribute('aria-label', 'Time left of ' + L + ' minutes' + (w ? ', ' + w : ''));
   }
   ofWords();
   function draw(){ var m = Math.floor(left/60), s = left % 60; t.textContent = m + ':' + (s < 10 ? '0' : '') + s; ring.style.setProperty('--p', ((total - left) / total).toFixed(4)); }
@@ -338,16 +358,25 @@
     held = false; ui.classList.remove('holding'); ring.classList.remove('hold'); home.setAttribute('href', 'morning.html');
     left = 0; draw(); ring.classList.add('ended'); setTimeout(function(){ if (!left) ring.classList.add('rest'); }, 1200);
     if (job === 'cat') brEl.setAttribute('data-b', 'cat');
+    else if (k === kE && N === k && P > N) {
+      brEl.setAttribute('data-b', 'enough');                 /* D-047: the hour is done; the rest of the day's room waits for a choice */
+    }
     else if (k < N) {
       brEl.setAttribute('data-b', 'mid');
-      document.getElementById('brdone').textContent = 'That’s the ' + ORD[k] + ' delve.';
+      var enoughNow = k === kE;
+      document.getElementById('brdone').textContent = enoughNow ? 'Course session complete.' : 'That’s the ' + ORD[k] + ' delve.';
+      document.getElementById('brsay').innerHTML = enoughNow ? 'Enough for today. The rest is extra.<br>You set more, so the next starts by itself.'
+        : 'The passage opens out ahead.<br>Rest a little. The next starts by itself.';
       resting = true;
       bline.classList.remove('go'); void bline.offsetWidth; bline.style.setProperty('--bd', (BREATH_MS / 1000) + 's');
       setTimeout(function(){ if (resting) bline.classList.add('go'); }, 900);
       clearTimeout(brT); brT = setTimeout(next, BREATH_MS + 900);
     } else {
       brEl.setAttribute('data-b', 'last');
-      document.getElementById('rundone').textContent = N === 1 ? 'That’s the delve done.' : 'That’s the run done.';
+      var atEnough = k === kE;
+      document.getElementById('rundone').textContent = atEnough ? 'Course session complete.' : (N === 1 ? 'That’s the delve done.' : 'That’s the run done.');
+      document.getElementById('lastlabel').textContent = atEnough ? 'Enough' : 'The last delve';
+      document.getElementById('lastsay').textContent = atEnough ? 'Enough for today.' : 'The passage opens out ahead.';
     }
     setTimeout(function(){ ui.classList.add('breathing'); }, 900);
   }
@@ -382,6 +411,7 @@
     var m = Math.max(1, (k - 1) * L + Math.floor((total - left) / 60));
     finished = true; held = false; resting = false; clearTimeout(brT);
     document.querySelectorAll('.donemin').forEach(function(e){ e.textContent = words(m); });
+    document.getElementById('finsay').textContent = m >= ENOUGH ? 'Enough for today.' : 'The passage opens out ahead.';   /* short of enough is never shown as short */
     home.setAttribute('href', 'morning.html');
     ui.classList.remove('holding', 'breathing'); ring.classList.add('hold');
     if (!ring.classList.contains('ended')) {
@@ -400,6 +430,8 @@
   document.getElementById('heldfinish').addEventListener('click', finish);
   document.getElementById('brfinish').addEventListener('click', finish);
   document.getElementById('nextnow').addEventListener('click', next);
+  /* Continue: the rest of the day's planned room, as more. From here the run carries on by itself (D-037). */
+  document.getElementById('continue').addEventListener('click', function(){ N = P; brEl.setAttribute('data-b', 'mid'); resting = true; next(); });
   document.getElementById('isdone').addEventListener('click', function(){ answer('yes'); });
   document.getElementById('notyet').addEventListener('click', function(){ answer('no'); });
   if (/breather|end/.test(h)) end();

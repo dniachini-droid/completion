@@ -500,3 +500,18 @@
 - **Rationale:** Dan's choice; wording is judged best on real screens in real use.
 - **Consequences:** `CURRENT_STATE.md`, `OPEN_QUESTIONS.md`, `design/UX_PRINCIPLES.md`. Phase 7 records the one-place copy requirement. Supersedes D-031's suggested slot.
 - **Reversible:** Yes.
+
+## D-047 — The week planner: the second review reconciled; the Course day counts at its hour
+- **Date:** 2026-09-24
+- **Context:** ChatGPT's second review of the planner (D-045) agreed with the direction and with all three of Claude's rejections, and asked for a small reconciliation. Dan answered D-045's open question himself: a 3-hour Course day counts once its first hour is done. Record: `product/SCHEDULER_REVIEW.md` → "The second review" (6 accepted, 1 modified, 8 already resolved, none rejected).
+- **Decision:**
+  1. **The Course day counts at its first hour** (Dan). The planned 3 hours are room, not the bar; the rest is more, which moves Dan in full (D-044) and is never shown as owed. Contract: planned as "1 h · room for 3"; Begin opens the run at the hour, with a gold *enough* mark on the line; the hour ends in its own moment ("Course session complete. Enough for today."), which counts at once; then **Continue** and **Back to today** with equal weight, neither the default; past enough the words say "more", never "of six". If Dan set a longer run himself before Begin, the moment still shows and the run carries on by itself (D-037 kept).
+  2. **Each job has its own enough, read from how it's set up** (no categories; D-038 point 4 kept): a delve rhythm counts at its *enough at* (one optional field, delve rhythms only, default all of it; the Course preloaded at 1 hour); a delve one-off when Dan says it's done; a job without a timer when marked done, its length only planning and paying steps. Replaces the draft "one hour = done" rule for every timed job.
+  3. **Invariant: adding rhythms never raises the most Keys a period can usefully give** (`game/ECONOMY.md`). The period's Key supply is bounded by the game; once used up, effort still pays through steps, distance, finds, side chambers and the deep route. Step 3 sets the numbers.
+  4. Copy: the Low day says only "A lighter day."; the forecast is predictive ("Current forecast: … around Thursday"; waypoints tagged *forecast*); "Stop this one" becomes "Stop repeating".
+  5. The readability check gates the planner's lock, not Phase 4 (closed, D-040): passed at true size in the browser (every quiet colour 6:1 or better); Dan's check on his own phone remains.
+- **Disagreements with the review:** only item 14's timing (Phase 4 is already closed). Kept, with reasons: the D-037 auto-continue for a run Dan lengthens himself.
+- **Alternatives:** count the Course only at 3 hours (turns 2 good hours into a miss, against P5); keep one hour as the rule for every timed job (wrong for completion jobs); a per-job completion setting for every job (setup Dan doesn't want, P9); Continue as the main button (makes more the expected path).
+- **Rationale:** P2, P5, P7, P9, rule 10 (trivial or multiplied inputs must not out-earn real effort), rule 11, UX 6.
+- **Consequences:** `game/PLANNER.md` (reconciled, ready for Dan's approval), `game/ECONOMY.md`, `product/PHASE5_PLAN.md` (step 3 input), `product/SCHEDULER_REVIEW.md`, `design/INTERACTION_NOTES.md`, mock-ups `today-planned.html`, `week.html`, `rhythms.html`, `delve-set.html`, `delve.html` and their `NOTES.md`. Answers D-045's open question.
+- **Reversible:** Yes.

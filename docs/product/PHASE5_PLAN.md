@@ -14,6 +14,7 @@ Dan (2026-09-24): no new concepts. The game is the one already chosen and built 
 3. **Settle the numbers** (starting guesses, tuned in play):
    - region sizes, how far apart named places are, and step pacing (D-037), with enough route past every opened place for Dan's real hours (D-037, D-039);
    - the reward rhythm: what Dan is guaranteed to get per delve, per day, per week (D-035);
+   - the week's bounded Key supply and how rhythms fill it; adding rhythms must never raise it (invariant, `game/ECONOMY.md`, D-047);
    - high-energy days: what extra effort always unlocks (D-035, D-011);
    - memory and recap, so a story told in small pieces stays remembered, and the before → now view for re-reading (D-035).
 4. **Write the first playable's contents list**: what's in and what's out, from the draft in `game/GAME_DESIGN.md`, sized for 5–6 weeks of play (D-023). This feeds Phase 6 (MVP).

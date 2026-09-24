@@ -47,3 +47,29 @@
 | 33.17 | Mock up the planner before locking it | **Accept** | Done alongside this file (`design/directions/d-combined/week.html`, `rhythms.html`, `today-planned.html`). |
 
 **Rejected:** the "stretch aim" label (row 7); the tray even as a secondary view (row 3); an "explain why" feature in the first playable (row 12).
+
+---
+
+# The second review (2026-09-24)
+
+> ChatGPT reviewed the reconciled planner (`PLANNER_FOR_REVIEW.md` and the screenshots). Verdict: much stronger; it agrees with all three rejections above and with the overall direction; proceed after a small reconciliation. Checked item by item below, and D-047 records it. Dan decided item 1 himself.
+
+**Verdicts:** 6 accepted · 1 modified · 8 already resolved · 0 rejected.
+
+| # | Review says | Verdict | Why, against the repo |
+|---|---|---|---|
+| 1 | The Course day counts after its first hour; the 3 hours are runway; stopping there is full success; continuing is optional | **Accept** (Dan's decision) | Matches P5 ("one hour of course work counts as done") and D-038 (any 50 minutes of delves). Contract written into `PLANNER.md` and `INTERACTION_NOTES.md`; mock-ups show it: "1 h · room for 3", a gold *enough* mark on the run line, its own moment ("Course session complete. Enough for today."), then Continue and Back to today with equal weight, and "more · the third delve" after. **One boundary kept:** if Dan sets a longer run himself *before* Begin, the enough moment still shows and the run then carries on by itself, as he chose in D-037. Setting the longer run is the explicit choice; it is never the default (Begin opens at the hour). |
+| 2 | Don't make "one hour = done" a rule for every timed job; use each job's own enough, with defaults, no heavy setup | **Accept** | Right: the draft rule would have called a two-hour tank clean done at one hour. Rewritten around how the job runs, read from its setup, never a category (keeps D-038 point 4: the modes stay internal): **delve rhythm** counts at its *enough at* (default: all of it); **delve one-off** counts when Dan says it's done (D-036, D-037 5a); **no timer** counts when marked done, and its length only plans and pays steps. The one addition is an optional *enough at* row, shown only for delve rhythms, already filled in. The Course is preloaded at 1 hour. |
+| 3 | Close the Key-farming loop: more rhythms must never raise the most useful Keys per period | **Accept** | A real gap: D-043 F6 protects the core's order, but side content is still reward. Invariant added to `game/ECONOMY.md` (the Key source document) and to step 3's inputs. Numbers stay in step 3. Honest residual risk noted: a trivial rhythm could make the bounded supply easier to reach; the guard is that rhythms are Dan's real commitments (D-030), and play will show whether that holds. |
+| 4 | Remove the bookkeeping sentence from the Low-day screen | **Accept** | It narrated the scheduler and made the released session sound like debt moved to another day (P7). Now only "A lighter day." Re-placing stays silent (rule unchanged). |
+| 5 | Forecast language, not "if the plan holds" or "by Thursday" | **Accept** | Follows the planner's first rule. Now "Current forecast: the Salt Gallery around Thursday"; waypoints tagged *forecast*. |
+| 6 | "Stop this one" is ambiguous | **Accept** | The control ends the rhythm's future sessions. Now "Stop repeating"; still no confirmation (done work is never touched). |
+| 7 | Keep the three rejections (no stretch aim, no tray, no ranges) | **Already resolved** | D-045. Unchanged. |
+| 8 | Keep Plan my week as the default | **Already resolved** | Rule 3. Added the question it should raise: "does this week look roughly right?" |
+| 9 | Keep capacity over the plan | **Already resolved** | P3; unchanged. |
+| 10 | Keep plan adherence reward-neutral | **Already resolved** | "Off-plan counts in full". Added "no planning streak" to the list of things never shown. |
+| 11 | Keep planned/moved/done internal and hidden; no "explain why" yet | **Already resolved** | Unchanged. |
+| 12 | Keep the first-playable scope small | **Already resolved** | Same list; "enough at" joins the rhythm fields (item 2); advanced recurrence and adherence analytics named under Later. |
+| 13 | Keep This Week as the main view | **Already resolved** | Unchanged. |
+| 14 | Test the quiet text at real phone size before locking Phase 4 | **Modify** | Phase 4 closed with Dan's approval (D-040), so this can't gate it. It gates **the planner's lock** instead. Done so far: the screens rendered at true size (360×780 and 390×844) with no layout faults (two small collisions on the run screen, found and fixed), and every quiet colour measures 6:1 or better against the scene, well above 4.5:1. The composite's faintness came from scaling. **Dan's check on his own phone** stays the last step. |
+| 15 | Keep the visual direction and plain job names | **Already resolved** | D-038 point 15; unchanged. |

@@ -57,7 +57,7 @@ button.job.sel { background: linear-gradient(90deg, rgba(var(--violet-rgb), .16)
 button.job.sel .t { color: #fff; }
 .job.arrive { animation: rise .7s var(--ease) both; }
 .none { font-family: var(--life); font-style: italic; font-size: 15.5px; color: var(--ink-3); padding-top: 6px; }
-/* a named place the plan would reach: a forecast, never a promise (dim, dashed) */
+/* a named place the plan would reach: a forecast, never a promise (dim, dashed; D-047: forecast words, never "if the plan holds") */
 .wp { position: relative; display: grid; grid-template-columns: 14px 1fr; column-gap: 12px; align-items: center; padding: 2px 0 6px; }
 .wp::before { content: ""; position: absolute; left: 6.5px; top: 0; bottom: 0; width: 1px;
   background: repeating-linear-gradient(180deg, var(--edge-3) 0 4px, transparent 4px 8px); }
@@ -113,7 +113,7 @@ body.editing .bottom .normal { display: none; }
   <section class="col head rise d1">
     <h1 class="carve lg" id="title">This week</h1>
     <span class="soft on-scene" id="dates">21 – 27 September</span>
-    <p class="forecast on-scene st week" id="forecast">If the week goes like this: <b>the Salt Gallery</b> by Thursday, <b>the stair</b> by Sunday.</p>
+    <p class="forecast on-scene st week" id="forecast">Current forecast: <b>the Salt Gallery</b> around Thursday, <b>the stair</b> around Sunday.</p>
   </section>
   <div class="mid col rise d2" id="mid">
     <div class="empty st empty-v">
@@ -167,11 +167,11 @@ body.editing .bottom .normal { display: none; }
   /* What "Plan my week" lays out, by its fixed rules (PLANNER.md): the appointment and set days first; gym spread;
      no day above Normal size; Saturday light; the one-off early. */
   function planned(){ return [
-    [J('Course','3 h'), J(GYM,'1 h')],
+    [J('Course','1 h · room for 3'), J(GYM,'1 h')],
     [J('Spanish study','1 h'), J('Dentist','11:00',1)],
-    [J('Course','3 h'), J(GYM,'1 h')],
-    [J('Order the cat’s medication','one-off'), J('Course','3 h'), J('Spanish lesson','18:00',1)],
-    [J(GYM,'1 h'), J('Course','3 h'), J('Spanish study','1 h')],
+    [J('Course','1 h · room for 3'), J(GYM,'1 h')],
+    [J('Order the cat’s medication','one-off'), J('Course','1 h · room for 3'), J('Spanish lesson','18:00',1)],
+    [J(GYM,'1 h'), J('Course','1 h · room for 3'), J('Spanish study','1 h')],
     [J('Tank clean','1 h')],
     [J('Meal prep',''), J(GYM,'1 h')]
   ]; }
@@ -205,7 +205,7 @@ body.editing .bottom .normal { display: none; }
       });
       if (!shown && !state.w) html += '<li class="none">&nbsp;</li>';
       html += '</ul></li>';
-      if (state.w && W.place[i] && i >= W.today) html += '<li class="wp"><span class="ring"></span><span class="nm">' + W.place[i] + '<i>if the plan holds</i></span></li>';
+      if (state.w && W.place[i] && i >= W.today) html += '<li class="wp"><span class="ring"></span><span class="nm">' + W.place[i] + '<i>forecast</i></span></li>';
     }
     daysEl.innerHTML = html;
     if (scrollToday) { scrollToday = false; var t = daysEl.querySelector('.day.today'), m = document.getElementById('mid');
@@ -219,7 +219,7 @@ body.editing .bottom .normal { display: none; }
     document.getElementById('title').textContent = W.title;
     document.getElementById('dates').textContent = W.dates;
     if (k === 'week') { state.w = midweek(); setView('week');
-      document.getElementById('forecast').innerHTML = 'If the week goes like this: <b>the Salt Gallery</b> by Thursday, <b>the stair</b> by Sunday.'; }
+      document.getElementById('forecast').innerHTML = 'Current forecast: <b>the Salt Gallery</b> around Thursday, <b>the stair</b> around Sunday.'; }
     else { state.w = null; setView('empty'); document.getElementById('emptyHead').textContent = W.head; }
     render(false);
   }
@@ -227,8 +227,8 @@ body.editing .bottom .normal { display: none; }
   document.getElementById('plan').addEventListener('click', function(){
     state.w = planned(); setView('week');
     document.getElementById('forecast').innerHTML = state.key === 'next'
-      ? 'If next week goes like this: <b>the stair</b> by Wednesday, <b>the low door</b> by Sunday.'
-      : 'If the week goes like this: <b>the Salt Gallery</b> by Thursday, <b>the stair</b> by Sunday.';
+      ? 'Current forecast: <b>the stair</b> around Wednesday, <b>the low door</b> around Sunday.'
+      : 'Current forecast: <b>the Salt Gallery</b> around Thursday, <b>the stair</b> around Sunday.';
     render(true);
   });
   document.getElementById('backLink').addEventListener('click', function(e){ e.preventDefault(); history.replaceState(null, '', location.pathname); show('week'); });

@@ -165,7 +165,7 @@ body { --scrim-top-h: 300px; --scrim-bottom-h: 52%; }
       </div>
       <div class="count">
         <button type="button" id="less" aria-label="One delve fewer"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M4 9h10"/></svg></button>
-        <div aria-live="polite"><div class="n" id="cn"><b>2 delves</b> of 25</div><div class="when" id="when">done around 11:25</div></div>
+        <div aria-live="polite"><div class="n" id="cn"><b>2 delves</b> of 25</div><div class="when" id="when">enough around 11:25</div></div>
         <button type="button" id="more" aria-label="One more delve"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M4 9h10M9 4v10"/></svg></button>
       </div>
     </div>
@@ -224,6 +224,9 @@ body { --scrim-top-h: 300px; --scrim-bottom-h: 52%; }
      delves of 25 (175 minutes of work). The line always shows room for one more delve; past 8 × 25 it compresses gently.
      Four or more delves in one sitting (a long delve) show a side chamber off the line near the run's end: a pull, never a target. */
   var GALLERY = 175, MAXN = 8, BREATH = 5;
+  /* D-047: the Course's enough (its hour: 50 minutes of delves) is a small gold mark on the line. Past it is more, never owed.
+     #plan-P (from Today on a planned Course day) is passed on to the delve, so Continue can offer the day's room after the hour. */
+  var ENOUGH = 50, plan = /plan-([1-8])/.exec(location.hash || '');
   var route = document.getElementById('route'), routebox = document.getElementById('routebox');
   var run = { n: 2 }, vis = { n: 2, span: 215, side: 0 }, visAnim = null;
   function spanFor(n, len) { return Math.max(215, Math.min(MAXN, n + 1) * len); }
@@ -255,6 +258,10 @@ body { --scrim-top-h: 300px; --scrim-bottom-h: 52%; }
       '<path d="' + ARCH + ' Z" fill="#0b0b1c"/><path d="' + ARCH + '" fill="none" stroke="#ece9ff" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></g>');
     var ga = xg + 58 > g.W ? 'end' : (xg - 58 < 0 ? 'start' : 'middle'), gx = ga === 'end' ? g.W : (ga === 'start' ? 0 : xg);
     s.push('<text x="' + gx.toFixed(1) + '" y="' + (y + 25) + '" text-anchor="' + ga + '" fill="' + (k > .5 ? '#eceaff' : '#a3a6cc') + '">the Salt Gallery</text>');
+    /* enough: a gold tick at the Course's hour, labelled under the line (above is the side chamber's) */
+    var xn = px(ENOUGH), lit = endM >= ENOUGH;
+    s.push('<g opacity="' + (lit ? 1 : .55) + '"><path d="M' + xn.toFixed(1) + ' ' + (y - 6) + 'V' + (y + 6) + '" stroke="#f2c170" stroke-width="1.6" stroke-linecap="round"' + (lit ? ' style="filter:drop-shadow(0 0 4px #f2c170)"' : '') + '/>' +
+      '<text x="' + xn.toFixed(1) + '" y="' + (y + 25) + '" text-anchor="middle" fill="' + (lit ? '#e8cf9f' : '#a3a6cc') + '">enough</text></g>');
     /* here */
     s.push('<circle cx="' + g.x0 + '" cy="' + y + '" r="3.4" fill="#ffd27a" style="filter:drop-shadow(0 0 5px #f2c170)"/>');
     s.push('<text x="' + (g.x0 - 5) + '" y="' + (y + 25) + '" fill="#a3a6cc">here</text>');
@@ -300,13 +307,14 @@ body { --scrim-top-h: 300px; --scrim-bottom-h: 52%; }
   function words() {
     var n = run.n, len = state.snap, there = n * len >= GALLERY;
     cn.innerHTML = '<b>' + n + (n === 1 ? ' delve' : ' delves') + '</b> of ' + len;
-    when.textContent = 'done around ' + clock(n * len + (n - 1) * BREATH);
+    var kE = Math.ceil(ENOUGH / len), atE = clock(ENOUGH + (kE - 1) * BREATH), end = clock(n * len + (n - 1) * BREATH);
+    when.textContent = n < kE ? 'ends around ' + end : (n === kE ? 'enough around ' + atE : 'enough around ' + atE + ' · ends ' + end);
     head.textContent = there ? 'To the Salt Gallery' : 'Towards the Salt Gallery';
     runEl.classList.toggle('there', there);
     less.disabled = n <= 1; more.disabled = n >= MAXN;
     routebox.setAttribute('aria-valuenow', n);
-    routebox.setAttribute('aria-valuetext', n + (n === 1 ? ' delve' : ' delves') + ' of ' + len + ' minutes, done around ' + clock(n * len + (n - 1) * BREATH) + (there ? ', to the Salt Gallery' : ''));
-    start.href = 'delve.html#run-' + n + '-' + len;
+    routebox.setAttribute('aria-valuetext', n + (n === 1 ? ' delve' : ' delves') + ' of ' + len + ' minutes, ' + when.textContent + (there ? ', to the Salt Gallery' : ''));
+    start.href = 'delve.html#run-' + n + '-' + len + (plan ? '-plan-' + plan[1] : '');
   }
   less.addEventListener('click', function () { setCount(run.n - 1); });
   more.addEventListener('click', function () { setCount(run.n + 1); });
