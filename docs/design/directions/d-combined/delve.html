@@ -71,10 +71,15 @@
 .bottom .of { font-size:17px; margin-top:2px; }
 .bottom .away { font-size:17px; color:var(--ink-2); margin:12px 0 18px; }
 .stopbtn { min-width: 220px; }
-.confirm, .breather { display:none; }
-.stopping .normal { display:none; } .stopping .confirm { display:block; }
-.confirm p { font-size:18px; color:var(--ink); margin:0 0 18px; }
-.breathing .normal, .breathing .confirm { display:none; } .breathing .breather { display:block; }
+.breather, .held { display:none; }
+.breathing .normal, .holding .normal { display:none; } .breathing .breather, .holding .held { display:block; }
+/* D-036: stepped away. The ring keeps its fill; the count inside goes quiet. */
+.holding .breath-hide { opacity:0; transition: opacity 1s var(--ease); }
+.ring.hold .inner, .ring.hold .tip { opacity:0; transition: opacity 1.2s var(--ease); }
+.held p { font-size:17px; color:var(--ink-2); margin:6px 0 20px; }
+.held .cant { display:flex; justify-content:center; margin-top: 8px; }
+#back { flex-direction: column; gap: 3px; padding-top: 10px; padding-bottom: 10px; line-height: 1.1; }
+#back .tail { font-family: var(--life); font-style: italic; font-weight: 500; font-size: 17px; letter-spacing: .01em; text-transform: none; }
 .breather p { font-size:17px; color:var(--ink-2); margin:6px 0 20px; }
 .breather .cant { display:flex; justify-content:center; margin-top: 8px; }
 .breather .cant.two { align-items:center; gap: 2px; } .breather .cant .dot { color: var(--ink-3); }
@@ -120,11 +125,14 @@
       <p class="soft of first-only">the first of two delves</p>
       <p class="soft of second-only">the second of two delves</p>
       <p class="say away">Put the phone away. You’ll hear it end.</p>
-      <button class="btn-quiet stopbtn" id="stop"><span>Stop for now</span></button>
+      <button class="btn-quiet stopbtn" id="step"><span>Step away</span></button>
     </div>
-    <div class="confirm">
-      <p class="say">Stop here? Every minute you did still counts.</p>
-      <div class="btn-row"><a class="btn-quiet full" href="morning.html">Stop here</a><button class="btn resting" id="keep">Keep going</button></div>
+    <div class="held">
+      <div class="label-line centred">A breather</div>
+      <h2 style="margin-top:10px" id="heldjob">Course: one hour</h2>
+      <p class="say">Your minutes are kept.<br>It’ll wait for you, even if you leave.</p>
+      <button class="btn resting" id="back"><span>Back to the delve</span><span class="tail"><span id="heldmin">13</span> min left</span></button>
+      <div class="cant"><a class="text-link" id="heldtoday" href="morning.html#held-course-13"><span>Back to today</span></a></div>
     </div>
     <div class="breather">
       <div class="first-only">
@@ -175,6 +183,10 @@
   if (second) left = 21*60 + 40;
   /* from the length dial on the cat's-medication job: delve.html#cat-25 | 30 | 45 | 60 (one delve, just begun) */
   var cat = location.hash.match(/cat-(25|30|45|60)\b/);
+  /* D-036: carrying on a held delve, from Today: #resume-course-13 | #resume-second-13 | #resume-cat-13-of-30 (N min left of the original length) */
+  var resume = location.hash.match(/resume-(course|second|cat)-(\d+)(?:-of-(25|30|45|60))?/);
+  if (resume && resume[1] === 'cat') cat = [0, resume[3] || '25'];
+  var job = cat ? 'cat' : (second ? 'second' : 'course');
   if (cat) {
     var n = +cat[1], REACH = { 25: ['Towards', 'The Salt Gallery'], 30: ['Into', 'The Salt Gallery'], 45: ['On to', 'The Survey Cut'], 60: ['To the far end of', 'The Survey Cut'] }[n];
     total = n * 60; left = total;
@@ -186,15 +198,29 @@
     document.querySelectorAll('.first-only, .second-only').forEach(function(e){ e.style.display = 'none'; });
     document.querySelectorAll('.cat-only').forEach(function(e){ e.style.display = 'block'; });
   }
+  if (resume) left = Math.min(total, Math.max(1, +resume[2]) * 60);
+  if (/stepped/.test(location.hash)) left = 13*60;   /* a sample: stepped away with 13 min left */
   ring.setAttribute('aria-label', 'Time left of ' + Math.round(total / 60) + ' minutes');
   function draw(){ var m = Math.floor(left/60), s = left % 60; t.textContent = m + ':' + (s < 10 ? '0' : '') + s; ring.style.setProperty('--p', ((total - left) / total).toFixed(4)); }
-  function end(){ left = 0; draw(); ring.classList.add('ended'); setTimeout(function(){ ring.classList.add('rest'); }, 1200); setTimeout(function(){ ui.classList.remove('stopping'); ui.classList.add('breathing'); }, 900); }
+  var held = false;
+  function end(){ held = false; ui.classList.remove('holding'); ring.classList.remove('hold'); left = 0; draw(); ring.classList.add('ended'); setTimeout(function(){ ring.classList.add('rest'); }, 1200); setTimeout(function(){ ui.classList.add('breathing'); }, 900); }
+  /* D-036: step away. The minutes done are kept, the delve is held with its time left, and the breather starts at once. */
+  function stepAway(){
+    held = true;
+    var m = Math.max(1, Math.floor(left / 60)), tail = job + '-' + m + (job === 'cat' ? '-of-' + (total / 60) : '');
+    document.getElementById('heldmin').textContent = m;
+    document.getElementById('heldjob').textContent = document.getElementById('job').textContent;
+    document.getElementById('heldtoday').setAttribute('href', 'morning.html#held-' + tail);
+    ring.classList.add('hold'); ui.classList.add('holding');
+  }
+  function backToDelve(){ held = false; ring.classList.remove('hold'); ui.classList.remove('holding'); }
   draw();
-  if (!frozen) requestAnimationFrame(function(){ requestAnimationFrame(function(){ setTimeout(function(){ setInterval(function(){ if (left > 0) { left--; draw(); if (!left) end(); } }, 1000); }, 3000); }); });
-  ring.addEventListener('click', end);   /* a preview of the end: tap the ring */
-  document.getElementById('stop').addEventListener('click', function(){ ui.classList.add('stopping'); });
-  document.getElementById('keep').addEventListener('click', function(){ ui.classList.remove('stopping'); });
+  if (!frozen) requestAnimationFrame(function(){ requestAnimationFrame(function(){ setTimeout(function(){ setInterval(function(){ if (left > 0 && !held) { left--; draw(); if (!left) end(); } }, 1000); }, 3000); }); });
+  ring.addEventListener('click', function(){ if (!held) end(); });   /* a preview of the end: tap the ring */
+  document.getElementById('step').addEventListener('click', stepAway);
+  document.getElementById('back').addEventListener('click', backToDelve);
   if (/breather|end/.test(location.hash)) end();
+  if (/stepped/.test(location.hash)) stepAway();
 })();
 </script>
 </body>

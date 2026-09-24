@@ -30,6 +30,12 @@ body.v-early .st.early, body.v-later .st.later, body.v-done .st.done { display: 
 body.v-early .st.early.g, body.v-later .st.later.g, body.v-done .st.done.g { display: grid; }
 .row .s svg { width: 12px; height: 12px; margin-left: 6px; vertical-align: -1px; fill: none; stroke: var(--edge-2); stroke-width: 1.4; }
 a.row:hover .t { color: #fff; }
+/* D-036: a held delve is the first offer (#held-<job>-N) */
+.next.carry { display: none; }
+body.h-held .next.carry { display: block; }
+body.h-held .next.st.early.later { display: none; }
+.next.carry .btn-row.lead { grid-template-columns: 1.25fr 1fr; }
+.next.carry .btn-quiet { padding: 0 10px 0 calc(10px + .14em); letter-spacing: .14em; }
 @media (max-height: 800px) {
   .seg { margin-top: 10px; } .ahead { margin-top: 8px; } .ahead p { margin-top: 4px; } .next .soft { margin-bottom: 14px; }
   .row { min-height: 44px; }
@@ -74,6 +80,16 @@ a.row:hover .t { color: #fff; }
         <a class="btn st early g" href="delve-set.html">Begin</a>
         <a class="btn st later g" href="delve.html#second">Begin</a>
         <button class="btn-quiet" aria-label="Swap for another job"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 5h9.5L10 2.5M13 11H3.5L6 13.5"/></svg><span>Swap</span></button>
+      </div>
+      <div class="cant"><button class="text-link"><span>I can’t start</span></button></div>
+    </div>
+    <div class="next carry">
+      <div class="label-line lit">Next</div>
+      <h2 class="say-lg">Carry on: <span id="carryjob">Course</span></h2>
+      <p class="soft" id="carryleft">13 minutes left in this delve</p>
+      <div class="btn-row lead">
+        <a class="btn" id="carrygo" href="delve.html#resume-course-13">Carry on</a>
+        <a class="btn-quiet" id="carryfresh" href="delve.html"><span>Start afresh</span></a>
       </div>
       <div class="cant"><button class="text-link"><span>I can’t start</span></button></div>
     </div>
@@ -147,15 +163,27 @@ document.querySelectorAll('.seg > button').forEach(function(b){
 });
 /* one morning, three moments: morning.html (early), #later (the cat's medication and first delve done), #done (the day complete) */
 (function(){
+  /* D-036: #held-course-13 | #held-second-13 | #held-cat-13-of-30 (a delve stepped away from, N min left) */
+  var CARRY = { course: ['Course', 'delve.html'], second: ['Course', 'delve.html#second'], cat: ['the cat’s medication', 'delve-set.html'] };
+  function held(){ return location.hash.match(/held-(course|second|cat)-(\d+)(-of-(?:25|30|45|60))?/); }
+  function view(){ var h = location.hash, k = held(); return k ? (k[1] === 'second' ? 'later' : 'early') : (/done/.test(h) ? 'done' : (/later/.test(h) ? 'later' : 'early')); }
   function apply(){
-    var h = location.hash, v = /done/.test(h) ? 'done' : (/later/.test(h) ? 'later' : 'early');
-    var b = document.body; b.classList.remove('v-early','v-later','v-done','s-day','s-day2','s-done');
+    var v = view(), k = held();
+    var b = document.body; b.classList.remove('v-early','v-later','v-done','s-day','s-day2','s-done','h-held');
     b.classList.add('v-' + v, v === 'early' ? 's-day' : (v === 'later' ? 's-day2' : 's-done'));
+    if (k) {
+      var n = Math.max(1, +k[2]);
+      b.classList.add('h-held');
+      document.getElementById('carryjob').textContent = CARRY[k[1]][0];
+      document.getElementById('carryleft').textContent = n + (n === 1 ? ' minute' : ' minutes') + ' left in this delve';
+      document.getElementById('carrygo').setAttribute('href', 'delve.html#resume-' + k[1] + '-' + n + (k[3] || ''));
+      document.getElementById('carryfresh').setAttribute('href', CARRY[k[1]][1]);
+    }
   }
   /* the hall: the lintel on the left wall ahead, the lamp on its ledge to the right */
   var GOLD = { early: .12, later: .4, done: .85 }, drawn = null;
   function paint(){
-    var v = /done/.test(location.hash) ? 'done' : (/later/.test(location.hash) ? 'later' : 'early');
+    var v = view();
     if (drawn === v) return; drawn = v;
     var h = Hall.draw(document.getElementById('hall'), { cam: { x: .2, y: 1.6, z: 1.5, f: .62, cx: .5, cy: .47 }, gold: GOLD[v] });
     /* fine, faint brackets on the lintel ("Ahead") */

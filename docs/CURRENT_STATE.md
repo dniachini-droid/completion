@@ -28,7 +28,7 @@ What happened:
 
 **Resume here (next session), in order:**
 1. ~~Final fix round for D~~ **done** (`design/directions/d-combined/REVISION-2.md`). Not done on purpose: the record band's deeper rework and the daybook's stone (both low value, risky on screens Dan likes).
-2. ~~Netlify zip~~ **sent to Dan** (`sh docs/design/tools/netlify_zip.sh out.zip`). **Now:** Dan walks through D once more and dictates notes; apply them.
+2. ~~Netlify zip~~ **sent to Dan** (rebuilt with "Step away", D-036) (`sh docs/design/tools/netlify_zip.sh out.zip`). **Now:** Dan walks through D once more and dictates notes; apply them.
 3. **Dan approves D**, the design system, the interaction notes and the UX principles → tick the Phase 4 exit criteria.
 4. **Open a PR into `main` and merge it** (D-006), once Dan says yes.
 5. **Ask Dan to agree to Phase 5** (Concept synthesis), then start it in a new session.
