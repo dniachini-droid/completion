@@ -426,6 +426,10 @@ export const STAND_IN: Record<StretchId, string> = {
   'st-mouth': 'sample-well-stair', 'st-hall': 'sample-rib-gallery', 'st-salt': 'sample-pool-dome', 'st-camp': 'sample-rib-gallery',
   'st-stair': 'sample-well-stair', 'st-flight2': 'sample-well-stair', 'st-square': 'sample-rib-gallery',
 };
+/** The places painted from their briefs so far (ids only; D-015): each shows its own painting, `pt-<id>`, which
+    ui/paintings.ts carries (a test keeps the two in step); every other place shows its stretch's stand-in. */
+export const PAINTED: ReadonlySet<string> = new Set<string>([]);
+export const paintingOf = (id: string | null, stretch: StretchId): string => id && PAINTED.has(id) ? `pt-${id}` : STAND_IN[stretch];
 
 function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
   /* one of the places played at day complete: nothing but the world's answers between the lock-in and it */
@@ -435,12 +439,12 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
   if (f.kind === 'place') {
     const b = S.beatOf(c.story, f.id)!;
     return { seq: f.seq, kind: 'place', id: b.id, name: b.name ?? '', line: b.line ?? '', taps: b.taps, choice: b.choice,
-      records: b.carries?.records ?? [], guess: b.carries?.guess ?? [], look: null, stretch: b.stretch, painting: STAND_IN[b.stretch], completedDay, byKey: f.how === 'key' };
+      records: b.carries?.records ?? [], guess: b.carries?.guess ?? [], look: null, stretch: b.stretch, painting: paintingOf(b.id, b.stretch), completedDay, byKey: f.how === 'key' };
   }
   const k = c.story.camps.find(x => x.id === f.id)!;
   const find = all.find(g => g.type === 'findGiven' && g.why === 'camp' && g.seq > f.seq && g.seq <= f.seq + 1) as FactOf<'findGiven'> | undefined;
   const look = find ? c.story.finds.find(x => x.id === find.id)?.line ?? null : 'line' in k.look ? k.look.line : null;
-  return { seq: f.seq, kind: 'camp', id: k.id, name: k.name, line: k.line, records: [], guess: [], look, stretch: k.stretch, painting: STAND_IN[k.stretch], completedDay, byKey: false };
+  return { seq: f.seq, kind: 'camp', id: k.id, name: k.name, line: k.line, records: [], guess: [], look, stretch: k.stretch, painting: paintingOf(k.id, k.stretch), completedDay, byKey: false };
 }
 
 /** What a job's return (a jobDone fact) shows. */
@@ -512,7 +516,7 @@ export function see(facts: Fact[], c: Content, now: Moment): View {
   const opening = c.story.beats.find(b => b.kind === 'morning' && b.w === 1);
   const stretch = c.story.stretches.find(x => x.id === st.stretch)!;
   const here: Here = lastPlace
-    ? { id: lastPlace.id, name: lastPlace.name ?? stretch.name, line: lastPlace.line ?? '', stretch: st.stretch, painting: STAND_IN[st.stretch] }
+    ? { id: lastPlace.id, name: lastPlace.name ?? stretch.name, line: lastPlace.line ?? '', stretch: st.stretch, painting: paintingOf(lastPlace.id, st.stretch) }
     : { id: null, name: stretch.name, line: opening?.line ?? '', stretch: st.stretch, painting: STAND_IN[st.stretch] };
   const w = walked(facts), nextBeat = S.nextPlace(c.story, st), nextAt = nextBeat ? S.nextPlaceAt(st) : null;
   const view = S.inView(c.story, st);
