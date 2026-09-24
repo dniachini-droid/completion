@@ -8,7 +8,7 @@ export default {
   id: 'pt-pl-w1-pick-niche',
   name: 'The pick niche',
   line: '',
-  cam: { x: 1.0, y: .5, z: ZN - .8, pitch: -5, yaw: 40, f: .64, cx: .5, cy: .5 },
+  cam: { x: 1.0, y: .5, z: ZN - .8, pitch: -9, yaw: 40, f: .64, cx: .5, cy: .5 },
   far: 45, fogK: 1 / 30, hazeFar: [.1, .09, .26],
   bloomAt: [-.3, 1.2, ZN + 34], bloomPow: 14, bloomC: [.44, .41, .82],
   glow: { threshold: .62, k: .7 },
@@ -16,11 +16,12 @@ export default {
   expo: 1.75, grade: [1.1, 1, .9], grain: .4, shadowJitter: 1,
   salt: { pink: 0 },
   lights: [
-    { p: [-1.1, 1.1, ZN + 7.5], c: [.62, .58, 1.2], k: 11, r: 4, shadow: 1 },   /* the gallery's light, raking along the wall from the left */
+    { p: [-1.1, 1.1, ZN + 7.5], c: [.62, .58, 1.2], k: 8, r: 4, shadow: 1 },   /* the gallery's light, raking along the wall from the left */
     { p: [-.3, 1.5, ZN + 32], c: [.62, .58, 1.2], k: 40, r: 9 },                 /* far down the gallery */
-    { p: [1.75, .1, ZN + .7], c: [.62, .58, 1.2], k: .7, r: .3, shadow: 1 },       /* the same light, low along the lip */
+    { p: [1.62, .34, ZN + .5], c: [.62, .58, 1.2], k: .3, r: .22, shadow: 1 },      /* the same light, low from the front-left, raking the lip and its strokes */
     { p: [2.15, .35, ZN], c: [.4, .37, .85], k: .02, r: .25 },                    /* a trace of it at the niche's back */
     { p: [0, 1.4, ZN - 5], c: [.3, .28, .66], k: .4, r: 3 },                        /* faint fill from behind */
+    { p: [.6, 1.5, ZN + 1.2], c: [.36, .33, .8], k: .12, r: 1.2 },                   /* a little of it up under the low roof, so the roof has form */
   ],
   glsl: /* glsl */ `
   const float ZN = ${ZN}.;
@@ -37,12 +38,17 @@ export default {
     vec3 q = p - vec3(2., .3, ZN); vec2 m = vec2(q.z, q.y);
     float head = .12 + .04 * (1. - (m.x / .38) * (m.x / .38));
     float slot = min(min(.38 - abs(m.x), head - m.y), m.y);
+    slot += rough(p, .03, 7.);                                                           /* the mouth hand-cut, uneven */
     d = A(d, vec4(min(slot, .55 - q.x), M_CUT_SMALL, NOUV));
-    /* its lip: a worn sill of cut stone, a little proud of the salt, its arris rounded by hands */
-    vec4 lip = box(q, vec3(-.03, -.045, 0), vec3(.06, .035, .43), M_DRESSED); lip.x -= .012; lip.x += rough(p, .006, 20.);
-    d = U(d, lip);
+    if (q.x > .06) gTint = vec3(mix(.6, .2, smoothstep(.06, .4, q.x)));                    /* the slot goes dark inside */
+    /* its lip: the slot's floor carried out as a band of cut stone set flush in the salt, its arris worn round
+       by hands; its ends feathered into the salt */
+    float foot = -.105 + (fbm(vec2(m.x * 34., 1.), 3) - .5) * .016, end = .41 + (fbm(vec2(m.y * 30., 3.), 3) - .5) * .05;   /* ragged where it meets the salt */
+    float band = (1. - smoothstep(end - .03, end + .03, abs(m.x))) * smoothstep(foot - .012, foot + .012, m.y) * step(m.y, .01);
+    if (band > .5 && q.x < .06) { d.yzw = vec3(M_DRESSED, NOUV); gTint = vec3(.92); }
+    d.x -= .008 * band * smoothstep(.06, -.02, q.x);                                     /* barely proud, and only at its face */
     /* on its face, a row of empty strokes: hand-cut, uneven, tapering to the foot */
-    if (q.x < -.05 && q.x > -.14 && m.y < 0. && m.y > -.09) {
+    if (q.x < .01 && q.x > -.09 && m.y < 0. && m.y > -.09) {
       float k = floor((m.x + .25) / .1), c0 = -.25 + (k + .5) * .1 + (h2(vec2(k, 7.)) - .5) * .03;
       float t = clamp((m.y + .07) / .05, 0., 1.);
       float ln = length(vec2(m.x - c0 + (h2(vec2(k, 2.)) - .5) * .01 * t, max(abs(m.y + .045) - .022 - .006 * h2(vec2(k, 5.)), 0.)));

@@ -15,10 +15,10 @@ export default {
   bloom: { alpha: .12 },
   glow: { threshold: .66, k: .6 },
   blur: { px: 1.4, d0: 2.4, d1: 6, k: .6 },
-  gold: 1, grain: .3, shadowJitter: 1, amb: .42, expo: 2.1, ambC: [.8, .72, 1.45],
+  gold: 1, grain: .3, shadowJitter: 1, amb: .42, expo: 2.05, ambC: [.86, .76, 1.45],
   lights: [
-    { p: [-.3, 1.6, -3.4], c: [1, .7, .34], k: 12, r: 1.2, warm: .01, shadow: 1 },   /* the clay lamp, in the passage behind you */
-    { p: [.45, .22, 1.12], c: [1, .7, .34], k: .12, r: .2 },                             /* its light ending on the boots' toes */
+    { p: [-.3, 1.95, -3.], c: [1, .7, .34], k: 12, r: 1.2, warm: .01, shadow: 1 },   /* the clay lamp, high in the passage behind you: its light comes down through the doorway */
+    { p: [.4, .26, 1.05], c: [1, .7, .34], k: .2, r: .22 },                             /* its light ending on the boots' toes */
     { p: [-1.3, 1.9, 3.6], c: [.4, .37, .85], k: 1.1, r: 1.2 },                        /* violet in the far corners */
     { p: [1.35, 1.9, 3.7], c: [.4, .37, .85], k: .8, r: 1 },
     { p: [-.9, 1.5, 3.3], c: [.44, .41, .9], k: .25, r: .5 },                          /* a violet rim along the rod */
@@ -26,33 +26,43 @@ export default {
     { p: [1.05, .9, 2.0], c: [.4, .37, .85], k: .25, r: .6 },                          /* a little violet on the cot's things */                           /* under the roof */
   ],
   glsl: /* glsl */ `
+  float ell(vec3 p, vec3 r) { return (length(p / r) - 1.) * min(r.x, min(r.y, r.z)); }
+  /* an old leather boot, toe toward -x: an oval leg narrowing to the ankle, its top slumped and folded over at the
+     back; a low flat foot with a real toe, turned up a little; laces only down the front */
   vec4 boot(vec3 p, vec3 at, float lean) {
     vec3 q = p - at; q.x += q.y * lean;
-    /* the leg: a flattened tube, open at the top, slumped a little; its top folded over into a cuff */
-    vec2 r2 = q.xz * vec2(1., 1.25);
-    float leg = max(length(r2 * vec2(1., 1.15)) - .052 + .03 * q.y, max(q.y - .3, -q.y));     /* oval, tapering up */
-    leg = max(leg, -max(length(r2) - .044, .29 - q.y));
-    float cuff = length(vec2(length(r2 * vec2(1., 1.15)) - .045, q.y - .29)) - .009 + max(0., q.z) * .2;   /* a thin cuff, folded on one side */
-    /* the foot: toes out, rounded, turned up a little at the toe */
-    vec3 f = q - vec3(-.1, .05 + .02 * smoothstep(-.08, -.2, q.x), 0);
-    float foot = length(max(abs(f) - vec3(.11, .014, .03), 0.)) - .032;
-    float b = smin(min(leg, cuff), foot, .035);
-    /* the lacing: small cuts across the front of the leg and the instep */
-    float lace = abs(fract((q.y + .01) / .035) - .5) * .035;
-    if (q.x < -.035 && abs(q.z) < .02 && q.y > .06 && q.y < .26) b += engrave(lace, .003, .003);
+    float r = mix(.04, .054, smoothstep(.07, .25, q.y));                                   /* narrow at the ankle */
+    vec2 o = vec2(q.x / 1.18, q.z);
+    float top = .25 - .035 * smoothstep(-.02, .05, q.x);                                     /* the back slumps lower */
+    float leg = max(length(o) - r, max(q.y - top, .04 - q.y));
+    leg = max(leg, -max(length(o) - r + .006, top - .02 - q.y));                              /* open at the top */
+    float cuff = length(vec2(length(o) - r - .004, q.y - top + .012)) - .011;                 /* the fold at the cuff */
+    cuff = max(cuff, -.005 - q.x * .4);                                                       /* folded over at the back only */
+    vec3 f = q;
+    float heel = ell(f - vec3(-.02, .05, 0), vec3(.075, .052, .046));
+    float instep = ell(f - vec3(-.1, .042, 0), vec3(.09, .04, .044));
+    float toe = ell(f - vec3(-.185, .034, 0), vec3(.05, .03, .04));
+    float foot = smin(smin(heel, instep, .03), toe, .025);
+    foot = max(foot, .006 - q.y);
+    float b = smin(min(leg, cuff), foot, .03);
+    /* the laces: crossed, only down the front of the leg and over the instep */
+    float t = fract(q.y / .03), zz = (abs(t - .5) * 2. - .5) * .026, lace = min(abs(q.z - zz), abs(q.z + zz));
+    if (q.x < -.028 && q.y > .06 && q.y < .21) b += engrave(lace, .0035, .0035);
     vec4 bt = vec4(b, M_LEATHER, NOUV);
-    if (b < .01) gTint = vec3(.7);
-    vec4 sole = vec4(length(max(abs(q - vec3(-.09, .008, 0)) - vec3(.13, .004, .032), 0.)) - .01, M_LEATHER, NOUV);
-    if (sole.x < bt.x) gTint = vec3(.55);
+    if (b < .01) gTint = vec3(.58, .52, .5) * (1. - .25 * smoothstep(.2, .25, q.y));      /* the cuff darker, handled */
+    float sl = max(smin(smin(heel, instep, .03), toe, .025) - .006, max(q.y - .012, -q.y));
+    vec4 sole = vec4(sl, M_LEATHER, NOUV);
+    if (sole.x < bt.x && sole.x < .01) gTint = vec3(.4);                                 /* only on the sole itself */
     return U(bt, sole);
   }
   vec4 scene(vec3 p) {
     vec4 d = hallAir(p, 1.7, 1., 1.7, 0., 4., M_CUT);
     if (p.z > 3.9) d.zw = NOUV;                                                    /* the back wall laid square */
     d = A(d, boxAir(p, vec3(0, .78, -1.6), vec3(.68, .78, 1.65), M_CUT));            /* the doorway and passage */
+    d = A(d, boxAir(p, vec3(0, 1.15, -2.), vec3(.68, 1.15, 1.6), M_CUT));             /* the passage rises behind the door, to the lamp's niche */
     d = U(d, box(p, vec3(0, .02, -.12), vec3(.69, .02, .1), M_DRESSED));            /* the threshold stone, worn low */
-    if (p.y < .03) gTint = vec3(mix(.4, 1., smoothstep(.4, 1.3, p.z)));
-    if (p.y > 1.3) gTint = vec3(mix(1., .5, smoothstep(1.3, 2.4, p.y)));             /* the roof close and dark overhead */                                    /* the near floor, in the doorway's shadow */
+    if (p.y < .03) gTint = mix(vec3(.16, .15, .24), vec3(1), smoothstep(.7, 1.3, p.z));   /* the near floor in the doorway's shadow, cold */
+    if (p.y > 1.3) gTint = vec3(mix(1., .38, smoothstep(1.3, 2.4, p.y)));             /* the roof close and dark overhead */
     /* the cot: canvas slung over two wooden rails, sagging between the ends; X-legs at each end */
     float u = (p.z - 1.85) / .92, vx = (p.x - .95) / .34;
     float sag = .14 * max(0., 1. - u * u) * (1. - .55 * vx * vx);

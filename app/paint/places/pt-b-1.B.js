@@ -19,13 +19,14 @@ export default {
   bloom: { alpha: .18 },
   glow: { threshold: .6, k: .5 },
   blur: { d0: 9, d1: 26 },
-  sheen: .1, grain: .3, grade: [1.12, .98, .86],
+  sheen: .1, grain: .3, grade: [1.2, 1., .8],
   amb: .55, expo: 1.75,
   lights: [
-    { p: [L[0], .5, L[1]], c: [.62, .58, 1.2], k: 190, r: 9, shadow: .8 },     /* low, so it grazes the floor */     /* the gallery's light, round the bend */
+    { p: [L[0], .5, L[1]], c: [.62, .58, 1.2], k: 190, r: 9, shadow: .8 },     /* low, so it grazes the floor: the gallery's light, round the bend */
     { p: [beyond(1.5)[0] - 1.5 * T[1], .7, beyond(1.5)[1] + 1.5 * T[0]], c: [.44, .41, .9], k: 34, r: 4 }, /* its spill at the turn */
-    { p: [0, 4, 9], c: [.3, .28, .66], k: 9, r: 6 },
-    { p: [arcX(-1.6, .6), 2.4, arcZ(-1.6, .6)], c: [.44, .41, .9], k: 14, r: 3 },   /* the lit wall's bounce onto the inner wall */                             /* the hall behind, faint */
+    { p: [0, 4, 9], c: [.3, .28, .66], k: 9, r: 6 },                              /* the hall behind, faint */
+    { p: [arcX(1.3, .5), 3.6, arcZ(1.3, .5)], c: [.5, .45, .88], k: 16, r: 2.2 },   /* the lit wall's bounce, high on the inner wall */
+    { p: [arcX(-2.45, .2), .16, arcZ(-2.45, .2)], c: [.62, .56, 1.1], k: 7, r: 1.6, shadow: 1 },   /* low along the floor from the outer side: rakes across the troughs */
   ],
   glsl: /* glsl */ `
   const float R = ${R}., PHI = ${PHI}, ZC = ${ZC}.;
@@ -50,14 +51,17 @@ export default {
     vec4 d = hallAir(h, 2.7, 6., 12.47, -10., 70., M_CUT);
     /* the troughs: two smooth hollows a stride apart, worn deepest at the bend, fading out at both ends */
     float fade = smoothstep(ZC - 14., ZC - 4., b.y) * (1. - smoothstep(ZC + 8., ZC + 14., b.y));
-    float s = abs(b.x + 1.15) - .42, e = s / .27, q = max(0., 1. - e * e), dep = .11 * fade * q * q;
+    float s = abs(b.x + 1.15) - .42, e = s / .27, q = max(0., 1. - e * e), dep = .14 * fade * q * q;
     d = A(d, vec4(min(p.y + dep, .3 - abs(s)) * .5, M_FLOOR, NOUV));
-    if (p.y < .05 && q > 0.) { gPolish = .9 * q * fade; gTint = vec3(1. - .35 * q * fade); }
+    /* the flank that faces the outer side (toward the raking light) is worn to a shine; the other stays in shadow */
+    float tc = b.x - (b.x < -1.15 ? -1.57 : -.73), lit = smoothstep(-.05, .12, tc / .27);
+    if (p.y < .05 && q > 0.) { gPolish = .95 * q * fade * lit; gTint = vec3(1. - .6 * q * fade * (1. - lit)); }
     /* the band: rubbed smooth to twice a shoulder on the outer wall; above it, marks */
     float top = 2.9 + (vn(vec2(b.y * 1.1, 3.)) - .5) * .3;
     float along = smoothstep(ZC - 9., ZC - 4., b.y) * (1. - smoothstep(ZC + 8., ZC + 12., b.y));
     if (b.x < -2.5 && p.y > .02) gPolish = .95 * along * (1. - smoothstep(top - .25, top + .1, p.y));
     float dw = -2.7 - b.x;
+    if (p.y > 4.2) gTint *= mix(1., .38, smoothstep(4.2, 7.5, p.y));                   /* the vault falls away into the dark */
     if (p.y > top && p.y < 4.6 && dw > -.1) d.x += marks(vec2(b.y, p.y));
     return d;
   }`,
