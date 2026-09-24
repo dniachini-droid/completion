@@ -448,6 +448,7 @@
           if (jmask < 1 && kind !== 5) { var jd = .55 + .45 * jmask; R *= jd; G *= jd; Bc *= jd; }
         }
 
+        if (o.debug && (kind === 1)) { R = G = Bc = st[3] * .5 + (v % 2 < 1 ? .2 : 0); }
         /* haze: deeper and brighter toward the far end; a gold bank near the lamp's floor */
         var fz = 1 - Math.exp(-dist * S.fogK), bl = ndx * farDir[0] + ndy * farDir[1] + ndz * farDir[2];
         var bloom = Math.pow(Math.max(0, bl), 30), fR, fG, fB;
