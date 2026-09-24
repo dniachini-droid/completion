@@ -14,7 +14,7 @@ One tap to start: **Begin** opens the delve-length dial with 25 minutes already 
 ## Setting the delve's length (D-033, Dan's pick: the dial)
 - A ring with four stops: **25, 30, 45, 60 minutes**. Drag the glowing handle round, tap a number, or use the keys.
 - The ring fills in proportion to the time (30 = half, 60 = full) with violet light; the number ticks up; each stop gives a small visual tick and a gentle settle on release (phone vibration is unreliable on the web, so the visual tick carries the feel).
-- Underneath, **where it will take you**, only ever to places you can reach. At 25 it shows the usual destination; longer times reveal further places. Never a warning, never shown as falling short.
+- Underneath, **the run (D-037)**: one route line. Each delve adds a segment in proportion to its minutes (set the count with − / + or by tapping along the line); the next named place sits at its real distance and lights when the run reaches it; four or more show a side chamber; one plain line gives the finish time. No debt numbers. During the run, the next delve starts by itself when a breather ends.
 - The breather stays 5 minutes. B (the hall slider) and C (the flame) are kept in `delve-set-variants.html` for comparison.
 
 ## The delve

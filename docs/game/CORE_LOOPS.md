@@ -19,7 +19,7 @@ So: Part 1 is the shared chassis (proposals where Phase 1 left gaps, marked **[p
 
 ### The unit of effort
 - A **main job** is the unit the game rewards. A normal day has about 3, a low day has 2 (outside + a real meal). (P2)
-- Jobs are finished either by a **real-world completion** (went to the gym, booked the Spanish lesson, ordered the cat's medication) or by **focus sessions**: a bounded 25-minute timer, the Pomodoro unit that already works for Dan (P13). One hour of course work = 2 sessions = the job is done (P5).
+- Jobs are finished either by a **real-world completion** (went to the gym, booked the Spanish lesson, ordered the cat's medication) or by **focus sessions**: a bounded 25-minute timer, the Pomodoro unit that already works for Dan (P13). One hour of course work = 2 sessions = the job is done (P5). **Distance comes from time (D-037):** one step = 25 minutes of effort, and a job done without a timer counts by its usual length (the gym's hour = 2.4 steps).
 - Dan taps "done". There is no proof, no verification, no anti-cheat to run. [proposal]
 
 ### Anti-farming without admin [proposal]
@@ -231,8 +231,8 @@ Each return to the app takes **under a minute** (a decode included: a record fra
 ### Three sizes of reward
 | Size | Earned by | What Dan gets |
 |---|---|---|
-| **Step** | each main job, and each focus session after day complete | the map extends; often a small find or a line of script |
-| **Arrival** | day complete | a place worth arriving at: a chamber, a view, a record whose fragment you can decode |
+| **Step** | every 25 minutes of real effort, in proportion (D-037): delves, and jobs without a timer by their usual length | the map extends; often a small find or a line of script. Named places are about a working day apart. |
+| **Arrival** | day complete | wherever the day's steps reached: a named place on a long day, a camp with a view on a short one; a record whose fragment you can decode |
 | **Key** | each weekly target met; major milestones | opens something **already seen and sealed**: a gate, a sealed record, a new sign |
 
 **What opens what (D-013).** Every sealed thing shows what it needs: a **Key** (earned by living the week) or a **word** (earned by learning). The largest gates need both. Dan can always see which, so the goal is clear.
