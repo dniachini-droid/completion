@@ -172,6 +172,10 @@ vec4 spiralStair(vec3 p, vec2 c, float r0, float r1, float y0, float drop, float
 }
 /* Rough, unworked rock: push a surface in and out. */
 float rough(vec3 p, float amp, float scale) { return (fbm3(p * scale, 4) - .5) * amp; }
+/* A cut mark, carved not drawn: a V-groove along a 2D distance d (to the mark's line), width w, depth dp.
+   Add it to a wall's distance: d.x += engrave(...) pushes the surface in, deepest on the line. Keep w at
+   least ~.012 m per metre of viewing distance, or it reads as ink. */
+float engrave(float d, float w, float dp) { float k = clamp(1. - abs(d) / w, 0., 1.); return dp * k * k * (3. - 2. * k); }
 
 /* ---------- the hall's stone ---------- */
 /* returns (tone, tiltU, tiltV, joint mask) */
@@ -213,6 +217,7 @@ uniform vec4 uBeam; uniform vec3 uBeamC; uniform float uBeamTop; /* a shaft of l
 uniform int uSteps; uniform float uStepK;
 uniform float uSaltPink;
 uniform float uGrain;
+uniform float uGold;                                       /* 1: warm light lands gold, not salmon or rose (0: as the hall) */
 uniform float uShJit;                                      /* 1: finer soft shadows for close views (0: as the hall) */                                      /* close views: the pick marks in cut stone (0: the hall's long-view stone) */                                   /* how much the salt's band edges go pink (0: grey and white only) */
 out vec4 outColor;
 
@@ -275,7 +280,8 @@ vec3 lightAt(vec3 p, vec3 n, vec3 alb, float wrap, vec3 d, float specK, float sp
     if (specK > 0.) {
       vec3 hv = normalize(L / dd - d);
       float nl = max(dot(n, L / dd), 0.);
-      c += uLc[i] * specK * pow(max(dot(n, hv), 0.), specP) * (specP + 8.) / 50. * nl * att * sh;
+      float irr = nl * att * sh * dot(uLc[i], vec3(.3, .5, .2));         /* only where this light truly falls: nothing sparkles in the dark */
+      c += uLc[i] * specK * pow(max(dot(n, hv), 0.), specP) * (specP + 8.) / 50. * nl * att * sh * smoothstep(.01, .06, irr);
     }
   }
   /* a lamp's warmth lies on the stone around it as gold, as in the hall (added, not tinted by the violet) */
@@ -321,15 +327,15 @@ vec3 shade(vec3 p, vec3 d, float t, vec3 n, vec4 hs, float fpx) {
     /* beds of salt laid down one on another: grey, white, with thin dark seams between; crystals in each bed */
     float b = p.y * 1.7 + (fbm3(p * vec3(.3, .5, .3), 3) - .5) * 3.2 + (fbm3(p * 2.5, 2) - .5) * .25, bi = floor(b), bf = b - bi;
     float bed = h2(vec2(bi, 71.)), white = smoothstep(.25, .65, bed) * (.7 + .3 * fbm3(p * 3., 2));
-    vec3 grey = vec3(.27, .27, .31) * (.7 + .45 * h2(vec2(bi, 5.))), wh = vec3(.9, .89, .93);
+    vec3 grey = vec3(.2, .2, .235) * (.7 + .45 * h2(vec2(bi, 5.))), wh = vec3(.95, .94, .97);
     alb = mix(grey, wh, white);
     float bd = min(bf, 1. - bf);
     alb = mix(alb, vec3(.82, .6, .64), (1. - smoothstep(0., .2, bd)) * uSaltPink * (.4 + .6 * white));   /* pink only at the edges of the beds */
-    alb *= 1. - .35 * (1. - smoothstep(0., .025, bd)) * h2(vec2(bi, 17.));                   /* a thin dark seam under some beds */
+    alb *= 1. - .15 * (1. - smoothstep(0., .025, bd)) * h2(vec2(bi, 17.));                   /* a thin dark seam under some beds */
     vec3 sd; vec3 cl = cells3(p * 28., sd);
     float grain = smoothstep(0., .1, cl.y - cl.x);                                           /* the boundary between crystals */
     float fade = 1. - smoothstep(.01, .035, fp);                                             /* crystals only where they can be seen */
-    alb *= mix(1., (.94 + .12 * cl.z) * (.93 + .07 * grain), fade);
+    alb *= mix(1., (.96 + .08 * cl.z) * (.95 + .05 * grain), fade);
     alb *= .88 + .24 * fbm3(p * 1.4, 3);
     vec3 cn = vec3(h2(sd.xy), h2(sd.yz + 3.), h2(sd.zx + 7.)) - .5;
     nb = (cn - n * dot(cn, n)) * .3 * fade + (vec3(fbm3(p * 4., 2), fbm3(p * 4. + 7., 2), fbm3(p * 4. + 13., 2)) - .5) * .6;
@@ -375,7 +381,7 @@ vec3 shade(vec3 p, vec3 d, float t, vec3 n, vec4 hs, float fpx) {
   }
   alb *= tint;
   /* polish: the grain and the chisel rubbed away, the stone paler and shining */
-  if (pol > 0.) { tU *= 1. - .85 * pol; tV *= 1. - .85 * pol; nb *= 1. - .85 * pol; alb *= 1. + .3 * pol; specK += 1.1 * pol; specP = mix(specP, 34., pol); }
+  if (pol > 0.) { tU *= 1. - .85 * pol; tV *= 1. - .85 * pol; nb *= 1. - .85 * pol; alb *= 1. + .08 * pol; specK += 1.3 * pol; specP = mix(specP, 60., pol); }
   /* a stain: dark and flat, nothing of the stone's relief or shine left */
   if (stn > 0.) { alb *= 1. - .9 * stn; tU *= 1. - stn; tV *= 1. - stn; nb *= 1. - stn; specK *= 1. - stn; }
   if (dot(nb, nb) > 0.) n = normalize(n + nb);
@@ -483,6 +489,12 @@ void main() {
   c = haze(c, o, d, t);
   c *= uGrade;
   c = 1. - exp(-c * uExpo);
+  /* the lamp's light on violet stone mixes to salmon; pull what is warm toward the hall's gold */
+  if (uGold > 0.) {
+    float w = clamp((c.r - c.b) / max(c.r, 1e-3) * 2., 0., 1.) * uGold;
+    c.b = mix(c.b, min(c.b, c.g * .7), w);
+    c.g = mix(c.g, max(c.g, c.r * .66), w * .6);
+  }
   c = pow(c, vec3(.92));
   outColor = vec4(c, t);
 }

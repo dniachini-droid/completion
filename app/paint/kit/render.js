@@ -27,6 +27,7 @@ const DEFAULTS = {
   mist: null, beam: null,
   salt: { pink: 0 },                          /* rock salt's band edges: 0 grey and white; up to 1 pink (only where a brief says) */
   grain: 0,                                   /* close views: pick marks in cut stone within a few metres (0: the hall's long-view stone) */
+  gold: 0,                                    /* 1: pull warm light to the hall's gold (lamp on violet stone goes salmon otherwise) */
   shadowJitter: 0,                            /* 1: close views, where soft shadows band: finer shadow steps */
   lights: [],
   steps: 220, stepK: .8,
@@ -46,6 +47,9 @@ function compile(gl, type, src) {
 }
 
 const frame = () => new Promise(r => setTimeout(r, 0));
+
+/* the clay lamp's colour, for every scene's lamp lights */
+export const GOLD = [1, .7, .34];
 
 export async function paint(canvas, sceneIn, opts = {}) {
   const S = Object.assign({}, DEFAULTS, sceneIn);
@@ -105,6 +109,7 @@ export async function paint(canvas, sceneIn, opts = {}) {
   gl.uniform1f(u('uSaltPink'), S.salt && S.salt.pink || 0);
   gl.uniform1f(u('uGrain'), S.grain || 0);
   gl.uniform1f(u('uShJit'), S.shadowJitter || 0);
+  gl.uniform1f(u('uGold'), S.gold || 0);
 
   /* paint into a float target, a strip at a time so the GPU is never held long */
   const tex = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tex);

@@ -7,13 +7,14 @@ export default {
   name: 'The Lamp Hall',
   line: '',
   cam: { x: .2, y: 1.6, z: 1.5, pitch: 0, f: .62, cx: .5, cy: .47 },
-  far: 66, fogK: 1 / 34,
+  far: 66, fogK: 1 / 34, sheen: .16,
   bloomAt: [0, 4.5, 66],
   lights: [
-    { p: [0, 5.5, 58], c: [.62, .58, 1.25], k: 420, r: 36 },                  /* the far end: the great door's light */
+    { p: [0, 5.5, 58], c: [.62, .58, 1.25], k: 470, r: 36 },                  /* the far end: the light before the great door */
+    { p: [0, 7.8, 63.5], c: [.62, .58, 1.25], k: 60, r: 3 },                  /* and on the door's head, so the leaf stands dark inside the glow */
     { p: [0, 9, 20], c: [.36, .33, .8], k: 26, r: 12 },                       /* haze high in the vault */
     { p: [0, 7, -4], c: [.3, .28, .66], k: 5, r: 7 },                         /* soft fill from behind */
-    { p: [2.26, 1.54, 5.6], c: [1, .58, .24], k: 1.9, r: 1, warm: .085 },     /* the clay lamp on its ledge */
+    { p: [2.26, 1.54, 5.6], c: [1, .68, .3], k: 1.9, r: 1, warm: .1 },     /* the clay lamp on its ledge */
     { p: [1.2, 2.6, 6.5], c: [.4, .37, .85], k: 3.2, r: 3.2 },                /* the hall's glow on the lintel wall */
   ],
   glsl: /* glsl */ `
@@ -28,22 +29,24 @@ export default {
     float zl = mod(p.z - z0, 3.1) - 1.55;
     vec3 q = vec3(p.x * side - 2.87, p.y - 3.56, zl);
     float e = (length(q / vec3(.15, .1, .15)) - 1.) * .1;
-    return vec4(max(e, q.y - .05), M_ROCK, NOUV);
+    if (max(e, q.y - .05) < .01) gTint = vec3(.8, .66, .6);                        /* clay, a shade lighter than the stone, so its rim shows */
+    vec4 b = vec4(max(e, q.y - .05), M_ROCK, NOUV);
+    return U(b, box(vec3(p.x * side, p.y, zl), vec3(2.72, 3.46, 0), vec3(.08, .025, .36), M_DRESSED));   /* the recess's sill, catching the violet */
   }
   /* rings cut into the walls within reach: shallow grooves, some cells only */
   float rings(vec3 p) {
     vec2 w = vec2(p.z, p.y) / .55, c = floor(w), f = fract(w) - .5;
-    float pick = h2(c + (p.x > 0. ? 7. : 0.));
+    float pick = h2(c + (p.x > 0. ? 7. : 0.)) + (length(vec2(p.z - 5.6, p.y - 1.22)) < .75 ? 1. : 0.);
     float rr = .2 + .12 * h2(c + 3.);
-    float g = abs(length(f) - rr) * .55 - .012;
-    return pick < .32 && p.y > .35 && p.y < 2.3 ? -g : -1.;
+    return pick < .22 && p.y > .35 && p.y < 2.3 ? engrave(abs(length(f) - rr) * .55, .03, .012) : 0.;
   }
   vec4 scene(vec3 p) {
     float ax = abs(p.x);
     vec4 d = hallAir(p, 2.7, 6., 12.47, -10., 66., M_CUT);
+    if (p.y < .03) gTint = vec3(.88);                                              /* the floor a shade down, as the hall's */
     d = A(d, cups(p, 1., 2.2));
     d = A(d, cups(p, -1., 3.75));
-    d = A(d, vec4(min(rings(p), min(2.718 - ax, ax - 2.5)), M_CUT, NOUV));
+    if (ax > 2.4) d.x += rings(p);
     d = A(d, vec4(min(min(p.z - 6.55, 8.05 - p.z), min(min(2.4 - p.y, p.y), min(2.83 + p.x, -2.5 - p.x))), M_CUT_SMALL, NOUV));  /* the lintel's sealed blank */
     /* the great door: most of the far wall, a darker leaf set back in a pointed arch */
     float dr = archOpening2(vec2(p.x, p.y), 2.1, 6.2);

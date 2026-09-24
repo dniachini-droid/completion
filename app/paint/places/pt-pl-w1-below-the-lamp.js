@@ -1,54 +1,56 @@
-/* SEALED (D-015). pt-pl-w1-below-the-lamp, round 2: kneeling under the lamp's ledge on the hall's right wall.
-   The ledge's underside is a dark band across the top; the lamp above it, out of frame, lays a steady warm
-   pool on the floor past the lip, and that pool's glow is all that reaches the wall under the ledge. A small
-   niche at knee height, a row of cut strokes over it; round its mouth the stone is darkened, flat, as if by oil.
-   The hall's violet comes from behind on the left. DARK state (cups unlit). */
+/* SEALED (D-015). pt-pl-w1-below-the-lamp, round 3: kneeling under the lamp's ledge on the hall's right wall.
+   The ledge's underside is a dark band across the top; the lamp above it, out of frame, lays a thin gold
+   light along the wall's foot, and that glow is all that reaches the wall under the ledge. A small low
+   recess at knee height, a row of cut strokes over it; round its mouth, weighted to the sill where hands
+   reached in, the stone is darkened as if by oil: a ring with a dull sheen, like a shadow that stays.
+   The hall's violet from behind on the left keeps the stone cold. DARK state (cups unlit). */
 export default {
   id: 'pt-pl-w1-below-the-lamp',
   name: 'Below the lamp',
   line: '',
-  cam: { x: 1.85, y: .5, z: 5.52, pitch: -6, yaw: 89, f: .78, cx: .5, cy: .5 },
+  cam: { x: 1.75, y: .42, z: 5.6, pitch: 4, yaw: 87, f: .74, cx: .5, cy: .44 },
   far: 30, fogK: 1 / 26,
-  hazeBase: [.012, .011, .034], hazeFar: [.03, .028, .08],
-  bloomAt: [2.1, .05, 5.6], bloomPow: 6, bloomC: [.1, .07, .06],
+  hazeBase: [.012, .011, .034], hazeFar: [.06, .055, .16],
+  bloomAt: [2.5, .05, 5.6], bloomPow: 6, bloomC: [.08, .06, .03],
   bloom: { alpha: .1 },
   glow: { threshold: .6, k: .7 },
   blur: { px: 1, d0: 1.6, d1: 4, k: .6 },
-  grain: .8, amb: .4, ambC: [.8, .76, 1.8], expo: 1.75,
+  gold: 1, grain: .3, shadowJitter: 1, amb: .5, ambC: [.75, .72, 1.9], expo: 1.85,
   lights: [
-    { p: [2.26, 1.55, 5.6], c: [1, .58, .24], k: 2.4, r: .8, shadow: 1 },           /* the clay lamp on the ledge, above and out of frame */
-    { p: [2.05, .04, 5.58], c: [1, .62, .32], k: .55, r: .42 },                     /* its pool on the floor, glowing back up at the wall */
-    { p: [.6, 2.6, 2.4], c: [.4, .37, .85], k: 5, r: 3.6, shadow: .6 },
-    { p: [2.5, .55, 4.5], c: [.4, .37, .85], k: .35, r: .6 },                        /* the hall's violet, grazing along the wall from the left */          /* the hall's violet, from behind on the left */
-    { p: [0, 2.5, 9], c: [.36, .33, .8], k: 3, r: 4 },                            /* the hall further on */
+    { p: [2.26, 1.55, 5.6], c: [1, .72, .36], k: .7, r: .8, shadow: 1 },           /* the clay lamp on the ledge, above and out of frame */
+    { p: [2.6, .03, 5.6], c: [1, .72, .36], k: .2, r: .3 },                      /* its light on the floor at the wall's foot, glowing back up */
+    { p: [2.66, .38, 5.6], c: [1, .72, .36], k: .003, r: .1 },                     /* a trace of it inside the recess, on its back */
+    { p: [.6, 2.6, 2.4], c: [.4, .37, .85], k: 9, r: 3.6, shadow: .6 },            /* the hall's violet, from behind on the left */
+    { p: [2.5, .55, 4.5], c: [.4, .37, .85], k: .35, r: .6 },                      /* the same, grazing along the wall */
   ],
   glsl: /* glsl */ `
-  /* the hall's rings cut in the wall within reach (as pt-b-1.A) */
-  float rings(vec3 p) {
-    vec2 w = vec2(p.z, p.y) / .55, c = floor(w), f = fract(w) - .5;
-    float pick = h2(c + (p.x > 0. ? 7. : 0.)), rr = .2 + .12 * h2(c + 3.);
-    float g = abs(length(f) - rr) * .55 - .007;
-    return pick < .32 && p.y > .35 && p.y < 2.3 && length(vec2(p.z - 5.6, p.y - .45)) > .55 ? -g : -1.;
-  }
   vec4 scene(vec3 p) {
     vec4 d = hallAir(p, 2.7, 6., 12.47, -10., 66., M_CUT);
-    d = A(d, vec4(min(rings(p), min(2.712 - abs(p.x), abs(p.x) - 2.5)), M_CUT, NOUV));
     vec3 q = p - vec3(2.7, .3, 5.6); vec2 m = vec2(q.z, q.y);
-    /* round the niche's mouth the stone is darkened as if by oil: flat and dark, a shadow that stays */
-    float rr = length((m - vec2(0, .15)) / vec2(1., 1.2)) + (fbm(m * 6., 3) - .5) * .035;
-    if (q.x > -.03) gStain = (1. - smoothstep(.2, .245, rr)) * .9;
-    d = A(d, vec4(min(archOpening2(m, .14, .15), .3 - q.x), M_CUT_SMALL, NOUV));      /* the niche, a hand deep and more */
-    /* a row of cut strokes over its mouth, clean stone above the dark */
-    float sz = mod(q.z + .125, .05) - .025, st = max(abs(sz) - .0045, abs(q.y - .41) - .028);
-    if (abs(q.z) < .125 && q.x > -.03) { d.x = max(d.x, -max(st, q.x - .012)); if (st < .004) gStain = 0.; }
-    vec4 lg = box(p, vec3(2.55, 1.22, 5.6), vec3(.33, .08, .36), M_CUT);            /* the lamp's ledge, its arrises worn round */
-    lg.x -= .02;
-    if (lg.x < .01 && p.y < 1.16) gTint = vec3(.45);                                /* its underside: dark, only the floor's glow on it */
+    /* the recess: low and a little wider than high, its corners worn round */
+    vec2 e = abs(m - vec2(0, .14)) - vec2(.16, .1) + .03;
+    float sd = length(max(e, 0.)) + min(max(e.x, e.y), 0.) - .03 + (fbm(m * 14., 3) - .5) * .018 - .02 * smoothstep(.1, .2, m.y) * (1. - abs(m.x) / .16);   /* hand-cut: uneven, its head a little arched */
+    if (q.x > -.06) {
+      /* the oil: a ring round the mouth, wiped clean at the very edge, heaviest at the sill and low sides */
+      float nz = (fbm(m * 3. + 2., 4) - .5) * .12;
+      float ring = smoothstep(.0, .025, sd) * (1. - smoothstep(.08, .24, sd + nz));
+      ring *= mix(.45, 1., smoothstep(.3, .02, m.y));
+      gStain = .88 * ring; gPolish = .3 * ring;
+      /* a row of cut strokes over it, V-cut, clean stone */
+      float k = floor((q.z + .125) / .05), sz = q.z + .125 - (k + .5) * .05;
+      float ln = length(vec2(sz, max(abs(q.y - .34) - .026, 0.)));
+      if (k >= 0. && k < 5.) d.x += engrave(ln, .011, .012);
+    }
+    d = A(d, vec4(min(-sd, .45 - q.x), M_CUT_SMALL, NOUV));
+    if (q.x > .03 && sd < .01) gTint = vec3(.3);                                    /* inside, the dark of a hand's depth */
+    vec4 lg = box(p, vec3(2.55, 1.22, 5.6), vec3(.31, .06, .34), M_CUT);            /* the lamp's ledge, its arrises worn round */
+    lg.x -= .04;
+    if (lg.x < .01 && p.y < 1.14) gTint = vec3(.5);                                 /* its underside: dark, only the floor's glow on it */
     d = U(d, lg);
     return d;
   }`,
   anchors: {
-    beam: [{ p: [2.12, 1.05, 5.6], w: .4 }, { p: [1.95, .05, 5.6], w: .7 }],
+    beam: [{ p: [2.4, 1.1, 5.6], w: .15 }, { p: [2.55, .02, 5.6], w: .15 }],
   },
   live: { motes: 'gold', gold: true },
 };
