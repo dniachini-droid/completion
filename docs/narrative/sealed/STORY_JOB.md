@@ -45,7 +45,7 @@ _Written 2026-09-24._
 ### S5 — where K4 and K6 are cut
 
 - **Conflict.** Several files put the list and the rings on "the faces of the three doors", but he cannot pass the first door, so he cannot reach the second's or third's faces.
-- **Chosen.** Both are on the **first door's upper face and the wall beside its jamb**. The second and third doors' faces stay bare all year, which is now a quiet physical clue shown twice (26.1, 41.3) and never explained. Files: WORLD_TRUTH §10.5, LIVES §6/§13 (K4, K6), SITE region 3/5, REVELATION_MAP 43/49/51, NICHES 43/51, ARR3 26.1, ARR45 41.3, wk 42 close, 43.A, 43.4, wk 43 teaser. His voice at week 49 comes "from the first door".
+- **Chosen.** Both are on the **first door's upper face**: K6 low, beside the door's count (41.A); K4's column begun high with room left at its top (for the head, cut at week 50) and growing down toward K6, so that at week 51 the five names and the empty ring sit just over K6 (the second review's catch). The second and third doors' faces stay bare all year, which is now a quiet physical clue shown twice (26.1, 41.3) and never explained. Files: WORLD_TRUTH §10.5, LIVES §6/§13 (K4, K6), SITE region 3/5, REVELATION_MAP 43/49/51, NICHES 43/51, ARR3 26.1, ARR45 41.3, wk 42 close, 43.A, 43.4, wk 43 teaser. His voice at week 49 comes "from the first door".
 
 ### N1, N2 — the wording of two internal rules
 
@@ -86,3 +86,14 @@ S4 and 10.1–10.6 were product work (done in Phases 5–6). S6 (month 5 and wee
   2. The place-bar (D2) was listed at week 6, but no record in weeks 1–13 carries a place-name. **Moved** to arrive with the first place-name (SCRIPT §3.3, §6).
   The week 6 Key therefore carries OPEN and EAT only, as ARR2 6.2 and NICHES 6.1 already said.
 - **REVELATION_MAP's week 6 row** named things week 6 does not show (the cord is week 3's, the roof-fall week 10's); rewritten to what the visits actually carry.
+
+### Review round on job 1 (a fresh reviewer: the late-choice promise and continuity)
+
+Two blockers, six should-fixes, five nits; all applied.
+- **The chain claim was not strictly true.** "Each of you came sooner" failed against the author's timeline (the Surveyor-to-Copyist gap is longer than the first) and against the Copyist, who never came. Chosen: keep the timeline and make his line exact. The chain begins with the boy's copy, and from there each reader *found the marks* sooner than the one before (Copyist, Engineer, Linguist: true). Speech ¶4 now reads *Since the child, each of you found them sooner than the one before.* L17's telling, WORLD_TRUTH §6, CHARACTERS and REVELATION_MAP match. He never lies.
+- **50.B's window.** It can play only after the speech and before the binding; after the binding a tap on the right-hand blank shows 50.3 and nothing more (a bound Custodian cannot speak).
+- **How he knows a word locked**, since sound never goes up: a lock at the Seed is a lock under the count, and the count is laced to the doors, where his hand lies on the first door's count (as at week 25). He feels locks, not words (WORLD_TRUTH §10.3 (f)).
+- **The refusal state:** the camp line goes back to week 45's; 49's *I will be at the doors.* plays once; the open route's re-read pool excludes L22, L1's last line, L4's handle, the speech, 49.x and any *cut* imperative.
+- **K6 and the list, placed exactly.** K6 is cut low on the first door's upper face, beside its count (41.A). The list's column begins high on the same face with room left at its top (the head is cut at week 50) and grows down toward K6, so at week 51 the five names and the empty ring sit just over it. "The wall beside the jamb" is dropped everywhere: one face.
+- **The Engineer, reconciled with the new argument:** he let a reader be loud because one who learns LOUD is nearer to one who can finish; it cost one man and a gallery, which is exactly what he fears the chain will do by accident. He has never said so (an omission). CHARACTERS §1.
+- Nits: "cuts it anyway" → "cuts it" (the answering word is what he asks for, not defiance); "the same four taps" → "the same taps" (the answering word has three marks); word count "about 390" everywhere (393); a tap between 48.A and 49.A shows the full count only; REVELATION_MAP's week 39 teaser now matches ARR45's third-person wording.

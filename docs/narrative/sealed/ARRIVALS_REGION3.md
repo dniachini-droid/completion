@@ -180,7 +180,7 @@ _Written 2026-09-23; revised the same day after the weeks 14–26 story-editor r
 | Visit | Kind | The line / scene | Choice | Carries |
 |---|---|---|---|---|
 | 26.A | **arrival** | **The second and third doors.** The counts fill, the second and then the third. Beyond the third: a hall with almost no rings, lit, high, and at its end a row of tables at a long hand's height, and a lift-shaft with a dark panel. | — | region 4 begins |
-| 26.1 | step | The second door's face, close: nothing is cut on it. | — | (the second and third doors' faces stay bare all year: he cannot reach them; K6 and K4 go on the first door's upper face and the wall beside it, from week 41; the app never explains) |
+| 26.1 | step | The second door's face, close: nothing is cut on it. | — | (the second and third doors' faces stay bare all year: he cannot reach them; K6 and K4 go on the first door's upper face, from week 41; the app never explains) |
 | 26.B | **arrival** | **The reading-tables.** On the nearest, a cut note with her hook in its corner and no head: *Down is out. I go out not. The doors I opened give me up and down; they know me. The next door: my count is not. Up one day, [grass]: not the world. The count is the world on the hand, days of it. I see what it wants; I keep it not.* | — | **L16** |
 | 26.2 | step | The hall's floor-stone, sealed: a drop inside a wedge beside a picture of a thing falling. | — | (the Key opens it in month 7: **SEED**) |
 | 26.3 | step | The bare walls. There are almost no rings here. Ten thousand in the halls above, and almost none past the third door. | — | the gradient |
