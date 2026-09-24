@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06070f">
+<title>The map · The Quiet</title>
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<link rel="stylesheet" href="direction.css">
+<style>
+
+.mapfog-a { animation: mdrift 80s ease-in-out infinite alternate; }
+.mapfog-b { animation: mdrift2 120s ease-in-out infinite alternate; }
+@keyframes mdrift { from { transform: translate(0,0); } to { transform: translate(-360px, 12px); } }
+@keyframes mdrift2 { from { transform: translate(0,0); } to { transform: translate(360px, -10px); } }
+.here { transform-box: view-box; transform-origin: 231px 288px; animation: breathe 4.6s ease-in-out infinite; }
+
+.title { position:absolute; top:100px; left:var(--gutter); z-index:6; }
+.title .pl { font-size:34px; }
+.title .sub { font-family:var(--life); font-style:italic; font-size:16px; color:var(--ink-3); margin-top:4px; }
+
+.lbl { position:absolute; z-index:6; font-family:var(--place); font-size:17px; line-height:1.1; color:var(--cold-hi); text-shadow:0 0 12px rgba(6,7,20,.95), 0 0 20px rgba(143,168,255,.35); white-space:nowrap; }
+.lbl small { display:block; font-family:var(--life); font-style:italic; font-size:14px; color:var(--ink-2); margin-top:2px; text-shadow:0 0 10px rgba(6,7,20,1); }
+.lbl.dim { color:rgba(212,221,255,.45); }
+.lbl.here-l { color:#ffe9bd; text-shadow:0 0 12px rgba(6,7,20,.95), 0 0 18px rgba(244,200,119,.5); }
+.lbl.here-l small { color:#ecd3ae; }
+.lbl.sel { color:#fff; }
+.lbl.sel { text-align:right; }
+.selring { position:absolute; z-index:6; width:26px; height:26px; border-radius:50%; box-shadow:0 0 0 1.2px rgba(230,236,255,.85), 0 0 16px rgba(143,168,255,.9), inset 0 0 10px rgba(143,168,255,.6); animation: breathe 3.6s ease-in-out infinite; }
+
+.card.place { bottom:30px; }
+.place .pl { font-size:27px; }
+.place p { font-family:var(--life); font-size:17px; color:var(--ink-2); margin:6px 0 16px; }
+.place .needs { display:inline-flex; align-items:center; gap:8px; font-family:var(--life); font-style:italic; font-size:16px; color:var(--cold-hi); }
+
+</style>
+</head>
+<body class="t-cold">
+<main class="phone">
+
+<div class="paint"><svg viewBox="0 0 390 844" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+<defs>
+  <radialGradient id="mbg" cx=".55" cy=".45" r=".8"><stop offset="0" stop-color="#151a44"/><stop offset=".5" stop-color="#0b0e26"/><stop offset="1" stop-color="#04050c"/></radialGradient>
+  <filter id="rock" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".02" numOctaves="5" seed="8"/>
+    <feColorMatrix values="0 0 0 0 .45  0 0 0 0 .5  0 0 0 0 .9  0 0 0 1 -.35"/>
+  </filter>
+  <filter id="carve" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3"/></filter>
+  <filter id="carve2" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency=".06" numOctaves="2" seed="4" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="6" xChannelSelector="R" yChannelSelector="G" result="d"/><feGaussianBlur in="d" stdDeviation="1.1"/></filter>
+  <filter id="big" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="16"/></filter>
+  <filter id="walkBlur" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="22"/></filter>
+  <radialGradient id="pool"><stop offset="0" stop-color="#dfe6ff" stop-opacity=".95"/><stop offset=".2" stop-color="#9fb2ff" stop-opacity=".6"/><stop offset=".6" stop-color="#5d6fd0" stop-opacity=".15"/><stop offset="1" stop-color="#5d6fd0" stop-opacity="0"/></radialGradient>
+  <radialGradient id="poolDim"><stop offset="0" stop-color="#aebcff" stop-opacity=".5"/><stop offset=".4" stop-color="#6070c8" stop-opacity=".18"/><stop offset="1" stop-color="#6070c8" stop-opacity="0"/></radialGradient>
+  <radialGradient id="warmPool"><stop offset="0" stop-color="#fff1cf"/><stop offset=".12" stop-color="#ffc877" stop-opacity=".9"/><stop offset=".4" stop-color="#e38a3c" stop-opacity=".28"/><stop offset="1" stop-color="#e38a3c" stop-opacity="0"/></radialGradient>
+  <radialGradient id="cairnGlow"><stop offset="0" stop-color="#f4c877" stop-opacity=".55"/><stop offset="1" stop-color="#f4c877" stop-opacity="0"/></radialGradient>
+  <mask id="walkedMask" maskUnits="userSpaceOnUse" x="0" y="0" width="390" height="844">
+    <rect width="390" height="844" fill="#fff"/>
+    <path d="M262 150 Q250 200 226 246 L206 500 M221 300 Q160 292 84 290" fill="none" stroke="#000" stroke-width="70" stroke-linecap="round" filter="url(#walkBlur)"/>
+    <circle cx="231" cy="288" r="46" fill="#000" filter="url(#walkBlur)"/>
+  </mask>
+  <filter id="mfog" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".007 .009" numOctaves="4" seed="14"/>
+    <feColorMatrix values="0 0 0 0 .42  0 0 0 0 .46  0 0 0 0 .85  0 0 0 2.2 -1.0"/>
+  </filter>
+  <filter id="mfog2" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".012 .016" numOctaves="3" seed="41"/>
+    <feColorMatrix values="0 0 0 0 .3  0 0 0 0 .33  0 0 0 0 .7  0 0 0 2 -.95"/>
+  </filter>
+</defs>
+
+<rect width="390" height="844" fill="url(#mbg)"/>
+<rect width="390" height="844" filter="url(#rock)" opacity=".5" style="mix-blend-mode:soft-light"/>
+
+<!-- the carved places, seen from above: cut deeper than the rock, softly lit -->
+<g filter="url(#carve2)" stroke-linecap="round" fill="none">
+  <!-- passages -->
+  <path d="M262 150 Q250 200 226 246" stroke="#03040a" stroke-width="12"/>
+  <path d="M221 300 Q160 292 104 290" stroke="#03040a" stroke-width="9"/>
+  <path d="M218 372 Q270 368 300 372" stroke="#03040a" stroke-width="9"/>
+  <path d="M194 396 Q140 406 108 444" stroke="#03040a" stroke-width="7" opacity=".55" stroke-dasharray="2 7"/>
+  <!-- the long hall -->
+  <path d="M226 246 L206 520" stroke="#03040a" stroke-width="38"/>
+  <path d="M226 246 L206 520" stroke="#1d2458" stroke-width="30"/>
+</g>
+<!-- rim light on the hall's edges -->
+<path d="M211 246 L191 520" stroke="#8fa8ff" stroke-width="1" opacity=".35" filter="url(#carve2)"/>
+<path d="M241 246 L221 520" stroke="#8fa8ff" stroke-width="1" opacity=".25" filter="url(#carve2)"/>
+<!-- galleries -->
+<ellipse cx="84" cy="290" rx="25" ry="17" fill="#03040a" opacity=".8" filter="url(#carve2)"/>
+<ellipse cx="84" cy="290" rx="21" ry="13" fill="#1a2152" filter="url(#carve2)"/>
+<path d="M294 364 q34 -16 62 -6 q8 12 0 22 q-30 10 -62 2 z" fill="#03040a" opacity=".8" filter="url(#carve2)"/>
+<path d="M298 367 q30 -13 56 -4 q5 9 -1 16 q-28 8 -55 1 z" fill="#171d48" filter="url(#carve2)"/>
+<!-- the mouth: a round shaft with a ladder -->
+<circle cx="262" cy="150" r="17" fill="#03040a" filter="url(#carve2)"/>
+<circle cx="262" cy="150" r="12" fill="#10143a" stroke="#8fa8ff" stroke-opacity=".4" stroke-width="1"/>
+<g stroke="#b9c6ff" stroke-width="1" opacity=".55"><line x1="258" y1="141" x2="258" y2="159"/><line x1="266" y1="141" x2="266" y2="159"/>
+  <line x1="258" y1="145" x2="266" y2="145"/><line x1="258" y1="150" x2="266" y2="150"/><line x1="258" y1="155" x2="266" y2="155"/></g>
+<!-- the head of the stair: a faint shape, not reached -->
+<g opacity=".32" filter="url(#carve2)">
+  <path d="M78 442 h36 v34 h-36 z" fill="#03040a"/>
+  <g stroke="#8fa8ff" stroke-width="1.2" opacity=".7"><line x1="82" y1="448" x2="110" y2="448"/><line x1="82" y1="454" x2="110" y2="454"/><line x1="82" y1="460" x2="110" y2="460"/><line x1="82" y1="466" x2="110" y2="466"/><line x1="82" y1="472" x2="110" y2="472"/></g>
+</g>
+<!-- the great door at the far end -->
+<path d="M183 536 h44" stroke="#c9d4ff" stroke-width="3" opacity=".7" filter="url(#carve2)"/>
+<!-- the lintel on the side wall -->
+<path d="M196 384 v24" stroke="#c9d4ff" stroke-width="3" opacity=".75" filter="url(#carve2)"/>
+
+
+
+<!-- cairns along the trail: warm, earned -->
+<g transform="translate(258 170)"><circle r="9" fill="url(#cairnGlow)"/><circle r="1.9" fill="#ffe2a8"/></g><g transform="translate(250 198)"><circle r="9" fill="url(#cairnGlow)"/><circle r="1.9" fill="#ffe2a8"/></g><g transform="translate(238 226)"><circle r="9" fill="url(#cairnGlow)"/><circle r="1.9" fill="#ffe2a8"/></g><g transform="translate(228 270)"><circle r="9" fill="url(#cairnGlow)"/><circle r="1.9" fill="#ffe2a8"/></g><g transform="translate(224 314)"><circle r="9" fill="url(#cairnGlow)"/><circle r="1.9" fill="#ffe2a8"/></g><g transform="translate(219 358)"><circle r="9" fill="url(#cairnGlow)"/><circle r="1.9" fill="#ffe2a8"/></g><g transform="translate(170 296)"><circle r="9" fill="url(#cairnGlow)"/><circle r="1.9" fill="#ffe2a8"/></g><g transform="translate(130 292)"><circle r="9" fill="url(#cairnGlow)"/><circle r="1.9" fill="#ffe2a8"/></g><g transform="translate(212 440)"><circle r="9" fill="url(#cairnGlow)"/><circle r="1.9" fill="#ffe2a8"/></g><g transform="translate(215 480)"><circle r="9" fill="url(#cairnGlow)"/><circle r="1.9" fill="#ffe2a8"/></g>
+
+<!-- the fog, thinned where you've walked -->
+<g mask="url(#walkedMask)">
+  <g class="mapfog-a"><rect width="780" height="844" filter="url(#mfog)" opacity=".75"/></g>
+  <g class="mapfog-b"><rect x="-390" width="780" height="844" filter="url(#mfog2)" opacity=".6"/></g>
+</g>
+
+<!-- pools of light -->
+<g style="mix-blend-mode:screen">
+  <circle cx="262" cy="150" r="46" fill="url(#poolDim)"/>
+  <circle cx="84" cy="290" r="58" fill="url(#pool)" opacity=".7"/>
+  <ellipse cx="216" cy="386" rx="60" ry="170" fill="url(#pool)" opacity=".75"/>
+  <circle cx="324" cy="372" r="50" fill="url(#poolDim)" opacity=".8"/>
+  <circle cx="205" cy="542" r="44" fill="url(#pool)" opacity=".6"/>
+  <circle cx="194" cy="396" r="34" fill="url(#pool)" opacity=".75"/>
+  <circle cx="96" cy="452" r="40" fill="url(#poolDim)" opacity=".35"/>
+</g>
+
+<!-- you are here: the lamp, always lit -->
+<g class="here">
+  <circle cx="231" cy="288" r="60" fill="url(#warmPool)" style="mix-blend-mode:screen"/>
+  <circle cx="231" cy="288" r="3.2" fill="#fff6e0"/>
+</g>
+</svg></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+<div class="ui">
+  <a class="home" href="morning.html"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Today</span></a>
+
+  <div class="title rise"><div class="place-name pl">The Quiet</div><div class="sub">the first region</div></div>
+
+  <div class="lbl" style="left:286px; top:138px">The Mouth</div>
+  <div class="lbl" style="left:34px; top:232px">The Survey Cut</div>
+  <div class="lbl here-l" style="left:253px; top:272px">The Lamp Hall<small>you are here</small></div>
+  <div class="lbl dim" style="left:280px; top:406px">The Salt Gallery</div>
+  <a class="lbl sel tap" href="cut.html" style="right:218px; top:386px">The lintel<small>needs a word</small></a><span class="selring" style="left:181px; top:383px"></span>
+  <div class="lbl dim" style="left:56px; top:478px; font-size:15px">the head of the stair</div>
+  <div class="lbl" style="left:235px; top:530px">The great door<small>needs a word and a Key</small></div>
+
+  <section class="card place rise d2">
+    <div class="place-name pl">The lintel</div>
+    <p>Two marks beside a rod-shaped blank. It needs a word.</p>
+    <a class="btn" href="cut.html">Try a word here</a>
+  </section>
+</div>
+</main>
+<script>
+/* the light blooms where you tap (motion only) */
+(function(){
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) return;
+  document.querySelectorAll('.btn, .quiet, .tap').forEach(function(el){
+    el.addEventListener('pointerdown', function(e){
+      var r = el.getBoundingClientRect(), b = document.createElement('span');
+      b.className = 'bloom'; b.style.left = (e.clientX - r.left) + 'px'; b.style.top = (e.clientY - r.top) + 'px';
+      if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+      el.style.overflow = 'hidden'; el.appendChild(b);
+      setTimeout(function(){ b.remove(); }, 950);
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -182,11 +182,11 @@ h1,.title{
 
 /* the one warm thing to press */
 .btn.warm{
-  color:var(--warm-hi);
+  color:#fff1de;
   border:1px solid rgba(255,206,150,.95);
   background:
-    radial-gradient(80% 120% at 50% 120%,rgba(255,190,115,.62),rgba(245,171,92,.16) 72%),
-    linear-gradient(180deg,#3a2614,#1e1209);
+    radial-gradient(90% 130% at 50% 120%,rgba(255,196,125,.78),rgba(245,171,92,.2) 72%),
+    linear-gradient(180deg,#402a15,#21140a);
   box-shadow:
     0 0 0 1px rgba(245,171,92,.14),
     0 0 26px rgba(245,171,92,.30),

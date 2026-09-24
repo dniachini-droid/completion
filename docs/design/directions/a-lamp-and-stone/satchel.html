@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>The satchel</title>
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<link rel="stylesheet" href="direction.css">
+<style>
+
+.head{top:310px;left:var(--gutter);right:var(--gutter)}
+.head .title{margin-top:8px;font-size:25px;text-wrap:balance}
+.list{left:var(--gutter);right:var(--gutter);top:396px;list-style:none}
+.list li{display:flex;align-items:center;gap:14px;min-height:50px}
+.list button{display:flex;align-items:center;justify-content:center;width:44px;height:44px;margin-left:-12px;margin-right:-4px;flex:none}
+.list .t{font-family:var(--voice);font-size:18.5px;color:var(--ink)}
+.list li.done .t{color:var(--ink-3)}
+.more{margin-top:6px;padding-left:34px;font-family:var(--voice);font-size:16px;color:var(--ink-3)}
+.act{left:var(--gutter);right:var(--gutter);top:696px}
+.act .warm-btn{width:100%}
+.nav{height:64px;padding-bottom:10px}
+
+</style>
+</head>
+<body>
+<main class="screen">
+
+<div class="scene"><svg viewBox="0 0 390 844" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>
+  <filter id="grain" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="71"/>
+    <feColorMatrix values="0 0 0 0 .62  0 0 0 0 .72  0 0 0 0 .78  0 0 0 .6 0"/>
+  </filter>
+  <filter id="clouds" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".011 .014" numOctaves="4" seed="75"/>
+    <feColorMatrix values="0 0 0 0 .52  0 0 0 0 .64  0 0 0 0 .72  0 0 0 1 -.3"/>
+  </filter>
+  <filter id="speck" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".06 .09" numOctaves="3" seed="80"/>
+    <feColorMatrix values="0 0 0 0 .6  0 0 0 0 .7  0 0 0 0 .78  0 0 0 1.4 -.72"/>
+  </filter>
+  <filter id="paint" x="-15%" y="-15%" width="130%" height="130%">
+    <feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="3" seed="73" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="7" xChannelSelector="R" yChannelSelector="G" result="d"/>
+    <feGaussianBlur in="d" stdDeviation="1.3"/>
+  </filter>
+  <filter id="paintS" x="-15%" y="-15%" width="130%" height="130%">
+    <feTurbulence type="fractalNoise" baseFrequency=".06" numOctaves="2" seed="76" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="3" xChannelSelector="R" yChannelSelector="G" result="d"/>
+    <feGaussianBlur in="d" stdDeviation=".6"/>
+  </filter>
+  <filter id="b1" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="1"/></filter>
+  <filter id="b2" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="2.4"/></filter>
+  <filter id="b4" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="4.5"/></filter>
+  <filter id="b8" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="9"/></filter>
+  <filter id="b16" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="18"/></filter>
+  <filter id="b30" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="30"/></filter>
+  <filter id="glowC" x="-100%" y="-100%" width="300%" height="300%">
+    <feGaussianBlur stdDeviation="2.2" result="b"/><feGaussianBlur in="SourceGraphic" stdDeviation="6" result="b2"/>
+    <feMerge><feMergeNode in="b2"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <radialGradient id="flameG" cx=".5" cy=".72" r=".62">
+    <stop offset="0" stop-color="#fffaf0"/><stop offset=".42" stop-color="#ffd690"/><stop offset=".8" stop-color="#f39a3c" stop-opacity=".6"/><stop offset="1" stop-color="#e57a24" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="warmPool" cx=".5" cy=".5" r=".5">
+    <stop offset="0" stop-color="#ffd28e" stop-opacity=".85"/><stop offset=".14" stop-color="#f0a24a" stop-opacity=".45"/>
+    <stop offset=".5" stop-color="#9c5424" stop-opacity=".16"/><stop offset="1" stop-color="#3a1c0c" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="coldPool" cx=".5" cy=".5" r=".5">
+    <stop offset="0" stop-color="#e2f3fa" stop-opacity=".9"/><stop offset=".12" stop-color="#9fc4d8" stop-opacity=".5"/>
+    <stop offset=".45" stop-color="#3e5a69" stop-opacity=".2"/><stop offset="1" stop-color="#0e161c" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="clay" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#b07a4e"/><stop offset=".45" stop-color="#7a4f31"/><stop offset="1" stop-color="#2e1c11"/>
+  </linearGradient>
+
+  <linearGradient id="sbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0c1318"/><stop offset=".35" stop-color="#18232a"/><stop offset=".6" stop-color="#0a0f13"/><stop offset="1" stop-color="#05080b"/></linearGradient>
+  <linearGradient id="nicheIn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#030507"/><stop offset=".7" stop-color="#0d1419"/><stop offset="1" stop-color="#2a2420"/></linearGradient>
+  <linearGradient id="topFade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#05080b" stop-opacity=".9"/><stop offset="1" stop-color="#05080b" stop-opacity="0"/></linearGradient>
+  <linearGradient id="botFade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#05080b" stop-opacity="0"/><stop offset=".3" stop-color="#05080b" stop-opacity=".9"/><stop offset="1" stop-color="#05080b"/></linearGradient>
+</defs>
+<rect width="390" height="844" fill="url(#sbg)"/>
+<rect width="390" height="844" filter="url(#clouds)" opacity=".3"/>
+<rect width="390" height="844" filter="url(#speck)" opacity=".12"/>
+<!-- faint marks cut on every surface within reach of a hand -->
+<g opacity=".5"><g transform="translate(40 150) scale(0.9)" opacity="1.0" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#010203" stroke-width="3.9000000000000004" opacity=".8" transform="translate(-.35 -.6)" filter="url(#b1)"/>
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#0a1117" stroke-width="2.5"/>
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#000" stroke-width="6.2" opacity="0" filter="url(#b2)"/>
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#27343c" stroke-width="1.36" opacity="0.0" filter="url(#b1)"/>
+  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#9fb6c1" stroke-width=".5" opacity="0.35" transform="translate(.3 .7)"/>
+</g><g transform="translate(350 140) scale(0.9)" opacity="1.0" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-6.5 7 Q-6.5 -6 0 -6 Q6.5 -6 6.5 7 M0 -6 V2" stroke="#010203" stroke-width="3.9000000000000004" opacity=".8" transform="translate(-.35 -.6)" filter="url(#b1)"/>
+  <path d="M-6.5 7 Q-6.5 -6 0 -6 Q6.5 -6 6.5 7 M0 -6 V2" stroke="#0a1117" stroke-width="2.5"/>
+  <path d="M-6.5 7 Q-6.5 -6 0 -6 Q6.5 -6 6.5 7 M0 -6 V2" stroke="#000" stroke-width="6.2" opacity="0" filter="url(#b2)"/>
+  <path d="M-6.5 7 Q-6.5 -6 0 -6 Q6.5 -6 6.5 7 M0 -6 V2" stroke="#27343c" stroke-width="1.36" opacity="0.0" filter="url(#b1)"/>
+  <path d="M-6.5 7 Q-6.5 -6 0 -6 Q6.5 -6 6.5 7 M0 -6 V2" stroke="#9fb6c1" stroke-width=".5" opacity="0.35" transform="translate(.3 .7)"/>
+</g><g transform="translate(140 120) scale(0.7)" opacity="1.0" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#010203" stroke-width="3.9000000000000004" opacity=".8" transform="translate(-.35 -.6)" filter="url(#b1)"/>
+  <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#0a1117" stroke-width="2.5"/>
+  <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#000" stroke-width="6.2" opacity="0" filter="url(#b2)"/>
+  <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#27343c" stroke-width="1.36" opacity="0.0" filter="url(#b1)"/>
+  <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#9fb6c1" stroke-width=".5" opacity="0.35" transform="translate(.3 .7)"/>
+</g><g transform="translate(262 118) scale(0.7)" opacity="1.0" fill="none" stroke-linecap="round" stroke-linejoin="round" >
+  <path d="M-7 6 Q-3 -9 2 -2 Q6 3 7 -7 M-3 7.5 H3" stroke="#010203" stroke-width="3.9000000000000004" opacity=".8" transform="translate(-.35 -.6)" filter="url(#b1)"/>
+  <path d="M-7 6 Q-3 -9 2 -2 Q6 3 7 -7 M-3 7.5 H3" stroke="#0a1117" stroke-width="2.5"/>
+  <path d="M-7 6 Q-3 -9 2 -2 Q6 3 7 -7 M-3 7.5 H3" stroke="#000" stroke-width="6.2" opacity="0" filter="url(#b2)"/>
+  <path d="M-7 6 Q-3 -9 2 -2 Q6 3 7 -7 M-3 7.5 H3" stroke="#27343c" stroke-width="1.36" opacity="0.0" filter="url(#b1)"/>
+  <path d="M-7 6 Q-3 -9 2 -2 Q6 3 7 -7 M-3 7.5 H3" stroke="#9fb6c1" stroke-width=".5" opacity="0.35" transform="translate(.3 .7)"/>
+</g></g>
+<ellipse cx="195" cy="250" rx="220" ry="90" fill="#f0a24a" opacity=".08" filter="url(#b30)"/>
+<g opacity="0.85">
+  <path d="M50 266 V218 Q50 190 78 190 Q106 190 106 218 V266 Z" fill="#000" opacity=".6" filter="url(#b4)" transform="translate(0 3)"/>
+  <path d="M50 266 V218 Q50 190 78 190 Q106 190 106 218 V266 Z" fill="url(#nicheIn)"/>
+  <ellipse cx="78" cy="266" rx="30.8" ry="41.8" fill="#9fc4d8" opacity=".32" filter="url(#b8)"/>
+  <ellipse cx="78" cy="264" rx="21.3" ry="4" fill="#dbeef6" opacity=".5" filter="url(#b2)"/>
+  <g transform="translate(78 256)">
+  <path d="M-10 0 L-7 -18 L0 -26 L6 -16 L10 0 Z" fill="#a9c7d4" opacity=".85" filter="url(#paintS)"/>
+  <path d="M-7 -18 L0 -26 L1 0" fill="none" stroke="#eef8fc" stroke-width="1" opacity=".7"/>
+  <path d="M-10 0 L-7 -18 L0 0 Z" fill="#6f8f9e" opacity=".6"/>
+</g>
+  <rect x="50" y="265" width="56" height="1.6" fill="#dbeef6" opacity=".45" filter="url(#b1)"/>
+  <path d="M50 266 V218 Q50 190 78 190 Q106 190 106 218 V266 Z" fill="none" stroke="#8fb0bf" stroke-width="1" opacity=".22" filter="url(#b1)"/>
+</g>
+<g opacity="1.0">
+  <path d="M147 270 V208 Q147 160 195 160 Q243 160 243 208 V270 Z" fill="#000" opacity=".6" filter="url(#b4)" transform="translate(0 3)"/>
+  <path d="M147 270 V208 Q147 160 195 160 Q243 160 243 208 V270 Z" fill="url(#nicheIn)"/>
+  <ellipse cx="195" cy="270" rx="52.8" ry="60.5" fill="#f0a24a" opacity=".32" filter="url(#b8)"/>
+  <ellipse cx="195" cy="268" rx="36.5" ry="4" fill="#ffd9a0" opacity=".5" filter="url(#b2)"/>
+  <g transform="translate(195 262)">
+  <path d="M-34 0 C-38 -30 -30 -46 0 -48 C30 -46 38 -30 34 0 Z" fill="#6b4630" filter="url(#paintS)"/>
+  <path d="M-30 -40 C-20 -58 20 -58 30 -40" fill="none" stroke="#4a2e1d" stroke-width="4" stroke-linecap="round"/>
+  <path d="M-33 -30 C-12 -38 12 -38 33 -30 L30 -14 C10 -20 -10 -20 -30 -14 Z" fill="#83573a" filter="url(#paintS)"/>
+  <circle cx="0" cy="-18" r="3" fill="#d9a46a"/>
+  <path d="M-32 -4 C-10 4 10 4 32 -4" stroke="#ffcf8e" stroke-width="2" fill="none" opacity=".8" filter="url(#b1)"/>
+  <path d="M-30 -31 C-12 -39 12 -39 30 -31" stroke="#ffd9a0" stroke-width="1" fill="none" opacity=".35"/>
+</g>
+  <rect x="147" y="269" width="96" height="1.6" fill="#ffd9a0" opacity=".45" filter="url(#b1)"/>
+  <path d="M147 270 V208 Q147 160 195 160 Q243 160 243 208 V270 Z" fill="none" stroke="#8fb0bf" stroke-width="1" opacity=".22" filter="url(#b1)"/>
+</g>
+<g opacity="0.85">
+  <path d="M284 266 V218 Q284 190 312 190 Q340 190 340 218 V266 Z" fill="#000" opacity=".6" filter="url(#b4)" transform="translate(0 3)"/>
+  <path d="M284 266 V218 Q284 190 312 190 Q340 190 340 218 V266 Z" fill="url(#nicheIn)"/>
+  <ellipse cx="312" cy="266" rx="30.8" ry="41.8" fill="#9fc4d8" opacity=".32" filter="url(#b8)"/>
+  <ellipse cx="312" cy="264" rx="21.3" ry="4" fill="#dbeef6" opacity=".5" filter="url(#b2)"/>
+  <g transform="translate(312 256)">
+  <ellipse cx="0" cy="-8" rx="12" ry="8" fill="#56646b" filter="url(#paintS)"/>
+  <path d="M-6 -6 L-2 -12 L2 -6 L6 -12" stroke="#1a2328" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M-10 -12 Q0 -17 10 -12" stroke="#ffd9a0" stroke-width="1" fill="none" opacity=".5"/>
+</g>
+  <rect x="284" y="265" width="56" height="1.6" fill="#dbeef6" opacity=".45" filter="url(#b1)"/>
+  <path d="M284 266 V218 Q284 190 312 190 Q340 190 340 218 V266 Z" fill="none" stroke="#8fb0bf" stroke-width="1" opacity=".22" filter="url(#b1)"/>
+</g>
+<!-- the ledge below the niches -->
+<path d="M-10 272 H400 V284 H-10 Z" fill="#1c262c" filter="url(#paint)"/>
+<rect x="-10" y="271.5" width="410" height="1.2" fill="#b9cfd8" opacity=".18" filter="url(#b1)"/>
+<rect width="390" height="120" fill="url(#topFade)"/>
+<rect y="300" width="390" height="544" fill="url(#botFade)"/>
+<rect width="390" height="844" filter="url(#grain)" opacity="0.14" style="mix-blend-mode:overlay"/>
+</svg></div>
+<canvas class="motes" aria-hidden="true" data-n="22" data-lights='[[195, 250, 180, "w", 0.7]]'></canvas>
+<header class="layer head rise d1">
+  <div class="eyebrow">The satchel</div>
+  <h1 class="title">Sort the flat before the visit</h1>
+</header>
+<ul class="layer list rise d2"><li class=""><button aria-label="Tick: Hoover the hall"><span class="pt dark"></span></button><span class="t">Hoover the hall</span></li><li class=""><button aria-label="Tick: Clear the desk"><span class="pt dark"></span></button><span class="t">Clear the desk</span></li><li class=""><button aria-label="Tick: Wash the bedding"><span class="pt dark"></span></button><span class="t">Wash the bedding</span></li><li class="done"><button aria-label="Ticked: Take the bottles out"><span class="pt warm"></span></button><span class="t">Take the bottles out</span></li><li class=""><button aria-label="Tick: Fix the shelf bracket"><span class="pt dark"></span></button><span class="t">Fix the shelf bracket</span></li></ul>
+<div class="layer rise d3" style="left:var(--gutter);top:650px"><p class="more">and more, folded away</p></div>
+<div class="layer act rise d4"><button class="warm-btn" style="width:100%">Add a line</button></div>
+<nav class="nav" aria-label="Places in the app"><a href="morning.html">Today</a><a href="map.html">Map</a><a href="satchel.html" class="here" aria-current="page">Satchel</a><a href="daybook.html">Daybook</a></nav>
+
+</main>
+<script>
+/* Dust in the light: few, slow, lit only near a light source. Motion only. */
+(function(){
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var c=document.querySelector('canvas.motes'); if(!c) return;
+  var L=JSON.parse(c.dataset.lights||'[]'), N=+(c.dataset.n||30), W=390, H=844;
+  var x=c.getContext('2d'); c.width=W*2; c.height=H*2; x.scale(2,2);
+  var R=Math.random, m=[];
+  for(var i=0;i<N;i++) m.push({x:R()*W,y:R()*H,r:.35+R()*1.1,vx:(R()-.5)*.05,vy:-.02-R()*.06,p:R()*6.3});
+  var last=performance.now();
+  function fr(t){
+    var dt=Math.min(50,t-last); last=t; x.clearRect(0,0,W,H);
+    for(var i=0;i<m.length;i++){ var q=m[i];
+      q.x+=q.vx*dt*.06; q.y+=q.vy*dt*.06; q.p+=dt*.001;
+      if(q.y<-4){q.y=H+4;q.x=R()*W} if(q.x<-4)q.x=W+4; if(q.x>W+4)q.x=-4;
+      var best=0,col=null;
+      for(var j=0;j<L.length;j++){var l=L[j],d=Math.hypot(q.x-l[0],q.y-l[1]),a=Math.max(0,1-d/l[2])*l[4]; if(a>best){best=a;col=l[3]}}
+      var a=best*(.5+.4*Math.sin(q.p)); if(a<.02) continue;
+      x.fillStyle=col==='w'?'rgba(255,214,150,'+a+')':'rgba(214,238,248,'+a+')';
+      x.beginPath(); x.arc(q.x,q.y,q.r,0,6.283); x.fill();
+    }
+    requestAnimationFrame(fr);
+  }
+  requestAnimationFrame(fr);
+})();
+</script>
+
+</body>
+</html>

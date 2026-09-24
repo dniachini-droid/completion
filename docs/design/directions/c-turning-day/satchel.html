@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06070f">
+<title>The satchel</title>
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<link rel="stylesheet" href="direction.css">
+<style>
+
+.head { position:absolute; top:100px; max-width:230px; left:var(--gutter); right:var(--gutter); z-index:6; }
+.head h1 { font-family:var(--life); font-weight:400; font-size:34px; line-height:1.05; color:var(--ink); text-shadow:0 0 24px rgba(var(--glow-rgb),.4); }
+.head .sub { font-family:var(--life); font-style:italic; font-size:17px; color:var(--ink-2); margin-top:4px; }
+
+.card.list { top:372px; padding:18px 16px 16px; }
+.list .k { font-family:var(--life); font-style:italic; font-size:16px; color:var(--glow); margin-left:4px; }
+.list h2 { font-family:var(--life); font-weight:500; font-size:23px; line-height:1.2; color:#fff; margin:2px 0 8px 4px; }
+.list ul { list-style:none; }
+.list li { display:flex; align-items:center; gap:6px; min-height:46px; border-top:1px solid rgba(var(--glow-rgb),.12); }
+.list li:first-child { border-top:0; }
+.list .tick { width:44px; height:44px; display:flex; align-items:center; justify-content:center; border-radius:50%; flex:none; }
+.list .tick .c { width:20px; height:20px; border-radius:50%; box-shadow: inset 0 0 0 1.4px rgba(var(--glow-rgb),.6); transition: all .4s var(--ease); }
+.list .t { font-family:var(--life); font-size:18px; color:var(--ink); }
+.list li.done .tick .c { background: radial-gradient(circle, #fff, var(--glow-hi) 45%, var(--glow)); box-shadow: 0 0 12px rgba(var(--glow-rgb),.9), 0 0 26px rgba(var(--glow-rgb),.5); }
+.list li.done .t { color:var(--ink-3); text-decoration: line-through; text-decoration-color: rgba(var(--glow-rgb),.5); text-decoration-thickness: 1px; }
+.list .more { display:flex; align-items:center; gap:10px; min-height:46px; margin-bottom:12px; padding-left:14px; border-top:1px solid rgba(var(--glow-rgb),.12); font-family:var(--life); font-style:italic; font-size:17px; color:var(--ink-2); width:100%; text-align:left; }
+.list .more svg { width:16px; height:16px; opacity:.7; }
+.adds { position:absolute; left:var(--gutter); right:var(--gutter); bottom:30px; z-index:6; }
+
+</style>
+</head>
+<body class="t-dusk">
+<main class="phone">
+
+<div class="paint"><img class="pimg" alt="" aria-hidden="true" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzOTAgODQ0IiB3aWR0aD0iMzkwIiBoZWlnaHQ9Ijg0NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQgc2xpY2UiPgo8ZGVmcz4KICA8cmFkaWFsR3JhZGllbnQgaWQ9InNiZyIgY3g9Ii43MiIgY3k9Ii4yIiByPSIuOCI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjNGEzZjc4Ii8+PHN0b3Agb2Zmc2V0PSIuMzUiIHN0b3AtY29sb3I9IiMxZTFhNDAiLz48c3RvcCBvZmZzZXQ9Ii44IiBzdG9wLWNvbG9yPSIjMGEwOTE4Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMDUwNTBjIi8+PC9yYWRpYWxHcmFkaWVudD4KICA8bGluZWFyR3JhZGllbnQgaWQ9ImxlYXRoZXIiIHgxPSIxIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiM1YTNjMzQiLz48c3RvcCBvZmZzZXQ9Ii40NSIgc3RvcC1jb2xvcj0iIzJlMWMxOCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzBlMDgwOCIvPjwvbGluZWFyR3JhZGllbnQ+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJmbGFwIiB4MT0iMSIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjNWEzYTMwIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMjIxNDBmIi8+PC9saW5lYXJHcmFkaWVudD4KICA8bGluZWFyR3JhZGllbnQgaWQ9InBhcGVyIiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZThlMmY0Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOWM5NmI4Ii8+PC9saW5lYXJHcmFkaWVudD4KICA8ZmlsdGVyIGlkPSJsdCIgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSI+PGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9Ii41IiBudW1PY3RhdmVzPSIyIiBzZWVkPSIzIi8+PGZlQ29sb3JNYXRyaXggdmFsdWVzPSIwIDAgMCAwIDAgIDAgMCAwIDAgMCAgMCAwIDAgMCAwICAwIDAgMCAuOSAtLjM1Ii8+PGZlQ29tcG9zaXRlIGluMj0iU291cmNlR3JhcGhpYyIgb3BlcmF0b3I9ImluIi8+PC9maWx0ZXI+CiAgPGZpbHRlciBpZD0ic29mdCIgeD0iLTIwJSIgeT0iLTIwJSIgd2lkdGg9IjE0MCUiIGhlaWdodD0iMTQwJSI+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMS41Ii8+PC9maWx0ZXI+CiAgPGZpbHRlciBpZD0ic2hhZG93IiB4PSItMzAlIiB5PSItMzAlIiB3aWR0aD0iMTYwJSIgaGVpZ2h0PSIxNjAlIj48ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSIxMCIvPjwvZmlsdGVyPgogIDxmaWx0ZXIgaWQ9InN0b25lIiB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjAyIC4wNiIgbnVtT2N0YXZlcz0iNCIgc2VlZD0iMTciLz48ZmVDb2xvck1hdHJpeCB2YWx1ZXM9IjAgMCAwIDAgLjUgIDAgMCAwIDAgLjUgIDAgMCAwIDAgLjg1ICAwIDAgMCAuOSAtLjMiLz48L2ZpbHRlcj4KICA8cmFkaWFsR3JhZGllbnQgaWQ9InBhZ2VHbG93Ij48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmMGU4ZmYiIHN0b3Atb3BhY2l0eT0iLjU1Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZjBlOGZmIiBzdG9wLW9wYWNpdHk9IjAiLz48L3JhZGlhbEdyYWRpZW50PgogIDxyYWRpYWxHcmFkaWVudCBpZD0icmltIiBjeD0iLjciIGN5PSIuMSIgcj0iLjkiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2Q5ZDBmZiIgc3RvcC1vcGFjaXR5PSIuNiIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2Q5ZDBmZiIgc3RvcC1vcGFjaXR5PSIwIi8+PC9yYWRpYWxHcmFkaWVudD4KPC9kZWZzPgo8cmVjdCB3aWR0aD0iMzkwIiBoZWlnaHQ9Ijg0NCIgZmlsbD0idXJsKCNzYmcpIi8+CjxyZWN0IHdpZHRoPSIzOTAiIGhlaWdodD0iODQ0IiBmaWx0ZXI9InVybCgjc3RvbmUpIiBvcGFjaXR5PSIuMzUiIHN0eWxlPSJtaXgtYmxlbmQtbW9kZTpzb2Z0LWxpZ2h0Ii8+CjwhLS0gdGhlIHN0b25lIHNoZWxmIGl0IHJlc3RzIG9uIC0tPgo8cGF0aCBkPSJNLTEwIDMzMCBMNDAwIDMxOCBMNDAwIDM1MiBMLTEwIDM2OCBaIiBmaWxsPSIjMTQxMjMwIi8+CjxwYXRoIGQ9Ik0tMTAgMzMwIEw0MDAgMzE4IiBzdHJva2U9IiNiOWIwZmYiIHN0cm9rZS13aWR0aD0iMSIgb3BhY2l0eT0iLjM1Ii8+CjxlbGxpcHNlIGN4PSIyNzAiIGN5PSIzMjIiIHJ4PSI5MCIgcnk9IjEwIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIuNzUiIGZpbHRlcj0idXJsKCNzaGFkb3cpIi8+CjwhLS0gdGhlIHNhdGNoZWwsIG9wZW4sIGEgZmV3IGZvbGRlZCBwYWdlcyBpbnNpZGUsIGxpdCBmcm9tIGFib3ZlIHJpZ2h0IC0tPgo8ZyBmaWx0ZXI9InVybCgjc29mdCkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDk2IDY0KSBzY2FsZSguNzIpIHJvdGF0ZSgtNCAyMzYgMjgwKSI+CiAgPCEtLSB0aGUgZmxhcCwgdGhyb3duIGJhY2sgYmVoaW5kIC0tPgogIDxwYXRoIGQ9Ik0xNTAgMjA0IFEyMzYgMTk2IDMzMCAyMDAgTDM1MiAxMTggUTIzNiA5MiAxMjggMTE2IFoiIGZpbGw9InVybCgjZmxhcCkiLz4KICA8cGF0aCBkPSJNMzUyIDExOCBRMjM2IDkyIDEyOCAxMTYiIHN0cm9rZT0iI2M5YmZmZiIgc3Ryb2tlLXdpZHRoPSIxLjYiIGZpbGw9Im5vbmUiIG9wYWNpdHk9Ii41Ii8+CiAgPHJlY3QgeD0iMjI4IiB5PSIxMDAiIHdpZHRoPSIxOCIgaGVpZ2h0PSIxMiIgcng9IjIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Q4YzhhMCIgc3Ryb2tlLXdpZHRoPSIyIiBvcGFjaXR5PSIuNyIvPgogIDxwYXRoIGQ9Ik0xNDYgMjA2IFEyMzYgMTk2IDMzMCAyMDQgTDMyMiAxODAgUTIzNiAxNzIgMTU2IDE4MCBaIiBmaWxsPSIjMGUwODA4Ii8+CiAgPHBhdGggZD0iTTE3NiAxOTYgTDE4NiAxNDAgUTE5MCAxMzIgMjAwIDEzNCBMMjg4IDE0MCBRMjk2IDE0MiAyOTYgMTUwIEwzMDAgMTk4IFoiIGZpbGw9InVybCgjcGFwZXIpIiBvcGFjaXR5PSIuOSIvPgogIDxwYXRoIGQ9Ik0yMDQgMTk0IEwyMTIgMTUyIEwyODAgMTU3IEwyODIgMTk2IFoiIGZpbGw9IiNmNGYwZmIiIG9wYWNpdHk9Ii43NSIvPgogIDxnIHN0cm9rZT0iIzZhNjQ4OCIgc3Ryb2tlLXdpZHRoPSIxLjQiIG9wYWNpdHk9Ii42Ij48bGluZSB4MT0iMjE0IiB5MT0iMTY0IiB4Mj0iMjcwIiB5Mj0iMTY3Ii8+PGxpbmUgeDE9IjIxMyIgeTE9IjE3MyIgeDI9IjI1OCIgeTI9IjE3NSIvPjwvZz4KICA8ZWxsaXBzZSBjeD0iMjQwIiBjeT0iMTg2IiByeD0iODQiIHJ5PSIzMCIgZmlsbD0idXJsKCNwYWdlR2xvdykiIHN0eWxlPSJtaXgtYmxlbmQtbW9kZTpzY3JlZW4iLz4KICA8IS0tIGJvZHkgLS0+CiAgPHBhdGggZD0iTTEzNiAyMDYgUTEzMCAzMDAgMTQ2IDMzOCBRMTU2IDM1MiAxODAgMzU0IEwzMDAgMzUyIFEzMjYgMzUwIDMzNCAzMzQgUTM0OCAzMDAgMzQwIDIwNiBRMjM2IDIyMiAxMzYgMjA2IFoiIGZpbGw9InVybCgjbGVhdGhlcikiLz4KICA8cGF0aCBkPSJNMTM2IDIwNiBRMTMwIDMwMCAxNDYgMzM4IFExNTYgMzUyIDE4MCAzNTQgTDMwMCAzNTIgUTMyNiAzNTAgMzM0IDMzNCBRMzQ4IDMwMCAzNDAgMjA2IFEyMzYgMjIyIDEzNiAyMDYgWiIgZmlsdGVyPSJ1cmwoI2x0KSIgb3BhY2l0eT0iLjYiLz4KICA8cGF0aCBkPSJNMzQwIDIwNiBRMzQ4IDMwMCAzMzQgMzM0IFEzMjYgMzUwIDMwMCAzNTIiIHN0cm9rZT0iI2M5YmZmZiIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIiBvcGFjaXR5PSIuNTUiLz4KICA8cGF0aCBkPSJNMTM2IDIwNiBRMjM2IDIyMiAzNDAgMjA2IiBzdHJva2U9IiNiOThhNjgiIHN0cm9rZS13aWR0aD0iMS42IiBmaWxsPSJub25lIiBvcGFjaXR5PSIuNyIvPgogIDxwYXRoIGQ9Ik0xNDggMjE2IFExNDQgMzAwIDE1OCAzMzQiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIxLjIiIGZpbGw9Im5vbmUiIHN0cm9rZS1kYXNoYXJyYXk9IjMgMyIgb3BhY2l0eT0iLjYiLz4KICA8cGF0aCBkPSJNMzI4IDIxNiBRMzM0IDMwMCAzMjIgMzM0IiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS4yIiBmaWxsPSJub25lIiBzdHJva2UtZGFzaGFycmF5PSIzIDMiIG9wYWNpdHk9Ii42Ii8+CiAgPCEtLSB0aGUgbG9uZyBzdHJhcCwgc2xhY2sgYWxvbmcgdGhlIHNoZWxmIGFuZCBhd2F5IG91dCBvZiB2aWV3IC0tPgogIDxwYXRoIGQ9Ik0xNDAgMjIyIFExMTAgMzAwIDEyMCAzNTIgUTEyNiAzNjYgODAgMzY4IEwtMTYwIDM3MiIgc3Ryb2tlPSIjMWUxMjBlIiBzdHJva2Utd2lkdGg9IjkiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0xNDAgMjIyIFExMTAgMzAwIDEyMCAzNTIiIHN0cm9rZT0iI2M5YmZmZiIgc3Ryb2tlLXdpZHRoPSIxLjIiIGZpbGw9Im5vbmUiIG9wYWNpdHk9Ii4zNSIvPgo8L2c+Cjwvc3ZnPg=="></div>
+<div class="fog" aria-hidden="true">
+  <img class="drift-a" alt="" aria-hidden="true" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3ODAgODQ0IiB3aWR0aD0iNzgwIiBoZWlnaHQ9Ijg0NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgICA8ZmlsdGVyIGlkPSJmb2dBIiB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC4wMDQgMC4wMDgiIG51bU9jdGF2ZXM9IjQiIHNlZWQ9IjEyIi8+CiAgICAgIDxmZUNvbG9yTWF0cml4IHZhbHVlcz0iMCAwIDAgMCAwLjc4NCAgMCAwIDAgMCAwLjc0NSAgMCAwIDAgMCAxLjAwMCAgMCAwIDAgMS4yIC0wLjcyIi8+PC9maWx0ZXI+CiAgICA8cmVjdCB3aWR0aD0iNzgwIiBoZWlnaHQ9Ijg0NCIgZmlsdGVyPSJ1cmwoI2ZvZ0EpIi8+PC9zdmc+">
+  <img class="drift-b" alt="" aria-hidden="true" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3ODAgODQ0IiB3aWR0aD0iNzgwIiBoZWlnaHQ9Ijg0NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgICA8ZmlsdGVyIGlkPSJmb2dCIiB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC4wMDkgMC4wMiIgbnVtT2N0YXZlcz0iMyIgc2VlZD0iOSIvPgogICAgICA8ZmVDb2xvck1hdHJpeCB2YWx1ZXM9IjAgMCAwIDAgMC43ODQgIDAgMCAwIDAgMC43NDUgIDAgMCAwIDAgMS4wMDAgIDAgMCAwIDEuMDggLTAuNzciLz48L2ZpbHRlcj4KICAgIDxyZWN0IHdpZHRoPSI3ODAiIGhlaWdodD0iODQ0IiBmaWx0ZXI9InVybCgjZm9nQikiLz48L3N2Zz4=">
+</div>
+<div class="grain" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<div class="ui">
+  <a class="home" href="morning.html"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Today</span></a>
+
+  <div class="head rise">
+    <h1>The satchel</h1>
+    <div class="sub">For the days you have a list.</div>
+  </div>
+
+  <section class="card list rise d2">
+    <h2>Sort the flat before the visit</h2>
+    <ul><li class=""><button class="tick tap" aria-pressed="false" aria-label="hoover the hall"><span class="c"></span></button><span class="t">hoover the hall</span></li><li class=""><button class="tick tap" aria-pressed="false" aria-label="clear the desk"><span class="c"></span></button><span class="t">clear the desk</span></li><li class=""><button class="tick tap" aria-pressed="false" aria-label="wash the bedding"><span class="c"></span></button><span class="t">wash the bedding</span></li><li class="done"><button class="tick tap" aria-pressed="true" aria-label="take the bottles out"><span class="c"></span></button><span class="t">take the bottles out</span></li><li class=""><button class="tick tap" aria-pressed="false" aria-label="fix the shelf bracket"><span class="c"></span></button><span class="t">fix the shelf bracket</span></li></ul>
+    <button class="more tap"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>and more, folded away</button>
+    <button class="btn">Add a line</button>
+  </section>
+</div>
+</main>
+<script>
+/* the light blooms where you tap (motion only) */
+(function(){
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) return;
+  document.querySelectorAll('.btn, .quiet, .tap').forEach(function(el){
+    el.addEventListener('pointerdown', function(e){
+      var r = el.getBoundingClientRect(), b = document.createElement('span');
+      b.className = 'bloom'; b.style.left = (e.clientX - r.left) + 'px'; b.style.top = (e.clientY - r.top) + 'px';
+      if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+      el.style.overflow = 'hidden'; el.appendChild(b);
+      setTimeout(function(){ b.remove(); }, 950);
+    });
+  });
+})();
+</script>
+<script>
+/* ticking feels good: the circle fills with light (motion only) */
+document.querySelectorAll('.list .tick').forEach(function(b){
+  b.addEventListener('click', function(){ var li = b.closest('li'); li.classList.toggle('done'); b.setAttribute('aria-pressed', li.classList.contains('done')); });
+});
+</script>
+</body>
+</html>

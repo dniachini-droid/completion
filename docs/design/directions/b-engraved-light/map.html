@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Map · Engraved Light</title>
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<link rel="stylesheet" href="direction.css">
+
+<style>
+.view{position:absolute;left:var(--gutter);right:var(--gutter);top:94px;height:470px}
+.chart{transform-origin:175px 206px;animation:zoomin 1.6s var(--ease) both}
+@keyframes zoomin{from{transform:scale(.86);opacity:0}to{transform:none;opacity:1}}
+.spin{transform-origin:284px 296px;animation:spin 60s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.nl{position:absolute;transform:translate(-50%,0);text-align:center;white-space:nowrap;pointer-events:none;animation:fade 1s var(--ease) both;animation-delay:.9s}
+.nl .n{font-family:var(--carve);font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ink);text-shadow:0 0 10px rgba(0,0,0,.9),0 0 3px #000}
+.nl .st{font-family:var(--book);font-style:italic;font-size:15px;color:var(--ink-2);text-shadow:0 0 8px #000,0 0 3px #000;margin-top:1px}
+.nl.dim .n{color:var(--ink-3)}
+.nl.here .n{color:var(--ink)}
+.nl.here .st{color:var(--warm-hi)}
+.nl.sel .n{color:var(--light-hi);text-shadow:0 0 12px rgba(191,239,255,.6),0 0 3px #000}
+.hit{position:absolute;width:56px;height:56px;transform:translate(-50%,-50%);border-radius:50%}
+.card{position:absolute;left:var(--gutter);right:var(--gutter);top:580px;padding:16px 18px 18px}
+.card .title{font-size:21px;margin-top:8px}
+.card p{margin-top:4px}
+.card .needs{display:flex;align-items:center;gap:10px;margin-top:10px;font-family:var(--book);font-size:17px;color:var(--ink-2)}
+.card .btn{margin-top:14px}
+</style>
+</head>
+<body>
+<main class="phone">
+
+  <header class="rail arrive">
+    <a class="home" href="morning.html" aria-label="Back to today"><svg viewBox="0 0 16 16"><path d="M10 3 5 8l5 5"/></svg>Today</a>
+    <div class="mid">The first region</div>
+    <span style="width:44px"></span>
+  </header>
+
+  <section class="view viewport ticks" aria-label="Map of the first region">
+    <svg viewBox="0 0 350 470">
+      <defs>
+  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur stdDeviation="2.2" result="b1"/><feGaussianBlur in="SourceGraphic" stdDeviation="7" result="b2"/>
+    <feMerge><feMergeNode in="b2"/><feMergeNode in="b1"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="glowSoft" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur stdDeviation="1.4" result="b1"/>
+    <feMerge><feMergeNode in="b1"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="blur6"><feGaussianBlur stdDeviation="6"/></filter>
+  <filter id="blur14" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14"/></filter>
+  <filter id="blur30" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="30"/></filter>
+  <filter id="stone" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".018 .045" numOctaves="5" seed="7" result="t"/>
+    <feDiffuseLighting in="t" surfaceScale="3.2" lighting-color="#8fb8cc" result="l"><feDistantLight azimuth="235" elevation="38"/></feDiffuseLighting>
+    <feColorMatrix in="l" values="0.16 0 0 0 0  0 0.24 0 0 0  0 0 0.32 0 0  0 0 0 0 1"/>
+  </filter>
+  <filter id="grit" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".75" numOctaves="2" seed="3"/>
+    <feColorMatrix values="0 0 0 0 .75  0 0 0 0 .9  0 0 0 0 1  0 0 0 .5 -.12"/>
+  </filter>
+  <radialGradient id="warmGlow"><stop offset="0" stop-color="#ffc98a" stop-opacity=".75"/><stop offset=".22" stop-color="#f5ab5c" stop-opacity=".4"/><stop offset=".55" stop-color="#b9652a" stop-opacity=".13"/><stop offset="1" stop-color="#b9652a" stop-opacity="0"/></radialGradient>
+  <radialGradient id="coldFog"><stop offset="0" stop-color="#bfefff" stop-opacity=".55"/><stop offset=".3" stop-color="#6fb4d4" stop-opacity=".22"/><stop offset="1" stop-color="#1b3a4d" stop-opacity="0"/></radialGradient>
+  <linearGradient id="bowl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e79a5a"/><stop offset=".35" stop-color="#9c5a2e"/><stop offset="1" stop-color="#2a150a"/></linearGradient>
+  <radialGradient id="flame" cx=".5" cy=".75" r=".6"><stop offset="0" stop-color="#fffbe8"/><stop offset=".35" stop-color="#ffe0a3"/><stop offset=".75" stop-color="#f5ab5c"/><stop offset="1" stop-color="#d9772f" stop-opacity="0"/></radialGradient>
+</defs>
+      <rect width="350" height="470" fill="#04080d"/>
+      <!-- painted depth: haze where the places are -->
+      <g filter="url(#blur30)">
+        <ellipse cx="175" cy="210" rx="120" ry="90" fill="#1b3a4f" opacity=".55"/>
+        <ellipse cx="80" cy="310" rx="70" ry="50" fill="#27465a" opacity=".45"/>
+        <ellipse cx="290" cy="150" rx="60" ry="50" fill="#1f3c50" opacity=".45"/>
+        <ellipse cx="190" cy="420" rx="120" ry="60" fill="#0d1d29" opacity=".6"/>
+      </g>
+      <rect width="350" height="470" filter="url(#grit)" opacity=".25"/>
+      <g class="chart">
+        <g fill="none" stroke="#bfefff" stroke-width=".7"><circle cx="175" cy="206" r="70" stroke-opacity="0.1"/>
+<circle cx="175" cy="206" r="140" stroke-opacity="0.2"/>
+<circle cx="175" cy="206" r="210" stroke-opacity="0.1"/>
+<circle cx="175" cy="206" r="280" stroke-opacity="0.2"/>
+<circle cx="175" cy="206" r="350" stroke-opacity="0.1"/>
+<path d="M371 206 L389 206" stroke-opacity=".22"/>
+<path d="M380.2 224 L388.2 224.7" stroke-opacity=".22"/>
+<path d="M377.9 241.8 L385.7 243.2" stroke-opacity=".22"/>
+<path d="M374 259.3 L381.7 261.4" stroke-opacity=".22"/>
+<path d="M368.6 276.5 L376.1 279.2" stroke-opacity=".22"/>
+<path d="M361.7 293.1 L368.9 296.4" stroke-opacity=".22"/>
+<path d="M344.7 304 L360.3 313" stroke-opacity=".22"/>
+<path d="M343.7 324.2 L350.3 328.7" stroke-opacity=".22"/>
+<path d="M332.8 338.4 L338.9 343.6" stroke-opacity=".22"/>
+<path d="M320.7 351.7 L326.3 357.3" stroke-opacity=".22"/>
+<path d="M307.4 363.8 L312.6 369.9" stroke-opacity=".22"/>
+<path d="M293.2 374.7 L297.7 381.3" stroke-opacity=".22"/>
+<path d="M273 375.7 L282 391.3" stroke-opacity=".22"/>
+<path d="M262.1 392.7 L265.4 399.9" stroke-opacity=".22"/>
+<path d="M245.5 399.6 L248.2 407.1" stroke-opacity=".22"/>
+<path d="M228.3 405 L230.4 412.7" stroke-opacity=".22"/>
+<path d="M210.8 408.9 L212.2 416.7" stroke-opacity=".22"/>
+<path d="M193 411.2 L193.7 419.2" stroke-opacity=".22"/>
+<path d="M175 402 L175 420" stroke-opacity=".22"/>
+<path d="M157 411.2 L156.3 419.2" stroke-opacity=".22"/>
+<path d="M139.2 408.9 L137.8 416.7" stroke-opacity=".22"/>
+<path d="M121.7 405 L119.6 412.7" stroke-opacity=".22"/>
+<path d="M104.5 399.6 L101.8 407.1" stroke-opacity=".22"/>
+<path d="M87.9 392.7 L84.6 399.9" stroke-opacity=".22"/>
+<path d="M77 375.7 L68 391.3" stroke-opacity=".22"/>
+<path d="M56.8 374.7 L52.3 381.3" stroke-opacity=".22"/>
+<path d="M42.6 363.8 L37.4 369.9" stroke-opacity=".22"/>
+<path d="M29.3 351.7 L23.7 357.3" stroke-opacity=".22"/>
+<path d="M17.2 338.4 L11.1 343.6" stroke-opacity=".22"/>
+<path d="M6.3 324.2 L-0.3 328.7" stroke-opacity=".22"/>
+<path d="M5.3 304 L-10.3 313" stroke-opacity=".22"/>
+<path d="M-11.7 293.1 L-18.9 296.4" stroke-opacity=".22"/>
+<path d="M-18.6 276.5 L-26.1 279.2" stroke-opacity=".22"/>
+<path d="M-24 259.3 L-31.7 261.4" stroke-opacity=".22"/>
+<path d="M-27.9 241.8 L-35.7 243.2" stroke-opacity=".22"/>
+<path d="M-30.2 224 L-38.2 224.7" stroke-opacity=".22"/>
+<path d="M-21 206 L-39 206" stroke-opacity=".22"/>
+<path d="M-30.2 188 L-38.2 187.3" stroke-opacity=".22"/>
+<path d="M-27.9 170.2 L-35.7 168.8" stroke-opacity=".22"/>
+<path d="M-24 152.7 L-31.7 150.6" stroke-opacity=".22"/>
+<path d="M-18.6 135.5 L-26.1 132.8" stroke-opacity=".22"/>
+<path d="M-11.7 118.9 L-18.9 115.6" stroke-opacity=".22"/>
+<path d="M5.3 108 L-10.3 99" stroke-opacity=".22"/>
+<path d="M6.3 87.8 L-0.3 83.3" stroke-opacity=".22"/>
+<path d="M17.2 73.6 L11.1 68.4" stroke-opacity=".22"/>
+<path d="M29.3 60.3 L23.7 54.7" stroke-opacity=".22"/>
+<path d="M42.6 48.2 L37.4 42.1" stroke-opacity=".22"/>
+<path d="M56.8 37.3 L52.3 30.7" stroke-opacity=".22"/>
+<path d="M77 36.3 L68 20.7" stroke-opacity=".22"/>
+<path d="M87.9 19.3 L84.6 12.1" stroke-opacity=".22"/>
+<path d="M104.5 12.4 L101.8 4.9" stroke-opacity=".22"/>
+<path d="M121.7 7 L119.6 -0.7" stroke-opacity=".22"/>
+<path d="M139.2 3.1 L137.8 -4.7" stroke-opacity=".22"/>
+<path d="M157 0.8 L156.3 -7.2" stroke-opacity=".22"/>
+<path d="M175 10 L175 -8" stroke-opacity=".22"/>
+<path d="M193 0.8 L193.7 -7.2" stroke-opacity=".22"/>
+<path d="M210.8 3.1 L212.2 -4.7" stroke-opacity=".22"/>
+<path d="M228.3 7 L230.4 -0.7" stroke-opacity=".22"/>
+<path d="M245.5 12.4 L248.2 4.9" stroke-opacity=".22"/>
+<path d="M262.1 19.3 L265.4 12.1" stroke-opacity=".22"/>
+<path d="M273 36.3 L282 20.7" stroke-opacity=".22"/>
+<path d="M293.2 37.3 L297.7 30.7" stroke-opacity=".22"/>
+<path d="M307.4 48.2 L312.6 42.1" stroke-opacity=".22"/>
+<path d="M320.7 60.3 L326.3 54.7" stroke-opacity=".22"/>
+<path d="M332.8 73.6 L338.9 68.4" stroke-opacity=".22"/>
+<path d="M343.7 87.8 L350.3 83.3" stroke-opacity=".22"/>
+<path d="M344.7 108 L360.3 99" stroke-opacity=".22"/>
+<path d="M361.7 118.9 L368.9 115.6" stroke-opacity=".22"/>
+<path d="M368.6 135.5 L376.1 132.8" stroke-opacity=".22"/>
+<path d="M374 152.7 L381.7 150.6" stroke-opacity=".22"/>
+<path d="M377.9 170.2 L385.7 168.8" stroke-opacity=".22"/>
+<path d="M380.2 188 L388.2 187.3" stroke-opacity=".22"/>
+<path d="M193 206 L525 206" stroke-opacity=".05"/>
+<path d="M190.6 215 L478.1 381" stroke-opacity=".05"/>
+<path d="M184 221.6 L350 509.1" stroke-opacity=".05"/>
+<path d="M175 224 L175 556" stroke-opacity=".05"/>
+<path d="M166 221.6 L0 509.1" stroke-opacity=".05"/>
+<path d="M159.4 215 L-128.1 381" stroke-opacity=".05"/>
+<path d="M157 206 L-175 206" stroke-opacity=".05"/>
+<path d="M159.4 197 L-128.1 31" stroke-opacity=".05"/>
+<path d="M166 190.4 L-0 -97.1" stroke-opacity=".05"/>
+<path d="M175 188 L175 -144" stroke-opacity=".05"/>
+<path d="M184 190.4 L350 -97.1" stroke-opacity=".05"/>
+<path d="M190.6 197 L478.1 31" stroke-opacity=".05"/></g>
+
+        <!-- engraved routes -->
+        <g fill="none" stroke="#bfefff" filter="url(#glowSoft)">
+          <path class="drawn" d="M175 62 L175 206" stroke-opacity="0.7" stroke-width="1.2"  style="--len:144;animation-delay:0.1s"/>
+          <path class="drawn" d="M175 206 L298 136" stroke-opacity="0.6" stroke-width="1.1"  style="--len:141.5;animation-delay:0.35s"/>
+          <path class="drawn" d="M175 206 L58 300" stroke-opacity="0.5" stroke-width="1.1"  style="--len:150.1;animation-delay:0.5s"/>
+          <path class="drawn" d="M175 206 L284 296" stroke-opacity="0.5" stroke-width="1.1"  style="--len:141.4;animation-delay:0.6s"/>
+          <path class="drawn" d="M175 206 L175 372" stroke-opacity="0.5" stroke-width="1.1"  style="--len:166;animation-delay:0.7s"/>
+        </g>
+        <g fill="none" stroke="#bfefff" stroke-width="1">
+          <path class="" d="M284 296 L296 408" stroke-opacity="0.3" stroke-width="1" stroke-dasharray="2 5" />
+          <path class="" d="M175 418 L175 470" stroke-opacity="0.18" stroke-width="1" stroke-dasharray="2 6" />
+        </g>
+        <!-- the ladder: rungs across the shaft line -->
+        <g stroke="#bfefff" stroke-opacity=".45" stroke-width=".8">
+          <path d="M169 84 L181 84"/><path d="M169 93 L181 93"/><path d="M169 102 L181 102"/><path d="M169 111 L181 111"/><path d="M169 120 L181 120"/><path d="M169 129 L181 129"/><path d="M169 138 L181 138"/><path d="M169 147 L181 147"/><path d="M169 156 L181 156"/><path d="M169 165 L181 165"/><path d="M169 174 L181 174"/>
+          <path d="M169 80 L169 184 M181 80 L181 184" stroke-opacity=".3"/>
+        </g>
+
+        <!-- cairns along the trail walked (no counts) -->
+        <g fill="#0a141c" stroke="#bfefff" stroke-opacity=".7" stroke-width=".8">
+          <g transform="translate(219.3 180.8) scale(1)"><ellipse cx="0" cy="0" rx="4.2" ry="1.6"/><ellipse cx=".4" cy="-3" rx="3.1" ry="1.3"/><ellipse cx="-.2" cy="-5.6" rx="2" ry="1"/></g>
+          <g transform="translate(251.3 162.6) scale(1)"><ellipse cx="0" cy="0" rx="4.2" ry="1.6"/><ellipse cx=".4" cy="-3" rx="3.1" ry="1.3"/><ellipse cx="-.2" cy="-5.6" rx="2" ry="1"/></g>
+          <g transform="translate(158 112) scale(0.9)"><ellipse cx="0" cy="0" rx="4.2" ry="1.6"/><ellipse cx=".4" cy="-3" rx="3.1" ry="1.3"/><ellipse cx="-.2" cy="-5.6" rx="2" ry="1"/></g>
+          <g transform="translate(158 150) scale(0.9)"><ellipse cx="0" cy="0" rx="4.2" ry="1.6"/><ellipse cx=".4" cy="-3" rx="3.1" ry="1.3"/><ellipse cx="-.2" cy="-5.6" rx="2" ry="1"/></g>
+        </g>
+
+        <!-- nodes -->
+        <!-- the Mouth: reached -->
+        <g filter="url(#glow)">
+          <circle cx="175" cy="62" r="5" fill="#dff7ff"/>
+        </g>
+        <circle cx="175" cy="62" r="11" fill="none" stroke="#bfefff" stroke-opacity=".5"/>
+        <!-- Survey Cut: reached -->
+        <circle cx="298" cy="136" r="22" fill="url(#coldFog)"/>
+        <circle cx="298" cy="136" r="4.5" fill="#dff7ff" filter="url(#glow)"/>
+        <circle cx="298" cy="136" r="10" fill="none" stroke="#bfefff" stroke-opacity=".5"/>
+        <!-- Salt Gallery: seen, not yet arrived -->
+        <circle cx="58" cy="300" r="8" fill="#08121a" stroke="#bfefff" stroke-opacity=".75" stroke-width="1.1" filter="url(#glowSoft)"/>
+        <circle cx="58" cy="300" r="2" fill="#bfefff" opacity=".6"/>
+        <!-- the Lamp Hall: you are here. The lamp is the one warm light. -->
+        <circle cx="175" cy="206" r="60" fill="url(#warmGlow)" opacity=".55"/>
+        <circle cx="175" cy="206" r="16" fill="#06101a" stroke="#bfefff" stroke-opacity=".85" stroke-width="1.1" filter="url(#glowSoft)"/>
+        <circle cx="175" cy="206" r="24" fill="none" stroke="#bfefff" stroke-opacity=".3" stroke-dasharray="1 4"/>
+        <circle class="breathe" cx="175" cy="206" r="5" fill="#ffd9a0" filter="url(#glow)"/>
+        <!-- the great door: needs a Key and a word -->
+        <g transform="translate(175 372)">
+          <rect x="-15" y="-15" width="30" height="30" transform="rotate(45)" fill="#06101a" stroke="#bfefff" stroke-opacity=".7" stroke-width="1"/>
+          <g stroke="#bfefff" stroke-opacity=".75" stroke-width=".8" fill="none">
+            <circle cx="0" cy="-4" r="5.5" stroke-dasharray="1.3 1.6"/>
+            <rect x="-6" y="5" width="12" height="4" rx="2"/>
+          </g>
+        </g>
+        <!-- the lintel: needs a word. Selected. -->
+        <g transform="translate(284 296)">
+          <rect x="-15" y="-10" width="30" height="20" fill="#06101a" stroke="#dff7ff" stroke-opacity=".95" stroke-width="1.1" filter="url(#glowSoft)"/>
+          <rect x="-8" y="-2.5" width="16" height="5" rx="2.5" fill="none" stroke="#dff7ff" stroke-width=".9"/>
+        </g>
+        <g class="spin" fill="none" stroke="#bfefff">
+          <circle cx="284" cy="296" r="30" stroke-opacity=".5" stroke-dasharray="14 8" stroke-width="1"/>
+        </g>
+        <g fill="none" stroke="#dff7ff" stroke-opacity=".9" stroke-width="1.1">
+          <path d="M252 264 h8 M252 264 v8 M316 264 h-8 M316 264 v8 M252 328 h8 M252 328 v-8 M316 328 h-8 M316 328 v-8"/>
+        </g>
+        <!-- the head of the stair: not yet reached, a faint shape -->
+        <g transform="translate(296 408)" stroke="#bfefff" stroke-opacity=".32" fill="none" stroke-width=".9">
+          <path d="M-12 8 h6 v-5 h6 v-5 h6 v-5 h6"/>
+        </g>
+      </g>
+    </svg>
+
+    <!-- labels -->
+    <div class="nl" style="left:175px;top:62px;transform:translate(22px,-14px);text-align:left"><div class="n">The Mouth</div><div class="st">the ladder</div></div>
+    <div class="nl here" style="left:150px;top:176px;transform:translate(-100%,0);text-align:right"><div class="n">The Lamp Hall</div><div class="st">you are here</div></div>
+    <div class="nl" style="left:338px;top:104px;transform:translate(-100%,0);text-align:right"><div class="n">The Survey Cut</div></div>
+    <div class="nl" style="left:10px;top:314px;transform:none;text-align:left"><div class="n">The Salt Gallery</div><div class="st">seen</div></div>
+    <div class="nl sel" style="left:272px;top:332px;"><div class="n">The lintel</div></div>
+    <div class="nl dim" style="left:175px;top:396px;"><div class="n">The great door</div></div>
+    <div class="nl dim" style="left:278px;top:420px;"><div class="st">the head of the stair</div></div>
+    <div class="scale"></div><div class="scale v"></div>
+  </section>
+
+  <section class="card plate ticks arrive d3" aria-label="Selected: the lintel">
+    <div class="label rule">Sealed · needs a word</div>
+    <h2 class="title">The lintel</h2>
+    <p class="book">On the side wall of the Lamp Hall: two marks beside a rod-shaped blank. You know two marks that might fit.</p>
+    <a class="btn warm" href="cut.html">Go to the lintel</a>
+  </section>
+</main>
+</body>
+</html>

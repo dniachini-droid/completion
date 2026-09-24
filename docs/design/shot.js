@@ -8,6 +8,6 @@ const { chromium } = require('playwright');
   const p = await b.newPage({ viewport: { width: +w, height: +h }, deviceScaleFactor: 2 });
   await p.goto('file://' + require('path').resolve(file));
   await p.waitForTimeout(+wait);
-  await p.screenshot({ path: out, fullPage: false });
+  await p.screenshot({ path: out, fullPage: false, ...(/\.jpe?g$/i.test(out) ? { type: 'jpeg', quality: 82 } : {}) });
   await b.close();
 })();
