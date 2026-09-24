@@ -264,7 +264,7 @@ Kept small, one tap each, and never required to progress:
 | Moment | What happens |
 |---|---|
 | **Morning** | Capacity is already suggested from bedtime (one tap to change). Screen: where you stand in the Site, the next gate you can see, and **one** suggested first job (the day's other jobs beneath; only today's, never a backlog, D-038). Accept or swap from a short menu. On a High day: an offer of a deep push. |
-| **Doing a job** | Desk work runs as a delve. A job away from the phone (gym, cooking, errands) has no timer: Dan goes, and taps Done on return (D-038). |
+| **Doing a job** | A delve job runs as a delve; any job can be one, Dan's choice (D-041). A job that isn't (gym, cooking, errands, unless he makes them delves) has no timer: Dan goes, and taps Done on return (D-038). |
 | **Coming back** | Tap done → the step plays (≈20–40 s) → at most one small choice → out. |
 | **"I can't start"** | A **teaser from just ahead** (a line of script one sign short of meaning, a sound behind the gate). Then one tiny physical step. Then an offer to continue, never a demand. The teaser's payoff is on the other side of the job. |
 | **Day complete** | The arrival. The day is explicitly **enough**, and its success is locked in. Rest is the main offer; a quiet "keep going" is there on every day (on High days, with the deep route shown) (D-038). |

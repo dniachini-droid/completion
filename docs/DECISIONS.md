@@ -421,3 +421,31 @@
 - **Rationale:** most points were wording drift between Phase 1–2 docs and the Phase 4 drafts; the real gaps (keep going, dated items, catch-up, non-desk jobs, the streak count) each close with one rule and no new system (rule 12). No sealed or story content touched.
 - **Consequences:** `DESIGN_PRINCIPLES.md` (P2–P7, P16), `ANTI_FEATURES.md`, `game/TOOLS.md`, `game/CORE_LOOPS.md`, `game/QUEST_SYSTEM.md`, `design/UX_PRINCIPLES.md`, `design/INTERACTION_NOTES.md`, `design/DESIGN_SYSTEM.md`, the D mock-ups `complete.html` and `morning.html`. `design/PRINCIPLES_FOR_REVIEW.md` stays as the snapshot that was reviewed.
 - **Reversible:** Yes. Point 12 needs Dan's nod, since it changes a detail he approved in D-023.
+
+## D-039 — No dead ends for effort
+- **Date:** 2026-09-24
+- **Context:** Approving D, Dan asked about the stair screen ("The stair will keep. You can go down another day.", with only "Back to today"): "I want to be able to keep going if I want. Especially if I am feeling motivated. Shouldn't be punished for doing more work. Should be rewarded."
+- **Decision:** Effort is never turned away. Every screen that ends something offers a way on when Dan wants it: quiet after day complete (D-038), the main button at a newly opened place. More real work always moves him further and brings more (Site, finds, records). The only thing paced is the order of the story's core marks (D-035); extra effort meets side content, never a wall or a "come back another day". The stair screen now reads "Every delve from here takes you further down", with **Go down** (opens the run screen) as the main button and a quiet "Today".
+- **Alternatives:** keep the stair as a natural stopping point (it reads as being sent home at the moment of most motivation).
+- **Rationale:** D-011 (low floor, high ceiling: "don't make it just for crippled me"); D-035 (high-energy days always unlock something real); rule 10 (real effort must be rewarded).
+- **Consequences:** `DESIGN_PRINCIPLES.md` (P2), `design/UX_PRINCIPLES.md` (12), the D mock-up `stair.html`. Phase 5–6 authoring: the route past every newly opened place must hold Dan's real hours (already required by D-037).
+- **Reversible:** Yes.
+
+## D-040 — Phase 4 closed; Phase 5 (Concept synthesis) opened
+- **Date:** 2026-09-24
+- **Context:** Dan agreed with every verdict of the principles reconciliation (D-038, including removing the days-in-a-row count), raised the stair (D-039), and said "we are ready to move to phase 5".
+- **Decision:** Direction D (D-032, with the motion pass of D-041), `design/UX_PRINCIPLES.md`, `design/DESIGN_SYSTEM.md` and `design/INTERACTION_NOTES.md` approved. Phase 4 closed; the work merged into `main`. Phase 5 opens. The zoomed-out whole-Site map mock-up is left for later (optional).
+- **Alternatives:** mock the whole-Site map first (not needed to approve the look).
+- **Consequences:** `CLAUDE.md` and `CURRENT_STATE.md` move to Phase 5. Phase 5 must set region sizes and step pacing numbers (D-037) and take in the product items from D-035.
+- **Reversible:** Phase changes need Dan's agreement either way.
+
+## D-041 — Every screen keeps moving; any job can be a delve
+- **Date:** 2026-09-24
+- **Context:** Before moving to Phase 5, Dan: the stair looks static; "all screens should look as beautiful as that but have some movement or reveal". A measurement of the D mock-ups confirmed it: once settled, only the delve and the word-cutting visibly moved. Separately, Dan: "I should be able to state what jobs I want to make delve jobs … I could even put gym as a delve job … If it locks me into what I've just told you, it wouldn't function very well."
+- **Decision:**
+  1. **The world is always alive** (UX 19). A shared `ambient.js` gives every screen a little life after it settles: scene screens drift slowly like a breathing camera (their light moves with them); fog drifts visibly faster; light motes rise (gold after day complete); the map sends a spark along walked routes and pulses "you are here". The stair lights its steps one by one going down, then a pulse keeps running down them into the mist. Reading screens never move the words (UX 17, D-038 point 15). Reduced motion turns all of it off.
+  2. **Delve or not is Dan's to set, for any job** (amends D-038 point 4). One-offs, weekly targets, daily jobs and satchel items can all be delves, including the gym or reading. It's set when adding or editing a job and switchable for today with one tap; the app's first guess for a new job is only a default, and Dan's choice is kept.
+- **Alternatives:** leave the reading screens as still as before (Dan asked for life everywhere); let the app decide delve-or-not with overrides (Dan: that would lock him in).
+- **Rationale:** Dan's taste (taste session: smooth, quiet everyday motion); D-030 (jobs are Dan's to edit); rule 12 (one setting per job, no modes).
+- **Consequences:** `design/UX_PRINCIPLES.md`, `design/INTERACTION_NOTES.md`, `game/TOOLS.md`, `game/CORE_LOOPS.md`, `DESIGN_PRINCIPLES.md` (P9); the D mock-ups (`ambient.js`, `direction.css`, `stair.html`, and eight screens load `ambient.js`).
+- **Reversible:** Yes.

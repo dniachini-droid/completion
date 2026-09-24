@@ -1,7 +1,7 @@
 # Design System
 
 > The look chosen in Phase 4: **direction D, the combined look** (D-032), built from Dan's screen-by-screen picks. Source of truth for values: `directions/d-combined/direction.css`; this page explains them. Spoiler-free.
-> Status: **draft for Dan's approval**, 2026-09-24. Mock-up values, not final code (no tech stack until Phase 7).
+> Status: **approved by Dan**, 2026-09-24 (D-040). Mock-up values, not final code (no tech stack until Phase 7).
 
 ## The rule in one line
 The world is a full-screen painting in violet light; a crisp, precise interface sits on top of it; the day turns from violet to gold.

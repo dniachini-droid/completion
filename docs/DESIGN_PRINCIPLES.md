@@ -22,7 +22,7 @@ The app's first job is to get Dan started. Opening it shows one obvious next thi
 
 Anything beyond that is a bonus, never a debt. *Clarified (D-038):* day complete means the day's success is **locked in**; nothing after it can undo it. After it, rest is the main offer and a quiet way to keep going is always there, never pushed.
 
-**Low floor, high ceiling** (added 2026-09-23, D-011). The small "enough" is the *floor*, not the design target. On high-capacity days the game must be able to make Dan **very** productive: more jobs, bigger pushes, richer rewards, with no cap that makes extra real effort pointless. The app is built for Dan at full strength as much as for Dan on a low day.
+**Low floor, high ceiling** (added 2026-09-23, D-011). The small "enough" is the *floor*, not the design target. On high-capacity days the game must be able to make Dan **very** productive: more jobs, bigger pushes, richer rewards, with no cap that makes extra real effort pointless. The app is built for Dan at full strength as much as for Dan on a low day. *Clarified 2026-09-24 (D-039):* **effort is never turned away.** Every screen that ends something offers a way on when Dan wants it, and more real work always moves him further and brings more (Site, finds, records). The only thing paced is the order of the story's core marks (D-035); extra effort meets side content, never a wall or a "come back another day".
 
 **3. Low days can fully succeed.**
 Capacity is Low, Normal or High.
@@ -56,7 +56,7 @@ No overdue counts, no red badges, and no backlog on the opening screen. *Clarifi
 When something is missed, the job waits, shrinks or changes route, or the app asks what happened. No lost progress, no shame, no guilt language (MASTER_BRIEF §16).
 
 **9. The app suggests, Dan chooses.**
-The app proposes the day's main jobs. Dan accepts them or swaps from a short menu. He adds one-off jobs by **typing one line**. The kinds of job and the weekly targets are his to edit (D-030); nothing about them is hard-coded. No estimating, tagging or scoring. The app learns over time; Dan doesn't administer it.
+The app proposes the day's main jobs. Dan accepts them or swaps from a short menu. He adds one-off jobs by **typing one line**. The kinds of job and the weekly targets are his to edit (D-030), including whether any job runs as a delve (D-041); nothing about them is hard-coded. No estimating, tagging or scoring. The app learns over time; Dan doesn't administer it.
 
 **10. Life happens, and it counts.**
 A real unplanned obligation (e.g. an appointment) can be added afterwards as one of the day's main jobs. The rest of the day shrinks to fit.
