@@ -16,7 +16,7 @@ Prototype the central interaction on the agreed stack (MASTER_BRIEF §67; `techn
 
 ## Resume here (next session)
 1. Start Phase 8: read `technical/` (all five), then set up `app/` as `ARCHITECTURE.md` describes and run the trials in this order: (a) the painting kit's three invented sample places, judged by Dan on his phone against the approved hall; (b) the delve alert with the phone locked, on silent and in Focus; (c) smoothness and real-app feel; (d) the cloud-Mac pipeline to TestFlight. Give Dan the Apple setup steps early (membership approval can take a day or two). Ask Dan his iPhone model.
-2. **The sealed story-fix session** (D-035, D-060), in its own session: **after the prototype, before the first playable's content goes in** (Phase 9). It includes week 6 of the clue ledger, the authoring list in `game/BALANCING.md` (D-049), the content budget in `product/MVP.md`, and whether weeks 1–6 need the before → now view (D-053). The real places' paintings follow it.
+2. **The sealed story job** (D-035, D-060, D-061): **running now in its own session**, in parallel with Phase 8, from `narrative/sealed/STORY_FIX_BRIEF.md`; it must be done and merged **before the first playable's content goes in** (Phase 9). It ends with a spoiler-free pull request for Dan to approve. It includes week 6 of the clue ledger, the authoring list in `game/BALANCING.md` (D-049), the content budget in `product/MVP.md`, and whether weeks 1–6 need the before → now view (D-053). The real places' paintings follow it.
 3. Whenever convenient: Dan looks at the planner screens on his phone (D-047).
 
 ## Last session (2026-09-24, Phase 7)
@@ -43,7 +43,7 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 - Real story content or real places' paintings in the prototype: it uses throwaway data and invented places until the story-fix session (D-060).
 - Features beyond the heart slice before the trials pass (rule 13).
 - Showing any sealed story content on a screen or in Dan-facing docs (D-015).
-- More story depth beyond what the playable needs (D-004). Pending: the sealed story-fix session (D-035, after the prototype and before the first playable's content, D-060; top priority: the late-game choice must never look like a promise the fixed story can't keep); week 6 of the sealed clue ledger (D-023); the "company at work" during a delve (later).
+- More story depth beyond what the playable needs (D-004). Pending: the sealed story-fix session (D-035, running in its own session, done before the first playable's content, D-061; top priority: the late-game choice must never look like a promise the fixed story can't keep); week 6 of the sealed clue ledger (D-023); the "company at work" during a delve (later).
 - Optional, later: the zoomed-out whole-Site map mock-up.
 
 ## Phase 8 exit criteria
@@ -118,7 +118,7 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 ## Unresolved blockers
 
 - None.
-- **Jobs queued for later phases:** the language pass on every line the app says (**after Dan has played the first playable for 3–4 weeks**, D-046; nothing before it is final wording); the sealed story-fix session (D-035, after the prototype, before the first playable's content, D-060); a memory and recap system, a before → now re-read view, a guaranteed reward rhythm and high-day extras (D-035, Phase 5–6); jobs and targets as editable data (D-030, now in `technical/DATA_MODEL.md`); week 6 of the sealed clue ledger (D-023).
+- **Jobs queued for later phases:** the language pass on every line the app says (**after Dan has played the first playable for 3–4 weeks**, D-046; nothing before it is final wording); the sealed story job (D-035, running in its own session, before the first playable's content, D-061); a memory and recap system, a before → now re-read view, a guaranteed reward rhythm and high-day extras (D-035, Phase 5–6); jobs and targets as editable data (D-030, now in `technical/DATA_MODEL.md`); week 6 of the sealed clue ledger (D-023).
 - Housekeeping (non-blocking): rename the GitHub repo once a product name exists (`narrative/NAMES.md`). (Privacy verified: private.)
 - Open for Dan whenever he likes: the app name (`narrative/NAMES.md`).
 

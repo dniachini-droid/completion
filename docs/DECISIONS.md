@@ -620,3 +620,11 @@
 - **Claude's answer on timing:** not after the MVP, because the MVP carries the story's first six weeks and its places' paintings, and the test can't start without them. It **can** come after the prototype: Phase 8 uses throwaway data and invented places. So it runs in its own session **after the prototype and before the first playable's content goes in** (Phase 9), and the real places' paintings follow it.
 - **Consequences:** `CLAUDE.md` and `CURRENT_STATE.md` move to Phase 8 with its exit criteria (five trials, the sample paintings approved, TestFlight working, the heart slice felt on Dan's phone). The story job is placed in the plan.
 - **Reversible:** Phase changes need Dan's agreement; the story job's timing can move earlier at any time.
+
+## D-061 — The story job runs now, in its own session, done before the first playable
+- **Date:** 2026-09-24
+- **Context:** D-060 placed the sealed story-fix session after the prototype. Dan: "Set up the story job to complete before the first playable. Might as well do it properly. Enough with the questions. You have enough now. Just get it done."
+- **Decision:** the story job starts now, in a separate session, in parallel with Phase 8, from a spoiler-free work order (`narrative/sealed/STORY_FIX_BRIEF.md`): the outside review's fixes (the late-choice promise first), week 6 of the clue ledger, the before → now answer, the MVP's full content budget for six story weeks, a painting brief for every named place and camp view, all shaped with ids and conditions for the build. It asks Dan nothing; creative calls are made and recorded in sealed files. It ends with a spoiler-free pull request that Dan approves.
+- **Alternatives:** wait until after the prototype (D-060; slower, and the prototype doesn't need it, but nothing is gained by waiting); run it in this session (Dan follows this chat, so sealed content would be in front of him).
+- **Consequences:** Phase 9 can start straight after Phase 8 without waiting on the story. The painting kit's real places can start as soon as the briefs are merged.
+- **Reversible:** Yes.
