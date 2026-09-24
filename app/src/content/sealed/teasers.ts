@@ -16,7 +16,7 @@ export const teasers: Teaser[] = [
   { id: "b-w2.tz2", w: 2, req: ["b-2.B"], line: "The rod is in your hand, and on the lintel is a blank the width of its edge." },
   { id: "tz-w2-a", w: 2, req: ["pl-w2-above-the-ring"], until: "seal-2-3", line: "Above the lone ring, something pale lies far back in a crack." },
   { id: "tz-w2-b", w: 2, req: ["pl-w2-box-by-the-cot"], until: "seal-2-5", line: "In her camp, a tin mug stands upside down on a box with a count." },
-  { id: "tz-w2-c", w: 2, req: ["b-2.A"], until: "seal-2-2", line: "In the salt is a long, narrow niche with a count, the length of a stick." },
+  { id: "tz-w2-c", w: 2, req: ["b-2.A"], until: "seal-2-2", line: "In the salt is a long, narrow niche, the length of a stick, with a count on it." },
   { id: "b-w3.tz1", w: 3, req: [], until: "b-3.A", line: "The rod is in your hand, and on the lintel is a blank the width of its edge." },
   { id: "b-w3.tz2", w: 3, req: ["b-3.A"], line: "At the head of the stair is a lid with a doorway carved on it." },
   { id: "tz-w3-a", w: 3, req: ["b-3.C"], until: "seal-4-1", line: "At the stair's first turn there is a niche with a count beside the rail." },

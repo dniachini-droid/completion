@@ -19,7 +19,7 @@ export const learned: WeekCloseLine[] = [
   { id: "wc-w4-1", w: 4, req: ["b-4.A"], line: "Her sheet for the stretch past the ring says: *go home… lamp… gave… went up.*" },
   { id: "wc-w4-2", w: 4, req: ["b-4.4"], line: "Nearly every record here ends with a hook closed on a dot. The wall by the lamp has another hook." },
   { id: "wc-w4-3", w: 4, req: ["b-4.3"], line: "On her ninth day she made herself a rule: go up every night." },
-  { id: "wc-w5-1", w: 5, req: ["b-5.A"], line: "Every line of the tally begins with the same three marks, the bar with a tick, a ring and a single drop." },
+  { id: "wc-w5-1", w: 5, req: ["b-5.A"], line: "Every line of the tally begins with the same three marks: the bar with a tick, a ring and a single drop." },
   { id: "wc-w5-2", w: 5, req: ["b-5.3"], line: "Behind the salt crust, the lamp's mark, the flame's and the hook-and-drop stand in a row, with no door near." },
   { id: "wc-w5-3", w: 5, req: ["b-5.2"], line: "She called him the Tenant, and he let her." },
   { id: "wc-w6-1", w: 6, req: ["b-6.1"], line: "The wall by the lamp was cut on her twentieth day, for the next one." },
@@ -41,7 +41,7 @@ export const soFar: SoFar[] = [
   ] },
   { id: 'sf-m2', w: 5, lines: [
     "The lamp on the ledge was lit for her too.", // sf-m2-1
-    "The tally's teller and she both met someone tall where the way turns.", // sf-m2-2
+    "She met someone tall where the way turns, and so did whoever told the tally.", // sf-m2-2
     "Nearly everything here was cut by one hand. The wall by the lamp was not.", // sf-m2-3
     "The little door she found open is shut to you.", // sf-m2-4
     "The great door has a count, and two marks beside a blank.", // sf-m2-5
@@ -56,7 +56,7 @@ export const soFarLines: WeekCloseLine[] = [
   { id: "sf-m1-3", w: 1, req: ["b-1.5"], line: "The long line of marks in the salt was cut by one hand." },
   { id: "sf-m1-4", w: 1, req: ["b-1.A"], line: "At the far end of the hall there is a door that is most of the wall." },
   { id: "sf-m2-1", w: 5, req: ["b-2.3"], line: "The lamp on the ledge was lit for her too." },
-  { id: "sf-m2-2", w: 5, req: ["b-2.A", "b-2.3"], line: "The tally's teller and she both met someone tall where the way turns." },
+  { id: "sf-m2-2", w: 5, req: ["b-2.A", "b-2.3"], line: "She met someone tall where the way turns, and so did whoever told the tally." },
   { id: "sf-m2-3", w: 5, req: ["b-4.4"], line: "Nearly everything here was cut by one hand. The wall by the lamp was not." },
   { id: "sf-m2-4", w: 5, req: ["b-4.3", "b-5.0"], line: "The little door she found open is shut to you." },
   { id: "sf-m2-5", w: 5, req: ["b-4.C"], line: "The great door has a count, and two marks beside a blank." },
@@ -70,7 +70,7 @@ export const openQuestions: OpenQuestion[] = [
   { id: "aw-w3", w: 3, line: "The stair goes down from the landing, lit, and you did not light it." },
   { id: "aw-w4", w: 4, line: "Past the lone ring, her sheet says: *…go home… he held me… lamp… gave… went up…*" },
   { id: "aw-w5", w: 5, line: "Every record in the tally begins the same way. The wall by the lamp does not." },
-  { id: "aw-w6", w: 6, line: "Through the side passage lies square stone, and on it a record in the tally's hand." },
+  { id: "aw-w6", w: 6, line: "Through the side passage is square stone, and on it a record in the tally's hand." },
 ];
 
 /** NOTE: the beat each open question needs (the source's "Shows if"). */

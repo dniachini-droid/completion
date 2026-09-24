@@ -105,7 +105,7 @@ export const camps: CampView[] = [
     w: 3,
     req: [],
     name: "Halfway down",
-    line: "From the middle of the top flight, every step is as high as your knee, and the rail is at your chest.",
+    line: "From the middle of the top flight you can see that every step is as high as your knee, and the rail is at your chest.",
     look: {"find": "fd-e09"},
   },
   {
@@ -132,7 +132,7 @@ export const camps: CampView[] = [
     w: 5,
     req: ["b-5.B"],
     name: "The gap",
-    line: "Through the gap at the height of your shoulder you can see square stone, and a draught comes through that smells of old smoke.",
+    line: "Through the gap at shoulder height you can see square stone, and a draught comes through it that smells of old smoke.",
     look: {"find": "fd-f06"},
   },
   {

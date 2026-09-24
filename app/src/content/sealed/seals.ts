@@ -15,18 +15,18 @@ export const seals: Seal[] = [
   { id: 'seal-1-1', w: 1, o: 1, where: 'The Salt Gallery, the inner count', stretch: 'st-salt', beat: 'b-1.6' },
   // NOTE: seal-1-1 opens the stretch of tally read at b-2.A (rec-s2); the record is carried by b-2.A, so none here, and not plain.
   { id: 'seal-1-2', w: 1, o: 2, where: 'The Salt Gallery, the pick niche', stretch: 'st-salt',
-    line: 'The strokes on the pick niche fill. Inside lies a bronze salt-pick, its edge worn to a curve and its handle wrapped in cord gone black. Beside it on the wall is a short line in the tally\'s hand.',
+    line: 'At the pick niche the strokes fill. Inside lies a bronze salt-pick, its edge worn to a curve and its handle wrapped in cord gone black. On the wall beside it is a short line in the tally\'s hand.',
     carries: { records: ['rec-x-pick'] } },
   { id: 'seal-1-3', w: 1, o: 3, where: 'The Lamp Hall, a low niche under the ledge', stretch: 'st-hall',
-    line: 'The strokes on the niche below the ledge fill. Inside is a clay saucer, the twin of the lamp\'s foot, and it is empty.',
+    line: 'Below the ledge, the strokes on the niche fill. Inside is a clay saucer, the twin of the lamp\'s foot, and it is empty.',
     plain: true },
   { id: 'seal-1-4', w: 1, o: 0, where: 'The Survey Cut, under the cot', stretch: 'st-camp', seenOnly: true },
   // NOTE: seen-only rows have no Key order; o is 0. seal-1-4 is seen in the open at b-1.C.
   { id: 'seal-1-5', w: 1, o: 4, where: 'The Mouth, a recess in the shaft wall', stretch: 'st-mouth',
-    line: 'The strokes on the recess in the shaft wall fill. Inside, hung on a nail, is a brass tag stamped with a shaft number.',
+    line: 'In the shaft wall the strokes on the recess fill. Inside, a brass tag stamped with a shaft number hangs on a nail.',
     plain: true },
   { id: 'seal-1-6', w: 1, o: 5, where: 'The Salt Gallery, a niche by the split, low', stretch: 'st-salt',
-    line: 'The strokes on the niche by the split fill. Inside is a small clay flask, stoppered with a twist of wool, empty and as light as an eggshell.',
+    line: 'By the split, the strokes on the niche fill. Inside is a small clay flask, stoppered with a twist of wool, empty and light as an eggshell.',
     plain: true },
 
   /* ---- week 2 ---- */
@@ -36,7 +36,7 @@ export const seals: Seal[] = [
   { id: 'seal-2-2', w: 2, o: 2, where: 'The Salt Gallery, the tally-stick niche', stretch: 'st-salt', beat: 'b-2.4',
     carries: { records: ['rec-x-daughter'] } },
   { id: 'seal-2-3', w: 2, o: 3, where: 'The Salt Gallery, a crack above the lone ring', stretch: 'st-salt',
-    line: 'The count by the crack above the ring fills. Inside is a bone comb with two teeth gone, and beside it on the wall is a short line in the tally\'s hand.',
+    line: 'Beside the crack above the ring, the count fills. Inside is a bone comb with two teeth gone, and on the wall beside it is a short line in the tally\'s hand.',
     carries: { records: ['rec-x-comb'] } },
   { id: 'seal-2-4', w: 2, o: 0, where: 'The Lamp Hall, the corner', stretch: 'st-hall', seenOnly: true },
   // NOTE: seal-2-4 is the named place pl-w2-smooth-place; its line is that place's.
@@ -44,7 +44,7 @@ export const seals: Seal[] = [
     line: 'The count on the box by the cot fills. Inside are a tin of tea, a spoon, a candle stub, and a shopping list in her hand: batteries, batteries, tape.',
     plain: true },
   { id: 'seal-2-6', w: 2, o: 5, where: 'The Survey Cut, a slate on the floor by the cot\'s head', stretch: 'st-camp',
-    line: 'By the head of the cot, the count on a slate on the floor fills. Under the slate lies a head torch, its strap gone stiff, and in its battery case is a crust of white powder.',
+    line: 'By the head of the cot a slate lies on the floor, and the count on it fills. Under it is a head torch, its strap gone stiff, with a crust of white powder in its battery case.',
     plain: true },
 
   /* ---- week 3 ---- */
@@ -56,10 +56,10 @@ export const seals: Seal[] = [
     line: 'The count on the recess at the first turn fills. Inside is a coil of measuring cord, knotted every ten paces, the knots gone stiff. Beside it on the wall is a short line in the tally\'s hand.',
     carries: { records: ['rec-x-cord'] } },
   { id: 'seal-3-4', w: 3, o: 3, where: 'The Lamp Hall, the foot of the wall by the lamp', stretch: 'st-hall',
-    line: 'The count at the foot of the wall by the lamp fills. Inside lies a stub of stone, the broken edge of a rod, and with it a scatter of chips.',
+    line: 'At the foot of the wall by the lamp, the count fills. Inside lies a stub of stone, the broken edge of a rod, among a scatter of chips.',
     plain: true },
   { id: 'seal-3-5', w: 3, o: 4, where: 'The Survey Cut, a ledge', stretch: 'st-camp',
-    line: 'The count on the ledge in her camp fills. On the ledge is a box of tape cassettes, and three of them are labelled in her hand: DAY 3 (HIM), DAY 6 (IT WORKS), DAY 14.',
+    line: 'In her camp the count on the ledge fills. On it is a box of tape cassettes, and three are labelled in her hand: DAY 3 (HIM), DAY 6 (IT WORKS), DAY 14.',
     plain: true },
   { id: 'seal-3-6', w: 3, o: 5, where: 'The head of the Stair, a crack in the landing\'s floor', stretch: 'st-stair',
     line: 'Along a crack in the landing\'s floor runs a count, and it fills. Inside the crack is a foil blanket still in its packet, and on the packet, in pencil: *in case I\'m an idiot*.',
@@ -76,7 +76,7 @@ export const seals: Seal[] = [
   { id: 'seal-4-4', w: 4, o: 0, where: 'The Lamp Hall, the far end', stretch: 'st-hall', seenOnly: true },
   // NOTE: seal-4-4 is the great door's count, seen close at b-4.C; nothing opens (it opens as seal-7-5).
   { id: 'seal-4-5', w: 4, o: 4, where: 'The Salt Gallery, a hollow in the salt', stretch: 'st-salt',
-    line: 'The count on the hollow in the salt fills. In it lies a child\'s clay animal, a sheep, with one leg mended with salt. Beside it on the wall is a short line in the tally\'s hand.',
+    line: 'At the hollow in the salt the count fills. In it lies a child\'s clay animal, a sheep, one leg mended with salt. Beside it on the wall is a short line in the tally\'s hand.',
     carries: { records: ['rec-x-sheep'] } },
   { id: 'seal-4-6', w: 4, o: 5, where: 'The Survey Cut, a slate low on the back wall', stretch: 'st-camp',
     line: 'Low on the back wall of her camp is a slate with a count, and the count fills. Behind it is a paperback dictionary of a dead language, its spine broken open at the grammar and its margins full of pencil.',
@@ -91,7 +91,7 @@ export const seals: Seal[] = [
     line: 'The count on the sill of the gap fills. On the sill lie wax crumbs and a broken stylus, and beside them on the wall is a short line in the tally\'s hand.',
     carries: { records: ['rec-x-wax'] } },
   { id: 'seal-5-4', w: 5, o: 4, where: 'The Survey Cut, the notebook\'s back pocket', stretch: 'st-camp',
-    line: 'The count on the notebook\'s back pocket fills. Inside is a folded map of the hill, with the shaft marked in pen and, in another pen, SALT? and TUNNEL?',
+    line: 'At the back of the notebook the count on its pocket fills. Inside is a folded map of the hill, the shaft marked in pen and, in another pen, SALT? and TUNNEL?',
     plain: true },
   // NOTE: seal-5-4's map is paper but not a record in MVP_CONTENT §4, so it counts as plain.
   { id: 'seal-5-5', w: 5, o: 5, where: 'The Lamp Hall, the ledge\'s underside', stretch: 'st-hall',
@@ -114,7 +114,7 @@ export const seals: Seal[] = [
     plain: true },
   // NOTE: seal-6-5's papers are not records in MVP_CONTENT §4, so it counts as plain.
   { id: 'seal-6-6', w: 6, o: 5, where: 'The square gallery, a niche cut square, low', stretch: 'st-square',
-    line: 'The count on a square niche low in the square wall fills. Inside is a clay water jar with its neck stopped with wax, and the wax is cracked.',
+    line: 'Low in the square wall, the count on a square niche fills. Inside is a clay water jar, its neck stopped with wax, and the wax is cracked.',
     plain: true },
 
   /* ---- week 7 (run-ahead) ---- */
