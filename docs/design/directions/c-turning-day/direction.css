@@ -83,15 +83,18 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .paint > img { object-fit: cover; }
 .paint.over { z-index: 2; pointer-events: none; }
 
-/* light inside the scene: gold pooling on the floor as the day is earned */
+/* light inside the scene: saturated amber (normal blending) claims the lower frame as the day is earned */
 .pool {
   position: absolute; inset: 0; z-index: 1; pointer-events: none;
-  opacity: var(--warmth); mix-blend-mode: screen;
   background:
-    radial-gradient(70% 22% at var(--pool-x, 50%) var(--pool-y, 92%), rgba(255, 196, 110, .55), rgba(232, 149, 74, .18) 55%, transparent 80%),
-    radial-gradient(90% 40% at var(--pool-x, 50%) 100%, rgba(232, 149, 74, .22), transparent 75%);
-  transition: opacity 1.2s var(--ease);
+    radial-gradient(var(--aw) var(--ah) at var(--pool-x, 45%) var(--pool-y, 70%), rgba(255, 170, 64, var(--a1)) 0%, rgba(250, 138, 34, calc(var(--a1) * .62)) 38%, rgba(240, 130, 30, 0) 72%),
+    linear-gradient(0deg, rgba(244, 136, 36, var(--a2)) 0%, rgba(244, 136, 36, calc(var(--a2) * .5)) var(--h2), rgba(244, 136, 36, 0) calc(var(--h2) * 2.1));
 }
+body            { --a1: 0;   --aw: 30%;  --ah: 12%; --a2: 0;   --h2: 10%; }
+body.s-day      { --a1: .26; --aw: 34%;  --ah: 13%; --a2: 0;   --h2: 10%; }
+body.s-day2     { --a1: .62; --aw: 100%; --ah: 34%; --a2: .42; --h2: 20%; }
+body.s-done     { --a1: .66; --aw: 115%; --ah: 44%; --a2: .52; --h2: 26%; }
+body.s-evening  { --a1: .66; --aw: 135%; --ah: 56%; --a2: .56; --h2: 30%; }
 
 /* fog: cold violet above; a warm bank low down that grows with the day */
 .fog { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden;

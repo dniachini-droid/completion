@@ -10,14 +10,14 @@
 <style>
 
 .lbl{position:absolute;z-index:3;display:flex;flex-direction:column;justify-content:center;min-height:44px;padding:4px 0;
-  font-family:var(--carve);font-size:13.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);
+  font-family:var(--voice);font-size:17px;font-weight:400;letter-spacing:0;color:var(--ink-2);
   text-shadow:0 1px 3px #000,0 0 12px #000;white-space:nowrap;line-height:1.2}
 .lbl small{display:inline-flex;align-items:center;gap:6px;font-family:var(--voice);font-size:16px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--ink-3);margin-top:3px}
 .lbl.w{color:#f8e2c2}
 .lbl.here small{color:#e8bd88}
 .lbl.c{color:var(--cold-hi)}
 .lbl.c small{color:#a9c8d6}
-.lbl.here{color:#fff4e2;font-size:15px}
+.lbl.here{color:#fff4e2;font-size:18px}
 .lbl.faint small{color:var(--ink-3)}
 .lbl.cen{margin-left:-110px;width:220px;align-items:center;text-align:center}
 .need svg{width:22px;height:10px}
@@ -63,6 +63,16 @@
     <feGaussianBlur stdDeviation="2.2" result="b"/><feGaussianBlur in="SourceGraphic" stdDeviation="6" result="b2"/>
     <feMerge><feMergeNode in="b2"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
   </filter>
+  <filter id="relief" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency=".022 .03" numOctaves="5" seed="32" result="n"/>
+    <feDiffuseLighting in="n" surfaceScale="5" diffuseConstant="1.1" lighting-color="#c9d6dc" result="l"><feDistantLight azimuth="210" elevation="38"/></feDiffuseLighting>
+    <feComposite in="l" in2="SourceGraphic" operator="in"/>
+  </filter>
+  <filter id="reliefFine" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency=".09 .12" numOctaves="3" seed="34" result="n"/>
+    <feDiffuseLighting in="n" surfaceScale="2.2" diffuseConstant="1" lighting-color="#c9d6dc" result="l"><feDistantLight azimuth="210" elevation="45"/></feDiffuseLighting>
+    <feComposite in="l" in2="SourceGraphic" operator="in"/>
+  </filter>
   <radialGradient id="flameG" cx=".5" cy=".72" r=".62">
     <stop offset="0" stop-color="#fffaf0"/><stop offset=".42" stop-color="#ffd690"/><stop offset=".8" stop-color="#f39a3c" stop-opacity=".6"/><stop offset="1" stop-color="#e57a24" stop-opacity="0"/>
   </radialGradient>
@@ -92,8 +102,6 @@
 <rect width="390" height="844" filter="url(#clouds)" opacity=".38"/>
 <!-- the hill's rock, painted as dark masses around the lit places -->
 <g filter="url(#b16)" opacity=".9">
-  <path d="M-40 60 Q120 90 150 200 Q110 300 -40 330 Z" fill="#070b0e" opacity=".8"/>
-  <path d="M430 330 Q300 330 260 380 Q280 500 430 520 Z" fill="#070b0e" opacity=".6"/>
   <ellipse cx="196" cy="318" rx="120" ry="70" fill="#2d414c" opacity=".35"/>
   <ellipse cx="74" cy="420" rx="70" ry="50" fill="#35505d" opacity=".25"/>
   <ellipse cx="170" cy="540" rx="80" ry="50" fill="#3b5866" opacity=".25"/>
@@ -142,18 +150,14 @@
 </g>
 
 <g transform="translate(318 236) scale(0.85)">
-  <g ><circle r="46" fill="url(#warmPool)" opacity=".9"/></g>
-  <circle r="10" fill="#ffc27a" opacity=".5" filter="url(#b4)"/>
-  <g class="flicker"><path d="M0 3 C-4.5 -1 -2.6 -7 0 -12.5 C2.6 -7 4.5 -1 0 3 Z" fill="url(#flameG)"/>
-  <path d="M0 2 C-1.6 0 -1.1 -3.2 0 -6 C1.1 -3.2 1.6 0 0 2 Z" fill="#fffaf0"/></g>
-  <path d="M-6 3 Q0 8 6 3 Z" fill="#6b4328"/>
+  <g ><circle r="46" fill="url(#warmPool)" opacity=".95"/></g>
+  <circle r="11" fill="#ffc27a" opacity=".55" filter="url(#b4)"/>
+  <circle r="3.4" fill="#fff1d6" filter="url(#b1)"/>
 </g>
 <g transform="translate(196 150) scale(0.9)">
-  <g ><circle r="46" fill="url(#warmPool)" opacity=".9"/></g>
-  <circle r="10" fill="#ffc27a" opacity=".5" filter="url(#b4)"/>
-  <g class="flicker"><path d="M0 3 C-4.5 -1 -2.6 -7 0 -12.5 C2.6 -7 4.5 -1 0 3 Z" fill="url(#flameG)"/>
-  <path d="M0 2 C-1.6 0 -1.1 -3.2 0 -6 C1.1 -3.2 1.6 0 0 2 Z" fill="#fffaf0"/></g>
-  <path d="M-6 3 Q0 8 6 3 Z" fill="#6b4328"/>
+  <g ><circle r="46" fill="url(#warmPool)" opacity=".95"/></g>
+  <circle r="11" fill="#ffc27a" opacity=".55" filter="url(#b4)"/>
+  <circle r="3.4" fill="#fff1d6" filter="url(#b1)"/>
 </g>
 <g transform="translate(74 420) scale(1.0)" class="hum">
   <circle r="40" fill="url(#coldPool)" opacity=".55"/>
@@ -172,11 +176,9 @@
 </g>
 <circle cx="196" cy="314" r="40" fill="#f0a24a" opacity=".12" filter="url(#b16)"/>
 <g transform="translate(196 318) scale(1.45)">
-  <g class="breathe"><circle r="46" fill="url(#warmPool)" opacity=".9"/></g>
-  <circle r="10" fill="#ffc27a" opacity=".5" filter="url(#b4)"/>
-  <g class="flicker"><path d="M0 3 C-4.5 -1 -2.6 -7 0 -12.5 C2.6 -7 4.5 -1 0 3 Z" fill="url(#flameG)"/>
-  <path d="M0 2 C-1.6 0 -1.1 -3.2 0 -6 C1.1 -3.2 1.6 0 0 2 Z" fill="#fffaf0"/></g>
-  <path d="M-6 3 Q0 8 6 3 Z" fill="#6b4328"/>
+  <g class="breathe"><circle r="46" fill="url(#warmPool)" opacity=".95"/></g>
+  <circle r="11" fill="#ffc27a" opacity=".55" filter="url(#b4)"/>
+  <circle r="3.4" fill="#fff1d6" filter="url(#b1)"/>
 </g>
 <rect y="600" width="390" height="244" fill="url(#botFade)"/>
 <rect width="390" height="844" filter="url(#grain)" opacity="0.15" style="mix-blend-mode:overlay"/>
@@ -187,7 +189,7 @@
 <button class="lbl w rise d3" style="right:6.2%;top:21.1%;text-align:right">The Survey Cut</button>
 <a class="lbl c rise d3" href="complete.html" style="left:8.7%;top:52.1%">The Salt Gallery</a>
 <a class="lbl c rise d3" href="cut.html" style="right:6.2%;top:53.6%;text-align:right">The lintel<small class="need">needs a word <svg viewBox="0 0 22 10" aria-hidden="true"><rect x="1" y="2" width="20" height="6" rx="3" fill="#0c141a" stroke="#bfe0ee" stroke-width="1"/></svg></small></a>
-<button class="lbl c rise d4" style="left:10.3%;top:68.0%;text-align:left;align-items:flex-start">The great door<small class="need">a Key and a word <svg viewBox="0 0 22 10" aria-hidden="true"><g fill="#bfe0ee"><circle cx="3" cy="5" r="1.4"/><circle cx="8" cy="5" r="1.4"/><circle cx="13" cy="5" r="1.4" opacity=".35"/><circle cx="18" cy="5" r="1.4" opacity=".35"/></g></svg><svg viewBox="0 0 22 10" aria-hidden="true"><rect x="1" y="2" width="20" height="6" rx="3" fill="#0c141a" stroke="#bfe0ee" stroke-width="1"/></svg></small></button>
+<button class="lbl c rise d4" style="left:10.3%;top:68.0%;text-align:left;align-items:flex-start">The great door<small class="need">a Key and a word <svg viewBox="0 0 22 10" aria-hidden="true"><g fill="#bfe0ee"><rect x="2" y="1" width="1.6" height="8" rx=".6"/><rect x="6.5" y="1" width="1.6" height="8" rx=".6"/><rect x="11" y="1" width="1.6" height="8" rx=".6" opacity=".3"/><rect x="15.5" y="1" width="1.6" height="8" rx=".6" opacity=".3"/></g></svg><svg viewBox="0 0 22 10" aria-hidden="true"><rect x="1" y="2" width="20" height="6" rx="3" fill="#0c141a" stroke="#bfe0ee" stroke-width="1"/></svg></small></button>
 <div class="ui">
   <header class="rise d1">
     <div class="eyebrow">The first region</div>
@@ -195,7 +197,7 @@
   </header>
   <div class="grow"></div>
   <section class="next rise d4">
-    <div class="eyebrow warm">Next</div>
+    <div class="eyebrow">Next</div>
     <div class="row">
       <div class="t">Order the cat’s medication</div>
       <a class="warm-btn" href="delve.html?job=cat">Begin</a>
@@ -211,7 +213,7 @@
 (function(){
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   var c=document.querySelector('canvas.motes'); if(!c) return;
-  var L=JSON.parse(c.dataset.lights||'[]'), N=+(c.dataset.n||30), W=390, H=844, x=c.getContext('2d'), k=1, ox=0, oy=0;
+  var V=!!c.dataset.violet, L=JSON.parse(c.dataset.lights||'[]'), N=+(c.dataset.n||30), W=390, H=844, x=c.getContext('2d'), k=1, ox=0, oy=0;
   function size(){ var w=c.clientWidth, h=c.clientHeight; c.width=w*2; c.height=h*2; k=Math.max(w/W,h/H); ox=(w-W*k)/2; oy=(h-H*k)/2; x.setTransform(2*k,0,0,2*k,2*ox,2*oy); }
   size(); addEventListener('resize', size);
   var R=Math.random, m=[];
@@ -225,7 +227,7 @@
       var best=0,col=null;
       for(var j=0;j<L.length;j++){var l=L[j],d=Math.hypot(q.x-l[0],q.y-l[1]),a=Math.max(0,1-d/l[2])*l[4]; if(a>best){best=a;col=l[3]}}
       var a=best*(.5+.4*Math.sin(q.p)); if(a<.02) continue;
-      x.fillStyle=col==='w'?'rgba(255,214,150,'+a+')':'rgba(214,238,248,'+a+')';
+      x.fillStyle=col==='w'?'rgba(255,214,150,'+a+')':(V?'rgba(214,218,252,'+a+')':'rgba(214,238,248,'+a+')');
       x.beginPath(); x.arc(q.x,q.y,q.r,0,6.283); x.fill();
     }
     requestAnimationFrame(fr);

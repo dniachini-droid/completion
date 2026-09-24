@@ -9,16 +9,17 @@
 <link rel="stylesheet" href="direction.css">
 <style>
 
-.top{flex:0 0 33%}
+.top{flex:0 0 32%}
 .head .title{margin-top:6px;text-wrap:balance}
 .list{list-style:none;margin-top:8px}
-.list li{display:flex;align-items:center;gap:8px;min-height:48px}
+.list li{display:flex;align-items:center;gap:8px;min-height:46px}
 .list button{display:flex;align-items:center;justify-content:center;width:44px;height:44px;margin-left:-14px;flex:none}
 .list .t{font-family:var(--voice);font-size:18.5px;color:var(--ink);text-shadow:0 1px 3px #000}
 .list li.done .t{color:var(--ink-3)}
-.more{margin-top:2px;padding-left:30px;font-family:var(--voice);font-size:16px;color:var(--ink-3)}
+.morerow{display:flex;justify-content:space-between;align-items:center}
+.more{padding-left:30px;font-family:var(--voice);font-size:16px;color:var(--ink-3)}
 .act{margin-top:10px}
-.act .warm-btn{width:100%}
+.act .warm-btn{width:100%;font-size:15.5px;letter-spacing:.16em}
 
 </style>
 </head>
@@ -58,6 +59,16 @@
     <feGaussianBlur stdDeviation="2.2" result="b"/><feGaussianBlur in="SourceGraphic" stdDeviation="6" result="b2"/>
     <feMerge><feMergeNode in="b2"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
   </filter>
+  <filter id="relief" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency=".022 .03" numOctaves="5" seed="82" result="n"/>
+    <feDiffuseLighting in="n" surfaceScale="5" diffuseConstant="1.1" lighting-color="#c9d6dc" result="l"><feDistantLight azimuth="210" elevation="38"/></feDiffuseLighting>
+    <feComposite in="l" in2="SourceGraphic" operator="in"/>
+  </filter>
+  <filter id="reliefFine" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency=".09 .12" numOctaves="3" seed="84" result="n"/>
+    <feDiffuseLighting in="n" surfaceScale="2.2" diffuseConstant="1" lighting-color="#c9d6dc" result="l"><feDistantLight azimuth="210" elevation="45"/></feDiffuseLighting>
+    <feComposite in="l" in2="SourceGraphic" operator="in"/>
+  </filter>
   <radialGradient id="flameG" cx=".5" cy=".72" r=".62">
     <stop offset="0" stop-color="#fffaf0"/><stop offset=".42" stop-color="#ffd690"/><stop offset=".8" stop-color="#f39a3c" stop-opacity=".6"/><stop offset="1" stop-color="#e57a24" stop-opacity="0"/>
   </radialGradient>
@@ -92,77 +103,73 @@
   <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#0a1117" stroke-width="2.5"/>
   <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#000" stroke-width="6.2" opacity="0" filter="url(#b2)"/>
   <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#27343c" stroke-width="1.36" opacity="0.0" filter="url(#b1)"/>
-  <path d="M-7 7 Q-7 -1 0 -1 Q7 -1 7 -8 M-7 -8 H-2" stroke="#9fb6c1" stroke-width=".5" opacity="0.35" transform="translate(.3 .7)"/>
 </g><g transform="translate(350 140) scale(0.9)" opacity="1.0" fill="none" stroke-linecap="round" stroke-linejoin="round" >
   <path d="M-6.5 7 Q-6.5 -6 0 -6 Q6.5 -6 6.5 7 M0 -6 V2" stroke="#010203" stroke-width="3.9000000000000004" opacity=".8" transform="translate(-.35 -.6)" filter="url(#b1)"/>
   <path d="M-6.5 7 Q-6.5 -6 0 -6 Q6.5 -6 6.5 7 M0 -6 V2" stroke="#0a1117" stroke-width="2.5"/>
   <path d="M-6.5 7 Q-6.5 -6 0 -6 Q6.5 -6 6.5 7 M0 -6 V2" stroke="#000" stroke-width="6.2" opacity="0" filter="url(#b2)"/>
   <path d="M-6.5 7 Q-6.5 -6 0 -6 Q6.5 -6 6.5 7 M0 -6 V2" stroke="#27343c" stroke-width="1.36" opacity="0.0" filter="url(#b1)"/>
-  <path d="M-6.5 7 Q-6.5 -6 0 -6 Q6.5 -6 6.5 7 M0 -6 V2" stroke="#9fb6c1" stroke-width=".5" opacity="0.35" transform="translate(.3 .7)"/>
 </g><g transform="translate(140 120) scale(0.7)" opacity="1.0" fill="none" stroke-linecap="round" stroke-linejoin="round" >
   <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#010203" stroke-width="3.9000000000000004" opacity=".8" transform="translate(-.35 -.6)" filter="url(#b1)"/>
   <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#0a1117" stroke-width="2.5"/>
   <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#000" stroke-width="6.2" opacity="0" filter="url(#b2)"/>
   <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#27343c" stroke-width="1.36" opacity="0.0" filter="url(#b1)"/>
-  <path d="M-7 -1 Q0 -8.5 7 -1 M-7 2.5 Q0 9 7 2.5 M0 -4.5 V5.5" stroke="#9fb6c1" stroke-width=".5" opacity="0.35" transform="translate(.3 .7)"/>
 </g><g transform="translate(262 118) scale(0.7)" opacity="1.0" fill="none" stroke-linecap="round" stroke-linejoin="round" >
   <path d="M-7 6 Q-3 -9 2 -2 Q6 3 7 -7 M-3 7.5 H3" stroke="#010203" stroke-width="3.9000000000000004" opacity=".8" transform="translate(-.35 -.6)" filter="url(#b1)"/>
   <path d="M-7 6 Q-3 -9 2 -2 Q6 3 7 -7 M-3 7.5 H3" stroke="#0a1117" stroke-width="2.5"/>
   <path d="M-7 6 Q-3 -9 2 -2 Q6 3 7 -7 M-3 7.5 H3" stroke="#000" stroke-width="6.2" opacity="0" filter="url(#b2)"/>
   <path d="M-7 6 Q-3 -9 2 -2 Q6 3 7 -7 M-3 7.5 H3" stroke="#27343c" stroke-width="1.36" opacity="0.0" filter="url(#b1)"/>
-  <path d="M-7 6 Q-3 -9 2 -2 Q6 3 7 -7 M-3 7.5 H3" stroke="#9fb6c1" stroke-width=".5" opacity="0.35" transform="translate(.3 .7)"/>
 </g></g>
 <ellipse cx="195" cy="250" rx="220" ry="90" fill="#f0a24a" opacity=".08" filter="url(#b30)"/>
-<g opacity="0.9">
-  <path d="M50 266 V218 Q50 190 78 190 Q106 190 106 218 V266 Z" fill="#000" opacity=".6" filter="url(#b4)" transform="translate(0 3)"/>
-  <path d="M50 266 V218 Q50 190 78 190 Q106 190 106 218 V266 Z" fill="url(#nicheIn)"/>
-  <ellipse cx="78" cy="266" rx="30.8" ry="41.8" fill="#9fc4d8" opacity=".32" filter="url(#b8)"/>
-  <ellipse cx="78" cy="264" rx="21.3" ry="4" fill="#dbeef6" opacity=".5" filter="url(#b2)"/>
-  <g transform="translate(78 262)">
-  <rect x="-15" y="-12" width="30" height="12" rx="2" fill="#57616a" filter="url(#paintS)"/>
-  <rect x="-16" y="-15" width="32" height="5" rx="1.5" fill="#6f7a82"/>
-  <g stroke="#1b2227" stroke-width="1" stroke-linecap="round">{''.join(f'<path d="M{-11+i*3.2:.1f} -14.2 v3"/>' for i in range(7))}</g>
-  <path d="M-16 -15 H16" stroke="#ffd9a0" stroke-width=".8" opacity=".4"/>
+<g opacity="0.95">
+  <path d="M45 268 V213 Q45 180 78 180 Q111 180 111 213 V268 Z" fill="#000" opacity=".6" filter="url(#b4)" transform="translate(0 3)"/>
+  <path d="M45 268 V213 Q45 180 78 180 Q111 180 111 213 V268 Z" fill="url(#nicheIn)"/>
+  <ellipse cx="78" cy="268" rx="36.3" ry="48.4" fill="#f0a24a" opacity=".32" filter="url(#b8)"/>
+  <ellipse cx="78" cy="266" rx="25.1" ry="4" fill="#ffd9a0" opacity=".5" filter="url(#b2)"/>
+  <g transform="translate(78 264)">
+  <rect x="-20" y="-16" width="40" height="16" rx="2.5" fill="#5d666d"/>
+  <rect x="-21" y="-21" width="42" height="7" rx="2" fill="#7a848b"/>
+  <rect x="-21" y="-14.5" width="42" height="1.4" fill="#232a2f"/>
+  <g fill="#232a2f"><rect x="-15.0" y="-20" width="1.3" height="4.6" rx=".5"/><rect x="-10.8" y="-20" width="1.3" height="4.6" rx=".5"/><rect x="-6.6" y="-20" width="1.3" height="4.6" rx=".5"/><rect x="-2.4" y="-20" width="1.3" height="4.6" rx=".5"/><rect x="1.8" y="-20" width="1.3" height="4.6" rx=".5"/><rect x="6.0" y="-20" width="1.3" height="4.6" rx=".5"/><rect x="10.2" y="-20" width="1.3" height="4.6" rx=".5"/></g>
+  <rect x="-20" y="-3" width="40" height="3" fill="#ffcf8e" opacity=".5" filter="url(#b1)"/>
 </g>
-  <rect x="50" y="265" width="56" height="1.6" fill="#dbeef6" opacity=".45" filter="url(#b1)"/>
-  <path d="M50 266 V218 Q50 190 78 190 Q106 190 106 218 V266 Z" fill="none" stroke="#8fb0bf" stroke-width="1" opacity=".22" filter="url(#b1)"/>
+  <rect x="45" y="267" width="66" height="1.6" fill="#ffd9a0" opacity=".45" filter="url(#b1)"/>
+  <path d="M45 268 V213 Q45 180 78 180 Q111 180 111 213 V268 Z" fill="none" stroke="#8fb0bf" stroke-width="1" opacity=".22" filter="url(#b1)"/>
 </g>
 <g opacity="1.0">
   <path d="M143 270 V202 Q143 150 195 150 Q247 150 247 202 V270 Z" fill="#000" opacity=".6" filter="url(#b4)" transform="translate(0 3)"/>
   <path d="M143 270 V202 Q143 150 195 150 Q247 150 247 202 V270 Z" fill="url(#nicheIn)"/>
   <ellipse cx="195" cy="270" rx="57.2" ry="66" fill="#f0a24a" opacity=".32" filter="url(#b8)"/>
   <ellipse cx="195" cy="268" rx="39.5" ry="4" fill="#ffd9a0" opacity=".5" filter="url(#b2)"/>
-  <g transform="translate(195 266)">
-  <!-- a long shoulder strap, hung from a peg -->
-  <circle cx="0" cy="-86" r="3" fill="#6b5a4c"/>
-  <path d="M-30 -30 C-40 -64 -8 -86 0 -86 C8 -86 40 -64 30 -30" fill="none" stroke="#3a2416" stroke-width="5.5" stroke-linecap="round"/>
-  <path d="M-30 -30 C-40 -64 -8 -86 0 -86 C8 -86 40 -64 30 -30" fill="none" stroke="#b7804f" stroke-width="1.1" opacity=".45" transform="translate(1 -1.5)"/>
-  <!-- the body: soft, sagging, worn at the corners -->
-  <path d="M-38 -1 C-41 -18 -38 -34 -30 -38 C-12 -41 12 -41 30 -38 C38 -34 41 -18 38 -1 C26 4 -26 4 -38 -1 Z" fill="#5e3c27" filter="url(#paintS)"/>
-  <path d="M-36 -6 C-30 -2 -24 -1 -18 -1" stroke="#9a6a45" stroke-width="3" opacity=".5" fill="none" filter="url(#b1)"/>
-  <path d="M36 -6 C30 -2 24 -1 18 -1" stroke="#9a6a45" stroke-width="3" opacity=".5" fill="none" filter="url(#b1)"/>
-  <!-- the flap, over most of the front, with a strap and buckle -->
-  <path d="M-33 -38 C-12 -44 12 -44 33 -38 L34 -14 C22 -4 -22 -4 -34 -14 Z" fill="#4a2e1c" filter="url(#paintS)"/>
-  <path d="M-34 -14 C-22 -4 22 -4 34 -14" fill="none" stroke="#e0a466" stroke-width="1.3" opacity=".6" filter="url(#b1)"/>
-  <rect x="-3.5" y="-22" width="7" height="22" rx="1.5" fill="#3a2416"/>
-  <rect x="-6" y="-12" width="12" height="8" rx="1.5" fill="none" stroke="#c9a070" stroke-width="1.4"/>
-  <path d="M-38 -2 C-24 3 24 3 38 -2" stroke="#ffcf8e" stroke-width="2.2" fill="none" opacity=".8" filter="url(#b1)"/>
+  <g transform="translate(195 268)">
+  <!-- the strap falls to one side and loops on the ledge -->
+  <path d="M26 -30 C44 -26 50 -8 46 2 L40 2 C43 -8 38 -22 24 -24 Z" fill="#3e2718"/>
+  <path d="M-30 -2 C-50 0 -60 4 -52 6 C-40 7 -30 5 -28 3 Z" fill="#3e2718"/>
+  <!-- the body: soft, sagging leather, worn pale at the corners -->
+  <path d="M-38 -1 C-41 -18 -38 -32 -30 -35 C-12 -38 12 -38 30 -35 C38 -32 41 -18 38 -1 C26 4 -26 4 -38 -1 Z" fill="#5e3c27"/>
+  <ellipse cx="-30" cy="-6" rx="8" ry="5" fill="#9a6a45" opacity=".45" filter="url(#b2)"/>
+  <ellipse cx="30" cy="-6" rx="8" ry="5" fill="#9a6a45" opacity=".45" filter="url(#b2)"/>
+  <!-- a flat flap over the top half, with a worn edge and a small buckle -->
+  <path d="M-34 -35 C-12 -40 12 -40 34 -35 L35 -16 C20 -13 -20 -13 -35 -16 Z" fill="#4a2e1c"/>
+  <path d="M-35 -16 C-20 -13 20 -13 35 -16 L35 -14 C20 -11 -20 -11 -35 -14 Z" fill="#d49a60" opacity=".55"/>
+  <rect x="-5" y="-17" width="10" height="7" rx="1.5" fill="#b08654"/><rect x="-3" y="-15.5" width="6" height="4" rx="1" fill="#4a2e1c"/>
+  <path d="M-38 -2 C-24 3 24 3 38 -2 L38 1 C24 6 -24 6 -38 1 Z" fill="#ffcf8e" opacity=".55" filter="url(#b1)"/>
 </g>
   <rect x="143" y="269" width="104" height="1.6" fill="#ffd9a0" opacity=".45" filter="url(#b1)"/>
   <path d="M143 270 V202 Q143 150 195 150 Q247 150 247 202 V270 Z" fill="none" stroke="#8fb0bf" stroke-width="1" opacity=".22" filter="url(#b1)"/>
 </g>
-<g opacity="0.9">
-  <path d="M284 266 V218 Q284 190 312 190 Q340 190 340 218 V266 Z" fill="#000" opacity=".6" filter="url(#b4)" transform="translate(0 3)"/>
-  <path d="M284 266 V218 Q284 190 312 190 Q340 190 340 218 V266 Z" fill="url(#nicheIn)"/>
-  <ellipse cx="312" cy="266" rx="30.8" ry="41.8" fill="#9fc4d8" opacity=".32" filter="url(#b8)"/>
-  <ellipse cx="312" cy="264" rx="21.3" ry="4" fill="#dbeef6" opacity=".5" filter="url(#b2)"/>
+<g opacity="0.95">
+  <path d="M279 268 V213 Q279 180 312 180 Q345 180 345 213 V268 Z" fill="#000" opacity=".6" filter="url(#b4)" transform="translate(0 3)"/>
+  <path d="M279 268 V213 Q279 180 312 180 Q345 180 345 213 V268 Z" fill="url(#nicheIn)"/>
+  <ellipse cx="312" cy="268" rx="36.3" ry="48.4" fill="#f0a24a" opacity=".32" filter="url(#b8)"/>
+  <ellipse cx="312" cy="266" rx="25.1" ry="4" fill="#ffd9a0" opacity=".5" filter="url(#b2)"/>
   <g transform="translate(312 262)">
-  <path d="M-20 -4 L18 -9 L20 -6 L-19 -1 Z" fill="#6a7479" filter="url(#paintS)"/>
-  <path d="M18 -9 L20 -6" stroke="#e8f2f6" stroke-width=".8" opacity=".6"/>
-  <path d="M-20 -4 L18 -9" stroke="#b9c8cf" stroke-width=".7" opacity=".6"/>
+  <rect x="-24" y="-9" width="48" height="8" rx="4" fill="#5f686d"/>
+  <rect x="-23" y="-8.5" width="46" height="2.4" rx="1.2" fill="#c9d4d9" opacity=".7"/>
+  <rect x="-24" y="-3.5" width="48" height="2.5" rx="1.2" fill="#ffcf8e" opacity=".55" filter="url(#b1)"/>
+  <path d="M22 -9 L27 -5 L22 -1 Z" fill="#8a959a"/>
 </g>
-  <rect x="284" y="265" width="56" height="1.6" fill="#dbeef6" opacity=".45" filter="url(#b1)"/>
-  <path d="M284 266 V218 Q284 190 312 190 Q340 190 340 218 V266 Z" fill="none" stroke="#8fb0bf" stroke-width="1" opacity=".22" filter="url(#b1)"/>
+  <rect x="279" y="267" width="66" height="1.6" fill="#ffd9a0" opacity=".45" filter="url(#b1)"/>
+  <path d="M279 268 V213 Q279 180 312 180 Q345 180 345 213 V268 Z" fill="none" stroke="#8fb0bf" stroke-width="1" opacity=".22" filter="url(#b1)"/>
 </g>
 <!-- the ledge below the niches -->
 <path d="M-10 272 H400 V284 H-10 Z" fill="#1c262c" filter="url(#paint)"/>
@@ -179,9 +186,11 @@
     <h1 class="title">Sort the flat before the visit</h1>
   </header>
   <ul class="list rise d2"><li class=""><button aria-label="Tick: Hoover the hall"><span class="pt cold"></span></button><span class="t">Hoover the hall</span></li><li class=""><button aria-label="Tick: Clear the desk"><span class="pt cold"></span></button><span class="t">Clear the desk</span></li><li class=""><button aria-label="Tick: Wash the bedding"><span class="pt cold"></span></button><span class="t">Wash the bedding</span></li><li class="done"><button aria-label="Ticked: Take the bottles out"><span class="pt warm"></span></button><span class="t">Take the bottles out</span></li><li class=""><button aria-label="Tick: Fix the shelf bracket"><span class="pt cold"></span></button><span class="t">Fix the shelf bracket</span></li></ul>
-  <p class="more rise d3">and more, folded away</p>
+  <div class="morerow rise d3"><p class="more">and more, folded away</p><button class="quiet-btn">Add a line</button></div>
   <div class="grow"></div>
-  <div class="act rise d4"><button class="warm-btn">Add a line</button></div>
+  <div class="act rise d4">
+    <button class="warm-btn">Take one into today</button>
+  </div>
   <nav class="nav" aria-label="Places in the app"><a href="morning.html">Today</a><a href="map.html">Map</a><a href="satchel.html" class="here" aria-current="page">Satchel</a><a href="daybook.html">Daybook</a></nav>
 </div>
 
@@ -192,7 +201,7 @@
 (function(){
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   var c=document.querySelector('canvas.motes'); if(!c) return;
-  var L=JSON.parse(c.dataset.lights||'[]'), N=+(c.dataset.n||30), W=390, H=844, x=c.getContext('2d'), k=1, ox=0, oy=0;
+  var V=!!c.dataset.violet, L=JSON.parse(c.dataset.lights||'[]'), N=+(c.dataset.n||30), W=390, H=844, x=c.getContext('2d'), k=1, ox=0, oy=0;
   function size(){ var w=c.clientWidth, h=c.clientHeight; c.width=w*2; c.height=h*2; k=Math.max(w/W,h/H); ox=(w-W*k)/2; oy=(h-H*k)/2; x.setTransform(2*k,0,0,2*k,2*ox,2*oy); }
   size(); addEventListener('resize', size);
   var R=Math.random, m=[];
@@ -206,7 +215,7 @@
       var best=0,col=null;
       for(var j=0;j<L.length;j++){var l=L[j],d=Math.hypot(q.x-l[0],q.y-l[1]),a=Math.max(0,1-d/l[2])*l[4]; if(a>best){best=a;col=l[3]}}
       var a=best*(.5+.4*Math.sin(q.p)); if(a<.02) continue;
-      x.fillStyle=col==='w'?'rgba(255,214,150,'+a+')':'rgba(214,238,248,'+a+')';
+      x.fillStyle=col==='w'?'rgba(255,214,150,'+a+')':(V?'rgba(214,218,252,'+a+')':'rgba(214,238,248,'+a+')');
       x.beginPath(); x.arc(q.x,q.y,q.r,0,6.283); x.fill();
     }
     requestAnimationFrame(fr);
