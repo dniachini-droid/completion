@@ -10,6 +10,7 @@ import { calendarWeek, epochOf, gameDay, momentOf, offsetOf, wallClock, weekdayO
 import { runAt, alertsAfter, type RunMark, type RunNow, type RunPlan } from './run';
 import type { Capacity, Content, Fact, FactBody, FactOf, Job, Rhythm } from './types';
 import * as S from './story';
+import * as W from './week';
 import type { Beat, Seal, StretchId } from './story-types';
 
 export const STEP_MIN = 25;                                   /* BALANCING §1 */
@@ -47,7 +48,46 @@ function activeRun(facts: Fact[]) {
 
 function capacityOn(facts: Fact[], day: string): Capacity {
   const c = ofType(onDay(facts, day), 'capacityChosen');
-  return c.length ? c[c.length - 1].capacity : 'normal';
+  return c.length ? c[c.length - 1].capacity : suggestedOn(facts, day).capacity;
+}
+
+/* ---------- bedtime, absence and the suggested day (slice 4; BALANCING §6) ---------- */
+
+/** Bedtime as Dan set it (the camp screen), "23:00" until he changes it. */
+export const DEFAULT_BEDTIME = '23:00';
+export const bedtimeOf = (facts: Fact[]) => { const b = ofType(facts, 'bedtimeSet'); return b.length ? b[b.length - 1].time : DEFAULT_BEDTIME; };
+/** Goodnight within this many minutes of bedtime keeps it; this late or later suggests a Low day tomorrow. */
+export const BEDTIME_GRACE = 15;
+export const LATE_NIGHT = 60;
+/** Days without opening that make an absence (BALANCING §6). */
+export const ABSENCE_DAYS = 3;
+
+/** Minutes past bedtime on a game day (negative: before it). A bedtime before 04:00 belongs to the night after the day. */
+export function pastBedtime(bedtime: string, at: Moment): number {
+  const { h, min } = wallClock(at);
+  const b = +bedtime.slice(0, 2) * 60 + +bedtime.slice(3, 5);
+  const shift = (x: number) => x < 4 * 60 ? x + 24 * 60 : x;
+  return shift(h * 60 + min) - shift(b);
+}
+
+/** The day before's first opening, if Dan was away ABSENCE_DAYS days or more before this one (the first day back). */
+function backFrom(facts: Fact[], day: string): string | null {
+  const before = ofType(facts, 'opened').filter(f => f.day < day);
+  if (!before.length) return null;
+  const last = before[before.length - 1].day;
+  return W.daysBetween(last, day) >= ABSENCE_DAYS ? last : null;
+}
+
+/**
+ * Today's suggested size: Low on the first day back after an absence (D-043 F9); otherwise from last night's bedtime,
+ * Low after a late night, else Normal. A guess, never a verdict; one tap changes it (P3). High is never suggested.
+ */
+export function suggestedOn(facts: Fact[], day: string): { capacity: Capacity; by: 'back' | 'bedtime' | null } {
+  if (backFrom(facts, day)) return { capacity: 'low', by: 'back' };
+  const night = ofType(facts, 'goodnight').filter(f => f.day === W.addDays(day, -1));
+  if (!night.length) return { capacity: 'normal', by: null };
+  const late = pastBedtime(bedtimeOf(facts.filter(f => f.seq <= night[0].seq)), night[0].at);
+  return { capacity: late >= LATE_NIGHT ? 'low' : 'normal', by: 'bedtime' };
 }
 
 /** The day's size: Low 2, Normal 3, High 5; opened after 14:00 one fewer, after 19:00 one job completes it (§6). */
@@ -71,7 +111,9 @@ export const delveMinutesOn = (facts: Fact[], day: string, job: string) =>
 
 export const rhythmOf = (c: Content, job: string): Rhythm | undefined => c.rhythms.find(r => r.job === job);
 /** Whether a job belongs in today's suggestion at all: a set-day rhythm on its day; a one-off until it's done. */
-function offeredOn(c: Content, facts: Fact[], day: string, j: Job): boolean {
+function offeredOn(c: Content, facts: Fact[], day: string, j: Job, planned: Set<string>): boolean {
+  if (planned.has(j.id)) return true;
+  if (j.item) return false;   /* a satchel line is offered only once it is planned for the day (TOOLS §2) */
   const r = rhythmOf(c, j.id);
   if (r?.days) return r.days.includes(weekdayOf(day));
   if (!r) return !ofType(facts, 'jobDone').some(f => f.job === j.id && f.day !== day);
@@ -83,10 +125,13 @@ const metThisWeek = (c: Content, facts: Fact[], day: string, job: string) => {
   return !!r && S.sessionsIn(facts.filter(f => f.day !== day), r, day) >= S.needOf(r);
 };
 
-/** Today's jobs in order: the content's order, rhythms already met this week last, changed by Swap. */
-function orderOn(c: Content, facts: Fact[], day: string): string[] {
-  const offered = c.jobs.filter(j => offeredOn(c, facts, day, j));
-  const order = [...offered.filter(j => !metThisWeek(c, facts, day, j.id)), ...offered.filter(j => metThisWeek(c, facts, day, j.id))].map(j => j.id);
+/** Today's jobs in order: today's plan first (an appointment as its time nears), then the content's order, rhythms
+    already met this week last; changed by Swap. Without a plan, Today works exactly as before (PLANNER.md). */
+function orderOn(c: Content, facts: Fact[], day: string, clock: string): string[] {
+  const plan = W.plannedToday(c, facts, day, clock).map(p => p.job);
+  const planned = new Set(plan);
+  const offered = c.jobs.filter(j => offeredOn(c, facts, day, j, planned) && !planned.has(j.id));
+  const order = [...plan, ...offered.filter(j => !metThisWeek(c, facts, day, j.id)), ...offered.filter(j => metThisWeek(c, facts, day, j.id))].map(j => typeof j === 'string' ? j : j.id);
   for (const s of ofType(onDay(facts, day), 'swapped')) {
     const a = order.indexOf(s.from), b = order.indexOf(s.to);
     if (a >= 0 && b >= 0) [order[a], order[b]] = [order[b], order[a]];
@@ -201,18 +246,20 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string) {
   const done = w.put({ type: 'jobDone', job, minutes }, at, day);
   if (timed === 0) w.put({ type: 'stepsGained', minutes, job }, at, day);
   storyClock(w, c, at, day);
-  /* a rhythm met this week lands a Key, until the week's supply is used; past it, one find a week (§3) */
-  const r = rhythmOf(c, job);
+  /* a rhythm met this week lands a Key, until the week's supply is used; past it, one find a week (§3). A rhythm Dan
+     added or changed counts for Keys from its next full period (D-043 F7): the rhythms as they stood when the week began. */
+  const r = rhythmOf(W.live(c.base ?? c, w.all, calendarWeek(day)), job);
   let keyed = false;
   if (r && S.sessionsIn(w.all, r, day) === S.needOf(r)) {
     if (S.keysIn(w.all, day) < S.KEYS_A_WEEK) keyed = !!landKey(w, c, r.id, at, day, done.seq);
     else if (!ofType(w.all, 'findGiven').some(f => f.why === 'surplus' && calendarWeek(f.day) === calendarWeek(day))) giveFind(w, c, 'surplus', at, day, done.seq);
   }
-  /* the return: on a High day past a Normal day's size, the deep push's next beat (once a day); else the story's next
-     step; else a line of the passage */
+  /* the return: the deep push's next beat (once a day) on a High day past a Normal day's size, or once a Normal day's
+     jobs are done if Dan called the push in the morning (D-054); else the story's next step; else a line of the passage */
   if (!keyed) {
     const st = S.storyState(w.all, c.story), step = S.nextStep(c.story, st);
-    const deep = capacityOn(w.all, day) === 'high' && doneOn(w.all, day).size > DAY_SIZE.normal
+    const n = doneOn(w.all, day).size, called = onDay(w.all, day).some(f => f.type === 'deepCalled');
+    const deep = capacityOn(w.all, day) === 'high' && (n > DAY_SIZE.normal || (called && n >= DAY_SIZE.normal))
       && !ofType(onDay(w.all, day), 'beatPlayed').some(f => S.beatOf(c.story, f.id)?.kind === 'deep') ? S.nextDeep(c.story, st) : null;
     if (deep) { w.put({ type: 'beatPlayed', id: deep.id, job: done.seq }, at, day); show(w, c, deep.carries?.records, at, day); }
     else if (step) { w.put({ type: 'beatPlayed', id: step.id, job: done.seq }, at, day); show(w, c, step.carries?.records, at, day); }
@@ -250,6 +297,67 @@ function settleIn(w: W, c: Content, nowMs: number) {
   }
 }
 
+/* ---------- the week close, the morning after camp, the welcome back (slice 4) ---------- */
+
+/** The week of play a calendar week is (1 = the week of the first opening). */
+function playWeek(facts: Fact[], week: string): number {
+  const first = facts.find(f => f.type === 'opened');
+  return first ? Math.round(W.daysBetween(calendarWeek(first.day), week) / 7) + 1 : 1;
+}
+
+/**
+ * The daybook's page for each calendar week that had anything done, written once at the first opening after the week
+ * (TOOLS §6; BALANCING §7): up to three things learned, the month's "so far" on the first close of each month of play
+ * (weeks 1 and 5), the story week's glimpse, and the sealed things the weekly floor opened. A week with nothing done
+ * gets no page, and no gap is marked (D-043). What the real week held is read from the log when the page is shown.
+ */
+function weekClose(w: W, c: Content, at: Moment, day: string, storyWeek: number) {
+  const closed = new Set(ofType(w.all, 'weekClosed').map(f => f.week));
+  const weeks = [...new Set(ofType(w.all, 'jobDone').map(f => calendarWeek(f.day)))].filter(x => x < calendarWeek(day) && !closed.has(x)).sort();
+  for (const wk of weeks) {
+    const st = S.storyState(w.all, c.story);
+    const before = new Set(ofType(w.all, 'weekClosed').flatMap(f => f.learned));
+    const learned = c.story.learned.filter(l => l.w <= storyWeek && !before.has(l.id) && l.req.every(r => S.met(st, r))).slice(0, 3).map(l => l.id);
+    const n = playWeek(w.all, wk);
+    const month = n === 1 ? c.story.soFar[0] : n === 5 ? c.story.soFar[1] : undefined;
+    const soFar = (month?.items ?? []).filter(l => l.req.every(r => S.met(st, r))).slice(0, 5).map(l => l.id);
+    const glimpse = c.story.beats.find(b => b.kind === 'close' && b.w === storyWeek && !st.played.has(b.id)) ?? null;
+    if (glimpse) w.put({ type: 'beatPlayed', id: glimpse.id }, at, day);
+    const seals = ofType(w.all, 'keyEarned').filter(k => k.rhythm === `floor:${wk}`)
+      .map(k => w.all.find(f => f.seq === k.seq + 1)).filter((f): f is FactOf<'sealOpened'> => f?.type === 'sealOpened').map(f => f.seal);
+    w.put({ type: 'weekClosed', week: wk, n, learned, soFar, glimpse: glimpse?.id ?? null, seals }, at, day);
+  }
+}
+
+/**
+ * The morning after a kept bedtime: something small is waiting (CORE_LOOPS → evening close). If the story week's camp
+ * line played that night, its morning plays (`b-wN.morning`, which settles the guesses it confirms, D-070); a morning
+ * that confirms nothing also brings a find, so what waits is always something to look at. With no camp line, a find.
+ */
+function morningAfter(w: W, c: Content, at: Moment, day: string) {
+  const nights = ofType(w.all, 'goodnight').filter(f => f.day < day && f.kept);
+  const night = nights[nights.length - 1];
+  if (!night || w.all.some(f => f.seq > night.seq && ((f.type === 'beatPlayed' && f.id.endsWith('.morning')) || (f.type === 'findGiven' && f.why === 'morning')))) return;
+  const camp = w.all.find(f => f.seq > night.seq && f.type === 'beatPlayed' && f.id.endsWith('.camp')) as FactOf<'beatPlayed'> | undefined;
+  if (camp && camp.day === night.day) {
+    const id = camp.id.replace(/\.camp$/, '.morning');
+    if (!S.storyState(w.all, c.story).played.has(id)) {
+      w.put({ type: 'beatPlayed', id }, at, day);
+      if (c.story.marks.some(m => m.confirmedBy === id)) return;
+    }
+  }
+  giveFind(w, c, 'morning', at, day);
+}
+
+/** The first opening after an absence: "where you were", with the one open question for the story week (BALANCING §7). */
+function welcomeBack(w: W, c: Content, at: Moment, day: string) {
+  const since = backFrom(w.all, day);
+  if (!since || onDay(w.all, day).some(f => f.type === 'welcomed')) return;
+  const st = S.storyState(w.all, c.story);
+  const qs = c.story.openQuestions.filter(q => q.w <= st.week && (q.req ?? []).every(r => S.met(st, r)));
+  w.put({ type: 'welcomed', since, question: qs.length ? qs[qs.length - 1].id : null }, at, day);
+}
+
 /* ---------- commands: Dan's actions ---------- */
 
 export type Command =
@@ -265,18 +373,41 @@ export type Command =
   | { do: 'finishHere' }
   | { do: 'done'; job: string }
   | { do: 'cantStart'; job: string }
-  | { do: 'seen'; what: 'step' | 'arrival'; ref: number }
+  | { do: 'seen'; what: 'step' | 'arrival' | 'morning' | 'welcome'; ref: number }
   | { do: 'guess'; mark: string; guess: string }
   | { do: 'choose'; beat: string; pick: number }
-  | { do: 'read'; record: string };
+  | { do: 'read'; record: string }
+  /* slice 4 */
+  | { do: 'saveRhythm'; rhythm: Rhythm; job: Job }
+  | { do: 'stopRhythm'; id: string }
+  | { do: 'addItems'; lines: string[] }
+  | { do: 'tick'; id: string }
+  | { do: 'dropItem'; id: string }
+  | { do: 'planWeek'; week: string }
+  | { do: 'movePlan'; entry: string; day: string | null; time?: string | null }
+  | { do: 'planJob'; job: string; day: string; time?: string }
+  | { do: 'addToWeek'; line: string; day: string; time?: string }
+  | { do: 'bedtime'; time: string }
+  | { do: 'goodnight' }
+  | { do: 'callDeep' }
+  | { do: 'closeRead'; week: string }
+  | { do: 'offerAnswered'; week: string };
 
 /** The facts a command adds to the log (including anything the clock made due first). */
-export function act(facts: Fact[], c: Content, cmd: Command, now: Moment): Fact[] {
-  const w = writer(facts, now), nowMs = epochOf(now);
+export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fact[] {
+  const w = writer(facts, now), nowMs = epochOf(now), c = W.live(base, facts);
   settleIn(w, c, nowMs);
   const day = gameDay(now), v = see(w.all, c, now);
   switch (cmd.do) {
-    case 'open': w.put({ type: 'opened' }); storyClock(w, c, now, day); floor(w, c, now, day); break;
+    case 'open': {
+      const was = S.storyState(w.all, c.story).week, first = !onDay(w.all, day).some(f => f.type === 'opened');
+      w.put({ type: 'opened' });
+      if (first) welcomeBack(w, c, now, day);
+      storyClock(w, c, now, day); floor(w, c, now, day);
+      weekClose(w, c, now, day, was);
+      morningAfter(w, c, now, day);
+      break;
+    }
     case 'guess': {
       /* a guess, never "wrong" at guess time; it may change until the place confirms it (SCRIPT §9; mock-up record.html) */
       const st = S.storyState(w.all, c.story), m = S.markOf(c.story, cmd.mark);
@@ -335,6 +466,61 @@ export function act(facts: Fact[], c: Content, cmd: Command, now: Moment): Fact[
       markDoneIn(w, c, cmd.job, now, day);
       break;
     case 'cantStart': w.put({ type: 'cantStartUsed', job: cmd.job }); break;
+    /* Dan's own rhythms and lines: editing earns nothing and loses nothing (P16, D-038) */
+    case 'saveRhythm': if (cmd.job.name.trim()) w.put({ type: 'rhythmSaved', rhythm: { ...cmd.rhythm, job: cmd.job.id }, job: { ...cmd.job, name: cmd.job.name.trim() } }); break;
+    case 'stopRhythm': if (c.rhythms.some(r => r.id === cmd.id)) w.put({ type: 'rhythmStopped', id: cmd.id }); break;
+    case 'addItems': {
+      let k = ofType(w.all, 'itemAdded').length;
+      for (const line of cmd.lines.map(x => x.replace(/^[-*•\s]+/, '').trim()).filter(Boolean)) w.put({ type: 'itemAdded', id: `it-${++k}`, name: line.slice(0, 120) });
+      break;
+    }
+    case 'tick': {
+      const it = W.items(w.all, day).find(x => x.id === cmd.id);
+      if (!it || it.done) break;
+      /* a line moves the expedition only as one of today's main jobs (TOOLS §2, P5); otherwise ticking just feels good */
+      if (v.slate.includes(cmd.id)) {
+        if (!ofType(onDay(w.all, day), 'jobBegun').some(f => f.job === cmd.id)) w.put({ type: 'jobBegun', job: cmd.id, from: 'record' });
+        markDoneIn(w, c, cmd.id, now, day);
+      } else w.put({ type: 'itemTicked', id: cmd.id });
+      break;
+    }
+    case 'dropItem': if (W.items(w.all, day).some(x => x.id === cmd.id)) w.put({ type: 'itemDropped', id: cmd.id }); break;
+    case 'planWeek': w.put({ type: 'planMade', week: cmd.week, entries: W.planWeek(c, w.all, cmd.week, day) }); break;
+    case 'movePlan': w.put({ type: 'planChanged', entry: cmd.entry, day: cmd.day, ...(cmd.time !== undefined ? { time: cmd.time } : {}) }); break;
+    case 'planJob': {
+      if (!c.jobs.some(j => j.id === cmd.job)) break;
+      const n = ofType(w.all, 'planAdded').length + 1;
+      w.put({ type: 'planAdded', entry: { id: `pa-${n}`, job: cmd.job, day: cmd.day, ...(cmd.time ? { time: cmd.time } : {}) } });
+      break;
+    }
+    case 'addToWeek': {
+      const name = cmd.line.trim().slice(0, 120);
+      if (!name) break;
+      const id = `it-${ofType(w.all, 'itemAdded').length + 1}`, n = ofType(w.all, 'planAdded').length + 1;
+      w.put({ type: 'itemAdded', id, name });
+      w.put({ type: 'planAdded', entry: { id: `pa-${n}`, job: id, day: cmd.day, ...(cmd.time ? { time: cmd.time } : {}) } });
+      break;
+    }
+    case 'bedtime': if (/^\d\d:\d\d$/.test(cmd.time)) w.put({ type: 'bedtimeSet', time: cmd.time }); break;
+    case 'goodnight': {
+      if (ofType(onDay(w.all, day), 'goodnight').length) break;
+      const kept = pastBedtime(bedtimeOf(w.all), now) <= BEDTIME_GRACE;
+      w.put({ type: 'goodnight', kept });
+      /* kept: the story week's camp line plays tonight, once a week; its morning waits for tomorrow */
+      if (kept) {
+        const st = S.storyState(w.all, c.story);
+        const camp = c.story.beats.find(b => b.kind === 'camp' && b.w === st.week && !st.played.has(b.id));
+        if (camp) w.put({ type: 'beatPlayed', id: camp.id });
+      }
+      break;
+    }
+    case 'callDeep':
+      if (!v.deepOffer) break;
+      if (v.capacity !== 'high') w.put({ type: 'capacityChosen', capacity: 'high', suggested: v.suggested });
+      w.put({ type: 'deepCalled' });
+      break;
+    case 'closeRead': if (!ofType(w.all, 'closeRead').some(f => f.week === cmd.week)) w.put({ type: 'closeRead', week: cmd.week }); break;
+    case 'offerAnswered': if (!ofType(w.all, 'offerAnswered').some(f => f.week === cmd.week)) w.put({ type: 'offerAnswered', week: cmd.week }); break;
     case 'seen': w.put({ type: 'seen', what: cmd.what, ref: cmd.ref }); break;
   }
   return w.out;
@@ -419,6 +605,27 @@ export interface View {
   runFinds: string[];
   /** A line of the passage for where Dan is (a breather, a delve's end). */
   passage: string;
+  /* slice 4: the week and the gaps */
+  /** Why today's size is suggested as it is: last night's bedtime, or the first day back. */
+  suggestedBy: 'bedtime' | 'back' | null;
+  bedtime: string;
+  /** Tonight's goodnight, once said: kept or not, and the camp line it played. */
+  night: { kept: boolean; beat: string | null } | null;
+  /** Something waiting in the morning, not yet looked at. */
+  morning: { seq: number; beat: string | null; find: string | null } | null;
+  /** Back after days away, not yet looked at: "where you were". */
+  welcome: { seq: number; question: string | null; record: string | null } | null;
+  /** The daybook's newest page, not yet read. */
+  close: FactOf<'weekClosed'> | null;
+  /** A High day's morning: the deep push may be called (D-054). */
+  deepOffer: boolean;
+  deepCalled: boolean;
+  /** Today's planned appointments (job → time). */
+  times: Record<string, string>;
+  /** Where the plan points: the day each next place would be reached (a forecast, never a promise). */
+  forecast: string[];
+  /** Dan's own data as it stands (his edits applied). */
+  content: Content;
 }
 
 /** The stand-in painting for a place until its own is painted from its brief (PROTOTYPE_NOTES.md). */
@@ -462,11 +669,24 @@ export function returnOf(c: Content, facts: Fact[], doneSeq: number): Return {
   return { beat: b.id, line: b.line ?? '', key: b.kind === 'stepKey', guess, choice: b.choice, records: [...(b.carries?.records ?? []), ...(viaSeal?.carries?.records ?? [])], finds, ...(part ? { part } : {}) };
 }
 
-export function see(facts: Fact[], c: Content, now: Moment): View {
-  const day = gameDay(now), nowMs = epochOf(now);
+export function see(facts: Fact[], base: Content, now: Moment): View {
+  const c = W.live(base, facts);
+  const day = gameDay(now), nowMs = epochOf(now), clock = now.slice(11, 16);
   const capacity = capacityOn(facts, day), size = sizeOn(facts, day);
-  const done = doneOn(facts, day), order = orderOn(c, facts, day);
+  const done = doneOn(facts, day), order = orderOn(c, facts, day, clock);
+  /* an appointment planned for today stays on the slate whatever the day's size (P10); the rest fill it in order */
+  const planned = W.plannedToday(c, facts, day, clock);
+  const times: Record<string, string> = {};
+  for (const p of planned) if (p.time) times[p.job] = p.time;
   const slate = order.slice(0, size);
+  for (const id of Object.keys(times)) {
+    if (slate.includes(id)) continue;
+    let k = slate.length - 1;
+    while (k >= 0 && (times[slate[k]] || done.has(slate[k]))) k--;
+    if (k >= 0) slate.splice(k, 1);
+    slate.push(id);
+  }
+  slate.sort((a, b) => order.indexOf(a) - order.indexOf(b));
   for (const id of order) if (done.has(id) && !slate.includes(id)) slate.push(id);   /* off-plan counts in full */
   const complete = completedOn(facts, day);
   const underWay = underWayOn(facts, day);
@@ -520,10 +740,35 @@ export function see(facts: Fact[], c: Content, now: Moment): View {
     : { id: null, name: stretch.name, line: opening?.line ?? '', stretch: st.stretch, painting: STAND_IN[st.stretch] };
   const w = walked(facts), nextBeat = S.nextPlace(c.story, st), nextAt = nextBeat ? S.nextPlaceAt(st) : null;
   const view = S.inView(c.story, st);
+
+  /* slice 4: tonight, the morning after, the welcome back, the daybook's new page, the deep push */
+  const sugg = suggestedOn(facts, day);
+  const gn = ofType(onDay(facts, day), 'goodnight')[0];
+  const campLine = gn ? facts.find(f => f.seq > gn.seq && f.type === 'beatPlayed' && f.id.endsWith('.camp') && f.day === day) as FactOf<'beatPlayed'> | undefined : undefined;
+  const mf = facts.filter(f => (f.type === 'beatPlayed' && f.id.endsWith('.morning')) || (f.type === 'findGiven' && f.why === 'morning'));
+  const mLast = mf[mf.length - 1];
+  let morning: View['morning'] = null;
+  if (mLast && !seen.has(mLast.seq)) {
+    const group = mf.filter(f => f.day === mLast.day && f.seq >= mLast.seq - 1);
+    const beat = group.find(f => f.type === 'beatPlayed') as FactOf<'beatPlayed'> | undefined, find = group.find(f => f.type === 'findGiven') as FactOf<'findGiven'> | undefined;
+    morning = { seq: mLast.seq, beat: beat?.id ?? null, find: find?.id ?? null };
+  }
+  const wf = ofType(facts, 'welcomed').filter(f => f.day === day && !seen.has(f.seq))[0];
+  const welcome = wf ? { seq: wf.seq, question: wf.question, record: st.records.length ? st.records[st.records.length - 1] : null } : null;
+  const closes = ofType(facts, 'weekClosed'), lastClose = closes[closes.length - 1];
+  const close = lastClose && !ofType(facts, 'closeRead').some(f => f.week === lastClose.week) ? lastClose : null;
+  const deepCalled = onDay(facts, day).some(f => f.type === 'deepCalled');
+  const deepToday = ofType(onDay(facts, day), 'beatPlayed').some(f => S.beatOf(c.story, f.id)?.kind === 'deep');
+  const deepOffer = capacity === 'high' && !deepCalled && !deepToday && !complete && done.size < DAY_SIZE.normal && !!S.nextDeep(c.story, st);
+  const toNext = nextAt !== null ? Math.max(0, nextAt - w) : null;
+
   return {
-    day, capacity, suggested: 'normal', size, order, slate, done, underWay, complete, next, run, runEnd, arrival,
+    suggestedBy: sugg.by, bedtime: bedtimeOf(facts), night: gn ? { kept: gn.kept, beat: campLine?.id ?? null } : null,
+    morning, welcome, close, deepOffer, deepCalled, times, content: c,
+    forecast: W.forecast(c, facts, day, toNext, S.PLACE_GAP),
+    day, capacity, suggested: sugg.capacity, size, order, slate, done, underWay, complete, next, run, runEnd, arrival,
     /* ahead: the sealed thing in view; before any, the way in (the first morning), then a line from just ahead */
-    here, ahead: view ? view.where : here.id === null ? here.line || S.teaser(c.story, st) : S.teaser(c.story, st), walked: w, toNext: nextAt !== null ? Math.max(0, nextAt - w) : null, nextAt,
+    here, ahead: view ? view.where : here.id === null ? here.line || S.teaser(c.story, st) : S.teaser(c.story, st), walked: w, toNext, nextAt,
     lastArrival: lastArr, story: S.storyState(facts, c.story), teaser: S.teaser(c.story, st), runFinds,
     passage: c.story.passages.find(p => p.id === S.nextPassage(c.story, st))?.line ?? '',
   };

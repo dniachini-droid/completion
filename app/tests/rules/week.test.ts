@@ -1,0 +1,274 @@
+/**
+ * Slice 4, the week and the gaps (PLANNER.md; TOOLS.md §2, §6; BALANCING.md §6–7; CORE_LOOPS → evening close, absence).
+ * Ids only: no story text is asserted here.
+ */
+import { describe, expect, it } from 'vitest';
+import { act, see, settle, type Command } from '../../src/core/game';
+import * as W from '../../src/core/week';
+import * as S from '../../src/core/story';
+import { weekdayOf } from '../../src/core/time';
+import type { Fact } from '../../src/core/types';
+import { content as C } from '../../src/content/world';
+import { sim } from './sim';
+
+/** A player on a phone clock in British Summer Time; `day(n)` moves to 09:00 n days on. */
+function player(start = '2026-09-28T09:00:00+01:00') {   /* a Monday */
+  let facts: Fact[] = [];
+  let now = Date.parse(start);
+  const at = () => new Date(now + 3_600_000).toISOString().slice(0, 19) + '+01:00';
+  return {
+    get facts() { return facts; },
+    do(cmd: Command) { facts = facts.concat(act(facts, C, cmd, at())); return this; },
+    wait(min: number) { now += min * 60_000; facts = facts.concat(settle(facts, C, at())); return this; },
+    /** Later the same game day, at a wall-clock time (after midnight: the night after). */
+    clock(hhmm: string) { const [h, m] = hhmm.split(':').map(Number); now = Date.parse(see(facts, C, at()).day + 'T00:00:00+01:00') + ((h < 4 ? h + 24 : h) * 60 + m) * 60_000; return this; },
+    next(days = 1) { now = Date.parse(W.addDays(see(facts, C, at()).day, days) + 'T09:00:00+01:00'); return this; },
+    view() { return see(facts, C, at()); },
+    get at() { return at(); },
+  };
+}
+const MON = '2026-09-28';
+const plan = () => W.planWeek(C, [], MON, MON);
+const on = (job: string) => plan().filter(e => e.job === job).map(e => e.day);
+
+describe('Plan my week (PLANNER.md, fixed rules)', () => {
+  it('appointments and set days first, with their time', () => {
+    expect(plan().filter(e => e.job === 'lesson')).toEqual([expect.objectContaining({ day: '2026-10-01', time: '18:00' })]);
+    expect(on('meal')).toEqual(['2026-10-04']);
+    expect(weekdayOf(on('lesson')[0])).toBe(4);
+  });
+  it('each rhythm gets its enough: gym 4, Course 4, Spanish 2, the tank once a fortnight', () => {
+    expect(on('gym')).toHaveLength(4);
+    expect(on('course')).toHaveLength(4);
+    expect(on('spanish')).toHaveLength(2);
+    expect(on('tank')).toHaveLength(1);
+  });
+  it('the gym never two days running where it can be avoided', () => {
+    const d = on('gym').map(x => Date.parse(x) / 864e5);
+    for (let i = 1; i < d.length; i++) expect(d[i] - d[i - 1]).toBeGreaterThan(1);
+  });
+  it('no day above a Normal day’s size, and one lighter day', () => {
+    const load = new Map<string, number>();
+    for (const e of plan()) if (!e.time) load.set(e.day, (load.get(e.day) ?? 0) + 1);
+    for (const n of load.values()) expect(n).toBeLessThanOrEqual(W.PLAN_DAY);
+    expect(plan().filter(e => weekdayOf(e.day) === 6).length).toBeLessThanOrEqual(1);
+  });
+  it('avoided one-offs early in the week', () => {
+    for (const j of ['cat', 'post']) expect(weekdayOf(on(j)[0])).toBeLessThanOrEqual(2);
+  });
+  it('planned mid-week: only the days left, and nothing already done is planned again', () => {
+    const p = player('2026-09-30T09:00:00+01:00').do({ do: 'open' }).do({ do: 'done', job: 'gym' });
+    const e = W.planWeek(C, p.facts, MON, '2026-09-30');
+    expect(e.every(x => x.day >= '2026-09-30')).toBe(true);
+    expect(e.filter(x => x.job === 'gym').length).toBeLessThanOrEqual(3);
+  });
+});
+
+describe('How the week drives Today', () => {
+  it('without a plan, Today works exactly as before', () => {
+    expect(player().do({ do: 'open' }).view().slate).toEqual(['course', 'gym', 'spanish']);
+  });
+  it('Today starts from today’s plan', () => {
+    const v = player().do({ do: 'open' }).do({ do: 'planWeek', week: MON }).view();
+    const today = plan().filter(e => e.day === MON).map(e => e.job);
+    expect(v.slate.slice(0, today.length)).toEqual(today);
+    expect(v.next?.job).toBe(today[0]);
+  });
+  it('capacity overrides the plan, but an appointment stays on a Low day (P10)', () => {
+    const p = player('2026-10-01T09:00:00+01:00').do({ do: 'open' }).do({ do: 'planWeek', week: MON }).do({ do: 'capacity', capacity: 'low' });
+    const v = p.view();
+    expect(v.size).toBe(2);
+    expect(v.slate).toContain('lesson');
+    expect(v.times.lesson).toBe('18:00');
+  });
+  it('the past shows only what was done; an undone job is re-placed on a later day below its size, or falls away', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'planWeek', week: MON });
+    const monday = plan().filter(e => e.day === MON).map(e => e.job);
+    p.do({ do: 'done', job: monday[0] }).next();
+    p.do({ do: 'open' });
+    const wk = W.weekOf(C, p.facts, MON, '2026-09-29');
+    expect(wk.days[0].jobs.map(j => j.job)).toEqual([monday[0]]);
+    expect(wk.days[0].jobs.every(j => j.done)).toBe(true);
+    for (const d of wk.days.slice(1)) expect(d.jobs.filter(j => !j.time).length).toBeLessThanOrEqual(W.PLAN_DAY);
+  });
+  it('once a rhythm’s enough for the week is met, its remaining planned sessions leave', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'planWeek', week: MON });
+    for (let i = 0; i < 2; i++) { p.do({ do: 'done', job: 'spanish' }).next(); p.do({ do: 'open' }); }
+    const wk = W.weekOf(C, p.facts, MON, '2026-09-30');
+    expect(wk.days.slice(2).flatMap(d => d.jobs).filter(j => j.job === 'spanish' && !j.done)).toEqual([]);
+  });
+  it('moving, timing and taking a job off the week earn nothing', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'planWeek', week: MON });
+    const e = p.view() && W.planOf(p.facts, MON)!.find(x => x.job === 'gym')!;
+    const before = p.facts.length;
+    p.do({ do: 'movePlan', entry: e.id, day: '2026-10-03', time: '07:30' });
+    const added = p.facts.slice(before).map(f => f.type);
+    expect(added).toEqual(['planChanged']);
+    expect(W.planOf(p.facts, MON)!.find(x => x.id === e.id)).toEqual(expect.objectContaining({ day: '2026-10-03', time: '07:30' }));
+    p.do({ do: 'movePlan', entry: e.id, day: null });
+    expect(W.planOf(p.facts, MON)!.some(x => x.id === e.id)).toBe(false);
+  });
+  it('the forecast names days only from the plan, and only doing moves Dan', () => {
+    const p = player().do({ do: 'open' });
+    expect(p.view().forecast).toEqual([]);
+    p.do({ do: 'planWeek', week: MON });
+    const f = p.view().forecast;
+    expect(f.length).toBeGreaterThan(0);
+    expect(p.view().walked).toBe(0);
+  });
+});
+
+describe('Dan’s rhythms and the satchel', () => {
+  it('a new rhythm can be planned at once, and counts for Keys from its next full week (D-043 F7)', () => {
+    const p = player().do({ do: 'open' });
+    p.do({ do: 'saveRhythm', rhythm: { id: 'r-walk', job: 'walk', times: 1 }, job: { id: 'walk', name: 'A long walk', delve: false, length: 60, doneBy: 'dan' } });
+    expect(p.view().content.rhythms.some(r => r.id === 'r-walk')).toBe(true);
+    const keys = () => p.facts.filter(f => f.type === 'keyEarned' && f.rhythm === 'r-walk').length;
+    p.do({ do: 'done', job: 'walk' });
+    expect(keys()).toBe(0);
+    p.next(7).do({ do: 'open' }).do({ do: 'done', job: 'walk' });
+    expect(keys()).toBe(1);
+  });
+  it('Stop repeating ends future sessions only', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'done', job: 'gym' }).do({ do: 'stopRhythm', id: 'r-gym' });
+    expect(p.view().content.rhythms.some(r => r.id === 'r-gym')).toBe(false);
+    expect(p.view().done.has('gym')).toBe(true);
+  });
+  it('lines are never on Today until planned; ticking one off Today moves nothing', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['- hoover the hall', 'clear the desk', ''] });
+    const it0 = W.items(p.facts, MON);
+    expect(it0.map(i => i.name)).toEqual(['hoover the hall', 'clear the desk']);
+    expect(p.view().order).not.toContain(it0[0].id);
+    const walked = p.view().walked;
+    p.do({ do: 'tick', id: it0[0].id });
+    expect(p.view().walked).toBe(walked);
+    expect(W.items(p.facts, MON)[0].done).toBe(true);
+  });
+  it('a line accepted as one of today’s jobs moves the expedition when done', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['clear the desk'] });
+    const id = W.items(p.facts, MON)[0].id;
+    p.do({ do: 'planJob', job: id, day: MON });
+    expect(p.view().slate).toContain(id);
+    const walked = p.view().walked;
+    p.do({ do: 'tick', id });
+    expect(p.view().walked).toBeGreaterThan(walked);
+  });
+  it('lines untouched for three weeks go quietly to someday; nothing is deleted', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['fix the shelf'] });
+    expect(W.items(p.facts, W.addDays(MON, 20))[0].someday).toBe(false);
+    expect(W.items(p.facts, W.addDays(MON, 21))[0].someday).toBe(true);
+  });
+});
+
+describe('Camp, bedtime and the morning', () => {
+  it('goodnight by bedtime plays the week’s camp line; the morning after, its morning waits', () => {
+    const p = player().do({ do: 'open' }).clock('22:40').do({ do: 'goodnight' });
+    expect(p.view().night).toEqual({ kept: true, beat: 'b-w1.camp' });
+    p.next().do({ do: 'open' });
+    const v = p.view();
+    expect(v.morning?.beat).toBe('b-w1.morning');
+    expect(v.morning?.find).not.toBeNull();   /* a morning that confirms nothing brings a find too */
+    expect(v.suggested).toBe('normal');
+    expect(v.suggestedBy).toBe('bedtime');
+    p.do({ do: 'seen', what: 'morning', ref: v.morning!.seq });
+    expect(p.view().morning).toBeNull();
+  });
+  it('a late night loses nothing: no camp line, no morning, and tomorrow is suggested Low', () => {
+    const p = player().do({ do: 'open' }).clock('00:30').do({ do: 'goodnight' });
+    expect(p.view().night).toEqual({ kept: false, beat: null });
+    p.next().do({ do: 'open' });
+    expect(p.view().morning).toBeNull();
+    expect(p.view().capacity).toBe('low');
+    expect(p.view().suggestedBy).toBe('bedtime');
+  });
+  it('the camp line plays once a story week; later kept nights bring a find in the morning', () => {
+    const p = player().do({ do: 'open' }).clock('22:00').do({ do: 'goodnight' }).next().do({ do: 'open' }).clock('22:00').do({ do: 'goodnight' });
+    expect(p.view().night?.beat).toBeNull();
+    p.next().do({ do: 'open' });
+    expect(p.view().morning).toEqual(expect.objectContaining({ beat: null }));
+    expect(p.view().morning?.find).not.toBeNull();
+  });
+  it('bedtime is Dan’s to set', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'bedtime', time: '22:30' });
+    expect(p.view().bedtime).toBe('22:30');
+    p.clock('22:50').do({ do: 'goodnight' });
+    expect(p.view().night?.kept).toBe(false);
+  });
+  it('guesses confirmed by a morning after camp settle only when that morning plays (D-070 hand-over)', () => {
+    const p = sim(undefined, undefined, 'kept');
+    for (let w = 0; w < 4; w++) p.week('normal');
+    const st = p.st();
+    for (const m of C.story.marks.filter(x => x.confirmedBy?.endsWith('.morning'))) {
+      if (st.guessed.has(m.id) && st.played.has(m.confirmedBy!)) expect(S.markHeld(m, st)!.confirmed, m.id).toBe(true);
+    }
+    expect([...st.played].filter(x => /^b-w\d\.morning$/.test(x)).length).toBeGreaterThanOrEqual(3);
+    expect(st.played.has('b-w3.morning')).toBe(true);
+  });
+});
+
+describe('The daybook’s week close', () => {
+  it('written once, at the first opening of the next week: learned lines, the month’s so far, the glimpse', () => {
+    const p = sim().week('normal');
+    const v = p.view();
+    expect(v.close).toBeNull();   /* not until the next week is opened */
+    const s2 = sim().week('normal');
+    s2.week(['normal', 'away', 'away', 'away', 'away', 'away', 'away']);
+    const closes = s2.facts.filter(f => f.type === 'weekClosed');
+    expect(closes).toHaveLength(1);
+    const c = closes[0] as Extract<Fact, { type: 'weekClosed' }>;
+    expect(c.n).toBe(1);
+    expect(c.learned.length).toBeGreaterThan(0);
+    expect(c.learned.length).toBeLessThanOrEqual(3);
+    expect(c.soFar.length).toBeGreaterThanOrEqual(3);
+    expect(c.soFar.length).toBeLessThanOrEqual(5);
+    expect(c.glimpse).toBe('b-w1.close');
+  });
+  it('learned lines never repeat, and only lines whose beats have played show', () => {
+    const p = sim().week('normal').week('normal').week('normal').week('normal');
+    const learned = p.facts.filter(f => f.type === 'weekClosed').flatMap(f => (f as { learned: string[] }).learned);
+    expect(new Set(learned).size).toBe(learned.length);
+    const st = p.st();
+    for (const id of learned) expect(C.story.learned.find(l => l.id === id)!.req.every(r => S.met(st, r))).toBe(true);
+  });
+  it('a week with nothing done gets no page', () => {
+    const p = sim().week('normal').week('away').week('normal').week(['normal', 'away', 'away', 'away', 'away', 'away', 'away']);
+    expect(p.facts.filter(f => f.type === 'weekClosed').map(f => (f as { week: string }).week)).toEqual(['2026-09-28', '2026-10-12']);
+  });
+});
+
+describe('Absence and the deep push', () => {
+  it('three days away: "where you were", and the first day back suggested Low', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'done', job: 'gym' }).next(3).do({ do: 'open' });
+    const v = p.view();
+    expect(v.welcome).not.toBeNull();
+    expect(v.capacity).toBe('low');
+    expect(v.suggestedBy).toBe('back');
+    p.do({ do: 'seen', what: 'welcome', ref: v.welcome!.seq });
+    expect(p.view().welcome).toBeNull();
+  });
+  it('two days away is not an absence', () => {
+    const p = player().do({ do: 'open' }).next(2).do({ do: 'open' });
+    expect(p.view().welcome).toBeNull();
+    expect(p.view().capacity).toBe('normal');
+  });
+  it('the deep push called in the morning plays once a Normal day’s jobs are done', () => {
+    const p = sim().week('normal');
+    /* the sim's week-1 log, then a High morning in week 2 */
+    const facts = p.facts.slice();
+    const at = '2026-10-06T09:00:00+01:00';
+    let log = facts.concat(act(facts, C, { do: 'open' }, at));
+    log = log.concat(act(log, C, { do: 'capacity', capacity: 'high' }, at));
+    const v = see(log, C, at);
+    expect(S.nextDeep(C.story, S.storyState(log, C.story))).not.toBeNull();
+    expect(v.deepOffer).toBe(true);
+    log = log.concat(act(log, C, { do: 'callDeep' }, at));
+    expect(see(log, C, at).deepOffer).toBe(false);
+    let t = Date.parse(at);
+    for (let k = 0; k < 3; k++) {
+      const job = see(log, C, new Date(t + 3_600_000).toISOString().slice(0, 19) + '+01:00').next!.job;
+      t += 90 * 60_000;
+      log = log.concat(act(log, C, { do: 'done', job }, new Date(t + 3_600_000).toISOString().slice(0, 19) + '+01:00'));
+    }
+    expect(log.some(f => f.type === 'beatPlayed' && S.beatOf(C.story, f.id)?.kind === 'deep')).toBe(true);
+  });
+});

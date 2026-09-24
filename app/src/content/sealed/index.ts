@@ -10,7 +10,10 @@ import { words } from './words';
 import { finds } from './finds';
 import { passages } from './passages';
 import { teasers } from './teasers';
-import { learned, soFar, openQuestions } from './weekclose';
+import { learned, soFar as soFarBare, soFarLines, openQuestions as questionsBare, openQuestionReq } from './weekclose';
+
+const soFar = soFarBare.map(m => ({ ...m, items: soFarLines.filter(l => l.w === m.w) }));
+const openQuestions = questionsBare.map(q => ({ ...q, req: openQuestionReq[q.id] ?? [] }));
 
 export const story: Story = {
   version: 'mvp-1',

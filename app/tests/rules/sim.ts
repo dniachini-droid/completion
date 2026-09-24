@@ -10,7 +10,8 @@ import { content as C } from '../../src/content/world';
 
 export type Week = 'normal' | 'low' | 'high' | 'away';
 
-export function sim(start = '2026-09-28T08:00:00+01:00', pick: (m: Mark) => string = m => m.candidates![0]) {   /* a Monday */
+/** `bed`: say goodnight each evening, on time (22:45, before the 23:00 bedtime) or late (00:30). */
+export function sim(start = '2026-09-28T08:00:00+01:00', pick: (m: Mark) => string = m => m.candidates![0], bed?: 'kept' | 'late') {   /* a Monday */
   let facts: Fact[] = [];
   let now = Date.parse(start);
   const at = () => new Date(now + 3_600_000).toISOString().slice(0, 19) + '+01:00';
@@ -46,6 +47,7 @@ export function sim(start = '2026-09-28T08:00:00+01:00', pick: (m: Mark) => stri
       const e = see(facts, C, at()).runEnd; if (e) run({ do: 'seen', what: 'step', ref: e.seq });
     }
     answer();
+    if (bed) { now = Math.max(now, d0 + (bed === 'kept' ? 13.75 : 15.5) * 3_600_000); run({ do: 'goodnight' }); }
     now = d0 + 864e5;
   };
   return {

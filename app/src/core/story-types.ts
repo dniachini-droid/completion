@@ -196,8 +196,10 @@ export interface Passage { id: string; stretch: StretchId; req: string[]; until?
 export interface Teaser { id: string; w: number; req: string[]; until?: string; line: string; }
 
 export interface WeekCloseLine { id: string; w: number; req: string[]; line: string; }
-export interface SoFar { id: string; /** The first week close of this month (by story week). */ w: number; lines: string[]; }
-export interface OpenQuestion { id: string; w: number; line: string; }
+export interface SoFar { id: string; /** The first week close of this month (by story week). */ w: number; lines: string[];
+  /** The lines with their own ids and conditions: each shows only if its beats have played (the first five that have). */
+  items?: WeekCloseLine[]; }
+export interface OpenQuestion { id: string; w: number; line: string; /** The beats it needs. */ req?: string[]; }
 
 export interface Story {
   version: string;

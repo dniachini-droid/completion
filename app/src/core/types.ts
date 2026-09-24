@@ -22,6 +22,8 @@ export interface Job {
   doneBy: 'enough' | 'dan';
   /** The tiny physical first step "I can't start" offers (TOOLS.md). */
   firstStep?: string;
+  /** A line from the satchel or the week (TOOLS §2): offered on Today only when planned for the day. */
+  item?: boolean;
 }
 
 /** What repeats (PLANNER.md → Rhythms; DATA_MODEL.md → Rhythm). Dan's own data; editing arrives with the planner (slice 4). */
@@ -44,6 +46,8 @@ export interface Content {
   jobs: Job[];
   rhythms: Rhythm[];
   story: Story;
+  /** The content as shipped, before Dan's edits (set by `live`, core/week.ts). */
+  base?: Content;
 }
 
 /** One entry in the fact log (ARCHITECTURE.md → How state works). Appended, never edited. */
@@ -62,7 +66,7 @@ export type FactBody =
   | { type: 'delveEnded'; job: string; minutes: number; how: 'ranOut' | 'finishedHere'; run: number }
   | { type: 'jobDone'; job: string; minutes: number }
   | { type: 'cantStartUsed'; job: string }
-  | { type: 'seen'; what: 'step' | 'arrival'; ref: number }
+  | { type: 'seen'; what: 'step' | 'arrival' | 'morning' | 'welcome'; ref: number }
   /* what the world gave (worked out once, then kept) */
   | { type: 'stepsGained'; minutes: number; job: string; run?: number }
   | { type: 'dayCompleted' }
@@ -71,12 +75,31 @@ export type FactBody =
   | { type: 'beatPlayed'; id: string; job?: number; passage?: string }
   | { type: 'keyEarned'; rhythm: string }
   | { type: 'sealOpened'; seal: string }
-  | { type: 'findGiven'; id: string; why: 'avoided' | 'switching' | 'chamber' | 'camp' | 'surplus'; job?: number }
+  | { type: 'findGiven'; id: string; why: 'avoided' | 'switching' | 'chamber' | 'camp' | 'surplus' | 'morning'; job?: number }
   | { type: 'recordShown'; id: string }
   | { type: 'storyWeekBegan'; w: number }
   /* Dan's small choices on a beat (never gating) and his guesses at marks */
   | { type: 'markGuessed'; mark: string; guess: string }
   | { type: 'choiceMade'; beat: string; pick: number }
   | { type: 'recordOpened'; id: string }
+  /* the week and the gaps (slice 4): Dan's own rhythms and lines, the plan, bedtime, the week close, absence */
+  | { type: 'rhythmSaved'; rhythm: Rhythm; job: Job }
+  | { type: 'rhythmStopped'; id: string }
+  | { type: 'itemAdded'; id: string; name: string }
+  | { type: 'itemTicked'; id: string }
+  | { type: 'itemDropped'; id: string }
+  | { type: 'planMade'; week: string; entries: PlanEntry[] }
+  | { type: 'planChanged'; entry: string; day: string | null; time?: string | null }
+  | { type: 'planAdded'; entry: PlanEntry }
+  | { type: 'bedtimeSet'; time: string }
+  | { type: 'goodnight'; kept: boolean }
+  | { type: 'deepCalled' }
+  | { type: 'weekClosed'; week: string; n: number; learned: string[]; soFar: string[]; glimpse: string | null; seals: string[] }
+  | { type: 'closeRead'; week: string }
+  | { type: 'offerAnswered'; week: string }
+  | { type: 'welcomed'; since: string; question: string | null }
+
+/** One job placed on a day of the week plan (PLANNER.md). A forecast: moving it earns nothing and loses nothing. */
+export interface PlanEntry { id: string; job: string; day: string; time?: string; }
 
 export type FactOf<T extends FactBody['type']> = Fact & Extract<FactBody, { type: T }>;
