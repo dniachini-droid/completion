@@ -97,3 +97,13 @@ Two blockers, six should-fixes, five nits; all applied.
 - **K6 and the list, placed exactly.** K6 is cut low on the first door's upper face, beside its count (41.A). The list's column begins high on the same face with room left at its top (the head is cut at week 50) and grows down toward K6, so at week 51 the five names and the empty ring sit just over it. "The wall beside the jamb" is dropped everywhere: one face.
 - **The Engineer, reconciled with the new argument:** he let a reader be loud because one who learns LOUD is nearer to one who can finish; it cost one man and a gallery, which is exactly what he fears the chain will do by accident. He has never said so (an omission). CHARACTERS §1.
 - Nits: "cuts it anyway" → "cuts it" (the answering word is what he asks for, not defiance); "the same four taps" → "the same taps" (the answering word has three marks); word count "about 390" everywhere (393); a tap between 48.A and 49.A shows the full count only; REVELATION_MAP's week 39 teaser now matches ARR45's third-person wording.
+
+---
+
+## 3. Before → now for story weeks 1–6 (D-053)
+
+**Answer for the Dan-facing tracker: no.**
+
+**Why (sealed).** Every re-rendering in weeks 1–6 is a *fill*, not a *turn*: a glyph becomes a word (LAMP and FIRE in S1; HERE and DOOR in S1 at week 3's morning; K1's *lit [ ]* → *Lit.* at week 5; the formula's ONCE, ring, ONE at 5.A; S2 and V2's *ate [ ]* with EAT at week 6). An old reading faded above a new one would show a bracket above a word, which is no before-and-after at all. The one real reversal inside the six weeks is a wrong guess being struck (the tempting candidate for the hook-and-drop, dying at 5.3; any other rejected guess), and that is already the marks screen's one-line beat (SCRIPT §9; ARR1 5.3 notes), with the record re-surfaced in its new reading. R2 (the wall is hers) changes what the wall *means*, not what it *says*: nothing to render.
+
+**When it will be needed.** The first reading that turns an old sentence into something else is **NOT, story week 9** (R4: S2 *he ate [not]*, S4 and V2 *he held me / us [not]*, X-foreman, the mule line and the lintels, at once, with her *emphasis* note turning beside them). Before → now must be built before story week 9's content ships (Phase 10, about three weeks after the test ends, since the story runs at most one story week per calendar week). The week 9 turn is exactly what BALANCING §7 describes: her *held me* faded above *held me [not]*, one record a visit, only when Dan chooses to look.
