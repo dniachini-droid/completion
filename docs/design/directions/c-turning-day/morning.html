@@ -43,7 +43,7 @@ body { --pool-x: 34%; --pool-y: 60%; }
 .more { display:flex; justify-content:center; gap:4px; margin-top:2px; border-top:1px solid rgba(var(--cold-rgb),.14); padding-top:2px; }
 .more a { min-height:44px; padding:0 12px; display:inline-flex; align-items:center; font-family:var(--life); font-size:16px; color:var(--ink-2); }
 .more span { color:var(--ink-3); display:inline-flex; align-items:center; }
-.more .st { display:none; } body.v-done .more .st { display:inline-flex; }
+.more .st { display:none; } body.v-done .more .st, body.v-done .more a.st.done, body.v-done .more span.st.done { display:inline-flex; }
 .st { display:none; }
 body.v-early .st.early, body.v-later .st.later, body.v-done .st.done { display:revert; }
 body.v-early .st.early.flex, body.v-later .st.later.flex, body.v-done .st.done.flex { display:flex; }
