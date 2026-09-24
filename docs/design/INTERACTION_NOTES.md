@@ -9,7 +9,7 @@
 - `prefers-reduced-motion`: every animation jumps to its settled state.
 
 ## The morning
-One tap to start: **Begin** opens the delve-length dial with 25 minutes already set, so starting still needs no decision. Swap and "I can't start" are one tap away. After day complete, morning shows the day as done ("To camp"), not a next job.
+Starting needs no decision: **Begin** on a short job starts a single 25-minute delve at once; a job that takes hours (the Course) opens the run screen already set from the job (e.g. 2 delves of 25), so it is one more tap on Begin. Swap and "I can't start" are one tap away. After day complete, morning shows the day as done ("To camp"), not a next job.
 
 ## Setting the delve's length (D-033, Dan's pick: the dial)
 - A ring with four stops: **25, 30, 45, 60 minutes**. Drag the glowing handle round, tap a number, or use the keys.
