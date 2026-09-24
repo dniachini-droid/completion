@@ -654,3 +654,12 @@
 - **Alternatives:** wait for Apple (loses days of feel-testing); Netlify Drop (Dan would have to upload a zip from his phone); GitHub Pages (the repository is private).
 - **Consequences:** on the web link the delve's end cannot sound with the phone locked; it chimes if the page is open and shows the end when Dan comes back. The save is the browser's own storage (throwaway). Both are recorded in `technical/PROTOTYPE_NOTES.md` and go away with the TestFlight build.
 - **Reversible:** Yes.
+
+## D-065 — The heart felt great; Phase 8 closed; Phase 9 (first playable) opened (Dan's call)
+- **Date:** 2026-09-24
+- **Context:** Dan played the heart on the web link (D-064). His words: it "ran beautifully"; how it looked "was beautiful"; the slice "was great". Only the timer could be used, so it was too small to test the game's functions. "We don't need to make any more changes. I think we just need to actually build the app now."
+- **Decision (Dan):** no fix round on the heart; close Phase 8 and build the whole app (the MVP's slices 2–4, `product/MVP.md` → build order).
+- **Deviation (recorded, rule 18):** Phase 8's exit criteria asked for all five trials first. Trials (a) and the heart's feel pass; **trials (b) the delve's end with the phone locked, (c) real-app feel and (d) the cloud-Mac pipeline are carried into Phase 9**, done on the first TestFlight build as soon as Dan's Apple setup is finished (`technical/APPLE_SETUP.md`, sittings 2 and 3). The build is already prepared for them: the save is kept by the phone in the app, and a rehearsal brings the delve's alert in seconds. If (b) or (c) fails badly, the option C fallback (D-057) still applies; the rules and data carry over unchanged.
+- **The story (D-035, D-060) is unchanged:** the sealed story-fix session still comes before the first playable's **content** goes in. Slices 2–4 are built now on throwaway content and invented places, so the story session can run in its own session at any point alongside; real content is loaded only after it.
+- **Consequences:** `CLAUDE.md` and `CURRENT_STATE.md` move to Phase 9; the Phase 8 work is merged into `main`. The heart stays as built (the critic's pass was stopped unread).
+- **Reversible:** Yes; the trials still gate the personal alpha (Phase 10).

@@ -4,24 +4,25 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-24 (Phase 8: the heart slice built as a web link while Apple setup waits, D-064)_
+_Last updated: 2026-09-24 (Phase 8 closed; Phase 9 opened, D-065)_
 
 ## Current phase
 
-**PHASE 8 — PROTOTYPE** (Phase 7 closed 2026-09-24, D-060)
+**PHASE 9 — FIRST PLAYABLE** (Phase 8 closed 2026-09-24, D-065)
 
 ## Current objective
 
-Prototype the central interaction on the agreed stack (MASTER_BRIEF §67; `technical/TECH_DECISIONS.md`): feel, clarity, reward timing, friction, beauty. **First the five trials** (`TECH_DECISIONS.md` → "Risks"), then **the heart** (`product/MVP.md` → build order, slice 1) on throwaway data, as a web link on Dan's phone and then through TestFlight. Placeholders are fine; any temporary ugliness is recorded so it never becomes permanent by accident.
+Build the whole MVP (`product/MVP.md` → build order): **slice 2** the Quiet answers (the map at two levels, records, a sealed thing in view, rhythms and Keys, finds), **slice 3** learning the Cut (signs and guessing, the first word, the cutting cinematic, the stair), **slice 4** the week and the gaps (the planner, the satchel, camp and bedtime, the daybook week close, absence). Each slice thin, complete and good-feeling before the next (rule 13), on the heart as built, first on **throwaway content and invented places**; the real story content and paintings go in only after the sealed story-fix session. Dan sees each slice on the web link as it lands, then on TestFlight.
 
 ## Resume here (next session)
-1. **Dan:** play the heart on the web link: https://claude.ai/artifact/TcH91A1SxeEvEnLJbRE4pi (private; open it on the phone). Use it on real jobs for a day or two. To feel a whole day in a few minutes, tap **Prototype → Start a rehearsal** (minutes pass 60 times faster, on a separate save). Then tell Claude, in any words: what felt good, what felt like a chore, what was unclear, and whether wanting to reach the next place made starting any easier.
-2. **Waiting on Dan (whenever he's at a computer):** Apple setup sitting 2 (`technical/APPLE_SETUP.md`, A–E; the key at **Admin**, four secrets including the Team ID). Then he says "Apple setup done", and Claude starts the TestFlight workflow and watches it (fallback: fastlane match or Codemagic, D-063).
-3. Then, from TestFlight: trials (b) the delve's end with the phone locked, on silent, in a Focus, and (c) the feel, now on the heart itself. Record results in `technical/PROTOTYPE_NOTES.md`.
-4. Claude, after Dan's notes: one round of fixes to the heart; then Phase 8 can close (exit criteria below).
-5. **The sealed story-fix session** (D-035, D-060), in its own session: after the prototype, before the first playable's content goes in.
+1. **Claude:** build slice 2 on throwaway content (read `game/GAME_DESIGN.md`, `game/BALANCING.md`, `game/TOOLS.md` and the D mock-ups `map.html`, `record.html` first); publish it on the web link for Dan.
+2. **The sealed story-fix session** (D-035, D-060): in its **own** session, any time now, and before real content goes in. Dan starts it by pasting: "Read CLAUDE.md and docs/CURRENT_STATE.md on branch main, then run the sealed story-fix session (D-035). Keep everything sealed from me." Claude in that session never shows Dan the story.
+3. **Waiting on Dan (whenever he's at a computer):** Apple setup sitting 2 (`technical/APPLE_SETUP.md`), then "Apple setup done"; Claude starts the TestFlight build; Dan does sitting 3 (the two ten-minute checks, trials b and c).
 
-## Last session (2026-09-24, Phase 8, the heart)
+## Last session (2026-09-24, Phase 8 close)
+Dan on the heart: it "ran beautifully", looked beautiful, "was great"; too small to test much (only the timer), so no more changes: build the app (D-065). Phase 8 closed with trials (b)–(d) carried into Phase 9 for the first TestFlight build. Before that, the app build was readied for them: the save is kept by the phone (Capacitor Preferences, not the browser's storage), a rehearsal now also brings the locked-phone alert 60 times sooner, and Dan's phone checklist is `APPLE_SETUP.md` → Sitting 3.
+
+## Earlier (2026-09-24, Phase 8, the heart)
 Apple setup blocked (the developer pages don't work on Dan's phone), so Dan asked for the heart slice first, as a web link (D-064). Built on the agreed stack: the rules as pure code over a fact log (a run of delves worked out from timestamps, so a locked phone or a closed app loses nothing; steps, day complete and the arrival written once when they happen), with 28 rule tests; the screens ported from direction D (Today, the dial and run line, the delve with the approved tunnel and ring, the step, day complete and the arrival, "I can't start"); throwaway content on the three invented sample places. The whole flow was walked at 390 × 844 and 360 × 780 with pictures of every screen: no errors, no network requests. Published as one self-contained page at a private claude.ai link. Compromises (no locked-phone alert on the web, browser storage, stand-in job list, no camp or map yet) are in `technical/PROTOTYPE_NOTES.md`.
 
 ## Earlier (2026-09-24, Phase 8 start, second)
@@ -51,19 +52,28 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 
 ## Do NOT work on yet
 
-- Real story content or real places' paintings in the prototype: it uses throwaway data and invented places until the story-fix session (D-060).
-- Features beyond the heart slice before the trials pass (rule 13).
+- Real story content or real places' paintings: throwaway content and invented places until the sealed story-fix session is done (D-060).
+- A slice before the one before it feels good (rule 13); anything in `product/FIRST_PLAYABLE.md` → "Out".
 - Showing any sealed story content on a screen or in Dan-facing docs (D-015).
 - More story depth beyond what the playable needs (D-004). Pending: the sealed story-fix session (D-035, after the prototype and before the first playable's content, D-060; top priority: the late-game choice must never look like a promise the fixed story can't keep); week 6 of the sealed clue ledger (D-023); the "company at work" during a delve (later).
 - Optional, later: the zoomed-out whole-Site map mock-up.
 
-## Phase 8 exit criteria
+## Phase 9 exit criteria
 
-- [ ] The five trials done (`TECH_DECISIONS.md` → "Risks"); any failure answered (fallback: option C).
+- [ ] Slices 2, 3 and 4 built on the heart, each felt by Dan on his phone (`product/MVP.md` → build order).
+- [ ] Carried from Phase 8 (D-065): trials (b) the delve's end with the phone locked, (c) real-app feel, (d) a build through TestFlight.
+- [ ] The sealed story-fix session done (D-035, D-060); the real content for six story weeks and its paintings loaded (`product/MVP.md` → budget).
+- [ ] SQLite save with snapshot and migrations; the flow tests in CI (`TEST_STRATEGY.md`; `PROTOTYPE_NOTES.md` emptied of anything that must not reach the test).
+- [ ] MASTER_BRIEF §67–70's bar: persists state, survives restart, real quest flow, game consequence, genuine narrative, a discovery, basic failure and recovery, usable repeatedly. Claude tests technically, then Dan uses it.
+- [ ] Dan agrees to move to Phase 10 (personal alpha: the central test, on a fresh save).
+
+## Phase 8 (closed) exit criteria
+
+- [~] The five trials: (a) passed; (b)–(d) carried into Phase 9 (D-065).
 - [x] The painting kit's three invented sample places approved by Dan on his phone (D-062).
-- [ ] Dan's Apple setup done; a build reaches his phone through TestFlight. (Membership active; pipeline written, D-063; sitting 2 pending.)
-- [ ] The heart (slice 1) prototyped and felt on Dan's phone: open → one job → Begin → delve → back → Done → the step → day complete → arrival; state survives a restart. (Built and on the web link, D-064; waiting on Dan's play.)
-- [ ] Compromises recorded (`technical/PROTOTYPE_NOTES.md`, kept current); Dan agrees to move to Phase 9 (first playable).
+- [~] TestFlight: membership active, pipeline written (D-063); sitting 2 pending, carried into Phase 9 (D-065).
+- [ ] The heart (slice 1) prototyped and felt on Dan's phone: open → one job → Begin → delve → back → Done → the step → day complete → arrival; state survives a restart. (Dan: "great", D-065.)
+- [x] Compromises recorded (`technical/PROTOTYPE_NOTES.md`); Dan agrees to move to Phase 9 (D-065).
 
 ## Phase 7 (closed) exit criteria
 
@@ -128,6 +138,7 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 - 2026-09-24 — Phase 8: the painting kit and three sample places; `app/` skeleton; Apple steps for Dan (D-061).
 - 2026-09-24 — Trial (a) passed: Dan approves the samples; iPhone 16 Pro Max (D-062). Capacitor wrapper, trials screen, TestFlight pipeline (D-063).
 - 2026-09-24 — The heart slice built and published as a web link while Apple setup waits (D-064).
+- 2026-09-24 — **Phase 8 complete** (D-065): the heart felt great; trials (b)–(d) carried into Phase 9. Merged into `main`. Phase 9 opened.
 
 ## Unresolved blockers
 
@@ -138,4 +149,4 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 
 ## Recommended next action
 
-**Dan:** play the heart on the web link (above), then tell Claude how it felt. In a new session, paste: "Read CLAUDE.md and docs/CURRENT_STATE.md on branch claude/heart-slice-web-link-npmuhq, then continue Phase 8. Here's how the heart felt: …" (and, once done at a computer, "Apple setup is done.")
+**Claude:** build slice 2 (the Quiet answers) on throwaway content. **Dan, in parallel:** start the sealed story-fix session in its own session (sentence above), and Apple setup when at a computer. To resume this build in a new session, paste: "Read CLAUDE.md and docs/CURRENT_STATE.md on branch claude/phase-8-continuation-ttngwy, then continue Phase 9."
