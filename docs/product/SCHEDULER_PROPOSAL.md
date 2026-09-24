@@ -1,6 +1,7 @@
 # Proposal: the week planner (a scheduler inside the game)
 
-> Written 2026-09-24 at Dan's request, for Dan and an outside review (ChatGPT) before anything is decided. **Not agreed yet.** Spoiler-free.
+> Written 2026-09-24 at Dan's request, for Dan and an outside review (ChatGPT) before anything is decided. Spoiler-free.
+> **Superseded:** reviewed and reconciled (`product/SCHEDULER_REVIEW.md`, D-045). The current rules are in `game/PLANNER.md`. Kept as the version that was reviewed.
 > **Reviewer:** the context section below is all you need. Please say plainly what is weak, what conflicts with the principles quoted, and what you would cut. Questions for you are at the end.
 
 ---

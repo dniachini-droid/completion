@@ -37,6 +37,7 @@ For the days Dan has a list ("sort the flat before the visit").
 - **Later:** groups ("flat move").
 
 ## 3. Scheduling → *plotting a route* (after the first playable)
+> **Superseded by `game/PLANNER.md` (D-045, draft for Dan):** the week planner is now central and in the first playable. Its waypoints are a forecast only; the landmark for keeping a plan is dropped. The text below is the earlier light version.
 Optional planning ahead, for the things that have a time ("Spanish lesson Thursday 6 pm"). The best-evidenced tool here: planning *when and where* reliably helps people follow through.
 - Dan can **plot** a job onto a day, or a day and time. On the map it becomes a **waypoint** on the route ahead. Only the next 7 days of waypoints show, so it never looks like a filled-in calendar.
 - That day, the plotted job leads the morning suggestion. Reaching a waypoint Dan plotted leaves a small landmark on the map.
