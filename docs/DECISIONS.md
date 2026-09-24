@@ -354,3 +354,11 @@
 - **Alternatives:** a fresh Claude critic with no spoiler risk (offered; Dan chose the outside review).
 - **Risks:** Dan sees the story by accident; ChatGPT leaks detail into its chat reply. Mitigated by the warning and the instructions, not eliminated.
 - **Reversible:** The review is; a spoiler is not.
+
+## D-035 — Acting on the outside story review (plan only; spoiler-free)
+- **Date:** 2026-09-24
+- **Context:** ChatGPT's review of the sealed story (D-034) came back; Dan pasted it without reading. Detail and Claude's item-by-item verdicts: `narrative/sealed/REVIEW_EXTERNAL_1.md`.
+- **Decision:** Claude agrees with nearly all of it (one point only in part). No rewrite. The fixes fall in three places: **a short sealed story session** before the first playable is built (a handful of precision fixes to the late story's presentation, one character's reasoning, how one mechanism is explained in the fiction, one location detail, and wording of two internal rules); **Phase 5–6 product design** (a formal memory and recap system so a year-long story delivered in small pieces stays remembered, a clear before/after for re-reading, a guaranteed reward rhythm, and high-energy days always unlocking something real); and **the first playable's test plan** (does Dan remember what he learns, and does it feel like discovery rather than homework). A second small story pass follows the playtest.
+- **Alternatives:** make every change now (not needed before the playable, and pacing changes should wait for the playtest); ignore it (the points are well founded).
+- **Consequences:** Listed in `CURRENT_STATE.md` for the next phases. One line of the open game bible about how the doors fill may be reworded, without changing anything Dan already knows.
+- **Reversible:** Yes, until clues are planted in the playable.
