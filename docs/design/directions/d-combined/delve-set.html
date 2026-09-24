@@ -9,7 +9,8 @@
 <link rel="stylesheet" href="direction.css">
 <style>
 /* delve-set: the moment after Begin. Dan chose the dial (D-033; the three tried are in delve-set-variants.html).
-   Four stops only: 25, 30, 45, 60, a quarter-turn apart. Research: design/research/DELVE_TIMER_CONTROLS.md
+   Four stops only: 25, 30, 45, 60, on a 60-minute face: the ring fills in proportion (25 = 5/12, 30 = half, 45 = three quarters,
+   60 = full), each stop label at its own angle, 60 at the top where the ring starts and ends. Research: design/research/DELVE_TIMER_CONTROLS.md
    One centre axis: the dial, its number, the stops, the route, the words and the button all share the column's centre. */
 
 body { --scrim-top-h: 300px; --scrim-bottom-h: 52%; }
@@ -66,7 +67,7 @@ body { --scrim-top-h: 300px; --scrim-bottom-h: 52%; }
 .dial .pulse.go { animation: pulse .6s var(--ease); }
 @keyframes pulse { 0% { opacity:.95; scale: .6; } 100% { opacity:0; scale: 2.8; } }
 
-/* the stops: top, right, bottom, left of the ring, all the same distance out (tap them, too) */
+/* the stops: at their minutes on a 60-minute face (25 at 150°, 30 at 180°, 45 at 270°, 60 at the top), all the same distance out (tap them, too) */
 .stop { position:absolute; left:0; top:0; width:48px; height:44px; margin:-22px 0 0 -24px; display:flex; align-items:center; justify-content:center;
   font-family: var(--life); font-size: 17px; color: var(--ink-3); font-variant-numeric: tabular-nums lining-nums;
   transform: rotate(var(--a)) translateY(calc((var(--R) / 2 + 30px) * -1)) rotate(calc(var(--a) * -1));
@@ -76,14 +77,16 @@ body { --scrim-top-h: 300px; --scrim-bottom-h: 52%; }
 .stop:focus-visible { outline: 1px solid var(--edge); outline-offset: -4px; }
 .stops { --R: min(224px, 56vw, 27vh); position:absolute; left:0; top:0; }
 
-/* the route: the column's full width, markers evenly spaced, all centred on one line */
+/* the route: the column's full width always drawn, markers evenly spaced and dim until reached, all centred on one line */
 .route { position:absolute; left:0; right:0; bottom: 0; height: 32px; pointer-events:none; }
 .route svg { width:100%; height:100%; overflow:visible; display:block; }
 
 /* where it takes you */
 .reach { text-align:center; min-height: 104px; margin-top: 14px; }
+.reach h2 { white-space: normal; text-wrap: balance; max-width: 16em; margin-left:auto; margin-right:auto; min-height: 2.5em; line-height: 1.25;
+  display:flex; align-items:center; justify-content:center; }
 .reach .label-line { justify-content:center; }
-.reach h2 { margin-top: 8px; font-size: 22px; letter-spacing: .12em; padding-left: .12em; white-space: nowrap; color: #eceaff;
+.reach h2 { margin-top: 8px; font-size: 22px; letter-spacing: .12em; padding-left: .12em; color: #eceaff;
   text-shadow: 0 -1px 0 rgba(0,0,0,.9), 0 0 16px rgba(var(--violet-rgb), .7), 0 0 44px rgba(var(--violet-rgb), .35); }
 .reach p { margin-top: 4px; min-height: 24px; }
 .reach .swap { transition: opacity .28s var(--ease), transform .28s var(--ease); }
@@ -97,7 +100,7 @@ body { --scrim-top-h: 300px; --scrim-bottom-h: 52%; }
 @media (max-height: 800px) {
   .job h1 { font-size: 24px; }
   .reach { min-height: 96px; margin-top: 10px; }
-  .reach h2 { font-size: 20px; }
+  .reach h2 { font-size: 19px; }
   .go .soft { margin-bottom: 10px; }
 }
 </style>
@@ -128,20 +131,20 @@ body { --scrim-top-h: 300px; --scrim-bottom-h: 52%; }
   <div class="mid stage col rise d2" id="stage">
     <div class="stage-in">
       <div class="dialwrap">
-        <div class="dial" id="dial" role="slider" tabindex="0" aria-label="Length of the delve" aria-valuemin="25" aria-valuemax="60" aria-valuenow="25" style="--p:.25">
+        <div class="dial" id="dial" role="slider" tabindex="0" aria-label="Length of the delve" aria-valuemin="25" aria-valuemax="60" aria-valuenow="25" style="--p:.4167">
           <div class="halo"></div><div class="disc"></div>
           <div class="band track"></div>
           <div class="glow wide"><div class="band fill"></div></div>
           <div class="glow"><div class="band fill"></div></div>
           <div class="band fill"></div>
-          <i class="notch" data-m="25" style="--a:90deg"></i><i class="notch" data-m="30" style="--a:180deg"></i><i class="notch" data-m="45" style="--a:270deg"></i><i class="notch" data-m="60" style="--a:360deg"></i>
+          <i class="notch" data-m="25" style="--a:150deg"></i><i class="notch" data-m="30" style="--a:180deg"></i><i class="notch" data-m="45" style="--a:270deg"></i><i class="notch" data-m="60" style="--a:360deg"></i>
           <div class="pulse"></div>
           <div class="handle"></div>
           <div class="inner"><span class="num">25</span><span class="unit">minutes</span></div>
         </div>
         <div class="stops">
           <button class="stop" type="button" data-m="60" style="--a:0deg" aria-label="60 minutes">60</button>
-          <button class="stop" type="button" data-m="25" style="--a:90deg" aria-label="25 minutes">25</button>
+          <button class="stop" type="button" data-m="25" style="--a:150deg" aria-label="25 minutes">25</button>
           <button class="stop" type="button" data-m="30" style="--a:180deg" aria-label="30 minutes">30</button>
           <button class="stop" type="button" data-m="45" style="--a:270deg" aria-label="45 minutes">45</button>
         </div>
@@ -152,13 +155,12 @@ body { --scrim-top-h: 300px; --scrim-bottom-h: 52%; }
 
   <section class="bottom col">
     <div class="reach rise d3" id="reach" aria-live="polite">
-      <div class="label-line centred swap" id="rk">Towards</div>
-      <h2 class="carve swap" id="rp">The Salt Gallery</h2>
-      <p class="soft on-scene swap" id="rl">where the passage is heading</p>
+      <div class="label-line centred">How far</div>
+      <h2 class="carve swap" id="rp">Towards the Salt Gallery</h2>
     </div>
     <div class="go rise d4">
       <p class="soft on-scene">Then a breather: <b>5 minutes</b>.</p>
-      <a class="btn" id="start" href="delve.html">Start the delve</a>
+      <a class="btn" id="start" href="delve.html#cat-25">Start the delve</a>
     </div>
   </section>
 </div>
@@ -185,12 +187,13 @@ body { --scrim-top-h: 300px; --scrim-bottom-h: 52%; }
 (function(){
   'use strict';
   var STOPS = [25, 30, 45, 60];
-  var ANG = { 25: 90, 30: 180, 45: 270, 60: 360 };   /* a quarter-turn apart: symmetric round the ring */
+  var ANG = { 25: 150, 30: 180, 45: 270, 60: 360 };   /* a 60-minute face: 6° a minute, from the top */
+  /* only the open first region: never past the sealed lintel */
   var REACH = {
-    25: ['Towards', 'The Salt Gallery', 'where the passage is heading'],
-    30: ['Towards', 'The Salt Gallery', 'and a little way beyond it'],
-    45: ['Further', 'The head of the stair', 'past the Salt Gallery, to where the stair begins'],
-    60: ['Further', 'Somewhere unlit', 'somewhere you haven’t been yet']
+    25: 'Towards the Salt Gallery',
+    30: 'The Salt Gallery, and a little past it',
+    45: 'On to the Survey Cut',
+    60: 'The far end of the Survey Cut'
   };
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var NS = 'http://www.w3.org/2000/svg';
@@ -202,10 +205,10 @@ body { --scrim-top-h: 300px; --scrim-bottom-h: 52%; }
   function el(tag, attrs, parent) { var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
   function buzz(ms) { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {} }
   function retrigger(node, cls) { node.classList.remove(cls); void node.offsetWidth; node.classList.add(cls); }
-  /* minutes ↔ angle, piecewise between the stops */
+  /* minutes ↔ angle: 6° a minute (and a piecewise map for the route) */
   function lerpMap(x, xs, ys) { for (var i = 0; i < xs.length - 1; i++) if (x <= xs[i + 1]) return ys[i] + (ys[i + 1] - ys[i]) * (x - xs[i]) / (xs[i + 1] - xs[i]); return ys[ys.length - 1]; }
-  function angOf(v) { return lerpMap(v, [25, 30, 45, 60], [90, 180, 270, 360]); }
-  function minOf(a) { return lerpMap(a, [90, 180, 270, 360], [25, 30, 45, 60]); }
+  function angOf(v) { return v * 6; }
+  function minOf(a) { return a / 6; }
 
   /* the painted hall behind */
   try { Hall.draw(document.getElementById('hall'), { cam: { y: 1.7, pitch: -3, f: .9, cy: .4 }, cups: 'dark', lintel: 'sealed', gold: .1, res: .75 }); } catch (e) {}
@@ -214,8 +217,8 @@ body { --scrim-top-h: 300px; --scrim-bottom-h: 52%; }
   var stopEls = Array.prototype.slice.call(document.querySelectorAll('.stop'));
   stopEls.forEach(function (b) { b.addEventListener('click', function () { settle(+b.dataset.m, true); }); });
 
-  /* the route: you → the Salt Gallery → the head of the stair → somewhere unlit.
-     Four markers, evenly spaced across the column, each centred on the one line. */
+  /* the route: you → the Salt Gallery → the Survey Cut → its far end. Arches only (never the stair: it lies past the sealed lintel).
+     The whole bar always shows, so it reads centred; each place is dim until the lit line reaches it. */
   var route = document.getElementById('route'), R = null;
   function drawRoute() {
     route.innerHTML = '';
@@ -225,33 +228,33 @@ body { --scrim-top-h: 300px; --scrim-bottom-h: 52%; }
     var d = el('defs', {}, route);
     d.innerHTML = '<linearGradient id="rg" gradientUnits="userSpaceOnUse" x1="0" x2="' + W + '" y1="0" y2="0"><stop offset="0" stop-color="#8f86ff" stop-opacity=".25"/><stop offset="1" stop-color="#ece9ff"/></linearGradient>' +
       '<radialGradient id="rn"><stop offset="0" stop-color="#fff"/><stop offset=".4" stop-color="#b9b3ff" stop-opacity=".7"/><stop offset="1" stop-color="#8f86ff" stop-opacity="0"/></radialGradient>';
-    var dim = el('path', { d: 'M' + xs[0] + ' ' + y + ' H' + xs[3], stroke: 'rgba(186,186,255,.16)', 'stroke-width': 1, 'stroke-dasharray': '2 5' }, route);
+    el('path', { d: 'M' + xs[0] + ' ' + y + ' H' + xs[3], stroke: 'rgba(186,186,255,.3)', 'stroke-width': 1 }, route);
     var lit = el('path', { stroke: 'url(#rg)', 'stroke-width': 1.6, 'stroke-linecap': 'round', style: 'filter:drop-shadow(0 0 4px rgba(143,134,255,.9))' }, route);
-    /* each glyph is drawn in a 16×16 box centred on (0,0), so all four share one centre line */
-    function glyph(x, dd, attrs) { var g = el('g', { transform: 'translate(' + x + ' ' + y + ')' }, route); el('path', Object.assign({ d: dd, fill: 'none', stroke: '#e9e6ff', 'stroke-width': 1.2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, attrs || {}), g); return g; }
-    el('circle', { cx: xs[0], cy: y, r: 3.2, fill: '#ffd27a', style: 'filter:drop-shadow(0 0 5px #f2c170)' }, route);
+    /* each glyph is drawn in a 16×16 box centred on (0,0), so all share one centre line; a dark fill hides the track behind it */
     var ARCH = 'M-6 8 V-1 Q-6 -8 0 -8 Q6 -8 6 -1 V8';
-    var g25 = glyph(xs[1], ARCH);
-    var g45 = glyph(xs[2], 'M-7 -7 H-2.5 V-2.5 H2 V2 H7 V7');
-    var g60 = glyph(xs[3], ARCH, { stroke: 'rgba(210,208,255,.7)', 'stroke-dasharray': '2 3' });
+    function glyph(x) { var g = el('g', { transform: 'translate(' + x + ' ' + y + ')' }, route); el('path', { d: ARCH + ' Z', fill: '#0b0b1c', stroke: 'none' }, g); el('path', { d: ARCH, fill: 'none', stroke: '#e9e6ff', 'stroke-width': 1.2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, g); return g; }
+    el('circle', { cx: xs[0], cy: y, r: 3.2, fill: '#ffd27a', style: 'filter:drop-shadow(0 0 5px #f2c170)' }, route);
+    var gs = [glyph(xs[1]), glyph(xs[2]), glyph(xs[3])];
     var spark = el('circle', { cy: y, r: 10, fill: 'url(#rn)' }, route);
-    R = { xs: xs, y: y, dim: dim, lit: lit, g25: g25, g45: g45, g60: g60, spark: spark };
+    R = { xs: xs, y: y, lit: lit, gs: gs, spark: spark };
   }
   function renderRoute(v) {
     if (!R) return;
-    var xs = R.xs, x;
-    if (v <= 30) x = xs[1] + (xs[2] - xs[1]) * .3 * (v - 25) / 5;          /* 30: a little beyond the Gallery */
-    else if (v <= 45) x = xs[1] + (xs[2] - xs[1]) * (.3 + .7 * (v - 30) / 15);
-    else x = xs[2] + (xs[3] - xs[2]) * (v - 45) / 15;
+    var xs = R.xs;
+    /* 25: most of the way to the Gallery; 30: a little past it; 45: the Survey Cut; 60: its far end */
+    var x = lerpMap(clamp(v, 25, 60), [25, 30, 45, 60], [xs[0] + (xs[1] - xs[0]) * .8, xs[1] + (xs[2] - xs[1]) * .3, xs[2], xs[3]]);
+    if (v < 25) x = xs[0] + (xs[1] - xs[0]) * .8 * v / 25;
     R.lit.setAttribute('d', 'M' + xs[0] + ' ' + R.y + ' H' + x.toFixed(1));
     R.spark.setAttribute('cx', x.toFixed(1));
-    R.dim.setAttribute('opacity', (.6 + .4 * clamp((v - 27) / 10, 0, 1)).toFixed(2));   /* the whole bar always shows, so it reads centred; only the places wait */
-    R.g45.setAttribute('opacity', clamp((v - 33) / 10, 0, 1).toFixed(2));
-    R.g60.setAttribute('opacity', clamp((v - 48) / 12, 0, 1).toFixed(2));
+    R.gs.forEach(function (g, i) {
+      var gx = xs[i + 1], k = clamp(1 - (gx - x) / 14, 0, 1);   /* lights as the line arrives */
+      g.setAttribute('opacity', (.34 + .66 * k).toFixed(2));
+      g.style.filter = k > .5 ? 'drop-shadow(0 0 4px rgba(143,134,255,.9))' : '';
+    });
   }
 
   var nums = document.querySelectorAll('.num');
-  var reach = document.getElementById('reach'), rk = document.getElementById('rk'), rp = document.getElementById('rp'), rl = document.getElementById('rl');
+  var reach = document.getElementById('reach'), rp = document.getElementById('rp'), start = document.getElementById('start');
   var shownSnap = 25, swapT = null;
   function render() {
     var v = state.v, s = nearest(v);
@@ -261,15 +264,16 @@ body { --scrim-top-h: 300px; --scrim-bottom-h: 52%; }
     if (s !== shownSnap) { tick(s); shownSnap = s; }
     stopEls.forEach(function (b) { var m = +b.dataset.m; b.classList.toggle('on', m === s); b.classList.toggle('past', m < s); });
   }
-  function setWords(s) { var r = REACH[s]; rk.textContent = r[0]; rp.textContent = r[1]; rl.textContent = r[2]; reach.classList.toggle('new', s === 60); }
+  /* the delve starts on the job the dial was opened from, at this length */
+  function setWords(s) { rp.textContent = REACH[s]; reach.classList.toggle('new', s === 60); start.href = 'delve.html#cat-' + s; }
   function tick(s) {
     nums.forEach(function (n) { n.textContent = s; retrigger(n, 'tick'); });
     var pulse = dial.querySelector('.pulse'); pulse.style.setProperty('--a', ANG[s] + 'deg'); retrigger(pulse, 'go');
     buzz(8);
-    dial.setAttribute('aria-valuenow', s); dial.setAttribute('aria-valuetext', s + ' minutes, ' + REACH[s][2]);
+    dial.setAttribute('aria-valuenow', s); dial.setAttribute('aria-valuetext', s + ' minutes, ' + REACH[s]);
     clearTimeout(swapT);
-    [rk, rp, rl].forEach(function (n) { n.classList.add('out'); });
-    swapT = setTimeout(function () { setWords(s); [rk, rp, rl].forEach(function (n) { n.classList.remove('out'); }); }, reduce ? 0 : 180);
+    rp.classList.add('out');
+    swapT = setTimeout(function () { setWords(s); rp.classList.remove('out'); }, reduce ? 0 : 180);
   }
 
   /* settle: ease to a stop, with a small overshoot, like a detent */
@@ -290,7 +294,7 @@ body { --scrim-top-h: 300px; --scrim-bottom-h: 52%; }
     anim = requestAnimationFrame(f);
   }
 
-  /* drag round the ring. The quarter between 60 and 25 is a stop, so it never jumps across the top. */
+  /* drag round the ring. The empty arc from the top to 25 (0°–150°) is a stop, so it never jumps across the top. */
   function angleAt(e) {
     var r = dial.getBoundingClientRect(), dx = e.clientX - r.left - r.width / 2, dy = e.clientY - r.top - r.height / 2;
     var a = Math.atan2(dx, -dy) * 180 / Math.PI; if (a < 0) a += 360;
@@ -303,7 +307,7 @@ body { --scrim-top-h: 300px; --scrim-bottom-h: 52%; }
     dial.setPointerCapture(e.pointerId); dial.classList.add('dragging');
     function mv(ev) {
       var a = angleAt(ev).a, lastA = angOf(state.v);
-      if (a < 90) a = lastA > 225 ? 360 : 90;      /* in the top-right quarter: hold at whichever end you came from */
+      if (a < 150) a = lastA > 255 ? 360 : 150;    /* in the empty arc: hold at whichever end you came from */
       if (Math.abs(a - lastA) > 120) a = lastA;
       state.v = magnet(clamp(minOf(a), 25, 60)); render();
     }
@@ -324,7 +328,7 @@ body { --scrim-top-h: 300px; --scrim-bottom-h: 52%; }
   if (STOPS.indexOf(n) < 0) n = 25;
   state.v = n; state.snap = n; shownSnap = n;
   nums.forEach(function (x) { x.textContent = n; }); setWords(n);
-  dial.setAttribute('aria-valuenow', n); dial.setAttribute('aria-valuetext', n + ' minutes, ' + REACH[n][2]);
+  dial.setAttribute('aria-valuenow', n); dial.setAttribute('aria-valuetext', n + ' minutes, ' + REACH[n]);
   function layout() { drawRoute(); render(); }
   layout(); addEventListener('resize', layout);
 })();

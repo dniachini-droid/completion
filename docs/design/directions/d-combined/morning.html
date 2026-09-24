@@ -15,10 +15,10 @@ body { --pool-x: 34%; --pool-y: 52%; --scrim-top-h: 330px; --scrim-bottom-h: 58%
 @keyframes aim-in { from { opacity: 0; } to { opacity: .4; } }
 @keyframes aim-breathe { 0%,100% { opacity: .4; } 50% { opacity: .22; } }
 h1.carve { margin-top: 2px; }
-.seg { margin-top: 6px; }
-.seg-note { text-align: left; margin-top: 6px; }
-.ahead { margin-top: 14px; }
-.ahead p { font-size: 17.5px; line-height: 1.38; max-width: 30ch; }
+.seg { margin-top: 12px; }
+.seg-note { text-align: left; margin-top: 4px; }
+.ahead { margin-top: 12px; }
+.ahead p { font-size: 17.5px; line-height: 1.38; margin-top: 6px; }
 .bottom { padding-top: 8px; }
 .next h2 { margin: 8px 0 4px; }
 .next .soft { margin-bottom: 18px; }
@@ -31,7 +31,7 @@ body.v-early .st.early.g, body.v-later .st.later.g, body.v-done .st.done.g { dis
 .row .s svg { width: 12px; height: 12px; margin-left: 6px; vertical-align: -1px; fill: none; stroke: var(--edge-2); stroke-width: 1.4; }
 a.row:hover .t { color: #fff; }
 @media (max-height: 800px) {
-  .seg { margin-top: 4px; } .ahead { margin-top: 10px; } .next .soft { margin-bottom: 14px; }
+  .seg { margin-top: 10px; } .ahead { margin-top: 8px; } .ahead p { margin-top: 4px; } .next .soft { margin-bottom: 14px; }
   .row { min-height: 44px; }
 }
 
@@ -58,7 +58,8 @@ a.row:hover .t { color: #fff; }
     </div>
     <p class="seg-note rise d1">from last night’s bedtime</p>
     <section class="ahead rise d2">
-      <p class="say on-scene">The lintel, on the side wall. It needs a word.</p>
+      <div class="label-line">Ahead</div>
+      <p class="say on-scene">The lintel, on the side wall.<br>It needs a word.</p>
     </section>
   </header>
   <div class="mid"></div>
