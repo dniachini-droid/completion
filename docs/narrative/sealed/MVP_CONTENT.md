@@ -40,7 +40,7 @@ Every item carries `w` (story week), `o` (order in that week, where order matter
 - **Keys and views.** A Key opens the first sealed thing in NICHES order **that is in view**; if none of the week's is in view yet, it opens the first one at the next arrival, whose scene ends on that count filling. A Key from the **floor of 2** at week close opens its sealed thing on the week close page (the count shown filling); if that sealed thing is a *(Key)* arrival, its scene plays as the first arrival of the next day complete.
 - **Places may run one story week ahead** (a deep push, "Keep going"): the next week's **`pl-` places**, in their order, skipping its story arrivals, each needing only its own physical `req` (§1); never a sign, never a record ahead of its turn. A record seen early is shown as its glyphs and read in its turn. Past that, the open route (passage lines, side chambers, finds).
 - **Low day**: if the day completes short of the next named place, the arrival is a **camp with a view** (§3) for the current stretch.
-- **Keys** open sealed things in NICHES order, story counts first (BALANCING §3); a surplus opens next week's first *place* rows, never a sign row.
+- **Keys** open sealed things in NICHES order, story counts first (BALANCING §3); a surplus opens next week's first rows that carry neither a sign nor a record (§5).
 - **Finds** (§8) come from the pool for the current stretch and window, in the listed order, each once. If every pool within reach is used up (a very large run of weeks), a find source gives the oldest record in view re-surfaced with its newest rendering instead, never nothing and never a bare reward.
 - **Absence** (3+ days): "where you were" (the last place, the sealed thing in view, one unfinished record) is worked out, and names the one open question for the story week Dan is in (§10.3).
 
@@ -121,8 +121,8 @@ A Low day, or any day that completes short of the next named place, ends at a **
 | `cv-10` | `st-stair` | 3 | **The landing.** At the head of the stair, the landing wide enough for a cart, and the flight going down into lamplight you did not light. | `fd-e07` (the first ring of the Stair) |
 | `cv-11` | `st-stair` | 3 | **Halfway down.** The top flight from its middle: every step as high as your knee, the rail at your chest. | `fd-e09` (the finger hollows, four and four) |
 | `cv-12` | `st-stair` | 4 | **The first turn.** The rail curls round the turn, and below it the second flight goes down, and on it a small door with a count. | `fd-e05` (her pencil tick on the rail) |
-| `cv-13` | `st-flight2` | 5 | **The second flight.** The little door, shut, its count full; beside it the one sharp ring among the worn. | `fd-f02` (her pencil on the jamb) |
-| `cv-14` | `st-flight2` | 5 | **The gap.** Through the gap at shoulder height, square stone, and a draught that smells of old smoke. | `fd-f06` (the chippings) |
+| `cv-13` | `st-flight2` | 5 / `b-5.0` | **The second flight.** The little door, shut, its count full; beside it the one sharp ring among the worn. | `fd-f02` (her pencil on the jamb) |
+| `cv-14` | `st-flight2` | 5 / `b-5.B` | **The gap.** Through the gap at shoulder height, square stone, and a draught that smells of old smoke. | `fd-f06` (the chippings) |
 | `cv-15` | `st-square` | 6 | **The join.** The square stone and the round fit so close you couldn't get a blade in the join. | `fd-g09` (the lead poured in the joint) |
 
 ---
@@ -191,7 +191,7 @@ Text is in `LIVES.md` (sign strings, renderings, her sheets, tellings) and the r
 | `seal-4-6` | her camp, a slate low on the back wall | Low on the back wall of her camp, a slate with a count: it fills. Behind it, a paperback dictionary of a dead language, its spine broken open at the grammar, the margins full of pencil. | Hers: her trade; the grammar she brought down (CHARACTERS §6: dictionaries, morphemes) | texture (the Linguist) |
 | `seal-6-6` | the square gallery, a niche cut square, low | A square niche low in the square wall: its count fills. Inside, a clay water jar, its neck stopped with wax, the wax cracked. | The road-works crew's water: they worked the gallery and stopped at the light (V1) | V1; C-59 (texture) |
 
-The NICHES rule stands, made exact: if Dan earns more Keys than a week's rows, the surplus opens next week's first rows that carry **neither a sign nor a record** (from week 6 that is `seal-7-3` only; any surplus beyond it goes to finds, BALANCING §3). **Build rule:** a *(Key)* step reads correctly even if its sealed thing had not been seen before (each line names the place and the count), so a Key never waits for a view.
+The NICHES rule stands, made exact: if Dan earns more Keys than a week's rows, the surplus opens next week's first rows that carry **neither a sign nor a record** (from week 6 that is `seal-7-3` only; any surplus beyond it goes to finds, BALANCING §3). **Build rule:** a *(Key)* step reads correctly even if its sealed thing had not been seen before (each line names the place and its count; in week 1, its strokes). The NICHES rows with no *(Key)* step line written in ARR1/ARR2 get one composed from NICHES' "What the count opens" column in the same form, *The [place]: its count fills. Inside, [what it opens].*, so a Key never waits for a view.
 
 ---
 
@@ -202,7 +202,7 @@ Every new mark arrives with a context and **four candidates**, one tempting but 
 | Id | Sign | w | Context (where it is guessed) | Candidates (the true one first here; the app shuffles) | Tempting wrong | Confirmed by | The line if a wrong guess is struck |
 |---|---|---|---|---|---|---|---|
 | `mk-lamp` | LAMP | 1 | `b-1.3` a carved lamp beside it | lamp · cup · hand · fire | cup | `b-3.A` (the lamp-cups wake) | *Not a cup. A cup with fire in it.* |
-| `mk-fire` | FIRE | 1 | `b-1.4` a carved flame beside it | fire · light · sun · fork | light | `b-3.A`, then `b-3.1` (the flame's mark and the hook-and-drop in one cell) | *That's the flame's own mark. Light is close, but it's the flame.* |
+| `mk-fire` | FIRE | 1 | `b-1.4` a carved flame beside it | fire · light · sun · fork | light | `b-3.A`, then `b-3.1` (the flame's mark and the hook-and-drop in one cell) | *That's the flame's own mark: the flame itself.* |
 | `mk-give` | GIVE | 2 | `b-2.2` the lintel; her box sheet has only a question mark | give · send · answer · open | open | give / send / answer: all provisional until month 9. *Open* dies at `b-5.3` | *Not open. Here it stands with the lamp's mark and the flame's, and there is no door near it.* |
 | `mk-person` | PERSON | 2 | `seal-2-1` her box sheet (*someone*) | person · someone · stranger · standing | stranger | `b-3.1` (S3: *he stood and counted*) | *Not just a stranger. Anyone at all who stands.* |
 | `mk-one` | ONE | 2 | `seal-2-1` (*one*) | one · the first · a drop · small | a drop | week 8 (the numbers: it is the numeral 1) | *A drop, yes, but it's counting. One.* |
@@ -445,7 +445,7 @@ One is shown for a step that has no authored step beat (§0.2; shared with scrip
 | `ps-t09` | A step with a chip out of its edge, and the chip still lying on the step below. | |
 | `ps-t10` | The walls are cut with marks all the way up past the lamps. | |
 | `ps-t11` | From the landing the top flight looks shorter than it is. | |
-| `ps-t12` | Halfway down, a niche with a count beside the rail, its strokes empty. | until `seal-4-1` |
+| `ps-t12` | At the first turn, a niche with a count beside the rail, its strokes empty. | until `seal-4-1` |
 | `ps-t13` | The rail's top is polished darker than the wall. | |
 | `ps-t14` | The stair's lamps light the underside of the flight above. | from w4 |
 | `ps-t15` | Grit on one step crunches under your boot; the next is swept clean. | |
@@ -614,7 +614,7 @@ After an absence, "where you were" names the one open question for the story wee
 | `aw-w1` | 1 | `b-1.A` | The lamp was lit when you came down, and there is no oil in it. |
 | `aw-w2` | 2 | `b-2.B` | The rod is in your hand, and the lintel on the side wall has a blank the width of its edge. |
 | `aw-w3` | 3 | `b-3.B` | The stair goes down from the landing, lit, and you did not light it. |
-| `aw-w4` | 4 | `b-4.A` | The salt-cutter left his lamp. Her sheet for that stretch says *he held me*. |
+| `aw-w4` | 4 | `b-4.A` | Past the lone ring, her sheet says: *…go home… he held me… lamp… gave… went up…* |
 | `aw-w5` | 5 | `b-5.A` | Every record in the tally begins the same way. The wall by the lamp does not. |
 | `aw-w6` | 6 | `b-6.A` | Through the side passage, square stone, and a record in the tally's hand. |
 
