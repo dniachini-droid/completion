@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-24 (Phase 5 closed and merged, D-052; Phase 6 opens next session)_
+_Last updated: 2026-09-24 (Phase 6 started: `product/MVP.md` drafted, D-053)_
 
 ## Current phase
 
@@ -15,14 +15,17 @@ _Last updated: 2026-09-24 (Phase 5 closed and merged, D-052; Phase 6 opens next 
 Define the smallest **true** version of the game (MASTER_BRIEF §60–61), cut from the approved contents list (`product/FIRST_PLAYABLE.md`), and write the MVP test: what counts as supporting and weakening evidence, what to observe, what not to overinterpret, without invasive analytics. Output: `product/MVP.md`.
 
 ## Resume here (next session)
-1. Start Phase 6: read `product/FIRST_PLAYABLE.md`, `game/BALANCING.md`, `product/CONCEPT.md` and MASTER_BRIEF §60–61, then draft `product/MVP.md`. Ask Dan only about taste and priorities.
-2. In its own session, before any build: the sealed story-fix session (D-035), including week 6 of the clue ledger and the authoring list from `game/BALANCING.md` (D-049).
+1. Dan answers the four points at the end of `product/MVP.md` (paintings per area; map waypoints; the morning deep push; where the test notes live). Then fold the answers into `FIRST_PLAYABLE.md`, `PLANNER.md`, `INTERACTION_NOTES.md`, and ask Dan to approve the MVP and move to Phase 7.
+2. In its own session, before any build: the sealed story-fix session (D-035), including week 6 of the clue ledger, the authoring list from `game/BALANCING.md` (D-049), the content budget in `product/MVP.md`, and whether weeks 1–6 need the before → now view (D-053).
 3. Whenever convenient: Dan looks at the planner screens on his phone (D-047).
 
-## Last session (2026-09-24, planner reconciliation)
+## This session (2026-09-24, Phase 6 start)
+`product/MVP.md` drafted (D-053). The first playable was already cut hard in Phase 5, so the MVP keeps it whole except a few second doors: the map's whole-Site zoom, forecast waypoints on the map, the morning deep push, and before → now unless the story needs it. The real size is in paintings and words: one painted scene per area proposed, and a content budget for six story weeks. Build order in four slices; the test starts only when all four are in. The central test is written: it measures **starting** (above all avoided jobs; started from the app vs logged afterwards), with a baseline chat and predictions before day 1, notes kept on the phone, three short chats, evidence for and against, what not to overinterpret, and what each answer leads to.
+
+## Session before (2026-09-24, planner reconciliation)
 ChatGPT's second planner review reconciled (D-047): 6 accepted, 1 modified, 8 already resolved. Dan decided the Course day counts at its first hour; the run now has its own "enough" moment, then Continue or Back to today with equal weight. Each job counts at its own enough (not "one hour" for everything). New invariant: more rhythms never mean more Keys. Copy fixed (forecast words, "A lighter day.", "Stop repeating"). Screens checked at true phone size. Dan approved; the planner is locked and rhythms are folded into the docs (D-048). Then step 3, the numbers (two clocks: time moves the Site, the story keeps its order; 5 Keys a week with a floor of 2; D-049), and step 4, the first playable's contents (D-050).
 
-## Session before (2026-09-24, late night, second)
+## Earlier (2026-09-24, late night, second)
 Phase 5 step 2: the concept stress-tested against the principles, the anti-features and the §71 checklist, with six walkthroughs (`product/STRESS_TEST.md`). It holds; 16 small gaps closed with one rule each (D-043), folded into `CONCEPT.md` and the game docs. The biggest: the day ends at about 4 am; capacity works all day; every delve minute counts on any job; the return after a week away never opens on a pile. Two points wait for Dan; seven numbers go to step 3.
 
 ## Earlier (2026-09-24, late night)
@@ -40,8 +43,8 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 
 ## Phase 6 exit criteria
 
-- [ ] `product/MVP.md`: the smallest true version, cut from `product/FIRST_PLAYABLE.md`.
-- [ ] The central MVP test written (evidence for, evidence against, what to observe, what not to overinterpret).
+- [ ] `product/MVP.md`: the smallest true version, cut from `product/FIRST_PLAYABLE.md`. *Drafted (D-053); four points wait for Dan.*
+- [ ] The central MVP test written (evidence for, evidence against, what to observe, what not to overinterpret). *Drafted in `product/MVP.md` (D-053); Dan reviews.*
 - [ ] Dan agrees to move to Phase 7 (technical architecture).
 
 ## Phase 5 (closed) exit criteria
@@ -97,4 +100,4 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 
 ## Recommended next action
 
-**Dan: start a new session and paste:** "Read CLAUDE.md and docs/CURRENT_STATE.md, then start Phase 6."
+Dan answers the four points in `product/MVP.md`. If the session has ended: **start a new session and paste:** "Read CLAUDE.md and docs/CURRENT_STATE.md, then continue Phase 6."
