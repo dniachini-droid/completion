@@ -556,3 +556,27 @@
 - **Decision (Dan):** "Yes." Phase 5 is closed and merged into `main`. Phase 6 (MVP, MASTER_BRIEF §60–61) opens in a new session.
 - **Carried into Phase 6:** the sealed story-fix session with week 6 and the new authoring list (D-035, D-049), before the build; Dan's phone check of the planner screens (D-047); the language pass after 3–4 weeks of play (D-046).
 - **Reversible:** Phase changes need Dan's agreement.
+
+## D-053 — The MVP and the central test (Phase 6; draft for Dan)
+- **Date:** 2026-09-24
+- **Context:** Phase 6 (MASTER_BRIEF §60–61): cut the approved first playable (D-050, D-051) to the smallest true version, and write the central test.
+- **Decision (draft; Claude's routine calls, D-006, with four points for Dan):** `product/MVP.md`. A four-question bar for every item (loop or test broken? task manager with a picture? a wall within six weeks? met before the test ends?). The first playable stays whole except: the map's whole-Site zoom level (out until a second region); forecast waypoints on the map (out; the forecast line stays; for Dan, since D-048 locked them); the morning deep push (out; "Keep going" reaches the same route; for Dan); before → now only if the story's weeks 1–6 need it; **one painted scene per area** with named places reusing it (for Dan). A content budget for six story weeks, week 7 onward drafted during the test. Build order in four slices; the test starts only when all four are in, on a fresh save. The test measures **starting**, above all avoided jobs, and separates jobs started from the app from jobs logged afterwards; a baseline chat and written predictions before day 1; notes stay on the phone; three short chats; evidence for, against, what not to overinterpret, and what each reading leads to.
+- **Alternatives:** cut the planner or the satchel (Dan asked for both, D-020, D-045; and without them normal use hits a wall); start the test with slices 1–2 and add the rest mid-test (the first word would arrive in a changing app, and mid-test bugs spoil the evidence); count total hours or Keys as the measure (they reward the Course and the gym, which already happen, and hide the avoided jobs).
+- **Rationale:** rule 13, rule 14, D-004 (small but beautiful, quickly), D-023 (5–6 weeks), MASTER_BRIEF §61 (qualitative, no invasive analytics).
+- **Consequences:** `product/MVP.md` (new content); `CURRENT_STATE.md`. On Dan's answers: `FIRST_PLAYABLE.md`, `PLANNER.md`, `INTERACTION_NOTES.md` note the cuts. The story-fix session (D-035) gains two jobs: say whether weeks 1–6 need before → now, and supply the content budget.
+- **Reversible:** Yes.
+
+## D-054 — Dan's four answers on the MVP
+- **Date:** 2026-09-24
+- **Context:** the four points in `product/MVP.md` (D-053).
+- **Decision (Dan):** **a painting for every named place** (not one per area, reused); **forecast waypoints on the map stay**; **the morning deep push stays**; **the test notes stay on the phone**, and Dan decides at the end whether to share the summary.
+- **Claude's note, said once:** a painting per place means about 30–35 before the test and about 5 a week after it (about 260 in a year). It is Dan's call on beauty, and it moves the biggest cost of the build into art production.
+- **Consequences:** `product/MVP.md` updated: the MVP now differs from the first playable only by the whole-Site zoom level (out until a second region) and before → now (only if the story needs it). **Phase 7** must choose how the paintings are made at that rate while keeping direction D (D-040). The start of the test moves later accordingly. `FIRST_PLAYABLE.md` and `INTERACTION_NOTES.md` note the zoom cut.
+- **Reversible:** Yes.
+
+## D-055 — The MVP approved; Phase 6 closed; Phase 7 (technical architecture) opened
+- **Date:** 2026-09-24
+- **Context:** Phase 6's exit criteria: `product/MVP.md` written (D-053), the central test written in it, Dan's four answers folded in (D-054).
+- **Decision (Dan):** "Proceed." The MVP and its test are approved; Phase 6 is closed and merged into `main`; Phase 7 (MASTER_BRIEF §62–66) opens in a new session.
+- **Carried into Phase 7:** the requirements in `FIRST_PLAYABLE.md` (the delve's end heard or felt with the phone locked; state survives restarts; all copy in one place, D-046; jobs and rhythms as data, D-030; planned / moved / done kept, never shown, D-045); the test notes on the phone only, with a summary Dan may share (D-054); **how a painting per named place is made at about 5 a week in direction D** (D-054). Still pending in parallel: the sealed story-fix session (D-035) with the MVP's content budget; Dan's phone check of the planner screens (D-047).
+- **Reversible:** Phase changes need Dan's agreement.
