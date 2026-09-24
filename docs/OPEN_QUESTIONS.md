@@ -25,7 +25,7 @@
 ## Game design
 - ~~Do HP/MP add real meaning?~~ No: dropped with XP, levels and currencies (D-012). Revisit if Dan misses a sense of size in use.
 - ~~Which core loop?~~ A blend, *Explore · Decode · Connect* (D-010).
-- Is the same-kind slowdown after ~2 extra hours the right high-day balance? *(Test in use.)*
+- ~~Is the same-kind slowdown the right high-day balance?~~ Replaced by a find for switching kinds; staying keeps full progress (D-044). Whether the find is enough pull towards variety: test in use.
 - ~~What is XP even for?~~ Dropped (D-012). Still open: how do daily repetitive inputs unlock *new verbs* often enough without inflation? *(Pacing in `game/PROGRESSION.md`.)*
 - ~~How many core daily actions define a complete day?~~ About 3 main jobs (P2). Test in use.
 - Does collection/rarity motivate him in practice, and how to prevent farming?
@@ -49,7 +49,7 @@
 ## UX
 - ~~What visual references?~~ Ancient stone/glyphs + dark sci-fi; the Stargate dialling sequence (round 6). Refine in Phase 4.
 - ~~Phone, desktop?~~ Phone only (round 6).
-- **Job to do: a language pass on every line the app says** (Dan, 2026-09-24, D-031). Lines on the Phase 4 mock-ups such as "The lintel needs a word" read as stilted, AI-sounding English. Before the first playable, rewrite the app's own voice so it sounds like a person: plain, natural, varied, not clipped. Not during the visual pass. Owner: Claude, with Dan reviewing a sample page of lines. Suggested slot: Phase 5 or 6, before any copy is fixed in the build.
+- **Job to do: a language pass on every line the app says** (Dan, 2026-09-24, D-031). Lines on the Phase 4 mock-ups such as "The lintel needs a word" read as stilted, AI-sounding English. Before the first playable, rewrite the app's own voice so it sounds like a person: plain, natural, varied, not clipped. Not during the visual pass. Owner: Claude, with Dan reviewing a sample page of lines. ~~Suggested slot: Phase 5 or 6.~~ **Moved (Dan, D-046): after he has played the first playable for 3–4 weeks.** He wants to see the app working first. All copy until then is placeholder, and the build keeps it easy to change.
 
 ## Technology
 - _(deferred to Phase 7)_

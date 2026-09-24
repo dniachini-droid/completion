@@ -38,3 +38,6 @@ _Written 2026-09-23._
 4. ~~Author the niche contents as a table.~~ Done for all 52 weeks (`NICHES.md`).
 5. ~~Arrival scenes for regions 2–5 in the manner of `ARRIVALS_REGION1.md`.~~ Done (`ARRIVALS_REGION2.md`, `ARRIVALS_REGION3.md`, `ARRIVALS_REGION4_5.md`; the last rewritten to Region 3's density after the weeks 27–35 review, fix log I).
 6. L20's *[hour]* and *[minute]* (LIVES §13) are not drawable either; its rendering is a settled week-37 line, so the string is left for a later pass (candidate: UP ONE DAY, [grass] / GO DEEP AGAIN, DAY NOT, as L16 was fixed).
+
+## Step 3 alignment (D-049, 2026-09-24)
+`game/BALANCING.md` sets the player-facing numbers against this ledger: one story week per calendar week at most (low weeks stretch, absence pauses); places up to one story week ahead, never signs (partial signs only where written: weeks 1 and 3 in region 1); 5 useful Keys a week, core counts first, floor of 2 for any week with a day complete (covers region 1's two core counts a week and keeps LIGHT in week 2–3); 8 steps between main-line places (≈ 5 a story week against ~5 Normal arrivals). New authoring asked for: open-route passage lines (~120 a region), ~12 finds a week, camp-with-a-view scenes, the week close's "learned" lines and each month's "so far" (3–5 lines). Do these with the story-fix session (D-035), weeks 1–5 first.

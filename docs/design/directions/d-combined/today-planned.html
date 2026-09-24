@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06070f">
+<title>Today, from the plan</title>
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<link rel="stylesheet" href="direction.css">
+<style>
+
+body { --pool-x: 34%; --pool-y: 52%; --scrim-top-h: 330px; --scrim-bottom-h: 58%; }
+.aim { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; opacity: 0;
+  animation: aim-in 1.2s var(--ease) 1.6s forwards, aim-breathe 5s ease-in-out 2.8s infinite; filter: drop-shadow(0 0 2px rgba(var(--violet-rgb), .8)); }
+@keyframes aim-in { from { opacity: 0; } to { opacity: .4; } }
+@keyframes aim-breathe { 0%,100% { opacity: .4; } 50% { opacity: .22; } }
+h1.carve { margin-top: 2px; }
+.seg { margin-top: 12px; }
+.seg-note { text-align: left; margin-top: 4px; }
+.ahead { margin-top: 12px; }
+.ahead p { font-size: 17.5px; line-height: 1.38; margin-top: 6px; }
+.bottom { padding-top: 8px; }
+.next h2 { margin: 8px 0 4px; }
+.next .soft { margin-bottom: 18px; }
+.cant { display: flex; justify-content: center; margin-top: 4px; }
+.rows { margin-top: 2px; }
+.nav-row { margin-top: 2px; }
+.st { display: none; }
+body.v-early .st.early, body.v-later .st.later, body.v-done .st.done { display: revert; }
+body.v-early .st.early.g, body.v-later .st.later.g, body.v-done .st.done.g { display: grid; }
+.row .s svg { width: 12px; height: 12px; margin-left: 6px; vertical-align: -1px; fill: none; stroke: var(--edge-2); stroke-width: 1.4; }
+a.row:hover .t { color: #fff; }
+/* D-036: a held delve is the first offer (#held-<job>-N) */
+.next.carry { display: none; }
+body.h-held .next.carry { display: block; }
+body.h-held .next.st.early.later { display: none; }
+.next.carry .btn-row.lead { grid-template-columns: 1.25fr 1fr; }
+.next.carry .btn-quiet { padding: 0 10px 0 calc(10px + .14em); letter-spacing: .14em; }
+@media (max-height: 800px) {
+  .seg { margin-top: 10px; } .ahead { margin-top: 8px; } .ahead p { margin-top: 4px; } .next .soft { margin-bottom: 14px; }
+  .row { min-height: 44px; }
+}
+
+
+/* Today from the week's plan (game/PLANNER.md, D-045, D-047). today-planned.html (Normal) · #low (Low: capacity overrides the plan) · #enough (the Course's hour done) */
+.from { font-family: var(--life); font-style: italic; font-size: 15.5px; color: var(--ink-3); }
+.row .s .tm { font-family: var(--carve); font-style: normal; font-size: 13.5px; letter-spacing: .12em; color: var(--violet-hi); }
+.lowonly { display: none; }
+body.cap-low .lowonly { display: block; }
+body.cap-low .normalonly { display: none !important; }
+.released { margin-top: 10px; font-size: 15.5px; }
+.nav-row .icon-link { font-size: 13px; letter-spacing: .06em; gap: 5px; }
+.nav-row .icon-link svg { width: 17px; height: 17px; }
+/* #enough: the Course's hour is done. It reads as done, not as two hours owed; tapping it offers more (D-047) */
+.row.done .t { color: var(--ink-2); }
+.row.done .pip { border-color: transparent; background: radial-gradient(circle, #fff0cc, #f2c170 60%, #e8954a); box-shadow: 0 0 6px rgba(var(--gold-rgb), .7); }
+.row.done .s { color: #d9bd8e; }
+</style>
+</head>
+<body class="s-day">
+<main class="phone">
+
+<div class="paint" id="hall" aria-hidden="true"></div>
+<div class="pool" aria-hidden="true"></div>
+<div class="fog " aria-hidden="true"><i class="drift-a"></i><i class="drift-b"></i></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+<div class="scrim-top" aria-hidden="true"></div>
+<div class="scrim-bottom" aria-hidden="true"></div>
+<div class="ui">
+  <header class="top col">
+    <div class="topbar rise"><span class="day">Thursday</span><span></span><a class="icon-link" href="map.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="17" r="2"/><circle cx="12" cy="6.5" r="2"/><circle cx="19" cy="14.5" r="2"/><path d="M6.1 15.2 10.9 8.3M13.5 8 17.6 12.9" stroke-opacity=".75"/></svg><span>Map</span></a></div>
+    <h1 class="carve lg rise">The Lamp Hall</h1>
+    <div class="seg rise d1" role="group" aria-label="How big today is" id="cap">
+      <button aria-pressed="false" data-c="low">Low</button><button aria-pressed="true" data-c="normal">Normal</button><button aria-pressed="false" data-c="high">High</button>
+    </div>
+    <p class="seg-note rise d1">suggested by last night’s bedtime</p>
+    <section class="ahead rise d2">
+      <div class="label-line">Ahead</div>
+      <p class="say on-scene">The lintel, on the side wall.<br>It needs a word.</p>
+    </section>
+  </header>
+  <div class="mid"></div>
+  <section class="bottom col rise d3">
+    <div class="next">
+      <div class="label-line lit">Next</div>
+      <h2 class="say-lg">Order the cat’s medication</h2>
+      <p class="soft">There’s something in the step after this one.</p>
+      <div class="btn-row lead">
+        <a class="btn" href="delve.html#cat-25">Begin</a>
+        <button class="btn-quiet" aria-label="Swap for another job"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 5h9.5L10 2.5M13 11H3.5L6 13.5"/></svg><span>Swap</span></button>
+      </div>
+      <div class="cant"><button class="text-link"><span>I can’t start</span></button></div>
+    </div>
+    <div class="rows">
+      <a class="row normalonly" id="course" href="delve-set.html#plan-6"><span class="pip"></span><span class="t">Course</span><span class="s">1 h · room for 3<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5"/></svg></span></a>
+      <div class="row"><span class="pip"></span><span class="t">Spanish lesson</span><span class="s"><span class="tm">18:00</span></span></div>
+    </div>
+    <p class="soft released lowonly on-scene">A lighter day.</p>
+    <nav class="nav-row" aria-label="Elsewhere">
+      <a class="icon-link" href="satchel.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9.5h14v9.5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1z"/><path d="M4.6 9.5c2-2.2 12.8-2.2 14.8 0l-.4 5c-4 1.6-10 1.6-14 0z"/><path d="M12 13v3"/><path d="M5.5 9C5 4 19 4 18.5 9" stroke-opacity=".6"/></svg><span>Satchel</span></a>
+      <a class="icon-link" href="week.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5v15" stroke-opacity=".7"/><path d="M5 6.5h0M5 12h0M5 17.5h0" stroke-width="3"/><path d="M9 6.5h10M9 12h8M9 17.5h9" stroke-opacity=".85"/></svg><span>Week</span></a>
+      <a class="icon-link" href="daybook.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.5c-2.5-1.6-5.5-1.8-8-1v13c2.5-.8 5.5-.6 8 1 2.5-1.6 5.5-1.8 8-1v-13c-2.5-.8-5.5-.6-8 1z"/><path d="M12 6.5v13"/></svg><span>Daybook</span></a>
+      <a class="icon-link" href="camp.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 16.5c1-2.6 4-3.6 8-3.6s7 .6 8.6 2.2l-2 1.6c-2 1-10.6 1.6-14.6-.2z"/><path d="M18.6 13c.5-1.7.4-3.2-.1-4.8.8 1.5 1.6 2.8.1 4.8z" stroke-opacity=".85"/></svg><span>Camp</span></a>
+    </nav>
+  </section>
+</div>
+</main>
+<script src="lamp.js"></script>
+<script src="hall.js"></script>
+<script>
+/* capacity overrides the plan (P3): Low keeps the appointment and releases the rest, without a word of debt */
+(function(){
+  var cap = document.getElementById('cap');
+  function set(c){ cap.querySelectorAll('button').forEach(function(o){ o.setAttribute('aria-pressed', o.dataset.c === c); });
+    document.body.classList.toggle('cap-low', c === 'low'); }
+  cap.addEventListener('click', function(e){ var b = e.target.closest('button'); if (b) set(b.dataset.c); });
+  if (location.hash === '#low') set('low');
+  /* #enough: the Course's first hour is done; the rest of its planned time is more, never owed */
+  if (location.hash === '#enough') { var c = document.getElementById('course'); c.classList.add('done'); c.href = 'delve-set.html';
+    c.querySelector('.s').firstChild.textContent = 'enough · more if you like'; }
+  Hall.draw(document.getElementById('hall'), { cam: { x: .2, y: 1.6, z: 1.5, f: .62, cx: .5, cy: .47 }, gold: .12 });
+})();
+</script>
+<script src="ambient.js" data-drift></script>
+</body>
+</html>

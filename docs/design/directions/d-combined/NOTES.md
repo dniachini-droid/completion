@@ -19,3 +19,10 @@ No figure; wall-cups dark (the morning painting is C's, with dark cups); the cla
 ## Weak spots
 - The lintel in the morning painting still reads a little like a sign (carried over from C).
 - The map's lines are B-bright. If Dan wants it closer to A's softness, the next step is to dim them to dust once they have drawn in.
+
+## The week planner (draft, 2026-09-24, D-045)
+Three new screens for `game/PLANNER.md`, in D's reading-screen style (the hall blurred behind a veil and scrims; words still):
+- **`week.html`**: This week. The days run down a thin route line, gold where done and dashed ahead; the past shows only what was done; forecast places (tagged *forecast*; "Current forecast: … around Thursday", D-047) sit on the line. Tap a job for the sheet (day, time, "Not this week"). `#empty` shows "Plan my week", which lays the week out with a rise; `#next` shows next week.
+- **`rhythms.html`**: What repeats. Dan's own rhythms, each with how often, each time, *enough at* (delve rhythms only; defaults to all of it), time and delve-or-not; "Stop repeating" at the foot. `#edit` (Spanish study), `#course` (3 hours, enough at 1), `#add`.
+- **`today-planned.html`**: the morning screen started from the plan, with a fourth nav link, Week. The Course reads "1 h · room for 3". `#low`: the appointment stays and the course is released; the only words are "A lighter day." `#enough`: the Course's hour done, shown as done ("enough · more if you like").
+- **The Course day (D-047)**: `delve-set.html#plan-6` (from Today) has a gold *enough* mark on the run line; `delve.html#run-2-25-d2-plan-6-breather` is the enough moment ("Course session complete. Enough for today." · Continue | Back to today); `#run-6-25-d3-plan-6` shows "more · the third delve".

@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07061a">
+<title>What repeats</title>
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<link rel="stylesheet" href="direction.css">
+<style>
+/* What repeats: Dan's rhythms, all his own input (game/PLANNER.md, D-045, D-030).
+   States: rhythms.html (the list) · #edit (Spanish study) · #course (the Course: 3 hours, enough at 1) · #add (a new one)
+   "Enough at" shows only for a rhythm run as delves; it defaults to the whole length, so nothing needs setting (D-047). */
+body { --scrim-top-h: 230px; --scrim-bottom-h: 30%; }
+.hall-blur { filter: blur(6px) brightness(.62); transform: scale(1.06); }
+.veil { position: absolute; inset: 0; z-index: 4; pointer-events: none; background: rgba(6, 5, 16, .52); }
+.head { margin-top: 6px; }
+.head .soft { display: block; margin-top: 4px; }
+.mid { overflow-y: auto; scrollbar-width: none; padding-top: 14px; }
+.mid::-webkit-scrollbar { display: none; }
+.list { list-style: none; border-bottom: 1px solid var(--edge-4); }
+.rh { display: grid; grid-template-columns: 1fr auto 14px; align-items: center; column-gap: 10px; width: 100%; min-height: 60px; padding: 8px 0;
+  text-align: left; border-top: 1px solid var(--edge-4); }
+.rh .t { font-family: var(--life); font-size: 17.5px; color: var(--ink); line-height: 1.2; }
+.rh .s { display: block; font-family: var(--life); font-style: italic; font-size: 15.5px; color: var(--ink-3); margin-top: 2px; }
+.rh .when { font-family: var(--carve); font-size: 12.5px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--violet-hi); white-space: nowrap; }
+.rh svg { width: 12px; height: 12px; fill: none; stroke: var(--edge-2); stroke-width: 1.4; }
+.rh:hover .t { color: #fff; }
+.addrow { margin-top: 14px; }
+.bottom { padding-top: 10px; }
+
+/* the editor: every field has a default; only the name is needed */
+.ed { display: none; }
+body.editing .ed { display: block; animation: rise .45s var(--ease) both; }
+body.editing .lst { display: none; }
+.field { margin-top: 14px; }
+.field .label { display: block; font-size: 13px; margin-bottom: 6px; }
+.name { width: 100%; min-height: 48px; padding: 0 2px; font-family: var(--life); font-size: 22px; font-weight: 500; color: #fff;
+  background: transparent; border: 0; border-bottom: 1px solid var(--edge-2); outline: none; }
+.name::placeholder { color: var(--ink-3); font-style: italic; font-weight: 400; }
+.name:focus { border-bottom-color: var(--edge); }
+.step { display: grid; grid-template-columns: 48px 1fr 48px; align-items: center; min-height: 48px; border: 1px solid var(--edge-3); border-radius: 2px;
+  background: rgba(8, 7, 24, .35); }
+.step button { height: 46px; font-family: var(--life); font-size: 24px; color: var(--violet-hi); }
+.step button:disabled { opacity: .25; }
+.step output { text-align: center; font-family: var(--life); font-size: 18px; color: #fff; }
+.seg { gap: 6px; }
+.seg > button { font-size: 12.5px; letter-spacing: .1em; padding: 0 2px; }
+.note { margin-top: 12px; font-size: 15px; }
+.ed .btn-row { margin-top: 16px; }
+.ed .remove { display: flex; justify-content: center; margin-top: 2px; }
+@media (max-height: 800px) { .field { margin-top: 10px; } .rh { min-height: 54px; } }
+</style>
+</head>
+<body class="s-day">
+<main class="phone">
+
+<div class="paint hall-blur" id="hall" aria-hidden="true"></div>
+<div class="fog" aria-hidden="true"><i class="drift-a"></i><i class="drift-b"></i></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+<div class="veil" aria-hidden="true"></div>
+<div class="scrim-top" aria-hidden="true"></div>
+<div class="scrim-bottom" aria-hidden="true"></div>
+<div class="ui">
+  <header class="topbar col rise"><a class="home" href="week.html"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5"/></svg><span>This week</span></a><span></span><span></span></header>
+  <section class="col head rise d1">
+    <h1 class="carve lg">What repeats</h1>
+    <span class="soft on-scene">Your own rhythms. Change any of them, any time.</span>
+  </section>
+  <div class="mid col rise d2">
+    <div class="lst">
+      <ul class="list" id="list"></ul>
+      <button class="btn-quiet full addrow" id="add"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>Add one</span></button>
+    </div>
+    <form class="ed" id="ed" onsubmit="return false">
+      <input class="name" id="name" placeholder="What is it?" aria-label="What is it?" autocomplete="off">
+      <div class="field"><span class="label">How often</span>
+        <div class="seg" role="group" aria-label="How often" id="often"><button type="button" data-o="week" aria-pressed="true">A week</button><button type="button" data-o="days" aria-pressed="false">Set days</button><button type="button" data-o="fort" aria-pressed="false">Fortnightly</button></div>
+      </div>
+      <div class="field" id="countF"><div class="step"><button type="button" id="cm" aria-label="Fewer">−</button><output id="count">2 times a week</output><button type="button" id="cp" aria-label="More">+</button></div></div>
+      <div class="field"><span class="label">Each time</span>
+        <div class="step"><button type="button" id="lm" aria-label="Shorter">−</button><output id="len">1 hour</output><button type="button" id="lp" aria-label="Longer">+</button></div>
+      </div>
+      <div class="field" id="enoughF"><span class="label">Enough at</span>
+        <div class="step"><button type="button" id="em" aria-label="Sooner">−</button><output id="enough">All of it</output><button type="button" id="ep" aria-label="Later">+</button></div>
+      </div>
+      <div class="field"><span class="label">Time</span>
+        <div class="seg" role="group" aria-label="Time" id="timeSeg"><button type="button" aria-pressed="true">Any time</button><button type="button" aria-pressed="false" id="timeSet">Set a time</button></div>
+      </div>
+      <div class="field"><span class="label">How it runs</span>
+        <div class="seg" role="group" aria-label="How it runs" id="runs"><button type="button" aria-pressed="true">As delves</button><button type="button" aria-pressed="false">No timer</button></div>
+      </div>
+      <p class="soft on-scene note" id="note">A new number counts from next week. You can plan it straight away.</p>
+      <div class="btn-row lead"><button class="btn" id="save" type="button">Save</button><a class="btn-quiet" href="rhythms.html" id="cancel"><span>Cancel</span></a></div>
+      <div class="remove"><button class="text-link" type="button" id="remove"><span>Stop repeating</span></button></div>
+    </form>
+  </div>
+  <section class="bottom col rise d3 lst">
+    <a class="btn" href="week.html">Plan my week</a>
+  </section>
+</div>
+</main>
+<script src="lamp.js"></script>
+<script src="hall.js"></script>
+<script>
+(function(){
+  /* Dan's starting set (his own numbers, 2026-09-24). Preloaded, all editable, none built in. */
+  var R = [
+    { t: 'Gym, then the sauna', o: 'week', n: 4, len: 3, delve: false },
+    { t: 'Spanish study', o: 'week', n: 2, len: 3, en: 3, delve: true },
+    { t: 'Spanish lesson', o: 'days', day: 'Thursdays', time: '18:00', len: 3, delve: false },
+    { t: 'Course', o: 'week', n: 4, len: 6, en: 3, delve: true },
+    { t: 'Tank clean', o: 'fort', n: 1, len: 3, delve: false },
+    { t: 'Meal prep', o: 'days', day: 'Sundays', len: 0, delve: false }
+  ];
+  var LEN = ['25 minutes', '30 minutes', '45 minutes', '1 hour', '1½ hours', '2 hours', '3 hours', '4 hours'];
+  var SHORT = ['25 min', '30 min', '45 min', '1 h', '1½ h', '2 h', '3 h', '4 h'];
+  var list = document.getElementById('list');
+  function often(r){ return r.o === 'week' ? r.n + ' a week' : (r.o === 'fort' ? 'every 2 weeks' : r.day); }
+  /* a delve rhythm whose enough is shorter than its length reads "1 h enough, room for 3 h"; otherwise just its length */
+  function size(r){ if (!r.len) return ''; return ' · ' + (r.delve && r.en != null && r.en < r.len ? SHORT[r.en] + ' enough, room for ' + SHORT[r.len] : SHORT[r.len]); }
+  function draw(){
+    list.innerHTML = R.map(function(r, i){
+      return '<li><button class="rh" data-i="' + i + '"><span><span class="t">' + r.t + '</span><span class="s">' + often(r) + size(r) + (r.delve ? ' · as delves' : '') + '</span></span>' +
+        '<span class="when">' + (r.time || '') + '</span><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5"/></svg></button></li>';
+    }).join('');
+  }
+  draw();
+
+  var cur = null, isNew = false;
+  function pressed(g, el){ g.querySelectorAll('button').forEach(function(o){ o.setAttribute('aria-pressed', o === el); }); }
+  function fill(){
+    document.getElementById('name').value = cur.t;
+    pressed(document.getElementById('often'), document.querySelector('#often [data-o="' + cur.o + '"]'));
+    var c = document.getElementById('count');
+    c.textContent = cur.o === 'week' ? (cur.n === 1 ? 'Once a week' : cur.n + ' times a week') : (cur.o === 'fort' ? 'Once every 2 weeks' : (cur.day || 'Thursdays') + (cur.time ? ', ' + cur.time : ''));
+    document.getElementById('cm').disabled = cur.o !== 'week' || cur.n <= 1;
+    document.getElementById('cp').disabled = cur.o !== 'week' || cur.n >= 7;
+    document.getElementById('len').textContent = cur.len === -1 ? 'Not set' : LEN[cur.len];
+    if (cur.en == null || cur.en > cur.len) cur.en = cur.len;
+    document.getElementById('enoughF').style.display = cur.delve ? '' : 'none';
+    document.getElementById('enough').textContent = cur.en >= cur.len ? 'All of it' : LEN[cur.en];
+    document.getElementById('em').disabled = cur.en <= 0;
+    document.getElementById('ep').disabled = cur.en >= cur.len;
+    pressed(document.getElementById('timeSeg'), document.getElementById('timeSeg').children[cur.time ? 1 : 0]);
+    document.getElementById('timeSet').textContent = cur.time ? 'At ' + cur.time : 'Set a time';
+    pressed(document.getElementById('runs'), document.getElementById('runs').children[cur.delve ? 0 : 1]);
+    document.getElementById('remove').style.visibility = isNew ? 'hidden' : 'visible';
+    document.getElementById('note').textContent = isNew ? 'It can go into this week’s plan straight away. It counts towards a Key from next week.' : 'A new number counts from next week. You can plan it straight away.';
+  }
+  function open(i){
+    isNew = i < 0;
+    cur = isNew ? { t: '', o: 'week', n: 1, len: 0, delve: true } : JSON.parse(JSON.stringify(R[i]));
+    cur.i = i; fill(); document.body.classList.add('editing');
+    if (isNew) setTimeout(function(){ document.getElementById('name').focus(); }, 400);
+  }
+  list.addEventListener('click', function(e){ var b = e.target.closest('.rh'); if (b) open(+b.dataset.i); });
+  document.getElementById('add').addEventListener('click', function(){ open(-1); });
+  document.getElementById('often').addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return; cur.o = b.dataset.o; if (cur.o === 'days' && !cur.day) cur.day = 'Sundays'; fill(); });
+  document.getElementById('cm').addEventListener('click', function(){ cur.n--; fill(); });
+  document.getElementById('cp').addEventListener('click', function(){ cur.n++; fill(); });
+  document.getElementById('lm').addEventListener('click', function(){ cur.len = Math.max(0, cur.len - 1); fill(); });
+  document.getElementById('lp').addEventListener('click', function(){ var all = cur.en >= cur.len; cur.len = Math.min(LEN.length - 1, cur.len + 1); if (all) cur.en = cur.len; fill(); });
+  document.getElementById('em').addEventListener('click', function(){ cur.en = Math.max(0, cur.en - 1); fill(); });
+  document.getElementById('ep').addEventListener('click', function(){ cur.en = Math.min(cur.len, cur.en + 1); fill(); });
+  document.getElementById('runs').addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return; cur.delve = b === this.children[0]; fill(); });
+  document.getElementById('timeSeg').addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return; cur.time = b === this.children[1] ? (cur.time || '18:00') : ''; fill(); });
+  document.getElementById('name').addEventListener('input', function(){ cur.t = this.value; });
+  function done(){ document.body.classList.remove('editing'); history.replaceState(null, '', location.pathname); draw(); }
+  document.getElementById('save').addEventListener('click', function(){
+    if (!cur.t.trim()) { document.getElementById('name').focus(); return; }
+    var r = { t: cur.t.trim(), o: cur.o, n: cur.n, len: cur.len, en: cur.en, delve: cur.delve, day: cur.day, time: cur.time };
+    if (isNew) R.push(r); else R[cur.i] = r; done();
+  });
+  document.getElementById('cancel').addEventListener('click', function(e){ e.preventDefault(); done(); });
+  document.getElementById('remove').addEventListener('click', function(){ R.splice(cur.i, 1); done(); });
+
+  var h = location.hash.slice(1);
+  if (h === 'edit') open(1); else if (h === 'course') open(3); else if (h === 'add') open(-1);
+  Hall.draw(document.getElementById('hall'), { cam: { x: .2, y: 1.6, z: 1.5, f: .62, cx: .5, cy: .47 }, gold: .12 });
+})();
+</script>
+<script src="ambient.js"></script>
+</body>
+</html>

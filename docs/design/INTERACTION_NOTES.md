@@ -11,7 +11,7 @@
 - `prefers-reduced-motion`: every animation jumps to its settled state.
 
 ## The morning
-Starting needs no decision: **Begin** on a short delve job starts a single 25-minute delve at once; a job that isn't a delve has no ring: Begin marks it under way and Done on return plays its steps (D-038). Which jobs are delves is Dan's to set, for any job, and switchable for today with one tap (D-041); a job that takes hours (the Course) opens the run screen already set from the job (e.g. 2 delves of 25), so it is one more tap on Begin. Swap and "I can't start" are one tap away. After day complete, morning shows the day as done ("To camp"), not a next job, with a quiet "Keep going" that opens the run screen (D-038).
+Starting needs no decision: **Begin** on a short delve job starts a single 25-minute delve at once; a job that isn't a delve has no ring: Begin marks it under way and Done on return plays its steps (D-038). Which jobs are delves is Dan's to set, for any job, and switchable for today with one tap (D-041); a job that takes hours (the Course) opens the run screen already set to **its enough** (the Course's hour: 2 delves of 25), never to its whole planned length, so it is one more tap on Begin (D-047). Swap and "I can't start" are one tap away. After day complete, morning shows the day as done ("To camp"), not a next job, with a quiet "Keep going" that opens the run screen (D-038).
 
 ## Setting the delve's length (D-033, Dan's pick: the dial)
 - A ring with four stops: **25, 30, 45, 60 minutes**. Drag the glowing handle round, tap a number, or use the keys.
@@ -21,6 +21,19 @@ Starting needs no decision: **Begin** on a short delve job starts a single 25-mi
 
 ## The delve
 The glowing ring fills with the time left in the middle (D-028); the destination is the headline ("Towards the Salt Gallery"); the tunnel and fog move so the world is visibly travelling. The phone can go away; the end must be heard or felt (Phase 7). **In flow:** "Keep going" at the end; during the breather, "Start it now" starts the next one at once (that is how the breather is skipped), without loss. **Only two ideas, always in the same words:** "Step away" (hold it, I'll be back) and "Finish here" (I'm done, count what I did). Every delve state has at most one main button and one quiet "Finish here"; the Today link at the top is the way back. **Interrupted (D-036):** a quiet "Step away" keeps the minutes, holds the delve and starts the breather, whose main button becomes "Back to the delve · N min left". If he's gone longer, the morning screen's first offer is "Carry on: <job> · N min left". Dan can go anywhere in the app meanwhile; the hold belongs to the job. Beside it, **"Finish here"** ends the delve with every minute counted; a done-or-not job then asks "Is it done?" (Done / Not yet). Never shown as falling short.
+
+## Enough, then more: the Course day (D-047)
+A job's session counts at its **enough** (`game/PLANNER.md`). For the Course that's its first hour, even on a day planned for 3.
+- **Before:** the plan reads "1 h · room for 3"; the run line has a small gold *enough* mark, and a longer run reads "enough around 10:25 · ends 12:25". Never "six delves".
+- **At enough:** its own moment: "Course session complete. Enough for today." It counts at once for the rhythm and the day; Today shows the Course done ("enough · more if you like").
+- **Then a real choice:** **Continue** and **Back to today** side by side, equal weight; neither is the default. Continue carries on into the day's remaining room as more. If Dan set a longer run himself before Begin, the moment still shows, and the run carries on by itself as he chose (D-037), with Finish here beside it.
+- **After:** the line under the job says "more · the third delve". No count of what's left, ever.
+- **Finish here** before enough keeps every minute and shows no shortfall; after it, it says "Enough for today."
+
+## The week (planner copy, D-047)
+- The forecast is predictive, not a promise: "Current forecast: the Salt Gallery around Thursday"; waypoints are tagged *forecast*. Never "if the plan holds", never "by" for an estimate.
+- On a Low day Today says only "A lighter day." Where released jobs went is never narrated on Today.
+- A rhythm's editor ends with "Stop repeating" (it ends future sessions only; no confirmation).
 
 ## The map
 Routes draw themselves in, then settle to dust. Tap a place: a crosshair closes on it and its description rises in a box underneath. Places you've walked are warm-lit; places seen but not reached are dim; the unknown is dark.

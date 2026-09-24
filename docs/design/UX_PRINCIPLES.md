@@ -41,4 +41,4 @@
 18. **Text on a surface in the scene follows that surface's perspective** (marks on the lintel).
 
 ## Copy
-14. Mock-up copy is placeholder. **A language pass on every line is a recorded job** (D-031): natural, human, not clipped formula lines.
+14. Mock-up copy is placeholder. **A language pass on every line is a recorded job** (D-031; after 3–4 weeks of playing the first playable, D-046): natural, human, not clipped formula lines.

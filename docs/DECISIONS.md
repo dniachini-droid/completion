@@ -458,3 +458,101 @@
 - **Rationale:** D-004 (thorough but pragmatic; get a small, beautiful first playable into Dan's hands quickly); the comparison §59 wants already happened in Phase 2 (`game/CORE_LOOPS.md` Parts 2–3).
 - **Consequences:** `CLAUDE.md`, `CURRENT_STATE.md`, new `product/PHASE5_PLAN.md`.
 - **Reversible:** Yes.
+
+## D-043 — The concept's stress test: sixteen small rules at the edges
+- **Date:** 2026-09-24
+- **Context:** Phase 5 step 2 (`product/PHASE5_PLAN.md`): `product/CONCEPT.md` checked against the principles, the anti-features and the MASTER_BRIEF §71 checklist, and walked through a low, normal and high day, an interrupted delve, a week away and a disrupted week. Full record: `product/STRESS_TEST.md`.
+- **Decision:** The concept holds; nothing is redesigned. Sixteen gaps, mostly where two agreed rules meet without saying what happens, are closed with one rule each (Claude's routine calls, per D-006; Dan sees them at step 5):
+  F1 the app's day ends at about 4 am; F2 capacity and Swap work at any time until then, and lowering capacity can complete the day; F3 every delve minute moves Dan, on any job, while only today's jobs fill and complete the day; F4 a job's usual length defaults to 25 minutes and is never asked; F5 "avoided" is a mark on the job (pre-set, learned from repeated swaps, Dan's to change); F6 a Key opens something the moment it's earned and is never held, and a sealed thing that takes a Key is always in view; F7 a change to a weekly target applies from next week; F8 editing jobs is on request only, from the job itself, with defaults everywhere and the first playable preloaded; F9 the welcome back after an absence follows one small real job, the first day back is suggested Low, and passed-date questions come at most one a day and none on the first day back; F10 a week with nothing done gets no daybook page; F11 "Keep going" leads to the deep route on any day; F12 catching up is not a mode; F13 tiny steps are written for regular jobs, and other jobs get one by their way (desk or away); F14 a rhythm thing is a main job only as its weekly target's pick or the Low day's meal; F15 "Start it now" is the one name for skipping the breather; F16 "growing into it" is out of the first playable.
+- **For Dan (step 5):** D1, keep the same-kind slowdown or pay variety as a bonus instead (Claude recommends the bonus: the job slate already protects avoided work, and the slowdown limits the course hours Dan wants); D2, a nod on evening "enough" (F2).
+- **For step 3:** a weekly floor in the reward rhythm (a week with no target met would open nothing and could stall the first word), the day's edge, the absence threshold, late opening, what low and normal arrivals always carry, and how often a side chamber holds an authored find.
+- **Alternatives:** leave the edges to the build (they would be decided by accident in code); larger fixes such as new modes for catching up or returning (rule 12).
+- **Rationale:** rule 8 (the free welcome moved the world without action), P7 (stacked questions on return), P9 (asking a length for every line), D-039 (effort on an off-list job or on a day suggested Normal was turned away), D-012 (held Keys would be a currency), rule 10 (mid-week target edits).
+- **Consequences:** `product/CONCEPT.md`, `product/STRESS_TEST.md` (new), `DESIGN_PRINCIPLES.md` (P3), `game/QUEST_SYSTEM.md`, `game/TOOLS.md`, `game/CORE_LOOPS.md`, `game/ECONOMY.md`, `OPEN_QUESTIONS.md`.
+- **Reversible:** Yes, every rule; the numbers stay provisional until the first playable.
+
+## D-044 — No slowdown for staying on one job; a find for switching
+- **Date:** 2026-09-24
+- **Context:** The two points D-043 left for Dan. D1: the same-kind slowdown (steps slower after about 2 extra hours of one kind of work, `QUEST_SYSTEM.md`) limited the course hours Dan wants. D2: lowering capacity in the evening to complete a two-job day (D-043, F2).
+- **Decision (Dan):** D1, "Something extra if I switch, but still progress if I don't." The slowdown is removed: staying on one job always keeps full progress (25 minutes = one step). After a long stretch of one kind of work (about 2 hours, tuned in step 3), the first delve on a different kind brings a **find**. D2, yes: F2 stands as written.
+- **Alternatives:** keep the slowdown (a penalty for doing more of what Dan wants to do); no variety pull at all (loses a gentle push towards avoided work).
+- **Rationale:** D-039 ("shouldn't be punished for doing more work"); rule 9; the day's job slate already keeps the course from crowding out avoided work (P5), so the bonus only needs to invite variety, not enforce it.
+- **Consequences:** `product/CONCEPT.md`, `product/STRESS_TEST.md`, `game/QUEST_SYSTEM.md`, `game/TOOLS.md`, `game/CORE_LOOPS.md`, `game/ECONOMY.md`, `OPEN_QUESTIONS.md`, `CURRENT_STATE.md`. Supersedes D-037 point 5's slowdown (its slot rule stays). Step 3 sets the stretch length and counts these finds in the year's supply.
+- **Reversible:** Yes.
+
+## D-045 — The week planner: reconciling the outside review (draft, for Dan)
+- **Date:** 2026-09-24
+- **Context:** Dan asked for a scheduler integrated into the app, not an afterthought: plan the week whenever he likes, with repeating jobs he defines himself (how long, how many times a week or fortnight), and delves scheduled automatically. He first asked for one at D-020; it was deferred. Claude's proposal (`product/SCHEDULER_PROPOSAL.md`) went to ChatGPT, which approved the direction and not every mechanic (about 8.5/10). Reconciled item by item in `product/SCHEDULER_REVIEW.md`.
+- **Decision (draft; locks when Dan approves the rules and the mock-ups):** the rules in `game/PLANNER.md`. Four rules: the plan is a forecast, not a promise; planning predicts progress and action creates it; the app proposes and Dan edits; enough is fixed before more begins. Weekly targets become **rhythms**, all Dan's own input (N a week, set days, every 2 weeks; optional length and time; no ranges). **This week** is the view, and **Plan my week** is the main action (fixed rules, no learning yet). There is **no tray** of unplaced jobs. Capacity overrides the plan. Released jobs are re-placed only below a day's Normal size, otherwise they fall away. Off-plan work counts in full, and keeping to the plan earns nothing extra. The plan never holds more of a rhythm than its enough. The past shows only what was done, while planned-vs-done is kept internally and never shown. The core story's pace does not depend on the number of rhythms. The planner is in the first playable, **without Google Calendar**.
+- **Disagreements with the review:** no "stretch aim: 12 h" label (a bar above enough, UX 6); no tray, even as a secondary view; no ranges; no "explain why" feature in the first playable.
+- **For Dan:** whether a 3-hour course day counts at its first hour (recommended; P5) or only at the full 3. Approval of `game/PLANNER.md` and the mock-ups (`week.html`, `rhythms.html`, `today-planned.html`).
+- **Alternatives:** keep planning deferred past the first playable (Dan: it must not be an afterthought); the tray-first proposal (a debt display); a full recurrence engine and calendar sync now (too much before the planner's value is tested).
+- **Rationale:** Dan's request; planning *when and where* is the best-evidenced tool in the design (`TOOLS_RESEARCH.md` §3) and is the activity scheduling his psychologist recommended; P1, P3, P6, P7, P9 and P16 are kept by the four rules.
+- **Consequences:** new `game/PLANNER.md`, `product/SCHEDULER_REVIEW.md`; `TOOLS.md` §3 points to it; three new D mock-ups. Once approved: fold rhythms into `QUEST_SYSTEM.md`, `CORE_LOOPS.md` and P6/P16, add the step to `PHASE5_PLAN.md`, and step 3 sets the Key numbers.
+- **Reversible:** Yes.
+
+## D-046 — The language pass comes after 3–4 weeks of play
+- **Date:** 2026-09-24
+- **Context:** Reading the planner review file, Dan: the language is "very AI like". He confirmed the language pass (D-031) must happen, and said: "I want to see the app before the language pass so build it in after my 3-4 week test."
+- **Decision:** The language pass on every line the app says moves from "Phase 5–6, before copy is fixed in the build" to **after Dan has played the first playable for 3–4 weeks**. Until then all copy (mock-ups, first playable) is placeholder. The first playable must keep every line easy to change in one place (a Phase 7 requirement), so the pass needs no rebuild.
+- **Note:** the behaviour test was set at 5–6 weeks (D-023), so the pass may land inside it. That's fine as long as it's recorded, since changed wording is one more thing that changes during the test.
+- **Alternatives:** do the pass before the build (D-031's slot; Dan wants to see the app first).
+- **Rationale:** Dan's choice; wording is judged best on real screens in real use.
+- **Consequences:** `CURRENT_STATE.md`, `OPEN_QUESTIONS.md`, `design/UX_PRINCIPLES.md`. Phase 7 records the one-place copy requirement. Supersedes D-031's suggested slot.
+- **Reversible:** Yes.
+
+## D-047 — The week planner: the second review reconciled; the Course day counts at its hour
+- **Date:** 2026-09-24
+- **Context:** ChatGPT's second review of the planner (D-045) agreed with the direction and with all three of Claude's rejections, and asked for a small reconciliation. Dan answered D-045's open question himself: a 3-hour Course day counts once its first hour is done. Record: `product/SCHEDULER_REVIEW.md` → "The second review" (6 accepted, 1 modified, 8 already resolved, none rejected).
+- **Decision:**
+  1. **The Course day counts at its first hour** (Dan). The planned 3 hours are room, not the bar; the rest is more, which moves Dan in full (D-044) and is never shown as owed. Contract: planned as "1 h · room for 3"; Begin opens the run at the hour, with a gold *enough* mark on the line; the hour ends in its own moment ("Course session complete. Enough for today."), which counts at once; then **Continue** and **Back to today** with equal weight, neither the default; past enough the words say "more", never "of six". If Dan set a longer run himself before Begin, the moment still shows and the run carries on by itself (D-037 kept).
+  2. **Each job has its own enough, read from how it's set up** (no categories; D-038 point 4 kept): a delve rhythm counts at its *enough at* (one optional field, delve rhythms only, default all of it; the Course preloaded at 1 hour); a delve one-off when Dan says it's done; a job without a timer when marked done, its length only planning and paying steps. Replaces the draft "one hour = done" rule for every timed job.
+  3. **Invariant: adding rhythms never raises the most Keys a period can usefully give** (`game/ECONOMY.md`). The period's Key supply is bounded by the game; once used up, effort still pays through steps, distance, finds, side chambers and the deep route. Step 3 sets the numbers.
+  4. Copy: the Low day says only "A lighter day."; the forecast is predictive ("Current forecast: … around Thursday"; waypoints tagged *forecast*); "Stop this one" becomes "Stop repeating".
+  5. The readability check gates the planner's lock, not Phase 4 (closed, D-040): passed at true size in the browser (every quiet colour 6:1 or better); Dan's check on his own phone remains.
+- **Disagreements with the review:** only item 14's timing (Phase 4 is already closed). Kept, with reasons: the D-037 auto-continue for a run Dan lengthens himself.
+- **Alternatives:** count the Course only at 3 hours (turns 2 good hours into a miss, against P5); keep one hour as the rule for every timed job (wrong for completion jobs); a per-job completion setting for every job (setup Dan doesn't want, P9); Continue as the main button (makes more the expected path).
+- **Rationale:** P2, P5, P7, P9, rule 10 (trivial or multiplied inputs must not out-earn real effort), rule 11, UX 6.
+- **Consequences:** `game/PLANNER.md` (reconciled, ready for Dan's approval), `game/ECONOMY.md`, `product/PHASE5_PLAN.md` (step 3 input), `product/SCHEDULER_REVIEW.md`, `design/INTERACTION_NOTES.md`, mock-ups `today-planned.html`, `week.html`, `rhythms.html`, `delve-set.html`, `delve.html` and their `NOTES.md`. Answers D-045's open question.
+- **Reversible:** Yes.
+
+## D-048 — The week planner approved and locked
+- **Date:** 2026-09-24
+- **Context:** Dan reviewed the reconciliation of the second review (D-047), the revised rules and the changed screens.
+- **Decision (Dan):** "Yes. Proceed." `game/PLANNER.md` is locked. Weekly targets become rhythms throughout the docs; the planner is in the first playable (without Google Calendar). P16 gains the planner's line: *the plan is a forecast, not a promise; planning predicts progress, action creates it.*
+- **Alternatives:** none open; D-045 and D-047 hold them.
+- **Consequences:** `game/PLANNER.md` (locked), `DESIGN_PRINCIPLES.md` (P5, P6, P16 clarified), `game/QUEST_SYSTEM.md`, `game/CORE_LOOPS.md`, `game/TOOLS.md`, `game/GAME_DESIGN.md` (planner in the first playable; plotting no longer "later"), `product/CONCEPT.md`, `product/PHASE5_PLAN.md` (step 2a). Phase 5 continues at step 3; readability on Dan's own phone is still worth a look whenever convenient.
+- **Reversible:** Yes, by a new decision.
+
+## D-049 — The numbers (Phase 5 step 3; draft for Dan)
+- **Date:** 2026-09-24
+- **Context:** `product/PHASE5_PLAN.md` step 3: set the numbers the build needs, as starting guesses. Inputs: D-035 (reward rhythm, high days, memory), D-037 (distance), D-043 (seven step-3 inputs), D-044 (switching), D-047 (the Key invariant), and the sealed pacing ledger (checked privately).
+- **Decision (Claude's routine call, D-006; Dan reviews at step 5):** `game/BALANCING.md`. Two clocks: **time moves the Site**, uncapped; **the story keeps its order**, at most one story week per calendar week, stretched by thin weeks and paused by absence. Places may run one story week ahead, never signs. Named places **8 steps** apart. **5 useful Keys a week**, one per rhythm met, story counts first; a **floor of 2** for any week with a day complete; a rhythm met past the supply brings one find (at most one a week); milestone Keys only fill their own great door. Every side chamber holds a find, about one in three record-bearing. The long stretch for the switching find: 4 delves on one job in a day. Opening late: after 14:00 one fewer job, after 19:00 one job completes the day. Absence: 3 days. Memory: the week close names up to 3 things learned; each month's first week close adds a 3–5 line "so far"; before → now on re-reads; the absence welcome names the nearest open question.
+- **Replaces:** "a strongly exceeded target can open a sealed thing" (`CORE_LOOPS.md`), which broke the D-047 invariant.
+- **Alternatives:** let hours advance the story (spends a year's story in weeks for a heavy worker, and breaks clue order); a hard daily cap (against D-011, D-039); Keys scaled by how much of each rhythm was done (a partial-credit meter, against P6 and UX 6).
+- **Rationale:** D-011, D-035, D-037, D-039, D-047, rule 10; Dan's honest week of rhythms comes to about 40 steps, which the 8-step spacing turns into one story week of places.
+- **Consequences:** `game/BALANCING.md` (new content), `CORE_LOOPS.md`, `ECONOMY.md`, `PROGRESSION.md`, `product/CONCEPT.md`, `product/STRESS_TEST.md`, `product/PHASE5_PLAN.md`; the D mock-ups' sample distance (`delve.html`, `delve-set.html`) moves from 7 to 8 delves; a sealed alignment note and an authoring list for the story-fix session.
+- **Reversible:** Yes: all numbers are tuned in play.
+
+## D-050 — The first playable's contents (Phase 5 step 4; draft for Dan)
+- **Date:** 2026-09-24
+- **Context:** `product/PHASE5_PLAN.md` step 4: what is in and out of the first playable, sized for the 5–6 week test (D-023).
+- **Decision (draft; Dan reviews at step 5):** `product/FIRST_PLAYABLE.md`. In: Today with capacity, the delve and runs (with the Course's enough moment), jobs with and without timers, the week planner (D-048), the satchel, one region with its open route, the map, two lives, the first marks and the first word in week 2–3, Keys by `BALANCING.md`, finds, the deep push, camp and bedtime, the trail's first relic, the daybook as week close with memory lines, absence handling. Out: calendar, drag and drop, advanced rhythms, planner learning, company at work, satchel groups, more great doors and milestone Keys, more lives, sound design, notifications, AI text. Before the build: the sealed story-fix session with week 6 and the new authoring list; Phase 7's requirements; Dan's phone check.
+- **For Dan:** great doors for big projects (the Course's modules) now or later (Claude leans later).
+- **Alternatives:** the Phase 2 draft as it stood (predates the planner, runs, the enough moment and the numbers).
+- **Consequences:** new `product/FIRST_PLAYABLE.md`; `game/GAME_DESIGN.md` and `game/TOOLS.md` point to it; `product/PHASE5_PLAN.md`.
+- **Reversible:** Yes; Phase 6 may cut it further.
+
+## D-051 — Step 5: Dan approves the numbers and the first playable's contents
+- **Date:** 2026-09-24
+- **Context:** Phase 5 step 5. Dan heard a three-point summary (the numbers, the contents list, one question) and answered by voice.
+- **Decision (Dan):** "The numbers feel right" (`game/BALANCING.md`, D-049, approved). "Nothing is missing" (`product/FIRST_PLAYABLE.md`, D-050, approved). Great doors for big projects (the Course's modules) come **later**: "it already counts" every day.
+- **Consequences:** both docs marked approved; `PHASE5_PLAN.md` step 5 done. Remaining for Phase 5: Dan's agreement to close it and move to Phase 6 (step 6). Still pending in parallel: the sealed story-fix session (D-035) and Dan's look at the planner screens on his phone (D-047).
+- **Reversible:** Yes.
+
+## D-052 — Phase 5 closed; Phase 6 (MVP) opened
+- **Date:** 2026-09-24
+- **Context:** Phase 5's exit criteria are met: one concept (D-042), written and stress-tested (D-043, D-044), the week planner added and locked (D-045, D-047, D-048), the numbers set (D-049) and the first playable's contents listed (D-050), both approved (D-051).
+- **Decision (Dan):** "Yes." Phase 5 is closed and merged into `main`. Phase 6 (MVP, MASTER_BRIEF §60–61) opens in a new session.
+- **Carried into Phase 6:** the sealed story-fix session with week 6 and the new authoring list (D-035, D-049), before the build; Dan's phone check of the planner screens (D-047); the language pass after 3–4 weeks of play (D-046).
+- **Reversible:** Phase changes need Dan's agreement.

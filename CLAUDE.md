@@ -5,9 +5,9 @@ It is a genuine game, not a productivity app with an RPG skin. Provisional name:
 
 ## Current phase
 
-**PHASE 5 — CONCEPT SYNTHESIS** (started 2026-09-24; Phase 4 closed with Dan's agreement, D-040)
+**PHASE 6 — MVP** (opened 2026-09-24; Phase 5 closed with Dan's agreement, D-052)
 
-Pull the agreed loop, tools, story shape and look (direction D) into one concept for the first playable and set the numbers the build needs (MASTER_BRIEF §59, paced by D-004). **One concept, no new ones** (D-042); the work order is `docs/product/PHASE5_PLAN.md`. The story **stays sealed from Dan** (`docs/narrative/sealed/`, D-015). No application code or tech stack. Details and exit criteria: `docs/CURRENT_STATE.md`. Phase changes require Dan's explicit agreement.
+Define the smallest **true** version of the game from the approved first-playable contents (`docs/product/FIRST_PLAYABLE.md`) and the central MVP test (MASTER_BRIEF §60–61). It must already feel like the product, not "task manager now, RPG later". The story **stays sealed from Dan** (`docs/narrative/sealed/`, D-015); the sealed story-fix session (D-035) runs in its own session before the build. No application code or tech stack yet (Phase 7). Details and exit criteria: `docs/CURRENT_STATE.md`. Phase changes require Dan's explicit agreement.
 
 Phase order: 0 Player discovery → 1 Product discovery → 2 Game design → 3 Narrative/world → 4 Experience/art/UX → 5 Concept synthesis → 6 MVP → 7 Technical architecture → 8 Prototype → 9 First playable → 10 Personal alpha → 11 Iteration.
 
