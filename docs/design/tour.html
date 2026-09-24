@@ -45,7 +45,7 @@ document.getElementById("name").innerHTML=`<b>${N[d]}</b> — ${l[i][1]} <span s
 document.querySelectorAll(".dirs button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.d===d));
 const dots=document.getElementById("dots");dots.innerHTML="";l.forEach((x,k)=>{const b=document.createElement("button");b.setAttribute("aria-label",x[1]);if(k===i)b.setAttribute("aria-current","true");b.onclick=()=>{i=k;go()};dots.append(b)});
 history.replaceState(null,"",`#${d}-${i}`)}
-document.querySelectorAll(".dirs button").forEach(b=>b.onclick=()=>{d=b.dataset.d;go()});
+document.querySelectorAll(".dirs button").forEach(b=>b.onclick=()=>{const cur=list(d)[i][0];d=b.dataset.d;const k=list(d).findIndex(x=>x[0]===cur);i=k>=0?k:(cur==="morning-violet"?0:Math.min(i,list(d).length-1));go()});
 document.getElementById("prev").onclick=()=>{i--;go()};
 document.getElementById("next").onclick=()=>{i++;go()};
 document.getElementById("replay").onclick=()=>{f.src=f.src};
