@@ -52,7 +52,8 @@ body { --pool-x: 50%; --pool-y: 78%; --scrim-top-h: 240px; --scrim-bottom-h: 30%
 @keyframes drop { to { opacity:1; transform:none; } }
 .cairnrow span { font-family:var(--life); font-style:italic; font-size:17px; color:var(--ink); padding:4px 18px; opacity:0;
   animation: fadein 1.2s 5.6s var(--ease) forwards; text-shadow:0 0 12px rgba(8,6,20,.95), 0 0 2px rgba(8,6,20,.9); }
-.bottom { opacity:0; animation: rise 1.2s 6.0s var(--ease) forwards; }
+/* the way out is there early (by about 2.5 s), even while the scene is still turning gold */
+.bottom { opacity:0; animation: rise 1s 1.4s var(--ease) forwards; }
 .bottom .btn-row { margin-top: 16px; }
 .replay svg { width:18px; height:18px; }
 @media (max-height: 800px) { .head { margin-top: 8px; } .cairnrow { margin-top: 4px; } .bottom .btn-row { margin-top: 12px; } }
@@ -95,7 +96,7 @@ body { --pool-x: 50%; --pool-y: 78%; --scrim-top-h: 240px; --scrim-bottom-h: 30%
   </div>
   <section class="bottom col">
     <a class="btn resting" href="camp.html">Rest here for today</a>
-    <div class="btn-row"><a class="btn-quiet" href="record.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6v12M10 6v12M14 6v12M18 6v12M4 15l16-6"/></svg><span>Read the tally</span></a></div>
+    <div class="btn-row"><a class="btn-quiet" href="record.html#fromdone"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6v12M10 6v12M14 6v12M18 6v12M4 15l16-6"/></svg><span>Read the tally</span></a></div>
   </section>
 </div>
 
@@ -108,6 +109,16 @@ body { --pool-x: 50%; --pool-y: 78%; --scrim-top-h: 240px; --scrim-bottom-h: 30%
   }
   arm(document.querySelector('.phone'));
   var m = location.hash.match(/t=([\d.]+)/);
+  /* a tap anywhere (not on a button) skips to the end state */
+  var ph = document.querySelector('.phone');
+  ph.addEventListener('pointerdown', function(e){
+    if (e.target.closest('a, button')) return;
+    ph.classList.add('go');
+    document.getAnimations().forEach(function(a){
+      var t = a.effect && a.effect.getComputedTiming && a.effect.getComputedTiming();
+      if (t && isFinite(t.endTime)) { try { a.finish(); } catch (err) {} }
+    });
+  });
   if (m) addEventListener('load', function(){ setTimeout(function(){ document.getAnimations().forEach(function(a){ a.pause(); a.currentTime = parseFloat(m[1]) * 1000; }); }, 50); });
 })();
 </script><script>

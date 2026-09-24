@@ -116,11 +116,11 @@
   </div>
   <section class="bottom col rise d3">
     <div class="normal">
-      <h2>Course: one hour</h2>
+      <h2 id="job">Course: one hour</h2>
       <p class="soft of first-only">the first of two delves</p>
       <p class="soft of second-only">the second of two delves</p>
       <p class="say away">Put the phone away. You’ll hear it end.</p>
-      <button class="btn-quiet stopbtn" id="stop"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="4.5" y="4.5" width="7" height="7" rx=".5"/></svg><span>Stop for now</span></button>
+      <button class="btn-quiet stopbtn" id="stop"><span>Stop for now</span></button>
     </div>
     <div class="confirm">
       <p class="say">Stop here? Every minute you did still counts.</p>
@@ -133,6 +133,12 @@
         <p class="say">The passage opens out ahead. Rest a little; there’s nothing to watch.</p>
         <a class="btn resting" href="delve.html#second">Next delve</a>
         <div class="cant two"><a class="text-link" href="delve.html#second"><span>Skip the breather</span></a><span class="dot" aria-hidden="true">·</span><a class="text-link" href="morning.html#later"><span>Done for now</span></a></div>
+      </div>
+      <div class="cat-only" style="display:none">
+        <div class="label-line centred">The delve</div>
+        <h2 style="margin-top:10px">That’s the delve done.</h2>
+        <p class="say">The passage opens out ahead.</p>
+        <a class="btn resting" href="morning.html#later">Back to today</a>
       </div>
       <div class="second-only">
         <div class="label-line centred">The last delve</div>
@@ -167,6 +173,20 @@
   document.querySelectorAll('.second-only').forEach(function(e){ e.style.display = second ? 'block' : 'none'; });
   document.querySelectorAll('.first-only').forEach(function(e){ e.style.display = second ? 'none' : ''; });
   if (second) left = 21*60 + 40;
+  /* from the length dial on the cat's-medication job: delve.html#cat-25 | 30 | 45 | 60 (one delve, just begun) */
+  var cat = location.hash.match(/cat-(25|30|45|60)\b/);
+  if (cat) {
+    var n = +cat[1], REACH = { 25: ['Towards', 'The Salt Gallery'], 30: ['Into', 'The Salt Gallery'], 45: ['On to', 'The Survey Cut'], 60: ['To the far end of', 'The Survey Cut'] }[n];
+    total = n * 60; left = total;
+    document.getElementById('job').textContent = 'Order the cat’s medication';
+    document.title = 'A delve · Order the cat’s medication';
+    document.querySelector('.head .label-line').textContent = REACH[0];
+    document.querySelector('.head h1').textContent = REACH[1];
+    document.querySelector('.ring .left').textContent = 'left of ' + n + ' minutes';
+    document.querySelectorAll('.first-only, .second-only').forEach(function(e){ e.style.display = 'none'; });
+    document.querySelectorAll('.cat-only').forEach(function(e){ e.style.display = 'block'; });
+  }
+  ring.setAttribute('aria-label', 'Time left of ' + Math.round(total / 60) + ' minutes');
   function draw(){ var m = Math.floor(left/60), s = left % 60; t.textContent = m + ':' + (s < 10 ? '0' : '') + s; ring.style.setProperty('--p', ((total - left) / total).toFixed(4)); }
   function end(){ left = 0; draw(); ring.classList.add('ended'); setTimeout(function(){ ring.classList.add('rest'); }, 1200); setTimeout(function(){ ui.classList.remove('stopping'); ui.classList.add('breathing'); }, 900); }
   draw();

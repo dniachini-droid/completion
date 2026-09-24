@@ -52,6 +52,7 @@ body.s-evening { --a1: .16; --aw: 40%; --ah: 20%; --a2: .08; --h2: 12%; }  /* le
 </div>
 
 </main>
+<!-- cool violet dust only: warm specks at cup height read as lit cups (CRITIQUE-2 SF3) -->
 <canvas class="sc-motes" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none"></canvas>
 <script>
 (function(){
@@ -69,7 +70,7 @@ body.s-evening { --a1: .16; --aw: 40%; --ah: 20%; --a2: .08; --h2: 12%; }  /* le
       var q = P[i]; q.x += q.vx + Math.sin(t/3000 + q.p)*.05; q.y += q.vy; q.p += .002;
       if (q.y < H*0.4 - 10) { q.y = H*0.72; q.x = Math.random()*W; }
       var al = q.a * (.6 + .4*Math.sin(t/1400 + q.p*3));
-      x.beginPath(); x.arc(q.x, q.y, q.r, 0, 6.283); x.fillStyle = 'rgba(255,214,160,' + al.toFixed(3) + ')'; x.fill();
+      x.beginPath(); x.arc(q.x, q.y, q.r, 0, 6.283); x.fillStyle = 'rgba(206,210,255,' + (al*.8).toFixed(3) + ')'; x.fill();
     }
   }
   requestAnimationFrame(tick);

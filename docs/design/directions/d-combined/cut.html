@@ -46,10 +46,22 @@ body.settled .head .after { opacity: 1; transform: none; }
 .head .say-lg { margin-top: 8px; }
 
 /* the word, in its box, floating over the scene */
-.wordbox { text-align: center; padding: 14px 16px 12px; transition: transform 1.2s var(--ease), background .8s var(--ease); }
+.wordbox { text-align: center; padding: 14px 16px 12px; }
 .wordbox .label-line { margin-bottom: 8px; }
-body.cine .wordbox { transform: translateY(-12px); background: linear-gradient(180deg, rgba(20, 18, 52, .34), rgba(8, 7, 24, .44)); }
-body.settled .wordbox { transform: none; }
+/* at the reveal the box's fill and edge fade away, so the whole phone is the hall; only the lit pill with its
+   two marks stays, lifted to about 62% of the height. The edge comes back with "Go through". */
+@property --wb { syntax: '<number>'; inherits: false; initial-value: 1; }
+.wordbox { --wb: 1; background: linear-gradient(180deg, rgba(20, 18, 52, calc(.5 * var(--wb))), rgba(8, 7, 24, calc(.62 * var(--wb))));
+  transition: transform 1.2s var(--ease), --wb .8s var(--ease), border-color .8s var(--ease), box-shadow .8s var(--ease), -webkit-backdrop-filter .8s var(--ease), backdrop-filter .8s var(--ease); }
+.wordbox::before { transition: opacity .8s var(--ease); }
+body.cine .wordbox { --wb: 0; transform: translateY(-7.5vh); border-color: transparent; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+body.cine .wordbox::before { opacity: 0; }
+body.settled .wordbox { --wb: 1; transform: none; border-color: var(--edge-3); box-shadow: inset 0 1px 0 rgba(217, 214, 255, .06), 0 0 40px rgba(var(--violet-rgb), .08); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+body.settled .wordbox::before { opacity: 1; }
+/* final state: no empty hint line under the readings (bottom padding about 24 px) */
+.hint { transition: opacity .4s, min-height .9s var(--ease), margin-top .9s var(--ease); }
+body.settled .hint { min-height: 0; margin-top: 0; }
+body.settled .wordbox { padding-bottom: 20px; }
 .rod { display: block; width: min(280px, 100%); height: auto; margin: 0 auto; overflow: visible; }
 .rodbody { fill: rgba(10, 9, 30, .55); stroke: rgba(206, 204, 255, .45); stroke-width: 1; }
 .ghost path { stroke: rgba(206, 204, 255, .16); stroke-dasharray: 2 3; }
@@ -89,6 +101,11 @@ body.settled .go { opacity: 1; transform: none; pointer-events: auto; }
 .after-row { display: flex; justify-content: center; margin-top: 6px; }
 .scrim-bottom { --scrim-bottom-h: 52%; }
 .scrim-top { --scrim-top-h: 230px; }
+/* cups: the group stays fully opaque (unisolated); its glow and flame fade in themselves (see script) */
+#hall .hall-cup { opacity: 1; transition: none; }
+#hall .hall-cup > * { opacity: 0; transition: opacity 1.2s var(--ease); }
+#hall.cups-waking .hall-cup > *, #hall.cups-lit .hall-cup > * { opacity: var(--a, 1); }
+#hall.cups-waking .hall-cup > * { transition-delay: calc(var(--i) * .09s); }
 @media (max-height: 800px) { .head .soft { font-size: 16px; } .wordbox { padding-top: 10px; padding-bottom: 8px; } .slot { margin-top: 10px; } }
 
 </style>
@@ -119,8 +136,8 @@ body.settled .go { opacity: 1; transform: none; pointer-events: auto; }
     </div>
     <div class="after">
       <h1 class="carve lg" aria-hidden="true">The lintel</h1>
-      <p class="say-lg on-scene">The lintel answered.</p>
-      <p class="soft on-scene">The lamps woke down the hall, and the stone under it has opened.</p>
+      <p class="say-lg on-scene">It answered.</p>
+      <p class="soft on-scene">The lamps woke down the hall, and the stone beneath it slid away.</p>
     </div>
   </div>
 
@@ -164,8 +181,19 @@ body.settled .go { opacity: 1; transform: none; pointer-events: auto; }
   /* the hall: you stand across from the lintel; the hall runs on to the right, the cups dark */
   var h = Hall.draw(document.getElementById('hall'), { cam: { x: .1, y: 1.65, z: 2.4, f: .62, cx: .62, cy: .42 }, lintel: 'opening', gold: .15 });
 
+  /* the cups wake as small warm points receding in perspective, not two blobs at the far end:
+     each glow's radius and strength shrink with distance, and each part fades on its own (screen-blended
+     the whole time), so no group is ever isolated into flat orange while it fades in */
+  var cupEls = document.querySelectorAll('#hall .hall-cup');
+  h.cups.forEach(function (c, i) {
+    var g = cupEls[i]; if (!g) return;
+    var glow = g.querySelector('circle'), k = Math.min(1, Math.pow(c.s / 40, .8));
+    if (glow) { glow.setAttribute('r', Math.max(1.5, c.s * 1.5 * k).toFixed(1)); glow.style.setProperty('--a', (.7 * Math.min(1, .15 + c.s / 45)).toFixed(3)); }
+    [].forEach.call(g.children, function (el) { if (el !== glow) el.style.setProperty('--a', Math.min(1, .45 + c.s / 30).toFixed(3)); });
+  });
+
   /* the two marks, cut into the rod-shaped blank on the lintel itself (sample shapes) */
-  var WAKE = 'M7 22 Q20 9 33 22 M12 27 Q20 32 28 27 M20 20 L20 20.1', STONE = 'M10 28 L14 13 L27 10 L31 25 Z M16 21 L25 18';
+  var WAKE_U = 'M7 22 Q20 9 33 22', WAKE_L = 'M12 27 Q20 32 28 27 M20 20 L20 20.1', STONE = 'M10 28 L14 13 L27 10 L31 25 Z M16 21 L25 18';
   var cuts = document.getElementById('cuts'), W = h.W, H = h.H;
   /* the beam's face in its own plane: u along the beam (2.6 m, near → far), v down from its top (0.85 m); 400 units a metre */
   var K = 400, FW = 2.6 * K, FH = .85 * K;
@@ -188,9 +216,14 @@ body.settled .go { opacity: 1; transform: none; pointer-events: auto; }
   cuts.innerHTML = '<svg viewBox="0 0 ' + FW + ' ' + FH + '" preserveAspectRatio="none">' +
     '<rect class="lockflash" x="' + rx + '" y="' + ry + '" width="' + rw + '" height="' + rh + '" rx="' + (rh * .5) + '" fill="rgba(228,226,255,.75)" style="filter:blur(12px)"/>' +
     /* each mark: the lower lip catching light, the dark groove, then the lit cut in it */
-    glyph(WAKE, .04, .48, 'cutm c1', 'rgba(214,210,255,.35)', 17).replace('translate(', 'translate(0 5) translate(') +
-    glyph(WAKE, .04, .48, 'cutm c1', '#0e0c1e', 14) +
-    glyph(WAKE, .04, .48, 'cutm c1 lit', '#f0eeff', 8) +
+    /* wake: the dot and the lower arc cut heavier than the upper arc, so at this scale it reads as the
+       word box's mark and not as two arrows chasing (a refresh sign) */
+    glyph(WAKE_U, .04, .48, 'cutm c1', 'rgba(214,210,255,.35)', 17).replace('translate(', 'translate(0 5) translate(') +
+    glyph(WAKE_L, .04, .48, 'cutm c1', 'rgba(214,210,255,.35)', 24).replace('translate(', 'translate(0 5) translate(') +
+    glyph(WAKE_U, .04, .48, 'cutm c1', '#0e0c1e', 14) +
+    glyph(WAKE_L, .04, .48, 'cutm c1', '#0e0c1e', 21) +
+    glyph(WAKE_U, .04, .48, 'cutm c1 lit', '#f0eeff', 8) +
+    glyph(WAKE_L, .04, .48, 'cutm c1 lit', '#f0eeff', 13) +
     glyph(STONE, .52, .96, 'cutm c2', 'rgba(214,210,255,.35)', 17).replace('translate(', 'translate(0 5) translate(') +
     glyph(STONE, .52, .96, 'cutm c2', '#0e0c1e', 14) +
     glyph(STONE, .52, .96, 'cutm c2 lit', '#f0eeff', 8) +

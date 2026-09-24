@@ -307,12 +307,12 @@
               if (s + m < 0) {
                 var zs = (m * S.zLip - Oy + Oz * s) / (s + m);
                 var k = Math.max(0, Math.floor((zs - S.zLip) / S.tread) - 1);
-                for (var kk = k; kk < k + 4; kk++) {
+                for (var kk = k; kk < k + 8; kk++) {
                   var hk = -S.riser * (kk + 1), ze = S.zLip + (kk + 1) * S.tread, te = (ze - Oz) / dz;
                   if (Oy + te * dy <= hk) {
                     var tq2 = (hk - Oy) / dy;
-                    if (Ox + tq2 * dx >= S.xs0) { tS = tq2; hitS = kk + 1; sn = ze; }
-                    break;
+                    /* below this tread's level but still beside the stair: it may yet land on a lower tread */
+                    if (Ox + tq2 * dx >= S.xs0) { tS = tq2; hitS = kk + 1; sn = ze; break; }
                   }
                 }
               }
@@ -454,6 +454,8 @@
           if (sn && edge < .03) glowAdd = .22 * (1 - edge / .03);
           /* the inside corner under the tread above is in shadow: bright edge, then a drop */
           if (sn) ao = .3 + .7 * sstep(0, S.tread * .55, Z - (sn - S.tread));
+          /* the landing: its lip catches the same light from below, and brightens toward it, so it runs into the first tread with no seam */
+          if (hitS === 0) { var le = S.zLip - Z; glowAdd = .07 * (1 - sstep(0, .9, le)) + (le < .03 ? .16 * (1 - le / .03) : 0); }
         }
 
         /* perturb the normal: tangent frame on the surface */

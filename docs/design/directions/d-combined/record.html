@@ -25,7 +25,10 @@
   background:
     radial-gradient(60% 90% at 50% 45%, rgba(206, 202, 255, .16), rgba(206, 202, 255, 0) 70%),
     url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='390' height='120' preserveAspectRatio='none'><filter id='p' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.006 .05' numOctaves='2' seed='6'/><feColorMatrix values='0 0 0 0 .78  0 0 0 0 .76  0 0 0 0 1  0 0 0 .22 -.04'/></filter><rect width='390' height='120' filter='url(%23p)'/></svg>") center/100% 100% no-repeat,
-    linear-gradient(180deg, #25224f 0%, #34316b 38%, #3a3774 62%, #2e2b60 100%);
+    linear-gradient(180deg, #1f1c44 0%, #2c2960 38%, #312e68 62%, #26234f 100%);
+  /* cut into the face, not laid on it: the channel's ends fade out at the screen edges (short fade, so no mark sits on the scratches) */
+  -webkit-mask-image: linear-gradient(90deg, transparent 2px, #000 20px, #000 calc(100% - 20px), transparent calc(100% - 2px));
+          mask-image: linear-gradient(90deg, transparent 2px, #000 20px, #000 calc(100% - 20px), transparent calc(100% - 2px));
   box-shadow:
     inset 0 9px 12px -6px rgba(3, 2, 10, .8),        /* the upper lip shades the channel */
     inset 0 -1px 0 rgba(222, 218, 255, .32),         /* the lower lip catches the light */
@@ -80,11 +83,11 @@
 .readout { flex: none; }
 .choices { height: calc(54px * 2 + 12px); }
 /* the guesses are the screen's action: lit boxes, the chosen one full of light */
-.choices > button { min-height: 54px; font-family: var(--life); font-style: italic; font-size: 19px; letter-spacing: 0; text-transform: none; color: var(--ink);
+.choices > button { min-height: 54px; font-family: var(--life); font-style: italic; font-weight: 400; font-size: 18px; letter-spacing: 0; text-transform: none; color: var(--ink);
   border-color: var(--edge-2); padding: 0 8px; background: linear-gradient(180deg, rgba(var(--violet-rgb), .16), rgba(var(--violet-rgb), .05));
   box-shadow: inset 0 0 18px rgba(var(--violet-rgb), .14), 0 0 20px rgba(var(--violet-rgb), .14); }
 .choices > button:last-child { color: var(--ink-2); }
-.choices > button[aria-pressed="true"] { color: var(--btn-ink); border-color: rgba(236, 234, 255, .92); text-shadow: none;
+.choices > button[aria-pressed="true"] { font-weight: 600; color: var(--btn-ink); border-color: rgba(236, 234, 255, .92); text-shadow: none;
   background: radial-gradient(70% 140% at 50% 125%, rgba(235, 232, 255, .7), rgba(var(--violet-rgb), 0) 70%), linear-gradient(180deg, #a9a2ff 0%, var(--violet) 55%, #7466f0 100%);
   box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 0 26px rgba(var(--violet-rgb), .5); }
 .bottom { display: flex; justify-content: center; }
@@ -162,6 +165,11 @@
   function show2(i){ var t = know.innerHTML; show(i, true); know.innerHTML = 'What else might it be?'; }
   cells.forEach(function(c, i){ c.addEventListener('click', function(){ show(i); }); });
   show(1);
+})();
+/* come back to the right morning: from the arrival (#fromdone) the day stays done */
+(function(){
+  if (!/fromdone/.test(location.hash)) return;
+  document.querySelectorAll('a[href="morning.html#later"]').forEach(function(a){ a.href = 'morning.html#done'; });
 })();
 </script>
 </body>
