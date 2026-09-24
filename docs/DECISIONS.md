@@ -328,3 +328,12 @@
 - **Rationale:** P14 (a plain, warm, honest voice); Dan knows how AI sounds and it breaks the spell.
 - **Consequences:** Listed as a job in `OPEN_QUESTIONS.md` → UX, and in the Phase 4 handover. Suggested slot: Phase 5 or 6, before copy is fixed in the build.
 - **Reversible:** Yes.
+
+## D-032 — Dan combines the directions into one look
+- **Date:** 2026-09-24
+- **Context:** Dan walked through the three directions screen by screen on his phone and dictated what he liked (`ART_DIRECTION.md` → "Dan's walkthrough").
+- **Decision:** Build a fourth, combined direction, **D**: C's purple world, full screen and never framed; B's interface (boxed buttons, labels with a line, selectable Low/Normal/High, line icons); A's map layout with B's animation and tap-to-select descriptions; B's cutting-a-word animation made full screen and purple; C's day complete, camp (with more depth), satchel (more realistic, gently glowing) and daybook. Spec: `ART_DIRECTION.md` → "D — The combined look".
+- **Alternatives:** pick one of A, B or C whole (Dan preferred parts of each).
+- **Rationale:** Dan's taste (rule 20). It also answers the two open questions: glow is purple for the place and the day, turning gold as the day completes; carved capitals set buttons and labels, plain print carries sentences.
+- **Consequences:** The rest of the run builds D and puts it through critique. A, B and C stay in the repo as the record. Phase 4's "Dan picks or blends one" is met once he approves D.
+- **Reversible:** Yes.

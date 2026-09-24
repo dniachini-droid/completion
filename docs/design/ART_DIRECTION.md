@@ -159,6 +159,21 @@ _Written 2026-09-24 by the visual run (`PHASE4_RUN.md`). All three sit inside th
 - **Records.** The record line floats large across the fog. Your guess sits under each mark in plain print.
 - **The delve ring.** A soft ring of cold light that brightens as it fills, with the fog drifting through it. At the end the ring blooms.
 
+### D — The combined look (from Dan's walkthrough, D-032)
+_Dan's picks, screen by screen, put together. This is the direction being built now: `directions/d-combined/`._
+
+**The rule in one line:** C's purple world, full screen and never framed; B's interface on top of it; A's map; the day turning from purple to gold as in C.
+
+- **The world (from C).** Full-bleed painted scenes in purple / blue-violet light, nebula-like cloud and haze, deep views down the hall. **Never a scene inside a box or window** (Dan, four times). Gold arrives through the day: a trace in the morning, gold at the arrival, warm at camp, but camp keeps the depth of the hall (less gold, more hall).
+- **The interface (from B).** Controls in crisp boxes with fine light edges: square-ish buttons, a label with a short line beside it ("NEXT ——"), Low / Normal / High as selectable boxes, small line icons beside Map, Satchel, Daybook, Camp. **Everything aligned to one grid and centred properly** (Dan noticed B's icons were off). Content (text, records, marks) sits out in the open on the scene, not in panels. **The main button is purple and glowing** (C's purple button), except at the arrival and camp, where the day has turned gold.
+- **Type.** B's carved capitals for labels and buttons; C's plain print for sentences and Dan's own jobs; carved place names.
+- **Morning.** C's scene and purple, B's buttons, boxes, icons and "NEXT ——" label, C's Map link. Information as agreed from the model test.
+- **Delve.** C's tunnel with drifting nebula cloud (it should visibly move) and the glowing ring. "Towards the Salt Gallery" more prominent: where you're going is the headline.
+- **Map.** A's layout and look (nebulous, places you've seen lit up), B's behaviour (lines draw themselves in; tap a place and a crosshair appears on it, and its description comes up in a box underneath), C's purple colours.
+- **Record.** B's way of working (tap a mark to select it, clean guess choices), C's light and glow, out in the open, no enclosing panels.
+- **Cutting a word.** B's animation (the door opens, the lamps wake one by one and you see all the way down the hall) and B's word shown in a box, but full screen, no window, purple; the marks overlaid on the scene.
+- **Day complete, camp, satchel, daybook.** C's versions. Camp: more depth, less gold. Satchel: more realistic, with a gentle glowing animation.
+
 ### Which open question each one tests
 - **Cold and warm balance:** A has warm for you, B has warm as rare, C lets the day decide.
 - **Carved letters:** A uses them everywhere, B pairs them with a companion face, C reserves them for the place.
