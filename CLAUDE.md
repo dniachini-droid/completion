@@ -5,9 +5,9 @@ It is a genuine game, not a productivity app with an RPG skin. Provisional name:
 
 ## Current phase
 
-**PHASE 7 — TECHNICAL ARCHITECTURE** (opened 2026-09-24; Phase 6 closed with Dan's agreement, D-055)
+**PHASE 8 — PROTOTYPE** (opened 2026-09-24; Phase 7 closed with Dan's agreement, D-060)
 
-Choose the technology for the approved MVP (`docs/product/MVP.md`) under MASTER_BRIEF §62–66: compare credible options, recommend, explain trade-offs in plain language (`docs/technical/TECH_DECISIONS.md`), and write the privacy and architecture docs. It must also settle how a painting for every named place gets made at about 5 a week while keeping direction D (D-054). The story **stays sealed from Dan** (`docs/narrative/sealed/`, D-015); the sealed story-fix session (D-035) runs in its own session before the build. No application code yet (Phase 8). Details and exit criteria: `docs/CURRENT_STATE.md`. Phase changes require Dan's explicit agreement.
+Prototype the central interaction on the agreed stack (`docs/technical/TECH_DECISIONS.md`, D-057, D-058) under MASTER_BRIEF §67: feel, clarity, reward timing, friction, beauty. First the five trials (the delve alert with the phone locked, smoothness, real-app feel, the cloud-Mac pipeline to TestFlight, the painting kit's three invented sample places), then the heart slice on throwaway data. Code follows `docs/technical/ARCHITECTURE.md` and `TEST_STRATEGY.md`. The story **stays sealed from Dan** (`docs/narrative/sealed/`, D-015); the sealed story-fix session (D-035) runs in its own session after the prototype and **before the first playable's content goes in** (D-060). Details and exit criteria: `docs/CURRENT_STATE.md`. Phase changes require Dan's explicit agreement.
 
 Phase order: 0 Player discovery → 1 Product discovery → 2 Game design → 3 Narrative/world → 4 Experience/art/UX → 5 Concept synthesis → 6 MVP → 7 Technical architecture → 8 Prototype → 9 First playable → 10 Personal alpha → 11 Iteration.
 
@@ -59,6 +59,6 @@ Before any consequential decision, also read: this file → `docs/MASTER_BRIEF.m
 - Collaborative, not sycophantic. Say plainly when an idea is weak or conflicts with earlier principles; separate "difficult but valuable" from "complicated and unnecessary".
 - Synthesise periodically during discovery; let Dan correct the model.
 - Docs are working tools: concise, cross-referenced, not duplicated.
-- Tech stack is chosen in Phase 7; no application code, `package.json` or database until Phase 8.
+- Tech stack chosen in Phase 7 (`docs/technical/`); application code lives in `app/` from Phase 8.
 - Focused commits with conventional prefixes (`docs:`, `design:`, `narrative:`, `feat:`, `test:`).
 - Session close: update `docs/CURRENT_STATE.md` → update docs → open questions → decisions → phase → tests (if code) → review diff → commit → brief summary.

@@ -612,3 +612,11 @@
 - **Rationale:** rules 9, 13, 18; D-015, D-030, D-045, D-046; MASTER_BRIEF §64's principles; the MVP's no-tracking test notes.
 - **Consequences:** Phase 8 creates `app/` in this shape. Story content and painting scene files live in marked sealed folders.
 - **Reversible:** Yes.
+
+## D-060 — Phase 7 closed; Phase 8 (prototype) opened; when the story job happens
+- **Date:** 2026-09-24
+- **Context:** Phase 7's exit criteria met: the stack and the painting kit agreed (D-057, D-058), the four technical docs written (D-059).
+- **Decision (Dan):** "Yes, proceed." Phase 7 closed and merged into `main`; Phase 8 (MASTER_BRIEF §67) opens in a new session. Dan also noted the sealed story-fix session (D-035) is still to do, "assuming it can come after the MVP".
+- **Claude's answer on timing:** not after the MVP, because the MVP carries the story's first six weeks and its places' paintings, and the test can't start without them. It **can** come after the prototype: Phase 8 uses throwaway data and invented places. So it runs in its own session **after the prototype and before the first playable's content goes in** (Phase 9), and the real places' paintings follow it.
+- **Consequences:** `CLAUDE.md` and `CURRENT_STATE.md` move to Phase 8 with its exit criteria (five trials, the sample paintings approved, TestFlight working, the heart slice felt on Dan's phone). The story job is placed in the plan.
+- **Reversible:** Phase changes need Dan's agreement; the story job's timing can move earlier at any time.
