@@ -47,7 +47,7 @@ No shame, no debt, no counts of what's left, no red; failure is information (rul
 Google Calendar (read, then write) · drag and drop (unless Phase 7 finds it cheap) · monthly and advanced rhythms · learning in the planner · adherence analytics (probably never) · "explain why" · company at work during a delve · satchel groups · great doors beyond the one in view, and milestone Keys for big projects (see the question below) · more lives and regions · re-reading at scale · sound design · notifications (tested separately) · "growing into it" (D-043 F16) · AI-written anything.
 
 ## What must exist before the build (Phase 6–7)
-1. **The sealed story-fix session** (D-035), including week 6 of the clue ledger (D-023) and the authoring list in `BALANCING.md` (open-route passages, about 12 finds a week, camp-with-a-view scenes, the "learned" lines, the first "so far").
+1. **The sealed story-fix session** (D-035), including week 6 of the clue ledger (D-023) and the authoring list in `BALANCING.md` (open-route passages, about 12 finds a week, camp-with-a-view scenes, the "learned" lines, the first "so far"). **Done (D-062).**
 2. **Phase 7 requirements:** the delve's end is heard or felt with the phone locked and away; delve, hold and plan state survive restarts; every line of copy lives in one place so the language pass needs no rebuild (D-046); jobs, rhythms and targets are data Dan edits (D-030); planned / moved / done kept internally, never shown (D-045).
 3. The quiet text checked on Dan's own phone (D-047).
 

@@ -29,7 +29,7 @@ Everything in `FIRST_PLAYABLE.md` → "In" stays, except the whole-Site zoom lev
 | **The map's third zoom level** (the whole Site as a cross-section) | **Out.** Close and Region only | With one region it shows one region. It earns its place with the second (bar 1–4: no) |
 | **Forecast waypoints on the map** | **In** (Dan, D-054) | Claude proposed dropping them as a second door to the forecast line; Dan keeps the planner as approved (D-048) |
 | **The deep push called in the morning** | **In** (Dan, D-054) | Claude proposed leaving "Keep going" as the only door; Dan keeps both |
-| **Before → now on re-reads** | **Only if** the story's weeks 1–6 change an old reading. The sealed story-fix session says yes or no | No point building a view with nothing to show in the test |
+| **Before → now on re-reads** | **Out of the MVP.** Only if the story's weeks 1–6 change an old reading; the sealed story job's answer is **no** (D-062). It is built later, before the story needs it | No point building a view with nothing to show in the test |
 | **Paintings for places** | **A painting for every named place** (Dan, D-054), each alive (D-041) | Claude proposed one per area, reused. Dan chose beauty: about 30–35 paintings for six weeks, and about 5 a week after that. How they are made at that rate is a Phase 7 question |
 
 Also confirmed out, as already listed in `FIRST_PLAYABLE.md` → "Out": the open cells (two marks → one line) wait for a later slice; the test needs guessing and the first word, not a conversation with the walls.

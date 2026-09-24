@@ -628,3 +628,18 @@
 - **Alternatives:** wait until after the prototype (D-060; slower, and the prototype doesn't need it, but nothing is gained by waiting); run it in this session (Dan follows this chat, so sealed content would be in front of him).
 - **Consequences:** Phase 9 can start straight after Phase 8 without waiting on the story. The painting kit's real places can start as soon as the briefs are merged.
 - **Reversible:** Yes.
+
+## D-062 — The sealed story job is done (spoiler-free)
+- **Date:** 2026-09-24
+- **Context:** D-035, D-061: the story job ran in its own session from the sealed work order, asking Dan nothing ("Enough with the questions… Just get it done."). Every creative call and its reasoning is in the sealed record (`narrative/sealed/STORY_JOB.md`); this entry says only what was done.
+- **Decision (Claude's calls, D-006, D-061):**
+  1. **The outside review's fixes** (D-035), top priority first: the late game's presentation and interaction were changed so it never looks like a promise the fixed story can't keep; then the precision fixes (one character's reasoning, how one mechanism is described in the fiction, one location detail, the wording of two internal rules, and a few smaller ones). The fixed ending and the canon are unchanged; each change followed the retcon procedure (MASTER_BRIEF §55). A fresh reviewer checked them; its findings were fixed.
+  2. **Week 6 of the clue ledger** is complete, every clue with its predetermined answer (rule 6), with fair-play checks.
+  3. **Before → now:** not needed for story weeks 1–6 (the reason is sealed); the sealed notes say which later week first needs it.
+  4. **The MVP's content, written in full** for six story weeks plus a week of run-ahead, meeting every line of `product/MVP.md`'s budget: 33 named places, 15 camps with a view, 30 sealed things (5 a week), the marks with their candidate meanings, the first two words with their cutting cinematics, 72 finds, 120 passage lines, 18 "learned" lines and 2 "so far"s, 30 teasers. The marks come to 14 in six weeks against the MVP's estimate of 8–12; kept, because the story's order puts the first word in week 2–3.
+  5. **48 painting briefs**, one for every named place and camp view, for the painting kit (D-057, D-058).
+  6. **Shaped for the build:** every item has a stable id, a data-model type and when it may appear. Phase 9 will want two small additions to `technical/DATA_MODEL.md`: a "story beat" type and a "stretch" (where on the map) field.
+  7. **One line of `narrative/GAME_BIBLE.md` reworded** (how the deepest door fills: "it fills as you live your weeks"), matching the numbers Dan approved in D-049/D-051. Nothing he already knew changes.
+- **Alternatives:** ask Dan the taste questions (he asked not to be asked); wait for the playtest (only the cadence audit of the later months waits for that, as planned in D-035).
+- **Consequences:** Phase 9 can turn the story into app content without re-deciding anything; the painting kit can start on the real places once this is merged. `CURRENT_STATE.md` and `product/MVP.md` note the answers.
+- **Reversible:** Yes, until clues are planted in the playable.

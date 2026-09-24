@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-24 (Phase 7 closed, D-060; Phase 8 opens next session)_
+_Last updated: 2026-09-24 (the sealed story job done, D-062, awaiting Dan's approval of its pull request; Phase 8 in its own session)_
 
 ## Current phase
 
@@ -16,7 +16,7 @@ Prototype the central interaction on the agreed stack (MASTER_BRIEF §67; `techn
 
 ## Resume here (next session)
 1. Start Phase 8: read `technical/` (all five), then set up `app/` as `ARCHITECTURE.md` describes and run the trials in this order: (a) the painting kit's three invented sample places, judged by Dan on his phone against the approved hall; (b) the delve alert with the phone locked, on silent and in Focus; (c) smoothness and real-app feel; (d) the cloud-Mac pipeline to TestFlight. Give Dan the Apple setup steps early (membership approval can take a day or two). Ask Dan his iPhone model.
-2. **The sealed story job** (D-035, D-060, D-061): **running now in its own session**, in parallel with Phase 8, from `narrative/sealed/STORY_FIX_BRIEF.md`; it must be done and merged **before the first playable's content goes in** (Phase 9). It ends with a spoiler-free pull request for Dan to approve. It includes week 6 of the clue ledger, the authoring list in `game/BALANCING.md` (D-049), the content budget in `product/MVP.md`, and whether weeks 1–6 need the before → now view (D-053). The real places' paintings follow it.
+2. **The sealed story job is done** (D-062), on branch `claude/story-job`, with a spoiler-free pull request waiting for **Dan's approval** before it is merged (D-006). Done: the outside review's fixes; week 6 of the clue ledger; **before → now: no** (not needed for story weeks 1–6); the MVP's content budget met in full (`product/MVP.md`); **painting briefs ready** for every named place and camp view. Once merged, the real places' paintings can start with the kit, and Phase 9 can load the content without re-deciding anything.
 3. Whenever convenient: Dan looks at the planner screens on his phone (D-047).
 
 ## Last session (2026-09-24, Phase 7)
@@ -40,10 +40,10 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 
 ## Do NOT work on yet
 
-- Real story content or real places' paintings in the prototype: it uses throwaway data and invented places until the story-fix session (D-060).
+- Real story content or real places' paintings in the prototype: it uses throwaway data and invented places (D-060). The story content is ready (D-062) and goes in at Phase 9.
 - Features beyond the heart slice before the trials pass (rule 13).
 - Showing any sealed story content on a screen or in Dan-facing docs (D-015).
-- More story depth beyond what the playable needs (D-004). Pending: the sealed story-fix session (D-035, running in its own session, done before the first playable's content, D-061; top priority: the late-game choice must never look like a promise the fixed story can't keep); week 6 of the sealed clue ledger (D-023); the "company at work" during a delve (later).
+- More story depth beyond what the playable needs (D-004). The sealed story job is done (D-062); still later: the cadence audit of the later months after playtest feedback (D-035) and the "company at work" during a delve.
 - Optional, later: the zoomed-out whole-Site map mock-up.
 
 ## Phase 8 exit criteria
@@ -114,11 +114,12 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 - 2026-09-24 — **Phase 6 complete** (D-055). Merged into `main`. Phase 7 opened.
 - 2026-09-24 — Phase 7: Dan's answers (D-056); the stack and the painting kit agreed (D-057, D-058); the four technical docs written (D-059).
 - 2026-09-24 — **Phase 7 complete** (D-060). Merged into `main`. Phase 8 opened.
+- 2026-09-24 — **The sealed story job done** (D-061, D-062), in its own session: the review's fixes, week 6 of the ledger, before → now (no), the MVP's content in full, painting briefs. Pull request open for Dan's approval.
 
 ## Unresolved blockers
 
 - None.
-- **Jobs queued for later phases:** the language pass on every line the app says (**after Dan has played the first playable for 3–4 weeks**, D-046; nothing before it is final wording); the sealed story job (D-035, running in its own session, before the first playable's content, D-061); a memory and recap system, a before → now re-read view, a guaranteed reward rhythm and high-day extras (D-035, Phase 5–6); jobs and targets as editable data (D-030, now in `technical/DATA_MODEL.md`); week 6 of the sealed clue ledger (D-023).
+- **Jobs queued for later phases:** the language pass on every line the app says (**after Dan has played the first playable for 3–4 weeks**, D-046; nothing before it is final wording); a memory and recap system, a before → now re-read view, a guaranteed reward rhythm and high-day extras (D-035, Phase 5–6); jobs and targets as editable data (D-030, now in `technical/DATA_MODEL.md`). The sealed story job is done (D-062), awaiting Dan's approval of its pull request.
 - Housekeeping (non-blocking): rename the GitHub repo once a product name exists (`narrative/NAMES.md`). (Privacy verified: private.)
 - Open for Dan whenever he likes: the app name (`narrative/NAMES.md`).
 
