@@ -35,7 +35,7 @@ Sizes: anything that matters ≥ 16 px; carved labels ≥ 14 px. Fonts are open-
 ## Layout
 - **One centred column**, 24 px gutter (20 px on small phones), 8 px rhythm. Everything aligns to it; rows of links span edge to edge with equal gaps.
 - **Holds at 360 × 780** as well as 390 × 844. The main action sits in the lower third, within thumb reach.
-- Content (text, records, marks) sits **in the open** on the scene, washed by soft scrims, not in panels.
+- Content (text, records, marks) sits **in the open** on the scene, washed by soft scrims, not in panels. Dense text (the satchel, the daybook) gets a strong scrim and a steady column: readability wins (UX 11, D-038).
 
 ## Components
 | Piece | What it is |

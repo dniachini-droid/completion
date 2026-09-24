@@ -55,6 +55,8 @@ body { --pool-x: 50%; --pool-y: 78%; --scrim-top-h: 240px; --scrim-bottom-h: 30%
 /* the way out is there early (by about 2.5 s), even while the scene is still turning gold */
 .bottom { opacity:0; animation: rise 1s 1.4s var(--ease) forwards; }
 .bottom .btn-row { margin-top: 16px; }
+.bottom .btn-row .btn-quiet { padding-left: 8px; padding-right: 8px; letter-spacing: .12em; } /* two quiet choices side by side (D-038) */
+.bottom .btn-row .btn-quiet svg { display: none; }
 .replay svg { width:18px; height:18px; }
 @media (max-height: 800px) { .head { margin-top: 8px; } .cairnrow { margin-top: 4px; } .bottom .btn-row { margin-top: 12px; } }
 
@@ -96,7 +98,7 @@ body { --pool-x: 50%; --pool-y: 78%; --scrim-top-h: 240px; --scrim-bottom-h: 30%
   </div>
   <section class="bottom col">
     <a class="btn resting" href="camp.html">Rest here for today</a>
-    <div class="btn-row"><a class="btn-quiet" href="record.html#fromdone"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6v12M10 6v12M14 6v12M18 6v12M4 15l16-6"/></svg><span>Read the tally</span></a></div>
+    <div class="btn-row"><a class="btn-quiet" href="record.html#fromdone"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6v12M10 6v12M14 6v12M18 6v12M4 15l16-6"/></svg><span>Read the tally</span></a><a class="btn-quiet" href="delve-set.html"><span>Keep going</span></a></div>
   </section>
 </div>
 

@@ -249,7 +249,7 @@ Kept small, one tap each, and never required to progress:
 ### Capacity: low floor, high ceiling (D-011)
 | Day | Main jobs | What the game offers |
 |---|---|---|
-| **Low** | 2 (outside + a real meal) | A short, safe push that still **arrives** somewhere. "That was enough. I still moved forward." |
+| **Low** | 2 (by default outside + a real meal; swappable, D-038) | A short, safe push that still **arrives** somewhere. "That was enough. I still moved forward." |
 | **Normal** | about 3 | A full arrival. |
 | **High** | up to 5, plus open-ended sessions | Dan can call a **deep push** in the morning: a route to places a normal day doesn't reach (deeper chambers, rarer records, harder gates, and sometimes **part of a sign**, D-013). |
 
@@ -263,11 +263,11 @@ Kept small, one tap each, and never required to progress:
 ### The daily loop
 | Moment | What happens |
 |---|---|
-| **Morning** | Capacity is already set from bedtime (one tap to change). Screen: where you stand in the Site, the next gate you can see, and **one** suggested first job (the other two beneath). Accept or swap from a short menu. On a High day: an offer of a deep push. |
-| **Doing a job** | Optional 25-minute timer. Dan leaves the app and does the thing. |
+| **Morning** | Capacity is already suggested from bedtime (one tap to change). Screen: where you stand in the Site, the next gate you can see, and **one** suggested first job (the day's other jobs beneath; only today's, never a backlog, D-038). Accept or swap from a short menu. On a High day: an offer of a deep push. |
+| **Doing a job** | Desk work runs as a delve. A job away from the phone (gym, cooking, errands) has no timer: Dan goes, and taps Done on return (D-038). |
 | **Coming back** | Tap done → the step plays (≈20–40 s) → at most one small choice → out. |
 | **"I can't start"** | A **teaser from just ahead** (a line of script one sign short of meaning, a sound behind the gate). Then one tiny physical step. Then an offer to continue, never a demand. The teaser's payoff is on the other side of the job. |
-| **Day complete** | The arrival. The day is explicitly **enough**. On High days, a quiet "keep going?" with the deep route shown. |
+| **Day complete** | The arrival. The day is explicitly **enough**, and its success is locked in. Rest is the main offer; a quiet "keep going" is there on every day (on High days, with the deep route shown) (D-038). |
 | **Opening late (4 pm)** | No comment on the time. The day shrinks to what fits and can still complete. |
 | **Life happens** | An appointment added afterwards counts as a main job. |
 | **Evening close** | **Camp.** A short wind-down scene. Going to bed by the chosen time → something is waiting at camp in the morning (a decoded line, a map mark). Missing it removes nothing. Bedtime sets tomorrow's capacity. |

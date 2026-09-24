@@ -397,3 +397,27 @@
 - **Rationale:** rule 10 and P13 (real effort outweighs trivial input); Dan's actual working pattern (hours, not single sessions); story pacing protected (D-013, rule 6); one honest picture of time = distance on the one screen that sets it.
 - **Consequences:** `game/CORE_LOOPS.md` (unit of effort, reward sizes), `game/ECONOMY.md`, `game/PROGRESSION.md`, `game/TOOLS.md` §1, `design/INTERACTION_NOTES.md` and the D mock-up (`delve-set.html`, `delve.html`, `morning.html`) updated. Supersedes D-033's destination list (a single delve no longer names far places).
 - **Reversible:** Yes; the numbers are provisional until the first playable.
+
+## D-038 — Reconciling the outside review of the principles
+- **Date:** 2026-09-24
+- **Context:** ChatGPT reviewed `design/PRINCIPLES_FOR_REVIEW.md` (15 points: 4 blockers, 7 should-fix, 4 nits). Dan asked for a reconciliation pass against the repo, not a blind implementation: a consistency and pressure-risk pass before approving Phase 4, not new design.
+- **Decision:** Each point checked against the source docs. Verdicts: **accepted** 1, 2, 9, 10, 11, 12, 14, 15; **accepted as a wording fix** (the design already said it) 3, 6, 8, 13; **modified** 4, 7; **no design change** 5 (wording only). Changes, all in the source docs:
+  1. **Day complete locks the day's success in.** Rest stays the main offer; a quiet "Keep going" is there on every day (with the deep route on a High day). Fixes a drift in the Phase 4 drafts, which had dropped the "keep going" of `CORE_LOOPS.md` Part 4 and D-011. Mock-ups: `complete.html`, `morning.html#done`.
+  2. **The opening screen shows only today's jobs** (the 2–5 accepted main jobs), never satchel items, *someday*, what's left of a weekly target, or counts. P7 now says "no backlog" instead of "no list".
+  3. **"I can't start" gives a teaser, never new story**: a line from just ahead, a sound, or something already found; the payoff comes after the job; the same teaser returns if tapped again that day. (`CORE_LOOPS.md` Part 4 already said this; P4's "story reveal" was loose.)
+  4. **Not every job is a delve.** A job done away from the phone (gym, cooking, errands, appointments) has no ring: Begin marks it under way, Done on return plays its steps by the job's usual length (D-037). The app picks the way from the kind of job; one tap switches it if wrong. *Modified:* the review's three named execution modes were not adopted; the existing two kinds (timed desk work and jobs with a usual length, D-036/D-037) already cover gym, appointments and errands, so only the Begin rule needed writing down.
+  5. **The breather:** no contradiction in the design. Inside a run Dan set, the next delve starts by itself (Dan's own choice, D-037); "Start it now" skips the breather early. Added: after a single delve nothing starts by itself. Stale button names fixed ("Next delve", "done for now").
+  6. **Rest is never scored or counted against Dan.** The breather's 5 minutes run in the background: a gentle cue, at most a faint line, no numbers.
+  7. **The low day is a default, not a fixed rule.** Outside + a real meal stays the default (Dan's own definition); Swap works as on any day. The app never asks what the meal was. *Modified:* no list of approved substitutions is added.
+  8. **Capacity is a suggestion from bedtime** (the wording now says so; one-tap change was already there).
+  9. **Dated items don't drift to *someday*.** Suggested as the date nears, no countdown or red; after the date, one question on opening: Done / New date / Let it go.
+  10. **No catch-up avalanche.** Open weekly targets never add jobs or raise the day's size, and aren't pushed harder late in the week. A disrupted week becomes a lighter week unless Dan asks.
+  11. **Using a tool alone earns nothing** (adding, sorting, planning); the world moves only for real action. P16 and the tool rule clarified.
+  12. **The trail shows only placed markers**: no calendar, empty slots, ghost markers, or count of days in a row. *This reverses one detail of D-023* (a days-in-a-row count as a quiet detail), which already contradicted the "no streak numbers" rule in the Phase 4 drafts.
+  13. **The course hour = two delves of 25** (the hour on the clock with the breather; any 50 delve minutes).
+  14. **Nothing cinematic delays starting.** Begin starts at once; big moments come after action and a tap settles them.
+  15. **Readability beats diegesis.** Dense screens (satchel, daybook) set text as a steady column on a strong scrim; a scrim is not a frame.
+- **Alternatives:** implement the review as written (adds an execution-mode system and substitution rules nobody needs yet); change nothing (leaves real contradictions: the missing keep-going, the streak count, the list wording).
+- **Rationale:** most points were wording drift between Phase 1–2 docs and the Phase 4 drafts; the real gaps (keep going, dated items, catch-up, non-desk jobs, the streak count) each close with one rule and no new system (rule 12). No sealed or story content touched.
+- **Consequences:** `DESIGN_PRINCIPLES.md` (P2–P7, P16), `ANTI_FEATURES.md`, `game/TOOLS.md`, `game/CORE_LOOPS.md`, `game/QUEST_SYSTEM.md`, `design/UX_PRINCIPLES.md`, `design/INTERACTION_NOTES.md`, `design/DESIGN_SYSTEM.md`, the D mock-ups `complete.html` and `morning.html`. `design/PRINCIPLES_FOR_REVIEW.md` stays as the snapshot that was reviewed.
+- **Reversible:** Yes. Point 12 needs Dan's nod, since it changes a detail he approved in D-023.

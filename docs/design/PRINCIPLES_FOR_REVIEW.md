@@ -2,6 +2,8 @@
 
 _Compiled 2026-09-24 from the project repo. Spoiler-free._
 
+> **Snapshot as sent for review.** The review was reconciled in D-038; the source docs are now authoritative and differ from this copy in places.
+
 ## Context for the reviewer
 This is a single-player phone game for one player, Dan. Its main input is meaningful progress in his real life: gym, a course, Spanish, admin, housework. Real effort moves an expedition through a sealed, ancient place, where he learns a script sign by sign and pieces together a mystery. It is meant to be a real game, not a productivity app with an RPG skin. Dan has ADHD traits: starting is the hard part, and shame or backlogs make him quit.
 

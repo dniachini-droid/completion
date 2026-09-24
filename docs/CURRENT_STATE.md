@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-24, late evening (D polished; delve rules D-036/D-037; ChatGPT review of the principles waiting)_
+_Last updated: 2026-09-24, night (outside review of the principles reconciled, D-038; Dan's approval of D next)_
 
 ## Current phase
 
@@ -28,8 +28,10 @@ What happened:
 
 **This session (2026-09-24, evening, branch `claude/phase-4-direction-d-4jifz4`):** D's final fix round done (`design/directions/d-combined/REVISION-2.md`); stepping away and finishing a delve (D-036); distance comes from time, runs of delves set on the dial screen, places a working day apart (D-037); the delve screen relit (bright violet, sparkles); how the map scales written into `design/INTERACTION_NOTES.md`; all principles bundled for an outside review (`design/PRINCIPLES_FOR_REVIEW.md`). Zip: `sh docs/design/tools/netlify_zip.sh out.zip`.
 
+**This session (2026-09-24, night, branch `claude/principles-review-reconciliation-pdjmhw`, which carries all of `claude/phase-4-direction-d-4jifz4`):** ChatGPT's review of the principles reconciled point by point (D-038): 8 accepted, 4 wording-only, 2 modified, 1 no change. Source docs and two D mock-ups (`complete.html`, `morning.html`) updated. Dan still to confirm point 12 (removing the days-in-a-row count from the trail, which changes a D-023 detail).
+
 **Resume here (next session), in order:**
-1. **ChatGPT's review of `design/PRINCIPLES_FOR_REVIEW.md`** (Dan pastes it). Sort each point into act on / decline with reasons; apply what Dan agrees to, in the source docs (`DESIGN_PRINCIPLES.md`, `ANTI_FEATURES.md`, `design/UX_PRINCIPLES.md`, `design/INTERACTION_NOTES.md`, `design/DESIGN_SYSTEM.md`), then rebuild the bundle if useful. Record decisions.
+1. ~~ChatGPT's review of the principles~~ done (D-038). If Dan disagreed with any verdict, revert that point.
 2. Any last notes from Dan on the latest zip; apply them; send a fresh zip.
 3. Optional (offered to Dan): mock the zoomed-out whole-Site map view.
 4. **Dan approves D**, the design system, the interaction notes and the UX principles → tick the Phase 4 exit criteria.
@@ -70,6 +72,7 @@ What happened:
 - 2026-09-24 — Taste session done; brief for the three directions written (D-027).
 - 2026-09-24 — Long visual run: three directions built and critiqued; Dan's combined look D built (D-028 to D-033); outside story review planned (D-034, D-035).
 - 2026-09-24 — D's final polish; delve interruptions and finishing (D-036); distance from time and runs of delves (D-037).
+- 2026-09-24 — Outside review of the principles reconciled (D-038).
 
 ## Unresolved blockers
 

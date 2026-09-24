@@ -6,7 +6,7 @@
 _Status: agreed by Dan, 2026-09-24._
 
 ## The rule for every tool (P16)
-A tool earns its place only if (1) using it moves or reveals something in the world, (2) it never creates a pile, a debt or a red number, and (3) it never lets an easy thing stand in for the avoided thing (P5). If a tool can't meet all three, it doesn't go in.
+A tool earns its place only if (1) the real action it helps with moves or reveals something in the world (using the tool on its own, adding, sorting or planning, earns nothing; D-038), (2) it never creates a pile, a debt or a red number, and (3) it never lets an easy thing stand in for the avoided thing (P5). If a tool can't meet all three, it doesn't go in.
 
 ## 1. The focus timer → *the delve*
 The 25/5 Pomodoro that already works for Dan, made into a moment in the world.
@@ -15,11 +15,12 @@ The 25/5 Pomodoro that already works for Dan, made into a moment in the world.
 - **The end must be heard or felt with the phone locked and away** (a requirement for Phase 7).
 - **What a delve earns.** During the day, **main jobs move the world**; the delve is how you do them, and the job's step is the reward (no double count). After day complete, each finished delve earns a step of its own (`CORE_LOOPS.md` Part 4).
 - **A shorter first delve.** After "I can't start" and the tiny step, the offer to continue is "10 minutes?". Minutes count towards the job as usual; a step after day complete still needs a full delve, so nothing becomes farmable.
-- **The break is a short *camp* beat that ends itself.** The find is shown, the camp packs up, and the obvious buttons are "next delve" or "done for now". Nothing to scroll or browse; a gentle sound when the 5 minutes are up. The break is where the phone wins, so it stays small.
+- **The break is a short *camp* beat that ends itself.** The find is shown, the camp packs up, and the obvious button is "Start it now"; "Finish here" stops (D-036). Inside a run Dan set, the next delve starts by itself when the 5 minutes are up (D-037); after a single delve, nothing starts by itself (D-038). Nothing to scroll or browse; a gentle sound when the 5 minutes are up, and no countdown on rest. The break is where the phone wins, so it stays small.
 - **The delve's length is Dan's to set** (Dan, 2026-09-24, D-033). It starts at 25 minutes; before starting, he can raise it to 30, 45 or 60 minutes (60 is the most). The breather stays 5 minutes. Setting it must be a beautiful, tactile control, never typed in (Phase 4 explores a dial, a slider and the lamp's flame). As he raises it, the screen shows **how much further it will take him** (a place beyond the usual reach), as a pull, never as a warning or a debt.
 - **Runs and distance (D-037).** The same screen sets **how many delves** in a run; the route ahead is one line where each delve adds a segment in proportion to its minutes, so four delves go four times as far as one. When a breather ends, the next delve starts by itself. One step = 25 minutes; named places are about a working day apart.
 - **In flow, keep going.** When a delve ends he can carry straight on, and he can **skip the breather** (tapping "Next delve" during it starts the next one at once). Nothing is lost either way: minutes count the same.
 - **A deep delve** is four delves in one sitting, with gaps of up to about 20 minutes allowed between them. It reaches somewhere a single one can't: a deeper chamber, or a find. Long focus is rewarded in kind, not with bigger numbers. An interruption doesn't cost the deep chamber.
+- **Not every job is a delve (D-038).** A job done away from the phone (the gym, cooking, an errand, an appointment) has no ring. Begin marks it under way, Dan goes and does it, and Done on his return plays its steps by the job's usual length (D-037). The app picks the way from the kind of job (desk work is a delve; the rest is not); if it guesses wrong, one tap switches it, and it remembers. No modes to configure.
 - Stopping early loses nothing. Minutes done still count towards the job's hour.
 - **Stepping away (D-036).** An interruption is handled with one quiet button, **"Step away"**: the minutes done are kept, the delve is **held** with its time left, and the breather starts. "Back to the delve · N min left" carries the same delve on; if the interruption runs long, Today offers "Carry on: <job> · N min left" whenever Dan returns that day. The hold belongs to the job, not the screen. Only one delve is held at a time, and it closes at the day's end. The pieces add up to one delve and earn no more than an unbroken one. **"Finish here"** sits beside it: it ends the delve now with every minute counted; for a done-or-not job it asks once, "Is it done?" (Done / Not yet).
 - Anti-farming is unchanged: only time earns, and it slows after about 2 extra hours of the same kind of work.
@@ -31,6 +32,7 @@ For the days Dan has a list ("sort the flat before the visit").
 - **Never on the opening screen.** Opening still shows one next thing (P1). The satchel opens on request, and shows the first handful of items with the rest folded away ("and more").
 - **Ticking an item feels good** (a sound, a line in the Chronicle) **but only moves the expedition** when the item has been accepted as one of the day's main jobs, or after day complete. An easy list can't quietly replace the avoided job (P5, rule 10).
 - **Nothing piles up.** No counts, no overdue marks. Items untouched for about 3 weeks quietly move to *someday*. *Someday* has no count and shows only when searched, or when a good day's suggestion draws from it. Nothing is deleted, and nothing is announced.
+- **Items with a date (D-038).** An item typed with a real date ("renew the passport by 3 Nov") never drifts to *someday*. It is suggested as a main job as the date nears, with no countdown and no red. If the date passes, the app asks once, when Dan next opens it: Done / New date / Let it go.
 - The morning suggestion can draw from the satchel and still leans towards what is avoided (P5). An item Dan swaps away twice isn't suggested again for a week.
 - **Later:** groups ("flat move").
 
@@ -50,7 +52,7 @@ Dan likes streaks; he dislikes *punitive* ones (Phase 0). Research shows that se
 - **Each day complete adds a marker** to a trail through the Site. A **low day counts** (P3). Rest is simply rest: it is not scored and needs no marking to "protect" anything (P12).
 - **Relics come from markers in total**, not from days in a row: about the 7th, 15th, 30th and 50th marker ever placed, and on from there. So there is no "almost there" pressure on day 6, and nothing to save at 11:45 pm.
 - **After a gap, the trail branches from the last marker** rather than starting over. It looks like a route that turned, not a line that snapped. Nothing is lost, and nothing is announced.
-- A days-in-a-row count exists only as a quiet detail, never the main thing shown.
+- **Only markers that were placed are shown** (D-038): no calendar, no empty slots, no ghost markers, and no count of days in a row (it would visibly reset, which is the broken streak this trail exists to avoid). Replaces D-023's "days in a row as a quiet detail".
 - **No weekly runs.** Keys already reward each week, and weeks start fresh (P6).
 - Anti-farming: markers need day complete, which is slot-based, so tiny tasks can't feed them.
 

@@ -13,25 +13,25 @@
 ## The morning screen carries (Dan, via the model test)
 - Where you are (day · place) and a way to the map.
 - One plain sentence about the sealed thing ahead.
-- Low / Normal / High, visible but quiet, marked "from last night's bedtime".
+- Low / Normal / High, visible but quiet, marked as a suggestion from last night's bedtime; one tap changes it.
 - The one next job, a short teaser under it, Begin and Swap.
-- The day's other jobs as plain rows with their state on the right.
+- Today's other jobs as plain rows with their state on the right. **Only today's jobs** (D-038): never satchel items, *someday*, what's left of a weekly target, or counts. A short slate for today is not a list in the sense of P7.
 - "I can't start", always one tap away.
-- After day complete, the morning screen shows the day as done, not a next job.
+- After day complete, the morning screen shows the day as done, not a next job; camp is the main offer and a quiet "Keep going" is there (D-038).
 
 ## Pressure
 6. **No numbers that can read as debt**: no counts of undone things, no streak numbers, no progress bars. The delve's glowing ring (D-028) is the only progress shape.
 7. **Cairns are shown as a place, never as a row to count.**
-8. **Rest is never timed.** The breather ends by itself with a gentle cue; no countdown on rest.
-9. **On a low day the screen is calm**: the arrival's main button is resting, not reading more.
+8. **Rest is never scored or counted against you** (D-038). The breather's 5 minutes run in the background: a gentle cue at the end, at most a faint line filling, never numbers or a countdown.
+9. **On a low day the screen is calm**: the arrival's main button is resting, not reading more. A quiet "Keep going" is there if the day turns out bigger (D-038).
 
 ## The world
 10. **The painting is the place, drawn to the description**: a long high hall rounded like the inside of a shell, cut stone, dark wall-cups, the clay lamp on its ledge. Painted masses and light, not outlined shapes.
-11. **Every screen stays in the world**, including the satchel and the daybook: finds and lists live in niches, on stone, in lamplight, never on a generic card.
+11. **Every screen stays in the world**, including the satchel and the daybook: finds and lists live in niches, on stone, in lamplight, never on a generic card. **Readability wins over the world** (D-038): dense screens (the satchel, the daybook) set their text as a steady, plain layer over the scene (one column on a strong scrim). A scrim is not a frame (15).
 
 ## Flow
 12. **Every screen has an obvious way back to today**, and each screen's exits go somewhere that makes sense in the day (a delve ends in a breather, the last delve of the day leads to the arrival, the arrival leads to camp).
-13. **Big moments are cinematic and short** (cutting a word, an arrival): a few seconds, then settle. They are done by you (a tap), not only watched.
+13. **Big moments are cinematic and short** (cutting a word, an arrival): a few seconds, then settle. They are done by you (a tap), not only watched. **Nothing cinematic ever stands between Dan and starting a real action** (D-038): Begin starts at once and motion runs alongside; big moments come after action, and a tap settles them.
 
 ## Dan's own rules (from his walkthrough)
 15. **Never frame the world.** No scene in a box or window; the painting fills the phone.
