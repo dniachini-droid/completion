@@ -258,7 +258,7 @@ Kept small, one tap each, and never required to progress:
   - time can't be split into cheaper pieces;
   - after about 2 extra hours of the *same* kind of work, steps come slower. Switching to another kind of job makes them full again. This keeps the course from crowding out Spanish and admin (P5) without punishing a long course day.
 - **A deep push that falls short loses nothing.** Every step taken is kept. The deep route is still there tomorrow.
-- **Growing into it:** if Dan's weeks are mostly Normal and High for a while, the app **offers** (never imposes) to raise the size of a normal day. A low day stays a complete day forever.
+- **Growing into it:** if Dan's weeks are mostly Normal and High for a while, the app **offers** (never imposes) to raise the size of a normal day. A low day stays a complete day forever. *Out of the first playable (D-043): since D-039 extra effort is rewarded in full, the offer adds pressure without reward. Revisit only if the test shows Dan wants it.*
 
 ### The daily loop
 | Moment | What happens |
@@ -267,8 +267,9 @@ Kept small, one tap each, and never required to progress:
 | **Doing a job** | A delve job runs as a delve; any job can be one, Dan's choice (D-041). A job that isn't (gym, cooking, errands, unless he makes them delves) has no timer: Dan goes, and taps Done on return (D-038). |
 | **Coming back** | Tap done → the step plays (≈20–40 s) → at most one small choice → out. |
 | **"I can't start"** | A **teaser from just ahead** (a line of script one sign short of meaning, a sound behind the gate). Then one tiny physical step. Then an offer to continue, never a demand. The teaser's payoff is on the other side of the job. |
-| **Day complete** | The arrival. The day is explicitly **enough**, and its success is locked in. Rest is the main offer; a quiet "keep going" is there on every day (on High days, with the deep route shown) (D-038). |
+| **Day complete** | The arrival. The day is explicitly **enough**, and its success is locked in. Rest is the main offer; a quiet "keep going" is there on every day, and it leads to the deep route on any day (D-038, D-043). |
 | **Opening late (4 pm)** | No comment on the time. The day shrinks to what fits and can still complete. |
+| **The day's edge (D-043)** | The day runs until about 4 am. Capacity and Swap work at any time until then; done jobs stay done, and lowering capacity can complete the day. |
 | **Life happens** | An appointment added afterwards counts as a main job. |
 | **Evening close** | **Camp.** A short wind-down scene. Going to bed by the chosen time → something is waiting at camp in the morning (a decoded line, a map mark). Missing it removes nothing. Bedtime sets tomorrow's capacity. |
 | **Rest day** | A camp day: a scene, no step, no cost, no score. |
@@ -297,7 +298,7 @@ A big real project (the 24-week Claude course, a module of it, restarting Spanis
 The focus timer (*the delve*), lists (*the satchel*), plotting, the calendar link, the trail and the Chronicle are specified in `TOOLS.md`. Each feeds the same three reward sizes: step, arrival, Key. During the day only main jobs move the world; the delve is how you do them (D-023). The trail adds relics to the collection.
 
 ### Absence
-After days away: a short "where you were" (last place, the gate you were looking at, one unfinished record), and one small welcoming step. No counts, no summary of what was missed.
+After days away: a short "where you were" (last place, the gate you were looking at, one unfinished record), and one small welcoming step: a real job, with the day suggested at Low; doing it plays the welcome (D-043). No counts, no summary of what was missed.
 
 ### Content load
 Better than any single candidate. The Site gives **systemic** beats (passages, gates, routes) that need design but little prose. Records need **authored** prose, but only at arrivals and Keys, not every step. Rough year: ~250 arrivals, of which perhaps half carry a record fragment, plus up to ~250 sealed things for Keys to open (5 targets × 52 weeks), and a Site large enough for uncapped High days. Phase 3 plans the writing around that rate.

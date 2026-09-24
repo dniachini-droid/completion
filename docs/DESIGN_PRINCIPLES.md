@@ -28,6 +28,7 @@ Anything beyond that is a bonus, never a debt. *Clarified (D-038):* day complete
 Capacity is Low, Normal or High.
 - It is **suggested from last night's bedtime** (a guess, not a verdict), and Dan can change it with one tap.
 - It changes **how many and how big** the day's jobs are. It never changes whether the day can succeed.
+- *Clarified 2026-09-24 (D-043):* it can be changed at any time until the day ends (about 4 am). Done jobs stay done; lowering it can complete the day.
 
 **4. Story pulls, a tiny step pushes.**
 "I can't start" gives **a story teaser first, then one tiny physical step** (e.g. "put your gym shoes on"). Afterwards it *offers* to continue and never demands. Steps are concrete and real, with no cheerleading, so they don't feel patronising. *Clarified (D-038):* the teaser is never new story. It is a line from just ahead, a sound behind a door, or something already found; its payoff comes only after the real job (`game/CORE_LOOPS.md` Part 4). Tapping it again the same day brings back the same teaser, so it can't be farmed.

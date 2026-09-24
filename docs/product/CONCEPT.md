@@ -4,7 +4,7 @@
 > **Spoiler-free: Dan reads this.** Story content is limited to what the open game bible says (`narrative/GAME_BIBLE.md`, D-015).
 > Words: the app's in-world names are used (the Quiet, marks, a delve); the design words are in `narrative/TERMINOLOGY.md`.
 
-_Status: step 1 of `PHASE5_PLAN.md`, written 2026-09-24. Not yet stress-tested (step 2) or given numbers (step 3)._
+_Status: step 1 of `PHASE5_PLAN.md`, written 2026-09-24. Stress-tested (step 2, `product/STRESS_TEST.md`): the gaps it found are closed by the small rules of D-043, folded in below. Numbers to come (step 3)._
 
 ---
 
@@ -45,9 +45,11 @@ A normal day, as it plays (detail: `game/CORE_LOOPS.md` Part 4 → "The daily lo
 | **Day complete** | Violet turns to gold from the floor up. "That's the day. Enough." The arrival: wherever the day's steps reached, a named place on a long day, a camp with a view on a short one. The day's success is **locked in**. Rest is the main offer; a quiet "Keep going" is always there (D-038, D-039). | a few seconds |
 | **Evening** | **Camp**, by the lamp. A short wind-down. Going to bed by his chosen time means something is waiting in the morning; missing it removes nothing. Bedtime sets tomorrow's suggested capacity (P11). | seconds |
 
+**The day's edge** (D-043): the app's day runs until about 4 am, so late work counts to the day it belongs to. Capacity and Swap work at any time until then; done jobs stay done, and lowering capacity can complete the day.
+
 **Low day:** two jobs (by default, outside and a real meal; any two small real things, D-038). A short, safe push that still arrives. The screen is calm; its main button is resting.
 
-**High day:** up to five jobs, plus open-ended delves after day complete, with **no daily cap** (D-011). A **deep push** can be called in the morning: a route to places a normal day doesn't reach (deeper chambers, rarer records, sometimes part of a mark). Four delves in one sitting (a **long delve**) reach a side chamber. Effort is never turned away (D-039).
+**High day:** up to five jobs, plus open-ended delves after day complete, with **no daily cap** (D-011). A **deep push** can be called in the morning: a route to places a normal day doesn't reach (deeper chambers, rarer records, sometimes part of a mark). On any day, "Keep going" after day complete leads there too (D-043). Four delves in one sitting (a **long delve**) reach a side chamber. Effort is never turned away (D-039).
 
 **Rest day:** a camp day. A scene, no step, no cost, never scored (P12).
 
@@ -80,7 +82,9 @@ real job done ─► a step into the Quiet ─► something is there (a passage,
 
 **Time speeds the place, never the story** (D-037). Steps come from minutes; marks, words and the core reveals come in a fixed, authored order, paced by days and Keys (D-035). Extra effort always meets more place and side content (passages, finds, extra records), never a wall.
 
-**Anti-farming is structural, never admin** (`game/QUEST_SYSTEM.md`): rewards attach to the day's job slots, not to entries; beyond the slots only time earns, and time can't be split; after about 2 extra hours of the same kind of work steps come slower, and switching kinds restores them; Keys come only from Dan's own weekly targets and one-tap milestones. No verification: the honour system is enough.
+**Anti-farming is structural, never admin** (`game/QUEST_SYSTEM.md`): every delve minute moves Dan, on any job, but only today's jobs fill the day and complete it; a job without a timer moves him only as one of today's jobs, so ten tiny entries earn nothing extra; time can't be split; after about 2 extra hours of the same kind of work steps come slower, and switching kinds restores them; Keys come only from Dan's own weekly targets and one-tap milestones; a change to a target applies from next week. No verification: the honour system is enough.
+
+**Keys are never held** (D-043): each opens something the moment it's earned (the sealed thing Dan last looked at, or the nearest on his route), and one that takes a Key is always in view.
 
 ---
 
@@ -103,7 +107,7 @@ From the open game bible (`narrative/GAME_BIBLE.md`, approved D-024). The answer
 ## 5. Collection
 
 **One collection: finds** (`game/COLLECTIONS.md`, `game/TOOLS.md` §5). They come from three places:
-- **avoided jobs** (admin, Spanish, housework, costly one-offs always turn a step into a find);
+- **avoided jobs** (admin, Spanish, housework, costly one-offs always turn a step into a find). "Avoided" is a mark on the job: pre-set for admin, Spanish, housework and every typed one-off, turned on quietly for a job Dan keeps swapping away, and his to change (D-043);
 - **long delves and deep pushes** (a side chamber, a deeper route);
 - **cairns**: each day complete leaves a small stack of stones on the route. Finds come at about the 7th, 15th, 30th and 50th cairn **ever placed**, not days in a row. After a gap the cairns turn off in a new direction; they never visibly break, and no count of days in a row is shown (D-023, D-038).
 
@@ -144,9 +148,9 @@ Real action is the main input, and the only thing that moves the world (rule 8, 
 - **Capacity sizes the day, never whether it can succeed** (P3). Suggested from bedtime; one tap to change.
 - **Aimed at what's avoided** (P5): the morning suggestion leans towards admin, Spanish, housework and costly one-offs, and those bring richer rewards. One hour of course work counts as done, so the absorbing thing can't crowd out the avoided ones.
 - **Weekly rhythm, not streaks** (P6): Dan's weekly targets (currently gym 4×, Spanish lesson + 1 h, cooking 2–3×, Sunday meal prep, course 1 h/day) fill themselves from completed jobs; each met is a Key. Weeks start fresh. **No catch-up avalanche**: open targets never add jobs or raise the day's size (D-038).
-- **Everything about jobs is Dan's to edit**: kinds of job, targets, usual lengths, which jobs are delves. The names in these docs are examples (D-030, D-041).
+- **Everything about jobs is Dan's to edit**: kinds of job, targets, usual lengths, which jobs are delves. The names in these docs are examples (D-030, D-041). **Editing never becomes admin** (D-043): only on request, never prompted; only a name is required; every field has a default (a usual length of 25 minutes, one step); a job is edited from its own row; the first playable starts preloaded with Dan's current jobs and targets.
 - **Tools inside the world** (`game/TOOLS.md`): the **delve** (the focus timer), the **satchel** (lists, on request, never on the opening screen; untouched items sink to the bottom quietly; dated items are suggested as the date nears), **cairns** (the non-punitive trail), the **daybook** (the week close). Later: waypoints (light plotting) and a read-only calendar link. Using a tool on its own earns nothing (D-038).
-- **Absence:** "where you were" (last place, the door he was looking at, one unfinished record) and one small welcoming step. No counts, no summary of what was missed. Dust has settled; nothing has broken.
+- **Absence:** "where you were" (last place, the door he was looking at, one unfinished record) and one small welcoming step, a real job suggested at Low size; doing it plays the welcome (D-043). No counts, no summary of what was missed, no daybook page for an empty week, and at most one passed-date question a day, none on the first day back. Dust has settled; nothing has broken.
 - **Life stays larger than the app** (P15): sessions are in, started, out. It complements the activity scheduling his psychologist recommended; it is not treatment.
 
 ---
@@ -177,7 +181,8 @@ What could make this fail, and where it is handled (or still open). Step 2 walks
 | **Not enough place for Dan's real hours** before the next seal | Open route past every opened place sized for his hours (D-037, D-039) | **Step 3** |
 | **It becomes reading homework** on a low day | Lines are short; the low day's main button is rest, not reading | Test (D-035) |
 | **The app becomes the new YouTube** (P15) | Nothing moves without real action; nothing to do in the app otherwise | Watch in play |
-| **Editing jobs and targets becomes admin** (D-030) | Open UX question | **Step 2** |
+| **Editing jobs and targets becomes admin** (D-030) | On request only, defaults everywhere, preloaded (D-043) | Closed |
+| **A bad early fortnight stalls the first word** (no targets met → no Keys) | A weekly floor in the reward rhythm | **Step 3** |
 | **Novelty dips around week 4** | Judge over 5–6 weeks; the first word lands in week 2–3 | Test |
 | **The dark tone weighs on a low day** | Kind voice (P14); calm low-day screens | Test |
 | **The app's lines sound AI-written** | Language pass on every line before the build (D-031) | Phase 5–6 |
@@ -223,13 +228,12 @@ Honest shape, for Phase 6–7 (no tech choices here; D-004, CLAUDE.md).
 
 ---
 
-## Known gaps, for steps 2–3
+## Known gaps, for steps 3–4
 
-Listed so they aren't lost; none is solved here (nothing new is invented in step 1).
-1. The numbers: region sizes, distance between named places, route length past each opened place (D-037, D-039).
-2. The guaranteed reward rhythm per delve, day and week (D-035).
-3. What extra effort always unlocks on a high day (D-035, D-011).
+Step 2 is done (`product/STRESS_TEST.md`, D-043). Still open:
+1. The numbers: region sizes, distance between named places, route length past each opened place (D-037, D-039); the day's edge and what counts as an absence.
+2. The guaranteed reward rhythm per delve, day and week, **including a weekly floor** so a week with no target met still opens something (D-035, D-043).
+3. What extra effort always unlocks on a high day, and how often a long delve's side chamber holds an authored find (D-035, D-011).
 4. Memory and recap, and the before → now re-read view (D-035).
-5. How Dan edits jobs and targets without it becoming admin (D-030).
-6. The walkthroughs: low, normal and high day; an interrupted delve; a week away; a disrupted week (`PHASE5_PLAN.md` step 2).
-7. The first playable's contents list (step 4), from `game/GAME_DESIGN.md` → "What the first playable needs".
+5. The first playable's contents list (step 4), from `game/GAME_DESIGN.md` → "What the first playable needs".
+6. **For Dan at step 5:** keep the same-kind slowdown, or pay variety as a bonus instead (`STRESS_TEST.md` §4, D1); a nod on evening "enough" (D2).
