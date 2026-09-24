@@ -43,6 +43,8 @@ Two things in that are new to the design:
 
 ## The proposal
 
+> **Dan's clarification (2026-09-24, after this went for review):** nothing in the planner is fixed. Every rhythm is Dan's own input: **what it is, how long each time takes, how many times a week (or fortnight)**. Any rhythm can be added, edited or deleted at any time. The examples below are only his current starting set, loaded in the first version so day one needs no setup. From each rhythm's length and count, the planner **schedules the week's delves automatically** (e.g. Spanish study 2× at 1 h → two 1-hour runs placed on two days), and Dan adjusts if he wants. This matches the agreed rule that jobs and targets are Dan's to edit and nothing is hard-coded (D-030, D-041); the reconciliation keeps it.
+
 ### 1. Rhythms: one kind of repeating job
 Weekly targets grow into **rhythms**. A rhythm is a repeating job with:
 - **how often:** a number of times per week, per fortnight or per month, or a set amount on a number of days a week;
