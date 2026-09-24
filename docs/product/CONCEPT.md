@@ -82,7 +82,7 @@ real job done ─► a step into the Quiet ─► something is there (a passage,
 
 **Time speeds the place, never the story** (D-037). Steps come from minutes; marks, words and the core reveals come in a fixed, authored order, paced by days and Keys (D-035). Extra effort always meets more place and side content (passages, finds, extra records), never a wall.
 
-**Anti-farming is structural, never admin** (`game/QUEST_SYSTEM.md`): every delve minute moves Dan, on any job, but only today's jobs fill the day and complete it; a job without a timer moves him only as one of today's jobs, so ten tiny entries earn nothing extra; time can't be split; after about 2 extra hours of the same kind of work steps come slower, and switching kinds restores them; Keys come only from Dan's own weekly targets and one-tap milestones; a change to a target applies from next week. No verification: the honour system is enough.
+**Anti-farming is structural, never admin** (`game/QUEST_SYSTEM.md`): every delve minute moves Dan, on any job, but only today's jobs fill the day and complete it; a job without a timer moves him only as one of today's jobs, so ten tiny entries earn nothing extra; time can't be split; nothing ever slows: staying on one job keeps full progress, and switching kinds after about 2 hours on one brings a find (D-044); Keys come only from Dan's own weekly targets and one-tap milestones; a change to a target applies from next week. No verification: the honour system is enough.
 
 **Keys are never held** (D-043): each opens something the moment it's earned (the sealed thing Dan last looked at, or the nearest on his route), and one that takes a Key is always in view.
 
@@ -236,4 +236,4 @@ Step 2 is done (`product/STRESS_TEST.md`, D-043). Still open:
 3. What extra effort always unlocks on a high day, and how often a long delve's side chamber holds an authored find (D-035, D-011).
 4. Memory and recap, and the before → now re-read view (D-035).
 5. The first playable's contents list (step 4), from `game/GAME_DESIGN.md` → "What the first playable needs".
-6. **For Dan at step 5:** keep the same-kind slowdown, or pay variety as a bonus instead (`STRESS_TEST.md` §4, D1); a nod on evening "enough" (D2).
+6. ~~For Dan: the slowdown and evening "enough"~~ Answered by Dan (D-044): the slowdown is gone and switching brings a find; evening "enough" agreed.

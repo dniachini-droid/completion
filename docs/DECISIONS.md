@@ -470,3 +470,12 @@
 - **Rationale:** rule 8 (the free welcome moved the world without action), P7 (stacked questions on return), P9 (asking a length for every line), D-039 (effort on an off-list job or on a day suggested Normal was turned away), D-012 (held Keys would be a currency), rule 10 (mid-week target edits).
 - **Consequences:** `product/CONCEPT.md`, `product/STRESS_TEST.md` (new), `DESIGN_PRINCIPLES.md` (P3), `game/QUEST_SYSTEM.md`, `game/TOOLS.md`, `game/CORE_LOOPS.md`, `game/ECONOMY.md`, `OPEN_QUESTIONS.md`.
 - **Reversible:** Yes, every rule; the numbers stay provisional until the first playable.
+
+## D-044 — No slowdown for staying on one job; a find for switching
+- **Date:** 2026-09-24
+- **Context:** The two points D-043 left for Dan. D1: the same-kind slowdown (steps slower after about 2 extra hours of one kind of work, `QUEST_SYSTEM.md`) limited the course hours Dan wants. D2: lowering capacity in the evening to complete a two-job day (D-043, F2).
+- **Decision (Dan):** D1, "Something extra if I switch, but still progress if I don't." The slowdown is removed: staying on one job always keeps full progress (25 minutes = one step). After a long stretch of one kind of work (about 2 hours, tuned in step 3), the first delve on a different kind brings a **find**. D2, yes: F2 stands as written.
+- **Alternatives:** keep the slowdown (a penalty for doing more of what Dan wants to do); no variety pull at all (loses a gentle push towards avoided work).
+- **Rationale:** D-039 ("shouldn't be punished for doing more work"); rule 9; the day's job slate already keeps the course from crowding out avoided work (P5), so the bonus only needs to invite variety, not enforce it.
+- **Consequences:** `product/CONCEPT.md`, `product/STRESS_TEST.md`, `game/QUEST_SYSTEM.md`, `game/TOOLS.md`, `game/CORE_LOOPS.md`, `game/ECONOMY.md`, `OPEN_QUESTIONS.md`, `CURRENT_STATE.md`. Supersedes D-037 point 5's slowdown (its slot rule stays). Step 3 sets the stretch length and counts these finds in the year's supply.
+- **Reversible:** Yes.

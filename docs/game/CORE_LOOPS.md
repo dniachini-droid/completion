@@ -256,7 +256,7 @@ Kept small, one tap each, and never required to progress:
 - **After day complete, effort keeps counting.** Every further focus session is another step. There is **no daily cap**.
 - **Anti-farming on high days** is gentle, and all of it is automatic:
   - time can't be split into cheaper pieces;
-  - after about 2 extra hours of the *same* kind of work, steps come slower. Switching to another kind of job makes them full again. This keeps the course from crowding out Spanish and admin (P5) without punishing a long course day.
+  - ~~after about 2 extra hours of the same kind of work, steps come slower~~ *Replaced by D-044 (Dan):* nothing slows; after a long stretch (about 2 hours) of one kind of work, the first delve on a different kind brings a find; staying on the same job keeps full progress. The day's jobs keep the course from crowding out Spanish and admin (P5).
 - **A deep push that falls short loses nothing.** Every step taken is kept. The deep route is still there tomorrow.
 - **Growing into it:** if Dan's weeks are mostly Normal and High for a while, the app **offers** (never imposes) to raise the size of a normal day. A low day stays a complete day forever. *Out of the first playable (D-043): since D-039 extra effort is rewarded in full, the offer adds pressure without reward. Revisit only if the test shows Dan wants it.*
 

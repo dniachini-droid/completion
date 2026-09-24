@@ -24,7 +24,7 @@ The three most important findings:
 |---|---|---|---|
 | **F1** | Nothing said when a day ends. Late work, held delves (D-036) and "day complete" all depend on it. | **The app's day ends at about 4 am**, not midnight. Work after midnight belongs to the day before. Camp records bedtime but does not end the day, so work after camp still counts. | P2, P11 |
 | **F2** | Capacity is set in the morning. A day that turns bad (or good) at 3 pm had no way to resize. | **Capacity and Swap work at any time until the day ends.** Done jobs stay done; the undone ones resize. Lowering capacity can complete the day at once (two jobs done on a day turned Low is a complete low day). The app never prompts for it. | P3, P8, P10 |
-| **F3** | Two earning rules met without saying what happens between them. "Extra sessions" earned only after day complete, and satchel items moved only as main jobs. So 25 real minutes on a job not on today's list earned nothing, which contradicts D-039. | **Every delve minute moves Dan, on any job, at any time** (25 min = one step, same-kind slowdown as before). **Only today's jobs fill the day and complete it.** A job without a timer still moves him only as one of today's jobs. "Extra session" stops being a separate kind. | P2 (D-039), P5, P13 |
+| **F3** | Two earning rules met without saying what happens between them. "Extra sessions" earned only after day complete, and satchel items moved only as main jobs. So 25 real minutes on a job not on today's list earned nothing, which contradicts D-039. | **Every delve minute moves Dan, on any job, at any time** (25 min = one step; D-044 later removed the slowdown). **Only today's jobs fill the day and complete it.** A job without a timer still moves him only as one of today's jobs. "Extra session" stops being a separate kind. | P2 (D-039), P5, P13 |
 | **F4** | D-037 counts a job without a timer by its usual length. Asking for a length on every typed line is estimating (P9). | **A job's usual length defaults to 25 minutes (one step).** It is never asked when a job is added; Dan can change it on any job later. Jobs he already has (the gym's hour) keep their lengths. | P9 |
 | **F5** | Avoided jobs bring finds, but nothing said how the app knows which jobs are avoided without tagging. | **"Avoided" is a mark on the job, already set.** It is pre-set for admin, Spanish, housework and typed one-offs. The app turns it on quietly for any job Dan swaps away again and again. Dan can change it on any job. | P5, P9 |
 | **F6** | Nothing said when a Key is used, or on what. Keys held for later would be a count and a currency (D-012). | **A Key is never held: it opens something the moment it's earned.** It opens the sealed thing Dan last looked at if that needs a Key, otherwise the nearest one on his route. Authoring rule: **at least one sealed thing that takes a Key is always in view.** Extra Keys open side things; they never pull core marks ahead (D-035). | P7, D-012 |
@@ -95,7 +95,7 @@ The questions: what problem it solves (player / game); does it support the loop;
 | **The delve and runs** | The Pomodoro that already works for Dan, inside the world | Walking off mid-run: honour | Two words only (D-036) | **Keep** |
 | **Long delve → side chamber** | Rewards sustained focus in kind | Daily runs could drain authored finds: step 3 | Content: mostly place | **Keep**; step 3 sizes the find rate |
 | **Deep route** | Low floor, high ceiling (D-011, D-039) | Part-marks never jump the order (D-035) | None | **Keep**; any day (F11) |
-| **Same-kind slowdown** | Keeps the course from crowding out avoided work | — | Invisible rule | **For Dan (D1)**: the slate already protects avoided work |
+| **Same-kind slowdown** | Keeps the course from crowding out avoided work | — | Invisible rule | **Replaced** (Dan, D-044): a find for switching, full progress for staying |
 | **"I can't start"** | Starting is the problem (P1, P4) | Same teaser all day, so it can't be farmed | Tiny steps authored (F13) | **Keep** |
 | **Finds** | Aims reward at what's avoided (P5); a collection tied to the truth | One-offs default to avoided (F5): slots cap it | Authored: step 3 sets the rate | **Keep** |
 | **Cairns** | A trail Dan likes, without a streak (P6) | Needs day complete, which is slot-based | None | **Keep** |
@@ -118,6 +118,8 @@ The questions: what problem it solves (player / game); does it support the loop;
 
 ## 4. For Dan (step 5, taste and priorities)
 
+**Answered by Dan, 2026-09-24 (D-044):** D1: the slowdown goes. "Something extra if I switch, but still progress if I don't." D2: yes.
+
 - **D1. The same-kind slowdown.** Today, after about 2 extra hours of the same kind of work, steps come slower. It was meant to stop the course crowding out Spanish and admin. But the day's job slate already does that, since day complete needs the avoided jobs. Meanwhile the slowdown limits the course hours Dan *wants* ("ideally 4 hours a day"). His own words at D-039: "Shouldn't be punished for doing more work."
   - *Option A:* keep it as it is.
   - *Option B (Claude's recommendation):* drop the slowdown. Instead, the first delve on a different kind of job after a long stretch of one kind brings a find. The balance is the same, but it is paid as a bonus instead of taken as a cut.
@@ -131,7 +133,7 @@ The questions: what problem it solves (player / game); does it support the loop;
 4. **A weekly floor:** a week with at least one day complete opens something, even with no target met. It protects the first word in week 2–3.
 5. A low day's and a normal day's guaranteed arrival (usually a camp): what it always carries.
 6. How often a long delve's side chamber holds an authored find, against the year's supply.
-7. What "about 2 extra hours" is counted from, if D1 keeps the slowdown.
+7. How long "a long stretch" of one kind is before switching brings a find (about 2 hours; D-044).
 
 ## 6. To watch in play (not rules)
 Whether leading each morning with the avoided job makes opening the app feel heavy. Whether evening lowering (F2) hollows out Normal days. Whether typed one-offs as "avoided" (F5) bring too many finds. Walking off mid-run. Bedtime taps are on trust.

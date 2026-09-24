@@ -10,7 +10,7 @@ _Status: **agreed with Dan** 2026-09-23. "Quest" is a design word here; what the
 |---|---|---|---|
 | **Main job** | One of the day's 2–5 real things | Suggested by the app from the pool below; Dan accepts or swaps | Step (a find if it's an avoided job) |
 | **Day complete** | All the day's main jobs done | Automatic | Arrival |
-| **Extra session** | Any delve beyond what the day's jobs need; before or after day complete, on any job (D-043) | Dan starts the timer on a job (one tap), so the app knows its kind without tagging | Step per 25 min (slows after ~2 extra h of the same kind); never fills a slot or completes the day |
+| **Extra session** | Any delve beyond what the day's jobs need; before or after day complete, on any job (D-043) | Dan starts the timer on a job (one tap), so the app knows its kind without tagging | Step per 25 min, never slowed; a find for switching kinds after a long stretch (D-044); never fills a slot or completes the day |
 | **Weekly target** | Dan's own weekly commitments (gym 4×, Spanish, cooking, meal prep, course) | Set once in Phase 1; changed only when Dan wants | Key |
 | **One-off** | A typed line ("order the cat's medication") | Dan types one line | Becomes a main job candidate; avoided one-offs are suggested early |
 | **Great gate** | A large real project and its milestones (the course, restarting Spanish lessons) | Set up once with Dan | Key per milestone; the great gate opens at the end |
@@ -28,7 +28,7 @@ Story beats are **not** quests. They arrive through steps, arrivals and Keys; Da
 ## Anti-farming, all structural (no admin)
 1. Rewards attach to **slots**, not entries: typing many tiny jobs gives nothing extra.
 2. Beyond the slots, only **time** earns, and time can't be split cheaply. Every delve minute moves Dan, on any job; only today's jobs complete the day (D-043).
-3. **Same-kind slowdown** after ~2 extra hours rebalances towards avoided work without a cap.
+3. **Variety is paid as a bonus, never a cut** (D-044, replaces the same-kind slowdown): after a long stretch (about 2 hours) of one kind of work, the first delve on a different kind brings a find; staying on the same job keeps full progress. Avoided work is protected by the day's jobs, which day complete needs.
 4. **Keys** come from Dan's own weekly commitments and one-tap milestone confirmations, the only "approval" in the system. A change to a target applies from next week; a Key opens something the moment it's earned and is never held (D-043).
 5. Signs and powers are paced by authored placement, so no amount of grinding skips the story.
 There is no verification. Dan is the only player and the honour system is enough.

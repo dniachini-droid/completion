@@ -16,7 +16,7 @@ Write the chosen game up as one clear concept, stress-test it, and set the numbe
 
 ## Resume here (next session)
 1. Steps 1–2 are done: `product/CONCEPT.md` is written and stress-tested (`product/STRESS_TEST.md`, D-043). Continue `product/PHASE5_PLAN.md` at **step 3** (the numbers; `STRESS_TEST.md` §5 adds seven inputs, including a weekly floor), then step 4. Commit and push after each step.
-2. Bring Dan the concept page and the numbers to review (step 5). Ask him only about taste and priorities, including the two points waiting for him: D1 (keep the same-kind slowdown, or pay variety as a bonus) and D2 (a nod on evening "enough"), `STRESS_TEST.md` §4.
+2. Bring Dan the concept page and the numbers to review (step 5). Ask him only about taste and priorities. (The two stress-test points are already answered, D-044.)
 3. The sealed story-fix session (D-035) runs in its own session, before the first playable is built.
 
 ## Last session (2026-09-24, late night, second)
@@ -73,7 +73,7 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 - 2026-09-24 — Outside review of the principles reconciled (D-038); no dead ends for effort (D-039); every screen keeps moving, any job can be a delve (D-041).
 - 2026-09-24 — **Phase 4 complete** (D-040). Direction D and the design docs approved; merged into `main`. Phase 5 opened.
 - 2026-09-24 — Phase 5 set up: one synthesis of the chosen concept, no new concepts (D-042); work order `product/PHASE5_PLAN.md`.
-- 2026-09-24 — Phase 5 steps 1–2: `product/CONCEPT.md` written and stress-tested; 16 edge rules (D-043).
+- 2026-09-24 — Phase 5 steps 1–2: `product/CONCEPT.md` written and stress-tested; 16 edge rules (D-043). Dan: no slowdown, a find for switching; evening "enough" agreed (D-044).
 
 ## Unresolved blockers
 
