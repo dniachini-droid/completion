@@ -11,7 +11,7 @@
 
   let { go }: { go: Go } = $props();
   const v = $derived(game.view);
-  const job = (id: string) => content.jobs.find(j => j.id === id)!;
+  const job = (id: string) => game.job(id)!;
   const next = $derived(v.next ? job(v.next.job) : null);
   const weekday = $derived(t(`day.${new Date(Date.UTC(+v.day.slice(0, 4), +v.day.slice(5, 7) - 1, +v.day.slice(8, 10))).getUTCDay()}` as never));
   const others = $derived(v.slate.filter(id => id !== v.next?.job));
@@ -20,6 +20,8 @@
   function rowNote(j: Job): string {
     if (v.done.has(j.id)) return t('row.done');
     if (v.underWay === j.id) return t('row.underWay');
+    if (v.times[j.id]) return v.times[j.id];
+    if (j.item) return t('row.oneOff');
     if (!j.delve) return t('row.about', { len: minutesWords(j.length) });
     const r = presetRun(j);
     return r.count === 1 ? t('row.delve') : t('row.delves', { n: delves(r.count), len: r.minutes });
@@ -70,7 +72,7 @@
         <button aria-pressed={v.capacity === c} onclick={() => choose(c)}>{t(`cap.${c}`)}</button>
       {/each}
     </div>
-    <p class="seg-note rise d1">{v.capacity === 'low' ? t('today.lighter') : t('today.suggested')}</p>
+    <p class="seg-note rise d1">{v.capacity === 'low' && !v.suggestedBy ? t('today.lighter') : v.capacity === v.suggested && v.suggestedBy ? t(v.suggestedBy === 'back' ? 'today.byBack' : 'today.byBedtime') : v.capacity === 'low' ? t('today.lighter') : t('today.suggested')}</p>
     {#if v.ahead}
       <section class="ahead rise d2">
         <div class="label-line">{t('today.ahead')}</div>
@@ -103,8 +105,11 @@
     {:else if v.next && next}
       <div class="next">
         <div class="label-line lit">{t('today.next')}</div>
-        <h2 class="say-lg">{next.name}</h2>
+        <h2 class="say-lg">{next.name}{#if v.times[next.id]}<span class="at"> · {v.times[next.id]}</span>{/if}</h2>
         <p class="soft">{teaser(next)}</p>
+        {#if v.deepOffer}
+          <p class="deep">{t('today.deep')} <button class="text-link" onclick={() => game.do({ do: 'callDeep' })}><span>{t('today.deep.call')}</span></button></p>
+        {:else if v.deepCalled && !v.complete}<p class="deep">{t('today.deep.called')}</p>{/if}
         <div class="btn-row lead">
           <button class="btn" onclick={() => begin(next)}>{t('today.begin')}</button>
           <button class="btn-quiet" onclick={() => game.do({ do: 'swap' })} aria-label={t('today.swap')}>
@@ -124,8 +129,9 @@
         {#if lastPlace}
           <p class="soft">{t(lastPlace.kind === 'place' ? 'today.reached' : 'today.camped', { place: inSentence(lastPlace.name) })}</p>
         {/if}
-        <button class="btn gold resting" onclick={() => go('arrival')}>{t('today.look')}</button>
+        <button class="btn gold resting" onclick={() => go('camp')}>{t('today.toCamp')}</button>
         <div class="btn-row after"><button class="btn-quiet" onclick={keepGoing}><span>{t('today.keepGoing')}</span></button></div>
+        {#if lastPlace}<div class="cant"><button class="text-link" onclick={() => go('arrival')}><span>{t('today.look')}</span></button></div>{/if}
         <div class="gap"></div>
       </div>
     {/if}
@@ -142,6 +148,12 @@
         {/each}
       </div>
     {/if}
+    <nav class="foot" aria-label={t('today.label')}>
+      <button class="text-link" onclick={() => go('satchel')}><span>{t('nav.satchel')}</span></button>
+      <button class="text-link" onclick={() => go('week')}><span>{t('nav.week')}</span></button>
+      <button class="text-link" onclick={() => go('daybook')}><span>{t('nav.daybook')}</span></button>
+      <button class="text-link" onclick={() => go('camp')}><span>{t('nav.camp')}</span></button>
+    </nav>
   </section>
 </div>
 
@@ -161,6 +173,11 @@
   .rows { margin-top: 2px; }
   button.row { width: 100%; text-align: left; }
   button.row:disabled { cursor: default; }
+  .at { color: var(--ink-2); font-size: .8em; }
+  .deep { font-family: var(--life); font-size: 16px; color: var(--ink-2); margin: -10px 0 14px; text-align: left; }
+  .deep .text-link { display: inline-flex; padding: 0 4px; min-height: 0; }
+  .foot { display: flex; justify-content: space-between; margin: 6px -10px 0; }
+  .foot span { font-size: 13px; letter-spacing: .12em; color: var(--ink-2); }
   .proto span { font-size: 14px; letter-spacing: .16em; color: var(--ink-3); }
   /* the day on the left; the map, records and the prototype's own link together on the right */
   .bar { display: flex; justify-content: space-between; }

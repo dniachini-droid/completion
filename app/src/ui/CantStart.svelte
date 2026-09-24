@@ -9,7 +9,7 @@
 
   let { go, jobId }: { go: Go; jobId: string } = $props();
   const v = $derived(game.view);
-  const job = $derived(content.jobs.find(j => j.id === jobId)!);
+  const job = $derived(game.job(jobId)!);
   const teaser = game.view.teaser ?? t('cant.fallback');
 
   function ten() {

@@ -56,8 +56,10 @@ function capacityOn(facts: Fact[], day: string): Capacity {
 /** Bedtime as Dan set it (the camp screen), "23:00" until he changes it. */
 export const DEFAULT_BEDTIME = '23:00';
 export const bedtimeOf = (facts: Fact[]) => { const b = ofType(facts, 'bedtimeSet'); return b.length ? b[b.length - 1].time : DEFAULT_BEDTIME; };
-/** Goodnight within this many minutes of bedtime keeps it; this late or later suggests a Low day tomorrow. */
+/** Goodnight within this many minutes after bedtime keeps it, and no earlier than the evening before it (so a Goodnight
+    at noon is only a goodnight); this late or later suggests a Low day tomorrow. */
 export const BEDTIME_GRACE = 15;
+export const BEDTIME_WINDOW = 180;
 export const LATE_NIGHT = 60;
 /** Days without opening that make an absence (BALANCING §6). */
 export const ABSENCE_DAYS = 3;
@@ -223,10 +225,12 @@ function gifts(w: W, c: Content, at: Moment, day: string) {
       arrive(w, c, next, 'foot', at, day); n++;
     }
   };
+  /* a place plays the moment it is reached, not held for day complete (Dan, 2026-09-24, D-073) */
   if (!completedOn(w.all, day)) {
-    if (doneOn(w.all, day).size < sizeOn(w.all, day)) return;
+    if (doneOn(w.all, day).size < sizeOn(w.all, day)) { reach(); return; }
     w.put({ type: 'dayCompleted' }, at, day);
-    if (reach() === 0) {
+    const earlier = ofType(onDay(w.all, day), 'arrived').some(a => a.kind === 'place');
+    if (reach() === 0 && !earlier) {
       /* short of the next place: a camp with a view, always with one thing to look at */
       const camp = S.nextCamp(c.story, S.storyState(w.all, c.story));
       w.put({ type: 'arrived', kind: 'camp', id: camp.id }, at, day);
@@ -504,7 +508,7 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     case 'bedtime': if (/^\d\d:\d\d$/.test(cmd.time)) w.put({ type: 'bedtimeSet', time: cmd.time }); break;
     case 'goodnight': {
       if (ofType(onDay(w.all, day), 'goodnight').length) break;
-      const kept = pastBedtime(bedtimeOf(w.all), now) <= BEDTIME_GRACE;
+      const past = pastBedtime(bedtimeOf(w.all), now), kept = past <= BEDTIME_GRACE && past >= -BEDTIME_WINDOW;
       w.put({ type: 'goodnight', kept });
       /* kept: the story week's camp line plays tonight, once a week; its morning waits for tomorrow */
       if (kept) {

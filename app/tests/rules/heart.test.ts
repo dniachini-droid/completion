@@ -58,16 +58,20 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     p.do({ do: 'startRun', job: 'course', minutes: 25, count: 2 }).wait(60);
     expect(p.view().runEnd).toMatchObject({ enough: true, minutes: 50 });
     p.do({ do: 'seen', what: 'step', ref: p.view().runEnd!.seq });
-    /* the gym: Begin marks it under way; Done plays its hour */
+    /* 75 minutes in: the first place plays the moment it is reached, mid-day (D-073) */
+    const v = p.view();
+    expect(v.complete).toBe(false);
+    expect(v.walked).toBe(75);
+    expect(v.arrival).toMatchObject({ kind: 'place', id: 'b-1.A', completedDay: false });
+    expect(v.here.id).toBeNull();   /* revealed on the arrival's own screen, not before */
+    p.do({ do: 'seen', what: 'arrival', ref: v.arrival!.seq });
+    /* the gym: Begin marks it under way; Done plays its hour and completes the day, with no camp (a place was reached) */
     p.do({ do: 'begin', job: 'gym' });
     expect(p.view().next).toEqual({ job: 'gym', mode: 'underWay' });
     p.wait(70).do({ do: 'done', job: 'gym' });
-    const v = p.view();
-    expect(v.complete).toBe(true);
-    expect(v.walked).toBe(135);
-    expect(v.arrival).toMatchObject({ kind: 'place', id: 'b-1.A', completedDay: true });
-    expect(v.here.id).toBeNull();   /* revealed on the arrival's own screen, not before */
-    p.do({ do: 'seen', what: 'arrival', ref: v.arrival!.seq });
+    expect(p.view().complete).toBe(true);
+    expect(p.view().walked).toBe(135);
+    expect(p.view().arrival).toBeNull();
     expect(p.view().here.id).toBe('b-1.A');
     expect(p.view().next).toBeNull();
   });

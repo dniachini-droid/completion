@@ -2,7 +2,7 @@
 
 > **Sealed (D-015). Dan must not read this.** Everything the MVP shows from the story, for **six story weeks plus the run-ahead** (story week 7), sized to `product/MVP.md` → "The words and pictures it needs" and `game/BALANCING.md` §2–5, §7. Written by the story job (D-066; `STORY_JOB.md` §4). Every item has a **stable id**, its **type** (`technical/DATA_MODEL.md` → "Authored content"), and **when it may appear**, so Phase 9 can turn it into app content without re-deciding anything.
 > **Nothing is duplicated.** Beats already written in `ARRIVALS_REGION1.md` (weeks 1–5), `ARRIVALS_REGION2.md` (weeks 6–7), `NICHES.md` and `LIVES.md` are listed here by id and stay authoritative there; only new content is written out in full here. Where the two disagree, those files win and this one is fixed.
-> **Wording is placeholder until the language pass** (D-046), but it is written to read as a person wrote it (D-031). Voice rules: `ARRIVALS_REGION1.md` → "Voice rules for the app's lines".
+> **Wording had its language pass on 2026-09-24** (D-074, brought forward by D-073 from D-046): whole sentences in the voice of a told tale; ids, conditions, order and every fact unchanged. Voice rules: `ARRIVALS_REGION1.md` → "Voice rules for the app's lines".
 
 _Written 2026-09-24._
 
@@ -85,21 +85,21 @@ Five named places a story week (BALANCING §2); fragments ride on about half of 
 
 | Id | w / o | Name | Line (the arrival, under a minute) | In view after it | Ties |
 |---|---|---|---|---|---|
-| `pl-w1-pick-niche` | 1 / 3 | **The pick niche.** | Low in the Salt Gallery's wall, a niche the length of an arm, and on its lip a row of cut strokes, every one of them empty. The salt beside it is scored with short cuts, close together. | `seal-1-2` | the pick (NICHES 1.2); texture |
-| `pl-w1-below-the-lamp` | 1 / 5 | **Below the lamp.** | Under the ledge, at the height of your knee, a small niche with a row of cut strokes on its lip. The stone round its mouth is darker than the rest, and greasy to the touch. | `seal-1-3` | the saucer (NICHES 1.3): the lamp once burned oil (S1); C-01 |
-| `pl-w2-above-the-ring` | 2 / 2 | **Above the ring.** | Over the lone ring, the salt has a crack in it two fingers wide, and a count cut beside it, small. Far back in the crack, something pale, too far in to reach. | `seal-2-3` | the comb (NICHES 2.3); C-12 |
-| `pl-w2-smooth-place` | 2 / 4 | **The smooth place.** | At the corner, on the polished wall, one patch where the marks are rubbed away altogether, at the height of a long hand. The stone there has gone smooth the way a banister does. | the corner's troughs | NICHES 2.4 (now seen, not sealed); C-04a |
-| `pl-w2-box-by-the-cot` | 2 / 5 | **The box by the cot.** | In her camp, pushed against the wall, a box the size of a shoebox with a thin slate laid across its lid, and a count cut in the slate. On the slate, a tin mug, upside down. | `seal-2-5` | the stove's box (NICHES 2.5) |
+| `pl-w1-pick-niche` | 1 / 3 | **The pick niche.** | Low in the wall of the Salt Gallery is a niche the length of an arm, and on its lip is a row of cut strokes, every one of them empty. The salt beside it is scored with short cuts, close together. | `seal-1-2` | the pick (NICHES 1.2); texture |
+| `pl-w1-below-the-lamp` | 1 / 5 | **Below the lamp.** | Under the ledge, at the height of your knee, is a small niche with a row of cut strokes on its lip. The stone round its mouth is darker than the rest, and greasy to the touch. | `seal-1-3` | the saucer (NICHES 1.3): the lamp once burned oil (S1); C-01 |
+| `pl-w2-above-the-ring` | 2 / 2 | **Above the ring.** | Over the lone ring the salt has a crack in it two fingers wide, with a small count cut beside it. Far back in the crack is something pale, too far in to reach. | `seal-2-3` | the comb (NICHES 2.3); C-12 |
+| `pl-w2-smooth-place` | 2 / 4 | **The smooth place.** | At the corner, on the polished wall, there is one patch at the height of a long hand where the marks are rubbed away altogether. The stone there has gone smooth, the way a banister does. | the corner's troughs | NICHES 2.4 (now seen, not sealed); C-04a |
+| `pl-w2-box-by-the-cot` | 2 / 5 | **The box by the cot.** | In her camp, pushed against the wall, is a box the size of a shoebox. A thin slate is laid across its lid with a count cut in it, and on the slate stands a tin mug, upside down. | `seal-2-5` | the stove's box (NICHES 2.5) |
 | `pl-w3-salt-lit` | 3 / 3 | **The salt, lit.** | In the glow that comes round the corner from the lit hall, the salt is banded grey and pink, and it glitters. The stones packed in the split are river stones, round and brown, carried up from somewhere with water in it. | the split | C-09 |
 | `pl-w3-far-end` | 3 / 5 | **The far end.** | The last lamp before the far end is a stride from the great door, and in its light the door goes up past where the flames reach, into the curve of the ceiling. Cold comes off its face, the way it comes off a window in winter. | the great door (`b-4.C`) | C-05 (a descent behind it; the cold air of 7.C) |
-| `pl-w4-hollow` | 4 / 2 | **The hollow.** | Low in the salt, a hollow the size of two cupped hands, worn smooth inside, and a count on its rim. The salt at the bottom is pressed flat in four small places. | `seal-4-5` | the clay sheep's four feet (NICHES 4.5) |
-| `pl-w4-recess-above-the-cot` | 4 / 4 | **The recess above the cot.** | Above her cot, at the height of a raised arm, a recess in the wall, closed by a slate with a count on it. Beside it, a drawing pin pushed into a crack, on its own. | `seal-4-3` | the printed page (NICHES 4.3) |
-| `pl-w5-ledge-lip` | 5 / 2 | **The ledge's lip.** | Under the lamp's ledge the stone is cut too: a small count, low enough that nobody standing would see it. | `seal-5-5` | *Hers again* (NICHES 5.5) |
+| `pl-w4-hollow` | 4 / 2 | **The hollow.** | Low in the salt is a hollow the size of two cupped hands, worn smooth inside, with a count on its rim. The salt at the bottom is pressed flat in four small places. | `seal-4-5` | the clay sheep's four feet (NICHES 4.5) |
+| `pl-w4-recess-above-the-cot` | 4 / 4 | **The recess above the cot.** | Above her cot, at the height of a raised arm, is a recess in the wall, closed by a slate with a count on it. Beside it a drawing pin is pushed into a crack, on its own. | `seal-4-3` | the printed page (NICHES 4.3) |
+| `pl-w5-ledge-lip` | 5 / 2 | **The ledge's lip.** | Under the lamp's ledge the stone is cut too. There is a small count there, low enough that nobody standing would see it. | `seal-5-5` | *Hers again* (NICHES 5.5) |
 | `pl-w5-worn-steps` | 5 / 3 | **The worn steps.** | Halfway down the top flight, every step is worn in two places a stride apart, and the stride is longer than yours. The rail beside them shines along its top. | the rail | C-04a (the same stride as the corner's troughs); C-36 later |
-| `pl-w5-second-landing` | 5 / 5 | **The second landing.** | Where the second flight turns, a landing as wide as the hall above, and the lamps along its wall are lit. In the wall across from the stair, a doorway too low for whoever made the stair, square at the corners. | the side passage (`b-6.A`) | C-58 |
+| `pl-w5-second-landing` | 5 / 5 | **The second landing.** | Where the second flight turns there is a landing as wide as the hall above, and the lamps along its wall are lit. In the wall across from the stair is a doorway, square at the corners, too low for whoever made the stair. | the side passage (`b-6.A`) | C-58 |
 | `pl-w6-square-gallery` | 6 / 2 | **The square gallery.** | The gallery runs straight, as tall as a tall man and no taller, its ceiling flat and its walls covered in small, even chisel marks. There are no cups in these walls. The light comes in from the round stone and gives out. Far down, the floor goes under a slope of broken stone. | the roof-fall (week 10) | C-58; the fall (ARR2 10.B) |
-| `pl-w6-wall-shelf` | 6 / 4 | **The wall-shelf.** | A shelf cut into the square wall at the height of your chest, with a count on its lip. Along the shelf's edge someone has scratched a line, dead level, with a short tick at each end. | `seal-6-3` | the level (NICHES 6.3); C-64 |
-| `pl-w6-folder` | 6 / 5 | **Her folder.** | Under her cot, pushed to the back, a document folder with an elastic band round it, and a thin slate on its cover with a count. On the folder's spine, in marker: HILL. | `seal-6-5` | her folder (NICHES 6.5); C-65 |
+| `pl-w6-wall-shelf` | 6 / 4 | **The wall-shelf.** | A shelf is cut into the square wall at the height of your chest, with a count on its lip. Along the shelf's edge someone has scratched a line, dead level, with a short tick at each end. | `seal-6-3` | the level (NICHES 6.3); C-64 |
+| `pl-w6-folder` | 6 / 5 | **Her folder.** | Under her cot, pushed to the back, lies a document folder with an elastic band round it, and on its cover is a thin slate with a count. On its spine, in marker, is the word HILL. | `seal-6-5` | her folder (NICHES 6.5); C-65 |
 
 ---
 
@@ -109,21 +109,21 @@ A Low day, or any day that completes short of the next named place, ends at a **
 
 | Id | Stretch | w from | The view | One thing to look at |
 |---|---|---|---|---|
-| `cv-01` | `st-mouth` | 1 | **The ladder's foot.** Eleven metres up, a square of white sky, and the ladder going up to it. The air moves up past you and out. | `fd-a02` (the chalk arrow) |
-| `cv-02` | `st-mouth` | 1 | **The pipe.** The passage from the ladder, floor and walls one curve, bending away so gently you only see it by where the light gives out. | `fd-a05` (bootprints both ways) |
-| `cv-03` | `st-hall` | 1 (until `b-3.A`) | **The hall, from the passage.** Just inside, the lamp on its ledge, and past it the hall going away into the dark. | `fd-b12` (the flame that does not flicker) |
-| `cv-04` | `st-hall` | 3 (after `b-3.A`) | **The hall, from the far end.** From the great door, the two lines of flames go back up the hall to the ledge. Beside you, round the corner, a glow on the salt. | `fd-b11` (rings on the ceiling) |
-| `cv-05` | `st-hall` | 1 | **In the trough.** You stand in one of the two troughs at the corner. The other is a stride away, the same depth, the same smoothness. | `fd-c01` (the leaf) |
-| `cv-06` | `st-salt` | 1 | **The salt, close.** The salt face at arm's length: bands of grey and white, and a skin of fine crystals where the air comes through the split. | `fd-c09` (salt grown in the cuts) |
-| `cv-07` | `st-salt` | 2 | **The tally, end on.** Looking along the gallery wall, the tally is a line of shadow from the first stretch to the dark. | `fd-c12` (the lone ring's single stroke) |
-| `cv-08` | `st-camp` | 1 | **Her cot.** Her camp from the doorway: the cot, the boots under it, the notebook with the pencil in it, a shelf. | `fd-d08` (DAY 1 on tape) |
-| `cv-09` | `st-camp` | 2 (after `b-2.B`) | **Her shelf.** The shelf where the rod lay, a clean stripe in the dust the length of a forearm. | the pencil line under the shelf, re-surfaced (L4's English: *For the next one. Cut the two marks on the lintel. Don't be precious about it.*) |
-| `cv-10` | `st-stair` | 3 | **The landing.** At the head of the stair, the landing wide enough for a cart, and the flight going down into lamplight you did not light. | `fd-e07` (the first ring of the Stair) |
-| `cv-11` | `st-stair` | 3 | **Halfway down.** The top flight from its middle: every step as high as your knee, the rail at your chest. | `fd-e09` (the finger hollows, four and four) |
-| `cv-12` | `st-stair` | 4 | **The first turn.** The rail curls round the turn, and below it the second flight goes down, and on it a small door with a count. | `fd-e05` (her pencil tick on the rail) |
-| `cv-13` | `st-flight2` | 5 / `b-5.0` | **The second flight.** The little door, shut, its count full; beside it the one sharp ring among the worn. | `fd-f02` (her pencil on the jamb) |
-| `cv-14` | `st-flight2` | 5 / `b-5.B` | **The gap.** Through the gap at shoulder height, square stone, and a draught that smells of old smoke. | `fd-f06` (the chippings) |
-| `cv-15` | `st-square` | 6 | **The join.** The square stone and the round fit so close you couldn't get a blade in the join. | `fd-g09` (the lead poured in the joint) |
+| `cv-01` | `st-mouth` | 1 | **The ladder's foot.** Eleven metres above you is a square of white sky, and the ladder climbs up to it. The air moves up past you and out. | `fd-a02` (the chalk arrow) |
+| `cv-02` | `st-mouth` | 1 | **The pipe.** The passage leads away from the ladder, its floor and walls one curve, and it bends so gently that you only see the bend by where the light gives out. | `fd-a05` (bootprints both ways) |
+| `cv-03` | `st-hall` | 1 (until `b-3.A`) | **The hall, from the passage.** Just inside stands the lamp on its ledge, and past it the hall goes away into the dark. | `fd-b12` (the flame that does not flicker) |
+| `cv-04` | `st-hall` | 3 (after `b-3.A`) | **The hall, from the far end.** From the great door, the two lines of flames run back up the hall to the ledge. Round the corner beside you, a glow lies on the salt. | `fd-b11` (rings on the ceiling) |
+| `cv-05` | `st-hall` | 1 | **In the trough.** You stand in one of the two troughs at the corner. The other is a stride away, just as deep and just as smooth. | `fd-c01` (the leaf) |
+| `cv-06` | `st-salt` | 1 | **The salt, close.** At arm's length the salt face shows bands of grey and white, and where the air comes through the split it has a skin of fine crystals. | `fd-c09` (salt grown in the cuts) |
+| `cv-07` | `st-salt` | 2 | **The tally, end on.** When you look along the gallery wall, the tally is a line of shadow running from the first stretch into the dark. | `fd-c12` (the lone ring's single stroke) |
+| `cv-08` | `st-camp` | 1 | **Her cot.** From the doorway you look into her camp. There is the cot with the boots under it, the notebook with the pencil in it, and a shelf. | `fd-d08` (DAY 1 on tape) |
+| `cv-09` | `st-camp` | 2 (after `b-2.B`) | **Her shelf.** On the shelf where the rod lay, a clean stripe the length of a forearm is left in the dust. | the pencil line under the shelf, re-surfaced (L4's English: *For the next one. Cut the two marks on the lintel. Don't be precious about it.*) |
+| `cv-10` | `st-stair` | 3 | **The landing.** At the head of the stair the landing is wide enough for a cart, and the flight goes down into lamplight you did not light. | `fd-e07` (the first ring of the Stair) |
+| `cv-11` | `st-stair` | 3 | **Halfway down.** From the middle of the top flight you can see that every step is as high as your knee, and the rail is at your chest. | `fd-e09` (the finger hollows, four and four) |
+| `cv-12` | `st-stair` | 4 | **The first turn.** The rail curls round the turn, and below it the second flight goes down, and on it is a small door with a count. | `fd-e05` (her pencil tick on the rail) |
+| `cv-13` | `st-flight2` | 5 / `b-5.0` | **The second flight.** The little door is shut, and its count is full. Beside it is the one sharp ring among the worn ones. | `fd-f02` (her pencil on the jamb) |
+| `cv-14` | `st-flight2` | 5 / `b-5.B` | **The gap.** Through the gap at shoulder height you can see square stone, and a draught comes through it that smells of old smoke. | `fd-f06` (the chippings) |
+| `cv-15` | `st-square` | 6 | **The join.** The square stone and the round fit so closely that you could not slip a blade into the join. | `fd-g09` (the lead poured in the joint) |
 
 ---
 
@@ -185,13 +185,31 @@ Text is in `LIVES.md` (sign strings, renderings, her sheets, tellings) and the r
 
 | Id | Where | The line when it opens | What it is (truth) | Ties |
 |---|---|---|---|---|
-| `seal-1-6` | the Salt Gallery, a niche by the split, low | The niche by the split: its strokes fill. Inside, a small clay flask, stoppered with a twist of wool, empty and light as an eggshell. | The first's oil flask: he went in "as far as the oil" (S1's telling: a lamp with a hand of oil) | S1; C-01 (the lamp burned oil, once) |
-| `seal-2-6` | her camp, a slate on the floor by the cot's head | By the cot's head, a slate on the floor with a count, and the count fills. Under it, a head torch, the strap gone stiff, and in its battery case a crust of white powder. | Hers: she saw by it until the batteries died, and after Day 6 by the lamps (L5: "the tape is dying; batteries") | L5; the lamps rule |
-| `seal-3-6` | the head of the Stair, a crack in the landing's floor | A crack in the landing's floor, with a count along it: it fills. Inside, a foil blanket still in its packet, and on the packet in pencil: *in case I'm an idiot*. | Hers: she was careful, then less so (L6's rule; L8) | L6, L8; C-24, C-35 (texture) |
-| `seal-4-6` | her camp, a slate low on the back wall | Low on the back wall of her camp, a slate with a count: it fills. Behind it, a paperback dictionary of a dead language, its spine broken open at the grammar, the margins full of pencil. | Hers: her trade; the grammar she brought down (CHARACTERS §6: dictionaries, morphemes) | texture (the Linguist) |
-| `seal-6-6` | the square gallery, a niche cut square, low | A square niche low in the square wall: its count fills. Inside, a clay water jar, its neck stopped with wax, the wax cracked. | The road-works crew's water: they worked the gallery and stopped at the light (V1) | V1; C-59 (texture) |
+| `seal-1-6` | the Salt Gallery, a niche by the split, low | By the split, the strokes on the niche fill. Inside is a small clay flask, stoppered with a twist of wool, empty and light as an eggshell. | The first's oil flask: he went in "as far as the oil" (S1's telling: a lamp with a hand of oil) | S1; C-01 (the lamp burned oil, once) |
+| `seal-2-6` | her camp, a slate on the floor by the cot's head | By the head of the cot a slate lies on the floor, and the count on it fills. Under it is a head torch, its strap gone stiff, with a crust of white powder in its battery case. | Hers: she saw by it until the batteries died, and after Day 6 by the lamps (L5: "the tape is dying; batteries") | L5; the lamps rule |
+| `seal-3-6` | the head of the Stair, a crack in the landing's floor | Along a crack in the landing's floor runs a count, and it fills. Inside the crack is a foil blanket still in its packet, and on the packet, in pencil: *in case I'm an idiot*. | Hers: she was careful, then less so (L6's rule; L8) | L6, L8; C-24, C-35 (texture) |
+| `seal-4-6` | her camp, a slate low on the back wall | Low on the back wall of her camp is a slate with a count, and the count fills. Behind it is a paperback dictionary of a dead language, its spine broken open at the grammar and its margins full of pencil. | Hers: her trade; the grammar she brought down (CHARACTERS §6: dictionaries, morphemes) | texture (the Linguist) |
+| `seal-6-6` | the square gallery, a niche cut square, low | Low in the square wall, the count on a square niche fills. Inside is a clay water jar, its neck stopped with wax, and the wax is cracked. | The road-works crew's water: they worked the gallery and stopped at the light (V1) | V1; C-59 (texture) |
 
-The NICHES rule stands, made exact: if Dan earns more Keys than a week's rows, the surplus opens next week's first rows that carry **neither a sign nor a record** (from week 6 that is `seal-7-3` only; any surplus beyond it goes to finds, BALANCING §3). **Build rule:** a *(Key)* step reads correctly even if its sealed thing had not been seen before (each line names the place and its count; in week 1, its strokes). The NICHES rows with no *(Key)* step line written in ARR1/ARR2 get one composed from NICHES' "What the count opens" column in the same form, *The [place]: its count fills. Inside, [what it opens].*, so a Key never waits for a view.
+The NICHES rule stands, made exact: if Dan earns more Keys than a week's rows, the surplus opens next week's first rows that carry **neither a sign nor a record** (from week 6 that is `seal-7-3` only; any surplus beyond it goes to finds, BALANCING §3). **Build rule:** a *(Key)* step reads correctly even if its sealed thing had not been seen before (each line names the place and its count; in week 1, its strokes). The NICHES rows with no *(Key)* step line written in ARR1/ARR2 get one composed from NICHES' "What the count opens" column, so a Key never waits for a view. Since the language pass (D-074) the form is a whole sentence, *The count on [the place] fills.* (in week 1, *The strokes on [the place] fill.*), then what lies inside, said as a sentence. The composed lines, as the app carries them:
+
+| Id | Where | The line when it opens |
+|---|---|---|
+| `seal-1-2` | The Salt Gallery, the pick niche | At the pick niche the strokes fill. Inside lies a bronze salt-pick, its edge worn to a curve and its handle wrapped in cord gone black. On the wall beside it is a short line in the tally's hand. |
+| `seal-1-3` | The Lamp Hall, a low niche under the ledge | Below the ledge, the strokes on the niche fill. Inside is a clay saucer, the twin of the lamp's foot, and it is empty. |
+| `seal-1-5` | The Mouth, a recess in the shaft wall | In the shaft wall the strokes on the recess fill. Inside, a brass tag stamped with a shaft number hangs on a nail. |
+| `seal-2-3` | The Salt Gallery, a crack above the lone ring | Beside the crack above the ring, the count fills. Inside is a bone comb with two teeth gone, and on the wall beside it is a short line in the tally's hand. |
+| `seal-2-5` | The Survey Cut, the box by the cot | The count on the box by the cot fills. Inside are a tin of tea, a spoon, a candle stub, and a shopping list in her hand: batteries, batteries, tape. |
+| `seal-3-3` | The Stair's first turn, a recess | The count on the recess at the first turn fills. Inside is a coil of measuring cord, knotted every ten paces, the knots gone stiff. Beside it on the wall is a short line in the tally's hand. |
+| `seal-3-4` | The Lamp Hall, the foot of the wall by the lamp | At the foot of the wall by the lamp, the count fills. Inside lies a stub of stone, the broken edge of a rod, among a scatter of chips. |
+| `seal-3-5` | The Survey Cut, a ledge | In her camp the count on the ledge fills. On it is a box of tape cassettes, and three are labelled in her hand: DAY 3 (HIM), DAY 6 (IT WORKS), DAY 14. |
+| `seal-4-3` | The Survey Cut, the recess above the cot | The count on the recess above the cot fills. Inside, pinned to the back of the recess, is a printed email. |
+| `seal-4-5` | The Salt Gallery, a hollow in the salt | At the hollow in the salt the count fills. In it lies a child's clay animal, a sheep, one leg mended with salt. Beside it on the wall is a short line in the tally's hand. |
+| `seal-5-3` | The Stair, the gap's sill | The count on the sill of the gap fills. On the sill lie wax crumbs and a broken stylus, and beside them on the wall is a short line in the tally's hand. |
+| `seal-5-4` | The Survey Cut, the notebook's back pocket | At the back of the notebook the count on its pocket fills. Inside is a folded map of the hill, the shaft marked in pen and, in another pen, SALT? and TUNNEL? |
+| `seal-5-5` | The Lamp Hall, the ledge's underside | The count on the ledge's lip fills. Under the ledge is a ring cut small, where no one would look, and beside it is a short line in the tally's hand. |
+| `seal-6-3` | The square gallery, a wall-shelf | The count on the wall-shelf fills. On the shelf lies a bronze level, its bubble long dry. |
+| `seal-6-5` | The Survey Cut, her folder | The count on her folder fills. In its first pocket are a letter from the council about the shaft and a note from a car's windscreen: "Your car's been here nine days. Ring me." |
 
 ---
 
@@ -232,10 +250,10 @@ Every new mark arrives with a context and **four candidates**, one tempting but 
 Both are already written as four-tap arrivals (one line per tap; no title or line names the word). The cinematic adds only what the build needs: what moves, when, and where the camera is. Motion follows direction D (smooth everyday, cinematic at big moments); no sound in the MVP.
 
 **`wd-light` (FIRE-GIVE), `b-3.A`, week 2–3.** req: `b-2.B`, `b-2.2`.
-1. Tap 1, *The rod's edge, in the blank.* Camera close on the side-wall lintel, the hall behind in the dark, the clay lamp's glow at the frame's edge. The rod's edge settles into the blank with a small haptic.
-2. Tap 2, *The first mark: the flame.* The flame's mark cuts in, a line of violet-white light following the stroke.
-3. Tap 3, *The second: the hook and the drop.* The second mark cuts in.
-4. Tap 4, *The cuts fill with light along the wall, and the rod rings once, low, like a struck pipe.* Both marks fill; light runs out of them along the lacing on the wall (a thin line, left and right) for about a second. A single long haptic for the ring.
+1. Tap 1, *You set the rod's edge in the blank.* Camera close on the side-wall lintel, the hall behind in the dark, the clay lamp's glow at the frame's edge. The rod's edge settles into the blank with a small haptic.
+2. Tap 2, *You cut the first mark, the flame's.* The flame's mark cuts in, a line of violet-white light following the stroke.
+3. Tap 3, *You cut the second, the hook and the drop.* The second mark cuts in.
+4. Tap 4, *Light fills the cuts along the wall, and the rod rings once, low, like a struck pipe.* Both marks fill; light runs out of them along the lacing on the wall (a thin line, left and right) for about a second. A single long haptic for the ring.
 5. **The wake** (no tap, about 6 s, cinematic): the camera pulls back and turns down the hall; the cups wake one by one, near to far, down both walls (a hand of them, then quicker, then more than can be counted), round the corner, and a glow comes up on the salt. The stone under the lintel is not there: it goes to dust-light and is gone. Beyond: the landing, already lit.
 6. The arrival settles on the open lintel and the lit landing. Gold comes up the floor as the day completes, as at every arrival. The map fills (the hall lit; the head of the Stair) the next time it is opened.
 Painting states needed: the hall with cups **dark** and **lit**, and the live layer **waking** (hall.js already has all three); the lintel **sealed** and **open**.
@@ -249,84 +267,84 @@ The same four beats at the lintel at the foot of the second flight; after tap 4 
 
 A find is **a thing already true, delivered as a find, never a bare reward** (sealed README). About twelve a week (BALANCING §4–5): an avoided job always brings one; switching after a long stretch; every side chamber on the open route; camp (the morning, if bedtime was kept, and the camp views, §3); a rhythm met past the week's supply. **Drawn from the pool for the stretch Dan is on, in the listed order, each once**, within its window. If a stretch's pool runs out, the next stretch back up the route gives its next one. Side chambers take their stretch's **told-line** finds first (about one in three side chambers holds one, BALANCING §5), so the told lines surface on long delves. Every find is either tied to a clue in `CLUE_LEDGER.md` or is texture whose truth is stated here in a clause and plants nothing.
 
-`w` = earliest story week; `req` = must have played first. Line = what the app shows (one or two sentences; one drawable noun).
+`w` = earliest story week; `req` = must have played first. Line = what the app shows (one or two whole sentences about one drawable thing).
 
 ### 8.1 The pool
 
 | Id | Stretch | w / req | Line | Truth (and ties) |
 |---|---|---|---|---|
 | `fd-a01` | mouth | 1 | At the ladder's foot, an old rung lies in the dust, bent in the middle, and the rung above it on the ladder is newer than the rest. | The council replaced it when it put up its notice: two ages of the one shaft (X-padlock). Texture |
-| `fd-a02` | mouth | 1 | On the shaft's brick at the ladder's foot, an arrow in old chalk pointing down, and beside it: 36 FT. | The company's shaft-sinkers' mark, in the railway age's feet (SCRIPT §11). The trial shaft (X-padlock). Texture |
-| `fd-a03` | mouth | 1 | Folded small and pushed behind a bracket, a cereal-bar wrapper, foil side out. | Hers. Texture |
+| `fd-a02` | mouth | 1 | On the shaft's brick at the ladder's foot an arrow is drawn in old chalk, pointing down, and beside it: 36 FT. | The company's shaft-sinkers' mark, in the railway age's feet (SCRIPT §11). The trial shaft (X-padlock). Texture |
+| `fd-a03` | mouth | 1 | A cereal-bar wrapper has been folded small and pushed behind a bracket, foil side out. | Hers. Texture |
 | `fd-a04` | mouth | 1 | Where the shaft's brick stops, its last course is laid right against the stone below, with no mortar between them. The stone was here first. | The trial shaft broke into the makers' passage from above. Texture |
-| `fd-a05` | mouth | 1 | In the passage dust, bootprints, one size, in and out, so many they have worn a path. | Her daily rule, go up every night (L6). Texture |
-| `fd-a06` | mouth | 1 | Tied to the bottom rung, a length of blue rope, cut, the end melted into a knob. | She lowered what her car held down the shaft at Day 40 (L15, month 4). Ties `fd-e08` |
-| `fd-b01` | hall | 1 | On the ledge's lip, a drip of glaze the lamp's colour, hard as glass. | He glazed the lamp new with the Site's dust when the first came back old (S7; WORLD_TRUTH rule 2). Ties C-01 |
+| `fd-a05` | mouth | 1 | In the dust of the passage are bootprints, all of one size, going in and out, so many that they have worn a path. | Her daily rule, go up every night (L6). Texture |
+| `fd-a06` | mouth | 1 | A length of blue rope is tied to the bottom rung. It has been cut, and the end melted into a knob. | She lowered what her car held down the shaft at Day 40 (L15, month 4). Ties `fd-e08` |
+| `fd-b01` | hall | 1 | On the lip of the ledge is a drip of glaze the colour of the lamp, hard as glass. | He glazed the lamp new with the Site's dust when the first came back old (S7; WORLD_TRUTH rule 2). Ties C-01 |
 | `fd-b02` | hall | 3 / `b-3.A` | In each cup the flame has no wick. It stands on the mark itself. | The Cut is technology; the mark burns (rule 1). R1 |
-| `fd-b03` | hall | 6 / `b-6.1` | Under the carved lamp on the wall, faint, in pencil, a grid of small squares, the kind you draw before you cut. | She laid out the wall (L8). R2, after the fact |
-| `fd-b04` | hall | 1 | On the ceiling above the ledge, a fan of old soot, thick at its point. | The lamp burned oil in the first's day (S1), and her candles later. C-01 |
-| `fd-b05` | hall | 1 | Five candle stubs in a row on the floor by the ledge, burned down to the stone. | Hers, before the lamps woke (Days 1–6, L5). Texture |
+| `fd-b03` | hall | 6 / `b-6.1` | Under the carved lamp on the wall, faint in pencil, is a grid of small squares, the kind you draw before you cut. | She laid out the wall (L8). R2, after the fact |
+| `fd-b04` | hall | 1 | On the ceiling above the ledge is a fan of old soot, thick at its point. | The lamp burned oil in the first's day (S1), and her candles later. C-01 |
+| `fd-b05` | hall | 1 | Five candle stubs stand in a row on the floor by the ledge, burned down to the stone. | Hers, before the lamps woke (Days 1–6, L5). Texture |
 | `fd-b06` | hall | 3 / `b-3.A` | One cup near the corner was broken at the lip and has been mended with a paste of the same stone. The flame's mark inside it is whole. | He mends what he keeps (the mended cup, week 23). Texture |
 | `fd-b07` | hall | 1, until `b-7.C` | At the foot of the great door, the dust lies in a line along the floor, finer than anywhere else, as if air has moved under it for a long time. | The makers' straight descent behind it (C-05); the cold air of 7.C |
-| `fd-b08` | hall | 1 (side) | In a crack beside the ledge, the burnt end of a wick, and beside it, cut small, a line in the tally's hand. | `tl-wick` (§8.2) |
-| `fd-b09` | hall | 1 | Under the ledge, a flake of glaze a shade darker than the lamp's. | The lamp's first glaze, before it was made new (S7). Ties C-01 |
-| `fd-b10` | hall | 1 | On the hall floor, in chalk, an arrow pointing at the side chamber, and the word CAMP. | Hers. Texture |
+| `fd-b08` | hall | 1 (side) | In a crack beside the ledge lies the burnt end of a wick, and beside it, cut small, is a line in the tally's hand. | `tl-wick` (§8.2) |
+| `fd-b09` | hall | 1 | Under the ledge lies a flake of glaze, a shade darker than the lamp's. | The lamp's first glaze, before it was made new (S7). Ties C-01 |
+| `fd-b10` | hall | 1 | On the floor of the hall, in chalk, is an arrow pointing at the side chamber, and the word CAMP. | Hers. Texture |
 | `fd-b11` | hall | 3 / `b-3.A` | In the lamplight there are rings on the ceiling too, cut where no ladder has been. | Cut at his reach, twice a man's height (C-04a; C-04) |
-| `fd-b12` | hall | 1 | The lamp's flame doesn't bend, even when you breathe on it. | It burns by his word, not by oil (C-01, C-02) |
-| `fd-c01` | hall (the corner) | 1 | In the bottom of one trough at the corner, a dry leaf of the kind that grows on a hedge, brown and crumbling. | Carried in on her boot from the field: the only thing from the world on this floor. Texture |
-| `fd-c02` | salt | 1 (side) | A knot of wool gone grey, tied round a knob of salt at the gallery's first turn. A short line is cut beside it. | `tl-wool` |
-| `fd-c03` | salt | 2 (side) | In a crack in the salt, a small cake of salt with a thumbprint pressed into it. Under it, a line in the tally's hand. | `tl-salt-cake` |
-| `fd-c04` | salt | 1 (side) | A chip of salt scratched with strokes in rows of five, and a line beside it in the tally's hand. | `tl-count` |
-| `fd-c05` | salt | 2 (side) | A length of wood worn smooth in two grooves, a carrying pole, laid in the salt with a few marks cut beside it. | `tl-yoke` |
-| `fd-c06` | salt | 1 | Point first in a crack of the salt, a bronze awl gone green. | The first's age (bronze). Texture |
-| `fd-c07` | salt | 1 | A strip of hide gone hard as wood, knotted in a loop. | A donkey's halter (the salt went down the hill on a donkey, S9 in month 4). Texture |
-| `fd-c08` | salt | 1 | In the crack with her sheets, a pencil worn down to the length of a thumb. | Hers. Texture |
+| `fd-b12` | hall | 1 | The lamp's flame does not bend, even when you breathe on it. | It burns by his word, not by oil (C-01, C-02) |
+| `fd-c01` | hall (the corner) | 1 | In the bottom of one trough at the corner lies a dry leaf, brown and crumbling, of the kind that grows on a hedge. | Carried in on her boot from the field: the only thing from the world on this floor. Texture |
+| `fd-c02` | salt | 1 (side) | At the gallery's first turn, a knot of wool gone grey is tied round a knob of salt, and a short line is cut beside it. | `tl-wool` |
+| `fd-c03` | salt | 2 (side) | In a crack in the salt lies a small cake of salt with a thumbprint pressed into it, and under it is a line in the tally's hand. | `tl-salt-cake` |
+| `fd-c04` | salt | 1 (side) | A chip of salt lies here, scratched with strokes in rows of five, and beside it is a line in the tally's hand. | `tl-count` |
+| `fd-c05` | salt | 2 (side) | A carrying pole, a length of wood worn smooth in two grooves, is laid in the salt, and a few marks are cut beside it. | `tl-yoke` |
+| `fd-c06` | salt | 1 | A bronze awl gone green is stuck point first in a crack of the salt. | The first's age (bronze). Texture |
+| `fd-c07` | salt | 1 | A strip of hide, knotted in a loop, has gone hard as wood. | A donkey's halter (the salt went down the hill on a donkey, S9 in month 4). Texture |
+| `fd-c08` | salt | 1 | In the crack with her sheets is a pencil, worn down to the length of a thumb. | Hers. Texture |
 | `fd-c09` | salt | 1 | In the tally's lowest cuts, salt has grown in small crystals, like frost in a crack. | Air from the split. Texture |
-| `fd-c10` | salt | 1 | In the salt floor by the split, the print of a sandal, the strap marks showing, set hard. | The first's, from the day the hill split. Texture |
-| `fd-c11` | salt | 1 | Between two of the stones in the split, a plug of wool with salt worked into it. | He sealed the crack himself on the way out (S4). C-09 |
-| `fd-c12` | salt | 2 / `b-2.A` | The lone ring over the tally, close: its curve is one cut, with no place where it starts or stops. | The ring is the only curve (SCRIPT §2), cut by a hand that has cut thousands. C-12 |
+| `fd-c10` | salt | 1 | In the salt floor by the split is the print of a sandal, set hard, with the marks of its straps still showing. | The first's, from the day the hill split. Texture |
+| `fd-c11` | salt | 1 | Between two of the stones in the split is a plug of wool with salt worked into it. | He sealed the crack himself on the way out (S4). C-09 |
+| `fd-c12` | salt | 2 / `b-2.A` | Seen close, the lone ring over the tally is a single cut, with no place where it starts or stops. | The ring is the only curve (SCRIPT §2), cut by a hand that has cut thousands. C-12 |
 | `fd-c13` | salt | 1 / `seal-1-2` | In the pick niche, the floor is scored where a pick was laid down and taken up, many times. | The first's pick. Texture |
-| `fd-c14` | salt | 2 / `b-2.A` | On the back of her Day 4 sheet, a sketch of the corner's two troughs, a measurement across them, and: *stride?? 1.4 m* | Hers. C-04a |
-| `fd-d01` | camp | 1 | A hair elastic wound round the notebook's pencil. | Hers. Texture |
-| `fd-d02` | camp | 1 | A page of an old railway timetable, printed thin, one line ringed in pencil, the station's name torn away. | Hers: she traced the railway company (TIMELINE). Texture |
-| `fd-d03` | camp | 1 | A tea bag dried to paper on the lid of a mug. | Hers. Texture |
-| `fd-d04` | camp | 2 | A photocopy of a page of handwriting in brown ink, *Log.* at the top, the rest greyed out by the copier. | The Engineer's log, copied from the archive (TIMELINE). Ties E1 (week 10) |
-| `fd-d05` | camp | 1 | A roll of black tape and a battery with its label peeled off. | Her tapes and their batteries (L5). Texture |
-| `fd-d06` | camp | 1 | A thermos, its cup upside down on the shelf, a brown ring dried inside it. | Hers. Texture |
-| `fd-d07` | camp | 1 | A crossword torn from a newspaper, half done in pencil, the date torn off. | Hers. Texture |
-| `fd-d08` | camp | 1 | On the cot's frame, a strip of masking tape with DAY 1 written on it in marker. | Hers. Texture |
-| `fd-d09` | camp | 1 | A box of matches with three left in it. | Hers, before the lamps woke. Texture |
-| `fd-d10` | camp | 6 / `b-6.1` | On the wall above the cot, pencil tallies in fives, twelve strokes, and a line drawn under the last. | The nights she went up, from her rule on Day 9 to Day 20 (L6, L8). C-35 |
-| `fd-d11` | camp | 1 | A paperback thriller left face down, open at page 211. | Hers. Texture |
-| `fd-d12` | camp | 1 | A fleece hat on a nail by the door. | Hers. Texture |
+| `fd-c14` | salt | 2 / `b-2.A` | On the back of her Day 4 sheet she has sketched the corner's two troughs and measured across them, and written: *stride?? 1.4 m* | Hers. C-04a |
+| `fd-d01` | camp | 1 | A hair elastic is wound round the notebook's pencil. | Hers. Texture |
+| `fd-d02` | camp | 1 | A page of an old railway timetable, printed thin, has one line ringed in pencil, and the station's name is torn away. | Hers: she traced the railway company (TIMELINE). Texture |
+| `fd-d03` | camp | 1 | A tea bag has dried to paper on the lid of a mug. | Hers. Texture |
+| `fd-d04` | camp | 2 | A photocopy of a page of handwriting in brown ink says *Log.* at the top, and the rest is greyed out by the copier. | The Engineer's log, copied from the archive (TIMELINE). Ties E1 (week 10) |
+| `fd-d05` | camp | 1 | A roll of black tape lies here, and a battery with its label peeled off. | Her tapes and their batteries (L5). Texture |
+| `fd-d06` | camp | 1 | A thermos's cup stands upside down on the shelf, with a brown ring dried inside it. | Hers. Texture |
+| `fd-d07` | camp | 1 | A crossword torn from a newspaper is half done in pencil, and its date is torn off. | Hers. Texture |
+| `fd-d08` | camp | 1 | On the frame of the cot is a strip of masking tape with DAY 1 written on it in marker. | Hers. Texture |
+| `fd-d09` | camp | 1 | A box of matches has three left in it. | Hers, before the lamps woke. Texture |
+| `fd-d10` | camp | 6 / `b-6.1` | On the wall above the cot are pencil tallies in fives, twelve strokes in all, and a line is drawn under the last. | The nights she went up, from her rule on Day 9 to Day 20 (L6, L8). C-35 |
+| `fd-d11` | camp | 1 | A paperback thriller lies face down, open at page 211. | Hers. Texture |
+| `fd-d12` | camp | 1 | A fleece hat hangs on a nail by the door. | Hers. Texture |
 | `fd-e01` | stair | 3 | Where a step's edge is chipped, the stone inside is darker and threaded with something like glass. | The lacing: the Seed's material, in the Site's rock (WORLD_TRUTH rule 2). Texture |
-| `fd-e02` | stair | 3 (side) | At the landing's edge, a wax seal the size of a coin, its stamp worn flat. The tally's hand has cut a line beside it. | `tl-seal` |
-| `fd-e03` | stair | 3 | Down the wall of the top flight, a long band polished smooth at the height of a long hand, as if one hand went down this wall many times. | His hand on the wall (C-04a; the rail at week 7, C-36) |
-| `fd-e04` | stair | 3 | Driven into a crack at the first turn, a bronze nail with a square head. | A surveyor's station mark: the second measured the Stair (V1's paces). Texture |
-| `fd-e05` | stair | 3 | On the rail, a pencil tick, and beside it: *1.3 m. Rail for somebody tall.* | Hers. C-04a |
-| `fd-e06` | stair | 3 | On the top step, a flake of candle wax, and beside it the print of a trainer's sole. | Hers, from Day 6 (L5). Texture |
-| `fd-e07` | stair | 3 | At the head of the top flight, on the wall, one ring set apart from the rest and cut deeper. | The first ring of the Stair: his list begins its halls with it (K4, week 43.2). Tied to K4 |
-| `fd-e08` | stair | 4 | Round the edge of one step, a groove worn by a rope, and a thread of blue caught in it. | Her rope, Day 40 (L15). Ties `fd-a06` |
-| `fd-e09` | stair | 3 | In the top flight's wall, at the height of your head, a row of small cut hollows, each the size of a fingertip: four, then a space, then four. | Holds for a four-fingered hand (C-10) |
-| `fd-e10` | stair | 3 | Wedged under a step, a folded page: a sketch of the stair, every step marked *50 cm*, and underneath, *built for legs longer than mine*. | Hers. C-04a |
-| `fd-f01` | flight2 | 4 | By the little door, a square of foam mat, cut to kneel on. | Hers: she knelt at it; it opened to her (L6: *the little door there is open*). C-24 |
-| `fd-f02` | flight2 | 5 / `b-5.0` | On the little door's jamb, in pencil: *open. D9* | It opened to her; it is shut to you: a count knows its bearer (C-24) |
-| `fd-f03` | flight2 | 4 | Along the second flight's wall at waist height, a straight black line, snapped like a chalk line. | The second's levelling line (he was vain about his levels). Texture |
-| `fd-f04` | flight2 | 5 | In a corner of the second landing, a small clay lamp with a spout and a handle, soot in the spout, cold. | The second's own lamp: every reader carried one down (R9.5, month 11). Texture |
-| `fd-f05` | flight2 | 5 | Down the second flight, a long shallow groove in the dust of every step, where something heavy was dragged. | Hers, Day 40 (L15). Texture |
-| `fd-f06` | flight2 | 5 | Swept against the wall under the gap, a heap of stone chips, square-edged. | The crew widened the gap; the boy cut marks through it (the wax crumbs, `seal-5-3`). Texture |
-| `fd-f07` | flight2 | 4 | On one step's riser, a ring worn so smooth it is only a shine in the stone. | Worn by ages of touch: the opposite of the sharp ring (C-29) |
-| `fd-f08` | flight2 | 5 | A leather thong, dry and curled, with a bronze bead on it. | The boy's (V3, X-boy at week 7). Texture |
-| `fd-g01` | square | 6 (side) | In a niche at a man's head height, under a patch of soot, a clay lamp with a spout; under it, cut small, a line in the tally's hand. | `tl-lamp` |
-| `fd-g02` | square | 6 (side) | A small sandal against the square wall, its hobnails in rows, and a line of marks above it. | `tl-sandal` |
-| `fd-g03` | square | 6 | The square wall, close: chisel marks a finger's width, row on row, each one angled the same way. | Human cutting, beside the makers' toolless curve (C-58) |
-| `fd-g04` | square | 6 | An iron hobnail, rusted to a brown stain on the floor. | The crew's. Texture |
-| `fd-g05` | square | 6 | Scratched into the square wall at a man's height, strokes in tens, a gap after each ten. | The crew's days, in tens (SCRIPT §11). Texture |
-| `fd-g06` | square | 6 | A wooden peg driven into a crack, charred black at its end. | A torch-holder: the crew's light. Texture |
-| `fd-g07` | square | 6 | A sherd of a big jar, with a stamped mark on it rubbed smooth. | The road-works' stores. Texture |
-| `fd-g08` | square | 6 | A grey whetstone, worn hollow in the middle. | The crew's. Texture |
-| `fd-g09` | square | 6 | In the join where square meets round, a sliver of grey metal poured into a crack to key a block. | Lead, the masons' key (C-58) |
-| `fd-g10` | square | 6 | At knee height, a line cut the length of the gallery, dead level. | The crew's level line, by the foreman's level (C-64) |
+| `fd-e02` | stair | 3 (side) | At the edge of the landing lies a wax seal the size of a coin, its stamp worn flat, and the tally's hand has cut a line beside it. | `tl-seal` |
+| `fd-e03` | stair | 3 | Down the wall of the top flight runs a long band, polished smooth at the height of a long hand, as if one hand went down this wall many times. | His hand on the wall (C-04a; the rail at week 7, C-36) |
+| `fd-e04` | stair | 3 | A bronze nail with a square head is driven into a crack at the first turn. | A surveyor's station mark: the second measured the Stair (V1's paces). Texture |
+| `fd-e05` | stair | 3 | On the rail is a pencil tick, and beside it is written: *1.3 m. Rail for somebody tall.* | Hers. C-04a |
+| `fd-e06` | stair | 3 | On the top step lies a flake of candle wax, and beside it is the print of a trainer's sole. | Hers, from Day 6 (L5). Texture |
+| `fd-e07` | stair | 3 | On the wall at the head of the top flight is one ring, set apart from the rest and cut deeper. | The first ring of the Stair: his list begins its halls with it (K4, week 43.2). Tied to K4 |
+| `fd-e08` | stair | 4 | Round the edge of one step a rope has worn a groove, and a thread of blue is caught in it. | Her rope, Day 40 (L15). Ties `fd-a06` |
+| `fd-e09` | stair | 3 | In the wall of the top flight, at head height, is a row of small cut hollows, each the size of a fingertip: four, then a space, then four. | Holds for a four-fingered hand (C-10) |
+| `fd-e10` | stair | 3 | A folded page is wedged under a step. On it is a sketch of the stair with every step marked *50 cm*, and underneath is written *built for legs longer than mine*. | Hers. C-04a |
+| `fd-f01` | flight2 | 4 | By the little door lies a square of foam mat, cut to kneel on. | Hers: she knelt at it; it opened to her (L6: *the little door there is open*). C-24 |
+| `fd-f02` | flight2 | 5 / `b-5.0` | On the jamb of the little door, in pencil: *open. D9* | It opened to her; it is shut to you: a count knows its bearer (C-24) |
+| `fd-f03` | flight2 | 4 | Along the wall of the second flight, at waist height, runs a straight black line, snapped like a chalk line. | The second's levelling line (he was vain about his levels). Texture |
+| `fd-f04` | flight2 | 5 | In a corner of the second landing stands a small clay lamp with a spout and a handle. There is soot in the spout, and the lamp is cold. | The second's own lamp: every reader carried one down (R9.5, month 11). Texture |
+| `fd-f05` | flight2 | 5 | Down the second flight, a long shallow groove runs through the dust of every step, where something heavy was dragged. | Hers, Day 40 (L15). Texture |
+| `fd-f06` | flight2 | 5 | A heap of square-edged stone chips has been swept against the wall under the gap. | The crew widened the gap; the boy cut marks through it (the wax crumbs, `seal-5-3`). Texture |
+| `fd-f07` | flight2 | 4 | On the riser of one step is a ring worn so smooth that it is only a shine in the stone. | Worn by ages of touch: the opposite of the sharp ring (C-29) |
+| `fd-f08` | flight2 | 5 | A leather thong lies dry and curled, with a bronze bead on it. | The boy's (V3, X-boy at week 7). Texture |
+| `fd-g01` | square | 6 (side) | In a niche at the height of a man's head, under a patch of soot, stands a clay lamp with a spout. Beneath it, cut small, is a line in the tally's hand. | `tl-lamp` |
+| `fd-g02` | square | 6 (side) | A small sandal lies against the square wall, its hobnails in rows, and above it is a line of marks. | `tl-sandal` |
+| `fd-g03` | square | 6 | Up close, the chisel marks on the square wall are a finger's width, row on row, each one angled the same way. | Human cutting, beside the makers' toolless curve (C-58) |
+| `fd-g04` | square | 6 | An iron hobnail has rusted to a brown stain on the floor. | The crew's. Texture |
+| `fd-g05` | square | 6 | Strokes are scratched into the square wall at a man's height, in tens, with a gap after each ten. | The crew's days, in tens (SCRIPT §11). Texture |
+| `fd-g06` | square | 6 | A wooden peg is driven into a crack, charred black at its end. | A torch-holder: the crew's light. Texture |
+| `fd-g07` | square | 6 | A sherd of a big jar has a stamped mark on it, rubbed smooth. | The road-works' stores. Texture |
+| `fd-g08` | square | 6 | A grey whetstone is worn hollow in the middle. | The crew's. Texture |
+| `fd-g09` | square | 6 | In the join where square meets round, a sliver of grey metal has been poured into a crack to key a block. | Lead, the masons' key (C-58) |
+| `fd-g10` | square | 6 | At knee height a line is cut the length of the gallery, dead level. | The crew's level line, by the foreman's level (C-64) |
 
 ### 8.2 The told lines (8, in the Cut)
 
@@ -357,11 +375,11 @@ One is shown for a step that has no authored step beat (§0.2; shared with scrip
 | `ps-m01` | The rungs are cold, and the ninth one is loose in its bracket. | |
 | `ps-m02` | Up the shaft, the ladder's rails narrow and meet in the daylight. | |
 | `ps-m03` | The draught goes up the shaft past your face, steady, and smells of nothing. | |
-| `ps-m04` | In the shaft wall at the ladder's foot, a recess with a row of cut strokes on its lip, and a nail above it. | until `seal-1-5` |
+| `ps-m04` | In the shaft wall at the ladder's foot is a recess with a row of cut strokes on its lip, and a nail above it. | until `seal-1-5` |
 | `ps-m05` | The passage curves off to the left, so slowly it hardly seems to. | |
-| `ps-m06` | Dust on the passage floor, finer than flour. It lifts round your boots and settles again. | |
+| `ps-m06` | Dust lies on the passage floor, finer than flour. It lifts round your boots and settles again. | |
 | `ps-m07` | The walls here are smooth enough that the dust does not stay on them. | |
-| `ps-m08` | A bracket for a cable, bolted into the shaft's brick, and no cable. | |
+| `ps-m08` | A bracket for a cable is bolted into the shaft's brick, but there is no cable. | |
 | `ps-m09` | The passage floor dips a hand's depth down its middle, worn by feet. | |
 | `ps-m10` | From the passage, the only sound is the air going up behind you. | |
 
@@ -369,14 +387,14 @@ One is shown for a step that has no authored step beat (§0.2; shared with scrip
 | Id | Line | Condition |
 |---|---|---|
 | `ps-h01` | The hall goes on past where the lamp's light reaches, and the air is colder that way. | before `b-3.A` |
-| `ps-h02` | A cup cut in the wall at head height, empty, the flame's mark inside it. | before `b-3.A` |
-| `ps-h03` | Another cup, then another, a few paces apart, all of them empty. | before `b-3.A` |
-| `ps-h04` | Rings on the wall at shoulder height, dozens of them, worn soft at the edges. | |
+| `ps-h02` | A cup is cut in the wall at head height, empty, with the flame's mark inside it. | before `b-3.A` |
+| `ps-h03` | Beyond it is another cup, and then another, a few paces apart, and all of them are empty. | before `b-3.A` |
+| `ps-h04` | Rings are cut in the wall at shoulder height, dozens of them, worn soft at the edges. | |
 | `ps-h05` | The floor is one stone as far as the lamp shows, with no joins in it. | before `b-3.A` |
 | `ps-h06` | From here the lamp on its ledge is small, and it does not flicker. | before `b-3.A` |
-| `ps-h07` | The ceiling curves over so high the lamp's light gives out before it does. | before `b-3.A` |
+| `ps-h07` | The ceiling curves over so high that the lamp's light gives out before it reaches it. | before `b-3.A` |
 | `ps-h08` | The marks go on up the wall past where you can reach. | |
-| `ps-h09` | On the side wall, the lintel with only stone beneath it, and the blank beside its two marks. | before `b-3.A` |
+| `ps-h09` | On the side wall stands the lintel, with only stone beneath it and the blank beside its two marks. | before `b-3.A` |
 | `ps-h10` | At the far end the lamp's light stops well short of the door. | before `b-3.A` |
 | `ps-h11` | The hall smells of dry stone and, very faintly, of salt. | |
 | `ps-h12` | The cups burn along both walls, each flame the same height as the last. | after `b-3.A` |
@@ -387,7 +405,7 @@ One is shown for a step that has no authored step beat (§0.2; shared with scrip
 | `ps-h17` | The flames stand straight. The draught along the hall does not move them. | after `b-3.A`, until `b-7.C` |
 | `ps-h18` | Lit, the hall's floor shows a paler path worn down its middle. | after `b-3.A` |
 | `ps-h19` | At the far end the great door fills the wall, and the lamps stop short of it. | after `b-3.A` |
-| `ps-h20` | The light reaches the ceiling now: marks there too, and rings among them. | after `b-3.A` |
+| `ps-h20` | The light reaches the ceiling now, and there are marks there too, with rings among them. | after `b-3.A` |
 | `ps-h21` | The flames in the cups are the colour of the clay lamp's, and there is no oil in any of them. | after `b-3.A` |
 | `ps-h22` | The ledge is cut out of the wall itself, with no join. | |
 
@@ -401,19 +419,19 @@ One is shown for a step that has no authored step beat (§0.2; shared with scrip
 | `ps-c05` | The salt face is streaked in bands of grey and white. | |
 | `ps-c06` | The tally runs along the wall at the height of a man's chest. | |
 | `ps-c07` | The tally's lowest cuts are furred white. | |
-| `ps-c08` | Her sheets in the crack, the top one curling at the corner. | |
+| `ps-c08` | Her sheets are in the crack, and the top one is curling at the corner. | |
 | `ps-c09` | The split is packed tight, stone against stone, salt in every gap. | |
-| `ps-c10` | Between the tally's marks, small pictures: a lamb, a loaf, a bird with long legs. | from w2 (`seal-1-1`) |
+| `ps-c10` | Between the tally's marks are small pictures: a lamb, a loaf, a bird with long legs. | from w2 (`seal-1-1`) |
 | `ps-c11` | The roof is low here, and the salt overhead has a sheen on it. | |
 | `ps-c12` | Where the cut stone meets the salt, the line between them is as straight as a rule. | |
-| `ps-c13` | A drift of salt dust against the wall, fine as sugar. | |
-| `ps-c14` | Pick scars on the salt face, short and slanting. | |
+| `ps-c13` | Salt dust has drifted against the wall, fine as sugar. | |
+| `ps-c14` | The salt face is marked with pick scars, short and slanting. | |
 | `ps-c15` | The tally goes under a crust of salt and comes out the other side. | from w4 |
 | `ps-c16` | Past the split the gallery narrows to the width of a man's arms held out. | |
 | `ps-c17` | Now and then the salt ticks, like a stove cooling. | |
 | `ps-c18` | In the glow from the corner, the salt's bands show all the way up the face. | after `b-3.A` |
 | `ps-c19` | The lone ring over the tally catches the light before anything near it. | from w2 (`b-2.A`) |
-| `ps-c20` | In front of the tally, a hollow worn in the floor where someone stood to read it. | |
+| `ps-c20` | In front of the tally a hollow is worn in the floor, where someone stood to read it. | |
 
 ### `st-camp` (w1)
 | Id | Line | Condition |
@@ -421,15 +439,15 @@ One is shown for a step that has no authored step beat (§0.2; shared with scrip
 | `ps-s01` | Her camp smells of paraffin and paper. | |
 | `ps-s02` | The cot's canvas sags in the middle, in the shape of whoever slept on it. | |
 | `ps-s03` | A bootlace hangs out from under the cot, untied at one end. | |
-| `ps-s04` | On the wall above the cot, a nail with nothing on it. | |
-| `ps-s05` | Pencilled sums on the wall by the doorway, crossed out. | |
+| `ps-s04` | On the wall above the cot is a nail with nothing on it. | |
+| `ps-s05` | On the wall by the doorway are sums in pencil, crossed out. | |
 | `ps-s06` | The notebook's pencil has tooth marks all along it. | |
 | `ps-s07` | The chamber is rounded like the hall, but the ceiling is low enough to touch. | |
-| `ps-s08` | A folding chair, one leg wrapped in tape. | |
-| `ps-s09` | Dust on the shelf, and a clean stripe where something long used to lie. | after `b-2.B` |
-| `ps-s10` | A pair of socks on a string across the corner, stiff as card. | |
+| `ps-s08` | A folding chair stands here with one leg wrapped in tape. | |
+| `ps-s09` | The shelf is dusty except for a clean stripe where something long used to lie. | after `b-2.B` |
+| `ps-s10` | A pair of socks hangs on a string across the corner, stiff as card. | |
 | `ps-s11` | Her things stand in piles along the wall, each pile squared off. | |
-| `ps-s12` | A plastic crate turned over for a table, rings of mug stains on top. | |
+| `ps-s12` | A plastic crate is turned over for a table, with rings of mug stains on top. | |
 
 ### `st-stair` (w3, after `b-3.A`)
 | Id | Line | Condition |
@@ -440,17 +458,17 @@ One is shown for a step that has no authored step beat (§0.2; shared with scrip
 | `ps-t04` | The rail is cut out of the wall itself, at the height of your chest. | |
 | `ps-t05` | The stair's lamps go down ahead of you, one every few steps. | |
 | `ps-t06` | Past the first turn the hall's light is behind you, and the stair's own lamps go on. | from w4 |
-| `ps-t07` | Rings on the stair wall too, at the height of a tall man's eye. | |
+| `ps-t07` | The stair wall has rings too, at the height of a tall man's eye. | |
 | `ps-t08` | The air comes up the stair, slow, a little warmer than the hall's. | |
-| `ps-t09` | A step with a chip out of its edge, and the chip still lying on the step below. | |
+| `ps-t09` | One step has a chip out of its edge, and the chip still lies on the step below. | |
 | `ps-t10` | The walls are cut with marks all the way up past the lamps. | |
 | `ps-t11` | From the landing the top flight looks shorter than it is. | |
-| `ps-t12` | At the first turn, a niche with a count beside the rail, its strokes empty. | until `seal-4-1` |
+| `ps-t12` | At the first turn, beside the rail, is a niche with a count, and its strokes are empty. | until `seal-4-1` |
 | `ps-t13` | The rail's top is polished darker than the wall. | |
 | `ps-t14` | The stair's lamps light the underside of the flight above. | from w4 |
-| `ps-t15` | Grit on one step crunches under your boot; the next is swept clean. | |
+| `ps-t15` | Grit on one step crunches under your boot, and the next is swept clean. | |
 | `ps-t16` | At the first turn the wall bulges round the rail like a knuckle. | |
-| `ps-t17` | Two lamps at the turn, one on either side, like the posts of a gate. | |
+| `ps-t17` | Two lamps stand at the turn, one on either side, like the posts of a gate. | |
 | `ps-t18` | From the first turn, the second flight goes down, and there is a small door on it. | until `b-4.1` |
 | `ps-t19` | A long hand could rest on this rail without bending. | |
 | `ps-t20` | The steps have no joins. The whole flight is one stone. | |
@@ -460,7 +478,7 @@ One is shown for a step that has no authored step beat (§0.2; shared with scrip
 |---|---|---|
 | `ps-f01` | The second flight is steeper than the first. | |
 | `ps-f02` | A finger's width of dark runs down one edge of the little door. | |
-| `ps-f03` | Under the second turn, the recess, and its count. | until `seal-5-1` |
+| `ps-f03` | Under the second turn is the recess, with its count. | until `seal-5-1` |
 | `ps-f04` | The lamps on the second flight are further apart. | |
 | `ps-f05` | At the second turn the stone goes paler, almost cream. | |
 | `ps-f06` | At the gap the round stone has been cut back, rough, by smaller tools. | from w5 (`b-5.B`) |
@@ -471,7 +489,7 @@ One is shown for a step that has no authored step beat (§0.2; shared with scrip
 | `ps-f11` | Below the second landing the stair goes on, and a lintel stands over it with only stone beneath. | from w6 |
 | `ps-f12` | The rail on the second flight is broken off for a stride, and the break is old and smooth. | |
 | `ps-f13` | From the second landing you can hear air moving below, a long way down. | from w5 |
-| `ps-f14` | A small square stone lies on the landing. It isn't the stair's stone: someone brought it in. | from w5 |
+| `ps-f14` | A small square stone lies on the landing. It is not the stair's stone. Someone brought it in. | from w5 |
 | `ps-f15` | The lamps on the second landing throw your shadow back up the stair. | from w5 |
 | `ps-f16` | The second flight's steps are as high as the first's, and narrower. | |
 
@@ -480,28 +498,28 @@ One is shown for a step that has no authored step beat (§0.2; shared with scrip
 |---|---|---|
 | `ps-g01` | The square gallery runs straight, as if someone drew it with a rule. | |
 | `ps-g02` | The chisel marks are small and close, row on row. | |
-| `ps-g03` | The ceiling is flat. It's the only flat ceiling down here. | |
+| `ps-g03` | The ceiling is flat. It is the only flat ceiling down here. | |
 | `ps-g04` | The square walls are bare, except where the tally's hand has cut on them. | |
-| `ps-g05` | In the dust of the square floor, old and hard, the marks of hobnails. | |
+| `ps-g05` | In the dust of the square floor, old and hard, are the marks of hobnails. | |
 | `ps-g06` | The gallery smells of old smoke. | |
-| `ps-g07` | Every ten paces, a short line cut at the edge of the floor. | |
-| `ps-g08` | A beam-slot cut in the wall, square, with nothing in it. | |
+| `ps-g07` | Every ten paces a short line is cut at the edge of the floor. | |
+| `ps-g08` | A square beam-slot is cut in the wall, with nothing in it. | |
 | `ps-g09` | The square stone is darker than the round, and it has cracks in it. | |
 | `ps-g10` | The gallery's corners are sharp enough to cut a finger on. | |
-| `ps-g11` | A crack in the ceiling, stopped with a wedge of wood gone grey. | |
-| `ps-g12` | Down the middle of the ceiling, a faint line of soot, where lights were carried. | |
+| `ps-g11` | A crack in the ceiling has been stopped with a wedge of wood gone grey. | |
+| `ps-g12` | Down the middle of the ceiling runs a faint line of soot, where lights were carried. | |
 | `ps-g13` | The floor rises very slightly toward the middle, the way a road does to shed water. | |
 | `ps-g14` | The dust gets thicker toward the far end. | |
-| `ps-g15` | A pale patch on the square wall where a board was fixed, and four holes for its pegs. | |
+| `ps-g15` | A pale patch on the square wall shows where a board was fixed, and there are four holes for its pegs. | |
 | `ps-g16` | Behind you the stair is lit. Ahead, the square stone goes dark. | |
 
 ### Anywhere (4)
 | Id | Line | Condition |
 |---|---|---|
 | `ps-x01` | Now and then a draught comes up from below, enough to lift the dust. | |
-| `ps-x02` | It's quiet enough to hear your own boots. | |
+| `ps-x02` | It is quiet enough to hear your own boots. | |
 | `ps-x03` | Far behind you, the lamp's light still shows on the wall. | before `b-3.A` |
-| `ps-x04` | Dust turns slowly in the light and doesn't settle. | |
+| `ps-x04` | Dust turns slowly in the light and does not settle. | |
 
 Count: 10 + 22 + 20 + 12 + 20 + 16 + 16 + 4 = 120, plus the 40 below: **160**.
 ### More, where the early weeks run short (40)
@@ -511,14 +529,14 @@ The first weeks' stretches are the ones a Normal week walks most (about 35 steps
 | Id | Stretch | Line | Condition |
 |---|---|---|---|
 | `ps-m11` | mouth | The shaft's brick is stamped with a maker's mark, worn to a blur. | |
-| `ps-m12` | mouth | A bolt in the brick, and a brown rust stain running down from it. | |
+| `ps-m12` | mouth | A bolt is set in the brick, and a brown rust stain runs down from it. | |
 | `ps-m13` | mouth | Where the passage leaves the shaft, the floor is scuffed grey by boots. | |
 | `ps-m14` | mouth | The passage is just too wide to touch both walls at once. | |
 | `ps-h23` | hall | The lamp's light lies on the floor in an oval, and the rest is dark. | before `b-3.A` |
 | `ps-h24` | hall | The wall by the ledge is cut so densely it looks like woven cloth. | |
-| `ps-h25` | hall | A cup with a hairline crack across its lip. | |
+| `ps-h25` | hall | One cup has a hairline crack across its lip. | |
 | `ps-h26` | hall | The hall's floor is cold through your boots. | before `b-3.A` |
-| `ps-h27` | hall | Two rings cut so close together their curves touch. | |
+| `ps-h27` | hall | Two rings are cut so close together that their curves touch. | |
 | `ps-h28` | hall | Somewhere past the lamp's light, the hall's far wall gives back your footsteps late. | before `b-3.A` |
 | `ps-h29` | hall | Near the lintel, the marks are cut deeper than anywhere else on the wall. | before `b-3.A` |
 | `ps-h30` | hall | The flames in the cups nearest the ledge lean very slightly toward it. | after `b-3.A` |
@@ -526,30 +544,30 @@ The first weeks' stretches are the ones a Normal week walks most (about 35 steps
 | `ps-c22` | salt | A lump of salt the size of a fist has fallen from the roof and lies where it fell. | |
 | `ps-c23` | salt | The cut stone band that carries the tally is a hand's width proud of the salt. | |
 | `ps-c24` | salt | The gallery's air is drier than the hall's, and tastes of salt. | |
-| `ps-c25` | salt | Where the tally turns a corner of the wall, its line doesn't break. | |
+| `ps-c25` | salt | Where the tally turns a corner of the wall, its line does not break. | |
 | `ps-c26` | salt | Her pencil has ticked some marks on the tally's first stretch, very lightly. | |
 | `ps-c27` | salt | The salt face has a vein of darker grey running through it at a slant. | |
-| `ps-c28` | salt | A dip in the salt floor, shaped like a boot heel, and another beside it. | |
-| `ps-c29` | salt | In the corner where the split meets the floor, a little heap of salt grains, fine as flour. | |
+| `ps-c28` | salt | In the salt floor is a dip shaped like a boot heel, and another beside it. | |
+| `ps-c29` | salt | In the corner where the split meets the floor lies a little heap of salt grains, fine as flour. | |
 | `ps-c30` | salt | The tally's cuts are all the same depth, from the first to the last you can see. | |
-| `ps-s13` | camp | A mug on the floor by the cot, a dry brown ring at the bottom of it. | |
+| `ps-s13` | camp | A mug stands on the floor by the cot, with a dry brown ring at the bottom of it. | |
 | `ps-s14` | camp | The camp's doorway is round-topped, and she has hung a jacket from a crack in it. | |
-| `ps-s15` | camp | Paper everywhere, weighted down with small stones. | |
-| `ps-s16` | camp | A washing-up bowl, dry, with a sponge gone hard in it. | |
-| `ps-s17` | camp | A rolled mat against the wall, its strap undone. | |
-| `ps-s18` | camp | Her writing on a cardboard box: FOOD, and under it, in smaller letters, *mostly*. | |
-| `ps-s19` | camp | A plastic water bottle, a third full, the water gone flat and clear. | |
-| `ps-s20` | camp | The smell of her camp changes by the door: stone again. | |
+| `ps-s15` | camp | There is paper everywhere, weighted down with small stones. | |
+| `ps-s16` | camp | A washing-up bowl has dried out, and the sponge in it has gone hard. | |
+| `ps-s17` | camp | A rolled mat leans against the wall, its strap undone. | |
+| `ps-s18` | camp | On a cardboard box she has written FOOD, and under it, in smaller letters, *mostly*. | |
+| `ps-s19` | camp | A plastic water bottle stands a third full, and the water in it has gone flat and clear. | |
+| `ps-s20` | camp | By the door the smell of her camp gives way, and the air smells of stone again. | |
 | `ps-t21` | stair | The lamps on the stair are set at the height of a tall man's hand. | |
 | `ps-t22` | stair | A long crack runs down one side of the flight, and no step has moved. | |
-| `ps-t23` | stair | The steps' edges are rounded, not sharp, from use. | |
-| `ps-t24` | stair | Looking down the stair from the landing, the lamps make a line that bends at the turn. | |
-| `ps-t25` | stair | A ring cut on a step's face, low down, half worn away by feet. | |
-| `ps-g17` | square | A pick-mark in the square wall, deeper than the rest, where a blow went wrong. | |
-| `ps-g18` | square | The square floor has been swept once, long ago: a clean strip along one wall. | |
-| `ps-g19` | square | A stub of candle-grease, grey, on the lip of a crack. | |
+| `ps-t23` | stair | The edges of the steps are rounded by use, not sharp. | |
+| `ps-t24` | stair | When you look down the stair from the landing, the lamps make a line that bends at the turn. | |
+| `ps-t25` | stair | A ring is cut low on the face of a step, half worn away by feet. | |
+| `ps-g17` | square | One pick-mark in the square wall is deeper than the rest, where a blow went wrong. | |
+| `ps-g18` | square | The square floor has been swept once, and a clean strip runs along one wall. | |
+| `ps-g19` | square | A grey stub of candle-grease sits on the lip of a crack. | |
 | `ps-g20` | square | The gallery's walls lean in very slightly toward the top. | |
-| `ps-g21` | square | Two chisel marks crossed, the only crossed marks on the wall. | |
+| `ps-g21` | square | Two chisel marks cross each other, the only crossed marks on the wall. | |
 
 
 **Passage lines that imply a person, and who** (rule 6): `ps-c20` the hollow before the tally: hers, standing to read it with her sheets; `ps-c26` her ticks; `ps-f10` the ring in a riser: his, like every ring (C-29); `ps-f12` the broken rail: broken in the makers' own age and worn smooth since, nothing more; `ps-f14` the square stone on the landing: a squared chip the second carried in from his gallery (C-58); `ps-g17`, `ps-g18`, `ps-g19` the crew; `ps-s*` hers. Every other passage line describes stone, salt, light or air.
@@ -577,16 +595,16 @@ Between passage lines, a step may instead show **a line of script**: one sign gr
 | `wc-w2-3` | `b-2.B` | The rod was left for the next one, with a note: cut the two marks on the lintel. |
 | `wc-w3-1` | `b-3.A` | The lintel took the rod, and the lamps woke all down the hall. |
 | `wc-w3-2` | `b-3.2` | She cut the same two marks on her sixth day, and a door opened for her too. |
-| `wc-w3-3` | `b-3.B` | At the head of the stair, a second clay lamp, unlit. |
+| `wc-w3-3` | `b-3.B` | At the head of the stair there is a second clay lamp, unlit. |
 | `wc-w4-1` | `b-4.A` | Her sheet for the stretch past the ring says: *go home… lamp… gave… went up.* |
 | `wc-w4-2` | `b-4.4` | Nearly every record here ends with a hook closed on a dot. The wall by the lamp has another hook. |
 | `wc-w4-3` | `b-4.3` | On her ninth day she made herself a rule: go up every night. |
-| `wc-w5-1` | `b-5.A` | Every line of the tally begins with the same three marks: the bar with a tick, a ring, a single drop. |
+| `wc-w5-1` | `b-5.A` | Every line of the tally begins with the same three marks: the bar with a tick, a ring and a single drop. |
 | `wc-w5-2` | `b-5.3` | Behind the salt crust, the lamp's mark, the flame's and the hook-and-drop stand in a row, with no door near. |
 | `wc-w5-3` | `b-5.2` | She called him the Tenant, and he let her. |
 | `wc-w6-1` | `b-6.1` | The wall by the lamp was cut on her twentieth day, for the next one. |
 | `wc-w6-2` | `b-6.A` | Square stone meets the round, and the record on it begins like the tally does. |
-| `wc-w6-3` | `b-6.B` | In the square gallery, a crew's wall, and a pay tablet with a ring at the head of every row. |
+| `wc-w6-3` | `b-6.B` | In the square gallery there is a crew's wall, and a pay tablet with a ring at the head of every row. |
 
 **The month's "so far"** (BALANCING §7: the first week close of each **month of play**, i.e. calendar weeks 1 and 5, whatever story week Dan is in; 3–5 lines, in the world's words, the open questions as things, never homework). Each line shows only if its beat has played; the week close shows the first five whose beats have.
 
@@ -597,11 +615,11 @@ Between passage lines, a step may instead show **a line of script**: one sign gr
 | `sf-m1-3` | `b-1.5` | The long line of marks in the salt was cut by one hand. |
 | `sf-m1-4` | `b-1.A` | At the far end of the hall there is a door that is most of the wall. |
 | `sf-m2-1` | `b-2.3` | The lamp on the ledge was lit for her too. |
-| `sf-m2-2` | `b-2.A`, `b-2.3` | The tally's teller and she both met someone tall where the way turns. |
+| `sf-m2-2` | `b-2.A`, `b-2.3` | She met someone tall where the way turns, and so did whoever told the tally. |
 | `sf-m2-3` | `b-4.4` | Nearly everything here was cut by one hand. The wall by the lamp was not. |
 | `sf-m2-4` | `b-4.3`, `b-5.0` | The little door she found open is shut to you. |
 | `sf-m2-5` | `b-4.C` | The great door has a count, and two marks beside a blank. |
-| `sf-m2-6` | `b-3.B` | At the head of the stair, a second clay lamp, unlit. |
+| `sf-m2-6` | `b-3.B` | At the head of the stair there is a second clay lamp, unlit. |
 
 (`sf-m2-3` says *the wall by the lamp*: R2 completes at story week 6.)
 
@@ -616,7 +634,7 @@ After an absence, "where you were" names the one open question for the story wee
 | `aw-w3` | 3 | `b-3.B` | The stair goes down from the landing, lit, and you did not light it. |
 | `aw-w4` | 4 | `b-4.A` | Past the lone ring, her sheet says: *…go home… he held me… lamp… gave… went up…* |
 | `aw-w5` | 5 | `b-5.A` | Every record in the tally begins the same way. The wall by the lamp does not. |
-| `aw-w6` | 6 | `b-6.A` | Through the side passage, square stone, and a record in the tally's hand. |
+| `aw-w6` | 6 | `b-6.A` | Through the side passage is square stone, and on it a record in the tally's hand. |
 
 ---
 
@@ -626,36 +644,36 @@ Always **from just ahead**, a thing Dan can see and not yet reach; never a conse
 
 | Id | w | Shows | Line |
 |---|---|---|---|
-| `b-w1.tz1` | 1 | before `b-1.A` | *Under the cap, eleven metres of ladder, and the air that comes up is dry.* (ARR1) |
-| `b-w1.tz2` | 1 | after `b-1.A` | *Three marks on the base of the lamp, and the lamp is warm.* (ARR1) |
-| `tz-w1-a` | 1 | after `pl-w1-pick-niche`, until `seal-1-2` | *In the salt, a niche the length of an arm, and cut strokes along its lip.* |
-| `tz-w1-b` | 1 | after `b-1.C`, until `seal-2-1` | *On her cot, a tin box with a row of cut strokes across its lid.* |
-| `tz-w1-c` | 1 | after `pl-w1-below-the-lamp`, until `seal-1-3` | *Under the lamp's ledge, a small niche, and the stone round its mouth is darker.* |
-| `b-w2.tz1` | 2 | before `b-2.B` | *On the shelf in her camp, a rod of stone, one edge finer than a knife.* (ARR1) |
-| `b-w2.tz2` | 2 | after `b-2.B` | *The rod is in your hand. On the lintel, a blank the width of its edge.* (ARR1) |
-| `tz-w2-a` | 2 | after `pl-w2-above-the-ring`, until `seal-2-3` | *Above the lone ring, something pale, far back in a crack.* |
-| `tz-w2-b` | 2 | after `pl-w2-box-by-the-cot`, until `seal-2-5` | *In her camp, a tin mug upside down on a box with a count.* |
-| `tz-w2-c` | 2 | after `b-2.A`, until `seal-2-2` | *In the salt, a long narrow niche with a count, the length of a stick.* |
-| `b-w3.tz1` | 3 | before `b-3.A` | *The rod is in your hand. On the lintel, a blank the width of its edge.* (ARR1) |
-| `b-w3.tz2` | 3 | after `b-3.A` | *At the head of the stair, a lid with a doorway carved on it.* (ARR1) |
-| `tz-w3-a` | 3 | after `b-3.C`, until `seal-4-1` | *At the stair's first turn, a niche with a count beside the rail.* |
-| `tz-w3-b` | 3 | after `pl-w3-far-end` | *At the far end, the great door, and cold coming off its face.* |
-| `tz-w3-c` | 3 | after `b-3.B`, until `seal-3-5` | *In her camp, on a ledge, a box with a count, and a label in her hand on its side.* |
-| `b-w4.tz1` | 4 | always | *Every record here was cut by the same hand. Except two.* (ARR1) |
-| `tz-w4-a` | 4 | after `pl-w4-hollow`, until `seal-4-5` | *Low in the salt, a hollow with four small flat marks in its floor.* |
-| `tz-w4-b` | 4 | after `pl-w4-recess-above-the-cot`, until `seal-4-3` | *Above her cot, a recess with a count, and a drawing pin beside it.* |
-| `tz-w4-c` | 4 | after `b-4.1`, until `seal-5-1` | *Under the second turn, a recess with a count of its own.* |
+| `b-w1.tz1` | 1 | before `b-1.A` | *Under the cap, eleven metres of ladder go down, and the air that comes up is dry.* (ARR1) |
+| `b-w1.tz2` | 1 | after `b-1.A` | *There are three marks on the base of the lamp, and the lamp is warm.* (ARR1) |
+| `tz-w1-a` | 1 | after `pl-w1-pick-niche`, until `seal-1-2` | *In the salt is a niche the length of an arm, with cut strokes along its lip.* |
+| `tz-w1-b` | 1 | after `b-1.C`, until `seal-2-1` | *On her cot lies a tin box with a row of cut strokes across its lid.* |
+| `tz-w1-c` | 1 | after `pl-w1-below-the-lamp`, until `seal-1-3` | *Under the lamp's ledge is a small niche, and the stone round its mouth is darker.* |
+| `b-w2.tz1` | 2 | before `b-2.B` | *On the shelf in her camp lies a rod of stone, with one edge finer than a knife's.* (ARR1) |
+| `b-w2.tz2` | 2 | after `b-2.B` | *The rod is in your hand, and on the lintel is a blank the width of its edge.* (ARR1) |
+| `tz-w2-a` | 2 | after `pl-w2-above-the-ring`, until `seal-2-3` | *Above the lone ring, something pale lies far back in a crack.* |
+| `tz-w2-b` | 2 | after `pl-w2-box-by-the-cot`, until `seal-2-5` | *In her camp, a tin mug stands upside down on a box with a count.* |
+| `tz-w2-c` | 2 | after `b-2.A`, until `seal-2-2` | *In the salt is a long, narrow niche, the length of a stick, with a count on it.* |
+| `b-w3.tz1` | 3 | before `b-3.A` | *The rod is in your hand, and on the lintel is a blank the width of its edge.* (ARR1) |
+| `b-w3.tz2` | 3 | after `b-3.A` | *At the head of the stair is a lid with a doorway carved on it.* (ARR1) |
+| `tz-w3-a` | 3 | after `b-3.C`, until `seal-4-1` | *At the stair's first turn there is a niche with a count beside the rail.* |
+| `tz-w3-b` | 3 | after `pl-w3-far-end` | *At the far end stands the great door, and cold comes off its face.* |
+| `tz-w3-c` | 3 | after `b-3.B`, until `seal-3-5` | *On a ledge in her camp is a box with a count, and on its side a label in her hand.* |
+| `b-w4.tz1` | 4 | always | *Every record here was cut by the same hand, except two.* (ARR1) |
+| `tz-w4-a` | 4 | after `pl-w4-hollow`, until `seal-4-5` | *Low in the salt is a hollow with four small flat marks in its floor.* |
+| `tz-w4-b` | 4 | after `pl-w4-recess-above-the-cot`, until `seal-4-3` | *Above her cot is a recess with a count, and a drawing pin beside it.* |
+| `tz-w4-c` | 4 | after `b-4.1`, until `seal-5-1` | *Under the second turn is a recess with a count of its own.* |
 | `b-w5.tz1` | 5 | always | *One line here does not begin with the bar with a tick.* (ARR1) |
-| `tz-w5-a` | 5 | after `pl-w5-ledge-lip`, until `seal-5-5` | *Under the lamp's ledge, a count where no one standing would see it.* |
-| `tz-w5-b` | 5 | after `b-5.B`, until `b-6.A` | *Through the gap, a record in the tally's hand, on square stone.* |
-| `tz-w5-c` | 5 | after `b-5.0` | *On the second flight, the little door, its count full, and it does not open.* |
-| `b-w6.tz1` | 6 | before `b-6.A` | *Past the second landing, a low doorway, and square stone beyond it.* (ARR2) |
-| `b-w6.tz2` | 6 | after `b-6.2` | *On the salt, a loaf carved beside a mark.* (ARR2) |
-| `tz-w6-a` | 6 | after `pl-w6-wall-shelf`, until `seal-6-3` | *On the square wall, a shelf with a count, and a level line scratched along it.* |
-| `tz-w6-b` | 6 | after `pl-w6-folder`, until `seal-6-5` | *Under her cot, a folder with HILL on its spine.* |
-| `tz-w6-c` | 6 | after `b-6.A`, until `b-6.B` | *On the square wall, a second record, longer, and a niche under it.* |
+| `tz-w5-a` | 5 | after `pl-w5-ledge-lip`, until `seal-5-5` | *Under the lamp's ledge is a count, where no one standing would see it.* |
+| `tz-w5-b` | 5 | after `b-5.B`, until `b-6.A` | *Through the gap you can see a record in the tally's hand, on square stone.* |
+| `tz-w5-c` | 5 | after `b-5.0` | *On the second flight the little door's count is full, and it does not open.* |
+| `b-w6.tz1` | 6 | before `b-6.A` | *Past the second landing is a low doorway, with square stone beyond it.* (ARR2) |
+| `b-w6.tz2` | 6 | after `b-6.2` | *On the salt, a loaf is carved beside a mark.* (ARR2) |
+| `tz-w6-a` | 6 | after `pl-w6-wall-shelf`, until `seal-6-3` | *On the square wall is a shelf with a count, and a level line is scratched along it.* |
+| `tz-w6-b` | 6 | after `pl-w6-folder`, until `seal-6-5` | *Under her cot lies a folder with HILL on its spine.* |
+| `tz-w6-c` | 6 | after `b-6.A`, until `b-6.B` | *On the square wall is a second record, longer than the first, with a niche under it.* |
 | `b-w7.tz1` | 7 | before `b-7.3` | *At the first turn of the stair, the rail has the shape of a hand in it.* (ARR2) |
-| `b-w7.tz2` | 7 | after `b-7.A` | *Beside the great door's blank, the two marks from the lintel on the stair.* (ARR2) |
+| `b-w7.tz2` | 7 | after `b-7.A` | *Beside the great door's blank are the two marks from the lintel on the stair.* (ARR2) |
 
 ---
 

@@ -10,7 +10,7 @@
   let { go, seq }: { go: Go; seq: number } = $props();
   const v = $derived(game.view);
   const fact = $derived(game.facts.find(f => f.seq === seq));
-  const job = $derived(fact && fact.type === 'jobDone' ? content.jobs.find(j => j.id === fact.job) : undefined);
+  const job = $derived(fact && fact.type === 'jobDone' ? game.job(fact.job) : undefined);
   const completedDay = $derived(game.facts.some(f => f.seq > seq && f.type === 'dayCompleted'));
   const gained = $derived(fact && fact.type === 'jobDone' ? fact.minutes : 0);
 
@@ -21,7 +21,7 @@
   const startAt = $derived(v.nextAt !== null ? Math.max(0, v.nextAt - 400) : from - 50);
   const px = (m: number) => 8 + (W - 16) * Math.min(1, Math.max(0, (m - startAt) / Math.max(1, target - startAt)));
 
-  function leave() { go(completedDay && v.arrival ? 'arrival' : 'today'); }
+  function leave() { go(v.arrival ? 'arrival' : 'today'); }
 </script>
 
 <Scene painting={v.here.painting} />
@@ -47,7 +47,7 @@
     </svg>
     <div class="rise d3"><Return doneSeq={fact && fact.type === 'jobDone' ? seq : null} {go} /></div>
     <div class="go rise d3">
-      {#if completedDay && v.arrival}
+      {#if v.arrival}
         <button class="btn" onclick={leave}>{t('delve.see')}</button>
       {:else}
         <button class="btn resting" onclick={leave}>{t('delve.toToday')}</button>
