@@ -93,12 +93,13 @@ class Game {
     else if (before.phase === 'breather' && after?.phase === 'delve') platform.sound.chime('breatherEnd');
   }
 
-  /** One alert per delve and breather end from now on; none while held, none after the run (ARCHITECTURE → the delve's end). */
+  /** One alert per delve and breather end from now on; none while held, none after the run (ARCHITECTURE → the delve's end).
+      In a rehearsal they come 60 times sooner, so trial (b) takes seconds, not a whole delve. */
   async alerts() {
     const ids = Array.from({ length: 24 }, (_, i) => 100 + i);
     await platform.notifier.cancel(ids);
     const r = this.view.run;
-    if (!r || !platform.notifier.locked || this.proto.rehearsal) return;
+    if (!r || !platform.notifier.locked) return;
     if (!(await platform.notifier.permit())) return;   /* asked once, at the first Begin */
     const marks = this.facts.filter(f => f.seq > r.seq && ['breatherSkipped', 'delveHeld', 'delveResumed'].includes(f.type))
       .map(f => ({ kind: f.type === 'breatherSkipped' ? 'skip' : f.type === 'delveHeld' ? 'hold' : 'resume', at: epochOf(f.at) } as const));
@@ -120,6 +121,7 @@ class Game {
     this.now = this.clock();
     this.append(settle(this.facts, content, this.now));
     this.do({ do: 'open' });
+    void this.alerts();   /* the other save's alerts go; this one's come back */
   }
   reset() {
     platform.store.remove(this.saveKey);

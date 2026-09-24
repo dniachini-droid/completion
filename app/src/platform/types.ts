@@ -12,4 +12,8 @@ export interface Haptics { tick(): Promise<void>; }
 export interface Store { get(key: string): string | null; set(key: string, value: string): void; remove(key: string): void; }
 /** A soft sound while the app is open: a delve's end, or a breather's. */
 export interface Sound { unlock(): void; chime(kind: 'delveEnd' | 'breatherEnd'): void; }
-export interface Platform { notifier: Notifier; haptics: Haptics; store: Store; sound: Sound; now(): Date; }
+export interface Platform {
+  notifier: Notifier; haptics: Haptics; store: Store; sound: Sound; now(): Date;
+  /** Wait for the save to be read, before the game starts. */
+  ready(): Promise<void>;
+}

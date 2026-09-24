@@ -8,11 +8,11 @@
 | The app icon | A crop of an invented sample painting | When the app has its name (`narrative/NAMES.md`) |
 | The working app name "Real Life RPG" | Apple needs one to make the record | Same |
 | The delve alert uses the phone's default sound | The delve's own sound isn't made yet | Heart slice or later, if play shows sound matters |
-| The fact log is saved in the browser's own storage (localStorage), throwaway; no snapshot, no migrations yet | The web link has no SQLite; the log is small | SQLite with the TestFlight build; snapshot and migrations before the first playable |
+| The fact log is saved as one text value: the browser's own storage on the web link, the phone's app settings (Capacitor Preferences, kept by iOS and backed up by iCloud) in the TestFlight build; no snapshot, no migrations yet | Enough for a prototype's small log, with nothing new to trust | SQLite, the snapshot and migrations before the first playable |
 | Screens checked in Chromium at phone size, not WebKit | The container has only Chromium; TEST_STRATEGY asks for WebKit | Dan's phone checks each build; add WebKit to CI when the flow tests arrive |
 | The painting kit samples bake in 10–80 s each; no scene of a real place yet | Real places wait for the sealed story-fix session (D-060) | After the story-fix session |
 | Cloud signing (D-063) is unproven | First run pending Dan's secrets | The first TestFlight build |
-| The trials screen was removed; trials (b) and (c) need a new bench in the TestFlight build | The heart came first while Apple setup waits (D-064) | The first TestFlight build (a hidden trials page, or the heart's own delve) |
+| Trials (b) and (c) run on the heart itself, in a rehearsal (alerts come 60 times sooner there); Dan's checklist is `APPLE_SETUP.md` → Sitting 3 | The trials screen was removed when the heart came first (D-064) | Done once, on the first TestFlight build |
 | On the web link the delve's end can't sound with the phone locked: it chimes only while the page is open, and shows when Dan comes back | Web pages can't schedule alerts | The TestFlight build (local notifications are already wired) |
 | The chime is a synthesised bell | The delve's own sound isn't made | When sound gets its pass |
 | The job list is a fixed stand-in from Dan's starting set; Today's jobs are its first 2, 3 or 5, changed by Swap | Editing jobs and the planner are slice 4 | Slice 4 |

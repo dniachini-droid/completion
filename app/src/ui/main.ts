@@ -2,7 +2,6 @@ import { mount } from 'svelte';
 import './fonts.css';
 import './direction.css';
 import './base.css';
-import App from './App.svelte';
 import { platform } from '../platform';
 
 /* the light blooms where you tap (direction D; motion only) */
@@ -19,4 +18,7 @@ if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
 /* sound may play only after a tap */
 document.addEventListener('pointerdown', () => platform.sound.unlock(), { once: true });
 
+/* the save is read before the game starts (the game is made when App is first loaded) */
+await platform.ready();
+const { default: App } = await import('./App.svelte');
 mount(App, { target: document.getElementById('app')! });

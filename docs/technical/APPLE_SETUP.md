@@ -42,6 +42,24 @@ The key stays in GitHub's locked secrets, where only the build can use it. **Don
 
 **E. Tell Claude "Apple setup done."** Claude then builds, the cloud Mac packages the app and sends it to Apple, and it appears in **TestFlight** on your phone, usually within an hour. You'll get a TestFlight invitation (you're the internal tester); open it and tap **Install**.
 
+## Sitting 3: two checks on the phone (about 10 minutes, once the app is installed)
+These are trials (b) and (c) (`TECH_DECISIONS.md` → "Risks"). Tell Claude what happened, in any words; a "no" is useful, not a failure.
+
+**(b) Does the delve's end reach you with the phone locked?**
+1. Open the app → **Prototype** → **Start a rehearsal** (minutes pass 60 times faster, on a separate save: a delve lasts under a minute).
+2. **Begin** a job. The first time, the phone asks whether the app may send notifications: **Allow**.
+3. Lock the phone straight away and put it face down. Does it chime or buzz when the delve ends?
+4. Again with the **ring/silent switch on silent** (it should buzz only), and again in a **Focus** (e.g. Do Not Disturb). In a Focus it stays quiet unless you add the app to that Focus's allowed apps; say which you'd prefer.
+
+**(c) Does it feel like a real app?**
+- It opens in a second or two, with no white flash.
+- Nothing bounces or scrolls when you drag the screen; long-pressing words doesn't select them.
+- Nothing sits under the notch or the bar at the bottom.
+- On a longer job (like the Course), Begin shows the dial: turning it gives small ticks you can feel.
+- Close the app fully (swipe it away) and reopen: you're where you left off.
+
+Then **Prototype → Back to real time** to go back to your own save.
+
 ## Good to know
 - The key can be **revoked** at any time in App Store Connect → Users and Access → Integrations. The app on your phone keeps working.
 - TestFlight builds expire after **90 days**; a monthly rebuild keeps a fresh one on the phone (`TECH_DECISIONS.md`). Your save is never touched by an update or an expiry.
