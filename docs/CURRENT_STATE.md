@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-24 (planner locked, D-048; step 3 numbers drafted, D-049)_
+_Last updated: 2026-09-24 (planner locked, D-048; steps 3–4 drafted, D-049, D-050; step 5 next)_
 
 ## Current phase
 
@@ -16,12 +16,12 @@ Write the chosen game up as one clear concept, stress-test it, and set the numbe
 
 ## Resume here (next session)
 0. The week planner is **approved and locked** (D-048; `game/PLANNER.md`). Rhythms are folded into the game docs.
-1. Steps 1–3 are done: `product/CONCEPT.md`, `product/STRESS_TEST.md` (D-043), the numbers in `game/BALANCING.md` (D-049, draft). Next: **step 4**, the first playable's contents list. Commit and push after each step.
+1. Steps 1–4 are done: `product/CONCEPT.md`, `product/STRESS_TEST.md` (D-043), the numbers `game/BALANCING.md` (D-049, draft), the contents list `product/FIRST_PLAYABLE.md` (D-050, draft). Next: **step 5**, Dan reviews the concept page, the numbers and the contents list.
 2. Bring Dan the concept page and the numbers to review (step 5). Ask him only about taste and priorities. (The two stress-test points are already answered, D-044.)
 3. The sealed story-fix session (D-035) runs in its own session, before the first playable is built.
 
 ## Last session (2026-09-24, planner reconciliation)
-ChatGPT's second planner review reconciled (D-047): 6 accepted, 1 modified, 8 already resolved. Dan decided the Course day counts at its first hour; the run now has its own "enough" moment, then Continue or Back to today with equal weight. Each job counts at its own enough (not "one hour" for everything). New invariant: more rhythms never mean more Keys. Copy fixed (forecast words, "A lighter day.", "Stop repeating"). Screens checked at true phone size. Dan approved; the planner is locked and rhythms are folded into the docs (D-048).
+ChatGPT's second planner review reconciled (D-047): 6 accepted, 1 modified, 8 already resolved. Dan decided the Course day counts at its first hour; the run now has its own "enough" moment, then Continue or Back to today with equal weight. Each job counts at its own enough (not "one hour" for everything). New invariant: more rhythms never mean more Keys. Copy fixed (forecast words, "A lighter day.", "Stop repeating"). Screens checked at true phone size. Dan approved; the planner is locked and rhythms are folded into the docs (D-048). Then step 3, the numbers (two clocks: time moves the Site, the story keeps its order; 5 Keys a week with a floor of 2; D-049), and step 4, the first playable's contents (D-050).
 
 ## Session before (2026-09-24, late night, second)
 Phase 5 step 2: the concept stress-tested against the principles, the anti-features and the §71 checklist, with six walkthroughs (`product/STRESS_TEST.md`). It holds; 16 small gaps closed with one rule each (D-043), folded into `CONCEPT.md` and the game docs. The biggest: the day ends at about 4 am; capacity works all day; every delve minute counts on any job; the return after a week away never opens on a pile. Two points wait for Dan; seven numbers go to step 3.
@@ -45,7 +45,7 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 - [x] `product/CONCEPT.md` written and stress-tested against the principles (`product/STRESS_TEST.md`, D-043).
 - [x] The week planner designed, reviewed and approved (D-045, D-047, D-048).
 - [x] The numbers set (as starting guesses, tuned in play): `game/BALANCING.md` (D-049; draft, Dan reviews at step 5).
-- [ ] The first playable's contents list written (step 4).
+- [x] The first playable's contents list written (step 4): `product/FIRST_PLAYABLE.md` (D-050, draft).
 - [ ] Dan agrees to move to Phase 6 (MVP).
 
 ## Phase 4 (closed) exit criteria
@@ -90,4 +90,4 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 
 ## Recommended next action
 
-**Dan:** open the planner mock-ups on your phone, then approve `game/PLANNER.md` or say what to change. If it's in a new session, paste: "Read CLAUDE.md and docs/CURRENT_STATE.md, then continue Phase 5 from 'Resume here': I approve the week planner (or: my changes are …)."
+**Dan:** step 5. Read `game/BALANCING.md` (the numbers) and `product/FIRST_PLAYABLE.md` (what's in the first playable), with `product/CONCEPT.md` if you want the whole picture, and answer the one question at the end of the contents list. If it's in a new session, paste: "Read CLAUDE.md and docs/CURRENT_STATE.md, then continue Phase 5 from 'Resume here': step 5, my review of the numbers and the first playable is …"

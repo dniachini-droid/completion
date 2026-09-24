@@ -15,6 +15,7 @@ _Status: **agreed with Dan** 2026-09-23 (D-010–D-013)._
 - Productivity tools inside the world (timer, lists, plotting, calendar, the trail, Chronicle) → `TOOLS.md` (D-020, D-023, agreed)
 
 ## What the first playable needs (draft)
+> *Superseded by the contents list `product/FIRST_PLAYABLE.md` (Phase 5 step 4, D-050). Kept as the record of the Phase 2 draft; the test section below still applies.*
 Thin, complete and beautiful (D-004, rule 13). Enough to test: *does wanting to go further in make Dan start real things?*
 
 **In:**

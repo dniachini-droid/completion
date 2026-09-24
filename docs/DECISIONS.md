@@ -533,3 +533,12 @@
 - **Rationale:** D-011, D-035, D-037, D-039, D-047, rule 10; Dan's honest week of rhythms comes to about 40 steps, which the 8-step spacing turns into one story week of places.
 - **Consequences:** `game/BALANCING.md` (new content), `CORE_LOOPS.md`, `ECONOMY.md`, `PROGRESSION.md`, `product/CONCEPT.md`, `product/STRESS_TEST.md`, `product/PHASE5_PLAN.md`; the D mock-ups' sample distance (`delve.html`, `delve-set.html`) moves from 7 to 8 delves; a sealed alignment note and an authoring list for the story-fix session.
 - **Reversible:** Yes: all numbers are tuned in play.
+
+## D-050 — The first playable's contents (Phase 5 step 4; draft for Dan)
+- **Date:** 2026-09-24
+- **Context:** `product/PHASE5_PLAN.md` step 4: what is in and out of the first playable, sized for the 5–6 week test (D-023).
+- **Decision (draft; Dan reviews at step 5):** `product/FIRST_PLAYABLE.md`. In: Today with capacity, the delve and runs (with the Course's enough moment), jobs with and without timers, the week planner (D-048), the satchel, one region with its open route, the map, two lives, the first marks and the first word in week 2–3, Keys by `BALANCING.md`, finds, the deep push, camp and bedtime, the trail's first relic, the daybook as week close with memory lines, absence handling. Out: calendar, drag and drop, advanced rhythms, planner learning, company at work, satchel groups, more great doors and milestone Keys, more lives, sound design, notifications, AI text. Before the build: the sealed story-fix session with week 6 and the new authoring list; Phase 7's requirements; Dan's phone check.
+- **For Dan:** great doors for big projects (the Course's modules) now or later (Claude leans later).
+- **Alternatives:** the Phase 2 draft as it stood (predates the planner, runs, the enough moment and the numbers).
+- **Consequences:** new `product/FIRST_PLAYABLE.md`; `game/GAME_DESIGN.md` and `game/TOOLS.md` point to it; `product/PHASE5_PLAN.md`.
+- **Reversible:** Yes; Phase 6 may cut it further.

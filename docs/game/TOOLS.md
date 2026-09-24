@@ -70,6 +70,6 @@ Relics from the trail join things found in the Site (finds on avoided jobs, deep
 
 ## First playable
 **In:** the delve (timer, the 10-minute first delve, the self-ending camp break), the satchel (lists, main-job rule), the trail with its first relic, and the Chronicle as the week close.
-**Later:** deep-delve variety, company at work, satchel groups, plotting and waypoints, the calendar link (after the Phase 7 check), "make it smaller" breakdowns (would need AI).
+**Also in (D-048):** the week planner (`PLANNER.md`). **Later:** deep-delve variety, company at work, satchel groups, the calendar link (after the Phase 7 check), "make it smaller" breakdowns (would need AI).
 
 **The test (D-023):** run the first playable for 5–6 weeks, and don't judge it on week 4 alone, because the novelty of game features usually dips around then.
