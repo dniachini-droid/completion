@@ -1,6 +1,7 @@
 /* Regression, not a place: the approved Lamp Hall (design/directions/d-combined/hall.js)
    rebuilt from the kit with the hall's own numbers, morning camera, gold .15.
-   After any change to the kit, bake this and compare it with the hall: it must stay the hall. */
+   After any change to the kit, bake this and compare it with the hall (hall-ref.jpg: the approved hall.js
+   at 440 × 956 @1.5, from view/hall-ref.html): it must stay the hall. */
 export default {
   id: 'regression-lamp-hall',
   name: 'The Lamp Hall',

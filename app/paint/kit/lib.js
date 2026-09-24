@@ -15,7 +15,8 @@
    Units are metres. y is up. The camera looks along +z at yaw 0.
    ========================================================================== */
 
-export const MAT = { CUT: 1, CUT_SMALL: 2, ROCK: 3, DRESSED: 4, WATER: 5, GLOW: 6, DARK: 7, FLOOR: 8 };
+export const MAT = { CUT: 1, CUT_SMALL: 2, ROCK: 3, DRESSED: 4, WATER: 5, GLOW: 6, DARK: 7, FLOOR: 8,
+  SALT: 9, CLOTH: 10, LEATHER: 11, TIN: 12, PAPER: 13, WOOD: 14, SLATE: 15 };
 
 export const LIB = /* glsl */ `
 #define PI 3.14159265
@@ -28,6 +29,21 @@ export const LIB = /* glsl */ `
 #define M_GLOW 6.
 #define M_DARK 7.
 #define M_FLOOR 8.
+/* materials that are not the Site's stone (kit v1, D-070): each its own colour, grain and shine */
+#define M_SALT 9.      /* rock salt: banded grey and white (pink at the band edges: the scene's salt.pink), crystalline, glinting */
+#define M_CLOTH 10.    /* canvas, wool: matt, a fine weave */
+#define M_LEATHER 11.  /* dark brown, creased, a low sheen */
+#define M_TIN 12.      /* tin: dull grey, dented, a soft metal shine */
+#define M_PAPER 13.    /* paper: pale, matt, fibrous */
+#define M_WOOD 14.     /* old wood: dark brown, grain along u */
+#define M_SLATE 15.    /* slate or dark fine-grained stone: near-black grey, a dull sheen */
+
+/* Set inside scene() where a surface has them (the kit resets them before each shading):
+   gPolish 0..1: stone polished by touch (smoother, paler, a sheen that catches the light);
+   gStain  0..1: a flat dark stain (as if by oil, or a shadow that stays): darker, no relief, no shine;
+   gTint: a colour to multiply this surface by (a material's own variation, kept muted). */
+float gPolish = 0., gStain = 0.;
+vec3 gTint = vec3(1);
 
 /* ---------- noise (as the hall) ---------- */
 float h2(vec2 p) {
@@ -51,6 +67,18 @@ float fbm3(vec3 p, int o) {
   float s = 0., a = .5, n = 0.;
   for (int i = 0; i < 5; i++) { if (i >= o) break; s += a * vn3(p); n += a; p = p * 2.02 + vec3(17.1, 3.7, 9.2); a *= .5; }
   return s / n;
+}
+
+/* 3D cells, for crystals: (distance to the nearest seed, to the second, the nearest cell's hash) and its seed */
+vec3 cells3(vec3 p, out vec3 seed) {
+  vec3 i = floor(p), f = p - i; float d1 = 9., d2 = 9., id = 0.;
+  for (int z = -1; z <= 1; z++) for (int y = -1; y <= 1; y++) for (int x = -1; x <= 1; x++) {
+    vec3 g = vec3(x, y, z), c = i + g;
+    float a = h2(c.xy + c.z * 57.13), b = h2(c.yz + c.x * 31.7 + 5.), e = h2(c.zx + c.y * 13.3 + 9.);
+    vec3 r = g + vec3(a, b, e) - f; float d = dot(r, r);
+    if (d < d1) { d2 = d1; d1 = d; id = a * .61 + b * .27 + e * .12; seed = c + vec3(a, b, e); } else if (d < d2) d2 = d;
+  }
+  return vec3(sqrt(d1), sqrt(d2), id);
 }
 
 /* ---------- combining ---------- */
@@ -183,6 +211,7 @@ uniform vec3 uHazeBase, uHazeFar, uBloomC, uBloomDir, uAmbC;
 uniform vec4 uMist; uniform vec3 uMistC, uMistDeep;       /* mist bank: (y, thickness, depth scale, on) */
 uniform vec4 uBeam; uniform vec3 uBeamC; uniform float uBeamTop; /* a shaft of light: (x, z, radius, strength) */
 uniform int uSteps; uniform float uStepK;
+uniform float uSaltPink;                                   /* how much the salt's band edges go pink (0: grey and white only) */
 out vec4 outColor;
 
 float map(vec3 p) { return scene(p).x; }
@@ -224,7 +253,8 @@ vec2 worldUV(vec3 q, vec3 n) {
 }
 vec2 uvAt(vec3 q, vec3 n, bool given) { return given ? scene(q).zw : worldUV(q, n); }
 
-vec3 lightAt(vec3 p, vec3 n, vec3 alb, float wrap) {
+/* diffuse light; with specK > 0 also a shine toward each light (power specP), tinted by the light */
+vec3 lightAt(vec3 p, vec3 n, vec3 alb, float wrap, vec3 d, float specK, float specP) {
   float am = .016 + .012 * (n.y * .5 + .5);
   vec3 c = alb * am * uAmbC * uAmb;
   for (int i = 0; i < 8; i++) {
@@ -236,6 +266,11 @@ vec3 lightAt(vec3 p, vec3 n, vec3 alb, float wrap) {
     float att = uLk[i] / (1. + d2 / r2) / r2;
     float sh = uLsh[i] > 0. ? mix(1., softShadow(p + n * .03, L / dd, dd), uLsh[i]) : 1.;
     c += alb * uLc[i] * ndl * att * sh;
+    if (specK > 0.) {
+      vec3 hv = normalize(L / dd - d);
+      float nl = max(dot(n, L / dd), 0.);
+      c += uLc[i] * specK * pow(max(dot(n, hv), 0.), specP) * (specP + 8.) / 50. * nl * att * sh;
+    }
   }
   /* a lamp's warmth lies on the stone around it as gold, as in the hall (added, not tinted by the violet) */
   for (int i = 0; i < 8; i++) {
@@ -259,6 +294,11 @@ vec3 shade(vec3 p, vec3 d, float t, vec3 n, vec4 hs, float fpx) {
   float fpv = t / fpx, cosI = abs(dot(n, d)), fp = fpv / max(.12, cosI);
   vec3 alb = vec3(.5, .5, .62);
   float tU = 0., tV = 0.;
+  /* the scene's marks on this surface (polish, stain, tint): read here, fresh */
+  gPolish = 0.; gStain = 0.; gTint = vec3(1); scene(p);
+  float pol = clamp(gPolish, 0., 1.), stn = clamp(gStain, 0., 1.); vec3 tint = gTint;
+  float specK = 0., specP = 16., wrap = uWrap;
+  vec3 nb = vec3(0);                                        /* a bump straight in 3D (materials that have no courses) */
   if (floorLike || m == M_FLOOR) {
     vec4 s = stone(vec2(uv.x, uv.y), fp, fpv, 1.7, 1.25, 5.); alb *= s.x * .92; tU = s.y * .5; tV = s.z * .5;
   } else if (m == M_CUT) {
@@ -271,7 +311,56 @@ vec3 shade(vec3 p, vec3 d, float t, vec3 n, vec4 hs, float fpx) {
     float g = fbm3(p * 1.7, 4), g2 = fbm3(p * 7., 3);
     alb *= .62 + .5 * g; alb *= .85 + .3 * g2;
     tU = (g2 - .5) * .9; tV = (fbm3(p * 7. + 11., 3) - .5) * .9;
+  } else if (m == M_SALT) {
+    /* beds of salt laid down one on another: grey, white, with thin dark seams between; crystals in each bed */
+    float b = p.y * 1.7 + (fbm3(p * vec3(.3, .5, .3), 3) - .5) * 3.2 + (fbm3(p * 2.5, 2) - .5) * .25, bi = floor(b), bf = b - bi;
+    float bed = h2(vec2(bi, 71.)), white = smoothstep(.25, .65, bed) * (.7 + .3 * fbm3(p * 3., 2));
+    vec3 grey = vec3(.34, .34, .39) * (.75 + .35 * h2(vec2(bi, 5.))), wh = vec3(.8, .79, .84);
+    alb = mix(grey, wh, white);
+    float bd = min(bf, 1. - bf);
+    alb = mix(alb, vec3(.82, .6, .64), (1. - smoothstep(0., .2, bd)) * uSaltPink * (.4 + .6 * white));   /* pink only at the edges of the beds */
+    alb *= 1. - .5 * (1. - smoothstep(0., .03, bd)) * h2(vec2(bi, 17.));                    /* a thin dark seam under some beds */
+    vec3 sd; vec3 cl = cells3(p * 28., sd);
+    float grain = smoothstep(0., .1, cl.y - cl.x);                                           /* the boundary between crystals */
+    float fade = 1. - smoothstep(.01, .035, fp);                                             /* crystals only where they can be seen */
+    alb *= mix(1., (.94 + .12 * cl.z) * (.93 + .07 * grain), fade);
+    alb *= .88 + .24 * fbm3(p * 1.4, 3);
+    vec3 cn = vec3(h2(sd.xy), h2(sd.yz + 3.), h2(sd.zx + 7.)) - .5;
+    nb = (cn - n * dot(cn, n)) * .3 * fade + (vec3(fbm3(p * 4., 2), fbm3(p * 4. + 7., 2), fbm3(p * 4. + 13., 2)) - .5) * .6;
+    float glint = step(.86, h2(sd.xz + sd.y * 3.1)) * fade;
+    specK = .12 + 2.2 * glint; specP = mix(24., 140., glint); wrap = max(wrap, .45);    /* light goes a little into salt */
+  } else if (m == M_CLOTH) {
+    alb = vec3(.46, .42, .35) * (.8 + .35 * fbm3(p * 3., 3));
+    float wv = fp < .004 ? (sin(uv.x * 900.) * sin(uv.y * 900.)) * (1. - fp / .004) : 0.;
+    alb *= 1. + .08 * wv;
+    nb = (vec3(fbm3(p * 9., 3), fbm3(p * 9. + 5., 3), fbm3(p * 9. + 9., 3)) - .5) * .35;  /* soft creases */
+    wrap = max(wrap, .5);
+  } else if (m == M_LEATHER) {
+    alb = vec3(.2, .13, .085) * (.75 + .5 * fbm3(p * 14., 3));
+    nb = (vec3(fbm3(p * 30., 3), fbm3(p * 30. + 5., 3), fbm3(p * 30. + 9., 3)) - .5) * .45;
+    specK = .35; specP = 12.;
+  } else if (m == M_TIN) {
+    alb = vec3(.3, .31, .34) * (.7 + .45 * fbm3(p * 11., 3));                          /* dull, a little patchy */
+    nb = (vec3(fbm3(p * 16., 2), fbm3(p * 16. + 5., 2), fbm3(p * 16. + 9., 2)) - .5) * .18;
+    specK = 1.3; specP = 40.;
+  } else if (m == M_PAPER) {
+    alb = vec3(.74, .7, .6) * (.9 + .12 * fbm3(p * 40., 3));
+    wrap = max(wrap, .5);
+  } else if (m == M_WOOD) {
+    float gr = fbm(vec2(uv.x * 1.2, uv.y * 26.), 4);
+    alb = vec3(.28, .19, .12) * (.65 + .6 * gr);
+    tU = (gr - .5) * .3;
+    specK = .12; specP = 10.;
+  } else if (m == M_SLATE) {
+    alb = vec3(.15, .155, .18) * (.85 + .3 * fbm3(p * 20., 3));
+    specK = .45; specP = 22.;
   }
+  alb *= tint;
+  /* polish: the grain and the chisel rubbed away, the stone paler and shining */
+  if (pol > 0.) { tU *= 1. - .85 * pol; tV *= 1. - .85 * pol; nb *= 1. - .85 * pol; alb *= 1. + .3 * pol; specK += 1.1 * pol; specP = mix(specP, 34., pol); }
+  /* a stain: dark and flat, nothing of the stone's relief or shine left */
+  if (stn > 0.) { alb *= 1. - .9 * stn; tU *= 1. - stn; tV *= 1. - stn; nb *= 1. - stn; specK *= 1. - stn; }
+  if (dot(nb, nb) > 0.) n = normalize(n + nb);
   /* relief: tilt the normal along the directions u and v grow */
   if (tU != 0. || tV != 0.) {
     vec3 t1 = normalize(cross(n, abs(n.y) < .9 ? vec3(0, 1, 0) : vec3(1, 0, 0))), t2 = cross(n, t1);
@@ -282,7 +371,9 @@ vec3 shade(vec3 p, vec3 d, float t, vec3 n, vec4 hs, float fpx) {
     if (dot(Tv, Tv) > 1e-6 && dot(Tv, Tv) < 1e4) Tv = normalize(Tv); else Tv = vec3(0);
     n = normalize(n + Tu * tU + Tv * tV);
   }
-  vec3 c = lightAt(p, n, alb, uWrap) * ambOcc(p, n);
+  vec3 c = lightAt(p, n, alb, wrap, d, specK, specP) * ambOcc(p, n);
+  /* polished stone mirrors the far light's haze, faintly */
+  if (pol > 0.) c += pol * pow(max(dot(reflect(d, n), uBloomDir), 0.), 6.) * uBloomC * .35;
   if (floorLike) {
     /* a worn sheen toward the far light */
     vec3 r = reflect(d, vec3(0, 1, 0));

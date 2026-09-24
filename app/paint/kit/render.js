@@ -25,6 +25,7 @@ const DEFAULTS = {
   ambC: [.9, .85, 1.9], amb: 1, expo: 1.7, ao: .5, wrap: .25, sheen: .22, grade: [1, 1, 1],
   glow: null,
   mist: null, beam: null,
+  salt: { pink: 0 },                          /* rock salt's band edges: 0 grey and white; up to 1 pink (only where a brief says) */
   lights: [],
   steps: 220, stepK: .8,
   blur: { px: 2.2, d0: 9, d1: 30, k: .9 },
@@ -99,6 +100,7 @@ export async function paint(canvas, sceneIn, opts = {}) {
   gl.uniform4f(u('uBeam'), b ? b.x : 0, b ? b.z : 0, b ? b.r : 1, b ? b.k : 0);
   gl.uniform3fv(u('uBeamC'), b ? b.c : [0, 0, 0]); gl.uniform1f(u('uBeamTop'), b ? b.top : 0);
   gl.uniform1i(u('uSteps'), S.steps); gl.uniform1f(u('uStepK'), S.stepK);
+  gl.uniform1f(u('uSaltPink'), S.salt && S.salt.pink || 0);
 
   /* paint into a float target, a strip at a time so the GPU is never held long */
   const tex = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tex);
