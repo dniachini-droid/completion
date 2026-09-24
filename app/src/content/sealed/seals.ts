@@ -121,7 +121,7 @@ export const seals: Seal[] = [
   { id: 'seal-7-1', w: 7, o: 1, where: 'The square gallery, a niche', stretch: 'st-square', beat: 'b-7.1',
     carries: { guess: ['mk-up', 'mk-stone', 'mk-child'] } },
   { id: 'seal-7-2', w: 7, o: 2, where: 'The square gallery, the crew\'s wall', stretch: 'st-square', arrival: 'b-7.B',
-    carries: { records: ['rec-x-boy'] } },
+    carries: {} },   /* X-boy has no told line or sign string of its own (the boy's slate is described in its beat) */
   // NOTE: rec-x-boy is not in MVP_CONTENT §4 (run-ahead); the id follows LIVES' X-boy.
   { id: 'seal-7-3', w: 7, o: 3, where: 'The Stair, the rail\'s recess', stretch: 'st-stair', beat: 'b-7.3',
     plain: true },

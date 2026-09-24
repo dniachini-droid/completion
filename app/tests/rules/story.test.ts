@@ -105,8 +105,11 @@ describe('six weeks of play', () => {
   it('Low weeks never stall: the floor keeps Keys coming and the story still moves', () => {
     const p = sim().week(['low', 'away', 'low', 'away', 'low', 'away', 'away']);
     for (let i = 0; i < 5; i++) p.week(['low', 'away', 'low', 'away', 'low', 'away', 'away']);
-    expect(p.st().week).toBeGreaterThanOrEqual(2);
-    expect(p.st().opened.size).toBeGreaterThanOrEqual(6 * 2 - 2);
+    const st = p.st();
+    /* a Low week stretches the story week; it never stops it: places keep coming, and the floor opens 2 a week */
+    expect(st.week).toBeGreaterThanOrEqual(2);
+    expect(st.opened.size).toBeGreaterThanOrEqual(10);
+    expect([...st.played].filter(x => /^(b-\d\.[A-C]|pl-)/.test(x)).length).toBeGreaterThanOrEqual(8);
   });
   it('a two-week absence pauses the story; it resumes where it was', () => {
     const p = sim().week('normal').week('normal');

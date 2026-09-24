@@ -149,7 +149,7 @@ function floor(w: W, c: Content, at: Moment, day: string) {
   const weeks = [...new Set(ofType(w.all, 'dayCompleted').map(f => calendarWeek(f.day)))].filter(x => x < thisWeek);
   const last = weeks[weeks.length - 1];
   if (!last || ofType(w.all, 'keyEarned').some(f => f.rhythm === `floor:${last}`)) return;
-  const had = ofType(w.all, 'keyEarned').filter(f => calendarWeek(f.day) === last).length;
+  const had = S.keysIn(w.all, last);   /* the week's own Keys, not floor Keys landed in it for the week before */
   for (let i = had; i < S.KEY_FLOOR; i++) landKey(w, c, `floor:${last}`, at, day);
   if (had >= S.KEY_FLOOR) w.put({ type: 'keyEarned', rhythm: `floor:${last}` }, at, day);   /* noted, so it's checked once */
 }
@@ -185,7 +185,10 @@ function gifts(w: W, c: Content, at: Moment, day: string) {
       /* short of the next place: a camp with a view, always with one thing to look at */
       const camp = S.nextCamp(c.story, S.storyState(w.all, c.story));
       w.put({ type: 'arrived', kind: 'camp', id: camp.id }, at, day);
-      if (camp.find && !S.storyState(w.all, c.story).given.has(camp.find)) w.put({ type: 'findGiven', id: camp.find, why: 'camp' }, at, day);
+      /* its one thing to look at: the view's own find, or the stretch's next if that one was already found */
+      const st = S.storyState(w.all, c.story);
+      const find = camp.find && !st.given.has(camp.find) ? camp.find : camp.line ? null : S.pickFind(c.story, st, 'camp')?.id;
+      if (find) w.put({ type: 'findGiven', id: find, why: 'camp' }, at, day);
     }
   } else reach();   /* after day complete, Keep going still arrives somewhere (no dead ends for effort, D-039) */
 }
@@ -413,8 +416,10 @@ export const STAND_IN: Record<StretchId, string> = {
 };
 
 function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
-  const completedDay = all.some(g => g.type === 'dayCompleted' && g.day === f.day && g.seq < f.seq)
-    && !all.some(g => g.type === 'arrived' && g.day === f.day && g.seq > f.seq && !(g as FactOf<'arrived'>).how);
+  /* one of the places played at day complete: nothing but the world's answers between the lock-in and it */
+  const dc = all.find(g => g.type === 'dayCompleted' && g.day === f.day && g.seq < f.seq);
+  const quiet = new Set(['arrived', 'recordShown', 'findGiven', 'sealOpened', 'keyEarned', 'beatPlayed', 'storyWeekBegan']);
+  const completedDay = !!dc && all.every(g => g.seq <= dc.seq || g.seq >= f.seq || quiet.has(g.type));
   if (f.kind === 'place') {
     const b = S.beatOf(c.story, f.id)!;
     return { seq: f.seq, kind: 'place', id: b.id, name: b.name ?? '', line: b.line ?? '', taps: b.taps, choice: b.choice,
