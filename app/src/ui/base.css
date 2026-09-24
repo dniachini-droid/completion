@@ -1,0 +1,14 @@
+/* Direction D's ground rules (design/DESIGN_SYSTEM.md), and what makes web code feel like an app. */
+@font-face { font-family: Cinzel; src: url(/fonts/Cinzel-500.woff2) format('woff2'); font-weight: 500; font-display: block; }
+@font-face { font-family: Spectral; src: url(/fonts/Spectral-400.woff2) format('woff2'); font-weight: 400; font-display: block; }
+@font-face { font-family: Spectral; src: url(/fonts/Spectral-400i.woff2) format('woff2'); font-weight: 400; font-style: italic; font-display: block; }
+:root {
+  --night: #05050c; --violet: #8f86ff; --violet-hi: #d9d6ff; --gold: #f2c170;
+  --ink: #f2f3fb; --ink-2: #c7c9e6; --ink-3: #a3a6cc;
+  --edge: rgba(217,214,255,.62); --edge-3: rgba(217,214,255,.22);
+  --gutter: 24px;
+}
+@media (max-width: 370px) { :root { --gutter: 20px; } }
+html, body { margin: 0; height: 100%; background: var(--night); color: var(--ink); overflow: hidden; overscroll-behavior: none; }
+body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; touch-action: manipulation; }

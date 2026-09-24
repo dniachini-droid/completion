@@ -33,7 +33,7 @@ await page.goto(`http://localhost:${port}/`);
 await mkdir(outDir, { recursive: true });
 for (const f of files) {
   const rel = '/' + relative(root, f).split('\\').join('/');
-  const W = Math.round(1290 * scale), H = Math.round(2796 * scale);
+  const W = Math.round(1320 * scale), H = Math.round(2868 * scale);
   const t0 = Date.now();
   const r = await page.evaluate(async ({ rel, W, H, quality }) => {
     const { paint } = await import('/paint/kit/render.js');

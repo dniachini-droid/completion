@@ -49,8 +49,8 @@ export async function paint(canvas, sceneIn, opts = {}) {
   S.cam = Object.assign({}, DEFAULTS.cam, sceneIn.cam);
   S.blur = Object.assign({}, DEFAULTS.blur, sceneIn.blur);
   S.bloom = Object.assign({}, DEFAULTS.bloom, sceneIn.bloom);
-  const W = opts.width || 1290, H = opts.height || 2796;
-  const scale = W / 430;                       /* the kit's sizes are in points on a 430-wide phone */
+  const W = opts.width || 1320, H = opts.height || 2868;
+  const scale = W / 440;                       /* the kit's sizes are in points on a 440-wide phone (16 Pro Max) */
 
   const glc = document.createElement('canvas'); glc.width = W; glc.height = H;
   const gl = glc.getContext('webgl2', { antialias: false, preserveDrawingBuffer: true });

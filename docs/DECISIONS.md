@@ -629,3 +629,19 @@
 - **Rationale:** D-057's kit, at a pace that makes about 5 paintings a week steady work; rule 13 (thin slices); SECURITY_PRIVACY (no key in chat).
 - **Consequences:** the baked images are small (50–110 KB each so far, far under the 0.3–0.7 MB budget). Dan judges the samples on his phone; if the kit can't reach the bar, we stop and talk (D-058).
 - **Reversible:** Yes.
+
+## D-062 — Dan approves the sample paintings; Apple membership active; his iPhone
+- **Date:** 2026-09-24
+- **Context:** Phase 8 trial (a) (D-061): the kit's three invented sample places, seen on Dan's phone beside the approved hall.
+- **Decision (Dan):** the samples "look good": **the painting kit reaches the bar** (D-058). Dan's Apple developer membership is active. His phone is an **iPhone 16 Pro Max**, with an **iPhone 18 Pro Max** coming soon.
+- **Consequences:** trial (a) passes. Paintings bake at the 16 Pro Max's own resolution (1320 × 2868; 440 × 956 points), so nothing is scaled up; a newer phone of the same class is checked when it arrives. Next: Apple setup sitting 2 (`technical/APPLE_SETUP.md`), then Capacitor, the cloud-Mac pipeline and a first TestFlight build carrying trials (b) and (c).
+- **Reversible:** Yes (the kit can be revisited if later paintings fall short).
+
+## D-063 — The iPhone wrapper and the cloud-Mac pipeline (Claude's routine calls, D-006)
+- **Date:** 2026-09-24
+- **Context:** Phase 8 trials (b)–(d) need a real app on Dan's phone (D-057, D-062).
+- **Decision:** Capacitor 8 wraps the web code (`app/ios/`, Swift Package Manager, no CocoaPods): iPhone only, portrait only, dark, no bounce, iOS 17 or later, and the "no special encryption" answer so TestFlight doesn't ask each build. The **pipeline** (`.github/workflows/testflight.yml`) runs on GitHub's macOS runner: tests, web build, archive unsigned, then **Xcode signs and uploads in one step** with Apple's cloud-managed distribution certificate, reached through the App Store Connect API key. That needs the key at **Admin** access and a fourth secret, the Team ID (`APPLE_SETUP.md` updated). It runs only when started by hand, on a commit marked `[testflight]`, or monthly (TestFlight's 90 days); Mac minutes are scarce. A Linux workflow runs the tests on every push. The first test app is a throwaway **trials screen** on the Well Stair painting: a one-minute delve whose end is a local notification (trial b), and a tap with a haptic tick plus the no-bounce, no-selection, safe-area checks (trial c).
+- **Alternatives:** fastlane with match (needs a separate certificate store and more secrets; the D-057 plan, kept as the fallback if cloud signing is refused); Codemagic (the fallback if GitHub's Mac minutes run short).
+- **Rationale:** fewest moving parts and nothing Dan must handle beyond four secrets on his phone.
+- **Consequences:** if Apple refuses cloud signing on the first run, we fall back to fastlane match or Codemagic (reversible, no change for Dan beyond possibly one more secret).
+- **Reversible:** Yes.

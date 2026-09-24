@@ -26,17 +26,18 @@ Use **Safari** on the phone. If a page is cramped, tap **aA** in the address bar
 
 **C. Make one key for the cloud Mac**
 1. In App Store Connect → **Users and Access** → **Integrations** → **App Store Connect API** → **Team Keys** → **+** (the first time, it may ask you to request access: accept).
-2. Name `cloud build`, access **App Manager** → **Generate**.
+2. Name `cloud build`, access **Admin** → **Generate**. (Admin lets the cloud Mac sign the app with Apple's own cloud certificate, so there are no certificate files to handle.)
 3. Note the **Issuer ID** (above the list) and the key's **Key ID**.
 4. **Download API Key** (you can only download it once). Safari saves a file ending `.p8` in **Files → Downloads**.
 
 **D. Give the key to the repository (never to the chat)**
-The key stays in GitHub's locked secrets, where only the build can use it. **Don't paste it into our conversation.**
+The key stays in GitHub's locked secrets, where only the build can use it. **Don't paste it into our conversation.** Four secrets in all.
 1. In **Files → Downloads**, long-press the `.p8` file → **Rename** → change the ending to `.txt` → open it → select all → **Copy**.
-2. In Safari go to **github.com/dniachini-droid/completion** → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**, three times:
+2. In Safari go to **github.com/dniachini-droid/completion** → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**, four times:
    - `ASC_KEY_P8` → paste the whole text you copied (including the BEGIN and END lines)
    - `ASC_KEY_ID` → the Key ID
    - `ASC_ISSUER_ID` → the Issuer ID
+   - `APPLE_TEAM_ID` → your **Team ID**: 10 letters and numbers, at **developer.apple.com/account** → **Membership details**
 3. Delete the `.txt` file from Downloads.
 
 **E. Tell Claude "Apple setup done."** Claude then builds, the cloud Mac packages the app and sends it to Apple, and it appears in **TestFlight** on your phone, usually within an hour. You'll get a TestFlight invitation (you're the internal tester); open it and tap **Install**.
