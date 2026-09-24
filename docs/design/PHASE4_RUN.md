@@ -76,4 +76,4 @@ Plus two hard checks: the brief (`ART_DIRECTION.md` → "Brief for the direction
 - 9:50 am — Stage 2 done: three directions written (`ART_DIRECTION.md`). Stage 3 started: three builders working in parallel, one per direction.
 - 10:30 am — B and A built (nine screens each). Critique round 1 started for A and B; C still building. Dan: jobs and targets are his to edit (D-030).
 - 10:45 am — All three built; critique round 1 done for all (A 5 blockers, B 3, C 4; common: layout breaks at 360 wide, small text, halls not painted enough). Revision round 1 running for all three.
-- 11:30 am — Revision round 1 done for all three; Dan loves C's purple light (kept). Critique round 2 done for A and B (both: interface now good, painting still weak); revision round 2 running for A (plus a violet morning variant) and B. C's round-2 critique running.
+- 11:05 am — Revision round 1 done for all three; Dan loves C's purple light (kept). Critique round 2 done for A and B (both: interface now good, painting still weak); revision round 2 running for A (plus a violet morning variant) and B. C's round-2 critique running.
