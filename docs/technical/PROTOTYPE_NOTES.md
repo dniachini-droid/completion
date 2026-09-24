@@ -17,7 +17,7 @@
 | Dan's starting set is preloaded (jobs and rhythms) but not yet editable; Today's jobs follow a fixed order, with rhythms met this week last | Editing jobs and the planner are slice 4 | Slice 4 |
 | Capacity is always suggested Normal ("a suggestion") | Bedtime and absence set the suggestion in slice 4 | Slice 4 |
 | Marks are guessed where offered, but there is no marks screen, no confirmation beat shown and no word-cutting cinematic yet (the word plays as four lines) | Slice 3 | Slice 3 |
-| Places show a stand-in painting for their stretch (one of the three samples) | Each place is painted from its sealed brief with the kit, about 5 a week (week 1 first) | As each is painted |
+| Places show a stand-in painting for their stretch (one of the three samples) | Week 1's first round (`paint/places/`) fell short of the hall; the kit needs materials before real places reach the bar | As each place is painted at the hall's level |
 | Mark glyphs are drawn from their elements by a simple stand-in (`ui/Glyph.svelte`) | The Cut's own lettering is part of slice 3 | Slice 3 |
 | The map's layout is hand-placed for the first region; no forecast waypoints | Waypoints come with the planner | Slice 4 |
 | After day complete the main button is "See where you are" (the arrival again), not "To camp" | Camp is slice 4 | Slice 4 |

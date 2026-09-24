@@ -13,10 +13,10 @@ export default {
   bloomAt: [-2, 3, 30], bloomPow: 30, bloomC: [.2, .18, .4],
   glow: { threshold: .62, k: .8 },
   blur: { px: .8, d0: .2, d1: .7, k: 1 },
-  expo: 1.7,
+  expo: 1.7, grade: [1, 1.06, .9],
   lights: [
-    { p: [2.23, 1.55, 5.6], c: [1, .58, .24], k: 2.6, r: .9, shadow: 1 },              /* the clay lamp on the ledge, above */
-    { p: [2.05, .3, 5.6], c: [1, .6, .3], k: .15, r: .4, warm: .015 },                  /* its light off the floor, back up */
+    { p: [2.23, 1.55, 5.6], c: [1, .68, .3], k: 2.6, r: .9, shadow: 1 },              /* the clay lamp on the ledge, above */
+    { p: [2.05, .3, 5.6], c: [1, .7, .34], k: .15, r: .4, warm: .015 },                  /* its light off the floor, back up */
     { p: [-2, 3.5, 9], c: [.4, .37, .85], k: 7, r: 5 },                                    /* the hall's violet, from behind */
   ],
   glsl: /* glsl */ `
