@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06070f">
+<title>The Combined Look</title>
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<link rel="stylesheet" href="direction.css">
+<style>
+body { background: var(--night); }
+.phone { height: auto; min-height: 100vh; min-height: 100dvh; overflow: visible;
+  background: radial-gradient(120% 50% at 70% 0%, #2a2466 0%, transparent 60%),
+              linear-gradient(180deg, #0b0a24 0%, #141236 40%, #1c1740 78%, #2a1f36 96%, #140f22 100%); }
+.wrap { position: relative; z-index: 5; padding-top: calc(var(--safe-t) + 20px); padding-bottom: 48px; }
+h1 { margin-top: 12px; }
+.lede { margin-top: 14px; }
+.lede p { font-size: 17px; line-height: 1.5; color: var(--ink-2); margin-bottom: 10px; }
+.lede b { font-weight: 500; color: var(--ink); }
+ol { list-style: none; margin-top: 22px; border-bottom: 1px solid var(--edge-4); }
+li a { display: grid; grid-template-columns: 60px 1fr; column-gap: 16px; align-items: center; padding: 12px 0; border-top: 1px solid var(--edge-4); min-height: 44px; }
+li img { width: 60px; height: 130px; object-fit: cover; object-position: top; flex: none; border: 1px solid var(--edge-3); background: var(--stone-1);
+  box-shadow: 0 8px 24px rgba(0,0,0,.5), 0 0 18px rgba(var(--violet-rgb), .12); }
+li .n { font-family: var(--carve); font-size: 13px; font-weight: 600; letter-spacing: .22em; color: var(--ink-3); }
+li .t { font-family: var(--life); font-weight: 500; font-size: 20px; color: var(--ink); margin-top: 2px; }
+li .c { font-family: var(--life); font-size: 16px; line-height: 1.4; color: var(--ink-2); margin-top: 2px; }
+li a:hover .t { color: #fff; }
+.also { margin-top: 26px; }
+.also .links { display: flex; flex-wrap: wrap; gap: 0 16px; margin-top: 6px; }
+.also .text-link { padding-left: 0; }
+.foot { font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink-3); margin-top: 22px; line-height: 1.45; }
+.start { margin-top: 22px; }
+</style>
+</head>
+<body class="s-day">
+<main class="phone">
+<div class="wrap col">
+  <div class="label-line lit">Direction D</div>
+  <h1 class="carve lg">The Combined Look</h1>
+  <div class="lede">
+    <p><b>C’s purple world, full screen and never framed. B’s interface on top of it. A’s map. The day turning from purple to gold.</b></p>
+    <p>Every screen is a full-bleed painting in violet light and drifting haze. The controls are crisp boxes with fine light edges, on one centred grid. The main button is purple and glowing, until the day turns gold at the arrival and camp.</p>
+  </div>
+  <a class="btn start" href="morning.html">Start at the morning</a>
+  <ol>
+    <li><a href="morning.html"><img src="shots/morning.jpg" alt=""><div><div class="n">01</div><div class="t">The morning</div><div class="c">C’s hall and purple; B’s boxes, “Next” label, Low / Normal / High and line icons.</div></div></a></li>
+    <li><a href="delve.html"><img src="shots/delve.jpg" alt=""><div><div class="n">02</div><div class="t">A delve</div><div class="c">Towards the Salt Gallery: the ring fills as the tunnel and the nebula drift past.</div></div></a></li>
+    <li><a href="map.html"><img src="shots/map.jpg" alt=""><div><div class="n">03</div><div class="t">The map</div><div class="c">A’s lit places in haze; B’s lines draw in. Tap a place for the crosshair and its box.</div></div></a></li>
+    <li><a href="record.html"><img src="shots/record.jpg" alt=""><div><div class="n">04</div><div class="t">A record</div><div class="c">The long tally in the open. Tap a mark, pick a guess.</div></div></a></li>
+    <li><a href="cut.html"><img src="shots/cut.jpg" alt=""><div><div class="n">05</div><div class="t">Cutting a word</div><div class="c">The word cut and boxed, the lintel opens, the lamps wake all the way down the hall.</div></div></a></li>
+    <li><a href="stair.html"><img src="shots/stair.jpg" alt=""><div><div class="n">06</div><div class="t">The head of the stair</div><div class="c">Through the lintel: where “Go through” arrives.</div></div></a></li>
+    <li><a href="complete.html"><img src="shots/complete.jpg" alt=""><div><div class="n">07</div><div class="t">Day complete</div><div class="c">The Salt Gallery, and the purple turns to gold. Enough for today.</div></div></a></li>
+    <li><a href="camp.html"><img src="shots/camp.jpg" alt=""><div><div class="n">08</div><div class="t">Camp</div><div class="c">By the lamp, with the hall going deep behind it. Bedtime.</div></div></a></li>
+    <li><a href="satchel.html"><img src="shots/satchel.jpg" alt=""><div><div class="n">09</div><div class="t">The satchel</div><div class="c">A painted satchel, softly glowing, and the jobs it holds. Nothing counted.</div></div></a></li>
+    <li><a href="daybook.html"><img src="shots/daybook.jpg" alt=""><div><div class="n">10</div><div class="t">The daybook</div><div class="c">Week 2, written for you in plain English.</div></div></a></li>
+  </ol>
+  <div class="also">
+    <div class="label-line">Other moments</div>
+    <div class="links">
+      <a class="text-link" href="morning.html#later"><span>The afternoon</span></a>
+      <a class="text-link" href="morning.html#done"><span>The day done</span></a>
+      <a class="text-link" href="delve.html#breather"><span>The breather</span></a>
+      <a class="text-link" href="delve.html#second"><span>The second delve</span></a>
+      <a class="text-link" href="map.html#stair"><span>The map, lintel open</span></a>
+    </div>
+  </div>
+  <p class="foot">Static mock-ups for a phone (390 × 844; they also hold at 360 × 780). Marks and records are invented samples.</p>
+</div>
+</main>
+</body>
+</html>

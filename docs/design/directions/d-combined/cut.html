@@ -39,8 +39,8 @@ body.c1 .dust.c1, body.c2 .dust.c2 { animation: dust 1.1s ease-in var(--dd) forw
 .ui { --scrim: 0; }
 .head { position: relative; margin-top: 10px; display: grid; }
 .head > div { grid-area: 1 / 1; transition: opacity .8s var(--ease), transform .8s var(--ease); }
-.head .after { opacity: 0; transform: translateY(8px); transition-delay: 2.6s; }
-body.answer .head .before { opacity: 0; transform: translateY(-6px); transition-delay: 1.2s; }
+.head .after { opacity: 0; transform: translateY(8px); transition-delay: 2.5s; }
+body.answer .head .before { opacity: 0; transform: translateY(-6px); transition-delay: 2s; }
 body.answer .head .after { opacity: 1; transform: none; }
 .head .say-lg { margin-top: 10px; }
 .head .soft { margin-top: 6px; max-width: 30ch; }
@@ -86,7 +86,7 @@ body.lock .readings .q { opacity: 0; }
 .key.done { opacity: .5; }
 .key .q { color: var(--cold-hi); font-style: normal; }
 body.answer .keys { opacity: 0; pointer-events: none; }
-.go { opacity: 0; transform: translateY(8px); pointer-events: none; transition: opacity .9s var(--ease) 3.4s, transform .9s var(--ease) 3.4s; }
+.go { opacity: 0; transform: translateY(8px); pointer-events: none; transition: opacity .9s var(--ease) 2.8s, transform .9s var(--ease) 2.8s; }
 body.answer .go { opacity: 1; transform: none; pointer-events: auto; }
 .after-row { display: flex; justify-content: center; margin-top: 6px; }
 .scrim-bottom { --scrim-bottom-h: 50%; }
