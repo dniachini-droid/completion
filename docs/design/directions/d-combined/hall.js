@@ -139,9 +139,9 @@
   /* in face units: u along the beam (m, from its near end), v up (m, from its underside) */
   var LINTEL_MARKS = [
     /* a hooked bar */
-    [[.30, .16], [.30, .62], [.46, .62], [.46, .50]],
+    [[1.52, .18], [1.52, .64], [1.7, .64], [1.7, .5]],
     /* a notched square */
-    [[.66, .18], [.66, .60], [.78, .60], [.78, .52], [.88, .52], [.88, .60], [1.0, .60], [1.0, .18], [.66, .18]]
+    [[1.92, .2], [1.92, .62], [2.04, .62], [2.04, .53], [2.14, .53], [2.14, .62], [2.27, .62], [2.27, .2], [1.92, .2]]
   ];
 
   /* ---------- the scene ---------- */
@@ -182,7 +182,7 @@
         S.niches.push({ side: 1, z0: zc - .34, z1: zc + .34, y0: 3.5, y1: 4.5, zc: zc });
         S.niches.push({ side: -1, z0: zc + 1.21, z1: zc + 1.89, y0: 3.5, y1: 4.5, zc: zc + 1.55 });
       }
-      if (o.lintel === 'open') S.lights.push({ x: -2.8, y: -.8, z: 7.3, c: [.72, .66, 1.25], k: 10, r: 2.2, spill: 1 });
+      if (o.lintel === 'open') S.lights.push({ x: -2.9, y: -1.2, z: 7.3, c: [.72, .66, 1.25], k: 5, r: 1.8, spill: 1 });
       S.lights.push({ x: 1.2, y: 2.6, z: 6.5, c: [.4, .37, .85], k: 3.2, r: 3.2 });   /* the hall's own glow on the lintel wall */
     }
     return S;
@@ -418,7 +418,7 @@
             if (nx > .5) {
               var fu2 = Z - S.beam[4], fv2 = Y - S.beam[2];
               /* the rod-shaped blank: a smoothed, faintly sunk band */
-              var rz0 = 1.4, rz1 = 2.3, rv0 = .2, rv1 = .64;
+              var rz0 = .22, rz1 = 1.22, rv0 = .18, rv1 = .66;
               if (fu2 > rz0 && fu2 < rz1 && fv2 > rv0 && fv2 < rv1) {
                 var edgeD = Math.min(fu2 - rz0, rz1 - fu2, fv2 - rv0, rv1 - fv2);
                 if (edgeD < .03) { albR *= .45; albG *= .45; albB *= .5; tiltU = fu2 - rz0 < .03 ? .6 : -.6; }
@@ -468,8 +468,9 @@
         var R, G, Bc;
         if (kind === 8) {
           /* the opened blank: dark, with light rising from below */
-          var yb2 = Y, glow = Math.pow(clamp(1 - yb2 / 2.35, 0, 1), 2.2);
-          R = .015 + .55 * glow; G = .014 + .5 * glow; Bc = .05 + 1.05 * glow;
+          var glow = Math.pow(clamp(1 - Y / 2.4, 0, 1), 4.5), side2 = clamp((Z - S.door.z0) / (S.door.z1 - S.door.z0), 0, 1);
+          glow *= .55 + .45 * side2;
+          R = .008 + .5 * glow; G = .008 + .46 * glow; Bc = .03 + 1.0 * glow;
         } else {
           alb[0] = albR; alb[1] = albG; alb[2] = albB;
           lightAt(X, Y, Z, nx, ny, nz, alb, col, (kind === 6 || kind === 7 || kind === 9) ? 1 : null);
@@ -636,7 +637,7 @@
 
     /* the lintel: where its parts fall on screen */
     var B = S.beam;
-    H2.onRod = function (u, v) { return project(B[1], B[2] + .2 + v * .44, B[4] + 1.4 + u * .9); };
+    H2.onRod = function (u, v) { return project(B[1], B[2] + .21 + v * .42, B[4] + .27 + u * .9); };
     H2.onBeam = function (u, v) { return project(B[1], B[2] + v, B[4] + u); };
     var dm = S.door;
     var wa = S.sec.wallAt;

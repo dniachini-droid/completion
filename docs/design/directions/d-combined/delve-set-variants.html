@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06070f">
+<title>Set the delve · Order the cat’s medication</title>
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<link rel="stylesheet" href="direction.css">
+<style>
+/* delve-set: the moment after Begin. Three ways to set the length (D-033), switchable A / B / C.
+   Only four stops: 25, 30, 45, 60. Research: design/research/DELVE_TIMER_CONTROLS.md */
+
+body { --scrim-top-h: 300px; --scrim-bottom-h: 52%; --reach: 0; }
+.hallfx { opacity:0; transition: opacity .6s var(--ease); }
+body.v-b .hallfx { opacity:1; }
+.dimwash { position:absolute; inset:0; z-index:4; pointer-events:none; background: rgba(5,5,14,.5); transition: opacity .8s var(--ease); }
+body.v-b .hallfx { opacity:0; transition: opacity .6s var(--ease); }
+body.v-b .hallfx { opacity:1; }
+.dimwash { opacity: 0; }
+
+/* the A / B / C switch sits in the top bar's centre */
+.try { display:flex; align-items:center; gap:6px; }
+.try .lab { font-family: var(--life); font-style: italic; font-size: 14px; color: var(--ink-3); margin-right: 4px; }
+.try .seg { gap: 6px; }
+.try .seg > button { min-height: 36px; width: 36px; padding: 0 0 0 .16em; font-size: 13px; }
+
+.job { margin-top: 6px; }
+.job h1 { margin-top: 8px; }
+
+/* the stage: each variant draws itself here */
+.stage { position: relative; }
+.var { position:absolute; inset:0 var(--gutter); display:none; }
+body.v-a .var.a, body.v-b .var.b, body.v-c .var.c { display:block; }
+
+/* the big number, shared look */
+.num { font-family: var(--life); font-weight: 300; line-height: 1; color: #f6f5ff; font-variant-numeric: tabular-nums lining-nums;
+  text-shadow: 0 0 24px rgba(var(--violet-rgb), .85), 0 0 64px rgba(var(--violet-rgb), .45); display:inline-block; }
+.unit { font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink-2); }
+.num.tick { animation: numtick .42s var(--ease); }
+@keyframes numtick { 0% { transform: scale(1); } 30% { transform: scale(1.09); text-shadow: 0 0 20px #fff, 0 0 44px rgba(var(--violet-rgb), 1), 0 0 90px rgba(var(--violet-rgb), .7); } 100% { transform: scale(1); } }
+
+/* the stops as tappable words (the non-drag route) */
+.stop { position:absolute; min-width:48px; min-height:44px; display:flex; align-items:center; justify-content:center;
+  font-family: var(--life); font-size: 17px; color: var(--ink-3); font-variant-numeric: lining-nums; transition: color .3s var(--ease), text-shadow .3s var(--ease); }
+.stop.on { color: #fff; text-shadow: 0 0 12px rgba(var(--violet-rgb), .95); }
+.stop.past { color: var(--ink-2); }
+.stop:focus-visible { outline: 1px solid var(--edge); outline-offset: -4px; }
+
+/* ---------- A: the dial (the delve's own ring) ---------- */
+.dial { --R: min(236px, 60vw, 29vh); position:absolute; left:50%; top:50%; width:var(--R); height:var(--R);
+  transform: translate(-50%, -52%); touch-action:none; cursor:grab; border-radius:50%; }
+.dial:active { cursor:grabbing; }
+.dial:focus-visible { outline:none; }
+.dial:focus-visible .track { background: rgba(210,210,255,.3); }
+.dial .band { position:absolute; inset:0; border-radius:50%;
+  -webkit-mask: radial-gradient(circle closest-side, transparent 90.5%, #000 91.5%, #000 96.5%, transparent 97.5%);
+          mask: radial-gradient(circle closest-side, transparent 90.5%, #000 91.5%, #000 96.5%, transparent 97.5%); }
+.dial .track { background: rgba(190,196,255,.14); }
+.dial .fill { background: conic-gradient(from 0deg, rgba(var(--violet-rgb),.35) 0, rgba(190,184,255,.95) calc(var(--p) * 1turn - 3deg), #fff calc(var(--p) * 1turn), transparent calc(var(--p) * 1turn + .5deg)); }
+.dial .glow { position:absolute; inset:-14%; filter: blur(10px); mix-blend-mode:screen; pointer-events:none; }
+.dial .glow .band { inset:12.3%; -webkit-mask: radial-gradient(circle closest-side, transparent 84%, #000 90%, #000 98%, transparent 104%); mask: radial-gradient(circle closest-side, transparent 84%, #000 90%, #000 98%, transparent 104%); }
+.dial .glow.wide { filter: blur(24px); opacity:.9; }
+.dial .disc { position:absolute; inset:5%; border-radius:50%; pointer-events:none;
+  background: radial-gradient(circle, rgba(200,196,255,calc(.05 + var(--p)*.16)), rgba(var(--violet-rgb),calc(.03 + var(--p)*.08)) 60%, transparent 72%); }
+.dial .halo { position:absolute; inset:-22%; border-radius:50%; pointer-events:none;
+  background: radial-gradient(circle, transparent 42%, rgba(var(--violet-rgb),calc(.06 + var(--p) * .26)) 50%, transparent 66%); }
+.dial .notch { position:absolute; left:50%; top:50%; width:2px; height:12px; margin:-6px 0 0 -1px; border-radius:1px; background: var(--edge-2);
+  transform: rotate(var(--a)) translateY(calc(var(--R) * -.47)); transition: background .3s var(--ease), box-shadow .3s var(--ease); pointer-events:none; }
+.dial .notch.lit { background: #fff; box-shadow: 0 0 8px rgba(var(--violet-rgb), 1); }
+.dial .handle { position:absolute; left:50%; top:50%; width:48px; height:48px; margin:-24px 0 0 -24px; pointer-events:none;
+  transform: rotate(calc(var(--p) * 1turn)) translateY(calc(var(--R) * -.47)); }
+.dial .handle::before { content:""; position:absolute; inset:14px; border-radius:50%;
+  background: radial-gradient(circle, #fff 0 32%, rgba(217,214,255,.9) 45%, rgba(var(--violet-rgb),.5) 62%, transparent 72%);
+  box-shadow: 0 0 20px 6px rgba(var(--violet-rgb), .7), 0 0 44px 10px rgba(var(--violet-rgb), .3); transition: transform .25s var(--ease); }
+.dial.dragging .handle::before { transform: scale(1.35); }
+.dial .inner { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none; }
+.dial .num { font-size: calc(var(--R) * .34); }
+.dial .unit { margin-top: 4px; }
+.dial .pulse { position:absolute; left:50%; top:50%; width:30px; height:30px; margin:-15px 0 0 -15px; border-radius:50%; pointer-events:none; opacity:0;
+  transform: rotate(var(--a, 0deg)) translateY(calc(var(--R) * -.47));
+  background: radial-gradient(circle, rgba(255,255,255,.9), rgba(var(--violet-rgb),.5) 45%, transparent 70%); }
+.dial .pulse.go { animation: pulse .6s var(--ease); }
+@keyframes pulse { 0% { opacity:.95; scale: .6; } 100% { opacity:0; scale: 2.8; } }
+.var.a .stops .stop { transform: translate(-50%, -50%); }
+
+/* the route: where the light reaches (A and C) */
+.route { position:absolute; left:0; right:0; bottom:0; height:40px; pointer-events:none; }
+.route svg { width:100%; height:100%; overflow:visible; display:block; }
+
+/* ---------- B: the hall slider ---------- */
+.var.b .num { font-size: 64px; }
+.var.b .readout { position:absolute; left:0; right:0; top: 4px; text-align:center; pointer-events:none; }
+.var.b .readout .unit { display:block; margin-top: 2px; }
+.hallfx { position:absolute; inset:0; z-index:4; pointer-events:none; }
+.hallfx svg { position:absolute; inset:0; width:100%; height:100%; }
+.slider { position:absolute; left:14px; right:14px; bottom: 30px; height:56px; touch-action:none; cursor:grab; }
+.slider:focus-visible { outline:none; }
+.slider:focus-visible .rail { background: var(--edge-2); }
+.slider .rail { position:absolute; left:0; right:0; top:50%; height:2px; margin-top:-1px; background: var(--edge-3); border-radius:1px; }
+.slider .lit { position:absolute; left:0; top:50%; height:2px; margin-top:-1px; width: calc(var(--t) * 100%); border-radius:1px;
+  background: linear-gradient(90deg, rgba(var(--violet-rgb),.4), #e6e3ff); box-shadow: 0 0 10px rgba(var(--violet-rgb), .9), 0 0 24px rgba(var(--violet-rgb), .5); }
+.slider .notch { position:absolute; top:50%; width:1px; height:12px; margin:-6px 0 0 0; background: var(--edge-2); }
+.slider .notch.lit2 { background:#fff; box-shadow: 0 0 6px rgba(var(--violet-rgb), 1); }
+.slider .thumb { position:absolute; top:50%; left: calc(var(--t) * 100%); width:48px; height:48px; margin:-24px 0 0 -24px; pointer-events:none; }
+.slider .thumb::before { content:""; position:absolute; inset:15px; transform: rotate(45deg);
+  background: radial-gradient(circle, #fff 0 30%, #d9d6ff 55%, rgba(var(--violet-rgb), .7));
+  box-shadow: 0 0 18px 5px rgba(var(--violet-rgb), .75), 0 0 40px 10px rgba(var(--violet-rgb), .3); transition: transform .25s var(--ease); }
+.slider.dragging .thumb::before { transform: rotate(45deg) scale(1.3); }
+.var.b .stops { position:absolute; left:14px; right:14px; bottom: -10px; height:44px; }
+.var.b .stops .stop { transform: translateX(-50%); top:0; }
+
+/* ---------- C: the flame ---------- */
+.lampbox { position:absolute; left:50%; top:0; bottom:44px; width: min(220px, 60%); transform: translateX(-50%); touch-action:none; cursor: ns-resize; }
+.lampbox:focus-visible { outline:none; }
+.lampbox:focus-visible .grip { opacity: 1; }
+.lampbox svg { position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
+.flame-g { transform-box: fill-box; transform-origin: 50% 100%; }
+.flicker { animation: flicker 2.8s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
+.var.c .readout { position:absolute; left: 0; top: 50%; transform: translateY(-60%); width: calc(50% - 70px); text-align:right; pointer-events:none; }
+.var.c .num { font-size: 66px; }
+.var.c .readout .unit { display:block; margin-top: 4px; }
+.var.c .stops { position:absolute; right: 0; top:0; bottom:44px; width: calc(50% - 70px); }
+.var.c .stops .stop { left: 18px; transform: translateY(-50%); justify-content:flex-start; padding-left: 20px; }
+.var.c .stops .stop::before { content:""; position:absolute; left:0; top:50%; width:12px; height:1px; background: currentColor; opacity:.7; }
+.grip { position:absolute; left:50%; bottom: -4px; transform: translateX(-50%); font-family: var(--life); font-style: italic; font-size: 14px; color: var(--ink-3); white-space: nowrap; opacity:.85; pointer-events:none; }
+
+/* ---------- where it takes you ---------- */
+.reach { text-align:center; min-height: 104px; }
+.reach .label-line { justify-content:center; }
+.reach h2 { margin-top: 8px; font-size: 22px; white-space: nowrap; letter-spacing: .12em; padding-left: .12em; color: #eceaff;
+  text-shadow: 0 -1px 0 rgba(0,0,0,.9), 0 0 16px rgba(var(--violet-rgb), .7), 0 0 44px rgba(var(--violet-rgb), .35); }
+.reach p { margin-top: 4px; min-height: 24px; }
+.reach .swap { transition: opacity .28s var(--ease), transform .28s var(--ease); }
+.reach .swap.out { opacity: 0; transform: translateY(4px); }
+.reach.new h2 { color: #d8d4ff; text-shadow: 0 -1px 0 rgba(0,0,0,.9), 0 0 22px rgba(var(--violet-rgb), .95), 0 0 60px rgba(var(--violet-rgb), .5); }
+
+.go { margin-top: 12px; }
+.go .soft { text-align:center; font-size: 16px; margin-bottom: 14px; }
+.go .soft b { font-weight: 500; font-style: normal; color: var(--ink); }
+
+@media (max-width: 370px) { .try .lab { display:none; } }
+.hall .hall-far { animation: none; opacity: .5; }
+.hall .hall-lamp { transition: opacity .6s var(--ease); }
+body.v-c .hall .hall-lamp { opacity: 0; }
+@media (max-height: 800px) {
+  .job h1 { font-size: 24px; }
+  .reach { min-height: 96px; }
+  .reach h2 { font-size: 20px; }
+  .go .soft { margin-bottom: 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .flicker { animation: none; } }
+</style>
+</head>
+<body class="s-day v-a">
+<main class="phone">
+
+<div class="paint" id="hall"></div>
+<div class="fog" aria-hidden="true"><i class="drift-a"></i><i class="drift-b"></i></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+<div class="hallfx" aria-hidden="true"><svg id="hallfx"></svg></div>
+<div class="dimwash" aria-hidden="true"></div>
+<div class="scrim-top" aria-hidden="true"></div>
+<div class="scrim-bottom" aria-hidden="true"></div>
+
+<div class="ui">
+  <header class="top col">
+    <div class="topbar rise">
+      <a class="home" href="morning.html"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg><span>Today</span></a>
+      <div class="try"><span class="lab">try</span><div class="seg" role="group" aria-label="Which control to try">
+        <button data-v="a" aria-pressed="true" aria-label="A, the dial">A</button><button data-v="b" aria-pressed="false" aria-label="B, the hall">B</button><button data-v="c" aria-pressed="false" aria-label="C, the flame">C</button>
+      </div></div>
+      <span></span>
+    </div>
+    <section class="job rise d1">
+      <div class="label-line lit">A delve</div>
+      <h1 class="say-lg">Order the cat’s medication</h1>
+    </section>
+  </header>
+
+  <div class="mid stage col rise d2" id="stage">
+    <!-- A: the dial -->
+    <div class="var a">
+      <div class="dial" id="dial" role="slider" tabindex="0" aria-label="Length of the delve" aria-valuemin="25" aria-valuemax="60" aria-valuenow="25" style="--p:.4167">
+        <div class="halo"></div><div class="disc"></div>
+        <div class="band track"></div>
+        <div class="glow wide"><div class="band fill"></div></div>
+        <div class="glow"><div class="band fill"></div></div>
+        <div class="band fill"></div>
+        <i class="notch" data-m="25" style="--a:150deg"></i><i class="notch" data-m="30" style="--a:180deg"></i><i class="notch" data-m="45" style="--a:270deg"></i><i class="notch" data-m="60" style="--a:360deg"></i>
+        <div class="pulse"></div>
+        <div class="handle"></div>
+        <div class="inner"><span class="num">25</span><span class="unit">minutes</span></div>
+      </div>
+      <div class="stops"></div>
+      <div class="route"><svg class="routesvg"></svg></div>
+    </div>
+    <!-- B: the hall -->
+    <div class="var b">
+      <div class="readout"><span class="num">25</span><span class="unit">minutes</span></div>
+      <div class="slider" id="slider" role="slider" tabindex="0" aria-label="Length of the delve" aria-valuemin="25" aria-valuemax="60" aria-valuenow="25" style="--t:0">
+        <div class="rail"></div><div class="lit"></div>
+        <div class="thumb"></div>
+      </div>
+      <div class="stops"></div>
+    </div>
+    <!-- C: the flame -->
+    <div class="var c">
+      <div class="readout"><span class="num">25</span><span class="unit">minutes</span></div>
+      <div class="lampbox" id="lamp" role="slider" tabindex="0" aria-label="Length of the delve: drag the flame up" aria-valuemin="25" aria-valuemax="60" aria-valuenow="25">
+        <svg id="lampsvg" aria-hidden="true"></svg>
+        <span class="grip">draw the flame up</span>
+      </div>
+      <div class="stops"></div>
+      <div class="route"><svg class="routesvg"></svg></div>
+    </div>
+  </div>
+
+  <section class="bottom col">
+    <div class="reach rise d3" id="reach" aria-live="polite">
+      <div class="label-line centred swap" id="rk">Towards</div>
+      <h2 class="carve swap" id="rp">The Salt Gallery</h2>
+      <p class="soft on-scene swap" id="rl">where the passage is heading</p>
+    </div>
+    <div class="go rise d4">
+      <p class="soft on-scene">Then a breather: <b>5 minutes</b>.</p>
+      <a class="btn" id="start" href="delve.html">Start the delve</a>
+    </div>
+  </section>
+</div>
+</main>
+
+<script src="hall.js"></script>
+<script>
+/* the light blooms where you tap (motion only) */
+(function(){
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('.btn, .btn-quiet, .seg > button').forEach(function(el){
+    el.addEventListener('pointerdown', function(e){
+      var r = el.getBoundingClientRect(), b = document.createElement('span');
+      b.className = 'bloom'; b.style.left = (e.clientX - r.left) + 'px'; b.style.top = (e.clientY - r.top) + 'px';
+      if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+      el.style.overflow = 'hidden'; el.appendChild(b);
+      setTimeout(function(){ b.remove(); el.style.overflow = ''; }, 950);
+    });
+  });
+})();
+</script>
+<script>
+(function(){
+  'use strict';
+  var STOPS = [25, 30, 45, 60];
+  var REACH = {
+    25: ['Towards', 'The Salt Gallery', 'where the passage is heading'],
+    30: ['Towards', 'The Salt Gallery', 'and a little way beyond it'],
+    45: ['Further', 'The head of the stair', 'past the Salt Gallery, to where the stair begins'],
+    60: ['Further', 'Somewhere unlit', 'somewhere you haven’t been yet']
+  };
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var NS = 'http://www.w3.org/2000/svg';
+  var body = document.body;
+  var state = { v: 25, snap: 25, variant: 'a' };
+  var hall = null;
+
+  function clamp(x, a, b) { return x < a ? a : x > b ? b : x; }
+  function nearest(v) { var b = STOPS[0]; STOPS.forEach(function (s) { if (Math.abs(s - v) < Math.abs(b - v)) b = s; }); return b; }
+  /* a little magnetism near each stop, so the stops are felt while dragging */
+  function magnet(v) { var d = nearest(v), k = Math.abs(v - d); return k < 2.5 ? v + (d - v) * (1 - k / 2.5) * .6 : v; }
+  function el(tag, attrs, parent) { var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+  function buzz(ms) { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {} }
+  function retrigger(node, cls) { node.classList.remove(cls); void node.offsetWidth; node.classList.add(cls); }
+
+  /* ---------- the painted hall behind everything ---------- */
+  var hallEl = document.getElementById('hall');
+  try { hall = Hall.draw(hallEl, { cam: { y: 1.7, pitch: -3, f: .9, cy: .4 }, cups: 'dark', lintel: 'sealed', gold: .1, res: .75 }); } catch (e) { hall = null; }
+
+  /* ---------- the stops as words (tap fallback) ---------- */
+  var stopEls = [];
+  function makeStops(container, place) {
+    STOPS.forEach(function (m) {
+      var b = document.createElement('button');
+      b.className = 'stop'; b.type = 'button'; b.textContent = m; b.dataset.m = m;
+      b.setAttribute('aria-label', m + ' minutes');
+      place(b, m);
+      b.addEventListener('click', function () { settle(m, true); });
+      container.appendChild(b); stopEls.push(b);
+    });
+  }
+  /* A: round the ring (60 minutes = one turn, like a clock) */
+  var dial = document.getElementById('dial');
+  function placeDialStops() {
+    var box = document.querySelector('.var.a .stops');
+    box.innerHTML = ''; stopEls = stopEls.filter(function (s) { return !box.contains(s); });
+    var st = document.querySelector('.var.a').getBoundingClientRect(), r = dial.getBoundingClientRect();
+    var cx = r.left - st.left + r.width / 2, cy = r.top - st.top + r.height / 2, R = r.width / 2 + 38;
+    box.style.cssText = 'position:absolute;inset:0;pointer-events:none';
+    makeStops(box, function (b, m) {
+      var a = (m / 60) * Math.PI * 2;
+      b.style.left = (cx + Math.sin(a) * R) + 'px'; b.style.top = (cy - Math.cos(a) * R) + 'px'; b.style.pointerEvents = 'auto';
+    });
+  }
+  /* B: under the rail, placed by time (so 25 → 30 is short, 45 → 60 is long) */
+  function tOf(m) { return (m - 25) / 35; }
+  makeStops(document.querySelector('.var.b .stops'), function (b, m) { b.style.left = (tOf(m) * 100) + '%'; });
+  /* C: a ruler beside the flame */
+  var FLAME = { min: .3, max: .74 };   /* flame height as a fraction of the lamp box, 25 → 60 */
+  makeStops(document.querySelector('.var.c .stops'), function (b, m) { b.dataset.c = 1; });
+
+  /* ---------- the route strip (A and C): you → the Salt Gallery → the stair → somewhere unlit ---------- */
+  function drawRoute(svg) {
+    svg.innerHTML = '';
+    var W = svg.clientWidth || 340, y = 20;
+    var d = el('defs', {}, svg);
+    d.innerHTML = '<linearGradient id="rg' + svg.dataset.k + '" gradientUnits="userSpaceOnUse" x1="0" x2="' + W + '" y1="0" y2="0"><stop offset="0" stop-color="#8f86ff" stop-opacity=".25"/><stop offset="1" stop-color="#ece9ff"/></linearGradient>' +
+      '<radialGradient id="rn' + svg.dataset.k + '"><stop offset="0" stop-color="#fff"/><stop offset=".4" stop-color="#b9b3ff" stop-opacity=".7"/><stop offset="1" stop-color="#8f86ff" stop-opacity="0"/></radialGradient>';
+    var xs = { you: 20, 25: W * .34, 30: W * .44, 45: W * .68, 60: W - 22 };
+    svg._xs = xs; svg._y = y;
+    el('path', { d: 'M' + xs.you + ' ' + y + ' H' + (W - 22), stroke: 'rgba(186,186,255,.14)', 'stroke-width': 1, 'stroke-dasharray': '2 5', 'class': 'r-dim' }, svg);
+    svg._lit = el('path', { d: 'M' + xs.you + ' ' + y + ' H' + xs[25], stroke: 'url(#rg' + svg.dataset.k + ')', 'stroke-width': 1.6, 'stroke-linecap': 'round', style: 'filter:drop-shadow(0 0 4px rgba(143,134,255,.9))' }, svg);
+    /* you: a tiny lamp point */
+    el('circle', { cx: xs.you, cy: y, r: 3, fill: '#ffd27a', style: 'filter:drop-shadow(0 0 5px #f2c170)' }, svg);
+    /* the Salt Gallery: an arch, lit */
+    function arch(x, s, cls, dash) {
+      var g = el('g', { 'class': cls, transform: 'translate(' + x + ' ' + y + ')' }, svg);
+      el('path', { d: 'M' + (-6 * s) + ' ' + (7 * s) + ' V' + (-2 * s) + ' Q' + (-6 * s) + ' ' + (-9 * s) + ' 0 ' + (-10 * s) + ' Q' + (6 * s) + ' ' + (-9 * s) + ' ' + (6 * s) + ' ' + (-2 * s) + ' V' + (7 * s),
+        fill: 'none', stroke: dash ? 'rgba(200,198,255,.55)' : '#e9e6ff', 'stroke-width': 1.2, 'stroke-dasharray': dash || 'none', 'stroke-linecap': 'round' }, g);
+      return g;
+    }
+    svg._g25 = arch(xs[25], 1, 'r-node');
+    /* the head of the stair: three small treads going down */
+    var sg = el('g', { 'class': 'r-node', transform: 'translate(' + xs[45] + ' ' + y + ')' }, svg);
+    el('path', { d: 'M-8 -6 H-3 V-1 H2 V4 H7 V8', fill: 'none', stroke: '#e9e6ff', 'stroke-width': 1.2, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }, sg);
+    svg._g45 = sg;
+    /* somewhere unlit: a dark doorway, dashed, barely there */
+    svg._g60 = arch(xs[60], 1.25, 'r-node', '2 3');
+    svg._spark = el('circle', { cx: xs[25], cy: y, r: 10, fill: 'url(#rn' + svg.dataset.k + ')' }, svg);
+  }
+  function renderRoute(svg, v) {
+    if (!svg._xs) return;
+    var xs = svg._xs, x;
+    /* position of the light along the route, piecewise by the stops */
+    if (v <= 30) x = xs[25] + (xs[30] - xs[25]) * (v - 25) / 5;
+    else if (v <= 45) x = xs[30] + (xs[45] - xs[30]) * (v - 30) / 15;
+    else x = xs[45] + (xs[60] - xs[45]) * (v - 45) / 15;
+    svg._lit.setAttribute('d', 'M' + xs.you + ' ' + svg._y + ' H' + x.toFixed(1));
+    svg._spark.setAttribute('cx', x.toFixed(1));
+    svg._g25.setAttribute('opacity', 1);
+    svg._g45.setAttribute('opacity', clamp((v - 33) / 10, 0, 1).toFixed(2));
+    svg._g60.setAttribute('opacity', (clamp((v - 48) / 12, 0, 1) * .8).toFixed(2));
+    svg.querySelector('.r-dim').setAttribute('opacity', clamp((v - 27) / 10, 0, 1).toFixed(2));
+  }
+  var routes = document.querySelectorAll('.routesvg');
+  routes.forEach(function (s, i) { s.dataset.k = i; });
+
+  /* ---------- B: light down the painted hall ---------- */
+  var fx = document.getElementById('hallfx'), fxParts = null;
+  var Z = { start: 2.6, 25: 6.2, 30: 7.2, 45: 10.5, 60: 17 };
+  function zOf(v) {
+    if (v <= 30) return Z[25] + (Z[30] - Z[25]) * (v - 25) / 5;
+    if (v <= 45) return Z[30] + (Z[45] - Z[30]) * (v - 30) / 15;
+    return Z[45] + (Z[60] - Z[45]) * (v - 45) / 15;
+  }
+  function proj(x, y, z) {
+    if (hall && hall.project) { var p = hall.project(x, y, z); if (p) return p; }
+    /* fallback perspective if the hall can't paint */
+    var W = innerWidth, H = innerHeight, f = .9 * W, s = f / z;
+    return [W / 2 + x * s, H * .4 + (1.7 - y) * s];
+  }
+  function buildHallFx() {
+    var W = fx.clientWidth, H = fx.clientHeight;
+    fx.setAttribute('viewBox', '0 0 ' + W + ' ' + H); fx.innerHTML = '';
+    var d = el('defs', {}, fx);
+    d.innerHTML = '<radialGradient id="orb"><stop offset="0" stop-color="#fff"/><stop offset=".18" stop-color="#e2dfff" stop-opacity=".95"/><stop offset=".45" stop-color="#8f86ff" stop-opacity=".45"/><stop offset="1" stop-color="#8f86ff" stop-opacity="0"/></radialGradient>' +
+      '<radialGradient id="pool"><stop offset="0" stop-color="#b9b3ff" stop-opacity=".55"/><stop offset="1" stop-color="#8f86ff" stop-opacity="0"/></radialGradient>' +
+      '<filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2"/></filter>';
+    var g = el('g', { style: 'mix-blend-mode:screen' }, fx);
+    var bg = el('linearGradient', { id: 'bandg', gradientUnits: 'userSpaceOnUse', x1: 0, x2: 0, y1: H, y2: 0 }, d);
+    var s0 = el('stop', { offset: 0, 'stop-color': '#8f86ff', 'stop-opacity': 0 }, bg), s1 = el('stop', { offset: 1, 'stop-color': '#d9d6ff', 'stop-opacity': .75 }, bg);
+    var band = el('path', { fill: 'url(#bandg)', filter: 'url(#soft)' }, g);
+    var trail = el('path', { fill: 'none', stroke: 'none' }, g), trailCore = el('path', { fill: 'none', stroke: 'none' }, g);
+    function mark(z, kind, x) {
+      var p = proj(x || 0, 0, z), s = Math.max(.45, 8 / z);
+      var m = el('g', { transform: 'translate(' + p[0].toFixed(1) + ' ' + p[1].toFixed(1) + ') scale(' + s.toFixed(3) + ')' }, fx);
+      if (kind === 'arch') el('path', { d: 'M-14 0 V-18 Q-14 -34 0 -36 Q14 -34 14 -18 V0', fill: 'none', stroke: '#ece9ff', 'stroke-width': 2 / s * .6 }, m);
+      if (kind === 'stair') el('path', { d: 'M-18 -10 H-8 V-3 H2 V4 H12 V10', fill: 'none', stroke: '#ece9ff', 'stroke-width': 2 / s * .6, 'stroke-linejoin': 'round' }, m);
+      if (kind === 'unlit') { el('path', { d: 'M-16 0 V-22 Q-16 -40 0 -42 Q16 -40 16 -22 V0', fill: 'none', stroke: 'rgba(226,224,255,.8)', 'stroke-width': 2 / s * .5, 'stroke-dasharray': (4 / s * .5) + ' ' + (5 / s * .5) }, m); }
+      return m;
+    }
+    var m25 = mark(Z[25], 'arch', -.75), m45 = mark(Z[45], 'stair', .8), m60 = mark(Z[60], 'unlit', 0);
+    var pool = el('ellipse', { fill: 'url(#pool)' }, g);
+    var orb = el('circle', { fill: 'url(#orb)' }, g);
+    fxParts = { bandg: bg, band: band, trail: trail, core: trailCore, orb: orb, pool: pool, m25: m25, m45: m45, m60: m60 };
+  }
+  function renderHall(v) {
+    if (!fxParts) return;
+    var z1 = zOf(v), pts = [];
+    for (var z = Z.start; z <= z1 + .01; z += Math.max(.3, (z1 - Z.start) / 40)) { var p = proj(0, .04, z); pts.push(p[0].toFixed(1) + ' ' + p[1].toFixed(1)); }
+    var pe = proj(0, .04, z1); pts.push(pe[0].toFixed(1) + ' ' + pe[1].toFixed(1));
+    var dd = 'M' + pts.join(' L');
+    fxParts.trail.setAttribute('d', dd);
+    var Lp = [], Rp = [];
+    for (var zz = Z.start; zz <= z1 + .01; zz += Math.max(.3, (z1 - Z.start) / 30)) { var a = proj(-.32, .02, zz), b = proj(.32, .02, zz); Lp.push(a[0].toFixed(1) + ' ' + a[1].toFixed(1)); Rp.unshift(b[0].toFixed(1) + ' ' + b[1].toFixed(1)); }
+    fxParts.band.setAttribute('d', 'M' + Lp.concat(Rp).join(' L') + ' Z');
+    var pn = proj(0, .02, Z.start);
+    fxParts.bandg.setAttribute('y1', pn[1].toFixed(1)); fxParts.bandg.setAttribute('y2', pe[1].toFixed(1)); fxParts.core.setAttribute('d', dd);
+    var po = proj(0, .5, z1), s = Math.max(10, 260 / z1);
+    fxParts.orb.setAttribute('cx', po[0]); fxParts.orb.setAttribute('cy', po[1]); fxParts.orb.setAttribute('r', s * 1.3);
+    fxParts.pool.setAttribute('cx', pe[0]); fxParts.pool.setAttribute('cy', pe[1]); fxParts.pool.setAttribute('rx', s * 4); fxParts.pool.setAttribute('ry', s * 1.2);
+    fxParts.m25.setAttribute('opacity', .95);
+    fxParts.m45.setAttribute('opacity', clamp((v - 33) / 10, 0, 1).toFixed(2));
+    fxParts.m60.setAttribute('opacity', clamp((v - 48) / 12, 0, 1).toFixed(2));
+  }
+
+  /* ---------- C: the clay lamp and its flame ---------- */
+  var lamp = document.getElementById('lamp'), lsvg = document.getElementById('lampsvg'), L = null;
+  function buildLamp() {
+    var W = lamp.clientWidth, H = lamp.clientHeight;
+    lsvg.setAttribute('viewBox', '0 0 ' + W + ' ' + H); lsvg.innerHTML = '';
+    var d = el('defs', {}, lsvg);
+    d.innerHTML =
+      '<linearGradient id="fl" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#6d5ff0"/><stop offset=".28" stop-color="#b3acff"/><stop offset=".55" stop-color="#ffe6b8"/><stop offset=".85" stop-color="#f2c170"/><stop offset="1" stop-color="#f2a24c" stop-opacity=".2"/></linearGradient>' +
+      '<linearGradient id="core" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".2"/><stop offset=".3" stop-color="#fff"/><stop offset="1" stop-color="#fff4dc" stop-opacity="0"/></linearGradient>' +
+      '<radialGradient id="halo"><stop offset="0" stop-color="#ffe2b0" stop-opacity=".55"/><stop offset=".3" stop-color="#b3acff" stop-opacity=".28"/><stop offset="1" stop-color="#8f86ff" stop-opacity="0"/></radialGradient>' +
+      '<radialGradient id="clayC" cx=".4" cy=".2" r=".9"><stop offset="0" stop-color="#d49060"/><stop offset=".45" stop-color="#8a4a2a"/><stop offset="1" stop-color="#2a130b"/></radialGradient>' +
+      '<radialGradient id="warm"><stop offset="0" stop-color="#ffc47a" stop-opacity=".4"/><stop offset="1" stop-color="#d0782e" stop-opacity="0"/></radialGradient>' +
+      '<filter id="fsoft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.4"/></filter>';
+    var cx = W / 2, by = H - 42;   /* the wick */
+    var halo = el('ellipse', { cx: cx, fill: 'url(#halo)', style: 'mix-blend-mode:screen' }, lsvg);
+    el('ellipse', { cx: cx, cy: by + 12, rx: 90, ry: 26, fill: 'url(#warm)', style: 'mix-blend-mode:screen' }, lsvg);
+    /* the dish: small heavy clay bowl, pinched spout toward the flame */
+    var g = el('g', {}, lsvg);
+    el('ellipse', { cx: cx - 8, cy: by + 20, rx: 50, ry: 6, fill: '#05040a', opacity: .7, filter: 'url(#fsoft)' }, g);
+    el('path', { d: 'M' + (cx - 52) + ' ' + (by + 2) + ' Q' + (cx - 50) + ' ' + (by + 20) + ' ' + (cx - 10) + ' ' + (by + 19) + ' Q' + (cx + 14) + ' ' + (by + 18) + ' ' + (cx + 8) + ' ' + (by + 4) + ' L' + (cx + 4) + ' ' + (by + 2) + ' Z', fill: 'url(#clayC)' }, g);
+    el('ellipse', { cx: cx - 22, cy: by + 2, rx: 30, ry: 5, fill: '#1c0d07' }, g);
+    el('path', { d: 'M' + (cx - 50) + ' ' + (by + 1) + ' Q' + (cx - 22) + ' ' + (by - 5) + ' ' + (cx + 4) + ' ' + (by + 1), stroke: '#f6b877', 'stroke-width': 1, fill: 'none', opacity: .8 }, g);
+    var fg = el('g', { 'class': 'flicker' }, lsvg);
+    var outer = el('path', { fill: 'url(#fl)', style: 'filter:drop-shadow(0 0 10px rgba(143,134,255,.8)) drop-shadow(0 0 22px rgba(242,193,112,.35))' }, fg);
+    var core = el('path', { fill: 'url(#core)' }, fg);
+    /* ruler ticks on the stops */
+    L = { cx: cx, by: by, H: H, halo: halo, outer: outer, core: core };
+    document.querySelectorAll('.var.c .stop').forEach(function (b) {
+      var m = +b.dataset.m, h = flameH(m);
+      b.style.top = (by - h) + 'px';
+    });
+  }
+  function flameH(v) { var usable = L ? L.by : 300; return usable * (FLAME.min + (FLAME.max - FLAME.min) * (v - 25) / 35); }
+  function renderLamp(v) {
+    if (!L) return;
+    var h = flameH(v), w = 11 + h * .065, x = L.cx + 6, y = L.by - 2, lean = h * .03;
+    function tear(h, w, lean) {
+      var b = y - w;   /* the round of the base */
+      return 'M' + (x + lean) + ' ' + (y - h) +
+        ' C' + (x + lean * .6 + w * .18) + ' ' + (y - h * .74) + ' ' + (x + w * 1.08) + ' ' + (y - h * .46) + ' ' + (x + w) + ' ' + b +
+        ' C' + (x + w) + ' ' + (y + w * .38) + ' ' + (x - w) + ' ' + (y + w * .38) + ' ' + (x - w) + ' ' + b +
+        ' C' + (x - w * 1.08) + ' ' + (y - h * .46) + ' ' + (x + lean * .6 - w * .18) + ' ' + (y - h * .74) + ' ' + (x + lean) + ' ' + (y - h) + ' Z';
+    }
+    L.outer.setAttribute('d', tear(h, w, lean));
+    L.core.setAttribute('d', tear(h * .5, w * .42, lean * .4));
+    L.halo.setAttribute('cy', y - h * .5); L.halo.setAttribute('rx', 40 + h * .7); L.halo.setAttribute('ry', 30 + h * .9);
+    L.halo.setAttribute('opacity', (.55 + (v - 25) / 35 * .45).toFixed(2));
+  }
+
+  /* ---------- the one render ---------- */
+  var nums = document.querySelectorAll('.num');
+  var reach = document.getElementById('reach'), rk = document.getElementById('rk'), rp = document.getElementById('rp'), rl = document.getElementById('rl');
+  var shownSnap = 25, swapT = null;
+  function render() {
+    var v = state.v, s = nearest(v);
+    dial.style.setProperty('--p', (v / 60).toFixed(4));
+    document.getElementById('slider').style.setProperty('--t', tOf(v).toFixed(4));
+    dial.querySelectorAll('.notch').forEach(function (n) { n.classList.toggle('lit', +n.dataset.m <= v + .01); });
+    routes.forEach(function (r) { renderRoute(r, v); });
+    renderHall(v); renderLamp(v);
+    body.style.setProperty('--reach', ((v - 25) / 35).toFixed(3));
+    if (s !== shownSnap) { tick(s); shownSnap = s; }
+    stopEls.forEach(function (b) { var m = +b.dataset.m; b.classList.toggle('on', m === s); b.classList.toggle('past', m < s); });
+  }
+  function tick(s) {
+    nums.forEach(function (n) { n.textContent = s; retrigger(n, 'tick'); });
+    var pulse = dial.querySelector('.pulse'); pulse.style.setProperty('--a', (s / 60 * 360) + 'deg'); retrigger(pulse, 'go');
+    buzz(8);
+    ['dial', 'slider', 'lamp'].forEach(function (id) { var e = document.getElementById(id); e.setAttribute('aria-valuenow', s); e.setAttribute('aria-valuetext', s + ' minutes, ' + REACH[s][2]); });
+    /* the words about where it takes you */
+    var r = REACH[s];
+    clearTimeout(swapT);
+    [rk, rp, rl].forEach(function (n) { n.classList.add('out'); });
+    swapT = setTimeout(function () {
+      rk.textContent = r[0]; rp.textContent = r[1]; rl.textContent = r[2];
+      reach.classList.toggle('new', s === 60);
+      [rk, rp, rl].forEach(function (n) { n.classList.remove('out'); });
+    }, reduce ? 0 : 180);
+  }
+
+  /* settle: ease to a stop, with a small overshoot, like a detent */
+  var anim = null;
+  function settle(target, fromTap) {
+    cancelAnimationFrame(anim);
+    state.snap = target;
+    if (reduce) { state.v = target; render(); return; }
+    var from = state.v, t0 = null, dur = fromTap ? 520 : 380;
+    function back(k) { var c1 = 1.2, c3 = c1 + 1; return 1 + c3 * Math.pow(k - 1, 3) + c1 * Math.pow(k - 1, 2); }
+    function f(ts) {
+      if (t0 == null) t0 = ts;
+      var k = clamp((ts - t0) / dur, 0, 1);
+      state.v = from + (target - from) * back(k);
+      render();
+      if (k < 1) anim = requestAnimationFrame(f); else { state.v = target; render(); }
+    }
+    anim = requestAnimationFrame(f);
+  }
+
+  /* ---------- pointer: one drag model per control ---------- */
+  function drag(node, onStart, onMove) {
+    node.addEventListener('pointerdown', function (e) {
+      if (e.target.closest && e.target.closest('.stop')) return;
+      if (onStart(e) === false) return;
+      cancelAnimationFrame(anim);
+      node.setPointerCapture(e.pointerId); node.classList.add('dragging');
+      function mv(ev) { var v = onMove(ev); if (v != null) { state.v = magnet(clamp(v, 25, 60)); render(); } }
+      function up() { node.classList.remove('dragging'); node.removeEventListener('pointermove', mv); node.removeEventListener('pointerup', up); node.removeEventListener('pointercancel', up); settle(nearest(state.v)); }
+      node.addEventListener('pointermove', mv); node.addEventListener('pointerup', up); node.addEventListener('pointercancel', up);
+      mv(e);
+      e.preventDefault();
+    });
+  }
+  /* A: angle round the ring. Never jumps across the top. */
+  drag(dial, function (e) {
+    var r = dial.getBoundingClientRect(), dx = e.clientX - r.left - r.width / 2, dy = e.clientY - r.top - r.height / 2;
+    return Math.hypot(dx, dy) > r.width * .28;   /* the ring and a wide margin, not the number */
+  }, function (e) {
+    var r = dial.getBoundingClientRect(), dx = e.clientX - r.left - r.width / 2, dy = e.clientY - r.top - r.height / 2;
+    var a = Math.atan2(dx, -dy); if (a < 0) a += Math.PI * 2;
+    var m = a / (Math.PI * 2) * 60, last = state.v;
+    if (m < 25) m = last > 42.5 ? 60 : 25;
+    if (Math.abs(m - last) > 22) m = last;
+    return m;
+  });
+  /* B: along the rail */
+  var slider = document.getElementById('slider');
+  drag(slider, function () {}, function (e) { var r = slider.getBoundingClientRect(); return 25 + clamp((e.clientX - r.left) / r.width, 0, 1) * 35; });
+  /* C: draw the flame up (relative, so it never jumps) */
+  var cStart = null;
+  drag(lamp, function (e) { cStart = { y: e.clientY, v: state.v }; }, function (e) {
+    var range = flameH(60) - flameH(25);
+    return cStart.v + (cStart.y - e.clientY) / range * 35 * 1.15;
+  });
+
+  /* keyboard: arrows step between stops, Home / End */
+  [dial, slider, lamp].forEach(function (n) {
+    n.addEventListener('keydown', function (e) {
+      var i = STOPS.indexOf(state.snap), k = e.key;
+      if (k === 'ArrowRight' || k === 'ArrowUp' || k === '+' || k === '=') i++;
+      else if (k === 'ArrowLeft' || k === 'ArrowDown' || k === '-') i--;
+      else if (k === 'Home') i = 0; else if (k === 'End') i = 3; else return;
+      e.preventDefault(); settle(STOPS[clamp(i, 0, 3)], true);
+    });
+  });
+
+  /* ---------- A / B / C and #a-45 style hashes ---------- */
+  var tries = document.querySelectorAll('.try .seg > button');
+  function setVariant(v) {
+    state.variant = v;
+    body.classList.remove('v-a', 'v-b', 'v-c'); body.classList.add('v-' + v);
+    tries.forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.v === v ? 'true' : 'false'); });
+    layout();
+  }
+  tries.forEach(function (b) { b.addEventListener('click', function () {
+    setVariant(b.dataset.v);
+    try { history.replaceState(null, '', '#' + b.dataset.v + '-' + state.snap); } catch (e) {}
+  }); });
+
+  function layout() {
+    if (state.variant === 'a') placeDialStops();
+    routes.forEach(function (r) { if (r.clientWidth) drawRoute(r); });
+    buildHallFx();
+    if (state.variant === 'c') buildLamp();
+    render();
+  }
+  addEventListener('resize', layout);
+
+  function fromHash() {
+    var m = /#?([abc])(?:-(\d+))?/.exec(location.hash || '');
+    var v = m ? m[1] : 'a', n = m && m[2] ? +m[2] : 25;
+    if (STOPS.indexOf(n) < 0) n = 25;
+    state.v = n; state.snap = n; shownSnap = n;
+    nums.forEach(function (x) { x.textContent = n; });
+    var r = REACH[n]; rk.textContent = r[0]; rp.textContent = r[1]; rl.textContent = r[2]; reach.classList.toggle('new', n === 60);
+    setVariant(v);
+  }
+  fromHash();
+  document.getElementById('start').addEventListener('click', function () { /* in the app, the chosen length travels with it */ });
+})();
+</script>
+</body>
+</html>
