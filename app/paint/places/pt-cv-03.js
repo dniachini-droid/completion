@@ -11,11 +11,11 @@ export default {
   line: '',
   cam: { x: .9, y: 1.52, z: 3.3, pitch: -1, yaw: 9, f: .62, cx: .5, cy: .47 },
   sheen: .1, gold: 1, glow: { threshold: .55, k: .5 },
-  hazeBase: [.02, .018, .06], hazeFar: [.09, .085, .22], bloomC: [.2, .18, .38],
+  hazeBase: [.02, .018, .06], hazeFar: [.09, .085, .22], bloomC: [.13, .12, .26],
   lights: [
     { p: [2.36, 1.6, 5.6], c: [1, .68, .3], k: 1.7, r: 1.1, warm: .02, shadow: .7 },    /* the clay lamp on its ledge: the one light */
     { p: [2.46, 1.36, 5.6], c: [1, .7, .34], k: .05, r: .12 },                         /* and pooled on the ledge under it */
-    { p: [0, 5.5, 58], c: [.62, .58, 1.25], k: 45, r: 40 },                            /* the far end: a trace of violet in the fog */
+    { p: [0, 5.5, 58], c: [.62, .58, 1.25], k: 22, r: 40 },                            /* the far end: a trace of violet in the fog */
     { p: [0, 9, 20], c: [.36, .33, .8], k: 12, r: 12 },                                  /* haze high in the vault */
     { p: [0, 7, -4], c: [.3, .28, .66], k: 3, r: 7 },                                   /* the passage behind you, faint */
   ],

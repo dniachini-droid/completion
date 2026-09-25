@@ -14,7 +14,7 @@ export default {
   cam: { x: 1.45, y: .5, z: 4.7, pitch: -18, yaw: 54, f: .9, cx: .5, cy: .5 },
   far: 66,
   blur: { px: 1.4, d0: 3, d1: 14, k: .8 },
-  gold: 1, grain: .8, shadowJitter: 1, amb: .6,
+  gold: 1, grain: .35, shadowJitter: 1, amb: .6,
   lights: [
     hall.lights[0], hall.lights[2], hall.lights[3],                                     /* the far glow, the vault's haze, the fill from behind */
     { p: [2.27, 1.4, 5.62], c: [1, .68, .3], k: 1.2, r: .6, warm: .02, shadow: 1 },       /* the clay lamp on its ledge, out of frame above */
@@ -45,12 +45,13 @@ export default {
         float nz = (fbm(m * 3. + 2., 4) - .5) * .12;
         float ring = smoothstep(-.03, -.008, sd) * (1. - smoothstep(.05, .3, sd + nz));
         ring *= mix(.25, 1., smoothstep(.2, -.02, m.y));
-        gStain = max(gStain, .85 * ring); gPolish = .5 * ring * smoothstep(.02, .06, sd);   /* the dull sheen out on the face, not on the lip */
+        gStain = max(gStain, max(.85 * ring, .95 * smoothstep(-.03, -.005, sd) * (1. - smoothstep(.0, .035, sd))));   /* the lip itself darkest: no pale rim */
+        gPolish = .5 * ring * smoothstep(.02, .06, sd);   /* the dull sheen out on the face, not on the lip */
         /* a row of cut strokes over it, V-cut */
         float k = floor((q.z + .125) / .05), sz = q.z + .125 - (k + .5) * .05 + (h2(vec2(k, 3.)) - .5) * .022;
         float tilt = (h2(vec2(k, 8.)) - .5) * .5, yc = .34 + .018 * (h2(vec2(k, 1.)) - .5);
         float side = sz + (q.y - yc) * tilt, ln = length(vec2(side, max(abs(q.y - yc) - .016 - .016 * h2(vec2(k, 4.)), 0.)));
-        if (k >= 0. && k < 5.) { d.x += .01 * max(0., 1. - ln / (side > 0. ? .011 : .004)); if (ln < .005) gTint *= .6; }
+        if (k >= 0. && k < 5.) { d.x += .01 * max(0., 1. - ln / (side > 0. ? .011 : .004)); gTint *= mix(1., .4, smoothstep(.009, .002, ln)); }
       }
       d = A(d, vec4(min(-sd, .45 - q.x), M_CUT_SMALL, NOUV));
       if (q.x > -.015 && sd < .01) { gTint = vec3(mix(.55, .3, smoothstep(.0, .3, q.x))); d.yzw = vec3(M_ROCK, NOUV); }   /* inside: rough, a hand's depth of dark */
