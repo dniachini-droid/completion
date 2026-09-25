@@ -14,6 +14,8 @@ import b1CUrl from '../../paint/places/img/pt-b-1.C.webp?url';
 import b1CMeta from '../../paint/places/img/pt-b-1.C.json';
 import b2AUrl from '../../paint/places/img/pt-b-2.A.webp?url';
 import b2AMeta from '../../paint/places/img/pt-b-2.A.json';
+import w2SmoothUrl from '../../paint/places/img/pt-pl-w2-smooth-place.webp?url';
+import w2SmoothMeta from '../../paint/places/img/pt-pl-w2-smooth-place.json';
 
 export interface Painting { url: string; meta: unknown; focus: number; }
 export const paintings: Record<string, Painting> = {
@@ -24,6 +26,7 @@ export const paintings: Record<string, Painting> = {
   'pt-b-1.B': { url: b1BUrl, meta: b1BMeta, focus: .49 },
   'pt-b-1.C': { url: b1CUrl, meta: b1CMeta, focus: .6 },
   'pt-b-2.A': { url: b2AUrl, meta: b2AMeta, focus: .48 },
+  'pt-pl-w2-smooth-place': { url: w2SmoothUrl, meta: w2SmoothMeta, focus: .48 },
 };
 
 /** Frame a painting so its light sits in the open gap between the words (the morning mock-up lifts the lamp the same way).
