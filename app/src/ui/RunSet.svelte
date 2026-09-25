@@ -8,6 +8,7 @@
   import { platform } from '../platform';
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
+  import { back } from './back.svelte';
   import './scene/runset.css';
 
   let { go, jobId }: { go: Go; jobId: string } = $props();
@@ -146,7 +147,7 @@
   <div class="ui">
     <header class="top col">
       <div class="topbar rise">
-        <button class="home" onclick={() => go('today')}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{t('delve.today')}</span></button>
+        <button class="home" onclick={() => go('back')}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{back.label}</span></button>
         <span></span><span></span>
       </div>
       <section class="job rise d1">
@@ -208,7 +209,8 @@
               </g>
             {/if}
             <circle cx={x0} cy={y} r="3.4" fill="#ffd27a" style="filter:drop-shadow(0 0 5px #f2c170)" />
-            <text x={x0 - 5} y={y + 25} fill="#a3a6cc">{t('set.here')}</text>
+            <!-- "here" steps aside when the next place is right beside it, so the two words never print over each other (review 2) -->
+            {#if xg === null || !place || xg - x0 > 90}<text x={x0 - 5} y={y + 25} fill="#a3a6cc">{t('set.here')}</text>{/if}
             {#if side}
               <g opacity=".85">
                 <path d="M{side.xb.toFixed(1)} {y} C{(side.xb + side.dir * 3).toFixed(1)} {y - 9} {(side.xb + side.dir * 9).toFixed(1)} {y - 15} {(side.cx - side.dir * 5).toFixed(1)} {side.cy + 2}" fill="none" stroke="#c9c5ff" stroke-width="1" stroke-dasharray="2 2.5" />

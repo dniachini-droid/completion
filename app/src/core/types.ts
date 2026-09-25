@@ -62,7 +62,11 @@ export type FactBody =
   | { type: 'setAside'; job: string }
   /** Chosen as the next job after the day's work is done (a tap on it, D-077). */
   | { type: 'picked'; job: string }
+  /** A job set aside and then put back on today's list (an undo of "Not today", Dan's own). */
+  | { type: 'putBack'; job: string }
   | { type: 'jobBegun'; job: string; from: 'app' | 'record' }
+  /** Begin taken back ("I haven't started"): the job is no longer under way, as if Begin had never been tapped. */
+  | { type: 'beginUndone'; job: string }
   | { type: 'delveStarted'; job: string; minutes: number; count: number }
   | { type: 'breatherSkipped' }
   | { type: 'delveHeld' }

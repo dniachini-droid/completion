@@ -2,7 +2,7 @@
 
 > **SEALED (D-015).** Quotes the painting brief. Dan must not read this.
 
-Same bar as the kit rounds (`paint/places/CRITIQUE-W2-2.md`): **8/10 or better goes into the app; below 8 stays out and keeps its stand-in.** 8 means Dan, who approved the hall, would accept it beside the hall as the same painter's work: beautiful, with one clear thing to look at, and it would not embarrass the game. The words sit in the top 22 % and the button in the lower third, so those bands stay calm. This place is on its first round under the new pipeline (D-084), so the round-3 "7 goes in" rule does not apply.
+Same bar as the kit rounds (`paint/places/CRITIQUE-W2-2.md`): **8/10 or better goes into the app; below 8 stays out and keeps its stand-in.** 8 means Dan, who approved the hall, would accept it beside the hall as the same painter's work: beautiful, with one clear thing to look at, and it would not embarrass the game. The words sit in the top 22 % and the button in the lower third, so those bands stay calm. This place is on its first round under the new pipeline (D-090), so the round-3 "7 goes in" rule does not apply.
 
 Reviewed: the Blender render at full size (1320×2868, `blender/img/`), side by side with the kit's round-2 version (scored 5), the brighter grade, `hall-ref.jpg` and the accepted `pt-b-1.C` (her camp, the same room); crops of the mug, the slate and box, and the wall; the scene source `blender/pt-pl-w2-box-by-the-cot.py`. Point colours are 12 px means, "brightest" the brightest 24 px block; u/v are fractions of the frame from top left. The automatic checks pass (words band 19, button band 34 / .47, warm 0 %).
 

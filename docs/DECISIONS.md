@@ -891,19 +891,82 @@
 - **Why it's safe (rule 10):** once a night, tied to a real behaviour, and small (about a tenth of a place's distance).
 - **Reversible:** Yes (one constant).
 
-## D-084 — Another way to make the paintings: Blender, with Meshy for objects (Dan; numbered D-076 on its own branch)
+## D-084 — The story's lines rewritten by an outside writer, kept sealed (Dan's call)
+- **Date:** 2026-09-25
+- **Numbering:** made on a parallel branch as D-080; renumbered at the merge (commit messages on that branch say D-080/D-081 for D-084/D-085).
+- **Context:** Dan wanted the story's on-screen lines rewritten by ChatGPT rather than Claude, without reading them himself. Claude put all 537 story lines from `app/src/content/sealed/` into one file with a brief (keep every fact, clue, mark shape and bracket; add no new facts; British English; return the whole file; show Dan only one week-1 line, before and after). Dan passed it to ChatGPT and back unread. His authorisation is on record in the session.
+- **Decision:** ChatGPT's wording is in the app: 384 lines changed, 153 unchanged. It was checked by script before loading: every line back under its id, every number, capitalised word, carved-mark description and [bracket] unchanged, italics restored where the paste lost them. One fix by Claude: a line that first names a place had lost the place's name, so the name was put back. Typecheck clean, 102 tests pass (the continuity guard included).
+- **Note:** the rewrite came back slightly shorter overall. It reads cleaner, but it is not the fuller, more descriptive prose Dan asked for. Dan may send it back for a second, fuller round using the same method.
+- **Consequences:** the app's `content/sealed/` is now the latest wording. The sealed docs in `docs/narrative/sealed/` still hold the earlier wording (same facts and ids) until they are brought in step.
+- **Reversible:** Yes (git).
+
+## D-085 — The story's lines made fuller (round 3 by the outside writer); story screens scroll (Dan's call)
+- **Date:** 2026-09-25
+- **Context:** Dan wanted the story fuller and more engrossing (D-084 came back as a tidy-up). Round 2 was rejected by Claude's checks: ChatGPT had padded lines with 85 stock sentences used over 1,000 times, and removing them left almost nothing new. Round 3 went out as four smaller files, one fresh ChatGPT chat each, with repetition banned and the rejected sentences listed. Buttons and location labels were left as they were.
+- **Decision:** round 3 is in the app: 418 story lines, about 8,700 words → 27,500. Checked by script before loading: every line back under its id; every number, capitalised word, [bracket], carved-mark description, italic and quote kept; lines that must match still match; no sentence reused across lines (other than lines that were already identical); none of the rejected sentences present. Claude's fixes: one line had brief wording copied into it, and six teasers had added or implied a detail the story does not have (a pencil, another recess, a place, a cause). Those words were taken out. Story screens now scroll when their words don't fit (`.ui` scrolls; a screen that fits never moves), and the screen walk now fails if any text is off screen or under a button.
+- **Round 4 (the 77 big moments only):** Claude judged round 3's story moments too much like a survey ("you can see / compare…" about 75 times), and Dan agreed to one more pass. Round 4 is in: the surveyor words are gone, every fact, mark and quote is kept (checked). Claude's fixes: three end-of-week glimpses had the player walk into places not yet reached (the little door in week 3, the square gallery in week 5, the water in week 7). They were turned back into views from where the player stands (D-079's rule), and two small added details were removed.
+- **The words on screen:** at Dan's request they keep to the lower half of the screen, scroll there and fold away ("Hide the words" / "Read on"), so the painting stays seen (`ui/Words.svelte`, on arrivals and on a job's return).
+- **Consequences:** `docs/narrative/sealed/` still holds the earlier wording (same facts and ids); the app's `content/sealed/` is the latest. Typecheck clean, 102 tests pass; the screen walk passes at both phone sizes.
+- **Reversible:** Yes (git).
+
+- **At the merge with the review branch:** that branch had rewritten 20 story lines for the story's order and facts (its D-080/D-081). Those 20 keep that branch's wording, and the fact fix wins. They are listed for the next writing pass. The other 506 carry the rewritten wording. Arrivals keep the lower-half words panel Dan asked for.
+
+## D-086 — The story's voice (Dan's taste)
+- **Date:** 2026-09-25
+- **Context:** to take the story's text from good to brilliant, Claude proposed a defined voice, place-by-place writing by a sealed agent team, and blind judging by Dan. Dan chose from six published passages.
+- **Decision:** Dan loved Le Guin (*The Tombs of Atuan*), VanderMeer (*Annihilation*) and Macfarlane (*Underland*); he disliked McCarthy (*The Road*). The voice is written up in `narrative/VOICE.md` (spoiler-free), pending Dan's approval. Next: a pilot (the Lamp Hall and one camp) written by a sealed agent team on Fable and on Opus to VOICE.md, judged blind by Dan against ChatGPT's version.
+- **Reversible:** Yes.
+
+## D-087 — The writer stays ChatGPT; Claude edits and checks (Dan's blind choice)
+- **Date:** 2026-09-25
+- **Context:** the pilot (D-086): the Lamp Hall arrival and the first camp, written by a sealed agent team on Fable and on Opus to VOICE.md (writer → critic → revision → fact check), set blind beside ChatGPT's round-4 text.
+- **Decision:** Dan picked ChatGPT's version for both, and found all three "very high quality". So there is no agent-team rewrite. ChatGPT stays the writer, with VOICE.md in its brief. Claude edits and checks: facts, clues, continuity, filler and repetition, markup. The 20 lines re-fixed on the review branch go to ChatGPT as round 5.
+- **Round 5 (in):** 19 of the 20 rewritten (the end-of-week question stays identical to its twin line), after one resend (the first return was unchanged). Claude's fixes: ChatGPT had given the player a lamp of their own ("your lamp", "bring the lamp close") in five lines. That breaks the correction these lines exist for ("the lamp" is always the lamp on the ledge), so it was changed to "the light" or removed. Paragraph breaks were joined, since each line shows as one block. 119 tests pass.
+- **Learned:** the pilot's writers worked from the current wording, so the arrival versions came out close together. Any later writing test gives writers the facts of a place, not its old text.
+- **Reversible:** Yes.
+
+## D-088 — Review 2: back goes back, taps can be undone, the planner's rough edges (Claude's call, Dan asked for the fixes)
+- **Date:** 2026-09-25
+- **Context:** an independent click-through of the whole app at phone size (Dan asked: pages, the planner, back, a story, editing the day). Checked again on `main` after the story-words merge: every finding still stood except the early Goodnight (fixed by D-083). Dan: fix them.
+- **Decision:**
+  - **Back:** the arrow at the top left returns to the screen it came from and says its name (Week → Map → back is the Week; a record opened from a place goes back to the place). Today and the day's own moments (a delve, a place reached, the stair, the morning) start the trail again. The phone's own back works too: the browser's back on the web link, a swipe in from the left edge in the app. The map's closer view has one way out (See the whole region), not three. This supersedes REVIEW_1's "left as is" on nav-7/8/10.
+  - **Undo:** Not today says "Taken off today. Put it back", and the Week shows the job as "not today" with "Back on today". A Begin on a job done away from the phone can be taken back ("I haven't started"). New facts `putBack` and `beginUndone`, appended like every other (the log is never edited). **Done is not undoable:** it plays story (steps, places, Keys) that cannot be taken back without a retcon (rule 5).
+  - **Planner:** a set time opens the phone's own time wheel (it took 36 taps to reach 9:00); the edit panel's button says Save, not Done; next week says "no plan for next week yet"; days already gone are shown only for what was done; What repeats lost its "Plan my week" link (it planned nothing); editing a repeat is titled "Change it"; Plan my week / Not now fit a small phone. After the day's work, a job still to come at a set time is named ("Still to come: …").
+  - **Satchel:** a tap on a line offers "Let it go"; "Today" became "Put on today" (two different Todays were on one screen).
+  - **Delve:** Step away is now **Pause**, and a paused delve says Paused (not "A breather", the name of the rest between delves). Supersedes the wording in D-036.
+  - **Story choices:** at the first hall the two "look at" choices opened each other's page (the choice order now follows the records'); where a place has one page, only the choice that opens it is shown, so no option opens a page about something else. No story words changed.
+  - **The screen never slides (Dan, with a picture):** on Today, Map + Records + the rehearsal badge made the top bar about 40 points wider than the phone, so the whole screen could be dragged sideways. The badge now takes its own line when there is no room, and every scrolling part is locked sideways and never bounces: only text longer than its space scrolls, up and down. The screen walk fails if anything on any screen can move sideways.
+  - **The week folds (Dan):** a tap on a day's name folds its jobs into one line ("13 done · 2 to do"); days already gone start folded.
+  - **"It's Friday 10 pm and the app says Saturday" (Dan):** a rehearsal was on, and its clock runs 60 times faster, so an evening passes in minutes. The real clock's day still ends at 4 am (D-043). A "Rehearsal ×60" tag now shows on every screen while one is on; it goes when Dan is happy with the app (Dan).
+  - **Small fixes:** on the delve set-up, "here" steps aside when the next place is right beside it (the two labels printed over each other).
+- **Consequences:** 122 rule tests (3 new); the screen walk checks the back trail at both sizes (the arrow's words, Map → Week, the phone's own back). Spoiler-free list: `product/REVIEW_2.md`.
+- **Reversible:** Yes.
+
+## D-089 — No Low / Normal / High on Today, and no "Already done" (Dan's call)
+- **Date:** 2026-09-25
+- **Context:** during the review-2 fixes. Dan: the size buttons "aren't really useful… just extra buttons… I set my days and run them"; and "Already done" is "a tempting way for me to cheat the system and move forward without using the app".
+- **Decision:** Today loses the three size buttons and their note, and the "Already done" link. Every day is Normal; nothing is suggested from bedtime or from days away any more (the plan is the day). A job done away from the phone is begun first (Begin), then Done.
+- **Consequences:**
+  - The central test's sharpest line (MVP → "started from the app or recorded afterwards") loses its "afterwards" half: a job done without the app can no longer be recorded, so "didn't do it" and "did it without the app" look the same. Told to Dan.
+  - The morning deep push (D-054) was offered only on a High day, so it no longer appears. **Dan: leave it out** ("I just set my jobs when I wake up or during the week"). This reverses D-054's "the morning deep push stays".
+  - Going to bed late, or coming back after days away, no longer makes the next day lighter. The head start for a kept bedtime (D-083) is unchanged.
+  - Supersedes the capacity-on-Today parts of CORE_LOOPS (morning start), QUEST_SYSTEM and D-043's "lowering capacity can complete the day". The rules keep capacity inside (an old save's choice, the deep push) so this is one line to undo.
+- **Reversible:** Yes: the buttons and the link are one screen's markup.
+
+## D-090 — Another way to make the paintings: Blender, with Meshy for objects (Dan; numbered D-076 on its own branch, then D-084)
 - **Date:** 2026-09-25
 - **Context:** Even with D-075 (reused rooms, parallel painters), most paintings land at 4–7; 7 of 48 are in the game. Dan: "if it's going to be this hard to make images maybe we should look for another way"; the pictures in development are finished first. Dan offered Meshy (AI text-to-3D models).
 - **Decision (Dan; the method Claude's):** after the current round, test a new pipeline on one of the paintings that keep failing: rooms built and lit by code in **Blender** (a real renderer: soft bounce light, true materials), small objects made by **Meshy** through its API (Claude calls it; Dan never sees the object list, D-015). This relaxes "paintings stay code-painted" (D-056) for props only. The bar stays 8 (Dan). If the test does not reach 8, AI image generation or a human artist are the next options, Dan's call.
 - **Setup (Dan):** a Meshy API key in the environment as `MESHY_API_KEY`, and `api.meshy.ai` allowed in network access; takes effect in a new session. Blender installs from the system packages.
 - **Reversible:** Yes.
 
-## D-085 — The paintings' bar is Dan's eye, not 8/10 (Dan; numbered D-077 on its own branch)
+## D-091 — The paintings' bar is Dan's eye, not 8/10 (Dan; numbered D-077 on its own branch, then D-085)
 - **Date:** 2026-09-25
-- **Context:** The critic's 8/10 bar (D-067, D-072) kept most paintings out after many rounds: 7 of 48 in the game; each place that passed took 2–5 rounds, the hardest two still out after 7, and the Blender test (D-084) about 2½ hours on one picture. Dan asked whether we were spending too much time per painting. He was shown, blind, the three invented sample places (not in the story, so no spoilers) at two levels: first tries made in minutes (the critic scored them 4, 5 and 6) and one-revision versions (about 6 minutes each), beside the approved hall.
+- **Context:** The critic's 8/10 bar (D-067, D-072) kept most paintings out after many rounds: 7 of 48 in the game; each place that passed took 2–5 rounds, the hardest two still out after 7, and the Blender test (D-090) about 2½ hours on one picture. Dan asked whether we were spending too much time per painting. He was shown, blind, the three invented sample places (not in the story, so no spoilers) at two levels: first tries made in minutes (the critic scored them 4, 5 and 6) and one-revision versions (about 6 minutes each), beside the approved hall.
 - **Decision (Dan):** he liked five of the six, including all three first tries (the 4/10 one too); he turned down one revised version. So **a painting goes into the game after its first attempt**, if it passes the automatic checks and the thing to look at reads as what it is (a clue must never read wrongly, rule 6). A second attempt only for a painting that fails either of those, or that Dan dislikes when he meets it in the game. The critic stays as a quick check for wrong readings, not a score to reach.
 - **Alternatives:** keep 8/10 (hours per place; most places on stand-ins); a middle bar of one revision each (Dan liked the first tries as much).
-- **Consequences:** the places now on stand-ins whose pictures already exist (scored 4–7) can go in once each is checked for wrong readings; new places get one attempt. The Blender test (D-084) is no longer needed to reach the bar; the kit, which paints a place in under a minute, is enough. Blender work is paused, kept on `claude/blender-meshy-round-2-1du0fv`, and can come back for a picture Dan dislikes.
+- **Consequences:** the places now on stand-ins whose pictures already exist (scored 4–7) can go in once each is checked for wrong readings; new places get one attempt. The Blender test (D-090) is no longer needed to reach the bar; the kit, which paints a place in under a minute, is enough. Blender work is paused, kept on `claude/blender-meshy-round-2-1du0fv`, and can come back for a picture Dan dislikes.
 - **Outcome (2026-09-25):** every place painted once (four painters in parallel); a critic checked wrong readings only, and a failure got one second attempt. 45 passed; Dan then asked for one polish pass, which changed little (Claude recommended stopping it; Dan agreed) but brought in two more. **47 of 48 in the game**; `pt-b-6.A` stays on its stand-in.
 - **Reversible:** Yes: Dan can raise the bar or send any painting back.
+
 

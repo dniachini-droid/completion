@@ -7,10 +7,10 @@
   import { t } from '../content/copy/en';
   import Scene from './Scene.svelte';
   import Glyph from './Glyph.svelte';
-  import type { Back, Go } from './nav';
+  import type { Go } from './nav';
+  import { back } from './back.svelte';
 
-  /* back: the screen that opened this record (an arrival, a delve's end), which the arrow returns to */
-  let { go, id, back = null }: { go: Go; id?: string; back?: Back | null } = $props();
+  let { go, id }: { go: Go; id?: string } = $props();
   const v = $derived(game.view);
   const s = content.story;
   const list = $derived([...v.story.records].reverse().map(r => recordOf(s, r)).filter(r => !!r));
@@ -27,7 +27,7 @@
 <div class="ui">
   <header class="top col">
     <div class="topbar rise">
-      <button class="home" onclick={() => (open && back ? go(back.screen, back.arg) : open ? go('records') : go('today'))}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{open ? t('records.label') : t('delve.today')}</span></button>
+      <button class="home" onclick={() => go('back')}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{back.label}</span></button>
       <span></span>
       {#if !open}
         <div class="seg lv" role="group" aria-label={t('records.label')}>

@@ -1,4 +1,4 @@
-"""The Blender painting pipeline (D-084). SEALED folder (D-015): scene files quote the briefs.
+"""The Blender painting pipeline (D-090). SEALED folder (D-015): scene files quote the briefs.
 
 Coordinates are the kit's (x right, y up, z into the room, metres), so rooms and cameras carry over from
 app/paint/places/*.js; K() turns them into Blender's (x, y forward, z up). Cycles on the CPU with the
