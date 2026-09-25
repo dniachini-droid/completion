@@ -7,11 +7,11 @@ import type { Teaser } from '../../core/story-types';
 
 /** §11 order within each week. The app shows the first whose condition holds, newest-written first within the week. The b-wN.tz rows are ARR1/ARR2's (they are the same 12 as §11 lists). */
 export const teasers: Teaser[] = [
-  { id: "b-w1.tz1", w: 1, req: [], until: "b-1.A", line: "Under the iron cap on the hillside, a ladder goes eleven metres down a shaft, and the air that comes up is dry." },
-  { id: "b-w1.tz2", w: 1, req: ["b-1.A"], line: "In the Lamp Hall, the clay lamp on the ledge has three carved symbols on its base. When you hold your hand close to it, you can feel that it is warm." },
-  { id: "tz-w1-a", w: 1, req: ["pl-w1-pick-niche"], until: "seal-1-2", line: "In the Salt Gallery, low in the salt wall, is a closed niche as long as your arm. Along its lip is a row of small notches." },
-  { id: "tz-w1-b", w: 1, req: ["b-1.C"], until: "seal-2-1", line: "In the Survey Cut, the side chamber off the Lamp Hall where someone camped, a tin box lies on the cot. Across its lid is a row of small notches." },
-  { id: "tz-w1-c", w: 1, req: ["pl-w1-below-the-lamp"], until: "seal-1-3", line: "In the Lamp Hall, under the ledge where the lamp stands, is a small closed niche. The stone round its mouth is darker than the rest of the wall." },
+  { id: "b-w1.tz1", w: 1, req: [], until: "b-1.A", line: "Under the iron cap on the hillside is an old shaft. A ladder goes eleven metres down it, and the air that comes up is dry." },
+  { id: "b-w1.tz2", w: 1, req: ["b-1.A"], line: "In the Lamp Hall, the small clay lamp on the ledge has three carved symbols on its base, and it is warm." },
+  { id: "tz-w1-a", w: 1, req: ["pl-w1-pick-niche"], until: "seal-1-2", line: "In the Salt Gallery, low in the salt wall, is a closed niche as long as your arm, with a row of small, empty notches along its lip." },
+  { id: "tz-w1-b", w: 1, req: ["b-1.C"], until: "seal-2-1", line: "In the Survey Cut, the side chamber where someone camped, a tin box lies on the cot with a row of small notches across its lid." },
+  { id: "tz-w1-c", w: 1, req: ["pl-w1-below-the-lamp"], until: "seal-1-3", line: "In the Lamp Hall, under the ledge where the lamp stands, is a small closed niche, and the stone round its mouth is darker than the rest." },
   { id: "b-w2.tz1", w: 2, req: [], until: "b-2.B", line: "On the shelf in her camp lies a rod made of stone. One edge has been worked astonishingly fine, narrower than the edge of a knife. When you compare the rod’s blunt body with that thin side, the difference is severe: most of it is solid weight, one edge reduced to precision." },
   { id: "b-w2.tz2", w: 2, req: ["b-2.B"], until: "b-3.A", line: "The stone rod rests in your hand, its worked edge turned towards the lintel. On that lintel is a blank exactly the width of the rod’s edge. Holding one in front of the other makes the correspondence hard to ignore: narrow edge in your hand, narrow empty space in the stone." },
   { id: "tz-w2-a", w: 2, req: ["pl-w2-above-the-ring"], until: "seal-2-3", line: "Above the lone ring, a crack runs back into the salt. Far inside it lies something pale, too deep in the split to make out as more than a light shape. The ring remains below, complete and near; the pale thing sits beyond easy reach in the darkness of the crack." },
