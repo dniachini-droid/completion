@@ -25,6 +25,9 @@ const p = (x: string): Token => ({ p: x });
 const pic = (x: string): Token => ({ pic: x });
 const HIS: Token = { hand: 'his' };
 const HERS: Token = { hand: 'hers' };
+/** The Surveyor's own hook (V4), and a maker's hook (the Reading Room's tablet, B0): neither the tally's nor hers. */
+const SURVEYOR: Token = { hand: 'surveyor' };
+const MAKER: Token = { hand: 'maker' };
 /** His own name-ring, KEEP-ONE: readable once KEEP and ONE are held. */
 const KEEP_ONE: Token = { ring: 'keep-one', s: ['mk-keep', 'mk-one'] };
 /** The Salt-Cutter's wife's ring. NOTE: `s` here is the sign that makes the ring readable (NAME, week 30), not signs inside it. */
@@ -367,6 +370,237 @@ export const records: RecordFragment[] = [
       [HIS],
     ],
     full: "Once, the second gave me [a bag]: the twelve's and the child's, thirteen days. The door was shut; the day came not. I kept it.",
+  },
+
+  // ——— Week 8 (ARRIVALS_REGION2 week 8; LIVES §2, §5, §12) ———
+  {
+    // NOTE: V4 is in the Surveyor's own hand: no formula, his own hook in the corner (C-40). LOUD stays a glyph until month 8.
+    id: 'rec-v4', life: 'V', kind: 'cut', where: 'the near lip of the channel that feeds the Water, cut low', w: 8, firstShown: ['b-8.2'],
+    cut: [
+      [s('water', 'The water'), pic('the channel'), s('move', 'moved'), s('not', 'not'), p(';'), s('here', 'here'), p('.')],
+      [pic('mules'), s('go', 'went'), s('deep', 'deep'), s('not', 'not'), p('.')],
+      [s('day', 'Day'), s('three', 'three'), p('.')],
+      [s('person', 'This'), s('one', 'one'), s('here', 'here'), s('count', 'counted'), pic('paces'), s('deep', 'deep'), p(':'), s('number', 'two hundred and ten'), p('.')],
+      [s('voice', 'The voice'), s('of', 'of'), s('one', 'the one'), p(':')],
+      [s('make', 'cut'), s('loud', 'loud'), s('once', 'once'), p(','), s('toward', 'expected'), p(';')],
+      [s('make', 'cut'), s('loud', 'loud'), s('again', 'again'), p(':'), s('good', 'good'), s('not', 'not'), p('.')],
+      [s('ask', 'He asked'), p(':'), s('make', 'cut'), s('not', 'not'), p('.')],
+      [SURVEYOR],
+    ],
+    full: 'The water in the channel: moved not. Still, as a floor. The [mules] went not in. Day three. This one counted [paces] down: two hundred and ten. His voice: after a loud cut, expected; the next loud cut, worse. He asked: cut not.',
+  },
+  {
+    id: 'rec-l9', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 8, firstShown: ['b-8.3'],
+    paper: [
+      "Day 26. Counting. The salt tally gives its teller's count, and beside it, cut smaller, another count. Where he says \"two hands\", the small strokes beside it say \"eight and two\". So either whoever told the salt tally learned to count in eights like the Tenant, or whoever cut his words into the salt isn't him. I know which I'd bet on, and I don't know why I mind.",
+    ],
+  },
+  {
+    // NOTE: E1 is seen at b-8.C (the book lying open below, unread) and read at b-10.2 at the ledge.
+    id: 'rec-e1', life: 'E', kind: 'paper', where: 'the log on the ledge in the blast room', w: 10, firstShown: ['b-10.2'],
+    paper: [
+      'Log. 14th. Broke into a chamber at 61 yards. Not ours. Dry, cut true, older than the hill by the look. A tall man with a lamp asked what I was cutting. Told him a railway. He asked which way it went. Told him through. He said: everything does, here. Then he asked what the sky had sounded like the day we broke through. Told him: like a sky.',
+    ],
+  },
+
+  // ——— Week 9 ———
+  {
+    // NOTE: B0, a lesson-tablet in a maker's hand: the same lesson as the wall by the lamp (C-43).
+    id: 'rec-b0', life: 'B', kind: 'cut', where: 'the Reading Room, the nearest tablet', w: 9, firstShown: ['b-9.A'],
+    cut: [
+      [pic('a flame'), s('fire', 'fire')],
+      [pic('a lamp'), s('lamp', 'lamp')],
+      [s('fire', 'fire'), s('give', 'lit')],
+      [MAKER],
+    ],
+    full: 'Fire. Lamp. Fire lit.',
+  },
+  {
+    // NOTE: the Reading Room's lintel, KEEP VOICE NOT (C-42): "[ ] [ ] [ ]" in week 8, "[ ] [ ] not" from week 9, "[ ] voice not" from week 11; KEEP in month 6.
+    id: 'rec-lintel', life: 'B', kind: 'cut', where: 'the lintel over the Reading Room’s inner door', w: 9, firstShown: ['b-9.A', 'seal-9-4'],
+    cut: [[s('keep', 'Keep'), s('voice', 'voice'), s('not', 'not'), p('.')]],
+    full: 'Keep voice-not.',
+  },
+  {
+    id: 'rec-l10', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 9, firstShown: ['b-9.1'],
+    paper: [
+      'Day 28. The report on the square wall (the surveyor\'s, I think) has a little cross after "held us", and so does the salt tally after "held me". I think it\'s emphasis. He *really* held them. That\'s the kind of thing you\'d want to underline.',
+    ],
+  },
+  {
+    id: 'rec-s7', life: 'S', kind: 'cut', where: 'the Salt Gallery, the tally past the sheet dated Day 9', w: 9, firstShown: ['b-9.3'],
+    cut: [
+      head('one'),
+      [s('me', 'I'), pic('an old man'), s('open', 'opened'), pic('the crack'), s('again', 'again'), p(','), s('lamp', 'lamp'), s('one', 'one'), p('.')],
+      [s('one', 'He'), s('here', 'here'), s('again', 'again'), p(';')],
+      [s('one', 'he'), s('keep', 'kept'), s('lamp', 'the lamp'), s('of', 'of'), s('me', 'me'), p(';')],
+      [s('lamp', 'the lamp'), s('fire', 'fire'), s('give', 'lit'), s('once', 'once'), s('here', 'here'), p(';')],
+      [s('lamp', 'the lamp'), s('make', 'made'), s('again', 'again'), p('.')],
+      [s('me', 'I'), s('voice', 'said'), s('give', 'gave'), s('day', 'days'), s('all', 'all'), p(';')],
+      [s('one', 'he'), s('make', 'cut'), s('mark', 'marks'), p('.')],
+      [s('ask', 'I asked'), s('question', 'why'), p('.')],
+      [s('voice', 'He said'), p(':'), s('toward', 'for'), s('one', 'the one who'), s('again', 'comes again'), p('.')],
+      [s('ask', 'I asked'), p(':'), s('person', 'person'), s('question', 'who?')],
+      [s('voice', 'He said'), p(':'), s('see', 'seen'), s('not', 'not'), p('.')],
+      tail('one', true),
+    ],
+    full: 'Once, the first. Old, I opened the crack again, with a new lamp. He was there; he had kept my lamp; it was lit beside him, made new. I said all my days; he cut them. Why? For the one who comes again. Who? Not yet seen.',
+  },
+  {
+    // NOTE: X-binder-child: a makers' lesson for a child; the answer is in a smaller, sharper cut under it (NICHES 8.5, moved to week 9 row 2).
+    id: 'rec-x-binder-child', life: 'B', kind: 'cut', where: 'the Reading Room, a small tablet on a low bench', w: 9, firstShown: ['b-9.C'],
+    cut: [
+      [pic('a flame'), s('fire', 'fire')],
+      [s('question', 'why?')],
+      [s('deep', 'deep'), p(';'), s('fire', 'fire'), s('not', 'not'), p('.')],
+    ],
+    full: 'Fire. Why? Deep; fire not: because it is dark.',
+  },
+
+  // ——— Week 10 ———
+  {
+    id: 'rec-v5', life: 'V', kind: 'cut', where: 'the standing stone before the fall, at the square gallery’s deep end', w: 10, firstShown: ['b-10.B'],
+    cut: [
+      head('two'),
+      [s('mark', 'Marks'), s('toward', 'for'), OVERSEER, p('.')],
+      [s('voice', 'His voice'), s('of', 'of'), s('one', 'the one'), p(':'), s('see', 'seen'), p('.')],
+      [s('path', 'The way'), s('deep', 'deep'), p(':'), s('number', 'thirty'), pic('paces'), s('toward', 'to'), s('stone', 'stone'), s('all', 'fallen'), p('.')],
+      [s('make', 'Cut'), s('loud', 'loud'), s('one', 'once'), p(':'), s('open', 'open'), p('.')],
+      [s('one', 'He'), s('ask', 'asked'), p(':'), s('keep', 'keep'), p('.')],
+      [s('one', 'This one'), s('keep', 'kept'), s('day', 'days'), s('number', 'nine'), p('.')],
+      [s('path', 'The way'), s('keep', 'keeps'), s('not', 'not'), p('.')],
+      tail('two', false),
+    ],
+    full: 'Once, the second. Marks for [ring]. His warning: seen. The lower way: thirty paces past a fall. One loud cut opens it. He asked: keep. This one kept nine days. The road keeps not.',
+  },
+  {
+    id: 'rec-l11', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 10, firstShown: ['b-10.3'],
+    paper: [
+      'Day 31. He speaks English like a railway timetable that nobody has updated since the railway. I asked where he learned it. He said: from the fourth. I have started to think of the Engineer as a colleague. He\'d have hated my handwriting.',
+    ],
+  },
+
+  // ——— Week 11 ———
+  {
+    // NOTE: C1 is her margin, in ink, on the page the book lies open at (the app shows the page, in English).
+    id: 'rec-c1', life: 'C', kind: 'paper', where: 'the bound book on the ledge in the blast room, its open page', w: 11, firstShown: ['b-11.A'],
+    paper: [
+      'In the margin: these are holy words, set down by the surveyor\'s boy without knowing, and I have put gold on them. The little cross comes after the word it undoes. Eleven times now, and never before. The fork set over a word is a rank, as of angels; I have put more gold on those. The Guest, I think, was an angel who closed the hill to keep men out. The surveyor was proud. Gold leaf: two leaves.',
+    ],
+  },
+  {
+    // NOTE: K3, KEEP ONCE and the hand-mark: "[ ] once" until KEEP (week 22), then "Kept."
+    id: 'rec-k3', life: 'K', kind: 'cut', where: 'the lip of the ledge beside the book, in the blast room', w: 11, firstShown: ['b-11.A', 'b-12.3'],
+    cut: [[s('keep', 'Kept'), s('once', 'once'), p('.'), HIS]],
+    full: 'Kept.',
+  },
+  {
+    id: 'rec-e2', life: 'E', kind: 'paper', where: 'the log on the ledge in the blast room', w: 11, firstShown: ['b-11.2'],
+    paper: [
+      'Log. 22nd. Cut the moving-mark loud with the powder-charge, twelve pounds, and the whole gallery came down as one, which no charge does. The Inspector had shown me the loud-mark on a lintel and said it was a warning. The book has it in gold as a rank. Took it for a rating. Watch stopped at the blast: 4.10.',
+    ],
+  },
+  {
+    id: 'rec-l12', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 11, firstShown: ['b-11.3'],
+    paper: [
+      'Day 33. The book was here, on the ledge in the blast room, open. She never came. She read a copy of a copy of a report, in a copying house, and put gold on the marks, and thought the cross was an angel\'s grammar, and he counts her anyway. Third reader, who never came. She got a number for two leaves of gold and a wrong guess about angels. I want to know what I get.',
+    ],
+  },
+  {
+    id: 'rec-x-powder-man', life: 'X', kind: 'paper', where: 'a crack in the blast room, a scrap of the company’s paper', w: 11, firstShown: ['b-11.C'],
+    paper: ['Not going back down for any wage. The sky made a noise. Tell him he can keep the book.'],
+  },
+
+  // ——— Week 12 ———
+  {
+    id: 'rec-e3', life: 'E', kind: 'paper', where: 'the log on the ledge in the blast room', w: 12, firstShown: ['b-12.A'],
+    paper: [
+      'Log. 25th. Well in the village stood still three days; the keeper came up to complain. Compasses swung to the hill. A sound in the sky at dusk like a door in a very large house. The men have gone. The company has written. I am taking my meals down.',
+    ],
+  },
+  {
+    id: 'rec-x-well-keeper', life: 'X', kind: 'paper', where: 'the blast room, inside the lid of an iron-bound bucket', w: 12, firstShown: ['b-12.A'],
+    paper: ['Three days still. Not low. Still. Then it came back and was cold.'],
+  },
+  {
+    id: 'rec-l13', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 12, firstShown: ['b-12.2'],
+    paper: [
+      'Day 35. Note. Loud use → something. Every single time. The surveyor: water stood still. The engineer: the well, the compasses, the sound. The makers\' own record, I think, though I\'ve only got a fifth of it: "the rock went still." I\'ve made a table. I hate the table.',
+    ],
+  },
+  {
+    id: 'rec-s8', life: 'S', kind: 'cut', where: 'the Salt Gallery, the end of the tally', w: 12, firstShown: ['b-12.B'],
+    cut: [
+      head('one'),
+      [s('sleep', 'Sleep'), s('not', 'not'), p(','), s('day', 'day'), s('not', 'not'), p('.')],
+      [s('count', 'Count'), s('hand-sign', 'hand'), s('of', 'of'), s('one', 'one'), p(':'), s('four', 'four'), p(','), s('four', 'four'), p(','), pic('long'), p('.')],
+      // NOTE: beside HAND HAND the transcriber's numeral is cut (8+2), as in S1 and S3.
+      [s('count', 'Count'), s('lamp', 'lamp'), s('mark', 'marks'), p(':'), s('hand-sign', 'hand'), p(','), s('hand-sign', 'hand'), p(','), s('all', 'more'), p('.')],
+      [s('count', 'Count'), s('child', 'child'), s('of', 'of'), s('child', 'child'), p(':'), s('three', 'three'), p('.')],
+      [s('count', 'Count'), s('not', 'not'), s('day', 'days'), s('all', 'all'), s('deep', 'deep'), p(':'), s('day', 'day'), s('one', 'one'), p('.')],
+      [s('day', 'Days'), s('all', 'all'), s('again', 'since'), p(':'), s('all', 'many'), p(';'), s('good', 'good'), p('.')],
+      [s('see', 'Seen'), s('all', 'all'), p('.')],
+      tail('one', true),
+    ],
+    full: 'Once, the first. Some nights, no sleep: I count his fingers, four and four, long. I count the lamp-marks: a hand, a hand, more. I count my child\'s children: three. I count not the days in the hill: one day. Days since: many. Good. All I saw.',
+  },
+
+  // ——— Week 13 ———
+  {
+    // NOTE: V6 is his own statement at the shut door (K-type): no closing line. MAKE, LOUD, AGAIN and SHUT unheld in week 13.
+    id: 'rec-v6', life: 'V', kind: 'cut', where: 'the shut door at the end of the side gallery', w: 13, firstShown: ['b-13.A'],
+    cut: [
+      [s('once', 'Once'), p(','), s('two', 'the second'), p(','), s('path', 'in this side way'), s('here', 'here'), p(':')],
+      [s('make', 'cut'), s('move', 'moving'), s('stone', 'stone'), s('loud', 'loud'), s('again', 'again'), p('.')],
+      [s('water', 'The water'), s('move', 'moved'), s('not', 'not'), s('again', 'again'), p(';'), s('move', 'moves'), s('not', 'not'), p('.')],
+      [s('me', 'I'), s('shut', 'shut'), s('door', 'the door'), p('.')],
+      [s('one', 'He'), s('long-sleep', 'long-slept'), s('not', 'not'), p(','), s('me', 'when I'), s('shut', 'shut'), s('once', 'it'), p('.')],
+      [s('me', 'I'), s('open', 'opened'), s('not', 'not'), s('again', 'again'), p('.')],
+      [HIS],
+    ],
+    full: 'Once, the second, in this side way, cut the moving-word loud again. The water moved not, again; it moves not. I shut the door. He long-slept not when I shut it. I have not opened it.',
+  },
+  {
+    id: 'rec-l14', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 13, firstShown: ['b-13.2'],
+    paper: [
+      'Day 38. Asked him about the second reader. He answered the way he gives a measurement: eleven paces by seven, and the rest. It\'s cut on the door in the side gallery, so I don\'t need to write it. I\'ve moved the cot to the wall furthest from the stair.',
+    ],
+  },
+  {
+    id: 'tl-ledger', life: 'X', kind: 'cut', where: 'the side gallery, a recess, beside a wax tablet of days', w: 13, firstShown: ['b-13.3'],
+    cut: [
+      [s('voice', 'Told'), p(':'), s('child', 'the child'), s('count', 'counted'), s('day', 'the days'), p(';'), s('one', 'he'), s('again', 'came again'), s('not', 'not'), p('.')],
+      [HIS],
+    ],
+    full: 'Told: the child counted the days; he came again not.',
+  },
+  {
+    id: 'tl-one-stroke', life: 'X', kind: 'cut', where: 'the Reading Room, along the edge of the second bench', w: 13, firstShown: ['b-13.C'],
+    cut: [
+      [s('count', 'Count'), s('again', 'again'), s('not', 'not'), p(';'), s('one', 'one'), p('.')],
+      [HIS],
+    ],
+    full: 'Count again not; one.',
+  },
+
+  // ——— Week 14 ———
+  {
+    id: 'rec-e4', life: 'E', kind: 'paper', where: 'the log on the ledge in the blast room', w: 14, firstShown: ['b-14.2'],
+    paper: [
+      'Log. Cut the hold-mark on the roof above the props; it held. The Inspector says the mark is not "hold". Would not say what it is. Said: you will read it. A distinction for a man with no roof to lose.',
+    ],
+  },
+  {
+    id: 'rec-s9', life: 'S', kind: 'cut', where: 'the Salt Gallery, a deep niche in the salt', w: 14, firstShown: ['b-14.4'],
+    cut: [
+      head('one'),
+      [pic('lambs'), pic('spring'), p(';'), pic('salt'), pic('summer'), p(';')],
+      [pic('salt blocks'), s('go', 'go'), p('to'), pic('the valley'), p(','), s('four', 'four'), s('up', 'up'), p('on'), pic('a donkey'), p('.')],
+      [s('me', 'I'), s('up', 'up'), p('on'), pic('the hill'), p(':'), pic('salt'), s('here', 'here'), p('.')],
+      [s('me', 'I'), s('see', 'looked for'), s('one', 'one'), s('not', 'not'), p(';'), s('ask', 'asked'), s('not', 'not'), p('.')],
+      tail('one', true),
+    ],
+    full: 'Once, the first. [Lambs] in [spring]; [salt] in [summer]; [blocks] to [the valley], four up on [a donkey]. I was on the hill: the salt is here. I looked for nothing; asked not.',
   },
 
   // ——— The told lines (MVP §8.2), carried by finds ———
