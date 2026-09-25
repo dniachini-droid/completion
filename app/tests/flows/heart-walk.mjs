@@ -117,16 +117,44 @@ const doNext = async (name) => {
   else if (await has('Back to today')) { await tap('Back to today'); await page.clock.runFor(1500); }
 };
 
-/** The map: opens on the region at where Dan is; tap each light in turn; look closer; back out. */
+/** Where every light on the map sits (relative to the map, so a long close view may scroll its own field), the map's
+ *  size and place, the box's size, and the page's scroll: none may change when a light is picked (D-075). */
+const mapGeometry = () => page.evaluate(() => {
+  const svg = document.querySelector('.field svg').getBoundingClientRect(), field = document.querySelector('.field');
+  const r4 = r => [r.x, r.y, r.width, r.height];
+  return {
+    lights: [...document.querySelectorAll('circle.node')].map(n => { const r = n.getBoundingClientRect(); return [r.x - svg.x, r.y - svg.y, r.width, r.height]; }),
+    map: [svg.x, svg.y + field.scrollTop, svg.width, svg.height],
+    box: r4(document.querySelector('.box').getBoundingClientRect()),
+    page: [window.scrollX, window.scrollY, document.scrollingElement.scrollTop, document.querySelector('.ui').scrollTop],
+    clipped: (() => { const b = document.querySelector('.box'); return b.scrollHeight > b.clientHeight + 1; })(),
+  };
+});
+const still = async (before, what) => {
+  await page.waitForTimeout(800);   /* past the crosshair's glide, the words' rise and any scroll */
+  const after = await mapGeometry(), off = (a, b) => a.some((v, i) => Math.abs(v - b[i]) > 0.5);
+  if (after.lights.length !== before.lights.length || after.lights.some((l, i) => off(l, before.lights[i]))) errors.push(`map: a light moved (${what})`);
+  if (off(after.map, before.map)) errors.push(`map: the map moved or resized (${what})`);
+  if (off(after.box, before.box)) errors.push(`map: the box changed size (${what})`);
+  if (off(after.page, before.page)) errors.push(`map: the page scrolled (${what})`);
+  if (after.clipped) errors.push(`map: the box overflows (${what})`);
+};
+/** The map: opens on the region at where Dan is; every light tapped (only the crosshair and the words may move); look
+ *  closer; every light there tapped; back out. */
 const mapWalk = async (name) => {
   await tap('Map'); await page.waitForTimeout(2500); await shot(name + '-region', 3500);
+  let g = await mapGeometry();
   const n = await page.locator('circle.node').count();
-  for (let k = 0; k < n; k++) { await page.locator('circle.node').nth(k).click(); await shot(`${name}-tap-${k}`, 900); }
-  await page.locator('circle.node[data-kind="here"]').first().click();
-  if (await has('Look closer')) { await tap('Look closer'); await page.waitForTimeout(2500); await shot(name + '-close', 3500);
+  for (let k = 0; k < n; k++) { await page.locator('circle.node').nth(k).click(); await still(g, `${name} region light ${k}`); await shot(`${name}-tap-${k}`, 300); }
+  await page.locator('circle.node[data-kind="here"]').first().click(); await still(g, `${name} back to here`);
+  if (await has('Look closer')) {
+    await tap('Look closer'); await page.waitForTimeout(2500); await shot(name + '-close', 3500);
+    g = await mapGeometry();
     const m = await page.locator('circle.node').count();
-    if (m > 1) { await page.locator('circle.node').nth(m - 1).click(); await shot(name + '-close-tap', 900); }
-    await tap('See the whole region'); await page.clock.runFor(1200); }
+    for (let k = 0; k < m; k++) { await page.locator('circle.node').nth(k).click(); await still(g, `${name} close light ${k}`); }
+    await shot(name + '-close-tap', 300);
+    await tap('See the whole region'); await page.clock.runFor(1200);
+  }
   await tap('Today'); await page.clock.runFor(2500);
 };
 await shot('today', 2500);

@@ -122,7 +122,17 @@
   let picked = $state<string | null>(null);
   const sel = $derived(lights.find(l => l.key === picked) ?? lights.find(l => l.kind === 'here') ?? lights[0]);
   let turn = $state(0);   /* restarts the box's rise on each pick */
-  const pick = (l: Light, e?: Event) => { picked = l.key; turn++; (e?.currentTarget as Element | undefined)?.scrollIntoView?.({ block: 'nearest', behavior: calm ? 'auto' : 'smooth' }); };
+  let field: HTMLDivElement;
+  /* Picking moves only the crosshair and the box's words: the box never changes size, so the sky and its lights never
+     move (D-075). In a close view longer than the screen, the field alone scrolls to bring the light into view. */
+  const pick = (l: Light, e?: Event) => {
+    picked = l.key; turn++;
+    const n = e?.currentTarget as Element | undefined;
+    if (!n || !field || field.scrollHeight <= field.clientHeight) return;
+    const r = n.getBoundingClientRect(), f = field.getBoundingClientRect();
+    const dy = r.top < f.top ? r.top - f.top - 12 : r.bottom > f.bottom ? r.bottom - f.bottom + 12 : 0;
+    if (dy) field.scrollBy({ top: dy, behavior: calm ? 'auto' : 'smooth' });
+  };
   const zoomIn = (k: StretchId) => { zoomed = k; level = 'close'; picked = null; turn++; };
   const zoomOut = () => { level = 'region'; picked = zoomed; turn++; };
 </script>
@@ -150,7 +160,7 @@
     </div>
   </header>
 
-  <div class="field" class:fit={level === 'region'}>
+  <div class="field" class:fit={level === 'region'} bind:this={field}>
    {#key level + (zoomed ?? '')}
     <svg viewBox="0 0 {RW} {H}" preserveAspectRatio="xMidYMid meet" style={level === 'region' ? '' : `aspect-ratio:${RW}/${H}`} role="group" aria-label={t('map.label')}>
       <defs>
@@ -227,7 +237,7 @@
       <!-- a generous tap target on every light -->
       {#each lights as l (l.key)}
         <circle class="node" data-kind={l.kind} cx={l.x} cy={l.y} r="32" fill="transparent" role="button" tabindex="0" aria-label={l.name ?? l.box.title}
-          onclick={e => pick(l, e)} onkeydown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(l, e); } }} />
+          onmousedown={e => e.preventDefault()} onclick={e => pick(l, e)} onkeydown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(l, e); } }} />
       {/each}
     </svg>
    {/key}
@@ -243,11 +253,14 @@
             <p class="say">{sel.box.say}</p>
           </div>
         {/key}
-        {#if level === 'region' && sel.box.closer}
-          <button class="btn-quiet full act" onclick={() => zoomIn(sel.box.closer!)}>{t('map.closer')}</button>
-        {:else if level === 'close'}
-          <button class="btn-quiet full act" onclick={zoomOut}>{t('map.whole')}</button>
-        {/if}
+        <!-- the action's row is always kept, so the box is the same size whatever is picked -->
+        <div class="foot">
+          {#if level === 'close'}
+            <button class="more back" onclick={zoomOut}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg>{t('map.whole')}</button>
+          {:else if sel.box.closer}
+            <button class="more" onclick={() => sel.box.closer && zoomIn(sel.box.closer)}>{t('map.closer')}<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" /></svg></button>
+          {/if}
+        </div>
       </div>
     {/if}
   </section>
@@ -291,10 +304,17 @@
   .node { cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent; }
   .node:focus-visible { stroke: var(--edge); stroke-width: 1; }
 
-  .box { border: 1px solid var(--edge-2); padding: 14px 18px 16px; background: rgba(10,9,24,.6); min-height: 128px; }
-  .box h2 { margin: 8px 0 6px; }
-  .box .say { color: var(--ink-2); font-size: 16.5px; line-height: 1.42; display: -webkit-box; -webkit-line-clamp: 4; line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
-  .box .act { margin-top: 12px; }
+  /* one fixed size: two lines of name, three of words, the action's row always kept */
+  .box { border: 1px solid var(--edge-2); padding: 14px 18px 16px; background: rgba(10,9,24,.6); height: 214px; display: flex; flex-direction: column; overflow: hidden; }
+  .box .swap { flex: 1; min-height: 0; overflow: hidden; }
+  .box h2 { margin: 8px 0 6px; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .box .say { color: var(--ink-2); font-size: 16.5px; line-height: 1.42; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .foot { flex: none; height: 34px; display: flex; justify-content: flex-end; align-items: flex-end; }
+  .more { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin: -10px -6px -10px 0; padding: 0 6px; background: none; border: 0; cursor: pointer;
+    font-family: var(--carve); font-size: 14px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--ink); }
+  .more.back { margin-right: auto; margin-left: -6px; color: var(--ink-2); }
+  .more svg { width: 14px; height: 14px; fill: none; stroke: var(--edge); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+  .more:hover, .more:focus-visible { color: var(--gold-hi); }
   .swap { animation: rise .45s var(--ease) both; }
   @media (prefers-reduced-motion: reduce) { .drawn, .dust, .pl, .labels, .reticle, .swap { animation: none; opacity: 1; } .drawn { opacity: 0; } .reticle { transition: none; } }
 </style>
