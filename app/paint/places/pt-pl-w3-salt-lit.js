@@ -54,9 +54,9 @@ export default {
   expo: 1.9, grade: [1, 1, 1],
   blur: { px: 1.8, d0: 4, d1: 16, k: .85 },
   lights: [
-    { p: [.7, 1.6, ZS - 3.2], c: [1, .86, .7], k: 1.3, r: 2, shadow: .6 },         /* the cups' glow, round the corner behind you */
-    { p: [-1.5, 1.3, ZS - .45], c: [1, .75, .48], k: .5, r: .4, reach: 1.5, shadow: 1 },   /* its last reach, from above, onto the stones' tops */
-    { p: [.6, 1.9, ZS + 1.5], c: [.62, .58, 1.2], k: 2.2, r: 2, shadow: .5 },        /* the gallery's violet, from further in */                  /* its last reach, onto the split's stones */
+    { p: [.4, 1.8, ZS - 2.2], c: [1, .84, .66], k: 3.2, r: 1.8, shadow: .6 },         /* the cups' glow, round the corner behind you */
+    { p: [-1.78, 1.02, ZS - .2], c: [1, .75, .48], k: .22, r: .25, reach: .75, shadow: 1 },   /* its last reach, from above, onto the stones' tops */
+    { p: [.6, 1.9, ZS + 2.5], c: [.62, .58, 1.2], k: 1, r: 2, shadow: .5 },        /* the gallery's violet, from further in */                  /* its last reach, onto the split's stones */
     { p: [.4, 1.6, 34], c: [.62, .58, 1.2], k: 22, r: 9 },                         /* the gallery going on in its own violet */
     { p: [1.3, 1.9, 16], c: [.62, .58, 1.2], k: 6, r: 4.5 },
   ],
@@ -64,6 +64,7 @@ export default {
   vec4 scene(vec3 p) {
     vec4 d = roomScene(p);
     if (floor(d.y + .5) == M_DRESSED) gTint *= .5;                                       /* the band kept down to the salt's value */
+    gTint *= mix(1., .3, smoothstep(1.75, 2.7, p.y));                                     /* the salt going up out of the light */
     if (p.x < -1.5) gTint *= .85 + .25 * smoothstep(.3, .7, vn(vec2(p.y * 5. + fbm(p.xz * .4, 2) * 2., 1.)));   /* the beds */
     if (p.y < .05) gTint *= mix(.3, .8, smoothstep(ZS - 1., ZS + 5., p.z));            /* the near floor kept down */
     if (p.y < .7 && p.x < -1.5) gTint *= mix(.55, 1., smoothstep(.1, .7, p.y));        /* and the wall's foot */
@@ -72,7 +73,7 @@ export default {
     vec4 s = stones(p);
     if (s.x < d.x) {
       d = s;
-      gTint = vec3(.62, .44, .3) * (.75 + .5 * h2(floor(vec2(p.z, p.y) / .085)));     /* river stones: brown, each its own */
+      gTint = vec3(.78, .5, .3) * (.8 + .4 * h2(floor(vec2(p.z, p.y) / .085)));     /* river stones: brown, each its own */
       gPolish = .5;                                                                  /* water-worn smooth */
     }
     return d;

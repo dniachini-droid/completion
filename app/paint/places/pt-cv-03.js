@@ -12,11 +12,11 @@ export default {
   name: 'The hall, from the passage',
   line: '',
   cam: { x: 1.92, y: 1.47, z: 4.72, pitch: 1, yaw: 21, f: .62, cx: .5, cy: .47 },
-  sheen: 0, gold: 1, expo: 1.9, glow: { threshold: .5, k: .8 },
+  sheen: 0, gold: 1, expo: 2.1, glow: { threshold: .5, k: .8 },
   hazeBase: [.02, .018, .06], hazeFar: [.09, .085, .22], bloomC: [.06, .055, .13],
   blur: { px: 1.6, d0: 4, d1: 20, k: .85 },
   lights: [
-    { p: [F[0] - .02, F[1] + .03, F[2]], c: [1, .68, .3], k: .3, r: .45, warm: .005, shadow: .7, reach: .65 },   /* the clay lamp's flame: the one light */
+    { p: [F[0] - .02, F[1] + .03, F[2]], c: [1, .68, .3], k: .22, r: .4, warm: .004, shadow: .7, reach: .6 },   /* the clay lamp's flame: the one light */
     { p: [F[0], F[1] + .008, F[2]], c: [1, .8, .5], k: 0, r: .022, air: 1.2 },         /* the flame itself: a small hot core, glowing in the air */
     { p: [F[0], F[1] + .02, F[2]], c: [1, .62, .26], k: 0, r: .07, air: .3 },       /* and its soft halo */
     { p: [0, 5.5, 58], c: [.62, .58, 1.25], k: 2.2, r: 40 },                              /* the far end: a trace of violet in the fog */

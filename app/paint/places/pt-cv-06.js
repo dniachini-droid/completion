@@ -1,50 +1,70 @@
-/* SEALED (D-015). pt-cv-06, the salt, close (camp view; the Salt Gallery of pt-b-2.A, reused, at the split of
-   pt-pl-w3-salt-lit): the salt face at a stride, banded, the split packed with its river stones, and the band
-   with its tally running into it. Where the air comes through the chinks between the stones, the salt has grown
-   a skin of fine crystals, like frost, in the cuts nearest the split. Quiet: one form, one light (the gallery's
-   cold violet, coming thin through the chinks). VP into the split. */
+/* SEALED (D-015). pt-cv-06, the salt, close (camp view; the Salt Gallery of pt-b-2.A, round 2): the salt face at
+   arm's length, low by the split, filling the frame: beds of grey and white salt, and running through them one of
+   the split's chinks, a narrow dark gap going in. The gallery's cold light comes thin through it from beyond.
+   Where the air comes through, the salt has grown a skin of fine crystals like frost, needles on the chink's
+   lowest lip and in the small cuts below it: the bright note. Quiet: one form, one light. VP into the chink. */
 import room from './pt-b-2.A.js';
-import { ZS, SPLIT } from './pt-pl-w3-salt-lit.js';
+import { ZS } from './pt-pl-w3-salt-lit.js';
 
+const ZC = ZS + 1.05, YC = .62;                                     /* the chink, past the split's end */
 const V = [.62, .58, 1.2];
 export default {
   ...room,
   id: 'pt-cv-06',
   name: 'The salt, close',
   line: '',
-  cam: { x: -.85, y: 1.0, z: ZS - 1.0, pitch: -16, yaw: -46, f: .62, cx: .5, cy: .5 },
-  far: 20,
-  bloomAt: [-2.4, 1.2, ZS], bloomPow: 30, bloomC: [.12, .11, .26],
-  glow: { threshold: .6, k: .6 },
-  blur: { px: 1.4, d0: 1.6, d1: 5, k: .7 },
+  cam: { x: -1.3, y: .8, z: ZC - .25, pitch: -3, yaw: -76, f: .66, cx: .5, cy: .5 },
+  far: 12, fogK: 1 / 10,
+  hazeBase: [.02, .02, .06],
+  bloomAt: [-2.2, YC, ZC], bloomPow: 30, bloomC: [.08, .08, .18],
+  glow: { threshold: .6, k: .55 },
+  blur: { px: 1.2, d0: 1.2, d1: 3, k: .5 },
   lights: [
-    { p: [-2.02, .5, ZS - .22], c: V, k: .03, r: .14, shadow: .6 },              /* the gallery's light, coming thin through the chinks, onto the frost */
-    { p: [-1.75, .8, ZS + .15], c: V, k: .12, r: .5, shadow: .8 },                  /* and lower down, from inside the split */
-    { p: [.6, 1.8, ZS + 3], c: [.36, .33, .8], k: 4.5, r: 2.5 },                   /* the gallery beyond, faint */
-    { p: [0, 1.6, ZS - 4], c: [.3, .28, .66], k: .8, r: 3 },                     /* faint fill from behind */
+    { p: [-1.96, YC - .1, ZC - .02], c: V, k: .012, r: .05, reach: .22, shadow: 1 },   /* the gallery's cold light, coming thin out of the chink, onto its lip */
+    { p: [-1.5, 1.3, ZC + 1.6], c: V, k: .9, r: 1.1, reach: 3, shadow: .8 },                      /* and along the face, raking the beds */
+    { p: [.4, 1.8, ZC - 1.5], c: [.36, .33, .8], k: .6, r: 2 },                                  /* the gallery, faint, on the salt's face */
   ],
-  glsl: room.glsl.replace('vec4 scene(vec3 p)', 'vec4 roomScene(vec3 p)') + SPLIT + /* glsl */ `
+  glsl: room.glsl.replace('vec4 scene(vec3 p)', 'vec4 roomScene(vec3 p)') + /* glsl */ `
+  const float ZC = ${ZC.toFixed(3)}, YC = ${YC.toFixed(3)};
   vec4 scene(vec3 p) {
-    vec4 d = roomScene(p);
-    if (p.y < .05) gTint *= .4;                                                        /* the floor kept down */
-    gTint *= mix(1., .55, smoothstep(.3, 1.4, abs(p.z - ZS)));                        /* the salt away from the split in the dark */
-    vec4 a = splitAir(p);
-    if (a.x > d.x) { d = a; gTint = vec3(mix(.6, .1, smoothstep(-2.0, -2.18, p.x))); }
-    vec4 s = stones(p);
-    if (s.x < d.x) { d = s; gTint = vec3(.6, .45, .33) * (.75 + .5 * h2(floor(vec2(p.z, p.y) / .085))); gPolish = .4; }
-    /* frost: where the air comes through the chinks, the salt at the split's lower lips has grown a skin of
-       fine crystals, white, standing a little proud */
-    float lip = -a.x;                                                                   /* how far into the salt from the split's edge */
-    float fr = (1. - smoothstep(.0, .07 + .04 * fbm(vec2(p.y * 9., p.z * 9.), 2), lip)) * (1. - smoothstep(.55, 1.05, p.y)) * smoothstep(.04, .12, p.y);
-    if (fr > 0. && p.x > -2.15 && s.x > .004 && d.x < .03) {
-      d.x -= fr * (.004 + .01 * fbm3(p * 90., 3));                                     /* the crystals, not a coat of paint */
-      d.yzw = vec3(M_SALT, NOUV);
-      gTint = mix(gTint, vec3(1.7, 1.7, 1.75), fr);
+    vec4 d = hallAir(p, 2., 2.6, 2.3, -10., 60., M_ROCK);
+    float wl = smoothstep(1.4, 1.9, abs(p.x)) * (1. - smoothstep(2.4, 3.2, p.y));
+    d.x += wl * (rough(p, .014, 7.) + rough(p, .005, 23.));
+    d.yzw = vec3(p.y < .05 && abs(p.x) < 1.8 ? M_FLOOR : M_SALT, NOUV);
+    /* beds of salt, grey and white, laid one on another and bent a little */
+    float bed = vn(vec2(p.y * 7. + fbm(p.xz * 1.2, 2) * 1.6, 3.));
+    gTint = vec3(.55 + .6 * smoothstep(.35, .65, bed));
+    gTint *= mix(1., .6, smoothstep(.3, 1.1, length(vec2(p.z - ZC, (p.y - YC) * 1.2))));   /* away from the chink, the salt in the dark */
+    if (p.y < .05) gTint *= .3;
+    /* the chink: a narrow gap running up through the beds, going back into the dark */
+    vec2 t = vec2(p.z - ZC, p.y - YC);
+    float along = t.y * .94 + t.x * .34, across = t.x * .94 - t.y * .34 + (fbm(vec2(along * 9., 2.), 2) - .5) * .03 + (fbm(vec2(along * 40., 7.), 2) - .5) * .008;
+    float half_ = .016 * (1. - smoothstep(.18, .34, abs(along))) * (.7 + .6 * fbm(vec2(along * 20., 5.), 2));
+    float ck = min(min(half_ - abs(across) + .002, p.x + 2.4), -1.8 - p.x);
+    if (ck > d.x) { d = vec4(ck, M_SALT, NOUV); gTint = vec3(mix(.6, .04, smoothstep(-1.99, -2.06, p.x))); }
+    /* frost: fine needles grown on the chink's lowest lip and in the little cuts below it, where the air comes out */
+    float low = smoothstep(.02, -.12, along) * (1. - smoothstep(.0, .09, abs(across) - half_));
+    vec2 nd = vec2(p.z, p.y) * vec2(1., 1.);
+    float needles = smoothstep(.42, .72, fbm(vec2(dot(nd, vec2(.8, .6)) * 90., dot(nd, vec2(-.6, .8)) * 14.), 3));
+    /* the little cuts below: three short scores in the salt, their floors furred with frost */
+    float cuts = 1.;
+    for (int k = 0; k < 3; k++) {
+      float fk = float(k);
+      vec2 c = vec2(ZC - .07 + fk * .06 + (h2(vec2(fk, 3.)) - .5) * .02, YC - .3 - fk * .015);
+      vec2 q = vec2(p.z, p.y) - c;
+      cuts = min(cuts, length(vec2(q.x + q.y * .3, max(abs(q.y) - .035 - .015 * h2(vec2(fk, 5.)), 0.))));
+    }
+    if (p.x < -1.85) d.x += engrave(cuts, .007, .008);
+    float fr = max(low, (1. - smoothstep(.002, .008, cuts)) * .9) * step(p.x, -1.9);
+    if (fr > 0. && ck < d.x + .01) {
+      d.x -= fr * needles * .005;                                                     /* crystals standing off the salt */
+      gTint = mix(gTint, vec3(1.8, 1.8, 1.85), fr * (.35 + .65 * needles));
     }
     return d;
   }`,
   anchors: {
-    glints: [[-2.02, .5, ZS - .25], [-2.02, .7, ZS + .3], [-1.98, .35, ZS - .3], [-2.05, .9, ZS + .05]].map(p => ({ p })),
+    glints: [[-1.99, YC - .08, ZC - .03], [-1.99, YC - .3, ZC], [-1.98, YC + .15, ZC + .05], [-1.99, YC - .2, ZC + .1]].map(p => ({ p })),
+    beam: [{ p: [-1.95, YC, ZC], w: .12 }],
   },
   live: { motes: 'violet' },
 };

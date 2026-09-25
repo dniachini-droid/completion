@@ -18,7 +18,7 @@ export default {
   gold: 1, sheen: 0, grain: .3, shadowJitter: 1, amb: .5, ambC: [.85, .78, 1.5], expo: 1.7,
   lights: [
     { p: [2.12, 1.42, 5.6], c: [1, .72, .36], k: .5, r: .5, shadow: 1, reach: 1.1 },           /* the clay lamp on the ledge, above and out of frame */
-    { p: [2.6, .06, 5.62], c: [1, .72, .36], k: .035, r: .15, reach: .22 },            /* its gold, lying on the floor at the wall's foot */                     /* its light on the floor at the wall's foot, glowing back up */
+    { p: [2.6, .06, 5.62], c: [1, .72, .36], k: .022, r: .15, reach: .22 },            /* its gold, lying on the floor at the wall's foot */                     /* its light on the floor at the wall's foot, glowing back up */
     { p: [2.78, .5, 5.6], c: [1, .74, .42], k: .07, r: .15, reach: .3 },         /* a little of it into the recess, on its floor and back */
     { p: [.6, 2.6, 2.4], c: [.4, .37, .85], k: 8, r: 3.6, shadow: .6 },            /* the hall's violet, from behind on the left */
     { p: [2.05, .85, 5.1], c: [.42, .39, .85], k: .7, r: .55 },                  /* the same, on the stone round the ring */
