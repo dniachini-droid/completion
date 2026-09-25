@@ -39,9 +39,9 @@ export default {
     float a = .045, ca = cos(a), sa = sin(a); q.xy = vec2(ca * q.x - sa * q.y, sa * q.x + ca * q.y);   /* the point lifted */
     float u = q.x, L = .38;
     float bl = 1. - smoothstep(.16, .26, u);                                       /* 1 along the blade, 0 on the handle */
-    float tip = clamp(u / .085, .03, 1.);                                          /* a clean tapered point */
+    float tip = clamp(u / .15, .02, 1.);                                          /* a clean tapered point */
     float w = mix(.0125, .016, bl) * tip;                                          /* half width */
-    float t = mix(.0105, .0072, bl) * mix(.25, 1., tip);                            /* half thickness */
+    float t = mix(.0105, .0072, bl) * mix(.12, 1., tip);                            /* half thickness */
     /* the blade's section: full on the spine, ground away to nothing at the edge */
     float bev = .18 * w;
     float ty = t * mix(1., clamp((q.z + w) / bev, .04, 1.), bl);
@@ -49,7 +49,7 @@ export default {
     float ell = (length(vec2(q.y / t, q.z / w)) - 1.) * min(t, w);                 /* the handle's section, worn round */
     float s = mix(ell, sec, bl);
     float ends = max(-u, u - L);
-    float r = max(s, ends) - .0012;
+    float r = max(s, ends) - .0012 * mix(.3, 1., smoothstep(0., .06, u));
     r += rough(p, .0006, 120.) * smoothstep(.04, .1, u);                            /* no roughness at the point: its outline stays clean */
     /* the honed edge: a thin line along the blade */
     gEdge = bl * smoothstep(.015, .05, u) * (1. - smoothstep(.0005, .0015, abs(q.z + w)));   /* only the edge itself, a thin line */

@@ -11,17 +11,17 @@ export default {
   id: 'pt-pl-w3-far-end',
   name: 'The far end',
   line: '',
-  cam: { x: .75, y: .42, z: ZD - 3.1, pitch: 30, yaw: 4, f: .45, cx: .5, cy: .5 },
+  cam: { x: .55, y: .42, z: ZD - 1.45, pitch: 20, yaw: 4, f: .7, cx: .5, cy: .5 },
   far: 30, fogK: 1 / 14, sheen: .04, gold: .8, expo: 2.3,
   hazeBase: [.028, .027, .075], hazeFar: [.04, .04, .12],
   bloomAt: [-1, .4, ZD], bloomPow: 6, bloomC: [.05, .05, .12],
   glow: { threshold: .58, k: .6 },
   blur: { px: 1.4, d0: 5, d1: 14, k: .7 },
   lights: [
-    { p: [2.4, 3.6, ZD - 1.0], c: [1, .68, .3], k: 3, r: .8, reach: 4.6, warm: .004, shadow: 1 },   /* the last cup's flame, a stride from the door: its light gives out partway up the face */
+    { p: [2.1, 2.6, ZD - 1.7], c: [1, .68, .3], k: 1.6, r: .8, warm: .002, shadow: .6 },   /* the last cup's flame, a stride from the door: its light gives out partway up the face */
     { p: [2.62, 3.72, ZD - 1.3], c: [1, .68, .3], k: 0, r: .16, air: 1.6 },                  /* the flame's glow in the air */
     { p: [0, 3, ZD - 12], c: [.3, .28, .66], k: 4, r: 6 },                                /* the hall behind: a faint cold fill */
-    { p: [-1, 1.2, ZD - 1.4], c: [.34, .33, .75], k: .7, r: 2.2 },                     /* the door's own cold, broad and faint */
+    { p: [-.6, 1.4, ZD - 1.6], c: [.34, .33, .75], k: 1.8, r: 2.2 },                     /* the door's own cold, broad and faint */
   ],
   glsl: hall.glsl.replace('vec4 scene(vec3 p)', 'vec4 hallScene(vec3 p)') + /* glsl */ `
   const float ZD = ${ZD.toFixed(2)};
@@ -38,7 +38,7 @@ export default {
       if (dr > .015) {
         d.yzw = vec3(M_SLATE, NOUV);                                                       /* fine-grained, close, cold */
         gTint = vec3(2.5, 2.6, 2.9) * (.94 + .12 * fbm(p.xy * .7, 3));
-        gTint *= mix(1., .3, smoothstep(3.5, 6.5, p.y));                                     /* up the face, into the dark */
+        gTint *= mix(1., .16, smoothstep(1.45, 1.95, p.y + .06 * (fbm(p.xy * 1.5, 3) - .5)));   /* where the flame's light gives out: a level edge */
       }
     }
     /* the last cup: an arched recess up in the right wall, a stride from the door, its bowl and its flame */
@@ -55,9 +55,8 @@ export default {
     return d;
   }`,
   anchors: {
-    fog: [{ p: [-.2, .2, ZD - .5], w: 1.4, h: .2, a: .22 }, { p: [.3, 2.0, ZD - .1], w: .9, h: .6, a: .12, speed: .5 }],
-    glints: [{ p: [1.2, 1.2, ZD - .01] }],
-    flame: [{ p: [2.62, 3.7, ZD - 1.3], size: 1, body: true }],
-  },
+    fog: [{ p: [.3, .2, ZD - .6], w: 1.4, h: .2, a: .22 }, { p: [.5, 2.4, ZD - .5], w: .9, h: .6, a: .12, speed: .5 }],
+    glints: [{ p: [.9, 1.1, ZD - .44] }],
+      },
   live: { fog: 'low', motes: 'gold', gold: true, flame: 'still' },
 };
