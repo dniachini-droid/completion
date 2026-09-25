@@ -206,5 +206,5 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 
 ## Recommended next action
 
-**Dan:** install the newest build from `main` and play; say what still feels clunky, and whether the phone still warms in a delve. On a run of two delves, say what the locked phone showed (item 0c). Do the lock / another app test (item 0d) once the 2026-09-26 build is on TestFlight.
+**Dan:** install the newest build from `main` and play; say what still feels clunky, and whether the phone still warms in a delve. On a run of two delves, say what the locked phone showed (item 0c). Do the lock / another app test (item 0d).
  **Claude:** weeks 8–14 of the story are being written in their own session (branch `claude/story-weeks-8-14`, same process, D-097); it merges and builds when done. To resume, paste: "Read CLAUDE.md and docs/CURRENT_STATE.md on branch main, then carry on from the recommended next action."
