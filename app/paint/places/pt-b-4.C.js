@@ -58,12 +58,13 @@ export default {
         vec2 dq = m - vec2(1.12, cy);
         float m2 = min(length(vec2(dq.x + .03, max(abs(dq.y - .03) - .03 * (1. - (dq.y - .0) / .08), 0.))), length(vec2(dq.x - .03, max(abs(dq.y + .03) - .03 * (1. - (-.06 - dq.y) / .08), 0.))));
         d.x += engrave(min(m1, m2), .016, .014);
+        if (m1 < .004) gTint *= .6;                                                                /* the bar-and-drop's floor in shadow: one solid cut, not an outline */
         /* under the count, a mark like a path doubling back: along, round, and back */
         vec2 pq = m - vec2(-.02, 1.26);
         float path = pq.x < .26 ? abs(abs(pq.y) - .06) : abs(length(pq - vec2(.26, 0.)) - .06);    /* a firm hairpin: out along the lower run, a tight turn, back along the upper */
         path = max(path, pq.y > 0. ? -.02 - pq.x : -.38 - pq.x);                                 /* the run back stops short of the start */
         d.x += engrave(path, .02, .016);                                                           /* cut as the count's strokes are */
-        if (m.y < 1.4) gTint *= .8;                                                               /* below the count, a shade down: the count leads */
+        gTint *= mix(.8, 1., smoothstep(1.2, 1.5, m.y));                                                               /* below the count, a shade down: the count leads */
         if (marks < .02) gTint *= .92;
       }
     }

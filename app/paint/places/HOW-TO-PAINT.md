@@ -6,7 +6,7 @@ Sealed folder (D-015): the scene files here quote the briefs. This guide itself 
 - **Room scale only.** Frame every place as a space seen from 1–4 m; the look-at is a lit feature within it. No macro close-ups of small objects (they never reached the bar). If a brief asks for a close view, take the nearest room-scale view that keeps its look-at.
 - **Reuse an approved room** (below) and change camera, light and one feature. Copy what worked in the accepted ones: a long view with a far glow, one warm or cold key, dark words band, calm floor.
 - **Drafts at `--scale .25`** (a few seconds); full size only at the end. Aim to finish a place in under ~10 drafts.
-- Before calling it done: `check.mjs` all ok at full size, and `stats.mjs` + a crop show the look-at is the brightest or sharpest thing.
+- Before calling it done: `check.mjs` all ok at full size, and `stats.mjs` + a crop show the look-at is the brightest or sharpest thing. One attempt, then the critic (D-085, below).
 
 ## Setup
 - `export NODE_PATH=/opt/node22/lib/node_modules` (Playwright lives there). Run from `app/`.
@@ -32,6 +32,10 @@ Sealed folder (D-015): the scene files here quote the briefs. This guide itself 
 - Small close objects (under ~10 cm at under 1 m) read as toys or CG boxes. Round every edge (`box(...).x -= r`), vary with `rough()`, give them contact (sit on something, no gap), dark real-world albedo, and one clear light edge. Fill the frame with the look-at: camera within ~0.5 m, portrait frame, keep the rest dark.
 - The look-at must be the brightest value or the sharpest edge. Check with stats and a crop.
 
-## The bar and the round
-- A separate critic scores each painting against the hall (see `CRITIQUE-W1-5.md` for the standard). 8/10 goes into the app; after 3 critiqued rounds a 7 goes in (Dan, 2026-09-24). Below 7 keeps its stand-in.
+## The bar and the round (D-085, Dan)
+- **A painting goes in after its first attempt** if `check.mjs` is all ok at full size and its look-at reads as what it is. No score to reach.
+- A separate critic checks each batch **for wrong readings only** (the look-at mistaken for something else, or not found); dark or plain is not a failure. See `CRITIQUE-D085-*.md`.
+- A painting that fails gets **one second attempt**, from the critic's smallest fix. If it still reads wrongly it keeps its stand-in and Dan decides. Dan can send any painting back when he meets it in the game.
+- Once in: copy `<id>.webp` + `.json` to `img/`, add the id to `core/game.ts` PAINTED and the import + `focus` (the look-at's height, 0 top to 1 bottom) to `ui/paintings.ts`; `tests/rules/paintings.test.ts` keeps them in step.
+- Before D-085 the bar was 8/10 from the critic (7 after three rounds); the older CRITIQUE files score against that.
 - Don't show sealed content outside `paint/places/` and `docs/narrative/sealed/`.
