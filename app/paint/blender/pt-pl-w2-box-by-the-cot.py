@@ -17,10 +17,13 @@ from lib import K
 ID = 'pt-pl-w2-box-by-the-cot'
 B = (-1.585, 2.35)                                     # the box, against the left wall (kit x, z)
 random.seed(7)
+CAM = (-1.25, .31, 1.86)                               # crouched low near the wall, a short step from the box
+TILT, RTURN = 4.5, -29.                                 # the mug: tipped toward us; turned so the handle is side-on
+KEY, FILL, GLINT = 1.6, 3., 40.                         # watts
 sc = lib.reset()
 
 # ---------- the room: her camp (pt-b-1.C), cut from the rock ----------
-stone = lib.stone_mat(dark_above=(.12, .65, 1., .09), dark_near=(2.15, 3.3, .12, 1.))   # walls dark overhead; the floor near us out of the light
+stone = lib.stone_mat(dark_above=(.1, .5, 1., .1), dark_near=(2.15, 3.3, .12, 1.))   # walls dark overhead; the floor near us out of the light
 rock = lib.box('rock', (0, 1.3, .2), (2.3, 1.6, 4.3), stone)
 air = [lib.arch_room(1.7, 1., 1.7, 0., 3.9),
        lib.box('door', (0, .78, -1.6), (.68, .78, 1.65)),
@@ -50,12 +53,25 @@ card = lib.bpy.data.materials.new('card')
 nt, nd, lk, bs = lib.nodes_of(card)
 tc = nd.new('ShaderNodeTexCoord')
 n1 = lib.noise(nd, lk, 9., 6., .6, tc.outputs['Object'])
-r1 = lib.ramp(nd, lk, n1.outputs['Fac'], (.17, .17, .175), (.30, .30, .305), .3, .75)   # pale grey card, blotched with damp
+r1 = lib.ramp(nd, lk, n1.outputs['Fac'], (.11, .11, .115), (.2, .2, .205), .3, .75)   # grey card, blotched with damp
 lk.new(r1.outputs['Color'], bs.inputs['Base Color'])
 bs.inputs['Roughness'].default_value = .95; bs.inputs['Sheen Weight'].default_value = .5; bs.inputs['Sheen Roughness'].default_value = .6
 n2 = lib.noise(nd, lk, 140., 8., .7, tc.outputs['Object'])                             # the fibres
 bm_ = nd.new('ShaderNodeBump'); bm_.inputs['Strength'].default_value = .25; bm_.inputs['Distance'].default_value = .001
 lk.new(n2.outputs['Fac'], bm_.inputs['Height']); lk.new(bm_.outputs['Normal'], bs.inputs['Normal'])
+# the damp: a tideline a few centimetres up, the card below it darker where it wicked the floor's wet
+sp_ = nd.new('ShaderNodeSeparateXYZ'); lk.new(tc.outputs['Object'], sp_.inputs[0])
+nw = lib.noise(nd, lk, 24., 3., .5, tc.outputs['Object'])
+wz = nd.new('ShaderNodeMath'); wz.operation = 'MULTIPLY_ADD'; lk.new(nw.outputs['Fac'], wz.inputs[0]); wz.inputs[1].default_value = .012
+lk.new(sp_.outputs['Z'], wz.inputs[2])
+wr = nd.new('ShaderNodeValToRGB'); lk.new(wz.outputs[0], wr.inputs['Fac'])
+els = wr.color_ramp.elements
+els[0].position = .0; els[0].color = (.5, .5, .52, 1)
+els[1].position = .03; els[1].color = (.78, .78, .8, 1)
+for pos, v in ((.034, .66), (.037, .72), (.042, 1.)):
+    e_ = els.new(pos); e_.color = (v, v, v * 1.02, 1)
+dm = nd.new('ShaderNodeMix'); dm.data_type = 'RGBA'; dm.blend_type = 'MULTIPLY'; dm.inputs['Factor'].default_value = 1
+lk.new(r1.outputs['Color'], dm.inputs[6]); lk.new(wr.outputs['Color'], dm.inputs[7]); lk.new(dm.outputs[2], bs.inputs['Base Color'])
 
 bx, bz = B
 body = lib.box('box', (bx, .047, bz), (.088, .047, .138), card, bevel=.007, segs=4, cuts=14)
@@ -68,10 +84,10 @@ def slump(p):
     bel = .004 * max(0., 1 - abs(q.y - .05) / .05)
     q.x += math.copysign(bel, q.x) * (1 - (q.z / .15) ** 2)
     if q.y > .08:
-        q.y -= .006 * max(0., 1 - (q.x / .1) ** 2) * max(0., 1 - (q.z / .15) ** 2)
-    c = Vector((.09, .115, -.145)); d = (q - c).length
-    if d < .07:
-        q += (Vector((0, 0, 0)) - c).normalized() * .014 * (1 - d / .07) ** 2
+        q.y -= .012 * max(0., 1 - (q.x / .1) ** 2) * max(0., 1 - (q.z / .15) ** 2)
+    c = Vector((.095, .075, -.15)); d = (q - c).length                     # the near corner, toward us, crushed in
+    if d < .085:
+        q += (Vector((0, .05, 0)) - c).normalized() * .024 * (1 - d / .085) ** 2
     n = math.sin(q.x * 90 + q.z * 40) * math.sin(q.y * 70 + q.z * 55)
     q.x += .0012 * n; q.z += .0008 * n
     return q + Vector((bx, 0, bz))
@@ -80,16 +96,32 @@ def slump(p):
 deform(body, slump); deform(lid, slump)
 
 # ---------- the slate, laid across the lid a little askew, a count cut in it ----------
-slate_m = lib.simple_mat('slate', (.055, .058, .07), .5, bump=.08, bscale=60.)
-cut_m = lib.simple_mat('slate cut', (.2, .2, .22), .8)
+slate_m = lib.simple_mat('slate', (.1, .1, .115), .55, bump=.12, bscale=40.)
+cut_m = lib.simple_mat('slate cut', (.3, .29, .31), .85)                                # scratched: paler than the face
 SA = math.radians(9.)                                   # turned a few degrees: laid across, not fitted
 S0 = Vector((bx + .014, .1245, bz + .012))              # its centre, on the lid's top
-slate = lib.box('slate', (0, 0, 0), (.078, .0045, .112), slate_m, bevel=.0025, segs=2)
+slate = lib.box('slate', (0, 0, 0), (.078, .0045, .112), slate_m, cuts=12)
+
+
+def riven(p):
+    # split, not sawn: the outline wanders, the face is a little uneven in layers
+    a = math.atan2(p.z, p.x)
+    w = .0035 * math.sin(a * 7 + 1.3) + .0022 * math.sin(a * 17 + .4) + .0012 * math.sin(a * 41)
+    if abs(p.x) > .077 or abs(p.z) > .111:
+        s_ = 1 + w / max(math.hypot(p.x, p.z), .01)
+        p = Vector((p.x * s_, p.y, p.z * s_))
+    if p.y > 0:
+        p.y += .0006 * math.sin(p.x * 70 + p.z * 23) + .0004 * math.sin(p.z * 150)
+    return p
+
+
+deform(slate, riven)
 cutters = []
+zk = -.1
 for k in range(7):
-    L = .01 + .003 * random.random(); lean = (random.random() - .5) * .25
-    z = -.098 + k * .0165 + (random.random() - .5) * .004
-    c = lib.box('stroke', (-.028 + (random.random() - .5) * .006, .0045, z), (L, .0024, .0011), cut_m, bevel=.0009, segs=2)
+    L = .006 + .007 * random.random(); lean = (random.random() - .5) * .35
+    zk += .011 + .01 * random.random()
+    c = lib.box('stroke', (-.03 + (random.random() - .5) * .01, .0047, zk), (L, .0012, .0009), cut_m, bevel=.0008, segs=1)
     c.rotation_euler = (0, 0, lean)
     cutters.append(c)
 for c in cutters:
@@ -102,73 +134,78 @@ for c in cutters:
     bpy.data.objects.remove(c)
 slate.rotation_euler = (0, 0, -SA); slate.location = K(*S0)
 
-# ---------- the tin mug, upside down on the slate, one side of its rim just lifted ----------
+# ---------- the tin mug (Meshy, D-076), upside down on the slate, the side toward us lifted off it ----------
+# Meshy's shape, our material: its baked colour and light would fight the scene's. Brushed dull tin, dented.
 tin = bpy.data.materials.new('tin')
 nt, nd, lk, bs = lib.nodes_of(tin)
 tc = nd.new('ShaderNodeTexCoord')
-n1 = lib.noise(nd, lk, 30., 6., .6, tc.outputs['Object'])
-r1 = lib.ramp(nd, lk, n1.outputs['Fac'], (.30, 0, 0), (.55, 0, 0), .3, .7)
+bv = nd.new('ShaderNodeVectorMath'); bv.operation = 'MULTIPLY'; bv.inputs[1].default_value = (4., 4., 120.)   # brushed: stretched along the height
+lk.new(tc.outputs['Object'], bv.inputs[0])
+n1 = lib.noise(nd, lk, 1., 6., .6, bv.outputs[0])
+r1 = lib.ramp(nd, lk, n1.outputs['Fac'], (.34, 0, 0), (.58, 0, 0), .3, .7)
 sepr = nd.new('ShaderNodeSeparateColor'); lk.new(r1.outputs['Color'], sepr.inputs[0]); lk.new(sepr.outputs[0], bs.inputs['Roughness'])
-n2 = lib.noise(nd, lk, 6., 4., .5, tc.outputs['Object'])
-r2 = lib.ramp(nd, lk, n2.outputs['Fac'], (.36, .37, .40), (.55, .57, .62), .35, .7)     # cool grey tin, dulled in patches
+n2 = lib.noise(nd, lk, 3., 3., .5, tc.outputs['Object'])
+r2 = lib.ramp(nd, lk, n2.outputs['Fac'], (.36, .36, .38), (.5, .5, .53), .35, .7)        # dull grey tin, a little uneven
 lk.new(r2.outputs['Color'], bs.inputs['Base Color'])
 bs.inputs['Metallic'].default_value = 1.
-n3 = lib.noise(nd, lk, 220., 4., .6, tc.outputs['Object'])                              # fine scratches and pits
-bmp = nd.new('ShaderNodeBump'); bmp.inputs['Strength'].default_value = .08; bmp.inputs['Distance'].default_value = .0005
-lk.new(n3.outputs['Fac'], bmp.inputs['Height']); lk.new(bmp.outputs['Normal'], bs.inputs['Normal'])
+bs.inputs['Anisotropic'].default_value = .6
+bmp = nd.new('ShaderNodeBump'); bmp.inputs['Strength'].default_value = .15; bmp.inputs['Distance'].default_value = .0004
+lk.new(n1.outputs['Fac'], bmp.inputs['Height']); lk.new(bmp.outputs['Normal'], bs.inputs['Normal'])
+rim_m = lib.simple_mat('rim', (.62, .62, .64), .12, metal=1.)                             # the worn bead: polished by use
 
 H = .088
-prof = [(0, .004), (.033, .004), (.0355, .0012), (.0368, 0.), (.0378, .004),              # base: a pressed ring
-        (.0385, .02), (.0395, .05), (.0405, .08), (.0409, H - .0015),                      # the wall, tapering out
-        (.0398, H - .0015), (.0392, .075), (.0378, .03), (.0365, .008), (.034, .0065), (0, .0065)]   # inside
-mug = lib.lathe('mug', prof, 128, tin)
-# dents: pushed in at a few places on the wall
-for v in mug.data.vertices:
+bpy.ops.import_scene.gltf(filepath=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets', 'mug.glb'))
+mug = bpy.context.selected_objects[0]; mug.name = 'mug'
+bpy.context.view_layer.objects.active = mug
+bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+me = mug.data
+zs = [v.co.z for v in me.vertices]; z0, z1 = min(zs), max(zs)
+ys = [v.co.y for v in me.vertices]; xs = [v.co.x for v in me.vertices]
+k = H / (z1 - z0); R = (max(ys) - min(ys)) / 2 * k                  # the body's radius (the handle is along +x)
+ax = min(xs) * k + R                                                   # its axis: the handle widens the model's box
+for v in me.vertices:
+    v.co = Vector((v.co.x * k - ax, v.co.y * k, (v.co.z - z0) * k))
+me.materials.clear(); me.materials.append(tin)
+# dents, deeper than the scan's, so they break the highlight
+for v in me.vertices:
     p = v.co; r = math.hypot(p.x, p.y); a = math.atan2(p.y, p.x)
-    if .01 < p.z < H - .006 and r > .036:
+    if .008 < p.z < H - .008 and R - .006 < r < R + .004 and abs(a) > .6:           # the wall only, not the handle
         dent = 0.
-        for a0, z0, s_, k in ((.9, .05, .5, .0028), (2.6, .03, .35, .0018), (-1.9, .062, .4, .0022)):
+        for a0, zc, s_, dk in ((-2.2, .05, .45, .0045), (2.0, .03, .35, .0032), (-1.0, .066, .3, .0036), (2.9, .07, .3, .003)):
             da = math.atan2(math.sin(a - a0), math.cos(a - a0))
-            dent += k * math.exp(-(da / s_) ** 2 - ((p.z - z0) / .016) ** 2)
+            dent += dk * math.exp(-(da / s_) ** 2 - ((p.z - zc) / .014) ** 2)
         p.x -= math.cos(a) * dent; p.y -= math.sin(a) * dent
-# the rolled rim: its own piece, so the lamp's last light can be given to it alone
-bpy.ops.mesh.primitive_torus_add(major_radius=.0414, minor_radius=.0019, major_segments=128, minor_segments=16, location=(0, 0, H - .0012))
-rim = bpy.context.view_layer.objects.active; rim.name = 'rim'; bpy.ops.object.transform_apply(location=True); rim.data.materials.append(tin); rim.data.shade_smooth()
-# the strap handle, riveted near the rim (upright: near the top): a thin strap swept along its bend
-path = [(.0402, .081), (.053, .0805), (.0615, .073), (.0635, .06), (.0605, .047), (.052, .039), (.0395, .036)]   # riveted just under the rim and at the middle
-def catmull(ps, n=10):
-    out = []
-    for i in range(len(ps) - 1):
-        p0, p1, p2, p3 = ps[max(i - 1, 0)], ps[i], ps[i + 1], ps[min(i + 2, len(ps) - 1)]
-        for j in range(n):
-            t = j / n
-            out.append(tuple(.5 * ((2 * p1[k]) + (-p0[k] + p2[k]) * t + (2 * p0[k] - 5 * p1[k] + 4 * p2[k] - p3[k]) * t * t
-                               + (-p0[k] + 3 * p1[k] - 3 * p2[k] + p3[k]) * t ** 3) for k in (0, 1)))
-    return out + [ps[-1]]
-cp = catmull(path)
-bm = bmesh.new(); rings = []
-for i, (x, z) in enumerate(cp):
-    a_, b_ = cp[max(i - 1, 0)], cp[min(i + 1, len(cp) - 1)]
-    tx, tz = b_[0] - a_[0], b_[1] - a_[1]; l = math.hypot(tx, tz); nx, nz = tz / l, -tx / l
-    hw, ht = .0029, .0008
-    rings.append([bm.verts.new((x + nx * dn, dy, z + nz * dn)) for dn, dy in ((-ht, -hw), (ht, -hw), (ht, hw), (-ht, hw))])
-for r0, r1 in zip(rings, rings[1:]):
-    for k in range(4):
-        bm.faces.new((r0[k], r0[(k + 1) % 4], r1[(k + 1) % 4], r1[k]))
-bm.faces.new(rings[0][::-1]); bm.faces.new(rings[-1])
-bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
-hd = lib.obj_from_bm('handle', bm, tin)
-m = hd.modifiers.new('bevel', 'BEVEL'); m.width = .0006; m.segments = 2
-bpy.ops.object.select_all(action='DESELECT'); mug.select_set(True); hd.select_set(True)
-bpy.context.view_layer.objects.active = mug; bpy.ops.object.join()
-# upside down: the rim on the slate; tipped ~2° so the side toward the room lifts a hair off it
+# the rolled rim: its own object, so the lamp's last light can be given to it alone
+bm = bmesh.new(); bm.from_mesh(me)
+top = [f_ for f_ in bm.faces if min(v.co.z for v in f_.verts) > H - .0045 and min(math.hypot(v.co.x, v.co.y) for v in f_.verts) > R - .008]
+rim_bm = bmesh.new()
+vm = {}
+for f_ in top:
+    vs = []
+    for v in f_.verts:
+        if v not in vm:
+            vm[v] = rim_bm.verts.new(v.co)
+        vs.append(vm[v])
+    try:
+        rim_bm.faces.new(vs)
+    except ValueError:
+        pass
+bmesh.ops.delete(bm, geom=top, context='FACES')
+bm.to_mesh(me); bm.free()
+rim = lib.obj_from_bm('rim', rim_bm, rim_m, smooth=True)
+me.shade_smooth()
+# upside down: the rim on the slate; tipped so the side toward us lifts and a dark sliver of the inside shows
 TOP = S0.y + .0045
-turn = Matrix.Rotation(math.radians(-20.), 4, 'Z')         # the handle to the room, seen side-on
+turn = Matrix.Rotation(math.radians(RTURN), 4, 'Z')        # the handle to the room's side, seen side-on
 flip = Matrix.Rotation(math.pi, 4, 'X')
-tilt = Matrix.Rotation(math.radians(-2.4), 4, Vector((.9, .435, 0)))   # the side toward us lifts
+_to = Vector((CAM[0] - (S0.x + .012), 0, CAM[2] - (S0.z + .05)))                   # toward the camera (kit x, z)
+_ax = K(-_to.z, 0, _to.x).normalized()                                              # the horizontal axis across it
+tilt = Matrix.Rotation(math.radians(TILT), 4, _ax)
+M = tilt @ flip @ turn
+low = min((M @ v.co).z for ob in (mug, rim) for v in ob.data.vertices)
 for ob in (mug, rim):
-    ob.matrix_world = Matrix.Translation(K(S0.x + .012, TOP + H + .0008 + .0008, S0.z + .052)) @ tilt @ flip @ turn
-mug.data.shade_smooth()
+    ob.matrix_world = Matrix.Translation(K(S0.x + .012, TOP, S0.z + .05) - Vector((0, 0, low))) @ M
+MUG = (S0.x + .012, TOP + H / 2, S0.z + .05)
 
 props = [body, lid, slate, mug, rim]
 
@@ -183,41 +220,36 @@ for ob in (body, lid):
     bpy.context.view_layer.objects.active = ob; ob.select_set(True)
     bpy.ops.object.shade_smooth_by_angle(angle=math.radians(40)); ob.select_set(False)
 
-# ---------- light ----------
-lib.world((.006, .005, .016), 1.)
-# the clay lamp, high in the passage behind us: its light comes weak through the doorway and lays its shape on the floor
-lib.point('clay lamp', (-.3, 1.95, -3.), (1., .62, .28), 60., .05)
-# and ends on the mug: its flank, and one line along the rim
-
-# violet half-light: from the far corners, as in her camp, and a little over the box
-lib.spot('violet, far left', (-1.05, 1.7, 3.3), (B[0] + .05, .08, B[1] + .05), (.42, .38, .9), 14., 55., 1., .5)
-lib.area('violet, far right', (1.35, 1.9, 3.7), (-1., .8, 3.), (.40, .37, .85), 2., 1.)
-lib.area('violet, over the box', (-1.05, .75, 2.75), (B[0], .1, B[1]), (.42, .38, .82), .5, .5)
-lib.point('violet, the far corner', (-1.45, .5, 3.8), (.52, .47, 1.), 9., .2)   # the far glow
-lib.area('violet from the room, over the box', (-1.25, .42, 2.62), (B[0] + .03, .1, B[1] + .06), (.58, .54, 1.), 5., .25)
-lib.area('a cold lift on the tin', (-1.25, .42, 2.62), (B[0] + .03, .17, B[1] + .06), (.7, .68, 1.), 10., .2, only=[mug])
+# ---------- light: one warm key, violet fill, one peak ----------
+lib.world((.008, .006, .016), 1.)
+WARM = (1., .62, .3)
+# the key: the clay lamp's light, weak, from the doorway side behind us, laid low on the box's near face and the floor
+lib.area('clay lamp', (-1.0, .35, 1.6), (B[0] + .06, 0., B[1] - .2), WARM, KEY, .35)
+# the violet half-light of her camp: from the far corners, and a large low fill from our side so no dark is black
+lib.spot('violet, far left', (-1.05, 1.1, 3.3), (B[0] + .05, .08, B[1] + .05), (.50, .40, .84), 12., 38., 1., .5)
+lib.area('violet along the wall', (-.9, .8, 3.6), (-1.7, .25, 2.2), (.50, .40, .84), 12., 1.)   # grazes the left wall: its blocks and stains
+lib.area('violet, far right', (1.35, 1.9, 3.7), (-1., .8, 3.), (.50, .40, .84), 1.2, 1.)
+lib.point('violet, the far corner', (-1.45, .5, 3.8), (.56, .44, .92), 10., .2)   # the far glow
+lib.area('violet, from our side', (-1.0, .5, 1.3), (B[0], .1, B[1]), (.50, .40, .84), FILL, 1.6, only=[rock, slate, mug])   # not the box: it would outshine the mug
+lib.area('violet on the tin', (-1.2, .4, 2.55), (MUG[0], .15, MUG[2]), (.56, .46, .9), 3., .2, only=[mug])
 
 for ob in bpy.data.objects:
     if ob.type == 'LIGHT':
         ob.visible_camera = False
 
-# ---------- camera: crouched low near the wall, a short step from the box, looking along the wall ----------
-CAM = (-1.27, .26, 1.9)
-MUG = (S0.x + .012, .17, S0.z + .052)
-lib.camera(CAM, lib.forward(CAM, -13., -27.), f=1.2, fstop=3.5, focus=MUG)
-# the lamp's last light on the rim: set where the rim's front bead mirrors it into the eye, reaching the rim alone
-_c, _m = Vector(CAM), Vector((MUG[0], .1295, MUG[2]))
-_to = Vector((_c.x - _m.x, 0, _c.z - _m.z)).normalized()
-_P = _m + _to * .0425 + Vector((0, .0015, 0))
-_V = (_c - _P).normalized(); _N = (Vector((0, 1, 0)) + _to * .6).normalized()
-_L = (2 * _N.dot(_V) * _N - _V).normalized()
-_lp = _P + _L * .45
-for ob in [lib.spot('lamp on the rim', tuple(_lp), tuple(_P), (1., .66, .34), 6., 8., .6, .004, only=[rim]),
-           lib.spot('lamp on the rim, from the doorway', (-1.12, .46, 1.62), tuple(_P), (1., .66, .34), 30., 10., .5, .006, only=[rim])]:
-    ob.visible_camera = False
-lib.comp(haze=(.014, .012, .036), haze_k=.5, mist=(.6, 3.5), glow=.3)
+# ---------- camera: low by the wall, pitched down so the mug's closed base reads as a disc ----------
+lib.camera(CAM, lib.forward(CAM, -20., -30.), f=1.2, fstop=5.6, focus=MUG)
+# the glint: the lamp's last light, one point on the rim's front, where the bead mirrors the key into the eye
+_c = Vector(CAM); _k = Vector((-1.0, .35, 1.6))
+_rv = [rim.matrix_world @ v.co for v in rim.data.vertices]
+_rv = [Vector((p.x, p.z, p.y)) for p in _rv]                       # back to kit coordinates
+_bis = ((_c - Vector(MUG)).normalized() + (_k - Vector(MUG)).normalized()); _bis.y = 0; _bis.normalize()
+_P = max(_rv, key=lambda p: (p - Vector((MUG[0], p.y, MUG[2]))).normalized().dot(_bis) - 30 * abs(p.y - min(q.y for q in _rv) - .004))
+_lp = _P + (_k - _P).normalized() * .5
+g = lib.spot('lamp on the rim', tuple(_lp), tuple(_P), WARM, GLINT, 4., .3, .002, only=[rim]); g.visible_camera = False
+lib.comp(haze=(.03, .022, .06), haze_k=.45, mist=(.5, 3.5), glow=.35)
 
-ANCHORS = {'glints': [{'p': [MUG[0] + .03, .128, MUG[2] - .02]}], 'beam': [{'p': [-.4, 1.1, .6], 'w': .35}]}
+ANCHORS = {'glints': [{'p': [round(_P.x, 4), round(_P.y, 4), round(_P.z, 4)]}], 'beam': [{'p': [-.4, 1.1, .6], 'w': .35}]}
 
 if __name__ == '__main__':
     out = sys.argv[sys.argv.index('--') + 1] if '--' in sys.argv else sys.argv[1]

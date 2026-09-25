@@ -142,27 +142,30 @@ def ramp(nd, lk, src, a, b, pa=0., pb=1.):
     return r
 
 
-def stone_mat(name='cut stone', c1=(.36, .34, .42), c2=(.27, .255, .32), mortar=(.17, .16, .21),
-              course=(.75, .34), slab=(.95, .7), rough=.82, dark_above=None, dark_near=None):
-    """Cut stone in courses on walls and vault; large slabs on the floor (the hall's family)."""
+def stone_mat(name='cut stone', c=(.34, .30, .40), course=(.75, .34), slab=(.95, .7), rough=.82,
+              joint=.58, floor_joint=.74, jw=.011, dark_above=None, dark_near=None):
+    """The hall's cut stone (app/src/ui/scene/hall.js stone()), as nodes: courses on walls and vault, slabs on the floor.
+    Per block a value (.82-1.12), a large stain (+-22 %), water streaks, chisel grain, and joints drawn darker
+    (x joint, the hall's JD) and soft, with the arris bevelled toward them. Shared by every Blender place."""
     mat = bpy.data.materials.new(name); nt, nd, lk, bs = nodes_of(mat)
     geo = nd.new('ShaderNodeNewGeometry'); tc = nd.new('ShaderNodeTexCoord')
     sp = nd.new('ShaderNodeSeparateXYZ'); lk.new(tc.outputs['Object'], sp.inputs[0])
     sn = nd.new('ShaderNodeSeparateXYZ'); lk.new(geo.outputs['Normal'], sn.inputs[0])
 
     def comb(a, b):
-        c = nd.new('ShaderNodeCombineXYZ'); lk.new(a, c.inputs[0]); lk.new(b, c.inputs[1]); return c.outputs[0]
+        cc = nd.new('ShaderNodeCombineXYZ'); lk.new(a, cc.inputs[0]); lk.new(b, cc.inputs[1]); return cc.outputs[0]
 
     def brick(vec, bw, rh, off=.5):
         b = nd.new('ShaderNodeTexBrick')
-        wob = nd.new('ShaderNodeTexNoise'); wob.inputs['Scale'].default_value = 7.; wob.inputs['Detail'].default_value = 3.
+        wob = nd.new('ShaderNodeTexNoise'); wob.inputs['Scale'].default_value = 2.2; wob.inputs['Detail'].default_value = 2.
         lk.new(vec, wob.inputs['Vector'])
-        vm = nd.new('ShaderNodeVectorMath'); vm.operation = 'MULTIPLY_ADD'; vm.inputs[1].default_value = (.018, .018, .018)
-        lk.new(wob.outputs['Color'], vm.inputs[0]); lk.new(vec, vm.inputs[2]); lk.new(vm.outputs[0], b.inputs['Vector'])   # joints that wander a little, worn
+        vm = nd.new('ShaderNodeVectorMath'); vm.operation = 'MULTIPLY_ADD'; vm.inputs[1].default_value = (.03, .025, .03)
+        lk.new(wob.outputs['Color'], vm.inputs[0]); lk.new(vec, vm.inputs[2]); lk.new(vm.outputs[0], b.inputs['Vector'])   # hand-cut: joints wander
         b.inputs['Scale'].default_value = 1.; b.inputs['Brick Width'].default_value = bw; b.inputs['Row Height'].default_value = rh
-        b.inputs['Mortar Size'].default_value = .009; b.inputs['Mortar Smooth'].default_value = 1.
+        b.inputs['Mortar Size'].default_value = jw; b.inputs['Mortar Smooth'].default_value = .7
         b.offset = off; b.inputs['Bias'].default_value = 0.; b.offset_frequency = 2; b.squash = 1.
-        b.inputs['Color1'].default_value = (*c1, 1); b.inputs['Color2'].default_value = (*c2, 1); b.inputs['Mortar'].default_value = (*mortar, 1)
+        b.inputs['Color1'].default_value = (.82, .82, .82, 1); b.inputs['Color2'].default_value = (1.12, 1.12, 1.12, 1)   # each block its own value
+        b.inputs['Mortar'].default_value = (1, 1, 1, 1)
         return b
     bx = brick(comb(sp.outputs['Y'], sp.outputs['Z']), *course)          # walls facing x (and the vault)
     by = brick(comb(sp.outputs['X'], sp.outputs['Z']), *course)          # walls facing z
@@ -175,17 +178,28 @@ def stone_mat(name='cut stone', c1=(.36, .34, .42), c2=(.27, .255, .32), mortar=
         m = nd.new('ShaderNodeMix'); m.data_type = t
         lk.new(fac, m.inputs['Factor']); lk.new(a, m.inputs[6 if t == 'RGBA' else 2]); lk.new(b, m.inputs[7 if t == 'RGBA' else 3])
         return m.outputs[2 if t == 'RGBA' else 0]
-    col = mix(fz.outputs[0], mix(fy.outputs[0], bx.outputs['Color'], by.outputs['Color']), bf.outputs['Color'])
+
+    def mul(a, b):
+        m = nd.new('ShaderNodeMix'); m.data_type = 'RGBA'; m.blend_type = 'MULTIPLY'; m.inputs['Factor'].default_value = 1
+        lk.new(a, m.inputs[6]); lk.new(b, m.inputs[7]); return m.outputs[2]
+
+    def jdark(bk, k):
+        # the joint as a drawn line: k times the stone's value (Fac is 1 in the joint, soft at its edge)
+        r = ramp(nd, lk, bk.outputs['Fac'], (1, 1, 1), (k, k, k), 0., 1.)
+        return mul(bk.outputs['Color'], r.outputs['Color'])
+    tone = mix(fz.outputs[0], mix(fy.outputs[0], jdark(bx, joint), jdark(by, joint)), jdark(bf, floor_joint))
     mfac = mix(fz.outputs[0], mix(fy.outputs[0], bx.outputs['Fac'], by.outputs['Fac'], 'FLOAT'), bf.outputs['Fac'], 'FLOAT')
-    # weathering: broad blotches and fine grain in the stone
-    n1 = noise(nd, lk, 1.6, 5., .6, tc.outputs['Object']); n2 = noise(nd, lk, 18., 6., .6, tc.outputs['Object'])
-    v1 = ramp(nd, lk, n1.outputs['Fac'], (.6, .6, .63), (1.18, 1.15, 1.2), .25, .75)
-    v2 = ramp(nd, lk, n2.outputs['Fac'], (.86, .86, .88), (1.06, 1.06, 1.06), .35, .65)
-    m1 = nd.new('ShaderNodeMix'); m1.data_type = 'RGBA'; m1.blend_type = 'MULTIPLY'; m1.inputs['Factor'].default_value = 1
-    lk.new(col, m1.inputs[6]); lk.new(v1.outputs['Color'], m1.inputs[7])
-    m2 = nd.new('ShaderNodeMix'); m2.data_type = 'RGBA'; m2.blend_type = 'MULTIPLY'; m2.inputs['Factor'].default_value = 1
-    lk.new(m1.outputs[2], m2.inputs[6]); lk.new(v2.outputs['Color'], m2.inputs[7])
-    last = m2.outputs[2]
+    base = nd.new('ShaderNodeRGB'); base.outputs[0].default_value = (*c, 1)
+    last = mul(base.outputs[0], tone)
+    # the large stain, the water run down it, the chisel
+    n1 = noise(nd, lk, 2.2, 4., .55, tc.outputs['Object'])
+    last = mul(last, ramp(nd, lk, n1.outputs['Fac'], (.74, .74, .76), (1.24, 1.2, 1.24), .3, .7).outputs['Color'])
+    st = nd.new('ShaderNodeVectorMath'); st.operation = 'MULTIPLY'; st.inputs[1].default_value = (4., 4., .35)   # streaks: stretched up the wall
+    lk.new(tc.outputs['Object'], st.inputs[0])
+    n2 = noise(nd, lk, 1., 3., .5, st.outputs[0])
+    last = mul(last, ramp(nd, lk, n2.outputs['Fac'], (.86, .86, .88), (1.1, 1.1, 1.1), .35, .65).outputs['Color'])
+    n3 = noise(nd, lk, 26., 5., .6, tc.outputs['Object'])
+    last = mul(last, ramp(nd, lk, n3.outputs['Fac'], (.84, .84, .85), (1.12, 1.12, 1.12), .3, .7).outputs['Color'])
     # a painter's shading of the room, as the kit's gTint: the stone darker overhead, the floor darker near the eye
     for spec, axis in ((dark_above, 'Z'), (dark_near, 'Y')):
         if not spec:
@@ -195,16 +209,15 @@ def stone_mat(name='cut stone', c1=(.36, .34, .42), c2=(.27, .255, .32), mortar=
         lk.new(sp.outputs[axis], mr.inputs['Value'])
         mr.inputs['From Min'].default_value = a0; mr.inputs['From Max'].default_value = a1
         mr.inputs['To Min'].default_value = k0; mr.inputs['To Max'].default_value = k1
-        mm = nd.new('ShaderNodeMix'); mm.data_type = 'RGBA'; mm.blend_type = 'MULTIPLY'; mm.inputs['Factor'].default_value = 1
         cc = nd.new('ShaderNodeCombineColor'); [lk.new(mr.outputs[0], cc.inputs[i]) for i in range(3)]
-        lk.new(last, mm.inputs[6]); lk.new(cc.outputs[0], mm.inputs[7]); last = mm.outputs[2]
+        last = mul(last, cc.outputs[0])
     lk.new(last, bs.inputs['Base Color'])
     bs.inputs['Roughness'].default_value = rough
-    # relief: sunk joints, a pitted face
+    # relief: the arris bevelled into the joint, the chisel on the face
     h = nd.new('ShaderNodeMath'); h.operation = 'MULTIPLY_ADD'; lk.new(mfac, h.inputs[0]); h.inputs[1].default_value = -1.; h.inputs[2].default_value = 1.
-    n3 = noise(nd, lk, 40., 8., .65, tc.outputs['Object'])
-    hh = nd.new('ShaderNodeMath'); hh.operation = 'MULTIPLY_ADD'; lk.new(n3.outputs['Fac'], hh.inputs[0]); hh.inputs[1].default_value = .12; lk.new(h.outputs[0], hh.inputs[2])
-    bump = nd.new('ShaderNodeBump'); bump.inputs['Strength'].default_value = .5; bump.inputs['Distance'].default_value = .01
+    n4 = noise(nd, lk, 30., 6., .65, tc.outputs['Object'])
+    hh = nd.new('ShaderNodeMath'); hh.operation = 'MULTIPLY_ADD'; lk.new(n4.outputs['Fac'], hh.inputs[0]); hh.inputs[1].default_value = .22; lk.new(h.outputs[0], hh.inputs[2])
+    bump = nd.new('ShaderNodeBump'); bump.inputs['Strength'].default_value = .6; bump.inputs['Distance'].default_value = .012
     lk.new(hh.outputs[0], bump.inputs['Height']); lk.new(bump.outputs['Normal'], bs.inputs['Normal'])
     return mat
 
@@ -324,12 +337,19 @@ def render(out_png, samples=128, scale=1.):
     sc.render.resolution_percentage = int(round(scale * 100))
     sc.render.image_settings.file_format = 'PNG'; sc.render.image_settings.color_depth = '16'
     sc.render.filepath = out_png
+    crop = os.environ.get('CROP')                   # drafts: CROP=u0,u1,v0,v1 renders just that part of the frame
+    if crop:
+        u0, u1, v0, v1 = map(float, crop.split(','))
+        sc.render.use_border = True; sc.render.use_crop_to_border = True
+        sc.render.border_min_x, sc.render.border_max_x = u0, u1
+        sc.render.border_min_y, sc.render.border_max_y = 1 - v1, 1 - v0
     bpy.ops.render.render(write_still=True)
 
 
 def anchors(spec, W=1320, H=2868):
     """The live layers' anchors, projected as the kit does (u, v from the top-left; s = f / depth)."""
     from bpy_extras.object_utils import world_to_camera_view
+    bpy.context.view_layer.update()                 # the camera's matrix is stale until the scene updates
     sc = bpy.context.scene; cam = sc.camera; f = cam.data.lens / cam.data.sensor_width
     out = {}
     for k, lst in spec.items():
