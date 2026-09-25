@@ -42,7 +42,7 @@ export const camps: CampView[] = [
     w: 3,
     req: ["b-3.A"],
     name: "The hall, from the far end",
-    line: "From the great door, two rows of flame lead back through the hall to the lamp’s ledge. The separate flames diminish with distance until the lamp at the far end is one more point of fire. Around the corner, light lies across the salt, catching the broad face beyond the turn. You can trace both directions from here without setting a foot in either.",
+    line: "You stop for the night at the far end of the Lamp Hall, beside the great door. From here the two lines of flames in the cups run back up the hall to the ledge, where the lamp burns, small in the distance. Round the corner beside you, a glow lies on the salt.",
     look: {"find": "fd-b11"},
   },
   {
@@ -69,7 +69,7 @@ export const camps: CampView[] = [
     w: 2,
     req: [],
     name: "The tally, end on",
-    line: "Seen lengthways, the tally is a dark seam along the gallery wall. Its cuts gather so closely at this angle that the separate strokes almost disappear. It runs from the first stretch into the unlit salt beyond; you can follow its position farther than you can read it. The darkness takes the wall by degrees, leaving the tally's course visible for a little longer.",
+    line: "You stop for the night in the Salt Gallery. Looking along the salt wall, you see the tally, the carved line of symbols, as a single line of shadow, running from its first stretch on into the dark.",
     look: {"find": "fd-c12"},
   },
   {
@@ -87,7 +87,7 @@ export const camps: CampView[] = [
     w: 2,
     req: ["b-2.B"],
     name: "Her shelf",
-    line: "On the shelf where the rod lay, the dust is broken by one clean stripe the length of a forearm. The stripe keeps its width across the shelf, with undisturbed dust close on either side. You can see the length without laying your arm beside it. Where the stripe ends, the dust resumes, and the empty shelf gives no shape to hold your eye except that absence.",
+    line: "You stop for the night in the Survey Cut, her camp. On the shelf where the rod lay before you took it, a clean stripe the length of a forearm is left in the dust.",
     look: {"line": "For the next one. Cut the two marks on the lintel. Don’t be precious about it."},
   },
   {
@@ -96,7 +96,7 @@ export const camps: CampView[] = [
     w: 3,
     req: [],
     name: "The landing",
-    line: "The landing at the head of the Stair is broad enough for a cart. At its edge there is room to stand clear of the first step and see the width of the descent. The flight goes down into lamplight you did not light. Each visible step catches enough of it to show the drop, while the farther part of the stair remains beyond your view.",
+    line: "You stop for the night on the landing at the head of the Stair, just beyond the lintel. The landing is wide enough for a cart. Below you, the top flight goes down into the light of flames in the cups, flames you did not light.",
     look: {"find": "fd-e07"},
   },
   {
@@ -105,7 +105,7 @@ export const camps: CampView[] = [
     w: 3,
     req: [],
     name: "Halfway down",
-    line: "Halfway down the top flight, each step comes almost to your knee. You lift your foot higher than the rhythm of an ordinary stair requires, and the next tread lies far below the one behind you. The rail runs level with your chest. With your hand against it, you can feel how its height answers the steps rather than the scale of your body.",
+    line: "You stop for the night halfway down the top flight of the Stair. From here you can see that every step is as high as your knee, and the rail cut into the wall stands at the height of your chest. It all seems made for someone much taller than you.",
     look: {"find": "fd-e09"},
   },
   {
@@ -114,7 +114,7 @@ export const camps: CampView[] = [
     w: 4,
     req: [],
     name: "The first turn",
-    line: "The rail turns with the stair, keeping its distance from the descending treads as the direction changes. Below it, the second flight drops away. A small counted door is set into the wall beside that fall, its height slight against the long slope of the stair. From here you can see the door and the turning rail together, but the flight continues below them.",
+    line: "You stop for the night at the first turn of the Stair, where the rail cut from the wall curls round the bend. Below, the second flight goes on down, and on it you can see the little door, small and shut, with its row of notches.",
     look: {"find": "fd-e05"},
   },
   {
@@ -123,7 +123,7 @@ export const camps: CampView[] = [
     w: 5,
     req: ["b-5.0"],
     name: "The second flight",
-    line: "The little door remains shut although its count is full. Beside it, one sharp-cut ring sits among all the worn ones. Its edge holds a cleaner line than theirs, so your eye returns to it even when you try to take in the whole group. The closed door occupies little of the wall; the filled count and the uneven wear occupy more of your attention.",
+    line: "You stop for the night on the second flight of the Stair, beside the little door. It is shut, though every notch in its row is full of light. Beside it is the one ring with sharp edges among all the worn, smooth ones.",
     look: {"find": "fd-f02"},
   },
   {
@@ -132,7 +132,7 @@ export const camps: CampView[] = [
     w: 5,
     req: ["b-5.B"],
     name: "The gap",
-    line: "Through the shoulder-high gap you can see square stone beyond. The opening makes you raise your head to take in the surface on the other side; its straight edges differ from those around you. A draught slips through carrying the smell of old smoke. It reaches you before you put your face near the gap, then thins again in the open air at your back.",
+    line: "You stop for the night on the second flight, by the gap in the wall at shoulder height. Through it you can see square-cut stone, and a draught comes through that smells of old smoke, as if fires once burned somewhere beyond.",
     look: {"find": "fd-f06"},
   },
   {
@@ -141,7 +141,7 @@ export const camps: CampView[] = [
     w: 6,
     req: [],
     name: "The join",
-    line: "The square-cut stone and the rounded stone meet so closely that a blade would not enter the join. You follow the meeting line with your eye, watching one kind of edge give way to the other without a visible interval. Your fingertip can find the change in shape, but no space between them; the two surfaces remain distinct all the way to their contact.",
+    line: "You stop for the night in the square gallery, at the join, where the square-cut stone meets the smooth, rounded stone. Up close, the seam between them is so tight that you could not slip a blade into it.",
     look: {"find": "fd-g09"},
   },
 ];

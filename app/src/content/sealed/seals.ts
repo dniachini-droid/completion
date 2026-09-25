@@ -36,15 +36,15 @@ export const seals: Seal[] = [
   { id: 'seal-2-2', w: 2, o: 2, where: 'The Salt Gallery, the tally-stick niche', stretch: 'st-salt', beat: 'b-2.4',
     carries: { records: ['rec-x-daughter'] } },
   { id: 'seal-2-3', w: 2, o: 3, where: 'The Salt Gallery, a crack above the lone ring', stretch: 'st-salt',
-    line: 'The count beside the crack above the ring fills. Inside is a bone comb, two of its teeth missing. The gaps interrupt the even run of the others so plainly that you count them twice. A short line in the tally’s hand is cut into the wall beside it, close enough that your gaze moves from the broken teeth to the cut without changing position.',
+    line: 'Further in along the Salt Gallery, above the lone ring, the notches beside the crack in the salt fill with light, the whole row at once. Now you can see the pale thing inside: a bone comb, with two of its teeth gone. It looks like an ordinary belonging, put away with care. On the wall beside it is a short line of symbols in the tally\'s hand.',
     carries: { records: ['rec-x-comb'] } },
   { id: 'seal-2-4', w: 2, o: 0, where: 'The Lamp Hall, the corner', stretch: 'st-hall', seenOnly: true },
   // NOTE: seal-2-4 is the named place pl-w2-smooth-place; its line is that place's.
   { id: 'seal-2-5', w: 2, o: 4, where: 'The Survey Cut, the box by the cot', stretch: 'st-camp',
-    line: 'The count on the box by the cot fills. Inside are a tin of tea, a spoon, a candle stub, and a shopping list in her hand: batteries, batteries, tape. The spoon lies at an angle to the tin; the candle has dwindled to something you could close your fingers around. On the list, the second batteries takes up its own place, with no attempt to cross out the first.',
+    line: 'In the Survey Cut, the notches on the slate across the shoebox-sized box by the cot light up together, and you can lift the lid. Inside are a tin of tea, a spoon, a candle stub, and a shopping list in her hand: batteries, batteries, tape. It looks like her store of supplies, and batteries seem to have been on her mind.',
     plain: true },
   { id: 'seal-2-6', w: 2, o: 5, where: 'The Survey Cut, a slate on the floor by the cot’s head', stretch: 'st-camp',
-    line: 'A slate lies on the floor by the head of the cot. Its count fills. Underneath is a head torch, the strap gone stiff enough to hold a bent shape without a head inside it. White powder has crusted in the battery case. You turn the case towards the available light; the powder stays lodged in its small recesses, and the torch remains dark.',
+    line: 'In the Survey Cut, by the head of the cot, a thin slate lies on the floor with a row of notches cut in it. The notches glow, and you lift the slate. Under it is a head torch, the kind worn on a strap round the head. The strap has gone stiff, and white powder has crusted in the battery case, as if the batteries were left in until they leaked.',
     plain: true },
 
   /* ---- week 3 ---- */
@@ -53,16 +53,16 @@ export const seals: Seal[] = [
   { id: 'seal-3-2', w: 3, o: 0, where: 'The Salt Gallery, the next stretch', stretch: 'st-salt', seenOnly: true },
   // NOTE: seal-3-2 is seen in the open at b-3.1.
   { id: 'seal-3-3', w: 3, o: 2, where: 'The Stair’s first turn, a recess', stretch: 'st-stair',
-    line: 'The recess at the first turn fills its count. Inside is a coil of measuring cord, knotted every ten paces. Its stiff knots hold the turns of the coil apart in uneven loops, so that you can follow the cord a little way without unrolling it. A short line in the tally’s hand is cut into the wall beside it, level with the recess.',
+    line: 'At the first turn of the Stair is another alcove, separate from the niche beside the rail: the recess at the first turn. Its row of notches fills with light, and it opens. Inside is a coil of measuring cord, knotted every ten paces, its knots gone stiff. It looks like a cord for pacing out distances. Beside it on the wall is a short line of symbols in the tally\'s hand, as if noting what the cord is.',
     carries: { records: ['rec-x-cord'] } },
   { id: 'seal-3-4', w: 3, o: 3, where: 'The Lamp Hall, the foot of the wall by the lamp', stretch: 'st-hall',
-    line: 'The count at the foot of the wall by the lamp fills. Among scattered chips lies a stub of stone: the broken edge of a rod. Its fractured end is rougher than the length that survives. You can see where it stops abruptly amid pieces small enough to shift under a fingertip, while the lamp above holds the floor and the wall in the same pool of light.',
+    line: 'In the Lamp Hall, at the foot of the wall by the lamp, the stretch of wall with the carved lamp and flame, a row of notches fills with light, and a small niche there opens. Inside, among a scatter of stone chips, lies a stub of stone: the broken-off edge of a rod, like the fine edge of the stone rod from the shelf. The chips look like the leftovers of cutting stone.',
     plain: true },
   { id: 'seal-3-5', w: 3, o: 4, where: 'The Survey Cut, a ledge', stretch: 'st-camp',
-    line: 'The count on the ledge in her camp fills. A box of tape cassettes sits there, its contents close together in the little space. Three bear labels in her hand: DAY 3 (HIM), DAY 6 (IT WORKS), DAY 14. You read them in that order. The gaps between the dates take up no room on the labels, though the box has room for each cassette.',
+    line: 'In the Survey Cut, where she camped, a row of notches along the edge of a ledge in the wall fills with light. On the ledge is a box of tape cassettes, the small plastic kind played in an old tape recorder. Three are labelled in her hand: DAY 3 (HIM), DAY 6 (IT WORKS), DAY 14. They look like recordings she made of her days here.',
     plain: true },
   { id: 'seal-3-6', w: 3, o: 5, where: 'The head of the Stair, a crack in the landing’s floor', stretch: 'st-stair',
-    line: 'A count follows a crack in the landing floor. It fills. Inside the crack is a foil blanket, still sealed in its packet. The packet has slipped into the narrow opening but has not opened there; you can see the folded foil pressed flat through its wrapping. In pencil on the packet: *in case I’m an idiot*. The words are small enough to fit beside the fold.',
+    line: 'On the landing at the head of the Stair, a row of notches runs along a crack in the floor, and it fills with light. Inside the crack is a foil blanket, the thin silver emergency kind that folds small, still in its packet. On the packet, in pencil: *in case I\'m an idiot*. It looks like spare kit, kept back for an emergency.',
     plain: true },
 
   /* ---- week 4 ---- */
@@ -71,15 +71,15 @@ export const seals: Seal[] = [
   { id: 'seal-4-2', w: 4, o: 2, where: 'The Salt Gallery, past the split', stretch: 'st-salt', arrival: 'b-4.B',
     carries: { records: ['rec-x-neighbour'] } },
   { id: 'seal-4-3', w: 4, o: 3, where: 'The Survey Cut, the recess above the cot', stretch: 'st-camp',
-    line: 'The count on the recess above the cot fills. A printed email is pinned to the back inside. The sheet hangs flat where the pin holds it and bows slightly below, close to the wall but clear of the recess floor. From the cot you would have to look up to read it; standing here, you can see the whole page at once.',
+    line: 'In the Survey Cut, the slate over the recess above the cot begins to change. Light fills its notches from end to end, and the recess opens. Pinned to the back of it is a printed email, a single sheet of ordinary paper. You reach up and read it where it hangs.',
     carries: { records: ['rec-x-colleague'] } },
   { id: 'seal-4-4', w: 4, o: 0, where: 'The Lamp Hall, the far end', stretch: 'st-hall', seenOnly: true },
   // NOTE: seal-4-4 is the great door's count, seen close at b-4.C; nothing opens (it opens as seal-7-5).
   { id: 'seal-4-5', w: 4, o: 4, where: 'The Salt Gallery, a hollow in the salt', stretch: 'st-salt',
-    line: 'The count around the hollow in the salt fills. Inside is a child’s clay sheep, one leg repaired with salt. The repair has the pale, granular look of the hollow around it against the more solid clay of the body. You can make out the little leg where it joins the sheep without lifting it. A short line in the tally’s hand is cut into the wall beside it.',
+    line: 'In the Salt Gallery, at the hollow low in the salt wall, light fills the notches round its rim. Lying in the hollow is a child\'s clay animal, a sheep. One of its legs has been mended with salt, as if someone cared enough to fix it. On the wall beside it is a short line of symbols in the tally\'s hand. You leave the sheep where it lies.',
     carries: { records: ['rec-x-sheep'] } },
   { id: 'seal-4-6', w: 4, o: 5, where: 'The Survey Cut, a slate low on the back wall', stretch: 'st-camp',
-    line: 'Low on the back wall of her camp, a slate’s count fills. Behind it is a paperback dictionary of a dead language. Its spine is broken at the grammar, where the pages settle open of their own accord; the margins there are thick with pencil. You hold it low to read, with the slate and the wall close behind the bent paper cover.',
+    line: 'Low on the back wall of her camp in the Survey Cut, a thin slate with a row of notches is set against the stone like a lid. The notches fill with light, and you lift the slate away. Behind it is a paperback dictionary of a dead language. Its spine is broken open at the grammar section, and the margins there are full of pencil notes, as if someone worked through it hard.',
     plain: true },
 
   /* ---- week 5 ---- */
@@ -88,14 +88,14 @@ export const seals: Seal[] = [
   { id: 'seal-5-2', w: 5, o: 2, where: 'The Salt Gallery, the crust', stretch: 'st-salt', beat: 'b-5.3',
     carries: { records: ['rec-s5'] } },
   { id: 'seal-5-3', w: 5, o: 3, where: 'The Stair, the gap’s sill', stretch: 'st-flight2',
-    line: 'The count on the gap’s sill fills. Wax crumbs and a broken stylus lie there, the crumbs small against the width of the sill. The broken end of the stylus faces the gap. Beside them, a short line in the tally’s hand is cut into the wall. You can see all three at once: the scattered wax, the shortened tool, and the cut beside it.',
+    line: 'On the second flight, light fills the notches on the sill of the gap, the rough window in the wall. On the sill lie crumbs of wax and a broken stylus, a thin pointed tool for scratching writing into wax. Beside them, a short line of symbols is cut into the wall in the tally\'s hand. They look like the leftovers of someone writing on wax.',
     carries: { records: ['rec-x-wax'] } },
   { id: 'seal-5-4', w: 5, o: 4, where: 'The Survey Cut, the notebook’s back pocket', stretch: 'st-camp',
-    line: 'The count on the notebook’s back pocket fills. Inside is a folded map of the hill. The folds resist you a little as you open it, and the hill spreads out across the paper. The shaft is marked in pen; in another pen: SALT? and TUNNEL? You hold the map by its edges while the two kinds of ink remain distinct on the same sheet.',
+    line: 'In the Survey Cut, a pocket at the back of her notebook has its own row of notches, and they fill with light. Inside is a folded map of the hill. You unfold it. The shaft is marked in pen, and in another pen someone has written SALT? and TUNNEL? The question marks make them look like guesses at what lies inside the hill.',
     plain: true },
   // NOTE: seal-5-4's map is paper but not a record in MVP_CONTENT §4, so it counts as plain.
   { id: 'seal-5-5', w: 5, o: 5, where: 'The Lamp Hall, the ledge’s underside', stretch: 'st-hall',
-    line: 'The count under the ledge fills. You have to lower yourself to see the small ring cut there, out of sight of anyone standing. A short line in the tally’s hand sits beside it. From this low angle the underside of the ledge occupies most of your view, and the ring and line are close enough to take in together.',
+    line: 'In the Lamp Hall, the notches under the front edge of the ledge fill with light. Beside them a small ring comes into view, cut where no one would look, and next to it a short line of symbols in the tally\'s hand. It looks as if it was cut to be there rather than to be seen.',
     carries: { records: ['rec-x-hers-again'] } },
 
   /* ---- week 6 ---- */
@@ -105,16 +105,16 @@ export const seals: Seal[] = [
   { id: 'seal-6-2', w: 6, o: 2, where: 'The square gallery, a niche under the crew’s wall', stretch: 'st-square', arrival: 'b-6.B',
     carries: { records: ['rec-x-foreman'] } },
   { id: 'seal-6-3', w: 6, o: 3, where: 'The square gallery, a wall-shelf', stretch: 'st-square',
-    line: 'The count on the wall-shelf fills. A bronze level lies on the shelf, long enough to rest across your hands. Its bubble is long dry. The place where a bubble should move is still; you can turn the level, but nothing inside responds to the tilt. Its bronze weight stays steady against your palms when you set it level again.',
+    line: 'At the wall-shelf in the square gallery, light fills the row of notches on its lip. On the shelf lies a bronze level, a builder\'s tool for checking that something is flat, like a spirit level. Its bubble dried up long ago.',
     plain: true },
   { id: 'seal-6-4', w: 6, o: 0, where: 'The square gallery, the floor', stretch: 'st-square', seenOnly: true },
   // NOTE: seal-6-4 (the mule-shoe) is seen on the floor at b-6.3, which carries its line.
   { id: 'seal-6-5', w: 6, o: 4, where: 'The Survey Cut, her folder', stretch: 'st-camp',
-    line: 'The count on her folder fills. Its first pocket contains a council letter about the shaft and a note taken from a car windscreen: “Your car’s been here nine days. Ring me.” The two sheets sit together in the pocket, the official letter larger than the note. You lift their edges far enough to see both without taking them out of order.',
+    line: 'In the Survey Cut, light fills the notches on the slate across her folder, the one marked HILL, and the folder opens. In its first pocket are a letter from the council about the shaft and a note from a car\'s windscreen: "Your car\'s been here nine days. Ring me." Someone up above seems to have noticed her car.',
     plain: true },
   // NOTE: seal-6-5's papers are not records in MVP_CONTENT §4, so it counts as plain.
   { id: 'seal-6-6', w: 6, o: 5, where: 'The square gallery, a niche cut square, low', stretch: 'st-square',
-    line: 'Low in the square wall, the square niche fills its count. Inside is a clay water jar stopped with wax. The wax is cracked, its surface divided across the mouth while the jar beneath remains whole. You bend to see into the low opening, but the stop covers the neck; only the shape of the jar and the broken surface of its seal are visible.',
+    line: 'Low in the square gallery\'s wall is a niche cut square, like a small cupboard. The row of notches on its lip fills with light, and the niche opens. Inside stands a clay water jar. Its neck is stopped with wax, and the wax is cracked. It looks as if someone once kept drinking water here.',
     plain: true },
 
   /* ---- week 7 (run-ahead) ---- */
