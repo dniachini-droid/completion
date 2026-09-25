@@ -639,7 +639,7 @@ export const STAND_IN: Record<StretchId, string> = {
 };
 /** The places painted from their briefs so far (ids only; D-015): each shows its own painting, `pt-<id>`, which
     ui/paintings.ts carries (a test keeps the two in step); every other place shows its stretch's stand-in. */
-export const PAINTED: ReadonlySet<string> = new Set<string>(['b-1.A', 'b-1.B', 'b-1.C']);
+export const PAINTED: ReadonlySet<string> = new Set<string>(['b-1.A', 'b-1.B', 'b-1.C', 'b-2.A']);
 export const paintingOf = (id: string | null, stretch: StretchId): string => id && PAINTED.has(id) ? `pt-${id}` : STAND_IN[stretch];
 
 function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
