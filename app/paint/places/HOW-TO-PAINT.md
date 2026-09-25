@@ -22,6 +22,8 @@ Sealed folder (D-015): the scene files here quote the briefs. This guide itself 
 ## Traps that cost hours
 - **gTint leaks.** `if (a.x < b.x) gTint = …` is true far from the object too. Always also require the surface to be near: `if (obj.x < d.x) { d = obj; gTint = … }` or `&& obj.x < .01`.
 - **Light falloff is broad**: `att = k / (1 + d²/r²) / r²` ≈ `k/d²` far away. A "small" warm light with k .5 washes a whole floor gold (warm check fails). Local accents: k .01–.1, r .1–.3, placed very near the thing.
+- A light's `reach: m` (kit v1.5) cuts it off beyond that distance: use it for small accents (a rim, a pin, an edge) so they light the thing and not the wall.
+- **Floor sheen** is added toward `bloomAt` and ignores gTint; if the floor near the camera glows, set `sheen: 0` in the scene.
 - `warm:` on a light adds gold everywhere around it; keep ≤ .02.
 - **Words band (top 22%) too bright**: tint the upper walls/vault down (`if (p.y > h) gTint *= mix(1., .3, smoothstep(h, h2, p.y))`) or pitch the camera down. **Button band (lower third) busy/bright**: darken the near floor with gTint; polish and floor sheen are additive and ignore gTint, so damp `gPolish` there too.
 - Floors (normal up, not M_DRESSED/M_ROCK) get a sheen toward `bloomAt`; inside small recesses set the material to `M_ROCK` to avoid it.
