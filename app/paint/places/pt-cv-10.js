@@ -15,7 +15,7 @@ export const ramp2 = x => ST.Y1 - Math.min(Math.max(x - ST.W, 0), 8) * ST.S;    
 /* the lamps' flames: top flight in the left wall, second flight in the far wall */
 export const LAMP1 = [2.5, 4.9].map(z => [-1.72, ramp1(z) + 1.98, z]);
 export const LAMP2 = [3.0, 5.2, 7.4, 9.6].map(x => [x, ramp2(x) + 1.98, 9.92]);
-export const lampLight = (f, k = .7, extra = {}) => ({ p: [f[0] + (f[0] < -1 ? .3 : 0), f[1] + .12, f[2] - (f[2] > 9 ? .3 : 0)], c: [1, .68, .34], k, r: .7, shadow: .6, ...extra });
+export const lampLight = (f, k = .7, extra = {}) => ({ p: [f[0] + (f[0] < -1 ? .3 : 0), f[1] + .12, f[2] - (f[2] > 9 ? .3 : 0)], c: [1, .68, .34], k, r: .7, shadow: .6, warm: .004, ...extra });
 
 export const STAIR_GLSL = /* glsl */ `
   const float SW = 1.6, ST_T = .55, ST_R = .42, ST_S = .42 / .55, ST_Y1 = -5.04, ST_ZT = 6.6, ST_ZF = 9.8;
@@ -59,6 +59,7 @@ export const STAIR_GLSL = /* glsl */ `
     vec4 a2 = hallAir(q2, SW, 3.2, SW, -SW, 16., M_CUT);
     vec4 d = A(a1, a2);
     if (d.x == a1.x) d.x *= .8; else d.x *= .8;                                       /* the sheared vault: keep the march honest */
+    d.x += rough(p, .01, 3.) + rough(p, .004, 12.);                                  /* the cut stone's faces, never quite flat */
     /* the lamps' cups: in the left wall of the top flight, the far wall of the second */
     float z1 = p.z - clamp(floor((p.z - 2.5) / 2.4 + .5), 0., 1.) * 2.4 - 2.5;
     d = A(d, vec4(cupAir(z1, p.y - ramp1(p.z), -p.x - SW), M_CUT, NOUV));
@@ -90,9 +91,10 @@ export const STAIR_GLSL = /* glsl */ `
 /* the Stair's look, shared */
 export const STAIR_LOOK = {
   far: 40, fogK: 1 / 18, sheen: 0, gold: 1, expo: 2.1, amb: .9, ambC: [.8, .76, 1.8], stepK: .7, steps: 260,
+  grain: .35, shadowJitter: 1, bloom: { alpha: .22 },
   hazeBase: [.018, .016, .05], hazeFar: [.06, .05, .12],
   bloomPow: 14, bloomC: [.12, .08, .05],
-  glow: { threshold: .55, k: .6 },
+  glow: { threshold: .55, k: .55 },
 };
 
 const RING = [-1.6, .72, 1.0];                                          /* the ring set apart, on the left wall at the flight's head */
@@ -106,9 +108,9 @@ export default {
   bloomAt: [0, -3, 6],
   blur: { px: 1.8, d0: 5, d1: 14, k: .85 },
   lights: [
-    lampLight(LAMP1[0], .45, { reach: 2.4 }),                                     /* light 0: the lamps' colour (the flames) */
-    lampLight(LAMP1[1], .5, { reach: 2.6 }),
-    { p: [0, -4.2, 6.8], c: [1, .68, .34], k: 2.6, r: 1.2, reach: 5 },                          /* the flight's lamplight, rising from below */
+    lampLight(LAMP1[0], .7, { reach: 2.6 }),                                     /* light 0: the lamps' colour (the flames) */
+    lampLight(LAMP1[1], .75, { reach: 2.8 }),
+    { p: [0, -4.2, 6.8], c: [1, .68, .34], k: 3.6, r: 1.2, reach: 5 },                          /* the flight's lamplight, rising from below */
     { p: [-1.3, .3, 1.15], c: [1, .76, .48], k: .3, r: .3, shadow: .8, reach: 1. },  /* and catching the ring's groove from below */
     { p: [0, 2.5, -2.5], c: [.34, .31, .75], k: 5, r: 2.5 },
     { p: [0, -1, 4], c: [.34, .31, .75], k: 6, r: 3 },                        /* violet under the landing's vault */

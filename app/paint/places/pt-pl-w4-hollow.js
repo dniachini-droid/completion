@@ -19,7 +19,7 @@ export default {
   blur: { px: 1.6, d0: 1.2, d1: 5, k: .8 },
   lights: [
     { p: [-.9, 1.6, ZH - .9], c: W, k: .5, r: 1., reach: 1.9 },              /* the cups' glow, from above and behind */
-    { p: [XH + .34, YH + .1, ZH - .26], c: W, k: .09, r: .2, reach: .9, shadow: 1 },         /* its reach into the hollow, low from your side: each pressed place's far wall lit, its near lip in shadow */       /* its reach into the hollow: the pressed places give it back */
+    { p: [XH + .06, YH + .07, ZH - .05], c: W, k: .018, r: .08, reach: .2, shadow: 1 },         /* its reach into the hollow, low from your side: each pressed place's far wall lit, its near lip in shadow */       /* its reach into the hollow: the pressed places give it back */
     { p: [.4, 1.6, 34], c: V, k: 5, r: 9 },                                                   /* the gallery going on in its own violet */
     { p: [.3, 1.2, ZH + 3], c: V, k: 2.2, r: 2.5 },
     { p: [0, 1.6, ZH - 6], c: [.3, .28, .66], k: .5, r: 3 },                                  /* faint fill from behind */

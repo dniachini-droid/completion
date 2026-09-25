@@ -19,6 +19,7 @@ export default {
   lights: [
     { p: [-.9, 1.4, ZB - 2.2], c: W, k: .55, r: 1.2, shadow: .6, reach: 3.2 },               /* the cups' glow, from the left: the gallery's near end */
     { p: [-1.97, YB + .12, ZB - .19], c: W, k: .03, r: .12, reach: .45, shadow: 1 },           /* its reach into the niche, raking across the block's face */
+    { p: [-1.45, YB + .45, ZB - .55], c: W, k: .12, r: .4, reach: 1.3, shadow: .8 },          /* the cups' warmth pooled on the stone surround and the salt at its left */
     { p: [.3, 1.6, ZB + 6], c: V, k: 3, r: 4 },                                                 /* the gallery going on in its own violet, on the right */
     { p: [0, 1.6, ZB - 7], c: [.3, .28, .66], k: .5, r: 3 },                                   /* faint fill from behind */
   ],

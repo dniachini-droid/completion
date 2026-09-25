@@ -21,7 +21,7 @@ export default {
   bloomAt: [GX, FL + 1, 20], bloomPow: 30, bloomC: [.05, .04, .05],
   blur: { px: 1.6, d0: 3.4, d1: 9, k: .85 },
   lights: [
-    { p: [GX - .1, TOP + 2.7, 6.95], c: [1, .68, .34], k: .7, r: .8, shadow: .7, reach: 4.5 },      /* the Stair's lamps behind you, their light falling into the gap */
+    { p: [GX - .1, TOP + 2.7, 6.95], c: [1, .68, .34], k: .85, r: .8, shadow: .7, reach: 4.5, warm: .003 },      /* the Stair's lamps behind you, their light falling into the gap */
     { p: [GX + .1, TOP + .55, 9.2], c: [1, .72, .4], k: .22, r: .22, shadow: .8, reach: .75 },
     { p: [GX, FL + .9, 10.7], c: [1, .66, .32], k: .35, r: .5, shadow: .5, reach: 3 },           /* the lamps' light, through the gap, on the square stone */       /* and on the chips at the wall's foot */
     { p: [GX, FL + 1.2, 13.5], c: [.3, .27, .6], k: 2, r: 1.8 },                                  /* the gallery beyond: a little cold light, dying */

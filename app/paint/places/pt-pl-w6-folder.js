@@ -22,9 +22,9 @@ export default {
   lights: [
     { ...room.lights[0], k: 5 },                                                            /* the clay lamp, in the passage behind */
     { p: [SX - .13, .03, F[1] - .04], c: [1, .72, .38], k: .006, r: .07, reach: .3 },    /* its light, low under the rail, ending on the spine */
-    { p: [SX - .55, .22, F[1] - .45], c: [1, .72, .38], k: .05, r: .3, shadow: 1, reach: 1.1 },   /* a warm pool on the floor, under the cot, leading in to it */
-    { p: [-1.3, 1.9, 3.6], c: [.4, .37, .85], k: .8, r: 1.2 },                              /* violet in the far corners */
-    { p: [1.35, 1.9, 3.7], c: [.4, .37, .85], k: .5, r: 1 },
+    { p: [SX - .6, .09, F[1] - .35], c: [1, .72, .38], k: .07, r: .3, reach: .9 },   /* a warm pool on the floor, under the cot, leading in to it */
+    { p: [-1.3, 1.9, 3.6], c: [.4, .37, .85], k: 1.4, r: 1.2 },                              /* violet in the far corners */
+    { p: [1.35, 1.9, 3.7], c: [.4, .37, .85], k: 1, r: 1 },
     { p: [.8, .3, 2.3], c: [.42, .38, .82], k: .025, r: .3, reach: .9 },
     { p: [.4, .2, 2.9], c: [.42, .38, .82], k: .04, r: .4, reach: 1.2 },                     /* violet half-light under the cot */
   ],
@@ -45,7 +45,7 @@ export default {
   }
   vec4 scene(vec3 p) {
     vec4 d = roomScene(p);
-    if (p.y > .3) gTint *= mix(1., .4, smoothstep(.3, 1., p.y));                      /* the canvas and the wall above, dark */
+    if (p.y > .3) gTint *= mix(1., .55, smoothstep(.3, 1., p.y));                      /* the canvas and the wall above, dark */
     if (p.y < .03) gTint *= mix(.45, .9, smoothstep(.4, 1.2, p.x));                   /* the floor near you, out of the light */
     vec3 b = p - vec3(${F[0].toFixed(3)}, 0, ${F[1].toFixed(3)});
     /* the folder: grey card, a little bowed, its spine toward you */
