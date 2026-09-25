@@ -43,6 +43,13 @@ Every item carries `w` (story week), `o` (order in that week, where order matter
 - **Keys** open sealed things in NICHES order, story counts first (BALANCING §3); a surplus opens next week's first rows that carry neither a sign nor a record (§5).
 - **Finds** (§8) come from the pool for the current stretch and window, in the listed order, each once. If every pool within reach is used up (a very large run of weeks), a find source gives the oldest record in view re-surfaced with its newest rendering instead, never nothing and never a bare reward.
 - **Absence** (3+ days): "where you were" (the last place, the sealed thing in view, one unfinished record) is worked out, and names the one open question for the story week Dan is in (§10.3).
+- **Order fixes from the playable's story review** (2026-09-25, `REVIEW_PLAYABLE.md`; guarded by the app's continuity test):
+  - **A guess never holds the story up.** A mark in a `req` is met once it has been *offered*; a word (`b-3.A`, `b-7.A`) asks any such mark still unguessed on its own screen, before the first tap.
+  - **A Key opens only what is in view:** a sealed thing some beat brings into view (`inView`) waits for that beat (`b-1.5` brings `seal-1-1`, `b-3.A` brings `seal-3-1`); a *(Key)* arrival waits for its own `req`; anything else waits until Dan has been to its stretch (D-079). Until then the Key is kept, never lost. Story counts (a step, place, record or guess of their own) open before plain ones, from any week up to the current.
+  - **A morning that confirms marks** (`b-w3`–`b-w6.morning`) plays on the first morning after the tablet offering those marks has opened, bedtime kept or not; bedtime brings the camp line and a find.
+  - **Camp lines and glimpses keep to what they describe:** `b-w3.camp` after `b-3.A`, `b-w7.camp` after `b-7.C`; `b-w2.camp`, `b-w2.close`, `b-w2.tz2` and `aw-w2` stop once `b-3.A` has played.
+  - **A guess asked on an arrival** is only one whose mark that place's own records carry, never on the beat that confirms it; a tablet a kept Key opens on an arrival asks its marks there.
+  - **Next week's places** come only on a deep push (a High day, a called push, or Keep going); otherwise one place a day on foot, the rest of the distance kept for tomorrow (Key places are extra). Camp views rotate (unused ones along the walked route first, then the one seen longest ago).
 
 ### 0.3 Stretches (where Dan is on the map)
 | Stretch | Id | From | Places on it |
@@ -136,7 +143,7 @@ Text is in `LIVES.md` (sign strings, renderings, her sheets, tellings) and the r
 | `rec-l1` | Linguist | LIVES §2 L1 (the wall by the lamp) | `b-1.A`, `b-1.3`, `b-1.4` | 1 | last line month 9; meant month 12 |
 | `rec-l2` | Linguist | LIVES §2 L2 (notebook, English) | `b-1.C` | 1 | at once |
 | `rec-s1` | Salt-Cutter | LIVES §1 S1 + her Day 1 sheet | `b-1.5` | 1 | month 5 |
-| `rec-k1` | (his) | LIVES §6 K1 (the lamp's base) | `b-1.A` (seen), `b-3.3` | 1 | week 5 |
+| `rec-k1` | (his) | LIVES §6 K1 (the base of the lamp on the ledge) | `b-1.A` (seen), `b-3.3` | 1 | week 5 |
 | `rec-x-pick` | chorus | LIVES §12 (the pick) | `seal-1-2` | 1 | month 4 |
 | `rec-s2` | Salt-Cutter | LIVES §1 S2 + her Day 4 sheet | `b-2.A` | 2 | month 5 |
 | `rec-l3` | Linguist | LIVES §2 L3 | `b-2.3` | 2 | at once |
@@ -239,7 +246,7 @@ Every new mark arrives with a context and **four candidates**, one tempting but 
 
 **True synonyms are accepted.** Where a candidate is a true second sense (*place* for HERE, *down* for DEEP, *leave* for GO, *out* for UP, *the first* for ONE, *someone* for PERSON), choosing it counts as right: it renders as its own word and is never struck. Only the listed tempting wrong one is struck, and only when the confirming beat plays.
 
-**Marks recognised, not guessed** (no candidates; the marks screen names the shape): `mk-ring` (week 1; *a ring*; her sheets give *[name]*, so by week 2 the screen says *a ring: a name*); `mk-hand` (week 4, `b-4.4`: *a hook closed on a dot*, her sheet's *signature?*; the rod's hook is *a hook with a tail*, named at `b-2.B`; the wall by the lamp's hook is described only as *not this hook* (`b-4.4`) and is never named or matched to the rod's before L8, week 6). The partial signs are `mk-give`'s hook (`b-1.7`, High) and `mk-deep`'s wedge (`b-3.4`, High), both already written.
+**Marks recognised, not guessed** (no candidates; the marks screen names the shape): `mk-ring` (week 1; *a ring*; her sheets give *[name]*, so by week 2 the screen says *a ring: a name*); `mk-hand` (week 4, `b-4.4`: *a hook closed on a dot*, her sheet's *signature?*; the rod's hook is *a hook with a tail*, named at `b-2.B`; the wall by the lamp's hook is described only as *not this hook* (`b-4.4`) and is never named or matched to the rod's before L8, week 6). The partial signs are `mk-give`'s hook (`b-1.7`, High) and `mk-deep`'s wedge (`b-3.4`, High), both already written. In the records, his hand-mark and hers are drawn as their own shapes (hers: *a hook with a tail*, `lettering.ts` `mk-hand-hers`), so the corner of the wall by the lamp shows hers; the marks screen lists only his as `mk-hand`. The app's guess contexts are written as whole sentences describing the picture or her sheet beside the mark (review 2026-09-25); her pencilled word under PERSON, ONE and ME is her sheet's evidence and is kept.
 
 **Count against the budget:** 14 marks guessed inside the six weeks plus 2 recognised, and 3 in the run-ahead, against the budget's 8–12. The budget was an estimate; the sealed order is canon (SCRIPT §6: region 1 front-loads its marks so the first word lands in week 2–3), and weeks 5–6 each carry three or two. No change.
 
@@ -290,7 +297,7 @@ A find is **a thing already true, delivered as a find, never a bare reward** (se
 | `fd-b09` | hall | 1 | Under the ledge lies a flake of glaze, a shade darker than the lamp's. | The lamp's first glaze, before it was made new (S7). Ties C-01 |
 | `fd-b10` | hall | 1 | On the floor of the hall, in chalk, is an arrow pointing at the side chamber, and the word CAMP. | Hers. Texture |
 | `fd-b11` | hall | 3 / `b-3.A` | In the lamplight there are rings on the ceiling too, cut where no ladder has been. | Cut at his reach, twice a man's height (C-04a; C-04) |
-| `fd-b12` | hall | 1 | The lamp's flame does not bend, even when you breathe on it. | It burns by his word, not by oil (C-01, C-02) |
+| `fd-b12` | hall | 1 | The flame of the lamp on the ledge does not bend, even when you breathe on it. | It burns by his word, not by oil (C-01, C-02) |
 | `fd-c01` | hall (the corner) | 1 | In the bottom of one trough at the corner lies a dry leaf, brown and crumbling, of the kind that grows on a hedge. | Carried in on her boot from the field: the only thing from the world on this floor. Texture |
 | `fd-c02` | salt | 1 (side) | At the gallery's first turn, a knot of wool gone grey is tied round a knob of salt, and a short line is cut beside it. | `tl-wool` |
 | `fd-c03` | salt | 2 (side) | In a crack in the salt lies a small cake of salt with a thumbprint pressed into it, and under it is a line in the tally's hand. | `tl-salt-cake` |
@@ -386,16 +393,16 @@ One is shown for a step that has no authored step beat (§0.2; shared with scrip
 ### `st-hall` (w1; dark until `b-3.A`, lit after)
 | Id | Line | Condition |
 |---|---|---|
-| `ps-h01` | The hall goes on past where the lamp's light reaches, and the air is colder that way. | before `b-3.A` |
+| `ps-h01` | The hall goes on past where the light of the lamp on the ledge reaches, and the air is colder that way. | before `b-3.A` |
 | `ps-h02` | A cup is cut in the wall at head height, empty, with the flame's mark inside it. | before `b-3.A` |
 | `ps-h03` | Beyond it is another cup, and then another, a few paces apart, and all of them are empty. | before `b-3.A` |
 | `ps-h04` | Rings are cut in the wall at shoulder height, dozens of them, worn soft at the edges. | |
-| `ps-h05` | The floor is one stone as far as the lamp shows, with no joins in it. | before `b-3.A` |
+| `ps-h05` | The floor is one stone as far as the lamp on the ledge shows, with no joins in it. | before `b-3.A` |
 | `ps-h06` | From here the lamp on its ledge is small, and it does not flicker. | before `b-3.A` |
-| `ps-h07` | The ceiling curves over so high that the lamp's light gives out before it reaches it. | before `b-3.A` |
+| `ps-h07` | The ceiling curves over so high that the light of the lamp on the ledge gives out before it reaches it. | before `b-3.A` |
 | `ps-h08` | The marks go on up the wall past where you can reach. | |
 | `ps-h09` | On the side wall stands the lintel, with only stone beneath it and the blank beside its two marks. | before `b-3.A` |
-| `ps-h10` | At the far end the lamp's light stops well short of the door. | before `b-3.A` |
+| `ps-h10` | At the far end the light of the lamp on the ledge stops well short of the door. | before `b-3.A` |
 | `ps-h11` | The hall smells of dry stone and, very faintly, of salt. | |
 | `ps-h12` | The cups burn along both walls, each flame the same height as the last. | after `b-3.A` |
 | `ps-h13` | In the lamplight every cut in the walls stands out in its own shadow. | after `b-3.A` |
@@ -629,8 +636,8 @@ After an absence, "where you were" names the one open question for the story wee
 
 | Id | Week | Shows if | Line |
 |---|---|---|---|
-| `aw-w1` | 1 | `b-1.A` | The lamp was lit when you came down, and there is no oil in it. |
-| `aw-w2` | 2 | `b-2.B` | The rod is in your hand, and the lintel on the side wall has a blank the width of its edge. |
+| `aw-w1` | 1 | `b-1.A` | The lamp on the ledge was lit when you came down, and there is no oil in it. |
+| `aw-w2` | 2 | `b-2.B`, until `b-3.A` | The rod is in your hand, and the lintel on the side wall has a blank the width of its edge. |
 | `aw-w3` | 3 | `b-3.B` | The stair goes down from the landing, lit, and you did not light it. |
 | `aw-w4` | 4 | `b-4.A` | Past the lone ring, her sheet says: *…go home… he held me… lamp… gave… went up…* |
 | `aw-w5` | 5 | `b-5.A` | Every record in the tally begins the same way. The wall by the lamp does not. |
@@ -645,12 +652,12 @@ Always **from just ahead**, a thing Dan can see and not yet reach; never a conse
 | Id | w | Shows | Line |
 |---|---|---|---|
 | `b-w1.tz1` | 1 | before `b-1.A` | *Under the cap, eleven metres of ladder go down, and the air that comes up is dry.* (ARR1) |
-| `b-w1.tz2` | 1 | after `b-1.A` | *There are three marks on the base of the lamp, and the lamp is warm.* (ARR1) |
+| `b-w1.tz2` | 1 | after `b-1.A` | *The clay lamp on the ledge has three marks on its base, and it is warm.* (ARR1) |
 | `tz-w1-a` | 1 | after `pl-w1-pick-niche`, until `seal-1-2` | *In the salt is a niche the length of an arm, with cut strokes along its lip.* |
 | `tz-w1-b` | 1 | after `b-1.C`, until `seal-2-1` | *On her cot lies a tin box with a row of cut strokes across its lid.* |
 | `tz-w1-c` | 1 | after `pl-w1-below-the-lamp`, until `seal-1-3` | *Under the lamp's ledge is a small niche, and the stone round its mouth is darker.* |
 | `b-w2.tz1` | 2 | before `b-2.B` | *On the shelf in her camp lies a rod of stone, with one edge finer than a knife's.* (ARR1) |
-| `b-w2.tz2` | 2 | after `b-2.B` | *The rod is in your hand, and on the lintel is a blank the width of its edge.* (ARR1) |
+| `b-w2.tz2` | 2 | after `b-2.B`, until `b-3.A` | *The rod is in your hand, and on the lintel is a blank the width of its edge.* (ARR1) |
 | `tz-w2-a` | 2 | after `pl-w2-above-the-ring`, until `seal-2-3` | *Above the lone ring, something pale lies far back in a crack.* |
 | `tz-w2-b` | 2 | after `pl-w2-box-by-the-cot`, until `seal-2-5` | *In her camp, a tin mug stands upside down on a box with a count.* |
 | `tz-w2-c` | 2 | after `b-2.A`, until `seal-2-2` | *In the salt is a long, narrow niche, the length of a stick, with a count on it.* |
