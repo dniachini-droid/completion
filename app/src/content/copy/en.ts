@@ -173,6 +173,8 @@ export const copy = {
 
   /* day complete and the arrival */
   'arrive.label': 'Arrived',
+  'words.hide': 'Hide the words',
+  'words.show': 'Read on',
   'arrive.camp': 'Camp',
   'arrive.enough': 'The day’s work is done.',
   'arrive.keyOpens': 'The key you carried opens something here.',

@@ -28,7 +28,11 @@ const fits = async (name) => {
     const shown = el => { for (let p = el; p; p = p.parentElement) { const s = getComputedStyle(p); if (s.display === 'none' || s.visibility === 'hidden' || +s.opacity < 0.05) return false; } return true; };
     const texts = [...document.querySelectorAll('p, h1, h2, h3, span, li, em, blockquote')].filter(el =>
       [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim()) && !el.closest('button, svg') && shown(el));
-    const buttons = [...document.querySelectorAll('button')].filter(shown).map(b => b.getBoundingClientRect()).filter(r => r.width && r.height);
+    /* each button as it is actually seen: cut to the box it scrolls in (a row scrolled out of view covers nothing) */
+    const buttons = [...document.querySelectorAll('button')].filter(shown).map(b => {
+      const r = b.getBoundingClientRect(), sc = scroller(b), c = sc ? sc.getBoundingClientRect() : { top: 0, bottom: H };
+      return { left: r.left, right: r.right, top: Math.max(r.top, c.top), bottom: Math.min(r.bottom, c.bottom) };
+    }).filter(r => r.right > r.left && r.bottom > r.top);
     for (const el of texts) {
       const r = el.getBoundingClientRect(); if (!r.width || !r.height) continue;
       const sc = scroller(el);

@@ -8,6 +8,7 @@
   import Guess from './Guess.svelte';
   import Settled from './Settled.svelte';
   import Cut from './Cut.svelte';
+  import Words from './Words.svelte';
   import { beatOf, marksIn, mayGuess, markHeld, markOf } from '../core/story';
   import type { Go } from './nav';
 
@@ -56,7 +57,7 @@
   <div class="arr" class:fresh bind:this={root} onpointerdown={settleNow} role="presentation">
     <Scene painting={a.painting} top="260px" bottom="34%" />
     <div class="facelight" aria-hidden="true"></div>
-    <div class="ui">
+    <div class="ui fixed">
       <header class="topbar col">
         <button class="home" onclick={() => leave('today')}><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" /></svg><span>{t('delve.today')}</span></button>
         <span></span><span></span>
@@ -64,10 +65,17 @@
       <section class="col head">
         <div class="label-line gold">{a.kind === 'place' ? t('arrive.label') : t('arrive.camp')}</div>
         <h1 class="carve lg">{a.name}</h1>
-        <span class="soft on-scene">{a.line}</span>
-        {#if a.look}<span class="soft on-scene look">{a.look}</span>{/if}
-        {#each a.opened as line}<p class="soft on-scene look">{t('arrive.keyOpens')} {line}</p>{/each}
       </section>
+      <!-- the painting, left clear -->
+      <div class="gap"></div>
+      <!-- the words keep to the lower half and scroll there; they can be folded away (D-081) -->
+      <div class="col text">
+        <Words length={(a.line?.length ?? 0) + (a.look?.length ?? 0)}>
+          <span class="soft on-scene">{a.line}</span>
+          {#if a.look}<span class="soft on-scene look">{a.look}</span>{/if}
+          {#each a.opened as line}<p class="soft on-scene look">{t('arrive.keyOpens')} {line}</p>{/each}
+        </Words>
+      </div>
       <div class="mid col">
         {#if a.id}
           <Settled beat={fresh ? a.id : null} />
@@ -102,11 +110,16 @@
   @keyframes gold { to { opacity: 1; } }
   .head { margin-top: 14px; animation: rise 1.4s .4s var(--ease) both; }
   .head .label-line { margin-bottom: 12px; }
-  .head .soft { display: block; margin-top: 6px; }
-  .head .look { color: var(--gold-hi); margin-top: 12px; }
   .choice { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; margin-bottom: 14px; }
   .topbar { animation: rise 1.2s .2s var(--ease) both; }
-  .mid { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding-bottom: 18px; }
+  /* the screen itself never scrolls: the words do, in the lower half (D-081) */
+  .ui.fixed { overflow: hidden; }
+  .head { flex: none; }
+  .gap { flex: 1 1 auto; min-height: 12vh; }
+  .text { flex: 0 1 auto; min-height: 0; display: flex; flex-direction: column; animation: rise 1.4s .6s var(--ease) both; }
+  .text :global(.soft) { display: block; margin-top: 6px; }
+  .text :global(.look) { color: var(--gold-hi); margin-top: 12px; }
+  .mid { flex: none; display: flex; flex-direction: column; align-items: center; padding-top: 6px; padding-bottom: 14px; }
   .enough { font-family: var(--life); font-size: min(31px, 8vw); line-height: 1.15; color: #fff; text-align: center;
     text-shadow: 0 0 26px rgba(242,193,112,.45), 0 2px 18px rgba(8,6,20,.9); animation: rise 1.6s 2.2s var(--ease) both; }
   .enough em { display: inline-block; animation: rise 1.6s 3s var(--ease) both; }
