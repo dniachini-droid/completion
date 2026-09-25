@@ -1,0 +1,40 @@
+# The iOS app compiles (unsigned) before anything native reaches main (D-095). Builds for Dan's phone come only from
+# main (testflight.yml, D-080), and native code (the delve's panel, ios/) can't be tried anywhere else, so a branch
+# that touches it is compiled here first on a cloud Mac: the app, its plugins and the LiveActivity extension.
+# Nothing is signed or uploaded, and no secrets are used.
+name: iOS build
+on:
+  workflow_dispatch:
+  push:
+    branches-ignore: [main]
+    paths: ['app/ios/**', 'app/package.json', 'app/package-lock.json', 'app/capacitor.config.ts', '.github/workflows/ios-build.yml']
+  pull_request:
+    branches: [main]
+    paths: ['app/ios/**', 'app/package.json', 'app/package-lock.json', 'app/capacitor.config.ts', '.github/workflows/ios-build.yml']
+concurrency: { group: 'ios-build-${{ github.ref }}', cancel-in-progress: true }
+jobs:
+  build:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    defaults: { run: { working-directory: app } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: app/package-lock.json }
+      - run: npm ci
+      - run: npx vite build
+      - run: npx cap sync ios
+      - name: Use the newest Xcode
+        run: |
+          X=$(ls -d /Applications/Xcode_*.app | sort -V | tail -1); sudo xcode-select -s "$X"; xcodebuild -version
+      - name: Compile (unsigned)
+        run: |
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Release \
+            -destination 'generic/platform=iOS' -derivedDataPath "$RUNNER_TEMP/dd" \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" build
+      - name: The panel is inside the app
+        run: |
+          APP="$RUNNER_TEMP/dd/Build/Products/Release-iphoneos/App.app"
+          test -d "$APP/PlugIns/LiveActivity.appex"
+          /usr/libexec/PlistBuddy -c 'Print :NSSupportsLiveActivities' "$APP/Info.plist"
+          /usr/libexec/PlistBuddy -c 'Print :NSExtension:NSExtensionPointIdentifier' "$APP/PlugIns/LiveActivity.appex/Info.plist"

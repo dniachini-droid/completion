@@ -93,72 +93,86 @@ export const TALLY = /* glsl */ `
     return d;
   }`;
 
-const CAM = { x: .75, y: 1.45, z: .55 };
+/* This place, round 4 (D-091 retry, a different approach): stand in the round passage and look at where it
+   ends against the square stone's flat face. The round passage's wall and vault curve over and run straight into
+   the flat, square-cut face; the low square doorway is cut through that face, to the right, into the square
+   gallery. The clasp is the inside corner where curve meets flat: the square face's courses turn the corner and
+   bite into the round wall in alternate courses, the round wall's courses running into the gaps between them.
+   Both stones the same value: the joint shows only as the zigzag of the seam and the change from curved to flat.
+   One warm pool, the landing's lamps behind, falls right across the corner; it dies away into the gallery. */
+const FZ = JZ, R = 1.55, S = 1.1, GX = .25, CH = .4, TL = .42;       /* the face; the round passage; the doorway's offset; course height; tooth */
+const CAM = { x: 0, y: 1.45, z: FZ - 2.3 };
 export default {
   id: 'pt-b-6.A',
   name: 'The side passage',
   line: '',
-  cam: { ...CAM, pitch: -2, yaw: -57, f: .64, cx: .5, cy: .47 },
+  cam: { ...CAM, pitch: 0, yaw: -28, f: .64, cx: .5, cy: .47 },
   far: 30, fogK: 1 / 16,
-  hazeBase: [.018, .016, .046], hazeFar: [.1, .09, .24],
-  bloomAt: [0, 1.1, 16], bloomPow: 18, bloomC: [.22, .2, .42],
+  hazeBase: [.018, .016, .046], hazeFar: [.08, .07, .18],
+  bloomAt: [GX, 1.1, RZ], bloomPow: 22, bloomC: [.1, .09, .2],
   bloom: { alpha: .2 },
   glow: { threshold: .6, k: .5 },
-  blur: { px: 1.8, d0: 5, d1: 16, k: .75 },
-  gold: 1, grain: .5, shadowJitter: 1, amb: .6, expo: 2, ambC: [.86, .78, 1.5], sheen: .06,
+  blur: { px: 1.4, d0: 5, d1: 16, k: .5 },
+  gold: 1, grain: .5, shadowJitter: 1, amb: .6, expo: 2, ambC: [.86, .78, 1.5], sheen: .04,
   lights: [
-    { p: [.3, 1.4, -1.6], c: [1, .7, .34], k: 3, r: .9, shadow: 1, reach: 5, warm: .006 },   /* the landing's lamps, behind: their light comes through the doorway and pools on the floor */
-    { p: [-.5, 1.0, JZ - .3], c: [1, .72, .38], k: .16, r: .35, shadow: 1, reach: 1.1 },     /* and falls along the left wall, on the clasp */
-    { p: [.1, 1.9, -1.8], c: [.4, .37, .85], k: 3.6, r: 1.4 },                                 /* the landing's violet, behind */
-    { p: [0, 1.4, 6.5], c: [.4, .37, .85], k: 2.4, r: 2.5 },                                     /* cold, down the gallery, where the lamp gives out */
-    { p: [0, 1.4, 13.5], c: [.48, .45, .95], k: 5, r: 3 },                                      /* a far glow */
+    { p: [-.95, 1.35, FZ - .42], c: [1, .7, .36], k: .4, r: .32, shadow: 1, reach: 1.6, warm: .004 },  /* the landing's lamps, behind: one pool, across the corner */
+    { p: [.2, 1.8, CAM.z - 2.5], c: [.4, .37, .85], k: 3.4, r: 1.6 },                                    /* the landing's violet, behind */
+    { p: [GX, 1.3, 7], c: [.42, .4, .9], k: .45, r: 2.2 },                                              /* cold, down the gallery */
   ],
   glsl: squareRoom(CAM) + TALLY + /* glsl */ `
+  const float FZ = ${FZ.toFixed(2)}, RR = ${R.toFixed(2)}, SS = ${S.toFixed(2)}, GX = ${GX.toFixed(2)}, CH = ${CH.toFixed(2)}, TL = ${TL.toFixed(2)};
+  const vec3 STONE = vec3(.62, .62, .76);
+  float zTooth(float k) { return FZ - (mod(k, 2.) < 1. && k < 5. ? TL * (.85 + .3 * h2(vec2(k, 5.))) : 0.); }
   vec4 scene(vec3 p) {
-    vec4 d = roomScene(p);
-    /* this side of the clasp the passage is the round side's: a round-headed passage, its vault springing at a
-       man's chest; the square gallery's flat roof and straight walls meet it at the clasp. Near the clasp both
-       stones are flush, the same value; the square side keeps its chisel strokes, the round side is smooth; the
-       teeth show only as the zigzag of the joint. Above the springing the joint runs straight across. */
-    float sz = JZ;
-    if (p.y < 1.12 && abs(p.x) > WW - .06) { float kk = floor(p.y / .33); sz = JZ + (mod(kk, 2.) < 1. ? .08 : -.08) + (h2(vec2(kk, 3.)) - .5) * .03; }
-    if (p.z > sz && p.z < JZ + .3 && abs(p.x) < WW + .1 && p.y < HT + .1) {                   /* the square stone's teeth, as the square wall */
-      d.y = M_DRESSED; d.zw = NOUV; gTint = vec3(.62, .6, .7); gPolish = 0.;
-      if (abs(p.x) > WW - .06 && p.y > .03) d.x += chisel(vec2(p.z, p.y) + (p.x < 0. ? 0. : 3.1));
+    vec4 rd = hallAir(p, RR, SS, RR, -8., FZ, M_CUT_SMALL);
+    vec3 q = p - vec3(GX, 0, 0);
+    vec4 g = boxAir(q, vec3(0, HT * .5, (FZ + ${ZEND.toFixed(2)}) * .5 - .03), vec3(WW, HT * .5, (${ZEND.toFixed(2)} - FZ) * .5 + .03), M_DRESSED);
+    vec4 d = A(rd, g);
+    if (p.z > RZ - .5) { vec4 r = vec4(rubble(q), M_ROCK, NOUV); if (r.x < d.x) { d = r; gTint = vec3(.7, .68, .78); return d; } }
+    /* which stone: the flat face and the gallery are square; so is every other course for a tooth's length up the round wall */
+    float k = floor(p.y / CH);
+    float zs = zTooth(k);
+    bool wall = p.y > .03;
+    bool sq = p.z > FZ - .02 || (wall && p.z > zs);
+    bool face = p.z > FZ - .02 && q.z < FZ + .05;
+    /* the seam on the round wall: the zigzag round the teeth, cut the same on both sides of it */
+    float dj = 9.;
+    if (wall && !face && p.z > FZ - TL * 1.3) {
+      float za = zTooth(k - 1.), zb = zTooth(k + 1.);
+      if (p.z < FZ - .02) dj = abs(p.z - zs);
+      if (p.z > min(zs, za) && p.z < max(zs, za)) dj = min(dj, abs(p.y - k * CH));
+      if (p.z > min(zs, zb) && p.z < max(zs, zb)) dj = min(dj, abs(p.y - (k + 1.) * CH));
+      d.x += engrave(dj, .012, .006);
     }
-    if (p.y > HT - .06 && p.z < JZ + 1.2) { float cr = crack(vec2(p.z, p.x), 0., 23.); if (cr < .03) { d.x -= engrave(cr, .009, .014); if (cr < .006) gTint /= .35; } }   /* no crack at the clasp's head */
-    if (p.z > sz && p.z < JZ + 1.3 && abs(p.x) < WW + .1 && p.y < HT + .1) d.x += .028 * (1. - smoothstep(JZ + .5, JZ + 1.2, p.z));   /* flush at the joint */
-    if (p.z > .1 && p.z < JZ + .4) {
-      vec4 ra = hallAir(p, WW, 1.15, WW, -1., JZ + .4, M_DRESSED);
-      float core = min(ra.x, d.x), rnd = max(core, min(ra.x, sz - p.z)), sqa = max(core, min(d.x, p.z - sz));
-      float land = hallAir(p, 1.9, 1.45, 1.9, -9., .2, M_CUT_SMALL).x;
-      float a = max(land, max(rnd, sqa));
-      if (p.z < sz) { d = vec4(a, M_DRESSED, NOUV); gTint = vec3(.64, .62, .72) * (.92 + .12 * fbm(p.zy * 2.2, 3)); gPolish = .35; } else d.x = a;   /* the round stone: smooth, the same value */
+    if (sq) {
+      d.y = M_DRESSED; d.zw = NOUV; gTint = STONE;
+      if (wall && q.z < FZ + .05) {
+        vec2 w = face ? vec2(p.x, p.y) : vec2(p.z, p.y);
+        d.zw = vec2(w.x, w.y * .1);                                          /* even mottling, no drag lines */
+        /* the square stone is tooled: close-set small pecks, every way */
+        float pk = (smoothstep(.6, .82, vn(w * 70.)) + .5 * smoothstep(.62, .85, vn(w * 130. + 7.))) * (.55 + .7 * fbm(w * 3., 2));
+        d.x += .0018 * pk * smoothstep(.004, .016, dj);
+      }
+      if (face) {
+        /* the face's own courses: bed joints level, end joints staggered */
+        float bl = .6 + .35 * h2(vec2(k, 4.)), o = h2(vec2(k, 9.)) * bl, dx = abs(fract((p.x + o) / bl + .5) - .5) * bl;
+        float df = min(abs(p.y - floor(p.y / CH + .5) * CH), dx);
+        if (wall) d.x += engrave(df, .012, .006);
+      }
+      /* the gallery: cracks along its walls */
+      if (p.z > FZ + .1 && abs(q.x) > WW - .05) { float cr = min(crack(vec2(p.z, p.y), 1.2, q.x < 0. ? 1. : 5.), crack(vec2(p.z * 1.3 + 4., p.y), .55, q.x < 0. ? 11. : 17.)); if (cr < .03) { d.x += engrave(cr, .009, .014); if (cr < .006) gTint *= .35; } }
+      if (p.z > FZ + .1) gTint *= .92;
+    } else {
+      d.zw = vec2(rd.z, rd.w) * (.7 / CH);
+      gTint = STONE * (.95 + .08 * fbm(p.zy * 2.2, 3)); gPolish = .2;       /* the round stone: smooth, worn */
     }
-    if (p.y > HT - .08 && p.z > JZ - .01 && p.z < JZ + .1) gTint = vec3(.64, .62, .72) * (.92 + .12 * fbm(p.xy * 2.2, 3));   /* the square stone's end face over the arch: plain */
-    if (p.y > HT - .08 && p.z > JZ - .01 && p.z < JZ + .35 && abs(p.x) < WW - .05) d.x -= chisel(vec2(p.z, p.x) + (p.x < 0. ? 0. : 3.1)) * (1. - smoothstep(2.2, 6.5, length(p - CAMP)));   /* the square roof's end, flat where it meets the arch */
-    if (p.z < sz && p.z > .15) gTint *= .96 + .06 * fbm(vec2(p.z * 7., p.y * 2.), 2);                      /* the round stone smooth, a little mottled */
-    /* the joint: a fine zigzag where the two faces meet */
-    if (abs(p.x) > WW - .06 && p.z > JZ - .3 && p.z < JZ + .3 && p.y > .02) {
-      float dj = abs(p.z - sz);
-      if (p.y < 1.12) { float t = p.y / .33, fy = (fract(t) - .5) * .33, k = floor(t);
-        float za = JZ + (mod(k, 2.) < 1. ? .08 : -.08) + (h2(vec2(k, 3.)) - .5) * .03, zb = JZ + (mod(k + 1., 2.) < 1. ? .08 : -.08) + (h2(vec2(k + 1., 3.)) - .5) * .03, zc = JZ + (mod(k - 1., 2.) < 1. ? .08 : -.08) + (h2(vec2(k - 1., 3.)) - .5) * .03;
-        float y1 = .165 - fy, y0 = fy + .165;
-        if (p.z > min(za, zb) - .003 && p.z < max(za, zb) + .003) dj = min(dj, y1);
-        if (p.z > min(za, zc) - .003 && p.z < max(za, zc) + .003) dj = min(dj, y0); }
-      d.x += engrave(dj, .003, .0025);
-      if (dj < .0015) gTint *= .75;
-    }
-    if (p.y > HT - .05 && p.z > sz) gTint *= mix(.5, .85, smoothstep(JZ - .5, JZ + 1., p.z));  /* the flat roof overhead */
-    else if (p.y > 1.3 && p.z < sz) gTint *= mix(1., .5, smoothstep(1.3, 2.15, p.y) * (1. - smoothstep(JZ - .5, JZ - .1, p.z)));
-    if (p.z < .25 && p.y > HT) gTint *= mix(.55, .15, smoothstep(HT, 2.5, p.y));        /* the round end above the door, in shadow */
-    if (p.y < .03) gTint *= mix(.55, .9, smoothstep(-1., JZ, p.z));                     /* the floor */
-    /* the record, in the tally's hand, on the square wall just past the clasp */
-    if (p.x < -WW + .05 && p.z > JZ + .5 && p.z < JZ + 1.25 && abs(p.y - 1.42) < .05) d.x += engrave(tally(vec2(p.z, p.y - 1.42), .05, 41.), .0045, .006);
+    /* keep the frame's edges calm: the vault close overhead, the floor at your feet */
+    if (p.y > 1.9 && p.z < FZ - .4) gTint *= mix(1., .3, smoothstep(1.9, 2.7, p.y) * (1. - smoothstep(FZ - 1.4, FZ - .4, p.z)));
+    if (p.y < .03) gTint *= mix(.45, .9, smoothstep(${CAM.z.toFixed(2)}, FZ, p.z));
     return d;
   }`,
   anchors: {
-    fog: [{ p: [-.6, .25, JZ + .6], w: 1.1, h: .2, a: .14, speed: .6 }, { p: [-.3, .3, JZ - .3], w: .9, h: .2, a: .1 }],
+    fog: [{ p: [-.4, .25, FZ - .5], w: 1.2, h: .2, a: .12, speed: .6 }, { p: [GX, .3, FZ + 1], w: .9, h: .2, a: .1 }],
   },
   live: { motes: 'gold', fog: 'low', gold: true },
 };

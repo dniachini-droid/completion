@@ -100,6 +100,8 @@ import pcv_01Url from '../../paint/places/img/pt-cv-01.webp?url';
 import pcv_01Meta from '../../paint/places/img/pt-cv-01.json';
 import ppl_w4_hollowUrl from '../../paint/places/img/pt-pl-w4-hollow.webp?url';
 import ppl_w4_hollowMeta from '../../paint/places/img/pt-pl-w4-hollow.json';
+import pb_6_AUrl from '../../paint/places/img/pt-b-6.A.webp?url';
+import pb_6_AMeta from '../../paint/places/img/pt-b-6.A.json';
 
 export interface Painting { url: string; meta: unknown; focus: number; }
 export const paintings: Record<string, Painting> = {
@@ -153,6 +155,7 @@ export const paintings: Record<string, Painting> = {
   'pt-pl-w6-wall-shelf': { url: ppl_w6_wall_shelfUrl, meta: ppl_w6_wall_shelfMeta, focus: .5 },
   'pt-cv-01': { url: pcv_01Url, meta: pcv_01Meta, focus: .43 },
   'pt-pl-w4-hollow': { url: ppl_w4_hollowUrl, meta: ppl_w4_hollowMeta, focus: .43 },
+  'pt-b-6.A': { url: pb_6_AUrl, meta: pb_6_AMeta, focus: .47 },
 };
 
 /** Frame a painting so its light sits in the open gap between the words (the morning mock-up lifts the lamp the same way).

@@ -365,6 +365,14 @@ export const copy = {
   'notify.breatherEnd.title': 'The next delve is starting',
   'notify.breatherEnd.body': 'Your breather is over.',
 
+  /* the delve's panel on the lock screen and in the Dynamic Island (D-095): read at a glance, so short */
+  'panel.paused': 'Your minutes are safe.',
+  'panel.breather.line': 'The {ord} delve will begin on its own.',
+  'panel.breather.left': 'of the breather',
+  'panel.goesOn': 'The run goes on',
+  'panel.goesOn.line': 'It goes on by itself, and ends at {end}.',
+  'panel.goesOn.left': 'left of the run',
+
   /* words for numbers and times */
   'min.one': '1 minute', 'min.many': '{n} minutes', 'hour.one': '1 hour', 'hour.many': '{n} hours',
   'min.short': '{n} min', 'hour.short': '{n} h',
