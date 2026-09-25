@@ -9,9 +9,9 @@
    with pt-b-3.C. */
 
 /* the nominal line of the treads' tops: the landing at 0, the flight down along +z from z 3 (riser .45, tread
-   .6, eight steps), the turn's landing at -3.6 */
+   .6), the turn's landing at -2.7, six steps down */
 export const STAIR = /* glsl */ `
-  float stairLine(float z) { return -clamp((z - 3.) / .6 * .45, 0., 3.6); }
+  float stairLine(float z) { return -clamp((z - 3.) / .6 * .45, 0., 2.7); }
   float railY(float z) { return stairLine(z) + 1.25; }
   /* a hooded lamp recess in the right wall, open down the stair: its hood on the uphill side */
   vec4 lampRecess(vec3 p, float z0, float y0) {
@@ -20,28 +20,28 @@ export const STAIR = /* glsl */ `
   }
   vec4 stairScene(vec3 p) {
     float fa = stairLine(p.z) - .6;
-    vec4 d = hallAir(vec3(p.x, p.y - fa, p.z), 1.7, 3.5, 1.7, 2.9, 11.2, M_CUT);
+    vec4 d = hallAir(vec3(p.x, p.y - fa, p.z), 1.7, 3.5, 1.7, 2.9, 10., M_CUT);
     d.x *= .78;
     d = A(d, hallAir(vec3(p.x + .8, p.y + .6, p.z), 2.5, 3.2, 2.5, -4., 3., M_CUT));      /* the landing: wider than the stair, on the left */
     /* the turn: an opening in the right wall, the next flight going on down out of sight */
-    vec4 side = boxAir(p, vec3(4., -3.6 + .8, 9.4), vec3(2.4, 2.4, 1.1), M_CUT);
+    vec4 side = boxAir(p, vec3(4., -2.7 + .8, 8.3), vec3(2.4, 2.4, 1.1), M_CUT);
     d = A(d, side);
     d = A(d, lampRecess(p, 4.55, -.9));
-    d = A(d, lampRecess(p, 6.35, -2.25));
+    d = A(d, lampRecess(p, 5.75, -1.8));
     /* the landing, the flight, the turn's landing */
     vec4 land = box(p, vec3(-.8, -1., -.5), vec3(2.6, 1., 3.5), M_DRESSED);
-    vec4 st = stairs(p, -1.8, 1.8, 3., 0., .6, .45, 8, M_DRESSED);
-    vec4 tl = box(p, vec3(.9, -4.6, 9.5), vec3(2.7, 1., 1.72), M_DRESSED);
+    vec4 st = stairs(p, -1.8, 1.8, 3., 0., .6, .45, 6, M_DRESSED);
+    vec4 tl = box(p, vec3(.9, -3.7, 8.3), vec3(2.7, 1., 1.72), M_DRESSED);
     vec4 fl = U(land, U(st, tl));
     fl.x -= .012;                                                                   /* the noses rounded by wear */
     fl.x += rough(p, .006, 9.);
     if (fl.x < d.x) {
       d = fl;
-      float top = smoothstep(.04, .0, abs(p.y - (p.z < 3. ? 0. : p.z > 7.8 ? -3.6 : -.45 * (floor((p.z - 3.) / .6) + 1.))));
+      float top = smoothstep(.04, .0, abs(p.y - (p.z < 3. ? 0. : p.z > 6.6 ? -2.7 : -.45 * (floor((p.z - 3.) / .6) + 1.))));
       gPolish = .35 * top * (1. - smoothstep(.8, 1.7, abs(p.x)));                   /* treads worn smooth down the middle */
     }
     /* the hoods over the lamps: a lip of the wall on each recess's uphill side */
-    vec4 hd = U(box(p, vec3(1.8, -.9 + .12, 4.44), vec3(.14, .3, .15), M_CUT_SMALL), box(p, vec3(1.8, -2.25 + .12, 6.24), vec3(.14, .3, .15), M_CUT_SMALL));
+    vec4 hd = U(box(p, vec3(1.8, -.9 + .12, 4.44), vec3(.14, .3, .15), M_CUT_SMALL), box(p, vec3(1.8, -1.8 + .12, 5.64), vec3(.14, .3, .15), M_CUT_SMALL));
     hd.x -= .02;
     if (hd.x < d.x) { d = hd; gTint = vec3(.55); }
     /* the rail, cut from the left wall: down the flight, round the turn's landing and along its far wall */
@@ -49,8 +49,8 @@ export const STAIR = /* glsl */ `
     vec2 q1 = vec2(p.x + 1.64, p.y - yr);
     vec2 e1 = abs(q1) - vec2(.07, .055);
     float r1 = (length(max(e1, 0.)) + min(max(e1.x, e1.y), 0.) - .03) * .8;
-    r1 = max(r1, max(3.1 - p.z, p.z - 11.2));
-    vec2 q2 = vec2(p.z - 11.14, p.y - (-3.6 + 1.25));
+    r1 = max(r1, max(3.1 - p.z, p.z - 10.));
+    vec2 q2 = vec2(p.z - 9.94, p.y - (-2.7 + 1.25));
     vec2 e2 = abs(q2) - vec2(.07, .055);
     float r2 = max(length(max(e2, 0.)) + min(max(e2.x, e2.y), 0.) - .03, p.x - 1.1);
     float rail = min(r1, r2);
@@ -59,7 +59,7 @@ export const STAIR = /* glsl */ `
       d.x = smin(d.x, rail, .05);
       if (k > .5) {
         d.yzw = vec3(M_DRESSED, NOUV);
-        float ry = p.y - (p.z > 7.8 ? -2.35 : yr);
+        float ry = p.y - (p.z > 9.8 ? -1.45 : yr);
         gPolish = smoothstep(.0, .06, ry) * smoothstep(3.3, 4.5, p.z);                                          /* its top worn smooth by hands */
         gTint = vec3(1. + .3 * smoothstep(.02, .07, ry)) * mix(.45, 1., smoothstep(3.3, 4.5, p.z));
       }
@@ -82,8 +82,8 @@ export default {
   blur: { px: 1.4, d0: 4, d1: 14, k: .7 },
   lights: [
     { p: [.9, -.3, 4.3], c: W, k: 1.4, r: .9, reach: 5, shadow: .7 },                        /* the Stair's lamps below: their light coming up over the landing's edge */
-    { p: [1.3, -1.6, 6.5], c: W, k: 1.2, r: 1, reach: 4, shadow: .5, air: .02 },              /* and further down */
-    { p: [XN + .2, YN + .035, 2.98], c: W, k: .04, r: .13, reach: .38, shadow: 1 },               /* the same light, from below the niche's sill: the glaze gives it back */
+    { p: [1.3, -1.4, 5.9], c: W, k: 1.2, r: 1, reach: 4, shadow: .5, air: .02 },              /* and further down */
+    { p: [XN + .02, YN + .2, 2.95], c: [1, .8, .58], k: .05, r: .13, reach: .42, shadow: 1 },               /* the same light, from below the niche's sill: the glaze gives it back */
     { p: [0, 3.6, -3], c: V, k: 4, r: 3.5 },                                                  /* the place's own cold, from the lintel behind */
     { p: [-.5, 3.4, 3], c: [.36, .33, .8], k: 2.5, r: 2.5 },                                  /* and high in the vault */
   ],
@@ -113,8 +113,8 @@ export default {
     vec4 lamp = vec4(smin(body, noz, .025), M_ROCK, NOUV);
     if (lamp.x < d.x) {
       d = lamp;
-      gTint = vec3(1.2, .95, .7) * (.95 + .1 * fbm(p.xz * 60., 2));                            /* its glaze: honey-coloured, whole, unchipped */
-      gPolish = 1.; gSmooth = .35;
+      gTint = vec3(1.35, 1.12, .88) * (.95 + .1 * fbm(p.xz * 60., 2));                            /* its glaze: honey-coloured, whole, unchipped */
+      gPolish = 1.; gSmooth = .15;
       if (length(p - vec3(XN + .19, YN + .09, 3.17)) < .016) gTint = vec3(.08);                    /* the wick, dark: never lit */
     }
     /* its lid: a small tablet leaned against the wall beneath, carved: a doorway, a bar, two marks */

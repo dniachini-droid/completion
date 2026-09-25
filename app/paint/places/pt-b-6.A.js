@@ -22,14 +22,18 @@ export function squareRoom(cam) {
     float s = mod(t, 2.) < 1. ? .2 : -.2;
     return JZ + s + (h2(vec2(t, 3.)) - .5) * .06;
   }
-  /* small even chisel strokes, row on row, each row slanting the other way */
+  /* small even chisel strokes, row on row, each a short dent at its own slant, a few missing */
   float chisel(vec2 w) {
-    vec2 c = vec2(.05, .036), k = floor(w / c), f = w - (k + .5) * c;
-    float dir = mod(k.y, 2.) < 1. ? 1. : -1.;
-    f += (vec2(h2(k), h2(k + 9.)) - .5) * vec2(.012, .006);
-    vec2 t = normalize(vec2(1., .8 * dir));
-    float al = dot(f, t), ac = dot(f, vec2(-t.y, t.x));
-    return engrave(length(vec2(ac, max(abs(al) - .014, 0.))), .006, .0028);
+    vec2 c = vec2(.032, .024), k = floor(w / c);
+    w.x += h2(vec2(k.y, 5.)) * c.x; k = floor(w / c);                    /* each row set off from the last */
+    vec2 f = w - (k + .5) * c;
+    if (h2(k + 17.) < .25) return 0.;
+    f += (vec2(h2(k), h2(k + 9.)) - .5) * vec2(.01, .006);
+    float a = (mod(k.y, 2.) < 1. ? .75 : -.75) + (h2(k + 3.) - .5) * .7;
+    vec2 t = vec2(cos(a), sin(a));
+    float al = dot(f, t), ac = dot(f, vec2(-t.y, t.x)), L = .007 + .006 * h2(k + 5.);
+    float dd = length(vec2(ac, max(abs(al) - L, 0.)));
+    return engrave(dd, .0045, .0016 * (1. - .6 * smoothstep(-L, L, al)));   /* deeper where the chisel went in */
   }
   /* a crack wandering along a face: distance to it, where it runs */
   float crack(vec2 w, float y0, float seed) {

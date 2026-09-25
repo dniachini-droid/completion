@@ -1,0 +1,87 @@
+/* SEALED (D-015). pt-pl-w4-hollow (the Salt Gallery of pt-b-2.A, reused, in the cups' light): low in the left
+   wall, at its foot, a bank of salt; in its top a hollow the size of two cupped hands, worn smooth inside to a
+   glassy finish, a count cut on its rim. At its bottom the salt is pressed flat in four small places, two and
+   two: four tiny footprints of something that is not there. The cups' warm light from above and behind.
+   Crouched beside it, looking down into the hollow; VP at its centre. */
+import room from './pt-b-2.A.js';
+
+const ZH = 15.2, XH = -1.72, H0 = .42, RX = .55, RZ = 1.1;
+const YH = H0 * (1 - ((XH + 1.95) / RX) ** 2);                               /* the hollow's centre, on the bank's top */
+const W = [1, .84, .66], V = [.62, .58, 1.2];
+export default {
+  ...room,
+  id: 'pt-pl-w4-hollow',
+  name: 'The hollow',
+  line: '',
+  cam: { x: -1.2, y: .92, z: ZH - .36, pitch: -54, yaw: -52, f: .75, cx: .5, cy: .5 },
+  salt: { pink: .3 },
+  expo: 1.85, grade: [1, 1, 1], bloomC: [.1, .09, .2], sheen: 0,
+  blur: { px: 1.6, d0: 1.2, d1: 5, k: .8 },
+  lights: [
+    { p: [-.9, 1.6, ZH - .9], c: W, k: .5, r: 1., reach: 1.9 },              /* the cups' glow, from above and behind */
+    { p: [XH + .02, YH + .13, ZH + .01], c: W, k: .013, r: .09, reach: .3 },       /* its reach into the hollow: the pressed places give it back */
+    { p: [.4, 1.6, 34], c: V, k: 5, r: 9 },                                                   /* the gallery going on in its own violet */
+    { p: [.3, 1.2, ZH + 3], c: V, k: 2.2, r: 2.5 },
+    { p: [0, 1.6, ZH - 6], c: [.3, .28, .66], k: .5, r: 3 },                                  /* faint fill from behind */
+  ],
+  glsl: room.glsl.replace('vec4 scene(vec3 p)', 'vec4 roomScene(vec3 p)') + /* glsl */ `
+  const float ZH = ${ZH.toFixed(2)}, XH = ${XH.toFixed(2)}, YH = ${YH.toFixed(2)};
+  vec4 scene(vec3 p) {
+    vec4 d = roomScene(p);
+    if (floor(d.y + .5) == M_DRESSED) gTint *= .5;                                           /* the band kept down */
+    gTint *= mix(1., .12, smoothstep(.4, .9, p.y));                                          /* the wall going up out of the light */
+    if (p.x < -1.5) gTint *= .85 + .25 * smoothstep(.3, .7, vn(vec2(p.y * 5. + fbm(p.xz * .4, 2) * 2., 1.)));   /* the beds */
+    if (p.x < -1.85 && p.y > .5) gTint *= .4;                                                 /* the wall above, out of the light */
+    if (p.y < .05) gTint *= mix(.45, .8, smoothstep(ZH - 1.5, ZH + 3., p.z));
+    /* the bank: salt heaped at the wall's foot, its top roughly level */
+    vec3 b = p - vec3(-1.95, 0., ZH);
+    vec2 bq = vec2(b.x / ${RX.toFixed(2)}, b.z / ${RZ.toFixed(2)});
+    float bank = (p.y - ${H0.toFixed(2)} * (1. - dot(bq, bq)) - .015 * fbm(p.xz * 6., 2)) * .5;
+    bank += rough(p, .014, 7.) + rough(p, .005, 23.);
+    if (bank < d.x) { d = vec4(bank, M_SALT, NOUV); gTint = vec3(.95) * mix(.5, 1., smoothstep(0., YH, p.y)); }
+    /* the hollow: a bowl the size of two cupped hands, worn glassy inside */
+    vec3 q = p - vec3(XH, YH + .03, ZH);
+    float bowl = length(q / vec3(.14, .065, .16)) - 1.;
+    bowl *= .065;
+    if (-bowl > d.x - .03 && p.y > YH - .1) {
+      d.x = -smin(-d.x, bowl, .025);                                                        /* its lip worn round, no edge left on it */
+      if (bowl < .03) {
+        d.yzw = vec3(M_SALT, NOUV);
+        float depth = smoothstep(.0, -.035, q.y), wk = smoothstep(.03, .0, bowl);
+        gTint = mix(gTint, vec3(mix(.72, 1., depth)), wk);
+        gPolish = .6 * wk; gSmooth = .06 * wk;                                                          /* worn to a glassy smoothness */
+        /* four small places at the bottom pressed flat, two and two */
+        vec2 f = q.xz;
+        float fp = 1e3;
+        vec2 e = vec2(.75, 1.25);                                                              /* each a little longer than wide, all one way */
+        fp = min(fp, length((f - vec2(-.026, -.05)) * e));
+        fp = min(fp, length((f - vec2(.024, -.034)) * e));
+        fp = min(fp, length((f - vec2(-.028, .036)) * e));
+        fp = min(fp, length((f - vec2(.027, .052)) * e));
+        fp += (vn(f * 300.) - .5) * .004;                                                        /* pressed, not stamped: their edges uneven */
+        float pr = 1. - smoothstep(.011, .015, fp);
+        if (pr > 0. && q.y < -.02) {
+          d.x = max(d.x, p.y - (YH - .03)) ;                                                 /* flat: the salt pressed level */
+          gTint = mix(gTint, vec3(2.3), pr); gPolish = 1.; gSmooth = .06;
+        }
+      }
+    }
+    /* the count on its rim: short strokes cut across the lip, on the side toward you */
+    vec3 r = p - vec3(XH + .1, YH + .02, ZH - .1);
+    if (abs(r.y) < .05 && length(q.xz / vec2(.13, .15)) > 1.02) {
+      float ang = atan(q.z, q.x), k = floor((ang + 2.6) / .12);
+      float cA = -2.6 + (k + .5) * .12;
+      vec2 rim = vec2(cos(cA) * .165, sin(cA) * .185);
+      vec2 tn = normalize(rim);
+      vec2 w = q.xz - rim;
+      float st = length(vec2(dot(w, vec2(-tn.y, tn.x)), max(abs(dot(w, tn)) - .018, 0.)));
+      if (k >= 0. && k < 5.) d.x += engrave(st, .005, .004);
+    }
+    return d;
+  }`,
+  anchors: {
+    glints: [[XH - .03, YH - .03, ZH - .04], [XH + .03, YH - .03, ZH + .05], [XH + .1, YH + .01, ZH + .1], [XH - .05, YH + .02, ZH - .18]].map(p => ({ p })),
+    fog: [{ p: [-1.55, .12, ZH + .25], w: 1.2, h: .14, a: .12 }],
+  },
+  live: { motes: 'gold', fog: 'low' },
+};

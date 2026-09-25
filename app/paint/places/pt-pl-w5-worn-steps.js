@@ -33,8 +33,8 @@ export const STAIR = /* glsl */ `
   /* the rail: a long groove cut in the right wall, leaving a round bar standing in it, a man's chest above the treads */
   vec4 railCut(vec3 p, out float onRail) {
     float h = p.y - noseY(p.z);                                               /* height above the noses */
-    vec2 rc = vec2(p.x - (SW - .02), h - 1.35);
-    float groove = min(min(.2 - abs(rc.y), rc.x + .17), 1.);                  /* the groove: air, 40 cm tall, 17 cm deep */
+    vec2 rc = vec2(p.x - (SW + .1), h - 1.35);
+    float groove = min(min(.2 - abs(rc.y), SW + .22 - p.x), p.x - SW + .3);                 /* the groove: air, 40 cm tall, 17 cm deep */
     float bar = length(rc / vec2(1.3, 1.)) - .075;                            /* the bar left standing */
     onRail = smoothstep(.02, 0., bar) * smoothstep(-.02, .06, rc.y + .02);
     return vec4(max(groove, -bar), M_CUT_SMALL, NOUV);
@@ -91,7 +91,7 @@ export default {
     { p: L(3), c: WARM, k: .5, r: .7, shadow: .7, reach: 4.5, air: .03 },
     { p: [.4, -ST.RISE * 16 + 1.6, 17.5 * ST.TREAD], c: WARM, k: 1., r: 1.4, shadow: .5 },   /* the first turn, lit */
     { p: L(1), c: WARM, k: .25, r: .5, shadow: .8, reach: 2.2 },                  /* the lamp you have passed, just behind on the left */
-    { p: [0, -ST.RISE * 8 + .5, 8.1 * ST.TREAD], c: [1, .76, .48], k: .22, r: .35, reach: 1.3, shadow: 1 },   /* its light lying along the nearest step */
+    { p: [0, -ST.RISE * 8 + .5, 8.1 * ST.TREAD], c: [1, .76, .48], k: .32, r: .35, reach: 1.3, shadow: 1 },   /* its light lying along the nearest step */
     { p: [.2, -1.2, 2.4], c: [.42, .39, .95], k: 6, r: 2.6, shadow: .5 },                               /* the violet from the landing above, behind you */
   ],
   glsl: STAIR + /* glsl */ `
@@ -106,11 +106,11 @@ export default {
     if (abs(p.y - top) < .08 && d.x < .05) {
       for (int s = 0; s < 2; s++) {
         vec2 c = vec2(float(s) == 0. ? -.42 : .4, zc + (float(s) - .5) * .06);
-        vec2 e = (p.xz - c) / vec2(.23, .19);
+        vec2 e = (p.xz - c) / vec2(.2, .16);
         float r = length(e);
-        float dip = .045 * (1. - smoothstep(0., 1., r * r));
+        float dip = .04 * max(1. - r * r * r * r, 0.);
         d.x += dip;
-        gPolish = max(gPolish, smoothstep(1.05, .5, r)); gTint *= 1. + .5 * smoothstep(1.05, .4, r);
+        gPolish = max(gPolish, smoothstep(1.05, .5, r)); gTint *= 1. + .9 * smoothstep(1.05, .4, r);
       }
     }
     /* every other tread worn the same way, fainter */
