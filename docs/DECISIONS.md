@@ -944,11 +944,11 @@
 
 ## D-089 — No Low / Normal / High on Today, and no "Already done" (Dan's call)
 - **Date:** 2026-09-25
-- **Context:** during the review-2 fixes. Dan: the size buttons "aren't really useful… just extra buttons… I set my days and run them"; and a job should not be markable as already done.
+- **Context:** during the review-2 fixes. Dan: the size buttons "aren't really useful… just extra buttons… I set my days and run them"; and "Already done" is "a tempting way for me to cheat the system and move forward without using the app".
 - **Decision:** Today loses the three size buttons and their note, and the "Already done" link. Every day is Normal; nothing is suggested from bedtime or from days away any more (the plan is the day). A job done away from the phone is begun first (Begin), then Done.
 - **Consequences:**
   - The central test's sharpest line (MVP → "started from the app or recorded afterwards") loses its "afterwards" half: a job done without the app can no longer be recorded, so "didn't do it" and "did it without the app" look the same. Told to Dan.
-  - The morning deep push (D-054) was offered only on a High day, so it no longer appears. **Open for Dan:** leave it out, or offer it another way.
+  - The morning deep push (D-054) was offered only on a High day, so it no longer appears. **Dan: leave it out** ("I just set my jobs when I wake up or during the week"). This reverses D-054's "the morning deep push stays".
   - Going to bed late, or coming back after days away, no longer makes the next day lighter. The head start for a kept bedtime (D-083) is unchanged.
   - Supersedes the capacity-on-Today parts of CORE_LOOPS (morning start), QUEST_SYSTEM and D-043's "lowering capacity can complete the day". The rules keep capacity inside (an old save's choice, the deep push) so this is one line to undo.
 - **Reversible:** Yes: the buttons and the link are one screen's markup.
