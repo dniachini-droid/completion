@@ -40,6 +40,7 @@ export default {
         d.yzw = vec3(M_SLATE, NOUV);
         gTint = vec3(2.4, 2.5, 2.8) * (.94 + .12 * fbm(p.xy * .7, 3));
         gTint *= mix(1., .25, smoothstep(2.4, 4.6, p.y));                                     /* up the face, into the dark: its top lost */
+        gTint *= mix(.5, 1., smoothstep(-1.9, -.8, p.x));                                     /* nearest the cup the face kept down: its light is for the count */
         vec2 m = p.xy;
         /* the count: long strokes in a row, cut deep and clean, every one empty */
         float cy = 1.72, k = floor((m.x + .62) / .15), c = -.62 + (k + .5) * .15;
