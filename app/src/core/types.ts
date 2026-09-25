@@ -69,7 +69,8 @@ export type FactBody =
   | { type: 'beginUndone'; job: string }
   | { type: 'delveStarted'; job: string; minutes: number; count: number }
   | { type: 'breatherSkipped' }
-  | { type: 'delveHeld' }
+  /** Paused: by hand (Pause), or by going into another app (why 'away', D-094), stamped when Dan left. */
+  | { type: 'delveHeld'; why?: 'away' }
   | { type: 'delveResumed' }
   | { type: 'delveEnded'; job: string; minutes: number; how: 'ranOut' | 'finishedHere'; run: number }
   | { type: 'jobDone'; job: string; minutes: number }
