@@ -14,10 +14,10 @@ export default {
   far: 14, fogK: 1 / 12, sheen: 0, gold: 1, expo: 2.1, amb: .9, ambC: [.8, .76, 1.8], grain: .5, shadowJitter: 1,
   hazeBase: [.012, .011, .035], hazeFar: [.03, .026, .07],
   bloomAt: [0, 7, 0], bloomPow: 20, bloomC: [.03, .025, .05],
-  glow: { threshold: .6, k: .45 }, bloom: { alpha: .2 },
+  glow: { threshold: .6, k: .5 },
   blur: { px: 1.4, d0: 2.2, d1: 6, k: .8 },
   lights: [
-    { p: [-1.6, 1.1, -1.3], c: [1, .68, .34], k: 1.35, r: .9, shadow: .8, warm: .003 },                             /* the round side's light (the Stair's lamps), warm, low on the left */
+    { p: [-1.6, 1.1, -1.3], c: [1, .68, .34], k: 1.1, r: .9, shadow: .8 },                             /* the round side's light (the Stair's lamps), warm, low on the left */
     { p: [-.3, (L[0] + L[1]) / 2 - .35, -.42], c: [1, .76, .48], k: .05, r: .25, reach: .9 },   /* and on the stone round the lead */
     { p: [1.5, 2.5, -1.5], c: [.32, .29, .7], k: 1.2, r: 1.5 },                                        /* violet on the square side */
     { p: [0, 5, -1.2], c: [.3, .27, .65], k: 1.5, r: 2 },                                              /* and high up the join, fading */
@@ -42,7 +42,7 @@ export default {
     bool lead = p.y > L0 && p.y < L1 && p.x > 0.;
     /* the joint open, a narrow dark gap; where the lead was poured it fills the joint's full width, flush, flat-faced */
     if (!lead) d.x += .018 * (1. - smoothstep(gapW * .5, gapW, jj));
-    else if (jd < .012 && d.x < .01) { d.y = M_TIN; gTint = vec3(.95, .97, 1.08) * (.9 + .15 * fbm(p.xy * 90., 2));
+    else if (jd < .012 && d.x < .01) { d.y = M_TIN; gTint = vec3(.72, .74, .84) * (.9 + .15 * fbm(p.xy * 90., 2));
       float pk = length(vec2((p.x - .045) / .007, (p.y - 2.72) / .05)); gTint *= 1. + 14. * (1. - smoothstep(.3, 1., pk)); gSmooth = .3; }   /* one small pick of sheen along the metal */
     if (!isRound && d.x < .02 && p.z > -.1) {
       gTint *= vec3(.62, .6, .66);                                                       /* square stone, darker, smoke-dulled */

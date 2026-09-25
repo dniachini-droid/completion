@@ -15,9 +15,9 @@ export default {
   far: 9, fogK: 1 / 14,
   bloomAt: [-1.7, 1.4, 3.7], bloomPow: 18, bloomC: [.05, .045, .11],
   blur: { px: 1.3, d0: .8, d1: 2.2, k: .6 },
-  expo: 2.2, sheen: 0, bloom: { alpha: .16 }, shadowJitter: 1,
+  expo: 2.2, sheen: 0,
   lights: [
-    { ...room.lights[0], k: 5, warm: .002 },                                                          /* the clay lamp, in the passage */
+    { ...room.lights[0], k: 4 },                                                          /* the clay lamp, in the passage */
     { p: [-.5, 1.4, 3.66], c: [1, .72, .38], k: .05, r: .2, shadow: 1, reach: .5 },
     { p: [-.9, 1.3, 3.9], c: [1, .72, .38], k: .012, r: .1, reach: .75 },       /* its light, reaching the ledge, weak */
     { p: [-1.5, 1.7, 3.6], c: [.4, .37, .85], k: 1.1, r: .9 },                             /* violet in the far corner */
@@ -46,11 +46,11 @@ export default {
         float w = mix(.011, .015, 1. - bl) * tip + .002;                               /* narrow at the point, wider at the handle */
         float e = max(abs(q.z) - w, max(-u, u - .38));
         float grain = fbm(p.xz * 260., 3);
-        float clean = 1. - smoothstep(-.006, .01 + .008 * grain, e);                 /* soft-edged: the dust thins toward it */
+        float clean = 1. - smoothstep(-.003, .004 + .005 * grain, e);                 /* soft-edged: the dust thins toward it */
         float dust = smoothstep(.0, .03, e) * (.75 + .5 * grain);
         vec3 dustC = vec3(1.45, 1.4, 1.38) * mix(.8, 1., dust) * (.85 + .3 * fbm(p.xz * 90., 2));
         float rim = smoothstep(.0, .003, e) * (1. - smoothstep(.004, .012 + .006 * grain, e));   /* the dust a little heaped along its edge */
-        dustC *= 1. + .12 * rim;
+        dustC *= 1. + .45 * rim;
         float streak = 1. - smoothstep(0., w * .7, abs(q.z + .002 * sin(u * 40.)));   /* the bare stone, wiped, a dull sheen along its middle */
         gTint = mix(dustC, vec3(.55, .52, .56) * (1. + .35 * streak), clean);
         gPolish = clean;

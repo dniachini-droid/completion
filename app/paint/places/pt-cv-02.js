@@ -14,13 +14,13 @@ export default {
   line: '',
   cam: { x: -.08, y: .5, z: .2, pitch: -12, yaw: 7, f: 1.1, cx: .5, cy: .5 },
   far: 24, fogK: 1 / 16, sheen: 0, expo: 2.1, amb: 1.1,
-  hazeBase: [.016, .014, .045], hazeFar: [.1, .09, .24],
+  hazeBase: [.016, .014, .045], hazeFar: [.07, .065, .17],
   bloomAt: LP, bloomPow: 16, bloomC: [.14, .12, .3],
-  glow: { threshold: .6, k: .45 }, bloom: { alpha: .14 }, grain: .4, shadowJitter: 1,
+  glow: { threshold: .6, k: .5 },
   blur: { px: 2.2, d0: 2.6, d1: 7, k: .95 },
   lights: [
     { p: LP, c: [.62, .58, 1.25], k: 30, r: 3, shadow: .5 },                      /* the violet place-light, round the bend */
-    { p: [.5, .3, 4.2], c: [.66, .62, 1.2], k: .2, r: .5, shadow: .8, reach: 3.6 },   /* the same light, low along the floor: it rakes across the prints */
+    { p: [.5, .3, 4.2], c: [.66, .62, 1.2], k: .12, r: .5, shadow: .8, reach: 3.6 },   /* the same light, low along the floor: it rakes across the prints */
     { p: [0, .9, -1.5], c: [.3, .28, .66], k: .6, r: 2 },                         /* faint fill from the ladder behind */
   ],
   glsl: /* glsl */ `
@@ -44,16 +44,14 @@ export default {
     float air = min(1. - length(cs), p.y);
     float ang = atan(cs.x, -cs.y);
     vec4 d = vec4(min(air, 30. - s), M_CUT, vec2(s, ang * 1.));
-    d.x += rough(p, .012, 5.) * smoothstep(.1, .35, p.y);                               /* the tube's stone, a little uneven, worn smooth underfoot */
     if (p.y > .55) gTint *= mix(1., .3, smoothstep(.55, 1.7, p.y));                       /* the crown of the tube, dark: the words' band stays calm */
     /* the dust in the bottom of the curve; a path worn through it; the prints */
     float low = 1. - smoothstep(.12, .32, p.y);
     if (low > 0. && d.x < .02) {
       float n = fbm(vec2(lat * 9., s * 4.), 3);
-      vec3 dust = vec3(1.7, 1.66, 1.5) * (.7 + .5 * n) * (.8 + .4 * fbm(vec2(lat * 2.5, s * 1.2), 3));
-            float trackW = .2 + .03 * sin(s * 1.3);
+      vec3 dust = vec3(1.7, 1.66, 1.5) * (.85 + .25 * n);
+      float trackW = .2 + .03 * sin(s * 1.3);
       float track = 1. - smoothstep(trackW - .06, trackW + .05, abs(lat + .02 * sin(s * .7)));
-      d.x += (fbm(vec2(lat * 14., s * 11.), 3) - .5) * .006 * (1. - track);          /* the dust lies in soft drifts, ridged a little either side of the path */
       vec3 c = mix(dust, vec3(.8, .78, .82) * (.9 + .2 * n), track * .8);
       /* the prints: a stride apart, left and right, going away; whole near, blurring into the path further on */
       float k = floor(s / .38), side = mod(k, 2.) < .5 ? -1. : 1.;

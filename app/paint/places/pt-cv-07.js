@@ -15,7 +15,7 @@ export default {
   line: '',
   cam: { x: -1.62, y: 1.5, z: ZR - 1.3, pitch: -2, yaw: -3, f: .72, cx: .5, cy: .5 },
   blur: { px: 1.8, d0: 2.5, d1: 14, k: .85 },
-  glow: { threshold: .7, k: .4 }, bloom: { alpha: .22 }, shadowJitter: 1,
+  glow: { threshold: .7, k: .45 },
   bloomC: [.3, .28, .6],
   lights: [
     { p: [-.5, 1.9, 9.5], c: V, k: 14, r: 3.5, shadow: .7 },                 /* the gallery's light, raking back along the wall from further in */
@@ -39,7 +39,7 @@ export default {
     float ty = 1.3 + .01 * sin(p.z * .7) + (vn(vec2(p.z * 3., 1.)) - .5) * .012;
     if (p.x < -1.8 && abs(p.y - ty) < .06) d.x += engrave(tally(vec2(p.z, p.y - ty)), .008, .016);
     /* above it, the lone ring: one clean cut, no start, no end */
-    if (p.x < -1.7) { float rr = abs(length(vec2(p.z - ZR7, p.y - 1.66)) - .15); d.x += engrave(rr, .012, .018); if (rr < .013) { gPolish = .5 * smoothstep(.004, .01, rr); gTint = vec3(mix(.5, 1.8, smoothstep(.003, .01, rr))); } }   /* its cut clean: fresh crystals on its lips, the stroke's floor in shadow */
+    if (p.x < -1.7) { float rr = abs(length(vec2(p.z - ZR7, p.y - 1.66)) - .15); d.x += engrave(rr, .012, .018); if (rr < .013) { gPolish = 1.; gTint = vec3(1.9); } }   /* its cut clean, the crystals fresh in it */
     return d;
   }`,
   anchors: {

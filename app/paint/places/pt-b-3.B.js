@@ -22,8 +22,6 @@ export const STAIR = /* glsl */ `
     float fa = stairLine(p.z) - .6;
     vec4 d = hallAir(vec3(p.x, p.y - fa, p.z), 1.7, 3.5, 1.7, 2.9, 10., M_CUT);
     d.x *= .78;
-    d.x += rough(p, .012, 3.) + rough(p, .004, 13.);                                   /* the walls hand-cut, not machined */
-    gTint *= .8 + .4 * fbm(vec2(p.z + p.x, p.y) * 1.3, 3);                                   /* each block its own tone */
     d = A(d, hallAir(vec3(p.x + .8, p.y + .6, p.z), 2.5, 3.2, 2.5, -4., 3., M_CUT));      /* the landing: wider than the stair, on the left */
     /* the turn: an opening in the right wall, the next flight going on down out of sight */
     vec4 side = boxAir(p, vec3(4., -2.7 + .8, 8.3), vec3(2.4, 2.4, 1.1), M_CUT);
@@ -35,22 +33,17 @@ export const STAIR = /* glsl */ `
     vec4 st = stairs(p, -1.8, 1.8, 3., 0., .6, .45, 6, M_DRESSED);
     vec4 tl = box(p, vec3(.9, -3.7, 8.3), vec3(2.7, 1., 1.72), M_DRESSED);
     vec4 fl = U(land, U(st, tl));
-    fl.x -= .02;                                                                    /* the noses rounded by wear */
+    fl.x -= .012;                                                                   /* the noses rounded by wear */
     fl.x += rough(p, .006, 9.);
     if (fl.x < d.x) {
       d = fl;
       float top = smoothstep(.04, .0, abs(p.y - (p.z < 3. ? 0. : p.z > 6.6 ? -2.7 : -.45 * (floor((p.z - 3.) / .6) + 1.))));
       gPolish = .35 * top * (1. - smoothstep(.8, 1.7, abs(p.x)));                   /* treads worn smooth down the middle */
-      if (p.z < 2.95 && p.y > -.05) {                                                /* the landing laid in big slabs, their joints worn soft */
-        vec2 g = abs(fract(vec2(p.x / 1.15 + .3, p.z / 1.4 + .1 * floor(p.x / 1.15 + .3))) - .5);
-        d.x += engrave(min(.5 - g.x, .5 - g.y) * 1.2, .012, .006);
-        gTint *= .85 + .3 * fbm(floor(vec2(p.x / 1.15 + .3, p.z / 1.4)) * 3.1 + p.xz * .8, 3);
-      }
     }
     /* the hoods over the lamps: a lip of the wall on each recess's uphill side */
     vec4 hd = U(box(p, vec3(1.8, -.9 + .12, 4.44), vec3(.14, .3, .15), M_CUT_SMALL), box(p, vec3(1.8, -1.8 + .12, 5.64), vec3(.14, .3, .15), M_CUT_SMALL));
     hd.x -= .02;
-    if (hd.x < d.x) { d = hd; gTint = vec3(.35); }
+    if (hd.x < d.x) { d = hd; gTint = vec3(.55); }
     /* the rail, cut from the left wall: down the flight, round the turn's landing and along its far wall */
     float yr = railY(p.z);
     vec2 q1 = vec2(p.x + 1.64, p.y - yr);
@@ -82,14 +75,14 @@ export default {
   name: 'The head of the Stair',
   line: '',
   cam: { x: -1.7, y: 1.55, z: 1.35, pitch: -15, yaw: 7, f: .6, cx: .5, cy: .5 },
-  far: 40, fogK: 1 / 18, sheen: 0, gold: .7, expo: 2.1,
+  far: 40, fogK: 1 / 18, sheen: 0, gold: .7, expo: 2.0,
   hazeBase: [.02, .018, .055], hazeFar: [.06, .05, .13],
-  bloomAt: [.3, -2.5, 8], bloomPow: 8, bloomC: [.2, .13, .08],
-  glow: { threshold: .55, k: .45 },
+  bloomAt: [.3, -2.5, 8], bloomPow: 10, bloomC: [.14, .09, .06],
+  glow: { threshold: .55, k: .6 },
   blur: { px: 1.4, d0: 4, d1: 14, k: .7 },
   lights: [
-    { p: [.9, -.3, 4.3], c: W, k: 1.8, r: .9, reach: 5, shadow: .7 },                        /* the Stair's lamps below: their light coming up over the landing's edge */
-    { p: [1.3, -1.4, 5.9], c: W, k: 1.4, r: 1, reach: 4, shadow: .5, air: .05 },              /* and further down */
+    { p: [.9, -.3, 4.3], c: W, k: 1.4, r: .9, reach: 5, shadow: .7 },                        /* the Stair's lamps below: their light coming up over the landing's edge */
+    { p: [1.3, -1.4, 5.9], c: W, k: 1.2, r: 1, reach: 4, shadow: .5, air: .02 },              /* and further down */
     { p: [XN + .02, YN + .2, 2.95], c: [1, .8, .58], k: .05, r: .13, reach: .42, shadow: 1 },               /* the same light, from below the niche's sill: the glaze gives it back */
     { p: [0, 3.6, -3], c: V, k: 4, r: 3.5 },                                                  /* the place's own cold, from the lintel behind */
     { p: [-.5, 3.4, 3], c: [.36, .33, .8], k: 2.5, r: 2.5 },                                  /* and high in the vault */

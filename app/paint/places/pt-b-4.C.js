@@ -20,7 +20,7 @@ export default {
   glow: { threshold: .58, k: .6 },
   blur: { px: 1.2, d0: 4, d1: 12, k: .6 },
   lights: [
-    { p: [-2.6, .8, ZD - 2.4], c: W, k: .42, r: .8, reach: 3.6, warm: .004, shadow: 1 },  /* the last cup, low on the left: its light raking across the face */
+    { p: [-2.6, .8, ZD - 2.4], c: W, k: .3, r: .8, reach: 3.6, warm: .004, shadow: 1 },  /* the last cup, low on the left: its light raking across the face */
     { p: [-2.1, 1.75, ZD - .66], c: W, k: 2.6, r: .6, reach: 3.2, shadow: 1 },                /* and along the count, grazing: every empty stroke draws itself */
     { p: [0, 3, ZD - 12], c: [.3, .28, .66], k: 4, r: 6 },                                   /* the hall behind: a faint cold fill */
     { p: [1.2, 1.4, ZD - 1.4], c: [.34, .33, .75], k: .8, r: 2.2 },                          /* the door's own cold, broad and faint */
@@ -38,8 +38,7 @@ export default {
       d.x += engrave(dr, .02, .015);
       if (dr > .015) {
         d.yzw = vec3(M_SLATE, NOUV);
-        gTint = vec3(2.4, 2.5, 2.8) * (.86 + .2 * fbm(p.xy * .7, 3)) * (.93 + .1 * fbm(p.xy * vec2(3., 11.), 3));   /* cold close stone, a faint grain and a mottling in it */
-        d.x += rough(p, .0025, 7.);
+        gTint = vec3(2.4, 2.5, 2.8) * (.94 + .12 * fbm(p.xy * .7, 3));
         gTint *= mix(1., .25, smoothstep(2.4, 4.6, p.y));                                     /* up the face, into the dark: its top lost */
         gTint *= mix(.5, 1., smoothstep(-1.9, -.8, p.x));                                     /* nearest the cup the face kept down: its light is for the count */
         vec2 m = p.xy;

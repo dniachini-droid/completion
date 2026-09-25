@@ -16,11 +16,11 @@ export default {
   name: 'In the trough',
   line: '',
   cam: { ...CAM, pitch: -27, yaw: 64, f: .85, cx: .5, cy: .5 },
-  sheen: .05, expo: 2, grain: .35, shadowJitter: 1,
+  sheen: .05, expo: 2,
   blur: { px: 1.6, d0: 1.6, d1: 6, k: .85 },
   lights: [
     ...corner.lights.slice(0, 3),
-    { ...corner.lights[4], k: 5.5 },                                                         /* low along the floor from the outer side: rakes across the troughs */
+    { ...corner.lights[4], k: 5 },                                                         /* low along the floor from the outer side: rakes across the troughs */
     { p: [LEAF[0] - .1, .24, LEAF[1] + .1], c: [.8, .75, 1.1], k: .045, r: .18, shadow: .7, reach: .62 },          /* the turn's light, low over the troughs, catching the leaf's curled edges */
   ],
   glsl: corner.glsl.replace('vec4 scene(vec3 p)', 'vec4 cornerScene(vec3 p)') + /* glsl */ `

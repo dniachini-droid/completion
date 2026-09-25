@@ -17,8 +17,8 @@ export default {
   bloomAt: [12, ramp2(12), 8.2], bloomPow: 14,
   blur: { px: 1.6, d0: 3, d1: 9, k: .85 },
   lights: [
-    lampLight(LAMP2[1], .7, { reach: 3 }),
-    lampLight(LAMP2[2], .8, { reach: 3.4 }),
+    lampLight(LAMP2[1], .5, { reach: 3 }),
+    lampLight(LAMP2[2], .6, { reach: 3.4 }),
     { p: [JX - .15, JY + .25, 6.95], c: [1, .74, .44], k: .05, r: .25, shadow: .6, reach: .7 },    /* the lamps' light on the jamb, where she wrote */
     { p: [DOOR.x - .6, DOOR.y + 1.2, 7.3], c: [1, .72, .4], k: .2, r: .4, shadow: .7, reach: 1.4 },  /* and on the door, the count and the ring */
     { p: [3.8, ramp2(3.8) + 1.4, 8.2], c: [.34, .31, .75], k: 3, r: 2 },                         /* violet on the flight */

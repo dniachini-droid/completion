@@ -31,3 +31,18 @@ Separate critic, 2026-09-25. Old = `img/<id>.webp` (in the game); new = the sess
 **pt-pl-w2-box-by-the-cot: KEEP-OLD.** The mug still reads upside down (flat base on top, rim on the slate), and the scene gains a warm tone on the box and a cool pool on the floor. But the look-at itself got worse: the mug's body is warped (bulging, dented left wall) and its warm reflection is broken into two blotches with a smudgy dark band between them (u .45–.60, v .50–.56), reading as a dent or a smear rather than one clean glint; and the box has gone warmer brown, pushing it further toward leather, the old should-fix. Old mug is cleaner.
 
 **pt-pl-w2-above-the-ring: KEEP-NEW.** Nearly identical frame; the pale thing is now a little smaller, dimmer and set lower in the crack's dark, so it reads slightly further back (the earlier should-fix). Still the brightest small value, still "something pale inside the crack". At least as good; not visibly richer.
+
+---
+
+## Stand-in fixes
+
+Not in the game yet (earlier versions failed on wrong readings); judged PASS/FAIL on wrong readings only, new (`polish/p4/pt-cv-01`, `polish/p1/pt-pl-w4-hollow`) against previous (`p4/`, `p1/`).
+
+| Id | Verdict |
+|---|---|
+| pt-cv-01 | PASS |
+| pt-pl-w4-hollow | PASS |
+
+**pt-cv-01, the ladder's foot: PASS.** The railing is gone. The ladder is now on the wall facing the camera, two straight rails with round rungs lit on their upper edges, the spacing shrinking toward the sky square. It reads at once as a ladder going up a shaft. The chalk "↑ 40 FT" sits beside it on the same wall, upright, with the arrow pointing along the ladder toward the daylight. The earlier "level corridor, doorway at the end" reading no longer holds, because the ladder and the upright chalk set which way is up. Should fix (not a wrong reading): the strip at the bottom edge (v .94–1.0) is too dark to read as the shaft's floor, and the ladder's feet don't visibly rest on it. Lifting that strip a little would give the last gravity cue. At a glance, rails and rungs running to a light could be mistaken for a track in a tunnel, but the rungs sit between the rails (not under them) and the chalk is upright, so it does not hold.
+
+**pt-pl-w4-hollow: PASS.** The raised-stud/button reading is gone. The four places now have darker, flat grey floors, with a shadowed near-inner edge and a lit far rim, so they read as shallow dents pressed into the basin's bottom, not bumps. The layout is no longer a diamond: one pair is offset and the spacing is uneven. The eye reading does not come back. The new bright pool of light on the basin floor sets them off well. Should fix (not a wrong reading): the dents are neat, even ellipses, a little like drilled pits. Softening one side of each and varying their size would push them toward "pressed" and away from "cut".

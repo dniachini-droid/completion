@@ -12,19 +12,19 @@ export default {
   far: 30, fogK: 1 / 26,
   hazeBase: [.012, .011, .034], hazeFar: [.06, .055, .16],
   bloomAt: [2.2, 1.5, 5.6], bloomPow: 8, bloomC: [.06, .045, .03],
-  bloom: { alpha: .28 },
+  bloom: { alpha: .12 },
   glow: { threshold: .6, k: .6 },
   blur: { px: 1.2, d0: 1.8, d1: 6, k: .7 },
-  gold: 1, sheen: 0, grain: .55, shadowJitter: 1, amb: .5, ambC: [.85, .78, 1.5], expo: 1.7,
+  gold: 1, sheen: 0, grain: .3, shadowJitter: 1, amb: .5, ambC: [.85, .78, 1.5], expo: 1.7,
   lights: [
     { p: [2.3, 1.42, 5.6], c: [1, .72, .36], k: .45, r: .5, shadow: 1, reach: 1.2 },          /* the clay lamp on the ledge, above and out of sight */
     { p: [2.14, 1.09, 5.62], c: [1, .76, .46], k: .07, r: .14, reach: .42, shadow: .6 },           /* its light curling round the lip, just under it */
     { p: [.4, 2.2, 3.4], c: [.42, .39, .9], k: 12, r: 3.4, shadow: .6 },                          /* the hall's violet, from behind on the left */
     { p: [-1.9, 3.7, 9.], c: [1, .74, .45], k: 1.4, r: 1.4, reach: 5. },                       /* the cups on the far wall, a low warm glow */
-    { p: [2.3, .08, 5.6], c: [1, .72, .36], k: .035, r: .25, reach: .6 },                      /* the lamp's gold lying at the wall's foot */
+    { p: [2.2, .06, 5.6], c: [1, .72, .36], k: .012, r: .15, reach: .3 },                      /* the lamp's gold lying at the wall's foot */
   ],
   glsl: /* glsl */ `
-  vec4 scenePrev(vec3 p) {
+  vec4 scene(vec3 p) {
     vec4 d = hallAir(p, 2.7, 6., 12.47, -10., 66., M_CUT);
     d.z += 1.1; d.w += .55;
     if (p.y < .03) gTint = vec3(mix(.14, .3, smoothstep(1.8, 2.68, p.x)));                  /* the floor, kept down */
@@ -46,16 +46,6 @@ export default {
       if (p.y < 1.17) gTint *= mix(.35, 1., smoothstep(2.6, 2.3, p.x));                        /* the underside darker toward the wall */
     }
     d = U(d, lg);
-    return d;
-  }
-  /* polish pass: the stone's own relief and mottling, hand-worked, never machine-flat */
-  vec4 scene(vec3 p) {
-    vec4 d = scenePrev(p);
-    float m = floor(d.y + .5);
-    if (d.x < .05 && (m == M_CUT || m == M_CUT_SMALL || m == M_DRESSED || m == M_FLOOR)) {
-      d.x += rough(p, 0.006, 4.0) + rough(p, 0.0018, 20.0);
-      gTint *= .86 + .28 * fbm(p.xz * 1.7 + p.y * 1.3, 3);
-    }
     return d;
   }`,
   anchors: {

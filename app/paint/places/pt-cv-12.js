@@ -60,13 +60,12 @@ export default {
   bloomAt: [DOOR.x, DOOR.y + .5, 9.8], bloomPow: 16,
   blur: { px: 1.8, d0: 2.6, d1: 8, k: .85 },
   lights: [
-    lampLight(LAMP2[0], .75, { reach: 2.8 }),
-    lampLight(LAMP2[1], .8, { reach: 2.8 }),
-    lampLight(LAMP2[2], .8, { reach: 2.8 }),
+    lampLight(LAMP2[0], .5, { reach: 2.6 }),
+    lampLight(LAMP2[1], .55, { reach: 2.6 }),
+    lampLight(LAMP2[2], .55, { reach: 2.6 }),
     { p: [TICK[0] - .35, TICK[1] + .35, TICK[2] + .2], c: [1, .74, .44], k: .06, r: .25, shadow: .6, reach: .8 },   /* the nearest lamp's light along the rail's top */
     { p: [1.2, -4, 8.2], c: [.34, .31, .75], k: 4, r: 2.2 },                        /* violet on the turn landing */
     { p: [4.2, ramp2(4.2) + 1.3, 8.2], c: [.34, .31, .75], k: 3, r: 2 },               /* and down the flight */
-    { p: [3.4, ramp2(3.4) + .9, 8.6], c: [1, .68, .34], k: .5, r: .8, shadow: .6, reach: 2.4 },     /* the first lamp's pool on the flight's treads */
     { p: [DOOR.x - .2, DOOR.y + .9, 7.3], c: [1, .7, .38], k: .25, r: .45, shadow: .6, reach: 1.6 },   /* the lamps' light pooled at the little door */
   ],
   glsl: STAIR2_GLSL + PENCIL_GLSL + DOOR_GLSL + /* glsl */ `

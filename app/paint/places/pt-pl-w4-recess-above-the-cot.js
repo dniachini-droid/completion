@@ -10,23 +10,21 @@ export default {
   id: 'pt-pl-w4-recess-above-the-cot',
   name: 'The recess above the cot',
   line: '',
-  grain: .55,
-  bloom: { alpha: .28 },
   cam: { x: 1.0, y: 1.42, z: 2.24, pitch: 40, yaw: 139, f: 1.45, cx: .5, cy: .5 },   /* at the cot's foot end, looking up at the wall over it */
   far: 9, fogK: 1 / 15,
   bloomAt: [C[0] - .05, C[1] - .02, C[2] + .26], bloomPow: 30, bloomC: [.02, .015, .008],
   blur: { px: 1.3, d0: 1., d1: 2.6, k: .6 },
   expo: 2.15, amb: .3, sheen: 0,
   lights: [
-    { ...room.lights[0], k: 1.8 },                                                          /* the clay lamp, in the passage: its light rises into the vault */
-    { p: [1.26, 1.62, 1.8], c: [1, .7, .34], k: .045, r: .2, shadow: 1, reach: .5 },       /* its light, weak, from below, raking up the wall and into the recess's lip */
+    { ...room.lights[0], k: 2.5 },                                                          /* the clay lamp, in the passage: its light rises into the vault */
+    { p: [1.26, 1.62, 1.8], c: [1, .7, .34], k: .06, r: .2, shadow: 1, reach: .5 },       /* its light, weak, from below, raking up the wall and into the recess's lip */
     { p: [1.36, 1.945, 1.972], c: [.9, .92, 1.], k: .0025, r: .012, reach: .03 },             /* a cold point given back by the pin's steel */
     { p: [-1.3, 1.9, 3.6], c: [.4, .37, .85], k: .8, r: 1.2 },                            /* violet in the corners */
     { p: [.2, 2.4, .8], c: [.4, .37, .85], k: .7, r: 1 },
     { p: [.6, 1.7, 2.5], c: [.4, .37, .85], k: .12, r: .8 },                              /* violet fill on the wall over the cot */                               /* violet in the vault */
   ],
   glsl: room.glsl.replace('vec4 scene(vec3 p)', 'vec4 roomScene(vec3 p)') + /* glsl */ `
-  vec4 scenePrev(vec3 p) {
+  vec4 scene(vec3 p) {
     vec4 d = roomScene(p);
     vec3 c = vec3(${C.join(', ')});
     vec3 n = normalize(vec3(-c.x, -(c.y - 1.), 0.));                              /* the vault's face here, toward the room */
@@ -74,18 +72,8 @@ export default {
     if (nearWall && length(l.yz - vec2(-.02 - .004, .245 + .006)) < .006) gTint *= .5;             /* the head's small shadow on the stone */
     if (p.y > 2.15) gTint *= mix(1., .35, smoothstep(2.15, 2.6, p.y));              /* the crown of the vault in the dark */
     if (p.y < 1.15) gTint *= mix(.3, 1., smoothstep(.4, 1.15, p.y));                  /* the cot and the wall below, kept back */
-    if (p.y < 1.75) gTint *= mix(.38, 1., smoothstep(1.3, 1.75, p.y));                 /* the wall below falling off toward the cot */
+    if (p.y < 1.75) gTint *= mix(.5, 1., smoothstep(1.3, 1.75, p.y));                 /* the wall below falling off toward the cot */
     if (p.y < .65) gTint *= .3;                                                         /* the cot and the floor under you, in the dark */
-    return d;
-  }
-  /* polish pass: the stone's own relief and mottling, hand-worked, never machine-flat */
-  vec4 scene(vec3 p) {
-    vec4 d = scenePrev(p);
-    float m = floor(d.y + .5);
-    if (d.x < .05 && (m == M_CUT || m == M_CUT_SMALL || m == M_DRESSED || m == M_FLOOR)) {
-      d.x += rough(p, 0.005, 4.0) + rough(p, 0.0015, 20.0);
-      gTint *= .86 + .28 * fbm(p.xz * 1.7 + p.y * 1.3, 3);
-    }
     return d;
   }`,
   anchors: {

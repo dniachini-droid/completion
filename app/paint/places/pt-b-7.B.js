@@ -28,15 +28,15 @@ export default {
   cam: { x: .2, y: 1.3, z: Z13 - .45, pitch: -5, yaw: 52, f: .66, cx: .5, cy: .5 },
   far: 30, fogK: 1 / 18,
   hazeBase: [.012, .011, .034], hazeFar: [.06, .05, .14],
-  bloomAt: [0, 1.2, 20], bloomPow: 30, bloomC: [.22, .2, .42],
-  bloom: { alpha: .28 },
+  bloomAt: [0, 1.2, 20], bloomPow: 30, bloomC: [.1, .09, .2],
+  bloom: { alpha: .14 },
   glow: { threshold: .62, k: .5 },
   blur: { px: 1.4, d0: 2.5, d1: 9, k: .75 },
-  gold: 1, sheen: 0, grain: .55, shadowJitter: 1, amb: 1.1, ambC: [.8, .76, 2.1], expo: 1.8,
+  gold: 1, sheen: 0, grain: .4, shadowJitter: 1, amb: 1.1, ambC: [.8, .76, 2.1], expo: 1.8,
   lights: [
-    { p: [-.6, .95, Z13 - 2.4], c: WARM, k: 3, r: 1.1, shadow: .8, reach: 7 },            /* the round side's light, low, from the gallery's mouth */
+    { p: [-.6, .95, Z13 - 2.4], c: WARM, k: 2, r: 1.1, shadow: .8, reach: 7 },            /* the round side's light, low, from the gallery's mouth */
     { p: [XW - .16, 1.24, Z13 + .01], c: WARM, k: .03, r: .12, shadow: 1, reach: .32 },       /* its first catch, at the row's end */
-    { p: [0, 1.5, 11], c: [.5, .46, 1.], k: 8, r: 3.5, shadow: .4 },                          /* cold far down the gallery */
+    { p: [0, 1.9, 9], c: [.42, .39, .92], k: 3, r: 3, shadow: .4 },                          /* cold far down the gallery */
     { p: [-.8, 1.8, Z13 + .5], c: [.36, .33, .8], k: .8, r: 1.5 },                          /* cold fill */
   ],
   glsl: SQUARE + /* glsl */ `
@@ -52,7 +52,7 @@ export default {
     if (kind < .3) return length(vec2(fx, max(abs(y + .01) - .018 * (1. - (y + .028) / .056), 0.)));
     return bar;
   }
-  vec4 scenePrev(vec3 p) {
+  vec4 scene(vec3 p) {
     vec4 d = boxAir(p, vec3(0., 1.05, 8.), vec3(XW, 1.05, 12.), M_CUT);
     /* the niche under the rings, opened */
     vec4 ni = boxAir(p, vec3(XW + .14, .82, Z13 + .55), vec3(.15, .13, .24), M_ROCK);
@@ -91,16 +91,6 @@ export default {
     if (p.y < .03) gTint *= mix(.35, 1., smoothstep(Z13, Z13 + 6., p.z));                        /* the floor, kept down */
     if (p.y > 2.06) gTint *= .45;                                                                /* the flat ceiling, dark */
     if (p.x < -XW + .03) gTint *= .6;                                                            /* the far wall, quiet */
-    return d;
-  }
-  /* polish pass: the stone's own relief and mottling, hand-worked, never machine-flat */
-  vec4 scene(vec3 p) {
-    vec4 d = scenePrev(p);
-    float m = floor(d.y + .5);
-    if (d.x < .05 && (m == M_CUT || m == M_CUT_SMALL || m == M_DRESSED || m == M_FLOOR)) {
-      d.x += rough(p, 0.006, 3.0) + rough(p, 0.0018, 15.0);
-      gTint *= .86 + .28 * fbm(p.xz * 1.7 + p.y * 1.3, 3);
-    }
     return d;
   }`,
   anchors: {

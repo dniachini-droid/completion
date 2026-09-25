@@ -13,8 +13,6 @@ export default {
   id: 'pt-b-2.B',
   name: 'The rod',
   line: '',
-  grain: .55,
-  bloom: { alpha: .28 },
   cam: { x: -.24, y: 1.52, z: 3.24, pitch: -21, yaw: -20, f: 1.55, cx: .5, cy: .5 },   /* at the shelf, standing, looking down at the rod */
   far: 9, fogK: 1 / 15,
   bloomAt: [-.45, 1.26, 3.82], bloomPow: 24, bloomC: [.012, .012, .03],
@@ -22,7 +20,7 @@ export default {
   expo: 2.2, sheen: 0,
   lights: [
     { ...room.lights[0], k: 6 },                                                          /* the clay lamp, in the passage behind you */
-    { p: [-.36, 1.6, 3.74], c: [1, .7, .34], k: .032, r: .22, shadow: 1, reach: .55 },      /* its light reaching the shelf, weak */
+    { p: [-.36, 1.6, 3.74], c: [1, .7, .34], k: .02, r: .2, shadow: 1, reach: .5 },      /* its light reaching the shelf, weak */
     { p: [-.5, 1.34, 3.8], c: [1, .72, .38], k: .008, r: .07, reach: .15 },             /* the last of it, grazing the rod's honed edge */
     { p: [-1.3, 1.9, 3.6], c: [.4, .37, .85], k: 1., r: 1.2 },                           /* violet in the far corners */
     { p: [1.35, 1.9, 3.7], c: [.4, .37, .85], k: .4, r: 1 },
@@ -77,7 +75,7 @@ export default {
     }
     return vec4(r, M_SLATE, NOUV);
   }
-  vec4 scenePrev(vec3 p) {
+  vec4 scene(vec3 p) {
     vec4 d = roomScene(p);
     if (p.y > 1.32) gTint *= mix(1., .3, smoothstep(1.32, 1.85, p.y));              /* the vault going dark overhead */
     if (p.y < .03) gTint *= .35;                                                       /* the floor, out of the light */
@@ -100,16 +98,6 @@ export default {
     }
     /* under the shelf, a pencilled line on the wall: graphite, grey with a faint sheen */
     if (p.z > 3.97 && abs(p.y - .99 - .004 * sin(p.x * 9.)) < .004 && p.x > -.86 && p.x < -.2) { gTint = vec3(.3, .3, .36); gPolish = .6; }
-    return d;
-  }
-  /* polish pass: the stone's own relief and mottling, hand-worked, never machine-flat */
-  vec4 scene(vec3 p) {
-    vec4 d = scenePrev(p);
-    float m = floor(d.y + .5);
-    if (d.x < .05 && (m == M_CUT || m == M_CUT_SMALL || m == M_DRESSED || m == M_FLOOR)) {
-      d.x += rough(p, 0.003, 6.0) + rough(p, 0.0009, 30.0);
-      gTint *= .86 + .28 * fbm(p.xz * 1.7 + p.y * 1.3, 3);
-    }
     return d;
   }`,
   anchors: {

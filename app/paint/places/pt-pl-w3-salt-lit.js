@@ -51,10 +51,10 @@ export default {
   line: '',
   cam: { x: .0, y: 1.1, z: ZS - .75, pitch: -8, yaw: -74, f: .62, cx: .5, cy: .5 },
   salt: { pink: .45 },
-  expo: 2.0, grade: [1, 1, 1],
+  expo: 1.9, grade: [1, 1, 1],
   blur: { px: 1.8, d0: 4, d1: 16, k: .85 },
   lights: [
-    { p: [.4, 1.8, ZS - 2.2], c: [1, .84, .66], k: 1.35, r: 1.8, shadow: .6 },         /* the cups' glow, round the corner behind you */
+    { p: [.4, 1.8, ZS - 2.2], c: [1, .84, .66], k: 1.2, r: 1.8, shadow: .6 },         /* the cups' glow, round the corner behind you */
     { p: [-2.0, 1.02, ZS - .06], c: [1, .75, .48], k: .15, r: .2, reach: .55, shadow: 1 },   /* its last reach, from above, onto the stones' tops */
     { p: [.6, 1.9, ZS + 2.5], c: [.62, .58, 1.2], k: 1, r: 2, shadow: .5 },        /* the gallery's violet, from further in */                  /* its last reach, onto the split's stones */
     { p: [.4, 1.6, 34], c: [.62, .58, 1.2], k: 22, r: 9 },                         /* the gallery going on in its own violet */

@@ -14,12 +14,11 @@ export default {
   line: '',
   cam: { x: -1.0, y: .95, z: ZB + .04, pitch: -13, yaw: -90, f: .82, cx: .5, cy: .5 },
   salt: { pink: .3 },
-  expo: 1.95, grade: [1, 1, 1], bloomAt: [-2.2, YB + .1, ZB], bloomC: [.05, .045, .1], sheen: 0,
+  expo: 1.85, grade: [1, 1, 1], bloomAt: [-2.2, YB + .1, ZB], bloomC: [.05, .045, .1], sheen: 0,
   blur: { px: 1.4, d0: 1.3, d1: 5, k: .7 },
   lights: [
-    { p: [-.9, 1.4, ZB - 2.2], c: W, k: .55, r: 1.2, shadow: .6, reach: 3.2 },               /* the cups' glow, from the left: the gallery's near end */
+    { p: [-.9, 1.4, ZB - 2.2], c: W, k: .3, r: 1.2, shadow: .6, reach: 3.2 },               /* the cups' glow, from the left: the gallery's near end */
     { p: [-1.97, YB + .12, ZB - .19], c: W, k: .03, r: .12, reach: .45, shadow: 1 },           /* its reach into the niche, raking across the block's face */
-    { p: [-1.45, YB + .45, ZB - .55], c: W, k: .05, r: .4, reach: 1.3, shadow: .8 },          /* the cups' warmth pooled on the stone surround and the salt at its left */
     { p: [.3, 1.6, ZB + 6], c: V, k: 3, r: 4 },                                                 /* the gallery going on in its own violet, on the right */
     { p: [0, 1.6, ZB - 7], c: [.3, .28, .66], k: .5, r: 3 },                                   /* faint fill from behind */
   ],
@@ -35,9 +34,9 @@ export default {
     float bend = q.y < 0. ? abs(length(q) - r) : 1.;                                             /* the bend */
     float point = (q.y >= 0. && q.x > 0.) ? length(vec2(q.x - r, max(q.y - .008, 0.))) : 1.;   /* the point: a short way up, then in */
     vec2 tip = c + vec2(r, .008);
-    vec2 dt = c + vec2(.0, .002);                                                               /* the dot, where the point closes on it */
+    vec2 dt = c + vec2(.002, .012);                                                               /* the dot, where the point closes on it */
     point = min(point, length(vec2(max(abs(m.x - (tip.x + dt.x) * .5) - (tip.x - dt.x) * .5, 0.), m.y - tip.y - (m.x - tip.x) * -.5)));
-    float dd = length(m - dt) - .0045;                                                          /* a round pit of its own, clear of the curl */
+    float dd = length(m - dt) - .0035;
     return min(min(shank, bend), min(point, max(dd, 0.) + .0015));
   }
   vec4 scene(vec3 p) {
@@ -49,8 +48,8 @@ export default {
     if (p.x < -1.5) gTint *= mix(.45, 1., smoothstep(1.3, .35, length(vec2(p.z - ZB, (p.y - YB - .1) * 1.2))));   /* the salt away from the niche falls into the dark */
     /* the niche's surround: cut stone set in the salt, a hand proud of it, round an opened mouth */
     vec4 fr = box(p, vec3(-1.98, YB + .12, ZB), vec3(.09, .3, .34), M_CUT_SMALL); fr.x -= .01;
-    fr.x += rough(p, .008, 9.) + rough(p, .003, 30.);                                             /* hand-cut, its arrises chipped */
-    if (fr.x < d.x) { d = fr; gTint = vec3(.8) * (.8 + .35 * fbm(p.zy * 6., 3)); }
+    fr.x += rough(p, .004, 14.);
+    if (fr.x < d.x) { d = fr; gTint = vec3(.8); }
     vec4 mouth = boxAir(p, vec3(-2.2, YB + .12, ZB), vec3(.34, .19, .23), M_CUT_SMALL);
     if (mouth.x > d.x) { d = mouth; gTint = vec3(mix(.75, .2, smoothstep(-2., -2.4, p.x))); }
     /* the block of salt: clean, near-white, its edges softened */
@@ -60,7 +59,7 @@ export default {
       d = bl; gTint = vec3(1.25) * (.95 + .08 * fbm(p.zy * 14., 3));
       /* on its face, a hook closed on a dot, cut into the salt */
       if (p.x > -2.05) {
-        float h = hookD(vec2(p.z - ZB, p.y - YB - .05) * .78);
+        float h = hookD(vec2(p.z - ZB, p.y - YB - .05) * .85);
         d.x += engrave(h, .0045, .0045);
         if (h < .004) gTint *= .8;
       }

@@ -96,6 +96,10 @@ import ppl_w4_recess_above_the_cotUrl from '../../paint/places/img/pt-pl-w4-rece
 import ppl_w4_recess_above_the_cotMeta from '../../paint/places/img/pt-pl-w4-recess-above-the-cot.json';
 import ppl_w6_wall_shelfUrl from '../../paint/places/img/pt-pl-w6-wall-shelf.webp?url';
 import ppl_w6_wall_shelfMeta from '../../paint/places/img/pt-pl-w6-wall-shelf.json';
+import pcv_01Url from '../../paint/places/img/pt-cv-01.webp?url';
+import pcv_01Meta from '../../paint/places/img/pt-cv-01.json';
+import ppl_w4_hollowUrl from '../../paint/places/img/pt-pl-w4-hollow.webp?url';
+import ppl_w4_hollowMeta from '../../paint/places/img/pt-pl-w4-hollow.json';
 
 export interface Painting { url: string; meta: unknown; focus: number; }
 export const paintings: Record<string, Painting> = {
@@ -147,6 +151,8 @@ export const paintings: Record<string, Painting> = {
   'pt-pl-w3-salt-lit': { url: ppl_w3_salt_litUrl, meta: ppl_w3_salt_litMeta, focus: .47 },
   'pt-pl-w4-recess-above-the-cot': { url: ppl_w4_recess_above_the_cotUrl, meta: ppl_w4_recess_above_the_cotMeta, focus: .39 },
   'pt-pl-w6-wall-shelf': { url: ppl_w6_wall_shelfUrl, meta: ppl_w6_wall_shelfMeta, focus: .5 },
+  'pt-cv-01': { url: pcv_01Url, meta: pcv_01Meta, focus: .43 },
+  'pt-pl-w4-hollow': { url: ppl_w4_hollowUrl, meta: ppl_w4_hollowMeta, focus: .43 },
 };
 
 /** Frame a painting so its light sits in the open gap between the words (the morning mock-up lifts the lamp the same way).

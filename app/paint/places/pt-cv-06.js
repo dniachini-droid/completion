@@ -17,7 +17,7 @@ export default {
   far: 12, fogK: 1 / 10,
   hazeBase: [.02, .02, .06],
   bloomAt: [-2.2, YC, ZC], bloomPow: 30, bloomC: [.01, .01, .025],
-  glow: { threshold: .75, k: .35 }, shadowJitter: 1, bloom: { alpha: .2 },
+  glow: { threshold: .75, k: .35 },
   blur: { px: 1.2, d0: 1.2, d1: 3, k: .5 },
   lights: [
     { p: [-1.5, 1.3, ZC + 1.6], c: V, k: .9, r: 1.1, reach: 3, shadow: .8 },                      /* and along the face, raking the beds */
@@ -57,7 +57,7 @@ export default {
     float fr = max(low * .8, 1. - smoothstep(.004, .009, cuts)) * step(p.x, -1.9);
     if (fr > 0. && ck < d.x + .01) {
       d.x -= fr * needles * .005;                                                     /* crystals standing off the salt */
-      float spark = step(.8, h2(floor(vec2(p.z, p.y) * 900.))) + 2.2 * step(.9, h2(floor(vec2(p.z, p.y) * 380.) + 7.)) * (1. - smoothstep(.004, .008, cuts));   /* needle points standing out */
+      float spark = step(.8, h2(floor(vec2(p.z, p.y) * 900.)));
       float inCut = 1. - smoothstep(.004, .008, cuts);
       gTint = mix(gTint, vec3(mix(2.2, 7.5, inCut)) * vec3(1., 1., 1.04) * (1. + 1.2 * spark), fr * (.4 + .6 * needles));   /* brightest in the cuts' floors */
     }

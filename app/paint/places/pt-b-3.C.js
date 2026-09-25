@@ -13,17 +13,17 @@ export default {
   id: 'pt-b-3.C',
   name: 'The top flight',
   line: '',
-  cam: { x: -.35, y: 1.25, z: 3.2, pitch: -22, yaw: -2, f: .72, cx: .5, cy: .5 },
+  cam: { x: -.35, y: 1.65, z: 2.55, pitch: -24, yaw: -2, f: .72, cx: .5, cy: .5 },
   far: 40, fogK: 1 / 16, sheen: 0, gold: .7, expo: 2.0,
   hazeBase: [.02, .018, .055], hazeFar: [.05, .045, .12],
-  bloomAt: [1.8, -2.0, 8.3], bloomPow: 9, bloomC: [.18, .12, .07],
+  bloomAt: [1.5, -2.2, 8.3], bloomPow: 12, bloomC: [.1, .07, .05],
   glow: { threshold: .55, k: .6 },
   blur: { px: 1.4, d0: 5, d1: 14, k: .7 },
   lights: [
     { p: [1.8, -.6, 4.75], c: W, k: 1.2, r: .6, reach: 3.5, shadow: .6 },                   /* a lamp two steps down, in its hooded recess */
     { p: [1.8, -1.5, 5.95], c: W, k: 1.2, r: .6, reach: 3.5, shadow: .6 },                    /* another, further down */
-    { p: [2.6, -1.1, 7.5], c: W, k: 1.3, r: .8, reach: 6, shadow: .8, air: .04 },                   /* the lamps round the turn: their light out across the landing */
-    { p: [-.25, -1.22, 9.5], c: W, k: .3, r: .22, reach: .9, shadow: 1 },                  /* the same light along the far wall: the rail's worn top gives it back */
+    { p: [2.6, -1.1, 7.5], c: W, k: 1.1, r: .8, reach: 6, shadow: .8 },                   /* the lamps round the turn: their light out across the landing */
+    { p: [-.2, -.95, 9.35], c: W, k: .45, r: .3, reach: 1.3, shadow: 1 },                  /* the same light along the far wall: the rail's worn top gives it back */
     { p: [-.3, 4.5, 1.5], c: V, k: 4, r: 3.5 },                                            /* the place's own cold, from the landing behind */
     { p: [0, 2.5, 6.5], c: [.36, .33, .8], k: 3, r: 3 },                                    /* and high in the vault over the flight */
   ],
@@ -31,7 +31,7 @@ export default {
   vec4 scene(vec3 p) {
     vec4 d = stairScene(p);
     gTint *= mix(1., .35, smoothstep(stairLine(p.z) + 2.6, stairLine(p.z) + 4.6, p.y));     /* the vault into the dark: the words' band */
-    if (p.z < 5.4 && p.y < .05) gTint *= mix(.35, 1., smoothstep(3.3, 5.4, p.z));            /* the near treads kept down */
+    if (p.z < 4.2 && p.y < .05) gTint *= mix(.4, 1., smoothstep(2.6, 4.2, p.z));            /* the near treads kept down */
     if (p.z > 9.75 && p.y > -1.36 && floor(d.y + .5) != M_DRESSED) gTint *= mix(.3, 1., smoothstep(.35, 0., p.y + 1.36) * .5);   /* the far wall above the rail kept down: the rail's top is the light's */
     if (floor(d.y + .5) == M_DRESSED && p.z > 9.75 && p.y > -1.43) { gPolish = 1.; gTint *= 1.25; }
     /* a second niche with a count, in the left wall of the turn's landing, beside the rail */

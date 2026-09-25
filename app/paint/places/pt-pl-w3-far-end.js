@@ -37,9 +37,8 @@ export default {
       d.x += engrave(dr, .02, .015);                                                        /* the joint between leaf and frame */
       if (dr > .015) {
         d.yzw = vec3(M_SLATE, NOUV);                                                       /* fine-grained, close, cold */
-        gTint = vec3(2.5, 2.6, 2.9) * (.86 + .2 * fbm(p.xy * .7, 3)) * (.9 + .14 * fbm(p.xy * vec2(2.5, 9.), 3));   /* its grain: faint, long, running up the face */
-        d.x += rough(p, .003, 6.);
-        gTint *= mix(1., .24, smoothstep(1.45, 1.95, p.y + .06 * (fbm(p.xy * 1.5, 3) - .5)));   /* where the flame's light gives out: a level edge; the stone and its grain go on above it */   /* where the flame's light gives out: a level edge */
+        gTint = vec3(2.5, 2.6, 2.9) * (.94 + .12 * fbm(p.xy * .7, 3));
+        gTint *= mix(1., .16, smoothstep(1.45, 1.95, p.y + .06 * (fbm(p.xy * 1.5, 3) - .5)));   /* where the flame's light gives out: a level edge */
       }
     }
     /* the last cup: an arched recess up in the right wall, a stride from the door, its bowl and its flame */

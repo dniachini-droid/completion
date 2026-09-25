@@ -15,11 +15,11 @@ export default {
   bloomAt: [0, 1.2, -3], bloomPow: 20, bloomC: [.05, .045, .1],
   blur: { px: 1.6, d0: 3.5, d1: 9, k: .8 },
   lights: [
-    lampLight(LAMP1[0], .75, { reach: 2.8 }),                                       /* the nearest lamp, ahead and beside the hollows */
+    lampLight(LAMP1[0], .5, { reach: 2.6 }),                                       /* the nearest lamp, ahead and beside the hollows */
     { p: [-1.3, H[1] + .15, H[0] + .55], c: [1, .74, .44], k: .1, r: .3, shadow: 1, reach: 1. },   /* its light raking along the hollows */
     { p: [0, 1.6, -2.4], c: [.36, .33, .8], k: 4, r: 2.4 },                         /* the landing above, violet */
     { p: [.6, -1.2, 1.4], c: [.34, .31, .75], k: 3, r: 2 },                         /* violet along the flight */
-    lampLight(LAMP1[1], .5, { reach: 2.4 }),                                      /* the lamp behind you, on the steps at your feet */
+    lampLight(LAMP1[1], .35, { reach: 2.2 }),                                      /* the lamp behind you, on the steps at your feet */
   ],
   glsl: STAIR_GLSL.replace('abs(p.z - 1.) > .9)', 'abs(p.z - 1.) > .9 && abs(p.z - 3.15) > .7)') + /* glsl */ `
   vec4 scene(vec3 p) {
