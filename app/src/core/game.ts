@@ -736,7 +736,7 @@ export const STAND_IN: Record<StretchId, string> = {
 };
 /** The places painted from their briefs so far (ids only; D-015): each shows its own painting, `pt-<id>`, which
     ui/paintings.ts carries (a test keeps the two in step); every other place shows its stretch's stand-in. */
-export const PAINTED: ReadonlySet<string> = new Set<string>(['b-1.A', 'b-1.B', 'b-1.C', 'b-2.A', 'pl-w2-smooth-place', 'pl-w1-pick-niche']);
+export const PAINTED: ReadonlySet<string> = new Set<string>(['b-1.A', 'b-1.B', 'b-1.C', 'b-2.A', 'pl-w2-smooth-place', 'pl-w1-pick-niche', 'b-5.A', 'pl-w5-ledge-lip', 'pl-w5-second-landing', 'b-7.A', 'b-7.B', 'pl-w6-square-gallery', 'b-6.B', 'pl-w6-folder', 'cv-02', 'cv-10', 'cv-11', 'cv-12', 'cv-13', 'cv-14']);
 export const paintingOf = (id: string | null, stretch: StretchId): string => id && PAINTED.has(id) ? `pt-${id}` : STAND_IN[stretch];
 
 /** The place a job's Done reached, if its return and the arrival came together: only the world's answers between. */
