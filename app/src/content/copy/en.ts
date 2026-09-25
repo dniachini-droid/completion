@@ -122,7 +122,7 @@ export const copy = {
   'marks.aName': 'a name',
   'marks.unknown': 'Seen, but not known yet',
   'marks.held': 'You know this one now: it means {word}. The place itself told you.',
-  'marks.guess': 'You guessed {word}. You will know you were right when a word you cut holds, or another record agrees.',
+  'marks.guess': 'You guessed {word}. In time the place itself will tell you whether you were right.',
   'marks.open': 'You have not met this mark before. What do you think it means?',
   'marks.seen': 'You have seen this mark, but its meaning is still hidden from you.',
   'marks.ring': 'This is a name, cut inside a ring. You cannot read it yet, but you will know it when you meet it again.',

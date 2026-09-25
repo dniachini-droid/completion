@@ -23,7 +23,7 @@ export const finds: Find[] = [
   { id: "fd-b09", stretch: "st-hall", w: 1, req: [], line: "Under the ledge lies a flake of glaze, a shade darker than the lamp's." },
   { id: "fd-b10", stretch: "st-hall", w: 1, req: [], line: "On the floor of the hall, in chalk, is an arrow pointing at the side chamber, and the word CAMP." },
   { id: "fd-b11", stretch: "st-hall", w: 3, req: ["b-3.A"], line: "In the lamplight there are rings on the ceiling too, cut where no ladder has been." },
-  { id: "fd-b12", stretch: "st-hall", w: 1, req: [], line: "The lamp's flame does not bend, even when you breathe on it." },
+  { id: "fd-b12", stretch: "st-hall", w: 1, req: [], line: "The flame of the lamp on the ledge does not bend, even when you breathe on it." },
   { id: "fd-c01", stretch: "st-hall", w: 1, req: [], line: "In the bottom of one trough at the corner lies a dry leaf, brown and crumbling, of the kind that grows on a hedge." },
   { id: "fd-c02", stretch: "st-salt", w: 1, req: [], line: "At the gallery's first turn, a knot of wool gone grey is tied round a knob of salt, and a short line is cut beside it.", told: "tl-wool" }, // side chamber
   { id: "fd-c03", stretch: "st-salt", w: 2, req: [], line: "In a crack in the salt lies a small cake of salt with a thumbprint pressed into it, and under it is a line in the tally's hand.", told: "tl-salt-cake" }, // side chamber

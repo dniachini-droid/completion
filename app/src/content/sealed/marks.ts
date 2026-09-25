@@ -27,24 +27,24 @@ export const marks: Mark[] = [
     // NOTE: give, send and answer are all provisionally right until month 9 (SCRIPT §7.6); only "open" is struck, at b-5.3.
     // `confirmedBy` is that striking beat, not a confirmation of the true sense.
     id: 'mk-give', sign: 'GIVE', w: 2, elements: ['hook-open', 'drop-leaving'], shape: 'a hook, and a drop leaving it',
-    guessAt: 'b-2.2', context: 'the lintel, beside the flame\'s mark; her box sheet has only a question mark',
+    guessAt: 'b-2.2', context: 'It is cut on the lintel beside the flame\'s mark, and on her sheet there is only a question mark under it.',
     candidates: ['give', 'send', 'answer', 'open'], right: ['give', 'send', 'answer'],
     tempting: 'open', confirmedBy: 'b-5.3', provisional: true,
     struck: 'Not open. Here it stands with the lamp\'s mark and the flame\'s, and there is no door near it.',
   },
   {
     id: 'mk-person', sign: 'PERSON', w: 2, elements: ['drop', 'bar'], shape: 'a drop standing on a bar',
-    guessAt: 'seal-2-1', context: 'her box sheet: someone', candidates: ['person', 'someone', 'stranger', 'standing'],
+    guessAt: 'seal-2-1', context: 'Under this mark on her sheet, she has written the word someone in pencil.', candidates: ['person', 'someone', 'stranger', 'standing'],
     right: ['person', 'someone'], tempting: 'stranger', confirmedBy: 'b-3.1', struck: 'Not just a stranger. Anyone at all who stands.',
   },
   {
     id: 'mk-one', sign: 'ONE', w: 2, elements: ['drop'], shape: 'a single drop',
-    guessAt: 'seal-2-1', context: 'her box sheet: one', candidates: ['one', 'the first', 'a drop', 'small'],
+    guessAt: 'seal-2-1', context: 'Under this mark on her sheet, she has written the word one in pencil.', candidates: ['one', 'the first', 'a drop', 'small'],
     right: ['one', 'the first'], tempting: 'a drop', confirmedBy: 'b-8.1', struck: "A drop, yes, but it's counting. One.",
   },
   {
     id: 'mk-me', sign: 'ME', w: 2, elements: ['drop', 'hook-small-foot'], shape: 'a drop with a small hook at its foot',
-    guessAt: 'seal-2-1', context: 'her box sheet: me', candidates: ['me', 'you', 'mine', 'here'], right: ['me'],
+    guessAt: 'seal-2-1', context: 'Under this mark on her sheet, she has written the word me in pencil.', candidates: ['me', 'you', 'mine', 'here'], right: ['me'],
     tempting: 'you', confirmedBy: 'b-3.1', struck: "It's whoever is doing the talking.",
   },
   {
@@ -77,7 +77,7 @@ export const marks: Mark[] = [
   },
   {
     id: 'mk-go', sign: 'GO', w: 5, elements: ['bar', 'drop-far-end'], shape: 'the bar with its drop at the far end',
-    guessAt: 'b-5.1', context: 'the same bar, its drop at the far end', candidates: ['go', 'leave', 'arrive', 'walk'],
+    guessAt: 'b-5.1', context: 'It is the same bar again, with its drop at the far end.', candidates: ['go', 'leave', 'arrive', 'walk'],
     right: ['go', 'leave'], tempting: 'arrive', confirmedBy: 'b-w5.morning', struck: "The drop's at the far end: leaving, not arriving.",
   },
   {

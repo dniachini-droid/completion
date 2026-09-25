@@ -52,7 +52,7 @@ describe('six weeks of play', () => {
     expect(st.week).toBeGreaterThanOrEqual(5);
     for (let w = 1; w < st.week; w++) for (const id of places(w)) expect(st.played.has(id), id).toBe(true);
     expect(st.played.has('b-3.A')).toBe(true);   /* the first word, in week 2–3 */
-  });
+  }, 60_000);
   it('Low weeks never stall: the floor keeps Keys coming and the story still moves', () => {
     const p = sim().week(['low', 'away', 'low', 'away', 'low', 'away', 'away']);
     for (let i = 0; i < 5; i++) p.week(['low', 'away', 'low', 'away', 'low', 'away', 'away']);

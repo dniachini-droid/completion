@@ -86,7 +86,7 @@ export const records: RecordFragment[] = [
     full: 'Once, the first. The hill\'s stone moved. The salt face opened. A way, deep, cut; not by water; not by us. Lamp; oil, one hand. Went in. Light had been given here, by someone.',
   },
   {
-    id: 'rec-k1', life: 'K', kind: 'cut', where: "the lamp's base", w: 1, firstShown: ['b-1.A', 'b-3.3'],
+    id: 'rec-k1', life: 'K', kind: 'cut', where: "the base of the lamp on the ledge", w: 1, firstShown: ['b-1.A', 'b-3.3'],
     cut: [[s('fire', 'Fire'), s('give', 'lit'), s('once', 'once'), p('.'), HIS]],
     full: 'Lit.',
   },

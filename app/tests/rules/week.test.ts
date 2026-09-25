@@ -320,7 +320,7 @@ describe('Choosing what to do: Not today, and a delve on anything (D-077)', () =
 });
 
 describe('A guess is asked after its marks are seen (D-077)', () => {
-  it('when a job’s Done reaches a place, the guess its return brings is asked on the arrival, not before it', () => {
+  it('when a job’s Done reaches a place whose records carry the mark, its guess is asked there; otherwise on the return', () => {
     const p = player().do({ do: 'open' });
     let checked = 0;
     for (let d = 0; d < 10 && !checked; d++) {
@@ -332,8 +332,10 @@ describe('A guess is asked after its marks are seen (D-077)', () => {
         const beat = f.find(x => x.type === 'beatPlayed' && x.job === done?.seq) as { id: string } | undefined;
         const carries = beat ? S.beatOf(C.story, beat.id)?.carries?.guess ?? [] : [];
         if (done && arr && carries.length) {
-          expect(returnOf(C, p.facts, done.seq).guess).toEqual([]);
-          expect(p.view().arrival?.guess).toEqual(expect.arrayContaining(carries));
+          const place = (arr as { id: string }).id, here = S.marksIn(C.story, S.beatOf(C.story, place)?.carries?.records ?? []);
+          const moves = (m: string) => here.includes(m) && S.markOf(C.story, m)?.confirmedBy !== place;
+          expect(returnOf(C, p.facts, done.seq).guess).toEqual(carries.filter(m => !moves(m)));
+          expect(p.view().arrival?.guess).toEqual(expect.arrayContaining(carries.filter(moves)));
           checked++;
         }
         for (const a of p.facts.filter(x => x.type === 'arrived')) p.do({ do: 'seen', what: 'arrival', ref: a.seq });

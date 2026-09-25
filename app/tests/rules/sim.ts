@@ -11,7 +11,8 @@ import { content as C } from '../../src/content/world';
 export type Week = 'normal' | 'low' | 'high' | 'away';
 
 /** `bed`: say goodnight each evening, on time (22:45, before the 23:00 bedtime) or late (00:30). */
-export function sim(start = '2026-09-28T08:00:00+01:00', pick: (m: Mark) => string = m => m.candidates![0], bed?: 'kept' | 'late') {   /* a Monday */
+/** `pick`: the guess Dan makes for a mark on offer; null: he leaves it unanswered (a guess is always optional). */
+export function sim(start = '2026-09-28T08:00:00+01:00', pick: (m: Mark) => string | null = m => m.candidates![0], bed?: 'kept' | 'late') {   /* a Monday */
   let facts: Fact[] = [];
   let now = Date.parse(start);
   const at = () => new Date(now + 3_600_000).toISOString().slice(0, 19) + '+01:00';
@@ -23,7 +24,7 @@ export function sim(start = '2026-09-28T08:00:00+01:00', pick: (m: Mark) => stri
     const offered = new Set<string>();
     for (const b of C.story.beats) if (st.played.has(b.id)) b.carries?.guess?.forEach(m => offered.add(m));
     for (const x of C.story.seals) if (st.opened.has(x.id)) x.carries?.guess?.forEach(m => offered.add(m));
-    for (const m of offered) if (!st.guessed.has(m)) { const mk = S.markOf(C.story, m); if (mk?.candidates) run({ do: 'guess', mark: m, guess: pick(mk) }); }
+    for (const m of offered) if (!st.guessed.has(m)) { const mk = S.markOf(C.story, m), g = mk?.candidates ? pick(mk) : null; if (g) run({ do: 'guess', mark: m, guess: g }); }
     let a = see(facts, C, at()).arrival;
     while (a) { run({ do: 'seen', what: 'arrival', ref: a.seq }); a = see(facts, C, at()).arrival; }
     return v;
