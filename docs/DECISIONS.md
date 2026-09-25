@@ -799,3 +799,12 @@
 - **Decision (Dan; the method Claude's):** after the current round, test a new pipeline on one of the paintings that keep failing: rooms built and lit by code in **Blender** (a real renderer: soft bounce light, true materials), small objects made by **Meshy** through its API (Claude calls it; Dan never sees the object list, D-015). This relaxes "paintings stay code-painted" (D-056) for props only. The bar stays 8 (Dan). If the test does not reach 8, AI image generation or a human artist are the next options, Dan's call.
 - **Setup (Dan):** a Meshy API key in the environment as `MESHY_API_KEY`, and `api.meshy.ai` allowed in network access; takes effect in a new session. Blender installs from the system packages.
 - **Reversible:** Yes.
+
+## D-077 — The paintings' bar is Dan's eye, not 8/10 (Dan)
+- **Date:** 2026-09-25
+- **Context:** The critic's 8/10 bar (D-067, D-072) kept most paintings out after many rounds: 7 of 48 in the game; each place that passed took 2–5 rounds, the hardest two still out after 7, and the Blender test (D-076) about 2½ hours on one picture. Dan asked whether we were spending too much time per painting. He was shown, blind, the three invented sample places (not in the story, so no spoilers) at two levels: first tries made in minutes (the critic scored them 4, 5 and 6) and one-revision versions (about 6 minutes each), beside the approved hall.
+- **Decision (Dan):** he liked five of the six, including all three first tries (the 4/10 one too); he turned down one revised version. So **a painting goes into the game after its first attempt**, if it passes the automatic checks and the thing to look at reads as what it is (a clue must never read wrongly, rule 6). A second attempt only for a painting that fails either of those, or that Dan dislikes when he meets it in the game. The critic stays as a quick check for wrong readings, not a score to reach.
+- **Alternatives:** keep 8/10 (hours per place; most places on stand-ins); a middle bar of one revision each (Dan liked the first tries as much).
+- **Consequences:** the places now on stand-ins whose pictures already exist (scored 4–7) can go in once each is checked for wrong readings; new places get one attempt. The Blender test (D-076) is no longer needed to reach the bar; the kit, which paints a place in under a minute, is enough. Blender work is paused, kept on `claude/blender-meshy-round-2-1du0fv`, and can come back for a picture Dan dislikes.
+- **Reversible:** Yes: Dan can raise the bar or send any painting back.
+
