@@ -101,7 +101,9 @@
 
   <div class="mid"></div>
 
-  <section class="bottom col rise d3">
+  <section class="bottom fit col rise d3">
+    <!-- on a short phone the day scrolls; the foot's links never leave the screen (review finding ui-11) -->
+    <div class="scroll">
     {#if v.next?.mode === 'carry' && v.run}
       <div class="next">
         <div class="label-line lit">{t('today.next')}</div>
@@ -185,6 +187,7 @@
           <span class="plus" aria-hidden="true">+</span><span class="t">{t('today.else')}</span><span class="s"></span>
         </button>
       {/if}
+    </div>
     </div>
     <nav class="foot" aria-label={t('today.label')}>
       <button class="text-link" onclick={() => go('satchel')}><span>{t('nav.satchel')}</span></button>
