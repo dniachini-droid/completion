@@ -917,7 +917,7 @@
 - **Decision:** Dan loved Le Guin (*The Tombs of Atuan*), VanderMeer (*Annihilation*) and Macfarlane (*Underland*); he disliked McCarthy (*The Road*). The voice is written up in `narrative/VOICE.md` (spoiler-free), pending Dan's approval. Next: a pilot (the Lamp Hall and one camp) written by a sealed agent team on Fable and on Opus to VOICE.md, judged blind by Dan against ChatGPT's version.
 - **Reversible:** Yes.
 
-## D-087 — The writer stays ChatGPT; Claude edits and checks (Dan's blind choice)
+## D-087 — The writer stays ChatGPT; Claude edits and checks (Dan's blind choice) — superseded by D-096
 - **Date:** 2026-09-25
 - **Context:** the pilot (D-086): the Lamp Hall arrival and the first camp, written by a sealed agent team on Fable and on Opus to VOICE.md (writer → critic → revision → fact check), set blind beside ChatGPT's round-4 text.
 - **Decision:** Dan picked ChatGPT's version for both, and found all three "very high quality". So there is no agent-team rewrite. ChatGPT stays the writer, with VOICE.md in its brief. Claude edits and checks: facts, clues, continuity, filler and repetition, markup. The 20 lines re-fixed on the review branch go to ChatGPT as round 5.
@@ -1000,3 +1000,11 @@
 - **Alternatives:** buttons for Pause and Finish on the panel (App Intents; kept in the app, as told to Dan); a push server to advance the run (no server, D-057); background refresh (not at exact times, unreliable); showing only the current delve and leaving it at 0:00 (untrue during a run); Apple's timer alarms (AlarmKit: iOS 26 only, and alarm-loud).
 - **Consequences:** the app gains its first native code of its own and a second bundle (`com.dniachini.rlrpg.LiveActivity`), set up at Apple by the automatic signing on the first build from `main` (the key is Admin: probably nothing for Dan to do). Not yet seen on a phone: that the panel turns to its "after" by itself when a delve ends with the phone locked is to be checked on Dan's first run. The panel's lettering is the phone's own serif (New York), not the app's fonts.
 - **Reversible:** Yes: remove the extension target and the plugin; the game's rules don't depend on it.
+
+## D-096 — The story's words are written by Claude for clarity, and proven by readers who explain each screen back (Dan approved)
+- **Date:** 2026-09-25
+- **Context:** after the ChatGPT rounds (D-084–D-087), Dan played weeks 1–7 on his phone and found it "hardly makes any sense": he couldn't tell what things were, whether he was moving or touching something, or what was going on. Lines had been polished for atmosphere by a writer who never saw the story, so they read well but explained nothing. Dan: each screen should say where you are, what you see, what you touch and what you notice, and explain what things appear to be ("it appears to be some kind of tally").
+- **Decision:** Claude writes the story lines, with the sealed story to hand, to clarity rules (`narrative/WRITING_PROCESS.md`). A line passes only when cold readers who know nothing of the story (one of them on Fable) can explain each screen back correctly; unclear or misread screens are rewritten, then fact-checked against the plain story. Week 1 went first and Dan judged it in place, as screenshots of the app ("reads much much better"). Weeks 2–7 follow in one batch, with a sample for Dan; later weeks in one pass when they're written.
+- **Alternatives:** more ChatGPT rounds (they made the lines vaguer each time); a style checklist alone (it read stilted); Fable as the writer (used as a reader instead, where a fresh eye matters most).
+- **Consequences:** supersedes D-087 (ChatGPT as writer) and the ChatGPT steps of D-084–D-085; VOICE.md (D-086) still sets the tone, second to clarity. Dan no longer carries files between tools. The app's own labels explain Keys; story lines never say "Key". The screen walk captures a week as an in-app page for Dan to read.
+- **Reversible:** Yes: text only.
