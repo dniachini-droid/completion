@@ -660,16 +660,180 @@
 - **Context:** Dan played the heart on the web link (D-064). His words: it "ran beautifully"; how it looked "was beautiful"; the slice "was great". Only the timer could be used, so it was too small to test the game's functions. "We don't need to make any more changes. I think we just need to actually build the app now."
 - **Decision (Dan):** no fix round on the heart; close Phase 8 and build the whole app (the MVP's slices 2–4, `product/MVP.md` → build order).
 - **Deviation (recorded, rule 18):** Phase 8's exit criteria asked for all five trials first. Trials (a) and the heart's feel pass; **trials (b) the delve's end with the phone locked, (c) real-app feel and (d) the cloud-Mac pipeline are carried into Phase 9**, done on the first TestFlight build as soon as Dan's Apple setup is finished (`technical/APPLE_SETUP.md`, sittings 2 and 3). The build is already prepared for them: the save is kept by the phone in the app, and a rehearsal brings the delve's alert in seconds. If (b) or (c) fails badly, the option C fallback (D-057) still applies; the rules and data carry over unchanged.
-- **The story (D-035, D-060) is unchanged:** the sealed story-fix session still comes before the first playable's **content** goes in. Slices 2–4 are built now on throwaway content and invented places, so the story session can run in its own session at any point alongside; real content is loaded only after it.
+- **The story (D-035, D-060):** the sealed story job had in fact already run in its own session (D-066, D-067, on `claude/story-job`, not yet merged); Dan asked Claude to check it was done. It was, and it is merged with this phase's work (its decisions renumbered from D-061/D-062, which Phase 8 had also used).
 - **Consequences:** `CLAUDE.md` and `CURRENT_STATE.md` move to Phase 9; the Phase 8 work is merged into `main`. The heart stays as built (the critic's pass was stopped unread).
 - **Reversible:** Yes; the trials still gate the personal alpha (Phase 10).
 
-## D-066 — An early outside review of the app's words (Dan's call)
+## D-066 — The story job runs now, in its own session, done before the first playable
+- **Date:** 2026-09-24
+- **Context:** D-060 placed the sealed story-fix session after the prototype. Dan: "Set up the story job to complete before the first playable. Might as well do it properly. Enough with the questions. You have enough now. Just get it done."
+- **Decision:** the story job starts now, in a separate session, in parallel with Phase 8, from a spoiler-free work order (`narrative/sealed/STORY_FIX_BRIEF.md`): the outside review's fixes (the late-choice promise first), week 6 of the clue ledger, the before → now answer, the MVP's full content budget for six story weeks, a painting brief for every named place and camp view, all shaped with ids and conditions for the build. It asks Dan nothing; creative calls are made and recorded in sealed files. It ends with a spoiler-free pull request that Dan approves.
+- **Alternatives:** wait until after the prototype (D-060; slower, and the prototype doesn't need it, but nothing is gained by waiting); run it in this session (Dan follows this chat, so sealed content would be in front of him).
+- **Consequences:** Phase 9 can start straight after Phase 8 without waiting on the story. The painting kit's real places can start as soon as the briefs are merged.
+- **Reversible:** Yes.
+
+## D-067 — The sealed story job is done (spoiler-free)
+- **Date:** 2026-09-24
+- **Context:** D-035, D-066: the story job ran in its own session from the sealed work order, asking Dan nothing ("Enough with the questions… Just get it done."). Every creative call and its reasoning is in the sealed record (`narrative/sealed/STORY_JOB.md`); this entry says only what was done.
+- **Decision (Claude's calls, D-006, D-066):**
+  1. **The outside review's fixes** (D-035), top priority first: the late game's presentation and interaction were changed so it never looks like a promise the fixed story can't keep; then the precision fixes (one character's reasoning, how one mechanism is described in the fiction, one location detail, the wording of two internal rules, and a few smaller ones). The fixed ending and the canon are unchanged; each change followed the retcon procedure (MASTER_BRIEF §55). A fresh reviewer checked them; its findings were fixed.
+  2. **Week 6 of the clue ledger** is complete, every clue with its predetermined answer (rule 6), with fair-play checks.
+  3. **Before → now:** not needed for story weeks 1–6 (the reason is sealed); the sealed notes say which later week first needs it.
+  4. **The MVP's content, written in full** for six story weeks plus a week of run-ahead, meeting every line of `product/MVP.md`'s budget: 33 named places, 15 camps with a view, 30 sealed things (5 a week), the marks with their candidate meanings, the first two words with their cutting cinematics, 72 finds, 160 passage lines, 18 "learned" lines and 2 "so far"s, 30 teasers. The marks come to 14 in six weeks against the MVP's estimate of 8–12; kept, because the story's order puts the first word in week 2–3.
+  5. **48 painting briefs**, one for every named place and camp view, for the painting kit (D-057, D-058).
+  6. **Shaped for the build:** every item has a stable id, a data-model type and when it may appear. Phase 9 will want two small additions to `technical/DATA_MODEL.md`: a "story beat" type and a "stretch" (where on the map) field.
+  7. **One line of `narrative/GAME_BIBLE.md` reworded** (how the deepest door fills: "it fills as you live your weeks"), matching the numbers Dan approved in D-049/D-051. Nothing he already knew changes.
+- **Alternatives:** ask Dan the taste questions (he asked not to be asked); wait for the playtest (only the cadence audit of the later months waits for that, as planned in D-035).
+- **Consequences:** Phase 9 can turn the story into app content without re-deciding anything; the painting kit can start on the real places once this is merged. `CURRENT_STATE.md` and `product/MVP.md` note the answers.
+- **Reversible:** Yes, until clues are planted in the playable.
+
+## D-068 — Slice 2 (the Quiet answers): how the story runs in the app (Claude's routine calls, D-006)
+- **Date:** 2026-09-24
+- **Context:** Phase 9, slice 2 (`product/MVP.md` → build order): the map, records, a sealed thing in view, rhythms and Keys, finds, on the real sealed content (D-067). Spoiler-free: this entry names rules, never story.
+- **Decision (Claude, routine):**
+  1. **The story as data.** The sealed content is transcribed into typed data in `app/src/content/sealed/` (a marked sealed folder; ids only in commits and PRs, D-015). Tests check that every id a rule reads exists and that every mark offered has four candidates.
+  2. **The story clock** (BALANCING §2): the first story week begins at the first opening; the next begins at the first opening in a later calendar week (Monday to Sunday), once this week's places and ordered steps have all played. An absence pauses it.
+  3. **Places:** the first named place is 75 minutes of effort from the start (so a first Normal day arrives somewhere, as in the heart), then 8 steps (200 minutes) apart. Places reached during a day play at day complete, in order, one screen each; after day complete they play as reached. A day short of the next place ends at a camp with a view and its one thing to look at.
+  4. **Keys:** a rhythm met in its week lands a Key at once, up to 5 a week; the Key opens the next sealed thing in the story's order, and that opening is the job's return (the line says the count fills, never "Key"). Past the 5, a rhythm met gives one find a week. **The floor:** a week with a day complete that brought fewer than 2 Keys is topped up to 2 at the first opening of the next week.
+  5. **Each job's return** plays the story's next step in order, else a line of the passage for where Dan is (never repeating on a stretch until its list is used). An avoided job always brings a find; a side chamber (the 4th delve in one sitting) and switching jobs after 100 minutes on one bring one each (BALANCING §1, §5).
+  6. **Guessing a mark** is offered where the story offers it (one tap, four candidates, never "wrong"), already in slice 2, because the first word needs it; the marks screen itself is slice 3.
+  7. **Today's order:** a rhythm already met this week drops to the end; a set-day rhythm (the Thursday lesson, Sunday meal prep) is offered only on its day; a one-off leaves once done. The full planner is slice 4.
+  8. **The map** has two levels, as stars on the dark like the mock-up: Region (the stretches Dan has walked, the way ahead a faint unnamed star) and Close (this stretch's places and the sealed things in view). **Records** list what has been found; a record in the script shows each mark Dan holds as his guess or its meaning, the rest as marks, and her sheet in her hand.
+  9. **Names are revealed on arrival:** the delve and the run set-up say "Further in" and "the next place", never the next place's name.
+  10. **Paintings:** each place shows a stand-in painting for its stretch until its own is painted from its brief with the kit; week 1's are being painted first.
+- **Alternatives:** a hand-typed rendering per week for each record (rejected by the story job's build rule: renderings are computed from sign strings); showing all Keys' results on a separate screen (rejected: a Key is felt as the job's return, UX 6).
+- **Consequences:** the heart's throwaway content (invented places, stand-in job list) is gone; the prototype save starts afresh (save version 2). Dan's starting set is preloaded with its rhythms.
+- **Reversible:** Yes (all numbers are starting guesses, tuned in play).
+
+## D-069 — A fresh session for each slice, started by Claude (Dan's request)
+- **Date:** 2026-09-24
+- **Context:** Dan: "Shouldn't we move to a new window for each slice? Can you do that automatically to prevent context rot."
+- **Decision:** each build slice runs in its own session. When a slice is done (tests pass, the flow walked at phone size, committed, pushed, the web link updated), Claude updates `CURRENT_STATE.md` with everything the next session needs, then **starts the next session itself** (the cloud session tool), on the same working branch, with a one-line resume message, and gives Dan its link. The repository, not the chat, carries continuity (CLAUDE.md). Merging into `main` still waits for Dan's approval at the end of the phase (D-006).
+- **Consequences:** background helpers (transcription, painting) report to the session that started them, so a slice session waits for its own helpers before handing over. The painting of real places continues as its own thread across slices.
+- **Reversible:** Yes.
+
+## D-070 — Slice 3 (learning the Cut): how guessing, confirming and the word run (Claude's routine calls, D-006)
+- **Date:** 2026-09-24
+- **Context:** Phase 9, slice 3 (`product/MVP.md` → build order): signs and guessing, the first word, the cutting cinematic, the stair. Dan asked for slices 3 and 4 back to back without testing in between (2026-09-24), so the routine calls are Claude's. Spoiler-free: this entry names rules, never story.
+- **Decision (Claude, routine):**
+  1. **A guess can change until the place answers.** One tap, never "wrong" at guess time (SCRIPT §9); on the marks screen Dan can keep it or change it (the approved record mock-up's "Keep · Change it") until its confirming beat plays. After that it is settled.
+  2. **When the place answers,** a right guess holds (its question mark goes); the one tempting wrong guess is struck, shown once as a line on the beat's own screen and kept on the marks screen, and the mark then reads as what it is. A true second sense is never struck. A mark Dan never guessed is simply learned when the place answers (rule 9: failure is information). One mark's right answers stay guesses on purpose (its contest is the story's); only its tempting one is struck.
+  3. **The marks screen** lists every mark Dan has met, in the order met: known, a guess (with its question mark), new (guess it here), seen but not known (its shape named), a name, or only part of it. It sits beside Records (one switch: Records · Marks). It shows no mark before the story brings it.
+  4. **The first word is its own screen,** as the approved mock-up (cut.html): four taps (the rod's edge in the blank, the first mark, the second, the lock), one story line each; then the place answers by itself for about six seconds while the interface steps aside (a tap settles it at once); then the arrival settles with its line, the guesses it confirmed and the day's gold. "Go through" leads to the head of the stair ("Go down" · Today, D-039). "Later" before the first tap leaves the cut waiting. A later word uses the same screen without the waking.
+  5. **The Cut's own lettering:** every mark is drawn by hand in a square cell with straight cuts only, the ring the only curve (SCRIPT §2), the same element always the same shape. It replaces the stand-in glyphs everywhere (marks, records, guesses, the word). The marks beside the lintel's blank in the hall are the word's own marks.
+  6. **The deep push, for now:** on a High day, a job's return after a Normal day's size plays the next deep beat (once a day), with any partial sign it carries (its element alone, named, never a hint about which candidate). Calling the deep push in the morning comes with slice 4's morning.
+  7. **Confirmations "the morning after"** a camp are met when slice 4 plays that morning; until then those guesses simply stay guesses.
+- **Alternatives:** guesses locked after one tap (rejected: the approved mock-up offers changing, and a first wrong tap shouldn't cost the pleasure of a considered guess); a separate "confirmed" screen (rejected: a confirmation is a beat on the place's own screen, SCRIPT §9); a generated lettering from elements (rejected: hand-drawn cells read as one script).
+- **Consequences:** new screens `Marks`, `Cut`, `Stair`; the painted hall (`ui/scene/hall.js`, from the approved mock-up) now ships in the app; the haptics gain a long "ring" for the word locking. Save version unchanged (all new state is computed from facts already written).
+- **Reversible:** Yes.
+
+## D-071 — The app is called The Long Answer (Dan)
+- **Date:** 2026-09-24
+- **Context:** "We really need to change the name." The shortlist (`narrative/NAMES.md`, D-021), each name checked privately against the sealed truth.
+- **Decision (Dan):** **The Long Answer**, Claude's recommendation. Under the icon it reads **Long Answer** (the full name is too long for the label).
+- **Consequences:** the app's name, the page title and the icon label change now; the bundle id `com.dniachini.rlrpg` stays (Apple never shows it and it can't change without a new app record). Dan may rename the App Store Connect record (App Information → Name) whenever he likes; TestFlight shows that record's name. The GitHub repository keeps its name for now (renaming it mid-build would disturb the sessions working on it; housekeeping after the build). A proper trademark search before anything goes public (NAMES.md).
+- **Reversible:** Yes, until the app is public.
+
+## D-072 — The painting kit v1: more than one material (Claude's routine calls, D-006)
+- **Date:** 2026-09-24
+- **Context:** Phase 9, the real places' paintings (D-067). The first round of week 1's five, painted from their briefs with the kit as it stood, scored 5–7 of 10 against the approved hall: flat, beige, and every material the same stone. The briefs ask for rock salt, cloth, leather, tin, paper, stone polished by touch and a dark stain, none of which the kit could paint. Spoiler-free: this entry names the kit's tools, never what they paint.
+- **Decision (Claude, routine):**
+  1. **Materials beyond the stone,** each with its own colour, grain and shine: rock salt (beds of grey and white, thin seams, crystals, small glints; pink only at the beds' edges where a brief asks, `salt.pink`), cloth, leather, tin, paper, old wood, slate. Under the Site's violet they stay muted; only the lamp warms them.
+  2. **Marks a scene sets on any surface:** polish (stone rubbed smooth by touch: paler, no chisel, a shine that catches the light and the far haze), a flat dark stain (no relief, no shine), and a tint.
+  3. **Close views:** the pick's dents in cut stone within a few metres (`grain`), and finer soft shadows where close shadows banded (`shadowJitter`). Both off by default, so the hall's long-view stone is untouched.
+  4. **A still flame** in the live layers: a flame that does not gutter, only breathes (`live.flame: 'still'` or a flame's `still`).
+  5. **The automatic palette check recalibrated on the approved hall,** which itself failed the old check (4.7% "off"): the dusky mauve-rose where the lamp's gold meets violet stone is part of direction D; what fails is green or cyan and vivid pink. A new check, **cold stone**: at least half the colour is blue-violet (the hall: 95%), so no painting turns beige.
+  6. **Regression:** after every kit change the regression hall and the three approved samples are re-baked and compared; all four came out pixel-identical. A materials swatch (`paint/regression/materials.js`) and the approved hall's reference picture (`paint/regression/hall-ref.jpg`) join the regression set.
+- **Alternatives:** tinting the one stone per scene (rejected: that is how round 1 went beige); new materials that also changed the hall's stone (rejected: the hall and samples are approved; the new tools are opt-in).
+- **Consequences:** week 1 repainted with the new kit and critiqued each round by a separate critic until 8/10 or three rounds; only paintings at the bar are wired into the app (`core/game.ts` PAINTED, `ui/paintings.ts`; the rest keep their stretch's stand-in).
+- **Reversible:** Yes.
+
+## D-073 — Slice 4 (the week and the gaps), places the moment they're reached, and the language pass brought forward (Claude's routine calls, D-006; two changes from Dan)
+- **Date:** 2026-09-24
+- **Context:** Phase 9, slice 4 (`product/MVP.md` → build order): the planner (D-045–D-048), the satchel (TOOLS §2), camp and bedtime, the daybook week close (TOOLS §6, BALANCING §7), absence (D-043 F9), and slice 3's two hand-overs (D-070). While it was being built, Dan played slice 1 in rehearsal and said two things.
+- **Decision (Dan):**
+  1. **A place plays the moment it is reached.** Dan: holding a place until every job of the day was done felt broken. This replaces the story job's "places reached during the day are held and played at day complete" (MVP_CONTENT §0.2; that rule is sealed, but the change touches only when a place plays, not which one). Day complete no longer makes camp when a place was already reached that day.
+  2. **The language pass is brought forward, before the test,** rather than after 3–4 weeks of play (D-046). Dan: the words are hard to read, too often not full sentences, and should read like a story, "think J. R. R. Tolkien". The app's own lines (`content/copy/en.ts`) get their first pass now, in that voice: whole sentences, measured and warm; buttons and settings stay short and plain. The story's own sealed lines get theirs in a separate session (D-015: never shown to Dan outside the game).
+- **Decision (Claude, routine):**
+  1. **Dan's data as facts:** rhythms added, changed or stopped, satchel lines, the week's plan and its changes are all facts in the log; "Dan's own data as it stands" is worked out from them (`core/week.ts` → `live`). A rhythm added or changed counts for Keys from its next full week (D-043 F7); it can be planned at once.
+  2. **Plan my week** follows PLANNER.md's fixed rules: appointments and set days first (with their time), avoided one-offs early, the same rhythm spread (never two days running where avoidable), no day above a Normal day's size, one lighter day (Saturday, or the week's last), every-2-weeks once in the fortnight. Planning mid-week covers only the days left and nothing already done.
+  3. **The week drives Today:** today's planned jobs lead (an appointment as its time nears, within two hours); capacity still sizes the day, but an appointment always stays on it (P10). The past shows only what was done; a planned job that didn't happen is re-placed on the next day below a Normal day's size, or falls away; past a rhythm's enough, its remaining sessions leave. Moving, timing or removing earns nothing.
+  4. **The forecast** names days, never places not yet reached: "the next place around Tuesday, and the one after around Wednesday", from the planned room against the distance; the map shows the same as waypoints marked "forecast".
+  5. **The satchel:** lines never reach Today unless Dan puts one on today's list; ticking one that isn't on it is recorded and feels good but moves nothing (P5, rule 10); on the list, it counts as a job. Untouched for three weeks, a line folds into "someday". No dates yet.
+  6. **Camp and bedtime:** after day complete the main button is "To camp". Bedtime is Dan's (23:00 to start). Goodnight counts as bedtime kept when tapped from three hours before bedtime until fifteen minutes after (a Goodnight at noon is only a goodnight). Kept: the story week's camp line plays that night, once a week; the next opening shows what was waiting: the week's morning (`b-wN.morning`, which settles the guesses it confirms, D-070), plus a find when that morning confirms nothing; on later kept nights, a find. Late or missed: nothing is said and nothing is lost.
+  7. **Tomorrow's suggested size:** Low after a Goodnight an hour or more past bedtime, or on the first day back after 3+ days away; otherwise Normal. The note under Low / Normal / High says why. High is never suggested.
+  8. **The morning deep push:** on a High day, before a Normal day's jobs are done, Today offers "Push deeper". Called, the deep beat plays once a Normal day's jobs are done (instead of after them); uncalled High days keep the old rule.
+  9. **The week close** is written once, at the first opening of the next week, for any week with something done: what the week held (each job and how often), where it went, up to three "learned" lines (never repeated; a line the month's "so far" already covers is not said twice), the "so far" on the first and fifth week of play, the counts the weekly floor filled, and the story week's glimpse. It opens by itself once; the newest page ends with "Shall the week ahead be planned for you?" once.
+  10. **Absence:** the first opening after 3+ days shows "where you were" (the place, the sealed thing in view, the week's one open question, the last record), and the day is suggested Low.
+- **Alternatives:** Sunday-evening week close (kept for later: one reliable moment first); bedtime kept by any Goodnight before bedtime (rejected: a tap at noon would earn a find, rule 10); a plan made by "Plan my week" wiping lines Dan added himself (rejected: they are kept beside it).
+- **Consequences:** new screens Camp, Morning, Welcome, Daybook, Week, Rhythms, Satchel, and a foot on Today (Satchel · Week · Daybook · Camp); 33 new rule tests (84 in all); the flow walk now runs through camp, a morning, the week close with its plan, the satchel, the rhythms and a return after days away. PROTOTYPE_NOTES updated.
+- **Reversible:** Yes.
+
+## D-074 — The language pass on the story's own lines (Claude's routine calls, D-006; Dan's brief, D-073)
+- **Date:** 2026-09-24
+- **Context:** Dan asked for every line to read like a told tale (D-073: "written like a story", "full sentences that are a joy to read", "think J. R. R. Tolkien"). The app's own lines had their first pass in the slice 4 session; the story's sealed lines (what the places, steps, counts, finds, camps, passages, "I can't start" and the week close say) had theirs in a separate session, so Dan never sees them outside the game (D-015).
+- **Decision (Claude, routine):**
+  1. **How, never what.** Every line kept its id, condition, order and facts; quoted record text, anything a character wrote, the names of places and the fixed names of the marks are unchanged. Only the saying changed: whole sentences with their verbs, no clipped lists or chains of colons and semicolons, plain words with rhythm, never fake-archaic. Present tense stays for what is in front of Dan.
+  2. **A critic, then one revision.** After the first pass (261 of 420 lines rewritten), a second Claude read every line against Dan's brief (first pass 6.5/10, the old lines 3/10) and pushed back on a repeated sentence shape, template-like lines, stiff long-winded phrasing and a few remaining fragments; the revision took about 90 of its notes and refused the few that would have changed a fact.
+  3. **The sealed docs stay the authority:** the story docs were changed to match line for line, their voice rules rewritten for the new voice, and lines that had been composed by a rule are now written out there.
+  4. One unused app line that hinted at the place's age was removed.
+- **Alternatives:** past-tense narration throughout (rejected for now: the lines show where Dan is at this moment and many recur; the told-tale feel comes from whole sentences and rhythm); rewriting the characters' own writing too (rejected: it is theirs, and some of it is evidence).
+- **Consequences:** the new words go to Dan's phone in the next TestFlight build. **Dan judges the voice on his phone**; anything still hard to read goes into the next pass. The later story weeks, not yet in the app, keep the old voice until they are built.
+- **Reversible:** Yes (the old lines are in the history).
+
+## D-075 — The paintings: room-scale framing, reused rooms, parallel painters (Claude's routine call, D-006; Dan: too slow, too poor)
 - **Date:** 2026-09-25
-- **Context:** Dan asked for every line the app shows, as one file, to have ChatGPT rewrite it: the room text should read like real fantasy / science-fiction prose, descriptive, not "AI-sounding" and not just reworded.
-- **Decision:** `design/COPY_FOR_REVIEW.md` holds every line from `app/src/content/` (world text to rewrite fully; interface text kept short and plain; real-world first steps kept literal), with a brief for the reviewer: no story talk, no new world facts beyond what the current lines and the paintings already show (rule 6), no guilt or pressure (rule 9), placeholders and keys unchanged, a length limit per line. Dan sends back the reviewed file; Claude reconciles it as with earlier reviews and loads the agreed lines into `en.ts` / `prototype.ts` (the screens may be adjusted to fit longer room text).
-- **Deviation noted:** this brings part of the language pass (D-046, after 3–4 weeks of play) forward, at Dan's request. D-046's full pass on real screens still happens. The places reviewed are the throwaway samples (D-060), so the lasting value is the voice, which carries into the real content after the sealed story-fix session.
-- **Alternatives:** wait for D-046's slot; have Claude rewrite the lines itself.
-- **Rationale:** Dan's choice (rule 20); an outside voice has helped before (D-038, D-047).
-- **Consequences:** `CURRENT_STATE.md`; the reconciled wording and a short voice note to follow.
+- **Context:** After three painting sessions, 5 of the 48 paintings were at the bar (8/10). Dan: far too slow and too costly per picture; all of them should be done by now. The cause: every place was built as its own scene and tuned by many small bake-and-look rounds, and most failures were extreme close-ups of small objects, the painting kit's weakest ground. All five accepted paintings are room-scale views.
+- **Decision (Claude, routine):**
+  1. **Room-scale framing.** Every place is painted as a space seen from 1–4 m, its thing to look at a lit feature within it; no macro close-ups. Where a brief asks for a close view, the painter frames the nearest room-scale view that keeps its look-at.
+  2. **Rooms reused.** The approved rooms are the sets; a new place imports one and changes the camera, the light and one feature. A room not yet built is built once, to the bar, then reused.
+  3. **Fast drafts, one critic per batch.** Drafts at quarter size; full size only when finishing; the separate critic judges a batch at a time (same bar: 8, or 7 after three critiqued rounds).
+  4. **Painters in parallel.** One painter per room, a few at a time, so a batch takes about as long as one painting did.
+- **Alternatives:** more rounds of tuning close-ups one by one (rejected: the evidence says it does not converge); lowering the bar (rejected: Dan wants 8).
+- **Consequences:** paintings may look further back than their briefs first imagined; the look-at stays. Dan is told the measured rate after the first batch.
+
+## D-076 — The map brought back to the approved mock-up; no Close/Region switch (Claude's routine call, D-006; Dan's report)
+- **Date:** 2026-09-25
+- **Context:** Dan, on TestFlight: the map "looks incomplete", not pretty like the original pages; nothing on it can be touched; and "why is Region there, it doesn't make any sense". All three were true. The built map drew small dots over the blurred place painting, where the approved mock-up (`design/directions/d-combined/map.html`) has its own night sky with pools of light; it had no tapping, although INTERACTION_NOTES → The map asks for it; and it switched levels with a Close/Region button, where INTERACTION_NOTES says the map opens on the region and zooms by tapping in and out.
+- **Decision (Claude, routine; it brings the build in line with what was already approved):**
+  1. **The region's own sky:** the mock-up's night-cloud sky, drifting fog, and a pool of light under every place (warm and breathing where Dan is, faint for the way ahead). Walked routes draw themselves in, settle to dust, and carry a small spark; names are carved on the sky with a dark halo.
+  2. **Every light can be tapped:** the crosshair closes on it and the box below says what is known: where Dan is and what is ahead; a walked stretch and the places named on it; a reached place and the first sentence of what it said; a sealed thing in view; the forecast day. Only what has been reached is named; the way ahead stays unnamed.
+  3. **No switch.** It opens on the whole region ("The first region · The Quiet"), on where Dan is. **Look closer** zooms into a stretch (its places in the order reached, sealed things in view, the forecast's waypoints); **See the whole region**, or "‹ The Quiet" above the title, zooms back out. Pinch is not built (a later nicety).
+- **Alternatives:** keeping the switch with clearer words (rejected: a mode switch at the top is exactly what Dan found confusing, and the approved design never had one); dropping the close level (rejected: it is where sealed things and forecast waypoints sit, MVP.md).
+- **Follow-up (same day, Dan):** the lights shifted a little on every tap: "looks stilted". Cause: the box under the map changed height with what was picked (two or three lines, a button or none), and the map re-fitted itself to the space left. Fixed at the root: the box is **one fixed size** (two lines of name, three of words, a slim action row always kept; "Look closer ›" and "‹ See the whole region" are carved links in that row), and nothing scrolls the page on a tap. **A standing check** in the flow walk measures every light, the map, the box and the page scroll before and after each tap, in both levels and at both phone sizes, and fails on any change over half a pixel; it was run against the old map first to show it catches the fault.
+- **Consequences:** the flow walk now taps every light on day 1 and after the first word, and looks closer once. Dan judges the new map on his phone.
+- **Note:** written as D-075 in its own session, alongside the painting session's D-075; renumbered D-076 when the branches were merged (commit messages and code on that branch say D-075).
+
+## D-077 — Choosing what to do on Today, and a guess that waits for its marks (Dan's report; Claude's routine calls, D-006)
+- **Date:** 2026-09-25
+- **Context:** Dan, playing the first playable: after the day's work he couldn't choose which delve to do next (Keep going picked one for him); nothing could be taken off Today; a job added in Week couldn't be started from Today; there was no way to delve on anything he liked; the screen had too many buttons (Begin and Swap side by side). And the lamp's marks: he saw them at one place but was asked to guess only later, which felt disjointed.
+- **Decision:**
+  1. **One main button.** "Delve" for a delve job, "Begin" only for a job done away from the phone. Swap is gone.
+  2. **A tap on any job makes it the next one**, at any time of day, including after the day's work is done (a `picked` fact).
+  3. **Not today:** a small link under the main button, or a swipe left on a row. The job leaves today's list with no mark against it; the next job in order takes its place; it is offered again tomorrow, or as soon as Dan begins or taps it (a `setAside` fact). It never completes the day and earns nothing (rule 10).
+  4. **Delve on anything:** the last row, "Something else…" (and Keep going after the day's work), opens "Choose a delve": today's list, all Dan's jobs, his satchel lines, and a box to name something new. Any choice goes straight to the delve's set-up (D-041). A job done this way shows on Today as done and counts in full.
+  5. **A guess waits for its marks.** When a job's Done both brings a step with a guess and reaches a place, the guess is now asked on the arrival, after the place's marks are seen, not on the screen before it (it was an engine ordering bug). A guess about a mark seen elsewhere says "One of the marks you saw at {place}". A place showing marks that can't be guessed yet says so once, gently. Guesses opening over several weeks is the story's design and is kept.
+  6. **"Your lamp":** the app's own two lines about Dan's lamp now say "your lamp", so it isn't confused with the lamps he finds. The story's own lines that say only "the lamp" are listed (ids only) for the next sealed story session to anchor.
+- **Alternatives:** an action tray on each row (tried and rejected by Dan: too many buttons); keeping Swap (rejected: tapping a row does the same, directly).
+- **Consequences:** new screen Choose; 7 new rule tests (91 in all); the flow walk taps Delve. Sealed follow-up for the story session: anchor the ambiguous "the lamp" lines.
+- **Reversible:** Yes.
+
+## D-078 — Today follows the week's plan (Dan's report)
+- **Date:** 2026-09-25
+- **Context:** Dan's Friday: the week showed Gym, Order the cat's medication and Tank clean, but Today put the Course first. Today filled the day's size from all his jobs, not only the plan. Dan: "Weekly planner should match up with what the daily plan is… not suggest things I haven't put in the weekly plan."
+- **Decision:** once a week is laid out with Plan my week, Today offers only the jobs the plan puts on that day (appointments as before). The day's size is never more than the plan holds for it (at least one), so a day planned light completes when its planned jobs are done. Anything else is one tap away in "Something else…" (D-077). A week with no Plan my week (only a line or two added) works as before.
+- **Alternatives:** keep filling from other jobs (rejected by Dan).
+- **Consequences:** PLANNER.md's "capacity still sizes the day" now reads: capacity sizes the day, up to what the plan holds. 3 new rule tests.
+- **Reversible:** Yes.
+
+## D-079 — The story never runs ahead of where Dan has been; Keys wait (Dan's report; changes D-049)
+- **Date:** 2026-09-25
+- **Context:** Dan arrived at the Lamp Hall and was told about something in the Salt Gallery, where he had never been. Cause: two clocks (D-049). The story week moves with the calendar, where Dan stands moves with effort, and the story's steps, sealed things and week-close glimpses were chosen by story week alone. The route loops between areas (hall, salt gallery, camp, stair…), so this could happen in any week. No test checked it.
+- **Decision:**
+  1. **The continuity guard** (`tests/rules/continuity.test.ts`): 21 simulated six-week playthroughs (Normal, Low, High, mixed, a week away, two weeks away, High then Low; each with no bedtime, bedtime kept, bedtime late). It fails if any story moment or sealed thing plays in an area Dan has never set foot in. It runs before every phone build, so a build that breaks it cannot ship. Before the fix, normal play had 3 such moments (all in week 1, the one Dan met), and other patterns had more in weeks 3–6. After it, 0.
+  2. **A story step plays only in an area Dan has been.** Otherwise the job's return is a line of the passage, as it already was when no step was due.
+  3. **Sealed things keep the story's written order.** A Key earned while the next one lies in an area not yet reached is **kept** (`keyHeld`). It opens that thing on the arrival that makes it reachable, and the arrival screen says so ("The key you carried opens something here."). No Key is lost: the same number of sealed things open over six weeks as before.
+  4. **The week-close glimpse** waits until its area has been reached.
+  5. Exempt on purpose: a Key whose opening carries Dan to a place, and the High day's deep push, which goes further in by design.
+- **What it changes of D-049:** "the story keeps its order" still holds. The story week still sets what may come next, but where Dan has walked now also gates it, so in slow weeks the story waits for his feet instead of running ahead.
 - **Reversible:** Yes.

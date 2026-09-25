@@ -11,12 +11,14 @@
   import fogFront from './scene/fog-front.html?raw';
   import { tunnelLight } from './scene/light.js';
   import type { Go } from './nav';
+  import Return from './Return.svelte';
   import './scene/tunnel.css';
 
   let { go }: { go: Go } = $props();
   const v = $derived(game.view);
   const run = $derived(v.run);
   const end = $derived(v.runEnd);
+  /* keep the end on screen while its story plays (a guess, a choice), even after it's marked seen */
   let answer = $state<'yes' | 'no' | null>(null);
   let root: HTMLDivElement;
   let restful = $state(false);
@@ -59,9 +61,16 @@
     go(to);
   }
   function yes() { if (end) { game.do({ do: 'done', job: end.job.id }); answer = 'yes'; } }
+  /* the job's return, if this run finished it (enough, or "Is it done?" answered) */
+  const doneSeq = $derived.by(() => {
+    if (!end) return null;
+    const start = game.facts.find(f => f.type === 'delveEnded' && f.seq === end.seq);
+    const d = game.facts.find(f => f.type === 'jobDone' && f.job === end.job.id && start && f.day === start.day && f.seq > (start as { run: number }).run);
+    return d ? d.seq : null;
+  });
 </script>
 
-<div class="dv" bind:this={root}>
+<div class="dv" class:told={!!end && (doneSeq !== null || v.runFinds.length > 0)} bind:this={root}>
   {@html tunnel}
   <div class="ui">
     <header class="top col">
@@ -70,8 +79,8 @@
         <span></span><span></span>
       </div>
       <div class="head rise d1">
-        <div class="label-line centred lit">{v.ahead ? t('delve.towards') : t('delve.further')}</div>
-        {#if v.ahead}<h1 class="carve">{v.ahead.name}</h1>{/if}
+        <div class="label-line centred lit">{t('delve.further')}</div>
+        <h1 class="carve">{v.here.name}</h1>
         <p class="soft on-scene breath-hide" class:gone={!run || run.phase !== 'delve'}>{t('delve.moves')}</p>
       </div>
     </header>
@@ -134,8 +143,9 @@
             {:else if end.how === 'finishedHere' && end.minutes > 0}{t('delve.finished', { min: minutesWords(end.minutes), job: end.job.name })}
             {:else}{end.count > 1 ? t('delve.doneRun') : t('delve.doneOne')}{/if}
           </h2>
-          <p class="say">{end.enough ? t('delve.enoughSay') : v.passage}</p>
-          {#if end.completedDay}
+          {#if doneSeq !== null}<Return {doneSeq} extraFinds={v.runFinds} {go} />
+          {:else}<p class="say">{end.enough ? t('delve.enoughSay') : v.passage}</p><Return doneSeq={null} extraFinds={v.runFinds} />{/if}
+          {#if end.completedDay || game.view.arrival}
             <button class="btn" onclick={() => leave('arrival')}>{t('delve.see')}</button>
           {:else}
             <button class="btn resting" onclick={() => leave('today')}>{t('delve.toToday')}</button>
@@ -148,6 +158,8 @@
 
 <style>
   .dv { display: contents; }
+  /* when the end carries the story, the ring steps back to make room for it */
+  .dv.told :global(.ring) { --R: min(170px, 44vw, 22vh); }
   .gone { opacity: 0; transition: opacity 1s var(--ease); }
   h2.m { margin-top: 10px; }
   .dv :global(.bottom p.say) { margin: 6px 0 20px; font-size: 17px; color: var(--ink-2); }

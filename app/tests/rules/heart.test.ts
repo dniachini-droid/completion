@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { act, daySize, presetRun, see, settle, type Command } from '../../src/core/game';
 import type { Fact } from '../../src/core/types';
-import { prototype as C } from '../../src/content/world/prototype';
+import { content as C } from '../../src/content/world';
 
 /** A tiny player: a log, and a phone clock on the same day in British Summer Time. */
 function player(start = '2026-09-24T09:00:00+01:00') {
@@ -21,9 +21,9 @@ describe('Today', () => {
   it('a Normal day holds three jobs; the first is next', () => {
     const v = player().do({ do: 'open' }).view();
     expect(v.size).toBe(3);
-    expect(v.slate).toEqual(['cat', 'course', 'gym']);
-    expect(v.next).toEqual({ job: 'cat', mode: 'begin' });
-    expect(v.here.name).toBe('The Well Stair');
+    expect(v.slate).toEqual(['course', 'gym', 'spanish']);
+    expect(v.next).toEqual({ job: 'course', mode: 'begin' });
+    expect(v.here.id).toBeNull();   /* before the first place: the way in */
   });
   it('day sizes: Low 2, Normal 3, High 5; opened late, one fewer; in the evening, one', () => {
     expect(daySize('low', '2026-09-24T09:00:00+01:00')).toBe(2);
@@ -34,8 +34,8 @@ describe('Today', () => {
   });
   it('Swap brings in a job from beyond the slate', () => {
     const p = player().do({ do: 'open' }).do({ do: 'swap' });
-    expect(p.view().slate).toEqual(['spanish', 'course', 'gym']);
-    expect(p.view().next?.job).toBe('spanish');
+    expect(p.view().slate).toEqual(['lesson', 'gym', 'spanish']);
+    expect(p.view().next?.job).toBe('lesson');
   });
   it('a job that takes hours opens set to its enough', () => {
     expect(presetRun(C.jobs.find(j => j.id === 'course')!)).toEqual({ minutes: 25, count: 2 });
@@ -58,30 +58,35 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     p.do({ do: 'startRun', job: 'course', minutes: 25, count: 2 }).wait(60);
     expect(p.view().runEnd).toMatchObject({ enough: true, minutes: 50 });
     p.do({ do: 'seen', what: 'step', ref: p.view().runEnd!.seq });
-    /* the gym: Begin marks it under way; Done plays its hour */
+    /* 75 minutes in: the first place plays the moment it is reached, mid-day (D-073) */
+    const v = p.view();
+    expect(v.complete).toBe(false);
+    expect(v.walked).toBe(75);
+    expect(v.arrival).toMatchObject({ kind: 'place', id: 'b-1.A', completedDay: false });
+    expect(v.here.id).toBeNull();   /* revealed on the arrival's own screen, not before */
+    p.do({ do: 'seen', what: 'arrival', ref: v.arrival!.seq });
+    /* the gym: Begin marks it under way; Done plays its hour and completes the day, with no camp (a place was reached) */
     p.do({ do: 'begin', job: 'gym' });
     expect(p.view().next).toEqual({ job: 'gym', mode: 'underWay' });
     p.wait(70).do({ do: 'done', job: 'gym' });
-    const v = p.view();
-    expect(v.complete).toBe(true);
-    expect(v.walked).toBe(135);
-    expect(v.arrival).toMatchObject({ kind: 'place', name: 'The Rib Gallery', completedDay: true });
-    expect(v.here.name).toBe('The Well Stair');   /* revealed on the arrival's own screen, not before */
-    p.do({ do: 'seen', what: 'arrival', ref: v.arrival!.seq });
-    expect(p.view().here.name).toBe('The Rib Gallery');
+    expect(p.view().complete).toBe(true);
+    expect(p.view().walked).toBe(135);
+    expect(p.view().arrival).toBeNull();
+    expect(p.view().here.id).toBe('b-1.A');
     expect(p.view().next).toBeNull();
   });
   it('a short day still arrives: a camp with a view', () => {
     const p = player().do({ do: 'open' }).do({ do: 'capacity', capacity: 'low' });
-    p.do({ do: 'done', job: 'gym' }).do({ do: 'done', job: 'meal' });
+    p.do({ do: 'done', job: 'gym' }).do({ do: 'done', job: 'tank' });
     expect(p.view().walked).toBe(120);
-    /* 120 minutes passes the Rib Gallery (75): a named place */
+    /* 120 minutes passes the first place (75): a named place */
     expect(p.view().arrival?.kind).toBe('place');
     const q = player().do({ do: 'open' }).do({ do: 'capacity', capacity: 'low' });
     q.do({ do: 'startRun', job: 'cat', minutes: 25, count: 1 }).wait(25).do({ do: 'done', job: 'cat' });
     q.do({ do: 'startRun', job: 'post', minutes: 25, count: 1 }).wait(25).do({ do: 'done', job: 'post' });
     expect(q.view().arrival).toMatchObject({ kind: 'camp', completedDay: true });
-    expect(q.view().here.name).toBe('The Well Stair');
+    expect(q.view().arrival!.look).toBeTruthy();   /* a camp always has one thing to look at */
+    expect(q.view().here.id).toBeNull();
   });
   it('Done with no Begin is recorded as afterwards; Begin then Done as from the app', () => {
     const p = player().do({ do: 'open' }).do({ do: 'done', job: 'gym' });
@@ -90,7 +95,7 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     expect(q.facts.filter(f => f.type === 'jobBegun')).toEqual([expect.objectContaining({ job: 'gym', from: 'app' })]);
   });
   it('lowering capacity can complete the day, and day complete locks in', () => {
-    const p = player().do({ do: 'open' }).do({ do: 'done', job: 'gym' }).do({ do: 'done', job: 'meal' });
+    const p = player().do({ do: 'open' }).do({ do: 'done', job: 'gym' }).do({ do: 'done', job: 'tank' });
     expect(p.view().complete).toBe(false);
     p.do({ do: 'capacity', capacity: 'low' });
     expect(p.view().complete).toBe(true);
@@ -123,11 +128,11 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     expect(p.facts.find(f => f.type === 'stepsGained')!.day).toBe('2026-09-24');
   });
   it('Keep going after day complete still arrives at the next place (no dead ends for effort)', () => {
-    const p = player().do({ do: 'open' }).do({ do: 'capacity', capacity: 'low' }).do({ do: 'done', job: 'gym' }).do({ do: 'done', job: 'meal' });
+    const p = player().do({ do: 'open' }).do({ do: 'capacity', capacity: 'low' }).do({ do: 'done', job: 'gym' }).do({ do: 'done', job: 'tank' });
     const first = p.view().arrival!; p.do({ do: 'seen', what: 'arrival', ref: first.seq });
     p.do({ do: 'startRun', job: 'spanish', minutes: 60, count: 3 }).wait(200);
     expect(p.view().walked).toBe(300);
-    expect(p.view().arrival).toMatchObject({ kind: 'place', name: 'The Pool Dome', completedDay: false });
+    expect(p.view().arrival).toMatchObject({ kind: 'place', id: 'b-1.B', completedDay: false });
   });
   it('splitting work earns nothing extra: steps are time', () => {
     const a = player().do({ do: 'open' }).do({ do: 'startRun', job: 'course', minutes: 25, count: 2 }).wait(60);

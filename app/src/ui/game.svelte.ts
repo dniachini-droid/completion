@@ -5,13 +5,13 @@
 import { act, alertsAfter, see, settle, type Command } from '../core/game';
 import { epochOf, momentOf, type Moment } from '../core/time';
 import type { Fact } from '../core/types';
-import { prototype as content } from '../content/world/prototype';
+import { content } from '../content/world';
 import { platform } from '../platform';
 import { t } from '../content/copy/en';
 
 export { content };
 
-const SAVE_VERSION = 1;
+const SAVE_VERSION = 2;   /* 2: the story (slice 2); older prototype saves start afresh */
 interface Save { version: number; content: string; facts: Fact[]; }
 
 /* ---- the prototype's rehearsal: minutes pass 60 times faster, on a separate throwaway save (PROTOTYPE_NOTES.md) ---- */
@@ -38,6 +38,9 @@ class Game {
     this.#ticker = window.setInterval(() => this.tick(), 250);
     document.addEventListener('visibilitychange', () => { if (!document.hidden) this.tick(); });
   }
+
+  /** A job as Dan has it now (his edits and satchel lines included). */
+  job(id: string) { return this.view.content.jobs.find(j => j.id === id); }
 
   get saveKey() { return this.proto.rehearsal ? 'save.rehearsal' : 'save.v1'; }
 

@@ -78,7 +78,7 @@ Added for the tellings the core lives need (RESEARCH lesson 1: the inventory mus
 | 35 | EAT / TAKE-IN | hook closing on a drop, over a bar (taking, at rest) | wk 6 | "He ate not" (S2) reads by week 9 |
 | 36 | GO / LEAVE | PATH with the drop at the far end | wk 5 (with PATH) | "He said: go" |
 | 37 | CHILD | small PERSON | wk 7 | The daughter; "a child's hand" |
-| 38 | HOME | PLACE + OF + ONE | wk 6 (compositional, no new element) | "I went home" |
+| 38 | HOME | PLACE + OF + ONE | m 4, with OF (compositional, no new element) | "I went home". Moved from wk 6 by the story job: it needs OF, and no week 6 record uses it (S4's *go home* renders with the rest of S4) |
 | 39 | DAY / SUN | inverted wedge with a fork above (the surface's fire) | wk 8 | Units of time in every age |
 | 40 | GOOD / WHOLE | a full cell (bar, drop, bar: a thing on ground under a roof) | wk 12 | "They were good" |
 | 41 | ASK | QUESTION + GIVE (compositional) | m 4 | "I asked why" |
@@ -107,7 +107,7 @@ Later signs (months 8–9, rare): TEACH (give+mark), LEARN (take+mark), ONE-WHO 
 | # | Mark | Arrives | Meaning |
 |---|---|---|---|
 | D1 | **Name-ring** | wk 1 (recognised, not read) | A ring around a sign-group: a person's name. Dan sees rings on every wall from day one |
-| D2 | Place-bar | wk 6 | A bar under a group: a place-name |
+| D2 | Place-bar | with the first place-name (not in weeks 1–13) | A bar under a group: a place-name. (Listed at wk 6 in the first draft; no week 6 record uses it, so it arrives where one does: story job §2) |
 | D3 | Device-mark | m 4 | Small wedge-and-fork above a group: a made thing |
 | D4 | **Hand-mark** | wk 4 | A small hook in the cell's corner: *cut by*. A signature. The Custodian's hand-mark is a tiny KEEP-ONE (the app's fixed name for it: *a hook closed on a dot*). The Surveyor's and the Linguist's differ (hers, the app: *a hook with a tail*) |
 | D5 | Number bundle | wk 8 | The Builders count in eights (four long fingers a hand): strokes to seven, a bar across for eight, a wedge for sixty-four |
@@ -183,7 +183,7 @@ Signs are earned by Keys (one per weekly target met) and occasionally by an arri
 | 3 | HERE, DOOR | LIGHT confirmed: the Lamp Door opens | |
 | 4 | DEEP; hand-mark | | Every record now shows *whose hand* cut it; almost all one hand |
 | 5 | ONCE; PATH, GO | | Records open with the formula: all told after the life. Her cut pieces carry no formula: present tense, recent |
-| 6 | OPEN; EAT; HOME (compositional); place-bar | | |
+| 6 | OPEN; EAT | | S2 and V2's *ate [ ]* rhyme (the cross reads at wk 9) |
 | 7 | UP/OUT; STONE; CHILD | **OPEN-WAY** (PATH-OPEN) | |
 | 8 | SEE; COUNT; DAY; number bundle | | The readers are *numbered*: the Salt-Cutter is ONE, the Surveyor is TWO (V1's formula). The double notation: his count beside the reader's |
 | 9 | **NOT** | | Her glossed "he held me" / "he held us" take the cross: "…[not]" in S4 and V2; S2 "he ate [not]"; the lintels show "[ ] [ ] [ ]" → "[ ] [ ] not" (VOICE arrives week 11) |
@@ -244,7 +244,7 @@ A record's *voice* comes from what it counts and compares, its formula, its unit
 - A **power word** can only be cut into a **rod-shaped blank**, and a blank accepts only the word whose signs are cut beside it. Word-doors, devices and the Seed fix where each word is first *possible*; that is how the authored order holds even when Dan holds a word's signs early (he holds SEE and ONCE by week 8; ECHO's blank is behind the Loud Room's fall until MOVE-STONE clears it in month 3–4; QUIET's blank is in the quiet chambers, month 8–9). A blank that is not yet reachable is not a refusal; it is a place.
 - **Open cells** (small blank cells on many walls) accept any two-sign word Dan cares to try (§5.1). The place answers with one line and no progress. A power word tried in an open cell answers the way §5.1 says ("the hall goes quiet for a breath": the hint that VOICE-NOT is a word, months before its blank). The three words the player never needs (REMAIN, ANSWER, and any word not in §5) get the open-cell answer "the cuts do not fill": the wrong-guess clue, nothing lost.
 - **The rod rings when a word locks.** Cutting with it *is* the sounding (WORLD_TRUTH rule 3).
-- **At the Seed** there are two blanks, one per prepared word. VOICE-GIVE-FAR cut there locks but does not carry, because Dan enters with QUIET cut on the sill and the answering word needs LOUD to carry; the Custodian knows this and says so. KEEP-ALL cut there closes the Seed. The ending is fixed (WORLD_TRUTH §10); the other blank is a detour with a line, not an ending.
+- **At the Seed** there are two blanks, one per prepared word. VOICE-GIVE-FAR cut there locks but does not carry, because Dan enters with QUIET cut on the sill and the answering word needs LOUD to carry; the Custodian knows this and says so. KEEP-ALL cut there closes the Seed. The ending is fixed (WORLD_TRUTH §10); the other blank is a cut with a consequence (its own visit: the lock, the ring stopping at Dan's feet, his one line, two old lines side by side), not an ending. The blanks are tapped like every blank of the year; no screen ever offers them as options (WORLD_TRUTH §10.3).
 
 ## 9. Guessing and confirmation (RESEARCH lessons 17, 6)
 

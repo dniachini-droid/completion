@@ -21,7 +21,7 @@ _Written 2026-09-23. Must agree with `WORLD_TRUTH.md`._
 
 ## The human ages (the readers)
 
-The Custodian counts a reader as anyone who read a mark of the Cut and whom he has named in his count. His count is canon. He had the salt-cutters' tongue before the first of them came in: their people had cut salt at the face for generations, and he listens through the rock.
+The Custodian counts a reader as anyone who read a mark of the Cut and whom he has named in his count. His count is canon. He had the sound of the salt-cutters' tongue before the first of them came in (their people had cut salt at the face for generations, and he listens through the rock), but not the speaking of it: with the first his words were few and "nearly ours", and he learned fast from him.
 
 | Reader | Who | How they reached the Site | What they learned | How it ended | Author's analogue |
 |---|---|---|---|---|---|

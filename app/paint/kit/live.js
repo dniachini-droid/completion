@@ -3,7 +3,8 @@
    The heavy painting is an image; these move on top of it, cheaply:
      - the whole scene drifts very slowly, like a camera breathing
      - mist and haze move where the scene says (anchors.fog)
-     - flames flicker, with their warm halo (anchors.flame)
+     - flames flicker, with their warm halo (anchors.flame); a still flame (anchor still: true,
+       or live.flame 'still' for them all) does not gutter: it only breathes, very slowly
      - glints wink on water (anchors.glints)
      - motes of light rise, or float in a shaft of light (anchors.beam)
    prefers-reduced-motion: everything is drawn, nothing moves.
@@ -79,8 +80,9 @@ export function live(host, meta) {
   for (const f of A.flame || []) {
     const [x, y] = map(f.u, f.v), perM = f.s * meta.width * map.k;     /* host pixels per metre, there */
     const fs = Math.max(4, perM * .11 * (f.size || 1));
-    const g = el('g', { style: `transform-origin:${x}px ${y}px;${still ? '' : 'animation:live-flicker 2.8s ease-in-out infinite;'}` }, svg);
-    el('circle', { cx: x, cy: y - fs * .4, r: Math.max(10, perM * .7 * (f.size || 1)), fill: 'url(#lvHalo)', style: 'mix-blend-mode:screen' }, g);
+    const calm = f.still || (meta.live && meta.live.flame === 'still');
+    const g = el('g', { style: `transform-origin:${x}px ${y}px;${still || calm ? '' : 'animation:live-flicker 2.8s ease-in-out infinite;'}` }, svg);
+    el('circle', { cx: x, cy: y - fs * .4, r: Math.max(10, perM * .7 * (f.size || 1)), fill: 'url(#lvHalo)', style: 'mix-blend-mode:screen;' + (calm && !still ? `transform-origin:${x}px ${y - fs * .4}px;animation:live-breathe 7s ease-in-out infinite` : '') }, g);
     if (f.body && globalThis.ClayLamp) globalThis.ClayLamp.draw(g, { x, y, size: fs * 2.6, pool: .8 });
     el('path', { d: `M${x} ${y - fs * 1.15} Q${x + fs * .36} ${y - fs * .35} ${x + fs * .18} ${y - fs * .05} Q${x} ${y + fs * .1} ${x - fs * .2} ${y - fs * .05} Q${x - fs * .3} ${y - fs * .4} ${x} ${y - fs * 1.15}Z`, fill: 'url(#lvFlame)' }, g);
     el('ellipse', { cx: x, cy: y - fs * .22, rx: fs * .08, ry: fs * .2, fill: '#fffaf0' }, g);
@@ -137,6 +139,7 @@ if (typeof document !== 'undefined' && !document.getElementById('live-css')) {
   const s = document.createElement('style'); s.id = 'live-css';
   s.textContent = '@keyframes live-drift{from{transform:none}to{transform:scale(1.04) translate(-.6%,.8%)}}' +
     '@keyframes live-flicker{0%,100%{transform:scale(1,1)}30%{transform:scale(.94,1.07)}62%{transform:scale(1.04,.95)}}' +
+    '@keyframes live-breathe{0%,100%{opacity:.88;transform:scale(1)}50%{opacity:1;transform:scale(1.03)}}' +
     '@keyframes live-glint{0%,100%{opacity:0}45%{opacity:.9}55%{opacity:.7}}';
   document.head.appendChild(s);
 }
