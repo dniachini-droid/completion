@@ -68,9 +68,11 @@
     const d = game.facts.find(f => f.type === 'jobDone' && f.job === end.job.id && start && f.day === start.day && f.seq > (start as { run: number }).run);
     return d ? d.seq : null;
   });
+  /* the end carries the story (a step, a mark to guess, a find) */
+  const told = $derived(!!end && (doneSeq !== null || v.runFinds.length > 0));
 </script>
 
-<div class="dv" class:told={!!end && (doneSeq !== null || v.runFinds.length > 0)} bind:this={root}>
+<div class="dv" class:told bind:this={root}>
   {@html tunnel}
   <div class="ui">
     <header class="top col">
@@ -97,7 +99,7 @@
       </div>
     </div>
 
-    <section class="bottom col rise d3">
+    <section class="bottom col rise d3" class:fit={told}>
       {#if run?.phase === 'delve'}
         <h2>{run.job.name}</h2>
         <p class="soft of">{ofLine}</p>
@@ -136,15 +138,17 @@
           <p class="say">{t('delve.keptSay')}</p>
           <button class="btn resting" onclick={() => leave('today')}>{t('delve.toToday')}</button>
         {:else}
-          <div class="label-line centred" class:lit={end.enough}>{end.enough ? t('delve.enoughLabel') : t('delve.label')}</div>
-          <h2 class="m">
-            {#if answer === 'yes'}{t('delve.yesSay')}
-            {:else if end.enough}{t('delve.sessionComplete', { job: end.job.name })}
-            {:else if end.how === 'finishedHere' && end.minutes > 0}{t('delve.finished', { min: minutesWords(end.minutes), job: end.job.name })}
-            {:else}{end.count > 1 ? t('delve.doneRun') : t('delve.doneOne')}{/if}
-          </h2>
-          {#if doneSeq !== null}<Return {doneSeq} extraFinds={v.runFinds} {go} />
-          {:else}<p class="say">{end.enough ? t('delve.enoughSay') : v.passage}</p><Return doneSeq={null} extraFinds={v.runFinds} />{/if}
+          <div class="scroll">
+            <div class="label-line centred" class:lit={end.enough}>{end.enough ? t('delve.enoughLabel') : t('delve.label')}</div>
+            <h2 class="m">
+              {#if answer === 'yes'}{t('delve.yesSay')}
+              {:else if end.enough}{t('delve.sessionComplete', { job: end.job.name })}
+              {:else if end.how === 'finishedHere' && end.minutes > 0}{t('delve.finished', { min: minutesWords(end.minutes), job: end.job.name })}
+              {:else}{end.count > 1 ? t('delve.doneRun') : t('delve.doneOne')}{/if}
+            </h2>
+            {#if doneSeq !== null}<Return {doneSeq} extraFinds={v.runFinds} {go} />
+            {:else}<p class="say">{end.enough ? t('delve.enoughSay') : v.passage}</p><Return doneSeq={null} extraFinds={v.runFinds} />{/if}
+          </div>
           {#if end.completedDay || game.view.arrival}
             <button class="btn" onclick={() => leave('arrival')}>{t('delve.see')}</button>
           {:else}
@@ -158,8 +162,12 @@
 
 <style>
   .dv { display: contents; }
-  /* when the end carries the story, the ring steps back to make room for it */
-  .dv.told :global(.ring) { --R: min(170px, 44vw, 22vh); }
+  /* the ring takes the room left between the place's name and the words below, never more; when the end carries the
+     story it steps back, and on a phone too short for it, it gives way altogether */
+  .dv :global(.mid) { container-type: size; }
+  .dv :global(.ring) { --R: max(64px, min(250px, 66vw, 36vh, 86cqh)); }
+  .dv.told :global(.ring) { --R: max(64px, min(170px, 44vw, 22vh, 76cqh)); }
+  @container (max-height: 120px) { .dv.told :global(.ring) { visibility: hidden; } }
   .gone { opacity: 0; transition: opacity 1s var(--ease); }
   h2.m { margin-top: 10px; }
   .dv :global(.bottom p.say) { margin: 6px 0 20px; font-size: 17px; color: var(--ink-2); }

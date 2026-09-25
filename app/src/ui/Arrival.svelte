@@ -61,28 +61,30 @@
         <button class="home" onclick={() => leave('today')}><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" /></svg><span>{t('delve.today')}</span></button>
         <span></span><span></span>
       </header>
-      <section class="col head">
-        <div class="label-line gold">{a.kind === 'place' ? t('arrive.label') : t('arrive.camp')}</div>
-        <h1 class="carve lg">{a.name}</h1>
-        <span class="soft on-scene">{a.line}</span>
-        {#if a.look}<span class="soft on-scene look">{a.look}</span>{/if}
-        {#each a.opened as line}<p class="soft on-scene look">{t('arrive.keyOpens')} {line}</p>{/each}
-      </section>
-      <div class="mid col">
-        {#if a.id}
-          <Settled beat={fresh ? a.id : null} />
-          {#each a.guess as mark (mark)}<Guess {mark} at={a.id} />{/each}
-          {#if later.length}<p class="soft later">{t('arrive.marksLater')}</p>{/if}
-          {#if a.records.length}
-            <div class="choice">
-              {#if a.choice}{#each a.choice as c, i}<button class="text-link" onclick={() => pick(i)}><span>{cap(c)}</span></button>{/each}
-              {:else}<button class="text-link" onclick={() => go('records', a.records[0])}><span>{t('records.read')}</span></button>{/if}
-            </div>
+      <div class="scroll">
+        <section class="col head">
+          <div class="label-line gold">{a.kind === 'place' ? t('arrive.label') : t('arrive.camp')}</div>
+          <h1 class="carve lg">{a.name}</h1>
+          <span class="soft on-scene">{a.line}</span>
+          {#if a.look}<span class="soft on-scene look">{a.look}</span>{/if}
+          {#each a.opened as line}<p class="soft on-scene look">{t('arrive.keyOpens')} {line}</p>{/each}
+        </section>
+        <div class="mid col">
+          {#if a.id}
+            <Settled beat={fresh ? a.id : null} />
+            {#each a.guess as mark (mark)}<Guess {mark} at={a.id} />{/each}
+            {#if later.length}<p class="soft later">{t('arrive.marksLater')}</p>{/if}
+            {#if a.records.length}
+              <div class="choice">
+                {#if a.choice}{#each a.choice as c, i}<button class="text-link" onclick={() => pick(i)}><span>{cap(c)}</span></button>{/each}
+                {:else}<button class="text-link" onclick={() => go('records', a.records[0])}><span>{t('records.read')}</span></button>{/if}
+              </div>
+            {/if}
+            {#if a.completedDay}
+              <p class="enough">{t('arrive.enough')} <em>{t('arrive.enough2')}</em></p>
+            {/if}
           {/if}
-          {#if a.completedDay}
-            <p class="enough">{t('arrive.enough')} <em>{t('arrive.enough2')}</em></p>
-          {/if}
-        {/if}
+        </div>
       </div>
       <section class="bottom col">
         <button class="btn resting" onclick={() => leave('today')}>{a.completedDay ? t('arrive.rest') : t('arrive.onward')}</button>
@@ -106,7 +108,7 @@
   .head .look { color: var(--gold-hi); margin-top: 12px; }
   .choice { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; margin-bottom: 14px; }
   .topbar { animation: rise 1.2s .2s var(--ease) both; }
-  .mid { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding-bottom: 18px; }
+  .mid { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding-top: 16px; }
   .enough { font-family: var(--life); font-size: min(31px, 8vw); line-height: 1.15; color: #fff; text-align: center;
     text-shadow: 0 0 26px rgba(242,193,112,.45), 0 2px 18px rgba(8,6,20,.9); animation: rise 1.6s 2.2s var(--ease) both; }
   .enough em { display: inline-block; animation: rise 1.6s 3s var(--ease) both; }

@@ -167,10 +167,12 @@
 
     <div class="mid"></div>
 
-    <section class="bottom col word rise d2" aria-label={t('cut.label')}>
+    <section class="bottom col word rise d2" class:fit={phase === 'settled'} aria-label={t('cut.label')}>
       {#if phase === 'settled'}
-        <div class="settle-list"><Settled beat={a.id} /></div>
-        {#if a.completedDay}<p class="enough">{t('arrive.enough')} <em>{t('arrive.enough2')}</em></p>{/if}
+        <div class="scroll">
+          <div class="settle-list"><Settled beat={a.id} /></div>
+          {#if a.completedDay}<p class="enough">{t('arrive.enough')} <em>{t('arrive.enough2')}</em></p>{/if}
+        </div>
       {/if}
       <div class="box ticks wordbox">
         <button class="rodbtn" class:ready={step === 0 || step === 3} onclick={tapRod} disabled={step !== 0 && step !== 3} aria-label={step === 0 ? t('cut.hint.rod') : t('cut.hint.lock')}>
