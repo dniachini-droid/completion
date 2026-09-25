@@ -780,3 +780,14 @@
 - **Alternatives:** past-tense narration throughout (rejected for now: the lines show where Dan is at this moment and many recur; the told-tale feel comes from whole sentences and rhythm); rewriting the characters' own writing too (rejected: it is theirs, and some of it is evidence).
 - **Consequences:** the new words go to Dan's phone in the next TestFlight build. **Dan judges the voice on his phone**; anything still hard to read goes into the next pass. The later story weeks, not yet in the app, keep the old voice until they are built.
 - **Reversible:** Yes (the old lines are in the history).
+
+## D-075 — The map brought back to the approved mock-up; no Close/Region switch (Claude's routine call, D-006; Dan's report)
+- **Date:** 2026-09-25
+- **Context:** Dan, on TestFlight: the map "looks incomplete", not pretty like the original pages; nothing on it can be touched; and "why is Region there, it doesn't make any sense". All three were true. The built map drew small dots over the blurred place painting, where the approved mock-up (`design/directions/d-combined/map.html`) has its own night sky with pools of light; it had no tapping, although INTERACTION_NOTES → The map asks for it; and it switched levels with a Close/Region button, where INTERACTION_NOTES says the map opens on the region and zooms by tapping in and out.
+- **Decision (Claude, routine; it brings the build in line with what was already approved):**
+  1. **The region's own sky:** the mock-up's night-cloud sky, drifting fog, and a pool of light under every place (warm and breathing where Dan is, faint for the way ahead). Walked routes draw themselves in, settle to dust, and carry a small spark; names are carved on the sky with a dark halo.
+  2. **Every light can be tapped:** the crosshair closes on it and the box below says what is known: where Dan is and what is ahead; a walked stretch and the places named on it; a reached place and the first sentence of what it said; a sealed thing in view; the forecast day. Only what has been reached is named; the way ahead stays unnamed.
+  3. **No switch.** It opens on the whole region ("The first region · The Quiet"), on where Dan is. **Look closer** zooms into a stretch (its places in the order reached, sealed things in view, the forecast's waypoints); **See the whole region**, or "‹ The Quiet" above the title, zooms back out. Pinch is not built (a later nicety).
+- **Alternatives:** keeping the switch with clearer words (rejected: a mode switch at the top is exactly what Dan found confusing, and the approved design never had one); dropping the close level (rejected: it is where sealed things and forecast waypoints sit, MVP.md).
+- **Consequences:** the flow walk now taps every light on day 1 and after the first word, and looks closer once. Dan judges the new map on his phone.
+- **Reversible:** Yes.

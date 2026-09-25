@@ -4,7 +4,8 @@
 // Day 1 (a Thursday): the Course, the gym, Spanish study → the first place; the map; records. Then more days (one High,
 // for a deep push) until the first word is cut (slice 3): the cut, the stair, the marks. Slice 4: camp and Goodnight on
 // day 1, the morning after, the week close on the first Monday (with Plan it for me and the week), the satchel, the
-// rhythms, and a return after days away. No story text is asserted.
+// rhythms, and a return after days away. The map on day 1 and again after the first word (every light tapped, one stretch
+// looked at closer). No story text is asserted.
 const { chromium } = await import(process.env.PLAYWRIGHT ?? 'playwright');
 const [,, url, out, w = '390', h = '844'] = process.argv;
 const browser = await chromium.launch();
@@ -116,6 +117,18 @@ const doNext = async (name) => {
   else if (await has('Back to today')) { await tap('Back to today'); await page.clock.runFor(1500); }
 };
 
+/** The map: opens on the region at where Dan is; tap each light in turn; look closer; back out. */
+const mapWalk = async (name) => {
+  await tap('Map'); await page.waitForTimeout(2500); await shot(name + '-region', 3500);
+  const n = await page.locator('circle.node').count();
+  for (let k = 0; k < n; k++) { await page.locator('circle.node').nth(k).click(); await shot(`${name}-tap-${k}`, 900); }
+  await page.locator('circle.node[data-kind="here"]').first().click();
+  if (await has('Look closer')) { await tap('Look closer'); await page.waitForTimeout(2500); await shot(name + '-close', 3500);
+    const m = await page.locator('circle.node').count();
+    if (m > 1) { await page.locator('circle.node').nth(m - 1).click(); await shot(name + '-close-tap', 900); }
+    await tap('See the whole region'); await page.clock.runFor(1200); }
+  await tap('Today'); await page.clock.runFor(2500);
+};
 await shot('today', 2500);
 /* the Course: Begin opens the run set to its hour; a breather; enough */
 await tap('Begin'); await shot('runset', 2000);
@@ -127,7 +140,7 @@ await doNext('d1-b');
 await doNext('d1-c');
 await shot('today-complete', 2500);
 const campDay1 = true;
-await tap('Map'); await shot('map-close', 1500); await tap('Region'); await shot('map-region', 1500); await tap('Today'); await page.clock.runFor(2500);
+await mapWalk('map');
 if (await has('Records')) {
   await tap('Records'); await shot('records', 1200);
   const r = page.locator('button.row').first();
@@ -151,6 +164,7 @@ for (let d = 2; d <= 24 && !cut; d++) {
   if (!cut) await camp(`d${d}`, d === 2);
 }
 if (!cut) errors.push('the first word was never cut');
+await mapWalk('map-late');
 await tap('Records'); await page.clock.runFor(800); await tap('Marks'); await shot('marks', 1500);
 const openMark = page.locator('.cell .cap.new').first();
 if (await openMark.count()) { await openMark.click(); await shot('marks-open', 800); }
