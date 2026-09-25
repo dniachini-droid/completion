@@ -167,8 +167,9 @@ describe('Camp, bedtime and the morning', () => {
     expect(p.view().night).toEqual({ kept: true, beat: 'b-w1.camp' });
     p.next().do({ do: 'open' });
     const v = p.view();
-    expect(v.morning?.beat).toBe('b-w1.morning');
-    expect(v.morning?.find).not.toBeNull();   /* a morning that confirms nothing brings a find too */
+    /* week 1's camp has no morning line of its own (its morning id is the story's opening, never replayed); the find waits */
+    expect(v.morning?.beat).toBeNull();
+    expect(v.morning?.find).not.toBeNull();
     expect(v.suggested).toBe('normal');
     expect(v.suggestedBy).toBe('bedtime');
     p.do({ do: 'seen', what: 'morning', ref: v.morning!.seq });
