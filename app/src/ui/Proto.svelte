@@ -5,6 +5,13 @@
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
   import { back } from './back.svelte';
+  import { platform } from '../platform';
+
+  /* the phone's own reading of each time the app went to the background during a delve (D-094's test on TestFlight) */
+  let leaves = $state<Awaited<ReturnType<typeof platform.delve.log>>>([]);
+  if (platform.app) void platform.delve.log().then(l => (leaves = l));
+  const how = { locked: t('proto.leave.locked'), left: t('proto.leave.left'), unsure: t('proto.leave.unsure') };
+  const hhmm = (ms: number) => new Date(ms).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
   let { go }: { go: Go } = $props();
   let confirm = $state(false);
@@ -30,6 +37,14 @@
       <span>{game.proto.rehearsal ? t('proto.rehearsal.stop') : t('proto.rehearsal.start')}</span>
     </button>
     <button class="btn-quiet full" onclick={wipe}><span>{confirm ? t('proto.reset.confirm') : t('proto.reset')}</span></button>
+    {#if platform.app}
+      <div class="label-line">{t('proto.leave.title')}</div>
+      <p class="soft">{t('proto.leave.about')}</p>
+      <ul class="leaves">
+        {#each leaves as l}<li><span class="at">{hhmm(l.at)}</span> {how[l.how]}{l.signs.length ? ` (${l.signs.join(', ')})` : ''}</li>
+        {:else}<li>{t('proto.leave.none')}</li>{/each}
+      </ul>
+    {/if}
   </section>
 </div>
 
@@ -38,4 +53,7 @@
   .label-line { margin-top: 18px; }
   .say { color: var(--ink-2); }
   button.home { color: var(--ink-2); }
+  .leaves { list-style: none; margin: 0; padding: 0; font-size: 14px; color: var(--ink-2); }
+  .leaves li { padding: 3px 0; }
+  .leaves .at { color: var(--ink-3); font-variant-numeric: tabular-nums; }
 </style>

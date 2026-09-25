@@ -1,8 +1,8 @@
-import { Capacitor } from '@capacitor/core';
+import { Capacitor, registerPlugin } from '@capacitor/core';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { Haptics as CapHaptics, ImpactStyle } from '@capacitor/haptics';
 import { Preferences } from '@capacitor/preferences';
-import type { Platform } from './types';
+import type { Delve, Panel, Platform } from './types';
 import { sound } from './chime';
 
 /* Prototype storage. On the web link: the browser's own. The fact log is the real save's shape; it moves to SQLite
@@ -26,8 +26,27 @@ async function readKept() {
   for (const key of keys) { const { value } = await Preferences.get({ key }); if (value !== null) kept.set(key, value); }
 }
 
+/* The app's own native part (app/ios/App/App/DelvePlugin.swift): the lock-screen panel, and telling a lock from
+   going into another app, which only the phone can do (D-094, D-095). */
+interface DelvePlugin {
+  show(p: Panel): Promise<void>;
+  end(): Promise<void>;
+  watch(o: { on: boolean; alerts: string[] }): Promise<void>;
+  take(): Promise<{ at?: number }>;
+  log(): Promise<{ entries: { at: number; how: 'locked' | 'left' | 'unsure'; signs: string[] }[] }>;
+}
+const Native = registerPlugin<DelvePlugin>('Delve');
+const nativeDelve: Delve & { first: number | null } = {
+  first: null,
+  panel(p) { void (p ? Native.show(p) : Native.end()).catch(() => {}); },
+  watch(on, alerts) { void Native.watch({ on, alerts: alerts.map(String) }).catch(() => {}); },
+  async take() { try { return (await Native.take()).at ?? null; } catch { return null; } },
+  async log() { try { return (await Native.log()).entries; } catch { return []; } },
+};
+
 const native: Platform = {
-  store: nativeStore, sound, now: () => new Date(), ready: readKept, app: true,
+  store: nativeStore, sound, now: () => new Date(), app: true, delve: nativeDelve,
+  ready: async () => { await readKept(); nativeDelve.first = await nativeDelve.take(); },
   notifier: {
     locked: true,
     async permit() {
@@ -43,9 +62,20 @@ const native: Platform = {
   haptics: { tick: () => CapHaptics.impact({ style: ImpactStyle.Light }), ring: () => CapHaptics.vibrate({ duration: 450 }) },
 };
 
+/* In a browser a lock and another tab can't be told apart: hiding the page during a delve pauses it (D-094). No panel. */
+let watching = false, hiddenAt: number | null = null;
+document.addEventListener('visibilitychange', () => { if (document.hidden && watching) hiddenAt = Date.now(); });
+const webDelve: Delve = {
+  first: null,
+  panel() {},
+  watch(on) { watching = on; },
+  async take() { const at = hiddenAt; hiddenAt = null; return at; },
+  async log() { return []; },
+};
+
 /* In a browser (the web link, tests): the end chimes if the page is open, and shows when you come back. */
 const web: Platform = {
-  store, sound, now: () => new Date(), ready: async () => {}, app: false,
+  store, sound, now: () => new Date(), ready: async () => {}, app: false, delve: webDelve,
   notifier: { locked: false, permit: async () => false, at: async () => {}, cancel: async () => {} },
   haptics: {
     tick: async () => { try { navigator.vibrate?.(8); } catch { /* */ } },

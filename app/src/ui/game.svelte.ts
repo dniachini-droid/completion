@@ -3,6 +3,7 @@
  * Rules live in core; this file only reads the clock, keeps the save and schedules the phone's alerts.
  */
 import { act, alertsAfter, see, settle, type Command } from '../core/game';
+import { BREATHER_MIN } from '../core/run';
 import { epochOf, momentOf, type Moment } from '../core/time';
 import type { Fact } from '../core/types';
 import { content } from '../content/world';
@@ -22,6 +23,8 @@ function loadProto(): Proto {
   return { rehearsal: false, anchorReal: 0, anchorFake: 0 };
 }
 export const REHEARSAL_SPEED = 60;
+/** The delve's alerts' ids on the phone: one per delve and breather end (alerts). */
+const ALERT_IDS = Array.from({ length: 24 }, (_, i) => 100 + i);
 
 class Game {
   proto = $state<Proto>(loadProto());
@@ -33,23 +36,39 @@ class Game {
   constructor() {
     this.now = this.clock();
     this.facts = this.load();
+    /* the phone closed the app while Dan was in another one: that time is taken off first (D-094) */
+    if (platform.delve.first !== null) this.away(platform.delve.first);
     this.append(settle(this.facts, content, this.now));
     this.do({ do: 'open' });
     this.#ticker = window.setInterval(() => this.tick(), 250);
-    document.addEventListener('visibilitychange', () => { if (!document.hidden) this.wake(); });
-    window.addEventListener('focus', () => this.wake());
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) void this.wake(); });
+    window.addEventListener('focus', () => void this.wake());
+    this.native();
   }
 
   /** Counts each return to the app that began a new game day, so the screens can show what waits (App.svelte). */
   woke = $state(0);
-  /** Back from the background (the app is rarely closed on a phone): the clock's facts, and a new day's opening, with
-      its morning, week close, welcome back and story week, exactly as a cold start would (review finding, D-080). */
-  wake() {
+  #waking: Promise<void> | null = null;
+  /** Back from the background (the app is rarely closed on a phone): the time spent in another app taken off the
+      delve (D-094), then the clock's facts, and a new day's opening, with its morning, week close, welcome back and
+      story week, exactly as a cold start would (review finding, D-080). */
+  wake() { return (this.#waking ??= this.#wake().finally(() => { this.#waking = null; })); }
+  async #wake() {
+    const left = await platform.delve.take();
     this.now = this.clock();
+    if (left !== null) this.away(left);
     this.append(settle(this.facts, content, this.now));
     const today = this.view.day;
     if (!this.facts.some(f => f.type === 'opened' && f.day === today)) { this.do({ do: 'open' }); this.woke++; }
     else this.tick();
+    this.native();
+  }
+
+  /** Dan went into another app at `leftAt` (the phone's ms) and is back now: the delve paused where he left (D-094).
+      The phone silenced the delve's alerts when he left, so they are set again from what is true now. */
+  away(leftAt: number) {
+    this.do({ do: 'away', from: this.gameMs(leftAt), to: this.clockMs() });
+    void this.alerts();
   }
 
   /** A job as Dan has it now (his edits and satchel lines included). */
@@ -58,10 +77,7 @@ class Game {
   get saveKey() { return this.proto.rehearsal ? 'save.rehearsal' : 'save.v1'; }
 
   /** The phone's clock, or the rehearsal's quick one. */
-  clockMs(): number {
-    const real = platform.now().getTime(), p = this.proto;
-    return p.rehearsal ? p.anchorFake + (real - p.anchorReal) * REHEARSAL_SPEED : real;
-  }
+  clockMs(): number { return this.gameMs(platform.now().getTime()); }
   clock(): Moment { const ms = this.clockMs(); return momentOf(ms, -new Date(ms).getTimezoneOffset()); }
   /** An instant on the game's clock, as a real Date (for alerts, which need the phone's own time). */
   realDate(ms: number): Date {
@@ -113,11 +129,47 @@ class Game {
     const f = act(this.facts, content, cmd, this.now);
     this.append(f);
     if (['startRun', 'skipBreather', 'stepAway', 'resume', 'finishHere'].includes(cmd.do) || (before && !this.view.run)) void this.alerts();
+    this.native();
     return f;
+  }
+
+  /* ---- the delve beyond the page: the lock-screen panel and watching for another app (D-094, D-095) ---- */
+  #shown = '';
+  /** Keeps the phone's panel and its watch in step with the run; only sends when what it shows changes. */
+  native() {
+    const r = this.view.run;
+    const key = r ? `${r.seq}|${r.phase}|${r.k}|${r.phase === 'held' ? r.leftMs : ''}` : '';
+    if (key === this.#shown) return;
+    this.#shown = key;
+    platform.delve.watch(!!r && r.phase !== 'held', ALERT_IDS);
+    if (!r) { platform.delve.panel(null); return; }
+    const L = r.minutes * 60_000, B = BREATHER_MIN * 60_000, nowMs = this.clockMs(), real = (ms: number) => this.realDate(ms).getTime();
+    const delve = (k: number) => r.count === 1 ? t('live.one') : t('live.ofRun', { k: String(k), n: String(r.count) });
+    let label = delve(r.k), start = nowMs - r.doneMs, end = nowMs + r.leftMs, rest = false;
+    let next: { label: string; start: number; end: number } | null = null;
+    if (r.phase === 'breather') {
+      label = t('live.breather'); rest = true;
+      start = nowMs - (B - r.breatherLeftMs); end = nowMs + r.breatherLeftMs;
+      next = { label: delve(r.k + 1), start: real(end), end: real(end + L) };
+    } else if (r.k < r.count) next = { label: delve(r.k + 1), start: real(end + B), end: real(end + B + L) };
+    platform.delve.panel({
+      run: r.seq, job: r.job.name, label: r.phase === 'held' ? t('live.paused') : label,
+      start: real(start), end: real(end), rest, paused: r.phase === 'held', left: real(nowMs + r.leftMs) - real(nowMs),
+      fraction: r.phase === 'held' ? r.doneMs / L : 0, hint: t('live.paused.hint'),
+      next, from: t('live.from'), done: t('live.done'),
+      pausedLabel: t('live.paused'),
+    });
+  }
+  /** The phone's clock (ms) as the game's (the rehearsal runs 60 times faster). */
+  gameMs(real: number): number {
+    const p = this.proto;
+    return p.rehearsal ? p.anchorFake + (real - p.anchorReal) * REHEARSAL_SPEED : real;
   }
 
   #minute = 0;
   tick() {
+    /* in the background, or just back and not yet told how long Dan was away: nothing is settled (D-094) */
+    if (document.hidden || this.#waking) return;
     const before = this.view.run;
     /* with no delve running, the clock only matters by the minute: the view is not rebuilt four times a second */
     const m = Math.floor(this.clockMs() / 60_000);
@@ -131,7 +183,7 @@ class Game {
     const f = settle(this.facts, content, this.now);
     this.append(f);
     const after = this.view.run;
-    if (document.hidden) return;
+    this.native();
     /* the end is heard while the page is open (with the phone locked, the app's alert does it) */
     if (f.some(x => x.type === 'stepsGained')) platform.sound.chime('delveEnd');
     else if (before.phase === 'breather' && after?.phase === 'delve') platform.sound.chime('breatherEnd');
@@ -140,7 +192,7 @@ class Game {
   /** One alert per delve and breather end from now on; none while held, none after the run (ARCHITECTURE → the delve's end).
       In a rehearsal they come 60 times sooner, so trial (b) takes seconds, not a whole delve. */
   async alerts() {
-    const ids = Array.from({ length: 24 }, (_, i) => 100 + i);
+    const ids = ALERT_IDS;
     await platform.notifier.cancel(ids);
     const r = this.view.run;
     if (!r || !platform.notifier.locked) return;
@@ -167,6 +219,7 @@ class Game {
     this.append(settle(this.facts, content, this.now));
     this.do({ do: 'open' });
     void this.alerts();   /* the other save's alerts go; this one's come back */
+    this.#shown = '-'; this.native();
   }
   reset() {
     /* even a wipe keeps one copy aside, so a slip can be undone (D-080) */

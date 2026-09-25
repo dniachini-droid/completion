@@ -13,6 +13,9 @@ function player(start = '2026-09-24T09:00:00+01:00') {
     get facts() { return facts; },
     do(cmd: Command) { facts = facts.concat(act(facts, C, cmd, at())); return this; },
     wait(min: number) { now += min * 60_000; facts = facts.concat(settle(facts, C, at())); return this; },
+    /** Time passing with the app asleep in the background: nothing is settled until it wakes. */
+    sleep(min: number) { now += min * 60_000; return this; },
+    get ms() { return now; },
     view() { return see(facts, C, at()); },
     types() { return facts.map(f => f.type); },
   };
@@ -115,6 +118,44 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     expect(p.view().runEnd).toMatchObject({ minutes: 15, how: 'finishedHere', enough: false });
     expect(p.view().walked).toBe(15);
     expect(p.view().done.has('course')).toBe(false);
+  });
+  it('going into another app pauses the delve where Dan left; the time away does not count (D-094)', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'startRun', job: 'course', minutes: 25, count: 2 }).wait(10);
+    const left = p.ms;
+    p.sleep(40).do({ do: 'away', from: left, to: p.ms });
+    expect(p.view().run).toMatchObject({ phase: 'held', k: 1, doneMs: 10 * 60_000, leftMs: 15 * 60_000, away: true });
+    expect(p.facts.filter(f => f.type === 'stepsGained')).toHaveLength(0);
+    expect(p.facts.find(f => f.type === 'delveHeld')!.at).toBe('2026-09-24T09:10:00+01:00');
+    expect(p.view().next).toEqual({ job: 'course', mode: 'carry' });
+    /* Carry on: the delve goes on from where it was */
+    p.do({ do: 'resume' }).wait(5);
+    expect(p.view().run).toMatchObject({ phase: 'delve', doneMs: 15 * 60_000, away: false });
+  });
+  it('left in a breather: the delve after it waits, and the delve before it keeps its step (D-094)', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'startRun', job: 'course', minutes: 25, count: 2 }).wait(27);
+    const left = p.ms;
+    p.sleep(30).do({ do: 'away', from: left, to: p.ms });
+    expect(p.view().run).toMatchObject({ phase: 'held', k: 2, doneMs: 0, away: true });
+    expect(p.facts.filter(f => f.type === 'stepsGained').map(f => f.minutes)).toEqual([25]);
+  });
+  it('back before the breather ran out, or while paused by hand: nothing changes', () => {
+    const a = player().do({ do: 'open' }).do({ do: 'startRun', job: 'course', minutes: 25, count: 2 }).wait(26);
+    const left = a.ms, n = a.facts.length;
+    a.sleep(2).do({ do: 'away', from: left, to: a.ms });
+    expect(a.facts).toHaveLength(n);
+    expect(a.view().run).toMatchObject({ phase: 'breather' });
+    const b = player().do({ do: 'open' }).do({ do: 'startRun', job: 'course', minutes: 25, count: 2 }).wait(5).do({ do: 'stepAway' });
+    const bl = b.ms;
+    b.sleep(20).do({ do: 'away', from: bl, to: b.ms });
+    expect(b.facts.filter(f => f.type === 'delveHeld')).toHaveLength(1);
+    expect(b.view().run).toMatchObject({ phase: 'held', away: false });
+  });
+  it('away for hours: the delve finishes where Dan left, every minute before it kept', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'startRun', job: 'course', minutes: 25, count: 2 }).wait(10);
+    const left = p.ms;
+    p.sleep(5 * 60).do({ do: 'away', from: left, to: p.ms });
+    expect(p.view().run).toBeNull();
+    expect(p.view().runEnd).toMatchObject({ minutes: 10, how: 'finishedHere' });
   });
   it('the clock settles a run that ended while the phone was locked, stamped when it really ended', () => {
     const p = player().do({ do: 'open' }).do({ do: 'startRun', job: 'course', minutes: 25, count: 2 });

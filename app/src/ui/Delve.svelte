@@ -109,11 +109,12 @@
           <button class="btn-quiet" onclick={() => game.do({ do: 'finishHere' })}><span>{t('delve.finishHere')}</span></button>
         </div>
       {:else if run?.phase === 'held'}
-        <div class="label-line centred">{t('delve.paused')}</div>
+        <!-- paused by Pause, or by going into another app: then it says so, and offers Carry on or Finish here (D-094) -->
+        <div class="label-line centred">{run.away ? t('delve.awayLabel') : t('delve.paused')}</div>
         <h2 class="m">{run.job.name}</h2>
-        <p class="say">{t('delve.held.say')}</p>
+        <p class="say">{run.away ? t('delve.away.say') : t('delve.held.say')}</p>
         <button class="btn resting back" onclick={() => game.do({ do: 'resume' })}>
-          <span>{t('delve.back')}</span><span class="tail">{t('delve.back.left', { min: minutesWords(Math.max(1, Math.ceil(run.leftMs / 60000))) })}</span>
+          <span>{run.away ? t('delve.carryOn') : t('delve.back')}</span><span class="tail">{t('delve.back.left', { min: minutesWords(Math.max(1, Math.ceil(run.leftMs / 60000))) })}</span>
         </button>
         <div class="cant"><button class="text-link" onclick={() => game.do({ do: 'finishHere' })}><span>{t('delve.finishHere')}</span></button></div>
       {:else if run?.phase === 'breather'}
