@@ -817,3 +817,11 @@
 - **Alternatives:** an action tray on each row (tried and rejected by Dan: too many buttons); keeping Swap (rejected: tapping a row does the same, directly).
 - **Consequences:** new screen Choose; 7 new rule tests (91 in all); the flow walk taps Delve. Sealed follow-up for the story session: anchor the ambiguous "the lamp" lines.
 - **Reversible:** Yes.
+
+## D-078 — Today follows the week's plan (Dan's report)
+- **Date:** 2026-09-25
+- **Context:** Dan's Friday: the week showed Gym, Order the cat's medication and Tank clean, but Today put the Course first. Today filled the day's size from all his jobs, not only the plan. Dan: "Weekly planner should match up with what the daily plan is… not suggest things I haven't put in the weekly plan."
+- **Decision:** once a week is laid out with Plan my week, Today offers only the jobs the plan puts on that day (appointments as before). The day's size is never more than the plan holds for it (at least one), so a day planned light completes when its planned jobs are done. Anything else is one tap away in "Something else…" (D-077). A week with no Plan my week (only a line or two added) works as before.
+- **Alternatives:** keep filling from other jobs (rejected by Dan).
+- **Consequences:** PLANNER.md's "capacity still sizes the day" now reads: capacity sizes the day, up to what the plan holds. 3 new rule tests.
+- **Reversible:** Yes.

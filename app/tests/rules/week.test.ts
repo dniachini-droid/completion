@@ -360,3 +360,31 @@ describe('After the day’s work, a tap on a job makes it the next one (D-077)',
     expect(p.view().next).toBeNull();
   });
 });
+
+describe('Today follows the week’s plan (Dan, D-078)', () => {
+  it('on a week laid out with Plan my week, Today offers only what the plan puts on the day', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'planWeek', week: MON });
+    for (let d = 0; d < 7; d++) {
+      const v = p.view();
+      const planned = W.weekOf(v.content, p.facts, MON, v.day).days.find(x => x.day === v.day)!.jobs.filter(j => j.entry).map(j => j.job);
+      for (const id of v.slate) expect(planned).toContain(id);
+      if (v.next) expect(planned).toContain(v.next.job);
+      p.next().do({ do: 'open' });
+    }
+  });
+  it('the day is complete once the plan’s jobs for it are done, even if fewer than a Normal day', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'planWeek', week: MON });
+    for (let d = 0; d < 7; d++) {
+      const v = p.view();
+      if (v.slate.length && v.slate.length < 3) {
+        for (const id of v.slate) p.do({ do: 'done', job: id });
+        expect(p.view().complete).toBe(true);
+        return;
+      }
+      p.next().do({ do: 'open' });
+    }
+  });
+  it('without Plan my week, Today works as before', () => {
+    expect(player().do({ do: 'open' }).view().slate).toEqual(['course', 'gym', 'spanish']);
+  });
+});

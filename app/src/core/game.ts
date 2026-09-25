@@ -101,9 +101,19 @@ export function daySize(capacity: Capacity, firstOpen: Moment | null): number {
   if (h >= 14) return Math.max(1, base - 1);
   return base;
 }
-function sizeOn(facts: Fact[], day: string) {
+/** Whether Dan laid this week out with Plan my week: then Today follows the plan (D-078). */
+const planLeads = (facts: Fact[], day: string) => W.planMade(facts, calendarWeek(day));
+/** How many jobs the plan puts on a day (done as planned, or still to do), when the plan leads; else null. */
+function plannedCount(c: Content, facts: Fact[], day: string): number | null {
+  if (!planLeads(facts, day)) return null;
+  return W.weekOf(c, facts, calendarWeek(day), day).days.find(d => d.day === day)!.jobs.filter(j => j.entry).length;
+}
+/** The day's size: from capacity; on a planned week, never more than the plan puts on the day (at least one) (D-078). */
+function sizeOn(facts: Fact[], day: string, c?: Content) {
   const first = onDay(facts, day).find(f => f.type === 'opened');
-  return daySize(capacityOn(facts, day), first ? first.at : null);
+  const size = daySize(capacityOn(facts, day), first ? first.at : null);
+  const n = c ? plannedCount(c, facts, day) : null;
+  return n === null ? size : Math.max(1, Math.min(size, n));
 }
 
 const doneOn = (facts: Fact[], day: string) => new Set(ofType(onDay(facts, day), 'jobDone').map(f => f.job));
@@ -133,7 +143,8 @@ function orderOn(c: Content, facts: Fact[], day: string, clock: string): string[
   const aside = asideOn(facts, day);
   const plan = W.plannedToday(c, facts, day, clock).map(p => p.job).filter(id => !aside.has(id));
   const planned = new Set(plan);
-  const offered = c.jobs.filter(j => offeredOn(c, facts, day, j, planned) && !planned.has(j.id) && !aside.has(j.id));
+  /* a week laid out with Plan my week: Today is the plan, nothing else slipped in (Dan, D-078); "Something else…" is there */
+  const offered = planLeads(facts, day) ? [] : c.jobs.filter(j => offeredOn(c, facts, day, j, planned) && !planned.has(j.id) && !aside.has(j.id));
   const order = [...plan, ...offered.filter(j => !metThisWeek(c, facts, day, j.id)), ...offered.filter(j => metThisWeek(c, facts, day, j.id))].map(j => typeof j === 'string' ? j : j.id);
   for (const s of ofType(onDay(facts, day), 'swapped')) {
     const a = order.indexOf(s.from), b = order.indexOf(s.to);
@@ -238,7 +249,7 @@ function gifts(w: W, c: Content, at: Moment, day: string) {
   };
   /* a place plays the moment it is reached, not held for day complete (Dan, 2026-09-24, D-073) */
   if (!completedOn(w.all, day)) {
-    if (doneOn(w.all, day).size < sizeOn(w.all, day)) { reach(); return; }
+    if (doneOn(w.all, day).size < sizeOn(w.all, day, c)) { reach(); return; }
     w.put({ type: 'dayCompleted' }, at, day);
     const earlier = ofType(onDay(w.all, day), 'arrived').some(a => a.kind === 'place');
     if (reach() === 0 && !earlier) {
@@ -715,7 +726,7 @@ function rawReturn(c: Content, facts: Fact[], doneSeq: number): Return {
 export function see(facts: Fact[], base: Content, now: Moment): View {
   const c = W.live(base, facts);
   const day = gameDay(now), nowMs = epochOf(now), clock = now.slice(11, 16);
-  const capacity = capacityOn(facts, day), size = sizeOn(facts, day);
+  const capacity = capacityOn(facts, day), size = sizeOn(facts, day, c);
   const done = doneOn(facts, day), order = orderOn(c, facts, day, clock);
   /* an appointment planned for today stays on the slate whatever the day's size (P10); the rest fill it in order */
   const planned = W.plannedToday(c, facts, day, clock);
