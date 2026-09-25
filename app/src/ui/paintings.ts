@@ -46,6 +46,30 @@ import pcv_13Url from '../../paint/places/img/pt-cv-13.webp?url';
 import pcv_13Meta from '../../paint/places/img/pt-cv-13.json';
 import pcv_14Url from '../../paint/places/img/pt-cv-14.webp?url';
 import pcv_14Meta from '../../paint/places/img/pt-cv-14.json';
+import ppl_w5_worn_stepsUrl from '../../paint/places/img/pt-pl-w5-worn-steps.webp?url';
+import ppl_w5_worn_stepsMeta from '../../paint/places/img/pt-pl-w5-worn-steps.json';
+import pb_5_BUrl from '../../paint/places/img/pt-b-5.B.webp?url';
+import pb_5_BMeta from '../../paint/places/img/pt-b-5.B.json';
+import pb_7_CUrl from '../../paint/places/img/pt-b-7.C.webp?url';
+import pb_7_CMeta from '../../paint/places/img/pt-b-7.C.json';
+import pcv_15Url from '../../paint/places/img/pt-cv-15.webp?url';
+import pcv_15Meta from '../../paint/places/img/pt-cv-15.json';
+import pcv_03Url from '../../paint/places/img/pt-cv-03.webp?url';
+import pcv_03Meta from '../../paint/places/img/pt-cv-03.json';
+import pcv_04Url from '../../paint/places/img/pt-cv-04.webp?url';
+import pcv_04Meta from '../../paint/places/img/pt-cv-04.json';
+import pcv_05Url from '../../paint/places/img/pt-cv-05.webp?url';
+import pcv_05Meta from '../../paint/places/img/pt-cv-05.json';
+import pcv_07Url from '../../paint/places/img/pt-cv-07.webp?url';
+import pcv_07Meta from '../../paint/places/img/pt-cv-07.json';
+import pcv_08Url from '../../paint/places/img/pt-cv-08.webp?url';
+import pcv_08Meta from '../../paint/places/img/pt-cv-08.json';
+import pcv_09Url from '../../paint/places/img/pt-cv-09.webp?url';
+import pcv_09Meta from '../../paint/places/img/pt-cv-09.json';
+import ppl_w2_above_the_ringUrl from '../../paint/places/img/pt-pl-w2-above-the-ring.webp?url';
+import ppl_w2_above_the_ringMeta from '../../paint/places/img/pt-pl-w2-above-the-ring.json';
+import ppl_w2_box_by_the_cotUrl from '../../paint/places/img/pt-pl-w2-box-by-the-cot.webp?url';
+import ppl_w2_box_by_the_cotMeta from '../../paint/places/img/pt-pl-w2-box-by-the-cot.json';
 
 export interface Painting { url: string; meta: unknown; focus: number; }
 export const paintings: Record<string, Painting> = {
@@ -72,6 +96,18 @@ export const paintings: Record<string, Painting> = {
   'pt-cv-12': { url: pcv_12Url, meta: pcv_12Meta, focus: .37 },
   'pt-cv-13': { url: pcv_13Url, meta: pcv_13Meta, focus: .61 },
   'pt-cv-14': { url: pcv_14Url, meta: pcv_14Meta, focus: .62 },
+  'pt-pl-w5-worn-steps': { url: ppl_w5_worn_stepsUrl, meta: ppl_w5_worn_stepsMeta, focus: .6 },
+  'pt-b-5.B': { url: pb_5_BUrl, meta: pb_5_BMeta, focus: .47 },
+  'pt-b-7.C': { url: pb_7_CUrl, meta: pb_7_CMeta, focus: .44 },
+  'pt-cv-15': { url: pcv_15Url, meta: pcv_15Meta, focus: .49 },
+  'pt-cv-03': { url: pcv_03Url, meta: pcv_03Meta, focus: .5 },
+  'pt-cv-04': { url: pcv_04Url, meta: pcv_04Meta, focus: .5 },
+  'pt-cv-05': { url: pcv_05Url, meta: pcv_05Meta, focus: .5 },
+  'pt-cv-07': { url: pcv_07Url, meta: pcv_07Meta, focus: .5 },
+  'pt-cv-08': { url: pcv_08Url, meta: pcv_08Meta, focus: .5 },
+  'pt-cv-09': { url: pcv_09Url, meta: pcv_09Meta, focus: .5 },
+  'pt-pl-w2-above-the-ring': { url: ppl_w2_above_the_ringUrl, meta: ppl_w2_above_the_ringMeta, focus: .5 },
+  'pt-pl-w2-box-by-the-cot': { url: ppl_w2_box_by_the_cotUrl, meta: ppl_w2_box_by_the_cotMeta, focus: .5 },
 };
 
 /** Frame a painting so its light sits in the open gap between the words (the morning mock-up lifts the lamp the same way).
