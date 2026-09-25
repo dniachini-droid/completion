@@ -50,8 +50,9 @@ export default {
         float dust = smoothstep(.0, .03, e) * (.75 + .5 * grain);
         vec3 dustC = vec3(1.45, 1.4, 1.38) * mix(.8, 1., dust) * (.85 + .3 * fbm(p.xz * 90., 2));
         float rim = smoothstep(.0, .003, e) * (1. - smoothstep(.004, .012 + .006 * grain, e));   /* the dust a little heaped along its edge */
-        dustC *= 1. + .3 * rim;
-        gTint = mix(dustC, vec3(.4, .38, .43), clean);
+        dustC *= 1. + .45 * rim;
+        float streak = 1. - smoothstep(0., w * .7, abs(q.z + .002 * sin(u * 40.)));   /* the bare stone, wiped, a dull sheen along its middle */
+        gTint = mix(dustC, vec3(.55, .52, .56) * (1. + .35 * streak), clean);
         gPolish = clean;
       }
     }
