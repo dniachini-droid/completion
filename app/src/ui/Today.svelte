@@ -80,9 +80,8 @@
       <span class="navs">
         <button class="icon-link" onclick={() => go('map')}><span>{t('map.nav')}</span></button>
         {#if v.story.records.length}<button class="icon-link" onclick={() => go('records')}><span>{t('records.nav')}</span></button>{/if}
-      <button class="icon-link proto" onclick={() => go('proto')}>
-        {#if game.proto.rehearsal}<span class="badge">{t('proto.badge')}</span>{:else}<span>{t('nav.proto')}</span>{/if}
-      </button>
+      <!-- the trial controls live at camp; here only while a rehearsal is on, so it can't be missed (D-080) -->
+      {#if game.proto.rehearsal}<button class="icon-link proto" onclick={() => go('proto')}><span class="badge">{t('proto.badge')}</span></button>{/if}
       </span>
     </div>
     <h1 class="carve lg rise">{v.here.name}</h1>
@@ -112,6 +111,15 @@
           <button class="btn" onclick={carry}>{t('today.carry.go')}</button>
           <button class="btn-quiet" onclick={finish}><span>{t('today.finishHere')}</span></button>
         </div>
+      </div>
+    {:else if v.next?.mode === 'running' && v.run}
+      <!-- a delve running while Dan looks at Today: one way back to it, nothing else (review finding, D-080) -->
+      <div class="next">
+        <div class="label-line lit">{t('today.underWay')}</div>
+        <h2 class="say-lg">{v.run.job.name}</h2>
+        <p class="soft">{t('today.running.say')}</p>
+        <div class="lead"><button class="btn full" onclick={() => go('delve')}>{t('today.running.go')}</button></div>
+        <div class="gap"></div>
       </div>
     {:else if v.next?.mode === 'underWay' && next}
       <div class="next">

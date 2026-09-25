@@ -142,8 +142,11 @@ export function nextStep(s: Story, st: StoryState): Beat | null {
 export function nextPassage(s: Story, st: StoryState): string | null {
   const here = s.passages.filter(p => p.stretch === st.stretch && allMet(st, p.req) && !(p.until && met(st, p.until)));
   if (!here.length) return null;
-  const used = st.passagesShown.filter(id => here.some(p => p.id === id)).length;
-  return here[used % here.length].id;
+  /* the first not yet shown; once all have been, the one shown longest ago (a list that grows never repeats early) */
+  const fresh = here.find(p => !st.passagesShown.includes(p.id));
+  if (fresh) return fresh.id;
+  const last = (id: string) => st.passagesShown.lastIndexOf(id);
+  return here.reduce((a, b) => (last(b.id) < last(a.id) ? b : a)).id;
 }
 
 /* ---------- Keys ---------- */

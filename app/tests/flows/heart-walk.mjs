@@ -161,7 +161,9 @@ const mapWalk = async (name) => {
 };
 await shot('today', 2500);
 /* the Course: Begin opens the run set to its hour; a breather; enough */
-await start(); await shot('runset', 2000);
+/* the day's plan leads Today (D-080); the Course is chosen through "Something else…" (D-077) */
+await tap('Something else…'); await shot('choose', 1000);
+await page.locator('.body button.row', { hasText: 'Course' }).first().click(); await shot('runset', 2000);
 await tap('Begin'); await shot('delve', 10 * 60_000);
 await ff(26 * 60_000); await shot('breather', 2000);
 await ff(30 * 60_000); await shot('course-enough', 2000); await guessIfAny('course');

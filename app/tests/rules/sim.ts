@@ -39,7 +39,8 @@ export function sim(start = '2026-09-28T08:00:00+01:00', pick: (m: Mark) => stri
       const v = see(facts, C, at());
       if (v.complete && kind !== 'high') break;
       if (v.complete && guard > 8) break;
-      const job = v.next?.job ?? v.order.find(j => !v.done.has(j));
+      /* past the day's plan, a High day's player chooses more work himself ("Something else…", D-080) */
+      const job = v.next?.job ?? v.order.find(j => !v.done.has(j)) ?? (kind === 'high' ? C.jobs.find(j => !v.done.has(j.id) && !j.item)?.id : undefined);
       if (!job) break;
       const j = C.jobs.find(x => x.id === job)!;
       if (j.delve) { run({ do: 'startRun', job, minutes: 25, count: Math.ceil((j.enoughAt ?? j.length) / 25) }); wait((j.enoughAt ?? j.length) * 1.3 + 10); if (!see(facts, C, at()).done.has(job)) run({ do: 'done', job }); }

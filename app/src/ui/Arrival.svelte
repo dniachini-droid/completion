@@ -32,7 +32,7 @@
   function pick(i: number) { if (!a) return; game.do({ do: 'choose', beat: a.id, pick: i }); go('records', a.records[Math.min(i, a.records.length - 1)]); }
   /* after the cut: through the lintel to the stair (D-039), back to today, or later (the cut waits, unseen) */
   function cutLeave(to: 'through' | 'today' | 'later') {
-    if (to === 'later') { go('today'); return; }
+    if (to === 'later') { go('today', 'stay'); return; }
     if (to === 'through' && v.arrival) { game.do({ do: 'seen', what: 'arrival', ref: v.arrival.seq }); go('stair'); return; }
     leave('today');
   }
@@ -42,7 +42,7 @@
       game.do({ do: 'seen', what: 'arrival', ref: v.arrival.seq });
       /* a big day reached more than one place: each plays in turn */
       const more = game.view.arrival;
-      if (more && to === 'today') { go('arrival', more.seq); return; }
+      if (more) { go('arrival', more.seq); return; }   /* each unseen place in turn, whichever way out (D-080) */
     }
     /* Keep going: Dan chooses what next (D-077) */
     if (to === 'set') go('choose');

@@ -102,11 +102,13 @@ export function daySize(capacity: Capacity, firstOpen: Moment | null): number {
   return base;
 }
 /** Whether Dan laid this week out with Plan my week: then Today follows the plan (D-078). */
-const planLeads = (facts: Fact[], day: string) => W.planMade(facts, calendarWeek(day));
+const planLeads = (facts: Fact[], day: string) => W.planOf(facts, calendarWeek(day)) !== null;
 /** How many jobs the plan puts on a day (done as planned, or still to do), when the plan leads; else null. */
 function plannedCount(c: Content, facts: Fact[], day: string): number | null {
   if (!planLeads(facts, day)) return null;
-  return W.weekOf(c, facts, calendarWeek(day), day).days.find(d => d.day === day)!.jobs.filter(j => j.entry).length;
+  /* a job set aside ("Not today") no longer counts toward the day (review finding, D-080) */
+  const aside = asideOn(facts, day);
+  return W.weekOf(c, facts, calendarWeek(day), day).days.find(d => d.day === day)!.jobs.filter(j => j.entry && (j.done || !aside.has(j.job))).length;
 }
 /** The day's size: from capacity; on a planned week, never more than the plan puts on the day (at least one) (D-078). */
 function sizeOn(facts: Fact[], day: string, c?: Content) {
@@ -144,7 +146,10 @@ function orderOn(c: Content, facts: Fact[], day: string, clock: string): string[
   const plan = W.plannedToday(c, facts, day, clock).map(p => p.job).filter(id => !aside.has(id));
   const planned = new Set(plan);
   /* a week laid out with Plan my week: Today is the plan, nothing else slipped in (Dan, D-078); "Something else…" is there */
-  const offered = planLeads(facts, day) ? [] : c.jobs.filter(j => offeredOn(c, facts, day, j, planned) && !planned.has(j.id) && !aside.has(j.id));
+  /* on a planned week, a job Dan chose himself today (begun, delved on or tapped) joins the list after the plan's (D-080) */
+  const chosen = [...new Set(onDay(facts, day).flatMap(f => f.type === 'jobBegun' || f.type === 'delveStarted' || f.type === 'picked' ? [f.job] : []))]
+    .filter(id => !planned.has(id) && !aside.has(id) && c.jobs.some(j => j.id === id)).map(id => c.jobs.find(j => j.id === id)!);
+  const offered = planLeads(facts, day) ? chosen : c.jobs.filter(j => offeredOn(c, facts, day, j, planned) && !planned.has(j.id) && !aside.has(j.id));
   const order = [...plan, ...offered.filter(j => !metThisWeek(c, facts, day, j.id)), ...offered.filter(j => metThisWeek(c, facts, day, j.id))].map(j => typeof j === 'string' ? j : j.id);
   for (const s of ofType(onDay(facts, day), 'swapped')) {
     const a = order.indexOf(s.from), b = order.indexOf(s.to);
@@ -166,7 +171,9 @@ function asideOn(facts: Fact[], day: string): Set<string> {
 /** A job begun away from the phone (Begin on a no-timer job) and not yet done today. */
 function underWayOn(facts: Fact[], day: string): string | null {
   const done = doneOn(facts, day);
-  const begun = ofType(onDay(facts, day), 'jobBegun').filter(f => f.from === 'app').map(f => f.job);
+  /* a delve stopped early is not "under way": its job simply stays on the list (review finding, D-080) */
+  const delved = new Set(ofType(onDay(facts, day), 'delveStarted').map(f => f.job));
+  const begun = ofType(onDay(facts, day), 'jobBegun').filter(f => f.from === 'app' && !delved.has(f.job)).map(f => f.job);
   for (let i = begun.length - 1; i >= 0; i--) if (!done.has(begun[i])) return begun[i];
   return null;
 }
@@ -312,6 +319,19 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string) {
 const reachesEnough = (all: Fact[], day: string, j: Job) =>
   j.doneBy === 'enough' && !doneOn(all, day).has(j.id) && delveMinutesOn(all, day, j.id) >= enoughOf(j);
 
+/** Finish a run at an instant: every minute counts; a repeating delve at its enough is done. */
+function finishRun(w: W, c: Content, r: NonNullable<ReturnType<typeof activeRun>>, atMs: number, at: Moment) {
+  const s = runAt(r.plan, r.marks, atMs), rday = r.fact.day, j = jobOf(c, r.fact.job);
+  const part = s.phase === 'delve' || s.phase === 'held' ? Math.floor(s.doneMs / MIN) : 0;
+  const counted = s.ends.length * r.plan.minutes + part;
+  if (part > 0) w.put({ type: 'stepsGained', minutes: part, job: j.id, run: r.fact.seq }, at, rday);
+  w.put({ type: 'delveEnded', job: j.id, minutes: counted, how: 'finishedHere', run: r.fact.seq }, at, rday);
+  if (reachesEnough(w.all, rday, j)) markDoneIn(w, c, j.id, at, rday);
+  else gifts(w, c, at, rday);
+}
+/** A delve left stepped-away this long ends by itself where it was paused (review finding, D-080). */
+export const HOLD_MAX = 3 * 60 * MIN;
+
 /** Write down whatever the clock has made due in a run: each delve's step, enough, the run's end. */
 function settleIn(w: W, c: Content, nowMs: number) {
   const r = activeRun(w.all);
@@ -330,6 +350,12 @@ function settleIn(w: W, c: Content, nowMs: number) {
       && !ofType(onDay(w.all, day), 'findGiven').some(f => f.why === 'switching')) giveFind(w, c, 'switching', at, day);
     if (reachesEnough(w.all, day, j)) markDoneIn(w, c, j.id, at, day);
     else gifts(w, c, at, day);
+  }
+  /* stepped away and never back: after three hours, or once its day is over, it finishes where it was paused, on its day */
+  const hold = r.marks[r.marks.length - 1];
+  if (s.phase === 'held' && hold?.kind === 'hold' && (nowMs - hold.at > HOLD_MAX || gameDay(momentOf(nowMs, w.off)) !== r.fact.day)) {
+    finishRun(w, c, activeRun(w.all)!, hold.at, momentOf(hold.at, w.off));
+    return;
   }
   if (s.phase === 'ended' && s.how === 'ranOut') {
     w.put({ type: 'delveEnded', job: j.id, minutes: Math.round(s.countedMs / MIN), how: 'ranOut', run: r.fact.seq }, momentOf(s.endedAt!, w.off), day);
@@ -444,6 +470,9 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       const was = S.storyState(w.all, c.story).week, first = !onDay(w.all, day).some(f => f.type === 'opened');
       w.put({ type: 'opened' });
       if (first) welcomeBack(w, c, now, day);
+      /* a week with no plan yet is laid out at its first opening, from today on, so the Week and Today always agree;
+         Dan changes it as he likes (Dan, D-078; review finding, D-080) */
+      if (W.planOf(w.all, calendarWeek(day)) === null) w.put({ type: 'planMade', week: calendarWeek(day), entries: W.planWeek(c, w.all, calendarWeek(day), day) });
       storyClock(w, c, now, day); floor(w, c, now, day);
       weekClose(w, c, now, day, was);
       morningAfter(w, c, now, day);
@@ -496,15 +525,7 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     case 'resume': if (v.run?.phase === 'held') w.put({ type: 'delveResumed' }); break;
     case 'finishHere': {
       const r = activeRun(w.all);
-      if (!r) break;
-      const s = runAt(r.plan, r.marks, nowMs), rday = r.fact.day, j = jobOf(c, r.fact.job);
-      const part = s.phase === 'delve' || s.phase === 'held' ? Math.floor(s.doneMs / MIN) : 0;
-      const counted = s.ends.length * r.plan.minutes + part;
-      if (part > 0) w.put({ type: 'stepsGained', minutes: part, job: j.id, run: r.fact.seq }, now, rday);
-      w.put({ type: 'delveEnded', job: j.id, minutes: counted, how: 'finishedHere', run: r.fact.seq }, now, rday);
-      /* Finish here counts every minute; a repeating delve at its enough is done */
-      if (reachesEnough(w.all, rday, j)) markDoneIn(w, c, j.id, now, rday);
-      else gifts(w, c, now, rday);
+      if (r) finishRun(w, c, r, nowMs, now);
       break;
     }
     case 'done':
@@ -757,7 +778,9 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   const planned = W.plannedToday(c, facts, day, clock);
   const times: Record<string, string> = {};
   for (const p of planned) if (p.time) times[p.job] = p.time;
-  const slate = order.slice(0, size);
+  /* on a planned week Today shows every job planned for the day, as the Week does; capacity only sets how many make
+     the day complete (review finding, D-080). Without a plan, capacity sizes the list as before. */
+  const slate = planLeads(facts, day) ? order.slice() : order.slice(0, size);
   for (const id of Object.keys(times)) {
     if (slate.includes(id)) continue;
     let k = slate.length - 1;

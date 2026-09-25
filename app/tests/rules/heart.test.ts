@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { act, daySize, presetRun, see, settle, type Command } from '../../src/core/game';
 import type { Fact } from '../../src/core/types';
+import * as W from '../../src/core/week';
 import { content as C } from '../../src/content/world';
 
 /** A tiny player: a log, and a phone clock on the same day in British Summer Time. */
@@ -18,11 +19,12 @@ function player(start = '2026-09-24T09:00:00+01:00') {
 }
 
 describe('Today', () => {
-  it('a Normal day holds three jobs; the first is next', () => {
+  it('the first opening lays the week out, and Today is the day’s plan; the first job is next (D-080)', () => {
     const v = player().do({ do: 'open' }).view();
-    expect(v.size).toBe(3);
-    expect(v.slate).toEqual(['course', 'gym', 'spanish']);
-    expect(v.next).toEqual({ job: 'course', mode: 'begin' });
+    expect(v.size).toBeLessThanOrEqual(3);
+    const planned = W.weekOf(v.content, [], '2026-09-21', v.day) && W.plannedToday(v.content, player().do({ do: 'open' }).facts, v.day, '09:00').map(p => p.job);
+    expect([...v.slate].sort()).toEqual([...planned].sort());
+    expect(v.next).toEqual({ job: v.slate[0], mode: 'begin' });
     expect(v.here.id).toBeNull();   /* before the first place: the way in */
   });
   it('day sizes: Low 2, Normal 3, High 5; opened late, one fewer; in the evening, one', () => {
@@ -32,10 +34,12 @@ describe('Today', () => {
     expect(daySize('high', '2026-09-24T19:10:00+01:00')).toBe(1);
     expect(daySize('normal', '2026-09-25T02:00:00+01:00')).toBe(1);
   });
-  it('Swap brings in a job from beyond the slate', () => {
-    const p = player().do({ do: 'open' }).do({ do: 'swap' });
-    expect(p.view().slate).toEqual(['lesson', 'gym', 'spanish']);
-    expect(p.view().next?.job).toBe('lesson');
+  it('Swap brings in the next job of the day', () => {
+    const p = player().do({ do: 'open' });
+    const [a, b] = p.view().slate;
+    p.do({ do: 'swap' });
+    expect(p.view().next?.job).toBe(b);
+    expect(p.view().slate).toContain(a);
   });
   it('a job that takes hours opens set to its enough', () => {
     expect(presetRun(C.jobs.find(j => j.id === 'course')!)).toEqual({ minutes: 25, count: 2 });

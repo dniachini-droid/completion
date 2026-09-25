@@ -101,7 +101,7 @@
       {#if run?.phase === 'delve'}
         <h2>{run.job.name}</h2>
         <p class="soft of">{ofLine}</p>
-        <p class="say away">{platform.notifier.locked ? t('delve.away.locked') : t('delve.away.web')}</p>
+        <p class="say away">{platform.notifier.locked ? t(game.alertsOff ? 'delve.away.noAlerts' : 'delve.away.locked') : t('delve.away.web')}</p>
         <div class="two-quiet">
           <button class="btn-quiet" onclick={() => game.do({ do: 'stepAway' })}><span>{t('delve.stepAway')}</span></button>
           <button class="btn-quiet" onclick={() => game.do({ do: 'finishHere' })}><span>{t('delve.finishHere')}</span></button>

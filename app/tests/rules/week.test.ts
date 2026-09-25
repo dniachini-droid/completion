@@ -65,8 +65,11 @@ describe('Plan my week (PLANNER.md, fixed rules)', () => {
 });
 
 describe('How the week drives Today', () => {
-  it('without a plan, Today works exactly as before', () => {
-    expect(player().do({ do: 'open' }).view().slate).toEqual(['course', 'gym', 'spanish']);
+  it('a week with no plan is laid out at its first opening, from that day on (D-080)', () => {
+    const p = player().do({ do: 'open' });
+    expect(W.planOf(p.facts, MON)).not.toBeNull();
+    expect(p.facts.filter(f => f.type === 'planMade')).toHaveLength(1);
+    expect(p.do({ do: 'open' }).facts.filter(f => f.type === 'planMade')).toHaveLength(1);   /* once */
   });
   it('Today starts from today’s plan', () => {
     const v = player().do({ do: 'open' }).do({ do: 'planWeek', week: MON }).view();
@@ -110,8 +113,6 @@ describe('How the week drives Today', () => {
   });
   it('the forecast names days only from the plan, and only doing moves Dan', () => {
     const p = player().do({ do: 'open' });
-    expect(p.view().forecast).toEqual([]);
-    p.do({ do: 'planWeek', week: MON });
     const f = p.view().forecast;
     expect(f.length).toBeGreaterThan(0);
     expect(p.view().walked).toBe(0);
@@ -265,7 +266,8 @@ describe('Absence and the deep push', () => {
     expect(see(log, C, at).deepOffer).toBe(false);
     let t = Date.parse(at);
     for (let k = 0; k < 3; k++) {
-      const job = see(log, C, new Date(t + 3_600_000).toISOString().slice(0, 19) + '+01:00').next!.job;
+      const v2 = see(log, C, new Date(t + 3_600_000).toISOString().slice(0, 19) + '+01:00');
+      const job = v2.next?.job ?? C.jobs.find(j => !v2.done.has(j.id) && !j.item)!.id;   /* past the plan: Dan's own choice */
       t += 90 * 60_000;
       log = log.concat(act(log, C, { do: 'done', job }, new Date(t + 3_600_000).toISOString().slice(0, 19) + '+01:00'));
     }
@@ -274,22 +276,25 @@ describe('Absence and the deep push', () => {
 });
 
 describe('Choosing what to do: Not today, and a delve on anything (D-077)', () => {
-  it('Not today takes a job off today’s list; the next in order takes its place; nothing is earned or lost', () => {
+  it('Not today takes a job off today’s list; the day then needs one job fewer; nothing is earned or lost', () => {
     const p = player().do({ do: 'open' });
-    const before = p.view(), walked = before.walked;
-    p.do({ do: 'setAside', job: 'course' });
+    const before = p.view(), walked = before.walked, id = before.slate[0];
+    p.do({ do: 'setAside', job: id });
     const v = p.view();
-    expect(v.slate).not.toContain('course');
-    expect(v.slate).toHaveLength(before.slate.length);
-    expect(v.next?.job).not.toBe('course');
+    expect(v.slate).not.toContain(id);
+    expect(v.next?.job).not.toBe(id);
     expect(v.walked).toBe(walked);
     expect(v.complete).toBe(false);
-    /* tomorrow it is offered again */
-    expect(p.next().do({ do: 'open' }).view().order).toContain('course');
+    for (const x of v.slate) p.do({ do: 'done', job: x });
+    expect(p.view().complete).toBe(true);   /* the rest of the day's plan completes it (review finding, D-080) */
   });
   it('a job set aside and then begun comes back to the list', () => {
-    const p = player().do({ do: 'open' }).do({ do: 'setAside', job: 'course' }).do({ do: 'startRun', job: 'course', minutes: 25, count: 1 });
-    expect(p.view().order).toContain('course');
+    const p = player().do({ do: 'open' });
+    const id = p.view().slate[0];
+    p.do({ do: 'setAside', job: id });
+    expect(p.view().order).not.toContain(id);
+    p.do({ do: 'startRun', job: id, minutes: 25, count: 1 });
+    expect(p.view().order).toContain(id);
   });
   it('a job done or running cannot be set aside', () => {
     const p = player().do({ do: 'open' }).do({ do: 'done', job: 'gym' }).do({ do: 'setAside', job: 'gym' });
@@ -323,8 +328,8 @@ describe('A guess is asked after its marks are seen (D-077)', () => {
   it('when a job’s Done reaches a place, the guess its return brings is asked on the arrival, not before it', () => {
     const p = player().do({ do: 'open' });
     let checked = 0;
-    for (let d = 0; d < 10 && !checked; d++) {
-      for (const id of p.view().slate) {
+    for (let d = 0; d < 21 && !checked; d++) {
+      for (const id of C.jobs.filter(j => !j.item).map(j => j.id)) {
         if (p.view().done.has(id)) continue;
         const f = act(p.facts, C, { do: 'done', job: id }, p.at);
         p.do({ do: 'done', job: id });
@@ -384,7 +389,46 @@ describe('Today follows the week’s plan (Dan, D-078)', () => {
       p.next().do({ do: 'open' });
     }
   });
-  it('without Plan my week, Today works as before', () => {
-    expect(player().do({ do: 'open' }).view().slate).toEqual(['course', 'gym', 'spanish']);
+  it('a job Dan chose himself today stays on the list after the plan’s (D-080)', () => {
+    const p = player().do({ do: 'open' });
+    const other = C.jobs.find(j => !p.view().slate.includes(j.id) && !j.item)!.id;
+    p.do({ do: 'startRun', job: other, minutes: 25, count: 1 }).wait(10).do({ do: 'finishHere' });
+    expect(p.view().slate).toContain(other);
+  });
+});
+
+describe('A delve left paused ends by itself (review finding, D-080)', () => {
+  it('stepped away and never back: after three hours it finishes where it was paused, and Today is free', () => {
+    const p = player().do({ do: 'open' });
+    const job = p.view().slate[0];
+    p.do({ do: 'startRun', job, minutes: 25, count: 1 }).wait(10).do({ do: 'stepAway' }).wait(200);
+    const v = p.view();
+    expect(v.run).toBeNull();
+    const end = p.facts.find(f => f.type === 'delveEnded') as { minutes: number; day: string } | undefined;
+    expect(end?.minutes).toBe(10);
+    expect(v.next?.mode).not.toBe('carry');
+  });
+  it('a stopped delve never leaves its job "under way" (review finding, D-080)', () => {
+    const p = player().do({ do: 'open' });
+    const job = p.view().slate[0];
+    p.do({ do: 'startRun', job, minutes: 25, count: 1 }).wait(5).do({ do: 'finishHere' });
+    expect(p.view().underWay).toBeNull();
+  });
+});
+
+describe('The planner’s own bugs (review findings, D-080)', () => {
+  it('taking a planned job off the week never deletes a line Dan added himself', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addToWeek', line: 'Fix the bike', day: '2026-09-30' });
+    const made = W.planOf(p.facts, MON)!.find(e => e.id.startsWith('pa-') === false)!;
+    p.do({ do: 'movePlan', entry: made.id, day: null });
+    expect(W.planOf(p.facts, MON)!.some(e => e.id.startsWith('pa-'))).toBe(true);
+  });
+  it('a missed appointment falls away; it is never moved to another day at its old time', () => {
+    const p = player().do({ do: 'open' });
+    const appt = W.planOf(p.facts, MON)!.find(e => e.time)!;
+    p.next(W.daysBetween(MON, appt.day) + 1).do({ do: 'open' });
+    const v = p.view();
+    const wk = W.weekOf(v.content, p.facts, MON, v.day);
+    expect(wk.days.filter(d => d.day >= v.day).some(d => d.jobs.some(j => j.job === appt.job && j.time === appt.time && !j.done))).toBe(false);
   });
 });

@@ -3,3 +3,4 @@
 export type Screen = 'today' | 'set' | 'delve' | 'step' | 'arrival' | 'cant' | 'proto' | 'map' | 'records' | 'marks' | 'stair'
   | 'camp' | 'morning' | 'welcome' | 'daybook' | 'week' | 'rhythms' | 'satchel' | 'choose';
 export type Go = (to: Screen, arg?: string | number) => void;
+export interface Back { screen: Screen; arg?: string | number }

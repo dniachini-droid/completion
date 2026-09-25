@@ -82,7 +82,7 @@ export function planOf(facts: Fact[], week: string): PlanEntry[] | null {
     else if (f.type === 'planChanged') {
       const e = made.find(x => x.id === f.entry) ?? added.find(x => x.id === f.entry);
       if (!e) continue;
-      if (f.day === null) { made = made.filter(x => x !== e); added.splice(added.indexOf(e), 1); continue; }
+      if (f.day === null) { made = made.filter(x => x !== e); if (added.includes(e)) added.splice(added.indexOf(e), 1); continue; }
       e.day = f.day;
       if (f.time === null) delete e.time; else if (f.time) e.time = f.time;
     }
@@ -186,7 +186,7 @@ export function weekOf(c: Content, facts: Fact[], week: string, today: string): 
     if (!c.jobs.some(j => j.id === e.job)) continue;
     const dj = at(e.day)?.jobs.find(x => x.done && x.job === e.job && x.entry === null);
     if (e.day <= today && dj) { dj.entry = e.id; if (e.time) dj.time = e.time; continue; }   /* done as planned */
-    if (e.day < today) { released.push(e); continue; }
+    if (e.day < today) { if (!e.time) released.push(e); continue; }   /* a missed appointment falls away (D-080) */
     if (left(e.job) > 0 && !at(e.day)!.jobs.some(x => x.job === e.job && !x.done)) place(e, e.day);   /* past enough, it quietly leaves */
   }
   /* released: the first day from today still below a Normal day's size and without this job; otherwise it falls away */

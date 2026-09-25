@@ -1,15 +1,15 @@
 # Build the app on a cloud Mac and send it to TestFlight (TECH_DECISIONS.md, ARCHITECTURE.md → Build and release).
-# Runs when started by hand, or on a push whose commit message contains [testflight] (Mac minutes are scarce).
+# Runs when started by hand (Actions → TestFlight → Run workflow, on the branch to ship), or on a push to main whose
+# commit message contains [testflight]. Pushes to claude/** branches never build on their own, and there is no monthly
+# rebuild: during the six-week test only a build someone chose may reach Dan's phone (review finding, D-080).
 # Signing: Xcode's cloud-managed distribution certificate, reached with the App Store Connect API key
 # (secrets ASC_KEY_P8, ASC_KEY_ID, ASC_ISSUER_ID, APPLE_TEAM_ID; technical/APPLE_SETUP.md). No certificate files.
 name: TestFlight
 on:
   workflow_dispatch:
   push:
-    branches: ['claude/**', main]
+    branches: [main]
     paths: ['app/**', '.github/workflows/testflight.yml']
-  schedule:
-    - cron: '0 6 1 * *'   # monthly, so a fresh build is always inside TestFlight's 90 days
 concurrency: { group: testflight, cancel-in-progress: false }
 jobs:
   testflight:

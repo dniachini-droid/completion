@@ -90,6 +90,8 @@
       <div class="gap"></div>
     {/if}
   </section>
+  <!-- the trial's controls (rehearsal, starting again): here at camp, out of the day's way (D-080) -->
+  <button class="text-link trial" onclick={() => go('proto')}><span>{t('nav.proto')}</span></button>
 </div>
 
 <style>
@@ -111,4 +113,6 @@
   .after { margin-top: 14px; }
   .gap { height: 12px; }
   button.home { color: var(--ink-2); }
+  .trial { position: absolute; right: 12px; bottom: calc(env(safe-area-inset-bottom) + 4px); z-index: 3; }
+  .trial span { font-size: 12px; letter-spacing: .14em; color: var(--ink-3); }
 </style>
