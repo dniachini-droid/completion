@@ -20,8 +20,8 @@ export default {
   glow: { threshold: .58, k: .6 },
   blur: { px: 1.2, d0: 4, d1: 12, k: .6 },
   lights: [
-    { p: [-2.0, 1.0, ZD - 1.7], c: W, k: .5, r: .8, reach: 3.6, warm: .004, shadow: 1 },  /* the last cup, low on the left: its light raking across the face */
-    { p: [-2.05, 1.72, ZD - .75], c: W, k: .45, r: .6, reach: 3.2, shadow: 1 },                /* and along the count, grazing: every empty stroke draws itself */
+    { p: [-2.6, .8, ZD - 2.4], c: W, k: .3, r: .8, reach: 3.6, warm: .004, shadow: 1 },  /* the last cup, low on the left: its light raking across the face */
+    { p: [-2.1, 1.75, ZD - .66], c: W, k: 2.6, r: .6, reach: 3.2, shadow: 1 },                /* and along the count, grazing: every empty stroke draws itself */
     { p: [0, 3, ZD - 12], c: [.3, .28, .66], k: 4, r: 6 },                                   /* the hall behind: a faint cold fill */
     { p: [1.2, 1.4, ZD - 1.4], c: [.34, .33, .75], k: .8, r: 2.2 },                          /* the door's own cold, broad and faint */
   ],
@@ -49,7 +49,7 @@ export default {
         /* beside it, a blank: a clean-edged recess, a rod's length */
         vec2 bq = abs(m - vec2(.82, cy)) - vec2(.2, .035);
         float bl = length(max(bq, 0.)) + min(max(bq.x, bq.y), 0.) - .012;
-        d.x = max(d.x, min(-bl, p.z - (ZD - .438)));
+        d.x = max(d.x, min(-bl, (ZD - .42) - p.z));
         if (bl < 0.) gTint *= 1.2;
         /* and by the blank, two marks: a bar with a drop; two drops parted */
         float m1 = min(length(vec2(m.x - .53, max(abs(m.y - cy - .02) - .06, 0.))), length((m - vec2(.53, cy - .09)) * vec2(1., .7)) - .012);
@@ -62,7 +62,7 @@ export default {
         float path = pq.x < .28 ? abs(abs(pq.y) - .07) : abs(length(pq - vec2(.28, 0.)) - .07);
         path = max(path, pq.y > 0. ? -.08 - pq.x : -.42 - pq.x);                                 /* out along the lower way, round, and back along the upper, which stops short */
         path = min(path, length(pq - vec2(-.08, .07)) - .012);                                    /* where it ends: a point */
-        d.x += engrave(path, .012, .01);
+        d.x += engrave(path, .01, .006);
         if (marks < .02) gTint *= .92;
       }
     }
