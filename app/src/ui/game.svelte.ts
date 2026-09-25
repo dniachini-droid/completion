@@ -3,7 +3,6 @@
  * Rules live in core; this file only reads the clock, keeps the save and schedules the phone's alerts.
  */
 import { act, alertsAfter, see, settle, type Command } from '../core/game';
-import { BREATHER_MIN } from '../core/run';
 import { epochOf, momentOf, type Moment } from '../core/time';
 import type { Fact } from '../core/types';
 import { content } from '../content/world';
@@ -37,7 +36,7 @@ class Game {
     this.now = this.clock();
     this.facts = this.load();
     /* the phone closed the app while Dan was in another one: that time is taken off first (D-094) */
-    if (platform.delve.first !== null) this.away(platform.delve.first);
+    if (platform.away.first !== null) this.away(platform.away.first);
     this.append(settle(this.facts, content, this.now));
     this.do({ do: 'open' });
     this.#ticker = window.setInterval(() => this.tick(), 250);
@@ -54,7 +53,7 @@ class Game {
       story week, exactly as a cold start would (review finding, D-080). */
   wake() { return (this.#waking ??= this.#wake().finally(() => { this.#waking = null; })); }
   async #wake() {
-    const left = await platform.delve.take();
+    const left = await platform.away.take();
     this.now = this.clock();
     if (left !== null) this.away(left);
     this.append(settle(this.facts, content, this.now));
@@ -67,6 +66,7 @@ class Game {
   /** Dan went into another app at `leftAt` (the phone's ms) and is back now: the delve paused where he left (D-094).
       The phone silenced the delve's alerts when he left, so they are set again from what is true now. */
   away(leftAt: number) {
+    this.#watched = '-';   /* the phone stopped watching when it saw him leave: it is told again */
     this.do({ do: 'away', from: this.gameMs(leftAt), to: this.clockMs() });
     void this.alerts();
   }
@@ -133,32 +133,14 @@ class Game {
     return f;
   }
 
-  /* ---- the delve beyond the page: the lock-screen panel and watching for another app (D-094, D-095) ---- */
-  #shown = '';
-  /** Keeps the phone's panel and its watch in step with the run; only sends when what it shows changes. */
+  /* ---- leaving the app during a delve (D-094) ---- */
+  #watched = '';
+  /** The phone watches for another app only while a delve or breather runs (not while paused, not between runs). */
   native() {
-    const r = this.view.run;
-    const key = r ? `${r.seq}|${r.phase}|${r.k}|${r.phase === 'held' ? r.leftMs : ''}` : '';
-    if (key === this.#shown) return;
-    this.#shown = key;
-    platform.delve.watch(!!r && r.phase !== 'held', ALERT_IDS);
-    if (!r) { platform.delve.panel(null); return; }
-    const L = r.minutes * 60_000, B = BREATHER_MIN * 60_000, nowMs = this.clockMs(), real = (ms: number) => this.realDate(ms).getTime();
-    const delve = (k: number) => r.count === 1 ? t('live.one') : t('live.ofRun', { k: String(k), n: String(r.count) });
-    let label = delve(r.k), start = nowMs - r.doneMs, end = nowMs + r.leftMs, rest = false;
-    let next: { label: string; start: number; end: number } | null = null;
-    if (r.phase === 'breather') {
-      label = t('live.breather'); rest = true;
-      start = nowMs - (B - r.breatherLeftMs); end = nowMs + r.breatherLeftMs;
-      next = { label: delve(r.k + 1), start: real(end), end: real(end + L) };
-    } else if (r.k < r.count) next = { label: delve(r.k + 1), start: real(end + B), end: real(end + B + L) };
-    platform.delve.panel({
-      run: r.seq, job: r.job.name, label: r.phase === 'held' ? t('live.paused') : label,
-      start: real(start), end: real(end), rest, paused: r.phase === 'held', left: real(nowMs + r.leftMs) - real(nowMs),
-      fraction: r.phase === 'held' ? r.doneMs / L : 0, hint: t('live.paused.hint'),
-      next, from: t('live.from'), done: t('live.done'),
-      pausedLabel: t('live.paused'),
-    });
+    const r = this.view.run, on = !!r && r.phase !== 'held', key = on ? `${r!.seq}` : '';
+    if (key === this.#watched) return;
+    this.#watched = key;
+    platform.away.watch(on, ALERT_IDS);
   }
   /** The phone's clock (ms) as the game's (the rehearsal runs 60 times faster). */
   gameMs(real: number): number {
@@ -219,7 +201,7 @@ class Game {
     this.append(settle(this.facts, content, this.now));
     this.do({ do: 'open' });
     void this.alerts();   /* the other save's alerts go; this one's come back */
-    this.#shown = '-'; this.native();
+    this.#watched = '-'; this.native();
   }
   reset() {
     /* even a wipe keeps one copy aside, so a slip can be undone (D-080) */

@@ -23,9 +23,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 }
 
-/// The web view's controller, with the app's own native part added: the delve's panel and leaving (DelvePlugin.swift).
+/// The web view's controller, with the app's own native part added: telling a lock from leaving (AwayPlugin.swift).
 class MainViewController: CAPBridgeViewController {
     override open func capacitorDidLoad() {
-        bridge?.registerPluginInstance(DelvePlugin())
+        bridge?.registerPluginInstance(AwayPlugin())
     }
 }

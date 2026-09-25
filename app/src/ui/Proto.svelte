@@ -8,8 +8,8 @@
   import { platform } from '../platform';
 
   /* the phone's own reading of each time the app went to the background during a delve (D-094's test on TestFlight) */
-  let leaves = $state<Awaited<ReturnType<typeof platform.delve.log>>>([]);
-  if (platform.app) void platform.delve.log().then(l => (leaves = l));
+  let leaves = $state<Awaited<ReturnType<typeof platform.away.log>>>([]);
+  if (platform.app) void platform.away.log().then(l => (leaves = l));
   const how = { locked: t('proto.leave.locked'), left: t('proto.leave.left'), unsure: t('proto.leave.unsure') };
   const hhmm = (ms: number) => new Date(ms).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 

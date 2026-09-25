@@ -13,24 +13,8 @@ export interface Haptics { tick(): Promise<void>; ring(): Promise<void>; }
 export interface Store { get(key: string): string | null; set(key: string, value: string): void; remove(key: string): void; }
 /** A soft sound while the app is open: a delve's end, or a breather's. */
 export interface Sound { unlock(): void; chime(kind: 'delveEnd' | 'breatherEnd'): void; }
-/** One delve's panel on the lock screen and in the Dynamic Island (a Live Activity, D-095). Times are the phone's own (ms). */
-export interface Panel {
-  run: number; job: string;
-  /** What is on now: a delve, a breather (rest), or paused (then only `left` and `fraction`). */
-  label: string; start: number; end: number; rest: boolean;
-  paused: boolean; left: number; fraction: number; hint: string;
-  /** The delve after this one, shown by itself once `end` passes (the phone can't run the app to say so). */
-  next: { label: string; start: number; end: number } | null;
-  from: string;
-  /** Shown once the time is up and nothing follows. */
-  done: string;
-  /** The words the panel says if it pauses by itself when Dan goes into another app. */
-  pausedLabel: string;
-}
-/** A delve beyond the page: its lock-screen panel, and leaving the app (D-094, D-095). */
-export interface Delve {
-  /** Show or update the panel; `null` takes it away. */
-  panel(p: Panel | null): void;
+/** Leaving the app during a delve (D-094): only the phone app can tell it from locking. */
+export interface Away {
   /** Watch for Dan going into another app while a delve runs; `alerts` are the delve's alerts to silence if he does. */
   watch(on: boolean, alerts: number[]): void;
   /** When Dan last went into another app during a delve (the phone's ms), once: null if he didn't (a lock is not leaving). */
@@ -41,7 +25,7 @@ export interface Delve {
   log(): Promise<{ at: number; how: 'locked' | 'left' | 'unsure'; signs: string[] }[]>;
 }
 export interface Platform {
-  notifier: Notifier; haptics: Haptics; store: Store; sound: Sound; now(): Date; delve: Delve;
+  notifier: Notifier; haptics: Haptics; store: Store; sound: Sound; now(): Date; away: Away;
   /** Inside the phone app (no browser around it: the app draws its own swipe back from the left edge). */
   readonly app: boolean;
   /** Wait for the save to be read, before the game starts. */

@@ -360,14 +360,6 @@ export const copy = {
   'month.7': 'July', 'month.8': 'August', 'month.9': 'September', 'month.10': 'October', 'month.11': 'November', 'month.12': 'December',
 
   /* the phone's alerts */
-  /* the delve's panel on the lock screen and in the Dynamic Island (D-095): short, it is read at a glance */
-  'live.one': 'The delve',
-  'live.ofRun': 'Delve {k} of {n}',
-  'live.breather': 'A breather',
-  'live.from': 'From',
-  'live.done': 'The delve is over. Open the app when you are ready.',
-  'live.paused': 'Paused',
-  'live.paused.hint': 'Open the app to carry on.',
   'notify.delveEnd.title': 'The delve is over',
   'notify.delveEnd.body': 'Come back up when you are ready.',
   'notify.breatherEnd.title': 'The next delve is starting',
