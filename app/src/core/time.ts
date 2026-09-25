@@ -50,3 +50,13 @@ export function offsetOf(at: Moment): number {
   if (!z || z[1] === 'Z') return 0;
   return (z[2] === '-' ? -1 : 1) * (+z[3] * 60 + +z[4]);
 }
+
+/** The calendar week a game day belongs to, named by its Monday (YYYY-MM-DD). Weeks run Monday to Sunday. */
+export function calendarWeek(day: string): string {
+  const d = new Date(`${day}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7));
+  return d.toISOString().slice(0, 10);
+}
+
+/** The weekday of a game day: 0 Sunday … 6 Saturday. */
+export const weekdayOf = (day: string) => new Date(`${day}T00:00:00Z`).getUTCDay();

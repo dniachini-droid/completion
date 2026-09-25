@@ -1,0 +1,96 @@
+<script lang="ts">
+  /* The satchel (TOOLS §2; mock-up satchel.html): for the days Dan has a list. Never on the opening screen. One line or
+     many at once; the first handful shows, the rest folded away. Ticking feels good, but only moves the expedition when
+     the line is one of today's jobs ("Today" puts it there). No counts, no overdue marks; untouched lines go quietly to
+     someday after three weeks, and nothing is announced. */
+  import { game } from './game.svelte';
+  import { t } from '../content/copy/en';
+  import { items } from '../core/week';
+  import { platform } from '../platform';
+  import Scene from './Scene.svelte';
+  import type { Go } from './nav';
+
+  let { go }: { go: Go } = $props();
+  const v = $derived(game.view);
+  const all = $derived(items(game.facts, v.day));
+  const open = $derived(all.filter(i => !i.someday));
+  const someday = $derived(all.filter(i => i.someday));
+  let more = $state(false), showSomeday = $state(false), text = $state(''), adding = $state(false);
+  const FIRST = 5;
+  const shown = $derived(more ? open : open.slice(0, FIRST));
+
+  function put() {
+    const lines = text.split('\n');
+    if (!lines.some(l => l.trim())) return;
+    game.do({ do: 'addItems', lines }); text = ''; adding = false;
+  }
+  function tick(id: string) {
+    const f = game.do({ do: 'tick', id });
+    platform.sound.chime('breatherEnd');
+    const d = f.find(x => x.type === 'jobDone');
+    if (d) go('step', d.seq);
+  }
+  function today(id: string) { game.do({ do: 'planJob', job: id, day: v.day }); }
+</script>
+
+<Scene painting={v.here.painting} blur />
+<div class="ui">
+  <header class="top col">
+    <div class="topbar rise">
+      <button class="home" onclick={() => go('today')}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{t('delve.today')}</span></button>
+      <span></span><span></span>
+    </div>
+    <h1 class="carve lg rise">{t('satchel.label')}</h1>
+    <p class="soft say-note rise">{t('satchel.say')}</p>
+  </header>
+
+  <div class="body col rise d1">
+    {#if !all.length && !adding}<p class="soft say-note">{t('satchel.empty')}</p>{/if}
+    {#each shown as it (it.id)}
+      <div class="item" class:done={it.done}>
+        <button class="tickbox" aria-pressed={it.done} aria-label={t('satchel.tick', { name: it.name })} disabled={it.done} onclick={() => tick(it.id)}><span class="pip" class:done={it.done}></span></button>
+        <span class="t">{it.name}</span>
+        {#if !it.done}
+          {#if v.slate.includes(it.id)}<span class="s">{t('satchel.onToday')}</span>
+          {:else}<button class="text-link small" onclick={() => today(it.id)}><span>{t('satchel.today')}</span></button>{/if}
+        {/if}
+      </div>
+    {/each}
+    {#if open.length > FIRST}
+      <button class="text-link fold" onclick={() => (more = !more)}><span>{more ? t('satchel.less') : t('satchel.more')}</span></button>
+    {/if}
+    {#if adding}
+      <textarea class="lines" bind:value={text} rows="4" placeholder={t('satchel.addMany')}></textarea>
+      <div class="btn-row"><button class="btn" onclick={put}>{t('satchel.put')}</button><button class="btn-quiet" onclick={() => (adding = false)}><span>{t('rhythms.cancel')}</span></button></div>
+    {:else}
+      <div class="links"><button class="text-link" onclick={() => (adding = true)}><span>{t('satchel.add')}</span></button>
+        {#if someday.length}<button class="text-link" onclick={() => (showSomeday = !showSomeday)}><span>{t('satchel.someday')}</span></button>{/if}</div>
+    {/if}
+    {#if showSomeday}
+      {#each someday as it (it.id)}
+        <div class="item someday">
+          <button class="tickbox" aria-label={t('satchel.tick', { name: it.name })} onclick={() => tick(it.id)}><span class="pip"></span></button>
+          <span class="t">{it.name}</span>
+          <button class="text-link small" onclick={() => today(it.id)}><span>{t('satchel.today')}</span></button>
+        </div>
+      {/each}
+    {/if}
+  </div>
+</div>
+
+<style>
+  .body { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 28px; }
+  h1 { margin-top: 4px; }
+  .say-note { margin-top: 4px; text-align: left; }
+  .item { display: flex; align-items: center; gap: 10px; min-height: 48px; border-bottom: 1px solid var(--edge-2); }
+  .item .t { flex: 1; font-size: 17px; color: #fff; }
+  .item.done .t { color: var(--ink-3); text-decoration: line-through; text-decoration-thickness: 1px; }
+  .item .s { font-family: var(--life); font-size: 15px; color: var(--gold); }
+  .tickbox { width: 44px; height: 44px; display: grid; place-items: center; margin-left: -12px; }
+  .small span { font-size: 15px; }
+  .fold { margin-top: 8px; }
+  .links { display: flex; justify-content: center; gap: 18px; margin-top: 16px; }
+  textarea.lines { width: 100%; margin-top: 12px; padding: 10px 12px; font: inherit; font-size: 17px; color: #fff; background: rgba(255,255,255,.06); border: 1px solid var(--edge-2); border-radius: 0; resize: vertical; }
+  .btn-row { margin-top: 10px; }
+  button.home { color: var(--ink-2); }
+</style>

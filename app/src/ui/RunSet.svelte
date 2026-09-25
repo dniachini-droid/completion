@@ -11,9 +11,9 @@
   import './scene/runset.css';
 
   let { go, jobId }: { go: Go; jobId: string } = $props();
-  const job = $derived(content.jobs.find(j => j.id === jobId)!);
+  const job = $derived(game.job(jobId)!);
   const v = $derived(game.view);
-  const preset = presetRun(content.jobs.find(j => j.id === jobId)!);
+  const preset = presetRun(game.job(jobId)!);
   const reduce = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   const ANG: Record<number, number> = { 25: 150, 30: 180, 45: 270, 60: 360 };
   const MAXN = 8, BREATH = 5;
@@ -29,7 +29,7 @@
   /* what's left of the job's enough today (a gold mark on the line; past it is more, never owed) */
   const enoughLeft = $derived(v.done.has(jobId) || job.doneBy !== 'enough' ? null
     : Math.max(0, enoughOf(job) - delveMinutesOn(game.facts, v.day, jobId)) || null);
-  const place = $derived(v.ahead);
+  const place = $derived(v.toNext !== null ? { name: t('set.nextPlace') } : null);
   const toPlace = $derived(v.toNext);
   const there = $derived(toPlace !== null && n * snap >= toPlace);
 

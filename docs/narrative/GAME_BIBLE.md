@@ -36,7 +36,7 @@ You'll know roughly what's coming. The details are the surprise. Roughly:
 2. **Everyone met him.** As you read further, the same figure appears in every age's records, under a different name.
 3. **What the makers left.** Lessons in a hand older than anything, a rule, and the two sides of a disagreement.
 4. **What he wants.** Why the figure has been teaching, and what it costs to find out.
-5. **The bottom.** A door that needs the most from you (it fills at once on a great day, or slowly with steady weeks), and what is behind it.
+5. **The bottom.** A door that needs the most from you (it fills as you live your weeks), and what is behind it.
 
 The story is finished when it is finished. It has a fixed ending, decided before any clue was planted, and every thread connects to it.
 

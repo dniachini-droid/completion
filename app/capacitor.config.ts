@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.dniachini.rlrpg',
-  appName: 'Real Life RPG',
+  appName: 'The Long Answer',
   webDir: 'dist',
   backgroundColor: '#05050c',
   ios: {

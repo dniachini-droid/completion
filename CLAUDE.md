@@ -7,7 +7,7 @@ It is a genuine game, not a productivity app with an RPG skin. Provisional name:
 
 **PHASE 9 — FIRST PLAYABLE** (opened 2026-09-24; Phase 8 closed with Dan's agreement, D-065)
 
-Build the whole MVP (`docs/product/MVP.md` → build order, slices 2–4 on top of the heart) on the agreed stack, following `docs/technical/ARCHITECTURE.md` and `TEST_STRATEGY.md`, first on throwaway content and invented places. Carried over from Phase 8: trials (b)–(d) on the first TestFlight build once Dan's Apple setup is done (D-065). The story **stays sealed from Dan** (`docs/narrative/sealed/`, D-015); the sealed story-fix session (D-035) runs in its own session and **must happen before the first playable's real content goes in** (D-060). Details and exit criteria: `docs/CURRENT_STATE.md`. Phase changes require Dan's explicit agreement.
+Build the whole MVP (`docs/product/MVP.md` → build order, slices 2–4 on top of the heart) on the agreed stack, following `docs/technical/ARCHITECTURE.md` and `TEST_STRATEGY.md`, with the real content. Carried over from Phase 8: trials (b)–(d) on the first TestFlight build once Dan's Apple setup is done (D-065). The story **stays sealed from Dan** (`docs/narrative/sealed/`, D-015); the sealed story job (D-035) is **done** in its own session (D-066, D-067): the MVP's content and painting briefs are in `docs/narrative/sealed/`, loaded into the app without ever being shown to Dan in chat, commits or PRs. Details and exit criteria: `docs/CURRENT_STATE.md`. Phase changes require Dan's explicit agreement.
 
 Phase order: 0 Player discovery → 1 Product discovery → 2 Game design → 3 Narrative/world → 4 Experience/art/UX → 5 Concept synthesis → 6 MVP → 7 Technical architecture → 8 Prototype → 9 First playable → 10 Personal alpha → 11 Iteration.
 

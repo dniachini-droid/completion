@@ -40,14 +40,17 @@ const native: Platform = {
     },
     async cancel(ids) { await LocalNotifications.cancel({ notifications: ids.map(id => ({ id })) }); },
   },
-  haptics: { tick: () => CapHaptics.impact({ style: ImpactStyle.Light }) },
+  haptics: { tick: () => CapHaptics.impact({ style: ImpactStyle.Light }), ring: () => CapHaptics.vibrate({ duration: 450 }) },
 };
 
 /* In a browser (the web link, tests): the end chimes if the page is open, and shows when you come back. */
 const web: Platform = {
   store, sound, now: () => new Date(), ready: async () => {},
   notifier: { locked: false, permit: async () => false, at: async () => {}, cancel: async () => {} },
-  haptics: { tick: async () => { try { navigator.vibrate?.(8); } catch { /* */ } } },
+  haptics: {
+    tick: async () => { try { navigator.vibrate?.(8); } catch { /* */ } },
+    ring: async () => { try { navigator.vibrate?.(450); } catch { /* */ } },
+  },
 };
 
 export const platform: Platform = Capacitor.isNativePlatform() ? native : web;

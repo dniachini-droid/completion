@@ -21,7 +21,7 @@ _Written 2026-09-23. Must agree with `WORLD_TRUTH.md`._
 
 ## The human ages (the readers)
 
-The Custodian counts a reader as anyone who read a mark of the Cut and whom he has named in his count. His count is canon. He had the salt-cutters' tongue before the first of them came in: their people had cut salt at the face for generations, and he listens through the rock.
+The Custodian counts a reader as anyone who read a mark of the Cut and whom he has named in his count. His count is canon. He had the sound of the salt-cutters' tongue before the first of them came in (their people had cut salt at the face for generations, and he listens through the rock), but not the speaking of it: with the first his words were few and "nearly ours", and he learned fast from him.
 
 | Reader | Who | How they reached the Site | What they learned | How it ended | Author's analogue |
 |---|---|---|---|---|---|
@@ -51,3 +51,4 @@ The Custodian counts a reader as anyone who read a mark of the Cut and whom he h
 - REMAIN was cut by the Custodian in the long solitude and by the Linguist at the end of her life. No one else.
 - The Custodian was below all four counting doors when the Builders ended, cut B7 in the deep, came up, and has been above the three doors ever since. He has never read the Seed's finest cut.
 - Order of the human intrusions: salt crack (north, high), road tunnel (south, high), railway blast (east, low), ventilation shaft (top). The Water is the works' channel, still since the Surveyor's great cut.
+- Why no one came down after the Linguist (rule 6; the playable's story review, 2026-09-25): no one outside knew where she had gone. She told no one about the shaft (L2: the bolt-cutters were "for a gate"). She rang the farmer about his note and told him she was surveying the old workings, which he believed (he gave her his photograph of the lights, X-farmer). On Day 40, once she had lowered what her car held down the shaft (`fd-a06`), she drove the empty car to the station in the town, left it there, posted her department a letter giving up her post and saying she was going abroad, and walked back up the hill; the department's questions (X-colleague) followed that letter abroad, and the farmer took the car's going to mean she had finished. The council's "monitoring" is a look at the cap from the field gate a few times a year, and from there a cap sitting on its rim looks shut; she set it back on its rim every time she used it, the last time after her hour in the field, and the cut padlock has lain in the grass beside it since. Nothing of this is planted in the MVP; if a line is ever wanted, it belongs in her notebook or her folder, never in the app's own voice.

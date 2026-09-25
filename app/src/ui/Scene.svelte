@@ -2,6 +2,7 @@
   /* A place's painting, full-bleed and alive (D-041): the baked image with its live layers, the day's gold pooling in,
      drifting fog, grain and vignette, and washes so words read on it. Never framed (DESIGN_SYSTEM → Never). */
   import { live } from '../../paint/kit/live.js';
+  import './scene/lamp.js';                       /* the clay lamp's body, for paintings whose flame anchor has one */
   import { paintings, lift } from './paintings';
 
   let { painting, blur = false, framed = false, top = '300px', bottom = '58%' }: { painting: string; blur?: boolean; framed?: boolean; top?: string; bottom?: string } = $props();
