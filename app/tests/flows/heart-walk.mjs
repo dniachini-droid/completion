@@ -23,6 +23,8 @@ const shot = async (name, settle = 1500) => { if (settle > 10000) await ff(settl
 const locked = async (name) => {
   const bad = await page.evaluate(() => [document.scrollingElement, ...document.querySelectorAll('.phone *')].filter(e => {
     if (!e) return false; const s = getComputedStyle(e);
+    /* the map alone is dragged around, and only once a region is wider than the screen (D-092) */
+    if (e.dataset?.pan === 'map') { const svg = e.querySelector('svg'); if (svg && svg.getBoundingClientRect().width > e.clientWidth + 1) return false; }
     const sideways = (s.overflowX === 'auto' || s.overflowX === 'scroll') && e.scrollWidth > e.clientWidth + 1;
     return sideways || e.scrollLeft > 0 || (e === document.scrollingElement && e.scrollTop > 0);
   }).map(e => e.className?.baseVal ?? e.className ?? e.tagName));
@@ -174,7 +176,7 @@ const doNext = async (name) => {
   else if (await has('Back to today')) { await tap('Back to today'); await page.clock.runFor(1500); }
 };
 
-/** Where every light on the map sits (relative to the map, so a long close view may scroll its own field), the map's
+/** Where every light on the map sits (relative to the map), the map's
  *  size and place, the box's size, and the page's scroll: none may change when a light is picked (D-076). */
 const mapGeometry = () => page.evaluate(() => {
   const svg = document.querySelector('.field svg').getBoundingClientRect(), field = document.querySelector('.field');
@@ -196,22 +198,15 @@ const still = async (before, what) => {
   if (off(after.page, before.page)) errors.push(`map: the page scrolled (${what})`);
   if (after.clipped) errors.push(`map: the box overflows (${what})`);
 };
-/** The map: opens on the region at where Dan is; every light tapped (only the crosshair and the words may move); look
- *  closer; every light there tapped; back out. */
+/** The map: one map (D-092), opening on the region at where Dan is; every light tapped (only the crosshair and the
+ *  words may move). */
 const mapWalk = async (name) => {
   await tap('Map'); await page.waitForTimeout(2500); await shot(name + '-region', 3500);
   let g = await mapGeometry();
   const n = await page.locator('circle.node').count();
   for (let k = 0; k < n; k++) { await page.locator('circle.node').nth(k).click(); await still(g, `${name} region light ${k}`); await shot(`${name}-tap-${k}`, 300); }
   await page.locator('circle.node[data-kind="here"]').first().click(); await still(g, `${name} back to here`);
-  if (await has('Look closer')) {
-    await tap('Look closer'); await page.waitForTimeout(2500); await shot(name + '-close', 3500);
-    g = await mapGeometry();
-    const m = await page.locator('circle.node').count();
-    for (let k = 0; k < m; k++) { await page.locator('circle.node').nth(k).click(); await still(g, `${name} close light ${k}`); }
-    await shot(name + '-close-tap', 300);
-    await tap('See the whole region'); await page.clock.runFor(1200);
-  }
+  if (await has('Look closer')) errors.push(`map: a second, closer map is back (${name}, D-092)`);
   await home(); await page.clock.runFor(2500);
 };
 await shot('today', 2500);
