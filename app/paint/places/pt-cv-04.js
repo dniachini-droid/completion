@@ -14,11 +14,11 @@ export default {
   name: 'The hall, from the far end',
   line: '',
   cam: { x: -.8, y: 1.5, z: 61.5, pitch: 50, yaw: 168, f: .5, cx: .5, cy: .5 },
-  sheen: .05, gold: .5, ambC: [.8, .78, 2.1], expo: 2.25, glow: { threshold: .5, k: .8 },
+  sheen: .05, gold: .7, ambC: [.8, .78, 2.1], expo: 2.25, glow: { threshold: .5, k: .7 }, bloom: { alpha: .22 }, grain: .3, shadowJitter: 1,
   hazeBase: [.02, .018, .055], hazeFar: [.1, .08, .15], bloomAt: [2.3, 1.4, 5.6], bloomPow: 60, bloomC: [.12, .08, .05],
   fogK: 1 / 26, blur: { px: 2.6, d0: 5, d1: 18, k: .95 },
   lights: [
-    ...CUPR.slice(0, 2).map((z, i) => ({ p: [1.95, 5.9, z], c: [1, .72, .42], k: 3.6 - .8 * i, r: 1.2, shadow: .5, reach: 4. })),   /* the nearest cups' light, thrown up the vault */
+    ...CUPR.slice(0, 2).map((z, i) => ({ p: [1.95, 5.9, z], c: [1, .7, .38], k: 4 - .8 * i, r: 1.2, shadow: .5, reach: 4., warm: .003 })),   /* the nearest cups' light, thrown up the vault */
     ...[59.55, 56.45].map(z => ({ p: [2.72, 3.85, z], c: [1, .72, .42], k: .12, r: .3, reach: .7 })),                  /* and filling their own recesses */   /* the nearest cups on the right: up into the vault */
     ...CUPL.slice(0, 1).map(z => ({ p: [-1.95, 5.9, z], c: [1, .72, .42], k: 2.6, r: 1.2, shadow: .5, reach: 4. })),  /* and on the left */
     { p: [0, 6, 34], c: [.5, .42, .85], k: 70, r: 14 },                                  /* the lines of cups further back, as one glow in the violet */

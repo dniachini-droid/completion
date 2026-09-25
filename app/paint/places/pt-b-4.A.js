@@ -15,12 +15,12 @@ export default {
   line: '',
   cam: { x: -1.1, y: 1.5, z: ZC - 1.1, pitch: -6, yaw: -35, f: .64, cx: .5, cy: .5 },
   salt: { pink: .3 },
-  expo: 1.85, grade: [1, 1, 1], bloomC: [.1, .09, .2],
+  expo: 1.9, grade: [1, 1, 1], bloomC: [.14, .12, .26], bloomPow: 10,
   blur: { px: 1.6, d0: 3.5, d1: 14, k: .8 },
   lights: [
-    { p: [.3, 1.9, ZC - 4.2], c: W, k: 1.4, r: 1.5, shadow: .6 },                          /* the cups' glow, from the gallery's near end behind you */
+    { p: [.3, 1.9, ZC - 4.2], c: W, k: 2.1, r: 1.5, shadow: .6 },                          /* the cups' glow, from the gallery's near end behind you */
     { p: [-1.42, 1.52, ZC + .12], c: W, k: .07, r: .22, reach: .8, shadow: 1 },             /* its last reach, raking along the crust: every stroke of the count shows */
-    { p: [.4, 1.6, 34], c: V, k: 7, r: 9 },                                                 /* the gallery going on in its own violet */
+    { p: [.4, 1.6, 34], c: V, k: 10, r: 9 },                                                 /* the gallery going on in its own violet */
     { p: [.8, 1.9, ZC + 4], c: V, k: 4, r: 3.5 },
     { p: [0, 1.6, ZC - 9], c: [.3, .28, .66], k: .6, r: 3 },                                 /* faint fill from behind */
   ],
@@ -37,13 +37,14 @@ export default {
     vec2 cq = vec2((p.z - ZC - .35) / 1.25, (p.y - 1.3) / .6);
     float t = .27 * (1. - dot(cq, cq)) + (fbm(vec2(p.z * 2.5, p.y * 2.5), 3) - .5) * .09;
     float sm = smoothstep(.12, .35, length(vec2(p.z - ZC - .24, (p.y - 1.4) * 1.5)));          /* its face smoother where the count is cut */
-    float cr = (p.x - (-2.03 + max(t, -.3))) * .6 + rough(p, .01, 9.) * (.3 + .7 * sm) + rough(p, .004, 30.) * sm;
+    float edge = 1. - smoothstep(.0, .09, t);                                                   /* near its edge the crust is thin, broken, crystalline */
+    float cr = (p.x - (-2.03 + max(t, -.3))) * .6 + rough(p, .01, 9.) * (.3 + .7 * sm) + rough(p, .004, 30.) * sm + rough(p, .012, 22.) * edge;
     if (cr < d.x + .03) {
       float k = clamp(.5 + .5 * (d.x - cr) / .03, 0., 1.);
       d.x = smin(d.x, cr, .03);
       if (k > .5) {
         d.yzw = vec3(M_SALT, NOUV);
-        gTint = vec3(1.02) * (.92 + .1 * fbm(p.zy * 9., 3));                                  /* thicker, whiter */
+        gTint = vec3(1.02 + .12 * edge) * (.92 + .1 * fbm(p.zy * 9., 3));                                  /* thicker, whiter */
         /* the count set in it: a row of strokes cut into the salt, clean, one depth */
         vec2 w = vec2(p.z - (ZC + .06), p.y - 1.4);
         float kk = floor(w.x / .08), cx = (kk + .5) * .08 + (h2(vec2(kk, 3.)) - .5) * .008;
@@ -69,7 +70,7 @@ export default {
     return d;
   }`,
   anchors: {
-    glints: [[-1.72, 1.55, ZC + .3], [-1.75, 1.1, ZC + .8], [-1.8, 1.7, ZC + 1.1], [-1.95, 1.9, ZC + 2.2], [-1.9, .9, ZC - .6]].map(p => ({ p })),
+    glints: [[-1.8, 1.05, ZC - .3], [-1.78, 1.75, ZC + .9], [-1.72, 1.55, ZC + .3], [-1.75, 1.1, ZC + .8], [-1.8, 1.7, ZC + 1.1], [-1.95, 1.9, ZC + 2.2], [-1.9, .9, ZC - .6]].map(p => ({ p })),
     fog: [{ p: [-1.3, .2, ZC + 1.8], w: 1.4, h: .18, a: .14 }],
   },
   live: { motes: 'gold', fog: 'low' },

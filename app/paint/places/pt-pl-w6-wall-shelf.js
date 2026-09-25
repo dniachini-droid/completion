@@ -24,7 +24,7 @@ export default {
     { p: [-W + .3, LY + .03, SZ - 1.3], c: [1, .74, .42], k: .1, r: .35, reach: 2.4 },     /* and the last of it, raking along the lip */
     { p: [.4, 1.6, SZ - 2], c: [.4, .37, .85], k: 2, r: 1.2 },                                      /* cold fill */
     { p: [0, 1.3, SZ + 3.5], c: [.4, .37, .85], k: 1.6, r: 2 },                                     /* cold, down the gallery */
-    { p: [0, 1.4, RZ - 1.2], c: [.48, .45, .95], k: 3.5, r: 2.5 },                                  /* a far glow, at the gallery's end */
+    { p: [0, 1.4, RZ - 1.2], c: [.48, .45, .95], k: 2.4, r: 2.5 },                                  /* a far glow, at the gallery's end */
   ],
   glsl: squareRoom(CAM) + /* glsl */ `
   const float SZ = ${SZ.toFixed(2)}, LY = ${LY.toFixed(3)};
