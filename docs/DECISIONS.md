@@ -917,7 +917,7 @@
 - **Decision:** Dan loved Le Guin (*The Tombs of Atuan*), VanderMeer (*Annihilation*) and Macfarlane (*Underland*); he disliked McCarthy (*The Road*). The voice is written up in `narrative/VOICE.md` (spoiler-free), pending Dan's approval. Next: a pilot (the Lamp Hall and one camp) written by a sealed agent team on Fable and on Opus to VOICE.md, judged blind by Dan against ChatGPT's version.
 - **Reversible:** Yes.
 
-## D-087 — The writer stays ChatGPT; Claude edits and checks (Dan's blind choice)
+## D-087 — The writer stays ChatGPT; Claude edits and checks (Dan's blind choice) — superseded by D-097
 - **Date:** 2026-09-25
 - **Context:** the pilot (D-086): the Lamp Hall arrival and the first camp, written by a sealed agent team on Fable and on Opus to VOICE.md (writer → critic → revision → fact check), set blind beside ChatGPT's round-4 text.
 - **Decision:** Dan picked ChatGPT's version for both, and found all three "very high quality". So there is no agent-team rewrite. ChatGPT stays the writer, with VOICE.md in its brief. Claude edits and checks: facts, clues, continuity, filler and repetition, markup. The 20 lines re-fixed on the review branch go to ChatGPT as round 5.
@@ -1008,3 +1008,11 @@
 - **Alternatives:** the screen's brightness alone (unreliable with the iPhone 16 Pro Max's always-on screen); protected data alone (needs a passcode, and arrives about 10 s late); guessing from the timing of iOS's own app events (not reliable); pausing on any trip to the background (would pause locked delves, which D-094 forbids).
 - **Consequences:** the lock notice's name is not a documented Apple API. Apple has rejected App Store apps for it, but TestFlight builds for Dan are not reviewed that way. If the app ever goes to the App Store, drop it and rely on the other two signs. Unhandled on purpose: from the lock screen, opening another app straight from its notification never brings this app forward, so that time counts. An app switch shorter than 15 s is not paused. Away for more than 3 hours: the delve finishes where he left (the existing rule for a Pause, D-080). The lock-screen panel (D-095) is its own session's: it corrects itself when Dan comes back, but while he is in another app it isn't told the delve paused.
 - **Reversible:** Yes: one native file and one command in the rules.
+
+## D-097 — The story's words are written by Claude for clarity, and proven by readers who explain each screen back (Dan approved) (first numbered D-096; the pause on leaving the app took D-096)
+- **Date:** 2026-09-25
+- **Context:** after the ChatGPT rounds (D-084–D-087), Dan played weeks 1–7 on his phone and found it "hardly makes any sense": he couldn't tell what things were, whether he was moving or touching something, or what was going on. Lines had been polished for atmosphere by a writer who never saw the story, so they read well but explained nothing. Dan: each screen should say where you are, what you see, what you touch and what you notice, and explain what things appear to be ("it appears to be some kind of tally").
+- **Decision:** Claude writes the story lines, with the sealed story to hand, to clarity rules (`narrative/WRITING_PROCESS.md`). A line passes only when cold readers who know nothing of the story (one of them on Fable) can explain each screen back correctly; unclear or misread screens are rewritten, then fact-checked against the plain story. Week 1 went first and Dan judged it in place, as screenshots of the app ("reads much much better"). Weeks 2–7 follow in one batch, with a sample for Dan; later weeks in one pass when they're written.
+- **Alternatives:** more ChatGPT rounds (they made the lines vaguer each time); a style checklist alone (it read stilted); Fable as the writer (used as a reader instead, where a fresh eye matters most).
+- **Consequences:** supersedes D-087 (ChatGPT as writer) and the ChatGPT steps of D-084–D-085; VOICE.md (D-086) still sets the tone, second to clarity. Dan no longer carries files between tools. The app's own labels explain Keys; story lines never say "Key". The screen walk captures a week as an in-app page for Dan to read.
+- **Reversible:** Yes: text only.

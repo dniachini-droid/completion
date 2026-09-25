@@ -23,6 +23,7 @@ const lit = (s, q) => q + (q === "'" ? s.replace(/\\/g, '\\\\').replace(/'/g, "\
 let done = 0; const unres = [], ital = [], multi = [];
 for (const x of a) {
   let n = g[x.key];
+  if (n === undefined) continue;   /* a batch may carry only some lines */
   if (n.replace(/\*/g, '') === x.text.replace(/\*/g, '')) continue;
   const ni = withItalics(x.text, n);
   if (ni === null) { ital.push(x.key); continue; }

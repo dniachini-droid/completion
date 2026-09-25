@@ -219,3 +219,45 @@ describe('Seven weeks reach the story’s turn (Dan: the test runs seven weeks, 
     }, 120_000);
   }
 });
+
+describe('The opening is never replayed as a morning after camp', () => {
+  it('the hillside opening does not play once Dan has been underground (bedtime kept or late)', () => {
+    for (const bed of ['kept', 'late'] as const) {
+      const s = sim(undefined, undefined, bed).week('normal');
+      const opening = C.story.beats.find(b => b.kind === 'morning' && b.w === 1)!.id;
+      const firstJob = s.facts.find(f => f.type === 'jobDone');
+      const late = s.facts.filter(f => f.type === 'beatPlayed' && (f as { id: string }).id === opening && firstJob && f.seq > firstJob.seq);
+      expect(late, `bedtime ${bed}`).toHaveLength(0);
+    }
+  });
+});
+
+describe('A find never describes a place Dan has not reached', () => {
+  it('every find given is from an area already walked into (bedtime kept, late, none)', () => {
+    for (const bed of ['kept', 'late', undefined] as const) {
+      const s = sim(undefined, undefined, bed).week('normal').week('normal');
+      const facts = s.facts;
+      for (const f of facts) {
+        if (f.type !== 'findGiven') continue;
+        const find = C.story.finds.find(x => x.id === (f as { id: string }).id)!;
+        const st = S.storyState(facts.filter(x => x.seq <= f.seq), C.story);
+        expect(st.visited.has(find.stretch), `${find.id} in ${find.stretch}, bedtime ${bed}`).toBe(true);
+      }
+    }
+  });
+});
+
+describe('A find never comes before the arrival that brings Dan into its room', () => {
+  it('every find is from an area whose arrival Dan had already seen when it was given', () => {
+    for (const bed of ['kept', 'late', undefined] as const) {
+      const facts = sim(undefined, undefined, bed).week('normal').week('normal').facts;
+      for (const f of facts) {
+        if (f.type !== 'findGiven') continue;
+        const find = C.story.finds.find(x => x.id === (f as { id: string }).id)!;
+        const seen = new Set(facts.filter(x => x.seq < f.seq && x.type === 'seen' && (x as { what: string }).what === 'arrival').map(x => (x as { ref: number }).ref));
+        const known = facts.filter(x => x.seq < f.seq && !(x.type === 'arrived' && !seen.has(x.seq)));
+        expect(S.storyState(known, C.story).visited.has(find.stretch), `${find.id} (${find.stretch}), bedtime ${bed}`).toBe(true);
+      }
+    }
+  });
+});

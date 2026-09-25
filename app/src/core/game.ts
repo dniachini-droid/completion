@@ -241,7 +241,11 @@ function arrive(w: W, c: Content, b: Beat, how: 'foot' | 'key', at: Moment, day:
   }
 }
 function giveFind(w: W, c: Content, why: FactOf<'findGiven'>['why'], at: Moment, day: string, job?: number) {
-  const f = S.pickFind(c.story, S.storyState(w.all, c.story), why);
+  /* a find comes from where Dan knows he is: a place reached but not yet shown on its arrival screen doesn't count yet,
+     or a find could describe a room on the screen before the one that brings him into it */
+  const seen = new Set(w.all.filter(f => f.type === 'seen' && f.what === 'arrival').map(f => (f as FactOf<'seen'>).ref));
+  const known = w.all.filter(f => !(f.type === 'arrived' && !seen.has(f.seq)));
+  const f = S.pickFind(c.story, S.storyState(known, c.story), why);
   if (!f) return;
   w.put({ type: 'findGiven', id: f.id, why, ...(job ? { job } : {}) }, at, day);
   if (f.told) show(w, c, [f.told], at, day);
@@ -469,7 +473,9 @@ function morningAfter(w: W, c: Content, at: Moment, day: string) {
   const camp = w.all.find(f => f.seq > night.seq && f.type === 'beatPlayed' && f.id.endsWith('.camp')) as FactOf<'beatPlayed'> | undefined;
   if (camp && camp.day === night.day) {
     const id = camp.id.replace(/\.camp$/, '.morning');
-    if (!confirms(id).length && !S.storyState(w.all, c.story).played.has(id)) w.put({ type: 'beatPlayed', id }, at, day);
+    /* the story's opening (the hillside, before any job) shares the week-1 morning's id: it is never a morning after camp */
+    const opening = S.beatOf(c.story, id)?.kind === 'morning' && S.beatOf(c.story, id)?.w === 1 && !confirms(id).length;
+    if (!opening && !confirms(id).length && !S.storyState(w.all, c.story).played.has(id)) w.put({ type: 'beatPlayed', id }, at, day);
   }
   giveFind(w, c, 'morning', at, day);
 }
