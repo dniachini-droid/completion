@@ -59,7 +59,9 @@ export const bedtimeOf = (facts: Fact[]) => { const b = ofType(facts, 'bedtimeSe
 /** Goodnight within this many minutes after bedtime keeps it, and no earlier than the evening before it (so a Goodnight
     at noon is only a goodnight); this late or later suggests a Low day tomorrow. */
 export const BEDTIME_GRACE = 15;
-export const BEDTIME_WINDOW = 180;
+export const BEDTIME_WINDOW = 300;   /* Go to sleep counts from five hours before bedtime (18:00 for 23:00), D-083 */
+/** Minutes of distance a night in bed on time gives the next morning: a head start (Dan, D-083). */
+export const HEAD_START = 15;
 export const LATE_NIGHT = 60;
 /** Days without opening that make an absence (BALANCING §6). */
 export const ABSENCE_DAYS = 3;
@@ -429,6 +431,9 @@ function morningAfter(w: W, c: Content, at: Moment, day: string) {
   const nights = ofType(w.all, 'goodnight').filter(f => f.day < day && f.kept);
   const night = nights[nights.length - 1];
   if (!night || w.all.some(f => f.seq > night.seq && f.type === 'findGiven' && f.why === 'morning')) return;
+  /* in bed on time: the day begins a little further in (Dan, D-083); once per night, with the morning's find */
+  w.put({ type: 'stepsGained', minutes: HEAD_START, job: 'sleep' }, at, day);
+  gifts(w, c, at, day);
   const camp = w.all.find(f => f.seq > night.seq && f.type === 'beatPlayed' && f.id.endsWith('.camp')) as FactOf<'beatPlayed'> | undefined;
   if (camp && camp.day === night.day) {
     const id = camp.id.replace(/\.camp$/, '.morning');

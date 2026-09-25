@@ -878,3 +878,15 @@
   4. **Text size:** Dan's is fine; the app keeps its own.
   - Q2 (is Today still too busy?) explained to Dan; waiting on his answer.
 - **Reversible:** Yes.
+
+## D-083 — Camp made clear: "Go to sleep", and a head start for bed on time (Dan)
+- **Date:** 2026-09-25
+- **Context:** Dan: camp wasn't clear. Do I press a button to go to sleep? If it's meant to help me put the phone down, it should have a "go to sleep" button, and being in bed before a certain hour should bring something positive the next day. Before this, "Goodnight" counted only from three hours before bedtime, its reward was a small find or line in the morning, nothing said whether it had counted, and the button showed at noon too.
+- **Decision (Dan's, built as he described):**
+  1. The button is **Go to sleep**. It is offered from five hours before Dan's bedtime (18:00 for 23:00). Before that, camp says when to come back.
+  2. Camp says plainly how it works: press it when you go to bed and put the phone down; in bed by your bedtime, and tomorrow begins with a head start.
+  3. **In bed on time** (up to 15 minutes past bedtime): the next morning begins **15 minutes of distance further in** (`HEAD_START`), once per night, plus the morning's find or story line; the Morning screen says so. After pressing, camp says so, and says to put the phone down. There is nothing more to press.
+  4. **Late:** "The head start is for nights you are in bed by {bedtime}. Nothing is lost." No guilt, nothing taken away (rule 9).
+  5. The Trial link sits quietly in camp's top bar.
+- **Why it's safe (rule 10):** once a night, tied to a real behaviour, and small (about a tenth of a place's distance).
+- **Reversible:** Yes (one constant).

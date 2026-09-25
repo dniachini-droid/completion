@@ -454,3 +454,24 @@ describe('A High day adds one job beyond the plan, and only one (Dan, D-082)', (
     expect([...p.view().slate].sort()).toEqual([...planned].sort());
   });
 });
+
+describe('Go to sleep: on time gives a head start (Dan, D-083)', () => {
+  const sleepSteps = (facts: Fact[]) => facts.filter(f => f.type === 'stepsGained' && f.job === 'sleep').length;
+  it('in bed by bedtime: the next morning begins a little further in, once', () => {
+    const p = player().do({ do: 'open' }).clock('22:30').do({ do: 'goodnight' });
+    const before = p.view().walked;
+    p.next().do({ do: 'open' });
+    expect(sleepSteps(p.facts)).toBe(1);
+    expect(p.view().walked).toBe(before + 15);
+    p.do({ do: 'open' });
+    expect(sleepSteps(p.facts)).toBe(1);   /* once per night */
+  });
+  it('late, or at noon: no head start, and nothing lost', () => {
+    const late = player().do({ do: 'open' }).clock('01:30').do({ do: 'goodnight' });
+    late.next().do({ do: 'open' });
+    expect(sleepSteps(late.facts)).toBe(0);
+    const noon = player().do({ do: 'open' }).clock('12:00').do({ do: 'goodnight' });
+    noon.next().do({ do: 'open' });
+    expect(sleepSteps(noon.facts)).toBe(0);
+  });
+});

@@ -38,6 +38,7 @@
   </section>
   <div class="mid"></div>
   <section class="bottom col center rise d2">
+    {#if game.facts.some(f => f.type === 'stepsGained' && f.job === 'sleep' && f.day === v.day)}<p class="say">{t('morning.headStart')}</p>{/if}
     {#if said}<p class="say look">{said}</p>{/if}
     {#if m?.beat}<Settled beat={m.beat} />{/if}
     {#if find}

@@ -20,7 +20,7 @@ Seven independent critics reviewed the app, each told to find problems, not to p
 | story-7 | major | Some arrival lines assumed every guess was right | **Fixed** |
 | story-8 | major | A guess came a step early, and a close look could come after a change | **Fixed** |
 | story-9 | major | Normal weeks ran out of new places; the same camp view repeated | **Fixed** |
-| story-10 | minor | The six-week test ends just before a big turn | **Your call**: Q1 below |
+| story-10 | minor | The six-week test ends just before a big turn | **Decided (D-082)**: the test runs seven weeks |
 | story-11 | minor | After a word works, its mark still read as a guess | **Fixed** |
 | story-12 | minor | "The lamp" was ambiguous in some lines | **Fixed** |
 | story-13 | major | The week plan and Today could disagree | **Fixed** |
@@ -43,7 +43,7 @@ Seven independent critics reviewed the app, each told to find problems, not to p
 | ui-7 | minor | Back navigation differs from screen to screen and is often stacked | **Partly fixed**: records now return to where they were opened; other screens keep their own back |
 | ui-8 | minor | Week screen: stray dots on empty days, notes that wrap, a button label that doesn't fit | **Fixed** |
 | ui-9 | minor | Today tells Dan to 'tap one of your jobs below' when there are none | **Fixed** |
-| ui-10 | minor | Marks screen: the status 'new' looks like a meaning, and opening it starts a quiz | **Partly fixed**: "new" is now a label; whether Marks should open with nothing selected is Q3 below |
+| ui-10 | minor | Marks screen: the status 'new' looks like a meaning, and opening it starts a quiz | **Fixed**: Marks opens with nothing selected (D-082) |
 | ui-11 | minor | At 375×667 and below, Today's footer and the arrival's text overlap or fall off-screen | **Fixed** |
 
 ## Psychology and staying on track
@@ -58,7 +58,7 @@ Seven independent critics reviewed the app, each told to find problems, not to p
 | psych-5 | minor | After a miss or an absence, re-placement fills the lighter day and packs the rest of the week to three jobs a day | **Left as is**: minor: re-placing a missed job after a gap can fill later days to three |
 | psych-6 | minor | Tapping Begin and then Done within seconds counts as 'started from the app', which contaminates the test's main measure | **Left as is**: noted for the test: a Begin then Done within seconds still counts as started in the app; the test notes will read it with care |
 | psych-7 | minor | A satchel line or a line added in Week earns 25 minutes and a full day's slot for one tick | **Left as is**: minor: a satchel line done counts as a job; watched in the test |
-| psych-8 | minor | Choosing High on a planned week changes nothing on Today | **Your call**: Q4 below |
+| psych-8 | minor | Choosing High on a planned week changes nothing on Today | **Fixed**: a High day adds one job beyond the plan (D-082) |
 | psych-9 | major | The prototype controls, including 'wipe the save', are one link from Today | **Fixed** |
 
 ## Bugs and rules
@@ -104,7 +104,7 @@ Seven independent critics reviewed the app, each told to find problems, not to p
 | newplayer-2 | major | Low, or opening the app late, quietly hides jobs that the week still lists for today | **Fixed** |
 | newplayer-3 | major | Stopping a delve early locks Today on 'Under way … Done', and Done then counts a full session | **Fixed** |
 | newplayer-4 | major | A missed appointment is moved to another day with its time | **Fixed** |
-| newplayer-5 | minor | On a planned week, High does nothing and the deep push can't be reached from Today | **Your call**: Q4 below |
+| newplayer-5 | minor | On a planned week, High does nothing and the deep push can't be reached from Today | **Fixed**: a High day adds one job beyond the plan (D-082) |
 | newplayer-6 | major | After reopening from the background the next morning, the camp screen offers yesterday's Goodnight | **Fixed** |
 | newplayer-7 | major | Two taps from Today wipe the six-week save, with no backup | **Fixed** |
 | newplayer-8 | minor | Putting a satchel line on a full planned day makes it vanish, and the Satchel still offers 'Today' | **Fixed** |
@@ -125,7 +125,7 @@ Seven independent critics reviewed the app, each told to find problems, not to p
 | phone-7 | minor | The in-app chime is lost for good after the app has been in the background once | **Fixed** |
 | phone-8 | minor | Tapping the delve-end alert, or coming back after a delve ended, doesn't take Dan to the end if he had left the delve screen | **Partly fixed**: coming back on a new day shows what waits; on the same day, the delve end shows on the next tap |
 | phone-9 | minor | Renaming the app must never change its bundle id, or the save is left behind | **Left as is**: a rule, not a bug: the app id must never change; recorded |
-| phone-10 | minor | Text ignores the iPhone's own text size setting | **Your call**: Q5 below |
+| phone-10 | minor | Text ignores the iPhone's own text size setting | **Left as is**: Dan's text size is fine (D-082) |
 
 ## Questions for Dan
 
