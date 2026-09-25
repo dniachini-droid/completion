@@ -110,6 +110,15 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     expect(p.view().complete).toBe(true);
     expect(p.types().filter(t => t === 'dayCompleted')).toHaveLength(1);
   });
+  it("a delve begun before 04:00 and answered after: Done answers it, and it stays answered (Dan's report)", () => {
+    const p = player('2026-09-24T23:30:00+01:00').do({ do: 'open' }).do({ do: 'addItems', lines: ['a job of his own'] });
+    const id = (p.facts[p.facts.length - 1] as { id: string }).id;
+    p.do({ do: 'startRun', job: id, minutes: 25, count: 1 }).sleep(8 * 60).wait(0).do({ do: 'open' });
+    expect(p.view().runEnd).toMatchObject({ ask: true });
+    p.do({ do: 'done', job: id });
+    expect(p.view().done.has(id)).toBe(true);
+    expect(p.view().runEnd).toMatchObject({ ask: false });
+  });
   it('Step away keeps the minutes; Today offers Carry on; Finish here counts every minute', () => {
     const p = player().do({ do: 'open' }).do({ do: 'startRun', job: 'course', minutes: 25, count: 2 }).wait(12).do({ do: 'stepAway' }).wait(120);
     expect(p.view().next).toEqual({ job: 'course', mode: 'carry' });
