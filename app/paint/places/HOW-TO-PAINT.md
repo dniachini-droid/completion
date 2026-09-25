@@ -11,7 +11,7 @@ Sealed folder (D-015): the scene files here quote the briefs. This guide itself 
 ## Setup
 - `export NODE_PATH=/opt/node22/lib/node_modules` (Playwright lives there). Run from `app/`.
 - Bake a draft at half size: `node paint/bake.mjs --scale .5 --jpg --out <scratch>/<dir> paint/places/<id>.js` (10–25 s).
-- Final at full size: drop `--scale .5` (bake with `--jpg` too, for viewing). The app uses the `.webp` + `.json`.
+- Final at full size: drop `--scale .5` and add `--ss 2` (kit v1.5: painted at twice the size and scaled down, so near edges do not stair-step; about 4× the time, finals only) (bake with `--jpg` too, for viewing). The app uses the `.webp` + `.json`.
 - Checks: `node paint/check.mjs <dir>/<id>.json` (every line must say ok: words band dark ≤32, button band ≤45 and busyness ≤.6, warm ≤15%, anchors in frame, palette). **Busyness rises at full size**: re-check full-size bakes.
 - Look at it: `node paint/tools/sheet.mjs out.jpg 900 a.jpg b.jpg@x0,y0,x1,y1 …` (side by side; `@` crops by fractions), then view with Read. `node paint/tools/stats.mjs img…` for luminance/mean RGB. The bar: `paint/regression/hall-ref.jpg` and the accepted `paint/places/img/pt-b-1.{A,B,C}.webp`.
 
