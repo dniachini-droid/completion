@@ -76,14 +76,14 @@
   function tapRow(id: string) { if (suppress) { suppress = false; return; } focus(id); }
   const offset = (id: string) => drag?.id === id ? drag.dx : swiped === id ? -OPEN : 0;
 
-  /* the evening (D-090): going to bed lives on Today, no page of its own. From five hours before bedtime (when Go to
+  /* the evening (D-093): going to bed lives on Today, no page of its own. From five hours before bedtime (when Go to
      sleep counts, D-083) Today carries "Tonight": the bedtime, one tap to change it, and Go to sleep. Once said, the
      night's line shows here until morning. */
   const evening = $derived(!v.night && pastBedtime(v.bedtime, game.now) >= -BEDTIME_WINDOW);
   const nightLine = $derived(v.night?.beat ? beatOf(content.story, v.night.beat)?.line ?? '' : '');
   function setBedtime(time: string) { if (time && time !== v.bedtime) game.do({ do: 'bedtime', time }); }
   function pick(e: MouseEvent) { try { (e.currentTarget as HTMLInputElement).showPicker?.(); } catch { /* not every browser */ } }
-  /* the story ahead folds to a few lines, so the next job is always in view; a tap reads it all (D-090) */
+  /* the story ahead folds to a few lines, so the next job is always in view; a tap reads it all (D-093) */
   let aheadOpen = $state(false);
 </script>
 
@@ -220,7 +220,7 @@
         </button>
       {/if}
     </div>
-    <!-- the evening, before the day's work is done: Tonight at the end of the day's list (D-090) -->
+    <!-- the evening, before the day's work is done: Tonight at the end of the day's list (D-093) -->
     {#if evening && !v.complete && !v.run}<section class="tonight-end">{@render tonight()}</section>{/if}
     </div>
     <nav class="foot" aria-label={t('today.label')}>

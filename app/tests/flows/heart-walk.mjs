@@ -23,6 +23,8 @@ const shot = async (name, settle = 1500) => { if (settle > 10000) await ff(settl
 const locked = async (name) => {
   const bad = await page.evaluate(() => [document.scrollingElement, ...document.querySelectorAll('.phone *')].filter(e => {
     if (!e) return false; const s = getComputedStyle(e);
+    /* the map alone is dragged around, and only once a region is wider than the screen (D-092) */
+    if (e.dataset?.pan === 'map') { const svg = e.querySelector('svg'); if (svg && svg.getBoundingClientRect().width > e.clientWidth + 1) return false; }
     const sideways = (s.overflowX === 'auto' || s.overflowX === 'scroll') && e.scrollWidth > e.clientWidth + 1;
     return sideways || e.scrollLeft > 0 || (e === document.scrollingElement && e.scrollTop > 0);
   }).map(e => e.className?.baseVal ?? e.className ?? e.tagName));
@@ -152,7 +154,7 @@ const openers = async (name) => {
     return;
   }
 };
-/* Going to bed lives on Today (no camp page, D-090): "Tonight" with Go to sleep shows only in the evening */
+/* Going to bed lives on Today (no camp page, D-093): "Tonight" with Go to sleep shows only in the evening */
 const camp = async (name, loud) => {
   if (!(await has('Keep going'))) return;
   if (await has('Go to sleep')) errors.push('TONIGHT offered before the evening');
@@ -175,7 +177,7 @@ const doNext = async (name) => {
   else if (await has('Back to today')) { await tap('Back to today'); await page.clock.runFor(1500); }
 };
 
-/** Where every light on the map sits (relative to the map, so a long close view may scroll its own field), the map's
+/** Where every light on the map sits (relative to the map), the map's
  *  size and place, the box's size, and the page's scroll: none may change when a light is picked (D-076). */
 const mapGeometry = () => page.evaluate(() => {
   const svg = document.querySelector('.field svg').getBoundingClientRect(), field = document.querySelector('.field');
@@ -197,22 +199,15 @@ const still = async (before, what) => {
   if (off(after.page, before.page)) errors.push(`map: the page scrolled (${what})`);
   if (after.clipped) errors.push(`map: the box overflows (${what})`);
 };
-/** The map: opens on the region at where Dan is; every light tapped (only the crosshair and the words may move); look
- *  closer; every light there tapped; back out. */
+/** The map: one map (D-092), opening on the region at where Dan is; every light tapped (only the crosshair and the
+ *  words may move). */
 const mapWalk = async (name) => {
   await tap('Map'); await page.waitForTimeout(2500); await shot(name + '-region', 3500);
   let g = await mapGeometry();
   const n = await page.locator('circle.node').count();
   for (let k = 0; k < n; k++) { await page.locator('circle.node').nth(k).click(); await still(g, `${name} region light ${k}`); await shot(`${name}-tap-${k}`, 300); }
   await page.locator('circle.node[data-kind="here"]').first().click(); await still(g, `${name} back to here`);
-  if (await has('Look closer')) {
-    await tap('Look closer'); await page.waitForTimeout(2500); await shot(name + '-close', 3500);
-    g = await mapGeometry();
-    const m = await page.locator('circle.node').count();
-    for (let k = 0; k < m; k++) { await page.locator('circle.node').nth(k).click(); await still(g, `${name} close light ${k}`); }
-    await shot(name + '-close-tap', 300);
-    await tap('See the whole region'); await page.clock.runFor(1200);
-  }
+  if (await has('Look closer')) errors.push(`map: a second, closer map is back (${name}, D-092)`);
   await home(); await page.clock.runFor(2500);
 };
 await shot('today', 2500);
@@ -254,7 +249,7 @@ for (let d = 2; d <= 24 && !cut; d++) {
 if (!cut) errors.push('the first word was never cut');
 await mapWalk('map-late');
 await tap('Records'); await page.clock.runFor(1500); await tap('Marks');
-/* Records ⇄ Marks is a tab: nothing rises or fades in again, the heading stays put (Dan, D-090) */
+/* Records ⇄ Marks is a tab: nothing rises or fades in again, the heading stays put (Dan, D-093) */
 if ((await page.locator('h1').first().evaluate(e => getComputedStyle(e).animationName)) !== 'none') errors.push('TABS the heading moved on switching');
 await shot('marks', 1500);
 const openMark = page.locator('.cell .cap.new').first();
@@ -280,7 +275,7 @@ await tap('Week'); await shot('week', 1500);
   await dn.click(); await page.clock.runFor(300);
   if ((await page.locator('.day button.row').count()) !== n0) errors.push('FOLD a day did not open again'); }
 const row = page.locator('.day:not(.past) button.row:not([disabled])').first();
-/* a job's sheet: the time box is the phone's own; a tap on a day moves the job there at once (D-090) */
+/* a job's sheet: the time box is the phone's own; a tap on a day moves the job there at once (D-093) */
 if (await row.count()) {
   await row.click(); await page.locator('.sheet .clock-btn input').fill('14:30'); await page.locator('.sheet .clock-btn input').dispatchEvent('change');
   await shot('week-edit', 800);
@@ -290,7 +285,7 @@ if (await row.count()) {
   if (await page.locator('.sheet').count()) errors.push('WEEK the sheet stayed open after a move');
   if ((await page.locator('.day:not(.past)').first().locator('button.row').count()) !== n0 - 1) errors.push('WEEK a tap on a day did not move the job');
 }
-/* adding a one-off: the + on a day opens a line under it, already typing; Enter puts it there (D-090) */
+/* adding a one-off: the + on a day opens a line under it, already typing; Enter puts it there (D-093) */
 { await page.locator('.day:not(.past) button.plus').first().click(); await page.clock.runFor(300);
   if (!(await page.evaluate(() => document.activeElement?.closest('form.new')))) errors.push('WEEK the new line was not ready to type');
   await shot('week-adding', 500);

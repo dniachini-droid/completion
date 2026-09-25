@@ -21,7 +21,7 @@
   const view = $derived(weekOf(v.content, game.facts, wk, v.day));
 
   let open = $state<string | null>(null);
-  /* adding (the clunkiness pass, D-090): the + on a day opens a line right under that day's name, already typing */
+  /* adding (the clunkiness pass, D-093): the + on a day opens a line right under that day's name, already typing */
   let addingTo = $state<string | null>(null), line = $state(''), lineEl = $state<HTMLInputElement | null>(null);
 
   /* jobs taken off today's list ("Not today"): the Week says so, and can put them back (review 2, D-088) */
@@ -56,7 +56,7 @@
   }
 
   /* a job's sheet: a tap on a day moves it there at once; the time opens the phone's own wheel and keeps what it's set
-     to; nothing to save (D-090) */
+     to; nothing to save (D-093) */
   function edit(j: DayJob, day: string) {
     if (j.done || !j.entry || day < v.day) return;
     addingTo = null;
@@ -137,7 +137,7 @@
                   {#each days as x (x)}<button aria-pressed={d.day === x} onclick={() => moveTo(j, d.day, x)}>{short(x)}</button>{/each}
                 </div>
                 <div class="when">
-                  <!-- the time box is the phone's own: a tap opens its wheel, and what it's set to is kept (D-090) -->
+                  <!-- the time box is the phone's own: a tap opens its wheel, and what it's set to is kept (D-093) -->
                   <label class="clock-btn">
                     <span class="carve" class:set={!!j.time}>{j.time ? t('week.at', { time: j.time }) : t('week.setTime')}</span>
                     <input type="time" step="900" value={j.time ?? ''} aria-label={t('week.time')} onclick={pick}

@@ -13,7 +13,7 @@ export function tunnelLight(root) {
     dpr = Math.min(2, window.devicePixelRatio || 1);
     R = ring.offsetWidth; RW = R * 1.6; rc.width = Math.round(RW * dpr); rc.height = Math.round(RW * dpr);
     /* the dust is soft points of light: drawn at the screen's own size, not doubled, it looks the same and the phone
-       moves a quarter of the pixels each frame (D-090, Dan: the phone warmed during a delve) */
+       moves a quarter of the pixels each frame (D-093, Dan: the phone warmed during a delve) */
     PW = phone.clientWidth; PH = phone.clientHeight; mc.width = Math.round(PW); mc.height = Math.round(PH);
   }
   fit(); window.addEventListener('resize', fit);
@@ -135,7 +135,7 @@ export function tunnelLight(root) {
   }
 
   /* 30 frames a second, as the paintings' own live layers: the dust drifts slowly and the ring moves a hair a second,
-     so a faster screen (60 or 120 a second on a newer iPhone) only warms the phone (D-090) */
+     so a faster screen (60 or 120 a second on a newer iPhone) only warms the phone (D-093) */
   var t0 = null, prev = 0, STEP = 1000 / 30 - 2;
   function frame(ts){
     if (!stopped) raf = requestAnimationFrame(frame);

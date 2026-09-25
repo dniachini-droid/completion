@@ -22,7 +22,7 @@
   const tappable = $derived(open?.kind === 'cut' && (open.cut ?? []).some(l => render(l, held, s).some(tk => tk.t === 'glyph' && isMark(tk.mark))));
 </script>
 
-<!-- the painting behind is drawn once by App, shared by both tabs (D-090) -->
+<!-- the painting behind is drawn once by App, shared by both tabs (D-093) -->
 <div class="ui">
   <header class="top col">
     <div class="topbar rise">

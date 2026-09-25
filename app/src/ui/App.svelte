@@ -50,7 +50,7 @@
   const LOOK = new Set<Screen>(['map', 'records', 'marks', 'week', 'rhythms', 'satchel', 'daybook', 'choose', 'set', 'proto', 'cant']);
   const TABS = new Set<Screen>(['records', 'marks']);
   let trail = $state<Back[]>([]);
-  /* Records ⇄ Marks is a tab: the screen swaps in place, with nothing rising or fading in again (Dan, D-090) */
+  /* Records ⇄ Marks is a tab: the screen swaps in place, with nothing rising or fading in again (Dan, D-093) */
   let still = $state(false);
   const go: Go = (to, a) => {
     still = TABS.has(screen) && TABS.has(to);
@@ -105,7 +105,7 @@
   {#if game.proto.rehearsal && !['today', 'proto'].includes(screen)}<div class="rehearsal" aria-live="polite">{t('proto.badge')}</div>{/if}
   <!-- a screen that fails shows a way back, never a blank phone; the save is untouched (review finding, D-080) -->
   <svelte:boundary onerror={(e) => console.error(e)}>
-  <!-- Records ⇄ Marks share one painting, drawn once: switching tabs swaps only what is under the tab bar (Dan, D-090) -->
+  <!-- Records ⇄ Marks share one painting, drawn once: switching tabs swaps only what is under the tab bar (Dan, D-093) -->
   {#if TABS.has(screen)}<Scene painting={game.view.here.painting} blur bottom="40%" />{/if}
   {#key screen + String(arg ?? '')}
     {#if screen === 'today'}<Today {go} />

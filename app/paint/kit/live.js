@@ -47,7 +47,7 @@ function cloudTexture(tint) {
 }
 
 /* opts.still: drawn once and held (a painting seen only through a blur, behind a list: moving it there would only warm
-   the phone, D-090) */
+   the phone, D-093) */
 export function live(host, meta, opts = {}) {
   const still = reduced || !!opts.still;
   const img = host.querySelector('img.paint');
