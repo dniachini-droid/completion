@@ -1,0 +1,30 @@
+{
+ "id": "pt-pl-w6-square-gallery",
+ "name": "The square gallery",
+ "line": "",
+ "width": 1320,
+ "height": 2868,
+ "live": {
+  "motes": "gold",
+  "fog": "low",
+  "gold": true
+ },
+ "anchors": {
+  "fog": [
+   {
+    "p": [
+     0,
+     0.3,
+     13
+    ],
+    "w": 0.9,
+    "h": 0.15,
+    "a": 0.12,
+    "speed": 0.6,
+    "u": 0.5,
+    "v": 0.581,
+    "s": 0.1467
+   }
+  ]
+ }
+}
