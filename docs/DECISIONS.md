@@ -876,7 +876,7 @@
   2. **A High day adds one job beyond the plan**, the next one due, and only one; more is Dan's own choice through "Something else…". The day's size on High is the plan plus one.
   3. **Marks opens with nothing selected** (Dan: "whatever you think"; Claude's call): a page to look at, not a quiz; a quiet line says to tap a mark.
   4. **Text size:** Dan's is fine; the app keeps its own.
-  - Q2 (is Today still too busy?) explained to Dan; waiting on his answer.
+  5. **Today stays as it is** (Q2), as long as Dan can change what's on it: tap a job to make it next, Not today (or swipe), "Something else…", and the Week and What repeats for the plan itself.
 - **Reversible:** Yes.
 
 ## D-083 — Camp made clear: "Go to sleep", and a head start for bed on time (Dan)

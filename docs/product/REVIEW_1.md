@@ -36,7 +36,7 @@ Seven independent critics reviewed the app, each told to find problems, not to p
 | ui-0 | blocker | Week plan and Today disagree: a week Dan filled himself does not lead Today (Dan's Friday / Course bug) | **Fixed** |
 | ui-1 | major | The '‹ Today' link on the job-done and delve-end screens silently skips the place just reached; it comes back only on a cold start | **Fixed** |
 | ui-2 | minor | Delve end with a guess: the ring overlaps the headings, and at 360 wide the main button is pushed off-screen | **Fixed** |
-| ui-3 | major | Today on opening has about 17 tap targets; the one next action does not stand alone (Dan: 'too many buttons', 'slop') | **Your call**: Q2 below; Swap and the row trays are already gone |
+| ui-3 | major | Today on opening has about 17 tap targets; the one next action does not stand alone (Dan: 'too many buttons', 'slop') | **Decided (D-082)**: Dan keeps Today as it is, as long as he can change what's on it |
 | ui-4 | minor | One screen, three names: 'Something else…', 'Keep going' and 'Choose a delve' | **Left as is**: minor: the three routes to the chooser are one screen, reached from three places |
 | ui-5 | major | 'Start this save again' and the rehearsal switch sit one tap from Today during a six-week test | **Fixed** |
 | ui-6 | minor | The record page looks unfinished compared with its mock-up | **Fixed** |
