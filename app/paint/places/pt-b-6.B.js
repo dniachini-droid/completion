@@ -14,18 +14,17 @@ export default {
   line: '',
   cam: { ...CAM, pitch: -12, yaw: -36, f: .9, cx: .5, cy: .47 },
   far: 24, fogK: 1 / 14,
-  hazeBase: [.018, .016, .046], hazeFar: [.1, .09, .24],
-  bloomAt: [0, 1., 13], bloomPow: 20, bloomC: [.2, .18, .38],
-  bloom: { alpha: .18 },
+  hazeBase: [.014, .012, .038], hazeFar: [.04, .036, .1],
+  bloomAt: [0, .9, 14], bloomPow: 40, bloomC: [.05, .04, .1],
+  bloom: { alpha: .12 },
   glow: { threshold: .62, k: .45 },
   blur: { px: 1.3, d0: 2.6, d1: 8, k: .6 },
-  gold: 1, grain: .5, shadowJitter: 1, amb: .6, expo: 2, ambC: [.86, .78, 1.5], sheen: .05,
+  gold: 1, grain: .4, shadowJitter: 1, amb: .5, expo: 1.9, ambC: [.86, .78, 1.5], sheen: 0,
   lights: [
     { p: [-.62, 1.02, NZ - .7], c: [1, .72, .38], k: .2, r: .35, shadow: 1, reach: 1.3 },     /* the round side's light, low from the left, raking across the wax */
-    { p: [.3, 1.3, NZ - 3.2], c: [1, .7, .34], k: 1.3, r: .9, shadow: 1, reach: 5, warm: .004 },            /* and the rest of it, weak, down the wall */
+    { p: [.3, 1.3, NZ - 3.5], c: [1, .7, .34], k: .7, r: .9, shadow: 1, reach: 5 },            /* and the rest of it, weak, down the wall */
     { p: [.4, 1.6, NZ - 1.6], c: [.4, .37, .85], k: 1.6, r: 1.2 },                               /* cold fill */
-    { p: [0, 1.3, NZ + 4], c: [.4, .37, .85], k: 1.4, r: 2 },
-    { p: [0, 1.4, 14], c: [.48, .45, .95], k: 4, r: 2.5 },                                     /* a far glow down the gallery */                                     /* cold, down the gallery */
+    { p: [0, 1.3, NZ + 4], c: [.4, .37, .85], k: 1, r: 2 },                                     /* cold, down the gallery */
   ],
   glsl: squareRoom(CAM) + TALLY + /* glsl */ `
   const float NZ = ${NZ.toFixed(2)}, NY = ${NY.toFixed(2)};
@@ -33,7 +32,7 @@ export default {
     vec4 d = roomScene(p);
     if (p.y > HT - .05) gTint *= .35;                                                       /* the flat roof overhead, dark */
     if (p.y < .04) gTint *= mix(.35, .8, smoothstep(NZ - .5, NZ + 3., p.z));                 /* the floor, calm */
-    if (p.x < 0. && p.y < .92) gTint *= mix(.22, 1., smoothstep(.15, .92, p.y));             /* the wall's foot, out of the light: the button's band stays calm */
+    if (p.x < 0. && p.y < .75) gTint *= mix(.3, 1., smoothstep(.1, .75, p.y));             /* the wall's foot, out of the light: the button's band stays calm */
     if (p.x > 0. && p.y > .04 && p.y < HT - .05) gTint *= .6;                               /* the far wall, out of the light */
     /* the longer record, in the tally's hand, at chest height above the niche */
     if (p.x < -WW + .05 && abs(p.y - 1.4) < .05 && abs(p.z - NZ) < 1.2) d.x += engrave(tally(vec2(p.z + 7., p.y - 1.4), .05, 57.), .0045, .006);
@@ -50,20 +49,20 @@ export default {
     float ta = -.25, tb = .1;                                                             /* turned toward the gallery; leaning back */
     q.xz = mat2(cos(ta), -sin(ta), sin(ta), cos(ta)) * q.xz;
     q.xy = mat2(cos(tb), -sin(tb), sin(tb), cos(tb)) * q.xy;
-    vec4 fr = box(q, vec3(0), vec3(.011, .143, .198), M_WOOD); fr.x -= .006; fr.x += rough(p, .002, 60.);
-    if (fr.x < d.x) { d = fr; gTint = vec3(.95, .88, .92) * (.8 + .3 * fbm3(p * 40., 2)); }                       /* old wood, worn round at the edges */
+    vec4 fr = box(q, vec3(0), vec3(.012, .145, .2), M_WOOD); fr.x -= .004;
+    if (fr.x < d.x) { d = fr; gTint = vec3(.8, .75, .8); }
     vec4 wx = box(q, vec3(.006, 0, 0), vec3(.012, .128, .183), M_PAPER);
     if (wx.x < d.x) {
       d = wx; d.zw = NOUV;
-      gTint = vec3(.84, .76, .64) * (.82 + .24 * fbm3(p * 26., 3)); gPolish = .5;             /* hard wax, amber-grey, a low waxy sheen */
+      gTint = vec3(.95, .82, .66) * (.85 + .2 * fbm3(p * 30., 3)); gPolish = .3;             /* hard wax, amber-grey, a dull shine */
       if (q.x > .016) {
         /* ruled in rows; at the head of every row a ring; after it, a few faint marks */
         float ry = (q.y + .128) / .04267, ri = floor(ry), fy = (fract(ry) - .5) * .04267;
         float rule = fract(ry) * .04267;
-        float ruled = engrave(min(rule, .04267 - rule), .0026, .0032);
+        float ruled = engrave(min(rule, .04267 - rule), .0018, .0018);
         float hz = q.z;                                                                    /* along the row, from its head */
         vec2 rc = vec2(hz + .152, fy);
-        float ring = ri < 6. ? engrave(abs(length(rc) - .0125), .0034, .0045) : 0.;
+        float ring = ri < 6. ? engrave(abs(length(rc) - .0125), .0032, .004) : 0.;
         float mk = 0.;
         if (hz > -.125 && hz < .17 && ri < 6.) {
           float c = floor((hz + .13) / .02), cx = hz + .13 - (c + .5) * .02;

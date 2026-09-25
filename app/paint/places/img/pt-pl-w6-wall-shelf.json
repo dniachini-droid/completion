@@ -1,0 +1,29 @@
+{
+ "id": "pt-pl-w6-wall-shelf",
+ "name": "The wall-shelf",
+ "line": "",
+ "width": 1320,
+ "height": 2868,
+ "live": {
+  "motes": "gold",
+  "gold": true
+ },
+ "anchors": {
+  "fog": [
+   {
+    "p": [
+     -0.3,
+     0.3,
+     9.7
+    ],
+    "w": 1,
+    "h": 0.15,
+    "a": 0.12,
+    "speed": 0.6,
+    "u": 0.7923,
+    "v": 0.574,
+    "s": 0.2011
+   }
+  ]
+ }
+}

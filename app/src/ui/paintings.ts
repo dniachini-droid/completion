@@ -94,6 +94,8 @@ import ppl_w3_salt_litUrl from '../../paint/places/img/pt-pl-w3-salt-lit.webp?ur
 import ppl_w3_salt_litMeta from '../../paint/places/img/pt-pl-w3-salt-lit.json';
 import ppl_w4_recess_above_the_cotUrl from '../../paint/places/img/pt-pl-w4-recess-above-the-cot.webp?url';
 import ppl_w4_recess_above_the_cotMeta from '../../paint/places/img/pt-pl-w4-recess-above-the-cot.json';
+import ppl_w6_wall_shelfUrl from '../../paint/places/img/pt-pl-w6-wall-shelf.webp?url';
+import ppl_w6_wall_shelfMeta from '../../paint/places/img/pt-pl-w6-wall-shelf.json';
 
 export interface Painting { url: string; meta: unknown; focus: number; }
 export const paintings: Record<string, Painting> = {
@@ -144,6 +146,7 @@ export const paintings: Record<string, Painting> = {
   'pt-b-4.C': { url: pb_4_CUrl, meta: pb_4_CMeta, focus: .5 },
   'pt-pl-w3-salt-lit': { url: ppl_w3_salt_litUrl, meta: ppl_w3_salt_litMeta, focus: .47 },
   'pt-pl-w4-recess-above-the-cot': { url: ppl_w4_recess_above_the_cotUrl, meta: ppl_w4_recess_above_the_cotMeta, focus: .39 },
+  'pt-pl-w6-wall-shelf': { url: ppl_w6_wall_shelfUrl, meta: ppl_w6_wall_shelfMeta, focus: .5 },
 };
 
 /** Frame a painting so its light sits in the open gap between the words (the morning mock-up lifts the lamp the same way).
