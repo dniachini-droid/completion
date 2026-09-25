@@ -19,12 +19,12 @@ A line is done when **a reader who knows nothing of the story can explain the sc
 ## Who does what
 
 - **Claude writes**, with the sealed story to hand, and runs the checks as a multi-agent workflow.
-- **Cold readers** (at least two, one on Fable) get only the screens in play order plus a recap of what the player has already seen. They must not open the repository. They explain every screen back and flag any they had to guess at.
+- **Cold readers** (at least two, one on Fable) get only the screens in play order plus a recap of what the player has already seen. They must not open the repository. They explain every screen back and flag any they had to guess at. A **judge** with the sealed docs compares their explanations with the intended reading and lists what to revise (weeks 8–14 onward).
 - **Dan judges in place:** a week captured from the app as screenshots with the full words under each, never as a list of lines. He sees only what he'd see playing, and only up to where he has played or agreed to read (D-015).
 
 ## The steps
 
-1. **Extract.** Dump the lines (`app/scripts/words/dump.ts`) into the scratchpad, never the repository, with each line's plain fact source. Leave out buttons that aren't choices, the taps of a cut word, and location labels.
+1. **Extract.** Dump the lines (`app/scripts/words/dump.ts`) into the scratchpad, never the repository, with each line's plain fact source. Leave out buttons that aren't choices, the taps of a cut word, and location labels. For new weeks, give the readers the screens **in the order the app plays them** (`app/scripts/words/screens.ts`, a simulated Normal run), then the week's other lines, after a short recap of what the player has seen; `check.cjs` takes an output path as its third argument, so its `returned.json` goes to the scratchpad too.
 2. **List the things.** Name every recurring thing, what it is in everyday words, and what it appears to be. Reuse earlier weeks' names.
 3. **Write** to the rules above.
 4. **Explain back.** The cold readers explain every screen. Rewrite each screen that anyone found unclear, *and* each one they explained wrongly while marking it clear.

@@ -1,7 +1,7 @@
 /**
  * SEALED (D-015): story content. Never shown to Dan outside the game.
  * Transcribed from docs/narrative/sealed/NICHES.md (weeks 1–7), MVP_CONTENT.md §0.3 and §5, and
- * ARRIVALS_REGION1.md / ARRIVALS_REGION2.md (the (Key) rows); those files are authoritative.
+ * ARRIVALS_REGION1.md / ARRIVALS_REGION2.md (the (Key) rows); weeks 8–14 from NICHES.md as planned in STORY_JOB.md §8; those files are authoritative.
  *
  * `o` is the Key order within the week (NICHES row order, Key rows only). Seen-only rows take no Key.
  * Where ARR has a (Key) step, `beat` names it; where ARR has a (Key) arrival, `arrival` names it.
@@ -130,4 +130,100 @@ export const seals: Seal[] = [
   // NOTE: rec-x-wages is not in MVP_CONTENT §4 (run-ahead); the id follows LIVES §12 "the wages".
   { id: 'seal-7-5', w: 7, o: 5, where: 'The Lamp Hall, the great door', stretch: 'st-hall', arrival: 'b-7.C',
     carries: { word: 'wd-open-way' } },
+  /* ---- week 8 (NICHES week 8; row 5 is new and the child's tablet moves to week 9: STORY_JOB §8.3) ---- */
+  { id: 'seal-8-1', w: 8, o: 1, where: 'The Water, a niche by the Stair’s last step', stretch: 'st-water', beat: 'b-8.1',
+    carries: { guess: ['mk-see', 'mk-count', 'mk-day', 'mk-number'] } },
+  { id: 'seal-8-2', w: 8, o: 0, where: 'The channel’s near lip', stretch: 'st-water', seenOnly: true },
+  // NOTE: seal-8-2 is V4, seen in the open at b-8.2.
+  { id: 'seal-8-3', w: 8, o: 2, where: 'The Water, a step under the water', stretch: 'st-water', beat: 'b-8.4', plain: true },
+  { id: 'seal-8-4', w: 8, o: 3, where: 'The Water’s far shore, a niche', stretch: 'st-blast', arrival: 'b-8.C' },
+  { id: 'seal-8-5', w: 8, o: 4, where: 'The channel, a niche above the water', stretch: 'st-water',
+    line: 'In the channel\'s side, the row of notches on the niche fills with light, and the niche opens. Inside lies a cork float, the kind that bobs on a fishing line, tied to a long cord knotted at even spaces. The cord is dry and neatly coiled. It looks as if someone once timed the channel\'s flow by letting the float drift along it.',
+    plain: true },
+
+  /* ---- week 9 ---- */
+  { id: 'seal-9-1', w: 9, o: 1, where: 'The Reading Room, a tablet set low on the wall', stretch: 'st-reading', beat: 'b-9.2',
+    carries: { guess: ['mk-not'] } },
+  { id: 'seal-9-2', w: 9, o: 2, where: 'The Reading Room, a low bench', stretch: 'st-reading', arrival: 'b-9.C',
+    carries: { records: ['rec-x-binder-child'] } },
+  { id: 'seal-9-3', w: 9, o: 3, where: 'The Reading Room, a bench with notches along its edge', stretch: 'st-reading', beat: 'b-9.4', plain: true },
+  { id: 'seal-9-4', w: 9, o: 4, where: 'The Reading Room, a flat stone on the floor', stretch: 'st-reading',
+    line: 'Near the Reading Room\'s benches, the row of notches on the flat stone in the floor fills with light. The three small symbols on its face are the same three as on the lintel over the inner door, cut small: a hook closed round a drop, a fork open sideways, and a cross. It looks like a copy of the lintel set down at floor level, where someone could read it up close.',
+    carries: { records: ['rec-lintel'] } },
+  { id: 'seal-9-5', w: 9, o: 5, where: 'Below the Water, a niche beside the lintel', stretch: 'st-blast',
+    line: 'Below the Water, beside the lintel that smells of powder, the row of notches on one of the two niches fills with light, and the niche opens. Inside stands a round tin with a tight lid, the kind blasting powder was kept in, with a company\'s name stamped on its side. It is empty.',
+    plain: true },
+
+  /* ---- week 10 ---- */
+  { id: 'seal-10-1', w: 10, o: 1, where: 'Below the Water, the other niche beside the lintel', stretch: 'st-blast', beat: 'b-10.1',
+    carries: { guess: ['mk-move', 'mk-water'] } },
+  { id: 'seal-10-2', w: 10, o: 2, where: 'Below the Water, the lintel over solid stone', stretch: 'st-blast', arrival: 'b-10.A',
+    carries: { word: 'wd-open-way' } },
+  { id: 'seal-10-3', w: 10, o: 3, where: 'The square gallery, the standing stone before the fall', stretch: 'st-square', arrival: 'b-10.B',
+    carries: { records: ['rec-v5'] } },
+  { id: 'seal-10-4', w: 10, o: 4, where: 'The blast room, a recess by the ledge', stretch: 'st-blast', arrival: 'b-10.C' },
+  { id: 'seal-10-5', w: 10, o: 5, where: 'The blast room, a shelf', stretch: 'st-blast',
+    line: 'In the blast room, the row of notches along the shelf fills with light. On the shelf is a tin plate with a knife laid across it, as if someone ate here and meant to come back to it.',
+    plain: true },
+
+  /* ---- week 11 (rows 6 and 7 are new: STORY_JOB §8.3) ---- */
+  { id: 'seal-11-1', w: 11, o: 1, where: 'The blast room, the cupboard', stretch: 'st-blast', beat: 'b-11.1',
+    carries: { guess: ['mk-voice', 'mk-sleep'] } },
+  { id: 'seal-11-2', w: 11, o: 2, where: 'The blast room, the ledge with the book', stretch: 'st-blast', arrival: 'b-11.A',
+    carries: { records: ['rec-c1', 'rec-k3'] } },
+  { id: 'seal-11-3', w: 11, o: 0, where: 'The blast room, the book’s other margins', stretch: 'st-blast', seenOnly: true },
+  { id: 'seal-11-4', w: 11, o: 3, where: 'The blast room, a crack by the torn wall', stretch: 'st-blast', arrival: 'b-11.C',
+    carries: { records: ['rec-x-powder-man'] } },
+  { id: 'seal-11-5', w: 11, o: 0, where: 'The blast room, under the ledge', stretch: 'st-blast', seenOnly: true },
+  // NOTE: seal-11-5 is the well-keeper's bucket, seen in the open at b-12.A.
+  { id: 'seal-11-6', w: 11, o: 4, where: 'The blast room, a split in the floor by the rails', stretch: 'st-blast',
+    line: 'Where the iron rails stop in the middle of the blast room, a row of notches along a split in the floor fills with light. Driven into the split is a spiked iron candle-holder, the kind miners drove into a wall to hold a candle while they worked. A stub of wax is still in its cup.',
+    plain: true },
+  { id: 'seal-11-7', w: 11, o: 5, where: 'The Reading Room, the end of a bench', stretch: 'st-reading',
+    line: 'On the end of a bench in the Reading Room, a row of notches fills with light. Lying there is a pencil stub, worn down to the length of your thumb and sharpened to a point with a knife. It looks like one of hers.',
+    plain: true },
+
+  /* ---- week 12 ---- */
+  { id: 'seal-12-1', w: 12, o: 1, where: 'The Water’s far end, a niche', stretch: 'st-water', beat: 'b-12.1',
+    carries: { guess: ['mk-take', 'mk-hand-sign', 'mk-good'] } },
+  { id: 'seal-12-2', w: 12, o: 2, where: 'The Salt Gallery, the tally’s last stretch', stretch: 'st-salt', arrival: 'b-12.B',
+    carries: { records: ['rec-s8'] } },
+  { id: 'seal-12-3', w: 12, o: 3, where: 'The blast room, the ledge’s lip', stretch: 'st-blast', beat: 'b-12.3',
+    carries: { records: ['rec-k3'] } },
+  { id: 'seal-12-4', w: 12, o: 4, where: 'The blast room, a box on the shelf', stretch: 'st-blast',
+    line: 'At the back of the blast room, the notches on the slate across the box\'s lid fill with light, and you lift the lid. The box is empty. Its inside is stained brown halfway up, as if water once stood in it.',
+    plain: true },
+  { id: 'seal-12-5', w: 12, o: 5, where: 'The side gallery, a sill across the floor', stretch: 'st-side', arrival: 'b-12.C' },
+  { id: 'seal-12-6', w: 12, o: 6, where: 'The blast room, a niche behind the shelf', stretch: 'st-blast',
+    line: 'At the back of the blast room, the row of notches on the small niche behind the shelf fills with light, and it opens. Inside is a child\'s pocket compass in a dented brass case. Its needle is stuck fast against the glass.',
+    plain: true },
+
+  /* ---- week 13 (row 6 is new) ---- */
+  { id: 'seal-13-1', w: 13, o: 1, where: 'The side gallery, a niche by the shut door', stretch: 'st-side', beat: 'b-13.1',
+    carries: { guess: ['mk-long-sleep', 'mk-mark'] } },
+  { id: 'seal-13-2', w: 13, o: 2, where: 'The side gallery, the shut door', stretch: 'st-side', arrival: 'b-13.A',
+    carries: { records: ['rec-v6'] } },
+  { id: 'seal-13-3', w: 13, o: 3, where: 'The side gallery, a recess across from the door', stretch: 'st-side', beat: 'b-13.3',
+    carries: { records: ['tl-ledger'] } },
+  { id: 'seal-13-4', w: 13, o: 0, where: 'The square gallery, the fall', stretch: 'st-square', seenOnly: true },
+  // NOTE: seal-13-4 (the roof-fall) is opened by the word at b-13.B, not by a Key.
+  { id: 'seal-13-5', w: 13, o: 4, where: 'The Reading Room, a bench apart from the rest', stretch: 'st-reading', arrival: 'b-13.C',
+    carries: { records: ['tl-one-stroke'] } },
+  { id: 'seal-13-6', w: 13, o: 5, where: 'The side gallery, a small niche by the floor', stretch: 'st-side',
+    line: 'Low in the side gallery\'s wall, the row of notches on the small niche fills with light, and it opens. Inside lies a folding rule made of bone, the kind of measuring stick that folds in two, marked along its edge in tens.',
+    plain: true },
+
+  /* ---- week 14 (NICHES weeks 14–26, week 14) ---- */
+  { id: 'seal-14-1', w: 14, o: 1, where: 'The blast room, the cupboard’s lower shelf', stretch: 'st-blast', beat: 'b-14.1',
+    carries: { guess: ['mk-world', 'mk-hear'] } },
+  { id: 'seal-14-2', w: 14, o: 2, where: 'The blast room, the ledge beside the log', stretch: 'st-blast',
+    line: 'In the blast room, a row of notches along the ledge beside the log fills with light. Tucked inside the log\'s back cover is a second page, folded in four and stuck to the board with old damp. You leave it to come free rather than tear it.',
+    plain: true },
+  // NOTE: seal-14-2's folded page is the log's next page (E5), read in week 15.
+  { id: 'seal-14-3', w: 14, o: 0, where: 'The blast room, the torn wall behind the fall', stretch: 'st-blast', seenOnly: true },
+  // NOTE: seal-14-3 is the blank seen at b-14.A (a word's blank, not a Key's).
+  { id: 'seal-14-4', w: 14, o: 3, where: 'The square gallery, under the line above the mule-shoe’s stone', stretch: 'st-square', beat: 'b-14.3',
+    carries: { records: ['rec-x-mule'] } },
+  { id: 'seal-14-5', w: 14, o: 4, where: 'The Salt Gallery, the deep niche', stretch: 'st-salt', beat: 'b-14.4',
+    carries: { records: ['rec-s9'] } },
 ];

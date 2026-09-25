@@ -33,6 +33,10 @@ export const lettering: Record<string, Letter> = {
   'mk-hand': { d: 'M13 31 L13 9 L27 9 L27 23 L20 23 M19.5 15.5 L20.5 16.5' },
   /* her hand-mark, drawn in a record's corner (`{ hand: 'hers' }`): a hook with a tail (ARR1 voice rules); not a sign of the Cut */
   'mk-hand-hers': { d: 'M14 29 L14 9 L27 9 L27 17 M14 29 L8 35' },
+  /* the Surveyor's own hook (V4: *a hook that is not the tally's either*): a hook crossed by a short cut */
+  'mk-hand-surveyor': { d: 'M14 31 L14 9 L27 9 L27 17 M8 21 L20 21' },
+  /* a maker's hook on the Reading Room's tablets: a hook with a short bar under its foot */
+  'mk-hand-maker': { d: 'M15 28 L15 9 L27 9 L27 16 M9 33 L21 33' },
   'mk-number': { d: 'M5 12 L5 28 M9 12 L9 28 M13 20 L21 20 M24 12 L29 28 L34 12' },
   'mk-two': { d: 'M16 7 L16 33 M24 7 L24 33' },
   'mk-three': { d: 'M12 7 L12 33 M20 7 L20 33 M28 7 L28 33' },
@@ -60,6 +64,10 @@ export const lettering: Record<string, Letter> = {
   'mk-keep': { d: 'M11 32 L11 8 L29 8 L29 26 L17 26 M20 13 L20 21' },
   'mk-shut': { d: 'M8 9 L32 9 M12 13 L12 32 M28 13 L28 32 M15 15 L25 27 M25 15 L15 27' },
   'mk-toward': { d: 'M20 9 L20 25 M15 21 L20 31 L25 21' },
+  'mk-long-sleep': { d: 'M6 13 L34 13 M6 21 L34 21 M6 29 L34 29' },
+  'mk-world': { d: 'M10 25 L20 8 L30 25 M6 32 L34 32' },
+  'mk-hear': { d: 'M29 10 L12 10 L12 30 L29 30' },
+  'mk-loud': { d: 'M20 16 L20 11 M20 11 L13 4 M20 11 L27 4 M8 22 L32 22 L32 34 L8 34 Z' },
   'mk-name': { d: 'M21 10 L35 10 L35 30 L21 30 Z M28 10 L28 30', rings: [[11, 20, 7]] },
   'mk-one-who': { d: 'M20 7 L20 15 M13 17 L27 17 M20 21 L20 30 M12 33 L28 33' },
 };

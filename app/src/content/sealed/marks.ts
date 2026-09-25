@@ -40,7 +40,7 @@ export const marks: Mark[] = [
   {
     id: 'mk-one', sign: 'ONE', w: 2, elements: ['drop'], shape: 'a single drop',
     guessAt: 'seal-2-1', context: 'Under this mark on her sheet, she has written the word one in pencil.', candidates: ['one', 'the first', 'a drop', 'small'],
-    right: ['one', 'the first'], tempting: 'a drop', confirmedBy: 'b-8.1', struck: "A drop, yes, but it's counting. One.",
+    right: ['one', 'the first'], tempting: 'a drop', confirmedBy: 'b-8.B', struck: 'A drop, yes: the single stroke that starts every count. One.',
   },
   {
     id: 'mk-me', sign: 'ME', w: 2, elements: ['drop', 'hook-small-foot'], shape: 'a drop with a small hook at its foot',
@@ -97,10 +97,10 @@ export const marks: Mark[] = [
     tempting: 'sky', confirmedBy: 'b-7.2', struck: 'Not the sky. Which way: up, and out.',
   },
   {
-    // NOTE: confirmed in week 13 by the word MOVE-STONE; that beat is outside the MVP, so the word id stands in for it.
+    // NOTE: confirmed in week 13 by the word MOVE-STONE, cut at b-13.B.
     id: 'mk-stone', sign: 'STONE', w: 7, elements: ['wedge', 'bar'], shape: 'a wedge on a bar',
     guessAt: 'b-7.1', context: 'a block', candidates: ['stone', 'wall', 'block', 'hill'], right: ['stone'],
-    tempting: 'wall', confirmedBy: 'wd-move-stone', struck: 'Not the wall. What the wall is made of.',
+    tempting: 'wall', confirmedBy: 'b-13.B', struck: 'Not the wall. What the wall is made of.',
   },
   {
     id: 'mk-child', sign: 'CHILD', w: 7, elements: ['drop-small', 'bar-small'], shape: 'a small drop standing on a small bar',
@@ -112,24 +112,96 @@ export const marks: Mark[] = [
   { id: 'mk-ring', sign: 'RING', w: 1, elements: ['ring'], shape: 'a ring', recognised: true },
   { id: 'mk-hand', sign: 'HAND-MARK', w: 4, elements: ['hook-closed', 'dot'], shape: 'a hook closed on a dot', recognised: true },
 
-  // ——— Signs the records use that stay glyphs in the MVP (SCRIPT §6; NICHES for the weeks) ———
-  { id: 'mk-number', sign: 'NUMBERS', w: 8, elements: ['strokes', 'bar', 'wedge'], shape: 'strokes in a row, then a bar, then a wedge' },
-  { id: 'mk-two', sign: 'TWO', w: 8, elements: ['stroke', 'stroke'], shape: 'two strokes' },
-  { id: 'mk-three', sign: 'THREE', w: 8, elements: ['stroke', 'stroke', 'stroke'], shape: 'three strokes' },
-  { id: 'mk-four', sign: 'FOUR', w: 8, elements: ['stroke', 'stroke', 'stroke', 'stroke'], shape: 'four strokes' },
-  { id: 'mk-see', sign: 'SEE', w: 8, elements: ['diamond'], shape: 'a diamond' },
-  { id: 'mk-count', sign: 'COUNT', w: 8, elements: ['strokes'], shape: 'strokes in a row' },
-  { id: 'mk-day', sign: 'DAY', w: 8, elements: ['fork', 'wedge-inverted'], shape: 'an inverted wedge with a fork above it' },
-  { id: 'mk-not', sign: 'NOT', w: 9, elements: ['cross'], shape: 'a cross' },
-  { id: 'mk-move', sign: 'MOVE', w: 10, elements: ['drop', 'bar-rising'], shape: 'a drop with a rising bar' },
-  { id: 'mk-water', sign: 'WATER', w: 10, elements: ['bar-short', 'bar-short', 'bar-short'], shape: 'three short bars' },
-  { id: 'mk-voice', sign: 'VOICE', w: 11, elements: ['fork-sideways'], shape: 'a fork open sideways' },
-  { id: 'mk-sleep', sign: 'SLEEP', w: 11, elements: ['bar', 'bar'], shape: 'a bar over a bar' },
-  { id: 'mk-take', sign: 'TAKE', w: 12, elements: ['hook-closing', 'drop-entering'], shape: 'a hook closing on a drop' },
+  // ——— Story weeks 8–14 (ARRIVALS_REGION2/3, NICHES weeks 8–14; STORY_JOB §8): guessed ———
+  {
+    // NOTE: the number bundle (SCRIPT D5): strokes to seven, a bar for eight, a wedge for sixty-four. Settled with the
+    // numerals at b-8.B, where the tally's own count and the eights stand side by side.
+    id: 'mk-number', sign: 'NUMBERS', w: 8, elements: ['strokes', 'bar', 'wedge'], shape: 'strokes in a row, then a bar, then a wedge',
+    guessAt: 'b-8.1', context: 'no picture: it stands alone at the foot of the tablet', candidates: ['numbers', 'a date', 'a list', 'steps'],
+    right: ['numbers'], tempting: 'a date', confirmedBy: 'b-8.B', struck: 'Not a date. Strokes, then a bar, then a wedge: counting, and counting bigger. Numbers.',
+  },
+  { id: 'mk-two', sign: 'TWO', w: 8, elements: ['stroke', 'stroke'], shape: 'two strokes', confirmedBy: 'b-8.B' },
+  { id: 'mk-three', sign: 'THREE', w: 8, elements: ['stroke', 'stroke', 'stroke'], shape: 'three strokes', confirmedBy: 'b-8.B' },
+  { id: 'mk-four', sign: 'FOUR', w: 8, elements: ['stroke', 'stroke', 'stroke', 'stroke'], shape: 'four strokes', confirmedBy: 'b-8.B' },
+  {
+    id: 'mk-see', sign: 'SEE', w: 8, elements: ['diamond'], shape: 'a diamond',
+    guessAt: 'b-8.1', context: 'a carved eye', candidates: ['see', 'eye', 'look', 'light'], right: ['see', 'look'],
+    tempting: 'eye', confirmedBy: 'b-8.B', struck: 'Not the eye itself. What the eye does: see.',
+  },
+  {
+    id: 'mk-count', sign: 'COUNT', w: 8, elements: ['strokes'], shape: 'strokes in a row',
+    guessAt: 'b-8.1', context: 'a carved hand, fingers spread', candidates: ['count', 'fingers', 'hand', 'many'], right: ['count'],
+    tempting: 'fingers', confirmedBy: 'b-8.B', struck: 'Not fingers. What fingers are for: counting. A row of strokes is the count itself.',
+  },
+  {
+    id: 'mk-day', sign: 'DAY', w: 8, elements: ['fork', 'wedge-inverted'], shape: 'an inverted wedge with a fork above it',
+    guessAt: 'b-8.1', context: 'a carved sun', candidates: ['day', 'sun', 'morning', 'dawn'], right: ['day'],
+    tempting: 'sun', confirmedBy: 'b-8.B', struck: 'Not the sun. What the sun makes: a day.',
+  },
+  {
+    id: 'mk-not', sign: 'NOT', w: 9, elements: ['cross'], shape: 'a cross',
+    guessAt: 'b-9.2', context: 'a carved lamp, lit, and the same lamp dark', candidates: ['not', 'dark', 'out', 'really'], right: ['not'],
+    tempting: 'dark', confirmedBy: 'b-9.B', struck: 'Not dark. The cross turns round the mark before it: not.',
+  },
+  {
+    id: 'mk-move', sign: 'MOVE', w: 10, elements: ['drop', 'bar-rising'], shape: 'a drop with a rising bar',
+    guessAt: 'b-10.1', context: 'a carved block, lifted', candidates: ['move', 'lift', 'fall', 'push'], right: ['move', 'lift'],
+    tempting: 'fall', confirmedBy: 'b-w10.morning', struck: 'Not falling. The block goes where it is sent: it moves.',
+  },
+  {
+    id: 'mk-water', sign: 'WATER', w: 10, elements: ['bar-short', 'bar-short', 'bar-short'], shape: 'three short bars',
+    guessAt: 'b-10.1', context: 'carved water', candidates: ['water', 'rain', 'lake', 'still'], right: ['water'],
+    tempting: 'still', confirmedBy: 'b-w10.morning', struck: 'Not still. Only water, moving or not.',
+  },
+  {
+    id: 'mk-voice', sign: 'VOICE', w: 11, elements: ['fork-sideways'], shape: 'a fork open sideways',
+    guessAt: 'b-11.1', context: 'a carved mouth', candidates: ['voice', 'mouth', 'breath', 'fire'], right: ['voice'],
+    tempting: 'mouth', confirmedBy: 'b-11.B', struck: 'Not the mouth. What comes out of it: a voice.',
+  },
+  {
+    id: 'mk-sleep', sign: 'SLEEP', w: 11, elements: ['bar', 'bar'], shape: 'a bar over a bar',
+    guessAt: 'b-11.1', context: 'a carved sleeper', candidates: ['sleep', 'bed', 'lie', 'rest'], right: ['sleep', 'lie'],
+    tempting: 'bed', confirmedBy: 'b-w11.morning', struck: 'Not the bed. What is done in it: sleep.',
+  },
+  {
+    id: 'mk-take', sign: 'TAKE', w: 12, elements: ['hook-closing', 'drop-entering'], shape: 'an open hook, its tip coming down on a drop',
+    guessAt: 'b-12.1', context: 'a carved hand taking bread', candidates: ['take', 'bread', 'eat', 'hold'], right: ['take'],
+    tempting: 'bread', confirmedBy: 'b-w12.morning', struck: 'Not the bread. The hook comes down on it: take.',
+  },
   // NOTE: the HAND sign (a plain hook) needs its own id: `mk-hand` is MVP §6's recognised hand-mark.
-  { id: 'mk-hand-sign', sign: 'HAND', w: 12, elements: ['hook'], shape: 'a plain hook' },
-  { id: 'mk-good', sign: 'GOOD', w: 12, elements: ['bar', 'drop', 'bar'], shape: 'a full cell: a bar, a drop, a bar' },
-  { id: 'mk-mark', sign: 'MARK', w: 13, elements: ['cell-divided'], shape: 'a cell divided by one cut' },
+  {
+    id: 'mk-hand-sign', sign: 'HAND', w: 12, elements: ['hook'], shape: 'a plain hook',
+    guessAt: 'b-12.1', context: 'a carved hand', candidates: ['hand', 'fingers', 'five', 'hook'], right: ['hand'],
+    tempting: 'fingers', confirmedBy: 'b-w12.morning', struck: 'Not the fingers. All of it: a hand.',
+  },
+  {
+    id: 'mk-good', sign: 'GOOD', w: 12, elements: ['bar', 'drop', 'bar'], shape: 'a full cell: a bar above, a bar below, a drop between',
+    guessAt: 'b-12.1', context: 'a carved lamb, standing', candidates: ['good', 'lamb', 'whole', 'young'], right: ['good', 'whole'],
+    tempting: 'lamb', confirmedBy: 'b-w12.morning', struck: 'Not the lamb. What the lamb is: good, and whole.',
+  },
+  {
+    id: 'mk-long-sleep', sign: 'LONG-SLEEP', w: 13, elements: ['bar', 'bar', 'bar'], shape: 'three long bars, laid close',
+    guessAt: 'b-13.1', context: 'a carved mound', candidates: ['long sleep', 'grave', 'buried', 'hill'], right: ['long sleep'],
+    tempting: 'grave', confirmedBy: 'b-13.A', struck: 'Not the grave. What lies in it: the long sleep.',
+  },
+  {
+    id: 'mk-mark', sign: 'MARK', w: 13, elements: ['cell-divided'], shape: 'a cell divided by one cut',
+    guessAt: 'b-13.1', context: 'a carved cut in stone', candidates: ['mark', 'a box', 'a cut', 'door'], right: ['mark', 'a cut'],
+    tempting: 'a box', confirmedBy: 'b-w13.morning', struck: 'Not a box. One cut in a cell: a mark.',
+  },
+  // NOTE: WORLD and HEAR are guessed in week 14 and settle later (REVELATION_MAP month 4): no confirming beat yet.
+  {
+    id: 'mk-world', sign: 'WORLD', w: 14, elements: ['wedge-inverted', 'bar'], shape: 'an inverted wedge on a bar',
+    guessAt: 'b-14.1', context: 'a carved sun over the ground', candidates: ['world', 'sunrise', 'hill', 'outside'], right: ['world', 'outside'],
+    tempting: 'sunrise', struck: 'Not the sunrise. The place the sun is over: the world.',
+  },
+  {
+    id: 'mk-hear', sign: 'HEAR', w: 14, elements: ['hook-reversed'], shape: 'a plain hook turned to face the other way, like a cup open to one side',
+    guessAt: 'b-14.1', context: 'a carved ear', candidates: ['hear', 'ear', 'cup', 'listen'], right: ['hear', 'listen'],
+    tempting: 'cup', struck: 'Not a cup. An ear: hear.',
+  },
+
+  // ——— Signs the records use that stay glyphs for now (SCRIPT §6; NICHES for the weeks) ———
   { id: 'mk-make', sign: 'MAKE', w: 15, elements: ['hook', 'cell-divided'], shape: 'a hook beside a divided cell' },
   { id: 'mk-read', sign: 'READ', w: 15, elements: ['diamond', 'cell-divided'], shape: 'a diamond beside a divided cell' },
   { id: 'mk-of', sign: 'OF', w: 16, elements: ['hook-small'], shape: 'a small hook linking two marks' },
@@ -142,6 +214,8 @@ export const marks: Mark[] = [
   { id: 'mk-keep', sign: 'KEEP', w: 22, elements: ['hook-closed', 'drop-inside'], shape: 'a hook closed round a drop' },
   { id: 'mk-shut', sign: 'SHUT', w: 23, elements: ['cross', 'bar', 'drop', 'drop'], shape: 'a cross over a doorway' },
   { id: 'mk-toward', sign: 'TOWARD', w: 24, elements: ['drop-pointed'], shape: 'a pointed drop' },
+  // NOTE: LOUD, the fork set over a sign (SCRIPT F9), arrives in month 8; V4, V5 and V6 carry it from weeks 8–13 as a glyph.
+  { id: 'mk-loud', sign: 'LOUD', w: 32, elements: ['fork-over'], shape: 'a fork set over a mark' },
   { id: 'mk-name', sign: 'NAME', w: 30, elements: ['ring', 'cell-divided'], shape: 'a ring beside a divided cell' },
   // NOTE: ONE-WHO arrives in month 9 (REVELATION_MAP: the rule-stone, week 36).
   { id: 'mk-one-who', sign: 'ONE-WHO', w: 36, elements: ['drop', 'bar'], shape: 'a drop on a bar, under another mark' },

@@ -25,10 +25,35 @@ export const learned: WeekCloseLine[] = [
   { id: "wc-w6-1", w: 6, req: ["b-6.1"], line: "According to her notebook, the carving on the wall by the lamp was cut on her twentieth day down here, for the next one." },
   { id: "wc-w6-2", w: 6, req: ["b-6.A"], line: "In the square gallery, square-cut stone meets the rounded stone, and the record on the square wall opens almost the way the tally's records do." },
   { id: "wc-w6-3", w: 6, req: ["b-6.B"], line: "In the square gallery is the crew's wall, and under it what looks like a pay tablet: a wax tablet with a ring at the head of every row." },
+  /* week 7, filled in, and story weeks 8–14 (STORY_JOB §8) */
+  { id: "wc-w7-1", w: 7, req: ["b-7.A"], line: "At the lintel at the foot of the second flight, you cut the bar with a drop and the two drops parted, the stone beneath it went, and the Stair went on down." },
+  { id: "wc-w7-2", w: 7, req: ["b-7.C"], line: "The great door at the far end of the Lamp Hall opened to the same two symbols, onto a steep stair going down." },
+  { id: "wc-w7-3", w: 7, req: ["b-7.3"], line: "On the Stair's rail, the stone has taken the shape of a hand with four long fingers." },
+  { id: "wc-w8-1", w: 8, req: ["b-8.A"], line: "At the foot of the Stair lies the Water, a lake so still that nothing on it moves, and something tall stood at its far end without moving." },
+  { id: "wc-w8-2", w: 8, req: ["b-8.3"], line: "Beside the tally's own count runs a second count in small strokes, and her notebook says it counts in eights." },
+  { id: "wc-w8-3", w: 8, req: ["b-8.2"], line: "The record on the channel's lip was cut by someone else, not whoever cut the tally, and it does not begin with the bar with a tick." },
+  { id: "wc-w9-1", w: 9, req: ["b-9.B"], line: "The cross means not. On the salt, after the symbol she read as held, there is a cross her sheet leaves out." },
+  { id: "wc-w9-2", w: 9, req: ["b-9.A"], line: "Across the Water is the Reading Room, and its first tablet teaches the same lesson as the wall by the lamp, in cuts worn round with age." },
+  { id: "wc-w9-3", w: 9, req: ["b-9.1"], line: "In her notebook she guessed the cross was there for emphasis." },
+  { id: "wc-w10-1", w: 10, req: ["b-10.2"], line: "In the blast room lies a log, and in it a tall man with a lamp asks what is being cut." },
+  { id: "wc-w10-2", w: 10, req: ["b-10.C"], line: "One wall of the blast room was torn open in one piece, and a watch there stopped at ten past four." },
+  { id: "wc-w10-3", w: 10, req: ["b-10.B"], line: "The standing stone before the fall carries a record that opens like the square gallery's records, with two drops." },
+  { id: "wc-w11-1", w: 11, req: ["b-11.A"], line: "On the ledge beside the log lies a bound book with gold laid over some of the symbols in its margins." },
+  { id: "wc-w11-2", w: 11, req: ["b-11.B"], line: "The lintel over the Reading Room's inner door ends: voice not." },
+  { id: "wc-w11-3", w: 11, req: ["b-11.3"], line: "Her notebook says the book's writer never came down here, and was counted anyway." },
+  { id: "wc-w12-1", w: 12, req: ["b-12.A"], line: "According to the log, after the blast a village well stood still for three days, and compasses swung towards the hill." },
+  { id: "wc-w12-2", w: 12, req: ["b-12.B"], line: "The tally ends with counts: a hand, four and four, long; lamps, a hand and a hand; a child's child, three; and then the word good." },
+  { id: "wc-w12-3", w: 12, req: ["b-12.C"], line: "At the end of the side gallery is a shut door, with stone chips at its foot on this side." },
+  { id: "wc-w13-1", w: 13, req: ["b-13.A"], line: "The record on the shut door says: He long-slept not, when I [ ] it." },
+  { id: "wc-w13-2", w: 13, req: ["b-13.B"], line: "At the standing stone you cut the wedge on a bar and the drop with a rising bar, and the fall of stone lifted aside." },
+  { id: "wc-w13-3", w: 13, req: ["b-13.C"], line: "On a bench apart in the Reading Room, a tally of eights ends in a single sharp stroke." },
+  { id: "wc-w14-1", w: 14, req: ["b-14.A"], line: "The same two symbols moved the rubble in the blast room, and behind it is a blank beside a diamond and the bar with a tick." },
+  { id: "wc-w14-2", w: 14, req: ["b-14.B"], line: "Beyond the blast room, the lower way goes further down, and its cups were already lit." },
+  { id: "wc-w14-3", w: 14, req: ["b-14.2"], line: "The log says a mark cut on a roof held it up, and that the mark is not \"hold\"." },
 ];
 
 /**
- * The month's "so far" (the first week close of each month of play: calendar weeks 1 and 5).
+ * The month's "so far" (the first week close of each month of play: calendar weeks 1, 5, 9 and 13).
  * NOTE: SoFar has no per-line condition, but each line shows only if its beats have played (the first five that have).
  * The per-line ids and conditions are in `soFarLines` below; `lines` here is in the same order.
  */
@@ -46,6 +71,19 @@ export const soFar: SoFar[] = [
     "The little door on the Stair, which she found open, is shut to you.", // sf-m2-4
     "The great door has a row of notches, and two symbols beside a blank.", // sf-m2-5
     "At the head of the Stair, in a niche, there is a second clay lamp, unlit.", // sf-m2-6
+  ] },  { id: 'sf-m3', w: 9, lines: [
+    "At the foot of the Stair lies the Water, perfectly still, and something tall once stood at its far end.", // sf-m3-1
+    "Two counts run side by side in the tally: the teller's own, and another in small strokes.", // sf-m3-2
+    "Not every record here was cut by the same carver: the one on the channel's lip has a hook of its own.", // sf-m3-3
+    "Her pencilled sheets were made before she knew the cross.", // sf-m3-4
+    "Two carved hooks you had not met before: the channel's cramped one, and a maker's on the Reading Room's tablet.", // sf-m3-5
+  ] },
+  { id: 'sf-m4', w: 13, lines: [
+    "A railway man broke into the blast room and kept a log, and in it a tall man with a lamp asks him questions.", // sf-m4-1
+    "On the ledge in the blast room lies a bound book with gold in its margins; her notebook says its writer never came.", // sf-m4-2
+    "After the blast, a village well stood still and compasses swung towards the hill.", // sf-m4-3
+    "The tally ends on a count, and on the word good.", // sf-m4-4
+    "At the end of the side gallery is a shut door, and on it a record cut by whoever cut the tally.", // sf-m4-5
   ] },
 ];
 
@@ -61,6 +99,16 @@ export const soFarLines: WeekCloseLine[] = [
   { id: "sf-m2-4", w: 5, req: ["b-4.3", "b-5.0"], line: "The little door on the Stair, which she found open, is shut to you." },
   { id: "sf-m2-5", w: 5, req: ["b-4.C"], line: "The great door has a row of notches, and two symbols beside a blank." },
   { id: "sf-m2-6", w: 5, req: ["b-3.B"], line: "At the head of the Stair, in a niche, there is a second clay lamp, unlit." },
+  { id: "sf-m3-1", w: 9, req: ["b-8.A"], line: "At the foot of the Stair lies the Water, perfectly still, and something tall once stood at its far end." },
+  { id: "sf-m3-2", w: 9, req: ["b-8.B"], line: "Two counts run side by side in the tally: the teller's own, and another in small strokes." },
+  { id: "sf-m3-3", w: 9, req: ["b-8.2"], line: "Not every record here was cut by the same carver: the one on the channel's lip has a hook of its own." },
+  { id: "sf-m3-4", w: 9, req: ["b-9.B"], line: "Her pencilled sheets were made before she knew the cross." },
+  { id: "sf-m3-5", w: 9, req: ["b-8.2", "b-9.A"], line: "Two carved hooks you had not met before: the channel's cramped one, and a maker's on the Reading Room's tablet." },
+  { id: "sf-m4-1", w: 13, req: ["b-10.2"], line: "A railway man broke into the blast room and kept a log, and in it a tall man with a lamp asks him questions." },
+  { id: "sf-m4-2", w: 13, req: ["b-11.3"], line: "On the ledge in the blast room lies a bound book with gold in its margins; her notebook says its writer never came." },
+  { id: "sf-m4-3", w: 13, req: ["b-12.A"], line: "After the blast, a village well stood still and compasses swung towards the hill." },
+  { id: "sf-m4-4", w: 13, req: ["b-12.B"], line: "The tally ends on a count, and on the word good." },
+  { id: "sf-m4-5", w: 13, req: ["b-13.A"], line: "At the end of the side gallery is a shut door, and on it a record cut by whoever cut the tally." },
 ];
 
 /** §10.3 "where you were": the week's line whose beat has played, else the week before's. NOTE: OpenQuestion has no condition field; see `openQuestionReq`. */
@@ -71,6 +119,14 @@ export const openQuestions: OpenQuestion[] = [
   { id: "aw-w4", w: 4, line: "Past the lone ring, her sheet says: *…go home… he held me… lamp… gave… went up…* Who is the \"he\" in it?" },
   { id: "aw-w5", w: 5, line: "Every record in the tally begins the same way. The line on the wall by the lamp does not. Why is it different?" },
   { id: "aw-w6", w: 6, line: "Through the side passage is square-cut stone, quite unlike the rounded halls, and on it is a record cut by whoever cut the tally. So how did that same carver come to cut a record here?" },
+  { id: "aw-w7", w: 7, line: "Both ways down, the Stair past the second lintel and the steep stair behind the great door, lead deeper. Where do they go?" },
+  { id: "aw-w8", w: 8, line: "Something tall stood at the far end of the Water and did not move while you watched. What was it?" },
+  { id: "aw-w9", w: 9, line: "Her sheet says he held me, but on the salt there is a cross after held. What does the line really say?" },
+  { id: "aw-w10", w: 10, line: "The log says a tall man with a lamp asked what was being cut. Who was the tall man?" },
+  { id: "aw-w11", w: 11, line: "Someone laid gold over the symbols in the book's margins. Who did it, and why?" },
+  { id: "aw-w12", w: 12, line: "Stone chips lie on this side of the shut door. What is behind it?" },
+  { id: "aw-w13", w: 13, line: "The record on the shut door says the water moved not, and moves not. What stopped it?" },
+  { id: "aw-w14", w: 14, line: "The lower way goes down, and its cups were already lit. Who lit them?" },
 ];
 
 /** NOTE: the beat each open question needs (the source's "Shows if"). */
@@ -81,4 +137,12 @@ export const openQuestionReq: Record<string, string[]> = {
   "aw-w4": ["b-4.A"],
   "aw-w5": ["b-5.A"],
   "aw-w6": ["b-6.A"],
+  "aw-w7": ["b-7.C"],
+  "aw-w8": ["b-8.A"],
+  "aw-w9": ["b-9.B"],
+  "aw-w10": ["b-10.2"],
+  "aw-w11": ["b-11.A"],
+  "aw-w12": ["b-12.C"],
+  "aw-w13": ["b-13.A"],
+  "aw-w14": ["b-14.B"],
 };
