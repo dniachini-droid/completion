@@ -18,7 +18,32 @@ await page.clock.install({ time: new Date('2026-09-24T09:00:00+01:00') });
 await page.goto(url);
 let i = 0;
 const ff = async (ms) => { const n = await page.evaluate(() => Date.now()); await page.clock.setSystemTime(n + ms); await page.clock.runFor(500); };
-const shot = async (name, settle = 1500) => { if (settle > 10000) await ff(settle); else await page.clock.runFor(settle); await page.waitForTimeout(300); await page.screenshot({ path: `${out}/${String(++i).padStart(2, '0')}-${name}.png` }); };
+const shot = async (name, settle = 1500) => { if (settle > 10000) await ff(settle); else await page.clock.runFor(settle); await page.waitForTimeout(300); await page.screenshot({ path: `${out}/${String(++i).padStart(2, '0')}-${name}.png` }); await fits(name); };
+/** No words cut off: every visible line of text is on screen (or inside a box that scrolls), and none sits under a button.
+ *  Reports the screen and the element's class only, never the words (the story stays sealed). */
+const fits = async (name) => {
+  const bad = await page.evaluate(() => {
+    const H = innerHeight, W = innerWidth, out = [];
+    const scroller = el => { for (let p = el.parentElement; p; p = p.parentElement) { const o = getComputedStyle(p).overflowY; if ((o === 'auto' || o === 'scroll') && p.scrollHeight > p.clientHeight + 1) return p; } return null; };
+    const shown = el => { for (let p = el; p; p = p.parentElement) { const s = getComputedStyle(p); if (s.display === 'none' || s.visibility === 'hidden' || +s.opacity < 0.05) return false; } return true; };
+    const texts = [...document.querySelectorAll('p, h1, h2, h3, span, li, em, blockquote')].filter(el =>
+      [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim()) && !el.closest('button, svg') && shown(el));
+    const buttons = [...document.querySelectorAll('button')].filter(shown).map(b => b.getBoundingClientRect()).filter(r => r.width && r.height);
+    for (const el of texts) {
+      const r = el.getBoundingClientRect(); if (!r.width || !r.height) continue;
+      const sc = scroller(el);
+      const box = sc ? sc.getBoundingClientRect() : { top: 0, bottom: H, left: 0, right: W };
+      if (!sc && (r.bottom > H + 1 || r.top < -1)) out.push(`off screen: ${el.tagName.toLowerCase()}.${el.className}`);
+      const vt = Math.max(r.top, box.top), vb = Math.min(r.bottom, box.bottom);
+      if (vb - vt > 4) for (const b of buttons) {
+        const ix = Math.min(r.right, b.right) - Math.max(r.left, b.left), iy = Math.min(vb, b.bottom) - Math.max(vt, b.top);
+        if (ix > 4 && iy > 4) { out.push(`under a button: ${el.tagName.toLowerCase()}.${el.className}`); break; }
+      }
+    }
+    return [...new Set(out)];
+  });
+  for (const b of bad) errors.push(`${name}: ${b}`);
+};
 /** The phone's clock to a wall time on this game day, or `days` later (forward only). */
 const toClock = async (days, hh, mm = 0) => {
   const n = await page.evaluate(() => Date.now());

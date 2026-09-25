@@ -845,3 +845,10 @@
 - **Note:** the rewrite came back slightly shorter overall. It reads cleaner, but it is not the fuller, more descriptive prose Dan asked for. Dan may send it back for a second, fuller round using the same method.
 - **Consequences:** the app's `content/sealed/` is now the latest wording. The sealed docs in `docs/narrative/sealed/` still hold the earlier wording (same facts and ids) until they are brought in step.
 - **Reversible:** Yes (git).
+
+## D-081 — The story's lines made fuller (round 3 by the outside writer); story screens scroll (Dan's call)
+- **Date:** 2026-09-25
+- **Context:** Dan wanted the story fuller and more engrossing (D-080 came back as a tidy-up). Round 2 was rejected by Claude's checks: ChatGPT had padded lines with 85 stock sentences used over 1,000 times, and removing them left almost nothing new. Round 3 went out as four smaller files, one fresh ChatGPT chat each, with repetition banned and the rejected sentences listed. Buttons and location labels were left as they were.
+- **Decision:** round 3 is in the app: 418 story lines, about 8,700 words → 27,500. Checked by script before loading: every line back under its id; every number, capitalised word, [bracket], carved-mark description, italic and quote kept; lines that must match still match; no sentence reused across lines (other than lines that were already identical); none of the rejected sentences present. Claude's fixes: one line had brief wording copied into it, and six teasers had added or implied a detail the story does not have (a pencil, another recess, a place, a cause). Those words were taken out. Story screens now scroll when their words don't fit (`.ui` scrolls; a screen that fits never moves), and the screen walk now fails if any text is off screen or under a button.
+- **Consequences:** `docs/narrative/sealed/` still holds the earlier wording (same facts and ids); the app's `content/sealed/` is the latest. Typecheck clean, 102 tests pass.
+- **Reversible:** Yes (git).

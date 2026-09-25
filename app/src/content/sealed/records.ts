@@ -64,7 +64,7 @@ export const records: RecordFragment[] = [
   {
     id: 'rec-l2', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 1, firstShown: ['b-1.C'],
     paper: [
-      "Day 1. Down the ventilation shaft at 07:40, the padlock cut with the bolt-cutters I told the hardware man were for a gate. Eleven metres of ladder, then a dry passage cut true. Not railway. A lamp on a ledge, clay, lit. *Lit.* I stood there for a stupid amount of time. There’s a tally cut in the salt wall by the old crack. I know a few marks from the log. It starts with a name.",
+      "Day 1. Down the ventilation shaft at 07:40. Cut the padlock with the bolt-cutters I told the hardware man were for a gate. Eleven metres of ladder, then a dry passage cut true. Not railway. There was a clay lamp on a ledge, lit. *Lit.* I stood there for a stupid amount of time. There’s a tally cut in the salt wall by the old crack. I know a few marks from the log. It starts with a name. I wrote that down before I could talk myself out of it.",
     ],
   },
   {
@@ -119,7 +119,7 @@ export const records: RecordFragment[] = [
   {
     id: 'rec-l3', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 2, firstShown: ['b-2.3'],
     paper: [
-      'Day 3. He was standing where the corridor turns. I took him for a pillar. Then the pillar said good morning in an accent I couldn’t place and I sat down on the floor. He waited. He did not shift his weight once, and I was down there a while. I asked what he was. He said a word in *their* language and then, in English: you will read it. Then he asked if he could write me down.',
+      'Day 3. He was standing where the corridor turns. I took him for a pillar. Then the pillar said good morning in an accent I couldn’t place and I sat down on the floor. He waited. He did not shift his weight once, and I was down there a while. I asked what he was. He said a word in *their* language and then, in English: you will read it. Then he asked if he could write me down. I said I needed a minute. I needed rather more than a minute.',
     ],
   },
   {
@@ -173,7 +173,7 @@ export const records: RecordFragment[] = [
   {
     id: 'rec-l5', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 3, firstShown: ['b-3.2'],
     paper: [
-      'Day 6. It works. IT WORKS. The lamps went down the hall like a fuse. I cut two marks in a lintel with the rod he gave me, which is a stone pencil, basically, and a door opened where there was stone. Note to self: don’t cry on the tape. Note to self: the tape is dying; batteries. I am going to have to write on the walls like everybody else.',
+      'Day 6. It works. IT WORKS. The lamps went down the hall like a fuse. I cut two marks in a lintel with the rod he gave me, which is a stone pencil, basically, and a door opened where there was stone. I checked the lintel again because apparently I thought that would make the door less real. Note to self: don’t cry on the tape. Note to self: the tape is dying; batteries. I am going to have to write on the walls like everybody else.',
     ],
   },
   {
@@ -208,7 +208,7 @@ export const records: RecordFragment[] = [
   {
     id: 'rec-l6', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 4, firstShown: ['b-4.3'],
     paper: [
-      "Day 9. Second flight of the stair. The little door there is open. Beyond it, more stair. I’m not going down yet. Rule: go up every night. I am a rational adult. The lamp’s base has two marks and a third I don’t have. Also: he has never once asked me for anything.",
+      "Day 9. Second flight of the stair. The little door there is open. Beyond it, more stair. I’m not going down yet. Rule: go up every night. I am a rational adult. I put that rule here because I know I can talk myself out of it once I’m tired. The lamp’s base has two marks and a third I don’t have. Also: he has never once asked me for anything.",
     ],
   },
   {
@@ -261,7 +261,7 @@ export const records: RecordFragment[] = [
   {
     id: 'rec-l7', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 5, firstShown: ['b-5.2'],
     paper: [
-      'Day 14. He was reading the salt wall when I came in, with his hands flat on it, at a height where I would want a ladder. He answers what you ask and not one word past it. I asked who cut the records on the walls. Same as day three: a word of theirs, then “you will read it”. I asked what his ring says. Same. He let me call the salt tally a “poem” for a week without a flicker, and he has the manner of someone who has been here longer than the lease, so I’m calling him the Tenant until I know better. He let me.',
+      'Day 14. He was reading the salt wall when I came in, with his hands flat on it, at a height where I would want a ladder. He answers what you ask and not one word past it. I asked who cut the records on the walls. Same as day three: a word of theirs, then “you will read it”. I asked what his ring says. Same. He let me call the salt tally a “poem” for a week without a flicker, and he has the manner of someone who has been here longer than the lease, so I’m calling him the Tenant until I know better. He let me. I’m aware that this is not a useful name in my notes.',
     ],
   },
   {
@@ -304,7 +304,7 @@ export const records: RecordFragment[] = [
   {
     id: 'rec-l8', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 6, firstShown: ['b-6.1'],
     paper: [
-      "Day 20. I’ve stopped going up every day. It’s forty minutes each way and there’s nothing up there but a field and my car, which has a note on it from the farmer. The rule was a good rule. I have decided it was a rule for a version of me who didn’t have thirty-one signs. Made a wall for the next one today, by the lamp: drew a lamp like a five-year-old. Got more lines of the salt tally too. It’s a person. It’s a *funny* person.",
+      "Day 20. I’ve stopped going up every day. It’s forty minutes each way and there’s nothing up there but a field and my car, which has a note on it from the farmer. The rule was a good rule. I have decided it was a rule for a version of me who didn’t have thirty-one signs. Made a wall for the next one today, by the lamp: drew a lamp like a five-year-old. Got more lines of the salt tally too. It’s a person. It’s a *funny* person. I keep going back to check I read that part right.",
     ],
   },
   {
