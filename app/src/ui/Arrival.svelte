@@ -66,6 +66,7 @@
         <h1 class="carve lg">{a.name}</h1>
         <span class="soft on-scene">{a.line}</span>
         {#if a.look}<span class="soft on-scene look">{a.look}</span>{/if}
+        {#each a.opened as line}<p class="soft on-scene look">{t('arrive.keyOpens')} {line}</p>{/each}
       </section>
       <div class="mid col">
         {#if a.id}

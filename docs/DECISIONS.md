@@ -825,3 +825,15 @@
 - **Alternatives:** keep filling from other jobs (rejected by Dan).
 - **Consequences:** PLANNER.md's "capacity still sizes the day" now reads: capacity sizes the day, up to what the plan holds. 3 new rule tests.
 - **Reversible:** Yes.
+
+## D-079 — The story never runs ahead of where Dan has been; Keys wait (Dan's report; changes D-049)
+- **Date:** 2026-09-25
+- **Context:** Dan arrived at the Lamp Hall and was told about something in the Salt Gallery, where he had never been. Cause: two clocks (D-049). The story week moves with the calendar, where Dan stands moves with effort, and the story's steps, sealed things and week-close glimpses were chosen by story week alone. The route loops between areas (hall, salt gallery, camp, stair…), so this could happen in any week. No test checked it.
+- **Decision:**
+  1. **The continuity guard** (`tests/rules/continuity.test.ts`): 21 simulated six-week playthroughs (Normal, Low, High, mixed, a week away, two weeks away, High then Low; each with no bedtime, bedtime kept, bedtime late). It fails if any story moment or sealed thing plays in an area Dan has never set foot in. It runs before every phone build, so a build that breaks it cannot ship. Before the fix, normal play had 3 such moments (all in week 1, the one Dan met), and other patterns had more in weeks 3–6. After it, 0.
+  2. **A story step plays only in an area Dan has been.** Otherwise the job's return is a line of the passage, as it already was when no step was due.
+  3. **Sealed things keep the story's written order.** A Key earned while the next one lies in an area not yet reached is **kept** (`keyHeld`). It opens that thing on the arrival that makes it reachable, and the arrival screen says so ("The key you carried opens something here."). No Key is lost: the same number of sealed things open over six weeks as before.
+  4. **The week-close glimpse** waits until its area has been reached.
+  5. Exempt on purpose: a Key whose opening carries Dan to a place, and the High day's deep push, which goes further in by design.
+- **What it changes of D-049:** "the story keeps its order" still holds. The story week still sets what may come next, but where Dan has walked now also gates it, so in slow weeks the story waits for his feet instead of running ahead.
+- **Reversible:** Yes.

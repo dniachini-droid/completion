@@ -175,6 +175,7 @@ export const copy = {
   'arrive.label': 'Arrived',
   'arrive.camp': 'Camp',
   'arrive.enough': 'The day’s work is done.',
+  'arrive.keyOpens': 'The key you carried opens something here.',
   'arrive.enough2': 'Rest now.',
   'arrive.rest': 'Rest here for today',
   'arrive.onward': 'Back to today',

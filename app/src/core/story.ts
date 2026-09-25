@@ -44,12 +44,17 @@ export interface StoryState {
   stretch: StretchId;
   passagesShown: string[];
   campsShown: string[];
+  /** Every stretch Dan has set foot in (the route loops back): the story plays only there (D-079). */
+  visited: Set<StretchId>;
+  /** Keys kept for a sealed thing not yet reached (D-079). */
+  held: number;
 }
 
 export function storyState(facts: Fact[], s: Story): StoryState {
   const played = new Set<string>(), opened = new Set<string>(), given = new Set<string>(), guessed = new Map<string, string>();
   const records: string[] = [], passagesShown: string[] = [], campsShown: string[] = [];
-  let week = 1, weekBegan: string | null = null, onFoot = 0, stretch: StretchId = s.stretches[0].id;
+  let week = 1, weekBegan: string | null = null, onFoot = 0, stretch: StretchId = s.stretches[0].id, held = 0;
+  const visited = new Set<StretchId>([stretch]);
   for (const f of facts) {
     switch (f.type) {
       case 'beatPlayed': played.add(f.id); if (f.passage) passagesShown.push(f.passage); break;
@@ -57,17 +62,19 @@ export function storyState(facts: Fact[], s: Story): StoryState {
         if (f.kind === 'place') {
           played.add(f.id);
           if (f.how !== 'key') onFoot++;
-          const b = beatOf(s, f.id); if (b) stretch = b.stretch;
+          const b = beatOf(s, f.id); if (b) { stretch = b.stretch; visited.add(b.stretch); }
         } else campsShown.push(f.id);
         break;
       case 'sealOpened': opened.add(f.seal); break;
       case 'markGuessed': guessed.set(f.mark, f.guess); break;
       case 'findGiven': given.add(f.id); break;
       case 'recordShown': if (!records.includes(f.id)) records.push(f.id); break;
+      case 'keyHeld': held++; break;
+      case 'keyUsed': held--; break;
       case 'storyWeekBegan': week = f.w; weekBegan = calendarWeek(f.day); break;
     }
   }
-  return { played, opened, guessed, given, records, week, weekBegan, onFoot, stretch, passagesShown, campsShown };
+  return { played, opened, guessed, given, records, week, weekBegan, onFoot, stretch, passagesShown, campsShown, visited, held };
 }
 
 export const beatOf = (s: Story, id: string): Beat | undefined => s.beats.find(b => b.id === id);
@@ -125,7 +132,8 @@ export function nextCamp(s: Story, st: StoryState): { id: string; find?: string;
 
 /** The next ordered step beat (after a main job): this story week's, in table order, each after its arrival. */
 export function nextStep(s: Story, st: StoryState): Beat | null {
-  const steps = s.beats.filter(b => b.kind === 'step' && !st.played.has(b.id) && inWeek(st, b) && allMet(st, b.req));
+  /* never about a stretch Dan hasn't been to (D-079) */
+  const steps = s.beats.filter(b => b.kind === 'step' && !st.played.has(b.id) && inWeek(st, b) && allMet(st, b.req) && st.visited.has(b.stretch));
   steps.sort((a, b) => a.w - b.w || a.o - b.o);
   return steps[0] ?? null;
 }
@@ -144,9 +152,10 @@ export function nextPassage(s: Story, st: StoryState): string | null {
 export function nextSeal(s: Story, st: StoryState): Seal | null {
   const shut = s.seals.filter(x => !x.seenOnly && !st.opened.has(x.id));
   const due = shut.filter(x => x.w <= st.week).sort((a, b) => a.w - b.w || a.o - b.o);
-  if (due.length) return due[0];
   const early = shut.filter(x => x.w === st.week + 1 && x.plain).sort((a, b) => a.o - b.o);
-  return early[0] ?? null;
+  const next = due[0] ?? early[0] ?? null;
+  /* in the story's own order, and only where Dan has been (or where its opening takes him); otherwise the Key waits (D-079) */
+  return next && (next.arrival || st.visited.has(next.stretch)) ? next : null;
 }
 
 /** A rhythm's sessions done in the calendar week of `day` (every 2 weeks: in the fortnight). */

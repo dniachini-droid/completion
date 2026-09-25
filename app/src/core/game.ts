@@ -197,6 +197,15 @@ function show(w: W, c: Content, ids: string[] | undefined, at: Moment, day: stri
 function arrive(w: W, c: Content, b: Beat, how: 'foot' | 'key', at: Moment, day: string) {
   w.put({ type: 'arrived', kind: 'place', id: b.id, how }, at, day);
   show(w, c, b.carries?.records, at, day);
+  /* a Key kept for later opens what is sealed here, on the arrival itself (D-079) */
+  let st = S.storyState(w.all, c.story);
+  while (st.held > 0) {
+    const seal = S.nextSeal(c.story, st);
+    if (!seal || seal.arrival) break;
+    w.put({ type: 'keyUsed' }, at, day);
+    openSeal(w, c, seal, at, day);
+    st = S.storyState(w.all, c.story);
+  }
 }
 function giveFind(w: W, c: Content, why: FactOf<'findGiven'>['why'], at: Moment, day: string, job?: number) {
   const f = S.pickFind(c.story, S.storyState(w.all, c.story), why);
@@ -227,7 +236,11 @@ function floor(w: W, c: Content, at: Moment, day: string) {
 function landKey(w: W, c: Content, rhythm: string, at: Moment, day: string, job?: number): Seal | null {
   w.put({ type: 'keyEarned', rhythm }, at, day);
   const seal = S.nextSeal(c.story, S.storyState(w.all, c.story));
-  if (!seal) return null;
+  /* nothing sealed where Dan has been: the Key is kept, never lost (D-079) */
+  if (!seal) { w.put({ type: 'keyHeld' }, at, day); return null; }
+  return openSeal(w, c, seal, at, day, job);
+}
+function openSeal(w: W, c: Content, seal: Seal, at: Moment, day: string, job?: number): Seal {
   w.put({ type: 'sealOpened', seal: seal.id }, at, day);
   show(w, c, seal.carries?.records, at, day);
   if (seal.arrival) { const b = S.beatOf(c.story, seal.arrival); if (b) arrive(w, c, b, 'key', at, day); }
@@ -347,7 +360,8 @@ function weekClose(w: W, c: Content, at: Moment, day: string, storyWeek: number)
     const n = playWeek(w.all, wk);
     const month = n === 1 ? c.story.soFar[0] : n === 5 ? c.story.soFar[1] : undefined;
     const soFar = (month?.items ?? []).filter(l => l.req.every(r => S.met(st, r))).slice(0, 5).map(l => l.id);
-    const glimpse = c.story.beats.find(b => b.kind === 'close' && b.w === storyWeek && !st.played.has(b.id)) ?? null;
+    /* the glimpse waits until Dan has been where it looks (D-079): a later week's close shows it then */
+    const glimpse = c.story.beats.find(b => b.kind === 'close' && b.w <= storyWeek && !st.played.has(b.id) && st.visited.has(b.stretch)) ?? null;
     if (glimpse) w.put({ type: 'beatPlayed', id: glimpse.id }, at, day);
     const seals = ofType(w.all, 'keyEarned').filter(k => k.rhythm === `floor:${wk}`)
       .map(k => w.all.find(f => f.seq === k.seq + 1)).filter((f): f is FactOf<'sealOpened'> => f?.type === 'sealOpened').map(f => f.seal);
@@ -598,6 +612,8 @@ export interface Arrival {
   guess: string[];
   /** A camp's one thing to look at. */
   look: string | null;
+  /** What a Key kept for this place opened on arriving (its line), if anything (D-079). */
+  opened: string[];
   stretch: StretchId; painting: string; completedDay: boolean; byKey: boolean;
 }
 /** What a job's return shows: the story's step (or a Key's sealed thing opening), else a passage line; and any finds. */
@@ -694,13 +710,22 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
     /* the guess the same job's return brought is asked here, after the marks have been seen, not before (D-077) */
     const by = ofType(all, 'jobDone').filter(d => d.seq < f.seq).pop();
     const carried = by && reachedBy(all, by.seq)?.seq === f.seq ? guessOf(c, all, by.seq) : [];
-    return { seq: f.seq, kind: 'place', id: b.id, name: b.name ?? '', line: b.line ?? '', taps: b.taps, choice: b.choice,
+    const opened: string[] = [];
+    for (const g of all) {
+      if (g.seq <= f.seq) continue;
+      if (g.type !== 'keyUsed' && !ANSWERS.has(g.type)) break;
+      if (g.type === 'sealOpened' && all.some(k => k.type === 'keyUsed' && k.seq === g.seq - 1)) {
+        const x = S.sealOf(c.story, g.seal), line = x?.beat ? S.beatOf(c.story, x.beat)?.line : x?.line;
+        if (line) opened.push(line);
+      }
+    }
+    return { seq: f.seq, kind: 'place', opened, id: b.id, name: b.name ?? '', line: b.line ?? '', taps: b.taps, choice: b.choice,
       records: b.carries?.records ?? [], guess: [...new Set([...(b.carries?.guess ?? []), ...carried])], look: null, stretch: b.stretch, painting: paintingOf(b.id, b.stretch), completedDay, byKey: f.how === 'key' };
   }
   const k = c.story.camps.find(x => x.id === f.id)!;
   const find = all.find(g => g.type === 'findGiven' && g.why === 'camp' && g.seq > f.seq && g.seq <= f.seq + 1) as FactOf<'findGiven'> | undefined;
   const look = find ? c.story.finds.find(x => x.id === find.id)?.line ?? null : 'line' in k.look ? k.look.line : null;
-  return { seq: f.seq, kind: 'camp', id: k.id, name: k.name, line: k.line, records: [], guess: [], look, stretch: k.stretch, painting: paintingOf(k.id, k.stretch), completedDay, byKey: false };
+  return { seq: f.seq, kind: 'camp', opened: [], id: k.id, name: k.name, line: k.line, records: [], guess: [], look, stretch: k.stretch, painting: paintingOf(k.id, k.stretch), completedDay, byKey: false };
 }
 
 /** What a job's return (a jobDone fact) shows. A guess it brings moves to the place the same job reached (D-077). */

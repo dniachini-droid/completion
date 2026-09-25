@@ -78,6 +78,9 @@ export type FactBody =
   /* the story (slice 2): each written once, when it happens */
   | { type: 'beatPlayed'; id: string; job?: number; passage?: string }
   | { type: 'keyEarned'; rhythm: string }
+  /** A Key earned while nothing Dan has reached is sealed: kept, and used on the next arrival that has one (D-079). */
+  | { type: 'keyHeld' }
+  | { type: 'keyUsed' }
   | { type: 'sealOpened'; seal: string }
   | { type: 'findGiven'; id: string; why: 'avoided' | 'switching' | 'chamber' | 'camp' | 'surplus' | 'morning'; job?: number }
   | { type: 'recordShown'; id: string }
