@@ -1,0 +1,15 @@
+{
+ "id": "pt-pl-w2-box-by-the-cot",
+ "name": "The box by the cot",
+ "line": "",
+ "width": 1320,
+ "height": 2868,
+ "live": {
+  "motes": "gold",
+  "gold": true
+ },
+ "anchors": {
+  "glints": [],
+  "beam": []
+ }
+}

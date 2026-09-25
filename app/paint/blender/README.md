@@ -9,7 +9,7 @@ Sealed (D-015): the scene files and Meshy prompts here quote the painting briefs
 
 ## Files
 - `lib.py`: kit coordinates (`K()`, x right, y up, z into the room), so rooms and cameras carry over from `../places/*.js`; room shells cut from rock (`arch_room` = the kit's `hallAir`), cut-stone material with the kit-style "darker overhead / darker near the eye" shading, lights with **light linking** (`only=[...]`, the Blender equivalent of the kit's `reach`), camera with the kit's `f`, compositor haze and glow, anchor projection.
-- `<id>.py`: one scene per place. `python <id>.py out.png [scale] [samples]` (drafts: `.5 64`, about 40 s; final: `1 160`, about 10 min on 4 CPUs).
+- `<id>.py`: one scene per place. `python <id>.py out.png [scale] [samples]` (drafts: `.5 64`, about 40 s; final: `1 160`, about 34 min on 4 CPUs; 64 samples would do).
 - `post.py`: vignette, grain, writes `<id>.webp/.jpg/.json` in the kit's format, so `node paint/check.mjs` and the app take them unchanged.
 - `meshy.py`: text-to-3D (preview, then refine with PBR textures), saves `assets/<name>.glb`. `resume <name>` fetches a job that finished while the asset host was blocked.
 - `img/`: the test's output. Not in the app.
