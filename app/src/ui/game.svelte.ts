@@ -2,7 +2,9 @@
  * The screens' one handle on the game: the fact log, saved as it grows; the clock; what can be seen now.
  * Rules live in core; this file only reads the clock, keeps the save and schedules the phone's alerts.
  */
-import { act, alertsAfter, see, settle, type Command } from '../core/game';
+import { act, alertsAfter, see, settle, type Command, type RunView } from '../core/game';
+import type { RunMark } from '../core/run';
+import { panelOf } from './panel';
 import { epochOf, momentOf, type Moment } from '../core/time';
 import type { Fact } from '../core/types';
 import { content } from '../content/world';
@@ -35,6 +37,7 @@ class Game {
     this.facts = this.load();
     this.append(settle(this.facts, content, this.now));
     this.do({ do: 'open' });
+    this.panel();
     this.#ticker = window.setInterval(() => this.tick(), 250);
     document.addEventListener('visibilitychange', () => { if (!document.hidden) this.wake(); });
     window.addEventListener('focus', () => this.wake());
@@ -50,6 +53,7 @@ class Game {
     const today = this.view.day;
     if (!this.facts.some(f => f.type === 'opened' && f.day === today)) { this.do({ do: 'open' }); this.woke++; }
     else this.tick();
+    this.panel();   /* the panel may have run past what it knew while the app was away: put it right */
   }
 
   /** A job as Dan has it now (his edits and satchel lines included). */
@@ -112,7 +116,7 @@ class Game {
     const before = this.view.run;
     const f = act(this.facts, content, cmd, this.now);
     this.append(f);
-    if (['startRun', 'skipBreather', 'stepAway', 'resume', 'finishHere'].includes(cmd.do) || (before && !this.view.run)) void this.alerts();
+    if (['startRun', 'skipBreather', 'stepAway', 'resume', 'finishHere'].includes(cmd.do) || (before && !this.view.run)) { void this.alerts(); this.panel(); }
     return f;
   }
 
@@ -131,6 +135,7 @@ class Game {
     const f = settle(this.facts, content, this.now);
     this.append(f);
     const after = this.view.run;
+    if (!after || after.phase !== before.phase || after.k !== before.k) this.panel();
     if (document.hidden) return;
     /* the end is heard while the page is open (with the phone locked, the app's alert does it) */
     if (f.some(x => x.type === 'stepsGained')) platform.sound.chime('delveEnd');
@@ -146,13 +151,38 @@ class Game {
     if (!r || !platform.notifier.locked) return;
     if (!(await platform.notifier.permit())) { this.alertsOff = true; return; }   /* asked once, at the first Begin */
     this.alertsOff = false;
-    const marks = this.facts.filter(f => f.seq > r.seq && ['breatherSkipped', 'delveHeld', 'delveResumed'].includes(f.type))
-      .map(f => ({ kind: f.type === 'breatherSkipped' ? 'skip' : f.type === 'delveHeld' ? 'hold' : 'resume', at: epochOf(f.at) } as const));
-    const list = alertsAfter({ startedAt: r.startedAt, minutes: r.minutes, count: r.count }, marks, epochOf(this.now));
+    const list = alertsAfter({ startedAt: r.startedAt, minutes: r.minutes, count: r.count }, this.marks(r), epochOf(this.now));
     for (const [i, a] of list.slice(0, ids.length).entries()) {
       await platform.notifier.at(ids[i], this.realDate(a.at), t(a.what === 'delveEnd' ? 'notify.delveEnd.title' : 'notify.breatherEnd.title'),
         t(a.what === 'delveEnd' ? 'notify.delveEnd.body' : 'notify.breatherEnd.body'));
     }
+  }
+
+  /** Dan's marks on a run (Start it now, Pause, Back to the delve), as the run's rules read them. */
+  marks(r: RunView): RunMark[] {
+    return this.facts.filter(f => f.seq > r.seq && ['breatherSkipped', 'delveHeld', 'delveResumed'].includes(f.type))
+      .map(f => ({ kind: f.type === 'breatherSkipped' ? 'skip' : f.type === 'delveHeld' ? 'hold' : 'resume', at: epochOf(f.at) }));
+  }
+
+  /** The delve's panel on the lock screen and in the Dynamic Island (D-094): shown while a run is on, redrawn only when
+      what it says changes (a new delve, a breather, a pause), and gone when the run ends. Its countdown and ring are
+      ticked by the phone, so nothing here runs while the phone is locked. */
+  #panel = '';
+  panel() {
+    const r = this.view.run;
+    if (!r) {
+      if (this.#panel !== 'none') { this.#panel = 'none'; void platform.panel.end(); }   /* also clears one left by a closed app */
+      return;
+    }
+    const p = panelOf(r, this.marks(r), epochOf(this.now), {
+      place: this.view.here.name, past: this.view.done.has(r.job.id),
+      real: ms => this.realDate(ms).getTime(),
+      clock: ms => { const d = new Date(ms); return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; },
+    });
+    const key = JSON.stringify(p);
+    if (key === this.#panel) return;
+    this.#panel = key;
+    void platform.panel.show(p);
   }
 
   /* ---- prototype controls ---- */
@@ -167,6 +197,7 @@ class Game {
     this.append(settle(this.facts, content, this.now));
     this.do({ do: 'open' });
     void this.alerts();   /* the other save's alerts go; this one's come back */
+    this.panel();
   }
   reset() {
     /* even a wipe keeps one copy aside, so a slip can be undone (D-080) */
@@ -176,6 +207,7 @@ class Game {
     if (this.proto.rehearsal) { this.setRehearsal(true); return; }
     this.facts = [];
     this.do({ do: 'open' });
+    this.panel();
   }
 }
 

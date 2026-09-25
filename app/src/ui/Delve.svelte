@@ -4,7 +4,8 @@
      the same words: Pause (once Step away; review 2, D-088) and Finish here. The scene is the approved mock-up's own (delve.html, revision 3). */
   import { onMount } from 'svelte';
   import { game } from './game.svelte';
-  import { t, minutesWords, ord, card } from '../content/copy/en';
+  import { t, minutesWords, ord } from '../content/copy/en';
+  import { mmss, ofLine } from './panel';
   import { platform } from '../platform';
   import { epochOf } from '../core/time';
   import tunnel from './scene/tunnel.html?raw';
@@ -29,18 +30,9 @@
 
   const L = $derived(run ? run.minutes * 60_000 : 1);
   const p = $derived(!run ? 1 : run.phase === 'delve' || run.phase === 'held' ? run.doneMs / L : 1);
-  const mmss = $derived.by(() => {
-    const s = Math.ceil((run?.leftMs ?? 0) / 1000);
-    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
-  });
+  const left = $derived(mmss(run?.leftMs ?? 0));
   const past = $derived(!!run && v.done.has(run.job.id));
-  const ofLine = $derived.by(() => {
-    if (!run) return '';
-    const { k, count: N, enoughK: kE } = run;
-    if (past) return t('delve.more', { ord: ord(k) });
-    if (kE) return Math.min(N, kE) === 1 ? (N === 1 ? t('delve.single') : t('delve.enoughAfter')) : t('delve.ofRun', { ord: ord(k), card: card(kE) });
-    return N === 1 ? t('delve.single') : t('delve.ofRun', { ord: ord(k), card: card(N) });
-  });
+  const of = $derived(run ? ofLine(run, run.k, past) : '');
   /* the breather right after the delve that reached enough is its own moment (D-047) */
   const enoughNow = $derived.by(() => {
     if (!run || run.phase !== 'breather' || !run.ends.length) return false;
@@ -89,12 +81,12 @@
 
     <div class="mid">
       <div class="ring rise d2" class:ended={!run || run.phase === 'breather'} class:rest={restful} class:hold={run?.phase === 'held'}
-        style="--p:{Math.min(1, p).toFixed(4)}" role="timer" aria-label={run ? `${mmss} ${t('delve.left', { len: run.minutes })}` : ''}>
+        style="--p:{Math.min(1, p).toFixed(4)}" role="timer" aria-label={run ? `${left} ${t('delve.left', { len: run.minutes })}` : ''}>
         <div class="halo"></div><div class="disc"></div>
         <canvas class="ringcv" aria-hidden="true"></canvas>
         <div class="fog-front" aria-hidden="true">{@html fogFront}</div>
         {#if run?.phase === 'delve'}
-          <div class="inner"><div class="time">{mmss}</div><div class="left">{t('delve.left', { len: run.minutes })}</div></div>
+          <div class="inner"><div class="time">{left}</div><div class="left">{t('delve.left', { len: run.minutes })}</div></div>
         {/if}
       </div>
     </div>
@@ -102,7 +94,7 @@
     <section class="bottom col rise d3" class:fit={told}>
       {#if run?.phase === 'delve'}
         <h2>{run.job.name}</h2>
-        <p class="soft of">{ofLine}</p>
+        <p class="soft of">{of}</p>
         <p class="say away">{platform.notifier.locked ? t(game.alertsOff ? 'delve.away.noAlerts' : 'delve.away.locked') : t('delve.away.web')}</p>
         <div class="two-quiet">
           <button class="btn-quiet" onclick={() => game.do({ do: 'stepAway' })}><span>{t('delve.stepAway')}</span></button>
