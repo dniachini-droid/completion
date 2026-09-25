@@ -9,7 +9,7 @@ class MainViewController: CAPBridgeViewController {
     }
 }
 
-/// Shows, updates and ends the delve's panel (D-094); the web side is platform/index.ts → DelvePanel.
+/// Shows, updates and ends the delve's panel (D-095); the web side is platform/index.ts → DelvePanel.
 @objc(DelvePanelPlugin)
 public class DelvePanelPlugin: CAPPlugin, CAPBridgedPlugin {
     public let identifier = "DelvePanelPlugin"

@@ -2,7 +2,7 @@ import ActivityKit
 import SwiftUI
 import WidgetKit
 
-/// The delve's panel on the lock screen and in the Dynamic Island (D-094). Still, as Apple requires: the countdown and
+/// The delve's panel on the lock screen and in the Dynamic Island (D-095). Still, as Apple requires: the countdown and
 /// the filling ring are the only motion, and the phone ticks both itself. Pause and Finish here stay in the app; a tap
 /// opens it.
 @main

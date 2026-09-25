@@ -13,7 +13,7 @@ export interface Haptics { tick(): Promise<void>; ring(): Promise<void>; }
 export interface Store { get(key: string): string | null; set(key: string, value: string): void; remove(key: string): void; }
 /** A soft sound while the app is open: a delve's end, or a breather's. */
 export interface Sound { unlock(): void; chime(kind: 'delveEnd' | 'breatherEnd'): void; }
-/** What the delve's panel on the lock screen and in the Dynamic Island shows (D-094; ui/panel.ts works it out).
+/** What the delve's panel on the lock screen and in the Dynamic Island shows (D-095; ui/panel.ts works it out).
     Times are the phone's real instants in ms; the phone ticks the countdown and the ring itself, so the app needn't run. */
 export interface PanelState {
   /** The run it follows (its fact's number): a new run replaces the panel, the same one updates it. */

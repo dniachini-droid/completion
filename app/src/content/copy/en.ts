@@ -356,7 +356,7 @@ export const copy = {
   'notify.breatherEnd.title': 'The next delve is starting',
   'notify.breatherEnd.body': 'Your breather is over.',
 
-  /* the delve's panel on the lock screen and in the Dynamic Island (D-094): read at a glance, so short */
+  /* the delve's panel on the lock screen and in the Dynamic Island (D-095): read at a glance, so short */
   'panel.paused': 'Your minutes are safe.',
   'panel.breather.line': 'The {ord} delve will begin on its own.',
   'panel.breather.left': 'of the breather',

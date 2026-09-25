@@ -1,7 +1,7 @@
 import ActivityKit
 import Foundation
 
-/// The delve's panel on the lock screen and in the Dynamic Island (D-094). Compiled into the app and into the
+/// The delve's panel on the lock screen and in the Dynamic Island (D-095). Compiled into the app and into the
 /// LiveActivity extension alike. Every word comes from the app (copy/en.ts via ui/panel.ts); the panel only lays them
 /// out, and the phone itself ticks its countdown and ring, so the app needn't run.
 struct DelveAttributes: ActivityAttributes {

@@ -1,5 +1,5 @@
 /**
- * The delve's panel on the lock screen and in the Dynamic Island (D-094): what it shows, worked out from the run.
+ * The delve's panel on the lock screen and in the Dynamic Island (D-095): what it shows, worked out from the run.
  * The phone ticks its countdown and ring by itself, so the app needn't run; but without the app (and with no server,
  * D-057) nothing can change the panel's words. So each panel also carries what it shows once the current delve or
  * breather ends with the app closed: the rest of the run as one countdown to its end, or, after the last delve, that

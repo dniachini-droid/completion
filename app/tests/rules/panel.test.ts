@@ -3,7 +3,7 @@ import { runAt, type RunMark, type RunPlan } from '../../src/core/run';
 import type { RunView } from '../../src/core/game';
 import { panelOf } from '../../src/ui/panel';
 
-/* The delve's panel on the lock screen (D-094): what it says now, and what it turns to once the phone is left locked. */
+/* The delve's panel on the lock screen (D-095): what it says now, and what it turns to once the phone is left locked. */
 const M = 60_000, T0 = Date.UTC(2026, 8, 24, 9, 0);
 const clock = (ms: number) => new Date(ms).toISOString().slice(11, 16);
 const o = { place: 'The Salt Gallery', past: false, real: (ms: number) => ms, clock };

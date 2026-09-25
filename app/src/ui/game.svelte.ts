@@ -164,7 +164,7 @@ class Game {
       .map(f => ({ kind: f.type === 'breatherSkipped' ? 'skip' : f.type === 'delveHeld' ? 'hold' : 'resume', at: epochOf(f.at) }));
   }
 
-  /** The delve's panel on the lock screen and in the Dynamic Island (D-094): shown while a run is on, redrawn only when
+  /** The delve's panel on the lock screen and in the Dynamic Island (D-095): shown while a run is on, redrawn only when
       what it says changes (a new delve, a breather, a pause), and gone when the run ends. Its countdown and ring are
       ticked by the phone, so nothing here runs while the phone is locked. */
   #panel = '';

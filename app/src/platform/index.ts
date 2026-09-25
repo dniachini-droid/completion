@@ -26,7 +26,7 @@ async function readKept() {
   for (const key of keys) { const { value } = await Preferences.get({ key }); if (value !== null) kept.set(key, value); }
 }
 
-/* The delve's panel (D-094): the app's own small plugin, ios/App/App/DelvePanelPlugin.swift. A phone that has Live
+/* The delve's panel (D-095): the app's own small plugin, ios/App/App/DelvePanelPlugin.swift. A phone that has Live
    Activities turned off for the app, or an older build, simply shows none: the delve never waits on it. */
 const DelvePanel = registerPlugin<{ show(p: PanelState): Promise<unknown>; end(): Promise<unknown> }>('DelvePanel');
 const nativePanel: Panel = {
