@@ -837,3 +837,17 @@
   5. Exempt on purpose: a Key whose opening carries Dan to a place, and the High day's deep push, which goes further in by design.
 - **What it changes of D-049:** "the story keeps its order" still holds. The story week still sets what may come next, but where Dan has walked now also gates it, so in slow weeks the story waits for his feet instead of running ahead.
 - **Reversible:** Yes.
+
+## D-080 — Fixes from the seven-way adversarial review (Dan asked for it; Claude's routine calls, D-006)
+- **Date:** 2026-09-25
+- **Context:** Dan asked for strong independent reviews before the six-week test (story, interface, psychology, bugs, navigation, a new player, the phone), because he cannot see the story himself. Seven critics each reviewed the app, and a separate sceptic checked every finding against the code: 86 of 92 were confirmed. The full list, and what was done about each, is in `product/REVIEW_1.md` (spoiler-free; story findings by id only; the detailed story report is sealed).
+- **Decision (core, this session):**
+  1. **The week is always planned, and it always leads Today.** At a week's first opening with no plan, Plan my week lays it out from that day on; Dan changes it as he likes. Today shows every job planned for the day (as the Week does); capacity (Low/Normal/High, the hour opened) only sets how many make the day complete. "Not today" takes one off and the day then needs one fewer. A job Dan starts or taps himself joins the list after the plan's. Going past the plan (a High day, the deep push) is Dan's own choice through "Something else…". Replaces D-078's "only after Plan my week".
+  2. **Reopening from the background** begins a new day exactly as a cold start does (the morning, week close, welcome back, story week) and shows what waits.
+  3. **No stuck states:** a stopped delve never leaves its job "under way"; a delve left stepped-away ends by itself after three hours or at the day's end, where it was paused, on its own day; Today shows a running delve with one button back to it.
+  4. **Navigation:** "Today" never skips a place just reached, the morning, the welcome back or a new daybook page; each unseen arrival plays in turn; a record returns to where it was opened; the Stair's "Go down" lets Dan choose.
+  5. **The save:** a save this build can't read is kept aside, never overwritten; yesterday's save is copied to a backup each day; a wipe keeps one copy; a screen error shows a way back instead of a blank phone. The Trial controls moved from Today to camp (shown on Today only while a rehearsal is on).
+  6. **Builds:** only from main (with [testflight]) or started by hand; no monthly rebuild and no side-branch builds, so nothing unchosen reaches Dan's phone during the test.
+  7. **Smaller:** honest words when alerts are off; sound re-armed after the background; the clock no longer rebuilds the screen four times a second; passage lines never repeat while an unseen one is available; removing a planned job no longer deletes a line Dan added; a missed appointment falls away.
+- **Story and screen polish** findings are fixed in their own passes (recorded in REVIEW_1.md). Taste calls go to Dan.
+- **Reversible:** Yes.
