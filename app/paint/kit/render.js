@@ -91,6 +91,7 @@ export async function paint(canvas, sceneIn, opts = {}) {
     gl.uniform1fv(u('uLair'), L.map(l => l.air || 0));
     gl.uniform1fv(u('uLsh'), L.map(l => l.shadow || 0));
     gl.uniform1fv(u('uLwarm'), L.map(l => l.warm || 0));
+    gl.uniform1fv(u('uLreach'), L.map(l => l.reach || 0));
   }
   gl.uniform1f(u('uFogK'), S.fogK); gl.uniform1f(u('uFar'), S.far);
   gl.uniform3fv(u('uHazeBase'), S.hazeBase); gl.uniform3fv(u('uHazeFar'), S.hazeFar);

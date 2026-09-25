@@ -210,7 +210,7 @@ vec4 stone(vec2 uv, float fp, float fpv, float courseH, float blockL, float seed
 export const MAIN = /* glsl */ `
 uniform vec2 uRes;
 uniform vec3 uCam; uniform float uPitch, uYaw, uF; uniform vec2 uC;
-uniform int uN; uniform vec3 uLp[8]; uniform vec3 uLc[8]; uniform float uLk[8], uLr[8], uLair[8], uLsh[8], uLwarm[8];
+uniform int uN; uniform vec3 uLp[8]; uniform vec3 uLc[8]; uniform float uLk[8], uLr[8], uLair[8], uLsh[8], uLwarm[8], uLreach[8];
 uniform vec3 uGrade;
 uniform float uFogK, uFar, uBloomPow, uAmb, uExpo, uAO, uWrap, uSheen;
 uniform vec3 uHazeBase, uHazeFar, uBloomC, uBloomDir, uAmbC;
@@ -277,6 +277,7 @@ vec3 lightAt(vec3 p, vec3 n, vec3 alb, float wrap, vec3 d, float specK, float sp
     if (ndl <= 0.) continue;
     float r2 = uLr[i] * uLr[i];
     float att = uLk[i] / (1. + d2 / r2) / r2;
+    if (uLreach[i] > 0.) att *= 1. - smoothstep(uLreach[i] * .5, uLreach[i], dd);   /* a light that reaches only so far: an accent on one thing, no spill */
     float sh = uLsh[i] > 0. ? mix(1., softShadow(p + n * .03, L / dd, dd), uLsh[i]) : 1.;
     c += alb * uLc[i] * ndl * att * sh;
     if (specK > 0.) {

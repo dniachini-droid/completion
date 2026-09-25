@@ -953,6 +953,21 @@
   - Supersedes the capacity-on-Today parts of CORE_LOOPS (morning start), QUEST_SYSTEM and D-043's "lowering capacity can complete the day". The rules keep capacity inside (an old save's choice, the deep push) so this is one line to undo.
 - **Reversible:** Yes: the buttons and the link are one screen's markup.
 
+## D-090 — Another way to make the paintings: Blender, with Meshy for objects (Dan; numbered D-076 on its own branch, then D-084)
+- **Date:** 2026-09-25
+- **Context:** Even with D-075 (reused rooms, parallel painters), most paintings land at 4–7; 7 of 48 are in the game. Dan: "if it's going to be this hard to make images maybe we should look for another way"; the pictures in development are finished first. Dan offered Meshy (AI text-to-3D models).
+- **Decision (Dan; the method Claude's):** after the current round, test a new pipeline on one of the paintings that keep failing: rooms built and lit by code in **Blender** (a real renderer: soft bounce light, true materials), small objects made by **Meshy** through its API (Claude calls it; Dan never sees the object list, D-015). This relaxes "paintings stay code-painted" (D-056) for props only. The bar stays 8 (Dan). If the test does not reach 8, AI image generation or a human artist are the next options, Dan's call.
+- **Setup (Dan):** a Meshy API key in the environment as `MESHY_API_KEY`, and `api.meshy.ai` allowed in network access; takes effect in a new session. Blender installs from the system packages.
+- **Reversible:** Yes.
+
+## D-091 — The paintings' bar is Dan's eye, not 8/10 (Dan; numbered D-077 on its own branch, then D-085)
+- **Date:** 2026-09-25
+- **Context:** The critic's 8/10 bar (D-067, D-072) kept most paintings out after many rounds: 7 of 48 in the game; each place that passed took 2–5 rounds, the hardest two still out after 7, and the Blender test (D-090) about 2½ hours on one picture. Dan asked whether we were spending too much time per painting. He was shown, blind, the three invented sample places (not in the story, so no spoilers) at two levels: first tries made in minutes (the critic scored them 4, 5 and 6) and one-revision versions (about 6 minutes each), beside the approved hall.
+- **Decision (Dan):** he liked five of the six, including all three first tries (the 4/10 one too); he turned down one revised version. So **a painting goes into the game after its first attempt**, if it passes the automatic checks and the thing to look at reads as what it is (a clue must never read wrongly, rule 6). A second attempt only for a painting that fails either of those, or that Dan dislikes when he meets it in the game. The critic stays as a quick check for wrong readings, not a score to reach.
+- **Alternatives:** keep 8/10 (hours per place; most places on stand-ins); a middle bar of one revision each (Dan liked the first tries as much).
+- **Consequences:** the places now on stand-ins whose pictures already exist (scored 4–7) can go in once each is checked for wrong readings; new places get one attempt. The Blender test (D-090) is no longer needed to reach the bar; the kit, which paints a place in under a minute, is enough. Blender work is paused, kept on `claude/blender-meshy-round-2-1du0fv`, and can come back for a picture Dan dislikes.
+- **Outcome (2026-09-25):** every place painted once (four painters in parallel); a critic checked wrong readings only, and a failure got one second attempt. 45 passed; Dan then asked for one polish pass, which changed little (Claude recommended stopping it; Dan agreed) but brought in two more. **47 of 48 in the game**; `pt-b-6.A` stays on its stand-in.
+- **Reversible:** Yes: Dan can raise the bar or send any painting back.
 
 ## D-092 — One map, dragged around, no closer view (Dan's call) (first numbered D-090; the painting branch had taken D-090 and D-091)
 - **Date:** 2026-09-25
