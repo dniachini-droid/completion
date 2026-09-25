@@ -8,7 +8,7 @@
    so every tooth's end catches the round side's light. Far down, the floor goes under a slope of broken stone.
    This place: at the join, eye height, looking down the square gallery; the clasp on the left jamb, lit warm
    from the landing's lamps behind; the record in the tally's hand on the square wall just past it. */
-export const JZ = .8;                                              /* where the clasp runs across the passage */
+export const JZ = 1.6;                                              /* where the clasp runs across the passage */
 export const W = 1.0, HT = 1.95, ZEND = 24, RZ = 15;                /* half width, height, far end, where the slope starts */
 
 /* the room's GLSL: defines vec4 roomScene(vec3 p) and helpers; cam fades the chisel strokes with distance */
@@ -89,12 +89,12 @@ export const TALLY = /* glsl */ `
     return d;
   }`;
 
-const CAM = { x: .5, y: 1.58, z: -.9 };
+const CAM = { x: .18, y: 1.55, z: .1 };
 export default {
   id: 'pt-b-6.A',
   name: 'The side passage',
   line: '',
-  cam: { ...CAM, pitch: -6, yaw: -21, f: .62, cx: .5, cy: .47 },
+  cam: { ...CAM, pitch: -9, yaw: -6, f: .6, cx: .5, cy: .47 },
   far: 30, fogK: 1 / 14,
   hazeBase: [.016, .014, .042], hazeFar: [.05, .045, .13],
   bloomAt: [0, .9, 20], bloomPow: 30, bloomC: [.06, .05, .12],
@@ -103,17 +103,20 @@ export default {
   blur: { px: 1.6, d0: 4, d1: 14, k: .7 },
   gold: 1, grain: .4, shadowJitter: 1, amb: .5, expo: 1.9, ambC: [.86, .78, 1.5], sheen: 0,
   lights: [
-    { p: [.9, 1.9, -3.4], c: [1, .7, .34], k: 2, r: 1.2, shadow: 1, reach: 5 },       /* the landing's lamps, behind: their light comes through the doorway */
-    { p: [-.3, 1.3, JZ - 1.1], c: [1, .72, .38], k: .35, r: .45, shadow: 1, reach: 1.8 },  /* and falls along the left jamb, on the clasp */
-    { p: [0, 1.4, 7], c: [.4, .37, .85], k: 2.5, r: 2.5 },
-    { p: [-.4, 1.2, -2.2], c: [.36, .33, .8], k: 3, r: 2 },                          /* the landing's violet, high in its vault behind */                                 /* cold, far down the gallery, where the lamp gives out */
-    { p: [0, 1.6, 13.5], c: [.45, .42, .9], k: 2.5, r: 3 },
+    { p: [.3, 1.25, -1.3], c: [1, .7, .34], k: .8, r: .9, shadow: 1, reach: 4.4 },          /* the landing's lamps, behind: their light comes weak through the doorway */
+    { p: [-.55, 1.05, JZ - .5], c: [1, .72, .38], k: .3, r: .3, shadow: 1, reach: 1. },      /* and falls on the clasp, left */
+    { p: [.6, 1.05, JZ - .5], c: [1, .72, .38], k: .2, r: .3, shadow: 1, reach: .95 },        /* and right */
+    { p: [.1, 1.8, -1.6], c: [.4, .37, .85], k: 3.2, r: 1.3 },                                 /* the landing's violet, behind */
+    { p: [0, 1.4, 7], c: [.4, .37, .85], k: 1.6, r: 2.5 },                                       /* cold, far down the gallery, where the lamp gives out */
+    { p: [0, 1.6, 13.5], c: [.45, .42, .9], k: 1.3, r: 3 },
   ],
   glsl: squareRoom(CAM) + TALLY + /* glsl */ `
   vec4 scene(vec3 p) {
     vec4 d = roomScene(p);
     if (p.z < .25 && p.y > HT) gTint *= mix(.55, .15, smoothstep(HT, 2.5, p.y));         /* the round end above the door, in shadow */
-    if (p.y < .03) gTint *= mix(.4, 1., smoothstep(-1., 1.5, p.z));                     /* the floor at your feet, calm */
+    if (p.y < .03) gTint *= mix(.3, .8, smoothstep(0., JZ, p.z));
+    if (p.y > HT - .05) gTint *= mix(.3, .75, smoothstep(JZ - .9, JZ, p.z));             /* the flat roof close overhead, dark */
+    else if (p.y > 1.4 && p.z < JZ - .3) gTint *= mix(1., .45, smoothstep(1.4, HT, p.y));                     /* the floor at your feet, calm */
     /* the record, in the tally's hand, on the square wall just past the clasp */
     if (p.x < -WW + .05 && p.z > JZ + .5 && p.z < JZ + 1.25 && abs(p.y - 1.42) < .05) d.x += engrave(tally(vec2(p.z, p.y - 1.42), .05, 41.), .0045, .006);
     return d;

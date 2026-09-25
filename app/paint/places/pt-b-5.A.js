@@ -59,7 +59,7 @@ export default {
       if (p.x < -1.8 && abs(p.y - by) < .06) d.x -= engrave(tally(vec2(p.z, p.y - by)), .0045, .006);
       gTint *= .85;
     }
-    if (floor(d.y + .5) == M_DRESSED && p.x < -1.8 && abs(p.y - by) < .06 && p.z > 0.) {
+    if (floor(d.y + .5) == M_DRESSED && p.x < -1.8 && abs(p.y - by) < .06 && p.z > .06) {
       vec2 r = records(vec2(p.z - .06, p.y - by));
       d.x += engrave(r.x, .0065, .009);
       if (r.y > .5 && r.x < .008) { gPolish = .8; gTint = vec3(1.35); }                   /* the head marks cut clean, the stone fresh in them */

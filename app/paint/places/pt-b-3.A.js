@@ -12,7 +12,7 @@ export default {
   id: 'pt-b-3.A',
   name: 'The lintel',
   line: '',
-  cam: { x: -.75, y: 1.5, z: 7.45, pitch: 17, yaw: -93, f: .62, cx: .5, cy: .5 },
+  cam: { x: -.75, y: 1.5, z: 7.45, pitch: 7, yaw: -93, f: .62, cx: .5, cy: .5 },
   far: 30, sheen: .03, gold: .7, expo: 2.0,
   bloomAt: [-2.4, 2.85, 7.6], bloomPow: 40, bloomC: [.05, .04, .06],
   blur: { px: 1.2, d0: 4, d1: 14, k: .6 },
@@ -30,7 +30,7 @@ export default {
   vec4 scene(vec3 p) {
     vec4 d = hallScene(p);
     if (p.y < .03) gTint *= mix(.35, 1., smoothstep(4., 7.5, -p.x + 5.));                 /* the near floor kept down */
-    if (p.x > -2.35 && p.y > .03) gTint *= mix(1., .45, smoothstep(3.6, 6., p.y));          /* the vault into the dark: the words' band */
+    if (p.y > .03) gTint *= mix(1., .4, smoothstep(3.3, 5., p.y));          /* the vault into the dark: the words' band */
     if (p.x < -2.3 && p.y < 2.35) gTint *= mix(.45, .8, smoothstep(.2, 2.3, p.y));          /* the blind doorway's stone, quiet under the lintel */
     if (floor(d.y + .5) == M_DRESSED) d.x += rough(p, .01, 6.) + rough(p, .003, 25.);      /* the lintel hand-dressed, not a plate */
     /* the lintel's face: two marks, then the blank */
