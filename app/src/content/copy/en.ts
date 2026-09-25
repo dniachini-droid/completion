@@ -67,6 +67,7 @@ export const copy = {
   'delve.enoughAfter': 'This one takes you to enough for today.',
   'delve.more': 'This one is extra: the {ord} delve.',
   'delve.away.locked': 'Put the phone away. A sound will call you back when the delve is over.',
+  'delve.away.noAlerts': 'Alerts are turned off for this app in Settings, so no sound will come while the phone is locked. Keep an eye on the time, or turn them on in Settings, then Notifications.',
   'delve.away.web': 'Set the phone down. If this page is left open, a chime will call you back.',
   'delve.stepAway': 'Step away',
   'delve.finishHere': 'Finish here',
@@ -110,6 +111,8 @@ export const copy = {
   'records.none': 'You have found nothing yet. Records lie further in, for those who go looking.',
   'records.her': 'Her sheet',
   'records.read': 'Read it',
+  'records.done': 'Done reading',
+  'records.tapMark': 'Tap a mark to see what you know of it.',
   'records.nav': 'Records',
 
   /* the marks (SCRIPT §9; mock-up record.html) */
@@ -122,7 +125,7 @@ export const copy = {
   'marks.aName': 'a name',
   'marks.unknown': 'Seen, but not known yet',
   'marks.held': 'You know this one now: it means {word}. The place itself told you.',
-  'marks.guess': 'You guessed {word}. You will know you were right when a word you cut holds, or another record agrees.',
+  'marks.guess': 'You guessed {word}. In time the place itself will tell you whether you were right.',
   'marks.open': 'You have not met this mark before. What do you think it means?',
   'marks.seen': 'You have seen this mark, but its meaning is still hidden from you.',
   'marks.ring': 'This is a name, cut inside a ring. You cannot read it yet, but you will know it when you meet it again.',
@@ -213,15 +216,18 @@ export const copy = {
   'today.deep.called': 'You will push deeper today. When a normal day’s work is done, the way goes further down.',
   'nav.satchel': 'Satchel', 'nav.week': 'Week', 'nav.daybook': 'Daybook', 'nav.camp': 'Camp',
   'row.at': 'at {time}',
-  'row.room': '{enough} is enough, with room for {len}',
+  'row.room': '{enough} · up to {len}',
   'row.oneOff': 'one-off',
 
   /* choosing what to do: any job, any time (D-077) */
   'row.notToday': 'Not today',
   'today.notToday': 'Not today',
+  'oops.say': 'Something went wrong on this screen. Your save is safe.',
+  'today.running.say': 'Your delve is still going. The timer keeps time whether you watch it or not.',
+  'today.running.go': 'Back to the delve',
   'today.else': 'Something else…',
   'today.clear': 'Nothing more is on today’s list.',
-  'today.clear.say': 'Tap one of your jobs below, or choose something else. Or rest; the road will keep.',
+  'today.clear.say': 'Choose something else to delve on, or rest. The road will keep.',
   'choose.label': 'Choose a delve',
   'choose.say': 'Any job can be a delve. Pick one, or name something new.',
   'choose.today': 'On today’s list',
@@ -242,8 +248,12 @@ export const copy = {
   'camp.earlier': 'Earlier',
   'camp.later': 'Later',
   'camp.set': 'Set',
-  'camp.promise': 'Be in bed by then, and something small will be waiting for you here in the morning.',
-  'camp.goodnight': 'Goodnight',
+  'camp.promise': 'When you go to bed, press Go to sleep and put the phone down. In bed by {bedtime}, and tomorrow begins with a head start: a little further into the cave, and something waiting for you.',
+  'camp.notYet': 'Come back here when you are going to bed. From {from} you can press Go to sleep.',
+  'camp.sleep.kept': 'You are in bed on time. Tomorrow begins a little further in, with something waiting for you. Put the phone down now.',
+  'camp.sleep.late': 'Sleep well. The head start is for nights you are in bed by {bedtime}. Nothing is lost.',
+  'morning.headStart': 'You went to sleep on time, so the day begins a little further in.',
+  'camp.goodnight': 'Go to sleep',
   'camp.night': 'Goodnight.',
   'camp.sleep': 'Sleep well. The hall will keep watch, and nothing here needs you until morning.',
 
@@ -302,7 +312,6 @@ export const copy = {
   'week.done': 'Done',
   'week.off': 'Not this week',
   'week.today': 'today',
-  'week.empty': '·',
 
   'rhythms.label': 'What repeats',
   'rhythms.say': 'These are the things you do again and again. You may change any of them, at any time.',
@@ -354,6 +363,7 @@ export const copy = {
 
   /* words for numbers and times */
   'min.one': '1 minute', 'min.many': '{n} minutes', 'hour.one': '1 hour', 'hour.many': '{n} hours',
+  'min.short': '{n} min', 'hour.short': '{n} h',
   'ord.1': 'first', 'ord.2': 'second', 'ord.3': 'third', 'ord.4': 'fourth', 'ord.5': 'fifth', 'ord.6': 'sixth', 'ord.7': 'seventh', 'ord.8': 'eighth',
   'card.1': 'one', 'card.2': 'two', 'card.3': 'three', 'card.4': 'four', 'card.5': 'five', 'card.6': 'six', 'card.7': 'seven', 'card.8': 'eight',
   'delves.one': '1 delve', 'delves.many': '{n} delves',
@@ -369,6 +379,12 @@ export function minutesWords(m: number): string {
   if (m < 60) return t(m === 1 ? 'min.one' : 'min.many', { n: m });
   const h = Math.floor(m / 60), r = m % 60;
   return t(h === 1 ? 'hour.one' : 'hour.many', { n: h }) + (r ? ' ' + t(r === 1 ? 'min.one' : 'min.many', { n: r }) : '');
+}
+/** "50 min", "3 h", "1 h 20 min": for a note that must stay on one line */
+export function minutesShort(m: number): string {
+  if (m < 60) return t('min.short', { n: m });
+  const h = Math.floor(m / 60), r = m % 60;
+  return t('hour.short', { n: h }) + (r ? ' ' + t('min.short', { n: r }) : '');
 }
 export const ord = (k: number) => copy[`ord.${Math.min(8, Math.max(1, k))}` as CopyKey];
 export const card = (k: number) => copy[`card.${Math.min(8, Math.max(1, k))}` as CopyKey];

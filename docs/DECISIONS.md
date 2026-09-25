@@ -838,19 +838,75 @@
 - **What it changes of D-049:** "the story keeps its order" still holds. The story week still sets what may come next, but where Dan has walked now also gates it, so in slow weeks the story waits for his feet instead of running ahead.
 - **Reversible:** Yes.
 
-## D-080 — The story's lines rewritten by an outside writer, kept sealed (Dan's call)
+## D-080 — Fixes from the seven-way adversarial review (Dan asked for it; Claude's routine calls, D-006)
 - **Date:** 2026-09-25
+- **Context:** Dan asked for strong independent reviews before the six-week test (story, interface, psychology, bugs, navigation, a new player, the phone), because he cannot see the story himself. Seven critics each reviewed the app, and a separate sceptic checked every finding against the code: 86 of 92 were confirmed. The full list, and what was done about each, is in `product/REVIEW_1.md` (spoiler-free; story findings by id only; the detailed story report is sealed).
+- **Decision (core, this session):**
+  1. **The week is always planned, and it always leads Today.** At a week's first opening with no plan, Plan my week lays it out from that day on; Dan changes it as he likes. Today shows every job planned for the day (as the Week does); capacity (Low/Normal/High, the hour opened) only sets how many make the day complete. "Not today" takes one off and the day then needs one fewer. A job Dan starts or taps himself joins the list after the plan's. Going past the plan (a High day, the deep push) is Dan's own choice through "Something else…". Replaces D-078's "only after Plan my week".
+  2. **Reopening from the background** begins a new day exactly as a cold start does (the morning, week close, welcome back, story week) and shows what waits.
+  3. **No stuck states:** a stopped delve never leaves its job "under way"; a delve left stepped-away ends by itself after three hours or at the day's end, where it was paused, on its own day; Today shows a running delve with one button back to it.
+  4. **Navigation:** "Today" never skips a place just reached, the morning, the welcome back or a new daybook page; each unseen arrival plays in turn; a record returns to where it was opened; the Stair's "Go down" lets Dan choose.
+  5. **The save:** a save this build can't read is kept aside, never overwritten; yesterday's save is copied to a backup each day; a wipe keeps one copy; a screen error shows a way back instead of a blank phone. The Trial controls moved from Today to camp (shown on Today only while a rehearsal is on).
+  6. **Builds:** only from main (with [testflight]) or started by hand; no monthly rebuild and no side-branch builds, so nothing unchosen reaches Dan's phone during the test.
+  7. **Smaller:** honest words when alerts are off; sound re-armed after the background; the clock no longer rebuilds the screen four times a second; passage lines never repeat while an unseen one is available; removing a planned job no longer deletes a line Dan added; a missed appointment falls away.
+- **Story and screen polish** findings are fixed in their own passes (recorded in REVIEW_1.md). Taste calls go to Dan.
+- **Reversible:** Yes.
+
+## D-081 — Story fixes from the review, and the pace for a planned week (Claude's routine calls, D-006)
+- **Date:** 2026-09-25
+- **Context:** the review's story critic confirmed 18 findings (details sealed: `narrative/sealed/REVIEW_PLAYABLE.md`). Once the week plan leads Today (D-080), a Normal week holds about 12–15 jobs, not 21, so the story fell a week behind by week 6.
+- **Decision:** 16 story findings fixed in the engine and the sealed data, each with a rule test where one is possible (spoiler-free list in `product/REVIEW_1.md`). The ones Dan would notice most:
+  1. Skipping an optional guess never stops the story.
+  2. A morning that confirms marks comes after they were offered, bedtime kept or not.
+  3. A Key opens only what is in view.
+  4. Camp lines wait for what they describe.
+  5. A guess moves onto an arrival only if that place carries the mark (narrows D-077).
+  6. Next week's places come only on a deep push, and otherwise one place a day on foot (`FOOT_A_DAY`, easy to change).
+  7. Camp views rotate.
+  8. Every ambiguous "the lamp" line is anchored.
+
+  **The pace:** the distance between named places is 150 minutes of effort (was 200, D-049), so a planned Normal, Low or High week each reach story week 6 in six calendar weeks (measured in the simulation). The "light weeks" test now counts Keys kept for later (D-079) as well as those opened.
+- **For Dan (story-10):** the six-week test ends just before the story's next big turn. Options: run seven weeks, or have the sealed story session bring one answer forward into week 6. It doesn't affect the behaviour test.
+- **Reversible:** Yes.
+
+## D-082 — Dan's answers to the review's questions
+- **Date:** 2026-09-25
+- **Decision (Dan):**
+  1. **The test runs seven weeks**, not six, so it reaches the story's turn in week 7 (the week 7 content was already built as run-ahead). A rule test checks that seven Normal or Low weeks reach story week 7 with nothing out of place.
+  2. **A High day adds one job beyond the plan**, the next one due, and only one; more is Dan's own choice through "Something else…". The day's size on High is the plan plus one.
+  3. **Marks opens with nothing selected** (Dan: "whatever you think"; Claude's call): a page to look at, not a quiz; a quiet line says to tap a mark.
+  4. **Text size:** Dan's is fine; the app keeps its own.
+  5. **Today stays as it is** (Q2), as long as Dan can change what's on it: tap a job to make it next, Not today (or swipe), "Something else…", and the Week and What repeats for the plan itself.
+- **Reversible:** Yes.
+
+## D-083 — Camp made clear: "Go to sleep", and a head start for bed on time (Dan)
+- **Date:** 2026-09-25
+- **Context:** Dan: camp wasn't clear. Do I press a button to go to sleep? If it's meant to help me put the phone down, it should have a "go to sleep" button, and being in bed before a certain hour should bring something positive the next day. Before this, "Goodnight" counted only from three hours before bedtime, its reward was a small find or line in the morning, nothing said whether it had counted, and the button showed at noon too.
+- **Decision (Dan's, built as he described):**
+  1. The button is **Go to sleep**. It is offered from five hours before Dan's bedtime (18:00 for 23:00). Before that, camp says when to come back.
+  2. Camp says plainly how it works: press it when you go to bed and put the phone down; in bed by your bedtime, and tomorrow begins with a head start.
+  3. **In bed on time** (up to 15 minutes past bedtime): the next morning begins **15 minutes of distance further in** (`HEAD_START`), once per night, plus the morning's find or story line; the Morning screen says so. After pressing, camp says so, and says to put the phone down. There is nothing more to press.
+  4. **Late:** "The head start is for nights you are in bed by {bedtime}. Nothing is lost." No guilt, nothing taken away (rule 9).
+  5. The Trial link sits quietly in camp's top bar.
+- **Why it's safe (rule 10):** once a night, tied to a real behaviour, and small (about a tenth of a place's distance).
+- **Reversible:** Yes (one constant).
+
+## D-084 — The story's lines rewritten by an outside writer, kept sealed (Dan's call)
+- **Date:** 2026-09-25
+- **Numbering:** made on a parallel branch as D-080; renumbered at the merge (commit messages on that branch say D-080/D-081 for D-084/D-085).
 - **Context:** Dan wanted the story's on-screen lines rewritten by ChatGPT rather than Claude, without reading them himself. Claude put all 537 story lines from `app/src/content/sealed/` into one file with a brief (keep every fact, clue, mark shape and bracket; add no new facts; British English; return the whole file; show Dan only one week-1 line, before and after). Dan passed it to ChatGPT and back unread. His authorisation is on record in the session.
 - **Decision:** ChatGPT's wording is in the app: 384 lines changed, 153 unchanged. It was checked by script before loading: every line back under its id, every number, capitalised word, carved-mark description and [bracket] unchanged, italics restored where the paste lost them. One fix by Claude: a line that first names a place had lost the place's name, so the name was put back. Typecheck clean, 102 tests pass (the continuity guard included).
 - **Note:** the rewrite came back slightly shorter overall. It reads cleaner, but it is not the fuller, more descriptive prose Dan asked for. Dan may send it back for a second, fuller round using the same method.
 - **Consequences:** the app's `content/sealed/` is now the latest wording. The sealed docs in `docs/narrative/sealed/` still hold the earlier wording (same facts and ids) until they are brought in step.
 - **Reversible:** Yes (git).
 
-## D-081 — The story's lines made fuller (round 3 by the outside writer); story screens scroll (Dan's call)
+## D-085 — The story's lines made fuller (round 3 by the outside writer); story screens scroll (Dan's call)
 - **Date:** 2026-09-25
-- **Context:** Dan wanted the story fuller and more engrossing (D-080 came back as a tidy-up). Round 2 was rejected by Claude's checks: ChatGPT had padded lines with 85 stock sentences used over 1,000 times, and removing them left almost nothing new. Round 3 went out as four smaller files, one fresh ChatGPT chat each, with repetition banned and the rejected sentences listed. Buttons and location labels were left as they were.
+- **Context:** Dan wanted the story fuller and more engrossing (D-084 came back as a tidy-up). Round 2 was rejected by Claude's checks: ChatGPT had padded lines with 85 stock sentences used over 1,000 times, and removing them left almost nothing new. Round 3 went out as four smaller files, one fresh ChatGPT chat each, with repetition banned and the rejected sentences listed. Buttons and location labels were left as they were.
 - **Decision:** round 3 is in the app: 418 story lines, about 8,700 words → 27,500. Checked by script before loading: every line back under its id; every number, capitalised word, [bracket], carved-mark description, italic and quote kept; lines that must match still match; no sentence reused across lines (other than lines that were already identical); none of the rejected sentences present. Claude's fixes: one line had brief wording copied into it, and six teasers had added or implied a detail the story does not have (a pencil, another recess, a place, a cause). Those words were taken out. Story screens now scroll when their words don't fit (`.ui` scrolls; a screen that fits never moves), and the screen walk now fails if any text is off screen or under a button.
 - **Round 4 (the 77 big moments only):** Claude judged round 3's story moments too much like a survey ("you can see / compare…" about 75 times), and Dan agreed to one more pass. Round 4 is in: the surveyor words are gone, every fact, mark and quote is kept (checked). Claude's fixes: three end-of-week glimpses had the player walk into places not yet reached (the little door in week 3, the square gallery in week 5, the water in week 7). They were turned back into views from where the player stands (D-079's rule), and two small added details were removed.
 - **The words on screen:** at Dan's request they keep to the lower half of the screen, scroll there and fold away ("Hide the words" / "Read on"), so the painting stays seen (`ui/Words.svelte`, on arrivals and on a job's return).
 - **Consequences:** `docs/narrative/sealed/` still holds the earlier wording (same facts and ids); the app's `content/sealed/` is the latest. Typecheck clean, 102 tests pass; the screen walk passes at both phone sizes.
 - **Reversible:** Yes (git).
+
+- **At the merge with the review branch:** that branch had rewritten 20 story lines for the story's order and facts (its D-080/D-081). Those 20 keep that branch's wording, and the fact fix wins. They are listed for the next writing pass. The other 506 carry the rewritten wording. Arrivals keep the lower-half words panel Dan asked for.

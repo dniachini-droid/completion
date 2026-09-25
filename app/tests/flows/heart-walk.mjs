@@ -68,6 +68,7 @@ let cut = false;
 const cutIfAny = async (name) => {
   if (!(await page.locator('button.rodbtn').count())) return false;
   await page.clock.runFor(2500); await page.waitForTimeout(1500); await shot(name + '-cut-0', 500);
+  await guessIfAny(name + '-cut');   /* a mark the word needs, left unguessed, is asked before the first tap */
   await page.locator('button.rodbtn').click(); await shot(name + '-cut-1', 1200);
   await page.locator('button.key.ready').click(); await shot(name + '-cut-2', 1200);
   await page.locator('button.key.ready').click(); await shot(name + '-cut-3', 1200);
@@ -77,6 +78,13 @@ const cutIfAny = async (name) => {
   await tap('Go through'); await page.clock.runFor(800); await page.waitForTimeout(1500); await shot('stair', 4000);
   await tap('Today'); await page.clock.runFor(1500);
   cut = true;
+  /* "Today" shows any place still waiting first (D-080): play it */
+  for (let k = 0; k < 4 && (await page.locator('.arr').count()); k++) {
+    await page.clock.runFor(6000);
+    const o = page.locator('.opts .btn-quiet'); if (await o.count()) await o.first().click();
+    if (await has('Rest here for today')) await tap('Rest here for today'); else await tap('Back to today');
+    await page.clock.runFor(1500);
+  }
   return true;
 };
 /** Play each arrival in turn, back to Today. */
@@ -111,6 +119,8 @@ const quiet = async () => {
 let closes = 0, mornings = 0;
 const openers = async (name) => {
   for (let k = 0; k < 4; k++) {
+    /* a place reached overnight (the head start, D-083) opens the app */
+    if (await page.locator('.arr').count() && !(await page.locator('button.rodbtn').count())) { await arrivals(name + '-open'); continue; }
     if (await has('On to today')) { if (mornings++ < 1) await shot(name + '-morning', 2500); await tap('On to today'); await page.clock.runFor(1500); continue; }
     if (await has('Back to today') && (await page.locator('.label-line.welcome').count())) { await shot(name + '-welcome', 2000); await tap('Back to today'); await page.clock.runFor(1500); continue; }
     if (await has('Plan it for me')) {
@@ -131,7 +141,7 @@ const camp = async (name, loud) => {
   if (!(await has('To camp'))) return;
   await toClock(0, 22, 30);
   await tap('To camp'); if (loud) await shot(name + '-camp', 2500); else await page.clock.runFor(1500);
-  await tap('Goodnight'); if (loud) await shot(name + '-goodnight', 2500); else await page.clock.runFor(800);
+  await tap('Go to sleep'); if (loud) await shot(name + '-goodnight', 2500); else await page.clock.runFor(800);
   await tap('Today'); await page.clock.runFor(1000);
 };
 /** Do today's next job, whatever it is, and show its return. */
@@ -190,7 +200,9 @@ const mapWalk = async (name) => {
 };
 await shot('today', 2500);
 /* the Course: Begin opens the run set to its hour; a breather; enough */
-await start(); await shot('runset', 2000);
+/* the day's plan leads Today (D-080); the Course is chosen through "Something else…" (D-077) */
+await tap('Something else…'); await shot('choose', 1000);
+await page.locator('.body button.row', { hasText: 'Course' }).first().click(); await shot('runset', 2000);
 await tap('Begin'); await shot('delve', 10 * 60_000);
 await ff(26 * 60_000); await shot('breather', 2000);
 await ff(30 * 60_000); await shot('course-enough', 2000); await guessIfAny('course');

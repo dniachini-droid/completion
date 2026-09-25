@@ -45,7 +45,7 @@ _Written 2026-09-23._
 | 7 | 1 | The Surveyor's gallery, a niche | A lesson-tablet: an inverted wedge beside a picture of the sky; a wedge-on-bar beside a picture of a block; a small person beside a child's tablet | — | **UP, STONE, CHILD** |
 | 7 | 2 | The Surveyor's gallery, the crew's wall | The boy's wax tablet | (see X-boy) | X-boy |
 | 7 | 3 | The Stair, the rail's recess | The shape in the stone where a long hand rested (the app describes: four fingers, and long) | (wordless) | C-36 |
-| 7 | 4 | The Surveyor's gallery, a cache | Twelve bronze coins and one clay token, in a leather bag gone hard | *Once, the second gave me [a bag]: the twelve's and the child's, thirteen days. The door was shut; the day came not. I kept it.* (at wk 7: *Once, [ ] gave me [a bag]: [ ] person [ ], child one; [ ] [ ]. [ ] door once, [ ] [ ] [ ]. I [ ] it.*) | X-foreman; the kind line |
+| 7 | 4 | The Surveyor's gallery, a cache | Twelve bronze coins and one clay token, in a leather bag gone hard | *Once, the second gave me [a bag]: the twelve's and the child's, thirteen days. The door was shut; the day came not. I kept it.* (at wk 7: *Once, [ ] gave me [a bag]: [ ] person [ ], [ ] [ ]; [ ] [ ]. [ ] door once, [ ] [ ] [ ]. I [ ] it.*) | X-foreman; the kind line |
 | 7 | 5 | The Lower Door | With OPEN-WAY and a Key: the makers' straight descent | — | Region 2 |
 | 8 | 1 | The Water's niche | A lesson-tablet: a diamond beside an eye; strokes in a row beside a hand; an inverted wedge with a fork beside the sun; the number bundle | — | **SEE, COUNT, DAY, numbers** |
 | 8 | 2 | The Water's edge | (seen, not sealed: in the open at ARR2 8.2) The Surveyor's own-hand record, V4, cut low on the channel's lip | — | V4 |

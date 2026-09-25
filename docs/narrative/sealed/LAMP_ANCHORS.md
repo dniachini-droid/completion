@@ -1,11 +1,5 @@
-# Lamp anchors (sealed; for the next story session, D-077)
+# Lamp anchors (sealed; D-077)
 
-Dan read "the lamp" as ambiguous (several different lamps in weeks 1–2). Each line below says "the lamp" without saying which; give it the place or object anchor the story already uses elsewhere (e.g. as `b-1.2` / `seal-1-3` do). How only, never what (D-074 rule 1). Keep MVP_CONTENT and `app/src/content/sealed/` in step.
+Dan read "the lamp" as ambiguous (several different lamps in weeks 1–2). **Done 2026-09-25** (the playable's story review, `REVIEW_PLAYABLE.md` §13): every listed line, and the extra ones the review found (the week camp lines, a find, the week-1 open question, a week-4 step), now names *the lamp on the ledge* where it meant that one; place names ("Below the lamp", "the wall by the lamp") are fixed names and stay. How only, never what (D-074 rule 1); MVP_CONTENT, ARRIVALS_REGION1/2 and `app/src/content/sealed/` changed together. Nothing is left on this list.
 
-- `b-w1.tz2` (line; the Ahead teaser Dan saw)
-- `rec-k1` (`where`)
-- `b-1.2`, `b-1.3`, `b-1.7` (line)
-- `pl-w1-below-the-lamp` (line)
-- passages `ps-h01`, `ps-h05`, `ps-h07`, `ps-h10`
-
-Found by a keyword scan; check the rest of weeks 1–2 while there. Do not settle, in any Dan-facing line, whether a lamp in the old records is one of these (a planted clue).
+Standing rule for new lines: a bare "the lamp" in the app's own voice names which lamp. Do not settle, in any Dan-facing line, whether a lamp in the old records is one of these (a planted clue).

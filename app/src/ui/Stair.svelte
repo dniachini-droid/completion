@@ -65,8 +65,8 @@
   });
 
   function down() {
-    const job = v.order.find(x => !v.done.has(x) && game.job(x)?.delve) ?? content.jobs.find(j => j.delve)?.id;
-    if (job) go('set', job); else go('today');
+    /* Go down: Dan chooses what to delve on, never a job picked for him (D-080) */
+    go('choose');
   }
   function today() { go(v.arrival ? 'arrival' : 'today'); }
 </script>

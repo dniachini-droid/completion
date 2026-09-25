@@ -4,7 +4,7 @@
      Looked at once, then Today. */
   import { game, content } from './game.svelte';
   import { t } from '../content/copy/en';
-  import { recordOf } from '../core/story';
+  import { beatOf, recordOf } from '../core/story';
   import Scene from './Scene.svelte';
   import Settled from './Settled.svelte';
   import type { Go } from './nav';
@@ -14,6 +14,8 @@
   const m = game.view.morning;
   const v = $derived(game.view);
   const find = m?.find ? s.finds.find(f => f.id === m.find)?.line ?? '' : '';
+  /* a later week's morning the story wrote a line for (week 1's morning beat is the opening screen, not this one) */
+  const said = m?.beat ? (b => b && b.kind === 'morning' && b.w > 1 ? b.line ?? '' : '')(beatOf(s, m.beat)) : '';
   /* the newest record that carries a mark Dan has guessed: it reads differently this morning */
   const record = m?.beat ? [...game.view.story.records].reverse().find(id => recordOf(s, id)?.cut?.some(l => l.some(tk => 's' in tk && typeof tk.s === 'string' && game.view.story.guessed.has(tk.s)))) ?? null : null;
 
@@ -36,6 +38,8 @@
   </section>
   <div class="mid"></div>
   <section class="bottom col center rise d2">
+    {#if game.facts.some(f => f.type === 'stepsGained' && f.job === 'sleep' && f.day === v.day)}<p class="say">{t('morning.headStart')}</p>{/if}
+    {#if said}<p class="say look">{said}</p>{/if}
     {#if m?.beat}<Settled beat={m.beat} />{/if}
     {#if find}
       <div class="label-line centred">{t('find.label')}</div>

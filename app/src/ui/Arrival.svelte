@@ -68,7 +68,7 @@
       </section>
       <!-- the painting, left clear -->
       <div class="gap"></div>
-      <!-- the words keep to the lower half and scroll there; they can be folded away (D-081) -->
+      <!-- the words keep to the lower half and scroll there; they can be folded away (D-085) -->
       <div class="col text">
         <Words length={(a.line?.length ?? 0) + (a.look?.length ?? 0)}>
           <span class="soft on-scene">{a.line}</span>
@@ -112,7 +112,7 @@
   .head .label-line { margin-bottom: 12px; }
   .choice { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; margin-bottom: 14px; }
   .topbar { animation: rise 1.2s .2s var(--ease) both; }
-  /* the screen itself never scrolls: the words do, in the lower half (D-081) */
+  /* the screen itself never scrolls: the words do, in the lower half (D-085) */
   .ui.fixed { overflow: hidden; }
   .head { flex: none; }
   .gap { flex: 1 1 auto; min-height: 12vh; }

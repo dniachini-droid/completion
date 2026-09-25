@@ -11,7 +11,7 @@ import type { Fact, FactOf, FactBody, Rhythm } from './types';
 import type { Beat, Carries, Find, Mark, RecordFragment, Seal, StretchId, Story, Token } from './story-types';
 
 /** Minutes of effort between named places reached on foot: 8 steps (BALANCING §1). */
-export const PLACE_GAP = 200;
+export const PLACE_GAP = 150;
 /** The first place is close, so the first Normal day arrives somewhere (the heart's rule, D-064). */
 export const FIRST_GAP = 75;
 /** Useful Keys a week (BALANCING §3). */
@@ -48,6 +48,8 @@ export interface StoryState {
   visited: Set<StretchId>;
   /** Keys kept for a sealed thing not yet reached (D-079). */
   held: number;
+  /** Marks offered for a guess so far (by a beat played or a sealed thing opened). */
+  offered: Set<string>;
 }
 
 export function storyState(facts: Fact[], s: Story): StoryState {
@@ -74,7 +76,10 @@ export function storyState(facts: Fact[], s: Story): StoryState {
       case 'storyWeekBegan': week = f.w; weekBegan = calendarWeek(f.day); break;
     }
   }
-  return { played, opened, guessed, given, records, week, weekBegan, onFoot, stretch, passagesShown, campsShown, visited, held };
+  const offered = new Set<string>();
+  for (const b of s.beats) if (played.has(b.id)) b.carries?.guess?.forEach(m => offered.add(m));
+  for (const x of s.seals) if (opened.has(x.id)) x.carries?.guess?.forEach(m => offered.add(m));
+  return { played, opened, guessed, given, records, week, weekBegan, onFoot, stretch, passagesShown, campsShown, visited, held, offered };
 }
 
 export const beatOf = (s: Story, id: string): Beat | undefined => s.beats.find(b => b.id === id);
@@ -82,10 +87,11 @@ export const sealOf = (s: Story, id: string): Seal | undefined => s.seals.find(x
 export const markOf = (s: Story, id: string): Mark | undefined => s.marks.find(m => m.id === id);
 export const recordOf = (s: Story, id: string): RecordFragment | undefined => s.records.find(r => r.id === id);
 
-/** Whether an id in a `req` list is satisfied: a beat or place played, a seal opened, a mark guessed, a find given. */
+/** Whether an id in a `req` list is satisfied: a beat or place played, a seal opened, a mark offered (a guess is
+    optional, so the story never waits on one; the word asks it before the first tap), a find given. */
 export function met(st: StoryState, id: string): boolean {
   if (id.startsWith('seal-')) return st.opened.has(id);
-  if (id.startsWith('mk-')) return st.guessed.has(id);
+  if (id.startsWith('mk-')) return st.guessed.has(id) || st.offered.has(id);
   if (id.startsWith('fd-')) return st.given.has(id);
   return st.played.has(id);
 }
@@ -102,15 +108,16 @@ export const nextPlaceAt = (st: StoryState) => st.onFoot === 0 ? FIRST_GAP : FIR
 
 /**
  * The next named place that can be reached on foot, in route order: this story week's first (places whose req is not
- * met are skipped for now); then, as a deep push, next week's plain places (never a story arrival ahead of its week).
+ * met are skipped for now); then, only on a deep push (`push`: a High day, a called push, or Keep going after the day's
+ * work), next week's plain places (never a story arrival ahead of its week) (MVP_CONTENT §0.2).
  */
-export function nextPlace(s: Story, st: StoryState): Beat | null {
+export function nextPlace(s: Story, st: StoryState, push = false): Beat | null {
   for (const rw of s.route) {
     for (const p of rw.places) {
       if (p.k || st.played.has(p.id)) continue;
       const b = beatOf(s, p.id);
       if (!b) continue;
-      const ahead = rw.w === st.week + 1 && p.id.startsWith('pl-');
+      const ahead = push && rw.w === st.week + 1 && p.id.startsWith('pl-');
       if (!(inWeek(st, b) || ahead)) continue;
       if (b.kind === 'word' && !EARLY.has(b.id) && b.w > st.week) continue;
       if (allMet(st, b.req)) return b;
@@ -119,12 +126,17 @@ export function nextPlace(s: Story, st: StoryState): Beat | null {
   return null;
 }
 
-/** The camp with a view for a day that completes short of the next place: the stretch's next unused view. */
+/** The camp with a view for a day that completes short of the next place: the stretch's next unused view, then an
+    unused one back along the route Dan has walked; once all are used, the one seen longest ago (never the same view
+    night after night). */
 export function nextCamp(s: Story, st: StoryState): { id: string; find?: string; line?: string } {
-  const ok = s.camps.filter(c => c.stretch === st.stretch && c.w <= st.week && allMet(st, c.req) && !(c.until && met(st, c.until)));
-  const fresh = ok.find(c => !st.campsShown.includes(c.id));
+  const open = s.camps.filter(c => st.visited.has(c.stretch) && c.w <= st.week && allMet(st, c.req) && !(c.until && met(st, c.until)));
+  const ok = open.filter(c => c.stretch === st.stretch);
+  const fresh = ok.find(c => !st.campsShown.includes(c.id)) ?? open.find(c => !st.campsShown.includes(c.id));
   if (fresh) return { id: fresh.id, ...('find' in fresh.look ? { find: fresh.look.find } : { line: fresh.look.line }) };
-  const first = ok[0] ?? s.camps.find(c => c.stretch === st.stretch) ?? s.camps[0];
+  const last = (id: string) => st.campsShown.lastIndexOf(id);
+  const first = [...ok, ...open.filter(c => c.stretch !== st.stretch)].sort((a, b) => last(a.id) - last(b.id))[0]
+    ?? s.camps.find(c => c.stretch === st.stretch) ?? s.camps[0];
   return { id: first.id, find: pickFind(s, st, 'camp')?.id };
 }
 
@@ -142,20 +154,39 @@ export function nextStep(s: Story, st: StoryState): Beat | null {
 export function nextPassage(s: Story, st: StoryState): string | null {
   const here = s.passages.filter(p => p.stretch === st.stretch && allMet(st, p.req) && !(p.until && met(st, p.until)));
   if (!here.length) return null;
-  const used = st.passagesShown.filter(id => here.some(p => p.id === id)).length;
-  return here[used % here.length].id;
+  /* the first not yet shown; once all have been, the one shown longest ago (a list that grows never repeats early) */
+  const fresh = here.find(p => !st.passagesShown.includes(p.id));
+  if (fresh) return fresh.id;
+  const last = (id: string) => st.passagesShown.lastIndexOf(id);
+  return here.reduce((a, b) => (last(b.id) < last(a.id) ? b : a)).id;
 }
 
 /* ---------- Keys ---------- */
 
-/** The sealed thing the next Key opens: the story's own first, in order; a surplus opens next week's plain ones. */
+/** A sealed thing that carries the story: a step or place of its own, a record or a guess (BALANCING §3: story counts first). */
+const storySeal = (x: Seal) => !!(x.beat || x.arrival || x.carries?.records?.length || x.carries?.guess?.length);
+
+/**
+ * Whether a Key may open this sealed thing now: if a beat brings it into view, that beat has played (MVP_CONTENT §0.2);
+ * a place its Key plays waits for that place's own req; anything else waits until Dan has been where it is (D-079).
+ */
+export function mayOpen(s: Story, st: StoryState, x: Seal): boolean {
+  const by = s.beats.filter(b => b.carries?.inView?.includes(x.id));
+  if (by.length && !by.some(b => st.played.has(b.id))) return false;
+  if (x.arrival) { const b = beatOf(s, x.arrival); return !b || allMet(st, b.req); }
+  return st.visited.has(x.stretch);
+}
+
+/** The sealed thing the next Key opens: the story's own first (any week up to this one, in order), then the plain ones;
+    a surplus opens next week's plain ones. */
 export function nextSeal(s: Story, st: StoryState): Seal | null {
   const shut = s.seals.filter(x => !x.seenOnly && !st.opened.has(x.id));
-  const due = shut.filter(x => x.w <= st.week).sort((a, b) => a.w - b.w || a.o - b.o);
-  const early = shut.filter(x => x.w === st.week + 1 && x.plain).sort((a, b) => a.o - b.o);
-  const next = due[0] ?? early[0] ?? null;
-  /* in the story's own order, and only where Dan has been (or where its opening takes him); otherwise the Key waits (D-079) */
-  return next && (next.arrival || st.visited.has(next.stretch)) ? next : null;
+  const order = (a: Seal, b: Seal) => a.w - b.w || a.o - b.o;
+  const due = shut.filter(x => x.w <= st.week);
+  const early = shut.filter(x => x.w === st.week + 1 && x.plain).sort(order);
+  const next = due.filter(storySeal).sort(order)[0] ?? due.filter(x => !storySeal(x)).sort(order)[0] ?? early[0] ?? null;
+  /* in the story's own order, and only once it can be reached and seen; otherwise the Key waits (D-079) */
+  return next && mayOpen(s, st, next) ? next : null;
 }
 
 /** A rhythm's sessions done in the calendar week of `day` (every 2 weeks: in the fortnight). */
@@ -323,7 +354,7 @@ export function marksSeen(s: Story, st: StoryState): MarkSeen[] {
     for (const line of rec?.cut ?? []) for (const tk of line) {
       if ('ring' in tk) add('mk-ring');
       else if ('s' in tk) add(tk.s);
-      else if ('hand' in tk) add('mk-hand');
+      else if ('hand' in tk && tk.hand === 'his') add('mk-hand');   /* his hand-mark; hers is another shape (b-2.B) */
     }
   }
   for (const m of s.marks) if (offered.has(m.id) || seen.has(m.id) || st.guessed.has(m.id)) add(m.id);

@@ -12,6 +12,7 @@
   import { beatOf } from '../core/story';
   import type { Arrival } from '../core/game';
   import Glyph from './Glyph.svelte';
+  import Guess from './Guess.svelte';
   import Settled from './Settled.svelte';
   import './scene/lamp.js';
   import './scene/hall.js';
@@ -33,8 +34,11 @@
   /* the first word wakes the hall; a later one is cut where the lamps are already lit */
   const wakes = word?.id === s.words[0]?.id;
   const taps = a.taps ?? [];
+  /* a mark the word's req names that Dan left unguessed: asked here, before the first tap, one tap, any candidate
+     (a guess never holds the story up; the word is where it counts) */
+  const ask = $derived((beat?.req ?? []).filter(r => r.startsWith('mk-') && !game.view.story.guessed.has(r)));
   /* what Dan read the marks as before the place answered, and after */
-  const before = marks.map(m => game.view.story.guessed.get(m) ?? '');
+  const before = $derived(marks.map(m => game.view.story.guessed.get(m) ?? ''));
   const after = $derived(marks.map(m => {
     const h = game.view.story.guessed.get(m);
     const mk = s.marks.find(x => x.id === m);
@@ -110,7 +114,7 @@
   });
 
   function tapRod() {
-    if (step === 0) { step = 1; void platform.haptics.tick(); }
+    if (step === 0) { if (ask.length) return; step = 1; void platform.haptics.tick(); }
     else if (step === 3) lock();
   }
   function tapMark(i: number) {
@@ -167,13 +171,16 @@
 
     <div class="mid"></div>
 
-    <section class="bottom col word rise d2" aria-label={t('cut.label')}>
+    <section class="bottom col word rise d2" class:fit={phase === 'settled'} aria-label={t('cut.label')}>
       {#if phase === 'settled'}
-        <div class="settle-list"><Settled beat={a.id} /></div>
-        {#if a.completedDay}<p class="enough">{t('arrive.enough')} <em>{t('arrive.enough2')}</em></p>{/if}
+        <div class="scroll">
+          <div class="settle-list"><Settled beat={a.id} /></div>
+          {#if a.completedDay}<p class="enough">{t('arrive.enough')} <em>{t('arrive.enough2')}</em></p>{/if}
+        </div>
       {/if}
+      {#if step === 0 && ask.length}<div class="ask">{#each ask as m (m)}<Guess mark={m} at={a.id} />{/each}</div>{/if}
       <div class="box ticks wordbox">
-        <button class="rodbtn" class:ready={step === 0 || step === 3} onclick={tapRod} disabled={step !== 0 && step !== 3} aria-label={step === 0 ? t('cut.hint.rod') : t('cut.hint.lock')}>
+        <button class="rodbtn" class:ready={(step === 0 && !ask.length) || step === 3} onclick={tapRod} disabled={(step !== 0 && step !== 3) || (step === 0 && ask.length > 0)} aria-label={step === 0 ? t('cut.hint.rod') : t('cut.hint.lock')}>
           <svg class="rodsvg" viewBox="0 0 300 92" aria-hidden="true">
             <rect class="rodbody" x="44" y="8" width="212" height="72" rx="36" />
             <path d="M150 20 V68" stroke="rgba(206,204,255,.22)" />
@@ -298,6 +305,7 @@
   .settled .go { opacity: 1; transform: none; pointer-events: auto; }
   .after-row { display: flex; justify-content: center; margin-top: 6px; }
   .settle-list { margin-bottom: 6px; }
+  .ask { margin-bottom: 4px; }
   .enough { font-family: var(--life); font-size: min(27px, 7vw); line-height: 1.15; color: #fff; text-align: center; margin: 2px 0 12px;
     text-shadow: 0 0 26px rgba(242,193,112,.45), 0 2px 18px rgba(8,6,20,.9); animation: rise 1.6s .8s var(--ease) both; }
   button.home { color: var(--ink-2); }

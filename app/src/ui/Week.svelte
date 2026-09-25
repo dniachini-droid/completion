@@ -4,7 +4,7 @@
      lays it out; a tap moves a job, gives it a time, or takes it off this week. The past shows only what was done. The
      forecast is one line in the world's terms: predictive, never contractual. Nothing here earns anything. */
   import { game } from './game.svelte';
-  import { t, dayName, minutesWords, weekDates } from '../content/copy/en';
+  import { t, dayName, minutesWords, minutesShort, weekDates } from '../content/copy/en';
   import { calendarWeek } from '../core/time';
   import { addDays, planMade, weekOf, type DayJob } from '../core/week';
   import Scene from './Scene.svelte';
@@ -29,7 +29,7 @@
     if (job.item) return t('row.oneOff');
     const r = v.content.rhythms.find(x => x.job === job.id);
     if (!r && job.avoided) return t('row.oneOff');
-    if (job.delve && job.enoughAt && job.enoughAt < job.length) return t('row.room', { enough: minutesWords(job.enoughAt), len: minutesWords(job.length) });
+    if (job.delve && job.enoughAt && job.enoughAt < job.length) return t('row.room', { enough: minutesShort(job.enoughAt), len: minutesShort(job.length) });
     return minutesWords(job.length);
   }
   const forecast = $derived.by(() => {
@@ -86,7 +86,6 @@
       {#if view.planned || d.jobs.length}
         <div class="day" class:past={d.day < v.day} class:today={d.day === v.day}>
           <div class="dname">{dayName(d.day)}{#if d.day === v.day}<em>{t('week.today')}</em>{/if}</div>
-          {#if !d.jobs.length}<div class="nothing">{t('week.empty')}</div>{/if}
           {#each d.jobs as j (j.entry ?? j.job + j.done)}
             <button class="row" class:done={j.done} onclick={() => edit(j, d.day)} disabled={j.done || d.day < v.day}>
               <span class="pip" class:done={j.done}></span><span class="t">{game.job(j.job)?.name ?? j.job}</span><span class="s">{note(j)}</span>
@@ -109,7 +108,8 @@
                     <button class="btn-quiet step" onclick={() => shift(15)} aria-label={t('camp.later')}><span>+</span></button>
                   </div>
                 {/if}
-                <div class="btn-row"><button class="btn" onclick={() => save(j)}>{t('week.done')}</button><button class="btn-quiet" onclick={() => off(j)}><span>{t('week.off')}</span></button></div>
+                <button class="btn save" onclick={() => save(j)}>{t('week.done')}</button>
+                <div class="off"><button class="text-link" onclick={() => off(j)}><span>{t('week.off')}</span></button></div>
               </div>
             {/if}
           {/each}
@@ -147,8 +147,9 @@
   .dname { font-family: var(--carve, inherit); font-size: 13px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); display: flex; gap: 10px; align-items: baseline; }
   .dname em { font-family: var(--life); text-transform: none; letter-spacing: 0; font-size: 15px; color: var(--gold); }
   .day.past .dname { color: var(--ink-3); }
-  .nothing { color: var(--ink-3); padding: 4px 0 2px 18px; }
   button.row { width: 100%; text-align: left; }
+  /* a note stays on one line; a long job name wraps instead */
+  button.row .s { white-space: nowrap; }
   button.row:disabled { cursor: default; }
   .sheet { border: 1px solid var(--edge-2); background: rgba(10,9,24,.7); padding: 10px 14px 14px; margin: 6px 0 10px; }
   .sheet .label-line { margin-top: 8px; }
@@ -159,6 +160,8 @@
   .step { min-width: 48px; }
   .step span { font-size: 20px; }
   .sheet .btn-row { margin-top: 12px; }
+  .sheet .btn.save { margin-top: 14px; }
+  .off { display: flex; justify-content: center; margin-top: 6px; }
   input.line { width: 100%; margin-top: 8px; padding: 10px 12px; font: inherit; font-size: 17px; color: #fff; background: rgba(255,255,255,.06); border: 1px solid var(--edge-2); border-radius: 0; }
   .links { display: flex; justify-content: center; flex-wrap: wrap; gap: 4px 18px; margin-top: 18px; }
   button.home { color: var(--ink-2); }

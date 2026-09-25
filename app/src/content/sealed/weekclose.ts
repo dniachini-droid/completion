@@ -65,8 +65,8 @@ export const soFarLines: WeekCloseLine[] = [
 
 /** §10.3 "where you were": the week's line whose beat has played, else the week before's. NOTE: OpenQuestion has no condition field; see `openQuestionReq`. */
 export const openQuestions: OpenQuestion[] = [
-  { id: "aw-w1", w: 1, line: "The lamp was already lit when you came down, and there is no oil in it." },
-  { id: "aw-w2", w: 2, line: "The rod is in your hand, and the lintel on the side wall has a blank exactly the width of its edge." },
+  { id: "aw-w1", w: 1, line: "The lamp on the ledge was already lit when you came down, and there is no oil in it." },
+  { id: "aw-w2", w: 2, until: "b-3.A", line: "The rod is in your hand, and the lintel on the side wall has a blank exactly the width of its edge." },
   { id: "aw-w3", w: 3, line: "The stair goes down from the landing already lit, and you did not light it." },
   { id: "aw-w4", w: 4, line: "Past the lone ring, her sheet says: *…go home… he held me… lamp… gave… went up…*" },
   { id: "aw-w5", w: 5, line: "Every record in the tally begins the same way. The wall by the lamp does not." },

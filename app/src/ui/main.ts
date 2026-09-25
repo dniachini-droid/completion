@@ -15,10 +15,17 @@ if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
     setTimeout(() => { b.remove(); el.style.overflow = ''; }, 950);
   });
 }
-/* sound may play only after a tap */
-document.addEventListener('pointerdown', () => platform.sound.unlock(), { once: true });
+/* sound may play only after a tap, and again after each return from the background */
+document.addEventListener('pointerdown', () => platform.sound.unlock());   /* every tap: iOS suspends sound after the background */
 
 /* the save is read before the game starts (the game is made when App is first loaded) */
 await platform.ready();
-const { default: App } = await import('./App.svelte');
-mount(App, { target: document.getElementById('app')! });
+try {
+  const { default: App } = await import('./App.svelte');
+  mount(App, { target: document.getElementById('app')! });
+} catch (e) {
+  /* never a blank phone: say so, keep the save, offer to try again (review finding, D-080) */
+  console.error(e);
+  const el = document.getElementById('app')!;
+  el.innerHTML = '<div style="padding:80px 24px;color:#ddd;font:18px Georgia,serif;text-align:center">Something went wrong starting up. Your save is safe.<br><br><button style="font:inherit;padding:10px 20px" onclick="location.reload()">Try again</button></div>';
+}
