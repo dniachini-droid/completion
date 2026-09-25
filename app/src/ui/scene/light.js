@@ -12,7 +12,9 @@ export function tunnelLight(root) {
   function fit(){
     dpr = Math.min(2, window.devicePixelRatio || 1);
     R = ring.offsetWidth; RW = R * 1.6; rc.width = Math.round(RW * dpr); rc.height = Math.round(RW * dpr);
-    PW = phone.clientWidth; PH = phone.clientHeight; mc.width = Math.round(PW * dpr); mc.height = Math.round(PH * dpr);
+    /* the dust is soft points of light: drawn at the screen's own size, not doubled, it looks the same and the phone
+       moves a quarter of the pixels each frame (D-093, Dan: the phone warmed during a delve) */
+    PW = phone.clientWidth; PH = phone.clientHeight; mc.width = Math.round(PW); mc.height = Math.round(PH);
   }
   fit(); window.addEventListener('resize', fit);
 
@@ -46,7 +48,7 @@ export function tunnelLight(root) {
   }
 
   function drawMotes(t, dt){
-    var ctx = mx; ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,PW,PH); ctx.globalCompositeOperation = 'lighter';
+    var ctx = mx; ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,PW,PH); ctx.globalCompositeOperation = 'lighter';
     var o = vp(), diag = Math.hypot(PW, PH);
     dust.forEach(function(m){
       if (!still) { m.x += m.vx * dt; m.y += m.vy * dt; if (m.y < -.02) { m.y = 1.02; m.x = Math.random(); } if (m.x < -.02) m.x = 1.02; if (m.x > 1.02) m.x = -.02; }
@@ -132,12 +134,15 @@ export function tunnelLight(root) {
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
   }
 
-  var t0 = null, prev = 0;
+  /* 30 frames a second, as the paintings' own live layers: the dust drifts slowly and the ring moves a hair a second,
+     so a faster screen (60 or 120 a second on a newer iPhone) only warms the phone (D-093) */
+  var t0 = null, prev = 0, STEP = 1000 / 30 - 2;
   function frame(ts){
+    if (!stopped) raf = requestAnimationFrame(frame);
+    if (t0 !== null && ts - prev * 1000 < STEP) return;
     var t = ts / 1000, dt = t0 === null ? 0 : Math.min(.1, t - prev); if (t0 === null) t0 = t; prev = t;
     if (ring.offsetWidth !== R) fit();
     drawRing(t, dt); drawMotes(t, dt);
-    if (!stopped) raf = requestAnimationFrame(frame);
   }
   raf = requestAnimationFrame(frame);
   return function () { stopped = true; cancelAnimationFrame(raf); window.removeEventListener('resize', fit); };

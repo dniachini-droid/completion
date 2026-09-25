@@ -154,13 +154,14 @@ const openers = async (name) => {
     return;
   }
 };
-/** Camp at the day's end: bedtime and Goodnight. */
+/* Going to bed lives on Today (no camp page, D-093): "Tonight" with Go to sleep shows only in the evening */
 const camp = async (name, loud) => {
-  if (!(await has('To camp'))) return;
-  await toClock(0, 22, 30);
-  await tap('To camp'); if (loud) await shot(name + '-camp', 2500); else await page.clock.runFor(1500);
+  if (!(await has('Keep going'))) return;
+  if (await has('Go to sleep')) errors.push('TONIGHT offered before the evening');
+  await toClock(0, 22, 30); await page.clock.runFor(1500);
+  if (loud) await shot(name + '-tonight', 1500);
   await tap('Go to sleep'); if (loud) await shot(name + '-goodnight', 2500); else await page.clock.runFor(800);
-  await home(); await page.clock.runFor(1000);
+  if (!(await page.locator('nav.foot').count())) errors.push('TONIGHT Go to sleep left Today');
 };
 /** Do today's next job, whatever it is, and show its return. */
 const doNext = async (name) => {
@@ -247,7 +248,10 @@ for (let d = 2; d <= 24 && !cut; d++) {
 }
 if (!cut) errors.push('the first word was never cut');
 await mapWalk('map-late');
-await tap('Records'); await page.clock.runFor(800); await tap('Marks'); await shot('marks', 1500);
+await tap('Records'); await page.clock.runFor(1500); await tap('Marks');
+/* Records ⇄ Marks is a tab: nothing rises or fades in again, the heading stays put (Dan, D-093) */
+if ((await page.locator('h1').first().evaluate(e => getComputedStyle(e).animationName)) !== 'none') errors.push('TABS the heading moved on switching');
+await shot('marks', 1500);
 const openMark = page.locator('.cell .cap.new').first();
 if (await openMark.count()) { await openMark.click(); await shot('marks-open', 800); }
 const held = page.locator('.cell .cap.known').first();
@@ -271,7 +275,22 @@ await tap('Week'); await shot('week', 1500);
   await dn.click(); await page.clock.runFor(300);
   if ((await page.locator('.day button.row').count()) !== n0) errors.push('FOLD a day did not open again'); }
 const row = page.locator('.day:not(.past) button.row:not([disabled])').first();
-if (await row.count()) { await row.click(); await tap('Set a time'); await shot('week-edit', 800); await tap('Save'); await page.clock.runFor(500); }
+/* a job's sheet: the time box is the phone's own; a tap on a day moves the job there at once (D-093) */
+if (await row.count()) {
+  await row.click(); await page.locator('.sheet .clock-btn input').fill('14:30'); await page.locator('.sheet .clock-btn input').dispatchEvent('change');
+  await shot('week-edit', 800);
+  if (!(await page.locator('.day button.row', { hasText: '14:30' }).count())) errors.push('WEEK the time was not kept');
+  const n0 = await page.locator('.day:not(.past)').first().locator('button.row').count();
+  await page.locator('.sheet .days button[aria-pressed="false"]').last().click(); await page.clock.runFor(500);
+  if (await page.locator('.sheet').count()) errors.push('WEEK the sheet stayed open after a move');
+  if ((await page.locator('.day:not(.past)').first().locator('button.row').count()) !== n0 - 1) errors.push('WEEK a tap on a day did not move the job');
+}
+/* adding a one-off: the + on a day opens a line under it, already typing; Enter puts it there (D-093) */
+{ await page.locator('.day:not(.past) button.plus').first().click(); await page.clock.runFor(300);
+  if (!(await page.evaluate(() => document.activeElement?.closest('form.new')))) errors.push('WEEK the new line was not ready to type');
+  await shot('week-adding', 500);
+  await page.keyboard.type('The dentist'); await page.keyboard.press('Enter'); await page.clock.runFor(500);
+  if (!(await page.locator('.day:not(.past)').first().locator('button.row', { hasText: 'The dentist' }).count())) errors.push('WEEK the one-off did not land on its day'); }
 await tap('What repeats'); await shot('rhythms', 1200);
 await page.locator('button.row').first().click(); await shot('rhythm-edit', 800);
 await page.locator('.body').evaluate(e => e.scrollTo(0, e.scrollHeight)); await shot('rhythm-edit-end', 500);
@@ -291,7 +310,7 @@ await tap('Daybook'); await shot('daybook', 1500); await home(); await page.cloc
   await page.goBack(); await page.clock.runFor(800);
   if (!(await page.locator('h1', { hasText: /this week/i }).count())) errors.push('BACK the phone’s own back did not step back one screen');
   await home();
-  await tap('Camp'); await tap('Map'); await page.clock.runFor(1500); expect('camp → map', await backSays(), 'camp');
+  await tap('Daybook'); await tap('Trial'); await page.clock.runFor(1500); expect('daybook → trial', await backSays(), 'daybook');
   await home();
   await tap('Something else…'); await page.locator('.body button.row').first().click(); await page.clock.runFor(800);
   expect('choose → delves', await backSays(), 'back');

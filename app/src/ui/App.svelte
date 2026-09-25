@@ -18,7 +18,7 @@
   import Records from './Records.svelte';
   import Marks from './Marks.svelte';
   import Stair from './Stair.svelte';
-  import Camp from './Camp.svelte';
+  import Scene from './Scene.svelte';
   import Morning from './Morning.svelte';
   import Welcome from './Welcome.svelte';
   import Daybook from './Daybook.svelte';
@@ -47,10 +47,13 @@
   /* Back (review 2, D-088): the screens Dan looks through keep a trail, so the arrow and the phone's own back return to
      where each was opened from. Today and the day's own moments (a delve, a place reached, the stair, the morning)
      start the trail again; their way out stays Today. */
-  const LOOK = new Set<Screen>(['map', 'records', 'marks', 'week', 'rhythms', 'satchel', 'daybook', 'camp', 'choose', 'set', 'proto', 'cant']);
+  const LOOK = new Set<Screen>(['map', 'records', 'marks', 'week', 'rhythms', 'satchel', 'daybook', 'choose', 'set', 'proto', 'cant']);
   const TABS = new Set<Screen>(['records', 'marks']);
   let trail = $state<Back[]>([]);
+  /* Records ⇄ Marks is a tab: the screen swaps in place, with nothing rising or fading in again (Dan, D-093) */
+  let still = $state(false);
   const go: Go = (to, a) => {
+    still = TABS.has(screen) && TABS.has(to);
     if (to === 'back') { const p = trail.pop(); if (p) { screen = p.screen; arg = p.arg; } else go('today'); return; }
     if (to === 'cant' && typeof a === 'string') game.do({ do: 'cantStart', job: a });
     /* "Today" never skips what waits: a place just reached, the morning, the welcome back, a new daybook page (D-080).
@@ -67,7 +70,7 @@
   };
   /* what the arrow says: the screen it returns to */
   const NAMES: Partial<Record<Screen, string>> = { today: 'delve.today', map: 'map.nav', records: 'records.nav', marks: 'marks.nav',
-    rhythms: 'rhythms.label', satchel: 'nav.satchel', daybook: 'nav.daybook', camp: 'nav.camp' };
+    rhythms: 'rhythms.label', satchel: 'nav.satchel', daybook: 'nav.daybook' };
   $effect(() => {
     const top = trail[trail.length - 1];
     back.label = !top ? t('delve.today') : top.screen === 'week' ? t(top.arg ? 'week.next' : 'week.label')
@@ -91,17 +94,19 @@
 
   /* the day's light: gold once the day has turned (DESIGN_SYSTEM → colour) */
   $effect(() => {
-    const gold = (screen === 'arrival' && !moment.cutting) || (screen === 'today' && game.view.complete) || screen === 'camp';
+    const gold = (screen === 'arrival' && !moment.cutting) || (screen === 'today' && game.view.complete) || (screen === 'today' && !!game.view.night);
     document.body.className = gold ? 's-done' : game.view.done.size ? 's-day2' : 's-day';
   });
 </script>
 
-<main class="phone">
+<main class="phone" class:still>
   <!-- a rehearsal's clock runs 60 times faster (an evening passes in minutes): said on every screen, so the day it
        shows is never mistaken for the real one (Dan, review 2). Today carries its own badge. -->
-  {#if game.proto.rehearsal && !['today', 'camp', 'proto'].includes(screen)}<div class="rehearsal" aria-live="polite">{t('proto.badge')}</div>{/if}
+  {#if game.proto.rehearsal && !['today', 'proto'].includes(screen)}<div class="rehearsal" aria-live="polite">{t('proto.badge')}</div>{/if}
   <!-- a screen that fails shows a way back, never a blank phone; the save is untouched (review finding, D-080) -->
   <svelte:boundary onerror={(e) => console.error(e)}>
+  <!-- Records ⇄ Marks share one painting, drawn once: switching tabs swaps only what is under the tab bar (Dan, D-093) -->
+  {#if TABS.has(screen)}<Scene painting={game.view.here.painting} blur bottom="40%" />{/if}
   {#key screen + String(arg ?? '')}
     {#if screen === 'today'}<Today {go} />
     {:else if screen === 'set'}<RunSet {go} jobId={String(arg)} />
@@ -114,7 +119,6 @@
     {:else if screen === 'records'}<Records {go} id={typeof arg === 'string' ? arg : undefined} />
     {:else if screen === 'marks'}<Marks {go} id={typeof arg === 'string' ? arg : undefined} />
     {:else if screen === 'stair'}<Stair {go} />
-    {:else if screen === 'camp'}<Camp {go} />
     {:else if screen === 'morning'}<Morning {go} />
     {:else if screen === 'welcome'}<Welcome {go} />
     {:else if screen === 'daybook'}<Daybook {go} week={typeof arg === 'string' ? arg : undefined} />
@@ -133,6 +137,7 @@
 </main>
 
 <style>
+  .still :global(.rise), .still :global(.scene), .still :global(.fade) { animation: none !important; }
   .rehearsal { position: absolute; z-index: 20; left: 50%; transform: translateX(-50%); top: calc(var(--safe-t, 0px) + 4px); pointer-events: none;
     font-family: var(--carve); font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); opacity: .85; white-space: nowrap; }
 </style>

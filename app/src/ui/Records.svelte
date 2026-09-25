@@ -5,7 +5,6 @@
   import { game, content } from './game.svelte';
   import { marksHeld, render, recordOf } from '../core/story';
   import { t } from '../content/copy/en';
-  import Scene from './Scene.svelte';
   import Glyph from './Glyph.svelte';
   import type { Go } from './nav';
   import { back } from './back.svelte';
@@ -23,7 +22,7 @@
   const tappable = $derived(open?.kind === 'cut' && (open.cut ?? []).some(l => render(l, held, s).some(tk => tk.t === 'glyph' && isMark(tk.mark))));
 </script>
 
-<Scene painting={v.here.painting} blur />
+<!-- the painting behind is drawn once by App, shared by both tabs (D-093) -->
 <div class="ui">
   <header class="top col">
     <div class="topbar rise">
@@ -120,8 +119,8 @@
   .w.guess { color: var(--ink-2); font-style: italic; }
   .pic { color: var(--ink-2); font-style: italic; }
   .p { margin-left: -6px; color: var(--ink-2); }
-  .lv { margin: 0; width: auto; }
-  .lv button { padding: 6px 12px; font-size: 13px; }
+  .lv { margin: 0; width: auto; grid-template-columns: 1fr 1fr; }
+  .lv button { padding: 6px 12px; font-size: 13px; min-width: 104px; }
   .sheet { margin-top: 22px; }
   .her { font-family: var(--life); font-style: italic; font-size: 17.5px; line-height: 1.5; color: var(--ink-2); margin-top: 8px; }
   .bottom { display: flex; justify-content: center; }

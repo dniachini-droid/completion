@@ -1,0 +1,29 @@
+{
+ "id": "pt-b-3.A",
+ "name": "The lintel",
+ "line": "",
+ "width": 1320,
+ "height": 2868,
+ "live": {
+  "fog": "low",
+  "motes": "gold",
+  "gold": true
+ },
+ "anchors": {
+  "flame": [],
+  "fog": [],
+  "beam": [],
+  "glints": [
+   {
+    "p": [
+     -2.4,
+     2.88,
+     7.5
+    ],
+    "u": 0.5469,
+    "v": 0.3147,
+    "s": 0.3442
+   }
+  ]
+ }
+}
