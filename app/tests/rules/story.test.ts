@@ -59,7 +59,8 @@ describe('six weeks of play', () => {
     const st = p.st();
     /* a Low week stretches the story week; it never stops it: places keep coming, and the floor opens 2 a week */
     expect(st.week).toBeGreaterThanOrEqual(2);
-    expect(st.opened.size).toBeGreaterThanOrEqual(10);
+    /* the floor keeps Keys coming: opened, or kept for a sealed thing not yet reached (never lost, D-079) */
+    expect(st.opened.size + st.held).toBeGreaterThanOrEqual(10);
     expect([...st.played].filter(x => /^(b-\d\.[A-C]|pl-)/.test(x)).length).toBeGreaterThanOrEqual(8);
   });
   it('a two-week absence pauses the story; it resumes where it was', () => {

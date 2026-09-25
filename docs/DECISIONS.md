@@ -851,3 +851,20 @@
   7. **Smaller:** honest words when alerts are off; sound re-armed after the background; the clock no longer rebuilds the screen four times a second; passage lines never repeat while an unseen one is available; removing a planned job no longer deletes a line Dan added; a missed appointment falls away.
 - **Story and screen polish** findings are fixed in their own passes (recorded in REVIEW_1.md). Taste calls go to Dan.
 - **Reversible:** Yes.
+
+## D-081 — Story fixes from the review, and the pace for a planned week (Claude's routine calls, D-006)
+- **Date:** 2026-09-25
+- **Context:** the review's story critic confirmed 18 findings (details sealed: `narrative/sealed/REVIEW_PLAYABLE.md`). Once the week plan leads Today (D-080), a Normal week holds about 12–15 jobs, not 21, so the story fell a week behind by week 6.
+- **Decision:** 16 story findings fixed in the engine and the sealed data, each with a rule test where one is possible (spoiler-free list in `product/REVIEW_1.md`). The ones Dan would notice most:
+  1. Skipping an optional guess never stops the story.
+  2. A morning that confirms marks comes after they were offered, bedtime kept or not.
+  3. A Key opens only what is in view.
+  4. Camp lines wait for what they describe.
+  5. A guess moves onto an arrival only if that place carries the mark (narrows D-077).
+  6. Next week's places come only on a deep push, and otherwise one place a day on foot (`FOOT_A_DAY`, easy to change).
+  7. Camp views rotate.
+  8. Every ambiguous "the lamp" line is anchored.
+
+  **The pace:** the distance between named places is 150 minutes of effort (was 200, D-049), so a planned Normal, Low or High week each reach story week 6 in six calendar weeks (measured in the simulation). The "light weeks" test now counts Keys kept for later (D-079) as well as those opened.
+- **For Dan (story-10):** the six-week test ends just before the story's next big turn. Options: run seven weeks, or have the sealed story session bring one answer forward into week 6. It doesn't affect the behaviour test.
+- **Reversible:** Yes.

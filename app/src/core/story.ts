@@ -11,7 +11,7 @@ import type { Fact, FactOf, FactBody, Rhythm } from './types';
 import type { Beat, Carries, Find, Mark, RecordFragment, Seal, StretchId, Story, Token } from './story-types';
 
 /** Minutes of effort between named places reached on foot: 8 steps (BALANCING §1). */
-export const PLACE_GAP = 200;
+export const PLACE_GAP = 150;
 /** The first place is close, so the first Normal day arrives somewhere (the heart's rule, D-064). */
 export const FIRST_GAP = 75;
 /** Useful Keys a week (BALANCING §3). */
