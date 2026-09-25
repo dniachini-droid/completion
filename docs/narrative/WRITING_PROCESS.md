@@ -1,6 +1,6 @@
 # How the story's words are written
 
-> **Spoiler-free.** How every story line that goes into the app is written and checked (D-096, which replaced the ChatGPT process of D-084–D-087). Follow it for any new story text, above all **the later weeks** (weeks 8 on), and for any line Dan flags while playing.
+> **Spoiler-free.** How every story line that goes into the app is written and checked (D-097, which replaced the ChatGPT process of D-084–D-087). Follow it for any new story text, above all **the later weeks** (weeks 8 on), and for any line Dan flags while playing.
 
 ## The one test
 

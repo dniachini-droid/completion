@@ -371,6 +371,19 @@ function finishRun(w: W, c: Content, r: NonNullable<ReturnType<typeof activeRun>
   if (reachesEnough(w.all, rday, j)) markDoneIn(w, c, j.id, at, rday);
   else gifts(w, c, at, rday);
 }
+/** Going into another app pauses the delve (D-094): at the moment Dan left, or, if he left in a breather, at the moment
+    the next delve would have begun without him. Time away never counts; nothing already done is lost. */
+function pauseAway(w: W, from: number, to: number) {
+  const r = activeRun(w.all);
+  if (!r) return;
+  const s = runAt(r.plan, r.marks, from);
+  let at = s.phase === 'delve' ? from : s.phase === 'breather' ? from + s.breatherLeftMs : null;
+  if (at === null || at >= to) return;
+  /* never stamped before something already in the log (the log stays in time order) */
+  at = Math.max(at, epochOf(w.all[w.all.length - 1].at));
+  if (runAt(r.plan, r.marks, at).phase === 'delve') w.put({ type: 'delveHeld', why: 'away' }, momentOf(at, w.off));
+}
+
 /** A delve left stepped-away this long ends by itself where it was paused (review finding, D-080). */
 export const HOLD_MAX = 3 * 60 * MIN;
 
@@ -492,6 +505,8 @@ export type Command =
   | { do: 'stepAway' }
   | { do: 'resume' }
   | { do: 'finishHere' }
+  /** Dan was in another app from `from` to `to` (game-clock ms): the delve pauses where he left (D-094). */
+  | { do: 'away'; from: number; to: number }
   | { do: 'done'; job: string }
   | { do: 'cantStart'; job: string }
   | { do: 'seen'; what: 'step' | 'arrival' | 'morning' | 'welcome'; ref: number }
@@ -517,6 +532,8 @@ export type Command =
 /** The facts a command adds to the log (including anything the clock made due first). */
 export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fact[] {
   const w = writer(facts, now), nowMs = epochOf(now), c = W.live(base, facts);
+  /* before anything the clock made due: the time away must not have counted */
+  if (cmd.do === 'away') pauseAway(w, cmd.from, Math.min(cmd.to, nowMs));
   settleIn(w, c, nowMs);
   const day = gameDay(now), v = see(w.all, c, now);
   switch (cmd.do) {
@@ -676,6 +693,8 @@ export interface RunView extends RunNow {
   enoughK: number | null;
   /** Instants, for the screen's clock words. */
   startedAt: number;
+  /** Held because Dan went into another app, not by Pause (D-094). */
+  away: boolean;
 }
 export interface RunEnd {
   seq: number; job: Job; minutes: number; how: 'ranOut' | 'finishedHere';
@@ -882,7 +901,9 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
       const k = Math.ceil((enoughOf(j) - before) / r.plan.minutes);
       enoughK = k >= 1 && k <= r.plan.count ? k : null;
     }
-    if (s.phase !== 'ended') run = { ...s, seq: r.fact.seq, job: j, minutes: r.plan.minutes, count: r.plan.count, enoughK, startedAt: r.plan.startedAt };
+    const held = ofType(facts, 'delveHeld').filter(f => f.seq > r.fact.seq).pop();
+    if (s.phase !== 'ended') run = { ...s, seq: r.fact.seq, job: j, minutes: r.plan.minutes, count: r.plan.count, enoughK, startedAt: r.plan.startedAt,
+      away: s.phase === 'held' && held?.why === 'away' };
   }
 
   let runEnd: RunEnd | null = null, runFinds: string[] = [];

@@ -6,6 +6,7 @@ import Foundation
 class MainViewController: CAPBridgeViewController {
     override open func capacitorDidLoad() {
         bridge?.registerPluginInstance(DelvePanelPlugin())
+        bridge?.registerPluginInstance(AwayPlugin())   // leaving the app pauses a delve (AwayPlugin.swift)
     }
 }
 
