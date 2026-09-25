@@ -176,8 +176,8 @@ export const seals: Seal[] = [
     carries: { records: ['rec-x-powder-man'] } },
   { id: 'seal-11-5', w: 11, o: 0, where: 'The blast room, under the ledge', stretch: 'st-blast', seenOnly: true },
   // NOTE: seal-11-5 is the well-keeper's bucket, seen in the open at b-12.A.
-  { id: 'seal-11-6', w: 11, o: 4, where: 'The blast room, a crack low by the torn wall', stretch: 'st-blast',
-    line: 'Low by the torn wall of the blast room, a row of notches along a crack fills with light. Pushed into the crack is a spiked iron candle-holder, the kind miners drove into a wall to hold a candle while they worked. A stub of wax is still in its cup.',
+  { id: 'seal-11-6', w: 11, o: 4, where: 'The blast room, a split in the floor by the rails', stretch: 'st-blast',
+    line: 'Where the iron rails stop in the middle of the blast room, a row of notches along a split in the floor fills with light. Driven into the split is a spiked iron candle-holder, the kind miners drove into a wall to hold a candle while they worked. A stub of wax is still in its cup.',
     plain: true },
   { id: 'seal-11-7', w: 11, o: 5, where: 'The Reading Room, the end of a bench', stretch: 'st-reading',
     line: 'On the end of a bench in the Reading Room, a row of notches fills with light. Lying there is a pencil stub, worn down to the length of your thumb and sharpened to a point with a knife. It looks like one of hers.',
@@ -217,7 +217,7 @@ export const seals: Seal[] = [
   { id: 'seal-14-1', w: 14, o: 1, where: 'The blast room, the cupboard’s lower shelf', stretch: 'st-blast', beat: 'b-14.1',
     carries: { guess: ['mk-world', 'mk-hear'] } },
   { id: 'seal-14-2', w: 14, o: 2, where: 'The blast room, the ledge beside the log', stretch: 'st-blast',
-    line: 'In the blast room, a row of notches along the ledge beside the log fills with light. Tucked inside the log\'s back cover is a second page, folded in four. You leave it folded where it is.',
+    line: 'In the blast room, a row of notches along the ledge beside the log fills with light. Tucked inside the log\'s back cover is a second page, folded in four and stuck to the board with old damp. You leave it to come free rather than tear it.',
     plain: true },
   // NOTE: seal-14-2's folded page is the log's next page (E5), read in week 15.
   { id: 'seal-14-3', w: 14, o: 0, where: 'The blast room, the torn wall behind the fall', stretch: 'st-blast', seenOnly: true },

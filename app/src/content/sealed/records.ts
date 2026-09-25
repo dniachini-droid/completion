@@ -424,7 +424,7 @@ export const records: RecordFragment[] = [
   {
     id: 'rec-l10', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 9, firstShown: ['b-9.1'],
     paper: [
-      'Day 28. The report on the square wall (the surveyor\'s, I think) has a little cross after "held us", and so does the salt tally after "held me". I think it\'s emphasis. He *really* held them. That\'s the kind of thing you\'d want to underline.',
+      'Day 28. The report on the crew\'s wall (the surveyor\'s, I think) has a little cross after "held us", and so does the salt tally after "held me". I think it\'s emphasis. He *really* held them. That\'s the kind of thing you\'d want to underline.',
     ],
   },
   {

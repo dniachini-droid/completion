@@ -39,7 +39,7 @@ export const teasers: Teaser[] = [
   { id: "b-w7.tz2", w: 7, req: ["b-7.A"], line: "At the far end of the Lamp Hall, beside the great door's blank, are the same two symbols as beside the second lintel on the Stair." },
   /* story weeks 8–14 (STORY_JOB §8) */
   { id: "b-w8.tz1", w: 8, req: [], until: "b-8.A", line: "At the foot of the Stair, below the second lintel, there is water, and the light of the cups lies on it without moving." },
-  { id: "b-w8.tz2", w: 8, req: ["b-8.B"], line: "In the Salt Gallery, beside every plain hook in the tally, there is a row of small strokes." },
+  { id: "b-w8.tz2", w: 8, req: ["b-8.B"], line: "In the Salt Gallery, beside every plain, open hook in the tally, there is a row of small strokes." },
   { id: "tz-w8-a", w: 8, req: ["b-8.A"], until: "seal-8-1", line: "At the Water's edge, beside the Stair's last step, is a niche with a row of notches." },
   { id: "tz-w8-b", w: 8, req: ["pl-w8-channel"], until: "seal-8-5", line: "In the side of the channel that feeds the Water, just above the water, is a niche with a row of notches." },
   { id: "tz-w8-c", w: 8, req: ["b-8.A"], until: "b-8.C", line: "On the Water's far shore, where the steep stair comes down, a narrower way goes on down, and the air from it smells of powder." },
@@ -62,8 +62,8 @@ export const teasers: Teaser[] = [
   { id: "b-w13.tz2", w: 13, req: ["b-13.A"], until: "b-13.B", line: "At the square gallery's deep end, on the standing stone before the fall, is a blank the width of the rod's edge." },
   { id: "tz-w13-a", w: 13, req: ["pl-w13-side-gallery"], until: "seal-13-3", line: "In the side gallery, across from the shut door, is a recess with a row of notches." },
   { id: "tz-w13-b", w: 13, req: ["b-9.A"], until: "b-13.C", line: "In the Reading Room, one bench stands apart from the rest, with notches along its edge." },
-  { id: "b-w14.tz0", w: 14, req: [], until: "b-14.A", line: "At the far end of the blast room, the fall of stone has a blank in its face, beside the wedge on a bar and the drop with a rising bar." },
-  { id: "b-w14.tz1", w: 14, req: ["b-14.A"], line: "On the torn wall behind the fall, low down, is a blank the width of the rod, and beside it a diamond and the bar with a tick." },
+  { id: "b-w14.tz0", w: 14, req: [], until: "b-14.A", line: "At the far end of the blast room, the heap of rubble has a blank in its face, beside the wedge on a bar and the drop with a rising bar." },
+  { id: "b-w14.tz1", w: 14, req: ["b-14.A"], line: "Behind the rubble at the blast room's far end, low on the rounded stone, is a blank the width of the rod, and beside it a diamond and the bar with a tick." },
   { id: "tz-w14-a", w: 14, req: ["pl-w14-mule-stone"], until: "seal-14-4", line: "In the square gallery, under the line above the mule-shoe's stone, is a row of dark notches." },
   { id: "tz-w14-b", w: 14, req: ["pl-w14-deep-niche"], until: "seal-14-5", line: "In the Salt Gallery is a niche set deeper than any other, with a row of notches along its lip." },
 ];

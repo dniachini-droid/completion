@@ -78,7 +78,7 @@ export const camps: CampView[] = [
     w: 1,
     req: [],
     name: "Her cot",
-    line: "You stop for the night at the doorway of the Survey Cut, the small side chamber where someone camped. From there you look in at the camp: the cot with the boots beneath it, the notebook with its pencil, and the shelf.",
+    line: "You stop for the night at the doorway of the Survey Cut, the small side chamber where the woman camped. From there you look in at her things: the cot with the boots beneath it, the notebook with its pencil, and the shelf where the rod lay.",
     look: {"find": "fd-d08"},
   },
   {
@@ -96,7 +96,7 @@ export const camps: CampView[] = [
     w: 3,
     req: [],
     name: "The landing",
-    line: "You stop for the night on the landing at the head of the Stair, just beyond the lintel. The landing is wide enough for a cart. Below you, the top flight goes down into the light of flames in the cups, flames you did not light.",
+    line: "You stop for the night on the landing at the head of the Stair, just beyond the lintel. The landing is wide enough for a cart. Below you, the top flight goes down into the light of the flames in its cups, which were already burning the first day you came this way.",
     look: {"find": "fd-e07"},
   },
   {
@@ -123,7 +123,7 @@ export const camps: CampView[] = [
     w: 5,
     req: ["b-5.0"],
     name: "The second flight",
-    line: "You stop for the night on the second flight of the Stair, beside the little door. It is shut, though every notch in its row is full of light. Beside it is the one ring with sharp edges among all the worn, smooth ones.",
+    line: "You stop for the night on the second flight of the Stair, beside the little door, the small door in the stair wall that her notebook says she found open. It is shut, though every notch in its row is full of light. Beside it is the one ring with sharp edges among all the worn, smooth ones.",
     look: {"find": "fd-f02"},
   },
   {
@@ -132,7 +132,7 @@ export const camps: CampView[] = [
     w: 5,
     req: ["b-5.B"],
     name: "The gap",
-    line: "You stop for the night on the second flight, by the gap in the wall at shoulder height. Through it you can see square-cut stone, and a draught comes through that smells of old smoke, as if fires once burned somewhere beyond.",
+    line: "You stop for the night on the second flight, by the gap, the rough hole in the stair wall at shoulder height. Through it you can see the square-cut stone of the square gallery, and a draught comes through that smells of old smoke, as if fires once burned somewhere beyond.",
     look: {"find": "fd-f06"},
   },
   {
@@ -197,7 +197,7 @@ export const camps: CampView[] = [
     req: ["pl-w10-deep-end"],
     until: "b-13.B",
     name: "The fall",
-    line: "You stop for the night at the square gallery's deep end, beside the standing stone. The slope of fallen stone rises in front of you to the ceiling, and the air behind it is quite still.",
+    line: "You stop for the night at the square gallery's deep end, beside the standing stone. The slope of fallen stone rises in front of you to the ceiling, and no draught comes through it. The air here is quite still.",
     look: {"find": "fd-g11"},
   },
 ];

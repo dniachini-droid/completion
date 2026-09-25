@@ -40,7 +40,7 @@ export const marks: Mark[] = [
   {
     id: 'mk-one', sign: 'ONE', w: 2, elements: ['drop'], shape: 'a single drop',
     guessAt: 'seal-2-1', context: 'Under this mark on her sheet, she has written the word one in pencil.', candidates: ['one', 'the first', 'a drop', 'small'],
-    right: ['one', 'the first'], tempting: 'a drop', confirmedBy: 'b-8.B', struck: "A drop, yes, but it's counting. One.",
+    right: ['one', 'the first'], tempting: 'a drop', confirmedBy: 'b-8.B', struck: 'A drop, yes: the single stroke that starts every count. One.',
   },
   {
     id: 'mk-me', sign: 'ME', w: 2, elements: ['drop', 'hook-small-foot'], shape: 'a drop with a small hook at its foot',
@@ -118,7 +118,7 @@ export const marks: Mark[] = [
     // numerals at b-8.B, where the tally's own count and the eights stand side by side.
     id: 'mk-number', sign: 'NUMBERS', w: 8, elements: ['strokes', 'bar', 'wedge'], shape: 'strokes in a row, then a bar, then a wedge',
     guessAt: 'b-8.1', context: 'no picture: it stands alone at the foot of the tablet', candidates: ['numbers', 'a date', 'a list', 'steps'],
-    right: ['numbers'], tempting: 'a date', confirmedBy: 'b-8.B', struck: 'Not a date. Strokes, then a bar for eight: it counts.',
+    right: ['numbers'], tempting: 'a date', confirmedBy: 'b-8.B', struck: 'Not a date. Strokes, then a bar, then a wedge: counting, and counting bigger. Numbers.',
   },
   { id: 'mk-two', sign: 'TWO', w: 8, elements: ['stroke', 'stroke'], shape: 'two strokes', confirmedBy: 'b-8.B' },
   { id: 'mk-three', sign: 'THREE', w: 8, elements: ['stroke', 'stroke', 'stroke'], shape: 'three strokes', confirmedBy: 'b-8.B' },
@@ -131,11 +131,11 @@ export const marks: Mark[] = [
   {
     id: 'mk-count', sign: 'COUNT', w: 8, elements: ['strokes'], shape: 'strokes in a row',
     guessAt: 'b-8.1', context: 'a carved hand, fingers spread', candidates: ['count', 'fingers', 'hand', 'many'], right: ['count'],
-    tempting: 'fingers', confirmedBy: 'b-8.B', struck: 'Not fingers. What fingers are for, here: counting.',
+    tempting: 'fingers', confirmedBy: 'b-8.B', struck: 'Not fingers. What fingers are for: counting. A row of strokes is the count itself.',
   },
   {
     id: 'mk-day', sign: 'DAY', w: 8, elements: ['fork', 'wedge-inverted'], shape: 'an inverted wedge with a fork above it',
-    guessAt: 'b-8.1', context: 'a carved sun', candidates: ['day', 'sun', 'morning', 'up'], right: ['day'],
+    guessAt: 'b-8.1', context: 'a carved sun', candidates: ['day', 'sun', 'morning', 'dawn'], right: ['day'],
     tempting: 'sun', confirmedBy: 'b-8.B', struck: 'Not the sun. What the sun makes: a day.',
   },
   {
@@ -164,9 +164,9 @@ export const marks: Mark[] = [
     tempting: 'bed', confirmedBy: 'b-w11.morning', struck: 'Not the bed. What is done in it: sleep.',
   },
   {
-    id: 'mk-take', sign: 'TAKE', w: 12, elements: ['hook-closing', 'drop-entering'], shape: 'a hook closing on a drop',
+    id: 'mk-take', sign: 'TAKE', w: 12, elements: ['hook-closing', 'drop-entering'], shape: 'an open hook, its tip coming down on a drop',
     guessAt: 'b-12.1', context: 'a carved hand taking bread', candidates: ['take', 'bread', 'eat', 'hold'], right: ['take'],
-    tempting: 'bread', confirmedBy: 'b-w12.morning', struck: 'Not the bread. The hook closes on it: take.',
+    tempting: 'bread', confirmedBy: 'b-w12.morning', struck: 'Not the bread. The hook comes down on it: take.',
   },
   // NOTE: the HAND sign (a plain hook) needs its own id: `mk-hand` is MVP §6's recognised hand-mark.
   {
@@ -175,12 +175,12 @@ export const marks: Mark[] = [
     tempting: 'fingers', confirmedBy: 'b-w12.morning', struck: 'Not the fingers. All of it: a hand.',
   },
   {
-    id: 'mk-good', sign: 'GOOD', w: 12, elements: ['bar', 'drop', 'bar'], shape: 'a full cell: a bar, a drop, a bar',
+    id: 'mk-good', sign: 'GOOD', w: 12, elements: ['bar', 'drop', 'bar'], shape: 'a full cell: a bar above, a bar below, a drop between',
     guessAt: 'b-12.1', context: 'a carved lamb, standing', candidates: ['good', 'lamb', 'whole', 'young'], right: ['good', 'whole'],
     tempting: 'lamb', confirmedBy: 'b-w12.morning', struck: 'Not the lamb. What the lamb is: good, and whole.',
   },
   {
-    id: 'mk-long-sleep', sign: 'LONG-SLEEP', w: 13, elements: ['bar', 'bar', 'bar'], shape: 'three stacked bars',
+    id: 'mk-long-sleep', sign: 'LONG-SLEEP', w: 13, elements: ['bar', 'bar', 'bar'], shape: 'three long bars, laid close',
     guessAt: 'b-13.1', context: 'a carved mound', candidates: ['long sleep', 'grave', 'buried', 'hill'], right: ['long sleep'],
     tempting: 'grave', confirmedBy: 'b-13.A', struck: 'Not the grave. What lies in it: the long sleep.',
   },
@@ -191,12 +191,12 @@ export const marks: Mark[] = [
   },
   // NOTE: WORLD and HEAR are guessed in week 14 and settle later (REVELATION_MAP month 4): no confirming beat yet.
   {
-    id: 'mk-world', sign: 'WORLD', w: 14, elements: ['wedge-inverted', 'bar'], shape: 'an inverted wedge on a bar',
+    id: 'mk-world', sign: 'WORLD', w: 14, elements: ['wedge-inverted', 'bar'], shape: 'a wedge standing on its point, on a bar',
     guessAt: 'b-14.1', context: 'a carved sun over the ground', candidates: ['world', 'sunrise', 'hill', 'outside'], right: ['world', 'outside'],
     tempting: 'sunrise', struck: 'Not the sunrise. The place the sun is over: the world.',
   },
   {
-    id: 'mk-hear', sign: 'HEAR', w: 14, elements: ['hook-reversed'], shape: 'a hook turned the other way',
+    id: 'mk-hear', sign: 'HEAR', w: 14, elements: ['hook-reversed'], shape: 'a plain hook turned to face the other way, like a cup open to one side',
     guessAt: 'b-14.1', context: 'a carved ear', candidates: ['hear', 'ear', 'cup', 'listen'], right: ['hear', 'listen'],
     tempting: 'cup', struck: 'Not a cup. An ear: hear.',
   },

@@ -248,7 +248,7 @@ for (let d = 2; d <= 24 && !cut; d++) {
 }
 if (!cut) errors.push('the first word was never cut');
 await mapWalk('map-late');
-await tap('Records'); await page.clock.runFor(1500); await tap('Marks');
+await tap('Records'); await page.clock.runFor(1500); await tap('Symbols');   /* the Marks tab is called Symbols now */
 /* Records ⇄ Marks is a tab: nothing rises or fades in again, the heading stays put (Dan, D-093) */
 if ((await page.locator('h1').first().evaluate(e => getComputedStyle(e).animationName)) !== 'none') errors.push('TABS the heading moved on switching');
 await shot('marks', 1500);

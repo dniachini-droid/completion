@@ -42,12 +42,12 @@ export const learned: WeekCloseLine[] = [
   { id: "wc-w11-2", w: 11, req: ["b-11.B"], line: "The lintel over the Reading Room's inner door ends: voice not." },
   { id: "wc-w11-3", w: 11, req: ["b-11.3"], line: "Her notebook says the book's writer never came down here, and was counted anyway." },
   { id: "wc-w12-1", w: 12, req: ["b-12.A"], line: "According to the log, after the blast a village well stood still for three days, and compasses swung towards the hill." },
-  { id: "wc-w12-2", w: 12, req: ["b-12.B"], line: "The tally ends with a count of fingers, of lamps, and of children's children, and the word good." },
+  { id: "wc-w12-2", w: 12, req: ["b-12.B"], line: "The tally ends with counts: a hand, four and four, long; lamp marks; a child's child, three; and then the word good." },
   { id: "wc-w12-3", w: 12, req: ["b-12.C"], line: "At the end of the side gallery is a shut door, with stone chips at its foot on this side." },
   { id: "wc-w13-1", w: 13, req: ["b-13.A"], line: "The record on the shut door says: He long-slept not, when I [ ] it." },
   { id: "wc-w13-2", w: 13, req: ["b-13.B"], line: "At the standing stone you cut the wedge on a bar and the drop with a rising bar, and the fall of stone lifted aside." },
   { id: "wc-w13-3", w: 13, req: ["b-13.C"], line: "On a bench apart in the Reading Room, a tally of eights ends in a single sharp stroke." },
-  { id: "wc-w14-1", w: 14, req: ["b-14.A"], line: "The same two symbols moved the fall in the blast room, and behind it is a blank beside a diamond and the bar with a tick." },
+  { id: "wc-w14-1", w: 14, req: ["b-14.A"], line: "The same two symbols moved the rubble in the blast room, and behind it is a blank beside a diamond and the bar with a tick." },
   { id: "wc-w14-2", w: 14, req: ["b-14.B"], line: "Beyond the blast room, the lower way goes further down, and its cups were already lit." },
   { id: "wc-w14-3", w: 14, req: ["b-14.2"], line: "The log says a mark cut on a roof held it up, and that the mark is not \"hold\"." },
 ];
@@ -75,14 +75,14 @@ export const soFar: SoFar[] = [
     "At the foot of the Stair lies the Water, perfectly still, and something tall once stood at its far end.", // sf-m3-1
     "Two counts run side by side in the tally: the teller's own, and another in small strokes.", // sf-m3-2
     "Not every record here was cut by the same carver: the one on the channel's lip has a hook of its own.", // sf-m3-3
-    "The cross means not, and it turns lines her sheets had read.", // sf-m3-4
-    "Across the Water, the Reading Room teaches the same first lesson as the wall by the lamp, in older stone.", // sf-m3-5
+    "Her pencilled sheets were made before she knew the cross.", // sf-m3-4
+    "Two carved hooks you had not met before: the channel's cramped one, and a maker's on the Reading Room's tablet.", // sf-m3-5
   ] },
   { id: 'sf-m4', w: 13, lines: [
     "A railway man broke into the blast room and kept a log, and in it a tall man with a lamp asks him questions.", // sf-m4-1
     "On the ledge in the blast room lies a bound book with gold in its margins; her notebook says its writer never came.", // sf-m4-2
     "After the blast, a village well stood still and compasses swung towards the hill.", // sf-m4-3
-    "The tally ends: its teller counted his days, and called them good.", // sf-m4-4
+    "The tally ends on a count, and on the word good.", // sf-m4-4
     "At the end of the side gallery is a shut door, and on it a record cut by whoever cut the tally.", // sf-m4-5
   ] },
 ];
@@ -102,12 +102,12 @@ export const soFarLines: WeekCloseLine[] = [
   { id: "sf-m3-1", w: 9, req: ["b-8.A"], line: "At the foot of the Stair lies the Water, perfectly still, and something tall once stood at its far end." },
   { id: "sf-m3-2", w: 9, req: ["b-8.B"], line: "Two counts run side by side in the tally: the teller's own, and another in small strokes." },
   { id: "sf-m3-3", w: 9, req: ["b-8.2"], line: "Not every record here was cut by the same carver: the one on the channel's lip has a hook of its own." },
-  { id: "sf-m3-4", w: 9, req: ["b-9.B"], line: "The cross means not, and it turns lines her sheets had read." },
-  { id: "sf-m3-5", w: 9, req: ["b-9.A"], line: "Across the Water, the Reading Room teaches the same first lesson as the wall by the lamp, in older stone." },
+  { id: "sf-m3-4", w: 9, req: ["b-9.B"], line: "Her pencilled sheets were made before she knew the cross." },
+  { id: "sf-m3-5", w: 9, req: ["b-8.2", "b-9.A"], line: "Two carved hooks you had not met before: the channel's cramped one, and a maker's on the Reading Room's tablet." },
   { id: "sf-m4-1", w: 13, req: ["b-10.2"], line: "A railway man broke into the blast room and kept a log, and in it a tall man with a lamp asks him questions." },
   { id: "sf-m4-2", w: 13, req: ["b-11.3"], line: "On the ledge in the blast room lies a bound book with gold in its margins; her notebook says its writer never came." },
   { id: "sf-m4-3", w: 13, req: ["b-12.A"], line: "After the blast, a village well stood still and compasses swung towards the hill." },
-  { id: "sf-m4-4", w: 13, req: ["b-12.B"], line: "The tally ends: its teller counted his days, and called them good." },
+  { id: "sf-m4-4", w: 13, req: ["b-12.B"], line: "The tally ends on a count, and on the word good." },
   { id: "sf-m4-5", w: 13, req: ["b-13.A"], line: "At the end of the side gallery is a shut door, and on it a record cut by whoever cut the tally." },
 ];
 
