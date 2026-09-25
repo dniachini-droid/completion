@@ -80,6 +80,14 @@ import pb_4_AUrl from '../../paint/places/img/pt-b-4.A.webp?url';
 import pb_4_AMeta from '../../paint/places/img/pt-b-4.A.json';
 import pb_4_BUrl from '../../paint/places/img/pt-b-4.B.webp?url';
 import pb_4_BMeta from '../../paint/places/img/pt-b-4.B.json';
+import pb_2_BUrl from '../../paint/places/img/pt-b-2.B.webp?url';
+import pb_2_BMeta from '../../paint/places/img/pt-b-2.B.json';
+import ppl_w1_below_the_lampUrl from '../../paint/places/img/pt-pl-w1-below-the-lamp.webp?url';
+import ppl_w1_below_the_lampMeta from '../../paint/places/img/pt-pl-w1-below-the-lamp.json';
+import ppl_w3_far_endUrl from '../../paint/places/img/pt-pl-w3-far-end.webp?url';
+import ppl_w3_far_endMeta from '../../paint/places/img/pt-pl-w3-far-end.json';
+import pcv_06Url from '../../paint/places/img/pt-cv-06.webp?url';
+import pcv_06Meta from '../../paint/places/img/pt-cv-06.json';
 
 export interface Painting { url: string; meta: unknown; focus: number; }
 export const paintings: Record<string, Painting> = {
@@ -123,6 +131,10 @@ export const paintings: Record<string, Painting> = {
   'pt-b-3.C': { url: pb_3_CUrl, meta: pb_3_CMeta, focus: .49 },
   'pt-b-4.A': { url: pb_4_AUrl, meta: pb_4_AMeta, focus: .48 },
   'pt-b-4.B': { url: pb_4_BUrl, meta: pb_4_BMeta, focus: .48 },
+  'pt-b-2.B': { url: pb_2_BUrl, meta: pb_2_BMeta, focus: .48 },
+  'pt-pl-w1-below-the-lamp': { url: ppl_w1_below_the_lampUrl, meta: ppl_w1_below_the_lampMeta, focus: .53 },
+  'pt-pl-w3-far-end': { url: ppl_w3_far_endUrl, meta: ppl_w3_far_endMeta, focus: .27 },
+  'pt-cv-06': { url: pcv_06Url, meta: pcv_06Meta, focus: .67 },
 };
 
 /** Frame a painting so its light sits in the open gap between the words (the morning mock-up lifts the lamp the same way).

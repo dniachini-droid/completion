@@ -75,3 +75,26 @@ Looked at: each final at full frame, then crops of every look-at (u/v are fracti
 **pt-pl-w2-box-by-the-cot: PASS.** The mug shows its flat closed base on top, its rolled rim at the bottom against the slate, and the handle set toward the slate: a mug with no opening on top reads as upside down. Should fix (not the look-at): the box is dark, glossy and bellied, closer to leather or a cushion than soft card; matt pale grey card would settle it.
 
 **pt-pl-w3-far-end: FAIL.** The cup's flame is on the right wall and its warm light spreads over the facing surface, but that surface does not read as the great door rising out of frame: the lit area's upper boundary is a **round arch of shadow** (u .20–.60, v .30–.36), so the lit face reads as an **arched alcove or doorway opening** at the end of a corridor, and the light fades softly sideways rather than giving out as an edge going up the face. Smallest fix: tilt up so the door's face fills the upper two thirds of the frame, its top out of frame; make the light's upper limit on the face a soft but clear, roughly level line well below the frame top, with the door's cold stone and haze visibly continuing above it; remove the arch-shaped shadow.
+
+---
+
+## Second attempts (four of the batch-2 fails; their last attempt under D-085)
+
+Finals from the session scratchpad `p2/` (pt-b-2.B, pt-pl-w1-below-the-lamp, pt-pl-w3-far-end) and `p4/` (pt-cv-06), each passing the kit's automatic checks. Judged only on whether the wrong reading named above is gone, same standard.
+
+**Result: 4 checked, 4 pass, 0 fail.** With these, batch 2 stands at 16 pass, 3 fail (pt-b-6.A, pt-pl-w6-wall-shelf, pt-cv-01).
+
+| Id | Verdict |
+|---|---|
+| pt-b-2.B | PASS |
+| pt-pl-w1-below-the-lamp | PASS |
+| pt-pl-w3-far-end | PASS |
+| pt-cv-06 | PASS |
+
+**pt-b-2.B, the rod: PASS.** The rod is now one dark, matt stone value with the light only as a thin warm line along the one edge (u .20–.50, v .45–.49). It reads as a dark stone blade with a fine lit edge, no longer polished wood or driftwood. The handle marks are faint cut signs, not ruled graduations. Should fix: the tip is still a little square and nicked at the far left (u .17, v .45); a cleaner point would finish it. The frame is very dark, which is not a failure.
+
+**pt-pl-w1-below-the-lamp: PASS.** The bright interior and the ochre clay collar are gone. The mouth is now a black hole, and round it a soft dark stain spreads out over the lamp-lit stone, heaviest below the sill (u .25–.75, v .47–.62). That reads as a dark ring of staining round a small niche, not an oven or a mousehole with a rim. Should fix: a faint, slightly lighter band still hugs the mouth just outside the hole (about 1 cm wide in the crop), a remnant of the old collar; blend it into the stain.
+
+**pt-pl-w3-far-end: PASS.** The arch-shaped shadow is gone. A tall plain face fills the frame with warm light from the right (the flame now out of frame). The light gives out along a soft, roughly level line (v .27–.30) with dark continuing up to the top edge, and the side wall's edge at the upper right runs on up past it, so the face reads as going on above the light, not as a low wall ending. Should fix: a trace of the face's stone grain above the line would make "the stone goes on, the light stops" certain.
+
+**pt-cv-06, the salt close: PASS.** The round white glow is gone. The light now comes as faint thin shafts along the split, and the three lowest cuts (u .49–.61, v .63–.69) are filled with pale, sparkling crystal, the brightest value in the frame, with a fringe of the same glitter along the split's lower edges. It reads as frost-like crystal grown in the cuts. Should fix: the fill is close to a flat pale colour at phone size (a viewer could take it for chalk); a few more distinct glints or needle points standing out of each cut would settle it.
