@@ -66,6 +66,7 @@ export default {
     { p: [TICK[0] - .35, TICK[1] + .35, TICK[2] + .2], c: [1, .74, .44], k: .06, r: .25, shadow: .6, reach: .8 },   /* the nearest lamp's light along the rail's top */
     { p: [1.2, -4, 8.2], c: [.34, .31, .75], k: 4, r: 2.2 },                        /* violet on the turn landing */
     { p: [4.2, ramp2(4.2) + 1.3, 8.2], c: [.34, .31, .75], k: 3, r: 2 },               /* and down the flight */
+    { p: [3.4, ramp2(3.4) + .9, 8.6], c: [1, .68, .34], k: .5, r: .8, shadow: .6, reach: 2.4 },     /* the first lamp's pool on the flight's treads */
     { p: [DOOR.x - .2, DOOR.y + .9, 7.3], c: [1, .7, .38], k: .25, r: .45, shadow: .6, reach: 1.6 },   /* the lamps' light pooled at the little door */
   ],
   glsl: STAIR2_GLSL + PENCIL_GLSL + DOOR_GLSL + /* glsl */ `

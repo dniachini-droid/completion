@@ -15,7 +15,7 @@ export default {
   far: 9, fogK: 1 / 15,
   bloomAt: [B[0] + .02, .2, B[1] + .08], bloomPow: 30, bloomC: [.04, .03, .014],
   blur: { px: 1.2, d0: 1.1, d1: 2.8, k: .6 },
-  expo: 2.25, amb: .36, ambC: [.9, .8, 1.35], sheen: 0, bloom: { alpha: .16 },
+  expo: 2.2, amb: .3, ambC: [.9, .8, 1.35], sheen: 0, bloom: { alpha: .16 },
   hazeBase: [.018, .015, .045], hazeFar: [.05, .04, .11],
   lights: [
     { ...room.lights[0], k: 5 },                                                          /* the clay lamp, in the passage behind */
@@ -24,17 +24,18 @@ export default {
     { p: [-1.3, 1.9, 3.6], c: [.4, .37, .85], k: .8, r: 1.2 },                            /* violet in the far corners */
     { p: [-1.36, .3, 2.3], c: [.6, .56, .9], k: .03, r: .1, reach: .35 },                /* a cold lift on the mug from the room */
     { p: [1.35, 1.9, 3.7], c: [.4, .37, .85], k: .5, r: 1 },
-    { p: [-1.2, .5, 2.6], c: [.42, .38, .82], k: .1, r: .35 },                             /* violet half-light over the box */
+    { p: [-1.2, .5, 2.6], c: [.42, .38, .82], k: .1, r: .35 },
+    { p: [-1.22, .2, 2.3], c: [.5, .47, .9], k: .025, r: .18, reach: .45 },                  /* a soft cold light on the box's side, so the card reads matt and pale */                             /* violet half-light over the box */
   ],
   glsl: room.glsl.replace('vec4 scene(vec3 p)', 'vec4 roomScene(vec3 p)') + /* glsl */ `
   vec4 scene(vec3 p) {
     vec4 d = roomScene(p);
-    if (p.y > .3) gTint *= mix(1., .2, smoothstep(.3, 1., p.y));                  /* the walls going dark overhead */
+    if (p.y > .3) gTint *= mix(1., .14, smoothstep(.3, .9, p.y));                  /* the walls going dark overhead */
     if (p.y < .03) gTint *= mix(.35, 1., smoothstep(1.5, 2.25, p.z));                 /* the floor near you, out of the light */
     vec3 b = p - vec3(${B[0]}, 0, ${B[1]});
     /* the box: grey card gone soft, its edges slumped, a little crushed on one corner */
     vec4 bx = box(b, vec3(0, .062, 0), vec3(.094, .044, .144), M_PAPER);
-    bx.x -= .016 + .005 * (1. - abs(b.y - .06) / .06);                                /* its sides a little bellied */
+    bx.x -= .016 + .002 * (1. - abs(b.y - .06) / .06);                                /* its sides a little bellied */
     bx.x += .012 * smoothstep(.1, 0., length(b - vec3(.1, .11, -.15)));
     bx.x += .006 * smoothstep(.06, 0., length(b.zy - vec2(-.04, .08))) * step(.08, b.x);   /* a soft dent in its side */               /* one corner dented in */
     vec4 lid = box(b, vec3(0, .1 - .006 * (1. - b.z * b.z / .02), 0), vec3(.098, .014, .148), M_PAPER); lid.x -= .008;   /* its lid, a little wider, sagging in the middle */   /* its lid, a little wider, sitting on it */
@@ -67,7 +68,7 @@ export default {
     float st = length(vec2(m.x - .044, (m.y - .03) * 1.15)) - .02;                  /* the handle set low, near the rim: the mug is upside down */
     float hd = max(max(abs(st) - .0016, abs(m.z) - .007), .036 - m.x);          /* a thin strap handle */
     vec4 mug = vec4(min(min(cup, bead), hd) - .0014 + rough(p, .0006, 120.), M_TIN, NOUV);
-    if (mug.x < d.x) { d = mug; gTint = vec3(.72, .76, .86) * (m.y > .08 ? .45 : 1.) * (.78 + .38 * fbm3(p * 70., 3)); gPolish = bead < .002 ? .8 : 0.; if (bead < .002) gTint *= 2.; else { gStain = .4; gTint *= 1.45; } }   /* cool grey tin; its upturned base dull */
+    if (mug.x < d.x) { d = mug; gTint = vec3(.72, .76, .86) * (m.y > .08 ? .45 : 1.) * (.7 + .5 * fbm3(p * 55., 3)); gPolish = bead < .002 ? .8 : 0.; if (bead < .002) gTint *= 2.; else { gStain = .4; gTint *= 1.45; } }   /* cool grey tin; its upturned base dull */
     return d;
   }`,
   anchors: {
