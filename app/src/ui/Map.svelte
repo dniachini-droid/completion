@@ -1,6 +1,6 @@
 <script lang="ts">
   /* The map (FIRST_PLAYABLE → the world; mock-up map.html; INTERACTION_NOTES → The map): lights on the region's own night
-     sky, joined by routes that draw themselves in and settle to dust. One map, one level (D-090: the closer view was two
+     sky, joined by routes that draw themselves in and settle to dust. One map, one level (D-092: the closer view was two
      maps to Dan): the region, opening on where Dan is. Tap a light: the crosshair closes on it and what is known of it
      rises in the box (a stretch's places reached, a sealed thing in view, the forecast). Only what has been reached is
      named; the way ahead is a faint light, unnamed. Never a count of what's left (UX 6). */

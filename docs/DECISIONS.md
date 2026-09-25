@@ -954,7 +954,7 @@
 - **Reversible:** Yes: the buttons and the link are one screen's markup.
 
 
-## D-090 — One map, dragged around, no closer view (Dan's call)
+## D-092 — One map, dragged around, no closer view (Dan's call) (first numbered D-090; the painting branch had taken D-090 and D-091)
 - **Date:** 2026-09-25
 - **Context:** Dan on TestFlight, with two pictures: "There seems to be two maps? Why? I'm very confused. And depending on what room I am in, the 2nd map is different." The map had two levels (D-068, D-076): the region, and "Look closer" into the stretch Dan stood in. The closer view drew a second, different map (the stretch's places down a winding line, its sealed thing, the forecast's days), so it read as another map, and it changed with each stretch. The box also said the stretch's name twice ("You are here: The Survey Cut / Ahead: The Survey Cut, …"). Then Dan: "the map will get bigger than the screen, so you should be able to drag the screen around to see other parts of the map as it expands."
 - **Decision:** **one map, the region.** Look closer and See the whole region are gone. What the closer view showed is in the region already: tap a stretch and the box names the places reached there; a stretch holding a sealed thing says so ("sealed" beside it, "Walked · something sealed here" in the box); the forecast's day sits beside where Dan is or the faint light ahead. The ahead line no longer repeats the name above it. **The map can be dragged:** it is drawn at the scale that fills the phone's width, its size comes from its lights, and once a region is bigger than the screen a finger drags it around (a mouse on the web link); it opens centred on where Dan is. The first region still fits one screen. Picking a light still moves nothing (D-076).
