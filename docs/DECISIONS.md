@@ -780,3 +780,17 @@
 - **Alternatives:** past-tense narration throughout (rejected for now: the lines show where Dan is at this moment and many recur; the told-tale feel comes from whole sentences and rhythm); rewriting the characters' own writing too (rejected: it is theirs, and some of it is evidence).
 - **Consequences:** the new words go to Dan's phone in the next TestFlight build. **Dan judges the voice on his phone**; anything still hard to read goes into the next pass. The later story weeks, not yet in the app, keep the old voice until they are built.
 - **Reversible:** Yes (the old lines are in the history).
+
+## D-075 — Choosing what to do on Today, and a guess that waits for its marks (Dan's report; Claude's routine calls, D-006)
+- **Date:** 2026-09-25
+- **Context:** Dan, playing the first playable: after the day's work he couldn't choose which delve to do next (Keep going picked one for him); nothing could be taken off Today; a job added in Week couldn't be started from Today; there was no way to delve on anything he liked; the screen had too many buttons (Begin and Swap side by side). And the lamp's marks: he saw them at one place but was asked to guess only later, which felt disjointed.
+- **Decision:**
+  1. **One main button.** "Delve" for a delve job, "Begin" only for a job done away from the phone. Swap is gone.
+  2. **A tap on any job makes it the next one**, at any time of day, including after the day's work is done (a `picked` fact).
+  3. **Not today:** a small link under the main button, or a swipe left on a row. The job leaves today's list with no mark against it; the next job in order takes its place; it is offered again tomorrow, or as soon as Dan begins or taps it (a `setAside` fact). It never completes the day and earns nothing (rule 10).
+  4. **Delve on anything:** the last row, "Something else…" (and Keep going after the day's work), opens "Choose a delve": today's list, all Dan's jobs, his satchel lines, and a box to name something new. Any choice goes straight to the delve's set-up (D-041). A job done this way shows on Today as done and counts in full.
+  5. **A guess waits for its marks.** When a job's Done both brings a step with a guess and reaches a place, the guess is now asked on the arrival, after the place's marks are seen, not on the screen before it (it was an engine ordering bug). A guess about a mark seen elsewhere says "One of the marks you saw at {place}". A place showing marks that can't be guessed yet says so once, gently. Guesses opening over several weeks is the story's design and is kept.
+  6. **"Your lamp":** the app's own two lines about Dan's lamp now say "your lamp", so it isn't confused with the lamps he finds. The story's own lines that say only "the lamp" are listed (ids only) for the next sealed story session to anchor.
+- **Alternatives:** an action tray on each row (tried and rejected by Dan: too many buttons); keeping Swap (rejected: tapping a row does the same, directly).
+- **Consequences:** new screen Choose; 7 new rule tests (91 in all); the flow walk taps Delve. Sealed follow-up for the story session: anchor the ambiguous "the lamp" lines.
+- **Reversible:** Yes.
