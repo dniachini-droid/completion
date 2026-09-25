@@ -1,7 +1,9 @@
 <script lang="ts">
   /* Today (the morning screen, UX_PRINCIPLES → "The morning screen carries"): where you are, the sealed thing ahead,
-     Low / Normal / High, the one next job with Begin and Swap, today's other jobs as plain rows, "I can't start".
-     After day complete: the day as done, not a next job. Mock-up: design/directions/d-combined/morning.html. */
+     Low / Normal / High, the one next job with one button, today's other jobs as plain rows, "I can't start".
+     A tap on a row makes it the next job, at any time of day; a swipe takes it off today; the last row chooses a delve
+     on anything (D-075). After day complete: the day as done, until Dan taps a job or keeps going.
+     Mock-up: design/directions/d-combined/morning.html. */
   import { game, content } from './game.svelte';
   import { presetRun } from '../core/game';
   import type { Capacity, Job } from '../core/types';
@@ -46,11 +48,28 @@
   }
   function carry() { game.do({ do: 'resume' }); go('delve'); }
   function finish() { game.do({ do: 'finishHere' }); go('delve'); }
-  function focus(id: string) { if (!v.done.has(id)) game.do({ do: 'focus', job: id }); }
-  function keepGoing() {
-    const id = v.order.find(x => !v.done.has(x) && job(x).delve) ?? v.order.find(x => job(x).delve)!;
-    go('set', id);
+  function focus(id: string) { if (swiped) { swiped = null; return; } if (!v.done.has(id)) game.do({ do: 'focus', job: id }); }
+  function aside(id: string) { swiped = null; game.do({ do: 'setAside', job: id }); }
+
+  /* a row slides left to show "Not today" (the phone's own gesture for taking something off a list) */
+  let swiped = $state<string | null>(null), drag = $state<{ id: string; x0: number; y0: number; dx: number } | null>(null);
+  const OPEN = 112;
+  function down(e: PointerEvent, id: string) { if (!v.done.has(id) && !v.run) drag = { id, x0: e.clientX, y0: e.clientY, dx: swiped === id ? -OPEN : 0 }; }
+  function move(e: PointerEvent) {
+    if (!drag) return;
+    const base = swiped === drag.id ? -OPEN : 0, dx = e.clientX - drag.x0, dy = e.clientY - drag.y0;
+    if (Math.abs(dy) > Math.abs(dx) && Math.abs(dx) < 12) return;
+    drag.dx = Math.min(0, Math.max(-OPEN - 24, base + dx));
   }
+  function up() {
+    if (!drag) return;
+    const moved = Math.abs(drag.dx - (swiped === drag.id ? -OPEN : 0)) > 8;
+    if (moved) { swiped = drag.dx < -OPEN / 2 ? drag.id : null; suppress = true; }
+    drag = null;
+  }
+  let suppress = false;
+  function tapRow(id: string) { if (suppress) { suppress = false; return; } focus(id); }
+  const offset = (id: string) => drag?.id === id ? drag.dx : swiped === id ? -OPEN : 0;
 </script>
 
 <Scene painting={v.here.painting} framed bottom="50%" />
@@ -110,17 +129,21 @@
         {#if v.deepOffer}
           <p class="deep">{t('today.deep')} <button class="text-link" onclick={() => game.do({ do: 'callDeep' })}><span>{t('today.deep.call')}</span></button></p>
         {:else if v.deepCalled && !v.complete}<p class="deep">{t('today.deep.called')}</p>{/if}
-        <div class="btn-row lead">
-          <button class="btn" onclick={() => begin(next)}>{t('today.begin')}</button>
-          <button class="btn-quiet" onclick={() => game.do({ do: 'swap' })} aria-label={t('today.swap')}>
-            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 5h9.5L10 2.5M13 11H3.5L6 13.5" /></svg><span>{t('today.swap')}</span>
-          </button>
-        </div>
+        <div class="lead"><button class="btn full" onclick={() => begin(next)}>{next.delve ? t('today.delve') : t('today.begin')}</button></div>
         <div class="cant">
           <button class="text-link" onclick={() => go('cant', next.id)}><span>{t('today.cantStart')}</span></button>
           <span class="dot" aria-hidden="true">·</span>
           <button class="text-link" onclick={() => done(next)}><span>{t('today.already')}</span></button>
+          <span class="dot" aria-hidden="true">·</span>
+          <button class="text-link" onclick={() => aside(next.id)}><span>{t('today.notToday')}</span></button>
         </div>
+      </div>
+    {:else if !v.complete}
+      <div class="next">
+        <div class="label-line lit">{t('today.label')}</div>
+        <h2 class="say-lg">{t('today.clear')}</h2>
+        <p class="soft">{t('today.clear.say')}</p>
+        <div class="gap"></div>
       </div>
     {:else}
       <div class="next">
@@ -130,24 +153,31 @@
           <p class="soft">{t(lastPlace.kind === 'place' ? 'today.reached' : 'today.camped', { place: inSentence(lastPlace.name) })}</p>
         {/if}
         <button class="btn gold resting" onclick={() => go('camp')}>{t('today.toCamp')}</button>
-        <div class="btn-row after"><button class="btn-quiet" onclick={keepGoing}><span>{t('today.keepGoing')}</span></button></div>
+        <div class="btn-row after"><button class="btn-quiet" onclick={() => go('choose')}><span>{t('today.keepGoing')}</span></button></div>
         {#if lastPlace}<div class="cant"><button class="text-link" onclick={() => go('arrival')}><span>{t('today.look')}</span></button></div>{/if}
         <div class="gap"></div>
       </div>
     {/if}
 
-    {#if others.length}
-      <div class="rows">
-        {#each others as id (id)}
-          {@const j = job(id)}
-          <button class="row" class:done={v.done.has(id)} onclick={() => focus(id)} disabled={v.done.has(id) || !!v.run}>
+    <div class="rows" onpointermove={move} onpointerup={up} onpointercancel={up}>
+      {#each others as id (id)}
+        {@const j = job(id)}
+        <div class="swipe">
+          {#if !v.done.has(id) && offset(id) < 0}<button class="aside" tabindex={swiped === id ? 0 : -1} onclick={() => aside(id)}>{t('row.notToday')}</button>{/if}
+          <button class="row" class:done={v.done.has(id)} style:transform={`translateX(${offset(id)}px)`} class:still={drag?.id === id}
+            onpointerdown={(e) => down(e, id)} onclick={() => tapRow(id)} disabled={v.done.has(id) || !!v.run}>
             <span class="pip" class:done={v.done.has(id)}></span>
             <span class="t">{j.name}</span>
             <span class="s">{rowNote(j)}</span>
           </button>
-        {/each}
-      </div>
-    {/if}
+        </div>
+      {/each}
+      {#if !v.run && v.next?.mode !== 'underWay' && !(v.complete && !v.next)}
+        <button class="row else" onclick={() => go('choose')}>
+          <span class="plus" aria-hidden="true">+</span><span class="t">{t('today.else')}</span><span class="s"></span>
+        </button>
+      {/if}
+    </div>
     <nav class="foot" aria-label={t('today.label')}>
       <button class="text-link" onclick={() => go('satchel')}><span>{t('nav.satchel')}</span></button>
       <button class="text-link" onclick={() => go('week')}><span>{t('nav.week')}</span></button>
@@ -172,6 +202,15 @@
   .after { margin-top: 12px; }
   .rows { margin-top: 2px; }
   button.row { width: 100%; text-align: left; }
+  .lead .btn.full { width: 100%; }
+  /* a row slides over its "Not today" */
+  .swipe { position: relative; overflow: hidden; }
+  .swipe .row { position: relative; z-index: 1; transition: transform .22s ease; touch-action: pan-y; }
+  .swipe .row.still { transition: none; }
+  .aside { position: absolute; right: 0; z-index: 0; top: 1px; bottom: 0; width: 112px; font-family: var(--life); font-style: italic; font-size: 16px;
+    color: var(--ink); background: rgba(var(--violet-rgb), .28); }
+  .row.else .t { color: var(--ink-2); font-style: italic; }
+  .plus { justify-self: center; color: var(--violet-hi); font-size: 20px; line-height: 1; }
   button.row:disabled { cursor: default; }
   .at { color: var(--ink-2); font-size: .8em; }
   .deep { font-family: var(--life); font-size: 16px; color: var(--ink-2); margin: -10px 0 14px; text-align: left; }

@@ -22,6 +22,7 @@
   import Week from './Week.svelte';
   import Rhythms from './Rhythms.svelte';
   import Satchel from './Satchel.svelte';
+  import Choose from './Choose.svelte';
 
   function first(): Screen {
     const v = game.view;
@@ -67,6 +68,7 @@
     {:else if screen === 'daybook'}<Daybook {go} week={typeof arg === 'string' ? arg : undefined} />
     {:else if screen === 'week'}<Week {go} week={typeof arg === 'string' ? arg : undefined} />
     {:else if screen === 'rhythms'}<Rhythms {go} />
-    {:else if screen === 'satchel'}<Satchel {go} />{/if}
+    {:else if screen === 'satchel'}<Satchel {go} />
+    {:else if screen === 'choose'}<Choose {go} />{/if}
   {/key}
 </main>

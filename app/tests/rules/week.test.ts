@@ -3,7 +3,7 @@
  * Ids only: no story text is asserted here.
  */
 import { describe, expect, it } from 'vitest';
-import { act, see, settle, type Command } from '../../src/core/game';
+import { act, returnOf, see, settle, type Command } from '../../src/core/game';
 import * as W from '../../src/core/week';
 import * as S from '../../src/core/story';
 import { weekdayOf } from '../../src/core/time';
@@ -270,5 +270,93 @@ describe('Absence and the deep push', () => {
       log = log.concat(act(log, C, { do: 'done', job }, new Date(t + 3_600_000).toISOString().slice(0, 19) + '+01:00'));
     }
     expect(log.some(f => f.type === 'beatPlayed' && S.beatOf(C.story, f.id)?.kind === 'deep')).toBe(true);
+  });
+});
+
+describe('Choosing what to do: Not today, and a delve on anything (D-075)', () => {
+  it('Not today takes a job off today’s list; the next in order takes its place; nothing is earned or lost', () => {
+    const p = player().do({ do: 'open' });
+    const before = p.view(), walked = before.walked;
+    p.do({ do: 'setAside', job: 'course' });
+    const v = p.view();
+    expect(v.slate).not.toContain('course');
+    expect(v.slate).toHaveLength(before.slate.length);
+    expect(v.next?.job).not.toBe('course');
+    expect(v.walked).toBe(walked);
+    expect(v.complete).toBe(false);
+    /* tomorrow it is offered again */
+    expect(p.next().do({ do: 'open' }).view().order).toContain('course');
+  });
+  it('a job set aside and then begun comes back to the list', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'setAside', job: 'course' }).do({ do: 'startRun', job: 'course', minutes: 25, count: 1 });
+    expect(p.view().order).toContain('course');
+  });
+  it('a job done or running cannot be set aside', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'done', job: 'gym' }).do({ do: 'setAside', job: 'gym' });
+    expect(p.facts.some(f => f.type === 'setAside')).toBe(false);
+    p.do({ do: 'startRun', job: 'course', minutes: 25, count: 1 }).do({ do: 'setAside', job: 'course' });
+    expect(p.facts.some(f => f.type === 'setAside')).toBe(false);
+  });
+  it('after the day is complete, any job can still be delved on, and its minutes move Dan', () => {
+    const p = player().do({ do: 'open' });
+    for (const id of p.view().slate) p.do({ do: 'done', job: id });
+    expect(p.view().complete).toBe(true);
+    const other = C.jobs.find(j => !p.view().done.has(j.id) && !j.item)!.id;
+    const walked = p.view().walked;
+    p.do({ do: 'startRun', job: other, minutes: 25, count: 1 }).wait(26);
+    expect(p.view().walked).toBe(walked + 25);
+  });
+  it('something new, named on the spot, can be delved on at once; its delve counts, and "done" counts it', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['Fix the bike'] });
+    const id = (p.facts.find(f => f.type === 'itemAdded') as { id: string }).id;
+    const walked = p.view().walked;
+    p.do({ do: 'startRun', job: id, minutes: 25, count: 1 }).wait(26);
+    expect(p.view().walked).toBe(walked + 25);
+    expect(p.view().runEnd?.ask).toBe(true);
+    p.do({ do: 'done', job: id });
+    expect(p.view().done.has(id)).toBe(true);
+    expect(p.view().slate).toContain(id);
+  });
+});
+
+describe('A guess is asked after its marks are seen (D-075)', () => {
+  it('when a job’s Done reaches a place, the guess its return brings is asked on the arrival, not before it', () => {
+    const p = player().do({ do: 'open' });
+    let checked = 0;
+    for (let d = 0; d < 10 && !checked; d++) {
+      for (const id of p.view().slate) {
+        if (p.view().done.has(id)) continue;
+        const f = act(p.facts, C, { do: 'done', job: id }, p.at);
+        p.do({ do: 'done', job: id });
+        const done = f.find(x => x.type === 'jobDone'), arr = f.find(x => x.type === 'arrived' && x.kind === 'place');
+        const beat = f.find(x => x.type === 'beatPlayed' && x.job === done?.seq) as { id: string } | undefined;
+        const carries = beat ? S.beatOf(C.story, beat.id)?.carries?.guess ?? [] : [];
+        if (done && arr && carries.length) {
+          expect(returnOf(C, p.facts, done.seq).guess).toEqual([]);
+          expect(p.view().arrival?.guess).toEqual(expect.arrayContaining(carries));
+          checked++;
+        }
+        for (const a of p.facts.filter(x => x.type === 'arrived')) p.do({ do: 'seen', what: 'arrival', ref: a.seq });
+      }
+      p.next().do({ do: 'open' });
+    }
+    expect(checked).toBeGreaterThan(0);
+  });
+});
+
+describe('After the day’s work, a tap on a job makes it the next one (D-075)', () => {
+  it('a tapped job becomes next after day complete, until it is done', () => {
+    const p = player().do({ do: 'open' });
+    for (const id of p.view().slate) p.do({ do: 'done', job: id });
+    expect(p.view().next).toBeNull();
+    const other = C.jobs.find(j => !p.view().done.has(j.id))!.id;
+    p.do({ do: 'focus', job: other });
+    expect(p.view().next).toEqual({ job: other, mode: 'begin' });
+    p.do({ do: 'setAside', job: other });
+    expect(p.view().next).toBeNull();
+    p.do({ do: 'focus', job: other });
+    expect(p.view().next?.job).toBe(other);
+    p.do({ do: 'done', job: other });
+    expect(p.view().next).toBeNull();
   });
 });

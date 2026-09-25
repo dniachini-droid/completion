@@ -8,7 +8,7 @@
   import Guess from './Guess.svelte';
   import Settled from './Settled.svelte';
   import Cut from './Cut.svelte';
-  import { beatOf } from '../core/story';
+  import { beatOf, marksIn, mayGuess, markHeld, markOf } from '../core/story';
   import type { Go } from './nav';
 
   let { go }: { go: Go } = $props();
@@ -26,6 +26,9 @@
   /* a word is cut on its own screen, the first time it plays (Cut.svelte) */
   const word = fresh && !!game.view.arrival && beatOf(content.story, game.view.arrival.id)?.kind === 'word';
   const cap = (x: string) => x.charAt(0).toUpperCase() + x.slice(1);
+  /* marks seen here that can't be guessed yet: said gently, once, so a later guess doesn't come from nowhere (D-075) */
+  const later = $derived(a ? marksIn(content.story, a.records).filter(m => !a.guess.includes(m) && !mayGuess(content.story, v.story, m)
+    && !markHeld(markOf(content.story, m)!, v.story)) : []);
   function pick(i: number) { if (!a) return; game.do({ do: 'choose', beat: a.id, pick: i }); go('records', a.records[Math.min(i, a.records.length - 1)]); }
   /* after the cut: through the lintel to the stair (D-039), back to today, or later (the cut waits, unseen) */
   function cutLeave(to: 'through' | 'today' | 'later') {
@@ -41,10 +44,9 @@
       const more = game.view.arrival;
       if (more && to === 'today') { go('arrival', more.seq); return; }
     }
-    if (to === 'set') {
-      const job = v.order.find(x => !v.done.has(x) && game.job(x)?.delve) ?? 'course';
-      go('set', job);
-    } else go('today');
+    /* Keep going: Dan chooses what next (D-075) */
+    if (to === 'set') go('choose');
+    else go('today');
   }
 </script>
 
@@ -68,7 +70,8 @@
       <div class="mid col">
         {#if a.id}
           <Settled beat={fresh ? a.id : null} />
-          {#each a.guess as mark (mark)}<Guess {mark} />{/each}
+          {#each a.guess as mark (mark)}<Guess {mark} at={a.id} />{/each}
+          {#if later.length}<p class="soft later">{t('arrive.marksLater')}</p>{/if}
           {#if a.records.length}
             <div class="choice">
               {#if a.choice}{#each a.choice as c, i}<button class="text-link" onclick={() => pick(i)}><span>{cap(c)}</span></button>{/each}
@@ -90,6 +93,7 @@
 
 <style>
   .arr { display: contents; }
+  .later { text-align: center; margin: 2px 0 10px; font-style: italic; }
   .facelight { position: absolute; inset: 0; z-index: 1; pointer-events: none; mix-blend-mode: screen;
     background: radial-gradient(90% 34% at 50% 68%, rgba(255,178,84,.3) 0%, rgba(250,160,60,.12) 55%, rgba(250,160,60,0) 100%), linear-gradient(0deg, rgba(200,110,30,.3) 0%, rgba(240,150,55,.18) 22%, rgba(250,170,70,.06) 40%, rgba(250,170,70,0) 52%); }
   .fresh :global(.pool), .fresh .facelight { opacity: 0; animation: gold 4.2s .6s ease-in-out forwards; }

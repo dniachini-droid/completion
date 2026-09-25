@@ -26,6 +26,8 @@ const toClock = async (days, hh, mm = 0) => {
 };
 const has = async (text) => (await page.getByRole('button', { name: text, exact: true }).count()) > 0;
 const tap = async (text) => { await page.getByRole('button', { name: text, exact: true }).first().click({ timeout: 8000 }).catch(() => page.getByRole('button', { name: text, exact: true }).first().click({ force: true })); };
+/** Today's one button: Delve on a delve job, Begin on one done away from the phone (D-075). */
+const start = async () => { if (await has('Delve')) await tap('Delve'); else await tap('Begin'); };
 /** Answer whatever guess the screen offers (the first option). */
 const guessIfAny = async (name) => {
   const opts = page.locator('.opts .btn-quiet');
@@ -60,7 +62,7 @@ const arrivals = async (name) => {
 /** Today's next job without pictures (the days between), answering guesses and playing arrivals. */
 const quiet = async () => {
   if (await has('Done')) await tap('Done');
-  else { await tap('Begin'); await page.clock.runFor(900); if (await has('Begin')) await tap('Begin'); await ff(75 * 60_000); if (await has('Done')) await tap('Done'); }
+  else { await start(); await page.clock.runFor(900); if (await has('Begin')) await tap('Begin'); await ff(75 * 60_000); if (await has('Done')) await tap('Done'); }
   await page.clock.runFor(2500);
   const opts = page.locator('.opts .btn-quiet'); if (await opts.count()) await opts.first().click();
   if (await has('See where you are')) {
@@ -106,7 +108,7 @@ const camp = async (name, loud) => {
 const doNext = async (name) => {
   if (await has('Done')) await tap('Done');
   else {
-    await tap('Begin'); await page.clock.runFor(900);
+    await start(); await page.clock.runFor(900);
     if (await has('Begin')) { await shot(name + '-set', 800); await tap('Begin'); }
     await ff(75 * 60_000);
     if (await has('Done')) await tap('Done');
@@ -118,7 +120,7 @@ const doNext = async (name) => {
 
 await shot('today', 2500);
 /* the Course: Begin opens the run set to its hour; a breather; enough */
-await tap('Begin'); await shot('runset', 2000);
+await start(); await shot('runset', 2000);
 await tap('Begin'); await shot('delve', 10 * 60_000);
 await ff(26 * 60_000); await shot('breather', 2000);
 await ff(30 * 60_000); await shot('course-enough', 2000); await guessIfAny('course');
@@ -144,7 +146,7 @@ for (let d = 2; d <= 24 && !cut; d++) {
   const loud = d <= 3 || high;
   if (loud) await shot(`d${d}-today`, 2500);
   for (let k = 0; k < (high ? 5 : 3); k++) {
-    if (!(await has('Begin')) && !(await has('Done'))) break;
+    if (!(await has('Begin')) && !(await has('Delve')) && !(await has('Done'))) break;
     if (loud) await doNext(`d${d}-${k}`); else await quiet();
     if (cut) break;
   }

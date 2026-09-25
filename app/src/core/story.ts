@@ -287,6 +287,23 @@ function carriedMarks(s: Story, st: StoryState) {
   return { offered, seen, partOf };
 }
 
+/** The marks cut in some records (a guessable mark's id, once each, in order). */
+export function marksIn(s: Story, records: string[]): string[] {
+  const out: string[] = [];
+  for (const r of records) for (const line of recordOf(s, r)?.cut ?? []) for (const tk of line)
+    if ('s' in tk && typeof tk.s === 'string' && !out.includes(tk.s) && markOf(s, tk.s)?.candidates?.length) out.push(tk.s);
+  return out;
+}
+/** Where each mark was first seen: the first place reached whose records carry it (D-075: a guess points back to it). */
+export function seenAt(s: Story, places: string[]): Map<string, string> {
+  const out = new Map<string, string>();
+  for (const id of places) {
+    const b = beatOf(s, id);
+    for (const m of marksIn(s, b?.carries?.records ?? [])) if (!out.has(m)) out.set(m, id);
+  }
+  return out;
+}
+
 /** Every mark Dan has met, in the order he met it: in a record shown, offered for a guess, seen, or a part of it. */
 export function marksSeen(s: Story, st: StoryState): MarkSeen[] {
   const { offered, seen, partOf } = carriedMarks(s, st);

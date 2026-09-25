@@ -130,15 +130,26 @@ const metThisWeek = (c: Content, facts: Fact[], day: string, job: string) => {
 /** Today's jobs in order: today's plan first (an appointment as its time nears), then the content's order, rhythms
     already met this week last; changed by Swap. Without a plan, Today works exactly as before (PLANNER.md). */
 function orderOn(c: Content, facts: Fact[], day: string, clock: string): string[] {
-  const plan = W.plannedToday(c, facts, day, clock).map(p => p.job);
+  const aside = asideOn(facts, day);
+  const plan = W.plannedToday(c, facts, day, clock).map(p => p.job).filter(id => !aside.has(id));
   const planned = new Set(plan);
-  const offered = c.jobs.filter(j => offeredOn(c, facts, day, j, planned) && !planned.has(j.id));
+  const offered = c.jobs.filter(j => offeredOn(c, facts, day, j, planned) && !planned.has(j.id) && !aside.has(j.id));
   const order = [...plan, ...offered.filter(j => !metThisWeek(c, facts, day, j.id)), ...offered.filter(j => metThisWeek(c, facts, day, j.id))].map(j => typeof j === 'string' ? j : j.id);
   for (const s of ofType(onDay(facts, day), 'swapped')) {
     const a = order.indexOf(s.from), b = order.indexOf(s.to);
     if (a >= 0 && b >= 0) [order[a], order[b]] = [order[b], order[a]];
   }
   return order;
+}
+
+/** Jobs taken off today's list ("Not today"), unless begun again after (D-075). Setting aside earns and costs nothing. */
+function asideOn(facts: Fact[], day: string): Set<string> {
+  const out = new Set<string>();
+  for (const f of onDay(facts, day)) {
+    if (f.type === 'setAside') out.add(f.job);
+    else if (f.type === 'jobBegun' || f.type === 'delveStarted' || f.type === 'picked') out.delete(f.job);
+  }
+  return out;
 }
 
 /** A job begun away from the phone (Begin on a no-timer job) and not yet done today. */
@@ -369,6 +380,7 @@ export type Command =
   | { do: 'capacity'; capacity: Capacity }
   | { do: 'swap' }
   | { do: 'focus'; job: string }
+  | { do: 'setAside'; job: string }
   | { do: 'begin'; job: string }
   | { do: 'startRun'; job: string; minutes: number; count: number }
   | { do: 'skipBreather' }
@@ -437,7 +449,14 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       break;
     }
     case 'focus':
-      if (v.next && v.next.job !== cmd.job && !v.done.has(cmd.job)) w.put({ type: 'swapped', from: v.next.job, to: cmd.job });
+      /* a tap on a job makes it the next one; after the day's work, too (D-075) */
+      if (v.run || v.done.has(cmd.job) || v.next?.job === cmd.job) break;
+      if (v.next?.mode === 'begin' && !v.complete) w.put({ type: 'swapped', from: v.next.job, to: cmd.job });
+      else if (v.complete || !v.next) w.put({ type: 'picked', job: cmd.job });
+      break;
+    case 'setAside':
+      /* "Not today": off today's list, with no mark against it; the next job in order takes its place (D-075) */
+      if ((v.order.includes(cmd.job) || v.next?.job === cmd.job) && !v.done.has(cmd.job) && v.run?.job.id !== cmd.job && v.underWay !== cmd.job) w.put({ type: 'setAside', job: cmd.job });
       break;
     case 'begin':
       if (!jobOf(c, cmd.job).delve && !v.done.has(cmd.job) && v.underWay !== cmd.job) w.put({ type: 'jobBegun', job: cmd.job, from: 'app' });
@@ -533,7 +552,8 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
 /** Facts the clock alone has made due (call on open and while a run is on screen). */
 export function settle(facts: Fact[], c: Content, now: Moment): Fact[] {
   const w = writer(facts, now);
-  settleIn(w, c, epochOf(now));
+  /* Dan's own jobs too (a satchel line or a job he added can be the one delved on) */
+  settleIn(w, W.live(c.base ?? c, facts), epochOf(now));
   return w.out;
 }
 
@@ -642,6 +662,17 @@ export const STAND_IN: Record<StretchId, string> = {
 export const PAINTED: ReadonlySet<string> = new Set<string>(['b-1.A', 'b-1.B', 'b-1.C']);
 export const paintingOf = (id: string | null, stretch: StretchId): string => id && PAINTED.has(id) ? `pt-${id}` : STAND_IN[stretch];
 
+/** The place a job's Done reached, if its return and the arrival came together: only the world's answers between. */
+const ANSWERS = new Set(['stepsGained', 'dayCompleted', 'keyEarned', 'sealOpened', 'recordShown', 'findGiven', 'beatPlayed', 'storyWeekBegan']);
+function reachedBy(all: Fact[], doneSeq: number): FactOf<'arrived'> | null {
+  for (const f of all) {
+    if (f.seq <= doneSeq) continue;
+    if (f.type === 'arrived') return f.kind === 'place' ? f : null;
+    if (!ANSWERS.has(f.type)) return null;
+  }
+  return null;
+}
+
 function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
   /* one of the places played at day complete: nothing but the world's answers between the lock-in and it */
   const dc = all.find(g => g.type === 'dayCompleted' && g.day === f.day && g.seq < f.seq);
@@ -649,8 +680,11 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
   const completedDay = !!dc && all.every(g => g.seq <= dc.seq || g.seq >= f.seq || quiet.has(g.type));
   if (f.kind === 'place') {
     const b = S.beatOf(c.story, f.id)!;
+    /* the guess the same job's return brought is asked here, after the marks have been seen, not before (D-075) */
+    const by = ofType(all, 'jobDone').filter(d => d.seq < f.seq).pop();
+    const carried = by && reachedBy(all, by.seq)?.seq === f.seq ? guessOf(c, all, by.seq) : [];
     return { seq: f.seq, kind: 'place', id: b.id, name: b.name ?? '', line: b.line ?? '', taps: b.taps, choice: b.choice,
-      records: b.carries?.records ?? [], guess: b.carries?.guess ?? [], look: null, stretch: b.stretch, painting: paintingOf(b.id, b.stretch), completedDay, byKey: f.how === 'key' };
+      records: b.carries?.records ?? [], guess: [...new Set([...(b.carries?.guess ?? []), ...carried])], look: null, stretch: b.stretch, painting: paintingOf(b.id, b.stretch), completedDay, byKey: f.how === 'key' };
   }
   const k = c.story.camps.find(x => x.id === f.id)!;
   const find = all.find(g => g.type === 'findGiven' && g.why === 'camp' && g.seq > f.seq && g.seq <= f.seq + 1) as FactOf<'findGiven'> | undefined;
@@ -658,8 +692,13 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
   return { seq: f.seq, kind: 'camp', id: k.id, name: k.name, line: k.line, records: [], guess: [], look, stretch: k.stretch, painting: paintingOf(k.id, k.stretch), completedDay, byKey: false };
 }
 
-/** What a job's return (a jobDone fact) shows. */
+/** What a job's return (a jobDone fact) shows. A guess it brings moves to the place the same job reached (D-075). */
 export function returnOf(c: Content, facts: Fact[], doneSeq: number): Return {
+  const r = rawReturn(c, facts, doneSeq);
+  return reachedBy(facts, doneSeq) ? { ...r, guess: [] } : r;
+}
+const guessOf = (c: Content, facts: Fact[], doneSeq: number) => rawReturn(c, facts, doneSeq).guess;
+function rawReturn(c: Content, facts: Fact[], doneSeq: number): Return {
   const beat = facts.find(f => f.type === 'beatPlayed' && f.job === doneSeq) as FactOf<'beatPlayed'> | undefined;
   const finds = facts.filter((f): f is FactOf<'findGiven'> => f.type === 'findGiven' && f.job === doneSeq).map(f => f.id);
   if (!beat) return { beat: null, line: '', key: false, guess: [], records: [], finds };
@@ -692,6 +731,7 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   }
   slate.sort((a, b) => order.indexOf(a) - order.indexOf(b));
   for (const id of order) if (done.has(id) && !slate.includes(id)) slate.push(id);   /* off-plan counts in full */
+  for (const id of done) if (!slate.includes(id)) slate.push(id);   /* so does something chosen from outside the list (D-075) */
   const complete = completedOn(facts, day);
   const underWay = underWayOn(facts, day);
   const seen = new Set(ofType(facts, 'seen').map(f => f.ref));
@@ -731,6 +771,11 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   else if (run) next = { job: run.job.id, mode: 'running' };
   else if (underWay) next = { job: underWay, mode: 'underWay' };
   else if (!complete) { const id = slate.find(x => !done.has(x)); if (id) next = { job: id, mode: 'begin' }; }
+  if (!next) {
+    /* after the day's work (or with today's list cleared), the job Dan tapped, until it is done or set aside (D-075) */
+    const aside = asideOn(facts, day), picks = ofType(onDay(facts, day), 'picked').map(f => f.job).filter(id => !done.has(id) && !aside.has(id));
+    if (picks.length) next = { job: picks[picks.length - 1], mode: 'begin' };
+  }
 
   /* an arrival not yet seen isn't where Dan stands yet: it is revealed on its own screen */
   const shown = arrival ? facts.filter(f => !(f.type === 'arrived' && f.seq >= arrival.seq)) : facts;
