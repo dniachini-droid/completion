@@ -219,3 +219,15 @@ describe('Seven weeks reach the story’s turn (Dan: the test runs seven weeks, 
     }, 120_000);
   }
 });
+
+describe('The opening is never replayed as a morning after camp', () => {
+  it('the hillside opening does not play once Dan has been underground (bedtime kept or late)', () => {
+    for (const bed of ['kept', 'late'] as const) {
+      const s = sim(undefined, undefined, bed).week('normal');
+      const opening = C.story.beats.find(b => b.kind === 'morning' && b.w === 1)!.id;
+      const firstJob = s.facts.find(f => f.type === 'jobDone');
+      const late = s.facts.filter(f => f.type === 'beatPlayed' && (f as { id: string }).id === opening && firstJob && f.seq > firstJob.seq);
+      expect(late, `bedtime ${bed}`).toHaveLength(0);
+    }
+  });
+});

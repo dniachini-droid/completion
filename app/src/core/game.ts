@@ -437,7 +437,9 @@ function morningAfter(w: W, c: Content, at: Moment, day: string) {
   const camp = w.all.find(f => f.seq > night.seq && f.type === 'beatPlayed' && f.id.endsWith('.camp')) as FactOf<'beatPlayed'> | undefined;
   if (camp && camp.day === night.day) {
     const id = camp.id.replace(/\.camp$/, '.morning');
-    if (!confirms(id).length && !S.storyState(w.all, c.story).played.has(id)) w.put({ type: 'beatPlayed', id }, at, day);
+    /* the story's opening (the hillside, before any job) shares the week-1 morning's id: it is never a morning after camp */
+    const opening = S.beatOf(c.story, id)?.kind === 'morning' && S.beatOf(c.story, id)?.w === 1 && !confirms(id).length;
+    if (!opening && !confirms(id).length && !S.storyState(w.all, c.story).played.has(id)) w.put({ type: 'beatPlayed', id }, at, day);
   }
   giveFind(w, c, 'morning', at, day);
 }
