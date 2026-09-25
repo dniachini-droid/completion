@@ -56,7 +56,6 @@ export default {
     if (wx.x < d.x) {
       d = wx; d.zw = NOUV;
       gTint = vec3(.84, .76, .64) * (.82 + .24 * fbm3(p * 26., 3)); gPolish = .5;             /* hard wax, amber-grey, a low waxy sheen */
-      d.x += rough(p, .0012, 90.);
       if (q.x > .016) {
         /* ruled in rows; at the head of every row a ring; after it, a few faint marks */
         float ry = (q.y + .128) / .04267, ri = floor(ry), fy = (fract(ry) - .5) * .04267;

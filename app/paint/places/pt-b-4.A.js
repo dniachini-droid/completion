@@ -20,6 +20,7 @@ export default {
   lights: [
     { p: [.3, 1.9, ZC - 4.2], c: W, k: 2.1, r: 1.5, shadow: .6 },                          /* the cups' glow, from the gallery's near end behind you */
     { p: [-1.42, 1.52, ZC + .12], c: W, k: .07, r: .22, reach: .8, shadow: 1 },             /* its last reach, raking along the crust: every stroke of the count shows */
+    { p: [-1.0, 1.1, ZC - 1.3], c: W, k: .25, r: .8, reach: 2.2 },                             /* the cups' warmth pooled on the near wall and the band below the sheet */
     { p: [.4, 1.6, 34], c: V, k: 10, r: 9 },                                                 /* the gallery going on in its own violet */
     { p: [.8, 1.9, ZC + 4], c: V, k: 4, r: 3.5 },
     { p: [0, 1.6, ZC - 9], c: [.3, .28, .66], k: .6, r: 3 },                                 /* faint fill from behind */

@@ -19,7 +19,7 @@ export default {
   blur: { px: 1.6, d0: 1.2, d1: 5, k: .8 },
   lights: [
     { p: [-.9, 1.6, ZH - .9], c: W, k: .5, r: 1., reach: 1.9 },              /* the cups' glow, from above and behind */
-    { p: [XH + .16, YH + .3, ZH + .2], c: W, k: .07, r: .2, reach: .8 },       /* its reach into the hollow: the pressed places give it back */
+    { p: [XH + .34, YH + .1, ZH - .26], c: W, k: .09, r: .2, reach: .9, shadow: 1 },         /* its reach into the hollow, low from your side: each pressed place's far wall lit, its near lip in shadow */       /* its reach into the hollow: the pressed places give it back */
     { p: [.4, 1.6, 34], c: V, k: 5, r: 9 },                                                   /* the gallery going on in its own violet */
     { p: [.3, 1.2, ZH + 3], c: V, k: 2.2, r: 2.5 },
     { p: [0, 1.6, ZH - 6], c: [.3, .28, .66], k: .5, r: 3 },                                  /* faint fill from behind */
@@ -61,14 +61,14 @@ export default {
         vec2 f = q.xz;
         float fp = 1e3;
         vec2 e = vec2(.8, 1.2);                                                                /* each a little longer than wide, set loosely, not in a square */
-        fp = min(fp, length((f - vec2(-.03, -.045)) * e) / .0125);
-        fp = min(fp, length((f - vec2(.018, -.022)) * e) / .011);
-        fp = min(fp, length((f - vec2(-.012, .03)) * e) / .012);
-        fp = min(fp, length((f - vec2(.036, .058)) * e) / .0105);
-        float pr = 1. - smoothstep(.7, 1.15, fp);
+        fp = min(fp, length((f - vec2(-.031, -.052)) * e) / .0125);                              /* two pairs, each a little offset, uneven in spacing and size */
+        fp = min(fp, length((f - vec2(.009, -.041)) * e) / .0105);
+        fp = min(fp, length((f - vec2(-.017, .026)) * e) / .0115);
+        fp = min(fp, length((f - vec2(.026, .047)) * e) / .0098);
+        float pr = 1. - smoothstep(.8, 1.08, fp);
         if (pr > 0. && q.y < -.02) {
-          d.x += .0035 * pr;                                                                    /* pressed in: a shallow flat dip, its lip shading one side */
-          gTint = mix(gTint, vec3(2.3), pr); gPolish = mix(gPolish, .45, pr);                  /* matte, a little lighter than round it, a soft sheen */
+          d.x += .0055 * pr;                                                                    /* pressed in: a shallow flat dip, its lip shading one side */
+          gTint = mix(gTint, vec3(1.1), pr); gPolish = mix(gPolish, .1, pr);                   /* matte: no highlight on top; they read by their lit far wall and shaded near one */                  /* matte, a little lighter than round it, a soft sheen */
         }
       }
     }
