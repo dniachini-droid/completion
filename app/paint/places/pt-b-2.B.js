@@ -1,8 +1,11 @@
-/* SEALED (D-015). pt-b-2.B, the rod, round 3 (room scale, D-075): her shelf in the Survey Cut (pt-b-1.C's room,
-   reused), seen from the middle of the room, past the foot of her cot. On the plank shelf on the back wall the rod
-   of stone lies at a low diagonal, forearm-long, dark and fine-grained, its blade end lifted on a chip of stone;
-   its one fine edge takes the last of the clay lamp's light, which comes weak and warm from the doorway behind you,
-   and is the brightest line in the room. Under the shelf a pencilled line on the wall. Violet in the corners. */
+/* SEALED (D-015). pt-b-2.B, the rod, round 4 (room scale, close: D-075, CRITIQUE-B1): her shelf in the Survey Cut
+   (pt-b-1.C's room, reused), come up to within a metre of it, standing, looking down at it from the room's side.
+   The shelf is a ledge of cut stone let into the back wall. On it the rod of stone lies at a low diagonal,
+   forearm-long, one dark fine-grained stone from point to butt: a long blade that thickens without a step into a
+   worn round handle; its blade end lifted on a chip of stone; on the handle a line of cut marks in cells and, in
+   the last cell's corner, a hook with a tail. Its one fine edge takes the last of the clay lamp's light, weak and
+   warm from the doorway behind you, as a single thin gold line: the brightest thing in the room. Under the shelf a
+   pencilled line on the wall. Violet in the corners. */
 import room from './pt-b-1.C.js';
 
 export default {
@@ -10,63 +13,92 @@ export default {
   id: 'pt-b-2.B',
   name: 'The rod',
   line: '',
-  cam: { x: .08, y: 1.44, z: 3.0, pitch: -8, yaw: -40, f: 1.02, cx: .5, cy: .5 },   /* standing past the cot's foot, turned to the shelf */
+  cam: { x: -.12, y: 1.66, z: 3.08, pitch: -30, yaw: -24, f: 1.05, cx: .5, cy: .5 },   /* at the shelf, standing, looking down at the rod */
   far: 9, fogK: 1 / 15,
-  bloomAt: [-.45, 1.25, 3.78], bloomPow: 24, bloomC: [.05, .038, .018],
-  blur: { px: 1.3, d0: 1.4, d1: 3.2, k: .6 },
-  expo: 2.15,
+  bloomAt: [-.45, 1.26, 3.82], bloomPow: 24, bloomC: [.05, .038, .018],
+  blur: { px: 1.2, d0: .9, d1: 2.2, k: .6 },
+  expo: 2.2, sheen: 0,
   lights: [
-    { ...room.lights[0], k: 7 },                                                          /* the clay lamp, in the passage behind you */
-    { p: [-.35, 1.6, 3.35], c: [1, .7, .34], k: .05, r: .25, warm: .003, shadow: 1 },      /* its light reaching the shelf, weak */
-    { p: [-.62, 1.4, 3.6], c: [1, .7, .34], k: .06, r: .14, shadow: 1 },              /* a small pool of it on the wall behind the rod */
-    { p: [-.69, 1.29, 3.74], c: [1, .72, .38], k: .02, r: .06, shadow: .6 },               /* the last of it, grazing the rod's honed edge */
-    { p: [-1.3, 1.9, 3.6], c: [.4, .37, .85], k: 1.1, r: 1.2 },                           /* violet in the far corners */
-    { p: [1.35, 1.9, 3.7], c: [.4, .37, .85], k: .6, r: 1 },
+    { ...room.lights[0], k: 6 },                                                          /* the clay lamp, in the passage behind you */
+    { p: [-.3, 1.62, 3.45], c: [1, .7, .34], k: .06, r: .3, shadow: 1, reach: .75 },      /* its light reaching the shelf, weak */
+    { p: [-.42, 1.33, 3.66], c: [1, .72, .38], k: .014, r: .07, reach: .2 },             /* the last of it, grazing the rod's honed edge */
+    { p: [-1.3, 1.9, 3.6], c: [.4, .37, .85], k: 1.3, r: 1.2 },                           /* violet in the far corners */
+    { p: [1.35, 1.9, 3.7], c: [.4, .37, .85], k: .8, r: 1 },
+    { p: [-.4, 1.1, 3.2], c: [.4, .37, .85], k: .35, r: .7 },                             /* violet on the wall under the shelf */
   ],
   glsl: room.glsl.replace('vec4 scene(vec3 p)', 'vec4 roomScene(vec3 p)')
-    .replace(/\n.*M_SLATE, NOUV\)\);\n/, '\n') +              /* the rod is not lying square on the shelf: it is drawn below */ /* glsl */ `
-  /* the rod, in its own frame: u along it, from the blade's point (u -.2) to the handle's end (u .17); the honed
+    .replace(/\n.*vec3\(-\.5, 1\.2, 3\.84\).*\n/, '\n')                   /* the plank shelf, its pegs and the rod: drawn below, in stone */
+    .replace(/\n.*p\.y - 1\.16\)\).*\n/, '\n')
+    .replace(/\n.*M_SLATE, NOUV\)\);\n/, '\n') + /* glsl */ `
+  /* the rod, in its own frame: u from the blade's point (0) to the handle's butt (.38); y up; z across, the honed
      edge on the side toward the room (z -) */
-  float gEdge = 0.;
+  float gEdge = 0., gMark = 0.;
   vec4 rod(vec3 p) {
-    vec3 o = vec3(-.62, 1.231, 3.8);                                               /* the handle's end rests on the shelf */
-    float a = .05, ca = cos(a), sa = sin(a);                                       /* the blade end lifted a little, on its chip */
-    vec3 q = p - o; float b = .3, cb = cos(b), sb = sin(b); q.xz = vec2(cb * q.x - sb * q.z, sb * q.x + cb * q.z);
-    q.xy = vec2(ca * q.x + sa * q.y, -sa * q.x + ca * q.y);
-    float u = q.x;                                                                   /* the blade toward the shelf's left end */
-    float bl = clamp((u + .2) / .19, 0., 1.);
-    float w = .014 * mix(.4, 1., sqrt(bl));
-    float t = .008 * mix(.55, 1., bl) * smoothstep(-w, -w * .1, q.z) + .0008;
-    float blade = max(max(abs(q.y) - t, abs(q.z) - w), max(-.2 - u, u - .02));
-    blade = max(blade, length(vec2(max(-.18 - u, 0.) * 1.3, q.z)) - w);            /* the point rounded */
-    blade *= .6;
-    float hr = .0098 - .002 * smoothstep(.13, .17, u);                              /* the handle: the same stone, worn round */
-    float handle = (length(vec3(max(abs(u - .09) - .08, 0.) / hr, q.y / (hr * .75), q.z / (hr * 1.25))) - 1.) * hr * .75;
-    float r = smin(blade, handle, .01) + rough(p, .0005, 90.);
-    gEdge = (1. - smoothstep(-.01, .03, u)) * smoothstep(-w + .003, -w + .0003, q.z);   /* the honed edge, fading along the blade */
+    vec3 o = vec3(-.68, 1.262, 3.94);                                               /* the point, on its chip */
+    vec3 q = p - o; float b = .34, cb = cos(b), sb = sin(b); q.xz = vec2(cb * q.x - sb * q.z, sb * q.x + cb * q.z);
+    float a = .045, ca = cos(a), sa = sin(a); q.xy = vec2(ca * q.x - sa * q.y, sa * q.x + ca * q.y);   /* the point lifted */
+    float u = q.x, L = .38;
+    float bl = 1. - smoothstep(.16, .26, u);                                       /* 1 along the blade, 0 on the handle */
+    float tip = sqrt(clamp(u / .06, .08, 1.));
+    float w = mix(.0125, .016, bl) * tip;                                          /* half width */
+    float t = mix(.0105, .0072, bl) * mix(.6, 1., tip);                            /* half thickness */
+    /* the blade's section: full on the spine, ground away to nothing at the edge */
+    float bev = .75 * w;
+    float ty = t * mix(1., clamp((q.z + w) / bev, .04, 1.), bl);
+    float sec = max(abs(q.y) - ty, abs(q.z) - w) * .7;
+    float ell = (length(vec2(q.y / t, q.z / w)) - 1.) * min(t, w);                 /* the handle's section, worn round */
+    float s = mix(ell, sec, bl);
+    float ends = max(-u, u - L);
+    float r = max(s, ends) - .0012;
+    r += rough(p, .0006, 120.);
+    /* the honed edge: a thin line along the blade */
+    gEdge = bl * smoothstep(.02, .06, u) * (1. - smoothstep(.0012, .004, q.z + w)) ;
+    /* on the handle's top: a line of marks in cells, and in the last cell's corner a hook with a tail */
+    gMark = 0.;
+    if (u > .23 && u < .355 && q.y > 0.) {
+      float cellW = .021, k = floor((u - .23) / cellW), fu = u - .23 - k * cellW;
+      float tick = abs(fu - .002);                                                  /* a cut across the handle between the cells */
+      float line = abs(q.z + .003);                                                 /* the line along them */
+      float m = min(tick < .0011 && abs(q.z) < .0075 ? tick : 1., line < .001 ? line : 1.);
+      if (k > 4.5) {                                                                /* the last cell: the hook with its tail */
+        vec2 h = vec2(fu - .012, q.z - .0045);
+        float hook = abs(length(h) - .0032); if (h.y < 0. && h.x < 0.) hook = 1.;
+        float tail = length(vec2(h.x - .0032 + clamp(h.x - .0032, -.0, 0.), max(abs(h.y + .002) - .003, 0.))) ;
+        tail = h.x > .0025 && h.y < 0. ? abs(h.x - .0032) + max(-h.y - .006, 0.) : 1.;
+        m = min(m, min(hook, tail));
+      }
+      gMark = 1. - smoothstep(.0005, .0011, m);
+      r += gMark * .0006;
+    }
     return vec4(r, M_SLATE, NOUV);
   }
   vec4 scene(vec3 p) {
     vec4 d = roomScene(p);
-    if (p.y > 1.45) gTint *= mix(1., .45, smoothstep(1.45, 2.3, p.y));              /* the vault going dark overhead */
-    if (p.y < .03) gTint *= mix(.25, .55, smoothstep(3., 3.8, p.z));               /* the floor near you, out of the light */
-    if (p.z > 3.86) gTint *= mix(1., .55, smoothstep(.35, .9, length(vec2(p.x + .5, (p.y - 1.2) * 1.4))));   /* the back wall kept back round the shelf */
-    /* the shelf: old wood, worn at its front edge */
-    if (p.y > 1.18 && p.y < 1.222 && p.z > 3.7 && p.z < 3.97 && p.x > -.95 && p.x < -.05 && d.x < .005) gTint *= (.6 + .3 * fbm(p.xz * vec2(30, 5), 3)) * (p.y > 1.216 ? .8 : .45);
+    if (p.y > 1.55) gTint *= mix(1., .35, smoothstep(1.55, 2.3, p.y));              /* the vault going dark overhead */
+    if (p.y < .03) gTint *= .35;                                                       /* the floor, out of the light */
+    /* the shelf: a ledge of cut stone let into the back wall, its front edge worn */
+    vec4 sh = box(p, vec3(-.5, 1.205, 3.88), vec3(.47, .028, .13), M_DRESSED);
+    sh.x -= .006; sh.x += rough(p, .003, 22.);
+    if (sh.x < d.x) { d = sh; gTint = vec3(.78, .76, .86) * (.8 + .35 * fbm(p.xz * vec2(9, 14), 3)); }
     /* the chip the blade's point rests on */
-    vec3 cq = p - vec3(-.795, 1.226, 3.858);
-    float chip = (length(cq / vec3(.018, .01, .014)) - 1.) * .009 + rough(p, .004, 70.);
+    vec3 cq = p - vec3(-.682, 1.244, 3.942);
+    float chip = (length(cq / vec3(.016, .011, .013)) - 1.) * .01 + rough(p, .003, 80.);
     vec4 ch = vec4(chip, M_ROCK, NOUV);
-    if (ch.x < d.x) { d = ch; gTint = vec3(.4); }
+    if (ch.x < d.x) { d = ch; gTint = vec3(.45, .43, .5); }
     vec4 r = rod(p);
-    if (r.x < d.x) { d = r; gTint = vec3(.2, .2, .22) * (.85 + .3 * fbm(p.xz * 60., 2)); gPolish = gEdge; gTint = mix(gTint, vec3(2.), gEdge); }
+    if (r.x < d.x) {
+      d = r;
+      gTint = vec3(.62, .6, .68) * (.85 + .3 * fbm(p.xz * 70., 2)); gStain = .25;           /* one dark stone, matt */
+      gTint *= 1. - .6 * gMark;
+      gTint = mix(gTint, vec3(3.2, 2.7, 2.), gEdge); gPolish = gEdge; gStain *= 1. - gEdge;  /* the honed edge takes the light */
+    }
     /* under the shelf, a pencilled line on the wall: graphite, grey with a faint sheen */
-    if (p.z > 3.86 && abs(p.y - 1.1 - .004 * sin(p.x * 9.)) < .005 && p.x > -.86 && p.x < -.18) { gTint = vec3(1.1, 1.1, 1.2); gPolish = .6; }
+    if (p.z > 3.97 && abs(p.y - 1.1 - .004 * sin(p.x * 9.)) < .0035 && p.x > -.86 && p.x < -.2) { gTint = vec3(.55, .55, .62); gPolish = .7; }
     return d;
   }`,
   anchors: {
-    beam: [{ p: [-.2, 1.5, 3.2], w: .35 }],
-    glints: [{ p: [-.72, 1.243, 3.8] }],
+    beam: [{ p: [-.3, 1.5, 3.4], w: .3 }],
+    glints: [{ p: [-.55, 1.27, 3.8] }],
   },
   live: { motes: 'gold', gold: true },
 };
