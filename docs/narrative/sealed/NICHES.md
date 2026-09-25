@@ -79,6 +79,10 @@ _Written 2026-09-23._
 | 13 | 4 | The Surveyor's gallery, the roof-fall | With MOVE-STONE: the way to the lower gallery | — | region 2 |
 | 13 | 5 | The Reading Room, a second bench | A Builder's tally of readers-of-the-tablet: eight and eight and eight, then a gap, then a single stroke in his hand | *count [ ] not; one.* at wk 13 (AGAIN wk 20); *Count again not; one.* when held | the fifth; his loneliness |
 
+### As built for the app (weeks 8–14, `STORY_JOB.md` §8.3)
+
+Row changes, recorded under MASTER_BRIEF §55 (no fact changed, no sign moved): **8.5** (the child's tablet) became week 9 row 2, so its arrival (after the turn, 9.B) can never hold a week-9 Key behind it; week 8's row 5 is new, a cork float on a knotted cord in the channel's niche (the Surveyor's; plain). Week 9's rows are now: NOT · the child's tablet · the stylus · the floor-stone · the powder-tin (B0 stays seen, not sealed). New plain rows: **11.6** a spiked iron candle-holder by the torn wall; **11.7** a pencil stub, hers, on a bench's end; **13.6** a bone folding rule marked in tens (the Surveyor's). **14.2** (E5) is a folded page left folded in week 14 and read in week 15. The app's seal ids follow these rows (`seal-8-5`, `seal-9-2`, `seal-11-6`, `seal-11-7`, `seal-13-6`).
+
 ## Rules
 
 - A niche's told line is in his hand with his hand-mark, always; the app never says "he wrote this". Dan learns whose hand it is in week 4.
