@@ -984,3 +984,11 @@
 - **Alternatives:** an "Add" box at the top of the Week (still a day to pick); keeping camp as an evening-only page (tried first; Dan still found it a random page); a "rest" mode that stops the delve's motion after a minute (conflicts with D-041, every screen keeps moving).
 - **Consequences:** the camp page and its painted hall are gone from the daily path (the hall still appears in the story). Amends D-083 (camp became Go to sleep) in where it lives, not in its rules. The Week shows empty days ahead. No save step anywhere in the Week.
 - **Reversible:** Yes: screen markup, and two numbers in the delve's drawing.
+
+## D-094 — Leaving the app pauses a delve; locking the phone doesn't (Dan's call)
+- **Date:** 2026-09-25
+- **Context:** Dan wanted a delve to reset, with nothing gained, if he went into another app, so that he has to stay on task. Claude pointed out the conflict with rule 9 (no lost progress) and D-036 (stopping never costs anything), that some delve jobs need other apps (ordering the cat's medication), and that iOS cannot cleanly tell locking from switching apps.
+- **Decision:** going into any other app **pauses** the delve: the time away does not count. Locking the phone keeps it running (the end alert still rings). Coming back says it was paused and offers Carry on or Finish here. Nothing already done is lost.
+- **Alternatives:** the reset (overrides rule 9; rejected by Dan once the costs were laid out); a reminder notification while away (not asked for); blocking chosen apps with Apple's Screen Time controls (needs an entitlement Apple must approve; left for later).
+- **Consequences:** amends D-036 (Pause was only ever pressed by hand). Needs a reliable way to tell locking from leaving (on iOS, the app goes to the background in both; the native side can tell by whether the screen went off/protected data became unavailable, or by the lock-screen Live Activity session). Built with item 0c's Live Activity, which makes locking the natural way to keep a delve going. The web link can't tell the two apart: there, hiding the page pauses.
+- **Reversible:** Yes.
