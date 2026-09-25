@@ -42,7 +42,7 @@ export const beats: Beat[] = [
     o: 4,
     name: "The Lamp Hall",
     line: "You come out of the passage into a long, high hall. Its walls curve into the floor and the ceiling, like the inside of a shell. This is the Lamp Hall. At the near end, where you came in, a ledge is cut into the wall, and on the ledge stands a clay lamp. The lamp is already lit. Without touching it, you look into it: there is no oil in it. Then you look at the walls. Every surface within your reach is covered in carved symbols, small shapes cut into the stone, crowded close together. Among the symbols are rings: small carved circles. Along both walls at head height, cups are cut into the stone: round hollows, one every few paces. All of them are empty. In one side wall is a doorway with a rounded top. At the far end, past the lamplight, you can just make out a great door that takes up most of the end wall.",
-    choice: ["Look closely at the lamp", "Study the wall by the lamp"],
+    choice: ["Study the wall by the lamp", "Look closely at the lamp"],
     req: [],
     stretch: "st-hall",
     painting: "pt-b-1.A",

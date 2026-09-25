@@ -15,6 +15,8 @@ export interface Store { get(key: string): string | null; set(key: string, value
 export interface Sound { unlock(): void; chime(kind: 'delveEnd' | 'breatherEnd'): void; }
 export interface Platform {
   notifier: Notifier; haptics: Haptics; store: Store; sound: Sound; now(): Date;
+  /** Inside the phone app (no browser around it: the app draws its own swipe back from the left edge). */
+  readonly app: boolean;
   /** Wait for the save to be read, before the game starts. */
   ready(): Promise<void>;
 }

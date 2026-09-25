@@ -6,6 +6,7 @@
   import { t, minutesWords } from '../content/copy/en';
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
+  import { back } from './back.svelte';
   import type { Job, Rhythm } from '../core/types';
 
   let { go }: { go: Go } = $props();
@@ -51,10 +52,11 @@
 <div class="ui">
   <header class="top col">
     <div class="topbar rise">
-      <button class="home" onclick={() => (d ? (d = null) : go('week'))}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{d ? t('rhythms.label') : t('week.label')}</span></button>
+      <button class="home" onclick={() => (d ? (d = null) : go('back'))}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{d ? t('rhythms.label') : back.label}</span></button>
       <span></span><span></span>
     </div>
-    <h1 class="carve lg rise">{t('rhythms.label')}</h1>
+    <!-- editing: the arrow says where it goes (What repeats), the title what this is (review 2) -->
+    <h1 class="carve lg rise">{d ? t(d.id ? 'rhythms.editing' : 'rhythms.adding') : t('rhythms.label')}</h1>
     {#if !d}<p class="soft say-note rise">{t('rhythms.say')}</p>{/if}
   </header>
 
@@ -70,8 +72,8 @@
           </button>
         {/if}
       {/each}
-      <div class="links"><button class="text-link" onclick={() => open(null)}><span>{t('rhythms.add')}</span></button>
-        <button class="text-link" onclick={() => go('week')}><span>{t('week.plan')}</span></button></div>
+      <!-- the week is the arrow at the top: no second link to it (it said "Plan my week" and planned nothing; review 2) -->
+      <div class="links"><button class="text-link" onclick={() => open(null)}><span>{t('rhythms.add')}</span></button></div>
     {:else}
       <div class="editor">
         <div class="label-line">{t('rhythms.name')}</div>
@@ -126,7 +128,8 @@
         {#if d.time !== null}
           <div class="stepper">
             <button class="btn-quiet step" onclick={() => shiftTime(-15)} aria-label={t('camp.earlier')}><span>−</span></button>
-            <span class="val carve">{d.time}</span>
+            <input class="clock val carve" type="time" step="900" value={d.time} aria-label={t('week.time')}
+              onchange={e => (d!.time = e.currentTarget.value || d!.time)} />
             <button class="btn-quiet step" onclick={() => shiftTime(15)} aria-label={t('camp.later')}><span>+</span></button>
           </div>
         {/if}
@@ -148,6 +151,9 @@
   .links { display: flex; justify-content: center; gap: 18px; margin-top: 16px; }
   .editor .label-line { margin-top: 14px; }
   .editor .seg { margin-top: 6px; }
+  /* three choices on one line, even on a small phone (review 2) */
+  .editor .seg:not(.days) button { letter-spacing: .08em; padding-left: 4px; padding-right: 4px; white-space: nowrap; }
+  .stepper input.val { flex: 1; }
   .days button { padding-left: 0; padding-right: 0; font-size: 13px; }
   .stepper { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; border: 1px solid var(--edge-2); background: rgba(10,9,24,.55); }
   .stepper .val { color: #fff; font-size: 17px; }

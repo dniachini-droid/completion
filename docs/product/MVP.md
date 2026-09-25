@@ -80,7 +80,7 @@ Claude also writes down, **before** the test, what a yes and a no would look lik
 
 ## What the app notes by itself
 On the phone only, never shown to Dan during play (UX 6, D-045), and no work for him:
-- **Each job:** when it was started, and **how**: from the app (Begin, a delve) or recorded afterwards (Done with no Begin). This is the test's sharpest line: a game that pulls starts vs a logbook.
+- **Each job:** when it was started, and **how**: from the app (Begin, a delve) or recorded afterwards (Done with no Begin). This is the test's sharpest line: a game that pulls starts vs a logbook. *(D-089: "Already done" is gone (Dan: it was a way to move forward without using the app), so recording afterwards is no longer possible; the test reads a Begin followed by Done within a minute as the nearest sign of it.)*
 - Whether it was an **avoided** job; swaps.
 - **"I can't start":** each use, and whether a job began within 30 minutes.
 - **Days:** opened, complete, capacity chosen; gaps of 3+ days and the return after them. There are **no notifications**, so every return is Dan's own.

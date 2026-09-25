@@ -4,6 +4,7 @@
   import { t } from '../content/copy/en';
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
+  import { back } from './back.svelte';
 
   let { go }: { go: Go } = $props();
   let confirm = $state(false);
@@ -15,7 +16,7 @@
 <div class="ui">
   <header class="top col">
     <div class="topbar">
-      <button class="home" onclick={() => go('today')}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{t('delve.today')}</span></button>
+      <button class="home" onclick={() => go('back')}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{back.label}</span></button>
       <span></span><span></span>
     </div>
     <div class="label-line">{t('proto.label')}</div>

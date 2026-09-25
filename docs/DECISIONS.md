@@ -924,3 +924,40 @@
 - **Round 5 (in):** 19 of the 20 rewritten (the end-of-week question stays identical to its twin line), after one resend (the first return was unchanged). Claude's fixes: ChatGPT had given the player a lamp of their own ("your lamp", "bring the lamp close") in five lines. That breaks the correction these lines exist for ("the lamp" is always the lamp on the ledge), so it was changed to "the light" or removed. Paragraph breaks were joined, since each line shows as one block. 119 tests pass.
 - **Learned:** the pilot's writers worked from the current wording, so the arrival versions came out close together. Any later writing test gives writers the facts of a place, not its old text.
 - **Reversible:** Yes.
+
+## D-088 — Review 2: back goes back, taps can be undone, the planner's rough edges (Claude's call, Dan asked for the fixes)
+- **Date:** 2026-09-25
+- **Context:** an independent click-through of the whole app at phone size (Dan asked: pages, the planner, back, a story, editing the day). Checked again on `main` after the story-words merge: every finding still stood except the early Goodnight (fixed by D-083). Dan: fix them.
+- **Decision:**
+  - **Back:** the arrow at the top left returns to the screen it came from and says its name (Week → Map → back is the Week; a record opened from a place goes back to the place). Today and the day's own moments (a delve, a place reached, the stair, the morning) start the trail again. The phone's own back works too: the browser's back on the web link, a swipe in from the left edge in the app. The map's closer view has one way out (See the whole region), not three. This supersedes REVIEW_1's "left as is" on nav-7/8/10.
+  - **Undo:** Not today says "Taken off today. Put it back", and the Week shows the job as "not today" with "Back on today". A Begin on a job done away from the phone can be taken back ("I haven't started"). New facts `putBack` and `beginUndone`, appended like every other (the log is never edited). **Done is not undoable:** it plays story (steps, places, Keys) that cannot be taken back without a retcon (rule 5).
+  - **Planner:** a set time opens the phone's own time wheel (it took 36 taps to reach 9:00); the edit panel's button says Save, not Done; next week says "no plan for next week yet"; days already gone are shown only for what was done; What repeats lost its "Plan my week" link (it planned nothing); editing a repeat is titled "Change it"; Plan my week / Not now fit a small phone. After the day's work, a job still to come at a set time is named ("Still to come: …").
+  - **Satchel:** a tap on a line offers "Let it go"; "Today" became "Put on today" (two different Todays were on one screen).
+  - **Delve:** Step away is now **Pause**, and a paused delve says Paused (not "A breather", the name of the rest between delves). Supersedes the wording in D-036.
+  - **Story choices:** at the first hall the two "look at" choices opened each other's page (the choice order now follows the records'); where a place has one page, only the choice that opens it is shown, so no option opens a page about something else. No story words changed.
+  - **The screen never slides (Dan, with a picture):** on Today, Map + Records + the rehearsal badge made the top bar about 40 points wider than the phone, so the whole screen could be dragged sideways. The badge now takes its own line when there is no room, and every scrolling part is locked sideways and never bounces: only text longer than its space scrolls, up and down. The screen walk fails if anything on any screen can move sideways.
+  - **The week folds (Dan):** a tap on a day's name folds its jobs into one line ("13 done · 2 to do"); days already gone start folded.
+  - **"It's Friday 10 pm and the app says Saturday" (Dan):** a rehearsal was on, and its clock runs 60 times faster, so an evening passes in minutes. The real clock's day still ends at 4 am (D-043). A "Rehearsal ×60" tag now shows on every screen while one is on; it goes when Dan is happy with the app (Dan).
+  - **Small fixes:** on the delve set-up, "here" steps aside when the next place is right beside it (the two labels printed over each other).
+- **Consequences:** 122 rule tests (3 new); the screen walk checks the back trail at both sizes (the arrow's words, Map → Week, the phone's own back). Spoiler-free list: `product/REVIEW_2.md`.
+- **Reversible:** Yes.
+
+## D-089 — No Low / Normal / High on Today, and no "Already done" (Dan's call)
+- **Date:** 2026-09-25
+- **Context:** during the review-2 fixes. Dan: the size buttons "aren't really useful… just extra buttons… I set my days and run them"; and "Already done" is "a tempting way for me to cheat the system and move forward without using the app".
+- **Decision:** Today loses the three size buttons and their note, and the "Already done" link. Every day is Normal; nothing is suggested from bedtime or from days away any more (the plan is the day). A job done away from the phone is begun first (Begin), then Done.
+- **Consequences:**
+  - The central test's sharpest line (MVP → "started from the app or recorded afterwards") loses its "afterwards" half: a job done without the app can no longer be recorded, so "didn't do it" and "did it without the app" look the same. Told to Dan.
+  - The morning deep push (D-054) was offered only on a High day, so it no longer appears. **Dan: leave it out** ("I just set my jobs when I wake up or during the week"). This reverses D-054's "the morning deep push stays".
+  - Going to bed late, or coming back after days away, no longer makes the next day lighter. The head start for a kept bedtime (D-083) is unchanged.
+  - Supersedes the capacity-on-Today parts of CORE_LOOPS (morning start), QUEST_SYSTEM and D-043's "lowering capacity can complete the day". The rules keep capacity inside (an old save's choice, the deep push) so this is one line to undo.
+- **Reversible:** Yes: the buttons and the link are one screen's markup.
+
+
+## D-092 — One map, dragged around, no closer view (Dan's call) (first numbered D-090; the painting branch had taken D-090 and D-091)
+- **Date:** 2026-09-25
+- **Context:** Dan on TestFlight, with two pictures: "There seems to be two maps? Why? I'm very confused. And depending on what room I am in, the 2nd map is different." The map had two levels (D-068, D-076): the region, and "Look closer" into the stretch Dan stood in. The closer view drew a second, different map (the stretch's places down a winding line, its sealed thing, the forecast's days), so it read as another map, and it changed with each stretch. The box also said the stretch's name twice ("You are here: The Survey Cut / Ahead: The Survey Cut, …"). Then Dan: "the map will get bigger than the screen, so you should be able to drag the screen around to see other parts of the map as it expands."
+- **Decision:** **one map, the region.** Look closer and See the whole region are gone. What the closer view showed is in the region already: tap a stretch and the box names the places reached there; a stretch holding a sealed thing says so ("sealed" beside it, "Walked · something sealed here" in the box); the forecast's day sits beside where Dan is or the faint light ahead. The ahead line no longer repeats the name above it. **The map can be dragged:** it is drawn at the scale that fills the phone's width, its size comes from its lights, and once a region is bigger than the screen a finger drags it around (a mouse on the web link); it opens centred on where Dan is. The first region still fits one screen. Picking a light still moves nothing (D-076).
+- **Alternatives:** keep two levels and label them better (still two maps to learn, rule 12); pinch to zoom (a later nicety if a region ever needs it).
+- **Consequences:** supersedes D-068 item 8's two levels and D-076's Look closer; INTERACTION_NOTES → the map updated. The screen walk now fails if a second map comes back; its "never slides" check allows the map alone to move sideways, and only when a region is wider than the screen.
+- **Reversible:** Yes (the closer view is in git history).

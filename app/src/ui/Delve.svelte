@@ -1,7 +1,7 @@
 <script lang="ts">
   /* The delve (INTERACTION_NOTES → the delve; D-028, D-036, D-037, D-047). The glowing ring fills with the time left;
      the destination is the headline; the tunnel moves so the world is visibly travelling. Only two ideas, always in
-     the same words: Step away and Finish here. The scene is the approved mock-up's own (delve.html, revision 3). */
+     the same words: Pause (once Step away; review 2, D-088) and Finish here. The scene is the approved mock-up's own (delve.html, revision 3). */
   import { onMount } from 'svelte';
   import { game } from './game.svelte';
   import { t, minutesWords, ord, card } from '../content/copy/en';
@@ -109,7 +109,7 @@
           <button class="btn-quiet" onclick={() => game.do({ do: 'finishHere' })}><span>{t('delve.finishHere')}</span></button>
         </div>
       {:else if run?.phase === 'held'}
-        <div class="label-line centred">{t('delve.breather')}</div>
+        <div class="label-line centred">{t('delve.paused')}</div>
         <h2 class="m">{run.job.name}</h2>
         <p class="say">{t('delve.held.say')}</p>
         <button class="btn resting back" onclick={() => game.do({ do: 'resume' })}>

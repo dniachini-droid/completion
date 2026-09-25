@@ -7,8 +7,10 @@
   import { t, dayName, minutesWords, minutesShort, weekDates } from '../content/copy/en';
   import { calendarWeek } from '../core/time';
   import { addDays, planMade, weekOf, type DayJob } from '../core/week';
+  import { asideToday } from '../core/game';
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
+  import { back } from './back.svelte';
 
   let { go, week }: { go: Go; week?: string } = $props();
   const v = $derived(game.view);
@@ -21,8 +23,12 @@
   let draftDay = $state(''), draftTime = $state<string | null>(null);
   let adding = $state(false), line = $state(''), addDay = $state('');
 
-  function note(j: DayJob): string {
+  /* jobs taken off today's list ("Not today"): the Week says so, and can put them back (review 2, D-088) */
+  const aside = $derived(asideToday(game.facts, v.day));
+  const isAside = (j: DayJob, day: string) => day === v.day && !j.done && aside.has(j.job);
+  function note(j: DayJob, day: string): string {
     if (j.done) return t('row.done');
+    if (isAside(j, day)) return t('week.asideNote');
     if (j.time) return j.time;
     const job = game.job(j.job);
     if (!job) return '';
@@ -39,6 +45,14 @@
     return t('week.forecast', { what: parts.join(', ') });
   });
   const days = $derived(view.days.map(d => d.day).filter(d => d >= v.day));
+  /* folding: days already gone are folded unless opened; any other day folds with a tap */
+  let toggled = $state<Record<string, boolean>>({});
+  const isFolded = (day: string) => toggled[day] ?? day < v.day;
+  function fold(day: string) { toggled[day] = !isFolded(day); if (toggled[day]) open = null; }
+  function summary(jobs: DayJob[]): string {
+    const done = jobs.filter(j => j.done).length, left = jobs.length - done;
+    return [done ? t('week.fold.done', { n: done }) : '', left ? t('week.fold.left', { n: left }) : ''].filter(Boolean).join(' · ');
+  }
 
   function edit(j: DayJob, day: string) {
     if (j.done || !j.entry || day < v.day) return;
@@ -65,7 +79,7 @@
 <div class="ui">
   <header class="top col">
     <div class="topbar rise">
-      <button class="home" onclick={() => go('today')}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{t('delve.today')}</span></button>
+      <button class="home" onclick={() => go('back')}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{back.label}</span></button>
       <span></span>
       <button class="icon-link" onclick={() => go('map')}><span>{t('map.nav')}</span></button>
     </div>
@@ -77,18 +91,23 @@
   <div class="body col rise d1">
     {#if !planMade(game.facts, wk)}
       <div class="none">
-        {#if !view.planned}<h2 class="say-lg">{t('week.none')}</h2>{/if}
+        {#if !view.planned}<h2 class="say-lg">{isNext ? t('week.none.next') : t('week.none')}</h2>{/if}
         <p class="soft">{t('week.none.say')}</p>
         <div class="btn-row lead"><button class="btn" onclick={plan}>{t('week.plan')}</button><button class="btn-quiet" onclick={() => go('today')}><span>{t('week.notNow')}</span></button></div>
       </div>
     {/if}
     {#each view.days as d (d.day)}
-      {#if view.planned || d.jobs.length}
+      {#if d.jobs.length || (view.planned && d.day >= v.day)}
         <div class="day" class:past={d.day < v.day} class:today={d.day === v.day}>
-          <div class="dname">{dayName(d.day)}{#if d.day === v.day}<em>{t('week.today')}</em>{/if}</div>
+          <!-- a tap on a day's name folds its jobs away; days already gone start folded (Dan, review 2) -->
+          <button class="dname" aria-expanded={!isFolded(d.day)} onclick={() => fold(d.day)}>
+            <span class="chev" class:shut={isFolded(d.day)} aria-hidden="true">›</span>{dayName(d.day)}{#if d.day === v.day}<em>{t('week.today')}</em>{/if}
+            {#if isFolded(d.day) && d.jobs.length}<small>{summary(d.jobs)}</small>{/if}
+          </button>
+          {#if !isFolded(d.day)}
           {#each d.jobs as j (j.entry ?? j.job + j.done)}
             <button class="row" class:done={j.done} onclick={() => edit(j, d.day)} disabled={j.done || d.day < v.day}>
-              <span class="pip" class:done={j.done}></span><span class="t">{game.job(j.job)?.name ?? j.job}</span><span class="s">{note(j)}</span>
+              <span class="pip" class:done={j.done}></span><span class="t">{game.job(j.job)?.name ?? j.job}</span><span class="s">{note(j, d.day)}</span>
             </button>
             {#if open && open === j.entry}
               <div class="sheet">
@@ -104,15 +123,21 @@
                 {#if draftTime !== null}
                   <div class="time-row">
                     <button class="btn-quiet step" onclick={() => shift(-15)} aria-label={t('camp.earlier')}><span>−</span></button>
-                    <span class="time carve">{draftTime}</span>
+                    <!-- a tap opens the phone's own time wheel; − and + still nudge by a quarter hour (review 2) -->
+                    <input class="clock time carve" type="time" step="900" value={draftTime} aria-label={t('week.time')}
+                      onchange={e => (draftTime = e.currentTarget.value || draftTime)} />
                     <button class="btn-quiet step" onclick={() => shift(15)} aria-label={t('camp.later')}><span>+</span></button>
                   </div>
                 {/if}
                 <button class="btn save" onclick={() => save(j)}>{t('week.done')}</button>
-                <div class="off"><button class="text-link" onclick={() => off(j)}><span>{t('week.off')}</span></button></div>
+                <div class="off">
+                  {#if isAside(j, d.day)}<button class="text-link" onclick={() => { draftDay = v.day; save(j); }}><span>{t('week.putBack')}</span></button>{/if}
+                  <button class="text-link" onclick={() => off(j)}><span>{t('week.off')}</span></button>
+                </div>
               </div>
             {/if}
           {/each}
+          {/if}
         </div>
       {/if}
     {/each}
@@ -144,7 +169,11 @@
   .none { margin: 8px 0 12px; }
   .none .soft { margin: 6px 0 16px; text-align: left; }
   .day { margin-top: 12px; }
-  .dname { font-family: var(--carve, inherit); font-size: 13px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); display: flex; gap: 10px; align-items: baseline; }
+  .dname { font-family: var(--carve, inherit); font-size: 13px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); display: flex; gap: 10px; align-items: baseline;
+    width: 100%; min-height: 36px; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; }
+  .dname small { margin-left: auto; font-family: var(--life); font-style: italic; text-transform: none; letter-spacing: 0; font-size: 15px; color: var(--ink-3); }
+  .chev { display: inline-block; width: 10px; font-size: 16px; line-height: 1; color: var(--ink-3); transform: rotate(90deg); transition: transform .2s ease; }
+  .chev.shut { transform: none; }
   .dname em { font-family: var(--life); text-transform: none; letter-spacing: 0; font-size: 15px; color: var(--gold); }
   .day.past .dname { color: var(--ink-3); }
   button.row { width: 100%; text-align: left; }
@@ -161,7 +190,9 @@
   .step span { font-size: 20px; }
   .sheet .btn-row { margin-top: 12px; }
   .sheet .btn.save { margin-top: 14px; }
-  .off { display: flex; justify-content: center; margin-top: 6px; }
+  .off { display: flex; justify-content: center; flex-wrap: wrap; gap: 0 14px; margin-top: 6px; }
+  /* a small phone: Plan my week above Not now, never off the edge (review 2) */
+  @media (max-width: 400px) { .none .btn-row.lead { grid-template-columns: 1fr; } }
   input.line { width: 100%; margin-top: 8px; padding: 10px 12px; font: inherit; font-size: 17px; color: #fff; background: rgba(255,255,255,.06); border: 1px solid var(--edge-2); border-radius: 0; }
   .links { display: flex; justify-content: center; flex-wrap: wrap; gap: 4px 18px; margin-top: 18px; }
   button.home { color: var(--ink-2); }

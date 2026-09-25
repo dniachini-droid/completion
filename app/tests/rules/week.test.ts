@@ -175,13 +175,12 @@ describe('Camp, bedtime and the morning', () => {
     p.do({ do: 'seen', what: 'morning', ref: v.morning!.seq });
     expect(p.view().morning).toBeNull();
   });
-  it('a late night loses nothing: no camp line, no morning, and tomorrow is suggested Low', () => {
+  it('a late night loses nothing: no camp line, no morning, and tomorrow is a Normal day as planned (D-089)', () => {
     const p = player().do({ do: 'open' }).clock('00:30').do({ do: 'goodnight' });
     expect(p.view().night).toEqual({ kept: false, beat: null });
     p.next().do({ do: 'open' });
     expect(p.view().morning).toBeNull();
-    expect(p.view().capacity).toBe('low');
-    expect(p.view().suggestedBy).toBe('bedtime');
+    expect(p.view().capacity).toBe('normal');   /* no size suggested on Today any more: the plan is the day (Dan, D-089) */
   });
   it('the camp line plays once a story week; later kept nights bring a find in the morning', () => {
     const p = player().do({ do: 'open' }).clock('22:00').do({ do: 'goodnight' }).next().do({ do: 'open' }).clock('22:00').do({ do: 'goodnight' });
@@ -239,12 +238,11 @@ describe('The daybook’s week close', () => {
 });
 
 describe('Absence and the deep push', () => {
-  it('three days away: "where you were", and the first day back suggested Low', () => {
+  it('three days away: "where you were", and the first day back is a Normal day as planned (D-089)', () => {
     const p = player().do({ do: 'open' }).do({ do: 'done', job: 'gym' }).next(3).do({ do: 'open' });
     const v = p.view();
     expect(v.welcome).not.toBeNull();
-    expect(v.capacity).toBe('low');
-    expect(v.suggestedBy).toBe('back');
+    expect(v.capacity).toBe('normal');
     p.do({ do: 'seen', what: 'welcome', ref: v.welcome!.seq });
     expect(p.view().welcome).toBeNull();
   });
@@ -474,5 +472,38 @@ describe('Go to sleep: on time gives a head start (Dan, D-083)', () => {
     const noon = player().do({ do: 'open' }).clock('12:00').do({ do: 'goodnight' });
     noon.next().do({ do: 'open' });
     expect(sleepSteps(noon.facts)).toBe(0);
+  });
+});
+
+describe('Undoing a tap made by mistake (review 2, D-088)', () => {
+  it('Not today can be put back: the job returns to today’s list', () => {
+    const p = player().do({ do: 'open' });
+    const id = p.view().slate[0];
+    p.do({ do: 'setAside', job: id });
+    expect(p.view().order).not.toContain(id);
+    p.do({ do: 'putBack', job: id });
+    expect(p.view().order).toContain(id);
+    expect(p.view().next?.job).toBe(id);
+  });
+  it('placing a set-aside job on today again in the Week puts it back', () => {
+    const p = player().do({ do: 'open' });
+    const v = p.view(), id = v.slate[0];
+    p.do({ do: 'setAside', job: id });
+    const entry = W.planOf(p.facts, W.weekOf(C, p.facts, '2026-09-28', v.day).days[0].day)!.find(e => e.job === id && e.day === v.day)!;
+    p.do({ do: 'movePlan', entry: entry.id, day: v.day });
+    expect(p.view().order).toContain(id);
+  });
+  it('a Begin can be taken back: the job is no longer under way, and a later Done counts as recorded afterwards', () => {
+    const p = player().do({ do: 'open' });
+    const away = p.view().slate.find(id => !C.jobs.find(j => j.id === id)!.delve)!;
+    p.do({ do: 'begin', job: away });
+    expect(p.view().underWay).toBe(away);
+    p.do({ do: 'unbegin', job: away });
+    expect(p.view().underWay).toBe(null);
+    const walked = p.view().walked;
+    p.do({ do: 'done', job: away });
+    const begun = p.facts.filter(f => f.type === 'jobBegun' && f.job === away);
+    expect(begun[begun.length - 1]).toMatchObject({ from: 'record' });
+    expect(p.view().walked).toBeGreaterThan(walked);
   });
 });
