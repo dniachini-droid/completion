@@ -231,3 +231,18 @@ describe('The opening is never replayed as a morning after camp', () => {
     }
   });
 });
+
+describe('A find never describes a place Dan has not reached', () => {
+  it('every find given is from an area already walked into (bedtime kept, late, none)', () => {
+    for (const bed of ['kept', 'late', undefined] as const) {
+      const s = sim(undefined, undefined, bed).week('normal').week('normal');
+      const facts = s.facts;
+      for (const f of facts) {
+        if (f.type !== 'findGiven') continue;
+        const find = C.story.finds.find(x => x.id === (f as { id: string }).id)!;
+        const st = S.storyState(facts.filter(x => x.seq <= f.seq), C.story);
+        expect(st.visited.has(find.stretch), `${find.id} in ${find.stretch}, bedtime ${bed}`).toBe(true);
+      }
+    }
+  });
+});

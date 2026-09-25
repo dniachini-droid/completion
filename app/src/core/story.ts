@@ -213,7 +213,8 @@ export function pickFind(s: Story, st: StoryState, why: string): Find | null {
     if (why === 'chamber') { const told = pool.find(f => f.told); if (told) return told; }
     return pool[0];
   }
-  for (const id of order) { const f = s.finds.find(x => x.stretch === id && ok(x)); if (f) return f; }
+  /* never a find from an area Dan has not reached: it would describe a place before he is there */
+  for (const id of order) { if (!st.visited.has(id)) continue; const f = s.finds.find(x => x.stretch === id && ok(x)); if (f) return f; }
   return null;
 }
 
