@@ -1,8 +1,8 @@
-import { Capacitor } from '@capacitor/core';
+import { Capacitor, registerPlugin } from '@capacitor/core';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { Haptics as CapHaptics, ImpactStyle } from '@capacitor/haptics';
 import { Preferences } from '@capacitor/preferences';
-import type { Platform } from './types';
+import type { Panel, PanelState, Platform } from './types';
 import { sound } from './chime';
 
 /* Prototype storage. On the web link: the browser's own. The fact log is the real save's shape; it moves to SQLite
@@ -26,6 +26,14 @@ async function readKept() {
   for (const key of keys) { const { value } = await Preferences.get({ key }); if (value !== null) kept.set(key, value); }
 }
 
+/* The delve's panel (D-095): the app's own small plugin, ios/App/App/DelvePanelPlugin.swift. A phone that has Live
+   Activities turned off for the app, or an older build, simply shows none: the delve never waits on it. */
+const DelvePanel = registerPlugin<{ show(p: PanelState): Promise<unknown>; end(): Promise<unknown> }>('DelvePanel');
+const nativePanel: Panel = {
+  async show(p) { try { await DelvePanel.show(p); } catch { /* no panel */ } },
+  async end() { try { await DelvePanel.end(); } catch { /* no panel */ } },
+};
+
 const native: Platform = {
   store: nativeStore, sound, now: () => new Date(), ready: readKept, app: true,
   notifier: {
@@ -41,12 +49,14 @@ const native: Platform = {
     async cancel(ids) { await LocalNotifications.cancel({ notifications: ids.map(id => ({ id })) }); },
   },
   haptics: { tick: () => CapHaptics.impact({ style: ImpactStyle.Light }), ring: () => CapHaptics.vibrate({ duration: 450 }) },
+  panel: nativePanel,
 };
 
 /* In a browser (the web link, tests): the end chimes if the page is open, and shows when you come back. */
 const web: Platform = {
   store, sound, now: () => new Date(), ready: async () => {}, app: false,
   notifier: { locked: false, permit: async () => false, at: async () => {}, cancel: async () => {} },
+  panel: { show: async () => {}, end: async () => {} },
   haptics: {
     tick: async () => { try { navigator.vibrate?.(8); } catch { /* */ } },
     ring: async () => { try { navigator.vibrate?.(450); } catch { /* */ } },
