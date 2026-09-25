@@ -344,7 +344,8 @@ vec3 shade(vec3 p, vec3 d, float t, vec3 n, vec4 hs, float fpx) {
     vec3 cn = vec3(h2(sd.xy), h2(sd.yz + 3.), h2(sd.zx + 7.)) - .5;
     nb = (cn - n * dot(cn, n)) * .05 * fade + (vec3(fbm3(p * 4., 2), fbm3(p * 4. + 7., 2), fbm3(p * 4. + 13., 2)) - .5) * .45;
     vec3 gs; vec3 gc = cells3(p * 70. + 3.7, gs);                                              /* glints: a few small faces, finer than the crystals */
-    float glint = step(.94, h2(gs.xz + gs.y * 3.1)) * (1. - smoothstep(.25, .45, gc.x)) * fade;
+    float gr0 = mix(.06, .25, smoothstep(.001, .006, fp));                                   /* seen close, a glint stays a point, not a drop */
+    float glint = step(.94, h2(gs.xz + gs.y * 3.1)) * (1. - smoothstep(gr0, gr0 * 1.8, gc.x)) * fade;
     specK = .12 + 2.2 * glint; specP = mix(24., 140., glint); wrap = max(wrap, .45);    /* light goes a little into salt */
   } else if (m == M_CLOTH) {
     alb = vec3(.46, .42, .35) * (.8 + .35 * fbm3(p * 3., 3));
