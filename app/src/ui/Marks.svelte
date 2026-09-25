@@ -148,7 +148,9 @@
     color: var(--ink-2); white-space: nowrap; text-shadow: 0 1px 8px rgba(6,5,16,.9); }
   .cap .q { color: var(--cold-hi); }
   .cap.unk { color: var(--ink-3); }
-  .cap.new { color: var(--violet-hi); }
+  /* "new" is a state, not a meaning: set as a small carved label, never in the italic that meanings read in */
+  .cap.new { font-family: var(--carve); font-style: normal; font-weight: 600; font-size: 11px; letter-spacing: .2em; padding-left: .2em;
+    text-transform: uppercase; color: var(--violet-hi); }
   .cap.known { color: #fff; }
   .cell.sel .cap { color: #fff; }
   .cell::before { content: ""; position: absolute; left: 50%; width: 60px; margin-left: -30px; top: 2px; height: 60px; pointer-events: none; opacity: 0;
