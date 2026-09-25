@@ -26,8 +26,10 @@ const fits = async (name) => {
     const H = innerHeight, W = innerWidth, out = [];
     const scroller = el => { for (let p = el.parentElement; p; p = p.parentElement) { const o = getComputedStyle(p).overflowY; if ((o === 'auto' || o === 'scroll') && p.scrollHeight > p.clientHeight + 1) return p; } return null; };
     const shown = el => { for (let p = el; p; p = p.parentElement) { const s = getComputedStyle(p); if (s.display === 'none' || s.visibility === 'hidden' || +s.opacity < 0.05) return false; } return true; };
+    /* text still fading in (a moment mid-animation) is not judged until it has settled */
+    const settled = el => { let o = 1; for (let p = el; p; p = p.parentElement) o *= +getComputedStyle(p).opacity; return o >= 0.6; };
     const texts = [...document.querySelectorAll('p, h1, h2, h3, span, li, em, blockquote')].filter(el =>
-      [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim()) && !el.closest('button, svg') && shown(el));
+      [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim()) && !el.closest('button, svg') && shown(el) && settled(el));
     /* each button as it is actually seen: cut to the box it scrolls in (a row scrolled out of view covers nothing) */
     const buttons = [...document.querySelectorAll('button')].filter(shown).map(b => {
       /* a quiet text link's tap area is taller than what it shows: measure its visible words, not its hit box */
