@@ -39,3 +39,26 @@ Looked at: each final at full frame, then crops of every look-at (u/v are fracti
 **pt-pl-w3-salt-lit: FAIL (unchanged wrong reading).** Re-baked unchanged, so the round-2 wrong reading stands: the split (u .37–.56, v .44–.55) is a rounded patch filled edge to edge with same-size glossy brown ovals, which reads as **a tray of eggs, beans or a sack**, not river stones packed in a natural split; and the peak is a warm hot-spot on bare salt above it (u .35–.50, v .42), which reads as a lamp. Smallest fix (as `CRITIQUE-B2-SALT.md`): make the split tall and irregular, narrowing top and bottom, with dark gaps; fewer stones of varied size, some lost in shadow; move the warm peak onto the stones' tops and dim the hot-spot on the wall.
 
 **pt-pl-w4-recess-above-the-cot: FAIL (unchanged wrong reading).** Re-baked unchanged, so the `CRITIQUE-B2.md` wrong reading stands: the pin (u .26–.30, v .38–.40) is a round glossy white ball, so it reads as **a pearl or bead threaded on a black hair or cable**. The crack is a thick, smooth, black wavy line with tapered ends (u .07–.40, v .25–.57), not a seam in stone. The pin is the brightest point, so it is found, but it does not read as a steel drawing pin. Lesser: the slate is a tilted box standing off a flat wall, not laid across a cut recess. Smallest fix: draw the pin as a flat circular steel head, seen slightly edge-on (an ellipse with a thin rim and one sharp specular glint), with a short shaft shadow into the crack; make the crack a thin, broken, irregular seam with an inner shadow and a lit lip, straight-ish, not a smooth wave.
+
+---
+
+## Second attempts (the last under D-085)
+
+Finals: `p1/pt-pl-w4-hollow`, `p1/pt-b-4.C`, `p1/pt-pl-w3-salt-lit`, `p2/pt-pl-w4-recess-above-the-cot`. Each judged on whether the wrong reading named above is gone, same standard.
+
+**Result: 4 checked, 3 pass, 1 fail.** (Batch 3 overall after second attempts: 9 checked, 8 in, 1 still failing.)
+
+| Id | Verdict |
+|---|---|
+| pt-pl-w4-hollow | **FAIL** |
+| pt-b-4.C | PASS |
+| pt-pl-w3-salt-lit | PASS |
+| pt-pl-w4-recess-above-the-cot | PASS |
+
+**pt-pl-w4-hollow: FAIL (new wrong reading).** The eye is gone: no bright rim arc, no lash-like strokes, the hollow now reads as a smooth worn basin. But the four places (u .33–.52, v .43–.45) are lit on top with a shadow under their lower rims, so they read as **four small raised studs or pips**, and four dots in a diamond inside a round dish reads as **a button**. The brief's clue is places *pressed down*; raised reads the opposite way. The painter's worry (a glint high in frame brighter) is minor; the four are found. Smallest fix: invert their shading so they read sunk (shadow on the inner edge nearest the light, lit on the far edge, no top highlight), keep them flat and matte; break the diamond into an irregular footprint-like layout (two slightly offset pairs, uneven spacing and size).
+
+**pt-b-4.C: PASS.** The planted mark under the count (u .26–.52, v .56–.59) is now a groove with the strokes' width and flank lighting, a firm hairpin that runs out, turns and comes back: it reads as a cut path doubling back, not a thread. The ring is gone. The bar-with-a-drop now swells into its drop, not an exclamation mark. Look-at unchanged and good.
+
+**pt-pl-w3-salt-lit: PASS.** The tray-of-eggs reading is gone: the split (u .47–.63, v .36–.58) is tall, irregular and pointed, a real fissure the rail breaks across, with a dozen stones of varied size packed in its lower half, some lost in the dark. The painter's worry (near-black interior as a flat cut-out) does not arise: the stones sitting in it and the lit lip on its left edge give it depth. Should fix: the stones are glossy perfect spheres (could pass for grapes or eggs at a glance); make them matte and slightly flattened, and let the warm light catch their tops more than the rim of the split.
+
+**pt-pl-w4-recess-above-the-cot: PASS.** The pearl-on-a-hair reading is gone: the pin (u .24–.27, v .37–.39) is a flat round metal head seen a little edge-on, with a rim, a glint and a short shadow, set in a thin irregular crack; it reads as a small steel pin or tack head in the stone, and it is the one crisp light point on the wall. Should fix: raise its glint a step so it is unmistakably the frame's brightest point; the slate is still a box standing off the wall (not a wrong reading of the look-at).

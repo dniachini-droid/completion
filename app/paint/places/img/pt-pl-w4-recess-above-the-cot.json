@@ -1,0 +1,38 @@
+{
+ "id": "pt-pl-w4-recess-above-the-cot",
+ "name": "The recess above the cot",
+ "line": "",
+ "width": 1320,
+ "height": 2868,
+ "live": {
+  "motes": "gold",
+  "gold": true
+ },
+ "anchors": {
+  "glints": [
+   {
+    "p": [
+     1.395,
+     1.938,
+     1.9649999999999999
+    ],
+    "u": 0.2528,
+    "v": 0.4064,
+    "s": 2.1
+   }
+  ],
+  "beam": [
+   {
+    "p": [
+     1.22,
+     1.72,
+     1.85
+    ],
+    "w": 0.2,
+    "u": 0.7463,
+    "v": 0.5658,
+    "s": 2.7417
+   }
+  ]
+ }
+}

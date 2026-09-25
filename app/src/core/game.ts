@@ -736,7 +736,7 @@ export const STAND_IN: Record<StretchId, string> = {
 };
 /** The places painted from their briefs so far (ids only; D-015): each shows its own painting, `pt-<id>`, which
     ui/paintings.ts carries (a test keeps the two in step); every other place shows its stretch's stand-in. */
-export const PAINTED: ReadonlySet<string> = new Set<string>(['b-1.A', 'b-1.B', 'b-1.C', 'b-2.A', 'pl-w2-smooth-place', 'pl-w1-pick-niche', 'b-5.A', 'pl-w5-ledge-lip', 'pl-w5-second-landing', 'b-7.A', 'b-7.B', 'pl-w6-square-gallery', 'b-6.B', 'pl-w6-folder', 'cv-02', 'cv-10', 'cv-11', 'cv-12', 'cv-13', 'cv-14', 'pl-w5-worn-steps', 'b-5.B', 'b-7.C', 'cv-15', 'cv-03', 'cv-04', 'cv-05', 'cv-07', 'cv-08', 'cv-09', 'pl-w2-above-the-ring', 'pl-w2-box-by-the-cot', 'b-3.A', 'b-3.B', 'b-3.C', 'b-4.A', 'b-4.B', 'b-2.B', 'pl-w1-below-the-lamp', 'pl-w3-far-end', 'cv-06']);
+export const PAINTED: ReadonlySet<string> = new Set<string>(['b-1.A', 'b-1.B', 'b-1.C', 'b-2.A', 'pl-w2-smooth-place', 'pl-w1-pick-niche', 'b-5.A', 'pl-w5-ledge-lip', 'pl-w5-second-landing', 'b-7.A', 'b-7.B', 'pl-w6-square-gallery', 'b-6.B', 'pl-w6-folder', 'cv-02', 'cv-10', 'cv-11', 'cv-12', 'cv-13', 'cv-14', 'pl-w5-worn-steps', 'b-5.B', 'b-7.C', 'cv-15', 'cv-03', 'cv-04', 'cv-05', 'cv-07', 'cv-08', 'cv-09', 'pl-w2-above-the-ring', 'pl-w2-box-by-the-cot', 'b-3.A', 'b-3.B', 'b-3.C', 'b-4.A', 'b-4.B', 'b-2.B', 'pl-w1-below-the-lamp', 'pl-w3-far-end', 'cv-06', 'b-4.C', 'pl-w3-salt-lit', 'pl-w4-recess-above-the-cot']);
 export const paintingOf = (id: string | null, stretch: StretchId): string => id && PAINTED.has(id) ? `pt-${id}` : STAND_IN[stretch];
 
 /** The place a job's Done reached, if its return and the arrival came together: only the world's answers between. */
