@@ -191,7 +191,7 @@ export const marks: Mark[] = [
   },
   // NOTE: WORLD and HEAR are guessed in week 14 and settle later (REVELATION_MAP month 4): no confirming beat yet.
   {
-    id: 'mk-world', sign: 'WORLD', w: 14, elements: ['wedge-inverted', 'bar'], shape: 'a wedge standing on its point, on a bar',
+    id: 'mk-world', sign: 'WORLD', w: 14, elements: ['wedge-inverted', 'bar'], shape: 'an inverted wedge on a bar',
     guessAt: 'b-14.1', context: 'a carved sun over the ground', candidates: ['world', 'sunrise', 'hill', 'outside'], right: ['world', 'outside'],
     tempting: 'sunrise', struck: 'Not the sunrise. The place the sun is over: the world.',
   },

@@ -575,7 +575,7 @@ export const records: RecordFragment[] = [
     full: 'Told: the child counted the days; he came again not.',
   },
   {
-    id: 'tl-one-stroke', life: 'X', kind: 'cut', where: 'the Reading Room, along the edge of the second bench', w: 13, firstShown: ['b-13.C'],
+    id: 'tl-one-stroke', life: 'X', kind: 'cut', where: 'the Reading Room, along the edge of the bench apart', w: 13, firstShown: ['b-13.C'],
     cut: [
       [s('count', 'Count'), s('again', 'again'), s('not', 'not'), p(';'), s('one', 'one'), p('.')],
       [HIS],
