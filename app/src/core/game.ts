@@ -48,7 +48,9 @@ function activeRun(facts: Fact[]) {
 
 function capacityOn(facts: Fact[], day: string): Capacity {
   const c = ofType(onDay(facts, day), 'capacityChosen');
-  return c.length ? c[c.length - 1].capacity : suggestedOn(facts, day).capacity;
+  /* Dan sets his days in the week and runs them: no Low / Normal / High on Today, nothing suggested (Dan, D-089).
+     A day is Normal; only calling the deep push (a High day's, kept in the rules) or an old save's choice changes it. */
+  return c.length ? c[c.length - 1].capacity : 'normal';
 }
 
 /* ---------- bedtime, absence and the suggested day (slice 4; BALANCING §6) ---------- */
@@ -170,7 +172,7 @@ function asideOn(facts: Fact[], day: string): Set<string> {
   const out = new Set<string>();
   for (const f of onDay(facts, day)) {
     if (f.type === 'setAside') out.add(f.job);
-    else if (f.type === 'jobBegun' || f.type === 'delveStarted' || f.type === 'picked') out.delete(f.job);
+    else if (f.type === 'jobBegun' || f.type === 'delveStarted' || f.type === 'picked' || f.type === 'putBack') out.delete(f.job);
   }
   return out;
 }
@@ -180,10 +182,27 @@ function underWayOn(facts: Fact[], day: string): string | null {
   const done = doneOn(facts, day);
   /* a delve stopped early is not "under way": its job simply stays on the list (review finding, D-080) */
   const delved = new Set(ofType(onDay(facts, day), 'delveStarted').map(f => f.job));
-  const begun = ofType(onDay(facts, day), 'jobBegun').filter(f => f.from === 'app' && !delved.has(f.job)).map(f => f.job);
+  const begun: string[] = [];
+  for (const f of onDay(facts, day)) {
+    if (f.type === 'jobBegun' && f.from === 'app' && !delved.has(f.job)) begun.push(f.job);
+    /* "I haven't started" takes a Begin back */
+    else if (f.type === 'beginUndone') for (let i = begun.length - 1; i >= 0; i--) if (begun[i] === f.job) begun.splice(i, 1);
+  }
   for (let i = begun.length - 1; i >= 0; i--) if (!done.has(begun[i])) return begun[i];
   return null;
 }
+
+/** Whether a job was begun today and the Begin still stands (not taken back since). */
+function begunOn(facts: Fact[], day: string, job: string): boolean {
+  let on = false;
+  for (const f of onDay(facts, day)) {
+    if (f.type === 'jobBegun' && f.job === job) on = true;
+    else if (f.type === 'beginUndone' && f.job === job) on = false;
+  }
+  return on;
+}
+/** Jobs set aside today and not put back: the Week shows them as "not today" (review 2, D-088). */
+export const asideToday = (facts: Fact[], day: string): Set<string> => asideOn(facts, day);
 
 /* ---------- the route ---------- */
 
@@ -460,6 +479,8 @@ export type Command =
   | { do: 'focus'; job: string }
   | { do: 'setAside'; job: string }
   | { do: 'begin'; job: string }
+  | { do: 'unbegin'; job: string }
+  | { do: 'putBack'; job: string }
   | { do: 'startRun'; job: string; minutes: number; count: number }
   | { do: 'skipBreather' }
   | { do: 'stepAway' }
@@ -542,9 +563,12 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     case 'begin':
       if (!jobOf(c, cmd.job).delve && !v.done.has(cmd.job) && v.underWay !== cmd.job) w.put({ type: 'jobBegun', job: cmd.job, from: 'app' });
       break;
+    /* undoing a tap made by mistake (review 2, D-088): Begin taken back, or a job set aside put back on today's list */
+    case 'unbegin': if (v.underWay === cmd.job) w.put({ type: 'beginUndone', job: cmd.job }); break;
+    case 'putBack': if (asideOn(w.all, day).has(cmd.job)) w.put({ type: 'putBack', job: cmd.job }); break;
     case 'startRun':
       if (v.run) break;
-      if (!ofType(onDay(w.all, day), 'jobBegun').some(f => f.job === cmd.job)) w.put({ type: 'jobBegun', job: cmd.job, from: 'app' });
+      if (!begunOn(w.all, day, cmd.job)) w.put({ type: 'jobBegun', job: cmd.job, from: 'app' });
       w.put({ type: 'delveStarted', job: cmd.job, minutes: cmd.minutes, count: Math.max(1, cmd.count) });
       break;
     case 'skipBreather': if (v.run?.phase === 'breather') w.put({ type: 'breatherSkipped' }); break;
@@ -558,7 +582,7 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     case 'done':
       if (v.done.has(cmd.job)) break;
       /* Done with no Begin: recorded afterwards (the test's sharpest line, MVP.md) */
-      if (!ofType(onDay(w.all, day), 'jobBegun').some(f => f.job === cmd.job)) w.put({ type: 'jobBegun', job: cmd.job, from: 'record' });
+      if (!begunOn(w.all, day, cmd.job)) w.put({ type: 'jobBegun', job: cmd.job, from: 'record' });
       markDoneIn(w, c, cmd.job, now, day);
       break;
     case 'cantStart': w.put({ type: 'cantStartUsed', job: cmd.job }); break;
@@ -575,14 +599,20 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       if (!it || it.done) break;
       /* a line moves the expedition only as one of today's main jobs (TOOLS §2, P5); otherwise ticking just feels good */
       if (v.slate.includes(cmd.id)) {
-        if (!ofType(onDay(w.all, day), 'jobBegun').some(f => f.job === cmd.id)) w.put({ type: 'jobBegun', job: cmd.id, from: 'record' });
+        if (!begunOn(w.all, day, cmd.id)) w.put({ type: 'jobBegun', job: cmd.id, from: 'record' });
         markDoneIn(w, c, cmd.id, now, day);
       } else w.put({ type: 'itemTicked', id: cmd.id });
       break;
     }
     case 'dropItem': if (W.items(w.all, day).some(x => x.id === cmd.id)) w.put({ type: 'itemDropped', id: cmd.id }); break;
     case 'planWeek': w.put({ type: 'planMade', week: cmd.week, entries: W.planWeek(c, w.all, cmd.week, day) }); break;
-    case 'movePlan': w.put({ type: 'planChanged', entry: cmd.entry, day: cmd.day, ...(cmd.time !== undefined ? { time: cmd.time } : {}) }); break;
+    case 'movePlan': {
+      w.put({ type: 'planChanged', entry: cmd.entry, day: cmd.day, ...(cmd.time !== undefined ? { time: cmd.time } : {}) });
+      /* a job set aside today and placed on today again in the Week is back on today's list (review 2, D-088) */
+      const e = W.planOf(w.all, calendarWeek(day))?.find(x => x.id === cmd.entry);
+      if (e && cmd.day === day && asideOn(w.all, day).has(e.job)) w.put({ type: 'putBack', job: e.job });
+      break;
+    }
     case 'planJob': {
       if (!c.jobs.some(j => j.id === cmd.job)) break;
       const n = ofType(w.all, 'planAdded').length + 1;

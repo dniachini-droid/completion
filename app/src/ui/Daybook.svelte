@@ -10,6 +10,7 @@
   import { beatOf, sealOf } from '../core/story';
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
+  import { back } from './back.svelte';
   import type { FactOf } from '../core/types';
 
   let { go, week }: { go: Go; week?: string } = $props();
@@ -39,7 +40,7 @@
   });
 
   function read() { if (page && fresh) game.do({ do: 'closeRead', week: page.week }); }
-  function leave() { read(); go('today'); }
+  function leave() { read(); go('back'); }
   function planIt() {
     if (!page) return;
     game.do({ do: 'offerAnswered', week: page.week }); read();
@@ -54,7 +55,7 @@
 <div class="ui">
   <header class="top col">
     <div class="topbar rise">
-      <button class="home" onclick={leave}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{t('delve.today')}</span></button>
+      <button class="home" onclick={leave}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{back.label}</span></button>
       <span></span><span></span>
     </div>
     <div class="label-line rise">{t('daybook.label')}</div>

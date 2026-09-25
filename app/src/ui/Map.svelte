@@ -9,6 +9,7 @@
   import { nextPlace } from '../core/story';
   import skyUrl from './scene/map-sky.svg?url';
   import type { Go } from './nav';
+  import { back } from './back.svelte';
   import type { StretchId } from '../core/story-types';
 
   let { go }: { go: Go } = $props();
@@ -147,14 +148,15 @@
 <div class="ui">
   <header class="top col">
     <div class="topbar rise">
-      <button class="home" onclick={() => go('today')}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{t('delve.today')}</span></button><span></span><span></span>
+      <button class="home" onclick={() => go('back')}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{back.label}</span></button><span></span><span></span>
     </div>
     <div class="head rise d1">
       {#if level === 'region'}
         <div class="label-line short">{t('map.regionLabel')}</div>
         <h1 class="carve lg">{t('map.regionName')}</h1>
       {:else}
-        <button class="label-line short up" onclick={zoomOut}>{t('map.regionName')}</button>
+        <!-- the region's name as a plain label: the one way out of the closer view is See the whole region (review 2) -->
+        <div class="label-line short">{t('map.regionName')}</div>
         <h1 class="carve lg">{stretchName(zoomed ?? v.here.stretch)}</h1>
       {/if}
     </div>
@@ -272,8 +274,6 @@
   .top { position: relative; z-index: 3; flex: none; }
   .head { margin-top: 6px; }
   .head h1 { margin-top: 8px; }
-  button.up { background: none; border: 0; padding: 0; cursor: pointer; width: 100%; }
-  button.up::before { content: "‹"; font-size: 18px; line-height: 0; margin-right: -4px; color: var(--edge); }
   button.home { color: var(--ink-2); }
 
   .field { position: relative; flex: 1; min-height: 0; overflow-y: auto; margin: 4px 0 8px; -webkit-overflow-scrolling: touch; }

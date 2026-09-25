@@ -18,6 +18,7 @@
 | Places show a stand-in painting for their stretch (one of the three samples) | Week 1's first round (`paint/places/`) fell short of the hall; the kit needs materials before real places reach the bar | As each place is painted at the hall's level |
 | Camps with a view reuse their stretch's stand-in painting | Camp paintings follow the places | The painting weeks |
 | The "Prototype" link on Today, and rehearsal mode (×60, separate save) | To feel a whole day in minutes | Removed before the test starts |
+| The "Rehearsal ×60" tag on every screen while a rehearsal is on | A rehearsal's evening passes in minutes; the tag stops its day being taken for the real one (Dan, review 2) | Removed once Dan is happy with the app (Dan), with rehearsal mode |
 | The single-page web link inlines everything (≈ 0.6 MB) | A private claude.ai link, nothing for Dan to upload | Replaced by TestFlight |
 | The flow walk (`app/tests/flows/heart-walk.mjs`) runs in Chromium by hand, not in CI | Playwright isn't in the app's dependencies yet | Add to CI with WebKit when the flow tests grow |
 | The map's layout is hand-placed for the first region | One region in the MVP | The second region |

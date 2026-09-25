@@ -42,7 +42,7 @@ export const beats: Beat[] = [
     o: 4,
     name: "The Lamp Hall",
     line: "The hall opens long and high. Its rounded edges rise like the inside of a shell; the lamp cannot carry its light all the way up. At the near end, a clay lamp burns on a ledge. It was lit when you came down. There is no oil in it. You hold your hand near the flame and feel its small warmth against the coolness of the hall. At head height, empty cups have been cut into both walls, one every few paces. They go on beyond the lamp's reach. Marks cover every surface within reach, rings among them: close cuts around the ledge, then more wherever your fingers might pass. You turn slowly in the lamplight, your breath quiet beneath all that stone. At the far end, beyond the light, a door takes up most of the wall. Its sides emerge from the dark more readily than its top. Above it the rounded wall rises into a height the flame does not disclose.",
-    choice: ["Look at the lamp", "look at the wall"],
+    choice: ["Look at the wall", "look at the lamp"],
     req: [],
     stretch: "st-hall",
     painting: "pt-b-1.A",

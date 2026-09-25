@@ -26,7 +26,7 @@
   .wash { position: absolute; left: -100vw; right: -100vw; top: -90px; bottom: -70vh; z-index: -1; pointer-events: none;
     background: linear-gradient(180deg, rgba(6,5,16,0) 0, rgba(6,5,16,.62) 90px, rgba(6,5,16,.72) 100%);
     transition: opacity .5s var(--ease); }
-  .scroll { max-height: 42vh; max-height: 42dvh; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none;
+  .scroll { max-height: 42vh; max-height: 42dvh; overflow-x: hidden; overflow-y: auto; overscroll-behavior: none; scrollbar-width: none;
     -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 12px, #000 calc(100% - 26px), transparent 100%);
             mask-image: linear-gradient(180deg, transparent 0, #000 12px, #000 calc(100% - 26px), transparent 100%);
     padding: 8px 0 18px; transition: max-height .5s var(--ease); }

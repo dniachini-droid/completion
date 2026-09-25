@@ -1,12 +1,12 @@
 <script lang="ts">
   /* Today (the morning screen, UX_PRINCIPLES → "The morning screen carries"): where you are, the sealed thing ahead,
-     Low / Normal / High, the one next job with one button, today's other jobs as plain rows, "I can't start".
+     the one next job (no Low / Normal / High, and no "Already done": Dan, D-089) with one button, today's other jobs as plain rows, "I can't start".
      A tap on a row makes it the next job, at any time of day; a swipe takes it off today; the last row chooses a delve
      on anything (D-077). After day complete: the day as done, until Dan taps a job or keeps going.
      Mock-up: design/directions/d-combined/morning.html. */
   import { game, content } from './game.svelte';
   import { presetRun } from '../core/game';
-  import type { Capacity, Job } from '../core/types';
+  import type { Job } from '../core/types';
   import { t, minutesWords, delves, inSentence } from '../content/copy/en';
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
@@ -33,7 +33,6 @@
     return j.delve ? t('today.teaser.delve') : t('today.teaser.away');
   }
 
-  function choose(c: Capacity) { game.do({ do: 'capacity', capacity: c }); }
   function begin(j: Job) {
     if (!j.delve) { game.do({ do: 'begin', job: j.id }); return; }
     const r = presetRun(j);
@@ -49,7 +48,12 @@
   function carry() { game.do({ do: 'resume' }); go('delve'); }
   function finish() { game.do({ do: 'finishHere' }); go('delve'); }
   function focus(id: string) { if (swiped) { swiped = null; return; } if (!v.done.has(id)) game.do({ do: 'focus', job: id }); }
-  function aside(id: string) { swiped = null; game.do({ do: 'setAside', job: id }); }
+  function aside(id: string) { swiped = null; game.do({ do: 'setAside', job: id }); lastAside = id; }
+  /* "Not today" said once, with a way to take it back while Today is still open (review 2, D-088) */
+  let lastAside = $state<string | null>(null);
+  function putBack() { if (lastAside) game.do({ do: 'putBack', job: lastAside }); lastAside = null; }
+  /* after the day's work: a timed job still ahead today is named, so "done" never hides it (review 2) */
+  const still = $derived(v.slate.filter(id => !v.done.has(id) && v.times[id]).map(id => `${job(id).name} ${t('row.at', { time: v.times[id] })}`));
 
   /* a row slides left to show "Not today" (the phone's own gesture for taking something off a list) */
   let swiped = $state<string | null>(null), drag = $state<{ id: string; x0: number; y0: number; dx: number } | null>(null);
@@ -85,12 +89,7 @@
       </span>
     </div>
     <h1 class="carve lg rise">{v.here.name}</h1>
-    <div class="seg rise d1" role="group" aria-label={t('today.capacity')}>
-      {#each ['low', 'normal', 'high'] as const as c}
-        <button aria-pressed={v.capacity === c} onclick={() => choose(c)}>{t(`cap.${c}`)}</button>
-      {/each}
-    </div>
-    <p class="seg-note rise d1">{v.capacity === 'low' && !v.suggestedBy ? t('today.lighter') : v.capacity === v.suggested && v.suggestedBy ? t(v.suggestedBy === 'back' ? 'today.byBack' : 'today.byBedtime') : v.capacity === 'low' ? t('today.lighter') : t('today.suggested')}</p>
+    <!-- no Low / Normal / High here: Dan sets his days in the week and runs them (Dan, D-089) -->
     {#if v.ahead}
       <section class="ahead rise d2">
         <div class="label-line">{t('today.ahead')}</div>
@@ -129,7 +128,7 @@
         <h2 class="say-lg">{next.name}</h2>
         <p class="soft">{t('today.underWay.say')}</p>
         <button class="btn" onclick={() => done(next)}>{t('today.done')}</button>
-        <div class="gap"></div>
+        <div class="cant"><button class="text-link" onclick={() => game.do({ do: 'unbegin', job: next.id })}><span>{t('today.unbegin')}</span></button></div>
       </div>
     {:else if v.next && next}
       <div class="next">
@@ -142,8 +141,6 @@
         <div class="lead"><button class="btn full" onclick={() => begin(next)}>{next.delve ? t('today.delve') : t('today.begin')}</button></div>
         <div class="cant">
           <button class="text-link" onclick={() => go('cant', next.id)}><span>{t('today.cantStart')}</span></button>
-          <span class="dot" aria-hidden="true">·</span>
-          <button class="text-link" onclick={() => done(next)}><span>{t('today.already')}</span></button>
           <span class="dot" aria-hidden="true">·</span>
           <button class="text-link" onclick={() => aside(next.id)}><span>{t('today.notToday')}</span></button>
         </div>
@@ -162,6 +159,7 @@
         {#if lastPlace}
           <p class="soft">{t(lastPlace.kind === 'place' ? 'today.reached' : 'today.camped', { place: inSentence(lastPlace.name) })}</p>
         {/if}
+        {#if still.length}<p class="soft still">{t('today.stillToCome', { what: still.join(', ') })}</p>{/if}
         <button class="btn gold resting" onclick={() => go('camp')}>{t('today.toCamp')}</button>
         <div class="btn-row after"><button class="btn-quiet" onclick={() => go('choose')}><span>{t('today.keepGoing')}</span></button></div>
         {#if lastPlace}<div class="cant"><button class="text-link" onclick={() => go('arrival')}><span>{t('today.look')}</span></button></div>{/if}
@@ -169,6 +167,9 @@
       </div>
     {/if}
 
+    {#if lastAside && !v.order.includes(lastAside) && !v.done.has(lastAside)}
+      <p class="said">{t('today.aside.said')} <button class="text-link" onclick={putBack}><span>{t('today.putBack')}</span></button></p>
+    {/if}
     <div class="rows" onpointermove={move} onpointerup={up} onpointercancel={up}>
       {#each others as id (id)}
         {@const j = job(id)}
@@ -200,8 +201,6 @@
 
 <style>
   h1 { margin-top: 2px; }
-  .seg { margin-top: 12px; }
-  .seg-note { text-align: left; margin-top: 4px; }
   .ahead { margin-top: 12px; }
   .ahead p { font-size: 17.5px; line-height: 1.38; margin-top: 6px; }
   .bottom { padding-top: 8px; }
@@ -224,6 +223,9 @@
   .plus { justify-self: center; color: var(--violet-hi); font-size: 20px; line-height: 1; }
   button.row:disabled { cursor: default; }
   .at { color: var(--ink-2); font-size: .8em; }
+  .still { margin: -12px 0 16px; }
+  .said { font-family: var(--life); font-style: italic; font-size: 15.5px; color: var(--ink-2); display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 2px 6px; margin: -6px 0 6px; }
+  .said .text-link { min-height: 0; padding: 4px; }
   .deep { font-family: var(--life); font-size: 16px; color: var(--ink-2); margin: -10px 0 14px; text-align: left; }
   .deep .text-link { display: inline-flex; padding: 0 4px; min-height: 0; }
   .foot { display: flex; justify-content: space-between; margin: 6px -10px 0; }
@@ -231,11 +233,13 @@
   .proto span { font-size: 14px; letter-spacing: .16em; color: var(--ink-3); }
   /* the day on the left; the map, records and the prototype's own link together on the right */
   .bar { display: flex; justify-content: space-between; }
-  .navs { display: flex; gap: 4px; align-items: center; margin-right: -10px; }
+  /* on a narrow bar the rehearsal badge takes a line of its own, never pushing the screen wider (Dan, review 2) */
+  .bar { gap: 8px; align-items: flex-start; }
+  .navs { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0 4px; align-items: center; margin-right: -10px; min-width: 0; }
   .navs span { font-size: 13px; letter-spacing: .14em; color: var(--ink-2); }
   .proto .badge { color: var(--gold); }
   @media (max-height: 800px) {
-    .seg { margin-top: 10px; } .ahead { margin-top: 8px; } .ahead p { margin-top: 4px; } .next .soft { margin-bottom: 14px; }
+    .ahead { margin-top: 8px; } .ahead p { margin-top: 4px; } .next .soft { margin-bottom: 14px; }
     :global(.row) { min-height: 44px; }
   }
 </style>

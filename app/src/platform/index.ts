@@ -27,7 +27,7 @@ async function readKept() {
 }
 
 const native: Platform = {
-  store: nativeStore, sound, now: () => new Date(), ready: readKept,
+  store: nativeStore, sound, now: () => new Date(), ready: readKept, app: true,
   notifier: {
     locked: true,
     async permit() {
@@ -45,7 +45,7 @@ const native: Platform = {
 
 /* In a browser (the web link, tests): the end chimes if the page is open, and shows when you come back. */
 const web: Platform = {
-  store, sound, now: () => new Date(), ready: async () => {},
+  store, sound, now: () => new Date(), ready: async () => {}, app: false,
   notifier: { locked: false, permit: async () => false, at: async () => {}, cancel: async () => {} },
   haptics: {
     tick: async () => { try { navigator.vibrate?.(8); } catch { /* */ } },

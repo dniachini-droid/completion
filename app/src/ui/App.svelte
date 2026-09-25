@@ -3,7 +3,10 @@
      a delve that ended while away shows its end; a run in progress shows the ring; an unseen arrival shows itself. */
   import { game } from './game.svelte';
   import { moment } from './moment.svelte';
-  import type { Go, Screen } from './nav';
+  import { onMount } from 'svelte';
+  import type { Back, Go, Screen } from './nav';
+  import { back } from './back.svelte';
+  import { platform } from '../platform';
   import Today from './Today.svelte';
   import RunSet from './RunSet.svelte';
   import Delve from './Delve.svelte';
@@ -41,17 +44,50 @@
   let lastWoke = game.woke;
   $effect(() => { if (game.woke !== lastWoke) { lastWoke = game.woke; screen = first(); arg = undefined; } });
 
-  /* where a record was opened from, so its back arrow returns there (an arrival, a delve's end, a morning) */
-  let from = $state<{ screen: Screen; arg?: string | number } | null>(null);
+  /* Back (review 2, D-088): the screens Dan looks through keep a trail, so the arrow and the phone's own back return to
+     where each was opened from. Today and the day's own moments (a delve, a place reached, the stair, the morning)
+     start the trail again; their way out stays Today. */
+  const LOOK = new Set<Screen>(['map', 'records', 'marks', 'week', 'rhythms', 'satchel', 'daybook', 'camp', 'choose', 'set', 'proto', 'cant']);
+  const TABS = new Set<Screen>(['records', 'marks']);
+  let trail = $state<Back[]>([]);
   const go: Go = (to, a) => {
+    if (to === 'back') { const p = trail.pop(); if (p) { screen = p.screen; arg = p.arg; } else go('today'); return; }
     if (to === 'cant' && typeof a === 'string') game.do({ do: 'cantStart', job: a });
     /* "Today" never skips what waits: a place just reached, the morning, the welcome back, a new daybook page (D-080).
        'stay' is the one way past it: the word left to cut later. */
     if (to === 'today' && a !== 'stay') { const f = first(); if (f !== 'today' && f !== 'delve') to = f; }
-    if (to === 'records' && a !== undefined && screen !== 'records') from = { screen, arg };
-    else if (to !== 'records') from = null;
+    if (LOOK.has(to)) {
+      const top = trail[trail.length - 1];
+      if (top && top.screen === to && top.arg === a) trail.pop();                  /* going where back would go */
+      else if (screen === to && !(arg === undefined && a !== undefined)) { /* the same screen, another page: replaced */ }
+      else if (TABS.has(screen) && TABS.has(to) && arg === undefined && a === undefined) { /* Records ⇄ Marks: a tab */ }
+      else trail.push({ screen, arg });
+    } else trail = [];
     screen = to; arg = to === 'today' ? undefined : a;
   };
+  /* what the arrow says: the screen it returns to */
+  const NAMES: Partial<Record<Screen, string>> = { today: 'delve.today', map: 'map.nav', records: 'records.nav', marks: 'marks.nav',
+    rhythms: 'rhythms.label', satchel: 'nav.satchel', daybook: 'nav.daybook', camp: 'nav.camp' };
+  $effect(() => {
+    const top = trail[trail.length - 1];
+    back.label = !top ? t('delve.today') : top.screen === 'week' ? t(top.arg ? 'week.next' : 'week.label')
+      : NAMES[top.screen] ? t(NAMES[top.screen] as never) : t('nav.back');
+  });
+
+  /* the phone's own back: the browser's back button or swipe on the web link, one step at a time; on Today with
+     nothing behind, the browser's back leaves as it always has */
+  const home = () => screen === 'today' && !trail.length;
+  onMount(() => {
+    history.pushState({ app: 1 }, '');
+    const pop = () => { if (home()) { history.back(); return; } go('back'); history.pushState({ app: 1 }, ''); };
+    addEventListener('popstate', pop);
+    /* in the phone app there is no browser: a swipe in from the left edge goes back, as in any iPhone app */
+    let edge: { x: number; y: number } | null = null;
+    const down = (e: PointerEvent) => { edge = platform.app && e.clientX < 24 && !home() ? { x: e.clientX, y: e.clientY } : null; };
+    const up = (e: PointerEvent) => { if (edge && e.clientX - edge.x > 70 && Math.abs(e.clientY - edge.y) < 60) go('back'); edge = null; };
+    addEventListener('pointerdown', down); addEventListener('pointerup', up);
+    return () => { removeEventListener('popstate', pop); removeEventListener('pointerdown', down); removeEventListener('pointerup', up); };
+  });
 
   /* the day's light: gold once the day has turned (DESIGN_SYSTEM → colour) */
   $effect(() => {
@@ -61,6 +97,9 @@
 </script>
 
 <main class="phone">
+  <!-- a rehearsal's clock runs 60 times faster (an evening passes in minutes): said on every screen, so the day it
+       shows is never mistaken for the real one (Dan, review 2). Today carries its own badge. -->
+  {#if game.proto.rehearsal && !['today', 'camp', 'proto'].includes(screen)}<div class="rehearsal" aria-live="polite">{t('proto.badge')}</div>{/if}
   <!-- a screen that fails shows a way back, never a blank phone; the save is untouched (review finding, D-080) -->
   <svelte:boundary onerror={(e) => console.error(e)}>
   {#key screen + String(arg ?? '')}
@@ -72,7 +111,7 @@
     {:else if screen === 'cant'}<CantStart {go} jobId={String(arg)} />
     {:else if screen === 'proto'}<Proto {go} />
     {:else if screen === 'map'}<Map {go} />
-    {:else if screen === 'records'}<Records {go} id={typeof arg === 'string' ? arg : undefined} back={from} />
+    {:else if screen === 'records'}<Records {go} id={typeof arg === 'string' ? arg : undefined} />
     {:else if screen === 'marks'}<Marks {go} id={typeof arg === 'string' ? arg : undefined} />
     {:else if screen === 'stair'}<Stair {go} />
     {:else if screen === 'camp'}<Camp {go} />
@@ -92,3 +131,8 @@
     {/snippet}
   </svelte:boundary>
 </main>
+
+<style>
+  .rehearsal { position: absolute; z-index: 20; left: 50%; transform: translateX(-50%); top: calc(var(--safe-t, 0px) + 4px); pointer-events: none;
+    font-family: var(--carve); font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); opacity: .85; white-space: nowrap; }
+</style>
