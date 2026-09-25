@@ -326,8 +326,10 @@ vec3 shade(vec3 p, vec3 d, float t, vec3 n, vec4 hs, float fpx) {
   } else if (m == M_SALT) {
     /* beds of salt laid down one on another: grey, white, with thin dark seams between; crystals in each bed */
     float b = p.y * 1.7 + (fbm3(p * vec3(.3, .5, .3), 3) - .5) * 3.2 + (fbm3(p * 2.5, 2) - .5) * .25, bi = floor(b), bf = b - bi;
-    float bed = h2(vec2(bi, 71.)), white = smoothstep(.25, .65, bed) * (.7 + .3 * fbm3(p * 3., 2));
-    vec3 grey = vec3(.2, .2, .235) * (.7 + .45 * h2(vec2(bi, 5.))), wh = vec3(.95, .94, .97);
+    /* one bed fades into the next over its last third, so the beds read as layers, not cut-out shapes (kit v1.3) */
+    float nx = smoothstep(.6, 1., bf), bed = mix(h2(vec2(bi, 71.)), h2(vec2(bi + 1., 71.)), nx);
+    float white = smoothstep(.2, .7, bed) * (.7 + .3 * fbm3(p * 3., 2));
+    vec3 grey = vec3(.26, .26, .3) * (.7 + .45 * mix(h2(vec2(bi, 5.)), h2(vec2(bi + 1., 5.)), nx)), wh = vec3(.95, .94, .97);
     alb = mix(grey, wh, white);
     float bd = min(bf, 1. - bf);
     alb = mix(alb, vec3(.82, .6, .64), (1. - smoothstep(0., .2, bd)) * uSaltPink * (.4 + .6 * white));   /* pink only at the edges of the beds */
