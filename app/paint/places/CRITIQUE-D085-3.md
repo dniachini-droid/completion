@@ -4,9 +4,9 @@
 
 The D-085 check, not a score. Every painting here has passed the kit's automatic checks. The one question: **would a player looking at it on a phone see the look-at as something other than what the brief says, or fail to find it at all?** A clue must never read wrongly (rule 6). Dark, plain or less beautiful than the hall is not a failure and is not marked.
 
-Looked at: each final at full frame, then crops of every look-at (u/v are fractions of the frame from top left). Finals from the session scratchpad `p1/` (first attempts) and `full/` (`pt-pl-w3-salt-lit`, an older scene re-baked unchanged, judged against the wrong readings in `CRITIQUE-B1-SALT.md` and `CRITIQUE-B2-SALT.md`).
+Looked at: each final at full frame, then crops of every look-at (u/v are fractions of the frame from top left). Finals from the session scratchpad `p1/` (first attempts) and `full/` (`pt-pl-w3-salt-lit` and `pt-pl-w4-recess-above-the-cot`, older scenes re-baked unchanged, judged against the wrong readings in `CRITIQUE-B1-SALT.md`, `CRITIQUE-B2-SALT.md`, `CRITIQUE-B1.md` and `CRITIQUE-B2.md`).
 
-**Result: 8 checked, 5 pass, 3 fail.**
+**Result: 9 checked, 5 pass, 4 fail.**
 
 | Id | Verdict |
 |---|---|
@@ -18,6 +18,7 @@ Looked at: each final at full frame, then crops of every look-at (u/v are fracti
 | pt-b-4.B | PASS |
 | pt-b-4.C | **FAIL** |
 | pt-pl-w3-salt-lit | **FAIL** |
+| pt-pl-w4-recess-above-the-cot | **FAIL** |
 
 ---
 
@@ -36,3 +37,5 @@ Looked at: each final at full frame, then crops of every look-at (u/v are fracti
 **pt-b-4.C, the Lower Door close: FAIL (wrong reading of a planted mark).** The look-at is fine: seven empty cut strokes (u .23–.54, v .48–.52) read as an empty count. But the mark under it, "a path doubling back" (u .22–.50, v .55–.59), reads as **a loose thread or wire lying on the door**: a thin raised line, a slack wave, and a small ring at one end like an eyelet. A clue must not read wrongly. Smallest fix: cut it as a groove with the same width and flank lighting as the count strokes; make it a firm hairpin (one run out, a tight turn, a near-parallel run back) with no slack wave; remove the ring at its end. Also watch: the bar-with-a-drop beside the blank (u .59, v .49–.52) is close to an exclamation mark; keep the drop joined to the bar as a teardrop swelling, not a separate round dot.
 
 **pt-pl-w3-salt-lit: FAIL (unchanged wrong reading).** Re-baked unchanged, so the round-2 wrong reading stands: the split (u .37–.56, v .44–.55) is a rounded patch filled edge to edge with same-size glossy brown ovals, which reads as **a tray of eggs, beans or a sack**, not river stones packed in a natural split; and the peak is a warm hot-spot on bare salt above it (u .35–.50, v .42), which reads as a lamp. Smallest fix (as `CRITIQUE-B2-SALT.md`): make the split tall and irregular, narrowing top and bottom, with dark gaps; fewer stones of varied size, some lost in shadow; move the warm peak onto the stones' tops and dim the hot-spot on the wall.
+
+**pt-pl-w4-recess-above-the-cot: FAIL (unchanged wrong reading).** Re-baked unchanged, so the `CRITIQUE-B2.md` wrong reading stands: the pin (u .26–.30, v .38–.40) is a round glossy white ball, so it reads as **a pearl or bead threaded on a black hair or cable**. The crack is a thick, smooth, black wavy line with tapered ends (u .07–.40, v .25–.57), not a seam in stone. The pin is the brightest point, so it is found, but it does not read as a steel drawing pin. Lesser: the slate is a tilted box standing off a flat wall, not laid across a cut recess. Smallest fix: draw the pin as a flat circular steel head, seen slightly edge-on (an ellipse with a thin rim and one sharp specular glint), with a short shaft shadow into the crack; make the crack a thin, broken, irregular seam with an inner shadow and a lit lip, straight-ish, not a smooth wave.
