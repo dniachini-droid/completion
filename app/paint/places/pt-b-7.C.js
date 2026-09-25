@@ -15,7 +15,7 @@ export default {
   id: 'pt-b-7.C',
   name: 'The great door, open',
   line: '',
-  cam: { x: -.7, y: 1.7, z: 66.2, pitch: -60, yaw: 3, f: .52, cx: .5, cy: .5 },
+  cam: { x: -.7, y: 1.7, z: 66.2, pitch: -68, yaw: 3, f: .52, cx: .5, cy: .5 },
   far: 50, fogK: 1 / 20,
   hazeBase: [.01, .009, .03], hazeFar: [.03, .028, .08],
   bloomAt: [0, -20, 90], bloomPow: 30, bloomC: [0, 0, 0],
@@ -27,7 +27,7 @@ export default {
     { p: [.3, 7.6, 63.2], c: WARM, k: 80, r: 3, shadow: 1 },                           /* the hall's cups, behind you, their light through the doorway */
     { p: [0, -4.3, 70.6], c: WARM, k: 3, r: 1., reach: 2.2 },                       /* the same, given back off the lit treads */
     { p: [0, Y11 - .6, Z11 + 3.6], c: [.4, .38, .9], k: 3.5, r: 3, shadow: .4 },                                 /* the stone's own faint violet, far below */
-    { p: [-.5, 3.2, 64.5], c: [.42, .4, .95], k: 3, r: 2.5, shadow: .5 },              /* the hall's violet on the door's cold reveal */
+    { p: [0, Y11 + 3.6, Z11 + 1.2], c: [.4, .38, .9], k: 2.2, r: 2.6, shadow: .4 },              /* the hall's violet on the door's cold reveal */
   ],
   glsl: hall.glsl.replace('vec4 scene(vec3 p)', 'vec4 hallScene(vec3 p)').replace('d = U(d, vec4(66.45 - p.z, M_DARK, NOUV));', '') + /* glsl */ `
   const float Z0 = ${Z0.toFixed(2)}, RI = ${RI.toFixed(2)}, TR = ${TR.toFixed(2)}, Z11 = ${Z11.toFixed(3)}, Y11 = ${Y11.toFixed(3)};
@@ -47,7 +47,9 @@ export default {
       float cut = p.z - Z11 - .12 * p.x + (p.y - Y11) * .3;
       float lit = smoothstep(.02, -.02, cut);
       gTint *= mix(.3, 1., lit);
-      if (lit < .5) gTint *= mix(1., .1, smoothstep(Z11 + 1., Z11 + 7., p.z));   /* below it, the unlit steps go on, fading to nothing */
+      if (lit < .5) gTint *= mix(1., .1, smoothstep(Z11 + 1., Z11 + 10., p.z)) * (p.y - ny > 1.6 ? 1.5 : 1.);   /* the vault carried on down, faint */
+      float fz = fract((p.z - Z0) / TR);
+      if (lit < .5 && abs(p.x) < 1.9 && fz > .88 && p.y - ny > -.6 && p.y - ny < .15) gTint *= 5.;   /* the unlit nosings, cold, catching what little there is */   /* below it, the unlit steps go on, fading to nothing */
       gTint *= mix(.3, 1., smoothstep(Z0 + .3, Z11 - 1.2, p.z));                   /* the first steps under the sill's own shadow, darker */
       if (abs(p.x) > 1.85) gTint *= vec3(.4, .4, .55);                                             /* the side walls, darker than the treads */
     } else {
