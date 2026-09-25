@@ -35,9 +35,10 @@ export const SPLIT = /* glsl */ `
         vec2 q2 = w - ctr; q2 = vec2(ca * q2.x - sa * q2.y, sa * q2.x + ca * q2.y);
         vec3 e = vec3(p.x - (-2.19 - fl * .08 + (h2(c + 2.) - .5) * .05), q2);
         float s = (length(e / vec3(.7, 1., 1.35 + .3 * h2(c + 31.))) - r) * .7;   /* flattened, water-worn */
-        best = min(best, s);
+        best = smin(best, s, .012);                                                /* packed, bedded in grit */
       }
     }
+    best += rough(p, .012, 22.) + rough(p, .004, 60.);                             /* pitted, not moulded */
     return vec4(max(best, -splitAir(p).x - .01), M_ROCK, NOUV);                  /* only in the gap */
   }
 `;
