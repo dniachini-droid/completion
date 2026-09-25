@@ -19,7 +19,7 @@ export default {
   blur: { px: 1.4, d0: 5, d1: 14, k: .7 },
   lights: [
     { p: [2.4, 3.6, ZD - 1.0], c: [1, .68, .3], k: 3, r: .8, reach: 4.6, warm: .004, shadow: 1 },   /* the last cup's flame, a stride from the door: its light gives out partway up the face */
-    { p: [2.62, 3.72, ZD - 1.3], c: [1, .68, .3], k: 0, r: .1, air: .6 },                  /* the flame's glow in the air */
+    { p: [2.62, 3.72, ZD - 1.3], c: [1, .68, .3], k: 0, r: .16, air: 1.6 },                  /* the flame's glow in the air */
     { p: [0, 3, ZD - 12], c: [.3, .28, .66], k: 4, r: 6 },                                /* the hall behind: a faint cold fill */
     { p: [-1, 1.2, ZD - 1.4], c: [.34, .33, .75], k: .7, r: 2.2 },                     /* the door's own cold, broad and faint */
   ],

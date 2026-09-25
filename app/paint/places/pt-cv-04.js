@@ -6,7 +6,7 @@
    places: one form, one light (the cups as one). */
 import hall from './pt-b-1.A.js';
 
-const CUPR = [57.45, 54.35, 51.25], CUPL = [55.7, 52.6];                     /* the nearest cups: right wall (x +), left (x -) */
+const CUPR = [56.45, 53.35, 50.25], CUPL = [54.9];                     /* the nearest cups: right wall (x +), left (x -) */
 
 export default {
   ...hall,
@@ -18,8 +18,9 @@ export default {
   hazeBase: [.02, .018, .055], hazeFar: [.1, .08, .15], bloomAt: [2.3, 1.4, 5.6], bloomPow: 60, bloomC: [.12, .08, .05],
   fogK: 1 / 30,
   lights: [
-    ...CUPR.map((z, i) => ({ p: [2.5, 4.05, z], c: [1, .72, .42], k: 3.6 - .8 * i, r: 1.5, shadow: .3, reach: 5. })),   /* the nearest cups on the right: up into the vault */
-    ...CUPL.map((z, i) => ({ p: [-2.5, 4.05, z], c: [1, .72, .42], k: 2.6 - .6 * i, r: 1.5, shadow: .3, reach: 5. })),  /* and on the left */
+    ...CUPR.slice(0, 2).map((z, i) => ({ p: [2.1, 5.4, z], c: [1, .72, .42], k: 3.6 - .8 * i, r: 1.2, shadow: .5, reach: 4. })),   /* the nearest cups' light, thrown up the vault */
+    ...[59.55, 56.45].map(z => ({ p: [2.72, 3.85, z], c: [1, .72, .42], k: .12, r: .3, reach: .7 })),                  /* and filling their own recesses */   /* the nearest cups on the right: up into the vault */
+    ...CUPL.slice(0, 1).map(z => ({ p: [-2.1, 5.4, z], c: [1, .72, .42], k: 2.6, r: 1.2, shadow: .5, reach: 4. })),  /* and on the left */
     { p: [0, 5, 30], c: [.5, .42, .8], k: 45, r: 14 },                                  /* the lines of cups further back, as one glow in the violet */
     { p: [2.3, 1.42, 5.6], c: [1, .7, .4], k: 0, r: .5, air: .5 },                       /* the lamp on its ledge, a warm point at the far end */
     { p: [-3.4, 1.2, 61.5], c: [.6, .58, 1.1], k: 3, r: 1.2, shadow: .5 },               /* round the corner beside you: cold light off the salt */
@@ -38,6 +39,7 @@ export default {
   vec4 scene(vec3 p) {
     vec4 d = hallScene(p);
     float ax = abs(p.x);
+    if (ax > 2.4 && p.z > 44.) d.x -= rings(p);                                      /* the rings within reach, faint here: the eye goes up */
     if (p.y > 5.6 && d.w > 5.7 && d.w < 10.5 && p.z > 44. && p.z < 60.5) d.x += vaultRings(d.zw, sign(p.x));
     if (p.y > 10.) gTint *= mix(1., .55, smoothstep(10., 13.5, p.y));                    /* the crown falls away into the dark */
     if (p.y < .03) gTint *= mix(.5, 1., smoothstep(61., 52., p.z));                    /* the floor at your feet, out of the cups' light */

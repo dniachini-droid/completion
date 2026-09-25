@@ -10,14 +10,16 @@ export default {
   id: 'pt-cv-08',
   name: 'Her cot',
   line: '',
-  cam: { x: .1, y: .62, z: .36, pitch: -7, yaw: 25, f: .84, cx: .5, cy: .5 },   /* crouched just inside the door */
+  cam: { x: .16, y: .74, z: .66, pitch: -19, yaw: 33, f: .92, cx: .5, cy: .5 },   /* crouched just inside the door, lower and closer than pt-b-1.C */
   far: 10, fogK: 1 / 16,
   bloomAt: [.45, .5, 2.4], bloomPow: 12, bloomC: [.06, .045, .024],
   blur: { px: 1.3, d0: .8, d1: 2.6, k: .6 },
   expo: 2.35,
   lights: [
     { ...room.lights[0], k: 11 },                                                          /* the clay lamp, in the passage behind you */
-    { p: [.4, .58, 1.02], c: [1, .7, .34], k: .05, r: .1, shadow: 1 },                       /* its light ending on the rail, on the tape */
+    { p: [.4, .26, 1.05], c: [1, .7, .34], k: .05, r: .22, reach: .6 },                  /* its light ending on the boots' toes, as in pt-b-1.C */
+    { p: [.15, 1., 1.3], c: [1, .7, .34], k: .08, r: .35, shadow: 1, reach: 1.3 },          /* the doorway's weak warm pool, lying along the cot and the floor under it */
+    { p: [.45, .56, 1.04], c: [1, .72, .38], k: .012, r: .06, reach: .2 },                  /* and ending on the rail, on the tape */
     { p: [-1.3, 1.9, 3.6], c: [.4, .37, .85], k: 1.1, r: 1.2 },                           /* violet in the far corners */
     { p: [1.35, 1.9, 3.7], c: [.4, .37, .85], k: .8, r: 1 },
     { p: [1.05, .9, 2.4], c: [.4, .37, .85], k: .2, r: .6 },                            /* a little violet on the cot's far end */
@@ -54,8 +56,11 @@ export default {
   vec4 scene(vec3 p) {
     vec4 d = roomScene(p);
     if (p.y > 1.2) gTint *= mix(1., .45, smoothstep(1.2, 2.2, p.y));               /* the roof close and dark */
-    if (p.y < .03) gTint *= mix(.4, 1., smoothstep(1.2, 2.2, p.z));                 /* the floor at your feet in shadow */
-    if (p.y < .3 && p.x > .45 && p.z > 1.15 && p.z < 1.6) gTint *= .6;              /* the boots, in the rail's shadow this time */
+    if (p.y < .03) gTint *= mix(.55, 1., smoothstep(.6, 1.1, p.z));                 /* the floor at your feet in your own shadow */
+    /* the canvas: a soft sheen along its sag, where someone slept */
+    { float u = (p.z - 1.85) / .92, vx = (p.x - .95) / .34;
+      float sag = .14 * max(0., 1. - u * u) * (1. - .55 * vx * vx);
+      if (abs(vx) < 1. && abs(u) < 1. && abs(p.y - (.47 - sag)) < .016 && d.x < .01) { gTint = vec3(1.15, 1.1, 1.05); gPolish = .3; } }
     /* the masking tape round the rail's side: pale, a little creased, its ends torn */
     vec3 tq = p - vec3(${T.join(', ')});
     float ends = .036 + .002 * sin(tq.y * 900.);
