@@ -781,7 +781,18 @@
 - **Consequences:** the new words go to Dan's phone in the next TestFlight build. **Dan judges the voice on his phone**; anything still hard to read goes into the next pass. The later story weeks, not yet in the app, keep the old voice until they are built.
 - **Reversible:** Yes (the old lines are in the history).
 
-## D-075 — Choosing what to do on Today, and a guess that waits for its marks (Dan's report; Claude's routine calls, D-006)
+## D-075 — The paintings: room-scale framing, reused rooms, parallel painters (Claude's routine call, D-006; Dan: too slow, too poor)
+- **Date:** 2026-09-25
+- **Context:** After three painting sessions, 5 of the 48 paintings were at the bar (8/10). Dan: far too slow and too costly per picture; all of them should be done by now. The cause: every place was built as its own scene and tuned by many small bake-and-look rounds, and most failures were extreme close-ups of small objects, the painting kit's weakest ground. All five accepted paintings are room-scale views.
+- **Decision (Claude, routine):**
+  1. **Room-scale framing.** Every place is painted as a space seen from 1–4 m, its thing to look at a lit feature within it; no macro close-ups. Where a brief asks for a close view, the painter frames the nearest room-scale view that keeps its look-at.
+  2. **Rooms reused.** The approved rooms are the sets; a new place imports one and changes the camera, the light and one feature. A room not yet built is built once, to the bar, then reused.
+  3. **Fast drafts, one critic per batch.** Drafts at quarter size; full size only when finishing; the separate critic judges a batch at a time (same bar: 8, or 7 after three critiqued rounds).
+  4. **Painters in parallel.** One painter per room, a few at a time, so a batch takes about as long as one painting did.
+- **Alternatives:** more rounds of tuning close-ups one by one (rejected: the evidence says it does not converge); lowering the bar (rejected: Dan wants 8).
+- **Consequences:** paintings may look further back than their briefs first imagined; the look-at stays. Dan is told the measured rate after the first batch.
+
+## D-077 — Choosing what to do on Today, and a guess that waits for its marks (Dan's report; Claude's routine calls, D-006)
 - **Date:** 2026-09-25
 - **Context:** Dan, playing the first playable: after the day's work he couldn't choose which delve to do next (Keep going picked one for him); nothing could be taken off Today; a job added in Week couldn't be started from Today; there was no way to delve on anything he liked; the screen had too many buttons (Begin and Swap side by side). And the lamp's marks: he saw them at one place but was asked to guess only later, which felt disjointed.
 - **Decision:**

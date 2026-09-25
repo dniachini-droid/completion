@@ -1,4 +1,4 @@
-# Lamp anchors (sealed; for the next story session, D-075)
+# Lamp anchors (sealed; for the next story session, D-077)
 
 Dan read "the lamp" as ambiguous (several different lamps in weeks 1–2). Each line below says "the lamp" without saying which; give it the place or object anchor the story already uses elsewhere (e.g. as `b-1.2` / `seal-1-3` do). How only, never what (D-074 rule 1). Keep MVP_CONTENT and `app/src/content/sealed/` in step.
 

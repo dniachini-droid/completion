@@ -142,7 +142,7 @@ function orderOn(c: Content, facts: Fact[], day: string, clock: string): string[
   return order;
 }
 
-/** Jobs taken off today's list ("Not today"), unless begun again after (D-075). Setting aside earns and costs nothing. */
+/** Jobs taken off today's list ("Not today"), unless begun again after (D-077). Setting aside earns and costs nothing. */
 function asideOn(facts: Fact[], day: string): Set<string> {
   const out = new Set<string>();
   for (const f of onDay(facts, day)) {
@@ -449,13 +449,13 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       break;
     }
     case 'focus':
-      /* a tap on a job makes it the next one; after the day's work, too (D-075) */
+      /* a tap on a job makes it the next one; after the day's work, too (D-077) */
       if (v.run || v.done.has(cmd.job) || v.next?.job === cmd.job) break;
       if (v.next?.mode === 'begin' && !v.complete) w.put({ type: 'swapped', from: v.next.job, to: cmd.job });
       else if (v.complete || !v.next) w.put({ type: 'picked', job: cmd.job });
       break;
     case 'setAside':
-      /* "Not today": off today's list, with no mark against it; the next job in order takes its place (D-075) */
+      /* "Not today": off today's list, with no mark against it; the next job in order takes its place (D-077) */
       if ((v.order.includes(cmd.job) || v.next?.job === cmd.job) && !v.done.has(cmd.job) && v.run?.job.id !== cmd.job && v.underWay !== cmd.job) w.put({ type: 'setAside', job: cmd.job });
       break;
     case 'begin':
@@ -659,7 +659,7 @@ export const STAND_IN: Record<StretchId, string> = {
 };
 /** The places painted from their briefs so far (ids only; D-015): each shows its own painting, `pt-<id>`, which
     ui/paintings.ts carries (a test keeps the two in step); every other place shows its stretch's stand-in. */
-export const PAINTED: ReadonlySet<string> = new Set<string>(['b-1.A', 'b-1.B', 'b-1.C']);
+export const PAINTED: ReadonlySet<string> = new Set<string>(['b-1.A', 'b-1.B', 'b-1.C', 'b-2.A']);
 export const paintingOf = (id: string | null, stretch: StretchId): string => id && PAINTED.has(id) ? `pt-${id}` : STAND_IN[stretch];
 
 /** The place a job's Done reached, if its return and the arrival came together: only the world's answers between. */
@@ -680,7 +680,7 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
   const completedDay = !!dc && all.every(g => g.seq <= dc.seq || g.seq >= f.seq || quiet.has(g.type));
   if (f.kind === 'place') {
     const b = S.beatOf(c.story, f.id)!;
-    /* the guess the same job's return brought is asked here, after the marks have been seen, not before (D-075) */
+    /* the guess the same job's return brought is asked here, after the marks have been seen, not before (D-077) */
     const by = ofType(all, 'jobDone').filter(d => d.seq < f.seq).pop();
     const carried = by && reachedBy(all, by.seq)?.seq === f.seq ? guessOf(c, all, by.seq) : [];
     return { seq: f.seq, kind: 'place', id: b.id, name: b.name ?? '', line: b.line ?? '', taps: b.taps, choice: b.choice,
@@ -692,7 +692,7 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
   return { seq: f.seq, kind: 'camp', id: k.id, name: k.name, line: k.line, records: [], guess: [], look, stretch: k.stretch, painting: paintingOf(k.id, k.stretch), completedDay, byKey: false };
 }
 
-/** What a job's return (a jobDone fact) shows. A guess it brings moves to the place the same job reached (D-075). */
+/** What a job's return (a jobDone fact) shows. A guess it brings moves to the place the same job reached (D-077). */
 export function returnOf(c: Content, facts: Fact[], doneSeq: number): Return {
   const r = rawReturn(c, facts, doneSeq);
   return reachedBy(facts, doneSeq) ? { ...r, guess: [] } : r;
@@ -731,7 +731,7 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   }
   slate.sort((a, b) => order.indexOf(a) - order.indexOf(b));
   for (const id of order) if (done.has(id) && !slate.includes(id)) slate.push(id);   /* off-plan counts in full */
-  for (const id of done) if (!slate.includes(id)) slate.push(id);   /* so does something chosen from outside the list (D-075) */
+  for (const id of done) if (!slate.includes(id)) slate.push(id);   /* so does something chosen from outside the list (D-077) */
   const complete = completedOn(facts, day);
   const underWay = underWayOn(facts, day);
   const seen = new Set(ofType(facts, 'seen').map(f => f.ref));
@@ -772,7 +772,7 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   else if (underWay) next = { job: underWay, mode: 'underWay' };
   else if (!complete) { const id = slate.find(x => !done.has(x)); if (id) next = { job: id, mode: 'begin' }; }
   if (!next) {
-    /* after the day's work (or with today's list cleared), the job Dan tapped, until it is done or set aside (D-075) */
+    /* after the day's work (or with today's list cleared), the job Dan tapped, until it is done or set aside (D-077) */
     const aside = asideOn(facts, day), picks = ofType(onDay(facts, day), 'picked').map(f => f.job).filter(id => !done.has(id) && !aside.has(id));
     if (picks.length) next = { job: picks[picks.length - 1], mode: 'begin' };
   }

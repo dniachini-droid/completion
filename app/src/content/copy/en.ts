@@ -200,7 +200,7 @@ export const copy = {
   'row.room': '{enough} is enough, with room for {len}',
   'row.oneOff': 'one-off',
 
-  /* choosing what to do: any job, any time (D-075) */
+  /* choosing what to do: any job, any time (D-077) */
   'row.notToday': 'Not today',
   'today.notToday': 'Not today',
   'today.else': 'Something else…',

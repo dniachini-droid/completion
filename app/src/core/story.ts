@@ -294,7 +294,7 @@ export function marksIn(s: Story, records: string[]): string[] {
     if ('s' in tk && typeof tk.s === 'string' && !out.includes(tk.s) && markOf(s, tk.s)?.candidates?.length) out.push(tk.s);
   return out;
 }
-/** Where each mark was first seen: the first place reached whose records carry it (D-075: a guess points back to it). */
+/** Where each mark was first seen: the first place reached whose records carry it (D-077: a guess points back to it). */
 export function seenAt(s: Story, places: string[]): Map<string, string> {
   const out = new Map<string, string>();
   for (const id of places) {

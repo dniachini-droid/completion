@@ -273,7 +273,7 @@ describe('Absence and the deep push', () => {
   });
 });
 
-describe('Choosing what to do: Not today, and a delve on anything (D-075)', () => {
+describe('Choosing what to do: Not today, and a delve on anything (D-077)', () => {
   it('Not today takes a job off today’s list; the next in order takes its place; nothing is earned or lost', () => {
     const p = player().do({ do: 'open' });
     const before = p.view(), walked = before.walked;
@@ -319,7 +319,7 @@ describe('Choosing what to do: Not today, and a delve on anything (D-075)', () =
   });
 });
 
-describe('A guess is asked after its marks are seen (D-075)', () => {
+describe('A guess is asked after its marks are seen (D-077)', () => {
   it('when a job’s Done reaches a place, the guess its return brings is asked on the arrival, not before it', () => {
     const p = player().do({ do: 'open' });
     let checked = 0;
@@ -344,7 +344,7 @@ describe('A guess is asked after its marks are seen (D-075)', () => {
   });
 });
 
-describe('After the day’s work, a tap on a job makes it the next one (D-075)', () => {
+describe('After the day’s work, a tap on a job makes it the next one (D-077)', () => {
   it('a tapped job becomes next after day complete, until it is done', () => {
     const p = player().do({ do: 'open' });
     for (const id of p.view().slate) p.do({ do: 'done', job: id });

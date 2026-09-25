@@ -26,7 +26,7 @@
   /* a word is cut on its own screen, the first time it plays (Cut.svelte) */
   const word = fresh && !!game.view.arrival && beatOf(content.story, game.view.arrival.id)?.kind === 'word';
   const cap = (x: string) => x.charAt(0).toUpperCase() + x.slice(1);
-  /* marks seen here that can't be guessed yet: said gently, once, so a later guess doesn't come from nowhere (D-075) */
+  /* marks seen here that can't be guessed yet: said gently, once, so a later guess doesn't come from nowhere (D-077) */
   const later = $derived(a ? marksIn(content.story, a.records).filter(m => !a.guess.includes(m) && !mayGuess(content.story, v.story, m)
     && !markHeld(markOf(content.story, m)!, v.story)) : []);
   function pick(i: number) { if (!a) return; game.do({ do: 'choose', beat: a.id, pick: i }); go('records', a.records[Math.min(i, a.records.length - 1)]); }
@@ -44,7 +44,7 @@
       const more = game.view.arrival;
       if (more && to === 'today') { go('arrival', more.seq); return; }
     }
-    /* Keep going: Dan chooses what next (D-075) */
+    /* Keep going: Dan chooses what next (D-077) */
     if (to === 'set') go('choose');
     else go('today');
   }

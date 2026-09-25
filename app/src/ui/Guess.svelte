@@ -8,7 +8,7 @@
   import { beatOf, seenAt } from '../core/story';
   import { inSentence } from '../content/copy/en';
 
-  /* `at`: the place this is asked at, if any; a mark seen somewhere else says where (D-075) */
+  /* `at`: the place this is asked at, if any; a mark seen somewhere else says where (D-077) */
   let { mark, at }: { mark: string; at?: string } = $props();
   const from = $derived.by(() => {
     const places = game.facts.filter(f => f.type === 'arrived' && f.kind === 'place').map(f => (f as { id: string }).id);

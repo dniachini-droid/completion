@@ -60,7 +60,7 @@ export type FactBody =
   | { type: 'swapped'; from: string; to: string }
   /** Taken off today's list ("Not today"): it stays Dan's, and comes back tomorrow or once he begins it again. */
   | { type: 'setAside'; job: string }
-  /** Chosen as the next job after the day's work is done (a tap on it, D-075). */
+  /** Chosen as the next job after the day's work is done (a tap on it, D-077). */
   | { type: 'picked'; job: string }
   | { type: 'jobBegun'; job: string; from: 'app' | 'record' }
   | { type: 'delveStarted'; job: string; minutes: number; count: number }

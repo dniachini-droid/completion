@@ -26,7 +26,7 @@ const toClock = async (days, hh, mm = 0) => {
 };
 const has = async (text) => (await page.getByRole('button', { name: text, exact: true }).count()) > 0;
 const tap = async (text) => { await page.getByRole('button', { name: text, exact: true }).first().click({ timeout: 8000 }).catch(() => page.getByRole('button', { name: text, exact: true }).first().click({ force: true })); };
-/** Today's one button: Delve on a delve job, Begin on one done away from the phone (D-075). */
+/** Today's one button: Delve on a delve job, Begin on one done away from the phone (D-077). */
 const start = async () => { if (await has('Delve')) await tap('Delve'); else await tap('Begin'); };
 /** Answer whatever guess the screen offers (the first option). */
 const guessIfAny = async (name) => {

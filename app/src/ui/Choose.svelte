@@ -1,5 +1,5 @@
 <script lang="ts">
-  /* Choose a delve (D-075): any job can be a delve (D-041), chosen by Dan, at any time of the day and after its work is
+  /* Choose a delve (D-077): any job can be a delve (D-041), chosen by Dan, at any time of the day and after its work is
      done. Today's list first, then his other jobs, then his satchel lines, then something new named here. Choosing
      earns nothing by itself; only the delve does (P5). */
   import { game } from './game.svelte';

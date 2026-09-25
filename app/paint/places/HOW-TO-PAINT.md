@@ -2,6 +2,12 @@
 
 Sealed folder (D-015): the scene files here quote the briefs. This guide itself holds no story.
 
+## The method (D-075): room scale, reused rooms, fast drafts
+- **Room scale only.** Frame every place as a space seen from 1–4 m; the look-at is a lit feature within it. No macro close-ups of small objects (they never reached the bar). If a brief asks for a close view, take the nearest room-scale view that keeps its look-at.
+- **Reuse an approved room** (below) and change camera, light and one feature. Copy what worked in the accepted ones: a long view with a far glow, one warm or cold key, dark words band, calm floor.
+- **Drafts at `--scale .25`** (a few seconds); full size only at the end. Aim to finish a place in under ~10 drafts.
+- Before calling it done: `check.mjs` all ok at full size, and `stats.mjs` + a crop show the look-at is the brightest or sharpest thing.
+
 ## Setup
 - `export NODE_PATH=/opt/node22/lib/node_modules` (Playwright lives there). Run from `app/`.
 - Bake a draft at half size: `node paint/bake.mjs --scale .5 --jpg --out <scratch>/<dir> paint/places/<id>.js` (10–25 s).

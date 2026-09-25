@@ -2,7 +2,7 @@
   /* Today (the morning screen, UX_PRINCIPLES → "The morning screen carries"): where you are, the sealed thing ahead,
      Low / Normal / High, the one next job with one button, today's other jobs as plain rows, "I can't start".
      A tap on a row makes it the next job, at any time of day; a swipe takes it off today; the last row chooses a delve
-     on anything (D-075). After day complete: the day as done, until Dan taps a job or keeps going.
+     on anything (D-077). After day complete: the day as done, until Dan taps a job or keeps going.
      Mock-up: design/directions/d-combined/morning.html. */
   import { game, content } from './game.svelte';
   import { presetRun } from '../core/game';

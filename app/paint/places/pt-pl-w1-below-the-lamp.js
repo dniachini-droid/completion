@@ -1,4 +1,4 @@
-/* SEALED (D-015). pt-pl-w1-below-the-lamp, round 3: kneeling under the lamp's ledge on the hall's right wall.
+/* SEALED (D-015). pt-pl-w1-below-the-lamp, round 7: kneeling under the lamp's ledge on the hall's right wall.
    The ledge's underside is a dark band across the top; the lamp above it, out of frame, lays a thin gold
    light along the wall's foot, and that glow is all that reaches the wall under the ledge. A small low
    recess at knee height, a row of cut strokes over it; round its mouth, weighted to the sill where hands
@@ -15,19 +15,21 @@ export default {
   bloom: { alpha: .1 },
   glow: { threshold: .6, k: .7 },
   blur: { px: 1, d0: 1.6, d1: 4, k: .6 },
-  gold: 1, grain: .3, shadowJitter: 1, amb: .5, ambC: [.75, .72, 1.9], expo: 1.7,
+  gold: 1, sheen: .02, grain: .3, shadowJitter: 1, amb: .5, ambC: [.75, .72, 1.9], expo: 1.7,
   lights: [
     { p: [2.26, 1.55, 5.6], c: [1, .72, .36], k: .7, r: .8, shadow: 1 },           /* the clay lamp on the ledge, above and out of frame */
-    { p: [2.6, .03, 5.6], c: [1, .72, .36], k: .3, r: .3 },                      /* its light on the floor at the wall's foot, glowing back up */
-    { p: [2.66, .36, 5.6], c: [1, .72, .36], k: .006, r: .1 },                     /* a trace of it inside the recess, on its back */
+    { p: [2.6, .03, 5.6], c: [1, .72, .36], k: .14, r: .3 },                     /* its light on the floor at the wall's foot, glowing back up */
+    { p: [2.8, .4, 5.6], c: [1, .72, .36], k: .012, r: .07 },                    /* a trace of it inside the recess, on its floor */
     { p: [.6, 2.6, 2.4], c: [.4, .37, .85], k: 9, r: 3.6, shadow: .6 },            /* the hall's violet, from behind on the left */
-    { p: [2.2, .75, 5.25], c: [.4, .37, .85], k: .17, r: .6 },                       /* the same, on the stone round the ring */
+    { p: [2.25, .72, 5.35], c: [.4, .37, .85], k: .45, r: .45 },                        /* the same, on the stone round the ring */
+    { p: [2.02, .24, 5.7], c: [.5, .47, .95], k: .22, r: .2 },                       /* and given back by the oil: placed so its sheen lands on the ring */
   ],
   glsl: /* glsl */ `
   vec4 scene(vec3 p) {
     vec4 d = hallAir(p, 2.7, 6., 12.47, -10., 66., M_CUT);
     d.z += 1.1;                                                                     /* the wall's courses laid so no joint runs up the middle of the view */
-    if (p.y < .03 && p.x < 2.3) gTint = vec3(.62);                                 /* the near floor, out of the lamp's reach */
+    if (p.y < .03) gTint = vec3(mix(.2, .45, smoothstep(2.1, 2.65, p.x)));
+    else if (p.y < .2) gTint *= mix(.45, 1., smoothstep(.0, .2, p.y));            /* the wall's foot, in the ledge's shadow but for the gold */        /* the near floor, out of the lamp's reach (no hard edge) */
     if (p.x > 2.6) gTint *= 1. - .75 * smoothstep(.8, 1.1, p.y);                   /* beside and above the ledge: one dark band */
     vec3 q = p - vec3(2.7, .3, 5.6); vec2 m = vec2(q.z, q.y);
     /* the recess: low and a little wider than high, its corners worn round */
@@ -38,15 +40,16 @@ export default {
       float nz = (fbm(m * 3. + 2., 4) - .5) * .12;
       float ring = smoothstep(-.035, -.012, sd) * (1. - smoothstep(.05, .16, sd + nz));   /* the oil runs over the edge and a little in: no clean rim */
       ring *= mix(.6, 1., smoothstep(.3, .02, m.y));
-      gStain = .85 * ring; gPolish = .8 * ring * smoothstep(-.005, .01, sd);   /* the sheen on the face only, not down in the mouth */
+      gStain = .62 * ring; gPolish = ring * smoothstep(-.005, .01, sd);   /* the sheen on the face only, not down in the mouth */
       /* a row of cut strokes over it, V-cut, clean stone */
       float k = floor((q.z + .125) / .05), sz = q.z + .125 - (k + .5) * .05 + (h2(vec2(k, 3.)) - .5) * .022;
       float t = clamp((q.y - .31) / .06, 0., 1.), tilt = (h2(vec2(k, 8.)) - .5) * .6;
       float yc = .34 + .018 * (h2(vec2(k, 1.)) - .5), ln = length(vec2(sz + (q.y - yc) * tilt, max(abs(q.y - yc) - .014 - .016 * h2(vec2(k, 4.)), 0.)));
-      if (k >= 0. && k < 5.) d.x += engrave(ln, .008, .006);             /* hand-cut, uneven, tapering to the foot */
+      float side = sz + (q.y - yc) * tilt;                                  /* a chisel's cut: one flank steep, the other long */
+      if (k >= 0. && k < 5.) { d.x += .006 * max(0., 1. - ln / (side > 0. ? .004 : .011)); if (ln < .004) gTint *= .55; }      /* V-cut: two flat flanks, so one takes the light and one does not */
     }
     d = A(d, vec4(min(-sd, .45 - q.x), M_CUT_SMALL, NOUV));
-    if (q.x > -.015 && sd < .01) { gTint = vec3(mix(.55, .06, smoothstep(.0, .3, q.x))); d.yzw = vec3(M_ROCK, NOUV); }   /* rough inside, so its floor takes no floor's sheen */   /* inside, the dark of a hand's depth: no back to be seen */
+    if (q.x > -.015 && sd < .01) { gTint = vec3(mix(.8, .3, smoothstep(.0, .3, q.x))); d.yzw = vec3(M_ROCK, NOUV); }   /* rough inside, so its floor takes no floor's sheen */   /* inside, the dark of a hand's depth: no back to be seen */
     vec4 lg = box(p, vec3(2.55, 1.22, 5.6), vec3(.31, .06, .34), M_CUT);            /* the lamp's ledge, its arrises worn round */
     lg.x -= .04;
     if (lg.x < .01) gTint = vec3(p.y < 1.14 ? .2 : .3);                             /* dark: its underside only the floor's glow on it */
