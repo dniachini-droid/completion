@@ -5,7 +5,16 @@
   import { t, type CopyKey } from '../content/copy/en';
   import Glyph from './Glyph.svelte';
 
-  let { mark }: { mark: string } = $props();
+  import { beatOf, seenAt } from '../core/story';
+  import { inSentence } from '../content/copy/en';
+
+  /* `at`: the place this is asked at, if any; a mark seen somewhere else says where (D-077) */
+  let { mark, at }: { mark: string; at?: string } = $props();
+  const from = $derived.by(() => {
+    const places = game.facts.filter(f => f.type === 'arrived' && f.kind === 'place').map(f => (f as { id: string }).id);
+    const id = seenAt(content.story, places).get(mark);
+    return id && id !== at ? beatOf(content.story, id)?.name ?? null : null;
+  });
   const m = $derived(content.story.marks.find(x => x.id === mark));
   const guessed = $derived(game.view.story.guessed.get(mark));
   /* a partial sign of it found on a deep push (SCRIPT §8): said once here, never a hint about which candidate */
@@ -25,6 +34,7 @@
 {#if m && m.candidates?.length}
   <div class="guess">
     <div class="mk"><Glyph {mark} size={46} lit={!!guessed} /></div>
+    {#if from && !guessed}<p class="soft ctx">{t('guess.from', { place: inSentence(from) })}</p>{/if}
     {#if m.context}<p class="soft ctx">{m.context}</p>{/if}
     {#if part && !guessed}<p class="soft ctx">{t('guess.part', { part: t(`part.${part}` as CopyKey) })}</p>{/if}
     {#if guessed}

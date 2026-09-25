@@ -1,4 +1,4 @@
-"""Meshy text-to-3D client for the Blender pipeline (D-076). SEALED folder (D-015).
+"""Meshy text-to-3D client for the Blender pipeline (D-084). SEALED folder (D-015).
 
   python meshy.py new <name> "<prompt>" ["<texture prompt>"]   start a preview, then refine with PBR; saves assets/<name>.glb
   python meshy.py resume <name>                                  continue an interrupted job from assets/<name>.task.json

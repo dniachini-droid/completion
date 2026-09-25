@@ -138,6 +138,8 @@ export interface Beat {
   carries?: Carries;
   /** The morning after (camp beats): what is waiting. */
   morning?: string;
+  /** Not played once this has (a camp line or a glimpse the story has moved past). */
+  until?: string;
 }
 
 /** A named place with no fragment, added by the story job (a `pl-` id). Plays as an arrival. */
@@ -199,7 +201,7 @@ export interface WeekCloseLine { id: string; w: number; req: string[]; line: str
 export interface SoFar { id: string; /** The first week close of this month (by story week). */ w: number; lines: string[];
   /** The lines with their own ids and conditions: each shows only if its beats have played (the first five that have). */
   items?: WeekCloseLine[]; }
-export interface OpenQuestion { id: string; w: number; line: string; /** The beats it needs. */ req?: string[]; }
+export interface OpenQuestion { id: string; w: number; line: string; /** The beats it needs. */ req?: string[]; /** Not asked once this has played. */ until?: string; }
 
 export interface Story {
   version: string;

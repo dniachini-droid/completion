@@ -6,6 +6,7 @@
   import { game, content } from './game.svelte';
   import { t, inSentence } from '../content/copy/en';
   import { beatOf } from '../core/story';
+  import { BEDTIME_WINDOW, pastBedtime } from '../core/game';
   import type { Go } from './nav';
   import './scene/lamp.js';
   import './scene/hall.js';
@@ -34,6 +35,10 @@
   }
   function set() { game.do({ do: 'bedtime', time: draft }); changing = false; }
   function goodnight() { game.do({ do: 'goodnight' }); }
+  /* Go to sleep is offered from five hours before bedtime; earlier in the day camp says when to come back (D-083) */
+  const early = $derived(pastBedtime(v.bedtime, game.now) < -BEDTIME_WINDOW);
+  const from = $derived.by(() => { const [h, m] = v.bedtime.split(':').map(Number), x = ((h * 60 + m - BEDTIME_WINDOW) % 1440 + 1440) % 1440;
+    return `${String(Math.floor(x / 60)).padStart(2, '0')}:${String(x % 60).padStart(2, '0')}`; });
 </script>
 
 <div class="stage" aria-hidden="true"><div class="paint" bind:this={hallEl}></div></div>
@@ -47,7 +52,8 @@
   <header class="top col">
     <div class="topbar rise">
       <button class="home" onclick={() => go('today')}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{t('delve.today')}</span></button>
-      <span></span>
+      <!-- the trial's controls (rehearsal, starting again): here at camp, out of the day's way (D-080) -->
+      <button class="icon-link trial" onclick={() => go('proto')}><span>{t('nav.proto')}</span></button>
       <button class="icon-link" onclick={() => go('map')}><span>{t('map.nav')}</span></button>
     </div>
     <h1 class="carve lg rise">{hall.name}</h1>
@@ -65,8 +71,8 @@
       <div class="night">
         <h2 class="say-lg">{t('camp.night')}</h2>
         {#if line}<p class="say camp-line">{line}</p>{/if}
-        <p class="soft">{t('camp.sleep')}</p>
-        <div class="btn-row after"><button class="btn-quiet" onclick={() => go('today')}><span>{t('delve.today')}</span></button></div>
+        <p class="soft">{v.night.kept ? t('camp.sleep.kept') : t('camp.sleep.late', { bedtime: v.bedtime })}</p>
+        <!-- nothing more to press: the phone goes down (Dan, D-083); the small Today link above is enough -->
       </div>
     {:else}
       <div class="bed">
@@ -84,9 +90,9 @@
             <button class="text-link" onclick={() => { draft = v.bedtime; changing = true; }}><span>{t('camp.change')}</span></button>
           </div>
         {/if}
-        <p class="soft promise">{t('camp.promise')}</p>
+        <p class="soft promise">{early ? t('camp.notYet', { from }) : t('camp.promise', { bedtime: v.bedtime })}</p>
       </div>
-      <button class="btn gold resting" onclick={goodnight}>{t('camp.goodnight')}</button>
+      {#if !early}<button class="btn gold resting" onclick={goodnight}>{t('camp.goodnight')}</button>{/if}
       <div class="gap"></div>
     {/if}
   </section>
@@ -111,4 +117,5 @@
   .after { margin-top: 14px; }
   .gap { height: 12px; }
   button.home { color: var(--ink-2); }
+  .trial span { font-size: 12px; letter-spacing: .14em; color: var(--ink-3); }
 </style>

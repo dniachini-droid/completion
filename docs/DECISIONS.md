@@ -791,20 +791,118 @@
   4. **Painters in parallel.** One painter per room, a few at a time, so a batch takes about as long as one painting did.
 - **Alternatives:** more rounds of tuning close-ups one by one (rejected: the evidence says it does not converge); lowering the bar (rejected: Dan wants 8).
 - **Consequences:** paintings may look further back than their briefs first imagined; the look-at stays. Dan is told the measured rate after the first batch.
+
+## D-076 — The map brought back to the approved mock-up; no Close/Region switch (Claude's routine call, D-006; Dan's report)
+- **Date:** 2026-09-25
+- **Context:** Dan, on TestFlight: the map "looks incomplete", not pretty like the original pages; nothing on it can be touched; and "why is Region there, it doesn't make any sense". All three were true. The built map drew small dots over the blurred place painting, where the approved mock-up (`design/directions/d-combined/map.html`) has its own night sky with pools of light; it had no tapping, although INTERACTION_NOTES → The map asks for it; and it switched levels with a Close/Region button, where INTERACTION_NOTES says the map opens on the region and zooms by tapping in and out.
+- **Decision (Claude, routine; it brings the build in line with what was already approved):**
+  1. **The region's own sky:** the mock-up's night-cloud sky, drifting fog, and a pool of light under every place (warm and breathing where Dan is, faint for the way ahead). Walked routes draw themselves in, settle to dust, and carry a small spark; names are carved on the sky with a dark halo.
+  2. **Every light can be tapped:** the crosshair closes on it and the box below says what is known: where Dan is and what is ahead; a walked stretch and the places named on it; a reached place and the first sentence of what it said; a sealed thing in view; the forecast day. Only what has been reached is named; the way ahead stays unnamed.
+  3. **No switch.** It opens on the whole region ("The first region · The Quiet"), on where Dan is. **Look closer** zooms into a stretch (its places in the order reached, sealed things in view, the forecast's waypoints); **See the whole region**, or "‹ The Quiet" above the title, zooms back out. Pinch is not built (a later nicety).
+- **Alternatives:** keeping the switch with clearer words (rejected: a mode switch at the top is exactly what Dan found confusing, and the approved design never had one); dropping the close level (rejected: it is where sealed things and forecast waypoints sit, MVP.md).
+- **Follow-up (same day, Dan):** the lights shifted a little on every tap: "looks stilted". Cause: the box under the map changed height with what was picked (two or three lines, a button or none), and the map re-fitted itself to the space left. Fixed at the root: the box is **one fixed size** (two lines of name, three of words, a slim action row always kept; "Look closer ›" and "‹ See the whole region" are carved links in that row), and nothing scrolls the page on a tap. **A standing check** in the flow walk measures every light, the map, the box and the page scroll before and after each tap, in both levels and at both phone sizes, and fails on any change over half a pixel; it was run against the old map first to show it catches the fault.
+- **Consequences:** the flow walk now taps every light on day 1 and after the first word, and looks closer once. Dan judges the new map on his phone.
+- **Note:** written as D-075 in its own session, alongside the painting session's D-075; renumbered D-076 when the branches were merged (commit messages and code on that branch say D-075).
+
+## D-077 — Choosing what to do on Today, and a guess that waits for its marks (Dan's report; Claude's routine calls, D-006)
+- **Date:** 2026-09-25
+- **Context:** Dan, playing the first playable: after the day's work he couldn't choose which delve to do next (Keep going picked one for him); nothing could be taken off Today; a job added in Week couldn't be started from Today; there was no way to delve on anything he liked; the screen had too many buttons (Begin and Swap side by side). And the lamp's marks: he saw them at one place but was asked to guess only later, which felt disjointed.
+- **Decision:**
+  1. **One main button.** "Delve" for a delve job, "Begin" only for a job done away from the phone. Swap is gone.
+  2. **A tap on any job makes it the next one**, at any time of day, including after the day's work is done (a `picked` fact).
+  3. **Not today:** a small link under the main button, or a swipe left on a row. The job leaves today's list with no mark against it; the next job in order takes its place; it is offered again tomorrow, or as soon as Dan begins or taps it (a `setAside` fact). It never completes the day and earns nothing (rule 10).
+  4. **Delve on anything:** the last row, "Something else…" (and Keep going after the day's work), opens "Choose a delve": today's list, all Dan's jobs, his satchel lines, and a box to name something new. Any choice goes straight to the delve's set-up (D-041). A job done this way shows on Today as done and counts in full.
+  5. **A guess waits for its marks.** When a job's Done both brings a step with a guess and reaches a place, the guess is now asked on the arrival, after the place's marks are seen, not on the screen before it (it was an engine ordering bug). A guess about a mark seen elsewhere says "One of the marks you saw at {place}". A place showing marks that can't be guessed yet says so once, gently. Guesses opening over several weeks is the story's design and is kept.
+  6. **"Your lamp":** the app's own two lines about Dan's lamp now say "your lamp", so it isn't confused with the lamps he finds. The story's own lines that say only "the lamp" are listed (ids only) for the next sealed story session to anchor.
+- **Alternatives:** an action tray on each row (tried and rejected by Dan: too many buttons); keeping Swap (rejected: tapping a row does the same, directly).
+- **Consequences:** new screen Choose; 7 new rule tests (91 in all); the flow walk taps Delve. Sealed follow-up for the story session: anchor the ambiguous "the lamp" lines.
 - **Reversible:** Yes.
 
-## D-076 — Another way to make the paintings: Blender, with Meshy for objects (Dan)
+## D-078 — Today follows the week's plan (Dan's report)
+- **Date:** 2026-09-25
+- **Context:** Dan's Friday: the week showed Gym, Order the cat's medication and Tank clean, but Today put the Course first. Today filled the day's size from all his jobs, not only the plan. Dan: "Weekly planner should match up with what the daily plan is… not suggest things I haven't put in the weekly plan."
+- **Decision:** once a week is laid out with Plan my week, Today offers only the jobs the plan puts on that day (appointments as before). The day's size is never more than the plan holds for it (at least one), so a day planned light completes when its planned jobs are done. Anything else is one tap away in "Something else…" (D-077). A week with no Plan my week (only a line or two added) works as before.
+- **Alternatives:** keep filling from other jobs (rejected by Dan).
+- **Consequences:** PLANNER.md's "capacity still sizes the day" now reads: capacity sizes the day, up to what the plan holds. 3 new rule tests.
+- **Reversible:** Yes.
+
+## D-079 — The story never runs ahead of where Dan has been; Keys wait (Dan's report; changes D-049)
+- **Date:** 2026-09-25
+- **Context:** Dan arrived at the Lamp Hall and was told about something in the Salt Gallery, where he had never been. Cause: two clocks (D-049). The story week moves with the calendar, where Dan stands moves with effort, and the story's steps, sealed things and week-close glimpses were chosen by story week alone. The route loops between areas (hall, salt gallery, camp, stair…), so this could happen in any week. No test checked it.
+- **Decision:**
+  1. **The continuity guard** (`tests/rules/continuity.test.ts`): 21 simulated six-week playthroughs (Normal, Low, High, mixed, a week away, two weeks away, High then Low; each with no bedtime, bedtime kept, bedtime late). It fails if any story moment or sealed thing plays in an area Dan has never set foot in. It runs before every phone build, so a build that breaks it cannot ship. Before the fix, normal play had 3 such moments (all in week 1, the one Dan met), and other patterns had more in weeks 3–6. After it, 0.
+  2. **A story step plays only in an area Dan has been.** Otherwise the job's return is a line of the passage, as it already was when no step was due.
+  3. **Sealed things keep the story's written order.** A Key earned while the next one lies in an area not yet reached is **kept** (`keyHeld`). It opens that thing on the arrival that makes it reachable, and the arrival screen says so ("The key you carried opens something here."). No Key is lost: the same number of sealed things open over six weeks as before.
+  4. **The week-close glimpse** waits until its area has been reached.
+  5. Exempt on purpose: a Key whose opening carries Dan to a place, and the High day's deep push, which goes further in by design.
+- **What it changes of D-049:** "the story keeps its order" still holds. The story week still sets what may come next, but where Dan has walked now also gates it, so in slow weeks the story waits for his feet instead of running ahead.
+- **Reversible:** Yes.
+
+## D-080 — Fixes from the seven-way adversarial review (Dan asked for it; Claude's routine calls, D-006)
+- **Date:** 2026-09-25
+- **Context:** Dan asked for strong independent reviews before the six-week test (story, interface, psychology, bugs, navigation, a new player, the phone), because he cannot see the story himself. Seven critics each reviewed the app, and a separate sceptic checked every finding against the code: 86 of 92 were confirmed. The full list, and what was done about each, is in `product/REVIEW_1.md` (spoiler-free; story findings by id only; the detailed story report is sealed).
+- **Decision (core, this session):**
+  1. **The week is always planned, and it always leads Today.** At a week's first opening with no plan, Plan my week lays it out from that day on; Dan changes it as he likes. Today shows every job planned for the day (as the Week does); capacity (Low/Normal/High, the hour opened) only sets how many make the day complete. "Not today" takes one off and the day then needs one fewer. A job Dan starts or taps himself joins the list after the plan's. Going past the plan (a High day, the deep push) is Dan's own choice through "Something else…". Replaces D-078's "only after Plan my week".
+  2. **Reopening from the background** begins a new day exactly as a cold start does (the morning, week close, welcome back, story week) and shows what waits.
+  3. **No stuck states:** a stopped delve never leaves its job "under way"; a delve left stepped-away ends by itself after three hours or at the day's end, where it was paused, on its own day; Today shows a running delve with one button back to it.
+  4. **Navigation:** "Today" never skips a place just reached, the morning, the welcome back or a new daybook page; each unseen arrival plays in turn; a record returns to where it was opened; the Stair's "Go down" lets Dan choose.
+  5. **The save:** a save this build can't read is kept aside, never overwritten; yesterday's save is copied to a backup each day; a wipe keeps one copy; a screen error shows a way back instead of a blank phone. The Trial controls moved from Today to camp (shown on Today only while a rehearsal is on).
+  6. **Builds:** only from main (with [testflight]) or started by hand; no monthly rebuild and no side-branch builds, so nothing unchosen reaches Dan's phone during the test.
+  7. **Smaller:** honest words when alerts are off; sound re-armed after the background; the clock no longer rebuilds the screen four times a second; passage lines never repeat while an unseen one is available; removing a planned job no longer deletes a line Dan added; a missed appointment falls away.
+- **Story and screen polish** findings are fixed in their own passes (recorded in REVIEW_1.md). Taste calls go to Dan.
+- **Reversible:** Yes.
+
+## D-081 — Story fixes from the review, and the pace for a planned week (Claude's routine calls, D-006)
+- **Date:** 2026-09-25
+- **Context:** the review's story critic confirmed 18 findings (details sealed: `narrative/sealed/REVIEW_PLAYABLE.md`). Once the week plan leads Today (D-080), a Normal week holds about 12–15 jobs, not 21, so the story fell a week behind by week 6.
+- **Decision:** 16 story findings fixed in the engine and the sealed data, each with a rule test where one is possible (spoiler-free list in `product/REVIEW_1.md`). The ones Dan would notice most:
+  1. Skipping an optional guess never stops the story.
+  2. A morning that confirms marks comes after they were offered, bedtime kept or not.
+  3. A Key opens only what is in view.
+  4. Camp lines wait for what they describe.
+  5. A guess moves onto an arrival only if that place carries the mark (narrows D-077).
+  6. Next week's places come only on a deep push, and otherwise one place a day on foot (`FOOT_A_DAY`, easy to change).
+  7. Camp views rotate.
+  8. Every ambiguous "the lamp" line is anchored.
+
+  **The pace:** the distance between named places is 150 minutes of effort (was 200, D-049), so a planned Normal, Low or High week each reach story week 6 in six calendar weeks (measured in the simulation). The "light weeks" test now counts Keys kept for later (D-079) as well as those opened.
+- **For Dan (story-10):** the six-week test ends just before the story's next big turn. Options: run seven weeks, or have the sealed story session bring one answer forward into week 6. It doesn't affect the behaviour test.
+- **Reversible:** Yes.
+
+## D-082 — Dan's answers to the review's questions
+- **Date:** 2026-09-25
+- **Decision (Dan):**
+  1. **The test runs seven weeks**, not six, so it reaches the story's turn in week 7 (the week 7 content was already built as run-ahead). A rule test checks that seven Normal or Low weeks reach story week 7 with nothing out of place.
+  2. **A High day adds one job beyond the plan**, the next one due, and only one; more is Dan's own choice through "Something else…". The day's size on High is the plan plus one.
+  3. **Marks opens with nothing selected** (Dan: "whatever you think"; Claude's call): a page to look at, not a quiz; a quiet line says to tap a mark.
+  4. **Text size:** Dan's is fine; the app keeps its own.
+  5. **Today stays as it is** (Q2), as long as Dan can change what's on it: tap a job to make it next, Not today (or swipe), "Something else…", and the Week and What repeats for the plan itself.
+- **Reversible:** Yes.
+
+## D-083 — Camp made clear: "Go to sleep", and a head start for bed on time (Dan)
+- **Date:** 2026-09-25
+- **Context:** Dan: camp wasn't clear. Do I press a button to go to sleep? If it's meant to help me put the phone down, it should have a "go to sleep" button, and being in bed before a certain hour should bring something positive the next day. Before this, "Goodnight" counted only from three hours before bedtime, its reward was a small find or line in the morning, nothing said whether it had counted, and the button showed at noon too.
+- **Decision (Dan's, built as he described):**
+  1. The button is **Go to sleep**. It is offered from five hours before Dan's bedtime (18:00 for 23:00). Before that, camp says when to come back.
+  2. Camp says plainly how it works: press it when you go to bed and put the phone down; in bed by your bedtime, and tomorrow begins with a head start.
+  3. **In bed on time** (up to 15 minutes past bedtime): the next morning begins **15 minutes of distance further in** (`HEAD_START`), once per night, plus the morning's find or story line; the Morning screen says so. After pressing, camp says so, and says to put the phone down. There is nothing more to press.
+  4. **Late:** "The head start is for nights you are in bed by {bedtime}. Nothing is lost." No guilt, nothing taken away (rule 9).
+  5. The Trial link sits quietly in camp's top bar.
+- **Why it's safe (rule 10):** once a night, tied to a real behaviour, and small (about a tenth of a place's distance).
+- **Reversible:** Yes (one constant).
+
+## D-084 — Another way to make the paintings: Blender, with Meshy for objects (Dan; numbered D-076 on its own branch)
 - **Date:** 2026-09-25
 - **Context:** Even with D-075 (reused rooms, parallel painters), most paintings land at 4–7; 7 of 48 are in the game. Dan: "if it's going to be this hard to make images maybe we should look for another way"; the pictures in development are finished first. Dan offered Meshy (AI text-to-3D models).
 - **Decision (Dan; the method Claude's):** after the current round, test a new pipeline on one of the paintings that keep failing: rooms built and lit by code in **Blender** (a real renderer: soft bounce light, true materials), small objects made by **Meshy** through its API (Claude calls it; Dan never sees the object list, D-015). This relaxes "paintings stay code-painted" (D-056) for props only. The bar stays 8 (Dan). If the test does not reach 8, AI image generation or a human artist are the next options, Dan's call.
 - **Setup (Dan):** a Meshy API key in the environment as `MESHY_API_KEY`, and `api.meshy.ai` allowed in network access; takes effect in a new session. Blender installs from the system packages.
 - **Reversible:** Yes.
 
-## D-077 — The paintings' bar is Dan's eye, not 8/10 (Dan)
+## D-085 — The paintings' bar is Dan's eye, not 8/10 (Dan; numbered D-077 on its own branch)
 - **Date:** 2026-09-25
-- **Context:** The critic's 8/10 bar (D-067, D-072) kept most paintings out after many rounds: 7 of 48 in the game; each place that passed took 2–5 rounds, the hardest two still out after 7, and the Blender test (D-076) about 2½ hours on one picture. Dan asked whether we were spending too much time per painting. He was shown, blind, the three invented sample places (not in the story, so no spoilers) at two levels: first tries made in minutes (the critic scored them 4, 5 and 6) and one-revision versions (about 6 minutes each), beside the approved hall.
+- **Context:** The critic's 8/10 bar (D-067, D-072) kept most paintings out after many rounds: 7 of 48 in the game; each place that passed took 2–5 rounds, the hardest two still out after 7, and the Blender test (D-084) about 2½ hours on one picture. Dan asked whether we were spending too much time per painting. He was shown, blind, the three invented sample places (not in the story, so no spoilers) at two levels: first tries made in minutes (the critic scored them 4, 5 and 6) and one-revision versions (about 6 minutes each), beside the approved hall.
 - **Decision (Dan):** he liked five of the six, including all three first tries (the 4/10 one too); he turned down one revised version. So **a painting goes into the game after its first attempt**, if it passes the automatic checks and the thing to look at reads as what it is (a clue must never read wrongly, rule 6). A second attempt only for a painting that fails either of those, or that Dan dislikes when he meets it in the game. The critic stays as a quick check for wrong readings, not a score to reach.
 - **Alternatives:** keep 8/10 (hours per place; most places on stand-ins); a middle bar of one revision each (Dan liked the first tries as much).
-- **Consequences:** the places now on stand-ins whose pictures already exist (scored 4–7) can go in once each is checked for wrong readings; new places get one attempt. The Blender test (D-076) is no longer needed to reach the bar; the kit, which paints a place in under a minute, is enough. Blender work is paused, kept on `claude/blender-meshy-round-2-1du0fv`, and can come back for a picture Dan dislikes.
+- **Consequences:** the places now on stand-ins whose pictures already exist (scored 4–7) can go in once each is checked for wrong readings; new places get one attempt. The Blender test (D-084) is no longer needed to reach the bar; the kit, which paints a place in under a minute, is enough. Blender work is paused, kept on `claude/blender-meshy-round-2-1du0fv`, and can come back for a picture Dan dislikes.
 - **Reversible:** Yes: Dan can raise the bar or send any painting back.
 

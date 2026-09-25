@@ -36,7 +36,20 @@ class Game {
     this.append(settle(this.facts, content, this.now));
     this.do({ do: 'open' });
     this.#ticker = window.setInterval(() => this.tick(), 250);
-    document.addEventListener('visibilitychange', () => { if (!document.hidden) this.tick(); });
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) this.wake(); });
+    window.addEventListener('focus', () => this.wake());
+  }
+
+  /** Counts each return to the app that began a new game day, so the screens can show what waits (App.svelte). */
+  woke = $state(0);
+  /** Back from the background (the app is rarely closed on a phone): the clock's facts, and a new day's opening, with
+      its morning, week close, welcome back and story week, exactly as a cold start would (review finding, D-080). */
+  wake() {
+    this.now = this.clock();
+    this.append(settle(this.facts, content, this.now));
+    const today = this.view.day;
+    if (!this.facts.some(f => f.type === 'opened' && f.day === today)) { this.do({ do: 'open' }); this.woke++; }
+    else this.tick();
   }
 
   /** A job as Dan has it now (his edits and satchel lines included). */
@@ -56,15 +69,35 @@ class Game {
     return new Date(p.rehearsal ? p.anchorReal + (ms - p.anchorFake) / REHEARSAL_SPEED : ms);
   }
 
+  /** The phone refused alerts: the delve says so, rather than promising a sound (review finding, D-080). */
+  alertsOff = $state(false);
+  /** A save this build couldn't read was kept aside, never overwritten (D-080): the key it was kept under. */
+  keptAside = $state<string | null>(null);
+
+  /** The save, read. A save this build can't use (unreadable, or from another version) is copied aside first, so
+      nothing Dan did is ever lost by an update; a newer version's save is never written over (D-080). */
   load(): Fact[] {
+    const raw = platform.store.get(this.saveKey);
+    if (raw === null) return [];
     try {
-      const s: Save = JSON.parse(platform.store.get(this.saveKey) ?? 'null');
+      const s: Save = JSON.parse(raw);
       if (s && s.version === SAVE_VERSION && Array.isArray(s.facts)) return s.facts;
-    } catch { /* a broken prototype save starts afresh */ }
+    } catch { /* kept aside below */ }
+    const key = `${this.saveKey}.kept.${platform.now().getTime()}`;
+    platform.store.set(key, raw);
+    this.keptAside = key;
     return [];
   }
+  #backedUp = '';
   save() {
     const s: Save = { version: SAVE_VERSION, content: content.version, facts: this.facts };
+    /* once a day, yesterday's save is copied to a backup before today's writes (D-080) */
+    const day = this.view?.day ?? '';
+    if (day && day !== this.#backedUp) {
+      const prev = platform.store.get(this.saveKey);
+      if (prev) platform.store.set(`${this.saveKey}.backup`, prev);
+      this.#backedUp = day;
+    }
     platform.store.set(this.saveKey, JSON.stringify(s));
   }
   append(f: Fact[]) {
@@ -83,10 +116,18 @@ class Game {
     return f;
   }
 
+  #minute = 0;
   tick() {
     const before = this.view.run;
+    /* with no delve running, the clock only matters by the minute: the view is not rebuilt four times a second */
+    const m = Math.floor(this.clockMs() / 60_000);
+    if (!before && m === this.#minute) return;
+    this.#minute = m;
     this.now = this.clock();
-    if (!before) return;
+    if (!before) {
+      if (!this.facts.some(f => f.type === 'opened' && f.day === this.view.day)) this.wake();   /* past 04:00 with the app open */
+      return;
+    }
     const f = settle(this.facts, content, this.now);
     this.append(f);
     const after = this.view.run;
@@ -103,7 +144,8 @@ class Game {
     await platform.notifier.cancel(ids);
     const r = this.view.run;
     if (!r || !platform.notifier.locked) return;
-    if (!(await platform.notifier.permit())) return;   /* asked once, at the first Begin */
+    if (!(await platform.notifier.permit())) { this.alertsOff = true; return; }   /* asked once, at the first Begin */
+    this.alertsOff = false;
     const marks = this.facts.filter(f => f.seq > r.seq && ['breatherSkipped', 'delveHeld', 'delveResumed'].includes(f.type))
       .map(f => ({ kind: f.type === 'breatherSkipped' ? 'skip' : f.type === 'delveHeld' ? 'hold' : 'resume', at: epochOf(f.at) } as const));
     const list = alertsAfter({ startedAt: r.startedAt, minutes: r.minutes, count: r.count }, marks, epochOf(this.now));
@@ -127,6 +169,9 @@ class Game {
     void this.alerts();   /* the other save's alerts go; this one's come back */
   }
   reset() {
+    /* even a wipe keeps one copy aside, so a slip can be undone (D-080) */
+    const prev = platform.store.get(this.saveKey);
+    if (prev) platform.store.set(`${this.saveKey}.wiped`, prev);
     platform.store.remove(this.saveKey);
     if (this.proto.rehearsal) { this.setRehearsal(true); return; }
     this.facts = [];

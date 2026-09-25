@@ -58,6 +58,10 @@ export type FactBody =
   | { type: 'opened' }
   | { type: 'capacityChosen'; capacity: Capacity; suggested: Capacity }
   | { type: 'swapped'; from: string; to: string }
+  /** Taken off today's list ("Not today"): it stays Dan's, and comes back tomorrow or once he begins it again. */
+  | { type: 'setAside'; job: string }
+  /** Chosen as the next job after the day's work is done (a tap on it, D-077). */
+  | { type: 'picked'; job: string }
   | { type: 'jobBegun'; job: string; from: 'app' | 'record' }
   | { type: 'delveStarted'; job: string; minutes: number; count: number }
   | { type: 'breatherSkipped' }
@@ -74,6 +78,9 @@ export type FactBody =
   /* the story (slice 2): each written once, when it happens */
   | { type: 'beatPlayed'; id: string; job?: number; passage?: string }
   | { type: 'keyEarned'; rhythm: string }
+  /** A Key earned while nothing Dan has reached is sealed: kept, and used on the next arrival that has one (D-079). */
+  | { type: 'keyHeld' }
+  | { type: 'keyUsed' }
   | { type: 'sealOpened'; seal: string }
   | { type: 'findGiven'; id: string; why: 'avoided' | 'switching' | 'chamber' | 'camp' | 'surplus' | 'morning'; job?: number }
   | { type: 'recordShown'; id: string }

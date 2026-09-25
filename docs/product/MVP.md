@@ -5,13 +5,13 @@
 _Status: **approved by Dan** (2026-09-24, D-055), with his four answers (D-054)._
 
 ## In one breath
-The MVP is the first playable almost whole. Phase 5 already cut the features hard; what is left is the loop itself and what Dan meets in the test's six weeks. **The real size of the build is in paintings and words, not features**, so that is where this page budgets. The test asks one thing: does wanting to go further in make Dan **start** real things, especially the ones he avoids?
+The MVP is the first playable almost whole. Phase 5 already cut the features hard; what is left is the loop itself and what Dan meets in the test's seven weeks (D-082). **The real size of the build is in paintings and words, not features**, so that is where this page budgets. The test asks one thing: does wanting to go further in make Dan **start** real things, especially the ones he avoids?
 
 ## What "true" means (the bar for every item)
 An item is in the MVP if **any** answer is yes:
 1. Without it, is the core loop broken, or the test dishonest?
 2. Without it, would a day feel like a task manager with a picture?
-3. Without it, would normal use hit a wall within six weeks (a gap, a bad week, a job that changes)?
+3. Without it, would normal use hit a wall within seven weeks (a gap, a bad week, a job that changes)?
 4. Does Dan meet it before the test ends (the first word in week 2–3, the week close, a gap, the month's "so far")?
 
 Everything else is cut or made simpler. A second way into something that already has one is the first thing cut.
@@ -100,7 +100,7 @@ Chores are asked about **before** favourites, so politeness doesn't bury the pro
 - **Avoided jobs start more often** than in the baseline, and they start from the app (Begin), not only logged afterwards.
 - **"I can't start" is followed by a job** more often than not.
 - He **comes back after gaps and low days** without being reminded.
-- Use **holds or recovers through weeks 4–6**, past the novelty dip.
+- Use **holds or recovers through weeks 4–7**, past the novelty dip.
 - He remembers what he learned, and talks about the Quiet between sessions (questions, guesses, "what's behind that door?").
 - Low days get completed instead of becoming zero days.
 
@@ -116,7 +116,7 @@ Chores are asked about **before** favourites, so politeness doesn't bury the pro
 
 ## What not to overinterpret
 - **Week 1** (novelty) and **week 4** (the usual dip), alone.
-- **One bad week.** Life, illness and hard days happen; the design expects them (rule 9). Look at the six weeks.
+- **One bad week.** Life, illness and hard days happen; the design expects them (rule 9). Look at the seven weeks.
 - **Total hours, steps, Keys, places.** More isn't the question; starting is.
 - **Planner adherence.** The plan is a forecast (D-048); a moved plan is not a failure.
 - **Politeness.** Dan is also the client; his "it's great" counts less than a remembered moment.

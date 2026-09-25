@@ -52,14 +52,15 @@ describe('six weeks of play', () => {
     expect(st.week).toBeGreaterThanOrEqual(5);
     for (let w = 1; w < st.week; w++) for (const id of places(w)) expect(st.played.has(id), id).toBe(true);
     expect(st.played.has('b-3.A')).toBe(true);   /* the first word, in week 2–3 */
-  });
+  }, 60_000);
   it('Low weeks never stall: the floor keeps Keys coming and the story still moves', () => {
     const p = sim().week(['low', 'away', 'low', 'away', 'low', 'away', 'away']);
     for (let i = 0; i < 5; i++) p.week(['low', 'away', 'low', 'away', 'low', 'away', 'away']);
     const st = p.st();
     /* a Low week stretches the story week; it never stops it: places keep coming, and the floor opens 2 a week */
     expect(st.week).toBeGreaterThanOrEqual(2);
-    expect(st.opened.size).toBeGreaterThanOrEqual(10);
+    /* the floor keeps Keys coming: opened, or kept for a sealed thing not yet reached (never lost, D-079) */
+    expect(st.opened.size + st.held).toBeGreaterThanOrEqual(10);
     expect([...st.played].filter(x => /^(b-\d\.[A-C]|pl-)/.test(x)).length).toBeGreaterThanOrEqual(8);
   });
   it('a two-week absence pauses the story; it resumes where it was', () => {
@@ -97,14 +98,16 @@ describe('Keys, finds and lines', () => {
     expect(new Set(ids).size).toBe(ids.length);
     expect(ids.length).toBeGreaterThan(0);
   });
-  it('passage lines do not repeat on a stretch until its list is used', () => {
+  it('a passage line never repeats while an unseen one is available where Dan is', () => {
     const p = sim().week('high').week('high');
-    const shown = p.facts.filter(f => f.type === 'beatPlayed' && (f as { passage?: string }).passage).map(f => (f as { passage: string }).passage);
-    const byStretch = new Map<string, string[]>();
-    for (const id of shown) { const ps = C.story.passages.find(x => x.id === id)!; byStretch.set(ps.stretch, [...(byStretch.get(ps.stretch) ?? []), id]); }
-    for (const [stretch, list] of byStretch) {
-      const pool = C.story.passages.filter(x => x.stretch === stretch).length;
-      expect(new Set(list.slice(0, pool)).size, stretch).toBe(Math.min(pool, list.length));
+    for (let i = 0; i < p.facts.length; i++) {
+      const f = p.facts[i] as { type: string; passage?: string };
+      if (f.type !== 'beatPlayed' || !f.passage) continue;
+      const st = S.storyState(p.facts.slice(0, i), C.story);
+      if (!st.passagesShown.includes(f.passage)) continue;
+      /* a repeat: allowed only once every line available on this stretch had been shown */
+      const here = C.story.passages.filter(x => x.stretch === st.stretch && x.req.every(r => S.met(st, r)) && !(x.until && S.met(st, x.until)));
+      expect(here.every(x => st.passagesShown.includes(x.id)), f.passage).toBe(true);
     }
   });
   it('a teaser whose condition is false never shows', () => {

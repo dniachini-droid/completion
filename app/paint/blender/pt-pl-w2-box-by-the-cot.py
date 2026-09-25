@@ -1,4 +1,4 @@
-"""SEALED (D-015). pt-pl-w2-box-by-the-cot, the Blender test (D-076).
+"""SEALED (D-015). pt-pl-w2-box-by-the-cot, the Blender test (D-084).
 Brief: a shoebox-sized box against her camp's wall, a thin slate laid across its lid with a count, and on the slate a
 tin mug upside down; tin, slate, cardboard gone soft, cut stone behind; the clay lamp's light from the doorway (warm,
 weak); low, near the floor, VP along the wall; look at the upside-down mug; a single glint on the mug's rim.
@@ -134,7 +134,7 @@ for c in cutters:
     bpy.data.objects.remove(c)
 slate.rotation_euler = (0, 0, -SA); slate.location = K(*S0)
 
-# ---------- the tin mug (Meshy, D-076), upside down on the slate, the side toward us lifted off it ----------
+# ---------- the tin mug (Meshy, D-084), upside down on the slate, the side toward us lifted off it ----------
 # Meshy's shape, our material: its baked colour and light would fight the scene's. Brushed dull tin, dented.
 tin = bpy.data.materials.new('tin')
 nt, nd, lk, bs = lib.nodes_of(tin)

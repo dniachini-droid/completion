@@ -11,3 +11,5 @@ node_modules/
 dist/
 build/
 *.zip
+.claude/worktrees/
+__pycache__/
