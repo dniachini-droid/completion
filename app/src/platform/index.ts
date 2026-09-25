@@ -37,7 +37,8 @@ const Native = registerPlugin<AwayPlugin>('Away');
 const nativeAway: Away & { first: number | null } = {
   first: null,
   watch(on, alerts) { void Native.watch({ on, alerts: alerts.map(String) }).catch(() => {}); },
-  async take() { try { return (await Native.take()).at ?? null; } catch { return null; } },
+  /* never waited on for long: a reply lost while the phone locks or wakes must not stop the game's clock for good */
+  async take() { try { return (await Promise.race([Native.take(), new Promise<never>((_, no) => setTimeout(no, 2000))])).at ?? null; } catch { return null; } },
   async log() { try { return (await Native.log()).entries; } catch { return []; } },
 };
 

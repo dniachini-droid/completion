@@ -57,7 +57,8 @@
   const doneSeq = $derived.by(() => {
     if (!end) return null;
     const start = game.facts.find(f => f.type === 'delveEnded' && f.seq === end.seq);
-    const d = game.facts.find(f => f.type === 'jobDone' && f.job === end.job.id && start && f.day === start.day && f.seq > (start as { run: number }).run);
+    /* on any day: a delve begun before 04:00 is answered on the next game day */
+    const d = game.facts.find(f => f.type === 'jobDone' && f.job === end.job.id && start && f.seq > (start as { run: number }).run);
     return d ? d.seq : null;
   });
   /* the end carries the story (a step, a mark to guess, a find) */
