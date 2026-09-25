@@ -102,15 +102,18 @@ export default {
     land.x = max(land.x, -1.) ;
     d = A(d, vec4(min(land.x, p.y - noseY(NST * TREAD) + .0), M_CUT, NOUV));
     /* the nearest step below you: two smooth hollows a stride apart, worn by feet */
-    float k = 7., top = -RISE * (k + 1.), zc = (k + .38) * TREAD;
+    float k = 7., top = -RISE * (k + 1.), zc = (k + .55) * TREAD;
     if (abs(p.y - top) < .08 && d.x < .05) {
       for (int s = 0; s < 2; s++) {
         vec2 c = vec2(float(s) == 0. ? -.42 : .4, zc + (float(s) - .5) * .06);
-        vec2 e = (p.xz - c) / vec2(.2, .16);
+        vec2 e = (p.xz - c) / vec2(.19, .25);                               /* longer front-to-back than wide */
+        e += (vec2(fbm(p.xz * 7. + float(s) * 5., 3), fbm(p.xz * 7. + 11., 3)) - .5) * .25;   /* worn, not drawn */
         float r = length(e);
-        float dip = .04 * max(1. - r * r * r * r, 0.);
+        float front = smoothstep(-1., 1., e.y);                                /* deepest toward the step's front edge */
+        float dip = .032 * (.55 + .45 * front) * smoothstep(1., .35, r);      /* the rim feathered into the tread */
         d.x += dip;
-        gPolish = max(gPolish, smoothstep(1.05, .5, r)); gTint *= 1. + .9 * smoothstep(1.05, .4, r);
+        float w = smoothstep(1.1, .3, r);
+        gPolish = max(gPolish, .9 * w); gTint *= 1. + .35 * w;
       }
     }
     /* every other tread worn the same way, fainter */
