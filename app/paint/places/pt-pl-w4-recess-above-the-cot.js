@@ -18,7 +18,7 @@ export default {
   lights: [
     { ...room.lights[0], k: 2.5 },                                                          /* the clay lamp, in the passage: its light rises into the vault */
     { p: [1.26, 1.62, 1.8], c: [1, .7, .34], k: .06, r: .2, shadow: 1, reach: .5 },       /* its light, weak, from below, raking up the wall and into the recess's lip */
-    { p: [1.36, 1.94, 1.975], c: [.9, .92, 1.], k: .004, r: .02, reach: .05 },             /* a cold point given back by the pin's steel */
+    { p: [1.36, 1.945, 1.972], c: [.9, .92, 1.], k: .0025, r: .012, reach: .03 },             /* a cold point given back by the pin's steel */
     { p: [-1.3, 1.9, 3.6], c: [.4, .37, .85], k: .8, r: 1.2 },                            /* violet in the corners */
     { p: [.2, 2.4, .8], c: [.4, .37, .85], k: .7, r: 1 },
     { p: [.6, 1.7, 2.5], c: [.4, .37, .85], k: .12, r: .8 },                              /* violet fill on the wall over the cot */                               /* violet in the vault */
@@ -48,18 +48,28 @@ export default {
     sl.x += rough(p, .0015, 60.);
     if (sl.x < d.x) { d = sl; gTint = cut ? vec3(1.2) : vec3(.72, .72, .78) * (.85 + .3 * fbm(p.yz * 40., 2)); }
     /* beside it, a crack running up the stone, and in it the drawing pin */
-    float cz = l.z - .245 - .012 * sin(l.y * 23.) - .006 * sin(l.y * 61. + 1.);
+    float cz = l.z - .245 - .03 * l.y - .004 * (fbm(vec2(l.y * 18., 3.), 3) - .5) * 2. - .0015 * (vn(vec2(l.y * 90., 8.)) - .5);   /* straight-ish, jagged */
     float crack = abs(cz);
     bool nearWall = sl.x > .004 && abs(l.x) < .02;
     if (nearWall && l.y > -.2 && l.y < .2) {
-      float w = .0042 * (1. - smoothstep(.1, .2, abs(l.y)));
-      d.x += engrave(crack, w, .01);
-      if (crack < w) gTint *= .35;
+      float brk = smoothstep(.4, .55, vn(vec2(l.y * 14., 21.)));                              /* broken: it closes up in places */
+      float w = (.0012 + .0016 * brk) * (1. - smoothstep(.1, .2, abs(l.y)));
+      d.x += engrave(crack, w, .008 * brk + .002);
+      if (crack < w * .7) gTint *= .2;                                                           /* its inner shadow */
+      else if (cz < 0. && crack < w * 1.8) gTint *= 1.35;                                         /* the lit lip on the lamp's side */
     }
-    vec3 pq = l - vec3(.003, -.02, .245 + .012 * sin(-.02 * 23.) + .006 * sin(-.02 * 61. + 1.));
-    float head = max(length(pq.yz) - .007, abs(pq.x) - .0012) - .0006;           /* the pin's head, flat, standing just proud of the crack */
-    vec4 pin = vec4(head, M_TIN, NOUV);
-    if (pin.x < d.x) { d = pin; gTint = vec3(1.4, 1.45, 1.55); gPolish = 1.; gSmooth = .6; }
+    vec3 pq = l - vec3(.003, -.02, .245 - .03 * -.02);
+    float ta = .45, ct = cos(ta), st = sin(ta);
+    vec3 hq = vec3(ct * pq.x - st * pq.z, pq.y, st * pq.x + ct * pq.z);                         /* the head tipped a little: an ellipse, seen edge-on */
+    float rr = length(hq.yz);
+    float head = max(rr - .0075, abs(hq.x) - .0005);                                              /* a flat steel disc */
+    float shaft = max(length(pq.yz) - .0007, max(-pq.x - .012, pq.x));                            /* its point, going into the crack */
+    vec4 pin = vec4(min(head, shaft), M_TIN, NOUV);
+    if (pin.x < d.x) {
+      d = pin; gTint = vec3(.8, .82, .88); gPolish = .5;
+      if (rr > .0062) gTint *= .55;                                                               /* a thin darker rim */
+    }
+    if (nearWall && length(l.yz - vec2(-.02 - .004, .245 + .006)) < .006) gTint *= .5;             /* the head's small shadow on the stone */
     if (p.y > 2.15) gTint *= mix(1., .35, smoothstep(2.15, 2.6, p.y));              /* the crown of the vault in the dark */
     if (p.y < 1.15) gTint *= mix(.3, 1., smoothstep(.4, 1.15, p.y));                  /* the cot and the wall below, kept back */
     if (p.y < 1.75) gTint *= mix(.5, 1., smoothstep(1.3, 1.75, p.y));                 /* the wall below falling off toward the cot */

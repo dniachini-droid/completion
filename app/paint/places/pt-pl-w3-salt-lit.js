@@ -49,13 +49,13 @@ export default {
   id: 'pt-pl-w3-salt-lit',
   name: 'The salt, lit',
   line: '',
-  cam: { x: -.25, y: 1.15, z: ZS - 1.55, pitch: -16, yaw: -44, f: .62, cx: .5, cy: .5 },
+  cam: { x: .0, y: 1.1, z: ZS - .75, pitch: -8, yaw: -74, f: .62, cx: .5, cy: .5 },
   salt: { pink: .45 },
   expo: 1.9, grade: [1, 1, 1],
   blur: { px: 1.8, d0: 4, d1: 16, k: .85 },
   lights: [
-    { p: [.4, 1.8, ZS - 2.2], c: [1, .84, .66], k: 1.9, r: 1.8, shadow: .6 },         /* the cups' glow, round the corner behind you */
-    { p: [-1.72, 1.3, ZS - .25], c: [1, .75, .48], k: .3, r: .3, reach: 1.1, shadow: 1 },   /* its last reach, from above, onto the stones' tops */
+    { p: [.4, 1.8, ZS - 2.2], c: [1, .84, .66], k: 1.2, r: 1.8, shadow: .6 },         /* the cups' glow, round the corner behind you */
+    { p: [-2.0, 1.02, ZS - .06], c: [1, .75, .48], k: .15, r: .2, reach: .55, shadow: 1 },   /* its last reach, from above, onto the stones' tops */
     { p: [.6, 1.9, ZS + 2.5], c: [.62, .58, 1.2], k: 1, r: 2, shadow: .5 },        /* the gallery's violet, from further in */                  /* its last reach, onto the split's stones */
     { p: [.4, 1.6, 34], c: [.62, .58, 1.2], k: 22, r: 9 },                         /* the gallery going on in its own violet */
     { p: [1.3, 1.9, 16], c: [.62, .58, 1.2], k: 6, r: 4.5 },
@@ -65,31 +65,32 @@ export default {
      varied, some lost in its shadow. SPLIT above is left as it was. */
   float split2Half(float y) {
     float t = clamp((y - .98) / .82, -1., 1.);
-    return .21 * pow(max(1. - t * t, 0.), .55) * (.7 + .6 * fbm(vec2(y * 4., 57.), 3)) - .01;   /* narrowing top and bottom, ragged */
+    return .3 * pow(max(1. - t * t, 0.), .55) * (.7 + .6 * fbm(vec2(y * 4., 57.), 3)) - .01;   /* narrowing top and bottom, ragged */
   }
   float split2Mid(float y) { return ZS + .09 * sin(y * 2.3 + .7) + (fbm(vec2(y * 2.2, 61.), 2) - .5) * .12; }
   vec4 split2Air(vec3 p) {
     float dz = p.z - split2Mid(p.y); dz *= dz > 0. ? 1. : 1.25;
-    float g = min(split2Half(p.y) - abs(dz) + rough(p, .025, 5.) + rough(p, .008, 15.), p.x + 2.55);
+    float g = min(split2Half(p.y) - abs(dz) + rough(p, .07, 3.) + rough(p, .02, 11.), p.x + 2.55);
     g = min(g, min(1.82 - p.y, p.y - .12));
     g = min(g, -1.8 - p.x);
     return vec4(g * .8, M_ROCK, NOUV);
   }
   vec4 stones2(vec3 p) {
-    float best = 1e3;
-    float cell = .15;
-    float cy = floor((p.y - .1) / cell);
-    for (int j = -1; j <= 1; j++) {
-      float c = cy + float(j);
-      if (h2(vec2(c, 7.)) < .3) continue;                                                     /* gaps: not every place in the split holds a stone */
-      float r = .035 + .05 * h2(vec2(c, 9.));                                                  /* varied sizes */
-      float yc = .1 + (c + .5) * cell + (h2(vec2(c, 3.)) - .5) * .05;
-      float zc = split2Mid(yc) + (h2(vec2(c, 5.)) - .5) * .1;
-      float xc = -2.08 - .22 * h2(vec2(c, 11.));                                                 /* some set far back, lost in its shadow */
-      vec3 e = vec3(p.x - xc, p.y - yc, p.z - zc);
-      float an = h2(vec2(c, 21.)) * 3.1, ca = cos(an), sa = sin(an);
+    float best = 1e3, cell = .12;
+    vec2 w = vec2(p.z - ZS, p.y - .1);
+    vec2 c0 = floor(w / cell);
+    for (int j = -1; j <= 1; j++) for (int i = -1; i <= 1; i++) {
+      vec2 c = c0 + vec2(i, j);
+      float yc = .1 + (c.y + .5) * cell;
+      if (yc > .95 - .25 * h2(c + 40.) || h2(c + 7.) < .22) continue;                         /* settled in the lower part, the top ragged; gaps between */
+      vec2 jit = vec2(h2(c + 1.), h2(c.yx + 5.)) - .5;
+      float r = .028 + .04 * h2(c + 9.);                                                         /* varied sizes */
+      vec2 ctr = (c + .5 + jit * .5) * cell + vec2(ZS, .1);
+      float xc = -2.1 - .25 * h2(c + 11.);                                                        /* some set far back, lost in its shadow */
+      vec3 e = vec3(p.x - xc, p.y - ctr.y, p.z - ctr.x);
+      float an = h2(c + 21.) * 3.1, ca = cos(an), sa = sin(an);
       e.yz = vec2(ca * e.y - sa * e.z, sa * e.y + ca * e.z);
-      best = min(best, (length(e / vec3(.85, 1., 1.25 + .3 * h2(vec2(c, 31.)))) - r) * .8);
+      best = min(best, (length(e / vec3(.85, 1., 1.2 + .35 * h2(c + 31.))) - r) * .8);
     }
     best += rough(p, .002, 40.);
     return vec4(max(best, -split2Air(p).x - .005), M_ROCK, NOUV);
@@ -102,11 +103,11 @@ export default {
     if (p.y < .05) gTint *= mix(.3, .8, smoothstep(ZS - 1., ZS + 5., p.z));            /* the near floor kept down */
     if (p.y < .7 && p.x < -1.5) gTint *= mix(.55, 1., smoothstep(.1, .7, p.y));        /* and the wall's foot */
     vec4 a = split2Air(p);
-    if (a.x > d.x) { d = a; gTint = vec3(mix(.45, .03, smoothstep(-1.97, -2.12, p.x))); }   /* the gap: dark, in its own shadow */
+    if (a.x > d.x) { d = a; gTint = vec3(mix(.7, .08, smoothstep(-1.95, -2.35, p.x))); }   /* the gap: its sides catching a little light, then dark */
     vec4 s = stones2(p);
     if (s.x < d.x) {
       d = s;
-      gTint = vec3(.78, .5, .3) * (.75 + .5 * h2(vec2(floor((p.y - .1) / .15), 13.))) * mix(.35, 1., smoothstep(-2.3, -2.05, p.x));   /* river stones: brown, each its own; the far-back ones in shadow */
+      gTint = vec3(.78, .5, .3) * (.75 + .5 * h2(floor(vec2(p.z - ZS, p.y - .1) / .12) + 13.)) * mix(.35, 1., smoothstep(-2.3, -2.05, p.x));   /* river stones: brown, each its own; the far-back ones in shadow */
       gPolish = .5;                                                                  /* water-worn smooth */
     }
     return d;
