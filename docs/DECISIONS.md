@@ -663,3 +663,13 @@
 - **The story (D-035, D-060) is unchanged:** the sealed story-fix session still comes before the first playable's **content** goes in. Slices 2–4 are built now on throwaway content and invented places, so the story session can run in its own session at any point alongside; real content is loaded only after it.
 - **Consequences:** `CLAUDE.md` and `CURRENT_STATE.md` move to Phase 9; the Phase 8 work is merged into `main`. The heart stays as built (the critic's pass was stopped unread).
 - **Reversible:** Yes; the trials still gate the personal alpha (Phase 10).
+
+## D-066 — An early outside review of the app's words (Dan's call)
+- **Date:** 2026-09-25
+- **Context:** Dan asked for every line the app shows, as one file, to have ChatGPT rewrite it: the room text should read like real fantasy / science-fiction prose, descriptive, not "AI-sounding" and not just reworded.
+- **Decision:** `design/COPY_FOR_REVIEW.md` holds every line from `app/src/content/` (world text to rewrite fully; interface text kept short and plain; real-world first steps kept literal), with a brief for the reviewer: no story talk, no new world facts beyond what the current lines and the paintings already show (rule 6), no guilt or pressure (rule 9), placeholders and keys unchanged, a length limit per line. Dan sends back the reviewed file; Claude reconciles it as with earlier reviews and loads the agreed lines into `en.ts` / `prototype.ts` (the screens may be adjusted to fit longer room text).
+- **Deviation noted:** this brings part of the language pass (D-046, after 3–4 weeks of play) forward, at Dan's request. D-046's full pass on real screens still happens. The places reviewed are the throwaway samples (D-060), so the lasting value is the voice, which carries into the real content after the sealed story-fix session.
+- **Alternatives:** wait for D-046's slot; have Claude rewrite the lines itself.
+- **Rationale:** Dan's choice (rule 20); an outside voice has helped before (D-038, D-047).
+- **Consequences:** `CURRENT_STATE.md`; the reconciled wording and a short voice note to follow.
+- **Reversible:** Yes.

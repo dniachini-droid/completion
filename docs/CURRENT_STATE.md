@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-24 (Phase 8 closed; Phase 9 opened, D-065)_
+_Last updated: 2026-09-25 (the app's words sent out for review, D-066)_
 
 ## Current phase
 
@@ -17,9 +17,13 @@ Build the whole MVP (`product/MVP.md` → build order): **slice 2** the Quiet an
 ## Resume here (next session)
 1. **Claude:** build slice 2 on throwaway content (read `game/GAME_DESIGN.md`, `game/BALANCING.md`, `game/TOOLS.md` and the D mock-ups `map.html`, `record.html` first); publish it on the web link for Dan.
 2. **The sealed story-fix session** (D-035, D-060): in its **own** session, any time now, and before real content goes in. Dan starts it by pasting: "Read CLAUDE.md and docs/CURRENT_STATE.md on branch main, then run the sealed story-fix session (D-035). Keep everything sealed from me." Claude in that session never shows Dan the story.
-3. **Waiting on Dan (whenever he's at a computer):** Apple setup sitting 2 (`technical/APPLE_SETUP.md`), then "Apple setup done"; Claude starts the TestFlight build; Dan does sitting 3 (the two ten-minute checks, trials b and c).
+3. **Waiting on Dan:** ChatGPT's rewrite of the app's words (`design/COPY_FOR_REVIEW.md`, D-066). When Dan sends it back, Claude reconciles it and loads the agreed lines.
+4. **Waiting on Dan (whenever he's at a computer):** Apple setup sitting 2 (`technical/APPLE_SETUP.md`), then "Apple setup done"; Claude starts the TestFlight build; Dan does sitting 3 (the two ten-minute checks, trials b and c).
 
-## Last session (2026-09-24, Phase 8 close)
+## Last session (2026-09-25, the words)
+Dan asked for every line the app says in one file for ChatGPT to rewrite as proper fantasy / sci-fi prose. Written as `design/COPY_FOR_REVIEW.md` with a spoiler-safe brief (D-066).
+
+## Earlier (2026-09-24, Phase 8 close)
 Dan on the heart: it "ran beautifully", looked beautiful, "was great"; too small to test much (only the timer), so no more changes: build the app (D-065). Phase 8 closed with trials (b)–(d) carried into Phase 9 for the first TestFlight build. Before that, the app build was readied for them: the save is kept by the phone (Capacitor Preferences, not the browser's storage), a rehearsal now also brings the locked-phone alert 60 times sooner, and Dan's phone checklist is `APPLE_SETUP.md` → Sitting 3.
 
 ## Earlier (2026-09-24, Phase 8, the heart)
