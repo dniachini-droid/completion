@@ -64,7 +64,7 @@ export const records: RecordFragment[] = [
   {
     id: 'rec-l2', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 1, firstShown: ['b-1.C'],
     paper: [
-      "Day 1. Down the ventilation shaft at 07:40. Cut the padlock with the bolt-cutters I told the hardware man were for a gate. Eleven metres of ladder, then a dry passage cut true. Not railway. There was a clay lamp on a ledge, lit. *Lit.* I stood there for a stupid amount of time. There’s a tally cut in the salt wall by the old crack. I know a few marks from the log. It starts with a name. I wrote that down before I could talk myself out of it.",
+      "Day 1. Down the ventilation shaft at 07:40. I cut the padlock with the bolt-cutters I told the hardware man were for a gate. Eleven metres of ladder, then a dry passage, cut true. Not railway. A lamp on a ledge. Clay, and lit. *Lit.* I stood there for a stupid amount of time. There's a tally cut in the salt wall by the old crack. I know a few symbols from the log. The tally starts with a name.",
     ],
   },
   {

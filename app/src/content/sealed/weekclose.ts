@@ -7,9 +7,9 @@ import type { OpenQuestion, SoFar, WeekCloseLine } from '../../core/story-types'
 
 /** §10: up to three a week; a line shows only if its beat played in that story week. */
 export const learned: WeekCloseLine[] = [
-  { id: "wc-w1-1", w: 1, req: ["b-1.A"], line: "The lamp on the ledge was already lit when you came down, and there is no oil in it." },
-  { id: "wc-w1-2", w: 1, req: ["b-1.5"], line: "One hand cut the long line of marks along the salt, and someone left pencilled sheets beside it." },
-  { id: "wc-w1-3", w: 1, req: ["b-1.C"], line: "Someone lived in the side chamber and left boots, a notebook and a rod there." },
+  { id: "wc-w1-1", w: 1, req: ["b-1.A"], line: "In the Lamp Hall, the lamp on the ledge was already lit when you came down, and there is no oil in it." },
+  { id: "wc-w1-2", w: 1, req: ["b-1.5"], line: "In the Salt Gallery, one hand cut a long line of symbols along the salt wall. Someone left sheets of paper beside it, dated in pencil." },
+  { id: "wc-w1-3", w: 1, req: ["b-1.C"], line: "Someone lived in the Survey Cut, the side chamber off the Lamp Hall, and left boots, a notebook and a stone rod there." },
   { id: "wc-w2-1", w: 2, req: ["b-2.A"], line: "The tally describes someone at the turn, as tall as two of whoever told it, and a lamb." },
   { id: "wc-w2-2", w: 2, req: ["b-2.3"], line: "She met someone where the corridor turns and mistook him for a pillar." },
   { id: "wc-w2-3", w: 2, req: ["b-2.B"], line: "The rod was left for the next one, with a note telling them to cut the two marks on the lintel." },
@@ -65,7 +65,7 @@ export const soFarLines: WeekCloseLine[] = [
 
 /** §10.3 "where you were": the week's line whose beat has played, else the week before's. NOTE: OpenQuestion has no condition field; see `openQuestionReq`. */
 export const openQuestions: OpenQuestion[] = [
-  { id: "aw-w1", w: 1, line: "The lamp on the ledge was already lit when you came down, and there is no oil in it." },
+  { id: "aw-w1", w: 1, line: "The lamp on the ledge in the Lamp Hall was already burning when you came down, and there is no oil in it. What keeps it lit?" },
   { id: "aw-w2", w: 2, until: "b-3.A", line: "The rod is in your hand, and the lintel on the side wall has a blank exactly the width of its edge." },
   { id: "aw-w3", w: 3, line: "The stair goes down from the landing already lit, and you did not light it." },
   { id: "aw-w4", w: 4, line: "Past the lone ring, her sheet says: *…go home… he held me… lamp… gave… went up…*" },

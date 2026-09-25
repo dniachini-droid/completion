@@ -14,7 +14,7 @@ export const camps: CampView[] = [
     w: 1,
     req: [],
     name: "The ladder's foot",
-    line: "Eleven metres above, a square of white sky sits at the top of the shaft. The ladder climbs towards it, each rung crossing the pale opening when you look straight up. The air slips past you and out. From down here the sky has edges, cut to the exact width of the shaft; the space between your feet and that square is all ladder and stone.",
+    line: "At the bottom of the shaft, at the foot of the ladder, you stop to rest. Eleven metres above you is a square of white sky, and the ladder climbs up to it. The air moves up past you and out.",
     look: {"find": "fd-a02"},
   },
   {
@@ -23,7 +23,7 @@ export const camps: CampView[] = [
     w: 1,
     req: [],
     name: "The pipe",
-    line: "The passage leaves the ladder in a single slow curve, floor and walls running together without a sharp join. Standing in it, you cannot put a finger on the point where it begins to turn. It bends so gently that you notice the turn only where the light fails; one length of the passage remains visible while the next takes the same curve out of sight.",
+    line: "You stop to rest for the night in the passage at the bottom of the shaft, a few steps from the foot of the ladder. The passage leads away from the ladder into the hill. Its floor and walls are one smooth curve. It bends so gently that you can only see the bend where the light from the shaft gives out.",
     look: {"find": "fd-a05"},
   },
   {
@@ -33,7 +33,7 @@ export const camps: CampView[] = [
     req: [],
     until: "b-3.A",
     name: "The hall, from the passage",
-    line: "Just inside, the lamp burns on its ledge. Its flame holds the near wall in view, and the ledge gives it a fixed place above the floor. Beyond it the hall goes on into darkness. You can see the lit stretch end without seeing the hall end; the lamp is small against the length of the opening, but from here its position is unmistakable.",
+    line: "You stop to rest for the night where the passage opens into the Lamp Hall. Just inside the hall, the lamp stands on its ledge. Past it, the hall goes away into the dark.",
     look: {"find": "fd-b12"},
   },
   {
@@ -51,7 +51,7 @@ export const camps: CampView[] = [
     w: 1,
     req: [],
     name: "In the trough",
-    line: "You stand with one foot in one of the troughs at the corner. The hollow receives your sole without a ridge beneath it. The other trough runs beside it, a stride away, equally deep and smooth. To stand across both you would have to widen your stance; as you shift your weight, the two parallel hollows keep their distance around the bend.",
+    line: "You walk to the far end of the Lamp Hall, to the corner beside the great door, and stop there to rest for the night. Two long troughs are worn into the floor here. Before you sit down, you step into one of them and stand there for a moment. The other trough is a stride away, just as deep and just as smooth.",
     look: {"find": "fd-c01"},
   },
   {
@@ -60,7 +60,7 @@ export const camps: CampView[] = [
     w: 1,
     req: [],
     name: "The salt, close",
-    line: "At arm’s length, the salt face resolves into bands of grey and white. They run across the split without losing their separate colours. Fine crystals skin the place where air leaks through, so the gap has a pale, granular edge unlike the broader bands on either side. You feel the draught against your hand before your fingers reach that edge.",
+    line: "You stop to rest for the night in the Salt Gallery, close enough to the salt wall to touch it. Up close, you can see bands of grey and white in the salt. Where a faint draught comes through the packed split, the salt has a thin skin of fine crystals.",
     look: {"find": "fd-c09"},
   },
   {
@@ -78,7 +78,7 @@ export const camps: CampView[] = [
     w: 1,
     req: [],
     name: "Her cot",
-    line: "From the doorway, her camp is all stillness: the cot, the boots beneath it, the notebook with its pencil, the shelf. The boots fit into the shadow under the cot; the notebook and pencil are small enough to draw your eye only after you have taken in the larger shape of the bed. You stay at the doorway, where the whole arrangement fits within one view.",
+    line: "You stop to rest for the night at the doorway of the Survey Cut, the small side chamber off the Lamp Hall where someone camped. From the doorway, you look in at the cot with the boots under it, the notebook with its pencil, and the shelf.",
     look: {"find": "fd-d08"},
   },
   {

@@ -15,18 +15,18 @@ export const seals: Seal[] = [
   { id: 'seal-1-1', w: 1, o: 1, where: 'The Salt Gallery, the inner count', stretch: 'st-salt', beat: 'b-1.6' },
   // NOTE: seal-1-1 opens the stretch of tally read at b-2.A (rec-s2); the record is carried by b-2.A, so none here, and not plain.
   { id: 'seal-1-2', w: 1, o: 2, where: 'The Salt Gallery, the pick niche', stretch: 'st-salt',
-    line: 'The strokes at the pick niche fill. Inside rests a bronze salt-pick. Its edge has worn into a curve, so that the narrow point you expect is no longer there; the cord on its handle has gone black, and lies tight against the bronze. Beside the niche, a short line in the tally’s hand is cut into the wall. You can take in the pick and the line together from where you stand.',
+    line: 'In the Salt Gallery, you crouch at the niche low in the salt wall, the one as long as your arm. Its mouth is closed. You do not touch it. As you watch, the notches on its lip fill with a soft light, one after another. When the whole row is lit, the niche opens. Inside lies a bronze salt-pick. Its edge is worn to a curve, and its handle is wrapped in cord that has gone black. You leave the pick where it lies. On the wall beside the niche is a short line of symbols, cut by the same hand as the tally.',
     carries: { records: ['rec-x-pick'] } },
   { id: 'seal-1-3', w: 1, o: 3, where: 'The Lamp Hall, a low niche under the ledge', stretch: 'st-hall',
-    line: 'Below the ledge, the niche’s strokes fill. An empty clay saucer sits inside, shallow enough for its whole interior to be visible at once. Its rim and low foot have the same shape as the lamp’s foot above. You measure one against the other with your eyes, the ledge between them; there is nothing in the saucer to interrupt the plain curve of the clay.',
+    line: 'At the near end of the Lamp Hall, you crouch under the ledge where the lamp stands, in front of the small niche at knee height. Its mouth is closed. You do not touch it. As you watch, the notches on its lip fill with a soft light, one after another. When the whole row is lit, the niche opens. Inside is a clay saucer, and it is empty. It matches the base of the lamp on the ledge exactly: the same shape and the same size. You leave the saucer where it is.',
     plain: true },
   { id: 'seal-1-4', w: 1, o: 0, where: 'The Survey Cut, under the cot', stretch: 'st-camp', seenOnly: true },
   // NOTE: seen-only rows have no Key order; o is 0. seal-1-4 is seen in the open at b-1.C.
   { id: 'seal-1-5', w: 1, o: 4, where: 'The Mouth, a recess in the shaft wall', stretch: 'st-mouth',
-    line: 'The strokes on the shaft-wall recess fill. A brass tag hangs from a nail inside, its weight drawing it straight down against the back of the recess. A shaft number is stamped into it. The stamped depressions remain legible even where the brass has dulled; the tag can turn a little on the nail, though the recess gives it hardly any room.',
+    line: 'At the bottom of the shaft, beside the foot of the ladder, is a small recess in the brick wall. Its mouth is closed, and along its lip is a row of small notches. You do not touch it. As you watch, the notches fill with a soft light, one after another. When the whole row is lit, the recess opens. Inside, a brass tag hangs on a nail. It is stamped with a shaft number. You leave it hanging there.',
     plain: true },
   { id: 'seal-1-6', w: 1, o: 5, where: 'The Salt Gallery, a niche by the split, low', stretch: 'st-salt',
-    line: 'By the split, the niche’s strokes fill. Inside sits a small clay flask, stopped with twisted wool. You lift it and find it empty, light as an eggshell; even the wool seems large against the narrow mouth. The clay has enough substance to keep its shape and little enough weight that you adjust your grip before it can slip between your fingers.',
+    line: 'In the Salt Gallery, you crouch by the split in the salt wall. Beside it is a niche. Its mouth is closed, and along its lip is a row of small notches. You do not touch it. As you watch, the notches fill with a soft light, one after another. When the whole row is lit, the niche opens. Inside is a small clay flask, stoppered with a twist of wool. You lift it out. It is empty, and as light as an eggshell. You put it back in the niche.',
     plain: true },
 
   /* ---- week 2 ---- */
