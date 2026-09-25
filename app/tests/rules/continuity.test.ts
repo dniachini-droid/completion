@@ -246,3 +246,18 @@ describe('A find never describes a place Dan has not reached', () => {
     }
   });
 });
+
+describe('A find never comes before the arrival that brings Dan into its room', () => {
+  it('every find is from an area whose arrival Dan had already seen when it was given', () => {
+    for (const bed of ['kept', 'late', undefined] as const) {
+      const facts = sim(undefined, undefined, bed).week('normal').week('normal').facts;
+      for (const f of facts) {
+        if (f.type !== 'findGiven') continue;
+        const find = C.story.finds.find(x => x.id === (f as { id: string }).id)!;
+        const seen = new Set(facts.filter(x => x.seq < f.seq && x.type === 'seen' && (x as { what: string }).what === 'arrival').map(x => (x as { ref: number }).ref));
+        const known = facts.filter(x => x.seq < f.seq && !(x.type === 'arrived' && !seen.has(x.seq)));
+        expect(S.storyState(known, C.story).visited.has(find.stretch), `${find.id} (${find.stretch}), bedtime ${bed}`).toBe(true);
+      }
+    }
+  });
+});

@@ -241,7 +241,11 @@ function arrive(w: W, c: Content, b: Beat, how: 'foot' | 'key', at: Moment, day:
   }
 }
 function giveFind(w: W, c: Content, why: FactOf<'findGiven'>['why'], at: Moment, day: string, job?: number) {
-  const f = S.pickFind(c.story, S.storyState(w.all, c.story), why);
+  /* a find comes from where Dan knows he is: a place reached but not yet shown on its arrival screen doesn't count yet,
+     or a find could describe a room on the screen before the one that brings him into it */
+  const seen = new Set(w.all.filter(f => f.type === 'seen' && f.what === 'arrival').map(f => (f as FactOf<'seen'>).ref));
+  const known = w.all.filter(f => !(f.type === 'arrived' && !seen.has(f.seq)));
+  const f = S.pickFind(c.story, S.storyState(known, c.story), why);
   if (!f) return;
   w.put({ type: 'findGiven', id: f.id, why, ...(job ? { job } : {}) }, at, day);
   if (f.told) show(w, c, [f.told], at, day);
