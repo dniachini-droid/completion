@@ -5,7 +5,6 @@
   import { game, content } from './game.svelte';
   import { marksHeld, render, recordOf } from '../core/story';
   import { t } from '../content/copy/en';
-  import Scene from './Scene.svelte';
   import Glyph from './Glyph.svelte';
   import type { Go } from './nav';
   import { back } from './back.svelte';
@@ -23,7 +22,7 @@
   const tappable = $derived(open?.kind === 'cut' && (open.cut ?? []).some(l => render(l, held, s).some(tk => tk.t === 'glyph' && isMark(tk.mark))));
 </script>
 
-<Scene painting={v.here.painting} blur />
+<!-- the painting behind is drawn once by App, shared by both tabs (D-090) -->
 <div class="ui">
   <header class="top col">
     <div class="topbar rise">

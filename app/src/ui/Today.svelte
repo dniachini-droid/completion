@@ -6,6 +6,7 @@
      Mock-up: design/directions/d-combined/morning.html. */
   import { game, content } from './game.svelte';
   import { presetRun, pastBedtime, BEDTIME_WINDOW } from '../core/game';
+  import { beatOf } from '../core/story';
   import type { Job } from '../core/types';
   import { t, minutesWords, delves, inSentence } from '../content/copy/en';
   import Scene from './Scene.svelte';
@@ -75,14 +76,29 @@
   function tapRow(id: string) { if (suppress) { suppress = false; return; } focus(id); }
   const offset = (id: string) => drag?.id === id ? drag.dx : swiped === id ? -OPEN : 0;
 
-  /* the evening (D-090): camp is going to bed, so it shows on Today only once Go to sleep can be pressed (five hours
-     before bedtime, D-083) and until it has been; the rest of the day it stays out of the way */
+  /* the evening (D-090): going to bed lives on Today, no page of its own. From five hours before bedtime (when Go to
+     sleep counts, D-083) Today carries "Tonight": the bedtime, one tap to change it, and Go to sleep. Once said, the
+     night's line shows here until morning. */
   const evening = $derived(!v.night && pastBedtime(v.bedtime, game.now) >= -BEDTIME_WINDOW);
-  const campFrom = $derived.by(() => { const [h, m] = v.bedtime.split(':').map(Number), x = ((h * 60 + m - BEDTIME_WINDOW) % 1440 + 1440) % 1440;
-    return `${String(Math.floor(x / 60)).padStart(2, '0')}:${String(x % 60).padStart(2, '0')}`; });
+  const nightLine = $derived(v.night?.beat ? beatOf(content.story, v.night.beat)?.line ?? '' : '');
+  function setBedtime(time: string) { if (time && time !== v.bedtime) game.do({ do: 'bedtime', time }); }
+  function pick(e: MouseEvent) { try { (e.currentTarget as HTMLInputElement).showPicker?.(); } catch { /* not every browser */ } }
   /* the story ahead folds to a few lines, so the next job is always in view; a tap reads it all (D-090) */
   let aheadOpen = $state(false);
 </script>
+
+{#snippet tonight()}
+  <div class="tonight">
+    <div class="label-line gold">{t('today.tonight')}</div>
+    <!-- the bedtime is the phone's own time box: a tap opens its wheel, and what it's set to is kept -->
+    <label class="bed">
+      <span class="bed-say">{t('today.bedtime')}</span><span class="bed-time carve">{v.bedtime}</span><span class="change">{t('camp.change')}</span>
+      <input type="time" step="900" value={v.bedtime} aria-label={t('camp.bedtime')} onclick={pick} onchange={e => setBedtime(e.currentTarget.value)} />
+    </label>
+    <p class="soft promise">{t('today.tonight.say', { bedtime: v.bedtime })}</p>
+    <button class="btn gold resting" onclick={() => game.do({ do: 'goodnight' })}>{t('camp.goodnight')}</button>
+  </div>
+{/snippet}
 
 <Scene painting={v.here.painting} framed bottom="50%" />
 <div class="ui">
@@ -111,7 +127,14 @@
   <section class="bottom fit col rise d3">
     <!-- on a short phone the day scrolls; the foot's links never leave the screen (review finding ui-11) -->
     <div class="scroll">
-    {#if v.next?.mode === 'carry' && v.run}
+    {#if v.night && !v.run}
+      <div class="next">
+        <div class="label-line gold">{t('today.tonight')}</div>
+        <h2 class="say-lg">{t('camp.night')}</h2>
+        {#if nightLine}<p class="say night-line">{nightLine}</p>{/if}
+        <p class="soft">{v.night.kept ? t('camp.sleep.kept') : t('camp.sleep.late', { bedtime: v.bedtime })}</p>
+      </div>
+    {:else if v.next?.mode === 'carry' && v.run}
       <div class="next">
         <div class="label-line lit">{t('today.next')}</div>
         <h2 class="say-lg">{t('today.carry', { job: v.run.job.name })}</h2>
@@ -168,9 +191,7 @@
           <p class="soft">{t(lastPlace.kind === 'place' ? 'today.reached' : 'today.camped', { place: inSentence(lastPlace.name) })}</p>
         {/if}
         {#if still.length}<p class="soft still">{t('today.stillToCome', { what: still.join(', ') })}</p>{/if}
-        {#if evening}
-          <button class="btn gold resting" onclick={() => go('camp')}>{t('today.toCamp')}</button>
-        {:else if !v.night}<p class="soft">{t('today.campFrom', { from: campFrom })}</p>{/if}
+        {#if evening}{@render tonight()}{/if}
         <div class="btn-row after"><button class="btn-quiet" onclick={() => go('choose')}><span>{t('today.keepGoing')}</span></button></div>
         {#if lastPlace}<div class="cant"><button class="text-link" onclick={() => go('arrival')}><span>{t('today.look')}</span></button></div>{/if}
         <div class="gap"></div>
@@ -198,13 +219,9 @@
           <span class="plus" aria-hidden="true">+</span><span class="t">{t('today.else')}</span><span class="s"></span>
         </button>
       {/if}
-      <!-- the evening, before the day's work is done: camp is one row, at the end of the day's list (D-090) -->
-      {#if evening && !v.complete && !v.run}
-        <button class="row camp" onclick={() => go('camp')}>
-          <span class="moon" aria-hidden="true">☾</span><span class="t">{t('today.campRow')}</span><span class="s">{t('today.bedBy', { time: v.bedtime })}</span>
-        </button>
-      {/if}
     </div>
+    <!-- the evening, before the day's work is done: Tonight at the end of the day's list (D-090) -->
+    {#if evening && !v.complete && !v.run}<section class="tonight-end">{@render tonight()}</section>{/if}
     </div>
     <nav class="foot" aria-label={t('today.label')}>
       <button class="text-link" onclick={() => go('satchel')}><span>{t('nav.satchel')}</span></button>
@@ -220,9 +237,16 @@
   .ahead p { font-size: 17.5px; line-height: 1.38; margin-top: 6px; }
   .ahead-text { display: block; width: 100%; padding: 0; background: none; border: 0; text-align: left; cursor: pointer; color: inherit; }
   .ahead-text:not(.open) p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; line-clamp: 4; overflow: hidden; }
-  .row.camp .t { color: var(--gold-hi); font-style: italic; }
-  .row.camp .s { color: var(--gold); }
-  .moon { justify-self: center; color: var(--gold); font-size: 17px; line-height: 1; }
+  .tonight-end { margin-top: 18px; }
+  .tonight { margin: 4px 0 6px; }
+  .bed { position: relative; display: flex; align-items: baseline; gap: 12px; margin-top: 8px; cursor: pointer; width: fit-content; }
+  .bed input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; border: 0; padding: 0; margin: 0; cursor: pointer; -webkit-appearance: none; appearance: none; }
+  .bed-say { font-family: var(--life); font-size: 18px; color: var(--ink-2); }
+  .bed-time { font-size: 28px; letter-spacing: .06em; color: #fff; }
+  .change { font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink-2); border-bottom: 1px solid var(--edge-3); }
+  .next .tonight .promise { text-align: left; margin: 6px 0 14px; }
+  .tonight .promise { text-align: left; margin: 6px 0 14px; }
+  .night-line { font-style: italic; color: #fff; margin: 8px 0 10px; line-height: 1.45; }
   .bottom { padding-top: 8px; }
   .next h2 { margin: 8px 0 4px; }
   .next .soft { margin-bottom: 18px; }

@@ -5,7 +5,6 @@
   import { game, content } from './game.svelte';
   import { marksSeen, mayGuess, markOf } from '../core/story';
   import { t, type CopyKey } from '../content/copy/en';
-  import Scene from './Scene.svelte';
   import Glyph from './Glyph.svelte';
   import type { Go } from './nav';
   import { back } from './back.svelte';
@@ -45,7 +44,7 @@
   });
 </script>
 
-<Scene painting={v.here.painting} blur bottom="40%" />
+<!-- the painting behind is drawn once by App, shared by both tabs (D-090) -->
 <div class="ui">
   <header class="top col">
     <div class="topbar rise">

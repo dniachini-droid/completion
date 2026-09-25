@@ -152,15 +152,14 @@ const openers = async (name) => {
     return;
   }
 };
-/** Camp at the day's end: bedtime and Goodnight. */
-/* Camp shows on Today only in the evening, once Go to sleep can be pressed (D-090) */
+/* Going to bed lives on Today (no camp page, D-090): "Tonight" with Go to sleep shows only in the evening */
 const camp = async (name, loud) => {
   if (!(await has('Keep going'))) return;
-  if (await has('To camp')) errors.push('CAMP offered before the evening');
-  await toClock(0, 22, 30);
-  await tap('To camp'); if (loud) await shot(name + '-camp', 2500); else await page.clock.runFor(1500);
+  if (await has('Go to sleep')) errors.push('TONIGHT offered before the evening');
+  await toClock(0, 22, 30); await page.clock.runFor(1500);
+  if (loud) await shot(name + '-tonight', 1500);
   await tap('Go to sleep'); if (loud) await shot(name + '-goodnight', 2500); else await page.clock.runFor(800);
-  await home(); await page.clock.runFor(1000);
+  if (!(await page.locator('nav.foot').count())) errors.push('TONIGHT Go to sleep left Today');
 };
 /** Do today's next job, whatever it is, and show its return. */
 const doNext = async (name) => {
