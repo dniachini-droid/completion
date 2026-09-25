@@ -910,3 +910,9 @@
 - **Reversible:** Yes (git).
 
 - **At the merge with the review branch:** that branch had rewritten 20 story lines for the story's order and facts (its D-080/D-081). Those 20 keep that branch's wording, and the fact fix wins. They are listed for the next writing pass. The other 506 carry the rewritten wording. Arrivals keep the lower-half words panel Dan asked for.
+
+## D-086 — The story's voice (Dan's taste)
+- **Date:** 2026-09-25
+- **Context:** to take the story's text from good to brilliant, Claude proposed a defined voice, place-by-place writing by a sealed agent team, and blind judging by Dan. Dan chose from six published passages.
+- **Decision:** Dan loved Le Guin (*The Tombs of Atuan*), VanderMeer (*Annihilation*) and Macfarlane (*Underland*); he disliked McCarthy (*The Road*). The voice is written up in `narrative/VOICE.md` (spoiler-free), pending Dan's approval. Next: a pilot (the Lamp Hall and one camp) written by a sealed agent team on Fable and on Opus to VOICE.md, judged blind by Dan against ChatGPT's version.
+- **Reversible:** Yes.
