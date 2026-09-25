@@ -953,3 +953,11 @@
   - Supersedes the capacity-on-Today parts of CORE_LOOPS (morning start), QUEST_SYSTEM and D-043's "lowering capacity can complete the day". The rules keep capacity inside (an old save's choice, the deep push) so this is one line to undo.
 - **Reversible:** Yes: the buttons and the link are one screen's markup.
 
+
+## D-090 — The clunkiness pass: fewer taps, camp only in the evening, a cooler delve (Claude's call, Dan asked for it)
+- **Date:** 2026-09-25
+- **Context:** Dan: the app "is extremely clunky… pretty but doesn't function well"; start with adding a one-off in the Week (the box opened at the bottom, out of sight). Camp was not understood. Then, during the pass: the phone heats up during a delve; Records ⇄ Marks jump when switched.
+- **Decision:** every daily path walked and tap-counted (`product/CLUNKINESS.md`). The Week: a + on each day adds a one-off there (focused, no day picker, no scroll); a job's sheet acts at once (a tap on a day moves it; the time box is the phone's own and keeps what it's set to; no Save). Camp: only in the evening (from five hours before bedtime, D-083), as a row at the end of Today's list or the gold To camp after the day's work; off Today's foot; bedtime is one tap on the time. Today's story "Ahead" folds to four lines. Trial controls move from camp to the Daybook (amends D-080). Records ⇄ Marks swap without animating. The delve draws at 30 frames a second with its dust at the screen's own resolution; paintings behind a blur are drawn once and held.
+- **Alternatives:** an "Add" box at the top of the Week (still a day to pick); folding camp entirely into Today (loses the hall and the goodnight moment Dan liked); a "rest" mode that stops the delve's motion after a minute (conflicts with D-041, every screen keeps moving).
+- **Consequences:** Dan cannot open camp in the daytime (there was nothing to do there). The Week shows empty days ahead. No save step anywhere in the Week.
+- **Reversible:** Yes: screen markup, and two numbers in the delve's drawing.

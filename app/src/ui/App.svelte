@@ -50,7 +50,10 @@
   const LOOK = new Set<Screen>(['map', 'records', 'marks', 'week', 'rhythms', 'satchel', 'daybook', 'camp', 'choose', 'set', 'proto', 'cant']);
   const TABS = new Set<Screen>(['records', 'marks']);
   let trail = $state<Back[]>([]);
+  /* Records ⇄ Marks is a tab: the screen swaps in place, with nothing rising or fading in again (Dan, D-090) */
+  let still = $state(false);
   const go: Go = (to, a) => {
+    still = TABS.has(screen) && TABS.has(to);
     if (to === 'back') { const p = trail.pop(); if (p) { screen = p.screen; arg = p.arg; } else go('today'); return; }
     if (to === 'cant' && typeof a === 'string') game.do({ do: 'cantStart', job: a });
     /* "Today" never skips what waits: a place just reached, the morning, the welcome back, a new daybook page (D-080).
@@ -96,7 +99,7 @@
   });
 </script>
 
-<main class="phone">
+<main class="phone" class:still>
   <!-- a rehearsal's clock runs 60 times faster (an evening passes in minutes): said on every screen, so the day it
        shows is never mistaken for the real one (Dan, review 2). Today carries its own badge. -->
   {#if game.proto.rehearsal && !['today', 'camp', 'proto'].includes(screen)}<div class="rehearsal" aria-live="polite">{t('proto.badge')}</div>{/if}
@@ -133,6 +136,7 @@
 </main>
 
 <style>
+  .still :global(.rise), .still :global(.scene), .still :global(.fade) { animation: none !important; }
   .rehearsal { position: absolute; z-index: 20; left: 50%; transform: translateX(-50%); top: calc(var(--safe-t, 0px) + 4px); pointer-events: none;
     font-family: var(--carve); font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); opacity: .85; white-space: nowrap; }
 </style>

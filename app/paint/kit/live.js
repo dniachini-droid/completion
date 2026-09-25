@@ -13,7 +13,7 @@
                         meta: the <id>.json the bake wrote
    ========================================================================== */
 const NS = 'http://www.w3.org/2000/svg';
-const still = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const reduced = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 function el(tag, attrs, parent) {
   const e = document.createElementNS(NS, tag);
@@ -46,7 +46,10 @@ function cloudTexture(tint) {
   return c;
 }
 
-export function live(host, meta) {
+/* opts.still: drawn once and held (a painting seen only through a blur, behind a list: moving it there would only warm
+   the phone, D-090) */
+export function live(host, meta, opts = {}) {
+  const still = reduced || !!opts.still;
   const img = host.querySelector('img.paint');
   const W = host.clientWidth, H = host.clientHeight;
   const map = coverMap(W, H, meta.width, meta.height);

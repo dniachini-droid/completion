@@ -18,8 +18,6 @@
   const hall = s.stretches.find(x => x.id === 'st-hall')!;
   const lit = game.view.story.played.has(s.words[0]?.beats[0] ?? '');
   let hallEl: HTMLDivElement;
-  let changing = $state(false);
-  let draft = $state(game.view.bedtime);
 
   const Hall = (window as unknown as { Hall: { draw(el: HTMLElement, o: object): unknown } }).Hall;
   onMount(() => { Hall.draw(hallEl, { cam: { x: .6, y: 1.55, z: 2.6, f: .6, cx: .44, cy: .52 }, gold: .6, cups: lit ? 'lit' : 'dark', res: .8 }); });
@@ -29,12 +27,9 @@
   const reached = $derived(v.lastArrival && v.lastArrival.kind === 'place' && v.complete ? v.lastArrival : null);
   const line = $derived(v.night?.beat ? beatOf(s, v.night.beat)?.line ?? '' : '');
 
-  function shift(min: number) {
-    const [h, m] = draft.split(':').map(Number);
-    const x = ((h * 60 + m + min) % 1440 + 1440) % 1440;
-    draft = `${String(Math.floor(x / 60)).padStart(2, '0')}:${String(x % 60).padStart(2, '0')}`;
-  }
-  function set() { game.do({ do: 'bedtime', time: draft }); changing = false; }
+  /* the bedtime is the phone's own time box: a tap opens its wheel, and what it's set to is kept (D-090) */
+  function set(time: string) { if (time && time !== v.bedtime) game.do({ do: 'bedtime', time }); }
+  function pick(e: MouseEvent) { try { (e.currentTarget as HTMLInputElement).showPicker?.(); } catch { /* not every browser */ } }
   function goodnight() { game.do({ do: 'goodnight' }); }
   /* Go to sleep is offered from five hours before bedtime; earlier in the day camp says when to come back (D-083) */
   const early = $derived(pastBedtime(v.bedtime, game.now) < -BEDTIME_WINDOW);
@@ -53,8 +48,7 @@
   <header class="top col">
     <div class="topbar rise">
       <button class="home" onclick={() => go('back')}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{back.label}</span></button>
-      <!-- the trial's controls (rehearsal, starting again): here at camp, out of the day's way (D-080) -->
-      <button class="icon-link trial" onclick={() => go('proto')}><span>{t('nav.proto')}</span></button>
+      <span></span>
       <button class="icon-link" onclick={() => go('map')}><span>{t('map.nav')}</span></button>
     </div>
     <h1 class="carve lg rise">{hall.name}</h1>
@@ -78,20 +72,10 @@
     {:else}
       <div class="bed">
         <div class="label-line">{t('camp.bedtime')}</div>
-        {#if changing}
-          <div class="time-row">
-            <button class="btn-quiet step" onclick={() => shift(-15)} aria-label={t('camp.earlier')}><span>−</span></button>
-            <input class="clock time carve" type="time" step="900" value={draft} aria-label={t('camp.bedtime')}
-              onchange={e => (draft = e.currentTarget.value || draft)} />
-            <button class="btn-quiet step" onclick={() => shift(15)} aria-label={t('camp.later')}><span>+</span></button>
-            <button class="text-link" onclick={set}><span>{t('camp.set')}</span></button>
-          </div>
-        {:else}
-          <div class="time-row">
-            <span class="time carve">{v.bedtime}</span>
-            <button class="text-link" onclick={() => { draft = v.bedtime; changing = true; }}><span>{t('camp.change')}</span></button>
-          </div>
-        {/if}
+        <label class="time-row">
+          <span class="time carve">{v.bedtime}</span><span class="change">{t('camp.change')}</span>
+          <input type="time" step="900" value={v.bedtime} aria-label={t('camp.bedtime')} onclick={pick} onchange={e => set(e.currentTarget.value)} />
+        </label>
         <p class="soft promise">{early ? t('camp.notYet', { from }) : t('camp.promise', { bedtime: v.bedtime })}</p>
       </div>
       {#if !early}<button class="btn gold resting" onclick={goodnight}>{t('camp.goodnight')}</button>{/if}
@@ -109,15 +93,14 @@
   .top .say { margin-top: 8px; font-size: 18px; }
   .held { margin-top: 8px; text-align: left; }
   .bed { margin-bottom: 18px; }
-  .time-row { display: flex; align-items: baseline; gap: 14px; margin-top: 6px; }
+  .time-row { position: relative; display: flex; align-items: baseline; gap: 14px; margin-top: 6px; cursor: pointer; width: fit-content; }
+  .time-row input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; border: 0; padding: 0; margin: 0; cursor: pointer; -webkit-appearance: none; appearance: none; }
+  .change { font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink-2); border-bottom: 1px solid var(--edge-3); }
   .time { font-size: 34px; letter-spacing: .06em; color: #fff; }
-  .step { min-width: 48px; }
-  .step span { font-size: 22px; }
   .promise { text-align: left; margin-top: 6px; }
   .night h2 { margin-bottom: 10px; }
   .camp-line { font-style: italic; color: #fff; margin-bottom: 10px; line-height: 1.45; }
   .after { margin-top: 14px; }
   .gap { height: 12px; }
   button.home { color: var(--ink-2); }
-  .trial span { font-size: 12px; letter-spacing: .14em; color: var(--ink-3); }
 </style>
