@@ -14,17 +14,18 @@ export default {
   far: 10, fogK: 1 / 16,
   bloomAt: [.45, .5, 2.4], bloomPow: 12, bloomC: [.06, .045, .024],
   blur: { px: 1.3, d0: .8, d1: 2.6, k: .6 },
-  expo: 2.35,
+  expo: 2.35, bloom: { alpha: .16 },
   lights: [
-    { ...room.lights[0], k: 7, warm: 0 },                                                          /* the clay lamp, in the passage behind you */
+    { ...room.lights[0], k: 8, warm: .003 },                                                          /* the clay lamp, in the passage behind you */
     { p: [.4, .26, 1.05], c: [1, .7, .34], k: .04, r: .2, reach: .45 },                  /* its light ending on the boots' toes, as in pt-b-1.C */
-    { p: [.35, 1., 1.4], c: [1, .7, .34], k: .025, r: .3, shadow: 1, reach: 1.1 },          /* the doorway's weak warm pool, lying along the cot and the floor under it */
+    { p: [.35, 1., 1.4], c: [1, .7, .34], k: .07, r: .3, shadow: 1, reach: 1.1 },          /* the doorway's weak warm pool, lying along the cot and the floor under it */
     { p: [.45, .56, 1.04], c: [1, .72, .38], k: .012, r: .06, reach: .2 },                  /* and ending on the rail, on the tape */
     { p: [-1.3, 1.9, 3.6], c: [.4, .37, .85], k: 1.1, r: 1.2 },                           /* violet in the far corners */
     { p: [1.35, 1.9, 3.7], c: [.4, .37, .85], k: .8, r: 1 },
     { p: [1.05, .9, 2.4], c: [.4, .37, .85], k: .2, r: .6 },                            /* a little violet on the cot's far end */
   ],
-  glsl: room.glsl.replace('vec4 scene(vec3 p)', 'vec4 roomScene(vec3 p)') + /* glsl */ `
+  glsl: room.glsl.replace('vec4 scene(vec3 p)', 'vec4 roomScene(vec3 p)')
+    .replace('d = U(d, box(vec3(abs(p.x - .95), p.y, p.z), vec3(.345, .455, 1.85), vec3(.022, .022, 1.), M_WOOD));', 'vec4 rl = box(vec3(abs(p.x - .95), p.y, p.z), vec3(.345, .455, 1.85), vec3(.015, .015, .993), M_WOOD); rl.x -= .007; d = U(d, rl);')   /* the rails' edges eased, handled */ + /* glsl */ `
   float seg(vec2 p, vec2 a, vec2 b) { vec2 pa = p - a, ba = b - a; return length(pa - ba * clamp(dot(pa, ba) / dot(ba, ba), 0., 1.)); }
   /* DAY 1 in marker, in the tape's plane (u along the tape, v up; letters 1.2 cm tall) */
   float dayOne(vec2 q) {

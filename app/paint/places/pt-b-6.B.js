@@ -33,7 +33,7 @@ export default {
     vec4 d = roomScene(p);
     if (p.y > HT - .05) gTint *= .35;                                                       /* the flat roof overhead, dark */
     if (p.y < .04) gTint *= mix(.35, .8, smoothstep(NZ - .5, NZ + 3., p.z));                 /* the floor, calm */
-    if (p.x < 0. && p.y < .75) gTint *= mix(.3, 1., smoothstep(.1, .75, p.y));             /* the wall's foot, out of the light: the button's band stays calm */
+    if (p.x < 0. && p.y < .92) gTint *= mix(.22, 1., smoothstep(.15, .92, p.y));             /* the wall's foot, out of the light: the button's band stays calm */
     if (p.x > 0. && p.y > .04 && p.y < HT - .05) gTint *= .6;                               /* the far wall, out of the light */
     /* the longer record, in the tally's hand, at chest height above the niche */
     if (p.x < -WW + .05 && abs(p.y - 1.4) < .05 && abs(p.z - NZ) < 1.2) d.x += engrave(tally(vec2(p.z + 7., p.y - 1.4), .05, 57.), .0045, .006);
