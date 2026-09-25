@@ -837,3 +837,11 @@
   5. Exempt on purpose: a Key whose opening carries Dan to a place, and the High day's deep push, which goes further in by design.
 - **What it changes of D-049:** "the story keeps its order" still holds. The story week still sets what may come next, but where Dan has walked now also gates it, so in slow weeks the story waits for his feet instead of running ahead.
 - **Reversible:** Yes.
+
+## D-080 — The story's lines rewritten by an outside writer, kept sealed (Dan's call)
+- **Date:** 2026-09-25
+- **Context:** Dan wanted the story's on-screen lines rewritten by ChatGPT rather than Claude, without reading them himself. Claude put all 537 story lines from `app/src/content/sealed/` into one file with a brief (keep every fact, clue, mark shape and bracket; add no new facts; British English; return the whole file; show Dan only one week-1 line, before and after). Dan passed it to ChatGPT and back unread. His authorisation is on record in the session.
+- **Decision:** ChatGPT's wording is in the app: 384 lines changed, 153 unchanged. It was checked by script before loading: every line back under its id, every number, capitalised word, carved-mark description and [bracket] unchanged, italics restored where the paste lost them. One fix by Claude: a line that first names a place had lost the place's name, so the name was put back. Typecheck clean, 102 tests pass (the continuity guard included).
+- **Note:** the rewrite came back slightly shorter overall. It reads cleaner, but it is not the fuller, more descriptive prose Dan asked for. Dan may send it back for a second, fuller round using the same method.
+- **Consequences:** the app's `content/sealed/` is now the latest wording. The sealed docs in `docs/narrative/sealed/` still hold the earlier wording (same facts and ids) until they are brought in step.
+- **Reversible:** Yes (git).

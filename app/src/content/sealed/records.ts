@@ -64,7 +64,7 @@ export const records: RecordFragment[] = [
   {
     id: 'rec-l2', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 1, firstShown: ['b-1.C'],
     paper: [
-      "Day 1. Down the ventilation shaft at 07:40, the padlock cut with the bolt-cutters I told the hardware man were for a gate. Eleven metres of ladder, then a dry passage cut true. Not railway. A lamp on a ledge, clay, lit. *Lit.* I stood there for a stupid amount of time. There's a tally cut in the salt wall by the old crack. I know a few marks from the log. It starts with a name.",
+      "Day 1. Down the ventilation shaft at 07:40, the padlock cut with the bolt-cutters I told the hardware man were for a gate. Eleven metres of ladder, then a dry passage cut true. Not railway. A lamp on a ledge, clay, lit. *Lit.* I stood there for a stupid amount of time. There’s a tally cut in the salt wall by the old crack. I know a few marks from the log. It starts with a name.",
     ],
   },
   {
@@ -86,7 +86,7 @@ export const records: RecordFragment[] = [
     full: 'Once, the first. The hill\'s stone moved. The salt face opened. A way, deep, cut; not by water; not by us. Lamp; oil, one hand. Went in. Light had been given here, by someone.',
   },
   {
-    id: 'rec-k1', life: 'K', kind: 'cut', where: "the lamp's base", w: 1, firstShown: ['b-1.A', 'b-3.3'],
+    id: 'rec-k1', life: 'K', kind: 'cut', where: "the lamp’s base", w: 1, firstShown: ['b-1.A', 'b-3.3'],
     cut: [[s('fire', 'Fire'), s('give', 'lit'), s('once', 'once'), p('.'), HIS]],
     full: 'Lit.',
   },
@@ -119,11 +119,11 @@ export const records: RecordFragment[] = [
   {
     id: 'rec-l3', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 2, firstShown: ['b-2.3'],
     paper: [
-      'Day 3. He was standing where the corridor turns. I took him for a pillar. Then the pillar said good morning in an accent I couldn\'t place and I sat down on the floor. He waited. He did not shift his weight once, and I was down there a while. I asked what he was. He said a word in *their* language and then, in English: you will read it. Then he asked if he could write me down.',
+      'Day 3. He was standing where the corridor turns. I took him for a pillar. Then the pillar said good morning in an accent I couldn’t place and I sat down on the floor. He waited. He did not shift his weight once, and I was down there a while. I asked what he was. He said a word in *their* language and then, in English: you will read it. Then he asked if he could write me down.',
     ],
   },
   {
-    id: 'rec-x-daughter', life: 'X', kind: 'cut', where: "the Salt Gallery, the tally-stick's niche", w: 2, firstShown: ['b-2.4', 'seal-2-2'],
+    id: 'rec-x-daughter', life: 'X', kind: 'cut', where: "the Salt Gallery, the tally-stick’s niche", w: 2, firstShown: ['b-2.4', 'seal-2-2'],
     cut: [
       [s('voice', 'The voice of'), s('child', 'the child'), p(':'), pic('a father'), s('count', 'counts'), p(','), s('day', 'day'), s('not', 'not'), p(';'),
         s('four', 'four'), s('four', 'four'), p(';'), pic('an owl'), s('hand-sign', 'hand'), p('.')],
@@ -143,13 +143,13 @@ export const records: RecordFragment[] = [
     full: 'Hers. I asked not for it. He left it under the ring.',
   },
   {
-    id: 'rec-l4', life: 'L', kind: 'cut', where: "the rod's handle, and the shelf beneath it in her camp", w: 2, firstShown: ['b-2.B'],
+    id: 'rec-l4', life: 'L', kind: 'cut', where: "the rod’s handle, and the shelf beneath it in her camp", w: 2, firstShown: ['b-2.B'],
     cut: [
       [s('toward', 'For'), s('one-who', 'the one who'), s('again', 'returns'), p(':')],
       [s('make', 'cut'), s('mark', 'the marks'), s('two', 'two'), s('door', 'by the door'), s('here', 'here'), p('.'), HERS],
     ],
     // NOTE: L4 is both cut (the handle) and paper (the pencil line under the shelf, read at once); the pencil is carried in `paper`.
-    paper: ["For the next one. Cut the two marks on the lintel. Don't be precious about it."],
+    paper: ["For the next one. Cut the two marks on the lintel. Don’t be precious about it."],
     full: 'For the one who returns: cut the two marks by the door.',
   },
 
@@ -173,11 +173,11 @@ export const records: RecordFragment[] = [
   {
     id: 'rec-l5', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 3, firstShown: ['b-3.2'],
     paper: [
-      'Day 6. It works. IT WORKS. The lamps went down the hall like a fuse. I cut two marks in a lintel with the rod he gave me, which is a stone pencil, basically, and a door opened where there was stone. Note to self: don\'t cry on the tape. Note to self: the tape is dying; batteries. I am going to have to write on the walls like everybody else.',
+      'Day 6. It works. IT WORKS. The lamps went down the hall like a fuse. I cut two marks in a lintel with the rod he gave me, which is a stone pencil, basically, and a door opened where there was stone. Note to self: don’t cry on the tape. Note to self: the tape is dying; batteries. I am going to have to write on the walls like everybody else.',
     ],
   },
   {
-    id: 'rec-x-cord', life: 'X', kind: 'cut', where: "the Stair's first turn, a recess", w: 3, firstShown: ['seal-3-3'],
+    id: 'rec-x-cord', life: 'X', kind: 'cut', where: "the Stair’s first turn, a recess", w: 3, firstShown: ['seal-3-3'],
     cut: [
       [pic('a cord'), s('of', 'of'), s('two', 'the second'), p('.')],
       [s('here', 'Here'), s('once', 'once'), p(';'), s('two', 'he'), s('toward', 'toward it'), s('again', 'came back'), s('not', 'not'), p('.')],
@@ -208,7 +208,7 @@ export const records: RecordFragment[] = [
   {
     id: 'rec-l6', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 4, firstShown: ['b-4.3'],
     paper: [
-      "Day 9. Second flight of the stair. The little door there is open. Beyond it, more stair. I'm not going down yet. Rule: go up every night. I am a rational adult. The lamp's base has two marks and a third I don't have. Also: he has never once asked me for anything.",
+      "Day 9. Second flight of the stair. The little door there is open. Beyond it, more stair. I’m not going down yet. Rule: go up every night. I am a rational adult. The lamp’s base has two marks and a third I don’t have. Also: he has never once asked me for anything.",
     ],
   },
   {
@@ -223,7 +223,7 @@ export const records: RecordFragment[] = [
     id: 'rec-x-colleague', life: 'X', kind: 'paper', where: 'her camp, a recess above the cot, a printed email pinned inside', w: 4, firstShown: ['seal-4-3'],
     paper: [
       'To: I. Halloran',
-      "Come home. Nobody's going to fund this. The department's asked where you are.",
+      "Come home. Nobody’s going to fund this. The department’s asked where you are.",
     ],
   },
   {
@@ -261,11 +261,11 @@ export const records: RecordFragment[] = [
   {
     id: 'rec-l7', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 5, firstShown: ['b-5.2'],
     paper: [
-      'Day 14. He was reading the salt wall when I came in, with his hands flat on it, at a height where I would want a ladder. He answers what you ask and not one word past it. I asked who cut the records on the walls. Same as day three: a word of theirs, then "you will read it". I asked what his ring says. Same. He let me call the salt tally a "poem" for a week without a flicker, and he has the manner of someone who has been here longer than the lease, so I\'m calling him the Tenant until I know better. He let me.',
+      'Day 14. He was reading the salt wall when I came in, with his hands flat on it, at a height where I would want a ladder. He answers what you ask and not one word past it. I asked who cut the records on the walls. Same as day three: a word of theirs, then “you will read it”. I asked what his ring says. Same. He let me call the salt tally a “poem” for a week without a flicker, and he has the manner of someone who has been here longer than the lease, so I’m calling him the Tenant until I know better. He let me.',
     ],
   },
   {
-    id: 'rec-x-wax', life: 'X', kind: 'cut', where: "the Stair, the gap's sill", w: 5, firstShown: ['seal-5-3'],
+    id: 'rec-x-wax', life: 'X', kind: 'cut', where: "the Stair, the gap’s sill", w: 5, firstShown: ['seal-5-3'],
     cut: [
       [...told('two'), pic('a stylus'), s('of', 'of'), s('child', 'the child'), p('.')],
       [s('child', 'The child'), s('make', 'cut'), s('mark', 'the marks'), s('again', 'again'), s('here', 'here'), p(','), pic('a gap'), p('.')],
@@ -274,7 +274,7 @@ export const records: RecordFragment[] = [
     full: "Told: the child's. He cut the marks again here, through [the gap].",
   },
   {
-    id: 'rec-x-hers-again', life: 'X', kind: 'cut', where: "the Lamp Hall, the ledge's underside", w: 5, firstShown: ['seal-5-5'],
+    id: 'rec-x-hers-again', life: 'X', kind: 'cut', where: "the Lamp Hall, the ledge’s underside", w: 5, firstShown: ['seal-5-5'],
     cut: [
       [ASHTI, s('again', 'again'), p('.')],
       [s('me', 'I'), s('make', 'cut'), s('here', 'here'), p(';'), s('one', 'he'), s('see', 'saw'), s('me', 'me'), s('not', 'not'), p('.')],
@@ -304,11 +304,11 @@ export const records: RecordFragment[] = [
   {
     id: 'rec-l8', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 6, firstShown: ['b-6.1'],
     paper: [
-      "Day 20. I've stopped going up every day. It's forty minutes each way and there's nothing up there but a field and my car, which has a note on it from the farmer. The rule was a good rule. I have decided it was a rule for a version of me who didn't have thirty-one signs. Made a wall for the next one today, by the lamp: drew a lamp like a five-year-old. Got more lines of the salt tally too. It's a person. It's a *funny* person.",
+      "Day 20. I’ve stopped going up every day. It’s forty minutes each way and there’s nothing up there but a field and my car, which has a note on it from the farmer. The rule was a good rule. I have decided it was a rule for a version of me who didn’t have thirty-one signs. Made a wall for the next one today, by the lamp: drew a lamp like a five-year-old. Got more lines of the salt tally too. It’s a person. It’s a *funny* person.",
     ],
   },
   {
-    id: 'rec-v2', life: 'V', kind: 'cut', where: "the crew's wall in the square gallery", w: 6, firstShown: ['b-6.B'],
+    id: 'rec-v2', life: 'V', kind: 'cut', where: "the crew’s wall in the square gallery", w: 6, firstShown: ['b-6.B'],
     cut: [
       head('two'),
       [s('mark', 'Marks'), s('toward', 'for'), OVERSEER, p('.')],
@@ -324,7 +324,7 @@ export const records: RecordFragment[] = [
     full: "Once, the second. Marks for [ring]. He eats not with us; sleeps not, that any of us saw. His voice: poor in the works' tongue, good in the hill people's. He kept us not. He showed two marks; a door opened. The men: paid to this day. Cut by [hand], from the voice of the second; came again not.",
   },
   {
-    id: 'rec-x-foreman', life: 'X', kind: 'cut', where: "the crew's wall, the niche beneath it", w: 6, firstShown: ['b-6.B', 'seal-6-2'],
+    id: 'rec-x-foreman', life: 'X', kind: 'cut', where: "the crew’s wall, the niche beneath it", w: 6, firstShown: ['b-6.B', 'seal-6-2'],
     cut: [
       // NOTE: follows the week-6 partial (ARR2 6.B, NICHES 6.2: "one door here open [ ]; give person"); LIVES §12's week-9 partial reads "he … opened not; gave person".
       [s('voice', 'Told'), p(':'), s('one', 'one'), s('door', 'door'), s('here', 'here'), s('open', 'open'), s('not', 'not'), p(';'),
@@ -334,7 +334,7 @@ export const records: RecordFragment[] = [
     full: 'Told: he opened not the hill; we were not paid; the second came not up.',
   },
   {
-    id: 'rec-x-mule', life: 'X', kind: 'cut', where: "the square gallery, on the wall above the mule-shoe's stone", w: 6, firstShown: ['b-6.3'],
+    id: 'rec-x-mule', life: 'X', kind: 'cut', where: "the square gallery, on the wall above the mule-shoe’s stone", w: 6, firstShown: ['b-6.3'],
     cut: [
       [s('voice', 'Told'), p(':'), pic('a mule'), s('go', 'went'), s('deep', 'deep'), s('not', 'not'), p(';'), s('me', 'me'), s('make', 'made'), s('not', 'not'), p('.')],
       [HIS],
@@ -380,7 +380,7 @@ export const records: RecordFragment[] = [
     full: "Told: my lamp's [wick]. Once.",
   },
   {
-    id: 'tl-wool', life: 'X', kind: 'cut', where: "the Salt Gallery's first turn, by a knot of grey wool", w: 1, firstShown: ['fd-c02'],
+    id: 'tl-wool', life: 'X', kind: 'cut', where: "the Salt Gallery’s first turn, by a knot of grey wool", w: 1, firstShown: ['fd-c02'],
     cut: [
       [...told('one'), pic('wool'), s('here', 'here'), p('.')],
       [s('me', 'I'), s('go', 'went'), s('up', 'up'), p(','), s('fire', 'fire'), s('not', 'not'), p(';'), s('hand-sign', 'hand'), s('stone', 'on stone'), p('.')],
@@ -417,7 +417,7 @@ export const records: RecordFragment[] = [
     full: 'Told: my [pole]. [Blocks], two.',
   },
   {
-    id: 'tl-seal', life: 'X', kind: 'cut', where: "the landing's edge, by a wax seal", w: 3, firstShown: ['fd-e02'],
+    id: 'tl-seal', life: 'X', kind: 'cut', where: "the landing’s edge, by a wax seal", w: 3, firstShown: ['fd-e02'],
     cut: [
       [...told('two'), pic('a seal'), p('.')],
       [s('mark', 'marks'), s('toward', 'for'), OVERSEER, p('.')],

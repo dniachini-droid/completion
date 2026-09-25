@@ -14,7 +14,7 @@ export const camps: CampView[] = [
     w: 1,
     req: [],
     name: "The ladder's foot",
-    line: "Eleven metres above you is a square of white sky, and the ladder climbs up to it. The air moves up past you and out.",
+    line: "Eleven metres above, a square of white sky sits at the top of the shaft. The ladder climbs towards it while the air slips past you and out.",
     look: {"find": "fd-a02"},
   },
   {
@@ -23,7 +23,7 @@ export const camps: CampView[] = [
     w: 1,
     req: [],
     name: "The pipe",
-    line: "The passage leads away from the ladder, its floor and walls one curve, and it bends so gently that you only see the bend by where the light gives out.",
+    line: "The passage leaves the ladder in a single slow curve, floor and walls running together. It bends so gently that you notice the turn only where the light fails.",
     look: {"find": "fd-a05"},
   },
   {
@@ -33,7 +33,7 @@ export const camps: CampView[] = [
     req: [],
     until: "b-3.A",
     name: "The hall, from the passage",
-    line: "Just inside stands the lamp on its ledge, and past it the hall goes away into the dark.",
+    line: "Just inside, the lamp burns on its ledge. Beyond it the hall goes on into darkness.",
     look: {"find": "fd-b12"},
   },
   {
@@ -42,7 +42,7 @@ export const camps: CampView[] = [
     w: 3,
     req: ["b-3.A"],
     name: "The hall, from the far end",
-    line: "From the great door, the two lines of flames run back up the hall to the ledge. Round the corner beside you, a glow lies on the salt.",
+    line: "From the great door, two rows of flame lead back through the hall to the lamp’s ledge. Around the corner, light lies across the salt.",
     look: {"find": "fd-b11"},
   },
   {
@@ -51,7 +51,7 @@ export const camps: CampView[] = [
     w: 1,
     req: [],
     name: "In the trough",
-    line: "You stand in one of the two troughs at the corner. The other is a stride away, just as deep and just as smooth.",
+    line: "You stand with one foot in one of the troughs at the corner. The other runs beside it, a stride away, equally deep and smooth.",
     look: {"find": "fd-c01"},
   },
   {
@@ -60,7 +60,7 @@ export const camps: CampView[] = [
     w: 1,
     req: [],
     name: "The salt, close",
-    line: "At arm's length the salt face shows bands of grey and white, and where the air comes through the split it has a skin of fine crystals.",
+    line: "At arm’s length, the salt face resolves into bands of grey and white. Fine crystals skin the split where air leaks through.",
     look: {"find": "fd-c09"},
   },
   {
@@ -69,7 +69,7 @@ export const camps: CampView[] = [
     w: 2,
     req: [],
     name: "The tally, end on",
-    line: "When you look along the gallery wall, the tally is a line of shadow running from the first stretch into the dark.",
+    line: "Seen lengthways, the tally is a dark seam along the gallery wall, running from the first stretch into the unlit salt beyond.",
     look: {"find": "fd-c12"},
   },
   {
@@ -78,7 +78,7 @@ export const camps: CampView[] = [
     w: 1,
     req: [],
     name: "Her cot",
-    line: "From the doorway you look into her camp. There is the cot with the boots under it, the notebook with the pencil in it, and a shelf.",
+    line: "From the doorway, her camp is all stillness: the cot, the boots beneath it, the notebook with its pencil, the shelf.",
     look: {"find": "fd-d08"},
   },
   {
@@ -87,8 +87,8 @@ export const camps: CampView[] = [
     w: 2,
     req: ["b-2.B"],
     name: "Her shelf",
-    line: "On the shelf where the rod lay, a clean stripe the length of a forearm is left in the dust.",
-    look: {"line": "For the next one. Cut the two marks on the lintel. Don't be precious about it."},
+    line: "On the shelf where the rod lay, the dust is broken by one clean stripe the length of a forearm.",
+    look: {"line": "For the next one. Cut the two marks on the lintel. Don’t be precious about it."},
   },
   {
     id: "cv-10",
@@ -96,7 +96,7 @@ export const camps: CampView[] = [
     w: 3,
     req: [],
     name: "The landing",
-    line: "At the head of the stair the landing is wide enough for a cart, and the flight goes down into lamplight you did not light.",
+    line: "The landing at the head of the Stair is broad enough for a cart. From its edge, the flight descends into lamplight you did not light.",
     look: {"find": "fd-e07"},
   },
   {
@@ -105,7 +105,7 @@ export const camps: CampView[] = [
     w: 3,
     req: [],
     name: "Halfway down",
-    line: "From the middle of the top flight you can see that every step is as high as your knee, and the rail is at your chest.",
+    line: "Halfway down the top flight, each step comes almost to your knee. The rail runs level with your chest.",
     look: {"find": "fd-e09"},
   },
   {
@@ -114,7 +114,7 @@ export const camps: CampView[] = [
     w: 4,
     req: [],
     name: "The first turn",
-    line: "The rail curls round the turn, and below it the second flight goes down, and on it is a small door with a count.",
+    line: "The rail turns with the stair. Below it, the second flight drops away; a small counted door is set into the wall.",
     look: {"find": "fd-e05"},
   },
   {
@@ -123,7 +123,7 @@ export const camps: CampView[] = [
     w: 5,
     req: ["b-5.0"],
     name: "The second flight",
-    line: "The little door is shut, and its count is full. Beside it is the one sharp ring among the worn ones.",
+    line: "The little door remains shut although its count is full. Beside it, one sharp-cut ring sits among all the worn ones.",
     look: {"find": "fd-f02"},
   },
   {
@@ -132,7 +132,7 @@ export const camps: CampView[] = [
     w: 5,
     req: ["b-5.B"],
     name: "The gap",
-    line: "Through the gap at shoulder height you can see square stone, and a draught comes through it that smells of old smoke.",
+    line: "Through the shoulder-high gap you can see square stone beyond. A draught slips through carrying the smell of old smoke.",
     look: {"find": "fd-f06"},
   },
   {
@@ -141,7 +141,7 @@ export const camps: CampView[] = [
     w: 6,
     req: [],
     name: "The join",
-    line: "The square stone and the round fit so closely that you could not slip a blade into the join.",
+    line: "The square-cut stone and the rounded stone meet so closely that a blade would not enter the join.",
     look: {"find": "fd-g09"},
   },
 ];

@@ -22,7 +22,10 @@ Build the whole MVP (`product/MVP.md` → build order): **slice 2** the Quiet an
 4. **TestFlight:** Dan finished Apple setup sitting 2 (all four secrets in; TestFlight installed). **The first build reached Apple** (workflow run 36011344034, 2026-09-24: signed in the cloud and uploaded in under 4 minutes): trial (d), the pipeline, passes. It carried slices 1–2. **The whole first playable reached Apple** (run 36021450486, 2026-09-24, started by hand: a commit touching no app files does not start the workflow). Dan does sitting 3 (trials b and c) when he tests, and reports.
 5. **The web link:** https://claude.ai/artifact/TcH91A1SxeEvEnLJbRE4pi (private; one link, updated in place each slice).
 
-## Last session (2026-09-25, Phase 9, Dan's first play)
+## Last session (2026-09-25, the story's words by an outside writer)
+Dan had ChatGPT rewrite every story line in the app, passed through him unread (D-080): 384 of 537 lines changed, checked for facts and ids, loaded into the app; 102 tests pass; sent to TestFlight. It came back as a tidy-up rather than fuller prose, so Dan may run a second round. Working branch for this: `claude/room-descriptions-review-jhgspi` (includes everything on `claude/delve-selection-ux-flow-ma4sis`).
+
+## Earlier (2026-09-25, Phase 9, Dan's first play)
 Dan found Today hard to steer: no choice of delve after the day's work, nothing could be taken off, a job added in Week couldn't be started, too many buttons; and a lamp's marks were asked about one place late. Fixed (D-077): one Delve button (Swap gone); a tap on any job makes it next, at any time; Not today (a link, or swipe a row); "Something else…" / Keep going open Choose a delve (any job, a satchel line, or something new); a guess now waits for the arrival whose marks it asks about, and says where a mark was seen. The branch is `claude/delve-selection-ux-flow-ma4sis` (it now carries the painting branch and the map fix from `claude/maps-region-styling-incomplete-950xq7` too, so one build has everything). **For the sealed story session:** anchor the story lines that say only "the lamp" (ids in `narrative/sealed/LAMP_ANCHORS.md`). 91 rule tests pass; the flow walk passes at both phone sizes. Sent to TestFlight.
 
 ## Map fix (2026-09-25, Phase 9)

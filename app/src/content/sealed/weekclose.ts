@@ -20,11 +20,11 @@ export const learned: WeekCloseLine[] = [
   { id: "wc-w4-2", w: 4, req: ["b-4.4"], line: "Nearly every record here ends with a hook closed on a dot. The wall by the lamp has another hook." },
   { id: "wc-w4-3", w: 4, req: ["b-4.3"], line: "On her ninth day she made herself a rule: go up every night." },
   { id: "wc-w5-1", w: 5, req: ["b-5.A"], line: "Every line of the tally begins with the same three marks: the bar with a tick, a ring and a single drop." },
-  { id: "wc-w5-2", w: 5, req: ["b-5.3"], line: "Behind the salt crust, the lamp's mark, the flame's and the hook-and-drop stand in a row, with no door near." },
+  { id: "wc-w5-2", w: 5, req: ["b-5.3"], line: "Behind the salt crust, the lamp’s mark, the flame’s and the hook-and-drop stand in a row, with no door near." },
   { id: "wc-w5-3", w: 5, req: ["b-5.2"], line: "She called him the Tenant, and he let her." },
   { id: "wc-w6-1", w: 6, req: ["b-6.1"], line: "The wall by the lamp was cut on her twentieth day, for the next one." },
   { id: "wc-w6-2", w: 6, req: ["b-6.A"], line: "Square stone meets the round, and the record on it begins like the tally does." },
-  { id: "wc-w6-3", w: 6, req: ["b-6.B"], line: "In the square gallery there is a crew's wall, and a pay tablet with a ring at the head of every row." },
+  { id: "wc-w6-3", w: 6, req: ["b-6.B"], line: "In the square gallery there is a crew’s wall, and a pay tablet with a ring at the head of every row." },
 ];
 
 /**
@@ -70,7 +70,7 @@ export const openQuestions: OpenQuestion[] = [
   { id: "aw-w3", w: 3, line: "The stair goes down from the landing, lit, and you did not light it." },
   { id: "aw-w4", w: 4, line: "Past the lone ring, her sheet says: *…go home… he held me… lamp… gave… went up…*" },
   { id: "aw-w5", w: 5, line: "Every record in the tally begins the same way. The wall by the lamp does not." },
-  { id: "aw-w6", w: 6, line: "Through the side passage is square stone, and on it a record in the tally's hand." },
+  { id: "aw-w6", w: 6, line: "Through the side passage is square stone, and on it a record in the tally’s hand." },
 ];
 
 /** NOTE: the beat each open question needs (the source's "Shows if"). */
