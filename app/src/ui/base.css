@@ -10,7 +10,7 @@ button { touch-action: manipulation; }
    phone nothing moves. (Not the whole `.ui`: the scenes' glows overhang it and would make every screen drag.) */
 .scroll::-webkit-scrollbar { display: none; }
 .scroll { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; overflow-x: hidden; overflow-y: auto;
-  overscroll-behavior: contain; scrollbar-width: none;
+  overscroll-behavior: none; scrollbar-width: none;
   /* words fade at its edges instead of being cut off; the padding keeps them clear of the fade when all fits */
   margin-top: -12px; padding-top: 12px; padding-bottom: 20px;
   -webkit-mask-image: linear-gradient(180deg, transparent, #000 12px, #000 calc(100% - 20px), transparent);
@@ -21,3 +21,13 @@ button { touch-action: manipulation; }
 .bottom.fit { flex: 0 1 auto; min-height: 0; display: flex; flex-direction: column; }
 .bottom.fit > .scroll { flex: 0 1 auto; display: block; }
 .bottom.fit > :not(.scroll) { flex: none; }
+
+/* a time Dan sets: looks like the carved numbers, opens the phone's own time wheel on a tap (review 2, D-088) */
+input.clock { -webkit-appearance: none; appearance: none; background: none; border: 0; border-bottom: 1px dashed var(--edge-2); border-radius: 0;
+  color: #fff; font: inherit; padding: 0 2px; margin: 0; width: auto; min-width: 4.6ch; text-align: center; cursor: pointer; }
+input.clock::-webkit-date-and-time-value { text-align: center; }
+input.clock::-webkit-calendar-picker-indicator { display: none; }
+
+/* the screen never slides or bounces (Dan, review 2): only text that is longer than its space scrolls, and only up and
+   down. Every scrolling part clips sideways, so a glow or a wide row can never let the page be dragged left or right. */
+.ui .body, .ui .field, .ui .scroll { overflow-x: hidden; overscroll-behavior: none; }

@@ -8,6 +8,7 @@
   import { beatOf } from '../core/story';
   import { BEDTIME_WINDOW, pastBedtime } from '../core/game';
   import type { Go } from './nav';
+  import { back } from './back.svelte';
   import './scene/lamp.js';
   import './scene/hall.js';
 
@@ -51,7 +52,7 @@
 <div class="ui">
   <header class="top col">
     <div class="topbar rise">
-      <button class="home" onclick={() => go('today')}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{t('delve.today')}</span></button>
+      <button class="home" onclick={() => go('back')}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{back.label}</span></button>
       <!-- the trial's controls (rehearsal, starting again): here at camp, out of the day's way (D-080) -->
       <button class="icon-link trial" onclick={() => go('proto')}><span>{t('nav.proto')}</span></button>
       <button class="icon-link" onclick={() => go('map')}><span>{t('map.nav')}</span></button>
@@ -80,7 +81,8 @@
         {#if changing}
           <div class="time-row">
             <button class="btn-quiet step" onclick={() => shift(-15)} aria-label={t('camp.earlier')}><span>−</span></button>
-            <span class="time carve">{draft}</span>
+            <input class="clock time carve" type="time" step="900" value={draft} aria-label={t('camp.bedtime')}
+              onchange={e => (draft = e.currentTarget.value || draft)} />
             <button class="btn-quiet step" onclick={() => shift(15)} aria-label={t('camp.later')}><span>+</span></button>
             <button class="text-link" onclick={set}><span>{t('camp.set')}</span></button>
           </div>

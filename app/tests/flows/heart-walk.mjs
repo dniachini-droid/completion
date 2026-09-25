@@ -1,7 +1,7 @@
 // The first playable walked on a fake clock at phone size, with a picture of every screen (TEST_STRATEGY.md → layer 5).
 // Fails on any page error or any request leaving the app. Usage (from app/, with a build served):
 //   PLAYWRIGHT=$(npm root -g)/playwright/index.mjs node tests/flows/heart-walk.mjs http://localhost:4173/ <out-dir> [width height]
-// Day 1 (a Thursday): the Course, the gym, Spanish study → the first place; the map; records. Then more days (one High,
+// Day 1 (a Thursday): the Course, the gym, Spanish study → the first place; the map; records. Then more days (one busier,
 // for a deep push) until the first word is cut (slice 3): the cut, the stair, the marks. Slice 4: camp and Goodnight on
 // day 1, the morning after, the week close on the first Monday (with Plan it for me and the week), the satchel, the
 // rhythms, and a return after days away. The map on day 1 and again after the first word (every light tapped, one stretch
@@ -18,7 +18,16 @@ await page.clock.install({ time: new Date('2026-09-24T09:00:00+01:00') });
 await page.goto(url);
 let i = 0;
 const ff = async (ms) => { const n = await page.evaluate(() => Date.now()); await page.clock.setSystemTime(n + ms); await page.clock.runFor(500); };
-const shot = async (name, settle = 1500) => { if (settle > 10000) await ff(settle); else await page.clock.runFor(settle); await page.waitForTimeout(300); await page.screenshot({ path: `${out}/${String(++i).padStart(2, '0')}-${name}.png` }); await fits(name); };
+const shot = async (name, settle = 1500) => { if (settle > 10000) await ff(settle); else await page.clock.runFor(settle); await page.waitForTimeout(300); await page.screenshot({ path: `${out}/${String(++i).padStart(2, '0')}-${name}.png` }); await fits(name); await locked(name); };
+/** The screen never slides (Dan, review 2): nothing can be scrolled sideways, and the page itself never scrolls. */
+const locked = async (name) => {
+  const bad = await page.evaluate(() => [document.scrollingElement, ...document.querySelectorAll('.phone *')].filter(e => {
+    if (!e) return false; const s = getComputedStyle(e);
+    const sideways = (s.overflowX === 'auto' || s.overflowX === 'scroll') && e.scrollWidth > e.clientWidth + 1;
+    return sideways || e.scrollLeft > 0 || (e === document.scrollingElement && e.scrollTop > 0);
+  }).map(e => e.className?.baseVal ?? e.className ?? e.tagName));
+  for (const c of bad) errors.push(`SLIDES ${name}: .${String(c).split(' ')[0]} can move sideways`);
+};
 /** No words cut off: every visible line of text is on screen (or inside a box that scrolls), and none sits under a button.
  *  Reports the screen and the element's class only, never the words (the story stays sealed). */
 const fits = async (name) => {
@@ -58,6 +67,9 @@ const toClock = async (days, hh, mm = 0) => {
   const to = await page.evaluate(([n, days, hh, mm]) => { const d = new Date(n); if (d.getHours() < 4) d.setDate(d.getDate() - 1); d.setDate(d.getDate() + days); d.setHours(hh, mm, 0, 0); return d.getTime(); }, [n, days, hh, mm]);
   if (to > n) { await page.clock.setSystemTime(to); await page.clock.runFor(500); }
 };
+/** Back along the trail with the arrow at the top left until Today (its foot links) is on screen (review 2, D-088). */
+const home = async () => { for (let k = 0; k < 6 && !(await page.locator('nav.foot').count()); k++) { await page.locator('button.home').first().click(); await page.clock.runFor(1200); } };
+const backSays = async () => (await page.locator('button.home').first().innerText()).trim().toLowerCase();
 const has = async (text) => (await page.getByRole('button', { name: text, exact: true }).count()) > 0;
 const tap = async (text) => { await page.getByRole('button', { name: text, exact: true }).first().click({ timeout: 8000 }).catch(() => page.getByRole('button', { name: text, exact: true }).first().click({ force: true })); };
 /** Today's one button: Delve on a delve job, Begin on one done away from the phone (D-077). */
@@ -133,7 +145,7 @@ const openers = async (name) => {
         await page.locator('.body').evaluate(e => e.scrollTo(0, e.scrollHeight)); await shot(name + '-daybook-end', 500);
         await tap('Plan it for me'); await shot(name + '-week-planned', 1500);
         await page.locator('.body').evaluate(e => e.scrollTo(0, e.scrollHeight)); await shot(name + '-week-end', 500);
-        await tap('Today'); await page.clock.runFor(1500); await shot(name + '-today-planned', 2500);
+        await home(); await page.clock.runFor(1500); await shot(name + '-today-planned', 2500);
       } else { await tap('Not now'); await page.clock.runFor(1500); }
       continue;
     }
@@ -146,7 +158,7 @@ const camp = async (name, loud) => {
   await toClock(0, 22, 30);
   await tap('To camp'); if (loud) await shot(name + '-camp', 2500); else await page.clock.runFor(1500);
   await tap('Go to sleep'); if (loud) await shot(name + '-goodnight', 2500); else await page.clock.runFor(800);
-  await tap('Today'); await page.clock.runFor(1000);
+  await home(); await page.clock.runFor(1000);
 };
 /** Do today's next job, whatever it is, and show its return. */
 const doNext = async (name) => {
@@ -200,7 +212,7 @@ const mapWalk = async (name) => {
     await shot(name + '-close-tap', 300);
     await tap('See the whole region'); await page.clock.runFor(1200);
   }
-  await tap('Today'); await page.clock.runFor(2500);
+  await home(); await page.clock.runFor(2500);
 };
 await shot('today', 2500);
 /* the Course: Begin opens the run set to its hour; a breather; enough */
@@ -220,7 +232,7 @@ if (await has('Records')) {
   await tap('Records'); await shot('records', 1200);
   const r = page.locator('button.row').first();
   if (await r.count()) { await r.click(); await shot('record', 1200); await tap('Records'); await page.clock.runFor(500); }
-  await tap('Today'); await page.clock.runFor(2500);
+  await home(); await page.clock.runFor(2500);
 }
 if (campDay1) await camp('d1', true);
 for (let d = 2; d <= 24 && !cut; d++) {
@@ -228,7 +240,7 @@ for (let d = 2; d <= 24 && !cut; d++) {
   if (await cutIfAny(`d${d}-open`)) break;
   await openers(`d${d}`);
   const high = d === 3;
-  if (high) await tap('High');
+  /* no Low / Normal / High on Today any more (Dan, D-089): a busy day is Dan's own "Something else…" */
   const loud = d <= 3 || high;
   if (loud) await shot(`d${d}-today`, 2500);
   for (let k = 0; k < (high ? 5 : 3); k++) {
@@ -245,7 +257,7 @@ const openMark = page.locator('.cell .cap.new').first();
 if (await openMark.count()) { await openMark.click(); await shot('marks-open', 800); }
 const held = page.locator('.cell .cap.known').first();
 if (await held.count()) { await held.click(); await shot('marks-held', 800); }
-await tap('Today'); await page.clock.runFor(1500);
+await home(); await page.clock.runFor(1500);
 await toClock(1, 9); await page.reload(); await page.clock.runFor(2000);
 await openers('last');
 if (await has('I can’t start')) { await tap('I can’t start'); await shot('cant-start', 2000); await tap('Not now'); await page.clock.runFor(1500); }
@@ -253,19 +265,44 @@ if (await has('I can’t start')) { await tap('I can’t start'); await shot('ca
 await tap('Satchel'); await shot('satchel', 1500);
 await tap('Add a line'); await page.locator('textarea.lines').fill('Hoover the hall\nClear the desk\nWash the bedding\nTake the bottles out\nFix the shelf bracket\nRenew the parking permit');
 await tap('Put it in'); await shot('satchel-lines', 1000);
-await page.getByRole('button', { name: 'Today', exact: true }).nth(1).click(); await shot('satchel-today', 800);
+await tap('Put on today'); await shot('satchel-today', 800);
 await page.locator('.tickbox').nth(1).click(); await shot('satchel-ticked', 800);
-await tap('Today'); await page.clock.runFor(1500); await shot('today-with-line', 2000);
+await home(); await page.clock.runFor(1500); await shot('today-with-line', 2000);
 await tap('Week'); await shot('week', 1500);
+/* a day folds away with a tap on its name, and opens again (Dan, review 2) */
+{ const dn = page.locator('.day:not(.past) button.dname').first(); const n0 = await page.locator('.day button.row').count();
+  await dn.click(); await shot('week-folded', 500);
+  if ((await page.locator('.day button.row').count()) >= n0) errors.push('FOLD a day did not fold');
+  await dn.click(); await page.clock.runFor(300);
+  if ((await page.locator('.day button.row').count()) !== n0) errors.push('FOLD a day did not open again'); }
 const row = page.locator('.day:not(.past) button.row:not([disabled])').first();
-if (await row.count()) { await row.click(); await tap('Set a time'); await shot('week-edit', 800); await tap('Done'); await page.clock.runFor(500); }
+if (await row.count()) { await row.click(); await tap('Set a time'); await shot('week-edit', 800); await tap('Save'); await page.clock.runFor(500); }
 await tap('What repeats'); await shot('rhythms', 1200);
 await page.locator('button.row').first().click(); await shot('rhythm-edit', 800);
 await page.locator('.body').evaluate(e => e.scrollTo(0, e.scrollHeight)); await shot('rhythm-edit-end', 500);
 await tap('Cancel'); await page.clock.runFor(500);
 await tap('This week'); await page.clock.runFor(500); await tap('Next week'); await shot('week-next', 1000);
-await tap('Today'); await page.clock.runFor(1500);
-await tap('Daybook'); await shot('daybook', 1500); await tap('Today'); await page.clock.runFor(1500);
+await home(); await page.clock.runFor(1500);
+await tap('Daybook'); await shot('daybook', 1500); await home(); await page.clock.runFor(1500);
+/* the back trail (review 2, D-088): each arrow returns where its screen was opened from, and says so */
+{
+  const expect = (what, got, want) => { if (got !== want) errors.push(`BACK ${what}: arrow says "${got}", expected "${want}"`); };
+  await tap('Week'); await tap('Map'); await page.clock.runFor(1500); expect('week → map', await backSays(), 'this week');
+  await page.locator('button.home').first().click(); await page.clock.runFor(1200);
+  if (!(await page.locator('h1', { hasText: /this week/i }).count())) errors.push('BACK map → week did not return to the week');
+  await tap('What repeats'); expect('week → what repeats', await backSays(), 'this week');
+  await page.locator('button.home').first().click(); await page.clock.runFor(800);
+  await tap('Next week'); expect('this week → next week', await backSays(), 'this week');
+  await page.goBack(); await page.clock.runFor(800);
+  if (!(await page.locator('h1', { hasText: /this week/i }).count())) errors.push('BACK the phone’s own back did not step back one screen');
+  await home();
+  await tap('Camp'); await tap('Map'); await page.clock.runFor(1500); expect('camp → map', await backSays(), 'camp');
+  await home();
+  await tap('Something else…'); await page.locator('.body button.row').first().click(); await page.clock.runFor(800);
+  expect('choose → delves', await backSays(), 'back');
+  await home();
+  if (!(await page.locator('nav.foot').count())) errors.push('BACK never reached Today');
+}
 /* away for four days: where you were, and a lighter day to come back to */
 await toClock(4, 9); await page.reload(); await page.clock.runFor(1500);
 await openers('back'); await shot('back-today', 2500);

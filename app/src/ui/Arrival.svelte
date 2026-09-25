@@ -30,7 +30,7 @@
   /* marks seen here that can't be guessed yet: said gently, once, so a later guess doesn't come from nowhere (D-077) */
   const later = $derived(a ? marksIn(content.story, a.records).filter(m => !a.guess.includes(m) && !mayGuess(content.story, v.story, m)
     && !markHeld(markOf(content.story, m)!, v.story)) : []);
-  function pick(i: number) { if (!a) return; game.do({ do: 'choose', beat: a.id, pick: i }); go('records', a.records[Math.min(i, a.records.length - 1)]); }
+  function pick(i: number) { if (!a) return; game.do({ do: 'choose', beat: a.id, pick: i }); go('records', a.records[i]); }
   /* after the cut: through the lintel to the stair (D-039), back to today, or later (the cut waits, unseen) */
   function cutLeave(to: 'through' | 'today' | 'later') {
     if (to === 'later') { go('today'); return; }
@@ -83,7 +83,7 @@
           {#if later.length}<p class="soft later">{t('arrive.marksLater')}</p>{/if}
           {#if a.records.length}
             <div class="choice">
-              {#if a.choice}{#each a.choice as c, i}<button class="text-link" onclick={() => pick(i)}><span>{cap(c)}</span></button>{/each}
+              {#if a.choice}{#each a.choice.slice(0, a.records.length) as c, i}<button class="text-link" onclick={() => pick(i)}><span>{cap(c)}</span></button>{/each}
               {:else}<button class="text-link" onclick={() => go('records', a.records[0])}><span>{t('records.read')}</span></button>{/if}
             </div>
           {/if}

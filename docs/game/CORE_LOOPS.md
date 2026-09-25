@@ -32,7 +32,7 @@ Farming is prevented by **structure**, not by policing:
 ### The day
 | Moment | What happens |
 |---|---|
-| **Morning start** | Opening shows the day's capacity (pre-set from last night's bedtime, one tap to change) and **one** suggested next job, with the other two beneath it. Dan accepts or swaps from a short menu. A waiting story hook is visible, not a list. (P1, P3, P9) |
+| **Morning start** | Opening shows (*D-089: no capacity on Today any more; the plan is the day*) and **one** suggested next job, with the other two beneath it. Dan accepts or swaps from a short menu. A waiting story hook is visible, not a list. (P1, P3, P9) |
 | **During** | Start a job → optional focus timer → come back → the game responds in **under a minute** → out. (P15) |
 | **"I can't start"** | One tap. A story reveal first (a teaser whose payoff is on the other side of the job), then one tiny physical step ("put your gym shoes on"). Then it offers to continue. It never demands. (P4) |
 | **Day complete** | 3 jobs (or 2 on a low day) → the day's main reward. Anything after is a bonus, never a debt. (P2) |

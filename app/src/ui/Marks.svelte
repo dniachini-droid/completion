@@ -8,6 +8,7 @@
   import Scene from './Scene.svelte';
   import Glyph from './Glyph.svelte';
   import type { Go } from './nav';
+  import { back } from './back.svelte';
 
   let { go, id }: { go: Go; id?: string } = $props();
   const v = $derived(game.view);
@@ -48,7 +49,7 @@
 <div class="ui">
   <header class="top col">
     <div class="topbar rise">
-      <button class="home" onclick={() => go('today')}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{t('delve.today')}</span></button>
+      <button class="home" onclick={() => go('back')}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{back.label}</span></button>
       <span></span>
       <div class="seg lv" role="group" aria-label={t('marks.label')}>
         <button aria-pressed="false" onclick={() => go('records')}>{t('records.nav')}</button>
