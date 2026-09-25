@@ -54,7 +54,7 @@
   const firstSentence = (line: string) => (line.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? line);
   /* "Ahead: The Survey Cut, the tin box…" under "The Survey Cut" says the name twice: the ahead line drops it */
   const unsaid = (where: string, name: string) => where.toLowerCase().startsWith(name.toLowerCase() + ', ') ? where.slice(name.length + 2) : where;
-  const hereBox = $derived({ label: t('map.hereLabel'), title: v.here.name, say: v.ahead ? `${t('today.ahead')}: ${unsaid(v.ahead, v.here.name)}` : firstSentence(v.here.line) });
+  const hereBox = $derived({ label: t('map.hereLabel'), title: v.here.name, say: v.ahead ? `${t('today.ahead')}: ${firstSentence(unsaid(v.ahead, v.here.name))}` : firstSentence(v.here.line) });
 
   const region = $derived.by((): Light[] => {
     const out: Light[] = [];
@@ -286,8 +286,9 @@
   .node { cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent; }
   .node:focus-visible { stroke: var(--edge); stroke-width: 1; }
 
-  /* one fixed size: two lines of name, three of words */
-  .box { border: 1px solid var(--edge-2); padding: 14px 18px 16px; background: rgba(10,9,24,.6); height: 162px; display: flex; flex-direction: column; overflow: hidden; }
+  /* one fixed size: two lines of name, three of words. 180px holds them all: border 2 + padding 30 + label 20 + name
+     margins 14 + two names 41 + three lines 70 = 177 (at 162 the third line was cut in half when the name took two) */
+  .box { border: 1px solid var(--edge-2); padding: 14px 18px 16px; background: rgba(10,9,24,.6); height: 180px; display: flex; flex-direction: column; overflow: hidden; }
   .box .swap { flex: 1; min-height: 0; overflow: hidden; }
   .box h2 { margin: 8px 0 6px; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .box .say { color: var(--ink-2); font-size: 16.5px; line-height: 1.42; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }

@@ -26,7 +26,10 @@ Build the whole MVP (`product/MVP.md` → build order): **slice 2** the Quiet an
 4. **TestFlight:** Dan finished Apple setup sitting 2 (all four secrets in; TestFlight installed). **The first build reached Apple** (workflow run 36011344034, 2026-09-24: signed in the cloud and uploaded in under 4 minutes): trial (d), the pipeline, passes. It carried slices 1–2. **The whole first playable reached Apple** (run 36021450486, 2026-09-24, started by hand: a commit touching no app files does not start the workflow). Dan does sitting 3 (trials b and c) when he tests, and reports.
 5. **The web link:** https://claude.ai/artifact/TcH91A1SxeEvEnLJbRE4pi (private; one link, updated in place each slice).
 
-## Last session (2026-09-25, Phase 9, the pause on leaving the app)
+## Last session (2026-09-25, Phase 9, three fixes from Dan's play)
+Three fixes: (1) the map's box was 16px too short for a two-line place name plus three lines of words, so the third line was cut in half. It is now 180px, still one fixed size (D-076), and its "Ahead" line ends on its first sentence. (2) A delve begun before 04:00 and answered after kept asking "Is it done?" forever, even across a reopen: the question looked for a Done on the day the delve began, and Done lands on the day it is pressed. It now counts any Done after the run (a rule test covers it). (3) On waking, the app waits at most 2s for the phone to say whether Dan left the app, so a reply lost while the phone locks or wakes can't stop the game's clock. **Open:** on Dan's phone the *first* press of Done also seemed to do nothing, which the browser does not reproduce: check on the next TestFlight build.
+
+## Earlier (2026-09-25, Phase 9, the pause on leaving the app)
 Built D-094: going into another app pauses a delve; locking doesn't (D-096 says how the phone tells them apart). The rules write the pause from the moment Dan left (in a breather: when the next delve would have begun) before anything else settles, so the time away never counts; the delve screen says "Paused while you were away" with Carry on / Finish here. The lock-screen panel came from another session (D-095) and was merged in first; both native parts are registered together. 126 rule tests (4 new); typecheck and build clean; the screen walk passes (75 screens).
 
 ## Earlier (2026-09-25, Phase 9, the delve's lock-screen panel)

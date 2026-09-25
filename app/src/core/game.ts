@@ -911,9 +911,10 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   const last = ends[ends.length - 1];
   if (last && !seen.has(last.seq) && !run) {
     const j = jobOf(c, last.job), start = facts.find(f => f.seq === last.run) as FactOf<'delveStarted'> | undefined;
-    const doneFact = ofType(facts, 'jobDone').find(f => f.job === j.id && f.day === last.day && f.seq > last.run);
+    /* answered on a later game day (a delve begun before 04:00, answered after): still this run's answer */
+    const doneFact = ofType(facts, 'jobDone').find(f => f.job === j.id && f.seq > last.run);
     const completedDay = facts.some(f => f.type === 'dayCompleted' && f.seq > last.run);
-    runEnd = { seq: last.seq, job: j, minutes: last.minutes, how: last.how, ask: j.doneBy === 'dan' && !doneOn(facts, last.day).has(j.id),
+    runEnd = { seq: last.seq, job: j, minutes: last.minutes, how: last.how, ask: j.doneBy === 'dan' && !doneOn(facts, last.day).has(j.id) && !doneFact,
       enough: j.doneBy === 'enough' && !!doneFact, completedDay, count: start?.count ?? 1 };
     runFinds = ofType(facts, 'findGiven').filter(f => f.seq > last.run && f.seq < last.seq && !f.job).map(f => f.id);
   }
