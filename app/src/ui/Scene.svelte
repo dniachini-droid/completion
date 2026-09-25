@@ -13,7 +13,7 @@
   $effect(() => {
     const meta = p.meta, img = host.querySelector('img')!;
     let handle: { stop(): void } | null = null, gone = false;
-    const start = () => { if (!gone) handle = live(host, meta); };
+    const start = () => { if (!gone) handle = live(host, meta, { still: blur }); };
     img.complete && img.naturalWidth ? start() : img.addEventListener('load', start, { once: true });
     return () => { gone = true; handle?.stop(); };
   });

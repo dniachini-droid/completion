@@ -10,7 +10,16 @@ const has = async t => (await page.getByRole('button', { name: t, exact: true })
 const tap = async t => page.getByRole('button', { name: t, exact: true }).first().click();
 for (let k = 0; k < 12 && !(await has('See where you are')); k++) {
   if (await page.locator('.arr').count()) { await page.clock.runFor(6000); const o = page.locator('.opts .btn-quiet'); if (await o.count()) await o.first().click(); await tap(await has('Rest here for today') ? 'Rest here for today' : 'Back to today'); await page.clock.runFor(1500); continue; }
-  if (await has('Already done')) { await tap('Already done'); await page.clock.runFor(2500); const o = page.locator('.opts .btn-quiet'); if (await o.count()) await o.first().click(); if (await has('See where you are')) break; if (await has('Back to today')) await tap('Back to today'); await page.clock.runFor(1500); }
+  /* a job done the long way (no "Already done" since D-089): Begin → Done, or Delve (→ Begin) → its end → Done */
+  if (await has('Begin') || await has('Delve')) {
+    await tap(await has('Begin') ? 'Begin' : 'Delve'); await page.clock.runFor(900);
+    if (await has('Begin')) await tap('Begin');
+    const n = await page.evaluate(() => Date.now()); await page.clock.setSystemTime(n + 75 * 60_000); await page.clock.runFor(2500);
+    if (await has('Done')) { await tap('Done'); await page.clock.runFor(2500); }
+    const o = page.locator('.opts .btn-quiet'); if (await o.count()) await o.first().click();
+    if (await has('See where you are')) break;
+    if (await has('Back to today')) await tap('Back to today'); await page.clock.runFor(1500);
+  }
   else break;
 }
 await tap('See where you are'); await page.clock.runFor(3000);

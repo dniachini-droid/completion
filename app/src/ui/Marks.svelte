@@ -5,7 +5,6 @@
   import { game, content } from './game.svelte';
   import { marksSeen, mayGuess, markOf } from '../core/story';
   import { t, type CopyKey } from '../content/copy/en';
-  import Scene from './Scene.svelte';
   import Glyph from './Glyph.svelte';
   import type { Go } from './nav';
   import { back } from './back.svelte';
@@ -45,7 +44,7 @@
   });
 </script>
 
-<Scene painting={v.here.painting} blur bottom="40%" />
+<!-- the painting behind is drawn once by App, shared by both tabs (D-093) -->
 <div class="ui">
   <header class="top col">
     <div class="topbar rise">
@@ -141,8 +140,8 @@
   .grid.small .gw { width: 40px; height: 40px; }
   .grid.small .cell::before { width: 46px; margin-left: -23px; height: 46px; }
   h1 { margin-top: 8px; }
-  .lv { margin: 0; width: auto; }
-  .lv button { padding: 6px 12px; font-size: 13px; }
+  .lv { margin: 0; width: auto; grid-template-columns: 1fr 1fr; }
+  .lv button { padding: 6px 12px; font-size: 13px; min-width: 104px; }
   button.home { color: var(--ink-2); }
   /* every glyph in the same square, every label on one line beneath (as the record's strip) */
   .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); row-gap: 6px; margin: 0 calc(var(--gutter) * -.4); }
