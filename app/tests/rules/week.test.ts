@@ -434,3 +434,23 @@ describe('The planner’s own bugs (review findings, D-080)', () => {
     expect(wk.days.filter(d => d.day >= v.day).some(d => d.jobs.some(j => j.job === appt.job && j.time === appt.time && !j.done))).toBe(false);
   });
 });
+
+describe('A High day adds one job beyond the plan, and only one (Dan, D-082)', () => {
+  it('High: the day shows one job more than the plan; once done, no more are added', () => {
+    const p = player().do({ do: 'open' });
+    const planned = p.view().slate.length;
+    p.do({ do: 'capacity', capacity: 'high' });
+    const v = p.view();
+    expect(v.slate.length).toBe(planned + 1);
+    const extra = v.slate[v.slate.length - 1];
+    for (const id of v.slate) p.do({ do: 'done', job: id });
+    expect(p.view().complete).toBe(true);
+    expect(p.view().slate.filter(id => !p.view().done.has(id))).toEqual([]);   /* nothing further is added */
+    expect(p.view().done.has(extra)).toBe(true);
+  });
+  it('Normal: the plan alone', () => {
+    const p = player().do({ do: 'open' });
+    const planned = W.plannedToday(p.view().content, p.facts, p.view().day, '09:00').map(x => x.job);
+    expect([...p.view().slate].sort()).toEqual([...planned].sort());
+  });
+});

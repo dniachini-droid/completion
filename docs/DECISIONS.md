@@ -868,3 +868,13 @@
   **The pace:** the distance between named places is 150 minutes of effort (was 200, D-049), so a planned Normal, Low or High week each reach story week 6 in six calendar weeks (measured in the simulation). The "light weeks" test now counts Keys kept for later (D-079) as well as those opened.
 - **For Dan (story-10):** the six-week test ends just before the story's next big turn. Options: run seven weeks, or have the sealed story session bring one answer forward into week 6. It doesn't affect the behaviour test.
 - **Reversible:** Yes.
+
+## D-082 — Dan's answers to the review's questions
+- **Date:** 2026-09-25
+- **Decision (Dan):**
+  1. **The test runs seven weeks**, not six, so it reaches the story's turn in week 7 (the week 7 content was already built as run-ahead). A rule test checks that seven Normal or Low weeks reach story week 7 with nothing out of place.
+  2. **A High day adds one job beyond the plan**, the next one due, and only one; more is Dan's own choice through "Something else…". The day's size on High is the plan plus one.
+  3. **Marks opens with nothing selected** (Dan: "whatever you think"; Claude's call): a page to look at, not a quiz; a quiet line says to tap a mark.
+  4. **Text size:** Dan's is fine; the app keeps its own.
+  - Q2 (is Today still too busy?) explained to Dan; waiting on his answer.
+- **Reversible:** Yes.

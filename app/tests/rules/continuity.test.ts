@@ -208,3 +208,14 @@ describe('Mornings and hands (story review)', () => {
     expect(S.marksSeen(C.story, st).some(x => x.id === 'mk-hand')).toBe(false);
   });
 });
+
+describe('Seven weeks reach the story’s turn (Dan: the test runs seven weeks, D-082)', () => {
+  for (const kind of ['normal', 'low'] as const) {
+    it(`${kind}: story week 7 begins by the seventh calendar week, nothing out of place`, () => {
+      const p = sim();
+      for (let i = 0; i < 7; i++) p.week(kind);
+      expect(S.storyState(p.facts, C.story).week).toBe(7);
+      expect(aheadOfDan(p.facts)).toEqual([]);
+    }, 120_000);
+  }
+});

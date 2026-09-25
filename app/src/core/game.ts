@@ -115,7 +115,8 @@ function sizeOn(facts: Fact[], day: string, c?: Content) {
   const first = onDay(facts, day).find(f => f.type === 'opened');
   const size = daySize(capacityOn(facts, day), first ? first.at : null);
   const n = c ? plannedCount(c, facts, day) : null;
-  return n === null ? size : Math.max(1, Math.min(size, n));
+  /* a High day holds one more than the plan (D-082) */
+  return n === null ? size : Math.max(1, Math.min(size, n + (capacityOn(facts, day) === 'high' ? 1 : 0)));
 }
 
 const doneOn = (facts: Fact[], day: string) => new Set(ofType(onDay(facts, day), 'jobDone').map(f => f.job));
@@ -149,7 +150,11 @@ function orderOn(c: Content, facts: Fact[], day: string, clock: string): string[
   /* on a planned week, a job Dan chose himself today (begun, delved on or tapped) joins the list after the plan's (D-080) */
   const chosen = [...new Set(onDay(facts, day).flatMap(f => f.type === 'jobBegun' || f.type === 'delveStarted' || f.type === 'picked' ? [f.job] : []))]
     .filter(id => !planned.has(id) && !aside.has(id) && c.jobs.some(j => j.id === id)).map(id => c.jobs.find(j => j.id === id)!);
-  const offered = planLeads(facts, day) ? chosen : c.jobs.filter(j => offeredOn(c, facts, day, j, planned) && !planned.has(j.id) && !aside.has(j.id));
+  /* a High day adds one job beyond the plan (the next one due), and only one; more is Dan's own choice (Dan, D-082) */
+  const off = new Set(ofType(onDay(facts, day), 'jobDone').map(f => f.job).filter(id => !planned.has(id)));
+  const extra = planLeads(facts, day) && capacityOn(facts, day) === 'high' && off.size === 0
+    ? c.jobs.filter(j => !j.item && !planned.has(j.id) && !aside.has(j.id) && !chosen.includes(j) && offeredOn(c, facts, day, j, planned) && !metThisWeek(c, facts, day, j.id)).slice(0, 1) : [];
+  const offered = planLeads(facts, day) ? [...chosen, ...extra] : c.jobs.filter(j => offeredOn(c, facts, day, j, planned) && !planned.has(j.id) && !aside.has(j.id));
   const order = [...plan, ...offered.filter(j => !metThisWeek(c, facts, day, j.id)), ...offered.filter(j => metThisWeek(c, facts, day, j.id))].map(j => typeof j === 'string' ? j : j.id);
   for (const s of ofType(onDay(facts, day), 'swapped')) {
     const a = order.indexOf(s.from), b = order.indexOf(s.to);

@@ -18,7 +18,8 @@
   const unknown = $derived(list.filter(x => x.state === 'seen'));
   /* the newest open mark is selected first: that is the one worth looking at */
   let sel = $state<string | null>(id ?? null);
-  const current = $derived(list.find(x => x.id === sel) ?? [...known].reverse().find(x => x.state === 'open') ?? known[known.length - 1] ?? list[0]);
+  /* the page opens with nothing chosen: a place to look, not a quiz; a mark opens when tapped (Dan left it to Claude, D-082) */
+  const current = $derived(list.find(x => x.id === sel) ?? null);
   let changing = $state(false);
   const m = $derived(current ? markOf(s, current.id) : undefined);
   const canGuess = $derived(!!current && mayGuess(s, v.story, current.id));
@@ -121,6 +122,8 @@
           {/if}
         </section>
         {/key}
+      {:else}
+        <p class="soft hint">{t('records.tapMark')}</p>
       {/if}
   </div>
   {/if}
@@ -173,4 +176,5 @@
   .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
   .choices .btn-quiet { justify-content: center; min-height: 46px; }
   .choices .btn-quiet[aria-pressed="true"] { border-color: var(--edge-2); color: #fff; }
+  .hint { text-align: center; margin: 8px 0 16px; }
 </style>
