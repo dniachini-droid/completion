@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-25 (Phase 9: review 2, back navigation and undo, D-088; Today without size buttons or Already done, D-089)_
+_Last updated: 2026-09-25 (Phase 9: one map, dragged around, D-090)_
 
 ## Current phase
 
@@ -24,7 +24,10 @@ Build the whole MVP (`product/MVP.md` → build order): **slice 2** the Quiet an
 4. **TestFlight:** Dan finished Apple setup sitting 2 (all four secrets in; TestFlight installed). **The first build reached Apple** (workflow run 36011344034, 2026-09-24: signed in the cloud and uploaded in under 4 minutes): trial (d), the pipeline, passes. It carried slices 1–2. **The whole first playable reached Apple** (run 36021450486, 2026-09-24, started by hand: a commit touching no app files does not start the workflow). Dan does sitting 3 (trials b and c) when he tests, and reports.
 5. **The web link:** https://claude.ai/artifact/TcH91A1SxeEvEnLJbRE4pi (private; one link, updated in place each slice).
 
-## Last session (2026-09-25, Phase 9, review 2: a click-through)
+## Last session (2026-09-25, Phase 9, one map)
+Dan on TestFlight: "There seems to be two maps? Why? I'm very confused", and the second changed with each room. It was the map's closer view (Look closer), which drew each stretch as its own different map. Now **one map** (D-090): Look closer is gone; tapping a stretch names its places in the box, a stretch with a sealed thing says so, the forecast sits on the map; the box no longer says the stretch's name twice. Dan: the map will outgrow the screen, so it should be dragged around. Done: the map's size comes from its lights, it is dragged by a finger (a mouse on the web link) once bigger than the screen, and opens centred on where Dan is (the first region still fits one screen). Branch `claude/multiple-maps-issue-0tjm4f`. **Dan: open the map on the next build and say if it now reads as one place.**
+
+## Earlier (2026-09-25, Phase 9, review 2: a click-through)
 An independent click-through of the whole app at phone size (`product/REVIEW_2.md`, spoiler-free). Fixed (D-088): **back goes back** (the arrow returns where each screen was opened from and names it; the browser's back and a swipe from the left edge in the app step back too); **undo** for Not today ("Put it back", and "Back on today" in the Week) and for Begin ("I haven't started"); a time opens the phone's own time wheel; the week's Save; next week's wording; What repeats' dead link gone; "Still to come" after the day's work; Let it go in the satchel; **Pause** instead of Step away; the first hall's swapped choices and four places whose second choice opened the wrong page; overlapping labels on the delve set-up; small-phone overflows; **the screen never slides sideways or bounces** (Dan's picture: Today's top bar was wider than the phone with the rehearsal badge). The week's days fold with a tap; the day that jumped to Saturday was a rehearsal (its clock runs 60× faster), so a "Rehearsal ×60" tag now shows on every screen while one is on (removed when Dan is happy with the app). Dan then took off Today's **Low / Normal / High** and **Already done** (D-089): the plan is the day. Two consequences told to Dan: the test can no longer see jobs logged afterwards, and the morning deep push (High days only) no longer appears. Dan: the deep push stays out (he sets his jobs in the morning or during the week); Already done could be used to move on without the app, so it goes. 122 rule tests; the screen walk (now with back-trail checks) passes at both sizes.
 
 ## Earlier (2026-09-25, the story's words by an outside writer)
