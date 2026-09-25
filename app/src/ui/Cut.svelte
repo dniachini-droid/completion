@@ -171,10 +171,12 @@
 
     <div class="mid"></div>
 
-    <section class="bottom col word rise d2" aria-label={t('cut.label')}>
+    <section class="bottom col word rise d2" class:fit={phase === 'settled'} aria-label={t('cut.label')}>
       {#if phase === 'settled'}
-        <div class="settle-list"><Settled beat={a.id} /></div>
-        {#if a.completedDay}<p class="enough">{t('arrive.enough')} <em>{t('arrive.enough2')}</em></p>{/if}
+        <div class="scroll">
+          <div class="settle-list"><Settled beat={a.id} /></div>
+          {#if a.completedDay}<p class="enough">{t('arrive.enough')} <em>{t('arrive.enough2')}</em></p>{/if}
+        </div>
       {/if}
       {#if step === 0 && ask.length}<div class="ask">{#each ask as m (m)}<Guess mark={m} at={a.id} />{/each}</div>{/if}
       <div class="box ticks wordbox">

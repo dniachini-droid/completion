@@ -111,6 +111,8 @@ export const copy = {
   'records.none': 'You have found nothing yet. Records lie further in, for those who go looking.',
   'records.her': 'Her sheet',
   'records.read': 'Read it',
+  'records.done': 'Done reading',
+  'records.tapMark': 'Tap a mark to see what you know of it.',
   'records.nav': 'Records',
 
   /* the marks (SCRIPT §9; mock-up record.html) */
@@ -212,7 +214,7 @@ export const copy = {
   'today.deep.called': 'You will push deeper today. When a normal day’s work is done, the way goes further down.',
   'nav.satchel': 'Satchel', 'nav.week': 'Week', 'nav.daybook': 'Daybook', 'nav.camp': 'Camp',
   'row.at': 'at {time}',
-  'row.room': '{enough} is enough, with room for {len}',
+  'row.room': '{enough} · up to {len}',
   'row.oneOff': 'one-off',
 
   /* choosing what to do: any job, any time (D-077) */
@@ -304,7 +306,6 @@ export const copy = {
   'week.done': 'Done',
   'week.off': 'Not this week',
   'week.today': 'today',
-  'week.empty': '·',
 
   'rhythms.label': 'What repeats',
   'rhythms.say': 'These are the things you do again and again. You may change any of them, at any time.',
@@ -356,6 +357,7 @@ export const copy = {
 
   /* words for numbers and times */
   'min.one': '1 minute', 'min.many': '{n} minutes', 'hour.one': '1 hour', 'hour.many': '{n} hours',
+  'min.short': '{n} min', 'hour.short': '{n} h',
   'ord.1': 'first', 'ord.2': 'second', 'ord.3': 'third', 'ord.4': 'fourth', 'ord.5': 'fifth', 'ord.6': 'sixth', 'ord.7': 'seventh', 'ord.8': 'eighth',
   'card.1': 'one', 'card.2': 'two', 'card.3': 'three', 'card.4': 'four', 'card.5': 'five', 'card.6': 'six', 'card.7': 'seven', 'card.8': 'eight',
   'delves.one': '1 delve', 'delves.many': '{n} delves',
@@ -371,6 +373,12 @@ export function minutesWords(m: number): string {
   if (m < 60) return t(m === 1 ? 'min.one' : 'min.many', { n: m });
   const h = Math.floor(m / 60), r = m % 60;
   return t(h === 1 ? 'hour.one' : 'hour.many', { n: h }) + (r ? ' ' + t(r === 1 ? 'min.one' : 'min.many', { n: r }) : '');
+}
+/** "50 min", "3 h", "1 h 20 min": for a note that must stay on one line */
+export function minutesShort(m: number): string {
+  if (m < 60) return t('min.short', { n: m });
+  const h = Math.floor(m / 60), r = m % 60;
+  return t('hour.short', { n: h }) + (r ? ' ' + t('min.short', { n: r }) : '');
 }
 export const ord = (k: number) => copy[`ord.${Math.min(8, Math.max(1, k))}` as CopyKey];
 export const card = (k: number) => copy[`card.${Math.min(8, Math.max(1, k))}` as CopyKey];
