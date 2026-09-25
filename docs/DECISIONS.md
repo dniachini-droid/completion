@@ -916,3 +916,10 @@
 - **Context:** to take the story's text from good to brilliant, Claude proposed a defined voice, place-by-place writing by a sealed agent team, and blind judging by Dan. Dan chose from six published passages.
 - **Decision:** Dan loved Le Guin (*The Tombs of Atuan*), VanderMeer (*Annihilation*) and Macfarlane (*Underland*); he disliked McCarthy (*The Road*). The voice is written up in `narrative/VOICE.md` (spoiler-free), pending Dan's approval. Next: a pilot (the Lamp Hall and one camp) written by a sealed agent team on Fable and on Opus to VOICE.md, judged blind by Dan against ChatGPT's version.
 - **Reversible:** Yes.
+
+## D-087 — The writer stays ChatGPT; Claude edits and checks (Dan's blind choice)
+- **Date:** 2026-09-25
+- **Context:** the pilot (D-086): the Lamp Hall arrival and the first camp, written by a sealed agent team on Fable and on Opus to VOICE.md (writer → critic → revision → fact check), set blind beside ChatGPT's round-4 text.
+- **Decision:** Dan picked ChatGPT's version for both, and found all three "very high quality". So there is no agent-team rewrite. ChatGPT stays the writer, with VOICE.md in its brief. Claude edits and checks: facts, clues, continuity, filler and repetition, markup. The 20 lines re-fixed on the review branch go to ChatGPT as round 5.
+- **Learned:** the pilot's writers worked from the current wording, so the arrival versions came out close together. Any later writing test gives writers the facts of a place, not its old text.
+- **Reversible:** Yes.
