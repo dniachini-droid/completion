@@ -19,9 +19,9 @@ export default {
   lights: [
     { ...room.lights[0], k: 5 },                                                          /* the clay lamp, in the passage behind */
     { p: [-1.42, .52, 2.16], c: [1, .7, .34], k: .035, r: .2, shadow: 1, reach: .5 },       /* the doorway's light, weak and warm, falling on the box's front */
-    { p: [-1.51, .148, 2.335], c: [1, .76, .45], k: .0015, r: .015, reach: .06 },              /* and the lamp's last, one warm touch on the mug's rim */
+    { p: [-1.505, .185, 2.335], c: [1, .76, .45], k: .002, r: .02, reach: .07, shadow: 1 },              /* and the lamp's last, one warm touch on the mug's rim */
     { p: [-1.3, 1.9, 3.6], c: [.4, .37, .85], k: .8, r: 1.2 },                            /* violet in the far corners */
-    { p: [-1.3, .32, 2.3], c: [.6, .56, .9], k: .012, r: .1, reach: .35 },                /* a cold lift on the mug from the room */
+    { p: [-1.36, .3, 2.3], c: [.6, .56, .9], k: .03, r: .1, reach: .35 },                /* a cold lift on the mug from the room */
     { p: [1.35, 1.9, 3.7], c: [.4, .37, .85], k: .5, r: 1 },
     { p: [-1.2, .5, 2.6], c: [.42, .38, .82], k: .1, r: .35 },                             /* violet half-light over the box */
   ],
@@ -63,7 +63,7 @@ export default {
     float st = length(vec2(m.x - .044, (m.y - .03) * 1.15)) - .02;                  /* the handle set low, near the rim: the mug is upside down */
     float hd = max(max(abs(st) - .0016, abs(m.z) - .007), .036 - m.x);          /* a thin strap handle */
     vec4 mug = vec4(min(min(cup, bead), hd) - .0008, M_TIN, NOUV);
-    if (mug.x < d.x) { d = mug; gTint = vec3(.72, .76, .86) * (m.y > .08 ? .45 : 1.); gPolish = bead < .002 ? 1. : 0.; if (bead < .002) gTint *= 2.2; else { gStain = .3; gTint *= .9; } }   /* cool grey tin; its upturned base dull */
+    if (mug.x < d.x) { d = mug; gTint = vec3(.72, .76, .86) * (m.y > .08 ? .45 : 1.); gPolish = bead < .002 ? 1. : 0.; if (bead < .002) gTint *= 2.2; else { gStain = .25; gTint *= 1.5; } }   /* cool grey tin; its upturned base dull */
     return d;
   }`,
   anchors: {

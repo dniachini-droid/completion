@@ -19,6 +19,7 @@ export default {
   blur: { px: 1.4, d0: 5, d1: 14, k: .7 },
   lights: [
     { p: [2.4, 3.6, ZD - 1.0], c: [1, .68, .3], k: 3, r: .8, reach: 4.6, warm: .004, shadow: 1 },   /* the last cup's flame, a stride from the door: its light gives out partway up the face */
+    { p: [2.62, 3.72, ZD - 1.3], c: [1, .68, .3], k: 0, r: .1, air: .6 },                  /* the flame's glow in the air */
     { p: [0, 3, ZD - 12], c: [.3, .28, .66], k: 4, r: 6 },                                /* the hall behind: a faint cold fill */
     { p: [-1, 1.2, ZD - 1.4], c: [.34, .33, .75], k: .7, r: 2.2 },                     /* the door's own cold, broad and faint */
   ],
@@ -26,12 +27,19 @@ export default {
   const float ZD = ${ZD.toFixed(2)};
   vec4 scene(vec3 p) {
     vec4 d = hallScene(p);
-    /* the door's leaf: not the dark of the far view, but stone, smoother and colder than the walls */
-    if (floor(d.y + .5) == M_DARK) {
-      d.y = M_ROCK; d.zw = NOUV;                                                         /* one stone, dressed: no courses, the faintest grain */
-      gTint = vec3(.86, .9, 1.08) * (.95 + .1 * fbm(p.xy * .8, 3));
-      gPolish = .25;
-      gTint *= mix(1., .3, smoothstep(3.5, 6.5, p.y));                                        /* up the face, into the dark */
+    /* the door's leaf, brought flush with the end wall so the flame reaches it: one stone, smoother and colder
+       than the walls, a joint round its arch */
+    vec4 leaf = vec4(ZD - .43 - p.z, M_ROCK, NOUV);
+    if (leaf.x < d.x) d = leaf;
+    float dr = archOpening2(vec2(p.x, p.y), 2.1, 6.2);
+    dr = max(dr, min(dr, 2.9 - length(vec2(abs(p.x) + .8, p.y - 6.2))));
+    if (p.z > ZD - .5 && dr > -.01) {
+      d.x += engrave(dr, .02, .015);                                                        /* the joint between leaf and frame */
+      if (dr > .015) {
+        d.yzw = vec3(M_SLATE, NOUV);                                                       /* fine-grained, close, cold */
+        gTint = vec3(2.5, 2.6, 2.9) * (.94 + .12 * fbm(p.xy * .7, 3));
+        gTint *= mix(1., .3, smoothstep(3.5, 6.5, p.y));                                     /* up the face, into the dark */
+      }
     }
     /* the last cup: an arched recess up in the right wall, a stride from the door, its bowl and its flame */
     float zl = p.z - (ZD - 1.3);
@@ -47,7 +55,7 @@ export default {
     return d;
   }`,
   anchors: {
-    fog: [{ p: [.6, .25, ZD - .4], w: 1.2, h: .2, a: .2 }, { p: [.9, 2.4, ZD - .08], w: .8, h: .5, a: .12, speed: .5 }],
+    fog: [{ p: [-.2, .2, ZD - .5], w: 1.4, h: .2, a: .22 }, { p: [.3, 2.0, ZD - .1], w: .9, h: .6, a: .12, speed: .5 }],
     glints: [{ p: [1.2, 1.2, ZD - .01] }],
     flame: [{ p: [2.62, 3.7, ZD - 1.3], size: 1, body: true }],
   },

@@ -18,8 +18,8 @@ export default {
   hazeBase: [.02, .018, .055], hazeFar: [.1, .08, .15], bloomAt: [2.3, 1.4, 5.6], bloomPow: 60, bloomC: [.12, .08, .05],
   fogK: 1 / 30,
   lights: [
-    ...CUPR.map((z, i) => ({ p: [2.25, 5.0, z], c: [1, .72, .42], k: 3.4 - .8 * i, r: 1.1, shadow: .5, reach: 4. })),   /* the nearest cups on the right: up into the vault */
-    ...CUPL.map((z, i) => ({ p: [-2.25, 5.0, z], c: [1, .72, .42], k: 2.2 - .5 * i, r: 1.1, shadow: .5, reach: 4. })),  /* and on the left */
+    ...CUPR.map((z, i) => ({ p: [2.5, 4.05, z], c: [1, .72, .42], k: 3.6 - .8 * i, r: 1.5, shadow: .3, reach: 5. })),   /* the nearest cups on the right: up into the vault */
+    ...CUPL.map((z, i) => ({ p: [-2.5, 4.05, z], c: [1, .72, .42], k: 2.6 - .6 * i, r: 1.5, shadow: .3, reach: 5. })),  /* and on the left */
     { p: [0, 5, 30], c: [.5, .42, .8], k: 45, r: 14 },                                  /* the lines of cups further back, as one glow in the violet */
     { p: [2.3, 1.42, 5.6], c: [1, .7, .4], k: 0, r: .5, air: .5 },                       /* the lamp on its ledge, a warm point at the far end */
     { p: [-3.4, 1.2, 61.5], c: [.6, .58, 1.1], k: 3, r: 1.2, shadow: .5 },               /* round the corner beside you: cold light off the salt */
@@ -28,18 +28,18 @@ export default {
   /* rings cut high in the vault over the cups: large, and cut deep */
   float vaultRings(vec2 uv, float side) {
     float z0 = side > 0. ? 2.2 : 3.75, id = floor((uv.x - z0) / 3.1 + .5), zl = uv.x - z0 - id * 3.1;
-    vec2 f = vec2(zl + (h2(vec2(id, side)) - .5) * .4, uv.y - 6.75 - .25 * h2(vec2(id, 3. + side)));
-    float rr = .72 + .12 * h2(vec2(id, 7. + side));
-    float g = engrave(abs(length(f) - rr), .09, .07);
-    vec2 f2 = f - vec2(1.15 * (h2(vec2(id, 2.)) > .5 ? 1. : -1.), 1.2 + .3 * h2(vec2(id, 9.)));      /* and a smaller one beside it, higher */
-    g += h2(vec2(id, 5. + side)) < .7 ? engrave(abs(length(f2) - .36), .07, .05) : 0.;
+    vec2 f = vec2(zl + (h2(vec2(id, side)) - .5) * .4, uv.y - 7.3 - .3 * h2(vec2(id, 3. + side)));
+    float rr = .9 + .12 * h2(vec2(id, 7. + side));
+    float g = engrave(abs(length(f) - rr), .12, .09);
+    vec2 f2 = f - vec2(1.25 * (h2(vec2(id, 2.)) > .5 ? 1. : -1.), 1.35 + .3 * h2(vec2(id, 9.)));      /* and a smaller one beside it, higher */
+    g += h2(vec2(id, 5. + side)) < .7 ? engrave(abs(length(f2) - .42), .09, .07) : 0.;
     return g;
   }
   vec4 scene(vec3 p) {
     vec4 d = hallScene(p);
     float ax = abs(p.x);
     if (p.y > 5.6 && d.w > 5.7 && d.w < 10.5 && p.z > 44. && p.z < 60.5) d.x += vaultRings(d.zw, sign(p.x));
-    if (p.y > 9.5) gTint *= mix(1., .4, smoothstep(9.5, 13., p.y));                    /* the crown falls away into the dark */
+    if (p.y > 10.) gTint *= mix(1., .55, smoothstep(10., 13.5, p.y));                    /* the crown falls away into the dark */
     if (p.y < .03) gTint *= mix(.5, 1., smoothstep(61., 52., p.z));                    /* the floor at your feet, out of the cups' light */
     if (p.z > 60.5 && p.y < 5.) gTint *= .6;                                           /* the door's jambs beside you, in shadow */
     /* the cups lit: a small still flame in every bowl, slim, the glow does the rest */

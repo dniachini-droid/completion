@@ -792,3 +792,10 @@
 - **Alternatives:** more rounds of tuning close-ups one by one (rejected: the evidence says it does not converge); lowering the bar (rejected: Dan wants 8).
 - **Consequences:** paintings may look further back than their briefs first imagined; the look-at stays. Dan is told the measured rate after the first batch.
 - **Reversible:** Yes.
+
+## D-076 — Another way to make the paintings: Blender, with Meshy for objects (Dan)
+- **Date:** 2026-09-25
+- **Context:** Even with D-075 (reused rooms, parallel painters), most paintings land at 4–7; 7 of 48 are in the game. Dan: "if it's going to be this hard to make images maybe we should look for another way"; the pictures in development are finished first. Dan offered Meshy (AI text-to-3D models).
+- **Decision (Dan; the method Claude's):** after the current round, test a new pipeline on one of the paintings that keep failing: rooms built and lit by code in **Blender** (a real renderer: soft bounce light, true materials), small objects made by **Meshy** through its API (Claude calls it; Dan never sees the object list, D-015). This relaxes "paintings stay code-painted" (D-056) for props only. The bar stays 8 (Dan). If the test does not reach 8, AI image generation or a human artist are the next options, Dan's call.
+- **Setup (Dan):** a Meshy API key in the environment as `MESHY_API_KEY`, and `api.meshy.ai` allowed in network access; takes effect in a new session. Blender installs from the system packages.
+- **Reversible:** Yes.
