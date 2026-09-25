@@ -26,7 +26,7 @@ export default {
   const float ZB = ${ZB.toFixed(2)}, YB = ${YB.toFixed(2)};
   /* the hook closed on a dot: a shank down, a bend, and the point coming back up and in over a dot inside the bend */
   float hookD(vec2 m) {
-    m = mat2(.77, .64, -.64, .77) * m;                                                         /* leaning over, as a hook hangs, not upright as a letter */
+    m = mat2(.77, .64, -.64, .77) * vec2(-m.x, m.y);                                           /* leaning over, as a hook hangs, not upright as a letter; its bend to the right */
     float r = .011;
     vec2 c = vec2(0., -.01);                                                                    /* the bend's centre */
     float shank = length(vec2(m.x + r, max(abs(m.y - .022) - .032, 0.)));                     /* a long shank */

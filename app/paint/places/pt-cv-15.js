@@ -29,7 +29,7 @@ export default {
     float sx = seamX(p.y);
     float zr = -p.x * p.x / 4.2;                                                          /* the round wall curves toward you, to the left */
     bool isRound = p.x < sx;
-    float wz = isRound ? zr : -.02;                                                         /* the square face stands a little proud */
+    float wz = isRound ? zr : -.004;                                                        /* the square face, near flush */
     vec4 d = vec4((wz - p.z) * .9, isRound ? M_CUT : M_CUT_SMALL, isRound ? vec2(p.x * 1.1, p.y) : NOUV);
     d = A(d, vec4(-(p.z + 3.), M_CUT, NOUV));
     d = U(d, vec4(p.y, M_FLOOR, NOUV));
@@ -44,8 +44,8 @@ export default {
     d.x += fill * (1. - smoothstep(gapW * .5, gapW, jj));
     /* the lead: poured into the joint, a little proud of it, a dull grey bead */
     vec3 lq = p - vec3(.045, clamp(p.y, L0, L1), -.011);
-    float bead = length(lq.xz * vec2(1., 1.6)) - .011 * (.75 + .25 * smoothstep(.0, .04, min(p.y - L0, L1 - p.y))) * (1. + .15 * sin(p.y * 70.)) + rough(p, .001, 160.);
-    if (bead < d.x) { d = vec4(bead, M_TIN, NOUV); gTint = vec3(1.3, 1.32, 1.42); }
+    float bead = length(vec3(lq.x, lq.y, lq.z * 1.6)) - .011 * (.75 + .25 * smoothstep(.0, .04, min(p.y - L0, L1 - p.y))) * (1. + .15 * sin(p.y * 70.)) + rough(p, .001, 160.);
+    if (bead < d.x) { d = vec4(bead, M_TIN, NOUV); gTint = vec3(2.5, 2.52, 2.65); }
     if (!isRound && d.x < .02 && p.z > -.1) {
       gTint *= vec3(.62, .6, .66);                                                       /* square stone, darker, smoke-dulled */
       d.x += .0015 * sin(p.y * 160. + p.x * 60.) * smoothstep(.2, .6, fbm(p.xy * 6., 2));  /* small even chisel marks */

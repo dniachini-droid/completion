@@ -35,8 +35,8 @@ export default {
         float dent = .025 * max(0., 1. - r * r);
         d.x += dent;
         float inside = 1. - smoothstep(.7, 1., r);
-        gPolish = max(gPolish, inside * .9);
-        gTint *= mix(1., 1.12, inside);
+        gPolish = max(gPolish, inside * .2);
+        gTint *= mix(1., mix(1.2, .3, smoothstep(-.3, .5, e.y)) * (1. - .45 * smoothstep(.75, .95, r) * step(0., e.y)), inside);           /* shadowed under its upper lip, lit at its lower: a hollow, not a boss */
       }
     }
     { float up = p.y - ramp1(p.z); if (up > 2.2) gTint *= mix(1., .3, smoothstep(2.2, 3.8, up)); }   /* the vault into the dark */
