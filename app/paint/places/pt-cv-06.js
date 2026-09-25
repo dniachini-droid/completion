@@ -16,11 +16,10 @@ export default {
   cam: { x: -1.3, y: .8, z: ZC - .25, pitch: -3, yaw: -76, f: .66, cx: .5, cy: .5 },
   far: 12, fogK: 1 / 10,
   hazeBase: [.02, .02, .06],
-  bloomAt: [-2.2, YC, ZC], bloomPow: 30, bloomC: [.08, .08, .18],
-  glow: { threshold: .6, k: .55 },
+  bloomAt: [-2.2, YC, ZC], bloomPow: 30, bloomC: [.01, .01, .025],
+  glow: { threshold: .75, k: .35 },
   blur: { px: 1.2, d0: 1.2, d1: 3, k: .5 },
   lights: [
-    { p: [-1.96, YC - .1, ZC - .02], c: V, k: .012, r: .05, reach: .22, shadow: 1 },   /* the gallery's cold light, coming thin out of the chink, onto its lip */
     { p: [-1.5, 1.3, ZC + 1.6], c: V, k: .9, r: 1.1, reach: 3, shadow: .8 },                      /* and along the face, raking the beds */
     { p: [.4, 1.8, ZC - 1.5], c: [.36, .33, .8], k: .6, r: 2 },                                  /* the gallery, faint, on the salt's face */
   ],
@@ -43,7 +42,7 @@ export default {
     float ck = min(min(half_ - abs(across) + .002, p.x + 2.4), -1.8 - p.x);
     if (ck > d.x) { d = vec4(ck, M_SALT, NOUV); gTint = vec3(mix(.6, .04, smoothstep(-1.99, -2.06, p.x))); }
     /* frost: fine needles grown on the chink's lowest lip and in the little cuts below it, where the air comes out */
-    float low = smoothstep(.02, -.12, along) * (1. - smoothstep(.0, .09, abs(across) - half_));
+    float low = smoothstep(.02, -.12, along) * (1. - smoothstep(.3, .4, -along)) * (1. - smoothstep(.0, .09, abs(across) - half_));
     vec2 nd = vec2(p.z, p.y) * vec2(1., 1.);
     float needles = smoothstep(.42, .72, fbm(vec2(dot(nd, vec2(.8, .6)) * 90., dot(nd, vec2(-.6, .8)) * 14.), 3));
     /* the little cuts below: three short scores in the salt, their floors furred with frost */
@@ -55,10 +54,25 @@ export default {
       cuts = min(cuts, length(vec2(q.x + q.y * .3, max(abs(q.y) - .035 - .015 * h2(vec2(fk, 5.)), 0.))));
     }
     if (p.x < -1.85) d.x += engrave(cuts, .007, .008);
-    float fr = max(low, (1. - smoothstep(.002, .008, cuts)) * .9) * step(p.x, -1.9);
+    float fr = max(low * .8, 1. - smoothstep(.004, .009, cuts)) * step(p.x, -1.9);
     if (fr > 0. && ck < d.x + .01) {
       d.x -= fr * needles * .005;                                                     /* crystals standing off the salt */
-      gTint = mix(gTint, vec3(1.8, 1.8, 1.85), fr * (.35 + .65 * needles));
+      float spark = step(.8, h2(floor(vec2(p.z, p.y) * 900.)));
+      float inCut = 1. - smoothstep(.004, .008, cuts);
+      gTint = mix(gTint, vec3(mix(2.2, 7.5, inCut)) * vec3(1., 1., 1.04) * (1. + 1.2 * spark), fr * (.4 + .6 * needles));   /* brightest in the cuts' floors */
+    }
+    /* the cold light comes thin through the chink's narrows: two or three shafts raking out across the salt */
+    if (p.x < -1.85 && ck < d.x + .01) {
+      for (int k = 0; k < 3; k++) {
+        float fk = float(k);
+        vec2 s0 = vec2(ZC, YC) + vec2(.34, .94) * (-.1 + fk * .1);                  /* a point on the chink */
+        vec2 dir = normalize(vec2(.94 + .2 * fk - .15, -.34 - .25 * fk));            /* out and down across the face */
+        vec2 r = vec2(p.z, p.y) - s0;
+        float a = dot(r, dir), c = abs(dot(r, vec2(-dir.y, dir.x)));
+        float w = .01 + .05 * max(a, 0.);
+        float sh = (1. - smoothstep(0., w, c)) * smoothstep(.0, .03, a) * (1. - smoothstep(.1, .5, a));
+        gTint *= 1. + .45 * sh;
+      }
     }
     return d;
   }`,

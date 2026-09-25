@@ -20,8 +20,8 @@ export default {
   expo: 2.2, sheen: 0,
   lights: [
     { ...room.lights[0], k: 6 },                                                          /* the clay lamp, in the passage behind you */
-    { p: [-.36, 1.6, 3.74], c: [1, .7, .34], k: .036, r: .2, shadow: 1, reach: .5 },      /* its light reaching the shelf, weak */
-    { p: [-.5, 1.34, 3.8], c: [1, .72, .38], k: .035, r: .07, reach: .15 },             /* the last of it, grazing the rod's honed edge */
+    { p: [-.36, 1.6, 3.74], c: [1, .7, .34], k: .02, r: .2, shadow: 1, reach: .5 },      /* its light reaching the shelf, weak */
+    { p: [-.5, 1.34, 3.8], c: [1, .72, .38], k: .008, r: .07, reach: .15 },             /* the last of it, grazing the rod's honed edge */
     { p: [-1.3, 1.9, 3.6], c: [.4, .37, .85], k: 1., r: 1.2 },                           /* violet in the far corners */
     { p: [1.35, 1.9, 3.7], c: [.4, .37, .85], k: .4, r: 1 },
     { p: [-.4, .95, 3.4], c: [.4, .37, .85], k: .1, r: .5 },                             /* violet on the wall under the shelf */
@@ -39,27 +39,30 @@ export default {
     float a = .045, ca = cos(a), sa = sin(a); q.xy = vec2(ca * q.x - sa * q.y, sa * q.x + ca * q.y);   /* the point lifted */
     float u = q.x, L = .38;
     float bl = 1. - smoothstep(.16, .26, u);                                       /* 1 along the blade, 0 on the handle */
-    float tip = sqrt(clamp(u / .06, .08, 1.));
+    float tip = clamp(u / .085, .03, 1.);                                          /* a clean tapered point */
     float w = mix(.0125, .016, bl) * tip;                                          /* half width */
-    float t = mix(.0105, .0072, bl) * mix(.6, 1., tip);                            /* half thickness */
+    float t = mix(.0105, .0072, bl) * mix(.25, 1., tip);                            /* half thickness */
     /* the blade's section: full on the spine, ground away to nothing at the edge */
-    float bev = .45 * w;
+    float bev = .18 * w;
     float ty = t * mix(1., clamp((q.z + w) / bev, .04, 1.), bl);
     float sec = max(abs(q.y) - ty, abs(q.z) - w) * .7;
     float ell = (length(vec2(q.y / t, q.z / w)) - 1.) * min(t, w);                 /* the handle's section, worn round */
     float s = mix(ell, sec, bl);
     float ends = max(-u, u - L);
     float r = max(s, ends) - .0012;
-    r += rough(p, .0006, 120.);
+    r += rough(p, .0006, 120.) * smoothstep(.04, .1, u);                            /* no roughness at the point: its outline stays clean */
     /* the honed edge: a thin line along the blade */
-    gEdge = bl * smoothstep(.02, .06, u) * (1. - smoothstep(.0012, .004, q.z + w)) ;
+    gEdge = bl * smoothstep(.015, .05, u) * (1. - smoothstep(.0004, .0014, q.z + w));   /* only the edge itself, a thin line */
     /* on the handle's top: a line of marks in cells, and in the last cell's corner a hook with a tail */
     gMark = 0.;
     if (u > .23 && u < .355 && q.y > 0.) {
       float cellW = .021, k = floor((u - .23) / cellW), fu = u - .23 - k * cellW + (h2(vec2(k, 3.)) - .5) * .004;
       float tick = abs(fu - .002);                                                  /* a cut across the handle between the cells */
-      float line = abs(q.z + .003);                                                 /* the line along them */
-      float m = min(tick < .0011 && abs(q.z) < .0075 ? tick : 1., line < .001 ? line : 1.);
+      float cu = fu - .0105, sg = h2(vec2(k, 9.));                                  /* in each cell its own sign, not a scale */
+      float sign = sg < .35 ? length(vec2(cu + q.z * .5, max(abs(q.z) - .004, 0.))) :
+                   sg < .7 ? abs(length(vec2(cu, q.z)) - .0028) :
+                   length(vec2(cu - (q.z > 0. ? q.z : -q.z) * .6, max(abs(q.z) - .0035, 0.)));
+      float m = min(tick < .0011 && abs(q.z) < .0075 ? tick : 1., sign < .0009 ? sign : 1.);
       if (k > 4.5) {                                                                /* the last cell: the hook with its tail */
         vec2 h = vec2(fu - .012, q.z - .0045);
         float hook = abs(length(h) - .0032); if (h.y < 0. && h.x < 0.) hook = 1.;
@@ -89,9 +92,9 @@ export default {
     vec4 r = rod(p);
     if (r.x < d.x) {
       d = r;
-      gTint = vec3(.3, .29, .34) * (.85 + .3 * fbm(p.xz * 70., 2)); gStain = .35;           /* one dark stone, matt */
+      gTint = vec3(.6, .58, .66) * (.85 + .3 * fbm(p.xz * 70., 2)); gStain = .92;   /* matt: no sheen on the flat faces */           /* one dark stone, matt */
       gTint *= 1. - .6 * gMark;
-      gTint = mix(gTint, vec3(4., 2.9, 1.7), gEdge); gPolish = gEdge; gStain *= 1. - gEdge;  /* the honed edge takes the light */
+      gTint = mix(gTint, vec3(7., 5., 3.), gEdge); gPolish = gEdge; gStain *= 1. - gEdge;  /* the honed edge takes the light */
     }
     /* under the shelf, a pencilled line on the wall: graphite, grey with a faint sheen */
     if (p.z > 3.97 && abs(p.y - .99 - .004 * sin(p.x * 9.)) < .004 && p.x > -.86 && p.x < -.2) { gTint = vec3(.3, .3, .36); gPolish = .6; }

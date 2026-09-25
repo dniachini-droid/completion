@@ -19,7 +19,7 @@ export default {
   lights: [
     { p: [2.12, 1.42, 5.6], c: [1, .72, .36], k: .5, r: .5, shadow: 1, reach: 1.1 },           /* the clay lamp on the ledge, above and out of frame */
     { p: [2.6, .06, 5.62], c: [1, .72, .36], k: .022, r: .15, reach: .22 },            /* its gold, lying on the floor at the wall's foot */                     /* its light on the floor at the wall's foot, glowing back up */
-    { p: [2.78, .5, 5.6], c: [1, .74, .42], k: .07, r: .15, reach: .3 },         /* a little of it into the recess, on its floor and back */
+    { p: [2.78, .5, 5.6], c: [1, .74, .42], k: .012, r: .15, reach: .25 },         /* a little of it into the recess, on its floor and back */
     { p: [.6, 2.6, 2.4], c: [.4, .37, .85], k: 8, r: 3.6, shadow: .6 },            /* the hall's violet, from behind on the left */
     { p: [2.05, .85, 5.1], c: [.42, .39, .85], k: .7, r: .55 },                  /* the same, on the stone round the ring */
     { p: [2.3, .12, 5.5], c: [.55, .5, .95], k: .05, r: .2, reach: .6 },        /* and given back by the oil on the sill */
@@ -39,9 +39,9 @@ export default {
     if (q.x > -.06) {
       /* the oil: faint at the top and sides, heaviest along the sill, fading out wide with no clean edge */
       float nz = (fbm(m * 3. + 2., 4) - .5) * .14;
-      float ring = 1. - smoothstep(.01, .16, sd + nz);
+      float ring = 1. - smoothstep(.0, .22, sd + nz);
       ring *= mix(.3, 1., smoothstep(.2, .0, m.y));
-      gStain = .85 * ring; gPolish = 0.;                                           /* a dull sheen on the face */
+      gStain = ring; gTint *= mix(1., .4, ring); gPolish = .25 * ring * smoothstep(.06, -.02, m.y);   /* flat dark stain; a dull oily sheen on the sill */
       /* a row of cut strokes over it: shallow cuts, darker in their floors */
       float k = floor((q.z + .125) / .05), sz = q.z + .125 - (k + .5) * .05 + (h2(vec2(k, 3.)) - .5) * .022;
       float tilt = (h2(vec2(k, 8.)) - .5) * .5, yc = .33 + .018 * (h2(vec2(k, 1.)) - .5);
@@ -50,10 +50,10 @@ export default {
     }
     float dep = .2 - q.x;
     float air = min(op, dep);
-    d.x = -smin(-d.x, -air, .025);                                                  /* the lip worn round */
+    d.x = -smin(-d.x, -air, .006);                                                  /* the lip: a plain cut edge, no collar */
     if (q.x > -.02 && op > -.02) {
       float inn = smoothstep(-.02, .03, q.x);
-      gTint *= mix(1., .45, inn); gStain = mix(gStain, .75, (1. - inn) * smoothstep(.12, 0., q.y + .02));   /* the oil runs over the sill and a little in */
+      gTint *= mix(1., .12, inn); gStain = mix(gStain, .75, (1. - inn) * smoothstep(.12, 0., q.y + .02));   /* the oil runs over the sill and a little in */
       if (q.x > .03) { gPolish = 0.; gStain = 0.; d.yzw = vec3(M_ROCK, NOUV); }    /* inside: rough, lit only by what comes in */
     }
     vec4 lg = box(p, vec3(2.55, 1.22, 5.6), vec3(.31, .06, .6), M_CUT);            /* the lamp's ledge, its arrises worn round and uneven */
