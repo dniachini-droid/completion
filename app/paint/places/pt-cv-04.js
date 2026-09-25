@@ -13,15 +13,15 @@ export default {
   id: 'pt-cv-04',
   name: 'The hall, from the far end',
   line: '',
-  cam: { x: -.8, y: 1.5, z: 61.5, pitch: 55, yaw: 168, f: .5, cx: .5, cy: .5 },
-  sheen: .05, gold: .5, ambC: [.8, .78, 2.1], expo: 2, glow: { threshold: .5, k: .8 },
+  cam: { x: -.8, y: 1.5, z: 61.5, pitch: 50, yaw: 168, f: .5, cx: .5, cy: .5 },
+  sheen: .05, gold: .5, ambC: [.8, .78, 2.1], expo: 2.25, glow: { threshold: .5, k: .8 },
   hazeBase: [.02, .018, .055], hazeFar: [.1, .08, .15], bloomAt: [2.3, 1.4, 5.6], bloomPow: 60, bloomC: [.12, .08, .05],
-  fogK: 1 / 30,
+  fogK: 1 / 26, blur: { px: 2.6, d0: 5, d1: 18, k: .95 },
   lights: [
-    ...CUPR.slice(0, 2).map((z, i) => ({ p: [2.1, 5.4, z], c: [1, .72, .42], k: 3.6 - .8 * i, r: 1.2, shadow: .5, reach: 4. })),   /* the nearest cups' light, thrown up the vault */
+    ...CUPR.slice(0, 2).map((z, i) => ({ p: [1.95, 5.9, z], c: [1, .72, .42], k: 3.6 - .8 * i, r: 1.2, shadow: .5, reach: 4. })),   /* the nearest cups' light, thrown up the vault */
     ...[59.55, 56.45].map(z => ({ p: [2.72, 3.85, z], c: [1, .72, .42], k: .12, r: .3, reach: .7 })),                  /* and filling their own recesses */   /* the nearest cups on the right: up into the vault */
-    ...CUPL.slice(0, 1).map(z => ({ p: [-2.1, 5.4, z], c: [1, .72, .42], k: 2.6, r: 1.2, shadow: .5, reach: 4. })),  /* and on the left */
-    { p: [0, 5, 30], c: [.5, .42, .8], k: 45, r: 14 },                                  /* the lines of cups further back, as one glow in the violet */
+    ...CUPL.slice(0, 1).map(z => ({ p: [-1.95, 5.9, z], c: [1, .72, .42], k: 2.6, r: 1.2, shadow: .5, reach: 4. })),  /* and on the left */
+    { p: [0, 6, 34], c: [.5, .42, .85], k: 70, r: 14 },                                  /* the lines of cups further back, as one glow in the violet */
     { p: [2.3, 1.42, 5.6], c: [1, .7, .4], k: 0, r: .5, air: .5 },                       /* the lamp on its ledge, a warm point at the far end */
     { p: [-3.4, 1.2, 61.5], c: [.6, .58, 1.1], k: 3, r: 1.2, shadow: .5 },               /* round the corner beside you: cold light off the salt */
   ],
@@ -39,10 +39,13 @@ export default {
   vec4 scene(vec3 p) {
     vec4 d = hallScene(p);
     float ax = abs(p.x);
-    if (ax > 2.4 && p.z > 44.) d.x -= rings(p);                                      /* the rings within reach, faint here: the eye goes up */
+    if (ax > 2.4 && p.z > 44.) d.x -= rings(p);
+    float zt = p.x > 0. ? mod(p.z - 2.2, 3.1) - 1.55 : mod(p.z - 3.75, 3.1) - 1.55;
+    if (p.z > 40. && p.z < 60.5 && abs(zt) > .4) d = U(d, vec4(2.701 - ax, M_CUT, NOUV));   /* only each wall's own cups open into it */                                      /* the rings within reach, faint here: the eye goes up */
     if (p.y > 5.6 && d.w > 5.7 && d.w < 10.5 && p.z > 44. && p.z < 60.5) d.x += vaultRings(d.zw, sign(p.x));
     if (p.y > 10.) gTint *= mix(1., .55, smoothstep(10., 13.5, p.y));                    /* the crown falls away into the dark */
-    if (p.y < .03) gTint *= mix(.5, 1., smoothstep(61., 52., p.z));                    /* the floor at your feet, out of the cups' light */
+    if (p.y < .03) gTint *= mix(.4, 1., smoothstep(61., 50., p.z));
+    if (p.y < 2.6 && p.y > .03) gTint *= mix(.55, 1., smoothstep(1.2, 2.6, p.y));     /* the walls low down, below the cups' light: the button's band stays calm */                    /* the floor at your feet, out of the cups' light */
     if (p.z > 60.5 && p.y < 5.) gTint *= .6;                                           /* the door's jambs beside you, in shadow */
     /* the cups lit: a small still flame in every bowl, slim, the glow does the rest */
     float zl = p.x > 0. ? mod(p.z - 2.2, 3.1) - 1.55 : mod(p.z - 3.75, 3.1) - 1.55;

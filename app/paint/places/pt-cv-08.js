@@ -16,9 +16,9 @@ export default {
   blur: { px: 1.3, d0: .8, d1: 2.6, k: .6 },
   expo: 2.35,
   lights: [
-    { ...room.lights[0], k: 11 },                                                          /* the clay lamp, in the passage behind you */
-    { p: [.4, .26, 1.05], c: [1, .7, .34], k: .05, r: .22, reach: .6 },                  /* its light ending on the boots' toes, as in pt-b-1.C */
-    { p: [.15, 1., 1.3], c: [1, .7, .34], k: .08, r: .35, shadow: 1, reach: 1.3 },          /* the doorway's weak warm pool, lying along the cot and the floor under it */
+    { ...room.lights[0], k: 7, warm: 0 },                                                          /* the clay lamp, in the passage behind you */
+    { p: [.4, .26, 1.05], c: [1, .7, .34], k: .04, r: .2, reach: .45 },                  /* its light ending on the boots' toes, as in pt-b-1.C */
+    { p: [.35, 1., 1.4], c: [1, .7, .34], k: .025, r: .3, shadow: 1, reach: 1.1 },          /* the doorway's weak warm pool, lying along the cot and the floor under it */
     { p: [.45, .56, 1.04], c: [1, .72, .38], k: .012, r: .06, reach: .2 },                  /* and ending on the rail, on the tape */
     { p: [-1.3, 1.9, 3.6], c: [.4, .37, .85], k: 1.1, r: 1.2 },                           /* violet in the far corners */
     { p: [1.35, 1.9, 3.7], c: [.4, .37, .85], k: .8, r: 1 },
@@ -75,7 +75,7 @@ export default {
     return d;
   }`,
   anchors: {
-    beam: [{ p: [.2, .7, 1.4], w: .35 }],
+    beam: [{ p: [.35, .6, 1.5], w: .3 }],
     glints: [{ p: [T[0] - .002, T[1] + .01, T[2] + .02] }],
   },
   live: { motes: 'gold', gold: true },
