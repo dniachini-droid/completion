@@ -52,7 +52,7 @@ export default {
     float r = max(s, ends) - .0012;
     r += rough(p, .0006, 120.) * smoothstep(.04, .1, u);                            /* no roughness at the point: its outline stays clean */
     /* the honed edge: a thin line along the blade */
-    gEdge = bl * smoothstep(.015, .05, u) * (1. - smoothstep(.0003, .0011, abs(q.z + w)));   /* only the edge itself, a thin line */
+    gEdge = bl * smoothstep(.015, .05, u) * (1. - smoothstep(.0005, .0015, abs(q.z + w)));   /* only the edge itself, a thin line */
     /* on the handle's top: a line of marks in cells, and in the last cell's corner a hook with a tail */
     gMark = 0.;
     if (u > .23 && u < .355 && q.y > 0.) {

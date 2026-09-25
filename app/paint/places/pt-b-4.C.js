@@ -53,17 +53,16 @@ export default {
         d.x = max(d.x, min(-bl, (ZD - .42) - p.z));
         if (bl < 0.) gTint *= 1.2;
         /* and by the blank, two marks: a bar with a drop; two drops parted */
-        float m1 = min(length(vec2(m.x - .53, max(abs(m.y - cy - .02) - .06, 0.))), length((m - vec2(.53, cy - .09)) * vec2(1., .7)) - .012);
+        float by = m.y - cy, tw = .004 + .016 * smoothstep(.0, -.08, by);                          /* the bar swelling to a drop at its foot, one cut */
+        float m1 = max(length(vec2(m.x - .53, max(abs(by + .005) - .08, 0.))) - tw, 0.);
         vec2 dq = m - vec2(1.12, cy);
         float m2 = min(length(vec2(dq.x + .03, max(abs(dq.y - .03) - .03 * (1. - (dq.y - .0) / .08), 0.))), length(vec2(dq.x - .03, max(abs(dq.y + .03) - .03 * (1. - (-.06 - dq.y) / .08), 0.))));
         d.x += engrave(min(m1, m2), .016, .014);
         /* under the count, a mark like a path doubling back: along, round, and back */
-        vec2 pq = m - vec2(-.1, 1.22);
-        pq.y -= .025 * sin(pq.x * 9.) * smoothstep(.3, -.2, pq.x);                              /* it wanders */
-        float path = pq.x < .28 ? abs(abs(pq.y) - .07) : abs(length(pq - vec2(.28, 0.)) - .07);
-        path = max(path, pq.y > 0. ? -.08 - pq.x : -.42 - pq.x);                                 /* out along the lower way, round, and back along the upper, which stops short */
-        path = min(path, length(pq - vec2(-.08, .07)) - .012);                                    /* where it ends: a point */
-        d.x += engrave(path, .01, .006);
+        vec2 pq = m - vec2(-.1, 1.26);
+        float path = pq.x < .26 ? abs(abs(pq.y) - .06) : abs(length(pq - vec2(.26, 0.)) - .06);    /* a firm hairpin: out along the lower run, a tight turn, back along the upper */
+        path = max(path, pq.y > 0. ? -.02 - pq.x : -.38 - pq.x);                                 /* the run back stops short of the start */
+        d.x += engrave(path, .02, .016);                                                           /* cut as the count's strokes are */
         if (marks < .02) gTint *= .92;
       }
     }
