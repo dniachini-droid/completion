@@ -17,7 +17,7 @@ export default {
   id: 'pt-b-5.B',
   name: 'Through a gap',
   line: '',
-  cam: { x: .75, y: YG + .05, z: ZG, pitch: -2, yaw: 90, f: .7, cx: .5, cy: .5 },
+  cam: { x: .1, y: YG + .05, z: ZG, pitch: -2, yaw: 90, f: .92, cx: .5, cy: .5 },
   far: 30, fogK: 1 / 20,
   hazeBase: [.012, .011, .034], hazeFar: [.05, .045, .12],
   bloomAt: [XF, YG - .2, ZG], bloomPow: 12, bloomC: [.12, .09, .06],
@@ -27,7 +27,7 @@ export default {
   gold: 1, sheen: 0, grain: .35, shadowJitter: 1, amb: 1.2, ambC: [.8, .76, 2.1], expo: 1.8,
   lights: [
     { p: [-XW + .1, YG - .1, ZG - .1], c: WARM, k: 1.1, r: 1., shadow: .7, reach: 5.5 },   /* the Stair's lamp behind you, on the round wall round the gap */
-    { p: [XW + 1.3, YG + .1, ZG - .2], c: WARM, k: 1.1, r: 1.3, shadow: 1, reach: 4.5 },        /* the same light, gone through the gap into the room beyond */
+    { p: [XW + 2.1, YG + .1, ZG - .2], c: WARM, k: 1.1, r: 1.3, shadow: 1, reach: 4.5 },        /* the same light, gone through the gap into the room beyond */
     { p: [.2, YG + .8, ZG + 3.5], c: [.42, .39, .95], k: 4, r: 2.4, shadow: .4 },        /* the Stair's violet, down the flight */
     { p: [XF - 1.5, YG + 1.4, ZG - 2.4], c: [.35, .32, .75], k: .8, r: 1.4, reach: 3.5 },  /* a little cold light in the room beyond */
   ],
@@ -60,7 +60,7 @@ export default {
     float gs = gapShape(vec2(p.y - G.y, p.z - G.z));
     float tube = min(gs, min(p.x - G.x + .3, G.x + .6 - p.x));
     vec4 air = A(room, vec4(tube, M_CUT, NOUV));
-    d.x = -smin(-d.x, -air.x, .035);
+    d.x = -smin(-d.x, -air.x, .008);                                                      /* a plain cut through the wall */
     bool beyond = p.x > G.x + .44;
     if (beyond) {
       /* the round stone the square was cut against: a great curved face on the right, meeting the square wall */
@@ -72,12 +72,12 @@ export default {
       if (rnd < .01) { gTint = vec3(.9, .88, 1.); gPolish = .25; }                              /* the Site's round stone: smooth, paler */
       else {
         /* square stone: darker, flat-faced, square blocks with chisel marks */
-        gTint = vec3(.6, .58, .62);
+        gTint = vec3(.5, .48, .53);
         vec2 w = abs(p.x - XF) < .05 ? vec2(p.z, p.y) : (abs(p.y - G.y) > 1.85 ? p.xz : vec2(p.x, p.y));
-        vec2 b = w / vec2(.46, .34); b.x += .5 * mod(floor(b.y), 2.);
+        vec2 b = w / vec2(1.25, .95); b.x += .5 * mod(floor(b.y), 2.);                      /* large ashlar blocks */
         vec2 f = fract(b) - .5, id = floor(b);
         float jn = min(.5 - abs(f.x), .5 - abs(f.y));
-        d.x += engrave(jn, .03, .012);                                                           /* square joints, sharp */
+        d.x += engrave(jn, .014, .014);                                                           /* square joints, sharp */
         float ch = sin((w.x * .6 + w.y) * 90. + h2(id) * 6.) * .5 + .5;
         d.x += .0012 * ch * (.6 + .4 * h2(id + 3.));                                             /* the chisel's even strokes */
         gTint *= .85 + .3 * h2(id + 7.);
@@ -91,7 +91,7 @@ export default {
         gTint *= mix(.35, 2.2, smoothstep(-.02, .03, g));
       }
     } else {
-      if (p.x > G.x - .1 && gs > -.1) gTint *= mix(1., .6, smoothstep(.0, .3, p.x - G.x));      /* the gap's throat, going into shadow */
+      if (p.x > G.x - .1 && gs > -.1) gTint *= vec3(.8, .8, .95) * mix(.3, 1., smoothstep(.05, -.25, p.y - G.y));   /* the reveal: the wall's own stone, lit only on its lower inside */
       gTint *= mix(1., .35, smoothstep(.5, 1.6, abs(p.y - G.y + .1)));                           /* the wall away from the gap falls into the dark */
     }
     return d;

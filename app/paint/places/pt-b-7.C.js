@@ -18,15 +18,15 @@ export default {
   cam: { x: -.7, y: 1.7, z: 66.2, pitch: -60, yaw: 3, f: .52, cx: .5, cy: .5 },
   far: 50, fogK: 1 / 20,
   hazeBase: [.01, .009, .03], hazeFar: [.03, .028, .08],
-  bloomAt: [0, -20, 90], bloomPow: 30, bloomC: [.05, .05, .12],
+  bloomAt: [0, -20, 90], bloomPow: 30, bloomC: [0, 0, 0],
   bloom: { alpha: .14 },
   glow: { threshold: .62, k: .5 },
   blur: { px: 1.8, d0: 4, d1: 14, k: .8 },
-  gold: 1, sheen: 0, grain: .3, shadowJitter: 1, amb: 1.4, ambC: [.7, .68, 2.1], expo: 1.8,
+  steps: 400, gold: 1, sheen: 0, grain: .3, shadowJitter: 1, amb: 1.4, ambC: [.7, .68, 2.1], expo: 1.8,
   lights: [
     { p: [.3, 7.6, 63.2], c: WARM, k: 80, r: 3, shadow: 1 },                           /* the hall's cups, behind you, their light through the doorway */
     { p: [0, -4.3, 70.6], c: WARM, k: 3, r: 1., reach: 2.2 },                       /* the same, given back off the lit treads */
-    { p: [0, -8.5, 75.5], c: [.4, .38, .9], k: 1.6, r: 2, shadow: .5 },                                 /* the stone's own faint violet, far below */
+    { p: [0, Y11 - .6, Z11 + 3.6], c: [.4, .38, .9], k: 3.5, r: 3, shadow: .4 },                                 /* the stone's own faint violet, far below */
     { p: [-.5, 3.2, 64.5], c: [.42, .4, .95], k: 3, r: 2.5, shadow: .5 },              /* the hall's violet on the door's cold reveal */
   ],
   glsl: hall.glsl.replace('vec4 scene(vec3 p)', 'vec4 hallScene(vec3 p)').replace('d = U(d, vec4(66.45 - p.z, M_DARK, NOUV));', '') + /* glsl */ `
@@ -36,7 +36,7 @@ export default {
     /* beyond the door: a passage going down at the stair's pitch, round-vaulted, a little narrower than the door */
     float ny = -RI / TR * max(p.z - Z0, 0.);
     vec3 q = vec3(p.x, p.y - ny + 1.4, p.z);
-    vec4 pa = hallAir(q, 1.95, 3.6, 1.95, Z0 - .6, Z0 + 40., M_CUT); pa.x *= .6;
+    vec4 pa = hallAir(q, 1.95, 3.6, 1.95, Z0 - .6, Z0 + 16., M_CUT); pa.x *= .75;
     d = A(d, pa);
     d.x += rough(p, .015, 3.) * step(1.85, abs(p.x)) * step(Z0, p.z);
     vec4 st = stairs(p, -2.2, 2.2, Z0, 0., TR, RI, 60, M_CUT);
@@ -46,7 +46,8 @@ export default {
       /* where the light stops: a clean line across the eleventh tread, leaning a little with the doorway's edge */
       float cut = p.z - Z11 - .12 * p.x + (p.y - Y11) * .3;
       float lit = smoothstep(.02, -.02, cut);
-      gTint *= mix(.14, 1., lit);
+      gTint *= mix(.3, 1., lit);
+      if (lit < .5) gTint *= mix(1., .1, smoothstep(Z11 + 1., Z11 + 7., p.z));   /* below it, the unlit steps go on, fading to nothing */
       gTint *= mix(.3, 1., smoothstep(Z0 + .3, Z11 - 1.2, p.z));                   /* the first steps under the sill's own shadow, darker */
       if (abs(p.x) > 1.85) gTint *= vec3(.4, .4, .55);                                             /* the side walls, darker than the treads */
     } else {
