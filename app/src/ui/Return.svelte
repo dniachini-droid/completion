@@ -23,7 +23,7 @@
 {#if r && r.line}
   {#if r.key}<div class="label-line centred lit key">{t('step.key')}</div>{/if}
   <!-- the story's words and any find keep to the lower half and scroll there; they can be folded away (D-085) -->
-  <Words length={r.line.length + finds.reduce((n, f) => n + f!.line.length, 0)}>
+  <Words plain length={r.line.length + finds.reduce((n, f) => n + f!.line.length, 0)}>
     <p class="say story on-scene">{r.line}</p>
     {#each finds as f (f!.id)}
       <div class="find">
@@ -51,7 +51,7 @@
     </div>
   {/if}
 {:else if finds.length}
-  <Words length={finds.reduce((n, f) => n + f!.line.length, 0)}>
+  <Words plain length={finds.reduce((n, f) => n + f!.line.length, 0)}>
     {#each finds as f (f!.id)}
       <div class="find">
         <div class="label-line centred gold">{t('find.label')}</div>

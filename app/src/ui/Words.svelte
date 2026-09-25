@@ -5,14 +5,15 @@
   import type { Snippet } from 'svelte';
   import { t } from '../content/copy/en';
 
-  let { children, length = 0 }: { children: Snippet; length?: number } = $props();
+  /* plain: the screen already scrolls its words and darkens the painting itself (a job's return), so here they only fold */
+  let { children, length = 0, plain = false }: { children: Snippet; length?: number; plain?: boolean } = $props();
   /* long enough to need the fold (roughly more than four lines on a phone) */
   const foldable = $derived(length > 220);
   let open = $state(true);
 </script>
 
-<div class="words" class:folded={foldable && !open}>
-  <div class="wash" aria-hidden="true"></div>
+<div class="words" class:plain class:folded={foldable && !open}>
+  {#if !plain}<div class="wash" aria-hidden="true"></div>{/if}
   <div class="scroll">{@render children()}</div>
   {#if foldable}
     <button class="text-link fold" onclick={() => (open = !open)} aria-expanded={open}><span>{open ? t('words.hide') : t('words.show')}</span></button>
@@ -32,5 +33,8 @@
   .scroll::-webkit-scrollbar { display: none; }
   .folded .scroll { max-height: 5.4em; overflow: hidden; }
   .folded .wash { opacity: .55; }
-  .fold { align-self: flex-end; min-height: 36px; font-style: italic; color: var(--ink-2); margin-top: -4px; }
+  .plain .scroll { max-height: none; overflow: visible; -webkit-mask-image: none; mask-image: none; padding: 0; }
+  .plain.folded .scroll { max-height: 5.4em; overflow: hidden;
+    -webkit-mask-image: linear-gradient(180deg, #000 60%, transparent 100%); mask-image: linear-gradient(180deg, #000 60%, transparent 100%); }
+  .fold { align-self: flex-end; min-height: 36px; font-style: italic; color: var(--ink-2); }
 </style>
