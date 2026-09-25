@@ -1,57 +1,68 @@
-/* SEALED (D-015). pt-pl-w2-above-the-ring, round 3 (room scale, D-075): the Salt Gallery's left wall
-   (pt-b-2.A's room, reused), seen from two strides out in the gallery, looking up. Low in the frame the lone
-   ring on its band; over it the salt has a crack two fingers wide, running up; beside the crack, cut small,
-   a count. Far back in the crack, something pale, too far in to reach: seen only as a highlight in the dark.
+/* SEALED (D-015). pt-pl-w2-above-the-ring, round 4 (room scale, D-075): the Salt Gallery's left wall
+   (pt-b-2.A's room, reused), from close under it, looking up. At the frame's foot, an arc of the lone ring on its
+   band; over it the salt has a crack two fingers wide running up into the dark; beside the crack, cut small, a
+   count. The crack has an inside: its lip lit where the light rakes across it, its walls stepping back into
+   black; and far back in it something pale, too far in to reach, seen only as a highlight: the brightest thing.
    The one light is the gallery's violet, raking across the salt from the left. */
 import room from './pt-b-2.A.js';
 
 const ZR = 3.4;                                                     /* the lone ring, as in pt-b-2.A */
 const V = [.62, .58, 1.2];
-const SL = .5;                                                      /* how far the crack slants away from you as it goes in */
+const SL = .25, LEAN = .12, CZ0 = .06;                              /* the crack: slant as it goes in, lean as it rises, where it starts */
+const PY = 2.45, PX = -2.2;                                         /* the pale thing, deep in it */
+const PZ = ZR + CZ0 - (PY - 1.95) * LEAN - (PX + 2) * SL;
 export default {
   ...room,
   id: 'pt-pl-w2-above-the-ring',
   name: 'Above the ring',
   line: '',
-  cam: { x: -.15, y: 1.45, z: ZR - 1.5, pitch: 16, yaw: -41, f: .7, cx: .5, cy: .5 },
-  far: 30, fogK: 1 / 20,
-  bloomAt: [.6, 1.3, 36], bloomPow: 14, bloomC: [.22, .2, .45],
-  glow: { threshold: .66, k: .45 },
-  blur: { px: 1.6, d0: 2.6, d1: 6, k: .8 },
+  cam: { x: -1.58, y: 1.8, z: ZR - .14, pitch: 55, yaw: -72, f: .7, cx: .5, cy: .5 },
+  far: 20, fogK: 1 / 18,
+  bloomAt: [PX, PY, PZ], bloomPow: 60, bloomC: [.06, .06, .13],
+  glow: { threshold: .62, k: .55 },
+  blur: { px: 1.4, d0: 1.6, d1: 4, k: .6 },
   lights: [
-    { p: [-1.35, 2.55, ZR - 1.25], c: V, k: .9, r: .85, shadow: .6 },              /* the gallery's light, raking across the salt from the left */
-    { p: [-1.8, 2.45, ZR - .3], c: V, k: .07, r: .25, shadow: .5 },                 /* its spill on the crack's left lip and the far inner wall */
-    { p: [-2.13, 2.47, ZR + .0085 + .13 * SL], c: V, k: .02, r: .025 },                          /* the little of it that gets far into the crack, onto the pale thing */
-    { p: [1.3, 1.9, 11], c: V, k: 10, r: 4.5, shadow: .55 },                         /* the gallery going on, beyond (as pt-b-2.A) */
-    { p: [.4, 1.6, 34], c: V, k: 12, r: 9 },
-    { p: [.5, 1.4, ZR - 5], c: [.3, .28, .66], k: .5, r: 3 },                       /* faint fill from behind */
+    { p: [-1.86, 2.45, ZR - .9], c: V, k: 1.6, r: .8, reach: 2.5, shadow: .8 },     /* the gallery's light, raking across the salt from the left */
+    { p: [PX + .08, PY + .03, PZ - .004], c: V, k: .035, r: .03, reach: .09 },     /* the little of it that gets far into the crack, onto the pale thing */
+    { p: [.5, 1.4, ZR - 4], c: [.3, .28, .66], k: .5, r: 3 },                     /* faint fill from behind */
+    { p: [-.4, 3.2, ZR + 1], c: [.36, .33, .8], k: .15, r: 1.5 },                 /* a trace on the vault, so the roof has form */
   ],
   glsl: room.glsl.replace('vec4 scene(vec3 p)', 'vec4 roomScene(vec3 p)') + /* glsl */ `
+  const float ZR2 = ${ZR.toFixed(2)};
   vec4 scene(vec3 p) {
     vec4 d = roomScene(p);
-    if (p.x < -1.5 && p.y > 1.4) gTint *= mix(1., .45, smoothstep(2.6, 3.3, p.y));     /* the salt above the crack going into the dark */
-    /* the crack: two fingers wide, wandering up from over the ring, going back into the dark */
-    float cz = ZR + .22 + ((fbm(vec2(p.y * 4., 3.), 3) - .5) * .14 + (fbm(vec2(p.y * 19., 5.), 2) - .5) * .025) * (1. - exp(-(p.y - 2.42) * (p.y - 2.42) / .01)) - (p.y - 1.95) * .45 - min(p.x + 2., 0.) * ${SL.toFixed(2)};   /* it goes in slanting away from you; (quiet where the pale thing sits, so it stays in the crack) */
-    float w = (.038 + .014 * fbm(vec2(p.y * 11., 7.), 2)) * smoothstep(1.86, 1.96, p.y) * (1. - smoothstep(2.75, 3.05, p.y)) * (1. + .45 * exp(-(p.y - 2.42) * (p.y - 2.42) / .02));   /* a little wider where the pale thing is */
-    float dz = abs(p.z - cz) + (fbm(vec2(p.x * 26., p.y * 10.), 3) - .5) * .02 * smoothstep(-2., -2.12, p.x);   /* its inner walls broken, stepping in */
-    float crack = min(w * mix(1., .5, smoothstep(-2., -2.35, p.x)) - dz, p.x + 2.36);   /* narrowing as it goes back */
-    vec4 cr = vec4(min(crack, min(p.y - 1.86, 3.05 - p.y)), M_SALT, NOUV);
-    if (cr.x > d.x) { d = cr; gTint = vec3(mix(.9, .02, smoothstep(-1.97, -2.12, p.x))); }   /* inside: lit at the mouth, then dark */
+    if (p.x < -1.5) gTint *= .8 + .3 * smoothstep(.3, .7, vn(vec2(p.y * 5. + fbm(p.xz * .4, 2) * 2., 1.)));   /* the beds, grey and white */
+    if (p.x < -1.5 && p.y > 1.4) gTint *= mix(1., .35, smoothstep(2.7, 3.4, p.y));     /* the salt going up into the dark */
+    if (p.x < -1.5) gTint *= mix(.18, 1., smoothstep(1.8, 2.15, p.y));                 /* and down, out of the light, round the ring */
+    /* the crack: two fingers wide, wandering up from over the ring, going back into the dark, its walls stepping in */
+    float quiet = 1. - exp(-(p.y - ${PY.toFixed(2)}) * (p.y - ${PY.toFixed(2)}) / .012);
+    float cz = ZR2 + ${CZ0.toFixed(3)} + ((fbm(vec2(p.y * 4., 3.), 3) - .5) * .12 + (fbm(vec2(p.y * 17., 5.), 2) - .5) * .03) * quiet
+             - (p.y - 1.95) * ${LEAN.toFixed(3)} - min(p.x + 2., 0.) * ${SL.toFixed(3)};
+    float w = (.024 + .012 * fbm(vec2(p.y * 11., 7.), 2)) * smoothstep(1.86, 2., p.y) * (1. - smoothstep(2.8, 3.2, p.y)) * (1. + .4 * (1. - quiet));
+    float step_ = floor((-2. - p.x) / .05);                                               /* its walls stepping in, ledge by ledge */
+    float dz = abs(p.z - cz) + (h2(vec2(step_, floor(p.y * 9.))) - .5) * .012 * smoothstep(-2., -2.05, p.x);
+    float crack = min(w * mix(1.15, .45, smoothstep(-1.99, -2.3, p.x)) - dz, p.x + 2.32);
+    vec4 cr = vec4(min(crack, min(p.y - 1.86, 3.2 - p.y)), M_SALT, NOUV);
+    if (cr.x > d.x) {
+      d = cr;
+      float lit = smoothstep(-.005, .005, p.z - cz);                                     /* the wall that faces the light */
+      gTint = vec3(mix(mix(.35, 1.1, lit), .015, smoothstep(-1.985, -2.1, p.x)));        /* lit at the lip, then black */
+    }
     /* far back in it, something pale, too far in to reach: a sliver, edge on */
-    vec3 pq = p - vec3(-2.2, 2.42, ZR + .22 - (2.42 - 1.95) * .45 + .2 * ${SL.toFixed(2)} + .012); pq.xy = vec2(.8 * pq.x - .6 * pq.y, .6 * pq.x + .8 * pq.y);
-    vec4 pale = vec4((length(pq / vec3(.006, .04, .012)) - 1.) * .006, M_PAPER, NOUV);
-    if (pale.x < d.x) { d = pale; gTint = vec3(1.1, 1.07, 1.02); gPolish = .5; }
+    vec3 pq = p - vec3(${PX.toFixed(3)}, ${PY.toFixed(3)}, ${PZ.toFixed(4)}); pq.xy = vec2(.8 * pq.x - .6 * pq.y, .6 * pq.x + .8 * pq.y);
+    vec4 pale = vec4((length(pq / vec3(.004, .03, .008)) - 1.) * .004, M_PAPER, NOUV);
+    if (pale.x < d.x) { d = pale; gTint = vec3(1.15, 1.12, 1.06); gPolish = .6; }
     /* beside the crack, a count, cut small */
-    if (p.x < -1.7 && abs(p.y - 2.12) < .06 && p.z > ZR + .3 && p.z < ZR + .47) {
-      float k = floor((p.z - ZR - .3) / .034), sz = p.z - ZR - .3 - (k + .5) * .034 + (h2(vec2(k, 3.)) - .5) * .01;
-      float yy = p.y - 2.12 - (h2(vec2(k, 6.)) - .5) * .012; sz += yy * (h2(vec2(k, 8.)) - .5) * .4;
-      d.x += engrave(length(vec2(sz, max(abs(yy) - .018 - .012 * h2(vec2(k, 1.)), 0.))), .007, .008);
+    if (p.x < -1.7 && abs(p.y - 2.18) < .06 && p.z > ZR2 + .12 && p.z < ZR2 + .3) {
+      float k = floor((p.z - ZR2 - .12) / .036), sz = p.z - ZR2 - .12 - (k + .5) * .036 + (h2(vec2(k, 3.)) - .5) * .01;
+      float yy = p.y - 2.18 - (h2(vec2(k, 6.)) - .5) * .012; sz += yy * (h2(vec2(k, 8.)) - .5) * .4;
+      d.x += engrave(length(vec2(sz, max(abs(yy) - .02 - .012 * h2(vec2(k, 1.)), 0.))), .008, .01);
     }
     return d;
   }`,
   anchors: {
-    glints: [[-2.26, 2.42, ZR + .06], [-1.96, 2.3, ZR - .3], [-1.97, 1.9, ZR + .4], [-1.96, 2.6, ZR - .6]].map(p => ({ p })),
-    beam: [{ p: [-1.8, 2.4, ZR], w: .3 }],
+    glints: [[PX, PY, PZ], [-1.97, 2.3, ZR - .3], [-1.97, 2.2, ZR + .2], [-1.96, 2.6, ZR - .4]].map(p => ({ p })),
+    beam: [{ p: [-1.85, 2.4, ZR], w: .3 }],
   },
   live: { motes: 'violet' },
 };
