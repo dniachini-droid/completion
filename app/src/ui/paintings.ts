@@ -70,6 +70,16 @@ import ppl_w2_above_the_ringUrl from '../../paint/places/img/pt-pl-w2-above-the-
 import ppl_w2_above_the_ringMeta from '../../paint/places/img/pt-pl-w2-above-the-ring.json';
 import ppl_w2_box_by_the_cotUrl from '../../paint/places/img/pt-pl-w2-box-by-the-cot.webp?url';
 import ppl_w2_box_by_the_cotMeta from '../../paint/places/img/pt-pl-w2-box-by-the-cot.json';
+import pb_3_AUrl from '../../paint/places/img/pt-b-3.A.webp?url';
+import pb_3_AMeta from '../../paint/places/img/pt-b-3.A.json';
+import pb_3_BUrl from '../../paint/places/img/pt-b-3.B.webp?url';
+import pb_3_BMeta from '../../paint/places/img/pt-b-3.B.json';
+import pb_3_CUrl from '../../paint/places/img/pt-b-3.C.webp?url';
+import pb_3_CMeta from '../../paint/places/img/pt-b-3.C.json';
+import pb_4_AUrl from '../../paint/places/img/pt-b-4.A.webp?url';
+import pb_4_AMeta from '../../paint/places/img/pt-b-4.A.json';
+import pb_4_BUrl from '../../paint/places/img/pt-b-4.B.webp?url';
+import pb_4_BMeta from '../../paint/places/img/pt-b-4.B.json';
 
 export interface Painting { url: string; meta: unknown; focus: number; }
 export const paintings: Record<string, Painting> = {
@@ -108,6 +118,11 @@ export const paintings: Record<string, Painting> = {
   'pt-cv-09': { url: pcv_09Url, meta: pcv_09Meta, focus: .5 },
   'pt-pl-w2-above-the-ring': { url: ppl_w2_above_the_ringUrl, meta: ppl_w2_above_the_ringMeta, focus: .5 },
   'pt-pl-w2-box-by-the-cot': { url: ppl_w2_box_by_the_cotUrl, meta: ppl_w2_box_by_the_cotMeta, focus: .5 },
+  'pt-b-3.A': { url: pb_3_AUrl, meta: pb_3_AMeta, focus: .32 },
+  'pt-b-3.B': { url: pb_3_BUrl, meta: pb_3_BMeta, focus: .5 },
+  'pt-b-3.C': { url: pb_3_CUrl, meta: pb_3_CMeta, focus: .49 },
+  'pt-b-4.A': { url: pb_4_AUrl, meta: pb_4_AMeta, focus: .48 },
+  'pt-b-4.B': { url: pb_4_BUrl, meta: pb_4_BMeta, focus: .48 },
 };
 
 /** Frame a painting so its light sits in the open gap between the words (the morning mock-up lifts the lamp the same way).
