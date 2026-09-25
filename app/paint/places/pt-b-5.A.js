@@ -13,6 +13,8 @@ export default {
   id: 'pt-b-5.A',
   name: 'The tally, from the head',
   line: '',
+  grain: .55,
+  bloom: { alpha: .28 },
   cam: { x: -.95, y: 1.45, z: -.5, pitch: -8, yaw: -36, f: .7, cx: .5, cy: .5 },
   bloomC: [.26, .24, .55],
   salt: { pink: .3 },
@@ -51,7 +53,7 @@ export default {
     if (kind < .14) d = drop;
     return vec2(d, 0.);
   }
-  vec4 scene(vec3 p) {
+  vec4 scenePrev(vec3 p) {
     vec4 d = roomScene(p);
     /* the old tally of the room is replaced: the band's face refilled, then cut again in records */
     float by = 1.28 + .015 * sin(p.z * .7) + .012 * sin(p.z * 1.9 + 1.) + (vn(vec2(p.z * 3., 1.)) - .5) * .01;
@@ -69,6 +71,16 @@ export default {
     if (p.y < .05) gTint *= mix(.35, 1., smoothstep(0., 7., p.z));                          /* the near floor kept down */
     if (p.y < 1.1 && p.x < -1.5) gTint *= mix(.5, 1., smoothstep(.2, 1.1, p.y));          /* the wall's foot */
     if (p.x > 1.5) gTint *= .7;                                                            /* the far wall quiet */
+    return d;
+  }
+  /* polish pass: the stone's own relief and mottling, hand-worked, never machine-flat */
+  vec4 scene(vec3 p) {
+    vec4 d = scenePrev(p);
+    float m = floor(d.y + .5);
+    if (d.x < .05 && (m == M_CUT || m == M_CUT_SMALL || m == M_DRESSED || m == M_FLOOR)) {
+      d.x += rough(p, 0.004, 5.0) + rough(p, 0.0012, 25.0);
+      gTint *= .86 + .28 * fbm(p.xz * 1.7 + p.y * 1.3, 3);
+    }
     return d;
   }`,
   anchors: {

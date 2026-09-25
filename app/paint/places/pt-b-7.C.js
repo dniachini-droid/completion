@@ -19,10 +19,10 @@ export default {
   far: 50, fogK: 1 / 20,
   hazeBase: [.01, .009, .03], hazeFar: [.03, .028, .08],
   bloomAt: [0, -20, 90], bloomPow: 30, bloomC: [0, 0, 0],
-  bloom: { alpha: .14 },
+  bloom: { alpha: .28 },
   glow: { threshold: .62, k: .5 },
   blur: { px: 1.8, d0: 4, d1: 14, k: .8 },
-  steps: 400, gold: 1, sheen: 0, grain: .3, shadowJitter: 1, amb: 1.4, ambC: [.7, .68, 2.1], expo: 1.8,
+  steps: 400, gold: 1, sheen: 0, grain: .55, shadowJitter: 1, amb: 1.4, ambC: [.7, .68, 2.1], expo: 1.8,
   lights: [
     { p: [.3, 7.6, 63.2], c: WARM, k: 80, r: 3, shadow: 1 },                           /* the hall's cups, behind you, their light through the doorway */
     { p: [0, -4.3, 70.6], c: WARM, k: 3, r: 1., reach: 2.2 },                       /* the same, given back off the lit treads */
@@ -31,7 +31,7 @@ export default {
   ],
   glsl: hall.glsl.replace('vec4 scene(vec3 p)', 'vec4 hallScene(vec3 p)').replace('d = U(d, vec4(66.45 - p.z, M_DARK, NOUV));', '') + /* glsl */ `
   const float Z0 = ${Z0.toFixed(2)}, RI = ${RI.toFixed(2)}, TR = ${TR.toFixed(2)}, Z11 = ${Z11.toFixed(3)}, Y11 = ${Y11.toFixed(3)};
-  vec4 scene(vec3 p) {
+  vec4 scenePrev(vec3 p) {
     vec4 d = hallScene(p);
     /* beyond the door: a passage going down at the stair's pitch, round-vaulted, a little narrower than the door */
     float ny = -RI / TR * max(p.z - Z0, 0.);
@@ -57,6 +57,16 @@ export default {
       if (p.y < .03) gTint *= .25;                                                   /* the sill at your feet */
     }
     if (p.y > 3.) gTint *= mix(1., .2, smoothstep(3., 7., p.y));
+    return d;
+  }
+  /* polish pass: the stone's own relief and mottling, hand-worked, never machine-flat */
+  vec4 scene(vec3 p) {
+    vec4 d = scenePrev(p);
+    float m = floor(d.y + .5);
+    if (d.x < .05 && (m == M_CUT || m == M_CUT_SMALL || m == M_DRESSED || m == M_FLOOR)) {
+      d.x += rough(p, 0.012, 2.5) + rough(p, 0.0036, 12.5);
+      gTint *= .86 + .28 * fbm(p.xz * 1.7 + p.y * 1.3, 3);
+    }
     return d;
   }`,
   anchors: {

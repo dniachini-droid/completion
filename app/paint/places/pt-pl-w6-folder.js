@@ -17,10 +17,12 @@ export default {
   far: 9, fogK: 1 / 15,
   bloomAt: [SX, .05, F[1]], bloomPow: 30, bloomC: [.04, .03, .014],
   blur: { px: 1.2, d0: 2.2, d1: 4, k: .5 },
-  expo: 2.1, amb: .3, ambC: [.9, .8, 1.35],
+  expo: 2.15, amb: .42, ambC: [.9, .8, 1.35], bloom: { alpha: .16 },
+  hazeBase: [.018, .015, .045], hazeFar: [.05, .04, .11],
   lights: [
     { ...room.lights[0], k: 5 },                                                            /* the clay lamp, in the passage behind */
     { p: [SX - .13, .03, F[1] - .04], c: [1, .72, .38], k: .006, r: .07, reach: .3 },    /* its light, low under the rail, ending on the spine */
+    { p: [SX - .55, .22, F[1] - .45], c: [1, .72, .38], k: .05, r: .3, shadow: 1, reach: 1.1 },   /* a warm pool on the floor, under the cot, leading in to it */
     { p: [-1.3, 1.9, 3.6], c: [.4, .37, .85], k: .8, r: 1.2 },                              /* violet in the far corners */
     { p: [1.35, 1.9, 3.7], c: [.4, .37, .85], k: .5, r: 1 },
     { p: [.8, .3, 2.3], c: [.42, .38, .82], k: .025, r: .3, reach: .9 },
@@ -44,10 +46,10 @@ export default {
   vec4 scene(vec3 p) {
     vec4 d = roomScene(p);
     if (p.y > .3) gTint *= mix(1., .4, smoothstep(.3, 1., p.y));                      /* the canvas and the wall above, dark */
-    if (p.y < .03) gTint *= mix(.3, .8, smoothstep(.5, 1.2, p.x));                   /* the floor near you, out of the light */
+    if (p.y < .03) gTint *= mix(.45, .9, smoothstep(.4, 1.2, p.x));                   /* the floor near you, out of the light */
     vec3 b = p - vec3(${F[0].toFixed(3)}, 0, ${F[1].toFixed(3)});
     /* the folder: grey card, a little bowed, its spine toward you */
-    vec4 fo = box(b, vec3(0, .02, 0), vec3(.11, .016, .155), M_PAPER); fo.x -= .004;
+    vec4 fo = box(b, vec3(0, .02, 0), vec3(.108, .015, .153), M_PAPER); fo.x -= .006; fo.x += rough(p, .0012, 70.);
     fo.x += .002 * smoothstep(.0, .15, abs(b.z)) * step(.03, b.y);
     if (fo.x < d.x) {
       d = fo; gTint = vec3(.72, .74, .88) * (.85 + .2 * fbm3(p * 25., 3));                 /* grey card */

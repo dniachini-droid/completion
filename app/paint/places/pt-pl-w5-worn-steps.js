@@ -82,20 +82,20 @@ export default {
   far: 40, fogK: 1 / 22,
   hazeBase: [.014, .012, .04], hazeFar: [.08, .07, .16],
   bloomAt: [0, -ST.RISE * 16 + 1, 17 * ST.TREAD], bloomPow: 10, bloomC: [.3, .2, .12],
-  bloom: { alpha: .2 },
+  bloom: { alpha: .28 },
   glow: { threshold: .6, k: .7 },
   blur: { px: 1.8, d0: 3, d1: 12, k: .85 },
-  gold: 1, sheen: 0, grain: .35, shadowJitter: 1, amb: 1.4, ambC: [.8, .76, 2.2], expo: 1.8,
+  gold: 1, sheen: 0, grain: .55, shadowJitter: 1, amb: 1.4, ambC: [.8, .76, 2.2], expo: 1.8,
   lights: [
-    { p: L(2), c: WARM, k: .45, r: .6, shadow: .8, reach: 3.5, air: .03 },          /* the Stair's lamps below, in the left wall */
-    { p: L(3), c: WARM, k: .5, r: .7, shadow: .7, reach: 4.5, air: .03 },
-    { p: [.4, -ST.RISE * 16 + 1.6, 17.5 * ST.TREAD], c: WARM, k: 1., r: 1.4, shadow: .5 },   /* the first turn, lit */
+    { p: L(2), c: WARM, k: .38, r: .6, shadow: .8, reach: 3.5, air: .03 },          /* the Stair's lamps below, in the left wall */
+    { p: L(3), c: WARM, k: .42, r: .7, shadow: .7, reach: 4.5, air: .03 },
+    { p: [.4, -ST.RISE * 16 + 1.6, 17.5 * ST.TREAD], c: WARM, k: .6, r: 1.4, shadow: .5 },   /* the first turn, lit */
     { p: L(1), c: WARM, k: .25, r: .5, shadow: .8, reach: 2.2 },                  /* the lamp you have passed, just behind on the left */
     { p: [0, -ST.RISE * 8 + .3, 8.2 * ST.TREAD], c: [1, .76, .48], k: .16, r: .25, reach: 1.1, shadow: 1 },   /* its light lying along the nearest step */
     { p: [.2, -1.2, 2.4], c: [.42, .39, .95], k: 6, r: 2.6, shadow: .5 },                               /* the violet from the landing above, behind you */
   ],
   glsl: STAIR + /* glsl */ `
-  vec4 scene(vec3 p) {
+  vec4 scenePrev(vec3 p) {
     vec4 d = flight(p, -3., NST * TREAD + .4);
     /* the first turn: a landing at the flight's foot, the way on turning right */
     vec4 land = boxAir(p, vec3(1.4, noseY(NST * TREAD) + 1.4, NST * TREAD + 1.5), vec3(2.95, 1.9, 1.5), M_CUT);
@@ -126,6 +126,16 @@ export default {
     }
     if (p.z < 7. * TREAD) gTint *= .3;                                          /* behind you, out of the lamps' light */
     if (p.y > noseY(p.z) + 2.4) gTint *= mix(1., .3, smoothstep(2.4, 3.8, p.y - noseY(p.z)));   /* the vault going up into the dark */
+    return d;
+  }
+  /* polish pass: the stone's own relief and mottling, hand-worked, never machine-flat */
+  vec4 scene(vec3 p) {
+    vec4 d = scenePrev(p);
+    float m = floor(d.y + .5);
+    if (d.x < .05 && (m == M_CUT || m == M_CUT_SMALL || m == M_DRESSED || m == M_FLOOR)) {
+      d.x += rough(p, 0.012, 2.5) + rough(p, 0.0036, 12.5);
+      gTint *= .86 + .28 * fbm(p.xz * 1.7 + p.y * 1.3, 3);
+    }
     return d;
   }`,
   anchors: {

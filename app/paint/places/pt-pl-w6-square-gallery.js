@@ -12,24 +12,24 @@ export default {
   line: '',
   cam: { ...CAM, pitch: 0, yaw: 0, f: .66, cx: .5, cy: .5 },
   far: 30, fogK: 1 / 16,
-  hazeBase: [.014, .012, .038], hazeFar: [.04, .036, .1],
-  bloomAt: [0, .9, RZ + 1.2], bloomPow: 40, bloomC: [.1, .08, .12],
-  bloom: { alpha: .14 },
+  hazeBase: [.018, .016, .046], hazeFar: [.08, .07, .16],
+  bloomAt: [0, 1.1, RZ + .6], bloomPow: 22, bloomC: [.2, .16, .22],
+  bloom: { alpha: .2 },
   glow: { threshold: .6, k: .5 },
   blur: { px: 1.2, d0: 9, d1: 24, k: .3 },
-  gold: 1, grain: .4, shadowJitter: 1, amb: .5, expo: 1.9, ambC: [.86, .78, 1.5], sheen: 0,
+  gold: 1, grain: .5, shadowJitter: 1, amb: .65, expo: 2.05, ambC: [.86, .78, 1.5], sheen: .05,
   lights: [
-    { p: [.1, 1.3, CAM.z - 3.5], c: [1, .7, .34], k: 1.4, r: 1, shadow: 1, reach: 8 },          /* the round side's light, from behind, dying down the gallery */
+    { p: [.1, 1.3, CAM.z - 2.8], c: [1, .7, .34], k: 2.6, r: 1, shadow: 1, reach: 8, warm: .005 },          /* the round side's light, from behind, dying down the gallery */
     { p: [0, 1.5, CAM.z - 2], c: [.4, .37, .85], k: 3.5, r: 1.4 },                            /* cold fill, behind */
-    { p: [0, 1.2, CAM.z + 3], c: [.4, .37, .85], k: .6, r: 1.5 },                            /* cold, further down */
-    { p: [.25, .95, RZ - 1.6], c: [.95, .76, .56], k: .5, r: .6, shadow: 1, reach: 3.2 },     /* the last of the round side's light, on the broken stone */
-    { p: [-.2, 1.3, RZ + .2], c: [.95, .76, .56], k: .3, r: .5, shadow: 1, reach: 1.9 },     /* and up the slope */
+    { p: [0, 1.2, CAM.z + 3], c: [.4, .37, .85], k: 1.2, r: 1.5 },                            /* cold, further down */
+    { p: [.25, .95, RZ - 1.6], c: [.95, .76, .56], k: .75, r: .6, shadow: 1, reach: 3.2 },     /* the last of the round side's light, on the broken stone */
+    { p: [-.2, 1.3, RZ + .2], c: [.95, .76, .56], k: .45, r: .5, shadow: 1, reach: 1.9 },     /* and up the slope */
   ],
   glsl: squareRoom(CAM) + /* glsl */ `
   vec4 scene(vec3 p) {
     vec4 d = roomScene(p);
-    if (p.y > HT - .05) gTint *= mix(.35, 1., smoothstep(${(CAM.z + 1).toFixed(2)}, ${(CAM.z + 6).toFixed(2)}, p.z));    /* the flat roof close overhead, dark */
-    if (p.y < .04) gTint *= mix(.35, 1., smoothstep(${(CAM.z + .5).toFixed(2)}, ${(CAM.z + 6).toFixed(2)}, p.z));      /* the floor at your feet, calm */
+    if (p.y > HT - .05) gTint *= mix(.45, 1., smoothstep(${(CAM.z + 1).toFixed(2)}, ${(CAM.z + 6).toFixed(2)}, p.z));    /* the flat roof close overhead, dark */
+    if (p.y < .04) gTint *= mix(.55, 1., smoothstep(${(CAM.z + .5).toFixed(2)}, ${(CAM.z + 6).toFixed(2)}, p.z));      /* the floor at your feet, calm */
     /* the broken stone: blocks fallen from the roof, lying on the slope, tipped every way */
     if (p.z > RZ - 1.2 && p.z < RZ + 3.5) {
       for (int i = 0; i < 16; i++) {

@@ -21,13 +21,13 @@ export default {
   far: 30, fogK: 1 / 20,
   hazeBase: [.012, .011, .034], hazeFar: [.05, .045, .12],
   bloomAt: [XF, YG - .2, ZG], bloomPow: 12, bloomC: [.12, .09, .06],
-  bloom: { alpha: .16 },
+  bloom: { alpha: .28 },
   glow: { threshold: .62, k: .6 },
   blur: { px: 1.4, d0: 2.4, d1: 8, k: .7 },
-  gold: 1, sheen: 0, grain: .35, shadowJitter: 1, amb: 1.2, ambC: [.8, .76, 2.1], expo: 1.8,
+  gold: 1, sheen: 0, grain: .55, shadowJitter: 1, amb: 1.2, ambC: [.8, .76, 2.1], expo: 1.8,
   lights: [
-    { p: [-XW + .1, YG - .1, ZG - .1], c: WARM, k: 1.1, r: 1., shadow: .7, reach: 5.5 },   /* the Stair's lamp behind you, on the round wall round the gap */
-    { p: [XW + 2.1, YG + .1, ZG - .2], c: WARM, k: 1.1, r: 1.3, shadow: 1, reach: 4.5 },        /* the same light, gone through the gap into the room beyond */
+    { p: [-XW + .1, YG - .1, ZG - .1], c: WARM, k: .75, r: 1., shadow: .7, reach: 5.5 },   /* the Stair's lamp behind you, on the round wall round the gap */
+    { p: [XW + 2.1, YG + .1, ZG - .2], c: WARM, k: .95, r: 1.3, shadow: 1, reach: 4.5 },        /* the same light, gone through the gap into the room beyond */
     { p: [.2, YG + .8, ZG + 3.5], c: [.42, .39, .95], k: 4, r: 2.4, shadow: .4 },        /* the Stair's violet, down the flight */
     { p: [XF - 1.5, YG + 1.4, ZG - 2.4], c: [.35, .32, .75], k: .8, r: 1.4, reach: 3.5 },  /* a little cold light in the room beyond */
   ],
@@ -51,7 +51,7 @@ export default {
     float kind = h2(vec2(k, 5.));
     return kind > .6 ? tick : (kind < .2 ? ring : bar);
   }
-  vec4 scene(vec3 p) {
+  vec4 scenePrev(vec3 p) {
     stairPale = 1.;
     vec4 d = flight(p, -3., NST * TREAD + 3.);
     /* the room beyond: square-cut, flat-faced */
@@ -93,6 +93,16 @@ export default {
     } else {
       if (p.x > G.x - .1 && gs > -.1) gTint *= vec3(.8, .8, .95) * mix(.3, 1., smoothstep(.05, -.25, p.y - G.y));   /* the reveal: the wall's own stone, lit only on its lower inside */
       gTint *= mix(1., .35, smoothstep(.5, 1.6, abs(p.y - G.y + .1)));                           /* the wall away from the gap falls into the dark */
+    }
+    return d;
+  }
+  /* polish pass: the stone's own relief and mottling, hand-worked, never machine-flat */
+  vec4 scene(vec3 p) {
+    vec4 d = scenePrev(p);
+    float m = floor(d.y + .5);
+    if (d.x < .05 && (m == M_CUT || m == M_CUT_SMALL || m == M_DRESSED || m == M_FLOOR)) {
+      d.x += rough(p, 0.01, 3.0) + rough(p, 0.0030, 15.0);
+      gTint *= .86 + .28 * fbm(p.xz * 1.7 + p.y * 1.3, 3);
     }
     return d;
   }`,

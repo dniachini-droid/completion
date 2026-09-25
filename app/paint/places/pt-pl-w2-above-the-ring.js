@@ -9,7 +9,7 @@ import room from './pt-b-2.A.js';
 const ZR = 3.4;                                                     /* the lone ring, as in pt-b-2.A */
 const V = [.62, .58, 1.2];
 const SL = .25, LEAN = .12, CZ0 = .06;                              /* the crack: slant as it goes in, lean as it rises, where it starts */
-const PY = 2.45, PX = -2.2;                                         /* the pale thing, deep in it */
+const PY = 2.45, PX = -2.26;                                         /* the pale thing, deep in it */
 const PZ = ZR + CZ0 - (PY - 1.95) * LEAN - (PX + 2) * SL;
 export default {
   ...room,
@@ -20,12 +20,15 @@ export default {
   far: 20, fogK: 1 / 18,
   bloomAt: [PX, PY, PZ], bloomPow: 60, bloomC: [.06, .06, .13],
   glow: { threshold: .62, k: .55 },
+  bloom: { alpha: .2 },
+  hazeFar: [.12, .11, .28],
   blur: { px: 1.4, d0: 1.6, d1: 4, k: .6 },
   lights: [
     { p: [-1.86, 2.45, ZR - .9], c: V, k: 1.6, r: .8, reach: 2.5, shadow: .8 },     /* the gallery's light, raking across the salt from the left */
     { p: [PX + .08, PY + .03, PZ - .004], c: V, k: .035, r: .03, reach: .09 },     /* the little of it that gets far into the crack, onto the pale thing */
     { p: [.5, 1.4, ZR - 4], c: [.3, .28, .66], k: .5, r: 3 },                     /* faint fill from behind */
-    { p: [-.4, 3.2, ZR + 1], c: [.36, .33, .8], k: .15, r: 1.5 },                 /* a trace on the vault, so the roof has form */
+    { p: [-.4, 3.2, ZR + 1], c: [.36, .33, .8], k: .3, r: 1.5 },
+    { p: [.3, 1.8, ZR + 6], c: [.5, .47, .95], k: 3, r: 2.5 },                    /* the gallery further in, a glow beyond the wall's curve */                 /* a trace on the vault, so the roof has form */
   ],
   glsl: room.glsl.replace('vec4 scene(vec3 p)', 'vec4 roomScene(vec3 p)') + /* glsl */ `
   const float ZR2 = ${ZR.toFixed(2)};

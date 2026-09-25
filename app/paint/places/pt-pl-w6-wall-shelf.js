@@ -12,19 +12,19 @@ export default {
   name: 'The wall-shelf',
   line: '',
   cam: { ...CAM, pitch: 0, yaw: -46, f: .45, cx: .5, cy: .5 },
-  far: 24, fogK: 1 / 14,
-  hazeBase: [.014, .012, .038], hazeFar: [.04, .036, .1],
-  bloomAt: [0, .9, RZ], bloomPow: 40, bloomC: [.06, .05, .1],
-  bloom: { alpha: .12 },
-  glow: { threshold: .62, k: .45 },
-  blur: { px: 1.2, d0: 4.5, d1: 12, k: .5 },
-  gold: 1, grain: .4, shadowJitter: 1, amb: .5, expo: 1.9, ambC: [.86, .78, 1.5], sheen: 0,
+  far: 24, fogK: 1 / 16,
+  hazeBase: [.018, .016, .046], hazeFar: [.1, .09, .24],
+  bloomAt: [0, 1.0, RZ - .5], bloomPow: 16, bloomC: [.2, .18, .38],
+  bloom: { alpha: .18 },
+  glow: { threshold: .8, k: .3 },
+  blur: { px: 1.4, d0: 4.5, d1: 12, k: .6 },
+  gold: 1, grain: .5, shadowJitter: 1, amb: .6, expo: 2.05, ambC: [.86, .78, 1.5], sheen: .05,
   lights: [
-    { p: [.4, 1.35, SZ - 4], c: [1, .7, .34], k: .4, r: .9, shadow: 1, reach: 6 },              /* the round side's light, weak, from behind */
-    { p: [-W + .3, LY + .03, SZ - 1.3], c: [1, .74, .42], k: .1, r: .35, reach: 2.4 },   /* and the last of it, raking along the lip */
-    { p: [-W + .14, LY + .01, SZ + .45], c: [.62, .58, 1.1], k: .015, r: .2, reach: 1.1 },   /* cold, from further down, along the lip the other way */
-    { p: [.4, 1.6, SZ - 2], c: [.4, .37, .85], k: 1.8, r: 1.2 },                                  /* cold fill */
-    { p: [0, 1.3, SZ + 4], c: [.4, .37, .85], k: 1, r: 2 },                                      /* cold, down the gallery */
+    { p: [.5, 1.35, SZ - 3.6], c: [1, .7, .34], k: 1.6, r: .9, shadow: 1, reach: 5.5, warm: .005 },   /* the round side's light, from behind: a warm pool along the wall and floor */
+    { p: [-W + .3, LY + .03, SZ - 1.3], c: [1, .74, .42], k: .1, r: .35, reach: 2.4 },     /* and the last of it, raking along the lip */
+    { p: [.4, 1.6, SZ - 2], c: [.4, .37, .85], k: 2, r: 1.2 },                                      /* cold fill */
+    { p: [0, 1.3, SZ + 3.5], c: [.4, .37, .85], k: 1.6, r: 2 },                                     /* cold, down the gallery */
+    { p: [0, 1.4, RZ - 1.2], c: [.48, .45, .95], k: 3.5, r: 2.5 },                                  /* a far glow, at the gallery's end */
   ],
   glsl: squareRoom(CAM) + /* glsl */ `
   const float SZ = ${SZ.toFixed(2)}, LY = ${LY.toFixed(3)};
@@ -36,8 +36,8 @@ export default {
       float cr = min(crack(vec2(p.z, p.y), 1.2, 1.), crack(vec2(p.z * 1.3 + 4., p.y), .55, 11.));
       if (cr < .03) { d.x -= engrave(cr, .009, .014); if (cr < .006) gTint /= .35; }
     }
-    if (p.y > HT - .05) gTint *= .35;                                                       /* the flat roof overhead, dark */
-    if (p.y < .04) gTint *= mix(.3, .8, smoothstep(SZ - .5, SZ + 3., p.z));                  /* the floor, calm */
+    if (p.y > HT - .05) gTint *= .5;                                                       /* the flat roof overhead, dark */
+    if (p.y < .04) gTint *= mix(.5, .9, smoothstep(SZ - .5, SZ + 3., p.z));                  /* the floor, calm */
     if (p.x < 0. && p.y < .75) gTint *= mix(.35, 1., smoothstep(.1, .75, p.y));            /* the wall's foot, out of the light */
     if (p.x > 0. && p.y > .04 && p.y < HT - .05) gTint *= .6;                               /* the far wall */
     /* the shelf: cut square into the wall at chest height, a forearm deep */
@@ -49,8 +49,12 @@ export default {
       float ln = length(vec2(max(abs(along) - e, 0.), p.y - LY));
       float tk = length(vec2(abs(along) - e, max(abs(p.y - LY) - .032, 0.)));
       float sc = min(ln, tk);
-      d.x += engrave(sc, .01, .002);
-      if (sc < .009) { gTint = vec3(3.2, 3.1, 3.3) * mix(1., .75, smoothstep(.006, .009, sc)); gStain = 0.; }                          /* the scratch pale: fresh stone in the cut */
+      /* a flat incised line, no body: pale fresh stone in the cut, a dark hairline along its upper edge (the cut's
+         wall in shadow); the ticks short cut strokes across it */
+      float up = p.y - LY;
+      bool inLine = abs(up) < .0075 && abs(along) < e + .002, inTick = abs(abs(along) - e) < .0045 && abs(up) < .03;
+      if (inLine || inTick) { gTint = vec3(2.7, 2.6, 2.8); gStain = 0.; gPolish = 0.; }
+      else if ((up > .0075 && up < .0115 && abs(along) < e) || (abs(abs(along) - e) < .0085 && abs(along) - e < 0. && abs(up) < .03 && abs(up) > .0075)) gTint *= .3;
       /* the count: six short upright strokes, under the line near its left end */
       float k = floor((along + .55) / .028), sz = along + .55 - (k + .5) * .028;
       float cs = length(vec2(sz, max(abs(p.y - LY + .05) - .012, 0.)));
@@ -60,7 +64,6 @@ export default {
   }`,
   anchors: {
     fog: [{ p: [-.3, .3, SZ + 1.5], w: 1, h: .15, a: .12, speed: .6 }],
-    glints: [{ p: [-W + .025, LY, SZ - .6] }, { p: [-W + .025, LY, SZ + .6] }],
   },
   live: { motes: 'gold', gold: true },
 };

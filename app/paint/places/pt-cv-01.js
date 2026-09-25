@@ -5,26 +5,26 @@
    (the daylight from above). */
 
 const TOP = 12.2;                                                   /* 40 ft of shaft */
-const C = [-.12, 3.05];                                             /* the chalk, on the front wall (z = +.55): its centre (x, y) */
+const C = [-.3, .78], LX = .24;                                             /* the chalk, on the front wall (z = +.55): its centre (x, y) */
 
 export default {
   id: 'pt-cv-01',
   name: "The ladder's foot",
   line: '',
-  cam: { x: -.05, y: 1.45, z: -.12, pitch: 90, yaw: 0, f: .56, cx: .5, cy: .5 },
+  cam: { x: -.02, y: .42, z: -.48, pitch: 50, yaw: 0, f: .44, cx: .5, cy: .31 },
   far: 20, fogK: 1 / 40, sheen: 0, expo: 2.3, amb: 1.6, ambC: [.8, .8, 1.5],
   hazeBase: [.012, .012, .03], hazeFar: [.05, .05, .08],
   bloomAt: [0, 16, 0], bloomPow: 60, bloomC: [.05, .05, .06],
-  bloom: { alpha: .16 }, glow: { threshold: .7, k: .5 },
+  bloom: { alpha: .12 }, glow: { threshold: .7, k: .45 },
   blur: { px: 1.4, d0: 3, d1: 11, k: .8 },
-  grain: 0,
+  grain: .4, shadowJitter: 1,
   beam: { x: 0, z: 0, r: .5, k: .045, c: [.6, .62, .75], top: 12 },
   lights: [
     { p: [0, TOP + 1.5, 0], c: [.36, .37, .43], k: 75, r: 2.2, shadow: .6 },        /* the daylight: the square of sky above */
     { p: [.1, 8.5, -.1], c: [.55, .56, .75], k: 12, r: 2.4 },
-    { p: [-.1, 4.2, -.1], c: [.5, .51, .7], k: 1.6, r: 1.4 },                        /* and lower down, fainter */
-    { p: [-.32, 3.6, 0], c: [.62, .63, .8], k: .5, r: .5, reach: 2.6 },            /* the sky's grey on the rungs' faces */                         /* its grey falling down the shaft */
-    { p: [-.2, 3.3, .12], c: [.85, .87, 1.], k: .09, r: .25, shadow: .4, reach: .8 },   /* a little of it, grazing the chalk */
+    { p: [-.1, 3.4, -.1], c: [.5, .51, .7], k: 2.4, r: 1.6 },                        /* and lower down, fainter */
+    { p: [LX, 3.2, .05], c: [.62, .63, .8], k: .6, r: .6, reach: 3.2 },            /* the sky's grey on the rungs' faces */                         /* its grey falling down the shaft */
+    { p: [-.3, 1.3, .2], c: [.85, .87, 1.], k: .06, r: .25, shadow: .4, reach: .8 },   /* a little of it, grazing the chalk */
   ],
   glsl: /* glsl */ `
   float seg(vec2 p, vec2 a, vec2 b) { vec2 pa = p - a, ba = b - a; return length(pa - ba * clamp(dot(pa, ba) / dot(ba, ba), 0., 1.)); }
@@ -64,31 +64,31 @@ export default {
     /* brick courses: 7.5 cm, bricks 22 cm, laid from each wall's own axis */
     bool xw = abs(p.x) > abs(p.z);
     vec2 bu = vec2((xw ? p.z : p.x) * 6.4 + (xw ? 3.1 : 0.), p.y * 9.3);
-    if (p.y > .02) d.zw = bu;
+    if (p.y > .02) { d.zw = bu; d.x += rough(p, .004, 18.); }                      /* old brick: each face a little uneven */
     /* the sky: past the shaft's mouth, pale grey */
     d = U(d, vec4(TOPY + 1.6 - p.y, M_GLOW, NOUV));
     if (p.y > .02) {
       float n = fbm(bu * .8, 3);
       gTint = vec3(.84, .76, .76) * (.75 + .4 * h2(floor(vec2(bu.x / 1.4 + floor(bu.y / .7) * .5, bu.y / .7))));   /* each brick its own shade, muted */
       gTint *= .85 + .3 * n;
-      gTint *= mix(.45, 1., smoothstep(1.8, 8., p.y)) * mix(.55, 1., smoothstep(2.2, 2.7, p.y));                              /* the foot of the shaft in its own dark */
+      gTint *= mix(.5, 1., smoothstep(0., 8., p.y));                              /* the foot of the shaft in its own dark */
     }
-    if (p.y < .02) gTint = vec3(.4);
-    /* the ladder: two iron rails and round rungs, on the right-hand wall */
-    vec3 lq = p - vec3(.42, 0, 0);
-    float rails = length(max(abs(vec2(lq.x, abs(lq.z) - .21)) - vec2(.012, .004), 0.)) - .003;
+    if (p.y < .02) gTint = vec3(.45) * (.7 + .5 * fbm(p.xz * 8., 3));                 /* the floor: grit and a little rubble */
+    /* the ladder: two round iron rails and round rungs, standing off the front wall on stays, its feet on the floor */
+    vec3 lq = p - vec3(${LX.toFixed(2)}, 0., .42);
+    float rails = length(vec2(abs(lq.x) - .21, lq.z)) - .016;
     rails = max(rails, -p.y); rails = max(rails, p.y - TOPY - .4);
     float ry = mod(p.y - .3, .3) - .15;
-    float rung = length(vec2(lq.x + .01, ry)) - .02; rung = max(rung, abs(lq.z) - .21);
+    float rung = length(vec2(lq.z, ry)) - .016; rung = max(rung, abs(lq.x) - .21);
     rung = max(rung, .2 - p.y);
-    float stays = length(vec2(abs(lq.z) - .21, mod(p.y - .1, 1.8) - .9)) - .01; stays = max(stays, max(-lq.x, lq.x - .14));
+    float stays = length(vec2(abs(lq.x) - .21, mod(p.y - 1., 1.8) - .9)) - .011; stays = max(stays, max(-lq.z, lq.z - .13));
     vec4 lad = vec4(min(min(rails, rung), stays), M_TIN, NOUV);
-    if (lad.x < d.x) { d = lad; gTint = vec3(.62, .52, .46) * mix(.45, 1., smoothstep(.5, 6., p.y));
-      if (rung < min(rails, stays) + .001) gTint = vec3(1.7, 1.55, 1.45) * mix(.7, 1.25, smoothstep(-.012, .014, ry)) * (1. + 1.4 * smoothstep(.008, .018, ry)) * mix(.6, 1., smoothstep(.5, 5., p.y)); }   /* each rung round, lit along its upper edge by the sky */
+    if (lad.x < d.x) { d = lad; gTint = vec3(.62, .52, .46) * (.8 + .4 * fbm(p.xy * 30., 2));
+      if (rung < min(rails, stays) + .001) gTint = vec3(1.15, 1.05, .98) * mix(.55, 1., smoothstep(-.012, .012, ry)) * (1. + 1.6 * smoothstep(.008, .016, ry)); }   /* each rung round, lit along its upper edge by the sky */
     /* the chalk on the front wall: dry white strokes, a little broken */
-    if (p.z > .53 && p.y > 2.65 && p.y < 3.45 && d.x < .01) {
+    if (p.z > .53 && p.y > .4 && p.y < 1.2 && p.x < .0 && d.x < .01) {
       vec2 cq = vec2(p.x - ${C[0].toFixed(3)}, p.y - ${C[1].toFixed(3)});
-      float e = chalk(cq) + (fbm(cq * 300., 2) - .5) * .004;
+      float e = chalk(cq / .8) * .8 + (fbm(cq * 300., 2) - .5) * .004;
       float k = (1. - smoothstep(.004, .0075, e)) * (.72 + .28 * smoothstep(.35, .6, fbm(cq * 140., 3)));
       gTint = mix(gTint, vec3(4.2, 4.2, 4.5), k);
     }
@@ -96,7 +96,7 @@ export default {
   }`.replaceAll('TOPY', TOP.toFixed(2)),
   anchors: {
     beam: [{ p: [0, 3.2, 0], w: .5 }, { p: [0, 6, 0], w: .4 }],
-    glints: [{ p: [.42, 2.1, .21] }],
+    glints: [{ p: [LX + .21, 1.2, .42] }],
   },
   live: { motes: 'violet' },
 };

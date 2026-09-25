@@ -17,14 +17,14 @@ export default {
   far: 30, fogK: 1 / 22,
   hazeBase: [.014, .012, .04], hazeFar: [.07, .06, .16],
   bloomAt: [-2.7, 2.4, ZL], bloomPow: 30, bloomC: [.06, .05, .08],
-  bloom: { alpha: .14 },
+  bloom: { alpha: .28 },
   glow: { threshold: .62, k: .6 },
   blur: { px: 1.4, d0: 3, d1: 10, k: .7 },
-  gold: 1, sheen: 0, grain: .35, shadowJitter: 1, amb: 1.2, ambC: [.8, .76, 2.1], expo: 1.8,
+  gold: 1, sheen: 0, grain: .55, shadowJitter: 1, amb: 1.2, ambC: [.8, .76, 2.1], expo: 1.8,
   lights: [
-    { p: [2.3, 1.5, 4.7], c: WARM, k: 2.4, r: 1.2, shadow: .7, reach: 9 },                  /* the landing's lamp behind you, on the right wall */
+    { p: [2.3, 1.5, 4.7], c: WARM, k: 3.6, r: 1.2, shadow: .7, reach: 9 },                  /* the landing's lamp behind you, on the right wall */
     { p: [2.3, 1.5, 2.4], c: WARM, k: .8, r: 1.2, shadow: .7, reach: 9 },
-    { p: [-2.42, 2.6, ZL - .7], c: [1, .76, .48], k: .035, r: .25, shadow: 1, reach: 1.1 },  /* the lamps' light raking across the lintel's face */
+    { p: [-2.42, 2.6, ZL - .7], c: [1, .76, .48], k: .06, r: .3, shadow: 1, reach: 1.2 },  /* the lamps' light raking across the lintel's face */
     { p: [0, 3.4, 3.], c: [.42, .39, .92], k: 3.5, r: 3, shadow: .4 },                       /* the Stair's violet */
   ],
   glsl: STAIR + LAND + /* glsl */ `
@@ -42,7 +42,7 @@ export default {
     b1 = vec2(c * b1.x + sn * b1.y, -sn * b1.x + c * b1.y); b2 = vec2(c * b2.x - sn * b2.y, sn * b2.x + c * b2.y);
     return min(m1, min(drop(b1), drop(b2)));                                         /* two drops, parted */
   }
-  vec4 scene(vec3 p) {
+  vec4 scenePrev(vec3 p) {
     vec4 d = landing(p);
     /* the sealed opening: stone set in, a hand back from the wall's face */
     vec4 op = boxAir(p, vec3(-LW - .05, 1.05, ZL), vec3(.12, 1.05, 1.15), M_DRESSED);
@@ -75,6 +75,16 @@ export default {
     if (p.y > 2.74) gTint *= mix(.75, .2, smoothstep(2.74, 4.2, p.y));                                /* above the lintel, falling into the dark */
     if (p.y < .03) gTint *= .4;
     if (!onLint && abs(p.z - ZL) > 1.6) gTint *= .7;
+    return d;
+  }
+  /* polish pass: the stone's own relief and mottling, hand-worked, never machine-flat */
+  vec4 scene(vec3 p) {
+    vec4 d = scenePrev(p);
+    float m = floor(d.y + .5);
+    if (d.x < .05 && (m == M_CUT || m == M_CUT_SMALL || m == M_DRESSED || m == M_FLOOR)) {
+      d.x += rough(p, 0.008, 3.0) + rough(p, 0.0024, 15.0);
+      gTint *= .86 + .28 * fbm(p.xz * 1.7 + p.y * 1.3, 3);
+    }
     return d;
   }`,
   anchors: {
