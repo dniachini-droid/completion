@@ -8,12 +8,12 @@ import type { Teaser } from '../../core/story-types';
 /** §11 order within each week. The app shows the first whose condition holds, newest-written first within the week. The b-wN.tz rows are ARR1/ARR2's (they are the same 12 as §11 lists). */
 export const teasers: Teaser[] = [
   { id: "b-w1.tz1", w: 1, req: [], until: "b-1.A", line: "Under the cap, eleven metres of ladder go down, and the air that comes up is dry." },
-  { id: "b-w1.tz2", w: 1, req: ["b-1.A"], line: "There are three marks on the base of the lamp, and the lamp is warm." },
+  { id: "b-w1.tz2", w: 1, req: ["b-1.A"], line: "The clay lamp on the ledge has three marks on its base, and it is warm." },
   { id: "tz-w1-a", w: 1, req: ["pl-w1-pick-niche"], until: "seal-1-2", line: "In the salt is a niche the length of an arm, with cut strokes along its lip." },
   { id: "tz-w1-b", w: 1, req: ["b-1.C"], until: "seal-2-1", line: "On her cot lies a tin box with a row of cut strokes across its lid." },
   { id: "tz-w1-c", w: 1, req: ["pl-w1-below-the-lamp"], until: "seal-1-3", line: "Under the lamp's ledge is a small niche, and the stone round its mouth is darker." },
   { id: "b-w2.tz1", w: 2, req: [], until: "b-2.B", line: "On the shelf in her camp lies a rod of stone, with one edge finer than a knife's." },
-  { id: "b-w2.tz2", w: 2, req: ["b-2.B"], line: "The rod is in your hand, and on the lintel is a blank the width of its edge." },
+  { id: "b-w2.tz2", w: 2, req: ["b-2.B"], until: "b-3.A", line: "The rod is in your hand, and on the lintel is a blank the width of its edge." },
   { id: "tz-w2-a", w: 2, req: ["pl-w2-above-the-ring"], until: "seal-2-3", line: "Above the lone ring, something pale lies far back in a crack." },
   { id: "tz-w2-b", w: 2, req: ["pl-w2-box-by-the-cot"], until: "seal-2-5", line: "In her camp, a tin mug stands upside down on a box with a count." },
   { id: "tz-w2-c", w: 2, req: ["b-2.A"], until: "seal-2-2", line: "In the salt is a long, narrow niche, the length of a stick, with a count on it." },

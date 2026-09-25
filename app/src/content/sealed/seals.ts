@@ -31,8 +31,8 @@ export const seals: Seal[] = [
 
   /* ---- week 2 ---- */
   { id: 'seal-2-1', w: 2, o: 1, where: 'The Survey Cut, the tin box on the cot', stretch: 'st-camp', beat: 'b-2.1',
-    carries: { guess: ['mk-give', 'mk-person', 'mk-one', 'mk-me'] } },
-  // NOTE: mk-give's guess is offered at b-2.2 (its guessAt); the tablet that brings it into view is here.
+    carries: { guess: ['mk-person', 'mk-one', 'mk-me'], seen: ['mk-give'] } },
+  // NOTE: mk-give is seen here (the sheet's question mark); its guess is offered at b-2.2 (its guessAt), with the lintel.
   { id: 'seal-2-2', w: 2, o: 2, where: 'The Salt Gallery, the tally-stick niche', stretch: 'st-salt', beat: 'b-2.4',
     carries: { records: ['rec-x-daughter'] } },
   { id: 'seal-2-3', w: 2, o: 3, where: 'The Salt Gallery, a crack above the lone ring', stretch: 'st-salt',

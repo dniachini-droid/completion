@@ -75,3 +75,24 @@ Her car stood by the shaft for days, a colleague asks where she is, the council 
 
 ## What holds
 Every `req`/record/mark id resolves; each guessed mark has four candidates with the true one; the order of her notebook days, the three hooks' names in the lines, the email header name, K1's three marks against L6, and the one-week-ahead rule for places all check out. The two-week absence pauses and resumes cleanly.
+
+## Status (2026-09-25, the story-fix pass)
+Fixed in the app and the sealed docs, each guarded by a rule test (`app/tests/rules/continuity.test.ts` unless noted):
+1. A mark in a `req` is met once offered; the word's Cut screen asks an unguessed req mark before the first tap; a *(Key)* arrival waits (Key kept) until its beat's `req` is met. Test: a Dan who never guesses reaches story week 6 with nothing out of order.
+2. Morning confirmations play the first morning after their tablet opened, bedtime or not; bedtime brings the camp line and a find. Tests: no confirmation before its offer; with no kept bedtime every offered morning-confirmed mark is confirmed; `b-w4.morning` plays.
+3. `nextSeal` honours `inView` (`seal-1-1` in view at `b-1.5`, `seal-3-1` at `b-3.A`) and a Key arrival's `req`, else the Key is kept. Test: no seal opens before its introducing beat.
+4. Story seals (step, place, record or guess) of any week up to the current open before plain ones.
+5. Camp lines: `b-w3.camp` req `b-3.A`, `b-w7.camp` req `b-7.C`; `b-w2.camp` until `b-3.A`. `b-w6.camp` left as is (it describes what is there before `b-6.1`). Test: every beat's `req` met and `until` unmet when it plays.
+6. D-077 narrowed: a return's guess moves to the arrival only if that place's records carry the mark, never onto its confirming beat; a tablet a kept Key opens on an arrival asks its marks there. `seenAt` unchanged. Tests: continuity (arrivals) and `week.test.ts` (D-077).
+7. Her hand-mark has its own glyph (`mk-hand-hers`); Records draws by `who`; the marks list counts only his. `b-w4.morning` has one line (never names or matches the hook).
+8. `b-6.A`, `b-6.B`, `b-7.B`, `b-7.4`: readings of marks not yet confirmed when they play are `[ ]`. `b-6.3` and `b-7.2` needed no change (their readings are confirmed by then, or by the beat itself).
+9. `seal-2-1` no longer offers GIVE (seen only); `b-3.A` req adds `b-2.2`. Test: each mark offered only at its own guessing place.
+10. Next week's `pl-` places only on a deep push; one place a day on foot otherwise (the distance is kept); camp views rotate, unused ones back along the walked route first. Test: the pace of a Normal week. Normal run now: camps per week 2, 1, 4, 3, 2, 3 (was 1, 1, 3, 3, 5, 5 with five-day repeats).
+11. Open for Dan: six or seven weeks (not changed).
+12. `marks.guess` copy no longer promises that a word confirms a guess.
+13. Lamp lines anchored (see `LAMP_ANCHORS.md`).
+14. `b-w2.tz2` and `aw-w2` until `b-3.A`; the week-2 glimpse is skipped once `b-3.A` has played.
+15. Records shows a cut record's pencil line (`rec-l4`).
+16. Five guess contexts rewritten as sentences; her pencilled words under PERSON, ONE and ME kept (they are her sheet's evidence, not a hint the app adds).
+17. The truth of why no one came down after her is in `TIMELINE.md`; nothing planted.
+(The plan/Today point is handled elsewhere.)

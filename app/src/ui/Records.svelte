@@ -60,11 +60,13 @@
             {:else if tk.t === 'word'}<span class="w" class:guess={tk.guess}>{tk.text}{tk.guess ? '?' : ''}</span>
             {:else if tk.t === 'pic'}<span class="pic">[{tk.text}]</span>
             {:else if tk.t === 'ring'}<span class="g"><Glyph mark="mk-ring" size={24} /></span>
-            {:else if tk.t === 'hand'}<span class="g"><Glyph mark="mk-hand" size={24} /></span>
+            {:else if tk.t === 'hand'}<span class="g"><Glyph mark={tk.who === 'hers' ? 'mk-hand-hers' : 'mk-hand'} size={24} /></span>
             {:else}<span class="p">{tk.text}</span>{/if}
           {/each}
         </p>
       {/each}
+      <!-- a cut record with a line in pencil beside it (the rod's shelf): the pencil reads at once, as paper does -->
+      {#each open.paper ?? [] as para}<p class="say paper">{para}</p>{/each}
       {#if open.sheet}
         <div class="sheet">
           <div class="label-line">{t('records.her')}</div>

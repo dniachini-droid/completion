@@ -39,6 +39,7 @@ let cut = false;
 const cutIfAny = async (name) => {
   if (!(await page.locator('button.rodbtn').count())) return false;
   await page.clock.runFor(2500); await page.waitForTimeout(1500); await shot(name + '-cut-0', 500);
+  await guessIfAny(name + '-cut');   /* a mark the word needs, left unguessed, is asked before the first tap */
   await page.locator('button.rodbtn').click(); await shot(name + '-cut-1', 1200);
   await page.locator('button.key.ready').click(); await shot(name + '-cut-2', 1200);
   await page.locator('button.key.ready').click(); await shot(name + '-cut-3', 1200);

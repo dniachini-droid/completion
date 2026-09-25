@@ -31,6 +31,8 @@ export const lettering: Record<string, Letter> = {
   'mk-child': { d: 'M20 18 L20 27 M14 30 L26 30' },
   'mk-ring': { d: '', rings: [[20, 20, 12]] },
   'mk-hand': { d: 'M13 31 L13 9 L27 9 L27 23 L20 23 M19.5 15.5 L20.5 16.5' },
+  /* her hand-mark, drawn in a record's corner (`{ hand: 'hers' }`): a hook with a tail (ARR1 voice rules); not a sign of the Cut */
+  'mk-hand-hers': { d: 'M14 29 L14 9 L27 9 L27 17 M14 29 L8 35' },
   'mk-number': { d: 'M5 12 L5 28 M9 12 L9 28 M13 20 L21 20 M24 12 L29 28 L34 12' },
   'mk-two': { d: 'M16 7 L16 33 M24 7 L24 33' },
   'mk-three': { d: 'M12 7 L12 33 M20 7 L20 33 M28 7 L28 33' },
