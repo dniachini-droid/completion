@@ -30,7 +30,9 @@ const fits = async (name) => {
       [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim()) && !el.closest('button, svg') && shown(el));
     /* each button as it is actually seen: cut to the box it scrolls in (a row scrolled out of view covers nothing) */
     const buttons = [...document.querySelectorAll('button')].filter(shown).map(b => {
-      const r = b.getBoundingClientRect(), sc = scroller(b), c = sc ? sc.getBoundingClientRect() : { top: 0, bottom: H };
+      /* a quiet text link's tap area is taller than what it shows: measure its visible words, not its hit box */
+      const vis = b.classList.contains('text-link') || b.classList.contains('home') ? (b.querySelector('span') ?? b) : b;
+      const r = vis.getBoundingClientRect(), sc = scroller(b), c = sc ? sc.getBoundingClientRect() : { top: 0, bottom: H };
       return { left: r.left, right: r.right, top: Math.max(r.top, c.top), bottom: Math.min(r.bottom, c.bottom) };
     }).filter(r => r.right > r.left && r.bottom > r.top);
     for (const el of texts) {
