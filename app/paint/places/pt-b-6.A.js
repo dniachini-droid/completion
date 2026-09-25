@@ -93,12 +93,12 @@ export const TALLY = /* glsl */ `
     return d;
   }`;
 
-const CAM = { x: .18, y: 1.55, z: .1 };
+const CAM = { x: .5, y: 1.5, z: .2 };
 export default {
   id: 'pt-b-6.A',
   name: 'The side passage',
   line: '',
-  cam: { ...CAM, pitch: -9, yaw: -6, f: .6, cx: .5, cy: .47 },
+  cam: { ...CAM, pitch: -4, yaw: -21, f: .66, cx: .5, cy: .47 },
   far: 30, fogK: 1 / 14,
   hazeBase: [.016, .014, .042], hazeFar: [.05, .045, .13],
   bloomAt: [0, .9, 20], bloomPow: 30, bloomC: [.06, .05, .12],
@@ -108,8 +108,8 @@ export default {
   gold: 1, grain: .4, shadowJitter: 1, amb: .5, expo: 1.9, ambC: [.86, .78, 1.5], sheen: 0,
   lights: [
     { p: [.3, 1.25, -1.3], c: [1, .7, .34], k: .8, r: .9, shadow: 1, reach: 4.4 },          /* the landing's lamps, behind: their light comes weak through the doorway */
-    { p: [-.55, 1.05, JZ - .5], c: [1, .72, .38], k: .3, r: .3, shadow: 1, reach: 1. },      /* and falls on the clasp, left */
-    { p: [.6, 1.05, JZ - .5], c: [1, .72, .38], k: .2, r: .3, shadow: 1, reach: .95 },        /* and right */
+    { p: [-.1, 1.3, JZ - .75], c: [1, .72, .38], k: .22, r: .4, shadow: 1, reach: 1.5 },    /* and falls along the left wall, on the clasp */
+    { p: [-.3, 1.5, JZ + .9], c: [.5, .47, .95], k: .25, r: .45, reach: 1.6 },               /* cold on the square side of it */
     { p: [.1, 1.8, -1.6], c: [.4, .37, .85], k: 3.2, r: 1.3 },                                 /* the landing's violet, behind */
     { p: [0, 1.4, 7], c: [.4, .37, .85], k: 1.6, r: 2.5 },                                       /* cold, far down the gallery, where the lamp gives out */
     { p: [0, 1.6, 13.5], c: [.45, .42, .9], k: 1.3, r: 3 },
@@ -117,10 +117,27 @@ export default {
   glsl: squareRoom(CAM) + TALLY + /* glsl */ `
   vec4 scene(vec3 p) {
     vec4 d = roomScene(p);
+    /* this side of the clasp the passage is the round side's: a round-headed passage, its vault springing at a
+       man's chest, cut in the round stone; the square gallery's flat roof and straight corners meet it at the
+       teeth, flush, so the curve of one stone runs into the flat face of the other */
+    float sz = seamZ(p);
+    if (p.z > .1 && p.z < JZ + .4) {
+      float w = WW - .028 * smoothstep(JZ - 1., JZ - .35, p.z);              /* flush with the square stone at the joint */
+      vec4 ra = hallAir(p, w, 1.15, w, -1., JZ + .4, M_CUT_SMALL);
+      float rnd = min(ra.x, sz - p.z + .05), sqa = min(d.x, p.z - sz + .05);
+      float land = hallAir(p, 1.9, 1.45, 1.9, -9., .2, M_CUT_SMALL).x;
+      float a = max(land, max(rnd, sqa));
+      if (p.z < sz) { d = vec4(a, M_CUT_SMALL, ra.zw); gTint = vec3(1.02, 1., 1.03) * mix(.4, 1., smoothstep(JZ - 1.1, JZ - .35, p.z)); } else d.x = a;   /* the round side near you in half-light, lit toward the joint */
+    }
+    /* one worn floor under both, level through the joint */
+    if (p.z > .15 && p.z < 24. && abs(p.x) < WW - .05 && p.y < .2) {
+      d.x = min(p.y, d.x + .028);
+      if (p.y < .03) { d.y = M_DRESSED; d.zw = NOUV; gTint = vec3(.55, .53, .62); }
+    }
     if (p.z < .25 && p.y > HT) gTint *= mix(.55, .15, smoothstep(HT, 2.5, p.y));         /* the round end above the door, in shadow */
-    if (p.y < .03) gTint *= mix(.3, .8, smoothstep(0., JZ, p.z));
-    if (p.y > HT - .05) gTint *= mix(.3, .75, smoothstep(JZ - .9, JZ, p.z));             /* the flat roof close overhead, dark */
-    else if (p.y > 1.4 && p.z < JZ - .3) gTint *= mix(1., .45, smoothstep(1.4, HT, p.y));                     /* the floor at your feet, calm */
+    if (p.y < .03) gTint *= mix(.3, .8, smoothstep(0., JZ, p.z));                       /* the floor at your feet, calm */
+    if (p.y > HT - .05 && p.z > sz) gTint *= mix(.45, .8, smoothstep(JZ - .9, JZ, p.z));  /* the flat roof overhead */
+    else if (p.y > 1.3 && p.z < sz) gTint *= mix(1., .45, smoothstep(1.3, 2.15, p.y) * (1. - smoothstep(JZ - .5, JZ - .1, p.z)));   /* the round vault going up into shadow */
     /* the record, in the tally's hand, on the square wall just past the clasp */
     if (p.x < -WW + .05 && p.z > JZ + .5 && p.z < JZ + 1.25 && abs(p.y - 1.42) < .05) d.x += engrave(tally(vec2(p.z, p.y - 1.42), .05, 41.), .0045, .006);
     return d;

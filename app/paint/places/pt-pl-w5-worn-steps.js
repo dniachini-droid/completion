@@ -91,7 +91,7 @@ export default {
     { p: L(3), c: WARM, k: .5, r: .7, shadow: .7, reach: 4.5, air: .03 },
     { p: [.4, -ST.RISE * 16 + 1.6, 17.5 * ST.TREAD], c: WARM, k: 1., r: 1.4, shadow: .5 },   /* the first turn, lit */
     { p: L(1), c: WARM, k: .25, r: .5, shadow: .8, reach: 2.2 },                  /* the lamp you have passed, just behind on the left */
-    { p: [0, -ST.RISE * 8 + .5, 8.1 * ST.TREAD], c: [1, .76, .48], k: .32, r: .35, reach: 1.3, shadow: 1 },   /* its light lying along the nearest step */
+    { p: [0, -ST.RISE * 8 + .3, 8.2 * ST.TREAD], c: [1, .76, .48], k: .16, r: .25, reach: 1.1, shadow: 1 },   /* its light lying along the nearest step */
     { p: [.2, -1.2, 2.4], c: [.42, .39, .95], k: 6, r: 2.6, shadow: .5 },                               /* the violet from the landing above, behind you */
   ],
   glsl: STAIR + /* glsl */ `
@@ -107,13 +107,13 @@ export default {
       for (int s = 0; s < 2; s++) {
         vec2 c = vec2(float(s) == 0. ? -.42 : .4, zc + (float(s) - .5) * .06);
         vec2 e = (p.xz - c) / vec2(.19, .25);                               /* longer front-to-back than wide */
-        e += (vec2(fbm(p.xz * 7. + float(s) * 5., 3), fbm(p.xz * 7. + 11., 3)) - .5) * .25;   /* worn, not drawn */
+        e += (vec2(fbm(p.xz * 7. + float(s) * 5., 3), fbm(p.xz * 7. + 11., 3)) - .5) * .12;   /* worn, not drawn */
         float r = length(e);
         float front = smoothstep(-1., 1., e.y);                                /* deepest toward the step's front edge */
-        float dip = .032 * (.55 + .45 * front) * smoothstep(1., .35, r);      /* the rim feathered into the tread */
+        float bw = max(1. - r * r, 0.); float dip = .085 * (.4 + .6 * front) * bw * bw;      /* the rim feathered into the tread */
         d.x += dip;
         float w = smoothstep(1.1, .3, r);
-        gPolish = max(gPolish, .9 * w); gTint *= 1. + .35 * w;
+        gPolish = max(gPolish, .9 * w); gTint *= 1. + .9 * w;
       }
     }
     /* every other tread worn the same way, fainter */
