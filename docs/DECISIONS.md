@@ -921,5 +921,6 @@
 - **Date:** 2026-09-25
 - **Context:** the pilot (D-086): the Lamp Hall arrival and the first camp, written by a sealed agent team on Fable and on Opus to VOICE.md (writer → critic → revision → fact check), set blind beside ChatGPT's round-4 text.
 - **Decision:** Dan picked ChatGPT's version for both, and found all three "very high quality". So there is no agent-team rewrite. ChatGPT stays the writer, with VOICE.md in its brief. Claude edits and checks: facts, clues, continuity, filler and repetition, markup. The 20 lines re-fixed on the review branch go to ChatGPT as round 5.
+- **Round 5 (in):** 19 of the 20 rewritten (the end-of-week question stays identical to its twin line), after one resend (the first return was unchanged). Claude's fixes: ChatGPT had given the player a lamp of their own ("your lamp", "bring the lamp close") in five lines. That breaks the correction these lines exist for ("the lamp" is always the lamp on the ledge), so it was changed to "the light" or removed. Paragraph breaks were joined, since each line shows as one block. 119 tests pass.
 - **Learned:** the pilot's writers worked from the current wording, so the arrival versions came out close together. Any later writing test gives writers the facts of a place, not its old text.
 - **Reversible:** Yes.
