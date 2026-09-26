@@ -89,3 +89,47 @@ Checked against `docs/narrative/sealed/PAINTING_BRIEFS.md` §4 and `ai/scenes.js
 - **pt-cv-21:** a lit gap at the top of the fall is minor.
 - **pt-b-13.B / pt-cv-21:** the standing stone shows circles instead of notches, which is minor.
 - **pt-pl-w14-meeting, pt-b-14.B, pt-cv-20:** these bowls on brackets are the lit cups the brief asks for.
+
+## Re-check after fixes
+
+Checked on `<id>.edit0.png` (AI edits) and `<id>.dl0.png` (local lamp removal), plus the final frames. "Local" means a pixel re-patch that costs no AI edit.
+
+| Id | Verdict | Note |
+|---|---|---|
+| pt-b-13.C | **FAIL MUST 1** | Lamp gone, but the groups still count **7, 8, 8**, gap, 1: the left group was not changed. |
+| pt-pl-w10-blast-floor | **FAIL MUST 2 (local)** | Flame gone, but an empty clay bowl with a wick is left on the pale ledge. It reads as an unlit lamp. |
+| pt-b-14.A | FAIL SHOULD 1 | "+" became a bar, but the vertical stroke runs through it above and below, so it still half-reads as a cross. Lamp gone ✓. |
+| pt-b-13.A | FAIL SHOULD 2 | Unfixed: no blank beneath the cross. |
+| pt-b-11.B | FAIL SHOULD 3 | Benches and wall cups now ✓, lamp gone ✓. The light fades over 5–6 benches instead of stopping at the third. |
+| pt-pl-w13-side-gallery | FAIL SHOULD 4 | Unfixed: no chisel rows. |
+| pt-pl-w10-deep-end | FAIL SHOULD 5 (local ok) | Unfixed glow in the fall. |
+| pt-b-10.B | FAIL SHOULD 6 (local ok) | Unfixed glow in the fall. |
+| pt-pl-w11-cupboard | FAIL SHOULD 7 (local) | Patch left a large dark rounded-square blob above the ledge. It reads as a second recess beside the cupboard. |
+| pt-cv-18 | FAIL SHOULD 8 (local) | Dark rounded-square blob on the ledge beside the chalk. It reads as a box or niche. |
+| pt-pl-w9-approach | FAIL SHOULD 9 (local) | Dark oval blob on the ledge. It reads as a round pot or hole. |
+| pt-pl-w8-steep-foot | FAIL SHOULD 10 (local) | Dark rounded blob above the shelf, with the warm halo left behind. |
+| pt-pl-w12-square-way | FAIL SHOULD 11 (local) | Dark rounded-square blob above the bracket. |
+| pt-pl-w12-shelf | FAIL SHOULD 12 (local) | Faint pale ghost of the bowl beside the box, with a warm halo left behind. |
+| pt-b-12.C | FAIL SHOULD 13 (local) | Dark square smudge where the ledge was. It reads as a small hole in the side wall. |
+| pt-b-10.C | PASS | Hour hand (spade tip) just past IV, minute hand at II–III: reads as ten past four. The counterweight tail toward X is long but acceptable. Lamp gone. |
+| pt-b-8.B | PASS | Five strokes beside the hook. |
+| pt-b-10.A | PASS | Holes gone. A bar with a drop and the two drops parted now sit left of the blank. |
+| pt-pl-w11-far-end | PASS | The niche is empty and dark. |
+| pt-b-9.A | PASS | Carved lamp-with-flame relief on the nearest tablet (focus 0.45). The relief glows slightly, which is acceptable. |
+| pt-b-11.A | PASS | Two gold bars and a gold drop, abstract. Small but they are the only gold. |
+| pt-b-8.A | PASS | Lamp gone. Only a faint soft shadow is left on the newel. |
+| pt-pl-w13-lower-gallery | PASS (note) | Soft stain and a small bracket stub. They read as wall wear. |
+| pt-pl-w9-benches | PASS (note) | Big lamp gone. The small bowls on the far bench corners read as the room's row of lights. |
+| pt-b-12.B | PASS (note) | Stand-lamp gone. An empty pale block and a soft shadow remain at the corner, far and soft. |
+
+**Fixes**
+- MUST 1 pt-b-13.C (AI): *add one more identical cut stroke at the left end of the left-hand group so it has eight, like the other two; change nothing else.*
+- MUST 2 pt-pl-w10-blast-floor (local): clone the bare ledge top over the bowl.
+- S1 pt-b-14.A (AI): *shorten the vertical stroke so it rises only above the left end of the bar (a small tick up), nothing below the bar; change nothing else.*
+- S2 pt-b-13.A (AI): *cut a clean empty rod-shaped blank recess beneath the cross; change nothing else.*
+- S3 pt-b-11.B (AI): *leave the fourth and later benches unlit and dark: the last cup-flame is level with the third bench; change nothing else.*
+- S4 pt-pl-w13-side-gallery (AI): *make the near wall rough-cut with visible rows of short diagonal chisel strokes; change nothing else.*
+- S5, S6 pt-pl-w10-deep-end and pt-b-10.B (local first): pull the warm glow inside the fall down to the surrounding cold stone tone. Use AI only if the local fix looks flat.
+- S7–S13 (local): refill each blob by cloning the adjacent lit wall block, matching its tone. No dark centre, no pale dome. Also fade the leftover warm halos: steep-foot, shelf and cupboard.
+
+AI edits needed: 5 (13.C, 14.A, 13.A, 11.B, side gallery), plus 2 more if the glows fail locally. That leaves at least 3 of ~10 for the next batch.
