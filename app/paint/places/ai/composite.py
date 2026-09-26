@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """Fit a 2:3 AI repaint (1024x1536) into the game's 1320x2868 frame. SEALED folder (D-015); this file holds no story.
 
-    python3 composite.py <ai.png|jpg> <out-dir> <id> [top]
+    python3 composite.py <ai.png|jpg> <out-dir> <id> [top] [soft] [dim]
 
 top = where the painted 1320x1980 window sits in the frame (default 444 = centred; 888 = bottom-aligned,
 0 = top-aligned). Above and below the window the picture is continued from the AI painting's own blurred edge,
 fading to dark (never blended with the old picture: that left seams and ghost lights). The lower third is softened
-so the button band stays calm (check.mjs). Writes <out-dir>/<id>.webp and .jpg; the .json (anchors) is made by
+so the button band stays calm (check.mjs): soft = that blur's radius (default 9; raise it when check.mjs says
+"button band busy"); dim = how much the words' band (top 22%) is darkened, 0-1 (default 0; raise it when check.mjs
+says "words band dark"). Writes <out-dir>/<id>.webp and .jpg; the .json (anchors) is made by
 anchors.py.
 """
 import sys
@@ -16,6 +18,8 @@ from PIL import Image, ImageFilter
 W, H, h = 1320, 2868, 1980
 src, out_dir, ident = sys.argv[1:4]
 top = int(sys.argv[4]) if len(sys.argv) > 4 else 444
+soft = float(sys.argv[5]) if len(sys.argv) > 5 else 9
+dim = float(sys.argv[6]) if len(sys.argv) > 6 else 0
 ai = Image.open(src).convert('RGB').resize((W, h), Image.LANCZOS)
 A = np.asarray(ai).astype(np.float32)
 blur = np.asarray(ai.filter(ImageFilter.GaussianBlur(28))).astype(np.float32)
@@ -33,8 +37,9 @@ if not top: w[:f] = 1
 if not nb: w[-f:] = 1
 out[top:top + h] = w * A + (1 - w) * blur
 im = Image.fromarray(np.clip(out, 0, 255).astype(np.uint8)); a = np.asarray(im).astype(np.float32)
-bb = np.asarray(im.filter(ImageFilter.GaussianBlur(9))).astype(np.float32)
+bb = np.asarray(im.filter(ImageFilter.GaussianBlur(soft))).astype(np.float32)
 v = np.arange(H, dtype=np.float32) / H; wb = np.clip((v - .60) / .08, 0, 1)[:, None, None] * .85
-fin = Image.fromarray(np.clip(wb * bb + (1 - wb) * a, 0, 255).astype(np.uint8))
+wd = 1 - dim * np.clip((.26 - v) / .1, 0, 1)[:, None, None]   # the words' band darkened, fading out by 26%
+fin = Image.fromarray(np.clip((wb * bb + (1 - wb) * a) * wd, 0, 255).astype(np.uint8))
 fin.save(f'{out_dir}/{ident}.webp', quality=90); fin.save(f'{out_dir}/{ident}.jpg', quality=92)
 print(ident, 'composited, window top', top)

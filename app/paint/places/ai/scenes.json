@@ -1,0 +1,47 @@
+{
+ "_note": "SEALED (D-015). One plain scene description per place, written from docs/narrative/sealed/PAINTING_BRIEFS.md; top = the layout window's top in the kit frame (444 centred, 888 bottom, 0 top). _house = approved repaints added as style references (file names in the out-dir).",
+ "_house": [],
+ "pt-b-1.A": {
+  "top": 444,
+  "scene": "eye height, looking down a long, high hall whose walls and ceiling curve like the inside of a shell, cut in cold violet stone. A row of small dark empty cups is cut into both walls about a third of the way up, unlit. Simple rings are cut into the stone within reach. On a stone ledge on the near right wall sits a small clay oil lamp with one still, warm flame: the only warm light, and the main subject. At the far end the hall is closed by a great door of smooth stone that fills most of the end wall, lost in violet haze. The floor is large worn flagstones. Fog lies in the depth."
+ },
+ "pt-b-1.B": {
+  "top": 444,
+  "scene": "low, near the floor, where a stone hall bends to the right. Two long troughs are worn into the floor along the outer side of the bend, a stride apart, smooth as basins, running away round the corner. The outer wall beside them is polished smooth by touch up to twice a man's shoulder height: a soft shine in the matt stone, its marks rubbed away; above that band the wall is still rough-cut. The one light is cold violet place-light coming round the bend from a gallery beyond; the troughs' smooth hollows catch it. A faint salt glitter far beyond the turn. No lamp, no warm light."
+ },
+ "pt-pl-w1-pick-niche": {
+  "top": 444,
+  "scene": "crouched, three-quarter view of a long low niche, the length of an arm, cut low in the right wall of a gallery of rock salt banded grey and white (no pink). The niche has a plain cut-stone lip; on that lip a short row of empty cut strokes (simple straight grooves, not filled). Beside the niche, in the salt, a few short score marks from a blade. The one light is cold violet place-light coming along the wall from the left, down the gallery, which runs away low on the left. Fine salt dust in the light. No warm light."
+ },
+ "pt-b-1.C": {
+  "top": 444,
+  "scene": "from a low doorway at eye height, into a low round-roofed side chamber cut in stone that someone camped in. Along the right, a canvas camp cot on crossed wooden legs, its canvas sagging. Beneath its edge, on the floor, a pair of old leather boots side by side, toes out, laced, as if left ready for the morning: the main subject, where the warm light ends. On the cot a small notebook with a pencil in it and a small tin box with a thin slate on its lid. On the back wall a plain plank shelf on two pegs with a dark stone rod lying on it. The only warm light is a weak clay-lamp glow coming through the doorway behind the camera, laying the doorway's shape on the floor; violet fills the corners.",
+  "soft": 16
+ },
+ "pt-pl-w1-below-the-lamp": {
+  "top": 444,
+  "scene": "kneeling low under a stone ledge (its underside a dark band across the top), looking into a small niche cut in the wall at knee height. Above the niche mouth, a short row of five straight cut strokes in the stone. The stone around the niche mouth is darkened by old oil, a soft dull dark ring, darkest and weighted at the sill where hands reached in, faint at the top and sides, like a shadow that doesn't move. The niche is a raised wall recess, a hand's depth, not at floor level, empty and dark inside; its edge is a plain cut, no rim, arch moulding or frame; it must not look like a fireplace or tunnel. Warm lamplight falls from directly above, out of frame, past the ledge's lip onto the floor at the wall's foot. The main subject is the dark oily ring around the niche mouth."
+ },
+ "pt-b-2.A": {
+  "top": 444,
+  "scene": "eye height beside the left wall of a long gallery whose walls are rock salt banded grey and white. Along the wall at chest height runs a band of cut stone a hand's width proud of the salt, and along it a long line of small cut marks (a tally), running away into the distance. Above the band, on its own, one ring cut into the stone, larger than the small marks, catching the light before anything near it: the main subject. Cold violet place-light from further in on the right rakes along the wall so every cut shows its shadow; the gallery runs away to the right. Glints on the salt, fog low on the floor. No warm light, no paper."
+ },
+ "pt-pl-w2-above-the-ring": {
+  "top": 888,
+  "scene": "looking up a wall of banded grey-white rock salt raked by cold violet light from the left. At the bottom of the frame, the upper arc of one large ring cut in a band of stone. Above it, a single narrow crack, two fingers wide, runs up the salt into the dark; its lip lit where the light rakes across it, its walls stepping back into black. Beside the crack, a small count of five short straight cut strokes. Far back inside the dark crack, a small, blunt, cool-white pale sliver catches a single glint: the brightest thing, cold not warm, not a flame. The main subject is that pale thing deep in the crack.",
+  "soft": 18,
+  "dim": 0.45
+ },
+ "pt-b-2.B": {
+  "top": 444,
+  "scene": "close on a ledge of cut stone let into a dark chamber's back wall: a rod of dark, fine-grained, matt stone, forearm-long, lying at a low diagonal across the frame; a long blade that thickens without a step into a worn round handle; one long edge ground finer than a knife. A thin line of weak warm lamplight from a doorway behind runs along that fine edge only: the brightest thing; the flat faces stay dark and matt. On the wall just under the shelf, a long thin dark-grey pencil line drawn flat on the stone surface (graphite, no groove, no relief, no lit lip). The back wall is plain stone with no pits or holes; the shelf front is plain with no cups or holes. Violet in the corners."
+ },
+ "pt-pl-w2-smooth-place": {
+  "top": 444,
+  "scene": "looking up from beside two long troughs worn in the floor at a stone hall's bend. On the polished outer wall, at the height of a long hand, one patch where the cut marks are rubbed away entirely and the stone has gone smooth as a mirror, like a banister: the brightest value in the frame, the main subject. Around it the marks are rubbed faint. Cold violet place-light from beyond the corner on the right. Fog passing. No lamp, no warm light."
+ },
+ "pt-pl-w2-box-by-the-cot": {
+  "top": 444,
+  "scene": "low, near the floor, looking along a cut-stone wall in a small camp room: an old shoebox-sized box of matt, pale grey-brown cardboard gone soft with age (slumped rounded corners, a visible lid edge, no stone texture) sits against the wall, not too bright; a thin dark slate is laid a little askew across its lid, with a short count of seven small straight strokes scratched on it; on the slate an old dented tin mug stands UPSIDE DOWN: its rim rests on the slate, its handle low near the slate, and its top is the mug's closed flat bottom, one piece with its side, no lid, no seam. Weak warm lamplight from a doorway ends as a single glint on the mug's rim; violet half-light elsewhere, dust in the air. The main subject is the upside-down mug."
+ }
+}
