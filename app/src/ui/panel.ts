@@ -39,7 +39,8 @@ export interface PanelInputs {
 
 export function panelOf(run: RunView, marks: RunMark[], now: number, o: PanelInputs): PanelState {
   const L = run.minutes * MIN, B = BREATHER_MIN * MIN, sec = (ms: number) => Math.round(o.real(ms) / 1000) * 1000;
-  const base = { run: run.seq, place: o.place, job: run.job.name, heldFraction: 0, heldTime: '' };
+  const base = { run: run.seq, place: o.place, job: run.job.name, heldFraction: 0, heldTime: '',
+    awayLabel: t('delve.paused'), awayLine: t('panel.away.line'), awayLeft: t('panel.paused'), awayLen: run.phase === 'held' ? 0 : L };
   const none = { afterLabel: '', afterLine: '', afterLeft: '', afterStart: 0, afterEnd: 0, staleAt: 0 };
 
   if (run.phase === 'held') {

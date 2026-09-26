@@ -1052,3 +1052,11 @@
 - **Also seen:** the model adds small oil lamps on ledges wherever it is unsure of the light; these read as clues and were removed. The README now says so.
 - **Alternatives:** buy more credits first (Dan wasn't asked mid-run; the 7 can be redone later for about 12 credits a try); keep stand-ins for the new places (all 41 passed).
 - **Reversible:** Yes: the kit paintings stay in git history, and `chosen.json` can point any place back to "kit".
+
+## D-102 — The lock-screen panel turns red and says Paused when Dan goes into another app (Dan's report; the look is his suggestion)
+- **Date:** 2026-09-26
+- **Context:** Dan: going into another app pauses the delve correctly (D-094, D-096), but the lock-screen panel and the Dynamic Island kept counting down until he came back. He suggested it "turn red and say paused in red". D-096 had left this open: the app is asleep while Dan is in another app, so only the phone's native part can change the panel.
+- **Decision:** each panel the app shows now also carries what it becomes if Dan leaves for another app (the words from `copy/en.ts`, and one delve's length). When the native watcher (`AwayPlugin.swift`) decides it was another app, about 15 seconds after he left, it turns the panel itself to **Paused**: stopped at the moment he left (left in a breather: the next delve, not begun), "You went into another app, so the delve is waiting for you.", "Your minutes are safe." A paused panel (this one, or one paused with the Pause button) is **red** instead of violet: the label, the ring, the time and the Island's outline. Coming back puts the panel right from the game's own rules, as before.
+- **Alternatives:** a push from a server (there is none, D-057); leaving it and relying on the fix on return (Dan's report: it misleads); a neutral grey for paused (Dan asked for red; red is used only for this state, and the words stay calm, rule 9).
+- **Consequences:** the panel is right about 15 seconds after Dan leaves, not at once (the phone needs that long to tell a lock from another app, D-096). Left in a breather and back before it ends: the panel said Paused though nothing was paused, and is put right on return. Can only be seen on the phone.
+- **Reversible:** Yes: two native files and four panel fields.

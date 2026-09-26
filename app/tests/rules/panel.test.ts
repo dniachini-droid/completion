@@ -39,6 +39,13 @@ describe('the delve’s panel', () => {
     expect(p).toMatchObject({ phase: 'held', label: 'Paused', heldFraction: 0.25, heldTime: '15:00', staleAt: 0 });
   });
 
+  it('carries what the phone shows by itself if Dan goes into another app: paused, with the delve’s length', () => {
+    const plan = { startedAt: T0, minutes: 25, count: 2 };
+    expect(at(plan, T0 + 5 * M)).toMatchObject({ awayLabel: 'Paused', awayLeft: 'Your minutes are safe.', awayLen: 25 * M });
+    expect(at(plan, T0 + 27 * M).awayLen).toBe(25 * M);
+    expect(at(plan, T0 + 50 * M, [{ kind: 'hold', at: T0 + 5 * M }]).awayLen).toBe(0);
+  });
+
   it('follows Start it now and a pause: the end moves with them', () => {
     const plan = { startedAt: T0, minutes: 25, count: 2 };
     const skip: RunMark[] = [{ kind: 'skip', at: T0 + 26 * M }];
