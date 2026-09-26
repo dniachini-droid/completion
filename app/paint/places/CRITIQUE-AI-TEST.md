@@ -41,3 +41,32 @@ Overall: the AI candidates are far richer than the current paintings (real stone
 - **Wrong reading 2:** the box is painted as a **cut-stone block** (chisel texture, hard arrises), so it reads as a stone plinth, part of the Site, not her cardboard shoebox. This reverses the signature (her world on his). Fix: matt pale grey-brown card gone soft, slumped corners, a lid seam, no stone texture. The same applies to free1's box.
 - Marks: seven strokes in a row on the slate, same order and spacing. Crop (292,882,492,965); free0 (300,910,507,995). **MATCH.** (free1 also has seven: (275,915,462,1005).)
 - Quality: better light and texture than the current (warm doorway light, stone floor), but the two readings above must be fixed before it can replace the current painting.
+
+---
+
+## Final composites (2026-09-26)
+
+The four chosen candidates, the two fails each given one targeted edit, fitted into the full game frame (1320×2868; AI picture in the middle, blended into the original's dark top and bottom, lower third softened). Files: session scratchpad `ai/free-out/<id>.jpg`, judged against the game's current `img/<id>.webp`. Coordinates below are in the **1320×2868** frame. The live-layer anchors in each `<id>.json` are unchanged from the current painting, so I also checked where they land on the new picture.
+
+No hard seams: row-mean luminance never jumps more than 2.3 levels between adjacent rows in any composite, and the top blends read as ceiling shadow.
+
+| Id | Wrong readings | Marks |
+|---|---|---|
+| pt-pl-w1-below-the-lamp | PASS | MATCH |
+| pt-b-2.B | **FAIL** | DIFFERS (pencil line) |
+| pt-pl-w2-above-the-ring | **FAIL** (the ring is lost) | MATCH |
+| pt-pl-w2-box-by-the-cot | PASS | MATCH |
+
+**pt-pl-w1-below-the-lamp: PASS, marks MATCH.** Five strokes with the same order and slants: current (525,1172,799,1278), final (535,1180,798,1274). The niche reads as a raised wall niche with a stain, not an oven. Blend: a **second, ghost light pool** from the original's floor shows below the AI pool, at about (400,2500,900,2800) in the softened lower third. It reads faintly as a second light source. Should fix: mask it out of the bottom blend. The beam anchor at (624,2257) sits between the two pools; move it onto the AI pool at about (620,2050).
+
+**pt-b-2.B: FAIL, marks DIFFER.** The edit fixed the rod: the highlight is now a thin line on one edge, the flats are matt, and the wall pocks are gone. But the pencilled line is now a **pale, near-invisible band**: lighter than the stone, with a faint dark edge, and not findable at native brightness. Where it is seen, a pale line on stone reads as a scratch or incised mark, not graphite. Current: a clear dark line, (35,1755,1320,2025). Final: (130,1880,1320,2105), starting ~95 px further right and ~110 px lower. Fix: repaint as a dark grey graphite stroke about 3–4 px wide, clearly darker than the surrounding stone (≥15% luminance drop), with no highlight edge, ideally on the current line's path. Handle marks: not visible in either (MATCH, absent). The glint anchor (360,1455) sits on the shelf just below the blade, as it does in the current; moving it onto the lit edge at about (390,1395) would match the brief.
+
+**pt-pl-w2-above-the-ring: FAIL, marks MATCH.** Five strokes: current ≈ (855,1665,1090,1790), final (850,1619,1089,1741). Pale thing: current (645,1596,657,1617), final ≈ (632,1555,652,1600), cool white and deep in the crack. Good. But **the ring is gone**: the current painting's arc of the lone ring at the bottom edge (y 2550–2868) was replaced by the dark bottom blend. The place loses the object it is named after and located by. Fix: restore the ring's arc from the current painting in the bottom band, keeping it above the softening so it stays visible. Also, the pale-thing glint anchor (645,1639) now lands ~50–60 px below the pale thing, in the dark crack, where a live glint would read as a second pale object. Move it to about (642,1578).
+
+**pt-pl-w2-box-by-the-cot: PASS, marks MATCH.** The edit fixed both readings. The mug's top is now a plain closed rounded base with no seam, with the taper wider at the slate and the rolled rim on the slate, so it reads upside down. The box is now a pale, matt card shoebox with a lid. Seven strokes: current (377,1583,640,1690), final (385,1615,648,1728). Should fix:
+- The pale box is now the brightest large mass and competes with the mug; drop its value ~20%.
+- The glint anchor (775,1571) lands mid-body; the brief puts it on the rim, at about (775,1650).
+- Clean the tiny pale chip on the slate at about (623,1740).
+- Faint vertical ghost edges from the original show in the softened bottom band, at about x 80 and x 720, y 2600–2868; mask them.
+
+Quality: all four are far richer than the current paintings. Once the two fails are fixed (the rod's pencil line, the ring's arc), all four are fit to replace the current paintings.
