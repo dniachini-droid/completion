@@ -87,3 +87,34 @@ Overall: the finish is far above the kit everywhere. In 7 of 10 places, though, 
 3. Nothing else added.
 4. Glint g0 (0.583,0.587) is on the mug's rim, as the brief asks. OK.
 - Fix: *change the slate's marks to seven short cut grooves, sunk and dark in their floors, not raised or segmented, with the 2nd and 3rd closer together.*
+
+## Re-check after edits
+
+Same critic, 2026-09-26. These are the new finals, each after one targeted edit, judged against the clarified bar: a mark row passes if it is present, roughly the right number and form, and does not read as something else at phone size. Boxes are pixels in the 1320×2868 frame. Anchor indices are 0-based within each layer of the place's `.json`.
+
+| Id | Verdict | Reason |
+|---|---|---|
+| pt-b-1.A | PASS | The rings are now flush cut grooves on both walls. The old curl is now a small ring inside a ring at (1265,1690,1300,1740). It is minor and reads as a cut ring. The flame anchor sits on the lamp's wick. |
+| pt-pl-w1-pick-niche | PASS (fix one anchor) | The sill is one continuous slab. The lip carries **7** short cuts across its front arris (kit has 6), bunched at the left half (745,1480,865,1560). There are **6** score marks in the salt (kit has 5) at (500,1225,620,1340). Both are within the bar and read as cut strokes, not seams. Glint [3] sits on the first lip stroke, where it could read as the stroke "filling"; move it to the salt. |
+| pt-b-1.C | PASS (should fix) | The edit did not fully take: the strap and hasp remain, and no strokes are visible on the lid (845,1395,975,1465). At phone size the box is about 35 pt wide, so neither reads, and the kit shows no strokes at this distance either. Remove the hasp if another pass is cheap. |
+| pt-b-2.A | PASS (fix the anchors) | The tally row is back with mixed marks: bars, small cut rings (several, including under the lone ring), and a few ticked bars. It reads as a tally, and the lone ring stays the largest ring. Small rings are more frequent than in the kit and drops are absent; neither changes the reading. Glint [2] is on the band face under the tally and glint [3] is on the band's top arris. |
+| pt-b-2.B | PASS (fix one anchor) | The rod is now matt dark stone with one thin gold line along the edge. The handle carries a line of cells ending in a hook in the last cell (930,1590,1060,1660). The cells are empty rather than each holding a sign, which is acceptable at phone size. The point rests flat, with no chip; minor. The pencil line under the shelf is still present. Glint [0] is still on bare shelf. |
+| pt-pl-w2-smooth-place | PASS (should fix) | The wall is flat and covered in short cut marks, with one bright oval at (470,1250,640,1470), the brightest value in the frame. At phone size it reads as a worn, shining patch. Should fix: the marks and joints run through the bright oval instead of being rubbed out, and there is a faint dark smudge just right of it at about (600,1300). Glints are on the hotspot. |
+| pt-pl-w2-box-by-the-cot | **FAIL** | The slate count is now **5** (kit has 7) at (420,1630,630,1745). The 5th is faint. The strokes are still pale and segmented, like inlay, though now each has a dark sunk edge. The mug, box and glint are fine. Fix: *change the slate's count to seven short cuts, sunk and dark in their floors, not pale or segmented.* If a second pass misses again, composite the kit's count, or **keep kit**. |
+
+pt-pl-w2-above-the-ring (unchanged painting): glint **[0]** (0.4629,0.5889) is the one on the **crack's lip**, and glint **[2]** (0.7364,0.6053) is the one on the **count**. In the first section above I called these g0 and g3; the count glint is index 2. Glints [1] and [3] are on the salt and stay.
+
+Anchor corrections (all others stay as auto-moved):
+
+```json
+[
+  {"id": "pt-pl-w1-pick-niche", "layer": "glints", "index": 3, "u": 0.786, "v": 0.462},
+  {"id": "pt-b-2.A", "layer": "glints", "index": 2, "u": 0.6394, "v": 0.600},
+  {"id": "pt-b-2.A", "layer": "glints", "index": 3, "u": 0.7379, "v": 0.5056},
+  {"id": "pt-b-2.B", "layer": "glints", "index": 0, "u": 0.3917, "v": 0.5119},
+  {"id": "pt-pl-w2-above-the-ring", "layer": "glints", "index": 0, "u": 0.5008, "v": 0.5516},
+  {"id": "pt-pl-w2-above-the-ring", "layer": "glints", "index": 2, "u": 0.800, "v": 0.550}
+]
+```
+
+No correction is needed for pt-b-1.A (flame on the wick), pt-b-1.C (beams only), pt-pl-w2-smooth-place (glints on the hotspot at 0.420,0.472) or pt-pl-w2-box-by-the-cot (glint on the mug's rim).
