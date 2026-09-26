@@ -1,8 +1,8 @@
 <script lang="ts">
   /* Today (the morning screen, UX_PRINCIPLES → "The morning screen carries"): where you are, the sealed thing ahead,
      the one next job (no Low / Normal / High, and no "Already done": Dan, D-089) with one button, today's other jobs as plain rows, "I can't start".
-     A tap on a row makes it the next job, at any time of day; a swipe takes it off today; the last row chooses a delve
-     on anything (D-077). After day complete: the day as done, until Dan taps a job or keeps going.
+     A tap on a row starts that job, as its own button would (D-100: it used to swap the row with the next job, and the
+     rows seemed to change places by themselves); a swipe takes it off today; the last row chooses a delve on anything (D-077). After day complete: the day as done, until Dan taps a job or keeps going.
      Mock-up: design/directions/d-combined/morning.html. */
   import { game, content } from './game.svelte';
   import { presetRun, pastBedtime, BEDTIME_WINDOW } from '../core/game';
@@ -48,7 +48,8 @@
   }
   function carry() { game.do({ do: 'resume' }); go('delve'); }
   function finish() { game.do({ do: 'finishHere' }); go('delve'); }
-  function focus(id: string) { if (swiped) { swiped = null; return; } if (!v.done.has(id)) game.do({ do: 'focus', job: id }); }
+  /* a tap on a job starts that job, never another: nothing on the list moves (Dan, D-100) */
+  function start(id: string) { if (swiped) { swiped = null; return; } if (!v.done.has(id)) begin(job(id)); }
   function aside(id: string) { swiped = null; game.do({ do: 'setAside', job: id }); lastAside = id; }
   /* "Not today" said once, with a way to take it back while Today is still open (review 2, D-088) */
   let lastAside = $state<string | null>(null);
@@ -73,7 +74,7 @@
     drag = null;
   }
   let suppress = false;
-  function tapRow(id: string) { if (suppress) { suppress = false; return; } focus(id); }
+  function tapRow(id: string) { if (suppress) { suppress = false; return; } start(id); }
   const offset = (id: string) => drag?.id === id ? drag.dx : swiped === id ? -OPEN : 0;
 
   /* the evening (D-093): going to bed lives on Today, no page of its own. From five hours before bedtime (when Go to

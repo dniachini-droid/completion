@@ -20,7 +20,9 @@ if (process.env.FREEZE) await page.addInitScript(() => { let s = 7; Math.random 
 await page.clock.install({ time: new Date('2026-09-24T09:00:00+01:00') });
 await page.goto(url);
 let i = 0;
-const ff = async (ms) => { const n = await page.evaluate(() => Date.now()); await page.clock.setSystemTime(n + ms); await page.clock.runFor(500); };
+/* after a jump the page is given a moment of real time too, so what the jump brings (a delve's end) is on screen before
+   the walk looks for it (2026-09-26) */
+const ff = async (ms) => { const n = await page.evaluate(() => Date.now()); await page.clock.setSystemTime(n + ms); await page.clock.runFor(500); await page.waitForTimeout(250); await page.clock.runFor(250); };
 const shot = async (name, settle = 1500) => { if (settle > 10000) await ff(settle); else await page.clock.runFor(settle); await page.waitForTimeout(300); const held = process.env.FREEZE ? await page.evaluate(() => (window.__held = document.getAnimations().filter(a => a.playState === 'running').map(a => { const t = a.currentTime; a.pause(); a.currentTime = 2300; return [a, t]; })).length) : 0; await page.screenshot({ path: `${out}/${String(++i).padStart(2, '0')}-${name}.png` }); if (held) await page.evaluate(() => window.__held.forEach(([a, t]) => { a.currentTime = t; a.play(); })); await fits(name); await locked(name); if (process.env.COST) await cost(name); };
 /** COST=1: what each screen costs the phone while it sits still (D-103), written to <out>/cost.json. The processor's
  *  time for two seconds of the screen's clock, and a census of what keeps moving: animations the graphics chip can run
@@ -200,7 +202,9 @@ const openers = async (name) => {
 };
 /* Going to bed lives on Today (no camp page, D-093): "Tonight" with Go to sleep shows only in the evening */
 const camp = async (name, loud) => {
-  if (!(await has('Keep going'))) return;
+  /* only from Today: an arrival also offers "Keep going", and the walk once took it for Today and waited for Go to sleep
+     there (the stall seen since 2026-09-26) */
+  if (!(await has('Keep going')) || !(await page.locator('nav.foot').count())) return;
   if (await has('Go to sleep')) errors.push('TONIGHT offered before the evening');
   await toClock(0, 22, 30); await page.clock.runFor(1500);
   if (loud) await shot(name + '-tonight', 1500);

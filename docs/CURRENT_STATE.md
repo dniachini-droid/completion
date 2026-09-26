@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-26, latest (Phase 9: the whole app audited for battery, D-103; the lock-screen panel says Paused, D-102; the AI repaint, D-100, D-101)_
+_Last updated: 2026-09-26, evening (Phase 9: a tap starts that job, no hard edges, D-104; the whole app audited for battery, D-103; the lock-screen panel says Paused, D-102; the AI repaint, D-100, D-101)_
 
 ## Current phase
 
@@ -27,6 +27,10 @@ Build the whole MVP (`product/MVP.md` → build order): **slice 2** the Quiet an
 4. **TestFlight:** Dan finished Apple setup sitting 2 (all four secrets in; TestFlight installed). **The first build reached Apple** (workflow run 36011344034, 2026-09-24: signed in the cloud and uploaded in under 4 minutes): trial (d), the pipeline, passes. It carried slices 1–2. **The whole first playable reached Apple** (run 36021450486, 2026-09-24, started by hand: a commit touching no app files does not start the workflow). Dan does sitting 3 (trials b and c) when he tests, and reports.
 5. **The web link:** https://claude.ai/artifact/TcH91A1SxeEvEnLJbRE4pi (private; one link, updated in place each slice).
 
+## Last session (2026-09-26, Phase 9, a tap starts that job; no hard edges, D-104)
+Dan on the D-099 build: no longer hot, smoother; Begin after a delve works; the ring and Done's glow show. Then: a tap on a job on Today swapped something else in. Now a tap starts that job and nothing else moves (D-104; `tests/flows/tap-row.mjs`). The sharp edges beside the list and the cut-off marks at the main button's corners (its brackets) are gone: the list's sides fade just outside the column. During a delve the view is rebuilt once a second, not four times. 148 rule tests; typecheck clean; tap-row and back-from-record pass; the screen walk passes at both sizes (74 and 73 screens, no errors). Its stall at Go to sleep (seen on `main` too) was the walk's own: an arrival also offers Keep going, and it took that for Today; it now goes to bed only from Today. The other session's whole-app battery audit (D-103) is merged in alongside. **Dan's test:** tap a job on Today: it should start that job; the list's sides should have no hard edge; say if the button's corner brackets should go.
+
+## Last session (2026-09-26, Phase 9, the panel paused with the delve, D-102)
 ## Last session (2026-09-26, Phase 9, the whole app audited for battery, D-103)
 Dan: after D-099, can the app drain less and stay smooth and pretty? Then: audit the whole app. The screen walk now measures every screen (`COST=1`) and can freeze animations for before/after pixel checks (`FREEZE=1`). Most screens already do nothing while still. Fixed with no change to the look: the delve's ring (redraws only where its light moves; no layout read every frame; script time 54 → 37 ms a second), the cut (the lamp's glow, halo and flame on their own layers, so the clay lamp is no longer repainted every frame), the stair (a small blur per tread instead of one over all 22). Ring pixel-identical to before; cut and stair differ only in the random dust. Left: the map's breathing pool and sparks, the cut rod's glow, the grain and fog (the look). 148 rule tests; typecheck clean; the walk passes (it sometimes stalls at Go to sleep, on the old build too). Merged into `main` with Dan's OK (PR #35); **the build reached Apple** (run 36221505560, 2026-09-26). **Dan's test:** a whole delve, a word cut and the stair; is the phone cooler, still smooth, and does anything look different?
 
@@ -229,5 +233,5 @@ ChatGPT's review of the principles reconciled (D-038; Dan agreed with every verd
 ## Recommended next action
 
 **Dan:** install the newest build from `main` and play; say what still feels clunky, and whether the phone still warms in a delve. On a run of two delves, say what the locked phone showed (item 0c). Do the lock / another app test (item 0d).
- **First, on the newest build (D-099, run 36215852138):** a whole delve and a while on Today: is the phone still hot, is the delve's motion smooth, and does Begin work on a job delved on earlier the same day? Also whether the ring and Done's light are drawn.
+ **First, on the newest build (D-104):** tap a job on Today: it should start that job, with nothing else moving; the list's sides should have no hard edge; say whether the main button's corner brackets should stay. (D-099 confirmed by Dan: no longer hot, smoother, Begin after a delve works, the ring and Done's glow drawn.)
  **Claude:** the AI repaint (D-100, D-101) merged into `main` and sent to TestFlight on Dan's OK; Dan meets the new paintings in the game. Then whatever Dan reports from the phone. If it still warms: the full-screen grain and screen-blended layers, then the ring's glow (D-099 → consequences). To resume, paste: "Read CLAUDE.md and docs/CURRENT_STATE.md on branch main, then carry on from the recommended next action."
