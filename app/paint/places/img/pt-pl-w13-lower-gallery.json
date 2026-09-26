@@ -1,0 +1,12 @@
+{
+ "id": "pt-pl-w13-lower-gallery",
+ "name": "The lower gallery",
+ "line": "",
+ "width": 1320,
+ "height": 2868,
+ "live": {
+  "motes": "violet",
+  "fog": "low"
+ },
+ "anchors": {}
+}

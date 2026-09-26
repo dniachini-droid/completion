@@ -1,0 +1,13 @@
+{
+ "id": "pt-pl-w11-far-end",
+ "name": "The Water's far end",
+ "line": "",
+ "width": 1320,
+ "height": 2868,
+ "live": {
+  "motes": "gold",
+  "fog": "low",
+  "gold": true
+ },
+ "anchors": {}
+}
