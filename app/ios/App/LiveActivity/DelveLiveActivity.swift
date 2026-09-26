@@ -14,6 +14,9 @@ struct LiveActivityBundle: WidgetBundle {
 private let violet = Color(red: 0x8f / 255, green: 0x86 / 255, blue: 0xff / 255)
 private let violetHi = Color(red: 0xd9 / 255, green: 0xd6 / 255, blue: 0xff / 255)
 private let night = Color(red: 0x05 / 255, green: 0x05 / 255, blue: 0x0c / 255)
+/* paused (Dan): red, so a glance tells a stopped delve from a running one */
+private let red = Color(red: 0xff / 255, green: 0x5a / 255, blue: 0x5a / 255)
+private let redHi = Color(red: 0xff / 255, green: 0xb4 / 255, blue: 0xb4 / 255)
 
 /// What the panel shows at this moment: what the app last said, or, once that ran out with the app closed
 /// (the system marks the panel stale), what the app said comes after.
@@ -29,6 +32,9 @@ private struct Shown {
     var line: String
     var left: String
     var clock: Clock
+    /// The panel's colour: violet while the delve runs, red while it is paused.
+    var accent: Color { if case .still = clock { return red } else { return violet } }
+    var accentHi: Color { if case .still = clock { return redHi } else { return violetHi } }
 
     init(_ s: DelveAttributes.ContentState, stale: Bool) {
         place = s.place
@@ -49,7 +55,8 @@ private struct Shown {
 
 /// The ring, filling as the delve goes (the system fills it; no app code runs).
 private struct Ring: View {
-    let clock: Shown.Clock
+    let s: Shown
+    var clock: Shown.Clock { s.clock }
     var body: some View {
         Group {
             switch clock {
@@ -62,14 +69,15 @@ private struct Ring: View {
             }
         }
         .progressViewStyle(.circular)
-        .tint(violet)
-        .shadow(color: violet.opacity(0.7), radius: 4)
+        .tint(s.accent)
+        .shadow(color: s.accent.opacity(0.7), radius: 4)
     }
 }
 
-/// The time left: counting down by itself, still while paused, a quiet mark once over.
+/// The time left: counting down by itself, still (and red) while paused, a quiet mark once over.
 private struct Countdown: View {
-    let clock: Shown.Clock
+    let s: Shown
+    var clock: Shown.Clock { s.clock }
     let size: CGFloat
     let width: CGFloat
     var body: some View {
@@ -85,7 +93,7 @@ private struct Countdown: View {
         }
         .font(.system(size: size, weight: .light, design: .serif))
         .monospacedDigit()
-        .foregroundStyle(violetHi)
+        .foregroundStyle(s.accentHi)
         .multilineTextAlignment(.trailing)
         .lineLimit(1)
         .frame(width: width, alignment: .trailing)
@@ -99,10 +107,10 @@ private struct LockScreen: View {
         HStack(alignment: .center, spacing: 14) {
             ZStack {
                 Circle()
-                    .fill(RadialGradient(colors: [violet.opacity(0.55), violet.opacity(0.12), .clear],
+                    .fill(RadialGradient(colors: [s.accent.opacity(0.55), s.accent.opacity(0.12), .clear],
                                          center: .center, startRadius: 2, endRadius: 46))
                     .frame(width: 92, height: 92)
-                Ring(clock: s.clock).frame(width: 50, height: 50)
+                Ring(s: s).frame(width: 50, height: 50)
             }
             .frame(width: 58, height: 58)
 
@@ -110,7 +118,7 @@ private struct LockScreen: View {
                 Text(s.label.uppercased())
                     .font(.system(size: 11, weight: .semibold))
                     .kerning(1.6)
-                    .foregroundStyle(violet)
+                    .foregroundStyle(s.accent)
                 Text(s.place)
                     .font(.system(size: 19, weight: .regular, design: .serif))
                     .foregroundStyle(.white)
@@ -129,7 +137,7 @@ private struct LockScreen: View {
             Spacer(minLength: 0)
 
             VStack(alignment: .trailing, spacing: 2) {
-                Countdown(clock: s.clock, size: 30, width: 92)
+                Countdown(s: s, size: 30, width: 92)
                 if !s.left.isEmpty {
                     Text(s.left)
                         .font(.system(size: 11))
@@ -148,24 +156,25 @@ private struct LockScreen: View {
 struct DelveLiveActivity: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: DelveAttributes.self) { context in
-            LockScreen(s: Shown(context.state, stale: context.isStale))
+            let s = Shown(context.state, stale: context.isStale)
+            return LockScreen(s: s)
                 .activityBackgroundTint(night)
-                .activitySystemActionForegroundColor(violet)
+                .activitySystemActionForegroundColor(s.accent)
         } dynamicIsland: { context in
             let s = Shown(context.state, stale: context.isStale)
             return DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
-                    Ring(clock: s.clock).frame(width: 40, height: 40).padding(.leading, 6)
+                    Ring(s: s).frame(width: 40, height: 40).padding(.leading, 6)
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-                    Countdown(clock: s.clock, size: 26, width: 84).padding(.trailing, 6)
+                    Countdown(s: s, size: 26, width: 84).padding(.trailing, 6)
                 }
                 DynamicIslandExpandedRegion(.center) {
                     VStack(spacing: 1) {
                         Text(s.label.uppercased())
                             .font(.system(size: 10, weight: .semibold))
                             .kerning(1.4)
-                            .foregroundStyle(violet)
+                            .foregroundStyle(s.accent)
                         Text(s.place)
                             .font(.system(size: 16, design: .serif))
                             .foregroundStyle(.white)
@@ -181,13 +190,13 @@ struct DelveLiveActivity: Widget {
                         .minimumScaleFactor(0.8)
                 }
             } compactLeading: {
-                Ring(clock: s.clock).frame(width: 20, height: 20)
+                Ring(s: s).frame(width: 20, height: 20)
             } compactTrailing: {
-                Countdown(clock: s.clock, size: 14, width: 44)
+                Countdown(s: s, size: 14, width: 44)
             } minimal: {
-                Ring(clock: s.clock).frame(width: 20, height: 20)
+                Ring(s: s).frame(width: 20, height: 20)
             }
-            .keylineTint(violet)
+            .keylineTint(s.accent)
         }
     }
 }
