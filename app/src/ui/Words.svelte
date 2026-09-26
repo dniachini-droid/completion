@@ -2,7 +2,7 @@
   /* The story's words over a painting (D-085). They keep to the lower half of the screen so the painting stays seen:
      a soft wash, no box or edge, the words scrolling inside it. "Hide the words" folds them to a couple of lines so the
      whole painting shows; "Read on" brings them back. Short lines simply sit there: no scrolling, no link.
-     Over a place's painting the link is "Look" instead (D-103): everything fades and the painting is seen whole. */
+     Over a place's painting the link is "Look" instead (D-105): everything fades and the painting is seen whole. */
   import type { Snippet } from 'svelte';
   import { t } from '../content/copy/en';
 

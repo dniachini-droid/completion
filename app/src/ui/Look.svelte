@@ -1,5 +1,5 @@
 <script lang="ts">
-  /* Looking at the painting (Dan, D-103): the words, the buttons, the day's gold and the dark washes fade away and the
+  /* Looking at the painting (Dan, D-105): the words, the buttons, the day's gold and the dark washes fade away and the
      place is seen as painted. Two fingers pinch to look closer and one finger moves about once closer; a tap anywhere
      comes back. Only the painting is zoomed, by this layer's own sums: the page never zooms or moves (the phone's own
      pinch is refused, here and in main.ts), so nothing else on the screen can be knocked out of place. */

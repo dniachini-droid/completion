@@ -22,7 +22,7 @@
   const startAt = $derived(v.nextAt !== null ? Math.max(0, v.nextAt - 400) : from - 50);
   const px = (m: number) => 8 + (W - 16) * Math.min(1, Math.max(0, (m - startAt) / Math.max(1, target - startAt)));
 
-  /* the painting, seen without the words (D-103) */
+  /* the painting, seen without the words (D-105) */
   let looking = $state(false);
   const look = () => (looking = true);
 

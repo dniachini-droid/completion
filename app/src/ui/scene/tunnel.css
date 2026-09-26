@@ -21,8 +21,8 @@
 .dv .ring .glow{ position:absolute; inset:-14%; filter: blur(10px); mix-blend-mode:screen; }
 .dv .ring .glow .band{ inset:12.3%; -webkit-mask: radial-gradient(circle closest-side, transparent 84%, #000 90%, #000 98%, transparent 104%); mask: radial-gradient(circle closest-side, transparent 84%, #000 90%, #000 98%, transparent 104%); }
 .dv .ring .glow.wide{ filter: blur(24px); opacity:.9; }
-.dv .ring .halo{ position:absolute; inset:-22%; border-radius:50%; background: radial-gradient(circle, transparent 42%, rgba(143,168,255,calc(.08 + var(--p) * .3)) 50%, transparent 66%); }
-.dv .ring .disc{ position:absolute; inset:5%; border-radius:50%; background: radial-gradient(circle, rgba(200,208,255,calc(.04 + var(--p)*.14)), rgba(143,168,255,calc(.03 + var(--p)*.07)) 60%, transparent 72%); }
+.dv .ring .halo{ position:absolute; inset:-22%; border-radius:50%; background: radial-gradient(circle, transparent 42%, rgba(143,168,255,calc(.08 + var(--pc, var(--p)) * .3)) 50%, transparent 66%); }
+.dv .ring .disc{ position:absolute; inset:5%; border-radius:50%; background: radial-gradient(circle, rgba(200,208,255,calc(.04 + var(--pc, var(--p))*.14)), rgba(143,168,255,calc(.03 + var(--pc, var(--p))*.07)) 60%, transparent 72%); }
 .dv .ring .tip{ position:absolute; left:50%; top:50%; width:14px; height:14px; margin:-7px 0 0 -7px; border-radius:50%;
   background: radial-gradient(circle, #fff, rgba(210,220,255,.8) 40%, transparent 70%); box-shadow: 0 0 18px 6px rgba(190,205,255,.55);
   transform: rotate(calc(var(--p) * 1turn)) translateY(calc(var(--R) * -.47)); }
@@ -40,7 +40,7 @@
           mask: radial-gradient(circle closest-side, transparent 88.4%, #000 89.6%, #000 97.8%, transparent 99%); }
 .dv .ring .glow{ opacity: calc(.4 + var(--p) * .8); }
 .dv .ring .glow.wide{ opacity: calc(.3 + var(--p) * .95); }
-.dv .ring .disc{ background: radial-gradient(circle, rgba(200,208,255,calc(.05 + var(--p)*.28)), rgba(143,168,255,calc(.03 + var(--p)*.15)) 60%, transparent 72%); }
+.dv .ring .disc{ background: radial-gradient(circle, rgba(200,208,255,calc(.05 + var(--pc, var(--p))*.28)), rgba(143,168,255,calc(.03 + var(--pc, var(--p))*.15)) 60%, transparent 72%); }
 .dv .flow{ filter: blur(2.1px); opacity: .82; }
 @keyframes pass{ 0% { transform: scale(.05); opacity: 0; } 18% { opacity: .35; } 62% { opacity: .95; } 82% { opacity: 1; } 100% { transform: scale(1.6); opacity: 0; } }
 .dv .fog-front{ position:absolute; inset:-20%; pointer-events:none; opacity:.5; z-index:3;

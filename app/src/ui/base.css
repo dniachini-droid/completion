@@ -15,6 +15,14 @@ button { touch-action: manipulation; }
   margin-top: -12px; padding-top: 12px; padding-bottom: 20px;
   -webkit-mask-image: linear-gradient(180deg, transparent, #000 12px, #000 calc(100% - 20px), transparent);
           mask-image: linear-gradient(180deg, transparent, #000 12px, #000 calc(100% - 20px), transparent); }
+/* its sides fade too, a little outside the column, the words staying where they were: a box that scrolls clips what it
+   holds at its sides, and at the column's edge that cut the glows behind the rows into sharp lines, and cut off the main
+   button's corner marks (Dan, 2026-09-26). Only a little wider, so the fade costs the phone little. */
+.col .scroll { margin-left: -18px; margin-right: -18px; padding-left: 18px; padding-right: 18px;
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 12px, #000 calc(100% - 20px), transparent), linear-gradient(90deg, transparent, #000 14px, #000 calc(100% - 14px), transparent);
+  -webkit-mask-composite: source-in;
+          mask-image: linear-gradient(180deg, transparent, #000 12px, #000 calc(100% - 20px), transparent), linear-gradient(90deg, transparent, #000 14px, #000 calc(100% - 14px), transparent);
+          mask-composite: intersect; }
 .scroll > * { flex-shrink: 0; }
 .scroll > .mid { flex: 1 0 auto; }
 /* a foot that holds the story's words above its button: the words scroll if they must, the button never leaves */
@@ -32,7 +40,7 @@ input.clock::-webkit-calendar-picker-indicator { display: none; }
    down. Every scrolling part clips sideways, so a glow or a wide row can never let the page be dragged left or right. */
 .ui .body, .ui .field, .ui .scroll { overflow-x: hidden; overscroll-behavior: none; }
 
-/* Looking at the painting (D-103, Look.svelte): everything laid over it fades away, the gold and the washes too, so the
+/* Looking at the painting (D-105, Look.svelte): everything laid over it fades away, the gold and the washes too, so the
    place shows as painted. !important because an arrival's gold is held by its animation. The page itself never moves. */
 .ui, .pool, .fog.warm, .scrim-top, .scrim-bottom, .vignette, .facelight { transition: opacity .45s var(--ease); }
 body.looking .ui, body.looking .pool, body.looking .fog.warm, body.looking .scrim-top, body.looking .scrim-bottom,

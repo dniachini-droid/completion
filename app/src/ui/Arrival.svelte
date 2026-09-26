@@ -39,7 +39,7 @@
     leave('today');
   }
 
-  /* the painting, seen without the words, the buttons or the gold (D-103) */
+  /* the painting, seen without the words, the buttons or the gold (D-105) */
   let looking = $state(false);
   const look = () => (looking = true);
 
@@ -71,7 +71,7 @@
         <div class="label-line gold">{a.kind === 'place' ? t('arrive.label') : t('arrive.camp')}</div>
         <h1 class="carve lg">{a.name}</h1>
       </section>
-      <!-- the painting, left clear: a tap on it looks at it (D-103) -->
+      <!-- the painting, left clear: a tap on it looks at it (D-105) -->
       <div class="gap" onclick={look} role="presentation"></div>
       <!-- the words keep to the lower half and scroll there; they can be folded away (D-085) -->
       <div class="col text">
