@@ -23,22 +23,29 @@
     const H = Hall.draw(hallEl, { scene: 'stair', cam: { x: -1.05, y: 1.7, z: .3, pitch: -28, f: .6, cx: .42, cy: .4 }, res: .8 });
     /* light on the treads' front edges (the stair's geometry from hall.js: lip at z 1.05, tread .34, riser .31) */
     const NS = 'http://www.w3.org/2000/svg', g = document.createElementNS(NS, 'g');
-    g.setAttribute('class', 'tread-glow'); g.style.mixBlendMode = 'screen';
-    const fl = document.createElementNS(NS, 'filter');
-    fl.id = 'treadSoft'; fl.setAttribute('x', '-20%'); fl.setAttribute('y', '-200%'); fl.setAttribute('width', '140%'); fl.setAttribute('height', '500%');
-    fl.innerHTML = '<feGaussianBlur stdDeviation="1.6"/>'; H.svg.querySelector('defs')?.appendChild(fl);
-    g.setAttribute('filter', 'url(#treadSoft)');
+    g.setAttribute('class', 'tread-glow');
+    /* each tread's light is softened by a blur of its own, over just that tread: under one blur for all 22, every step of
+       the pulse had the phone blur the whole stair again, every frame (D-103) */
+    const defs = H.svg.querySelector('defs');
     for (let n = 1; n <= 22; n++) {
       const m = n - 1, y = -.31 * m, z = 1.05 + m * .34, a = H.project(-.28, y, z), b = H.project(1.62, y, z);
       if (!a || !b) continue;
-      const w = Math.max(.5, 5 / (z + .6)), fade = Math.exp(-n / 8);
+      const w = Math.max(.5, 5 / (z + .6)), fade = Math.exp(-n / 8), pad = w * 1.2 + 1.6 * 3 + 2;
+      const fl = document.createElementNS(NS, 'filter');
+      fl.id = `treadSoft${n}`; fl.setAttribute('filterUnits', 'userSpaceOnUse');
+      fl.setAttribute('x', (Math.min(a[0], b[0]) - pad).toFixed(1)); fl.setAttribute('y', (Math.min(a[1], b[1]) - pad).toFixed(1));
+      fl.setAttribute('width', (Math.abs(b[0] - a[0]) + 2 * pad).toFixed(1)); fl.setAttribute('height', (Math.abs(b[1] - a[1]) + 2 * pad).toFixed(1));
+      fl.innerHTML = '<feGaussianBlur stdDeviation="1.6"/>'; defs?.appendChild(fl);
+      const tg = document.createElementNS(NS, 'g');
+      tg.setAttribute('filter', `url(#treadSoft${n})`); tg.style.mixBlendMode = 'screen';
       for (const k of ['base', 'pulse']) {
         const l = document.createElementNS(NS, 'line');
         l.setAttribute('x1', String(a[0])); l.setAttribute('y1', String(a[1])); l.setAttribute('x2', String(b[0])); l.setAttribute('y2', String(b[1]));
         l.setAttribute('stroke-width', (k === 'pulse' ? w * 2.4 : w).toFixed(2)); l.setAttribute('class', k);
         l.style.setProperty('--n', String(n)); l.style.setProperty('--o', (.55 * fade + .08).toFixed(3)); l.style.setProperty('--p', Math.min(1, 1.2 * fade + .25).toFixed(3));
-        g.appendChild(l);
+        tg.appendChild(l);
       }
+      g.appendChild(tg);
     }
     H.svg.appendChild(g);
     requestAnimationFrame(() => requestAnimationFrame(() => g.classList.add('awake')));
