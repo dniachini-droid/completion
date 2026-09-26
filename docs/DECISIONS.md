@@ -1025,3 +1025,12 @@
 - **Consequences:** the story no longer stops at week 7; it now runs to week 14 and then to the open route. Rule tests play fourteen weeks for Normal, Low and High lives and check every requirement can be met, nothing runs ahead of where Dan is, and each week closes. The new places show stand-in paintings: 35 places and 6 camp views still need their own. Dan reads the new weeks on his phone as he reaches them and flags any screen that reads badly (WRITING_PROCESS → after the text is in).
 - **Reversible:** Yes: content and a few map and view lines.
 
+## D-099 — Every place repainted by an image model over the kit's layout (Dan)
+- **Date:** 2026-09-26
+- **Context:** The kit's paintings are clear and correct but plain; a polish pass and a finishing filter changed little. Four places were repainted through Meshy's image-to-image (an image model, with the kit painting as the layout guide and the Lamp Hall as the style), fitted to the frame, and checked. Dan: "pretty beautiful … the detail on the repaints is amazing. Let's do it for all."
+- **Decision (Dan):** every place gets an AI repaint: the 48 painted with the kit, and the 41 new places of weeks 8–14 (D-098), painted from their briefs. **The bar:** story-critical things (the thing to look at, carved marks and counts, anything a clue depends on) must be right; small errors elsewhere are fine; fix what's wrong without being obsessive. A place whose story-critical thing stays wrong keeps its kit painting or stand-in.
+- **Changes:** D-056's "paintings stay code-painted" (already relaxed for props by D-090): the kit now sets each layout, the image model paints the finish. The places' descriptions go to Meshy's service (never to Dan, D-015).
+- **Method:** `app/paint/places/ai/README.md` (setup, the API, the eight steps, the wrong readings seen, the budget).
+- **Alternatives:** keep the kit paintings (plain); the finishing filter (small gain); Blender (D-090: about 34 min a picture and not yet at the hall's look); a human illustrator (weeks, real money).
+- **Reversible:** Yes: the kit paintings and scene files stay in git.
+
