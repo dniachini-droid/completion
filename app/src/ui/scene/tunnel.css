@@ -120,6 +120,11 @@
 .dv .head{ position:relative; }
 .dv .head::before{ content:""; position:absolute; left:50%; top:50%; width:128%; height:150%; transform: translate(-50%,-50%); z-index:-1; pointer-events:none;
   background: radial-gradient(closest-side, rgba(12,8,40,.62), rgba(12,8,40,.42) 55%, rgba(12,8,40,0)); }
+/* the delve screen itself never scrolls: its washes (the ::before glows behind the head, the line under it and the
+   foot) overhang the screen, and on a phone a screen they overhang becomes one the finger can drag, so a press on Done
+   turned into a small drag, or landed while the screen was still gliding, and did nothing (Dan, 2026-09-26). Nothing
+   real ever needs it: a job's return scrolls its own words (.bottom.fit > .scroll). */
+.dv > .ui{ overflow-y: hidden; }
 .dv .bottom::before{ content:""; position:absolute; left:50%; top:52%; width:130%; height:150%; transform: translate(-50%,-50%); z-index:-1; pointer-events:none;
   background: radial-gradient(closest-side, rgba(10,6,32,.72), rgba(10,6,32,.5) 55%, rgba(10,6,32,0)); }
 .dv .head .soft{ position:relative; color:#e4e2fb; }
