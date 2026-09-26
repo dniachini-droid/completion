@@ -17,7 +17,9 @@ page.on('request', r => { if (!r.url().startsWith(url) && !r.url().startsWith('d
 await page.clock.install({ time: new Date('2026-09-24T09:00:00+01:00') });
 await page.goto(url);
 let i = 0;
-const ff = async (ms) => { const n = await page.evaluate(() => Date.now()); await page.clock.setSystemTime(n + ms); await page.clock.runFor(500); };
+/* after a jump the page is given a moment of real time too, so what the jump brings (a delve's end) is on screen before
+   the walk looks for it; without it the walk sometimes looked too soon and took another path (2026-09-26) */
+const ff = async (ms) => { const n = await page.evaluate(() => Date.now()); await page.clock.setSystemTime(n + ms); await page.clock.runFor(500); await page.waitForTimeout(250); await page.clock.runFor(250); };
 const shot = async (name, settle = 1500) => { if (settle > 10000) await ff(settle); else await page.clock.runFor(settle); await page.waitForTimeout(300); await page.screenshot({ path: `${out}/${String(++i).padStart(2, '0')}-${name}.png` }); await fits(name); await locked(name); };
 /** The screen never slides (Dan, review 2): nothing can be scrolled sideways, and the page itself never scrolls. */
 const locked = async (name) => {
