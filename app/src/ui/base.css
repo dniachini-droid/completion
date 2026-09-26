@@ -31,3 +31,12 @@ input.clock::-webkit-calendar-picker-indicator { display: none; }
 /* the screen never slides or bounces (Dan, review 2): only text that is longer than its space scrolls, and only up and
    down. Every scrolling part clips sideways, so a glow or a wide row can never let the page be dragged left or right. */
 .ui .body, .ui .field, .ui .scroll { overflow-x: hidden; overscroll-behavior: none; }
+
+/* Looking at the painting (D-103, Look.svelte): everything laid over it fades away, the gold and the washes too, so the
+   place shows as painted. !important because an arrival's gold is held by its animation. The page itself never moves. */
+.ui, .pool, .fog.warm, .scrim-top, .scrim-bottom, .vignette, .facelight { transition: opacity .45s var(--ease); }
+body.looking .ui, body.looking .pool, body.looking .fog.warm, body.looking .scrim-top, body.looking .scrim-bottom,
+body.looking .vignette, body.looking .facelight { opacity: 0 !important; pointer-events: none !important; }
+/* the cool mist thins while looking, so a detail isn't hidden under it (it keeps drifting) */
+.fog:not(.warm) { transition: opacity .45s var(--ease); }
+body.looking .fog:not(.warm) { opacity: .4; }

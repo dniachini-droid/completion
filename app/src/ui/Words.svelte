@@ -1,21 +1,24 @@
 <script lang="ts">
   /* The story's words over a painting (D-085). They keep to the lower half of the screen so the painting stays seen:
      a soft wash, no box or edge, the words scrolling inside it. "Hide the words" folds them to a couple of lines so the
-     whole painting shows; "Read on" brings them back. Short lines simply sit there: no scrolling, no link. */
+     whole painting shows; "Read on" brings them back. Short lines simply sit there: no scrolling, no link.
+     Over a place's painting the link is "Look" instead (D-103): everything fades and the painting is seen whole. */
   import type { Snippet } from 'svelte';
   import { t } from '../content/copy/en';
 
   /* plain: the screen already scrolls its words and darkens the painting itself (a job's return), so here they only fold */
-  let { children, length = 0, plain = false }: { children: Snippet; length?: number; plain?: boolean } = $props();
+  let { children, length = 0, plain = false, look }: { children: Snippet; length?: number; plain?: boolean; look?: () => void } = $props();
   /* long enough to need the fold (roughly more than four lines on a phone) */
-  const foldable = $derived(length > 220);
+  const foldable = $derived(!look && length > 220);
   let open = $state(true);
 </script>
 
 <div class="words" class:plain class:folded={foldable && !open}>
   {#if !plain}<div class="wash" aria-hidden="true"></div>{/if}
   <div class="scroll">{@render children()}</div>
-  {#if foldable}
+  {#if look}
+    <button class="text-link fold" onclick={look}><span>{t('look.open')}</span></button>
+  {:else if foldable}
     <button class="text-link fold" onclick={() => (open = !open)} aria-expanded={open}><span>{open ? t('words.hide') : t('words.show')}</span></button>
   {/if}
 </div>

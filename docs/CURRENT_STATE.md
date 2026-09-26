@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-26, later still (Phase 9: the lock-screen panel says Paused when Dan goes into another app, D-102; the AI repaint of every place, D-100, D-101)_
+_Last updated: 2026-09-26, later still (Phase 9: Look, the painting without the words, pinch to zoom, D-103; the lock-screen panel says Paused, D-102; the AI repaint of every place, D-100, D-101)_
 
 ## Current phase
 
@@ -27,7 +27,10 @@ Build the whole MVP (`product/MVP.md` → build order): **slice 2** the Quiet an
 4. **TestFlight:** Dan finished Apple setup sitting 2 (all four secrets in; TestFlight installed). **The first build reached Apple** (workflow run 36011344034, 2026-09-24: signed in the cloud and uploaded in under 4 minutes): trial (d), the pipeline, passes. It carried slices 1–2. **The whole first playable reached Apple** (run 36021450486, 2026-09-24, started by hand: a commit touching no app files does not start the workflow). Dan does sitting 3 (trials b and c) when he tests, and reports.
 5. **The web link:** https://claude.ai/artifact/TcH91A1SxeEvEnLJbRE4pi (private; one link, updated in place each slice).
 
-## Last session (2026-09-26, Phase 9, the panel paused with the delve, D-102)
+## Last session (2026-09-26, Phase 9, Look, D-103)
+Dan: the new paintings are beautiful, but he wants to see one without the words or the gold light, especially where it holds something important, without making screens busier; and a pinch to look closer, with the page itself locked. Built (D-103): on an arrival and a job's return, "Hide the words" became **Look** (Dan chose the word), and a tap on the clear painting does the same: everything over the painting fades, two fingers zoom the painting alone (up to 4×), one moves it, a tap comes back as it was. The phone's own page pinch is refused everywhere. 148 rule tests; typecheck and build clean; the screen walk now tries Look on the first arrival (pinch, drag, back) and checks the page never moves or zooms. On branch `claude/painting-display-no-text-9c0p34`, **not yet merged: Dan tries it (web link or a hand-started build) and says OK.**
+
+## Earlier (2026-09-26, Phase 9, the panel paused with the delve, D-102)
 Dan: leaving the app paused the delve, but the widget on the lock screen and the Dynamic Island kept counting down. Fixed (D-102): the phone's own native part, which already decides "another app" about 15 s after he leaves, now also turns the panel to Paused, stopped where he left, in red (Dan's suggestion; red only for a paused panel, the words calm). The app sends the words ahead with each panel. 148 rule tests (1 new); typecheck clean; the iOS compile passed on a cloud Mac (run 36216941794). Merged into `main` with Dan's OK (PR #31), with the AI repaint; **the build reached Apple** (run 36217285143, 2026-09-26).
 
 ## Earlier (2026-09-26, Phase 9, the AI repaint, D-100, D-101)
