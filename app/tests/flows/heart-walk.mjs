@@ -333,10 +333,12 @@ if (await row.count()) {
   await row.click(); await page.locator('.sheet .clock-btn input').fill('14:30'); await page.locator('.sheet .clock-btn input').dispatchEvent('change');
   await shot('week-edit', 800);
   if (!(await page.locator('.day button.row', { hasText: '14:30' }).count())) errors.push('WEEK the time was not kept');
-  const n0 = await page.locator('.day:not(.past)').first().locator('button.row').count();
+  /* counted on the day the job is on (today's jobs may all be done, so the first open job can be on a later day) */
+  const at = await page.locator('.sheet').evaluate(sh => [...document.querySelectorAll('.day')].findIndex(d => d.contains(sh)));
+  const n0 = await page.locator('.day').nth(at).locator('button.row').count();
   await page.locator('.sheet .days button[aria-pressed="false"]').last().click(); await page.clock.runFor(500);
   if (await page.locator('.sheet').count()) errors.push('WEEK the sheet stayed open after a move');
-  if ((await page.locator('.day:not(.past)').first().locator('button.row').count()) !== n0 - 1) errors.push('WEEK a tap on a day did not move the job');
+  if ((await page.locator('.day').nth(at).locator('button.row').count()) !== n0 - 1) errors.push('WEEK a tap on a day did not move the job');
 }
 /* adding a one-off: the + on a day opens a line under it, already typing; Enter puts it there (D-093) */
 { await page.locator('.day:not(.past) button.plus').first().click(); await page.clock.runFor(300);
