@@ -151,12 +151,54 @@ const cutIfAny = async (name) => {
   }
   return true;
 };
+/** Looking at the painting (D-105), on the first arrival: "Look" fades everything laid over it; two fingers zoom the
+ *  painting alone and one moves it; the page itself never zooms or moves; a tap comes back with the screen as it was. */
+let looked = false;
+const lookCheck = async (name) => {
+  looked = true;
+  const state = () => page.evaluate(() => {
+    const pic = document.querySelector('.paint.scene'), ui = document.querySelector('.ui'), b = document.querySelector('.phone').getBoundingClientRect();
+    return { t: pic.style.transform, ui: +getComputedStyle(ui).opacity, look: !!document.querySelector('.look'),
+      page: [scrollX, scrollY, document.scrollingElement.scrollTop, visualViewport.scale, b.x, b.y, b.width, b.height] };
+  });
+  const before = await state();
+  await tap('Look'); await page.clock.runFor(600); await page.waitForTimeout(600);
+  await page.screenshot({ path: `${out}/${String(++i).padStart(2, '0')}-${name}-look.png` });
+  let s = await state();
+  if (!s.look || s.ui > 0.05) errors.push(`LOOK ${name}: the words did not fade (${s.ui})`);
+  /* two fingers spread from the middle, then one finger drags */
+  await page.evaluate(() => {
+    const el = document.querySelector('.look'), f = (type, id, x, y) => el.dispatchEvent(new PointerEvent(type, { pointerId: id, clientX: x, clientY: y, bubbles: true, cancelable: true, pointerType: 'touch', isPrimary: id === 1 }));
+    const cx = innerWidth / 2, cy = innerHeight / 2;
+    f('pointerdown', 1, cx - 20, cy); f('pointerdown', 2, cx + 20, cy);
+    for (let k = 1; k <= 10; k++) { f('pointermove', 1, cx - 20 - k * 8, cy); f('pointermove', 2, cx + 20 + k * 8, cy); }
+    f('pointerup', 2, cx + 100, cy);
+    for (let k = 1; k <= 5; k++) f('pointermove', 1, cx - 100 + k * 10, cy + k * 10);
+    f('pointerup', 1, cx - 50, cy + 50);
+  });
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: `${out}/${String(++i).padStart(2, '0')}-${name}-look-zoom.png` });
+  s = await state();
+  const m = /scale\(([\d.]+)\)/.exec(s.t);
+  if (!m || +m[1] < 2.5) errors.push(`LOOK ${name}: the painting did not zoom (${s.t})`);
+  if (!s.look) errors.push(`LOOK ${name}: a pinch closed the look`);
+  if (JSON.stringify(s.page) !== JSON.stringify(before.page)) errors.push(`LOOK ${name}: the page moved or zoomed ${JSON.stringify(s.page)}`);
+  /* a tap comes back */
+  await page.locator('.look').click(); await page.clock.runFor(800); await page.waitForTimeout(800);
+  s = await state();
+  if (s.look || s.t || s.ui < 0.95) errors.push(`LOOK ${name}: did not come back as it was (${s.t}, ${s.ui})`);
+  if (JSON.stringify(s.page) !== JSON.stringify(before.page)) errors.push(`LOOK ${name}: the page moved after looking`);
+  /* a tap on the clear painting looks too */
+  const gap = page.locator('.gap'); await gap.click(); await page.clock.runFor(300);
+  if (!(await page.locator('.look').count())) errors.push(`LOOK ${name}: a tap on the painting did not look`);
+  await page.locator('.look').click(); await page.clock.runFor(800); await page.waitForTimeout(600);
+};
 /** Play each arrival in turn, back to Today. */
 const arrivals = async (name) => {
   for (let k = 0; k < 6; k++) {
     if (await cutIfAny(`${name}-${k}`)) continue;
     if (!(await page.locator('.arr').count())) return;
-    await shot(`${name}-${k}`, 6000); await guessIfAny(`${name}-${k}`);
+    await shot(`${name}-${k}`, 6000); if (!looked) await lookCheck(`${name}-${k}`); await guessIfAny(`${name}-${k}`);
     if (await has('Rest here for today')) await tap('Rest here for today'); else await tap('Back to today');
     await page.clock.runFor(1500);
   }
@@ -328,10 +370,12 @@ if (await row.count()) {
   await row.click(); await page.locator('.sheet .clock-btn input').fill('14:30'); await page.locator('.sheet .clock-btn input').dispatchEvent('change');
   await shot('week-edit', 800);
   if (!(await page.locator('.day button.row', { hasText: '14:30' }).count())) errors.push('WEEK the time was not kept');
-  const n0 = await page.locator('.day:not(.past)').first().locator('button.row').count();
+  /* counted on the day the job is on (today's jobs may all be done, so the first open job can be on a later day) */
+  const at = await page.locator('.sheet').evaluate(sh => [...document.querySelectorAll('.day')].findIndex(d => d.contains(sh)));
+  const n0 = await page.locator('.day').nth(at).locator('button.row').count();
   await page.locator('.sheet .days button[aria-pressed="false"]').last().click(); await page.clock.runFor(500);
   if (await page.locator('.sheet').count()) errors.push('WEEK the sheet stayed open after a move');
-  if ((await page.locator('.day:not(.past)').first().locator('button.row').count()) !== n0 - 1) errors.push('WEEK a tap on a day did not move the job');
+  if ((await page.locator('.day').nth(at).locator('button.row').count()) !== n0 - 1) errors.push('WEEK a tap on a day did not move the job');
 }
 /* adding a one-off: the + on a day opens a line under it, already typing; Enter puts it there (D-093) */
 { await page.locator('.day:not(.past) button.plus').first().click(); await page.clock.runFor(300);
@@ -370,6 +414,7 @@ await toClock(4, 9); await page.reload(); await page.clock.runFor(1500);
 await openers('back'); await shot('back-today', 2500);
 if (!closes) errors.push('the week close never showed');
 if (!mornings) errors.push('no morning after camp');
+if (!looked) errors.push('LOOK never tried: no arrival reached');
 if (errors.length) { console.error(errors); process.exitCode = 1; } else console.log('walk: ' + i + ' screens, no errors, no network');
 if (process.env.COST) (await import('node:fs')).writeFileSync(`${out}/cost.json`, JSON.stringify(costs, null, 1));
 await browser.close();

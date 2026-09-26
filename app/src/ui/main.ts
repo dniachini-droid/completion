@@ -15,6 +15,10 @@ if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
     setTimeout(() => { b.remove(); el.style.overflow = ''; }, 950);
   });
 }
+/* the page never zooms (Dan, D-105): the phone's own pinch is refused everywhere; only a painting being looked at
+   zooms, by its own sums (Look.svelte) */
+for (const g of ['gesturestart', 'gesturechange', 'gestureend']) document.addEventListener(g, e => e.preventDefault(), { passive: false });
+
 /* sound may play only after a tap, and again after each return from the background */
 document.addEventListener('pointerdown', () => platform.sound.unlock());   /* every tap: iOS suspends sound after the background */
 

@@ -9,6 +9,7 @@
   import Settled from './Settled.svelte';
   import Cut from './Cut.svelte';
   import Words from './Words.svelte';
+  import Look from './Look.svelte';
   import { beatOf, marksIn, mayGuess, markHeld, markOf } from '../core/story';
   import type { Go } from './nav';
 
@@ -38,6 +39,10 @@
     leave('today');
   }
 
+  /* the painting, seen without the words, the buttons or the gold (D-105) */
+  let looking = $state(false);
+  const look = () => (looking = true);
+
   function leave(to: 'today' | 'set') {
     if (v.arrival) {
       game.do({ do: 'seen', what: 'arrival', ref: v.arrival.seq });
@@ -66,11 +71,11 @@
         <div class="label-line gold">{a.kind === 'place' ? t('arrive.label') : t('arrive.camp')}</div>
         <h1 class="carve lg">{a.name}</h1>
       </section>
-      <!-- the painting, left clear -->
-      <div class="gap"></div>
+      <!-- the painting, left clear: a tap on it looks at it (D-105) -->
+      <div class="gap" onclick={look} role="presentation"></div>
       <!-- the words keep to the lower half and scroll there; they can be folded away (D-085) -->
       <div class="col text">
-        <Words length={(a.line?.length ?? 0) + (a.look?.length ?? 0)}>
+        <Words {look} length={(a.line?.length ?? 0) + (a.look?.length ?? 0)}>
           <span class="soft on-scene">{a.line}</span>
           {#if a.look}<span class="soft on-scene look">{a.look}</span>{/if}
           {#each a.opened as line}<p class="soft on-scene look">{t('arrive.keyOpens')} {line}</p>{/each}
@@ -97,6 +102,7 @@
         <div class="btn-row"><button class="btn-quiet" onclick={() => leave('set')}><span>{t('today.keepGoing')}</span></button></div>
       </section>
     </div>
+    {#if looking}<Look close={() => (looking = false)} />{/if}
   </div>
 {/if}
 

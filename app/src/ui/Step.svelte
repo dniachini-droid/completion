@@ -5,6 +5,7 @@
   import { t } from '../content/copy/en';
   import Scene from './Scene.svelte';
   import Return from './Return.svelte';
+  import Look from './Look.svelte';
   import type { Go } from './nav';
 
   let { go, seq }: { go: Go; seq: number } = $props();
@@ -21,6 +22,10 @@
   const startAt = $derived(v.nextAt !== null ? Math.max(0, v.nextAt - 400) : from - 50);
   const px = (m: number) => 8 + (W - 16) * Math.min(1, Math.max(0, (m - startAt) / Math.max(1, target - startAt)));
 
+  /* the painting, seen without the words (D-105) */
+  let looking = $state(false);
+  const look = () => (looking = true);
+
   function leave() { go(v.arrival ? 'arrival' : 'today'); }
 </script>
 
@@ -32,7 +37,8 @@
       <span></span><span></span>
     </div>
   </header>
-  <div class="mid"></div>
+  <!-- the painting, left clear: a tap on it looks at it -->
+  <div class="mid" onclick={look} role="presentation"></div>
   <section class="bottom fit col center">
     <div class="scroll">
       <div class="label-line centred gold rise">{t('step.label')}</div>
@@ -46,7 +52,7 @@
         {/if}
         <circle cx={px(v.walked)} cy={y} r="3.4" fill="#ffd27a" />
       </svg>
-      <div class="rise d3"><Return doneSeq={fact && fact.type === 'jobDone' ? seq : null} {go} /></div>
+      <div class="rise d3"><Return doneSeq={fact && fact.type === 'jobDone' ? seq : null} {go} {look} /></div>
     </div>
     <div class="go rise d3">
       {#if v.arrival}
@@ -57,6 +63,7 @@
     </div>
   </section>
 </div>
+{#if looking}<Look close={() => (looking = false)} />{/if}
 
 <style>
   .bottom h2 { margin-top: 10px; }

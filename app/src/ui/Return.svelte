@@ -12,7 +12,7 @@
   import type { CopyKey } from '../content/copy/en';
 
   import type { Go } from './nav';
-  let { doneSeq, extraFinds = [], go }: { doneSeq: number | null; extraFinds?: string[]; go?: Go } = $props();
+  let { doneSeq, extraFinds = [], go, look }: { doneSeq: number | null; extraFinds?: string[]; go?: Go; look?: () => void } = $props();
   const cap = (x: string) => x.charAt(0).toUpperCase() + x.slice(1);
   /* a small choice never gates anything: each option opens what it names (the record here), then comes back */
   function pick(i: number) { if (!r?.beat) return; game.do({ do: 'choose', beat: r.beat, pick: i }); if (r.records.length && go) go('records', r.records[i]); }
@@ -23,7 +23,7 @@
 {#if r && r.line}
   {#if r.key}<div class="label-line centred lit key">{t('step.key')}</div>{/if}
   <!-- the story's words and any find keep to the lower half and scroll there; they can be folded away (D-085) -->
-  <Words plain length={r.line.length + finds.reduce((n, f) => n + f!.line.length, 0)}>
+  <Words plain {look} length={r.line.length + finds.reduce((n, f) => n + f!.line.length, 0)}>
     <p class="say story on-scene">{r.line}</p>
     {#each finds as f (f!.id)}
       <div class="find">
@@ -51,7 +51,7 @@
     </div>
   {/if}
 {:else if finds.length}
-  <Words plain length={finds.reduce((n, f) => n + f!.line.length, 0)}>
+  <Words plain {look} length={finds.reduce((n, f) => n + f!.line.length, 0)}>
     {#each finds as f (f!.id)}
       <div class="find">
         <div class="label-line centred gold">{t('find.label')}</div>
