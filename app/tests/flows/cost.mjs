@@ -1,10 +1,10 @@
 // What each screen costs the phone while it sits still: repaints, rasterised area and script time a second, measured
 // from the browser's own trace over a few seconds of real time (D-099, D-103). The browser here has no graphics chip,
 // so the numbers compare before and after; they are not the phone's. Usage (from app/, with a build served):
-//   PLAYWRIGHT=$(npm root -g)/playwright/index.mjs node tests/flows/cost.mjs http://localhost:4173/ [seconds]
-const { chromium } = await import(process.env.PLAYWRIGHT ?? 'playwright');
+//   node tests/flows/cost.mjs http://localhost:4173/ [seconds]
+const { launch } = await import('./browser.mjs');
 const [,, url, secs = '4'] = process.argv;
-const browser = await chromium.launch();
+const browser = await launch();
 const page = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, timezoneId: 'Europe/London' });
 const tap = (text) => page.getByRole('button', { name: text, exact: true }).first().click({ timeout: 8000 });
 const cdp = await page.context().newCDPSession(page);

@@ -25,7 +25,7 @@ Dependencies only point one way: **ui → core → (content types)**. core never
 
 The world's gifts are **worked out once, when they happen, and then kept as facts.** So a later change to the numbers or the rules never takes back anything Dan has already seen (rule 9, rule 18), and the story never replays differently.
 
-**What the game shows** is worked out from: the facts + the authored content + the rules + the clock. A small snapshot is saved alongside so opening the app never replays a year of facts; the snapshot can always be rebuilt from the log, so a broken snapshot costs nothing.
+**What the game shows** is worked out from: the facts + the authored content + the rules + the clock. No snapshot is saved: working out every screen from a year of facts takes about 15 ms, so the log is the only thing kept (D-106).
 
 Why this shape:
 - **Nothing is half-saved:** each fact is written the moment it happens, in one step (SQLite transaction).
@@ -87,7 +87,7 @@ A server; accounts; sync; an analytics or crash service; a state-management libr
 | Principle | Where it's met |
 |---|---|
 | Clear modules | The five parts; one-way dependencies |
-| Explicit state models | The fact log, the snapshot, the "can see now" view |
+| Explicit state models | The fact log, the "can see now" view |
 | Testability | core is pure, clock passed in; `TEST_STRATEGY.md` |
 | Migrations | `DATA_MODEL.md` → versions |
 | Deterministic rules | core; gifts recorded once |

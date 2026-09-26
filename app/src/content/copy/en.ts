@@ -216,6 +216,9 @@ export const copy = {
   'proto.leave.left': 'Another app: paused',
   'proto.leave.unsure': 'Back within 15 seconds, no sign of a lock: the delve went on',
   'proto.leave.none': 'Nothing yet.',
+  'proto.save.title': 'Where the save is kept',
+  'proto.save.sqlite': 'In the phone’s database: each thing you do is written as it happens.',
+  'proto.save.settings': 'In the app’s settings, the old way: nothing is lost, and the next start moves it back.',
 
   /* the week and the gaps (slice 4) */
   'today.tonight': 'Tonight',

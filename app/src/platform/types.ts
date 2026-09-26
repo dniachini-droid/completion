@@ -1,3 +1,4 @@
+import type { Saves } from './saves';
 /** The phone's services, behind small interfaces (ARCHITECTURE.md → platform). */
 export interface Notifier {
   /** Whether an alert can sound with the phone locked (the app: yes; a web page: no). */
@@ -49,6 +50,10 @@ export interface PanelState {
 export interface Panel { show(p: PanelState): Promise<void>; end(): Promise<void>; }
 export interface Platform {
   notifier: Notifier; haptics: Haptics; store: Store; sound: Sound; now(): Date; away: Away;
+  /** The save (D-106): SQLite on the phone, the browser's storage on the web link. */
+  readonly saves: Saves;
+  /** Why the phone's save fell back to the app settings, if it did (the trial screen shows it). */
+  readonly saveTrouble: string | null;
   /** The delve's panel on the lock screen and in the Dynamic Island (the app only; the web link has none). */
   panel: Panel;
   /** Inside the phone app (no browser around it: the app draws its own swipe back from the left edge). */

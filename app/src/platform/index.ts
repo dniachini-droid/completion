@@ -4,19 +4,24 @@ import { Haptics as CapHaptics, ImpactStyle } from '@capacitor/haptics';
 import { Preferences } from '@capacitor/preferences';
 import type { Away, Panel, PanelState, Platform } from './types';
 import { sound } from './chime';
+import { adopt, sqlSaves, textSaves, type Db, type Saves } from './saves';
 
-/* Prototype storage. On the web link: the browser's own. The fact log is the real save's shape; it moves to SQLite
-   before the first playable (DATA_MODEL.md; PROTOTYPE_NOTES.md). */
+/** The live saves (the real one and the rehearsal's): what's written the old way is brought into SQLite at start. */
+const LIVE = ['save.v1', 'save.rehearsal'];
+
+/* On the web link and in tests: the browser's own storage, the whole save as one text. */
 const store = {
   get: (k: string) => { try { return localStorage.getItem(k); } catch { return null; } },
   set: (k: string, v: string) => { try { localStorage.setItem(k, v); } catch { /* private mode */ } },
   remove: (k: string) => { try { localStorage.removeItem(k); } catch { /* */ } },
 };
 
-/* In the app: the phone's own app settings (Preferences), which iOS never clears to save space and iCloud backs up.
-   Read once at start into memory, so the game reads and writes as before; each write goes to the phone at once. */
+/* In the app, small settings (the rehearsal's): the phone's own app settings (Preferences), which iOS never clears to
+   save space and iCloud backs up. Read once at start into memory; each write goes to the phone at once. Up to D-106 the
+   save was kept here too, and is again if SQLite fails. */
 const kept = new Map<string, string>();
 const nativeStore = {
+  keys: () => [...kept.keys()],
   get: (k: string) => kept.get(k) ?? null,
   set: (k: string, v: string) => { kept.set(k, v); void Preferences.set({ key: k, value: v }); },
   remove: (k: string) => { kept.delete(k); void Preferences.remove({ key: k }); },
@@ -50,9 +55,42 @@ const nativePanel: Panel = {
   async end() { try { await DelvePanel.end(); } catch { /* no panel */ } },
 };
 
+/* The save (D-106): SQLite, through the app's own small plugin (ios/App/App/SavePlugin.swift); all the SQL is in
+   saves.ts. If SQLite can't be opened, or a write ever fails, the save goes on the old way, whole, in the app settings,
+   with nothing lost (memory holds it all); the next start brings it back into SQLite (adopt: the longer log wins). */
+const SqlPlugin = registerPlugin<{
+  open(): Promise<void>;
+  run(o: { steps: { sql: string; args?: unknown[] }[] }): Promise<void>;
+  all(o: { sql: string; args?: unknown[] }): Promise<{ rows: (string | number | null)[][] }>;
+}>('Save');
+const nativeDb: Db = {
+  run: steps => SqlPlugin.run({ steps }),
+  all: async (sql, args) => (await SqlPlugin.all({ sql, args })).rows,
+};
+let saves: Saves = textSaves(nativeStore, 'settings');
+let saveTrouble: string | null = null;
+async function openSaves() {
+  try {
+    await SqlPlugin.open();
+    const sql = await sqlSaves(nativeDb, why => {
+      saveTrouble = `write: ${String((why as Error)?.message ?? why)}`;
+      const settings = textSaves(nativeStore, 'settings');
+      for (const [k, raw] of sql.all()) nativeStore.set(k, raw);
+      saves = settings;
+    });
+    await adopt(sql, nativeStore, LIVE);
+    saves = sql;
+  } catch (why) {
+    /* SQLite unusable: the old way, which the settings still hold (nothing was moved out of them unless written first) */
+    saveTrouble = `open: ${String((why as Error)?.message ?? why)}`;
+    saves = textSaves(nativeStore, 'settings');
+  }
+}
+
 const native: Platform = {
   store: nativeStore, sound, now: () => new Date(), app: true, away: nativeAway,
-  ready: async () => { await readKept(); nativeAway.first = await nativeAway.take(); },
+  get saves() { return saves; }, get saveTrouble() { return saveTrouble; },
+  ready: async () => { await readKept(); await openSaves(); nativeAway.first = await nativeAway.take(); },
   notifier: {
     locked: true,
     async permit() {
@@ -80,8 +118,9 @@ const webAway: Away = {
 };
 
 /* In a browser (the web link, tests): the end chimes if the page is open, and shows when you come back. */
+const webSaves = textSaves(store, 'browser');
 const web: Platform = {
-  store, sound, now: () => new Date(), ready: async () => {}, app: false, away: webAway,
+  store, sound, now: () => new Date(), ready: async () => {}, app: false, away: webAway, saves: webSaves, saveTrouble: null,
   notifier: { locked: false, permit: async () => false, at: async () => {}, cancel: async () => {} },
   panel: { show: async () => {}, end: async () => {} },
   haptics: {

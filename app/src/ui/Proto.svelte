@@ -44,6 +44,10 @@
         {#each leaves as l}<li><span class="at">{hhmm(l.at)}</span> {how[l.how]}{l.signs.length ? ` (${l.signs.join(', ')})` : ''}</li>
         {:else}<li>{t('proto.leave.none')}</li>{/each}
       </ul>
+      <!-- the save's home on the phone (D-106): the database, or the old way if the database ever failed -->
+      <div class="label-line">{t('proto.save.title')}</div>
+      <p class="soft">{platform.saves.where === 'sqlite' ? t('proto.save.sqlite') : t('proto.save.settings')}</p>
+      {#if platform.saveTrouble}<p class="soft trouble">{platform.saveTrouble}</p>{/if}
     {/if}
   </section>
 </div>
@@ -55,5 +59,6 @@
   button.home { color: var(--ink-2); }
   .leaves { list-style: none; margin: 0; padding: 0; font-size: 14px; color: var(--ink-2); }
   .leaves li { padding: 3px 0; }
+  .trouble { font-size: 12px; color: var(--ink-3); overflow-wrap: anywhere; }
   .leaves .at { color: var(--ink-3); font-variant-numeric: tabular-nums; }
 </style>

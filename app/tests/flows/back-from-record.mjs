@@ -1,7 +1,7 @@
 // Dan's report (2026-09-25): from a place, "Look at …" opens a record; its back arrow must return to the place, not to Records.
-// Usage: PLAYWRIGHT=$(npm root -g)/playwright/index.mjs node tests/flows/back-from-record.mjs http://localhost:4173/
-const { chromium } = await import(process.env.PLAYWRIGHT);
-const b = await chromium.launch();
+// Usage: node tests/flows/back-from-record.mjs http://localhost:4173/
+const { launch } = await import('./browser.mjs');
+const b = await launch();
 const page = await b.newPage({ viewport: { width: 440, height: 956 }, timezoneId: 'Europe/London' });
 await page.clock.install({ time: new Date('2026-09-24T09:00:00+01:00') });
 await page.goto(process.argv[2]); await page.clock.runFor(2500);

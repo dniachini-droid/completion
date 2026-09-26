@@ -7,6 +7,7 @@ class MainViewController: CAPBridgeViewController {
     override open func capacitorDidLoad() {
         bridge?.registerPluginInstance(DelvePanelPlugin())
         bridge?.registerPluginInstance(AwayPlugin())   // leaving the app pauses a delve (AwayPlugin.swift)
+        bridge?.registerPluginInstance(SavePlugin())   // the save, in SQLite (SavePlugin.swift, D-106)
     }
 }
 

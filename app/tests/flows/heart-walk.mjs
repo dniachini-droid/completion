@@ -1,14 +1,14 @@
 // The first playable walked on a fake clock at phone size, with a picture of every screen (TEST_STRATEGY.md → layer 5).
 // Fails on any page error or any request leaving the app. Usage (from app/, with a build served):
-//   PLAYWRIGHT=$(npm root -g)/playwright/index.mjs node tests/flows/heart-walk.mjs http://localhost:4173/ <out-dir> [width height]
+//   node tests/flows/heart-walk.mjs http://localhost:4173/ <out-dir> [width height]
 // Day 1 (a Thursday): the Course, the gym, Spanish study → the first place; the map; records. Then more days (one busier,
 // for a deep push) until the first word is cut (slice 3): the cut, the stair, the marks. Slice 4: camp and Goodnight on
 // day 1, the morning after, the week close on the first Monday (with Plan it for me and the week), the satchel, the
 // rhythms, and a return after days away. The map on day 1 and again after the first word (every light tapped, one stretch
 // looked at closer). No story text is asserted.
-const { chromium } = await import(process.env.PLAYWRIGHT ?? 'playwright');
+const { launch } = await import('./browser.mjs');
 const [,, url, out, w = '390', h = '844'] = process.argv;
-const browser = await chromium.launch();
+const browser = await launch();
 const page = await browser.newPage({ viewport: { width: +w, height: +h }, deviceScaleFactor: 2, timezoneId: 'Europe/London' });
 const errors = [];
 page.on('pageerror', e => errors.push(e.message));
@@ -79,6 +79,9 @@ const locked = async (name) => {
 /** No words cut off: every visible line of text is on screen (or inside a box that scrolls), and none sits under a button.
  *  Reports the screen and the element's class only, never the words (the story stays sealed). */
 const fits = async (name) => {
+  /* judged once the screen has settled: a crossfade (words arriving where a button is leaving) runs on the screen's own
+     clock, not the walk's, and on a busy machine it can still be half-way here; looping motion (dust, glow) doesn't count */
+  for (let k = 0; k < 20 && await page.evaluate(() => document.getAnimations().some(a => a.playState === 'running' && a.effect?.getComputedTiming().iterations !== Infinity)); k++) await page.waitForTimeout(150);
   const bad = await page.evaluate(() => {
     const H = innerHeight, W = innerWidth, out = [];
     const scroller = el => { for (let p = el.parentElement; p; p = p.parentElement) { const o = getComputedStyle(p).overflowY; if ((o === 'auto' || o === 'scroll') && p.scrollHeight > p.clientHeight + 1) return p; } return null; };
@@ -119,7 +122,19 @@ const toClock = async (days, hh, mm = 0) => {
 const home = async () => { for (let k = 0; k < 6 && !(await page.locator('nav.foot').count()); k++) { await page.locator('button.home').first().click(); await page.clock.runFor(1200); } };
 const backSays = async () => (await page.locator('button.home').first().innerText()).trim().toLowerCase();
 const has = async (text) => (await page.getByRole('button', { name: text, exact: true }).count()) > 0;
-const tap = async (text) => { await page.getByRole('button', { name: text, exact: true }).first().click({ timeout: 8000 }).catch(() => page.getByRole('button', { name: text, exact: true }).first().click({ force: true })); };
+/** A button by its name. Stuck (no such button): a picture of the screen, `stuck-<name>.png`, and the screen's own class
+ *  names only (never its words: the story stays sealed), before the walk fails. */
+const tap = async (text) => {
+  const b = page.getByRole('button', { name: text, exact: true }).first();
+  try { await b.click({ timeout: 8000 }); return; } catch { /* covered, or not there */ }
+  try { await b.click({ force: true, timeout: 8000 }); return; } catch (e) {
+    await page.screenshot({ path: `${out}/stuck-${text.replace(/\W+/g, '-')}.png` }).catch(() => {});
+    const where = await page.evaluate(() => [...document.querySelectorAll('.phone > *, #app > *, .ui, main')].map(x => x.className?.baseVal ?? x.className).filter(Boolean).slice(0, 8).join(' | ')).catch(() => '?');
+    console.error(`STUCK: no "${text}" button; the screen: ${where}; ${screensSoFar()} screens so far`);
+    throw e;
+  }
+};
+const screensSoFar = () => i;
 /** Today's one button: Delve on a delve job, Begin on one done away from the phone (D-077). */
 const start = async () => { if (await has('Delve')) await tap('Delve'); else await tap('Begin'); };
 /** Answer whatever guess the screen offers (the first option). */
@@ -322,7 +337,7 @@ if (await has('Records')) {
 }
 if (campDay1) await camp('d1', true);
 for (let d = 2; d <= 24 && !cut; d++) {
-  await toClock(1, 9); await page.reload(); await page.clock.runFor(1500);
+  await toClock(1, 9); await page.reload({ waitUntil: 'domcontentloaded' }); await page.clock.runFor(1500);
   if (await cutIfAny(`d${d}-open`)) break;
   await openers(`d${d}`);
   const high = d === 3;
@@ -337,6 +352,8 @@ for (let d = 2; d <= 24 && !cut; d++) {
   if (!cut) await camp(`d${d}`, d === 2);
 }
 if (!cut) errors.push('the first word was never cut');
+/* a word cut first thing on opening comes before that morning's screens: they are seen now (2026-09-26) */
+await openers('late');
 await mapWalk('map-late');
 await tap('Records'); await page.clock.runFor(1500); await tap('Symbols');   /* the Marks tab is called Symbols now */
 /* Records ⇄ Marks is a tab: nothing rises or fades in again, the heading stays put (Dan, D-093) */
@@ -347,7 +364,7 @@ if (await openMark.count()) { await openMark.click(); await shot('marks-open', 8
 const held = page.locator('.cell .cap.known').first();
 if (await held.count()) { await held.click(); await shot('marks-held', 800); }
 await home(); await page.clock.runFor(1500);
-await toClock(1, 9); await page.reload(); await page.clock.runFor(2000);
+await toClock(1, 9); await page.reload({ waitUntil: 'domcontentloaded' }); await page.clock.runFor(2000);
 await openers('last');
 if (await has('I can’t start')) { await tap('I can’t start'); await shot('cant-start', 2000); await tap('Not now'); await page.clock.runFor(1500); }
 /* slice 4's own screens, from Today's foot */
@@ -370,12 +387,20 @@ if (await row.count()) {
   await row.click(); await page.locator('.sheet .clock-btn input').fill('14:30'); await page.locator('.sheet .clock-btn input').dispatchEvent('change');
   await shot('week-edit', 800);
   if (!(await page.locator('.day button.row', { hasText: '14:30' }).count())) errors.push('WEEK the time was not kept');
-  /* counted on the day the job is on (today's jobs may all be done, so the first open job can be on a later day) */
-  const at = await page.locator('.sheet').evaluate(sh => [...document.querySelectorAll('.day')].findIndex(d => d.contains(sh)));
-  const n0 = await page.locator('.day').nth(at).locator('button.row').count();
-  await page.locator('.sheet .days button[aria-pressed="false"]').last().click(); await page.clock.runFor(500);
-  if (await page.locator('.sheet').count()) errors.push('WEEK the sheet stayed open after a move');
-  if ((await page.locator('.day').nth(at).locator('button.row').count()) !== n0 - 1) errors.push('WEEK a tap on a day did not move the job');
+  /* followed by its name to the day it is moved to: counting the day it left is no test, since a job missed earlier in
+     the week takes the freed place (D-080). The sheet's days run from today to Sunday, the week's last days on screen.
+     A day already holding that job is not chosen (a second session there quietly leaves, PLANNER.md). */
+  const name = (await page.locator('.day button.row.open .t').innerText()).trim();
+  const moves = page.locator('.sheet .days button'), m = await moves.count(), all = await page.locator('.day').count();
+  const holds = async (k) => (await page.locator('.day').nth(all - m + k).locator('button.row .t').allInnerTexts()).filter(x => x.trim() === name).length;
+  let to = -1;
+  for (let k = m - 1; k >= 0 && to < 0; k--) if ((await moves.nth(k).getAttribute('aria-pressed')) === 'false' && !(await holds(k))) to = k;
+  if (to < 0) { console.log('week: no other day this week to move it to; the move is not checked this time'); await page.locator('.day button.row.open').click(); await page.clock.runFor(300); }
+  else {
+    await moves.nth(to).click(); await page.clock.runFor(500);
+    if (await page.locator('.sheet').count()) errors.push('WEEK the sheet stayed open after a move');
+    if ((await holds(to)) !== 1) errors.push('WEEK a tap on a day did not move the job there');
+  }
 }
 /* adding a one-off: the + on a day opens a line under it, already typing; Enter puts it there (D-093) */
 { await page.locator('.day:not(.past) button.plus').first().click(); await page.clock.runFor(300);
@@ -410,7 +435,7 @@ await tap('Daybook'); await shot('daybook', 1500); await home(); await page.cloc
   if (!(await page.locator('nav.foot').count())) errors.push('BACK never reached Today');
 }
 /* away for four days: where you were, and a lighter day to come back to */
-await toClock(4, 9); await page.reload(); await page.clock.runFor(1500);
+await toClock(4, 9); await page.reload({ waitUntil: 'domcontentloaded' }); await page.clock.runFor(1500);
 await openers('back'); await shot('back-today', 2500);
 if (!closes) errors.push('the week close never showed');
 if (!mornings) errors.push('no morning after camp');
