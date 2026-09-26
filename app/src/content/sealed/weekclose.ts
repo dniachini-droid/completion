@@ -76,7 +76,7 @@ export const soFar: SoFar[] = [
     "Two counts run side by side in the tally: the teller's own, and another in small strokes.", // sf-m3-2
     "Not every record here was cut by the same carver: the one on the channel's lip has a hook of its own.", // sf-m3-3
     "Her pencilled sheets were made before she knew the cross.", // sf-m3-4
-    "Two carved hooks you had not met before: the channel's cramped one, and a maker's on the Reading Room's tablet.", // sf-m3-5
+    "You have met two new carved hooks: the cramped one on the channel's record, and a maker's hook on the Reading Room's first tablet.", // sf-m3-5
   ] },
   { id: 'sf-m4', w: 13, lines: [
     "A railway man broke into the blast room and kept a log, and in it a tall man with a lamp asks him questions.", // sf-m4-1
@@ -103,7 +103,7 @@ export const soFarLines: WeekCloseLine[] = [
   { id: "sf-m3-2", w: 9, req: ["b-8.B"], line: "Two counts run side by side in the tally: the teller's own, and another in small strokes." },
   { id: "sf-m3-3", w: 9, req: ["b-8.2"], line: "Not every record here was cut by the same carver: the one on the channel's lip has a hook of its own." },
   { id: "sf-m3-4", w: 9, req: ["b-9.B"], line: "Her pencilled sheets were made before she knew the cross." },
-  { id: "sf-m3-5", w: 9, req: ["b-8.2", "b-9.A"], line: "Two carved hooks you had not met before: the channel's cramped one, and a maker's on the Reading Room's tablet." },
+  { id: "sf-m3-5", w: 9, req: ["b-8.2", "b-9.A"], line: "You have met two new carved hooks: the cramped one on the channel's record, and a maker's hook on the Reading Room's first tablet." },
   { id: "sf-m4-1", w: 13, req: ["b-10.2"], line: "A railway man broke into the blast room and kept a log, and in it a tall man with a lamp asks him questions." },
   { id: "sf-m4-2", w: 13, req: ["b-11.3"], line: "On the ledge in the blast room lies a bound book with gold in its margins; her notebook says its writer never came." },
   { id: "sf-m4-3", w: 13, req: ["b-12.A"], line: "After the blast, a village well stood still and compasses swung towards the hill." },
