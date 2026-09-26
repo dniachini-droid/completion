@@ -428,7 +428,7 @@ function playWeek(facts: Fact[], week: string): number {
 /**
  * The daybook's page for each calendar week that had anything done, written once at the first opening after the week
  * (TOOLS §6; BALANCING §7): up to three things learned, the month's "so far" on the first close of each month of play
- * (weeks 1 and 5), the story week's glimpse, and the sealed things the weekly floor opened. A week with nothing done
+ * (weeks 1, 5, 9 and 13), the story week's glimpse, and the sealed things the weekly floor opened. A week with nothing done
  * gets no page, and no gap is marked (D-043). What the real week held is read from the log when the page is shown.
  */
 function weekClose(w: W, c: Content, at: Moment, day: string, storyWeek: number) {
@@ -439,7 +439,8 @@ function weekClose(w: W, c: Content, at: Moment, day: string, storyWeek: number)
     const before = new Set(ofType(w.all, 'weekClosed').flatMap(f => f.learned));
     const learned = c.story.learned.filter(l => l.w <= storyWeek && !before.has(l.id) && l.req.every(r => S.met(st, r))).slice(0, 3).map(l => l.id);
     const n = playWeek(w.all, wk);
-    const month = n === 1 ? c.story.soFar[0] : n === 5 ? c.story.soFar[1] : undefined;
+    /* the first close of each month of play: weeks 1, 5, 9, 13… */
+    const month = (n - 1) % 4 === 0 ? c.story.soFar[(n - 1) / 4] : undefined;
     const soFar = (month?.items ?? []).filter(l => l.req.every(r => S.met(st, r))).slice(0, 5).map(l => l.id);
     /* the glimpse waits until Dan has been where it looks (D-079): a later week's close shows it then */
     const glimpse = c.story.beats.find(b => b.kind === 'close' && b.w <= storyWeek && !st.played.has(b.id) && st.visited.has(b.stretch)
@@ -788,6 +789,9 @@ export interface View {
 export const STAND_IN: Record<StretchId, string> = {
   'st-mouth': 'sample-well-stair', 'st-hall': 'sample-rib-gallery', 'st-salt': 'sample-pool-dome', 'st-camp': 'sample-rib-gallery',
   'st-stair': 'sample-well-stair', 'st-flight2': 'sample-well-stair', 'st-square': 'sample-rib-gallery',
+  /* story weeks 8–14: the side gallery is square stone, so it borrows the square gallery's own painting */
+  'st-water': 'sample-pool-dome', 'st-reading': 'sample-rib-gallery', 'st-blast': 'sample-well-stair',
+  'st-side': 'pt-pl-w6-square-gallery', 'st-lower': 'sample-rib-gallery',
 };
 /** The places painted from their briefs so far (ids only; D-015): each shows its own painting, `pt-<id>`, which
     ui/paintings.ts carries (a test keeps the two in step); every other place shows its stretch's stand-in. */
@@ -911,9 +915,10 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   const last = ends[ends.length - 1];
   if (last && !seen.has(last.seq) && !run) {
     const j = jobOf(c, last.job), start = facts.find(f => f.seq === last.run) as FactOf<'delveStarted'> | undefined;
-    const doneFact = ofType(facts, 'jobDone').find(f => f.job === j.id && f.day === last.day && f.seq > last.run);
+    /* answered on a later game day (a delve begun before 04:00, answered after): still this run's answer */
+    const doneFact = ofType(facts, 'jobDone').find(f => f.job === j.id && f.seq > last.run);
     const completedDay = facts.some(f => f.type === 'dayCompleted' && f.seq > last.run);
-    runEnd = { seq: last.seq, job: j, minutes: last.minutes, how: last.how, ask: j.doneBy === 'dan' && !doneOn(facts, last.day).has(j.id),
+    runEnd = { seq: last.seq, job: j, minutes: last.minutes, how: last.how, ask: j.doneBy === 'dan' && !doneOn(facts, last.day).has(j.id) && !doneFact,
       enough: j.doneBy === 'enough' && !!doneFact, completedDay, count: start?.count ?? 1 };
     runFinds = ofType(facts, 'findGiven').filter(f => f.seq > last.run && f.seq < last.seq && !f.job).map(f => f.id);
   }

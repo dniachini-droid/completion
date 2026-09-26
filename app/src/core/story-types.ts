@@ -7,7 +7,8 @@
  */
 
 /** Where Dan is on the map: a stretch of the route (the story job's §0.3). */
-export type StretchId = 'st-mouth' | 'st-hall' | 'st-salt' | 'st-camp' | 'st-stair' | 'st-flight2' | 'st-square';
+export type StretchId = 'st-mouth' | 'st-hall' | 'st-salt' | 'st-camp' | 'st-stair' | 'st-flight2' | 'st-square'
+  | 'st-water' | 'st-reading' | 'st-blast' | 'st-side' | 'st-lower';
 
 export interface Stretch {
   id: StretchId;
@@ -27,14 +28,16 @@ export type Token =
   /** A name-ring; `en` is what it renders as once readable (usually the name), else it shows as a ring. */
   | { ring: string; en?: string; s?: string[] }
   /** A hand-mark in a record's corner. */
-  | { hand: 'his' | 'hers' | 'rod' | 'other' }
+  /* the Surveyor's own hook, and a maker's (the Reading Room's tablets), are neither his nor hers */
+  | { hand: 'his' | 'hers' | 'rod' | 'other' | 'surveyor' | 'maker' }
   /** Punctuation or a joining word the rendering needs ("." ";" ":" "the"); shown only between rendered words. */
   | { p: string };
 
 export interface RecordFragment {
   id: string;
-  /** Whose life: the salt-cutter, the linguist, the surveyor, the tally's own hand, or the chorus. */
-  life: 'S' | 'L' | 'V' | 'K' | 'X';
+  /** Whose life: the salt-cutter, the linguist, the surveyor, the tally's own hand, the chorus; the copyist, the
+      engineer, the makers (weeks 9–14 on). */
+  life: 'S' | 'L' | 'V' | 'K' | 'X' | 'C' | 'E' | 'B';
   /** Where it is, as the app says it (plain, physical). */
   where: string;
   /** Cut in the script (rendered from held signs) or written on paper in English (read at once). */

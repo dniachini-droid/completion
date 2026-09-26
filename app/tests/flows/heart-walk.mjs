@@ -29,6 +29,17 @@ const locked = async (name) => {
     return sideways || e.scrollLeft > 0 || (e === document.scrollingElement && e.scrollTop > 0);
   }).map(e => e.className?.baseVal ?? e.className ?? e.tagName));
   for (const c of bad) errors.push(`SLIDES ${name}: .${String(c).split(' ')[0]} can move sideways`);
+  /* nor up and down just because a glow overhangs it: on a phone that turns a press into a small drag (Dan, 2026-09-26).
+     A box may scroll only for what is really in it: measured again with every ::before and ::after taken away. */
+  const drags = await page.evaluate(() => {
+    const boxes = [...document.querySelectorAll('.phone *')].filter(e => { const o = getComputedStyle(e).overflowY; return o === 'auto' || o === 'scroll'; });
+    const all = boxes.map(e => e.scrollHeight - e.clientHeight);
+    const s = document.createElement('style'); s.textContent = '.phone *::before, .phone *::after { content: none !important; }';
+    document.head.appendChild(s);
+    const real = boxes.map(e => e.scrollHeight - e.clientHeight); s.remove();
+    return boxes.map((e, k) => [e, k]).filter(([, k]) => all[k] > 1 && all[k] > real[k] + 1).map(([e, k]) => `${String(e.className?.baseVal ?? e.className).split(' ')[0]} (${all[k]}px, ${Math.max(0, real[k])}px real)`);
+  });
+  for (const d of drags) errors.push(`DRAGS ${name}: .${d} scrolls only because a glow overhangs it`);
 };
 /** No words cut off: every visible line of text is on screen (or inside a box that scrolls), and none sits under a button.
  *  Reports the screen and the element's class only, never the words (the story stays sealed). */
@@ -248,7 +259,7 @@ for (let d = 2; d <= 24 && !cut; d++) {
 }
 if (!cut) errors.push('the first word was never cut');
 await mapWalk('map-late');
-await tap('Records'); await page.clock.runFor(1500); await tap('Marks');
+await tap('Records'); await page.clock.runFor(1500); await tap('Symbols');   /* the Marks tab is called Symbols now */
 /* Records ⇄ Marks is a tab: nothing rises or fades in again, the heading stays put (Dan, D-093) */
 if ((await page.locator('h1').first().evaluate(e => getComputedStyle(e).animationName)) !== 'none') errors.push('TABS the heading moved on switching');
 await shot('marks', 1500);

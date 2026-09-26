@@ -67,7 +67,7 @@
                 {:else if tk.t === 'word'}<span class="w" class:guess={tk.guess}>{tk.text}{tk.guess ? '?' : ''}</span>
                 {:else if tk.t === 'pic'}<span class="pic">[{tk.text}]</span>
                 {:else if tk.t === 'ring'}{@render mark('mk-ring')}
-                {:else if tk.t === 'hand'}{#if tk.who === 'hers'}<span class="g"><Glyph mark="mk-hand-hers" size={24} /></span>{:else}{@render mark('mk-hand')}{/if}
+                {:else if tk.t === 'hand'}{#if tk.who === 'hers' || tk.who === 'surveyor' || tk.who === 'maker'}<span class="g"><Glyph mark={`mk-hand-${tk.who}`} size={24} /></span>{:else}{@render mark('mk-hand')}{/if}
                 {:else}<span class="p">{tk.text}</span>{/if}
               {/each}
             </p>

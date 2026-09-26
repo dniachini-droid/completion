@@ -36,10 +36,15 @@
     'st-stair':   { x: 318, y: 326, lx: 344, ly: 372, anchor: 'end' },
     'st-flight2': { x: 262, y: 434, lx: 226, ly: 430, anchor: 'end' },
     'st-square':  { x: 132, y: 488, lx: 168, ly: 484, anchor: 'start' },
+    /* story weeks 8–14: below the first region; the map grows (and is dragged) only once they are walked or ahead */
+    'st-water':   { x: 238, y: 586, lx: 274, ly: 582, anchor: 'start' },
+    'st-side':    { x: 58,  y: 626, lx: 24,  ly: 666, anchor: 'start' },
+    'st-reading': { x: 330, y: 668, lx: 372, ly: 638, anchor: 'end' },
+    'st-blast':   { x: 164, y: 716, lx: 200, ly: 712, anchor: 'start' },
+    'st-lower':   { x: 238, y: 826, lx: 202, ly: 822, anchor: 'end' },
   };
-  /* the region's size comes from its lights, never less than one phone's worth: a bigger region is dragged around */
-  const RW = Math.max(390, ...Object.values(AT).map(a => a.x + 60)), RH = Math.max(520, ...Object.values(AT).map(a => a.y + 60));
-  const LINKS: [StretchId, StretchId][] = [['st-mouth', 'st-hall'], ['st-hall', 'st-camp'], ['st-hall', 'st-salt'], ['st-hall', 'st-stair'], ['st-stair', 'st-flight2'], ['st-flight2', 'st-square']];
+  const LINKS: [StretchId, StretchId][] = [['st-mouth', 'st-hall'], ['st-hall', 'st-camp'], ['st-hall', 'st-salt'], ['st-hall', 'st-stair'], ['st-stair', 'st-flight2'], ['st-flight2', 'st-square'],
+    ['st-flight2', 'st-water'], ['st-water', 'st-reading'], ['st-water', 'st-blast'], ['st-blast', 'st-side'], ['st-blast', 'st-lower']];
 
   const placed = $derived(s.beats.filter(b => (b.kind === 'arrival' || b.kind === 'arrivalKey' || b.kind === 'word') && v.story.played.has(b.id)));
   const walkedOn = $derived(new Set<StretchId>([s.stretches[0].id, v.here.stretch, ...placed.map(b => b.stretch)]));   /* the way in is always walked */
@@ -54,7 +59,7 @@
   const firstSentence = (line: string) => (line.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? line);
   /* "Ahead: The Survey Cut, the tin box…" under "The Survey Cut" says the name twice: the ahead line drops it */
   const unsaid = (where: string, name: string) => where.toLowerCase().startsWith(name.toLowerCase() + ', ') ? where.slice(name.length + 2) : where;
-  const hereBox = $derived({ label: t('map.hereLabel'), title: v.here.name, say: v.ahead ? `${t('today.ahead')}: ${unsaid(v.ahead, v.here.name)}` : firstSentence(v.here.line) });
+  const hereBox = $derived({ label: t('map.hereLabel'), title: v.here.name, say: v.ahead ? `${t('today.ahead')}: ${firstSentence(unsaid(v.ahead, v.here.name))}` : firstSentence(v.here.line) });
 
   const region = $derived.by((): Light[] => {
     const out: Light[] = [];
@@ -76,6 +81,8 @@
     }
     return out;
   });
+  /* the region's size comes from the lights shown, never less than the first region: a bigger region is dragged around */
+  const RW = $derived(Math.max(390, ...region.map(a => a.x + 60))), RH = $derived(Math.max(548, ...region.map(a => a.y + 60)));
   const regionLinks = $derived(LINKS.filter(([a, b]) => walkedOn.has(a) && (walkedOn.has(b) || b === aheadOn))
     .map(([a, b]) => ({ d: curve(AT[a], AT[b]), walked: walkedOn.has(b) })));
 
@@ -286,8 +293,9 @@
   .node { cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent; }
   .node:focus-visible { stroke: var(--edge); stroke-width: 1; }
 
-  /* one fixed size: two lines of name, three of words */
-  .box { border: 1px solid var(--edge-2); padding: 14px 18px 16px; background: rgba(10,9,24,.6); height: 162px; display: flex; flex-direction: column; overflow: hidden; }
+  /* one fixed size: two lines of name, three of words. 180px holds them all: border 2 + padding 30 + label 20 + name
+     margins 14 + two names 41 + three lines 70 = 177 (at 162 the third line was cut in half when the name took two) */
+  .box { border: 1px solid var(--edge-2); padding: 14px 18px 16px; background: rgba(10,9,24,.6); height: 180px; display: flex; flex-direction: column; overflow: hidden; }
   .box .swap { flex: 1; min-height: 0; overflow: hidden; }
   .box h2 { margin: 8px 0 6px; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .box .say { color: var(--ink-2); font-size: 16.5px; line-height: 1.42; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }

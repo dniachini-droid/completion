@@ -105,6 +105,16 @@ Being optional, C-67 is never a prerequisite: 43.2 describes the ring on the Sta
 | C-54 | L22, her cut note: "He read the bottom by hand, once. He has seen it not." (ONE READ DEEP HAND ONCE; ONE SEE DEEP NOT) | Her last camp, month 10 | An aside about a blind reader | The finest cut is read by light; no Builder ever read it | Month 11 (R9.5) |
 | C-55 | The hook in B1's corner is *a hook closed on nothing*, not the round hand's *hook closed on a dot*; B7's corner (wk 29) carries the hook closed on a dot, and B6 re-surfaced with NAME (wk 30) carries the hook closed on nothing | Builders' quarters, from wk 17 (17.B); B7 at wk 29 (ARR45 29.A, 29.1); B6 at wk 30 (30.C) | The makers' first walls were signed by a different maker | The same hand in two ages: his Builder-age mark, then KEEP-ONE; the memoir is his. The app names the shapes and never compares them; L19 (wk 34) says it in her voice | Month 7–8 (R7) |
 
+## Weeks 8–14 as built (2026-09-25, `STORY_JOB.md` §8)
+
+C-36–C-52a above are planted where their rows say (C-36 was week 7). Weeks 8–14 add three rows; everything else new in these weeks (finds, camps, passages, the new niche rows) is texture and plants no answer of its own.
+
+| Id | Clue | Where / when | Surface meaning (sufficient) | True relation | Prerequisites | Payoff | Tag | Met? |
+|---|---|---|---|---|---|---|---|---|
+| C-68 | Two shallow dips a stride apart in the shore stone of the Water's far end, like the corner's troughs | `pl-w11-far-end`, week 11 | People waited here; water wear | Where he stood at week 8, and for ages before: the corner's physics again (C-04a) | none | Month 6 (the Landing; the face) | clue | no |
+| C-69 | Bench tops at chest height, each worn into two dips wider apart than a person's hands | `pl-w9-benches`, week 9 | Seats or tables for tall people | The makers' reading-tables, read standing, by touch (B2 month 5; X-table month 7) | none | Month 7 (X-table: *read with the hand*) | world | no |
+| C-70 | A cork float on a knotted cord, laid dry in the channel's niche | `seal-8-5`, week 8 | Someone measured the channel | The Surveyor timed the channel's flow; after his loud cut the water stood still (V4) | none | Week 8 (V4) | texture | no |
+
 ## Rules for this ledger
 
 1. No clue is planted without a row here first (rule 6).
