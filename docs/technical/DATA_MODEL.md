@@ -74,7 +74,7 @@ Each fact: `seq` (order), `at` (timestamp with the phone's time zone), `gameDay`
 | `weekClosed` | which lines were shown |
 
 ## What's worked out, not stored
-Today's jobs and the one that leads; the day's size and whether it's complete; where Dan is on the map; the story week and what's due next; Keys left (never shown, UX 6); this week's plan; the forecast; the week close; "where you were"; the test summary. All from the log + content + rules + clock. A **snapshot** of these is saved to open fast and is rebuilt from the log whenever missing or from an older version.
+Today's jobs and the one that leads; the day's size and whether it's complete; where Dan is on the map; the story week and what's due next; Keys left (never shown, UX 6); this week's plan; the forecast; the week close; "where you were"; the test summary. All from the log + content + rules + clock. Nothing of this is saved: a year of play works out in about 15 ms, so no snapshot is kept (D-106).
 
 ## Authored content (types only)
 Each item has a **stable id** that never changes once shipped, its **copy keys**, and **when it may appear** (story week, order, what must come first).

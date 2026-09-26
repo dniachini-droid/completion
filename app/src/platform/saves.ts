@@ -91,7 +91,8 @@ export async function sqlSaves(db: Db, failed: (why: unknown) => void, now = () 
       if (!adds) steps.push({ sql: 'DELETE FROM facts WHERE key = ?', args: [key] });
       steps.push({ sql: 'INSERT OR REPLACE INTO saves (key, version, content) VALUES (?, ?, ?)', args: [key, save.version, save.content] });
       fresh.forEach((body, i) => steps.push({ sql: 'INSERT INTO facts (key, n, body) VALUES (?, ?, ?)', args: [key, from + i, body] }));
-      live.set(key, { version: save.version, content: save.content, bodies: adds ? bodies.concat(fresh) : fresh });
+      if (adds) { l!.content = save.content; bodies.push(...fresh); }
+      else live.set(key, { version: save.version, content: save.content, bodies: fresh });
       send(steps);
     },
     keep(key, raw) {

@@ -14,7 +14,7 @@ Dan loses nothing, sees nothing early, and the rules do what the design docs say
 | 2. Story order and locked information | Vitest, on core + content | every push |
 | 3. Saves and migrations | Vitest, with sample saves | every push |
 | 4. Weeks played by a script | Vitest, simulated weeks | every push |
-| 5. Flows and the look | Playwright, WebKit (Safari's engine), at 390 × 844 and 360 × 780 | every push touching ui |
+| 5. Flows and the look | Playwright, WebKit (Safari's engine) and Chromium, at 390 × 844 and 360 × 780 (`.github/workflows/tests.yml`, D-106) | every push touching the app |
 | 6. On Dan's phone | By hand, a short list | each TestFlight build Claude flags |
 
 ## 1. Rules (from `game/BALANCING.md`, `PLANNER.md`, `TOOLS.md`)
@@ -36,10 +36,10 @@ Dan loses nothing, sees nothing early, and the rules do what the design docs say
 - What was shown stays shown after a rules or content update.
 
 ## 3. Saves and migrations
+`app/tests/rules/save.test.ts` (D-106), against Node's SQLite with the app's own SQL; sample saves in `app/tests/saves/`.
 - Every fact type is saved and read back.
 - Killing the app between any two facts loses at most the one in progress, and never corrupts the save.
 - **Every save version ever shipped** has a sample save; each one opens, migrates and plays on.
-- Rebuilding the snapshot from the log gives the same screen.
 - Save a copy → Load a copy gives the same game.
 
 ## 4. Weeks played by a script
