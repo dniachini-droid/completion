@@ -1,14 +1,14 @@
 // The first playable walked on a fake clock at phone size, with a picture of every screen (TEST_STRATEGY.md → layer 5).
 // Fails on any page error or any request leaving the app. Usage (from app/, with a build served):
-//   PLAYWRIGHT=$(npm root -g)/playwright/index.mjs node tests/flows/heart-walk.mjs http://localhost:4173/ <out-dir> [width height]
+//   node tests/flows/heart-walk.mjs http://localhost:4173/ <out-dir> [width height]
 // Day 1 (a Thursday): the Course, the gym, Spanish study → the first place; the map; records. Then more days (one busier,
 // for a deep push) until the first word is cut (slice 3): the cut, the stair, the marks. Slice 4: camp and Goodnight on
 // day 1, the morning after, the week close on the first Monday (with Plan it for me and the week), the satchel, the
 // rhythms, and a return after days away. The map on day 1 and again after the first word (every light tapped, one stretch
 // looked at closer). No story text is asserted.
-const { chromium } = await import(process.env.PLAYWRIGHT ?? 'playwright');
+const { launch } = await import('./browser.mjs');
 const [,, url, out, w = '390', h = '844'] = process.argv;
-const browser = await chromium.launch();
+const browser = await launch();
 const page = await browser.newPage({ viewport: { width: +w, height: +h }, deviceScaleFactor: 2, timezoneId: 'Europe/London' });
 const errors = [];
 page.on('pageerror', e => errors.push(e.message));

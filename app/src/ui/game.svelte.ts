@@ -10,11 +10,10 @@ import type { Fact } from '../core/types';
 import { content } from '../content/world';
 import { platform } from '../platform';
 import { t } from '../content/copy/en';
+import { readSave, SAVE_VERSION, type Save } from '../core/save';
 
 export { content };
 
-const SAVE_VERSION = 2;   /* 2: the story (slice 2); older prototype saves start afresh */
-interface Save { version: number; content: string; facts: Fact[]; }
 
 /* ---- the prototype's rehearsal: minutes pass 60 times faster, on a separate throwaway save (PROTOTYPE_NOTES.md) ---- */
 interface Proto { rehearsal: boolean; anchorReal: number; anchorFake: number; }
@@ -93,31 +92,36 @@ class Game {
   /** A save this build couldn't read was kept aside, never overwritten (D-080): the key it was kept under. */
   keptAside = $state<string | null>(null);
 
-  /** The save, read. A save this build can't use (unreadable, or from another version) is copied aside first, so
-      nothing Dan did is ever lost by an update; a newer version's save is never written over (D-080). */
+  /** The save, read and brought up to this build's version (DATA_MODEL.md → migrations). A save this build can't use
+      (unreadable, or from a newer version) is copied aside first, so nothing Dan did is ever lost by an update; a newer
+      version's save is never written over (D-080). An older one is upgraded, after a copy of it is kept. */
   load(): Fact[] {
-    const raw = platform.store.get(this.saveKey);
+    const saves = platform.saves, raw = saves.get(this.saveKey);
     if (raw === null) return [];
-    try {
-      const s: Save = JSON.parse(raw);
-      if (s && s.version === SAVE_VERSION && Array.isArray(s.facts)) return s.facts;
-    } catch { /* kept aside below */ }
+    const read = readSave(raw);
+    if (read && read.from !== SAVE_VERSION) {
+      saves.keep(`${this.saveKey}.v${read.from}`, raw);
+      saves.write(this.saveKey, read.save);
+    }
+    if (read) return read.save.facts;
     const key = `${this.saveKey}.kept.${platform.now().getTime()}`;
-    platform.store.set(key, raw);
+    saves.keep(key, raw);
     this.keptAside = key;
     return [];
   }
   #backedUp = '';
+  /** The facts written as they happen: on the phone only the new ones, each time in one step (D-106). */
   save() {
-    const s: Save = { version: SAVE_VERSION, content: content.version, facts: this.facts };
+    const saves = platform.saves;
     /* once a day, yesterday's save is copied to a backup before today's writes (D-080) */
     const day = this.view?.day ?? '';
     if (day && day !== this.#backedUp) {
-      const prev = platform.store.get(this.saveKey);
-      if (prev) platform.store.set(`${this.saveKey}.backup`, prev);
+      const prev = saves.get(this.saveKey);
+      if (prev) saves.keep(`${this.saveKey}.backup`, prev);
       this.#backedUp = day;
     }
-    platform.store.set(this.saveKey, JSON.stringify(s));
+    const s: Save = { version: SAVE_VERSION, content: content.version, facts: this.facts };
+    saves.write(this.saveKey, s);
   }
   append(f: Fact[]) {
     if (!f.length) return;
@@ -229,7 +233,7 @@ class Game {
     this.proto = { rehearsal: on, anchorReal: real, anchorFake: d.getTime() };
     platform.store.set(PROTO_KEY, JSON.stringify(this.proto));
     this.facts = on ? [] : this.load();
-    if (on) platform.store.remove('save.rehearsal');
+    if (on) platform.saves.remove('save.rehearsal');
     this.now = this.clock();
     this.append(settle(this.facts, content, this.now));
     this.do({ do: 'open' });
@@ -239,9 +243,9 @@ class Game {
   }
   reset() {
     /* even a wipe keeps one copy aside, so a slip can be undone (D-080) */
-    const prev = platform.store.get(this.saveKey);
-    if (prev) platform.store.set(`${this.saveKey}.wiped`, prev);
-    platform.store.remove(this.saveKey);
+    const prev = platform.saves.get(this.saveKey);
+    if (prev) platform.saves.keep(`${this.saveKey}.wiped`, prev);
+    platform.saves.remove(this.saveKey);
     if (this.proto.rehearsal) { this.setRehearsal(true); return; }
     this.facts = [];
     this.do({ do: 'open' });

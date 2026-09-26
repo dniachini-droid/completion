@@ -1,8 +1,12 @@
-# Every push: the rules' tests and a typecheck, on Linux (TEST_STRATEGY.md).
+# Every push touching the app (TEST_STRATEGY.md): the rules' tests, the saves' tests and a typecheck; then the flows
+# walked in a real browser at two phone sizes, in Chromium and in WebKit (Safari's engine, as on Dan's iPhone).
+# A flow fails on any page error, any request leaving the app, any screen that slides or cuts words off.
+# The screens' pictures carry the sealed story, so they are kept only when a walk fails, for a week (D-015).
 name: Tests
 on:
   push:
     paths: ['app/**', '.github/workflows/tests.yml']
+  workflow_dispatch:
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -15,3 +19,41 @@ jobs:
       - run: npm test
       - run: npm run typecheck
       - run: npx vite build
+
+  flows:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, webkit]
+        size: ['390 844', '360 780']
+    name: flows (${{ matrix.browser }}, ${{ matrix.size }})
+    defaults: { run: { working-directory: app } }
+    env: { BROWSER: '${{ matrix.browser }}' }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: app/package-lock.json }
+      - run: npm ci
+      - run: npx playwright install --with-deps ${{ matrix.browser }}
+      - run: npx vite build
+      - name: Serve the build
+        run: |
+          nohup npx vite preview --port 4173 --strictPort > "$RUNNER_TEMP/preview.log" 2>&1 &
+          for i in $(seq 30); do curl -sf http://localhost:4173/ > /dev/null && exit 0; sleep 1; done
+          cat "$RUNNER_TEMP/preview.log"; exit 1
+      - name: A tap on a job starts that job (D-104)
+        if: matrix.size == '390 844'
+        run: node tests/flows/tap-row.mjs http://localhost:4173/
+      - name: Back from a record returns to the place
+        if: matrix.size == '390 844'
+        run: node tests/flows/back-from-record.mjs http://localhost:4173/
+      - name: The whole first playable, walked day by day
+        run: mkdir -p "$RUNNER_TEMP/screens" && node tests/flows/heart-walk.mjs http://localhost:4173/ "$RUNNER_TEMP/screens" ${{ matrix.size }}
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screens-sealed-${{ matrix.browser }}-${{ strategy.job-index }}
+          path: ${{ runner.temp }}/screens
+          retention-days: 7

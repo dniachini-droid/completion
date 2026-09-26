@@ -1,14 +1,17 @@
 // Dan's report (2026-09-26): a tap on a job on Today swapped something else in. A tap starts that job, and no other row
-// moves (D-100). Usage: PLAYWRIGHT=$(npm root -g)/playwright/index.mjs node tests/flows/tap-row.mjs http://localhost:4173/
-const { chromium } = await import(process.env.PLAYWRIGHT);
-const b = await chromium.launch();
+// moves (D-100). Usage: node tests/flows/tap-row.mjs http://localhost:4173/
+const { launch } = await import('./browser.mjs');
+const b = await launch();
 const page = await b.newPage({ viewport: { width: 440, height: 956 }, timezoneId: 'Europe/London' });
 await page.clock.install({ time: new Date('2026-09-30T09:00:00+01:00') });
 await page.goto(process.argv[2]); await page.clock.runFor(2500);
 const fails = [];
 const names = async () => page.locator('.rows button.row:not(.else) .t').allTextContents();
 const nextName = async () => (await page.locator('.next h2').first().textContent())?.split(' · ')[0].trim();
+/* Today's list fades in: it is read only once its rows are drawn (read too early, it came back empty, 2026-09-26) */
+const drawn = async () => { await page.locator('.rows button.row:not(.else) .t').first().waitFor(); await page.locator('.next h2').first().waitFor(); };
 for (const which of ['away', 'delve']) {
+  await drawn();
   const rows = await names(), next0 = await nextName();
   /* the rows carry their kind in their note: a delve's note says so, a job away from the phone says how long */
   const notes = await page.locator('.rows button.row:not(.else) .s').allTextContents();
