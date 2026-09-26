@@ -133,3 +133,53 @@ Checked on `<id>.edit0.png` (AI edits) and `<id>.dl0.png` (local lamp removal), 
 - S7–S13 (local): refill each blob by cloning the adjacent lit wall block, matching its tone. No dark centre, no pale dome. Also fade the leftover warm halos: steep-foot, shelf and cupboard.
 
 AI edits needed: 5 (13.C, 14.A, 13.A, 11.B, side gallery), plus 2 more if the glows fail locally. That leaves at least 3 of ~10 for the next batch.
+
+## Final verdicts
+
+Checked on the chosen pictures (`ai/chosen.json`) and `final/<id>.jpg`. **USE** means put the painting in the game. **STAND-IN** means keep the generic sample, because the painting carries a wrong story reading.
+
+| Id | Verdict | Note |
+|---|---|---|
+| pt-b-8.A | USE | |
+| pt-pl-w8-channel | USE | |
+| pt-b-8.B | USE | |
+| pt-pl-w8-steep-foot | USE | |
+| pt-b-8.C | USE | |
+| pt-b-9.A | USE | |
+| pt-pl-w9-benches | USE | |
+| pt-b-9.B | USE | |
+| pt-b-9.C | USE | |
+| pt-pl-w9-approach | USE | edit0 clean: ledge bare, no lamp or bowl. |
+| pt-pl-w10-deep-end | USE (note) | The warm glow in the fall is allowed ("what lies ahead is … a glow") and is true to what lies beyond. |
+| pt-b-10.A | USE | |
+| pt-pl-w10-blast-floor | USE | edit1 clean: bowl gone. |
+| pt-b-10.B | USE (note) | Same glow in the fall, acceptable. |
+| pt-b-10.C | USE | |
+| pt-pl-w11-cupboard | USE | Redone patch reads as a soft shadow. |
+| pt-b-11.A | USE | |
+| pt-b-11.B | USE (note) | The text says the light stops at the third bench. The painting's light fades over benches 4–5 into dark. It still reads as "light that stops". A free local darkening of bench 4 onward would make it exact. |
+| pt-pl-w11-far-end | USE | |
+| pt-b-11.C | USE | |
+| pt-b-12.A | USE | |
+| pt-pl-w12-shelf | USE (note) | A faint pale dome ghost of the bowl is left right of the box. Soft; a free local clean-up is worth doing. |
+| pt-b-12.B | USE | |
+| pt-pl-w12-square-way | USE | Faint arch-shaped ghost over the bracket; soft. |
+| pt-b-12.C | USE | Chips at the door's foot ✓; the patch reads as shadow. |
+| pt-pl-w13-side-gallery | USE (note) | The chisel rows (haste) are missing. There is no false reading. |
+| pt-b-13.A | USE (note) | The blank under the record is missing, and so are the hook and the two marks beside it. The arrival text supplies them. Nothing false is painted. |
+| pt-b-13.B | USE | |
+| **pt-b-13.C** | **STAND-IN** | edit1 still counts **7, 8, 8**, gap, 1: the added stroke did not land in the left group. This is the clue itself. It becomes USE if one stroke is cloned locally onto the left end of the left group (free). |
+| pt-pl-w13-lower-gallery | USE | |
+| pt-b-14.A | USE (note) | The mark beside the blank is a bar with a thin stroke through it, a close cousin of "bar-with-a-tick". It does not read as a plain "+". The diamond and blank are right. Must be matched when the Seed wall (wk 45) is painted. |
+| pt-pl-w14-mule-stone | USE | |
+| pt-b-14.B | USE | |
+| pt-pl-w14-meeting | USE | |
+| pt-pl-w14-deep-niche | USE | |
+| pt-cv-16 | USE | |
+| pt-cv-17 | USE | |
+| pt-cv-18 | USE (note) | "61 yds" ✓. Faint rim fragments of the removed lamp and a warm spot remain on the ledge; soft at game size. A free local clean-up is worth doing. |
+| pt-cv-19 | USE | |
+| pt-cv-20 | USE | |
+| pt-cv-21 | USE | |
+
+**Totals:** 40 USE (10 with notes) and 1 STAND-IN (pt-b-13.C, which a free local stroke-clone can rescue).
