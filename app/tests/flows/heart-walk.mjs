@@ -14,11 +14,44 @@ const errors = [];
 page.on('pageerror', e => errors.push(e.message));
 page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
 page.on('request', r => { if (!r.url().startsWith(url) && !r.url().startsWith('data:') && !r.url().startsWith('blob:')) errors.push('NETWORK ' + r.url()); });
+/* FREEZE=1: every animation stopped at the same instant for each picture, and chance made repeatable, so two builds'
+   pictures can be compared pixel for pixel (a change meant to leave the look alone, D-103) */
+if (process.env.FREEZE) await page.addInitScript(() => { let s = 7; Math.random = () => (s = (s * 16807) % 2147483647) / 2147483647; });
 await page.clock.install({ time: new Date('2026-09-24T09:00:00+01:00') });
 await page.goto(url);
 let i = 0;
 const ff = async (ms) => { const n = await page.evaluate(() => Date.now()); await page.clock.setSystemTime(n + ms); await page.clock.runFor(500); };
-const shot = async (name, settle = 1500) => { if (settle > 10000) await ff(settle); else await page.clock.runFor(settle); await page.waitForTimeout(300); await page.screenshot({ path: `${out}/${String(++i).padStart(2, '0')}-${name}.png` }); await fits(name); await locked(name); };
+const shot = async (name, settle = 1500) => { if (settle > 10000) await ff(settle); else await page.clock.runFor(settle); await page.waitForTimeout(300); const held = process.env.FREEZE ? await page.evaluate(() => (window.__held = document.getAnimations().filter(a => a.playState === 'running').map(a => { const t = a.currentTime; a.pause(); a.currentTime = 2300; return [a, t]; })).length) : 0; await page.screenshot({ path: `${out}/${String(++i).padStart(2, '0')}-${name}.png` }); if (held) await page.evaluate(() => window.__held.forEach(([a, t]) => { a.currentTime = t; a.play(); })); await fits(name); await locked(name); if (process.env.COST) await cost(name); };
+/** COST=1: what each screen costs the phone while it sits still (D-103), written to <out>/cost.json. The processor's
+ *  time for two seconds of the screen's clock, and a census of what keeps moving: animations the graphics chip can run
+ *  alone (a moving or fading layer) and those it can't (the phone repaints pixels for them every frame), see-through
+ *  blended layers, live canvases. */
+const cdp = process.env.COST ? await page.context().newCDPSession(page) : null;
+if (cdp) await cdp.send('Performance.enable');
+const costs = [];
+const metric = async () => Object.fromEntries((await cdp.send('Performance.getMetrics')).metrics.map(m => [m.name, m.value]));
+const cost = async (name) => {
+  const a = await metric(); await page.clock.runFor(2000); const b = await metric();
+  const census = await page.evaluate(() => {
+    const onGpu = new Set(['transform', 'opacity', 'translate', 'scale', 'rotate', 'filter']);
+    const desc = e => { const c = e.className?.baseVal ?? e.className; return e.tagName.toLowerCase() + (c ? '.' + String(c).trim().split(/\s+/).slice(0, 2).join('.') : ''); };
+    const running = document.getAnimations().filter(an => an.playState === 'running' && an.effect?.target && (an.effect.getComputedTiming().iterations === Infinity || (an.effect.getComputedTiming().endTime - (an.currentTime ?? 0)) > 0));
+    const repaint = [], gpu = [];
+    for (const an of running) {
+      const t = an.effect.target, props = [...new Set(an.effect.getKeyframes().flatMap(k => Object.keys(k).filter(x => !['offset', 'easing', 'composite', 'computedOffset'].includes(x))))];
+      const svgChild = t instanceof SVGElement && !(t instanceof SVGSVGElement);
+      const cheap = !svgChild && props.every(x => onGpu.has(x)) && !(props.includes('filter'));
+      (cheap ? gpu : repaint).push(`${desc(t)} [${props.join(',')}]${an.effect.getComputedTiming().iterations === Infinity ? ' ∞' : ''}`);
+    }
+    const all = [...document.querySelectorAll('.phone *, body > *')];
+    const blends = all.filter(e => getComputedStyle(e).mixBlendMode !== 'normal').map(desc);
+    const filters = all.filter(e => { const f = getComputedStyle(e).filter; return f !== 'none'; }).map(e => desc(e) + ' ' + getComputedStyle(e).filter.slice(0, 40));
+    const canvases = [...document.querySelectorAll('canvas')].map(c => `${desc(c)} ${c.width}x${c.height}`);
+    return { repaint, gpu: gpu.length, gpuList: gpu, blends: blends.length, blendList: blends, filters, canvases, smil: document.querySelectorAll('animate, animateMotion, animateTransform').length };
+  });
+  const ms = k => +((b[k] - a[k]) * 1000 / 2).toFixed(1);
+  costs.push({ screen: name, taskMsPerS: ms('TaskDuration'), scriptMsPerS: ms('ScriptDuration'), styleMsPerS: ms('RecalcStyleDuration'), layoutMsPerS: ms('LayoutDuration'), ...census });
+};
 /** The screen never slides (Dan, review 2): nothing can be scrolled sideways, and the page itself never scrolls. */
 const locked = async (name) => {
   const bad = await page.evaluate(() => [document.scrollingElement, ...document.querySelectorAll('.phone *')].filter(e => {
@@ -334,4 +367,5 @@ await openers('back'); await shot('back-today', 2500);
 if (!closes) errors.push('the week close never showed');
 if (!mornings) errors.push('no morning after camp');
 if (errors.length) { console.error(errors); process.exitCode = 1; } else console.log('walk: ' + i + ' screens, no errors, no network');
+if (process.env.COST) (await import('node:fs')).writeFileSync(`${out}/cost.json`, JSON.stringify(costs, null, 1));
 await browser.close();

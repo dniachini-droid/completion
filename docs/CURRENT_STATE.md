@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-26, later still (Phase 9: the lock-screen panel says Paused when Dan goes into another app, D-102; the AI repaint of every place, D-100, D-101)_
+_Last updated: 2026-09-26, latest (Phase 9: the whole app audited for battery, D-103; the lock-screen panel says Paused, D-102; the AI repaint, D-100, D-101)_
 
 ## Current phase
 
@@ -27,7 +27,10 @@ Build the whole MVP (`product/MVP.md` → build order): **slice 2** the Quiet an
 4. **TestFlight:** Dan finished Apple setup sitting 2 (all four secrets in; TestFlight installed). **The first build reached Apple** (workflow run 36011344034, 2026-09-24: signed in the cloud and uploaded in under 4 minutes): trial (d), the pipeline, passes. It carried slices 1–2. **The whole first playable reached Apple** (run 36021450486, 2026-09-24, started by hand: a commit touching no app files does not start the workflow). Dan does sitting 3 (trials b and c) when he tests, and reports.
 5. **The web link:** https://claude.ai/artifact/TcH91A1SxeEvEnLJbRE4pi (private; one link, updated in place each slice).
 
-## Last session (2026-09-26, Phase 9, the panel paused with the delve, D-102)
+## Last session (2026-09-26, Phase 9, the whole app audited for battery, D-103)
+Dan: after D-099, can the app drain less and stay smooth and pretty? Then: audit the whole app. The screen walk now measures every screen (`COST=1`) and can freeze animations for before/after pixel checks (`FREEZE=1`). Most screens already do nothing while still. Fixed with no change to the look: the delve's ring (redraws only where its light moves; no layout read every frame; script time 54 → 37 ms a second), the cut (the lamp's glow, halo and flame on their own layers, so the clay lamp is no longer repainted every frame), the stair (a small blur per tread instead of one over all 22). Ring pixel-identical to before; cut and stair differ only in the random dust. Left: the map's breathing pool and sparks, the cut rod's glow, the grain and fog (the look). 148 rule tests; typecheck clean; the walk passes (it sometimes stalls at Go to sleep, on the old build too). Merged into `main` with Dan's OK ("Yes merge and go to TestFlight") and sent to TestFlight. **Dan's test:** a whole delve, a word cut and the stair; is the phone cooler, still smooth, and does anything look different?
+
+## Earlier (2026-09-26, Phase 9, the panel paused with the delve, D-102)
 Dan: leaving the app paused the delve, but the widget on the lock screen and the Dynamic Island kept counting down. Fixed (D-102): the phone's own native part, which already decides "another app" about 15 s after he leaves, now also turns the panel to Paused, stopped where he left, in red (Dan's suggestion; red only for a paused panel, the words calm). The app sends the words ahead with each panel. 148 rule tests (1 new); typecheck clean; the iOS compile passed on a cloud Mac (run 36216941794). Merged into `main` with Dan's OK (PR #31), with the AI repaint; **the build reached Apple** (run 36217285143, 2026-09-26).
 
 ## Earlier (2026-09-26, Phase 9, the AI repaint, D-100, D-101)
