@@ -258,8 +258,10 @@ body.s-evening  { --a1: .5;  --aw: 120%; --ah: 44%; --a2: .38; --h2: 22%; }
    (the map's description, the cut's word). Never used to hold a scene. */
 .box { position: relative; padding: 16px 18px; border: 1px solid var(--edge-3);
   background: linear-gradient(180deg, rgba(20, 18, 52, .5), rgba(8, 7, 24, .62));
-  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
   box-shadow: inset 0 1px 0 rgba(217, 214, 255, .06), 0 0 40px rgba(var(--violet-rgb), .08); }
+/* no blur of what lies behind it: over the map's moving lights that blur was worked out again every frame (Dan,
+   2026-09-26: the phone ran hot). The box is a shade darker instead, so its words read as well. */
+.box { background: linear-gradient(180deg, rgba(20, 18, 52, .62), rgba(8, 7, 24, .74)); }
 .box.lit { border-color: var(--edge-2); box-shadow: inset 0 0 24px rgba(var(--violet-rgb), .1), 0 0 32px rgba(var(--violet-rgb), .16); }
 
 /* buttons ------------------------------------------------------------------ */
@@ -281,8 +283,15 @@ body.s-evening  { --a1: .5;  --aw: 120%; --ah: 44%; --a2: .38; --h2: 22%; }
     0 0 26px rgba(var(--glow-rgb), .5),
     0 0 70px rgba(var(--glow-rgb), .26);
   text-shadow: 0 1px 0 rgba(255, 255, 255, .25);
-  animation: btn-breathe 4.8s ease-in-out infinite;
   transition: transform .22s var(--ease);
+}
+/* its breath: the stronger glow of the breath's peak, on a layer of its own that only fades in and out. Breathing the
+   shadow itself had the phone paint the button and its wide glow again on every frame (Dan, 2026-09-26: the phone ran
+   hot). An outer shadow never draws inside the box, so the words are untouched. */
+.btn::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; will-change: opacity;
+  box-shadow: 0 0 0 1px rgba(var(--glow-rgb), .06), 0 0 34px rgba(var(--glow-rgb), .3), 0 0 90px rgba(var(--glow-rgb), .16);
+  animation: btn-breathe 4.8s ease-in-out infinite;
 }
 .btn::before { /* corner brackets, just outside the box */
   content: ""; position: absolute; inset: -6px; pointer-events: none;
@@ -301,10 +310,7 @@ body.s-evening  { --a1: .5;  --aw: 120%; --ah: 44%; --a2: .38; --h2: 22%; }
 .btn:hover::before { inset: -8px; }
 .btn:active { transform: scale(.985); }
 .btn svg { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
-@keyframes btn-breathe {
-  0%, 100% { box-shadow: inset 0 1px 0 rgba(255,255,255,.55), inset 0 0 18px rgba(236,234,255,.35), 0 0 0 1px rgba(var(--glow-rgb),.18), 0 0 22px rgba(var(--glow-rgb),.44), 0 0 60px rgba(var(--glow-rgb),.22); }
-  50%      { box-shadow: inset 0 1px 0 rgba(255,255,255,.6),  inset 0 0 22px rgba(236,234,255,.45), 0 0 0 1px rgba(var(--glow-rgb),.24), 0 0 34px rgba(var(--glow-rgb),.62), 0 0 90px rgba(var(--glow-rgb),.32); }
-}
+@keyframes btn-breathe { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
 /* the day has turned: gold (arrival, camp). Automatic under body.s-done / s-evening, or add .gold. */
 .btn.gold, body.s-done .btn:not(.violet), body.s-evening .btn:not(.violet) {
   --glow-rgb: var(--gold-rgb); color: #2a1705; border-color: rgba(255, 238, 205, .95);
@@ -313,7 +319,7 @@ body.s-evening  { --a1: .5;  --aw: 120%; --ah: 44%; --a2: .38; --h2: 22%; }
     linear-gradient(180deg, #ffd999 0%, var(--gold) 50%, #e3a24f 100%);
 }
 /* a resting main button: still the loudest thing, but not pulling (low days, "rest here") */
-.btn.resting { animation: none; }
+.btn.resting::after { animation: none; opacity: 0; }
 
 /* .btn-quiet: secondary. The same box, unlit: a fine edge on dark glass, carved word, optional line icon. */
 .btn-quiet {

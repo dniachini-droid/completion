@@ -409,6 +409,21 @@ describe('A delve left paused ends by itself (review finding, D-080)', () => {
     expect(end?.minutes).toBe(10);
     expect(v.next?.mode).not.toBe('carry');
   });
+  it('a job delved on earlier in the day can still be begun away from the phone (Dan, 2026-09-26)', () => {
+    const p = player().do({ do: 'open' });
+    p.do({ do: 'startRun', job: 'lesson', minutes: 25, count: 1 }).wait(5).do({ do: 'finishHere' });
+    p.do({ do: 'seen', what: 'step', ref: p.view().runEnd!.seq });
+    p.do({ do: 'focus', job: 'lesson' }).do({ do: 'begin', job: 'lesson' });
+    expect(p.view().underWay).toBe('lesson');
+    expect(p.view().next).toEqual({ job: 'lesson', mode: 'underWay' });
+    p.do({ do: 'done', job: 'lesson' });
+    expect(p.view().done.has('lesson')).toBe(true);
+  });
+  it('a Begin followed by a delve on the same job is no longer "under way" once the delve stops', () => {
+    const p = player().do({ do: 'open' });
+    p.do({ do: 'begin', job: 'lesson' }).do({ do: 'startRun', job: 'lesson', minutes: 25, count: 1 }).wait(5).do({ do: 'finishHere' });
+    expect(p.view().underWay).toBeNull();
+  });
   it('a stopped delve never leaves its job "under way" (review finding, D-080)', () => {
     const p = player().do({ do: 'open' });
     const job = p.view().slate[0];

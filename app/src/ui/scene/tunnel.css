@@ -151,3 +151,16 @@
 
 }
 
+/* the ribs as pictures the phone only moves (light.js → ribs): a 390 × 844 stage laid over the screen as the mock-up's
+   drawing was (centred, covering it), each rib turning about the same point as before */
+.dv .ribstage{ position:absolute; left:50%; top:50%; width:390px; height:844px; margin:-422px 0 0 -195px; transform: scale(var(--k, 1)); pointer-events:none; }
+.dv .ribstage .rib{ position:absolute; left:0; top:0; width:390px; height:844px; transform-origin: 292px 250px; will-change: transform, opacity; }
+/* the clouds and the rays keep their motion but lose their live blur (Dan, 2026-09-26: the phone ran hot). A blur on
+   something moving is worked out again every frame over a screen and a half; these are soft gradients already, so
+   their edges are softened in the gradient itself, once. */
+.dv .nebula i{ filter:none; }
+.dv .nebula .n1{ background: radial-gradient(closest-side, rgba(185,150,255,.46), rgba(160,125,255,.3) 35%, rgba(143,110,255,.16) 62%, rgba(143,110,255,.05) 85%, transparent); }
+.dv .nebula .n2{ background: radial-gradient(closest-side, rgba(120,120,255,.34), rgba(105,110,248,.22) 35%, rgba(90,100,240,.11) 62%, rgba(90,100,240,.03) 85%, transparent); }
+.dv .nebula .n3{ background: radial-gradient(closest-side, rgba(200,120,255,.28), rgba(200,120,255,.17) 40%, rgba(200,120,255,.06) 75%, transparent); }
+.dv .opening .rays{ filter:none;
+  background: repeating-conic-gradient(from 0deg, rgba(217,214,255,0) 0deg, rgba(217,214,255,.05) 2deg, rgba(217,214,255,.11) 4deg, rgba(217,214,255,.05) 6deg, rgba(217,214,255,0) 8.5deg, rgba(217,214,255,0) 17deg); }
