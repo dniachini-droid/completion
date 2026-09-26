@@ -170,7 +170,7 @@ export const passages: Passage[] = [
   /* ---- story weeks 8–14 (STORY_JOB §8): the new stretches ---- */
   { id: "ps-w01", stretch: "st-water", req: [], line: "You walk the Water's near shore. Your footsteps come back to you off the lake, flat and close, as if the water were a floor." },
   { id: "ps-w02", stretch: "st-water", req: [], line: "At the Water's edge you look down. The lake is so clear and so still that you can see the stone floor going down under it, step by step, into the dark." },
-  { id: "ps-w03", stretch: "st-water", req: [], line: "You walk along the shore of the Water. The cup-flames on the Stair's last flight are reflected in it without a tremble." },
+  { id: "ps-w03", stretch: "st-water", req: [], line: "You walk along the shore of the Water. The flames in the cups on the Stair's last flight are reflected in it without a tremble." },
   { id: "ps-w04", stretch: "st-water", req: [], line: "By the Water, a pebble lies at your feet. You leave it there rather than break the lake's stillness with it." },
   { id: "ps-w05", stretch: "st-water", req: [], line: "You follow the curve of the Water's shore. Overhead the hall's rounded roof is lost in shadow, and the lake gives back only the flames." },
   { id: "ps-w06", stretch: "st-water", req: ["pl-w8-channel"], line: "You walk beside the channel that feeds the Water. Its square-cut sides run dead straight, and the water in it lies level with the lake." },
@@ -184,7 +184,7 @@ export const passages: Passage[] = [
   { id: "ps-r02", stretch: "st-reading", req: [], line: "In the Reading Room you look up at the tablets on the walls, row above row, each one a flat stone of pictures and symbols." },
   { id: "ps-r03", stretch: "st-reading", req: [], line: "The Reading Room is quieter than anywhere else you have been. Even your boots on its floor sound muffled, as if the hall swallowed the noise." },
   { id: "ps-r04", stretch: "st-reading", req: [], line: "In the Reading Room you stop at a tablet at the height of your face. Its cuts are worn round, like old coins." },
-  { id: "ps-r05", stretch: "st-reading", req: [], line: "You walk the length of the Reading Room. The benches stand in rows, evenly spaced, like pews in a church with no chairs." },
+  { id: "ps-r05", stretch: "st-reading", req: [], line: "You walk the length of the Reading Room. The benches stand in rows, evenly spaced, like the pews in a church." },
   { id: "ps-r06", stretch: "st-reading", req: [], line: "In the Reading Room, the dust between the benches is thin and even, and your footprints show clearly in it." },
   { id: "ps-r07", stretch: "st-reading", req: ["b-11.B"], line: "You pass the Reading Room's inner door. Beyond it the benches go on, and the light stops at the third one." },
   { id: "ps-r08", stretch: "st-reading", req: [], line: "In the Reading Room, one tablet has a lamp carved on it, and beside it the lamp's symbol, the same as on the wall by the lamp in the Lamp Hall." },
