@@ -8,6 +8,7 @@
 | The app icon | A crop of an invented sample painting | When the app has its name (`narrative/NAMES.md`) |
 | The App Store Connect record may still be called "Real Life RPG (Dan)" | Dan renames it there if he likes (D-071) | Before anything is public |
 | The delve alert uses the phone's default sound | The delve's own sound isn't made yet | Heart slice or later, if play shows sound matters |
+| The whole screen walk runs in CI in Chromium only; WebKit (Safari's engine) runs the short checks | Linux's WebKit crashes or hangs about two days into the walk; the iPhone's doesn't (D-106) | A Mac runner for WebKit, if the minutes allow, or a fix to Linux WebKit's crash |
 | The painting kit samples bake in 10–80 s each; no scene of a real place yet | Real places wait for the sealed story-fix session (D-060) | After the story-fix session |
 | Trials (b) and (c) run on the heart itself, in a rehearsal (alerts come 60 times sooner there); Dan's checklist is `APPLE_SETUP.md` → Sitting 3 | The trials screen was removed when the heart came first (D-064) | Done once, on the first TestFlight build |
 | On the web link the delve's end can't sound with the phone locked: it chimes only while the page is open, and shows when Dan comes back | Web pages can't schedule alerts | The TestFlight build (local notifications are already wired) |

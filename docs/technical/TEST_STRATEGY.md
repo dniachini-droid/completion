@@ -14,7 +14,7 @@ Dan loses nothing, sees nothing early, and the rules do what the design docs say
 | 2. Story order and locked information | Vitest, on core + content | every push |
 | 3. Saves and migrations | Vitest, with sample saves | every push |
 | 4. Weeks played by a script | Vitest, simulated weeks | every push |
-| 5. Flows and the look | Playwright, WebKit (Safari's engine) and Chromium, at 390 × 844 and 360 × 780 (`.github/workflows/tests.yml`, D-106) | every push touching the app |
+| 5. Flows and the look | Playwright at 390 × 844 and 360 × 780: the whole walk in Chromium, the short checks in WebKit (Safari's engine) too (`.github/workflows/tests.yml`, D-106) | every push touching the app |
 | 6. On Dan's phone | By hand, a short list | each TestFlight build Claude flags |
 
 ## 1. Rules (from `game/BALANCING.md`, `PLANNER.md`, `TOOLS.md`)

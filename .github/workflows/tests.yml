@@ -1,5 +1,6 @@
 # Every push touching the app (TEST_STRATEGY.md): the rules' tests, the saves' tests and a typecheck; then the flows
-# walked in a real browser at two phone sizes, in Chromium and in WebKit (Safari's engine, as on Dan's iPhone).
+# walked in a real browser at two phone sizes (Chromium), and the short checks in WebKit too (Safari's engine, as on
+# Dan's iPhone).
 # A flow fails on any page error, any request leaving the app, any screen that slides or cuts words off.
 # The screens' pictures carry the sealed story, so they are kept only when a walk fails, for a week (D-015).
 name: Tests
@@ -26,8 +27,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        browser: [chromium, webkit]
-        size: ['390 844', '360 780']
+        include:
+          - { browser: chromium, size: '390 844', short: true, walk: true }
+          - { browser: chromium, size: '360 780', short: false, walk: true }
+          # Linux's WebKit crashes or hangs about two days into the whole walk (D-106); the iPhone's doesn't. Here it
+          # runs the short checks; the whole walk in WebKit waits for a Mac runner or a fix.
+          - { browser: webkit, size: '390 844', short: true, walk: false }
     name: flows (${{ matrix.browser }}, ${{ matrix.size }})
     defaults: { run: { working-directory: app } }
     env: { BROWSER: '${{ matrix.browser }}' }
@@ -44,12 +49,13 @@ jobs:
           for i in $(seq 30); do curl -sf http://localhost:4173/ > /dev/null && exit 0; sleep 1; done
           cat "$RUNNER_TEMP/preview.log"; exit 1
       - name: A tap on a job starts that job (D-104)
-        if: matrix.size == '390 844'
+        if: matrix.short
         run: node tests/flows/tap-row.mjs http://localhost:4173/
       - name: Back from a record returns to the place
-        if: matrix.size == '390 844'
+        if: matrix.short
         run: node tests/flows/back-from-record.mjs http://localhost:4173/
       - name: The whole first playable, walked day by day
+        if: matrix.walk
         run: mkdir -p "$RUNNER_TEMP/screens" && node tests/flows/heart-walk.mjs http://localhost:4173/ "$RUNNER_TEMP/screens" ${{ matrix.size }}
       - if: failure()
         uses: actions/upload-artifact@v4
