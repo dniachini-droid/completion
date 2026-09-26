@@ -1,0 +1,324 @@
+{
+ "_note": "SEALED (D-015). One plain scene description per place, written from docs/narrative/sealed/PAINTING_BRIEFS.md; top = the layout window's top in the kit frame (444 centred, 888 bottom, 0 top). _house = approved repaints added as style references (file names in the out-dir).",
+ "_house": [
+  "pt-b-1.A.free0.png"
+ ],
+ "pt-b-1.A": {
+  "top": 444,
+  "scene": "eye height, looking down a long, high hall whose walls and ceiling curve like the inside of a shell, cut in cold violet stone. A row of small dark empty cups is cut into both walls about a third of the way up, unlit. Simple rings are cut into the stone within reach. On a stone ledge on the near right wall sits a small clay oil lamp with one still, warm flame: the only warm light, and the main subject. At the far end the hall is closed by a great door of smooth stone that fills most of the end wall, lost in violet haze. The floor is large worn flagstones. Fog lies in the depth."
+ },
+ "pt-b-1.B": {
+  "top": 444,
+  "scene": "low, near the floor, where a stone hall bends to the right. Two long troughs are worn into the floor along the outer side of the bend, a stride apart, smooth as basins, running away round the corner. The outer wall beside them is polished smooth by touch up to twice a man's shoulder height: a soft shine in the matt stone, its marks rubbed away; above that band the wall is still rough-cut. The one light is cold violet place-light coming round the bend from a gallery beyond; the troughs' smooth hollows catch it. A faint salt glitter far beyond the turn. No lamp, no warm light."
+ },
+ "pt-pl-w1-pick-niche": {
+  "top": 444,
+  "scene": "crouched, three-quarter view of a long low niche, the length of an arm, cut low in the right wall of a gallery of rock salt banded grey and white (no pink). The niche has a plain cut-stone lip; on that lip a short row of empty cut strokes (simple straight grooves, not filled). Beside the niche, in the salt, a few short score marks from a blade. The one light is cold violet place-light coming along the wall from the left, down the gallery, which runs away low on the left. Fine salt dust in the light. No warm light."
+ },
+ "pt-b-1.C": {
+  "top": 444,
+  "scene": "from a low doorway at eye height, into a low round-roofed side chamber cut in stone that someone camped in. Along the right, a canvas camp cot on crossed wooden legs, its canvas sagging. Beneath its edge, on the floor, a pair of old leather boots side by side, toes out, laced, as if left ready for the morning: the main subject, where the warm light ends. On the cot a small notebook with a pencil in it and a small tin box with a thin slate on its lid. On the back wall a plain plank shelf on two pegs with a dark stone rod lying on it. The only warm light is a weak clay-lamp glow coming through the doorway behind the camera, laying the doorway's shape on the floor; violet fills the corners.",
+  "soft": 16
+ },
+ "pt-pl-w1-below-the-lamp": {
+  "top": 444,
+  "scene": "kneeling low under a stone ledge (its underside a dark band across the top), looking into a small niche cut in the wall at knee height. Above the niche mouth, a short row of five straight cut strokes in the stone. The stone around the niche mouth is darkened by old oil, a soft dull dark ring, darkest and weighted at the sill where hands reached in, faint at the top and sides, like a shadow that doesn't move. The niche is a raised wall recess, a hand's depth, not at floor level, empty and dark inside; its edge is a plain cut, no rim, arch moulding or frame; it must not look like a fireplace or tunnel. Warm lamplight falls from directly above, out of frame, past the ledge's lip onto the floor at the wall's foot. The main subject is the dark oily ring around the niche mouth."
+ },
+ "pt-b-2.A": {
+  "top": 444,
+  "scene": "eye height beside the left wall of a long gallery whose walls are rock salt banded grey and white. Along the wall at chest height runs a band of cut stone a hand's width proud of the salt, and along it a long line of small cut marks (a tally), running away into the distance. Above the band, on its own, one ring cut into the stone, larger than the small marks, catching the light before anything near it: the main subject. Cold violet place-light from further in on the right rakes along the wall so every cut shows its shadow; the gallery runs away to the right. Glints on the salt, fog low on the floor. No warm light, no paper."
+ },
+ "pt-pl-w2-above-the-ring": {
+  "top": 888,
+  "scene": "looking up a wall of banded grey-white rock salt raked by cold violet light from the left. At the bottom of the frame, the upper arc of one large ring cut in a band of stone. Above it, a single narrow crack, two fingers wide, runs up the salt into the dark; its lip lit where the light rakes across it, its walls stepping back into black. Beside the crack, a small count of five short straight cut strokes. Far back inside the dark crack, a small, blunt, cool-white pale sliver catches a single glint: the brightest thing, cold not warm, not a flame. The main subject is that pale thing deep in the crack.",
+  "soft": 18,
+  "dim": 0.45
+ },
+ "pt-b-2.B": {
+  "top": 444,
+  "scene": "close on a ledge of cut stone let into a dark chamber's back wall: a rod of dark, fine-grained, matt stone, forearm-long, lying at a low diagonal across the frame; a long blade that thickens without a step into a worn round handle; one long edge ground finer than a knife. A thin line of weak warm lamplight from a doorway behind runs along that fine edge only: the brightest thing; the flat faces stay dark and matt. On the wall just under the shelf, a long thin dark-grey pencil line drawn flat on the stone surface (graphite, no groove, no relief, no lit lip). The back wall is plain stone with no pits or holes; the shelf front is plain with no cups or holes. Violet in the corners."
+ },
+ "pt-pl-w2-smooth-place": {
+  "top": 444,
+  "scene": "looking up from beside two long troughs worn in the floor at a stone hall's bend. On the polished outer wall, at the height of a long hand, one patch where the cut marks are rubbed away entirely and the stone has gone smooth as a mirror, like a banister: the brightest value in the frame, the main subject. Around it the marks are rubbed faint. Cold violet place-light from beyond the corner on the right. Fog passing. No lamp, no warm light."
+ },
+ "pt-pl-w2-box-by-the-cot": {
+  "top": 444,
+  "scene": "low, near the floor, looking along a cut-stone wall in a small camp room: an old shoebox-sized box of matt, pale grey-brown cardboard gone soft with age (slumped rounded corners, a visible lid edge, no stone texture) sits against the wall, not too bright; a thin dark slate is laid a little askew across its lid, with a short count of seven small straight strokes scratched on it; on the slate an old dented tin mug stands UPSIDE DOWN: its rim rests on the slate, its handle low near the slate, and its top is the mug's closed flat bottom, one piece with its side, no lid, no seam. Weak warm lamplight from a doorway ends as a single glint on the mug's rim; violet half-light elsewhere, dust in the air. The main subject is the upside-down mug."
+ },
+ "pt-b-3.A": {
+  "top": 444,
+  "scene": "eye height, from across a high hall of cold violet stone, looking at a stone lintel over a blind doorway in the side wall (the doorway is filled with plain stone). On the lintel's face, two small cut marks, and beside them a rod-shaped blank: a clean empty recess the length of a forearm, sharp-edged, its floor dressed flat and pale, waiting. Keep every carved mark exactly as the layout guide shows it: the same number of strokes, their shapes, order and place. Warm lamplight from a clay lamp off-frame to the left rakes along the lintel so the blank's edges draw themselves; the blank is the main subject. Small dark empty cups in the wall above, unlit."
+ },
+ "pt-b-3.B": {
+  "top": 444,
+  "scene": "standing on a stone landing. On the left, in the wall, a small niche with a small count cut beside it; its lid, a small stone tablet with a carved doorway, a carved bar and two marks, stands leaned against the wall beneath it; inside the niche sits a second small clay oil lamp, UNLIT (no flame), its glaze smooth and new-looking: the main subject. On the right, the head of a wide stair drops away, every step knee-high; warm lamplight comes UP from lamps set lower down the stair, out of sight in hooded recesses, so the light rises from below the landing's edge. Keep every carved mark exactly as the layout guide shows it: the same number of strokes, their shapes, order and place. Fog at the stair's head."
+ },
+ "pt-b-3.C": {
+  "top": 444,
+  "scene": "from the top step looking down a stone stair wide enough for three, every step knee-high, built for someone twice a man's size. Warm lamplight pools on the treads below from lamps hidden in hooded recesses in the right wall (only their light shows). At the first turn, far below, the stair meets a landing and turns right into more light; along the left wall a rail cut from the living stone runs down, its top worn smooth by hands and catching the light at the turn: the main subject. A small niche with a small count in the left wall beside it. Fog lies on the steps like water. Keep every carved mark exactly as the layout guide shows it: the same number of strokes, their shapes, order and place. "
+ },
+ "pt-b-4.A": {
+  "top": 444,
+  "scene": "close along a gallery wall of rock salt, warm-lit for once by a glow from behind. A band of cut stone runs along the wall carrying a long line of small cut marks (a tally); ahead, the band and its marks dive under a crust of salt, thicker and whiter than the face around it; set in that crust, a small count of strokes cut into the salt itself: the main subject. Just before the crust, a single sheet of paper with faint pencil writing is held flat against the wall, one corner lifting (the pencil writing illegible, just grey texture). Keep every carved mark exactly as the layout guide shows it: the same number of strokes, their shapes, order and place. "
+ },
+ "pt-b-4.B": {
+  "top": 444,
+  "scene": "close, square on to a small niche with a plain cut-stone mouth in a salt wall; inside it a block of clean near-white salt, centred. On the block's face, thumbnail-sized, one small mark cut into the salt: a hook closed on a dot: the main subject. On the niche's sill, a short line of small cut marks. Warm glow from the left. The niche mouth is a plain cut, no rim, arch or frame. Keep every carved mark exactly as the layout guide shows it: the same number of strokes, their shapes, order and place. "
+ },
+ "pt-b-4.C": {
+  "top": 444,
+  "scene": "close and low at the foot of a vast door of cold, smooth, pale-violet stone filling the frame and rising past where the light reaches. At eye height a long row of tall empty strokes cut into the door (a count, every stroke empty and unfilled): the main subject. Beside it a blank recess and two small marks. Under the count, one mark like a path that doubles back. Keep every carved mark exactly as the layout guide shows it: the same number of strokes, their shapes, order and place. Warm light from a small flame low on the left rakes across the face so each stroke draws its shadow; cold haze slides down the face."
+ },
+ "pt-b-5.A": {
+  "top": 444,
+  "scene": "standing at the head of a long band of cut stone at chest height on the left wall of a salt gallery, looking along it: the band runs away down the wall carrying rows of small cut marks, and every record on it starts with the same three small marks, repeating down the wall, smaller and smaller. Keep every carved mark exactly as the layout guide shows it: the same number of strokes, their shapes, order and place. Warm light from behind rakes along the wall; the far gallery goes on in cold violet light."
+ },
+ "pt-b-5.B": {
+  "top": 444,
+  "scene": "at a round hole in the right wall of a stone stair at shoulder height, its lip worn smooth; looking through it into a space beyond of darker, flat-faced, square-cut stone laid in square blocks with chisel marks, meeting rounded stone at a seam; on the square face a short record of small cut marks. Warm lamplight from behind the camera falls through the hole and lies as a pool, the hole's own shape, on the square stone beyond: the brightest thing and the main subject. Keep every carved mark exactly as the layout guide shows it: the same number of strokes, their shapes, order and place. "
+ },
+ "pt-b-6.A": {
+  "top": 444,
+  "scene": "at eye height, standing at a low square doorway from a round-vaulted space of cold violet stone into a straight gallery of darker, flat-faced square-cut stone covered in small even chisel strokes, flat-ceilinged, running away. On the left jamb, where square stone meets round, the two are keyed into each other in teeth, course by course, like the fingers of two clasped hands: the main subject, lit warm from lamps behind the camera. A short record of small cut marks on the square wall just past it. Far down the gallery, a slope of broken stone. Keep every carved mark exactly as the layout guide shows it: the same number of strokes, their shapes, order and place. "
+ },
+ "pt-b-6.B": {
+  "top": 444,
+  "scene": "close on the left wall of a straight gallery of dark square-cut stone covered in small even chisel marks. At chest height, a row of small cut marks. Below it a small opened niche; in it a wax tablet gone hard, amber-grey, in a thin wooden frame, turned a little outward: ruled in rows, with a small ring cut at the head of every row: the main subject. Warm light low from the left rakes across the wax so every ruled line and ring shows its shadow. Keep every carved mark exactly as the layout guide shows it: the same number of strokes, their shapes, order and place. "
+ },
+ "pt-b-7.A": {
+  "top": 444,
+  "scene": "eye height at a stone lintel set in a landing's left wall of paler cold stone, over an opening filled with plain stone; the lintel is lower than a hall lintel. On its face, two small cut marks beside a blank: a clean rod-shaped empty recess, sharp-edged, waiting: the main subject. Warm lamplight from behind the camera rakes across the face, picking out the blank's edges. Keep every carved mark exactly as the layout guide shows it: the same number of strokes, their shapes, order and place. "
+ },
+ "pt-b-7.B": {
+  "top": 444,
+  "scene": "close on the right wall of a straight gallery of dark square-set stone blocks with small even chisel marks, flat ceiling. Below a line of small cut marks, a row of cut rings: twelve the same size and, at the row's end, a thirteenth, smaller: the main subject, where the light lands first. Beneath, in a small opened niche, a hard amber-grey wax tablet, ruled and marked. Warm light low from the gallery mouth behind on the left rakes along the wall. Keep every carved mark exactly as the layout guide shows it: the same number of strokes, their shapes, order and place. "
+ },
+ "pt-b-7.C": {
+  "top": 444,
+  "scene": "standing on the threshold of a huge doorway whose door is gone; its deep cold stone reveal at the left edge of the frame. Looking down a stone stair twice as steep as a normal one, going down into the dark. Warm light from behind the camera falls through the doorway and down the steps and stops on the eleventh step in a clean line across the tread: the main subject; below it only cold dark and faint violet stone. Cold air rising as faint mist toward the camera."
+ },
+ "pt-pl-w3-far-end": {
+  "top": 444,
+  "scene": "low near the floor at the foot of a vast door of smooth, cold stone, looking up its face. A small warm flame out of frame on the right, near, lights the foot of the door warmly, and the light gives out fast as the face rises; the upper face goes up into darkness, its top lost. The edge where the warm light gives out on the door is the main subject. Cold haze slides down the face and pools on the floor. No marks added."
+ },
+ "pt-pl-w3-salt-lit": {
+  "top": 444,
+  "scene": "eye height in a gallery of rock salt, warm-lit by a glow coming from behind the camera: the salt banded grey and white, pink only at the edges of the beds, glittering. In the middle distance on the left, a split in the salt the height of a man, packed with round, brown, water-worn river stones: the main subject. Beyond, the gallery goes on in cold violet. Keep every carved mark exactly as the layout guide shows it: the same number of strokes, their shapes, order and place. "
+ },
+ "pt-pl-w4-hollow": {
+  "top": 444,
+  "scene": "crouched, looking down into a hollow the size of two cupped hands in the top of a low bank of salt, worn glassy-smooth inside, a small count cut on its rim. At its bottom the salt is pressed flat in four small places, two and two, like four tiny footprints: the main subject, catching the light. Warm light from above and behind. Keep every carved mark exactly as the layout guide shows it: the same number of strokes, their shapes, order and place. Nothing in the hollow; no pebbles, no objects."
+ },
+ "pt-pl-w4-recess-above-the-cot": {
+  "top": 444,
+  "scene": "looking up a cut-stone wall where it turns into a vault, from below in a camp room: a recess with a thin dark slate set across its mouth, a small count cut in the slate. Beside it a thin crack in the stone, and in the crack, alone, one small steel drawing pin with a round head: the main subject, catching a glint. Weak warm lamplight from below; violet in the vault. Keep every carved mark exactly as the layout guide shows it: the same number of strokes, their shapes, order and place. "
+ },
+ "pt-pl-w5-ledge-lip": {
+  "top": 444,
+  "scene": "kneeling beside a stone ledge on a hall wall, looking up under it: the ledge is a dark slab across the upper frame; a lamp on it is out of sight above, its warm light spilling round the ledge's front edge. In the shadow on the underside, close to the lip, a small count of short strokes cut into the stone: the main subject. The rest stays dark; a low warm glow on the far wall behind. Keep every carved mark exactly as the layout guide shows it: the same number of strokes, their shapes, order and place. "
+ },
+ "pt-pl-w5-second-landing": {
+  "top": 444,
+  "scene": "at the foot of a stair, eye height, looking across a wide round-vaulted landing of paler cold stone; lamps burn in small arched niches along its right wall. In the far wall, opposite, a doorway far too low for giants, cut square: sharp corners and a flat head, the only right angles in a round world: the main subject; through it dark and a little cold violet. The doorway is a plain square cut with no frame or surround."
+ },
+ "pt-pl-w5-worn-steps": {
+  "top": 444,
+  "scene": "low, a step's height above the treads, halfway down a wide stone stair of knee-high steps in a vaulted passage, looking down the flight. The nearest step below is worn into two smooth hollows a stride apart, catching the lamplight: the main subject. A rail cut from the right wall shines along its worn top. Small clay lamps burn in small arched niches in the left wall. The flight drops away into lamplight at the turn. Fog on the steps."
+ },
+ "pt-pl-w6-folder": {
+  "top": 444,
+  "scene": "on the floor of a camp room, looking in under a canvas camp cot (its sagging canvas dark overhead) to the wall behind it: at the back, lying flat, a document folder of grey card with an elastic band round it and a thin slate on its cover with a small count cut in it; its spine turned toward the camera, and on the spine, in black marker, the word HILL in plain capitals: the main subject. Weak warm lamplight comes low under the cot's rail and ends on the spine. Keep every carved mark exactly as the layout guide shows it: the same number of strokes, their shapes, order and place. "
+ },
+ "pt-pl-w6-square-gallery": {
+  "top": 444,
+  "scene": "eye height, straight down the axis of a gallery of dark square-cut stone: flat ceiling, straight walls covered in small even chisel strokes, cracked, no cups; a perfect one-point perspective, the vanishing point dead centre. Warm light from behind dies down the gallery; where it gives out, far down, the floor goes under a slope of broken stone, its faces catching the last light: the main subject."
+ },
+ "pt-pl-w6-wall-shelf": {
+  "top": 444,
+  "scene": "in a gallery of dark square-cut stone with small even chisel marks: a shelf cut into the left wall at chest height, a small count cut on its lip; along the lip's edge a scratched line, pale and dead level, with a short tick at each end: the main subject. The eye is exactly level with the line, so it runs straight across the frame while every other edge runs away to the vanishing point. Weak warm light from behind. Keep every carved mark exactly as the layout guide shows it: the same number of strokes, their shapes, order and place. "
+ },
+ "pt-cv-01": {
+  "top": 444,
+  "scene": "at the bottom of a narrow brick shaft looking straight up: brick walls closing to a small square of pale grey daylight sky, the only daylight. An iron ladder up the right-hand wall, rung after rung. On the brick in front, a little above head height, a chalk arrow pointing up and beside it in chalk the text 40 FT: the main subject, the sharpest thing in the frame. Quiet; one light, from above."
+ },
+ "pt-cv-02": {
+  "top": 444,
+  "scene": "low along the floor of a tube-like passage of cut stone, floor and walls one curve with no corners, bending away to the right. Grey dust lies in the bottom of the curve, and down its middle a path is worn through it by boots: the nearest bootprints still whole, heel and sole, a stride apart, going away round the bend: the main subject. Cold violet light from round the bend. Quiet."
+ },
+ "pt-cv-03": {
+  "top": 444,
+  "scene": "standing at a passage mouth just inside a long hall of cold violet stone: a small clay oil lamp on a stone ledge near on the right, its single warm flame perfectly still: the main subject; past it the hall goes away into the dark, its far end only a trace of violet in fog. Small dark empty cups in the walls, unlit. One small warm light against a long dark. Quiet."
+ },
+ "pt-cv-04": {
+  "top": 444,
+  "scene": "standing at the foot of a great door, looking back up a long hall and up into its vault: overhead, rings cut high in the vault take warm light from below, every groove drawn in warm light and shadow: the main subject. Below them two lines of small cup flames in the walls run back up the hall to a small warm point at the vanishing point. Beside the camera, round a corner, a little cold violet light. Quiet."
+ },
+ "pt-cv-05": {
+  "top": 444,
+  "scene": "crouched in a smooth trough worn into a stone floor, looking down and across at a second trough a stride away, worn to the same depth; both bend away into a turn where cold violet light comes from. In the inner trough lies one dry, curled, brown hedge leaf: the main subject. Quiet; one light."
+ },
+ "pt-cv-06": {
+  "top": 444,
+  "scene": "macro: a salt face at arm's length filling the frame, beds of grey and white salt; through them one narrow dark chink going in, cold violet light coming thin through it in shafts. Where the air comes through, the salt has grown a skin of fine white crystals like frost, needles on the chink's lowest lip and in the small cut marks below it: the main subject. Keep every carved mark exactly as the layout guide shows it: the same number of strokes, their shapes, order and place. Quiet."
+ },
+ "pt-cv-07": {
+  "top": 444,
+  "scene": "camera pressed against a gallery wall looking straight along it: a surface of banded salt rushing away; a line of small marks cut into the salt converging to the vanishing point. Near, one single ring with an unbroken stroke catches the raking violet light: the main subject. Keep every carved mark exactly as the layout guide shows it: the same number of strokes, their shapes, order and place. Quiet; cold light only."
+ },
+ "pt-cv-08": {
+  "top": 444,
+  "scene": "from just inside a doorway, low, in a small round-roofed stone camp room: a canvas camp cot's wooden rail running away along the right wall, the canvas sagging where someone slept, a pair of old leather boots beneath; on the rail's side a strip of masking tape with DAY 1 written in black marker: the main subject. Weak warm lamplight from behind; violet in the far corners."
+ },
+ "pt-cv-09": {
+  "top": 444,
+  "scene": "eye height just above a stone ledge on a camp room's back wall, seen end-on so it runs away along the wall: the ledge is empty, grey dust lies on it everywhere except one clean stripe the shape of a long rod, narrow at one end and wider at the other, where the rod lay: the main subject, the bare stone darker there with a dull sheen. Under the ledge a thin flat dark pencil line drawn on the wall (not carved). Weak warm lamplight from a doorway behind. Nothing on the ledge."
+ },
+ "pt-cv-10": {
+  "top": 444,
+  "scene": "standing at the back of a stone landing at the head of a wide stair of knee-high steps, looking down the flight into warm lamplight rising from below. On the left wall where the flight begins, one ring set apart from faint rings around it, larger and cut deeper, its groove catching the light: the main subject. Keep every carved mark exactly as the layout guide shows it: the same number of strokes, their shapes, order and place. Fog lying on the steps."
+ },
+ "pt-cv-11": {
+  "top": 444,
+  "scene": "seated on a knee-high step halfway down a wide stone stair, looking back up the flight to the landing; a rail runs above elbow height on the far wall. In the near wall at hand height, a row of shallow finger hollows worn smooth: four, a gap, four: the main subject, their insides catching a nearby lamp's warm light. A small lamp in an arched niche. Keep every carved mark exactly as the layout guide shows it: the same number of strokes, their shapes, order and place. "
+ },
+ "pt-cv-12": {
+  "top": 444,
+  "scene": "standing on a stair's turn landing looking down past a stone rail: the rail curls round the corner and runs away down a second flight; far below, a small stone door with a count above it. On the rail's worn top, just past the curl, a short pencil tick across it and beside it, small, in pencil handwriting, 0.9 m: the main subject. Warm lamplight; fog spilling down the second flight. Keep every carved mark exactly as the layout guide shows it: the same number of strokes, their shapes, order and place. "
+ },
+ "pt-cv-13": {
+  "top": 444,
+  "scene": "on a stone stair, three-quarter on a small shut stone door under a rail; above it a count of strokes, full; beside it one ring with sharp edges among worn ones. On the wall at the door's jamb, small, in pencil handwriting: open. D9 : the main subject. Warm lamplight from the far wall; the flight going on down into dark. Keep every carved mark exactly as the layout guide shows it: the same number of strokes, their shapes, order and place. "
+ },
+ "pt-cv-14": {
+  "top": 444,
+  "scene": "a step back from a gap in a stair's wall at shoulder height, its edge clean and rounded; through it, a straight gallery of square, smoke-darkened, chisel-marked stone going away into dark. Under the gap, on the tread at the wall's foot, a small heap of square-edged stone chips, pale and fresh against the worn stone, lit by warm lamplight from behind: the main subject. Fog drawn in through the gap."
+ },
+ "pt-cv-15": {
+  "top": 444,
+  "scene": "close against a wall looking up along a join: on the left, rounded stone curving away, its courses worn; on the right, flat darker square stone covered in small even chisel marks; between them the seam, keyed in square steps, running up the frame into the dark. Poured into the joint above head height, a thin sliver of dull grey lead catching warm light from the left: the main subject."
+ },
+ "pt-b-8.A": {
+  "scene": "from the last step of a stone stair coming down at the left, low over the water: a great rounded hall of cold violet stone whose whole floor is a black lake, perfectly still like a mirror, with no ripple. Small warm cup-flames set along the walls are reflected unbroken in the water. A wide doorway across the water. Far off at the lake's far end, tiny and in haze, a tall still dark shape standing beside one small light: never lit enough to show a face or hands, only a tall vague silhouette: the main subject. Fog over the water."
+ },
+ "pt-pl-w8-channel": {
+  "scene": "looking along a straight square-cut trench a stride wide, its water level with a lake beyond, dead flat and black like a strip of glass, no ripple. The trench walls are cut stone. In the trench's side wall, near the camera, a small niche with a short row of small notches cut on it: the main subject. Far warm cup-light across the lake at the channel's end, reflected in the still water."
+ },
+ "pt-b-8.B": {
+  "scene": "close, raking along a wall of banded grey-white rock salt: a line of small cut marks (a tally) runs away down the gallery. Near the camera, beside one plain hook-shaped mark, five small straight strokes cut in a row: the main subject, two counts side by side. Weak warm glow from round a corner. Glints on the salt."
+ },
+ "pt-pl-w8-steep-foot": {
+  "scene": "from a lake's stone shore looking up the last steps of a very steep stone stair that comes down into the water's edge and climbs up into black darkness. The last step at the water is wet and dark at its lip: the main subject. Warm cup-light reflected up from the still black water below; fog in the stairwell above."
+ },
+ "pt-b-8.C": {
+  "scene": "looking down through a small niche in a wall that has no back: it opens like a window onto a chamber below. Around it a narrow rounded stone way going down, cold violet light from below. In the chamber below, on a stone ledge, a pale old book lies open with a pencil in its fold: the main subject. The niche is a plain cut in the stone, no frame. Dust."
+ },
+ "pt-b-9.A": {
+  "scene": "from a doorway looking down the aisle of a long hall of chest-high stone benches in rows like pews; walls covered in rows of carved stone tablets rising out of sight into dark. At the end, a lintel over an inner door. Small warm cup-flames high on the walls. The nearest tablet, at the edge of the aisle, carries a small carved lamp with a flame: the main subject. Fog high among the tablets."
+ },
+ "pt-pl-w9-benches": {
+  "scene": "low, across the tops of chest-high stone benches in rows running away. The nearest bench top is worn into two smooth dips side by side: the main subject. On a flat floor-stone in the aisle, three small carved symbols. Warm light from small cup-flames. Dust."
+ },
+ "pt-b-9.B": {
+  "scene": "close over a single sheet of paper with faint grey pencil writing (illegible texture, no real letters), held flat against a banded salt wall, one corner lifting slightly. On the salt beside the sheet, among a line of small cut marks, one small cross, fingernail-sized, cut after one mark: the main subject. Warm glow from round a corner."
+ },
+ "pt-b-9.C": {
+  "scene": "low, at a child's eye height, down a tall hall of stone benches: in front, one low stone bench at child height, and on it a small carved stone tablet with three marks: a flame, an open square cell, and a smaller, sharper cut line: the main subject is that smaller sharper cut. Warm cup-light high above. The one low thing in a tall room."
+ },
+ "pt-pl-w9-approach": {
+  "scene": "looking down a rounded way of smooth stone going down, streaked grey with old smoke, to a lintel set over solid stone at its end (no opening, the stone below the lintel is solid); on the lintel's face a clean empty rod-shaped blank recess: the main subject. Two small niches in the side walls. Cold violet light, haze thickening downward."
+ },
+ "pt-pl-w10-deep-end": {
+  "scene": "from down a straight gallery of dark square-cut stone with a flat ceiling: it ends in a slope of fallen square blocks piled to the ceiling. Before the fall, a single standing stone like a gatepost, with a row of small notches and a clean empty rectangular blank cut on its face: the main subject. Faint warm light from far behind. Dust settling."
+ },
+ "pt-b-10.A": {
+  "scene": "square on to a stone lintel set over solid stone (a door that is only stone, no opening). On the lintel's face two small cut marks beside a clean empty rod-shaped blank recess: the main subject. Below, a row of small notches. Cold violet light."
+ },
+ "pt-pl-w10-blast-floor": {
+  "scene": "from a doorway into a rounded stone room with one wall torn open into a rough ragged hole of broken smoke-blackened rock. Two narrow iron rails run along the floor from the hole and simply stop at mid-floor: their ends are the main subject. A fall of rubble at the far end, a pale stone ledge. Smoke-dim violet haze."
+ },
+ "pt-b-10.B": {
+  "scene": "close on a single standing stone like a gatepost, before a slope of fallen blocks: on its face a short record of small cut marks in rows above a row of notches; the record's first line is the main subject. Faint warm light from far behind. Dust."
+ },
+ "pt-b-10.C": {
+  "scene": "three-quarter view of a door-sized hole torn whole through a smooth stone wall; rough, smoke-blackened broken rock beyond. On a stone ledge beside the hole lies an old pocket watch, its glass catching a little light, its hands at ten past four: the main subject. Smoke drifting through the hole, dim violet light."
+ },
+ "pt-pl-w11-cupboard": {
+  "scene": "square on to a recess in the stone wall with a heavy stone door, like a safe in a cave; on the door the word POWDER is scratched in rough capitals and crossed out with a scratched line: the main subject. Smoke-dim violet light. Dust."
+ },
+ "pt-b-11.A": {
+  "scene": "close over an old leather-bound book lying open on a stone ledge: pale vellum pages with faint handwriting texture; in the page margin a few small marks laid in gold leaf, softly glowing warm: the main subject, the only gold in the scene. On the ledge's lip, three small cut marks. Warm glow off the gold, otherwise cold violet."
+ },
+ "pt-b-11.B": {
+  "scene": "looking down an aisle of chest-high stone benches through an open doorway under a lintel with three small cut marks. Warm cup-light over the benches ends in darkness: the third bench is the last one lit and is the main subject; beyond it only dark and fog."
+ },
+ "pt-pl-w11-far-end": {
+  "scene": "standing on a lake's stone shore looking down: the shore stone is worn into two shallow dips a stride apart, like where someone stood a long time: the main subject. The black still lake beside, no ripple, warm cup-flames reflected low across it. A small niche in the rock nearby."
+ },
+ "pt-b-11.C": {
+  "scene": "close on a crack in rock beside a torn wall: in the crack, a coiled old fuse cord, and round it a small pencilled paper scrap with faint pencil handwriting (illegible texture): the main subject. Smoke-dim light; the paper pale."
+ },
+ "pt-b-12.A": {
+  "scene": "low beside an old wooden bucket bound with iron hoops, its lid off and leaning against it; inside the lid lies a pencil: the main subject. Above, on a stone ledge, an old log book lies open. Smoke-dim violet light. Dust."
+ },
+ "pt-pl-w12-shelf": {
+  "scene": "looking along a long stone shelf in a smoke-dim rounded room: on it an old water-stained wooden dispatch box under a small slate with a few notches cut in it; on the box's side a faded company stamp (a simple oval ink stamp, illegible): the main subject. At the shelf's end a small niche. Dust."
+ },
+ "pt-b-12.B": {
+  "scene": "along a banded salt wall to its end: a line of small cut marks (a tally) runs along the wall and stops; after the last mark only bare salt runs to the floor. The last mark before the bare salt is the main subject. Warm glow from round a corner; glints."
+ },
+ "pt-pl-w12-square-way": {
+  "scene": "from a rounded, smoke-dim room looking into a low square doorway with sharp corners cut into round stone, leading into a narrow gallery of square-cut stone. The doorway's sharp corners against the round stone are the main subject; the doorway is a plain square cut with no frame. Dust hanging in still air, light fading into the gallery."
+ },
+ "pt-b-12.C": {
+  "scene": "looking down a narrow gallery of square-cut stone to a shut square stone door at its end. On the door: three stacked bars, a cross, and a small hook in its corner, cut small. At the door's foot on this side, a small heap of stone chips: the main subject. Very low cold violet light."
+ },
+ "pt-pl-w13-side-gallery": {
+  "scene": "close to a shut door, looking back along the narrow wall of a square-cut stone gallery: the wall is rougher cut here, in rows of hasty chisel marks: the main subject. A niche, a recess and a small low niche in the wall. Cold violet light. Dust."
+ },
+ "pt-b-13.A": {
+  "scene": "square on to a shut square stone door: a short record of small cut marks in rows above three stacked bars and a cross, and a clean empty blank beneath. The record's last line is the main subject. Faint cold light on the door's face."
+ },
+ "pt-b-13.B": {
+  "scene": "standing before a single standing stone like a gatepost; behind it, a slope of fallen stone blocks is lifted up into the air, parting in the middle like a stone curtain drawn aside, the blocks hanging; through the opening, a gallery beyond, and warm light pours through the parting: the main subject. Dust falling."
+ },
+ "pt-b-13.C": {
+  "scene": "low along the edge of a single stone bench standing apart from the rest: along its edge a line of small cut strokes in groups: eight, eight, eight, a gap, then one single sharper stroke: that single stroke is the main subject. Warm cup-light. Dust."
+ },
+ "pt-pl-w13-lower-gallery": {
+  "scene": "looking down a clean, pale, square-cut stone gallery; at its end rounded stone begins, higher and wider: the join between square and round is the main subject. Cold violet air-light from ahead; dust moving toward the camera."
+ },
+ "pt-b-14.A": {
+  "scene": "from the foot of a fall of rubble that has parted, looking into rounded stone beyond; a torn rock wall goes on into it. Low on the wall, a clean empty blank recess with two small marks beside it: a diamond and a bar with a tick: the blank is the main subject. Smoke-dim light near, cold light beyond. Dust settling."
+ },
+ "pt-pl-w14-mule-stone": {
+  "scene": "low on a square-cut stone floor: an old iron mule-shoe lies on the floor beside a stone post whose edge is rubbed smooth and polished by a halter rope: the halter rub is the main subject. On the wall above, a line with small notches under it. Faint warm light from far off. Dust."
+ },
+ "pt-b-14.B": {
+  "scene": "from the top of a rounded stone way sloping down and in, curving away: small warm cup-flames already lit along its walls going down in a line into the distance: the main subject. Cold dust drifting up toward the camera."
+ },
+ "pt-pl-w14-meeting": {
+  "scene": "from a rounded stone way lit by small warm cup-flames, looking through an opening in its side wall into the rounded end of another gallery lit cold violet; the opening's edge, where warm and cold light meet, is the main subject. The opening is a plain cut, no frame. Air moving dust through it."
+ },
+ "pt-pl-w14-deep-niche": {
+  "scene": "at the mouth of a deep niche, shoulder-wide, cut into a wall of banded rock salt, looking in: its back wall is carved stone. On the niche's lip, a row of small notches: the main subject. Faint warm glow; glints on the salt. The niche mouth is a plain cut, no rim or frame."
+ },
+ "pt-cv-16": {
+  "scene": "seated on the near shore of a black underground lake, looking across it: small warm cup-flames along the far walls are reflected perfectly in the still water; one flame's reflection lies unbroken like a painted line on glass: the main subject. No ripples. Quiet."
+ },
+ "pt-cv-17": {
+  "scene": "seated with a stone bench at your back, looking up at walls covered in rows of carved stone tablets rising out of sight; small warm cup-flames high; the highest row lost in darkness: the main subject. Fog high up. Quiet."
+ },
+ "pt-cv-18": {
+  "scene": "seated beside a door-sized hole torn in a smooth stone wall, smoke-black broken rock beyond; on the smooth wall beside the hole, in white chalk, 61 YDS: the main subject. Dim smoky light. Quiet."
+ },
+ "pt-cv-19": {
+  "scene": "seated in the mouth of a narrow gallery of square-cut stone, walls close on either side, looking into the dark; a dim glow behind fading. The sharp corner of the square doorway near the camera is the main subject. Still dust. Quiet."
+ },
+ "pt-cv-20": {
+  "scene": "seated on a sloping rounded stone way that goes down past you; small warm cup-flames lit along it; the next flame below is the main subject. Cold dust drifting up. Quiet."
+ },
+ "pt-cv-21": {
+  "scene": "seated at the foot of a standing stone like a gatepost, looking up a slope of fallen square stone blocks piled to the ceiling; among the blocks, an old snapped wooden prop: the main subject. Faint far light. Dust. Quiet."
+ }
+}

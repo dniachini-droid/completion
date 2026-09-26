@@ -1,0 +1,12 @@
+{
+ "id": "pt-pl-w11-cupboard",
+ "name": "The cupboard",
+ "line": "",
+ "width": 1320,
+ "height": 2868,
+ "live": {
+  "motes": "violet",
+  "fog": "low"
+ },
+ "anchors": {}
+}

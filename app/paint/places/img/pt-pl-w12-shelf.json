@@ -1,0 +1,12 @@
+{
+ "id": "pt-pl-w12-shelf",
+ "name": "The shelf in the blast room",
+ "line": "",
+ "width": 1320,
+ "height": 2868,
+ "live": {
+  "motes": "violet",
+  "fog": "low"
+ },
+ "anchors": {}
+}

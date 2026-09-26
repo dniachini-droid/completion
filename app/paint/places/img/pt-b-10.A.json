@@ -1,0 +1,12 @@
+{
+ "id": "pt-b-10.A",
+ "name": "The door below the Water",
+ "line": "",
+ "width": 1320,
+ "height": 2868,
+ "live": {
+  "motes": "violet",
+  "fog": "low"
+ },
+ "anchors": {}
+}

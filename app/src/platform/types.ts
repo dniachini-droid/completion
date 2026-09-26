@@ -42,6 +42,9 @@ export interface PanelState {
   afterStart: number; afterEnd: number;
   /** When the panel turns to its "after" (0: never, while paused). */
   staleAt: number;
+  /** What the phone itself turns it to if Dan goes into another app (the app is asleep by then, D-094): paused where
+      he left, with these words. `awayLen` is one delve's length on the game's clock, for the time left (0 while paused). */
+  awayLabel: string; awayLine: string; awayLeft: string; awayLen: number;
 }
 export interface Panel { show(p: PanelState): Promise<void>; end(): Promise<void>; }
 export interface Platform {

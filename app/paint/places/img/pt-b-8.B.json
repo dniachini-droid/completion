@@ -1,0 +1,13 @@
+{
+ "id": "pt-b-8.B",
+ "name": "The tally's first line, close",
+ "line": "",
+ "width": 1320,
+ "height": 2868,
+ "live": {
+  "motes": "gold",
+  "fog": "low",
+  "gold": true
+ },
+ "anchors": {}
+}

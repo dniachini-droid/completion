@@ -1,0 +1,12 @@
+{
+ "id": "pt-pl-w8-steep-foot",
+ "name": "The steep stair's foot",
+ "line": "",
+ "width": 1320,
+ "height": 2868,
+ "live": {
+  "motes": "violet",
+  "fog": "low"
+ },
+ "anchors": {}
+}

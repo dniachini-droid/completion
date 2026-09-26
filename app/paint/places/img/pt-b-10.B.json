@@ -1,0 +1,13 @@
+{
+ "id": "pt-b-10.B",
+ "name": "The standing stone before the fall",
+ "line": "",
+ "width": 1320,
+ "height": 2868,
+ "live": {
+  "motes": "gold",
+  "fog": "low",
+  "gold": true
+ },
+ "anchors": {}
+}

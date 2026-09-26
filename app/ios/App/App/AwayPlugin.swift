@@ -110,6 +110,12 @@ public class AwayPlugin: CAPPlugin, CAPBridgedPlugin {
                 UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: alerts)
                 watching = false
                 note(r.at, "left", [])
+                /* the lock-screen panel and the Dynamic Island say it has paused too, before the app sleeps */
+                Task { @MainActor in
+                    await DelvePanelPlugin.hold(at: r.at)
+                    self.finish()
+                }
+                return
             } else {
                 note(r.at, "locked", r.signs)
             }

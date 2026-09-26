@@ -1,0 +1,13 @@
+{
+ "id": "pt-cv-17",
+ "name": "Among the benches",
+ "line": "",
+ "width": 1320,
+ "height": 2868,
+ "live": {
+  "motes": "gold",
+  "fog": "low",
+  "gold": true
+ },
+ "anchors": {}
+}

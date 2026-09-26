@@ -1,0 +1,12 @@
+{
+ "id": "pt-pl-w10-blast-floor",
+ "name": "The room past the lintel",
+ "line": "",
+ "width": 1320,
+ "height": 2868,
+ "live": {
+  "motes": "violet",
+  "fog": "low"
+ },
+ "anchors": {}
+}

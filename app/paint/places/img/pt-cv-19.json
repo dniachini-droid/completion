@@ -1,0 +1,12 @@
+{
+ "id": "pt-cv-19",
+ "name": "The side gallery",
+ "line": "",
+ "width": 1320,
+ "height": 2868,
+ "live": {
+  "motes": "violet",
+  "fog": "low"
+ },
+ "anchors": {}
+}

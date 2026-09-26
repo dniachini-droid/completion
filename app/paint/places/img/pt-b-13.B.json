@@ -1,0 +1,13 @@
+{
+ "id": "pt-b-13.B",
+ "name": "The blank on the standing stone",
+ "line": "",
+ "width": 1320,
+ "height": 2868,
+ "live": {
+  "motes": "gold",
+  "fog": "low",
+  "gold": true
+ },
+ "anchors": {}
+}

@@ -1,0 +1,12 @@
+{
+ "id": "pt-b-9.C",
+ "name": "The child's tablet",
+ "line": "",
+ "width": 1320,
+ "height": 2868,
+ "live": {
+  "motes": "violet",
+  "fog": "low"
+ },
+ "anchors": {}
+}

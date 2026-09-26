@@ -25,7 +25,16 @@ public class DelvePanelPlugin: CAPPlugin, CAPBridgedPlugin {
         return Date(timeIntervalSince1970: ms / 1000)
     }
 
+    /// What the panel turns to if Dan goes into another app (D-094), as the app last said; the app is asleep by then.
+    private struct Away { var label: String; var line: String; var left: String; var len: Double }
+    private static var away: Away?
+
     @objc func show(_ call: CAPPluginCall) {
+        let len = call.getDouble("awayLen") ?? 0
+        DispatchQueue.main.async {
+            Self.away = len > 0 ? Away(label: call.getString("awayLabel") ?? "", line: call.getString("awayLine") ?? "",
+                                        left: call.getString("awayLeft") ?? "", len: len) : nil
+        }
         guard ActivityAuthorizationInfo().areActivitiesEnabled else { call.resolve(["shown": false]); return }
         let run = call.getInt("run") ?? 0
         let now = Date()
@@ -65,6 +74,27 @@ public class DelvePanelPlugin: CAPPlugin, CAPBridgedPlugin {
             } catch {
                 call.reject("The delve's panel could not be shown: \(error.localizedDescription)")
             }
+        }
+    }
+
+    /// Dan went into another app at `at` (AwayPlugin, D-094): the panel stops where the delve will be paused, in the
+    /// paused look, rather than counting on while the app sleeps. Left in a breather: the next delve waits, not begun.
+    /// Coming back puts the panel right from the game's own rules.
+    @MainActor static func hold(at: Date) async {
+        guard let a = away else { return }
+        for activity in Activity<DelveAttributes>.activities where activity.activityState == .active || activity.activityState == .stale {
+            var s = activity.content.state
+            guard s.phase == "delve" || s.phase == "breather", at < s.end else { continue }
+            let span = s.end.timeIntervalSince(s.start)
+            let done = s.phase == "delve" && span > 0 ? min(1, max(0, at.timeIntervalSince(s.start) / span)) : 0
+            let left = Int((a.len * (1 - done) / 1000).rounded(.up))
+            s.phase = "held"
+            s.label = a.label
+            s.line = a.line
+            s.left = a.left
+            s.heldFraction = done
+            s.heldTime = "\(left / 60):\(String(format: "%02d", left % 60))"
+            await activity.update(ActivityContent(state: s, staleDate: nil))
         }
     }
 

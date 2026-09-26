@@ -367,6 +367,7 @@ export const copy = {
 
   /* the delve's panel on the lock screen and in the Dynamic Island (D-095): read at a glance, so short */
   'panel.paused': 'Your minutes are safe.',
+  'panel.away.line': 'You went into another app, so the delve is waiting for you.',
   'panel.breather.line': 'The {ord} delve will begin on its own.',
   'panel.breather.left': 'of the breather',
   'panel.goesOn': 'The run goes on',

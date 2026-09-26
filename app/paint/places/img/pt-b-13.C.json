@@ -1,0 +1,12 @@
+{
+ "id": "pt-b-13.C",
+ "name": "The second bench",
+ "line": "",
+ "width": 1320,
+ "height": 2868,
+ "live": {
+  "motes": "violet",
+  "fog": "low"
+ },
+ "anchors": {}
+}
