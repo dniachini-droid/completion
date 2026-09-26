@@ -560,6 +560,21 @@
     return e;
   }
 
+  /* A moving light on a layer of its own (D-103). Inside the one drawing over the painting, a breathing glow or a
+     flickering flame had the phone paint that part of the drawing again every frame, the clay lamp's texture filters and
+     the far glow's wash included; on its own small layer it is painted once and the graphics chip fades or moves it.
+     The layer takes `box` (x, y, w, h, in the drawing's units, which are the hall's pixels) and sits in the stack where
+     `before` is, so what is above and below it stays the same. */
+  function layer(el, before, box, cls, style) {
+    var x = Math.floor(box[0]), y = Math.floor(box[1]), w = Math.ceil(box[0] + box[2]) - x, h = Math.ceil(box[1] + box[3]) - y;
+    var l = svgEl('svg', { viewBox: x + ' ' + y + ' ' + w + ' ' + h, width: w, height: h, 'aria-hidden': 'true', 'class': 'hall-layer' + (cls ? ' ' + cls : '') });
+    l.style.cssText = 'left:' + x + 'px;top:' + y + 'px;right:auto;bottom:auto;width:' + w + 'px;height:' + h + 'px;overflow:visible;pointer-events:none;' + (style || '');
+    el.insertBefore(l, before || null);
+    return l;
+  }
+  /* the stack after the lamp: a drawing of its own, so the lamp's layers stay beneath what came after it */
+  function rest(el, W, H) { return svgEl('svg', { viewBox: '0 0 ' + W + ' ' + H, width: W, height: H, 'class': 'hall-over', 'aria-hidden': 'true' }, el); }
+
   function draw(el, opts) {
     var o = Object.assign({ scene: 'hall', cups: 'dark', lintel: 'sealed', gold: 0, res: 1 }, opts || {});
     o.cam = Object.assign({ x: 0, y: 1.6, z: 0, pitch: 0, f: .85, cx: .5, cy: .5 }, o.cam || {});
@@ -599,13 +614,15 @@
 
     if (o.scene === 'stair') {
       var pd = project(0, -24, 34);
-      if (pd) svgEl('ellipse', { cx: pd[0], cy: pd[1], rx: W * .5, ry: H * .2, fill: 'url(#hlFar)', 'class': 'hall-far', style: 'mix-blend-mode:screen' }, svg);
+      if (pd) svgEl('ellipse', { cx: pd[0], cy: pd[1], rx: W * .5, ry: H * .2, fill: 'url(#hlFar)' },
+        layer(el, svg, [pd[0] - W * .5, pd[1] - H * .2, W, H * .4], 'hall-far', 'mix-blend-mode:screen'));
       return H2;
     }
 
     /* the far end's bloom */
     var pf = project(0, 3.2, S.zFar - 1);
-    if (pf) svgEl('ellipse', { cx: pf[0], cy: pf[1], rx: W * .34, ry: W * .42, fill: 'url(#hlFar)', 'class': 'hall-far', style: 'mix-blend-mode:screen' }, svg);
+    if (pf) svgEl('ellipse', { cx: pf[0], cy: pf[1], rx: W * .34, ry: W * .42, fill: 'url(#hlFar)' },
+      layer(el, svg, [pf[0] - W * .34, pf[1] - W * .42, W * .68, W * .84], 'hall-far', 'mix-blend-mode:screen'));
 
     /* the wall-cups: dark; during the cut they wake one by one, near to far */
     var cupsG = svgEl('g', { 'class': 'hall-cups' }, svg);
@@ -625,15 +642,20 @@
     var L = S.lamp, pl = project(L.x, L.y, L.z);
     if (pl) {
       var s = o.cam.f * W / Math.max(.5, L.z - o.cam.z), g = o.gold || 0;
-      var lg = svgEl('g', { 'class': 'hall-lamp' }, svg);
-      svgEl('ellipse', { cx: pl[0], cy: pl[1] - s * .1, rx: s * (1.3 + g * 1.4), ry: s * (1.05 + g * 1.1), fill: 'url(#hlWarm)', 'class': 'hall-lamplight', style: 'mix-blend-mode:screen' }, lg);
+      /* the lamp's glow, its halo, the clay lamp and the flame, each on its own layer above the cups (D-103) */
+      var lrx = s * (1.3 + g * 1.4), lry = s * (1.05 + g * 1.1), lcy = pl[1] - s * .1;
+      svgEl('ellipse', { cx: pl[0], cy: lcy, rx: lrx, ry: lry, fill: 'url(#hlWarm)' },
+        layer(el, null, [pl[0] - lrx, lcy - lry, lrx * 2, lry * 2], 'hall-lamplight', 'mix-blend-mode:screen'));
       /* the clay lamp itself: one hand for every screen (lamp.js); the flame sits at its nozzle */
       var fx = pl[0] + s * .21, fy = pl[1] - s * .005, fs = s * .16;
+      /* a flickering layer's box has room for the flicker's stretch; it scales about the flame's foot */
+      var flick = function (box) { return layer(el, null, box, 'hall-flame', 'transform-origin:' + (fx - Math.floor(box[0])) + 'px ' + (fy - Math.floor(box[1])) + 'px'); };
       /* the halo glows in the air behind the lamp, so it lights the clay without washing it out */
-      var fh = svgEl('g', { 'class': 'hall-flame', style: 'transform-origin:' + fx + 'px ' + fy + 'px' }, lg);
-      svgEl('circle', { cx: fx, cy: fy - fs * .4, r: s * .55, fill: 'url(#hlHalo)', 'class': 'hall-halo' }, fh);
+      var hr = s * .55, hy = fy - fs * .4;
+      svgEl('circle', { cx: fx, cy: hy, r: hr, fill: 'url(#hlHalo)', 'class': 'hall-halo' }, flick([fx - hr * 1.2, hy - hr * 1.2, hr * 2.4, hr * 2.4]));
+      var lk = s * .4 / 100, lg = svgEl('g', { 'class': 'hall-lamp' }, layer(el, null, [fx - 150 * lk, fy - 40 * lk, 260 * lk, 85 * lk]));   /* the lamp, its ledge light and shadow (lamp.js units) */
       if (global.ClayLamp) global.ClayLamp.draw(lg, { x: fx, y: fy, size: s * .4, pool: .6 + .4 * g });
-      var fl = svgEl('g', { 'class': 'hall-flame', style: 'transform-origin:' + fx + 'px ' + fy + 'px' }, lg);
+      var fl = flick([fx - fs * 1.5, fy - fs * 1.8, fs * 3, fs * 2.4]);
       svgEl('path', { d: 'M' + fx + ' ' + (fy - fs * 1.15) + ' Q' + (fx + fs * .36) + ' ' + (fy - fs * .35) + ' ' + (fx + fs * .18) + ' ' + (fy - fs * .05) + ' Q' + fx + ' ' + (fy + fs * .1) + ' ' + (fx - fs * .2) + ' ' + (fy - fs * .05) + ' Q' + (fx - fs * .3) + ' ' + (fy - fs * .4) + ' ' + fx + ' ' + (fy - fs * 1.15) + 'Z', fill: 'url(#hlFlame)' }, fl);
       svgEl('ellipse', { cx: fx, cy: fy - fs * .22, rx: fs * .08, ry: fs * .2, fill: '#fffaf0' }, fl);
       H2.lamp = { x: pl[0], y: pl[1], s: s };
@@ -656,7 +678,7 @@
 
     if (two) {
       /* the stone sinks: the sealed painting loses the blank from the top down, then the light arrives */
-      var spill = svgEl('g', { 'class': 'hall-spill' }, svg);
+      var spill = svgEl('g', { 'class': 'hall-spill' }, pl ? rest(el, W, H) : svg);
       var c0 = project(-2.3, .1, (dm.z0 + dm.z1) / 2);
       if (c0) svgEl('ellipse', { cx: c0[0], cy: c0[1], rx: W * .42, ry: W * .2, fill: 'url(#hlSpill)', style: 'mix-blend-mode:screen' }, spill);
       H2.openStone = function (ms, done) {
