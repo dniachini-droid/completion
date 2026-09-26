@@ -152,14 +152,18 @@ class Game {
   }
 
   #minute = 0;
+  #second = 0;
   tick() {
     /* in the background, or just back and not yet told how long Dan was away: nothing is settled (D-094) */
     if (document.hidden || this.#waking) return;
     const before = this.view.run;
     /* with no delve running, the clock only matters by the minute: the view is not rebuilt four times a second */
-    const m = Math.floor(this.clockMs() / 60_000);
+    const ms = this.clockMs(), m = Math.floor(ms / 60_000), s = Math.floor(ms / 1000);
     if (!before && m === this.#minute) return;
-    this.#minute = m;
+    /* during a delve, by the second: the countdown shows whole seconds, so the view is rebuilt once a second, not four
+       times (the tick still looks four times a second, so each new second shows within a quarter of it) (D-100) */
+    if (before && s === this.#second) return;
+    this.#minute = m; this.#second = s;
     this.now = this.clock();
     if (!before) {
       if (!this.facts.some(f => f.type === 'opened' && f.day === this.view.day)) this.wake();   /* past 04:00 with the app open */
