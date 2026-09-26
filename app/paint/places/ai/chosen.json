@@ -1,0 +1,228 @@
+{
+ "_note": "SEALED (D-015). The picture chosen for each place: <id>.<choice>.png in the session out-dir (free = first paint, edit = targeted AI edit, hand/dl = local fix, cool = graded, kit = kit painting kept). anchors: critic corrections after the auto-move.",
+ "choice": {
+  "pt-b-1.A": "edit1",
+  "pt-b-1.B": "free0",
+  "pt-pl-w1-pick-niche": "edit1",
+  "pt-b-1.C": "edit1",
+  "pt-pl-w1-below-the-lamp": "free0",
+  "pt-b-2.A": "edit1",
+  "pt-pl-w2-above-the-ring": "free0",
+  "pt-b-2.B": "edit1",
+  "pt-pl-w2-smooth-place": "edit1",
+  "pt-pl-w2-box-by-the-cot": "hand1",
+  "pt-b-3.A": "edit0",
+  "pt-b-3.B": "kit",
+  "pt-b-3.C": "hand0",
+  "pt-b-4.A": "free0",
+  "pt-b-4.B": "hand0",
+  "pt-b-4.C": "free0",
+  "pt-b-5.A": "edit0",
+  "pt-b-5.B": "kit",
+  "pt-b-6.A": "hand0",
+  "pt-b-6.B": "kit",
+  "pt-b-7.A": "edit0",
+  "pt-b-7.B": "free0",
+  "pt-b-7.C": "kit",
+  "pt-pl-w3-far-end": "free0",
+  "pt-pl-w3-salt-lit": "free0",
+  "pt-pl-w4-hollow": "free0",
+  "pt-pl-w4-recess-above-the-cot": "edit0",
+  "pt-pl-w5-ledge-lip": "free0",
+  "pt-pl-w5-second-landing": "free0",
+  "pt-pl-w5-worn-steps": "free0",
+  "pt-pl-w6-folder": "cool0",
+  "pt-pl-w6-square-gallery": "free0",
+  "pt-pl-w6-wall-shelf": "hand0",
+  "pt-cv-01": "free0",
+  "pt-cv-02": "free0",
+  "pt-cv-03": "free0",
+  "pt-cv-04": "free0",
+  "pt-cv-05": "free0",
+  "pt-cv-06": "kit",
+  "pt-cv-07": "free0",
+  "pt-cv-08": "free0",
+  "pt-cv-09": "edit0",
+  "pt-cv-10": "free0",
+  "pt-cv-11": "free0",
+  "pt-cv-12": "edit0",
+  "pt-cv-13": "kit",
+  "pt-cv-14": "edit0",
+  "pt-cv-15": "kit",
+  "pt-b-8.A": "dl0",
+  "pt-pl-w8-channel": "free0",
+  "pt-b-8.B": "edit0",
+  "pt-pl-w8-steep-foot": "dl0",
+  "pt-b-8.C": "free0",
+  "pt-b-9.A": "edit0",
+  "pt-pl-w9-benches": "dl0",
+  "pt-b-9.B": "free0",
+  "pt-b-9.C": "free0",
+  "pt-pl-w9-approach": "edit0",
+  "pt-pl-w10-deep-end": "free0",
+  "pt-b-10.A": "edit0",
+  "pt-pl-w10-blast-floor": "edit1",
+  "pt-b-10.B": "free0",
+  "pt-b-10.C": "edit0",
+  "pt-pl-w11-cupboard": "dl0",
+  "pt-b-11.A": "edit0",
+  "pt-b-11.B": "edit0",
+  "pt-pl-w11-far-end": "edit0",
+  "pt-b-11.C": "free0",
+  "pt-b-12.A": "free0",
+  "pt-pl-w12-shelf": "dl0",
+  "pt-b-12.B": "dl0",
+  "pt-pl-w12-square-way": "dl0",
+  "pt-b-12.C": "dl0",
+  "pt-pl-w13-side-gallery": "free0",
+  "pt-b-13.A": "free0",
+  "pt-b-13.B": "cool0",
+  "pt-b-13.C": "hand0",
+  "pt-pl-w13-lower-gallery": "dl0",
+  "pt-b-14.A": "edit0",
+  "pt-pl-w14-mule-stone": "free0",
+  "pt-b-14.B": "free0",
+  "pt-pl-w14-meeting": "free0",
+  "pt-pl-w14-deep-niche": "free0",
+  "pt-cv-16": "free0",
+  "pt-cv-17": "free0",
+  "pt-cv-18": "dl0",
+  "pt-cv-19": "free0",
+  "pt-cv-20": "free0",
+  "pt-cv-21": "free0"
+ },
+ "anchors": {
+  "pt-pl-w1-pick-niche": [
+   [
+    "glints",
+    3,
+    0.786,
+    0.462
+   ]
+  ],
+  "pt-b-2.A": [
+   [
+    "glints",
+    2,
+    0.6394,
+    0.6
+   ],
+   [
+    "glints",
+    3,
+    0.7379,
+    0.5056
+   ]
+  ],
+  "pt-b-2.B": [
+   [
+    "glints",
+    0,
+    0.3917,
+    0.5119
+   ]
+  ],
+  "pt-pl-w2-above-the-ring": [
+   [
+    "glints",
+    0,
+    0.5008,
+    0.5516
+   ],
+   [
+    "glints",
+    2,
+    0.8,
+    0.55
+   ]
+  ],
+  "pt-pl-w3-salt-lit": [
+   [
+    "glints",
+    0,
+    0.6,
+    0.5,
+    0.567,
+    0.453
+   ]
+  ],
+  "pt-b-4.C": [
+   [
+    "glints",
+    0,
+    0.3,
+    0.43,
+    0.304,
+    0.486
+   ]
+  ],
+  "pt-pl-w5-worn-steps": [
+   [
+    "flame",
+    0,
+    0.117,
+    0.358
+   ],
+   [
+    "flame",
+    1,
+    0.349,
+    0.401
+   ]
+  ],
+  "pt-cv-04": [
+   [
+    "flame",
+    0,
+    0.276,
+    0.547
+   ],
+   [
+    "flame",
+    1,
+    0.424,
+    0.607
+   ],
+   [
+    "flame",
+    2,
+    0.652,
+    0.597
+   ]
+  ],
+  "pt-cv-08": [
+   [
+    "glints",
+    0,
+    0.77,
+    0.565
+   ]
+  ],
+  "pt-cv-10": [
+   [
+    "flame",
+    1,
+    0.483,
+    0.484
+   ]
+  ],
+  "pt-pl-w4-recess-above-the-cot": [
+   [
+    "glints",
+    0,
+    0.278,
+    0.372,
+    0.254,
+    0.396
+   ]
+  ],
+  "pt-cv-12": [
+   [
+    "flame",
+    0,
+    0.061,
+    0.532
+   ]
+  ]
+ }
+}

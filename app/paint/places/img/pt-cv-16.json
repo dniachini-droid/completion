@@ -1,0 +1,13 @@
+{
+ "id": "pt-cv-16",
+ "name": "The Water's edge",
+ "line": "",
+ "width": 1320,
+ "height": 2868,
+ "live": {
+  "motes": "gold",
+  "fog": "low",
+  "gold": true
+ },
+ "anchors": {}
+}

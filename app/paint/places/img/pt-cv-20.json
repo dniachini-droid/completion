@@ -1,0 +1,13 @@
+{
+ "id": "pt-cv-20",
+ "name": "The lower way",
+ "line": "",
+ "width": 1320,
+ "height": 2868,
+ "live": {
+  "motes": "gold",
+  "fog": "low",
+  "gold": true
+ },
+ "anchors": {}
+}

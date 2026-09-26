@@ -1034,7 +1034,26 @@
 - **Consequences:** the browser here has no graphics chip, so the real drop in heat and battery can only be judged on the phone. Still redrawn each frame at 30 a second: the delve's ring (with its comet and sparks) and the dust, both small canvases, and the paintings' motes. If the phone still warms, next candidates: the full-screen grain and screen-blended layers, and the ring's glow. The rehearsal badge and Stair/Cut screens were not re-measured (seen rarely).
 - **Reversible:** Yes: styles and the drawing code of the live layers; the look is unchanged by design.
 
-## D-100 — The lock-screen panel turns red and says Paused when Dan goes into another app (Dan's report; the look is his suggestion)
+## D-100 — Every place repainted by an image model over the kit's layout (Dan)
+- **Date:** 2026-09-26
+- **Context:** The kit's paintings are clear and correct but plain; a polish pass and a finishing filter changed little. Four places were repainted through Meshy's image-to-image (an image model, with the kit painting as the layout guide and the Lamp Hall as the style), fitted to the frame, and checked. Dan: "pretty beautiful … the detail on the repaints is amazing. Let's do it for all."
+- **Decision (Dan):** every place gets an AI repaint: the 48 painted with the kit, and the 41 new places of weeks 8–14 (D-098), painted from their briefs. **The bar:** story-critical things (the thing to look at, carved marks and counts, anything a clue depends on) must be right; small errors elsewhere are fine; fix what's wrong without being obsessive. A place whose story-critical thing stays wrong keeps its kit painting or stand-in.
+- **Changes:** D-056's "paintings stay code-painted" (already relaxed for props by D-090): the kit now sets each layout, the image model paints the finish. The places' descriptions go to Meshy's service (never to Dan, D-015).
+- **Method:** `app/paint/places/ai/README.md` (setup, the API, the eight steps, the wrong readings seen, the budget).
+- **Alternatives:** keep the kit paintings (plain); the finishing filter (small gain); Blender (D-090: about 34 min a picture and not yet at the hall's look); a human illustrator (weeks, real money).
+- **Reversible:** Yes: the kit paintings and scene files stay in git.
+
+
+## D-101 — The AI repaint done: 82 of 89 repainted, one try each, hand fixes, 7 kit paintings kept (Claude)
+- **Date:** 2026-09-26
+- **Context:** D-100's run. The Meshy account held 1,491 credits, not the ~2,100 the plan assumed (two tries per place).
+- **Decision (routine, Claude):** one candidate per place; a second only as a targeted edit where a critic found a wrong story reading. Small fixes done by hand at no cost (a count of strokes cut in, an added niche or mark patched out, a stray lamp removed, a too-warm picture cooled): `app/paint/places/ai/delamp.py`, `cool.py`. Three separate critics checked the story-critical things (sealed critiques `CRITIQUE-AI-B1/B2/B3.md`), then gave a final USE / KIT verdict on every fixed picture.
+- **Result:** 82 of 89 places use the repaint (all 41 new places of weeks 8–14, which had stand-ins, and 41 of the 48 kit places). 7 keep their kit painting because a story detail still read wrong once the credits ran out (5 places and 2 camp views; ids in `ai/chosen.json`, sealed). The picture chosen for each place is recorded in `ai/chosen.json`; `ai/fitall.py` rebuilds every frame from it.
+- **Also seen:** the model adds small oil lamps on ledges wherever it is unsure of the light; these read as clues and were removed. The README now says so.
+- **Alternatives:** buy more credits first (Dan wasn't asked mid-run; the 7 can be redone later for about 12 credits a try); keep stand-ins for the new places (all 41 passed).
+- **Reversible:** Yes: the kit paintings stay in git history, and `chosen.json` can point any place back to "kit".
+
+## D-102 — The lock-screen panel turns red and says Paused when Dan goes into another app (Dan's report; the look is his suggestion)
 - **Date:** 2026-09-26
 - **Context:** Dan: going into another app pauses the delve correctly (D-094, D-096), but the lock-screen panel and the Dynamic Island kept counting down until he came back. He suggested it "turn red and say paused in red". D-096 had left this open: the app is asleep while Dan is in another app, so only the phone's native part can change the panel.
 - **Decision:** each panel the app shows now also carries what it becomes if Dan leaves for another app (the words from `copy/en.ts`, and one delve's length). When the native watcher (`AwayPlugin.swift`) decides it was another app, about 15 seconds after he left, it turns the panel itself to **Paused**: stopped at the moment he left (left in a breather: the next delve, not begun), "You went into another app, so the delve is waiting for you.", "Your minutes are safe." A paused panel (this one, or one paused with the Pause button) is **red** instead of violet: the label, the ring, the time and the Island's outline. Coming back puts the panel right from the game's own rules, as before.

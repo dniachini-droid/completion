@@ -1,0 +1,13 @@
+{
+ "id": "pt-pl-w14-mule-stone",
+ "name": "The mule-shoe's stone",
+ "line": "",
+ "width": 1320,
+ "height": 2868,
+ "live": {
+  "motes": "gold",
+  "fog": "low",
+  "gold": true
+ },
+ "anchors": {}
+}

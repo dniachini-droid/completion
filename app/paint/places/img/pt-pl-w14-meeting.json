@@ -1,0 +1,13 @@
+{
+ "id": "pt-pl-w14-meeting",
+ "name": "Where the ways meet",
+ "line": "",
+ "width": 1320,
+ "height": 2868,
+ "live": {
+  "motes": "gold",
+  "fog": "low",
+  "gold": true
+ },
+ "anchors": {}
+}

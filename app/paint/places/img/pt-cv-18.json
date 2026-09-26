@@ -1,0 +1,12 @@
+{
+ "id": "pt-cv-18",
+ "name": "By the torn wall",
+ "line": "",
+ "width": 1320,
+ "height": 2868,
+ "live": {
+  "motes": "violet",
+  "fog": "low"
+ },
+ "anchors": {}
+}
