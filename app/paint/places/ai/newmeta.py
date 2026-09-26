@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The AI repaint (D-099), step 5 for a NEW place (no kit painting, so no anchors to move). SEALED folder (D-015).
+"""The AI repaint (D-100), step 5 for a NEW place (no kit painting, so no anchors to move). SEALED folder (D-015).
 
     python3 newmeta.py <out-dir> <id> ...
 

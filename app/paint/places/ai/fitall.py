@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The AI repaint (D-099), steps 4-6 for every place, from chosen.json. SEALED folder (D-015). Run from app/.
+"""The AI repaint (D-100), steps 4-6 for every place, from chosen.json. SEALED folder (D-015). Run from app/.
 
     python3 paint/places/ai/fitall.py <out-dir> [id ...]
 

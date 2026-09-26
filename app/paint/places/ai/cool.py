@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The AI repaint (D-099): cool a repaint that came out too warm (check.mjs "cold stone"). No story here.
+"""The AI repaint (D-100): cool a repaint that came out too warm (check.mjs "cold stone"). No story here.
 
     python3 cool.py <in.png> <out.png> [k]
 

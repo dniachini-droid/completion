@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The AI repaint (D-099), step 2 for any place. SEALED folder (D-015): scenes.json quotes the briefs.
+"""The AI repaint (D-100), step 2 for any place. SEALED folder (D-015): scenes.json quotes the briefs.
 
     python3 paint.py <out-dir> <n-each> <id>[:k] ...
 

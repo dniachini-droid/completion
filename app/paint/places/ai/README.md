@@ -1,4 +1,4 @@
-# The AI repaint (D-099): every place, painted by an image model over the kit's layout
+# The AI repaint (D-100): every place, painted by an image model over the kit's layout
 
 Sealed folder (D-015): the scripts here quote the briefs. **This README holds no story.** Never show Dan a brief, a prompt or a sealed id's meaning; show him only the pictures, labelled BEFORE / AFTER.
 
@@ -26,7 +26,7 @@ Dan saw four repaints and found them "pretty beautiful … the detail is amazing
 4. **Fit to the frame** (`composite.py <ai> <out-dir> <id> [top]`). This continues the picture above and below the window from its own blurred edge, never from the old picture (that left seams and ghost lights), and softens the lower third for the buttons.
 5. **Re-place the live anchors.** The `.json` beside each painting places the moving layers (glints, flames, beams, fog) by `u`, `v` (0–1 in the frame). The repaint moves things slightly, so a glint can land in a crack. Align the AI window to the kit window (OpenCV `findTransformECC`, affine, on grey images) and map each anchor through it, then move the `focus` in `ui/paintings.ts` the same way. New places: set anchors by hand on the lit points, or leave `anchors` empty (the painting stays still).
 6. **Automatic checks:** `node paint/check.mjs <out-dir>/<id>.json` must say ok on every line. The usual failure is "button band busy": soften the lower third more.
-7. **Critic, story-critical only.** A separate subagent with the brief, the kit painting and the repaint answers: is the thing to look at found and read correctly? Are carved marks and counts the same number, shape and place? Did the AI add a mark, hole, symbol or object that could read as a clue? Minor errors elsewhere are **not** failures (D-099).
+7. **Critic, story-critical only.** A separate subagent with the brief, the kit painting and the repaint answers: is the thing to look at found and read correctly? Are carved marks and counts the same number, shape and place? Did the AI add a mark, hole, symbol or object that could read as a clue? Minor errors elsewhere are **not** failures (D-100).
 8. **Put in:** `python3 paint/tools/put-in.py <out-dir>:<id>:<focus>` (for new places it also adds them to PAINTED); `npx vitest run --testTimeout 120000`, `npx tsc --noEmit`.
 
 ## Wrong readings seen in the test
@@ -39,13 +39,13 @@ Dan saw four repaints and found them "pretty beautiful … the detail is amazing
 
 Name the material, the orientation and "no rim or frame" in the scene description; check these first.
 
-## Wrong readings seen in the full run (D-100)
+## Wrong readings seen in the full run (D-101)
 - Small oil lamps added on ledges, benches and shelves wherever the light is unclear: the most common fault in new places. Say the light source plainly and remove any lamp the scene doesn't name.
 - Counts off by one (the model rarely gets 7, 8 or 9 strokes right twice); a hand fix (copy one stroke) is cheaper than an edit.
 - Handwritten words garbled ("open. D9"); pencil painted as carved.
 - Carved rings painted as raised metal; a bowl left behind after a lamp is removed reads as an unlit lamp.
 
-## The run's files (D-100)
+## The run's files (D-101)
 `scenes.json` (one scene per place), `paint.py` (step 2), `edit.py` (step 3), `delamp.py` / `cool.py` (hand fixes), `composite.py` (step 4), `anchors.py` / `newmeta.py` (step 5), `chosen.json` (the picture chosen per place, and the critics' anchor corrections), `fitall.py` (steps 4–5 for every place from `chosen.json`). The raw pictures stayed in the session scratchpad; only the final frames are in `img/`.
 
 ## Budget

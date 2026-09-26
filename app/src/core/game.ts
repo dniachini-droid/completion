@@ -180,11 +180,13 @@ function asideOn(facts: Fact[], day: string): Set<string> {
 /** A job begun away from the phone (Begin on a no-timer job) and not yet done today. */
 function underWayOn(facts: Fact[], day: string): string | null {
   const done = doneOn(facts, day);
-  /* a delve stopped early is not "under way": its job simply stays on the list (review finding, D-080) */
-  const delved = new Set(ofType(onDay(facts, day), 'delveStarted').map(f => f.job));
+  /* a delve stopped early is not "under way": its job simply stays on the list (review finding, D-080). Only the Begins
+     before it are cleared: a Begin pressed after a delve on the same job stands (Dan, 2026-09-26: a job delved on
+     earlier in the day could not be begun) */
   const begun: string[] = [];
   for (const f of onDay(facts, day)) {
-    if (f.type === 'jobBegun' && f.from === 'app' && !delved.has(f.job)) begun.push(f.job);
+    if (f.type === 'delveStarted') { for (let i = begun.length - 1; i >= 0; i--) if (begun[i] === f.job) begun.splice(i, 1); }
+    else if (f.type === 'jobBegun' && f.from === 'app') begun.push(f.job);
     /* "I haven't started" takes a Begin back */
     else if (f.type === 'beginUndone') for (let i = begun.length - 1; i >= 0; i--) if (begun[i] === f.job) begun.splice(i, 1);
   }

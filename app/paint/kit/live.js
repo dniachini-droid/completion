@@ -62,15 +62,24 @@ export function live(host, meta, opts = {}) {
   world.style.cssText = 'position:absolute;inset:0;transform-origin:50% 45%;' + (still ? '' : 'animation:live-drift 46s ease-in-out infinite alternate;');
   host.insertBefore(world, img); world.appendChild(img);
 
-  /* 2. mist */
-  const fogs = (A.fog || []).map(f => {
-    const [x, y] = map(f.u, f.v), w = (f.w || 1) * W;
-    const c = document.createElement('canvas');
-    c.width = Math.round(w); c.height = Math.round(w * (f.h || .5));
-    c.style.cssText = `position:absolute;left:${x - w / 2}px;top:${y - c.height / 2}px;mix-blend-mode:screen;pointer-events:none;opacity:${f.a || .8};` +
+  /* 2. mist: its cloud drawn once, twice over side by side, and slid sideways by the graphics chip, so nothing is redrawn
+     each frame (Dan, 2026-09-26: the phone ran hot). Two banks, as before: one drifting left, a fainter one right. */
+  (A.fog || []).forEach(f => {
+    const [x, y] = map(f.u, f.v), w = Math.round((f.w || 1) * W), h = Math.round(w * (f.h || .5)), sp = f.speed || 1;
+    const box = document.createElement('div');
+    box.style.cssText = `position:absolute;left:${x - w / 2}px;top:${y - h / 2}px;width:${w}px;height:${h}px;overflow:hidden;mix-blend-mode:screen;pointer-events:none;opacity:${f.a || .8};` +
       '-webkit-mask-image:radial-gradient(closest-side,#000 40%,transparent);mask-image:radial-gradient(closest-side,#000 40%,transparent)';
-    world.appendChild(c);
-    return { c, x: c.getContext('2d'), tex: cloudTexture(f.tint || violet), speed: f.speed || 1 };
+    const tex = cloudTexture(f.tint || violet);
+    const bank = (top, alpha, secs, dir) => {
+      const c = document.createElement('canvas'); c.width = w * 2; c.height = h;
+      const x2 = c.getContext('2d'); x2.drawImage(tex, 0, 0, w, h); x2.drawImage(tex, w, 0, w, h);
+      c.style.cssText = `position:absolute;left:0;top:${top}px;width:${w * 2}px;height:${h}px;opacity:${alpha};will-change:transform;` +
+        (still ? '' : `animation:live-slide-${dir} ${secs.toFixed(1)}s linear infinite`);
+      box.appendChild(c);
+    };
+    bank(0, 1, w / (6 * sp), 'l');
+    bank(Math.round(h * .08), .6, w / (3.5 * sp), 'r');
+    world.appendChild(box);
   });
 
   /* 3. flames, halos, glints */
@@ -80,26 +89,38 @@ export function live(host, meta, opts = {}) {
     '<radialGradient id="lvHalo"><stop offset="0" stop-color="#ffe2a8" stop-opacity=".9"/><stop offset=".25" stop-color="#f6a650" stop-opacity=".4"/><stop offset="1" stop-color="#f6a650" stop-opacity="0"/></radialGradient>' +
     '<linearGradient id="lvFlame" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff4d0" stop-opacity=".1"/><stop offset=".35" stop-color="#ffd27a"/><stop offset="1" stop-color="#f08a2c"/></linearGradient>' +
     '<radialGradient id="lvGlint"><stop offset="0" stop-color="#f1efff"/><stop offset="1" stop-color="#b9b2ff" stop-opacity="0"/></radialGradient>';
+  /* Each moving light is its own small drawing, and only that drawing is moved (Dan, 2026-09-26: the phone ran hot). In
+     one full-screen drawing a flicker had the phone paint the whole of it again, clay lamp and all, on every frame; on
+     a layer of its own it is painted once and the graphics chip moves it. A halo keeps its own layer too, so it still
+     lightens the painting beneath it (screen) rather than only the drawing it sits in. */
+  const small = (cx, cy, B, style) => el('svg', { viewBox: `${cx - B} ${cy - B} ${2 * B} ${2 * B}`, width: 2 * B, height: 2 * B,
+    style: `position:absolute;left:${cx - B}px;top:${cy - B}px;overflow:visible;pointer-events:none;${style}` }, world);
   for (const f of A.flame || []) {
     const [x, y] = map(f.u, f.v), perM = f.s * meta.width * map.k;     /* host pixels per metre, there */
     const fs = Math.max(4, perM * .11 * (f.size || 1));
     const calm = f.still || (meta.live && meta.live.flame === 'still');
-    const g = el('g', { style: `transform-origin:${x}px ${y}px;${still || calm ? '' : 'animation:live-flicker 2.8s ease-in-out infinite;'}` }, svg);
-    el('circle', { cx: x, cy: y - fs * .4, r: Math.max(10, perM * .7 * (f.size || 1)), fill: 'url(#lvHalo)', style: 'mix-blend-mode:screen;' + (calm && !still ? `transform-origin:${x}px ${y - fs * .4}px;animation:live-breathe 7s ease-in-out infinite` : '') }, g);
+    const r = Math.max(10, perM * .7 * (f.size || 1)), hy = y - fs * .4, B = Math.ceil(Math.max(r + fs * .4, fs * 4.2) + 8);
+    const flicker = still || calm ? '' : `transform-origin:${B}px ${B}px;animation:live-flicker 2.8s ease-in-out infinite;will-change:transform;`;
+    const halo = small(x, y, B, 'mix-blend-mode:screen;' + (calm && !still ? `transform-origin:${B}px ${B - fs * .4}px;animation:live-breathe 7s ease-in-out infinite;will-change:transform,opacity;` : flicker));
+    el('circle', { cx: x, cy: hy, r, fill: 'url(#lvHalo)' }, halo);
+    const g = el('g', {}, small(x, y, B, flicker));   /* above its halo, as before */
     if (f.body && globalThis.ClayLamp) globalThis.ClayLamp.draw(g, { x, y, size: fs * 2.6, pool: .8 });
     el('path', { d: `M${x} ${y - fs * 1.15} Q${x + fs * .36} ${y - fs * .35} ${x + fs * .18} ${y - fs * .05} Q${x} ${y + fs * .1} ${x - fs * .2} ${y - fs * .05} Q${x - fs * .3} ${y - fs * .4} ${x} ${y - fs * 1.15}Z`, fill: 'url(#lvFlame)' }, g);
     el('ellipse', { cx: x, cy: y - fs * .22, rx: fs * .08, ry: fs * .2, fill: '#fffaf0' }, g);
   }
   (A.glints || []).forEach((q, i) => {
-    const [x, y] = map(q.u, q.v);
-    el('circle', { cx: x, cy: y, r: q.r || 2.2, fill: 'url(#lvGlint)', style: still ? 'opacity:.5' : `opacity:0;animation:live-glint ${3.5 + (i % 5) * .9}s ease-in-out ${(i * 1.37) % 5}s infinite` }, svg);
+    const [x, y] = map(q.u, q.v), rr = q.r || 2.2;
+    const host2 = still ? svg : small(x, y, Math.ceil(rr) + 2, `opacity:0;will-change:opacity;animation:live-glint ${3.5 + (i % 5) * .9}s ease-in-out ${(i * 1.37) % 5}s infinite`);
+    el('circle', { cx: x, cy: y, r: rr, fill: 'url(#lvGlint)', style: still ? 'opacity:.5' : '' }, host2);
   });
 
   /* 4. motes: rising through the scene, or floating in a shaft of light */
   const cv = document.createElement('canvas');
   cv.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none';
   host.appendChild(cv);
-  const dpr = Math.min(2, globalThis.devicePixelRatio || 1);
+  /* soft points of light: drawn at the screen's own size, not doubled, they look the same for a quarter of the work
+     (as the delve's dust, D-093) */
+  const dpr = 1;
   cv.width = W * dpr; cv.height = H * dpr;
   const mx = cv.getContext('2d'); mx.setTransform(dpr, 0, 0, dpr, 0, 0);
   const beam = A.beam && A.beam.length === 2 ? A.beam.map(b => map(b.u, b.v).concat(b.w || .08)) : null;
@@ -117,13 +138,6 @@ export function live(host, meta, opts = {}) {
     if (stop) return;
     requestAnimationFrame(tick);
     if (t - last < 33) return; last = t;
-    for (const f of fogs) {
-      const w = f.c.width, h = f.c.height, off = (t / 1000 * 6 * f.speed) % w;
-      f.x.clearRect(0, 0, w, h);
-      f.x.drawImage(f.tex, -off, 0, w, h); f.x.drawImage(f.tex, w - off, 0, w, h);
-      f.x.globalAlpha = .6; const o2 = (t / 1000 * 3.5 * f.speed) % w;
-      f.x.drawImage(f.tex, o2, h * .08, w, h); f.x.drawImage(f.tex, o2 - w, h * .08, w, h); f.x.globalAlpha = 1;
-    }
     mx.clearRect(0, 0, W, H);
     for (const q of P) {
       q.t = (q.t + q.vy * .004 * (beam ? .5 : 1)) % 1;
@@ -143,6 +157,8 @@ if (typeof document !== 'undefined' && !document.getElementById('live-css')) {
   s.textContent = '@keyframes live-drift{from{transform:none}to{transform:scale(1.04) translate(-.6%,.8%)}}' +
     '@keyframes live-flicker{0%,100%{transform:scale(1,1)}30%{transform:scale(.94,1.07)}62%{transform:scale(1.04,.95)}}' +
     '@keyframes live-breathe{0%,100%{opacity:.88;transform:scale(1)}50%{opacity:1;transform:scale(1.03)}}' +
-    '@keyframes live-glint{0%,100%{opacity:0}45%{opacity:.9}55%{opacity:.7}}';
+    '@keyframes live-glint{0%,100%{opacity:0}45%{opacity:.9}55%{opacity:.7}}' +
+    '@keyframes live-slide-l{from{transform:translateX(0)}to{transform:translateX(-50%)}}' +
+    '@keyframes live-slide-r{from{transform:translateX(-50%)}to{transform:translateX(0)}}';
   document.head.appendChild(s);
 }

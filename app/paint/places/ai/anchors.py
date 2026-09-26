@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The AI repaint (D-099), step 5: move the live-layer anchors onto the repaint. SEALED folder (D-015); no story here.
+"""The AI repaint (D-100), step 5: move the live-layer anchors onto the repaint. SEALED folder (D-015); no story here.
 
     python3 anchors.py <ai.png> <out-dir> <id> [top] [focus]
 

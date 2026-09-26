@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The AI repaint (D-099), step 3: one targeted edit. SEALED folder (D-015): the instructions quote the briefs.
+"""The AI repaint (D-100), step 3: one targeted edit. SEALED folder (D-015): the instructions quote the briefs.
 
     python3 edit.py <out-dir> <id>:<src-suffix>:<new-suffix> "<instruction>" [<id>:<src>:<new> "<instruction>" ...]
 

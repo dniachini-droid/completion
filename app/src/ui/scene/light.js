@@ -15,7 +15,9 @@ export function tunnelLight(root) {
     /* the dust is soft points of light: drawn at the screen's own size, not doubled, it looks the same and the phone
        moves a quarter of the pixels each frame (D-093, Dan: the phone warmed during a delve) */
     PW = phone.clientWidth; PH = phone.clientHeight; mc.width = Math.round(PW); mc.height = Math.round(PH);
+    if (stage) stage.style.setProperty('--k', String(Math.max(PW / 390, PH / 844)));
   }
+  var stage = ribs(root);
   fit(); window.addEventListener('resize', fit);
 
   /* a soft round sprite, made once */
@@ -146,4 +148,44 @@ export function tunnelLight(root) {
   }
   raf = requestAnimationFrame(frame);
   return function () { stopped = true; cancelAnimationFrame(raf); window.removeEventListener('resize', fit); };
+}
+
+/* The tunnel's ribs, as pictures the phone only moves (Dan, 2026-09-26: the delve made the phone hot and its motion
+   jittery). In the mock-up each rib is a path inside one blurred full-screen drawing, so every frame the phone drew the
+   whole tunnel again and blurred it. Here each rib is drawn once, softly, at low resolution (the softness stands in for
+   the blur) into a picture, and the same `pass` animation moves and fades that picture: the graphics chip does it alone,
+   smoothly, and nothing is redrawn. Same paths, widths, light and timing as the mock-up (delve.html, revision 3). */
+function ribs(root) {
+  var svg = root.querySelector('svg.flow');
+  if (!svg) return null;
+  var spill = svg.querySelector('linearGradient'), stops = spill ? Array.prototype.map.call(spill.querySelectorAll('stop'), function (s) {
+    return [+s.getAttribute('offset'), s.getAttribute('stop-color'), s.hasAttribute('stop-opacity') ? +s.getAttribute('stop-opacity') : 1]; }) : [];
+  var X0 = -10, Y0 = -110, BW = 610, BH = 750;   /* the ribs' reach, in the tunnel's 390 × 844 units */
+  var R = .62, cache = {};                        /* canvas pixels per unit: about one per 1.7 screen points, soft as the blur was */
+  var OPACITY = .9;                               /* the mock-up's .flow opacity */
+  function bake(g) {
+    var c = document.createElement('canvas'); c.width = Math.round(BW * R); c.height = Math.round(BH * R);
+    var x = c.getContext('2d'); x.setTransform(R, 0, 0, R, -X0 * R, -Y0 * R); x.lineCap = 'butt';
+    Array.prototype.forEach.call(g.querySelectorAll('path'), function (p) {
+      var stroke = p.getAttribute('stroke') || '#000', paint = stroke;
+      if (stroke.indexOf('url(') === 0 && spill) {
+        paint = x.createLinearGradient(+spill.getAttribute('x1'), +spill.getAttribute('y1'), +spill.getAttribute('x2'), +spill.getAttribute('y2'));
+        stops.forEach(function (st) { paint.addColorStop(st[0], rgba(st[1], st[2])); });
+      }
+      x.globalAlpha = OPACITY * (p.hasAttribute('opacity') ? +p.getAttribute('opacity') : 1);
+      x.lineWidth = +(p.getAttribute('stroke-width') || 1); x.strokeStyle = paint; x.stroke(new Path2D(p.getAttribute('d')));
+    });
+    return c.toDataURL();
+  }
+  function rgba(hex, a) { var n = parseInt(hex.slice(1), 16); return 'rgba(' + (n >> 16) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')'; }
+  var stage = document.createElement('div'); stage.className = 'ribstage'; stage.setAttribute('aria-hidden', 'true');
+  Array.prototype.forEach.call(svg.querySelectorAll('g.rib'), function (g) {
+    var key = g.innerHTML, d = document.createElement('div'), im = document.createElement('img');
+    d.className = 'rib'; d.style.animationDelay = g.style.animationDelay;
+    im.alt = ''; im.src = cache[key] || (cache[key] = bake(g));
+    im.style.cssText = 'position:absolute;left:' + X0 + 'px;top:' + Y0 + 'px;width:' + BW + 'px;height:' + BH + 'px';
+    d.appendChild(im); stage.appendChild(d);
+  });
+  svg.replaceWith(stage);
+  return stage;
 }

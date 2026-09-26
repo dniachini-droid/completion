@@ -2,7 +2,7 @@
 
 > Sealed (D-015). Separate critic, 2026-09-26.
 
-Bar (D-099): story-critical things must be right (the look-at; carved marks and counts in number, shape, order and place; words and numbers the brief names; anything a clue depends on). Nothing may be added that could read as a clue. Minor drift elsewhere (floors, block courses, extra cracks, the procedural tally's filler marks) is not a failure. Coordinates are (u, v), 0–1, on the 1320×2868 frame.
+Bar (D-100): story-critical things must be right (the look-at; carved marks and counts in number, shape, order and place; words and numbers the brief names; anything a clue depends on). Nothing may be added that could read as a clue. Minor drift elsewhere (floors, block courses, extra cracks, the procedural tally's filler marks) is not a failure. Coordinates are (u, v), 0–1, on the 1320×2868 frame.
 
 **18 FAIL, 20 PASS.** Anchor fixes are listed separately and need no repaint.
 

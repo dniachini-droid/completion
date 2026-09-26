@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The AI repaint (D-099): take out a small lamp the model added (a false light), by inpainting. No story here.
+"""The AI repaint (D-100): take out a small lamp the model added (a false light), by inpainting. No story here.
 
     python3 delamp.py <in.png> <out.png> x0,y0,x1,y1 [...]
 
