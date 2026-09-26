@@ -11,14 +11,17 @@ export function tunnelLight(root) {
   var TAU = Math.PI * 2, R = 0, RW = 0, PW = 0, PH = 0, dpr = 1;
   function fit(){
     dpr = Math.min(2, window.devicePixelRatio || 1);
-    R = ring.offsetWidth; RW = R * 1.6; rc.width = Math.round(RW * dpr); rc.height = Math.round(RW * dpr);
+    R = ring.offsetWidth; RW = R * 1.6; arcKey = ''; prevBox = null; rc.width = Math.round(RW * dpr); rc.height = Math.round(RW * dpr);
     /* the dust is soft points of light: drawn at the screen's own size, not doubled, it looks the same and the phone
        moves a quarter of the pixels each frame (D-093, Dan: the phone warmed during a delve) */
     PW = phone.clientWidth; PH = phone.clientHeight; mc.width = Math.round(PW); mc.height = Math.round(PH);
     if (stage) stage.style.setProperty('--k', String(Math.max(PW / 390, PH / 844)));
   }
   var stage = ribs(root);
-  fit(); window.addEventListener('resize', fit);
+  /* sizes are read when the ring or the screen changes size, not every frame: reading one each frame made the phone
+     lay the whole screen out again 30 times a second (D-103) */
+  var ro = typeof ResizeObserver === 'function' ? new ResizeObserver(function(){ fit(); }) : null;
+  fit(); if (ro) { ro.observe(ring); ro.observe(phone); } else window.addEventListener('resize', fit);
 
   /* a soft round sprite, made once */
   function sprite(inner, outer){
@@ -99,41 +102,62 @@ export function tunnelLight(root) {
     }
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
   }
-  var tipA = 1, lastSpark = 0;
+  var tipA = 1, lastSpark = 0, prevBox = null;
+  /* Each frame only the part of the ring where the comet, its trail and sparks are, or just were, is drawn again: the arc
+     there is copied back from its finished picture and the light drawn over it, exactly as before, while the rest of the
+     ring is left as it is (D-103). The arc itself is drawn again only when its end has moved by a pixel. */
+  function box(x0, y0, x1, y1){ return [x0, y0, x1, y1]; }
+  function grow(b, x, y, pad){ if (!b) return box(x - pad, y - pad, x + pad, y + pad);
+    b[0] = Math.min(b[0], x - pad); b[1] = Math.min(b[1], y - pad); b[2] = Math.max(b[2], x + pad); b[3] = Math.max(b[3], y + pad); return b; }
   function drawRing(t, dt){
     var ctx = rx, p = parseFloat(ring.style.getPropertyValue('--p')) || 0;
     p = Math.max(0, Math.min(1, p));
     var quiet = ring.classList.contains('hold') || ring.classList.contains('rest');
     tipA += ((quiet ? 0 : 1) - tipA) * Math.min(1, dt * 2.2);
-    ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,rc.width,rc.height);
-    var key = p.toFixed(4) + '|' + RW + '|' + dpr;
-    if (key !== arcKey) { arcKey = key; if (arcCv.width !== rc.width) { arcCv.width = rc.width; arcCv.height = rc.height; } drawArc(ax, p); }
-    ctx.drawImage(arcCv, 0, 0);
-    ctx.setTransform(dpr,0,0,dpr,0,0); ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round';
     var c = RW / 2, r = R * .47, a0 = -Math.PI / 2, a1 = a0 + p * TAU, breath = still ? 1 : 1 + .06 * Math.sin(t * 1.6);
+    var tx = c + Math.cos(a1) * r, ty = c + Math.sin(a1) * r;
+    /* the arc's end moves one pixel of the ring's picture at a time */
+    var steps = Math.max(1, Math.round(TAU * r * dpr)), pa = p > .998 ? 1 : Math.round(p * steps) / steps;
+    var key = pa + '|' + RW + '|' + dpr, whole = false;
+    if (key !== arcKey) { arcKey = key; if (arcCv.width !== rc.width || arcCv.height !== rc.height) { arcCv.width = rc.width; arcCv.height = rc.height; } drawArc(ax, pa); whole = true; }
+    /* where this frame's light goes: the tip with its haze and glint, the trail behind it, the sparks */
+    var span = Math.min(p * TAU, .55), N = 12, i, b = null;
+    if (p > .003) for (i = 0; i <= N; i++) { var aa = a1 - span * (1 - i / N); b = grow(b, c + Math.cos(aa) * r, c + Math.sin(aa) * r, R * .05 + 2); }
+    b = grow(b, tx, ty, R * .18 + 3);
+    /* a few sparks shed from the tip, drifting off and fading */
+    if (tipA > .01 && !still && t - lastSpark > .42 && p > .003) { lastSpark = t;
+      var back = a1 - .05, out = rnd(-.4, 1);
+      sparks.push({ x: tx, y: ty, vx: Math.sin(a1) * 6 + Math.cos(back) * out * 7, vy: -Math.cos(a1) * 6 + Math.sin(back) * out * 7, life: 0, max: rnd(1.4, 2.4), r: rnd(1.4, 2.6) }); }
+    sparks = sparks.filter(function(k){ k.life += dt; k.x += k.vx * dt; k.y += k.vy * dt; k.vy -= 2 * dt; return k.life < k.max; });
+    sparks.forEach(function(k){ b = grow(b, k.x, k.y, k.r * 3.2 + 2); });
+    var u = whole || !prevBox ? null : [Math.min(b[0], prevBox[0]), Math.min(b[1], prevBox[1]), Math.max(b[2], prevBox[2]), Math.max(b[3], prevBox[3])];
+    prevBox = b;
+    ctx.setTransform(1,0,0,1,0,0);
+    if (u) {
+      /* the region, in whole pixels of the canvas, cleared and the arc copied back into it */
+      var X0 = Math.max(0, Math.floor(u[0] * dpr)), Y0 = Math.max(0, Math.floor(u[1] * dpr)),
+          X1 = Math.min(rc.width, Math.ceil(u[2] * dpr)), Y1 = Math.min(rc.height, Math.ceil(u[3] * dpr));
+      if (X1 <= X0 || Y1 <= Y0) return;
+      ctx.save(); ctx.beginPath(); ctx.rect(X0, Y0, X1 - X0, Y1 - Y0); ctx.clip();
+      ctx.clearRect(X0, Y0, X1 - X0, Y1 - Y0); ctx.drawImage(arcCv, X0, Y0, X1 - X0, Y1 - Y0, X0, Y0, X1 - X0, Y1 - Y0);
+    } else { ctx.save(); ctx.clearRect(0,0,rc.width,rc.height); ctx.drawImage(arcCv, 0, 0); }
+    ctx.setTransform(dpr,0,0,dpr,0,0); ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round';
     if (p > .003) {
       /* the comet's glow trail, just behind the tip */
-      var span = Math.min(p * TAU, .55), N = 12;
-      for (var i = 0; i < N; i++) {
+      for (i = 0; i < N; i++) {
         var q = i / N, s0 = a1 - span * (1 - q), s1 = a1 - span * (1 - (i + 1) / N);
         ctx.globalAlpha = tipA * .22 * q * q; ctx.lineWidth = R * (.03 + .06 * q); ctx.strokeStyle = '#e4defe';
         ctx.beginPath(); ctx.arc(c,c,r,s0,s1); ctx.stroke();
       }
     }
     /* the tip: always a whole, clean point of light (even at the very start) */
-    var tx = c + Math.cos(a1) * r, ty = c + Math.sin(a1) * r;
     if (tipA > .01) {
       var hs = R * .16 * breath; ctx.globalAlpha = tipA * .85; ctx.drawImage(HAZE, tx - hs, ty - hs, hs * 2, hs * 2);
       var ds = R * .05 * breath; ctx.globalAlpha = tipA; ctx.drawImage(DOT, tx - ds, ty - ds, ds * 2, ds * 2);
       if (!still) glint(ctx, tx, ty, R * (.07 + .015 * Math.sin(t * 1.3)), tipA * .45);
-      /* a few sparks shed from the tip, drifting off and fading */
-      if (!still && t - lastSpark > .42 && p > .003) { lastSpark = t;
-        var back = a1 - .05, out = rnd(-.4, 1);
-        sparks.push({ x: tx, y: ty, vx: Math.sin(a1) * 6 + Math.cos(back) * out * 7, vy: -Math.cos(a1) * 6 + Math.sin(back) * out * 7, life: 0, max: rnd(1.4, 2.4), r: rnd(1.4, 2.6) }); }
     }
-    sparks = sparks.filter(function(k){ k.life += dt; k.x += k.vx * dt; k.y += k.vy * dt; k.vy -= 2 * dt; return k.life < k.max; });
     sparks.forEach(function(k){ var q = k.life / k.max, s = k.r * (1.6 - q * .6); ctx.globalAlpha = (1 - q) * (1 - q) * .8 * Math.max(tipA, .3); ctx.drawImage(DOT, k.x - s * 2, k.y - s * 2, s * 4, s * 4); });
-    ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.restore();
   }
 
   /* 30 frames a second, as the paintings' own live layers: the dust drifts slowly and the ring moves a hair a second,
@@ -143,11 +167,10 @@ export function tunnelLight(root) {
     if (!stopped) raf = requestAnimationFrame(frame);
     if (t0 !== null && ts - prev * 1000 < STEP) return;
     var t = ts / 1000, dt = t0 === null ? 0 : Math.min(.1, t - prev); if (t0 === null) t0 = t; prev = t;
-    if (ring.offsetWidth !== R) fit();
     drawRing(t, dt); drawMotes(t, dt);
   }
   raf = requestAnimationFrame(frame);
-  return function () { stopped = true; cancelAnimationFrame(raf); window.removeEventListener('resize', fit); };
+  return function () { stopped = true; cancelAnimationFrame(raf); if (ro) ro.disconnect(); else window.removeEventListener('resize', fit); };
 }
 
 /* The tunnel's ribs, as pictures the phone only moves (Dan, 2026-09-26: the delve made the phone hot and its motion

@@ -82,7 +82,7 @@
 
     <div class="mid">
       <div class="ring rise d2" class:ended={!run || run.phase === 'breather'} class:rest={restful} class:hold={run?.phase === 'held'}
-        style="--p:{Math.min(1, p).toFixed(4)}" role="timer" aria-label={run ? `${left} ${t('delve.left', { len: run.minutes })}` : ''}>
+        style="--p:{Math.min(1, p).toFixed(4)};--pc:{(Math.round(Math.min(1, p) * 200) / 200).toFixed(3)}" role="timer" aria-label={run ? `${left} ${t('delve.left', { len: run.minutes })}` : ''}>
         <div class="halo"></div><div class="disc"></div>
         <canvas class="ringcv" aria-hidden="true"></canvas>
         <div class="fog-front" aria-hidden="true">{@html fogFront}</div>
