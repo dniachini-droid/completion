@@ -151,7 +151,7 @@ export const camps: CampView[] = [
     w: 8,
     req: ["b-8.A"],
     name: "The Water's edge",
-    line: "You stop for the night on the Water's near shore, at the foot of the Stair. The cup-flames on the last flight lie on the black surface, perfectly still, like flames painted on glass.",
+    line: "You stop for the night on the Water's near shore, at the foot of the Stair. The flames in the cups on the last flight lie reflected on the black surface, perfectly still, like flames painted on glass.",
     look: {"find": "fd-h01"},
   },
   {
