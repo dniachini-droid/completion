@@ -1,0 +1,13 @@
+{
+ "id": "pt-pl-w10-deep-end",
+ "name": "The square gallery's deep end",
+ "line": "",
+ "width": 1320,
+ "height": 2868,
+ "live": {
+  "motes": "gold",
+  "fog": "low",
+  "gold": true
+ },
+ "anchors": {}
+}

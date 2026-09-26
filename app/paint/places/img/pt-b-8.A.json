@@ -1,0 +1,13 @@
+{
+ "id": "pt-b-8.A",
+ "name": "The Water",
+ "line": "",
+ "width": 1320,
+ "height": 2868,
+ "live": {
+  "motes": "gold",
+  "fog": "low",
+  "gold": true
+ },
+ "anchors": {}
+}

@@ -1,0 +1,13 @@
+{
+ "id": "pt-pl-w9-benches",
+ "name": "The benches",
+ "line": "",
+ "width": 1320,
+ "height": 2868,
+ "live": {
+  "motes": "gold",
+  "fog": "low",
+  "gold": true
+ },
+ "anchors": {}
+}

@@ -1034,3 +1034,12 @@
 - **Alternatives:** keep the kit paintings (plain); the finishing filter (small gain); Blender (D-090: about 34 min a picture and not yet at the hall's look); a human illustrator (weeks, real money).
 - **Reversible:** Yes: the kit paintings and scene files stay in git.
 
+
+## D-100 — The AI repaint done: 82 of 89 repainted, one try each, hand fixes, 7 kit paintings kept (Claude)
+- **Date:** 2026-09-26
+- **Context:** D-099's run. The Meshy account held 1,491 credits, not the ~2,100 the plan assumed (two tries per place).
+- **Decision (routine, Claude):** one candidate per place; a second only as a targeted edit where a critic found a wrong story reading. Small fixes done by hand at no cost (a count of strokes cut in, an added niche or mark patched out, a stray lamp removed, a too-warm picture cooled): `app/paint/places/ai/delamp.py`, `cool.py`. Three separate critics checked the story-critical things (sealed critiques `CRITIQUE-AI-B1/B2/B3.md`), then gave a final USE / KIT verdict on every fixed picture.
+- **Result:** 82 of 89 places use the repaint (all 41 new places of weeks 8–14, which had stand-ins, and 41 of the 48 kit places). 7 keep their kit painting because a story detail still read wrong once the credits ran out (5 places and 2 camp views; ids in `ai/chosen.json`, sealed). The picture chosen for each place is recorded in `ai/chosen.json`; `ai/fitall.py` rebuilds every frame from it.
+- **Also seen:** the model adds small oil lamps on ledges wherever it is unsure of the light; these read as clues and were removed. The README now says so.
+- **Alternatives:** buy more credits first (Dan wasn't asked mid-run; the 7 can be redone later for about 12 credits a try); keep stand-ins for the new places (all 41 passed).
+- **Reversible:** Yes: the kit paintings stay in git history, and `chosen.json` can point any place back to "kit".

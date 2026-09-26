@@ -148,3 +148,28 @@ Fix: "Inside the gap, remove the small arched niches from both walls of the squa
 
 **pt-cv-15 — FAIL.** The lead is a long bright strip down the whole joint segment (u 0.63–0.67, v 0.48–0.57), warm-lit. It reads as light leaking through a seam, not as a dull sliver.
 Fix: "Reduce the bright strip in the joint to one short sliver of dull grey lead, about a finger long, at (0.63, 0.49); leave the rest of that joint dark like the others; change nothing else."
+
+## Final re-check
+
+Finals: `scratchpad/ai/final/<id>.jpg`; choices from `ai/chosen.json`. Verdicts: **USE** means the repaint is at least as right as the kit on story-critical things; **KIT** means keep the kit. pt-cv-06 and pt-cv-15 already keep their kits. Every glint and flame anchor in `final/<id>.json` was checked for the places below; all land sensibly (glints on the lamp, rail, block, pin, ring, wax or slate; the pt-cv-12 flame is on the painted flame at (0.061, 0.532)). No further anchor changes are needed.
+
+| Id | Choice | Final | Why |
+|---|---|---|---|
+| pt-b-3.B | edit0 | **KIT** | The tablet now has only a doorway and two strokes of unequal height: the long bar is gone, so it reads as three elements, not four. The kit is correct. |
+| pt-b-3.C | hand0 | USE | The added niche is cleanly gone. The small niche by the rail and the lit rail top are intact. |
+| pt-b-4.B | hand0 | USE | The hook now closes on a clear dot. |
+| pt-pl-w4-recess-above-the-cot | edit0 | USE | Nine strokes on the slate. The pin and its glint are right. |
+| pt-b-5.A | edit0 | USE | The lone ring is back: one unbroken cut above the band. It is larger than the kit's and sits a little left and higher (centre about (0.72, 0.40)), but it still reads as the lone ring. |
+| pt-b-5.B | edit0 | **KIT** | The record still has a full bar where the two drops should be, and the cross mark is still there. |
+| pt-b-6.A | hand0 | USE | The C-mark and ring are gone. Two tiny chips or ticks remain on the jamb at about (0.63, 0.43) and (0.63, 0.47); they read as damage at phone size. |
+| pt-b-6.B | edit0 | **KIT** | The five-stroke count was added high on the wall above the record's end, not on the niche lintel, so it reads as part of the record or as a count with no niche. The record's second half is still changed. |
+| pt-pl-w6-wall-shelf | hand0 | USE | The added light source is gone. A faint warm sheen on the far floor is harmless. The line, ticks and count of 6 are right. |
+| pt-pl-w6-folder | cool0 | USE | The wall rings and crescents are gone. The folder reads as soft grey-white card with its band, slate and HILL. |
+| pt-b-7.A | edit0 | USE | The rightmost mark is a bar ending in a closed drop, no fork. The blank and the two parted drops are right. |
+| pt-b-7.C | edit0 | **KIT** | The stair is steeper now, but the warm light is a cone on the middle treads, with dark near steps and violet beyond. There is no light from the threshold stopping in a clean line at the 11th step. |
+| pt-cv-09 | edit0 | USE | The shelf is dusty and the stripe is a flat darker patch, no longer a carved slot. |
+| pt-cv-12 | edit0 | USE | The tick and "0.9 m" are flat marks, no longer carved. They are paler than pencil (closer to chalk), but they still read as her note. |
+| pt-cv-13 | edit0 | **KIT** | The note still reads "open" plus a mangled "D9": the 9 is a loop, and the text runs over the joint. The kit's "open. D9" is clean. |
+| pt-cv-14 | edit0 | USE | The niches inside the square gallery are gone and the walls are plain. The gallery is less smoke-dark than the brief asks, which is minor. The chips are right. |
+
+**Result:** 11 USE; 5 KIT (pt-b-3.B, pt-b-5.B, pt-b-6.B, pt-b-7.C, pt-cv-13), plus pt-cv-06 and pt-cv-15 already on their kits.

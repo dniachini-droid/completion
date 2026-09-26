@@ -1,0 +1,12 @@
+{
+ "id": "pt-pl-w13-side-gallery",
+ "name": "The side gallery's end",
+ "line": "",
+ "width": 1320,
+ "height": 2868,
+ "live": {
+  "motes": "violet",
+  "fog": "low"
+ },
+ "anchors": {}
+}

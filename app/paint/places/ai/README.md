@@ -39,5 +39,14 @@ Dan saw four repaints and found them "pretty beautiful … the detail is amazing
 
 Name the material, the orientation and "no rim or frame" in the scene description; check these first.
 
+## Wrong readings seen in the full run (D-100)
+- Small oil lamps added on ledges, benches and shelves wherever the light is unclear: the most common fault in new places. Say the light source plainly and remove any lamp the scene doesn't name.
+- Counts off by one (the model rarely gets 7, 8 or 9 strokes right twice); a hand fix (copy one stroke) is cheaper than an edit.
+- Handwritten words garbled ("open. D9"); pencil painted as carved.
+- Carved rings painted as raised metal; a bowl left behind after a lamp is removed reads as an unlit lamp.
+
+## The run's files (D-100)
+`scenes.json` (one scene per place), `paint.py` (step 2), `edit.py` (step 3), `delamp.py` / `cool.py` (hand fixes), `composite.py` (step 4), `anchors.py` / `newmeta.py` (step 5), `chosen.json` (the picture chosen per place, and the critics' anchor corrections), `fitall.py` (steps 4–5 for every place from `chosen.json`). The raw pictures stayed in the session scratchpad; only the final frames are in `img/`.
+
 ## Budget
 89 places × 2 tries × 12 credits ≈ 2,100 credits, plus edits. Painters in parallel (a few at a time, each with its own group of places), one critic per batch. Show Dan a labelled BEFORE/AFTER sheet of the first batch before doing the rest.
