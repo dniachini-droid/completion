@@ -111,7 +111,7 @@
   const pick = (l: Light) => { if (dragged) return; picked = l.key; turn++; };
 
   /* One map that can be bigger than the screen (Dan): drawn at the scale that fills the screen's width, it is dragged
-     around (a finger scrolls it; a mouse drags it on the web link), and opens centred on where Dan is. Picking a light
+     around (a finger drags it), and opens centred on where Dan is. Picking a light
      never moves it (D-076). */
   let field = $state<HTMLDivElement>();
   let fw = $state(390);

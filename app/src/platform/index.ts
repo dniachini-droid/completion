@@ -9,7 +9,8 @@ import { adopt, sqlSaves, textSaves, type Db, type Saves } from './saves';
 /** The live saves (the real one and the rehearsal's): what's written the old way is brought into SQLite at start. */
 const LIVE = ['save.v1', 'save.rehearsal'];
 
-/* On the web link and in tests: the browser's own storage, the whole save as one text. */
+/* In the automated screen checks only (a browser on a server; the app is the phone's alone, D-108): the browser's own
+   storage, the whole save as one text. */
 const store = {
   get: (k: string) => { try { return localStorage.getItem(k); } catch { return null; } },
   set: (k: string, v: string) => { try { localStorage.setItem(k, v); } catch { /* private mode */ } },
@@ -116,8 +117,8 @@ const nativeCopies: Copies = {
   keep: (name, text, prefix, most) => CopyNative.keep({ name, text, prefix, most }),
   async list(prefix) { return (await CopyNative.list({ prefix })).names; },
 };
-/* On the web link: a download, and a file chosen from the computer or phone; no weekly copy (the page can't write one). */
-const webCopies: Copies = {
+/* In the screen checks: a download, and a file chosen by the check; no weekly copy. */
+const benchCopies: Copies = {
   async share(name, text) {
     const url = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
     const a = Object.assign(document.createElement('a'), { href: url, download: name });
@@ -158,20 +159,20 @@ const native: Platform = {
   panel: nativePanel,
 };
 
-/* In a browser a lock and another tab can't be told apart: hiding the page during a delve pauses it (D-094). */
+/* In the screen checks: hiding the page during a delve pauses it, as leaving the app does (D-094). */
 let watching = false, hiddenAt: number | null = null;
 document.addEventListener('visibilitychange', () => { if (document.hidden && watching) hiddenAt = Date.now(); });
-const webAway: Away = {
+const benchAway: Away = {
   first: null,
   watch(on) { watching = on; },
   async take() { const at = hiddenAt; hiddenAt = null; return at; },
   async log() { return []; },
 };
 
-/* In a browser (the web link, tests): the end chimes if the page is open, and shows when you come back. */
-const webSaves = textSaves(store, 'browser');
-const web: Platform = {
-  store, sound, now: () => new Date(), ready: async () => {}, app: false, copies: webCopies, away: webAway, saves: webSaves, saveTrouble: null,
+/* The screen checks' stand-in for the phone's services (never shipped to Dan as a page, D-108). */
+const benchSaves = textSaves(store, 'browser');
+const bench: Platform = {
+  store, sound, now: () => new Date(), ready: async () => {}, app: false, copies: benchCopies, away: benchAway, saves: benchSaves, saveTrouble: null,
   notifier: { locked: false, permit: async () => false, at: async () => {}, cancel: async () => {}, remind: async () => {} },
   panel: { show: async () => {}, end: async () => {} },
   haptics: {
@@ -180,4 +181,4 @@ const web: Platform = {
   },
 };
 
-export const platform: Platform = Capacitor.isNativePlatform() ? native : web;
+export const platform: Platform = Capacitor.isNativePlatform() ? native : bench;

@@ -64,13 +64,12 @@
         <p class="say bed">{t('settings.bedtime', { time: v.bedtime })}</p>
         <Remind lead={bed} pick={x => game.do({ do: 'remind', target: BEDTIME, lead: x })} />
       {/if}
-      {#if !platform.notifier.locked}<p class="soft note">{t('settings.reminders.web')}</p>
-      {:else if game.alertsOff}<p class="soft note">{t('settings.reminders.refused')}</p>{/if}
+      {#if game.alertsOff}<p class="soft note">{t('settings.reminders.refused')}</p>{/if}
     </section>
 
     <section>
       <div class="label-line">{t('settings.save')}</div>
-      <p class="soft note">{platform.app ? t('settings.save.app') : t('settings.save.web')}</p>
+      <p class="soft note">{t('settings.save.app')}</p>
       <button class="btn-quiet full" onclick={copy}><span>{t('settings.copy')}</span></button>
       {#if asking}
         <div class="ask" bind:this={askEl}>

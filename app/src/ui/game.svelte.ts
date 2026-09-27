@@ -266,7 +266,7 @@ class Game {
   /* ---- copies of the save (D-107) ---- */
   /** The save as a file: the same text the phone keeps, readable by `readSave` on any later build. */
   copyText(): string { return JSON.stringify({ version: SAVE_VERSION, content: content.version, facts: this.facts } satisfies Save); }
-  /** Save a copy: the phone's share sheet (Files, iCloud Drive…), or a download on the web link. */
+  /** Save a copy: the phone's share sheet (Files, iCloud Drive…). */
   saveCopy() { return platform.copies.share(copyName(this.view.day), this.copyText()); }
   /** Once a week, a copy into the app's Documents folder, which the Files app shows; the last four kept. The real save only. */
   async weekly() {

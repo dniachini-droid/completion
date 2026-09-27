@@ -559,3 +559,18 @@ describe('A line added by hand is an extra, never a takeover (review bug 1, D-10
     expect(v.slate).toContain(id);
   });
 });
+
+describe('One-tap capture (D-107)', () => {
+  it('puts each line in the satchel in one step, and never starts anything or changes Today', () => {
+    const p = player().do({ do: 'open' });
+    const before = p.view();
+    const n = p.facts.length;
+    p.do({ do: 'addItems', lines: ['Call the bank', '- Renew the passport', '', '  '] });
+    const added = p.facts.slice(n);
+    expect(added.map(f => f.type)).toEqual(['itemAdded', 'itemAdded']);
+    expect(W.items(p.facts, p.view().day).map(i => i.name)).toEqual(['Call the bank', 'Renew the passport']);
+    expect(p.view().slate).toEqual(before.slate);
+    expect(p.view().next).toEqual(before.next);
+    expect(p.view().run).toBeNull();
+  });
+});

@@ -368,8 +368,20 @@ await toClock(1, 9); await page.reload({ waitUntil: 'domcontentloaded' }); await
 await openers('last');
 if (await has('I can’t start')) { await tap('I can’t start'); await shot('cant-start', 2000); await tap('Not now'); await page.clock.runFor(1500); }
 /* slice 4's own screens, from Today's foot */
+/* one-tap capture (D-107): "+ Add" opens a box already typing; Return puts the line in the satchel, and Today stays */
+{ const rows0 = await page.locator('.rows button.row').allInnerTexts();
+  await tap('Add to the satchel'); await page.clock.runFor(300);
+  if (!(await page.evaluate(() => document.activeElement?.tagName === 'TEXTAREA'))) errors.push('CAPTURE the box was not already typing');
+  await page.keyboard.type('Call the bank'); await shot('today-capture', 300);
+  await page.keyboard.press('Enter'); await page.clock.runFor(500);
+  if (!(await page.getByText('In the satchel.').count())) errors.push('CAPTURE did not say it was put in');
+  if (!(await page.locator('nav.foot').count())) errors.push('CAPTURE left Today');
+  if (JSON.stringify(await page.locator('.rows button.row').allInnerTexts()) !== JSON.stringify(rows0)) errors.push('CAPTURE changed Today’s list'); }
 await tap('Satchel'); await shot('satchel', 1500);
-await tap('Add a line'); await page.locator('textarea.lines').fill('Hoover the hall\nClear the desk\nWash the bedding\nTake the bottles out\nFix the shelf bracket\nRenew the parking permit');
+if (!(await page.locator('.item .t', { hasText: 'Call the bank' }).count())) errors.push('CAPTURE the line is not in the satchel');
+await tap('Add a line');
+if (!(await page.evaluate(() => document.activeElement?.tagName === 'TEXTAREA'))) errors.push('SATCHEL Add a line was not already typing');
+await page.locator('textarea.lines').fill('Hoover the hall\nClear the desk\nWash the bedding\nTake the bottles out\nFix the shelf bracket\nRenew the parking permit');
 await tap('Put it in'); await shot('satchel-lines', 1000);
 await tap('Put on today'); await shot('satchel-today', 800);
 await page.locator('.tickbox').nth(1).click(); await shot('satchel-ticked', 800);
@@ -433,7 +445,7 @@ await tap('Daybook'); await shot('daybook', 1500); await home(); await page.cloc
   await home();
   await tap('Daybook'); await tap('Settings'); await page.clock.runFor(1500); expect('daybook → settings', await backSays(), 'daybook');
   await page.locator('.remind button', { hasText: '1 h before' }).click(); await shot('settings', 800);
-  /* Save a copy, then Restore from it (D-107): the file the web link gives back is read, asked about, and restored */
+  /* Save a copy, then Restore from it (D-107): the copy is read back, asked about, and restored */
   { const [dl] = await Promise.all([page.waitForEvent('download'), tap('Save a copy')]);
     const file = `${out}/copy.json`; await dl.saveAs(file);
     if (!/^Long Answer save \d{4}-\d{2}-\d{2}\.json$/.test(dl.suggestedFilename())) errors.push(`COPY named "${dl.suggestedFilename()}"`);

@@ -1,7 +1,7 @@
 import type { Saves } from './saves';
 /** The phone's services, behind small interfaces (ARCHITECTURE.md → platform). */
 export interface Notifier {
-  /** Whether an alert can sound with the phone locked (the app: yes; a web page: no). */
+  /** Whether an alert can sound with the phone locked (the phone: yes; the screen checks' stand-in: no). */
   readonly locked: boolean;
   /** Ask once, in plain words, at the first Begin. Returns whether alerts may sound. */
   permit(): Promise<boolean>;
@@ -51,23 +51,23 @@ export interface PanelState {
 }
 /** Copies of the save outside the app (D-107): the game decides what a copy holds and what a restore does. */
 export interface Copies {
-  /** Hand a copy to the phone's share sheet (Save to Files, iCloud Drive…); on the web link, download it. */
+  /** Hand a copy to the phone's share sheet (Save to Files, iCloud Drive…). */
   share(name: string, text: string): Promise<void>;
-  /** Let Dan choose a copy (the Files picker; a file on the web link): its text, or null if he chose none. */
+  /** Let Dan choose a copy (the Files picker): its text, or null if he chose none. */
   pick(): Promise<string | null>;
   /** The weekly copy, written where the Files app shows it, keeping the newest `most` named with `prefix` (the app only). */
   keep(name: string, text: string, prefix: string, most: number): Promise<void>;
-  /** The weekly copies there now, oldest first (none on the web link). */
+  /** The weekly copies there now, oldest first. */
   list(prefix: string): Promise<string[]>;
 }
 export interface Panel { show(p: PanelState): Promise<void>; end(): Promise<void>; }
 export interface Platform {
   notifier: Notifier; haptics: Haptics; store: Store; sound: Sound; now(): Date; away: Away;
-  /** The save (D-106): SQLite on the phone, the browser's storage on the web link. */
+  /** The save (D-106): SQLite on the phone (the screen checks keep it in the browser's storage). */
   readonly saves: Saves;
   /** Why the phone's save fell back to the app settings, if it did (the trial screen shows it). */
   readonly saveTrouble: string | null;
-  /** The delve's panel on the lock screen and in the Dynamic Island (the app only; the web link has none). */
+  /** The delve's panel on the lock screen and in the Dynamic Island . */
   panel: Panel;
   copies: Copies;
   /** Inside the phone app (no browser around it: the app draws its own swipe back from the left edge). */

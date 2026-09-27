@@ -78,8 +78,7 @@
       : NAMES[top.screen] ? t(NAMES[top.screen] as never) : t('nav.back');
   });
 
-  /* the phone's own back: the browser's back button or swipe on the web link, one step at a time; on Today with
-     nothing behind, the browser's back leaves as it always has */
+  /* back by history, one step at a time (the screen checks use it); on Today with nothing behind, nothing more */
   const home = () => screen === 'today' && !trail.length;
   onMount(() => {
     history.pushState({ app: 1 }, '');
