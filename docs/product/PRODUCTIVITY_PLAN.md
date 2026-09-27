@@ -117,12 +117,12 @@ Then ask Dan to choose, record each choice as a D-entry, and order stages 5 onwa
 ## Stage 5 onwards (Dan's choices, D-111)
 One session each unless noted; a stage waits for the earlier stages it builds on.
 - **Stage 5: accessibility A and "I'll read it later" A** (`scope/accessibility.md`, `scope/read-it-later.md`). The parts on screens Stage 1 doesn't touch go first; the rest (the title read on each screen in `App.svelte`, "Not today" reachable on Today, the satchel's box, the 13 px labels on the Week, What repeats and Today) after Stage 1 is merged in.
-  - [ ] a label on Choose's new-job box, on What repeats' name box and on the satchel's paste box
+  - [ ] a label on Choose's new-job box (done), on What repeats' name box and on the satchel's paste box (after Stage 1)
   - [ ] each new screen's title read out (focus moves to it)
   - [ ] "Not today" reachable without a swipe (VoiceOver)
-  - [ ] no carved label under 14 px (Week day names and buttons, What repeats' days, Today's foot and nav, Records/Marks switch; Marks' 11 px caption)
-  - [ ] Increase Contrast honoured (the quiet ink colours lifted)
-  - [ ] "To today" visible at once on every return and arrival, with no wait
+  - [ ] no carved label under 14 px: Records/Marks switch and Marks' "new" caption done; the Week, What repeats and Today after Stage 1
+  - [x] Increase Contrast honoured (the quiet ink colours lifted, `direction.css`)
+  - [x] "To today" visible at once on every return and arrival, with no wait: already so (every story screen has "Today" at the top left with no delay; the welcome back's button shows within 0.2 s); nothing to build
 - **Stage 6: capture and the nudge** (`scope/10-widget-share-siri.md` A, `scope/23-re-entry-nudge.md` B, off by default). After Stage 1.
 - **Stage 7: calendar import** (`scope/09-calendar-import.md` B). After Stage 3.
 - **Stage 8: the weekly look-ahead** (`scope/18-weekly-review.md` C, no reward). After Stage 3.

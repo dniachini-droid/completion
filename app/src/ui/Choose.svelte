@@ -70,7 +70,7 @@
     {/if}
     <div class="label-line">{t('choose.new')}</div>
     <form class="new" onsubmit={(e) => { e.preventDefault(); fresh(); }}>
-      <input bind:value={name} placeholder={t('choose.new.hint')} maxlength="120" enterkeyhint="go" />
+      <input bind:value={name} aria-label={t('choose.new')} placeholder={t('choose.new.hint')} maxlength="120" enterkeyhint="go" />
       <button class="btn-quiet" type="submit" disabled={!name.trim()}><span>{t('choose.new.go')}</span></button>
     </form>
   </div>

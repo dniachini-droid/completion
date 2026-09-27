@@ -120,7 +120,7 @@
   .pic { color: var(--ink-2); font-style: italic; }
   .p { margin-left: -6px; color: var(--ink-2); }
   .lv { margin: 0; width: auto; grid-template-columns: 1fr 1fr; }
-  .lv button { padding: 6px 12px; font-size: 13px; min-width: 104px; }
+  .lv button { padding: 6px 12px; font-size: 14px; min-width: 104px; }
   .sheet { margin-top: 22px; }
   .her { font-family: var(--life); font-style: italic; font-size: 17.5px; line-height: 1.5; color: var(--ink-2); margin-top: 8px; }
   .bottom { display: flex; justify-content: center; }

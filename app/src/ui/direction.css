@@ -78,6 +78,12 @@
   --safe-t: max(36px, env(safe-area-inset-top));
 }
 
+/* Increase Contrast on the phone (Settings → Accessibility → Display & Text Size): the quiet inks lift nearer white,
+   the look otherwise unchanged (accessibility A, D-111) */
+@media (prefers-contrast: more) {
+  :root { --ink-2: #e2e3f5; --ink-3: #cfd1ea; }
+}
+
 @media (max-width: 370px) { :root { --gutter: 20px; --gap: 10px; } }
 @media (max-height: 800px) { :root { --safe-t: max(22px, env(safe-area-inset-top)); --btn-h: 54px; } }
 
