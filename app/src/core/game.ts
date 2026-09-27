@@ -367,11 +367,11 @@ function crossedIn(facts: Fact[], day: string, job: string): number {
 function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string) {
   if (doneOn(w.all, day).has(job)) return;
   const j = jobOf(c, job), timed = delveMinutesOn(w.all, day, job) + crossedIn(w.all, day, job);
-  /* a delve's minutes have already moved Dan (counted once, even across 04:00, D-120); a job without them earns its
-     usual length (§1) */
-  const minutes = timed > 0 ? timed : enoughOf(j);
-  const done = w.put({ type: 'jobDone', job, minutes }, at, day);
-  if (timed === 0) w.put({ type: 'stepsGained', minutes, job }, at, day);
+  /* a delve's minutes have already moved Dan (counted once, even across 04:00, D-120). Every job is a delve (D-117): one
+     said done with no whole minute behind it counts as done for the day, but earns no minutes and brings no return: no
+     step of the story, no find, no Key (rule 10) */
+  if (timed === 0) { w.put({ type: 'jobDone', job, minutes: 0 }, at, day); gifts(w, c, at, day); return; }
+  const done = w.put({ type: 'jobDone', job, minutes: timed }, at, day);
   storyClock(w, c, at, day);
   /* a rhythm met this week lands a Key, until the week's supply is used; past it, one find a week (§3). A rhythm Dan
      added or changed counts for Keys from its next full period (D-043 F7): the rhythms as they stood when the week began. */
@@ -1052,7 +1052,7 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   const complete = completedOn(facts, day);
   /* "under way" was a job without a timer begun away from the phone; every job is a delve now (D-117), so an old Begin
      in a save leaves nothing under way */
-  const underWay = ((u: string | null) => u && !jobOf(c, u).delve ? u : null)(underWayOn(facts, day));
+  const underWay = ((u: string | null) => u && c.jobs.some(j => j.id === u && !j.delve) ? u : null)(underWayOn(facts, day));
   const seen = new Set(ofType(facts, 'seen').map(f => f.ref));
 
   let run: RunView | null = null;

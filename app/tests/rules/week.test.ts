@@ -24,6 +24,13 @@ function player(start = '2026-09-28T09:00:00+01:00') {   /* a Monday */
     clock(hhmm: string) { const [h, m] = hhmm.split(':').map(Number); now = Date.parse(see(facts, C, at()).day + 'T00:00:00+01:00') + ((h < 4 ? h + 24 : h) * 60 + m) * 60_000; return this; },
     next(days = 1) { now = Date.parse(W.addDays(see(facts, C, at()).day, days) + 'T09:00:00+01:00'); return this; },
     view() { return see(facts, C, at()); },
+    /** A job worked on, as every job is (D-117): a delve to its enough, then said done if that didn't do it. */
+    did(job: string) {
+      const j = see(facts, C, at()).content.jobs.find(x => x.id === job), m = Math.min(90, j?.enoughAt ?? j?.length ?? 25);
+      this.do({ do: 'startRun', job, minutes: m, count: 1 }).wait(m + 1);
+      if (!see(facts, C, at()).done.has(job)) this.do({ do: 'done', job });
+      return this;
+    },
     get at() { return at(); },
   };
 }
@@ -125,9 +132,9 @@ describe('Dan’s rhythms and the satchel', () => {
     p.do({ do: 'saveRhythm', rhythm: { id: 'r-walk', job: 'walk', times: 1 }, job: { id: 'walk', name: 'A long walk', delve: false, length: 60, doneBy: 'dan' } });
     expect(p.view().content.rhythms.some(r => r.id === 'r-walk')).toBe(true);
     const keys = () => p.facts.filter(f => f.type === 'keyEarned' && f.rhythm === 'r-walk').length;
-    p.do({ do: 'done', job: 'walk' });
+    p.did('walk');
     expect(keys()).toBe(0);
-    p.next(7).do({ do: 'open' }).do({ do: 'done', job: 'walk' });
+    p.next(7).do({ do: 'open' }).did('walk');
     expect(keys()).toBe(1);
   });
   it('Stop repeating ends future sessions only', () => {
@@ -151,7 +158,7 @@ describe('Dan’s rhythms and the satchel', () => {
     p.do({ do: 'planJob', job: id, day: MON });
     expect(p.view().slate).toContain(id);
     const walked = p.view().walked;
-    p.do({ do: 'tick', id });
+    p.did(id);
     expect(p.view().walked).toBeGreaterThan(walked);
   });
   it('lines untouched for three weeks go quietly to someday; nothing is deleted', () => {
@@ -267,8 +274,12 @@ describe('Absence and the deep push', () => {
     for (let k = 0; k < 3; k++) {
       const v2 = see(log, C, new Date(t + 3_600_000).toISOString().slice(0, 19) + '+01:00');
       const job = v2.next?.job ?? C.jobs.find(j => !v2.done.has(j.id) && !j.item)!.id;   /* past the plan: Dan's own choice */
+      const iso = (ms: number) => new Date(ms + 3_600_000).toISOString().slice(0, 19) + '+01:00';
+      /* worked on, as every job is (D-117): a delve, then said done */
+      log = log.concat(act(log, C, { do: 'startRun', job, minutes: 25, count: 1 }, iso(t)));
       t += 90 * 60_000;
-      log = log.concat(act(log, C, { do: 'done', job }, new Date(t + 3_600_000).toISOString().slice(0, 19) + '+01:00'));
+      log = log.concat(settle(log, C, iso(t)));
+      if (!see(log, C, iso(t)).done.has(job)) log = log.concat(act(log, C, { do: 'done', job }, iso(t)));
     }
     expect(log.some(f => f.type === 'beatPlayed' && S.beatOf(C.story, f.id)?.kind === 'deep')).toBe(true);
   });
@@ -284,7 +295,7 @@ describe('Choosing what to do: Not today, and a delve on anything (D-077)', () =
     expect(v.next?.job).not.toBe(id);
     expect(v.walked).toBe(walked);
     expect(v.complete).toBe(false);
-    for (const x of v.slate) p.do({ do: 'done', job: x });
+    for (const x of v.slate) p.did(x);
     expect(p.view().complete).toBe(true);   /* the rest of the day's plan completes it (review finding, D-080) */
   });
   it('a job set aside and then begun comes back to the list', () => {
@@ -330,8 +341,9 @@ describe('A guess is asked after its marks are seen (D-077)', () => {
     for (let d = 0; d < 21 && !checked; d++) {
       for (const id of C.jobs.filter(j => !j.item).map(j => j.id)) {
         if (p.view().done.has(id)) continue;
-        const f = act(p.facts, C, { do: 'done', job: id }, p.at);
-        p.do({ do: 'done', job: id });
+        const from = p.facts.length;
+        p.did(id);
+        const f = p.facts.slice(from);
         const done = f.find(x => x.type === 'jobDone'), arr = f.find(x => x.type === 'arrived' && x.kind === 'place');
         const beat = f.find(x => x.type === 'beatPlayed' && x.job === done?.seq) as { id: string } | undefined;
         const carries = beat ? S.beatOf(C.story, beat.id)?.carries?.guess ?? [] : [];
@@ -383,7 +395,7 @@ describe('Today follows the week’s plan (Dan, D-078)', () => {
     for (let d = 0; d < 7; d++) {
       const v = p.view();
       if (v.slate.length && v.slate.length < 3) {
-        for (const id of v.slate) p.do({ do: 'done', job: id });
+        for (const id of v.slate) p.did(id);
         expect(p.view().complete).toBe(true);
         return;
       }
@@ -780,5 +792,51 @@ describe('Everything is a delve (Dan, D-117)', () => {
   });
   it('the starting set has no job without a timer', () => {
     expect(C.jobs.every(j => j.delve)).toBe(true);
+  });
+  it('said done with no whole minute of delving, a job is off the list but earns nothing and brings no return (rule 10)', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addToWeek', line: 'Water the plants', day: MON });
+    const id = p.view().content.jobs.find(j => j.name === 'Water the plants')!.id;
+    const walked = p.view().walked, from = p.facts.length;
+    p.do({ do: 'startRun', job: id, minutes: 25, count: 1 }).do({ do: 'finishHere' }).do({ do: 'done', job: id });
+    const after = p.facts.slice(from);
+    expect(p.view().done.has(id)).toBe(true);
+    expect(p.view().walked).toBe(walked);
+    expect(after.find(f => f.type === 'jobDone')).toMatchObject({ minutes: 0 });
+    expect(after.some(f => f.type === 'beatPlayed' || f.type === 'findGiven' || f.type === 'keyEarned')).toBe(false);
+  });
+  it('old satchel lines dropped or ticked off stay gone: they are not jobs and never planned', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['old one', 'ticked one', 'kept one'] });
+    const [a, b, k] = W.items(p.facts, MON).map(i => i.id);
+    p.do({ do: 'dropItem', id: a }).do({ do: 'tick', id: b }).do({ do: 'replan' });
+    const ids = p.view().content.jobs.map(j => j.id);
+    expect(ids).not.toContain(a); expect(ids).not.toContain(b); expect(ids).toContain(k);
+    expect(W.planOf(p.facts, MON)!.some(e => e.job === a || e.job === b)).toBe(false);
+  });
+  it('a job Dan placed himself in a week is not placed again when that week is laid out', () => {
+    const SUN = W.addDays(MON, -1), WED = W.addDays(MON, 2);
+    const p = player(`${SUN}T09:00:00+01:00`).do({ do: 'open' }).do({ do: 'addToWeek', line: 'Book the MOT', day: WED });
+    const id = p.view().content.jobs.find(j => j.name === 'Book the MOT')!.id;
+    p.next().do({ do: 'open' });
+    expect(W.planOf(p.facts, MON)!.filter(e => e.job === id).map(e => e.day)).toEqual([WED]);
+    p.do({ do: 'planWeek', week: MON });
+    expect(W.planOf(p.facts, MON)!.filter(e => e.job === id).map(e => e.day)).toEqual([WED]);
+  });
+  it('the planner places only lately added jobs, one to a day; old or someday lines wait to be chosen', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'takeInbox', lines: [{ id: 'S1', text: 'Old thing' }] });
+    const old = p.view().content.jobs.find(j => j.name === 'Old thing')!.id;
+    p.next(W.ADDED_DAYS + 7).do({ do: 'open' }).do({ do: 'takeInbox', lines: [{ id: 'S2', text: 'New one' }, { id: 'S3', text: 'New two' }] });
+    const wk = calendarWeek(p.view().day), plan = () => W.planOf(p.facts, wk)!;
+    p.do({ do: 'replan' });
+    const news = p.view().content.jobs.filter(j => j.name.startsWith('New')).map(j => j.id);
+    expect(plan().some(e => e.job === old)).toBe(false);
+    const days = news.map(id => plan().find(e => e.job === id)?.day);
+    expect(days.every(Boolean)).toBe(true);
+    expect(new Set(days).size).toBe(2);
+  });
+  it('a line delved on is in hand: the look-ahead does not ask about it', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['Paint the gate'] });
+    const id = W.items(p.facts, MON)[0].id;
+    p.next(5).do({ do: 'open' }).do({ do: 'startRun', job: id, minutes: 25, count: 1 }).wait(26);
+    expect(W.sweepOf(p.facts, W.addDays(MON, 8)).some(i => i.id === id)).toBe(false);
   });
 });

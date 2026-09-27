@@ -27,7 +27,8 @@
   function fresh() {
     const line = name.trim();
     if (!line) return;
-    const f = game.do({ do: 'addItems', lines: [line] });
+    /* a job named here is on today too, so it's there if Dan leaves before delving (D-117 review) */
+    const f = game.do({ do: 'addToWeek', line, day: v.day });
     const added = f.find(x => x.type === 'itemAdded');
     if (added && added.type === 'itemAdded') go('set', added.id);
   }

@@ -23,7 +23,6 @@
 
   function rowNote(j: Job): string {
     if (v.done.has(j.id)) return t('row.done');
-    if (v.underWay === j.id) return t('row.underWay');
     if (v.times[j.id]) return v.times[j.id];
     /* every job is a delve (D-117): its row says how it runs */
     const r = presetRun(j);
@@ -42,8 +41,9 @@
   }
   function done(j: Job) {
     const f = game.do({ do: 'done', job: j.id });
+    /* a job with no whole minute behind it goes off the list and brings no return (rule 10, D-117) */
     const d = f.find(x => x.type === 'jobDone');
-    if (d) go('step', d.seq);
+    if (d && d.type === 'jobDone' && d.minutes > 0) go('step', d.seq);
   }
   /* a delve job worked on today, not yet said to be done: "Is it done?" answered "Not yet", or left unanswered. Its Done
      is here, so it never needs another delve to be marked (Dan, 2026-09-27, D-120) */
@@ -200,14 +200,6 @@
         <div class="lead"><button class="btn full" onclick={() => go('delve')}>{t('today.running.go')}</button></div>
         <div class="gap"></div>
       </div>
-    {:else if v.next?.mode === 'underWay' && next}
-      <div class="next">
-        <div class="label-line lit">{t('today.underWay')}</div>
-        <h2 class="say-lg">{next.name}</h2>
-        <p class="soft">{t('today.underWay.say')}</p>
-        <button class="btn" onclick={() => done(next)}>{t('today.done')}</button>
-        <div class="cant"><button class="text-link" onclick={() => game.do({ do: 'unbegin', job: next.id })}><span>{t('today.unbegin')}</span></button></div>
-      </div>
     {:else if v.next && next}
       <div class="next">
         <div class="label-line lit">{t('today.next')}</div>
@@ -216,7 +208,7 @@
         {#if v.deepOffer}
           <p class="deep">{t('today.deep')} <button class="text-link" onclick={() => game.do({ do: 'callDeep' })}><span>{t('today.deep.call')}</span></button></p>
         {:else if v.deepCalled && !v.complete}<p class="deep">{t('today.deep.called')}</p>{/if}
-        <div class="lead"><button class="btn full" onclick={() => begin(next)}>{next.delve ? t('today.delve') : t('today.begin')}</button></div>
+        <div class="lead"><button class="btn full" onclick={() => begin(next)}>{t('today.delve')}</button></div>
         <div class="cant">
           {#if delvedOn}<button class="text-link" onclick={() => done(next)}><span>{t('today.itsDone')}</span></button>
           {:else}<button class="text-link" onclick={() => go('cant', next.id)}><span>{t('today.cantStart')}</span></button>{/if}

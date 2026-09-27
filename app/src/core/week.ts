@@ -61,6 +61,10 @@ export function live(c: Content, facts: Fact[], before?: string): Content {
       if (!changed) { jobs = jobs.slice(); rhythms = rhythms.slice(); changed = true; }
       /* a job added from anywhere (+ Add, the Week, Siri) is a delve like any other (D-117) */
       jobs.push({ id: f.id, name: f.name, delve: true, length: 25, doneBy: 'dan' });
+    } else if (f.type === 'itemDropped' || f.type === 'itemTicked') {
+      /* an old satchel line dropped, or ticked off there, is finished with: it doesn't come back as a job (D-117) */
+      if (!changed) { jobs = jobs.slice(); rhythms = rhythms.slice(); changed = true; }
+      jobs = jobs.filter(x => x.id !== f.id);
     }
   }
   if (!changed) return c;
@@ -106,6 +110,8 @@ export function items(facts: Fact[], day: string): Item[] {
     else if (f.type === 'planAdded' && out.has(f.entry.job)) { touched.set(f.entry.job, f.day); shelved.delete(f.entry.job); }
     /* the look-ahead (D-116): kept, its three weeks start again; put to someday by hand, it goes there now */
     else if (f.type === 'itemKept' && out.has(f.id)) { touched.set(f.id, f.day); shelved.delete(f.id); }
+    /* delved on, it's in hand: the look-ahead doesn't ask about it (D-117 review) */
+    else if (f.type === 'delveStarted' && out.has(f.job)) { touched.set(f.job, f.day); shelved.delete(f.job); }
     else if (f.type === 'itemSomeday' && out.has(f.id)) shelved.add(f.id);
   }
   for (const [id, d] of ticked) if (d < day) out.delete(id);
@@ -147,6 +153,9 @@ const doneIn = (facts: Fact[], week: string) => ofType(facts, 'jobDone').filter(
 const sessions = (facts: Fact[], r: Rhythm, week: string) => R.sessionsIn(facts, r, r.everyDays ? addDays(week, 6) : week);
 const need = R.needOf;
 
+/** How recent a job added with no day of its own must be for the planner to place it (D-117 review). */
+export const ADDED_DAYS = 7;
+
 /**
  * "Plan my week" (PLANNER.md): fixed rules, no learning. Appointments and set days first; avoided one-offs early; the
  * same rhythm spread across days (never two days running where it can be avoided); no day above a Normal day's size;
@@ -177,16 +186,18 @@ export function planWeek(c: Content, facts: Fact[], week: string, from: string, 
   const doneOnDay = (job: string, d: string) => done.some(f => f.job === job && f.day === d);
   const ever = new Set(ofType(facts, 'jobDone').map(f => f.job));
   const rhythmJob = new Set(c.rhythms.map(r => r.job));
+  /* a one-off Dan placed himself this week stays where he put it: the planner never places it again (D-117 review) */
+  const hand = new Set(ofType(facts, 'planAdded').filter(f => calendarWeek(f.entry.day) === week && !rhythmJob.has(f.entry.job)).map(f => f.entry.job));
 
   /* the one thing that matters most this week (the look-ahead, D-116): first, early in the week */
   const pin = pinnedIn(facts, week);
-  if (pin && c.jobs.some(j => j.id === pin && !j.stopped) && !(ever.has(pin) && !c.rhythms.some(r => r.job === pin)) && !done.some(f => f.job === pin)) {
+  if (pin && !hand.has(pin) && c.jobs.some(j => j.id === pin && !j.stopped) && !(ever.has(pin) && !c.rhythms.some(r => r.job === pin)) && !done.some(f => f.job === pin)) {
     const d = days.find(x => fits(x, pin));
     if (d) put(pin, d);
   }
   /* dated work first (D-114): on the last day with room at least 2 days before its date; already that close, the first
      day with room. A date further off waits for its own week. */
-  for (const j of c.jobs.filter(x => x.by && !x.stopped && !ever.has(x.id))) {
+  for (const j of c.jobs.filter(x => x.by && !x.stopped && !ever.has(x.id) && !hand.has(x.id))) {
     const target = addDays(j.by!, -2);
     if (target > days[days.length - 1]) continue;
     const room = (x: string) => fits(x, j.id);
@@ -206,7 +217,7 @@ export function planWeek(c: Content, facts: Fact[], week: string, from: string, 
     }
   }
   /* avoided one-offs early in the week, one to a day where the week allows */
-  for (const j of c.jobs.filter(x => x.avoided && !x.stopped && !x.by && !rhythmJob.has(x.id) && !ever.has(x.id))) {
+  for (const j of c.jobs.filter(x => x.avoided && !x.stopped && !x.by && !rhythmJob.has(x.id) && !ever.has(x.id) && !hand.has(x.id))) {
     const d = days.find(x => fits(x, j.id) && !out.some(e => e.day === x && c.jobs.find(k => k.id === e.job)?.avoided)) ?? days.find(x => fits(x, j.id));
     if (d) put(j.id, d);
   }
@@ -232,10 +243,14 @@ export function planWeek(c: Content, facts: Fact[], week: string, from: string, 
       if (best) put(r.job, best, r.time);
     }
   }
-  /* the other jobs Dan added (from + Add, the Week or Siri), not done yet: where a day has room, oldest first (D-117) */
-  for (const j of c.jobs.filter(x => !x.stopped && !x.by && !x.avoided && !rhythmJob.has(x.id) && !ever.has(x.id) && !out.some(e => e.job === x.id))) {
-    const d = days.find(x => fits(x, j.id));
-    if (d) put(j.id, d);
+  /* a job added lately with no day of its own (from Siri, D-117): where a day has room, oldest first, at most one such
+     job to a day. Older lines, and lines put to someday, wait in Dan's jobs for him to choose; they never flood a week. */
+  const shelved = new Set(ofType(facts, 'itemSomeday').map(f => f.id));
+  const recent = new Set(ofType(facts, 'itemAdded').filter(f => f.day <= from && daysBetween(f.day, from) <= ADDED_DAYS).map(f => f.id));
+  const extra = new Set<string>();
+  for (const j of c.jobs.filter(x => recent.has(x.id) && !shelved.has(x.id) && !x.stopped && !x.by && !x.avoided && !rhythmJob.has(x.id) && !ever.has(x.id) && !hand.has(x.id) && !out.some(e => e.job === x.id))) {
+    const d = days.find(x => !extra.has(x) && fits(x, j.id));
+    if (d) { put(j.id, d); extra.add(d); }
   }
   return out.filter(e => !fixed.some(x => x.id === e.id)).sort((a, b) => a.day.localeCompare(b.day) || (a.time ?? '99').localeCompare(b.time ?? '99'));
 }

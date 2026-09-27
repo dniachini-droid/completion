@@ -17,6 +17,13 @@ function player(start = '2026-09-24T09:00:00+01:00') {
     sleep(min: number) { now += min * 60_000; return this; },
     get ms() { return now; },
     view() { return see(facts, C, at()); },
+    /** A job worked on, as every job is (D-117): a delve to its enough, then said done if that didn't do it. */
+    did(job: string) {
+      const j = see(facts, C, at()).content.jobs.find(x => x.id === job), m = Math.min(90, j?.enoughAt ?? j?.length ?? 25);
+      this.do({ do: 'startRun', job, minutes: m, count: 1 }).wait(m + 1);
+      if (!see(facts, C, at()).done.has(job)) this.do({ do: 'done', job });
+      return this;
+    },
     types() { return facts.map(f => f.type); },
   };
 }
@@ -82,7 +89,7 @@ describe('the heart: open → Begin → delve → back → Done → the step →
   });
   it('a short day still arrives: a camp with a view', () => {
     const p = player().do({ do: 'open' }).do({ do: 'capacity', capacity: 'low' });
-    p.do({ do: 'done', job: 'gym' }).do({ do: 'done', job: 'tank' });
+    p.did('gym').did('tank');
     expect(p.view().walked).toBe(120);
     /* 120 minutes passes the first place (75): a named place */
     expect(p.view().arrival?.kind).toBe('place');
@@ -181,7 +188,7 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     expect(p.facts.find(f => f.type === 'stepsGained')!.day).toBe('2026-09-24');
   });
   it('Keep going after day complete still arrives at the next place (no dead ends for effort)', () => {
-    const p = player().do({ do: 'open' }).do({ do: 'capacity', capacity: 'low' }).do({ do: 'done', job: 'gym' }).do({ do: 'done', job: 'tank' });
+    const p = player().do({ do: 'open' }).do({ do: 'capacity', capacity: 'low' }).did('gym').did('tank');
     const first = p.view().arrival!; p.do({ do: 'seen', what: 'arrival', ref: first.seq });
     p.do({ do: 'startRun', job: 'spanish', minutes: 60, count: 3 }).wait(200);
     expect(p.view().walked).toBe(300);
