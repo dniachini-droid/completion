@@ -21,10 +21,9 @@ export const KEYS_A_WEEK = 5;
 export const KEY_FLOOR = 2;
 /** A long stretch on one job in a day, after which switching brings a find (§1). */
 export const LONG_STRETCH = 100;
-/** Delves in one sitting that reach a side chamber (§1). */
-export const CHAMBER_RUN = 4;
-/** …and at least this much of them: short delves (5–15 min) reach it only with the same effort (rule 10, D-110). */
-export const CHAMBER_MIN = 100;
+/** A job done with less than this behind it (the dial's shortest delve) moves Dan by its minutes and is done, but brings
+    no return: no story step, find or Key, and it doesn't count towards the day's completion (rule 10, D-121). */
+export const RETURN_MIN = 5;
 
 const ofType = <T extends FactBody['type']>(facts: Fact[], type: T) => facts.filter((f): f is FactOf<T> => f.type === type);
 
@@ -108,6 +107,11 @@ const inWeek = (st: StoryState, b: { id: string; w: number }) => b.w <= st.week 
 
 /** Minutes of effort from the start to the next place reached on foot. */
 export const nextPlaceAt = (st: StoryState) => st.onFoot === 0 ? FIRST_GAP : FIRST_GAP + st.onFoot * PLACE_GAP;
+/** Minutes of effort from the start to the last place reached on foot (0 before the first). */
+export const lastPlaceAt = (st: StoryState) => st.onFoot === 0 ? 0 : FIRST_GAP + (st.onFoot - 1) * PLACE_GAP;
+/** The side chamber on the road: halfway between the last place reached on foot and the next, the same distance
+    whatever the delves' lengths or jobs (Dan, D-122). */
+export const chamberAt = (st: StoryState) => Math.ceil((lastPlaceAt(st) + nextPlaceAt(st)) / 2);
 
 /**
  * The next named place that can be reached on foot, in route order: this story week's first (places whose req is not
@@ -120,7 +124,7 @@ export function nextPlace(s: Story, st: StoryState, push = false): Beat | null {
       if (p.k || st.played.has(p.id)) continue;
       const b = beatOf(s, p.id);
       if (!b) continue;
-      const ahead = push && rw.w === st.week + 1 && p.id.startsWith('pl-');
+      const ahead = rw.w === st.week + 1 && p.id.startsWith('pl-');   /* one story, no waiting (D-123) */
       if (!(inWeek(st, b) || ahead)) continue;
       if (b.kind === 'word' && !EARLY.has(b.id) && b.w > st.week) continue;
       if (allMet(st, b.req)) return b;
@@ -227,9 +231,10 @@ export function weekDone(s: Story, st: StoryState): boolean {
   if (!rw.places.every(p => st.played.has(p.id))) return false;
   return s.beats.filter(b => b.w === st.week && b.kind === 'step').every(b => st.played.has(b.id));
 }
-/** The next story week may begin: this one is done and a later calendar week has begun (at most one a week). */
-export const mayAdvance = (s: Story, st: StoryState, day: string) =>
-  st.weekBegan !== null && weekDone(s, st) && calendarWeek(day) > st.weekBegan && s.route.some(r => r.w === st.week + 1);
+/** The next story week may begin as soon as this one is done: no calendar-week wait, so more work is never held back
+    (Dan, D-123; was at most one story week a calendar week). */
+export const mayAdvance = (s: Story, st: StoryState, _day?: string) =>
+  st.weekBegan !== null && weekDone(s, st) && s.route.some(r => r.w === st.week + 1);
 
 /* ---------- what's in view, and "I can't start" ---------- */
 

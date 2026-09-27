@@ -89,8 +89,8 @@ describe('weeks 8–14 play in order', () => {
       const p = sim(undefined, undefined, 'kept');
       const weeks: number[] = [];
       for (let i = 0; i < 14; i++) { p.week(kind); weeks.push(p.st().week); }
-      /* the story never goes backwards and never runs more than one story week a calendar week */
-      for (let i = 1; i < weeks.length; i++) { expect(weeks[i]).toBeGreaterThanOrEqual(weeks[i - 1]); expect(weeks[i]).toBeLessThanOrEqual(i + 2); }
+      /* the story never goes backwards; it runs as fast as Dan walks (one story, no calendar wait, D-123) */
+      for (let i = 1; i < weeks.length; i++) expect(weeks[i]).toBeGreaterThanOrEqual(weeks[i - 1]);
       if (kind !== 'low') expect(weeks[13]).toBe(14);
       else expect(weeks[13]).toBeGreaterThanOrEqual(10);
       expect(aheadOfDan(p.facts)).toEqual([]);

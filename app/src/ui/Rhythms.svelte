@@ -1,7 +1,7 @@
 <script lang="ts">
   /* What repeats (PLANNER.md → Rhythms; mock-up rhythms.html). Dan's own rhythms, preloaded and all his to change: what,
-     how often (N a week, set days, every 2 weeks), how long each time, enough at (as delves), a time (an appointment),
-     delves or no timer. One number is enough; no ranges. Stop repeating ends future sessions only; no confirmation. */
+     how often (N a week, set days, every 2 weeks), how long each time (for the plan), a time (an appointment),
+     every job a delve (D-117). One number is enough; no ranges. Stop repeating ends future sessions only; no confirmation. */
   import { game } from './game.svelte';
   import { t, minutesWords, byWords } from '../content/copy/en';
   import { addDays } from '../core/week';
@@ -12,20 +12,21 @@
   import Remind from './Remind.svelte';
   import { dateTarget, reminderOf, rhythmTarget, type Lead } from '../core/reminders';
 
-  /* `job`: opened straight on that job's editor (from the satchel or the Week, D-112); leaving it goes back there */
+  /* `job`: opened straight on that job's editor (from the Week, D-112); leaving it goes back there */
   let { go, job: jobArg }: { go: Go; job?: string } = $props();
   const v = $derived(game.view);
   const LEN = [5, 10, 15, 25, 30, 45, 60, 90, 120, 180, 240];   /* down to 5 min (D-110) */
   const DAYS = [1, 2, 3, 4, 5, 6, 0];
 
   interface Draft { id: string | null; job: Job; often: 'once' | 'week' | 'days' | 'fort' | 'month' | 'year' | 'every'; times: number;
-    mode: 'date' | 'nth'; mday: number; nth: 1 | 2 | 3 | 4 | -1; wday: number; ydate: string; every: number; days: number[]; len: number; enough: number | null; time: string | null; delve: boolean; remind: Lead | null;
+    mode: 'date' | 'nth'; mday: number; nth: 1 | 2 | 3 | 4 | -1; wday: number; ydate: string; every: number; days: number[]; len: number; time: string | null; delve: boolean; remind: Lead | null;
     avoided: boolean; step: string; note: string; isNew: boolean; by: string | null; dremind: 0 | 1440 | null; }
   let d = $state<Draft | null>(null);
   /* a job just removed, for its Undo (D-112) */
   let removed = $state<{ job: Job; rhythm: Rhythm | null } | null>(null);
-  /* the one-offs (Dan's own and the starting set's), not lines of the satchel: every job can be reached and changed */
-  const others = $derived(v.content.jobs.filter(j => !j.item && !j.stopped && !v.content.rhythms.some(r => r.job === j.id)));
+  /* the one-offs (Dan's own and the starting set's), not yet finished: every job can be reached and changed (D-117) */
+  const others = $derived(v.content.jobs.filter(j => !j.stopped && !v.content.rhythms.some(r => r.job === j.id)
+    && !game.facts.some(f => f.type === 'jobDone' && f.job === j.id && f.day !== v.day)));
 
   function often(r: Rhythm) {
     if (r.monthly) return 'day' in r.monthly ? t('rhythms.monthDay', { n: dayOrd(r.monthly.day) }) : t('rhythms.monthNth', { nth: t(`rhythms.nth.${r.monthly.nth}` as never), day: t(`day.${r.monthly.weekday}` as never) });
@@ -37,13 +38,12 @@
   const dayOrd = (n: number) => n >= 31 ? t('rhythms.lastDay') : `${n}${n % 10 === 1 && n !== 11 ? 'st' : n % 10 === 2 && n !== 12 ? 'nd' : n % 10 === 3 && n !== 13 ? 'rd' : 'th'}`;
   const yearWords = (md: string) => new Date(`2000-${md}T00:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', timeZone: 'UTC' });
   function size(j: Job) {
-    const len = minutesWords(j.length);
-    return j.delve && j.enoughAt && j.enoughAt < j.length ? t('rhythms.enoughRoom', { enough: minutesWords(j.enoughAt), len }) : len;
+    return minutesWords(j.length);
   }
   function open(r: Rhythm | null) {
     if (r) { edit(game.job(r.job)!, r); return; }
-    const j: Job = { id: `j-${Date.now().toString(36)}`, name: '', delve: false, length: 60, doneBy: 'dan' };
-    d = { id: null, job: j, often: 'week', times: 2, days: [], len: 60, enough: null, time: null, delve: false, remind: null, avoided: false, step: '', note: '', isNew: true, by: null, dremind: null, ...kinds(null) };
+    const j: Job = { id: `j-${Date.now().toString(36)}`, name: '', delve: true, length: 60, doneBy: 'enough' };
+    d = { id: null, job: j, often: 'week', times: 2, days: [], len: 60, time: null, delve: true, remind: null, avoided: false, step: '', note: '', isNew: true, by: null, dremind: null, ...kinds(null) };
   }
   /** The monthly, yearly and every-N-days settings of a rhythm, or their starting values (D-114). */
   function kinds(r: Rhythm | null) {
@@ -56,7 +56,7 @@
   function edit(j: Job, r = v.content.rhythms.find(x => x.job === j.id) ?? null) {
     removed = null;
     d = { ...kinds(r), id: r?.id ?? null, job: { ...j }, often: !r ? 'once' : r.days ? 'days' : r.every === 2 ? 'fort' : r.monthly ? 'month' : r.yearly ? 'year' : r.everyDays ? 'every' : 'week', times: r?.times ?? 2, days: r?.days ?? [], len: j.length,
-      enough: j.enoughAt ?? null, time: r?.time ?? null, delve: j.delve, remind: r ? reminderOf(game.facts, rhythmTarget(r.id)) : null,
+      time: r?.time ?? null, delve: j.delve, remind: r ? reminderOf(game.facts, rhythmTarget(r.id)) : null,
       avoided: !!j.avoided, step: j.firstStep ?? '', note: j.note ?? '', isNew: false, by: j.by ?? null, dremind: reminderOf(game.facts, dateTarget(j.id)) as 0 | 1440 | null };
   }
   if (jobArg) { const j = game.job(jobArg); if (j) edit(j); }
@@ -72,11 +72,9 @@
   function save() {
     if (!d || !d.job.name.trim() || (d.often === 'days' && !d.days.length)) return;
     const once = d.often === 'once';
-    /* a one-off is done when Dan says so; a repeating delve at its enough (PLANNER.md) */
-    const enough = d.delve && !once && d.enough !== null && d.enough < d.len ? d.enough : undefined;
-    const job: Job = { ...d.job, length: d.len, delve: d.delve, doneBy: d.delve && !once ? 'enough' : 'dan', ...(enough ? { enoughAt: enough } : {}),
-      firstStep: d.step, note: d.note };
-    if (!enough) delete job.enoughAt;
+    /* every job is a delve (D-117): a repeating one is that day's session once delved on (D-121), a one-off when Dan says so */
+    const job: Job = { ...d.job, length: d.len, delve: true, doneBy: !once ? 'enough' : 'dan', firstStep: d.step, note: d.note };
+    delete job.enoughAt;
     if (d.avoided) job.avoided = true; else delete job.avoided;
     /* a date only for a one-off or a line (D-114) */
     if (once && d.by) job.by = d.by; else delete job.by;
@@ -135,7 +133,7 @@
         {#if j}
           <button class="row" onclick={() => open(r)}>
             <span class="pip"></span>
-            <span class="t">{j.name}<small>{often(r)} · {size(j)}{j.delve ? ' · ' + t('rhythms.asDelves') : ''}</small></span>
+            <span class="t">{j.name}<small>{often(r)} · {size(j)}</small></span>
             <span class="s">{r.time ?? ''}</span>
           </button>
         {/if}
@@ -145,7 +143,7 @@
         {#each others as j (j.id)}
           <button class="row" onclick={() => edit(j)}>
             <span class="pip"></span>
-            <span class="t">{j.name}<small>{j.by ? byWords(j.by) : t('job.onceUntil')} · {size(j)}{j.delve ? ' · ' + t('rhythms.asDelves') : ''}</small></span>
+            <span class="t">{j.name}<small>{j.by ? byWords(j.by) : t('job.onceUntil')} · {size(j)}</small></span>
             <span class="s"></span>
           </button>
           {#if j.by && j.by < v.day}
@@ -165,8 +163,6 @@
         <div class="label-line">{t('rhythms.name')}</div>
         <input class="line" bind:value={d.job.name} maxlength="60" aria-label={t('rhythms.name')} />
 
-        <!-- a line of the satchel stays a line: it doesn't repeat (TOOLS §2) -->
-        {#if !d.job.item}
         <div class="label-line">{t('rhythms.often')}</div>
         <div class="seg often" role="group" aria-label={t('rhythms.often')}>
           <button aria-pressed={d.often === 'once'} onclick={() => (d!.often = 'once')}>{t('job.once')}</button>
@@ -228,7 +224,6 @@
         {:else}
           <p class="soft val-note">{t('job.onceSay')}</p>
         {/if}
-        {/if}
 
         <div class="label-line">{t('rhythms.each')}</div>
         <div class="stepper">
@@ -236,20 +231,6 @@
           <span class="val">{minutesWords(d.len)}</span>
           <button class="btn-quiet step" disabled={d.len >= LEN[LEN.length - 1]} onclick={() => (d!.len = step(LEN, d!.len, 1))} aria-label={t('rhythms.longer')}><span>+</span></button>
         </div>
-
-        <div class="label-line">{t('rhythms.runs')}</div>
-        <div class="seg" role="group" aria-label={t('rhythms.runs')}>
-          <button aria-pressed={d.delve} onclick={() => (d!.delve = true)}>{t('rhythms.delves')}</button>
-          <button aria-pressed={!d.delve} onclick={() => (d!.delve = false)}>{t('rhythms.noTimer')}</button>
-        </div>
-        {#if d.delve && d.often !== 'once'}
-          <div class="label-line">{t('rhythms.enough')}</div>
-          <div class="stepper">
-            <button class="btn-quiet step" disabled={(d.enough ?? d.len) <= LEN[0]} onclick={() => (d!.enough = step(LEN.filter(x => x <= d!.len), d!.enough ?? d!.len, -1))} aria-label={t('rhythms.less')}><span>−</span></button>
-            <span class="val">{d.enough === null || d.enough >= d.len ? t('rhythms.all') : minutesWords(d.enough)}</span>
-            <button class="btn-quiet step" disabled={d.enough === null || d.enough >= d.len} onclick={() => { const x = step(LEN, d!.enough ?? d!.len, 1); d!.enough = x >= d!.len ? null : x; }} aria-label={t('rhythms.more')}><span>+</span></button>
-          </div>
-        {/if}
 
         <!-- a one-off's time is set where it sits in the Week -->
         {#if d.often !== 'once'}
@@ -269,7 +250,7 @@
         {/if}
         {/if}
 
-        {#if d.often === 'once' || d.job.item}
+        {#if d.often === 'once'}
           <!-- by a date (D-114): the plan works back from it; no red, no count -->
           <div class="label-line">{t('by.label')}</div>
           <div class="seg" role="group" aria-label={t('by.label')}>
@@ -306,7 +287,7 @@
 
         {#if d.often !== 'once'}<p class="soft val-note">{t('rhythms.newNumber')}</p>{/if}
         <div class="btn-row lead"><button class="btn" onclick={save}>{t('rhythms.save')}</button><button class="btn-quiet" onclick={close}><span>{t('rhythms.cancel')}</span></button></div>
-        {#if !d.isNew}<div class="links"><button class="text-link" onclick={remove}><span>{d.job.item ? t('satchel.letGo') : t('job.remove')}</span></button></div>{/if}
+        {#if !d.isNew}<div class="links"><button class="text-link" onclick={remove}><span>{t('job.remove')}</span></button></div>{/if}
       </div>
     {/if}
   </div>

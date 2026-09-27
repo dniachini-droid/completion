@@ -15,12 +15,12 @@ There are **two clocks**. **Time moves the Site:** every real minute moves Dan, 
 | The Course's enough | **50 minutes** of delves (the hour on the clock) | P5, D-047 |
 | A breather | **5 minutes** | D-037 |
 | Between named places on the main line | **8 steps** (about 3 h 20 of effort: a full working day) | D-037 said 6–8. Dan's honest Normal week of rhythms comes to about 40 steps, and a story week holds about 5 places, so 8 keeps them in step |
-| A long delve | **4 delves in one sitting, and at least 100 minutes of them**, reach a side chamber (with 25-minute delves or longer, simply the fourth) | D-037; minutes added with the 5–15 min delves, D-110 |
+| A side chamber | **halfway between the last place reached on foot and the next** (38 minutes in on the first stretch, then 75 past each place), once a stretch, whatever the delves' lengths or jobs; found on the delve that passes it | Dan, D-122 (was 4 delves and 100 minutes in one sitting, D-037, D-110) |
 | A long stretch (the switching find) | **4 delves on the same job in a day** (100 minutes); the first delve on a different job then brings a find | D-044 said about 2 hours; matched to the long delve so there's one number to learn |
 
 ## 2. The story clock
 - The story is written in **story weeks**. A story week holds about **5 arrivals, 2–3 record fragments, 3–5 Key openings and 1–2 signs**; words about one a month after the first in week 2–3 (D-013).
-- **At most one story week per calendar week.** A story week lasts as long as it takes to deliver its beats: a thin week stretches it into the next, and a week away pauses it (the world waits; P8). A big week can't start the next one early.
+- **One continuous story, no calendar wait (Dan, D-123; was at most one story week per calendar week).** A new place every 150 minutes walked, as many a day as Dan walks. The story's own order still holds (a word to cut, a door a Key opens, a story step on a finished job); nothing waits for a new calendar week or a day's limit. When the written story runs out, more is written. _(Before: **At most one story week per calendar week.** A story week lasts as long as it takes to deliver its beats: a thin week stretches it into the next, and a week away pauses it (the world waits; P8). A big week can't start the next one early.)_
 - Beats arrive **on real action**, in order: a story line on a job's return, an arrival on day complete, a sealed thing when a Key lands. Minutes move the map; they don't hurry the story.
 - **Places may run ahead by up to one story week** (the deep push's rule). A record found early is seen, and reads in its turn. Signs never come early; a **partial sign** at most, and only where one is written (D-013).
 - Past that, extra effort goes to the **open route** (section 5).

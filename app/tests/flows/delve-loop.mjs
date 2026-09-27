@@ -1,7 +1,7 @@
 // The begin → delve → pause → done loop, tried the ways Dan uses it (2026-09-27, D-120): a delve left for another app
 // and carried on, from the delve and from Today; Finish here straight away; "Is it done?" answered "Not yet", then said
-// done from Today; a satchel line put on today, begun and ticked; a satchel line delved on through "Something else…" and
-// ticked mid-delve (the delve ends there); a double tap on Begin, Finish here and Done makes one decision; a delve that
+// done from Today; a job added with "+ Add" (every job a delve, D-117), delved on and said done; a job named in
+// "Something else…", delved on, left "Not yet" and said done from its row on Today; a double tap on Begin, Finish here and Done makes one decision; a delve that
 // ends while Dan is in the Week is shown to him, and once said done it never comes back. Leaving the app is stood in for by hiding the page, as the screen checks do.
 // Usage: node tests/flows/delve-loop.mjs http://localhost:4173/ [width height]
 const { launch } = await import('./browser.mjs');
@@ -57,26 +57,26 @@ await tap(btn('Back to today'), 'Back to today'); await expectOn('today', 'after
 await tap(btn('It’s done'), 'It’s done on Today'); await expectOn('step', 'It’s done');
 await toToday();
 
-/* 3. a satchel line: put on today, begun, ticked in the satchel */
-const addLine = async (txt) => { await tap(btn('Satchel'), 'Satchel'); await tap(page.getByRole('button', { name: /add a line/i }), 'Add a line'); await page.keyboard.type(txt); await tap(page.locator('.btn-row .btn'), 'Put it in'); };
-await addLine('Letters');
-await tap(page.locator('.item', { hasText: 'Letters' }).getByRole('button', { name: /today/i }), 'Today on the line');
-await tap(page.locator('.home'), 'back from the satchel');
+/* 3. a job added with "+ Add": a delve on today; delved on, "Is it done?" → Done (D-117) */
+await tap(page.locator('.foot .add'), '+ Add'); await page.keyboard.type('Letters'); await page.keyboard.press('Enter'); await page.clock.runFor(800);
 await tap(page.locator('.rows button.row', { hasText: 'Letters' }), 'the Letters row');
-if ((await page.locator('.next h2').first().textContent())?.trim() !== 'Letters') fails.push('Letters is not under way');
-await tap(btn('Satchel'), 'Satchel'); await tap(page.locator('.item', { hasText: 'Letters' }).locator('.tickbox'), 'tick on Letters');
-await expectOn('step', 'ticking a line under way'); await toToday();
-
-/* 4. a satchel line delved on through "Something else…", ticked mid-delve: the delve ends there */
-await addLine('Bills'); await tap(page.locator('.home'), 'back from the satchel');
-await tap(page.locator('.rows button.row.else'), 'Something else…');
-await tap(page.locator('button', { hasText: 'Bills' }), 'Bills in Choose'); await tap(btn('Begin'), 'Begin'); await expectOn('delve', 'delving on Bills');
-await ff(4 * 60_000);
-await tap(page.locator('.home'), 'Today'); await tap(btn('Satchel'), 'Satchel');
-await tap(page.locator('.item', { hasText: 'Bills' }).locator('.tickbox'), 'tick on Bills'); await expectOn('step', 'ticking Bills mid-delve');
+if (await page.locator('.rs').count()) await tap(btn('Begin'), 'Begin on the set-up');
+await expectOn('delve', 'a tap on Letters');
+await ff(3 * 60_000);
+await tap(btn('Finish here'), 'Finish here on Letters');
+await has('Done', 'Letters finished'); await tap(btn('Done'), 'Done on Letters');
 await toToday();
-if (await btn('Back to the delve').count()) fails.push('the delve on Bills still runs after Bills was ticked');
+if (!/done/i.test(await page.locator('.rows button.row', { hasText: 'Letters' }).first().innerText().catch(() => ''))) fails.push('Letters, said done, is not done on Today');
 
+/* 4. a job named in "Something else…": delved on, "Not yet", then It's done from its row on Today */
+await tap(page.locator('.rows button.row.else'), 'Something else…');
+await page.locator('form.new input').fill('Bills'); await tap(page.locator('form.new button'), 'Delve on it');
+if (await page.locator('.rs').count()) await tap(btn('Begin'), 'Begin'); await expectOn('delve', 'delving on Bills');
+await ff(4 * 60_000);
+await tap(btn('Finish here'), 'Finish here on Bills');
+await tap(btn('Not yet'), 'Not yet on Bills'); await tap(btn('Back to today'), 'Back to today'); await expectOn('today', 'after Not yet on Bills');
+await tap(page.locator('.swipe', { hasText: 'Bills' }).getByRole('button', { name: 'It’s done', exact: true }).or(page.locator('.next').getByRole('button', { name: 'It’s done', exact: true })), 'It’s done for Bills');
+await expectOn('step', 'It’s done for Bills');
 await toToday();
 /* 5. double taps: each makes one decision, never a second one on the screen that replaces it */
 const double = async (loc, what) => { const r = await loc.first().boundingBox().catch(() => null); if (!r) { fails.push(`no ${what}`); return; }
@@ -96,7 +96,7 @@ await toToday();
 {
   await choose('Sort the post'); await tap(btn('Begin'), 'Begin');
   await tap(page.locator('.home'), 'Today'); await tap(btn('Week'), 'Week');
-  await ff(26 * 60_000); await page.clock.runFor(1500);
+  await ff(31 * 60_000); await page.clock.runFor(1500);   /* the set-up opens at one delve of 30 minutes (D-124) */
   if (!(await page.locator('.dv').count())) fails.push('a delve that ended in the Week was not shown');
   await tap(page.locator('.home'), 'the arrow from the end');
   await tap(page.getByRole('button', { name: 'It’s done', exact: true }), 'It’s done for the post');

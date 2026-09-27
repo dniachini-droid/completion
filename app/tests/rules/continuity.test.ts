@@ -58,7 +58,7 @@ describe('The story never waits on a guess (story review, 2026-09-25)', () => {
       for (let w = 0; w < 6; w++) p.week('normal');
       const st = p.st();
       expect(st.guessed.size).toBe(0);
-      expect(st.week).toBe(6);
+      expect(st.week).toBeGreaterThanOrEqual(6);
       expect(st.played.has('b-3.A')).toBe(true);   /* the first word */
       expect(aheadOfDan(p.facts)).toEqual([]);
       expect(outOfOrder(p.facts)).toEqual([]);
@@ -108,7 +108,7 @@ describe('Guesses are asked where their marks are, never where they are answered
 });
 
 describe('The pace of a Normal week (story review)', () => {
-  it('next week’s places only on a deep push; one place a day on foot; never the same camp view two days running', () => {
+  it('a place every 150 minutes, as many a day as Dan walks; never a story arrival ahead; never the same camp view two days running (D-123)', () => {
     const p = sim();
     for (let w = 0; w < 6; w++) p.week('normal');
     const facts = p.facts, bad: string[] = [];
@@ -116,17 +116,16 @@ describe('The pace of a Normal week (story review)', () => {
     let lastCamp: string | null = null;
     for (const d of days) {
       const foot = facts.filter(f => f.day === d && f.type === 'arrived' && f.kind === 'place' && f.how !== 'key');
-      if (foot.length > 1) bad.push(`${d}: ${foot.length} places on foot`);
       for (const f of foot) {
         const i = facts.indexOf(f), b = S.beatOf(C.story, (f as { id: string }).id)!, st = S.storyState(facts.slice(0, i), C.story);
-        if (b.w > st.week && b.id !== 'b-3.A') bad.push(`${d}: ${b.id} ahead of story week ${st.week}`);
+        if (b.w > st.week && b.id !== 'b-3.A' && !(b.id.startsWith('pl-') && b.w === st.week + 1)) bad.push(`${d}: ${b.id} ahead of story week ${st.week}`);
       }
       const camp = facts.find(f => f.day === d && f.type === 'arrived' && f.kind === 'camp') as { id: string } | undefined;
       if (camp && camp.id === lastCamp) bad.push(`${d}: ${camp.id} again`);
       lastCamp = camp?.id ?? null;
     }
     expect(bad).toEqual([]);
-    expect(p.st().week).toBe(6);
+    expect(p.st().week).toBeGreaterThanOrEqual(6);
   }, 60_000);
 });
 
@@ -155,7 +154,7 @@ describe('Seven weeks reach the story’s turn (Dan: the test runs seven weeks, 
     it(`${kind}: story week 7 begins by the seventh calendar week, nothing out of place`, () => {
       const p = sim();
       for (let i = 0; i < 7; i++) p.week(kind);
-      expect(S.storyState(p.facts, C.story).week).toBe(7);
+      expect(S.storyState(p.facts, C.story).week).toBeGreaterThanOrEqual(7);
       expect(aheadOfDan(p.facts)).toEqual([]);
     }, 120_000);
   }

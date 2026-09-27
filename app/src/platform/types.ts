@@ -71,7 +71,7 @@ export interface Calendar {
   /** Told when the calendar changes (the app reads it again). */
   onChange(f: () => void): void;
 }
-/** Lines said to Siri, typed in Shortcuts or sent from the Action button, waiting for the satchel (D-113). */
+/** Lines said to Siri, typed in Shortcuts or sent from the Action button, waiting to become jobs (D-113, D-117). */
 export interface Inbox {
   take(): Promise<{ id: string; text: string }[]>;
   /** Forget the lines the game has written. */

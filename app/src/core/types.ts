@@ -14,7 +14,7 @@ export interface Job {
   delve: boolean;
   /** Usual length in minutes: a no-timer job earns this (BALANCING §1). */
   length: number;
-  /** Delve minutes in a day that count as its session (the Course: 50). Defaults to `length`. */
+  /** Old saves only: a "usual session", read as the job's minutes (D-124). */
   enoughAt?: number;
   /** "I tend to put this off" (D-030, P5). */
   avoided?: boolean;

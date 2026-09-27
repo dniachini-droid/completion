@@ -23,29 +23,25 @@
 
   function rowNote(j: Job): string {
     if (v.done.has(j.id)) return t('row.done');
-    if (v.underWay === j.id) return t('row.underWay');
     if (v.times[j.id]) return v.times[j.id];
-    if (j.item) return t('row.oneOff');
-    if (!j.delve) return t('row.about', { len: minutesWords(j.length) });
+    /* every job is a delve (D-117): its row says how it runs */
     const r = presetRun(j);
     return r.count === 1 ? t('row.delve') : t('row.delves', { n: delves(r.count), len: r.minutes });
   }
   function teaser(j: Job): string {
     if (j.avoided) return t('today.teaser.avoided');
-    return j.delve ? t('today.teaser.delve') : t('today.teaser.away');
+    return t('today.teaser.delve');
   }
 
   function begin(j: Job) {
-    if (!j.delve) { game.do({ do: 'begin', job: j.id }); return; }
-    const r = presetRun(j);
-    /* Starting needs no decision: a short delve job starts at once; a longer one opens set to its enough (D-038, D-047) */
-    if (r.count === 1 && r.minutes <= 25) { game.do({ do: 'startRun', job: j.id, ...r }); go('delve'); }
-    else go('set', j.id);
+    /* every job opens the set-up at one delve of 30 minutes; Dan sets the minutes and the delves (D-124) */
+    go('set', j.id);
   }
   function done(j: Job) {
     const f = game.do({ do: 'done', job: j.id });
+    /* a job with no whole minute behind it goes off the list and brings no return (rule 10, D-117) */
     const d = f.find(x => x.type === 'jobDone');
-    if (d) go('step', d.seq);
+    if (d && d.type === 'jobDone' && d.minutes > 0) go('step', d.seq);
   }
   /* a delve job worked on today, not yet said to be done: "Is it done?" answered "Not yet", or left unanswered. Its Done
      is here, so it never needs another delve to be marked (Dan, 2026-09-27, D-120) */
@@ -57,7 +53,6 @@
   /* a tap on a job starts that job, never another: nothing on the list moves (Dan, D-100) */
   function start(id: string) { if (swiped) { swiped = null; return; } if (!v.done.has(id)) begin(job(id)); }
   function aside(id: string) { swiped = null; game.do({ do: 'setAside', job: id }); lastAside = id; }
-  function doneNow(id: string) { swiped = null; done(job(id)); }
   /* "Not today" said once, with a way to take it back while Today is still open (review 2, D-088) */
   let lastAside = $state<string | null>(null);
   function putBack() { if (lastAside) game.do({ do: 'putBack', job: lastAside }); lastAside = null; }
@@ -66,8 +61,7 @@
 
   /* a row slides left to show "Not today" (the phone's own gesture for taking something off a list) */
   let swiped = $state<string | null>(null), drag = $state<{ id: string; x0: number; y0: number; dx: number } | null>(null);
-  /* two actions under a swiped row: Done (already done, no timer, D-112) and Not today */
-  const OPEN = 224;
+  const OPEN = 112;
   function down(e: PointerEvent, id: string) { if (!v.done.has(id) && !v.run) drag = { id, x0: e.clientX, y0: e.clientY, dx: swiped === id ? -OPEN : 0 }; }
   function move(e: PointerEvent) {
     if (!drag) return;
@@ -95,8 +89,8 @@
   /* the story ahead folds to a few lines, so the next job is always in view; a tap reads it all (D-093) */
   let aheadOpen = $state(false);
 
-  /* one-tap capture (D-107): "+ Add" opens a box already typing; what is put in goes to the satchel in one step, one
-     line or a pasted list. Capture only: it never starts anything, and nothing on Today changes */
+  /* one-tap capture (D-107): "+ Add" opens a box already typing; what is put in becomes a delve job on today, one line
+     or a pasted list (the satchel is gone, D-117). It never starts anything by itself */
   let capturing = $state(false), captured = $state(''), capEl = $state<HTMLTextAreaElement | null>(null), capSaid = $state(false);
   function startCapture() {
     if (capturing) { capturing = false; return; }
@@ -110,7 +104,9 @@
   function capture() {
     const lines = captured.split('\n');
     /* said for a moment where "+ Add" was, so nothing on Today moves */
-    if (lines.some(l => l.trim())) { game.do({ do: 'addItems', lines }); capSaid = true; setTimeout(() => (capSaid = false), 4000); }
+    const put = lines.map(l => l.replace(/^[-*•\s]+/, '').trim()).filter(Boolean);
+    for (const line of put) game.do({ do: 'addToWeek', line, day: v.day });
+    if (put.length) { capSaid = true; setTimeout(() => (capSaid = false), 4000); }
     captured = ''; capturing = false;
   }
   /* Return puts it in (a pasted list keeps its lines); Shift-Return starts a new line */
@@ -202,14 +198,6 @@
         <div class="lead"><button class="btn full" onclick={() => go('delve')}>{t('today.running.go')}</button></div>
         <div class="gap"></div>
       </div>
-    {:else if v.next?.mode === 'underWay' && next}
-      <div class="next">
-        <div class="label-line lit">{t('today.underWay')}</div>
-        <h2 class="say-lg">{next.name}</h2>
-        <p class="soft">{t('today.underWay.say')}</p>
-        <button class="btn" onclick={() => done(next)}>{t('today.done')}</button>
-        <div class="cant"><button class="text-link" onclick={() => game.do({ do: 'unbegin', job: next.id })}><span>{t('today.unbegin')}</span></button></div>
-      </div>
     {:else if v.next && next}
       <div class="next">
         <div class="label-line lit">{t('today.next')}</div>
@@ -218,7 +206,7 @@
         {#if v.deepOffer}
           <p class="deep">{t('today.deep')} <button class="text-link" onclick={() => game.do({ do: 'callDeep' })}><span>{t('today.deep.call')}</span></button></p>
         {:else if v.deepCalled && !v.complete}<p class="deep">{t('today.deep.called')}</p>{/if}
-        <div class="lead"><button class="btn full" onclick={() => begin(next)}>{next.delve ? t('today.delve') : t('today.begin')}</button></div>
+        <div class="lead"><button class="btn full" onclick={() => begin(next)}>{t('today.delve')}</button></div>
         <div class="cant">
           {#if delvedOn}<button class="text-link" onclick={() => done(next)}><span>{t('today.itsDone')}</span></button>
           {:else}<button class="text-link" onclick={() => go('cant', next.id)}><span>{t('today.cantStart')}</span></button>{/if}
@@ -255,13 +243,11 @@
       {#each others as id (id)}
         {@const j = job(id)}
         <div class="swipe">
-          <!-- VoiceOver can't swipe: the same two actions, heard but not seen (accessibility A, D-111) -->
+          <!-- VoiceOver can't swipe: "Not today", heard but not seen (accessibility A, D-111) -->
           {#if !v.done.has(id) && offset(id) >= 0}
-            <button class="sr" onclick={() => doneNow(id)}>{t('row.srDone', { job: job(id).name })}</button>
             <button class="sr" onclick={() => aside(id)}>{t('row.srAside', { job: job(id).name })}</button>
           {/if}
           {#if !v.done.has(id) && offset(id) < 0}
-            <button class="aside already" tabindex={swiped === id ? 0 : -1} onclick={() => doneNow(id)}>{t('row.already')}</button>
             <button class="aside" tabindex={swiped === id ? 0 : -1} onclick={() => aside(id)}>{t('row.notToday')}</button>
           {/if}
           <button class="row" class:done={v.done.has(id)} style:transform={`translateX(${offset(id)}px)`} class:still={drag?.id === id}
@@ -286,7 +272,6 @@
     </div>
     <nav class="foot" aria-label={t('today.label')}>
       <button class="text-link add" class:on={capturing} aria-label={t('today.add.label')} aria-expanded={capturing} onclick={startCapture}><span>{capSaid ? t('today.add.said') : t('today.add')}</span></button>
-      <button class="text-link" onclick={() => go('satchel')}><span>{t('nav.satchel')}</span></button>
       <button class="text-link" onclick={() => go('week')}><span>{t('nav.week')}</span></button>
       <button class="text-link" onclick={() => go('daybook')}><span>{t('nav.daybook')}</span></button>
     </nav>
@@ -330,7 +315,6 @@
   .aside { position: absolute; right: 18px; z-index: 0; top: 1px; bottom: 0; width: 112px; font-family: var(--life); font-style: italic; font-size: 16px;
     color: var(--ink); background: rgba(var(--violet-rgb), .28); }
   .sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
-  .aside.already { right: 130px; background: rgba(var(--violet-rgb), .16); }
   .row-done { position: absolute; z-index: 2; right: 18px; top: 50%; transform: translateY(-50%); min-height: 40px; padding: 0 0 0 12px; }
   .row-done span { font-size: 16px; color: var(--violet-hi); }
   .row.else .t { color: var(--ink-2); font-style: italic; }

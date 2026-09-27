@@ -6,7 +6,6 @@
   import { game } from './game.svelte';
   import { t, minutesWords, ord } from '../content/copy/en';
   import { mmss, ofLine } from './panel';
-  import { epochOf } from '../core/time';
   import tunnel from './scene/tunnel.html?raw';
   import fogFront from './scene/fog-front.html?raw';
   import { tunnelLight } from './scene/light.js';
@@ -34,12 +33,6 @@
   const left = $derived(mmss(run?.leftMs ?? 0));
   const past = $derived(!!run && v.done.has(run.job.id));
   const of = $derived(run ? ofLine(run, run.k, past) : '');
-  /* the breather right after the delve that reached enough is its own moment (D-047) */
-  const enoughNow = $derived.by(() => {
-    if (!run || run.phase !== 'breather' || !run.ends.length) return false;
-    const jd = game.facts.find(f => f.type === 'jobDone' && f.job === run.job.id && f.seq > run.seq);
-    return !!jd && Math.abs(epochOf(jd.at) - run.ends[run.ends.length - 1].at) < 1000;
-  });
   const breathP = $derived(run?.phase === 'breather' ? 1 - run.breatherLeftMs / 300_000 : 0);
 
   /* the ring settles after an end: lit, then resting */
@@ -117,9 +110,9 @@
         </button>
         <div class="cant"><button class="text-link" onclick={() => game.do({ do: 'finishHere' })}><span>{t('delve.finishHere')}</span></button></div>
       {:else if run?.phase === 'breather'}
-        <div class="label-line centred" class:lit={enoughNow}>{enoughNow ? t('delve.enoughLabel') : t('delve.breather')}</div>
-        <h2 class="m">{enoughNow ? t('delve.sessionComplete', { job: run.job.name }) : t('delve.breather.done', { ord: ord(run.k) })}</h2>
-        <p class="say">{enoughNow ? t('delve.breather.enough') : v.passage + ' ' + t('delve.breather.say')}</p>
+        <div class="label-line centred">{t('delve.breather')}</div>
+        <h2 class="m">{t('delve.breather.done', { ord: ord(run.k) })}</h2>
+        <p class="say">{v.passage + ' ' + t('delve.breather.say')}</p>
         <div class="breath-line" aria-hidden="true"><i style="width:{(breathP * 100).toFixed(1)}%"></i></div>
         <button class="btn resting" onclick={() => game.do({ do: 'skipBreather' })}>{t('delve.startNow')}</button>
         <div class="cant"><button class="text-link" onclick={() => game.do({ do: 'finishHere' })}><span>{t('delve.finishHere')}</span></button></div>
@@ -142,7 +135,7 @@
             <div class="label-line centred" class:lit={end.enough}>{end.enough ? t('delve.enoughLabel') : t('delve.label')}</div>
             <h2 class="m">
               {#if answer === 'yes'}{t('delve.yesSay')}
-              {:else if end.enough}{t('delve.sessionComplete', { job: end.job.name })}
+              {:else if end.enough}{t('delve.sessionComplete', { job: end.job.name, min: minutesWords(end.minutes) })}
               {:else if end.how === 'finishedHere' && end.minutes > 0}{t('delve.finished', { min: minutesWords(end.minutes), job: end.job.name })}
               {:else}{end.count > 1 ? t('delve.doneRun') : t('delve.doneOne')}{/if}
             </h2>

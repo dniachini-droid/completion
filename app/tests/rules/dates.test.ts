@@ -2,7 +2,7 @@
  * Deadlines (Stage 3 item 5, D-114): a "by" date on satchel lines and one-offs. Ids only: no story text is asserted.
  */
 import { describe, expect, it } from 'vitest';
-import { act, see, type Command } from '../../src/core/game';
+import { act, see, settle, type Command } from '../../src/core/game';
 import * as W from '../../src/core/week';
 import * as R from '../../src/core/reminders';
 import type { Fact, Job } from '../../src/core/types';
@@ -16,6 +16,8 @@ function player(start = '2026-09-28T09:00:00+01:00') {   /* a Monday */
     get facts() { return facts; },
     do(cmd: Command) { facts = facts.concat(act(facts, C, cmd, at())); return this; },
     to(day: string, hhmm = '09:00') { now = Date.parse(`${day}T${hhmm}:00+01:00`); return this; },
+    /** Worked on, as every job is (D-117): a 25-minute delve, then said done. */
+    did(job: string) { this.do({ do: 'startRun', job, minutes: 25, count: 1 }); now += 26 * 60_000; facts = facts.concat(settle(facts, C, at())); return this.do({ do: 'done', job }); },
     view() { return see(facts, C, at()); },
     get at() { return at(); },
   };
@@ -38,19 +40,12 @@ describe('a date on a job (D-114)', () => {
     p.to('2026-10-02').do({ do: 'open' });
     expect(p.view().slate).toContain('tax');
   });
-  it('a dated satchel line never goes to someday', () => {
-    const p = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['Renew the passport'] });
-    const line = p.view().content.jobs.find(j => j.item)!;
-    p.do({ do: 'saveJob', job: { ...line, by: '2026-12-01' }, rhythm: null });
-    const [it] = W.items(p.facts, W.addDays(MON, 30));
-    expect(it).toMatchObject({ by: '2026-12-01', someday: false });
-  });
   it('done before its date brings a find, once a week, and only for a date set two days or more before', () => {
     const finds = (p: ReturnType<typeof player>) => p.facts.filter(f => f.type === 'findGiven' && (f as { why: string }).why === 'dated').length;
     const early = player().do({ do: 'open' }).do({ do: 'saveJob', job: { ...tax, by: '2026-10-09' }, rhythm: null });
-    early.to('2026-10-01').do({ do: 'open' }).do({ do: 'done', job: 'tax' });
+    early.to('2026-10-01').do({ do: 'open' }).did('tax');
     expect(finds(early)).toBe(1);
-    const late = player().do({ do: 'open' }).do({ do: 'saveJob', job: { ...tax, by: '2026-10-09' }, rhythm: null }).do({ do: 'done', job: 'tax' });
+    const late = player().do({ do: 'open' }).do({ do: 'saveJob', job: { ...tax, by: '2026-10-09' }, rhythm: null }).did('tax');
     expect(finds(late)).toBe(0);
   });
   it('a date’s reminder: the morning of it, or the day before, at nine; none once done', () => {

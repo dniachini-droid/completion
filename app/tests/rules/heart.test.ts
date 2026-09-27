@@ -17,6 +17,13 @@ function player(start = '2026-09-24T09:00:00+01:00') {
     sleep(min: number) { now += min * 60_000; return this; },
     get ms() { return now; },
     view() { return see(facts, C, at()); },
+    /** A job worked on, as every job is (D-117): a delve to its enough, then said done if that didn't do it. */
+    did(job: string) {
+      const j = see(facts, C, at()).content.jobs.find(x => x.id === job), m = Math.min(90, j?.enoughAt ?? j?.length ?? 25);
+      this.do({ do: 'startRun', job, minutes: m, count: 1 }).wait(m + 1);
+      if (!see(facts, C, at()).done.has(job)) this.do({ do: 'done', job });
+      return this;
+    },
     types() { return facts.map(f => f.type); },
   };
 }
@@ -44,10 +51,8 @@ describe('Today', () => {
     expect(p.view().next?.job).toBe(b);
     expect(p.view().slate).toContain(a);
   });
-  it('a job that takes hours opens set to its enough', () => {
-    expect(presetRun(C.jobs.find(j => j.id === 'course')!)).toEqual({ minutes: 25, count: 2 });
-    expect(presetRun(C.jobs.find(j => j.id === 'spanish')!)).toEqual({ minutes: 30, count: 2 });
-    expect(presetRun(C.jobs.find(j => j.id === 'cat')!)).toEqual({ minutes: 25, count: 1 });
+  it('every job opens at one delve of 30 minutes; Dan sets the rest (D-124)', () => {
+    for (const j of C.jobs) expect(presetRun(j)).toEqual({ minutes: 30, count: 1 });
   });
 });
 
@@ -72,10 +77,8 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     expect(v.arrival).toMatchObject({ kind: 'place', id: 'b-1.A', completedDay: false });
     expect(v.here.id).toBeNull();   /* revealed on the arrival's own screen, not before */
     p.do({ do: 'seen', what: 'arrival', ref: v.arrival!.seq });
-    /* the gym: Begin marks it under way; Done plays its hour and completes the day, with no camp (a place was reached) */
-    p.do({ do: 'begin', job: 'gym' });
-    expect(p.view().next).toEqual({ job: 'gym', mode: 'underWay' });
-    p.wait(70).do({ do: 'done', job: 'gym' });
+    /* the gym, a delve like every job (D-117): its hour, done at its enough, completes the day, with no camp */
+    p.do({ do: 'startRun', job: 'gym', minutes: 30, count: 2 }).wait(70);
     expect(p.view().complete).toBe(true);
     expect(p.view().walked).toBe(135);
     expect(p.view().arrival).toBeNull();
@@ -84,7 +87,7 @@ describe('the heart: open → Begin → delve → back → Done → the step →
   });
   it('a short day still arrives: a camp with a view', () => {
     const p = player().do({ do: 'open' }).do({ do: 'capacity', capacity: 'low' });
-    p.do({ do: 'done', job: 'gym' }).do({ do: 'done', job: 'tank' });
+    p.did('gym').did('tank');
     expect(p.view().walked).toBe(120);
     /* 120 minutes passes the first place (75): a named place */
     expect(p.view().arrival?.kind).toBe('place');
@@ -95,14 +98,15 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     expect(q.view().arrival!.look).toBeTruthy();   /* a camp always has one thing to look at */
     expect(q.view().here.id).toBeNull();
   });
-  it('Done with no Begin is recorded as afterwards; Begin then Done as from the app', () => {
+  it('Done with no delve is recorded as afterwards; a delve to its enough counts as from the app (D-117)', () => {
     const p = player().do({ do: 'open' }).do({ do: 'done', job: 'gym' });
     expect(p.facts.find(f => f.type === 'jobBegun')).toMatchObject({ job: 'gym', from: 'record' });
-    const q = player().do({ do: 'open' }).do({ do: 'begin', job: 'gym' }).do({ do: 'done', job: 'gym' });
+    const q = player().do({ do: 'open' }).do({ do: 'startRun', job: 'gym', minutes: 30, count: 2 }).wait(70);
     expect(q.facts.filter(f => f.type === 'jobBegun')).toEqual([expect.objectContaining({ job: 'gym', from: 'app' })]);
+    expect(q.view().done.has('gym')).toBe(true);
   });
   it('lowering capacity can complete the day, and day complete locks in', () => {
-    const p = player().do({ do: 'open' }).do({ do: 'done', job: 'gym' }).do({ do: 'done', job: 'tank' });
+    const p = player().do({ do: 'open' }).did('gym').did('tank');
     expect(p.view().complete).toBe(false);
     p.do({ do: 'capacity', capacity: 'low' });
     expect(p.view().complete).toBe(true);
@@ -119,14 +123,14 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     expect(p.view().done.has(id)).toBe(true);
     expect(p.view().runEnd).toMatchObject({ ask: false });
   });
-  it('Step away keeps the minutes; Today offers Carry on; Finish here counts every minute', () => {
+  it('Step away keeps the minutes; Today offers Carry on; Finish here counts every minute, and the session (D-121)', () => {
     const p = player().do({ do: 'open' }).do({ do: 'startRun', job: 'course', minutes: 25, count: 2 }).wait(12).do({ do: 'stepAway' }).wait(120);
     expect(p.view().next).toEqual({ job: 'course', mode: 'carry' });
     expect(p.view().run).toMatchObject({ phase: 'held', leftMs: 13 * 60_000 });
     p.do({ do: 'resume' }).wait(3).do({ do: 'finishHere' });
-    expect(p.view().runEnd).toMatchObject({ minutes: 15, how: 'finishedHere', enough: false });
+    expect(p.view().runEnd).toMatchObject({ minutes: 15, how: 'finishedHere', enough: true });
     expect(p.view().walked).toBe(15);
-    expect(p.view().done.has('course')).toBe(false);
+    expect(p.view().done.has('course')).toBe(true);
   });
   it('going into another app pauses the delve where Dan left; the time away does not count (D-094)', () => {
     const p = player().do({ do: 'open' }).do({ do: 'startRun', job: 'course', minutes: 25, count: 2 }).wait(10);
@@ -182,7 +186,7 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     expect(p.facts.find(f => f.type === 'stepsGained')!.day).toBe('2026-09-24');
   });
   it('Keep going after day complete still arrives at the next place (no dead ends for effort)', () => {
-    const p = player().do({ do: 'open' }).do({ do: 'capacity', capacity: 'low' }).do({ do: 'done', job: 'gym' }).do({ do: 'done', job: 'tank' });
+    const p = player().do({ do: 'open' }).do({ do: 'capacity', capacity: 'low' }).did('gym').did('tank');
     const first = p.view().arrival!; p.do({ do: 'seen', what: 'arrival', ref: first.seq });
     p.do({ do: 'startRun', job: 'spanish', minutes: 60, count: 3 }).wait(200);
     expect(p.view().walked).toBe(300);

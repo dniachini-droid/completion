@@ -7,8 +7,8 @@ import { panelOf } from '../../src/ui/panel';
 const M = 60_000, T0 = Date.UTC(2026, 8, 24, 9, 0);
 const clock = (ms: number) => new Date(ms).toISOString().slice(11, 16);
 const o = { place: 'The Salt Gallery', past: false, real: (ms: number) => ms, clock };
-const view = (plan: RunPlan, marks: RunMark[], now: number, enoughK: number | null = null): RunView =>
-  ({ ...runAt(plan, marks, now), seq: 7, job: { name: 'Writing' }, minutes: plan.minutes, count: plan.count, enoughK, startedAt: plan.startedAt }) as unknown as RunView;
+const view = (plan: RunPlan, marks: RunMark[], now: number): RunView =>
+  ({ ...runAt(plan, marks, now), seq: 7, job: { name: 'Writing' }, minutes: plan.minutes, count: plan.count, startedAt: plan.startedAt }) as unknown as RunView;
 const at = (plan: RunPlan, now: number, marks: RunMark[] = []) => panelOf(view(plan, marks, now), marks, now, o);
 
 describe('the delve’s panel', () => {
