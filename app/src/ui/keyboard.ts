@@ -30,12 +30,17 @@ function fit() {
 
 /* Nor does anything on a screen slide sideways (Dan, review 2): a box that clips its sides can still be scrolled by the
    browser itself, to bring a caret or a button that overhangs the edge into view, and the whole screen then sat shifted
-   with its words cut off (seen on a delve's end, D-120). Any such sideways scroll is put straight back; the map, which
-   is dragged around on purpose, is left alone. */
+   with its words cut off (seen on a delve's end, D-120). Any such sideways scroll of a clipped box is put back; the map,
+   which is dragged around on purpose, and text boxes are left alone. */
+let slid = new Set<HTMLElement>(), queued = false;
 function unslide(e: Event) {
   const el = e.target;
-  if (!(el instanceof HTMLElement) || !el.scrollLeft || el.dataset.pan === 'map') return;
-  el.scrollLeft = 0;
+  /* only the screen's own boxes that clip their sides: never a text box (its line scrolls as Dan types), never the map */
+  if (!(el instanceof HTMLElement) || !el.scrollLeft || el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) return;
+  if (getComputedStyle(el).overflowX !== 'hidden') return;
+  slid.add(el);
+  /* put back once, on the next frame, not from inside the scroll itself */
+  if (!queued) { queued = true; requestAnimationFrame(() => { queued = false; for (const x of slid) x.scrollLeft = 0; slid = new Set(); }); }
 }
 
 export function watchKeyboard() {
