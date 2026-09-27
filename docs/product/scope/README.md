@@ -1,6 +1,6 @@
 # Stage 4: the scope pages, and what Dan chooses
 
-> The productivity track's Stage 4 (`product/PRODUCTIVITY_PLAN.md`, D-107). One page per larger idea, each with options from smallest to fullest and Claude's recommendation. **Nothing here is decided until Dan chooses**; each choice then becomes a D-entry (from D-111), and the chosen items are ordered into Stage 5 onwards. Spoiler-free: mechanics only; any story side goes through the sealed process.
+> The productivity track's Stage 4 (`product/PRODUCTIVITY_PLAN.md`, D-107). One page per larger idea, each with options from smallest to fullest and Claude's recommendation. **Decided 2026-09-27: Dan chose Claude's recommendations for every item (D-111)**; the order is Stages 5–9 in `product/PRODUCTIVITY_PLAN.md`. Spoiler-free: mechanics only; any story side goes through the sealed process.
 
 ## The choices at a glance
 | Item | Page | Options (smallest → fullest) | Claude recommends | When |

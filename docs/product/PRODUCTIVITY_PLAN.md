@@ -88,7 +88,7 @@
 - [ ] **(13) Choose a lighter day.** On the first open of the day, an optional Low / Normal / High choice with the suggested one pre-selected. It is never required: ignoring it keeps the suggestion.
 - [ ] **(16) What slipped.** After an absence (the welcome back), one line names a missed appointment or a passed date, with the same Still needed? question. It never lists everything.
 
-## Stage 4: scoping, with Dan (one session, docs only)
+## Stage 4: scoping, with Dan (one session, docs only) ✓ done (D-111)
 For each item below, write a one-page scope in `docs/product/scope/`:
 - what it is and why;
 - what Dan sees, tap by tap;
@@ -112,5 +112,20 @@ Then ask Dan to choose, record each choice as a D-entry, and order stages 5 onwa
 - **"I'll read it later"** for story screens between jobs.
 - **Onboarding / an empty start**, only if anyone other than Dan will use the app.
 
-## Stage 5 onwards
-Built in the order Dan picks in Stage 4, one session each, and added here as Stage 5, 6, …
+- [x] **Scope pages written** (`product/scope/`, index `scope/README.md`), and **Dan chose Claude's recommendations** (D-111, 2026-09-27).
+
+## Stage 5 onwards (Dan's choices, D-111)
+One session each unless noted; a stage waits for the earlier stages it builds on.
+- **Stage 5: accessibility A and "I'll read it later" A** (`scope/accessibility.md`, `scope/read-it-later.md`). The parts on screens Stage 1 doesn't touch go first; the rest (the title read on each screen in `App.svelte`, "Not today" reachable on Today, the satchel's box, the 13 px labels on the Week, What repeats and Today) after Stage 1 is merged in.
+  - [ ] a label on Choose's new-job box, on What repeats' name box and on the satchel's paste box
+  - [ ] each new screen's title read out (focus moves to it)
+  - [ ] "Not today" reachable without a swipe (VoiceOver)
+  - [ ] no carved label under 14 px (Week day names and buttons, What repeats' days, Today's foot and nav, Records/Marks switch; Marks' 11 px caption)
+  - [ ] Increase Contrast honoured (the quiet ink colours lifted)
+  - [ ] "To today" visible at once on every return and arrival, with no wait
+- **Stage 6: capture and the nudge** (`scope/10-widget-share-siri.md` A, `scope/23-re-entry-nudge.md` B, off by default). After Stage 1.
+- **Stage 7: calendar import** (`scope/09-calendar-import.md` B). After Stage 3.
+- **Stage 8: the weekly look-ahead** (`scope/18-weekly-review.md` C, no reward). After Stage 3.
+- **Stage 9: projects** (`scope/17-expeditions.md`, B then its door). After Stages 2–3, once Dan names a real project; its name is chosen then.
+- **Later, if still wanted:** the month view as an "Ahead" list (`scope/20-month-view.md` B), two weeks after Stage 3 is in use.
+- **Not now** (look again as noted on each page): make it smaller (19), hour-by-hour today (21), body doubling beyond Focusmate on the laptop (22), search, onboarding.

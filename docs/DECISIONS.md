@@ -1129,3 +1129,26 @@
 - **Alternatives:** 90 as a second lap of the ring (hard to read at a glance); lengths under 25 not allowed as delves (the review asked for them, for starting when starting is hard).
 - **Consequences:** 5 new rule tests (the two bugs fail on the old code). `Job` gains `stopped` (set by the rules, never saved: no new fact type, no save version). Taste call for Dan: where the 90 sits.
 - **Reversible:** Yes.
+
+## D-111 — Stage 4 chosen: the scope pages' recommendations, and the stages after it (Dan)
+- **Date:** 2026-09-27
+- **Context:** the Stage 4 scope pages (`product/scope/`, index in `scope/README.md`) gave each larger idea options from smallest to fullest and a recommendation. Dan: "Go with your recommendations for Stage 4."
+- **Decision (each item as recommended):**
+  - **(9) Calendar import: B.** Apple Calendar through EventKit, read-only; events show in the Week and Plan my week gives busy days less work. After Stage 3.
+  - **(10) Capture: A.** Siri, Shortcuts and the Action button add to the satchel through an App Group inbox. The widget (C) only if Dan later finds he forgets to open the app.
+  - **(17) Projects: C, built as B first and its door second**, after Stages 2–3, and only once Dan names a real project beyond the Course. It needs its own name ("expedition" is taken).
+  - **(18) The weekly look-ahead: C**, in the Daybook, after Stage 3, **with no reward** for doing it (P16 kept).
+  - **(19) Make it smaller: not now.** Stage 2's first step first; look again after a few weeks of use.
+  - **(20) Month view: B**, an "Ahead" list, two weeks after Stage 3 is in use, and only if paging the Week isn't enough.
+  - **(21) Hour-by-hour today: not now.** "No time-blocking" stays; look again with calendar import.
+  - **(22) Body doubling: A**, nothing built; Focusmate on the laptop works with a delve on the locked phone.
+  - **(23) Re-entry nudge: B**, once a week at most after 3 quiet days, **off by default**. After Stage 1's reminders.
+  - **Accessibility: A** (a title read on each screen, "Not today" reachable, labels on three boxes, no carved label under 14 px, Increase Contrast honoured). B (text follows the phone's size) only if Dan uses larger text. No light mode.
+  - **Search: not now.** The "last done" line (C) can join Stage 2's job editor if "when did I last…" turns out to matter.
+  - **"I'll read it later": A**, "To today" visible at once on every return; look again at week 4 of real play.
+  - **Onboarding: A, not now**, unless someone else will use the app.
+- **Order (Stage 5 onwards, in `product/PRODUCTIVITY_PLAN.md`):** 5 accessibility A and read-it-later A · 6 capture (10 A) and the nudge (23 B) · 7 calendar import (9 B) · 8 the weekly look-ahead (18 C) · 9 projects (17), when Dan names one · then the month view (20 B), if still wanted. Stages 2 and 3 come first where these depend on them.
+- **Alternatives:** the fuller options on each page.
+- **Rationale:** smallest version that answers the review's finding, built on what exists; bigger versions wait for evidence from Dan's own use (rule 12).
+- **Consequences:** the questions each page leaves for Dan (projects' name and which projects; the nudge's hour) are asked when that stage is built, not before.
+- **Reversible:** Yes; each is its own stage.
