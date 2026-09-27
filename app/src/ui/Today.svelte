@@ -39,7 +39,7 @@
     if (!j.delve) { game.do({ do: 'begin', job: j.id }); return; }
     const r = presetRun(j);
     /* Starting needs no decision: a short delve job starts at once; a longer one opens set to its enough (D-038, D-047) */
-    if (r.count === 1 && r.minutes === 25) { game.do({ do: 'startRun', job: j.id, ...r }); go('delve'); }
+    if (r.count === 1 && r.minutes <= 25) { game.do({ do: 'startRun', job: j.id, ...r }); go('delve'); }
     else go('set', j.id);
   }
   function done(j: Job) {
@@ -52,6 +52,7 @@
   /* a tap on a job starts that job, never another: nothing on the list moves (Dan, D-100) */
   function start(id: string) { if (swiped) { swiped = null; return; } if (!v.done.has(id)) begin(job(id)); }
   function aside(id: string) { swiped = null; game.do({ do: 'setAside', job: id }); lastAside = id; }
+  function doneNow(id: string) { swiped = null; done(job(id)); }
   /* "Not today" said once, with a way to take it back while Today is still open (review 2, D-088) */
   let lastAside = $state<string | null>(null);
   function putBack() { if (lastAside) game.do({ do: 'putBack', job: lastAside }); lastAside = null; }
@@ -60,7 +61,8 @@
 
   /* a row slides left to show "Not today" (the phone's own gesture for taking something off a list) */
   let swiped = $state<string | null>(null), drag = $state<{ id: string; x0: number; y0: number; dx: number } | null>(null);
-  const OPEN = 112;
+  /* two actions under a swiped row: Done (already done, no timer, D-112) and Not today */
+  const OPEN = 224;
   function down(e: PointerEvent, id: string) { if (!v.done.has(id) && !v.run) drag = { id, x0: e.clientX, y0: e.clientY, dx: swiped === id ? -OPEN : 0 }; }
   function move(e: PointerEvent) {
     if (!drag) return;
@@ -234,7 +236,15 @@
       {#each others as id (id)}
         {@const j = job(id)}
         <div class="swipe">
-          {#if !v.done.has(id) && offset(id) < 0}<button class="aside" tabindex={swiped === id ? 0 : -1} onclick={() => aside(id)}>{t('row.notToday')}</button>{/if}
+          <!-- VoiceOver can't swipe: the same two actions, heard but not seen (accessibility A, D-111) -->
+          {#if !v.done.has(id) && offset(id) >= 0}
+            <button class="sr" onclick={() => doneNow(id)}>{t('row.srDone', { job: job(id).name })}</button>
+            <button class="sr" onclick={() => aside(id)}>{t('row.srAside', { job: job(id).name })}</button>
+          {/if}
+          {#if !v.done.has(id) && offset(id) < 0}
+            <button class="aside already" tabindex={swiped === id ? 0 : -1} onclick={() => doneNow(id)}>{t('row.already')}</button>
+            <button class="aside" tabindex={swiped === id ? 0 : -1} onclick={() => aside(id)}>{t('row.notToday')}</button>
+          {/if}
           <button class="row" class:done={v.done.has(id)} style:transform={`translateX(${offset(id)}px)`} class:still={drag?.id === id}
             onpointerdown={(e) => down(e, id)} onclick={() => tapRow(id)} disabled={v.done.has(id) || !!v.run}>
             <span class="pip" class:done={v.done.has(id)}></span>
@@ -298,6 +308,8 @@
   .swipe .row.still { transition: none; }
   .aside { position: absolute; right: 18px; z-index: 0; top: 1px; bottom: 0; width: 112px; font-family: var(--life); font-style: italic; font-size: 16px;
     color: var(--ink); background: rgba(var(--violet-rgb), .28); }
+  .sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+  .aside.already { right: 130px; background: rgba(var(--violet-rgb), .16); }
   .row.else .t { color: var(--ink-2); font-style: italic; }
   .plus { justify-self: center; color: var(--violet-hi); font-size: 20px; line-height: 1; }
   button.row:disabled { cursor: default; }
@@ -313,14 +325,14 @@
   .capture .btn-quiet:disabled { opacity: .5; }
   .foot .add span { color: var(--violet-hi); }
   .foot { display: flex; justify-content: space-around; margin: 6px -10px 0; }
-  .foot span { font-size: 13px; letter-spacing: .12em; color: var(--ink-2); }
+  .foot span { font-size: 14px; letter-spacing: .1em; color: var(--ink-2); }
   .proto span { font-size: 14px; letter-spacing: .16em; color: var(--ink-3); }
   /* the day on the left; the map, records and the prototype's own link together on the right */
   .bar { display: flex; justify-content: space-between; }
   /* on a narrow bar the rehearsal badge takes a line of its own, never pushing the screen wider (Dan, review 2) */
   .bar { gap: 8px; align-items: flex-start; }
   .navs { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0 4px; align-items: center; margin-right: -10px; min-width: 0; }
-  .navs span { font-size: 13px; letter-spacing: .14em; color: var(--ink-2); }
+  .navs span { font-size: 14px; letter-spacing: .12em; color: var(--ink-2); }
   .proto .badge { color: var(--gold); }
   @media (max-height: 800px) {
     .ahead { margin-top: 8px; } .ahead p { margin-top: 4px; } .next .soft { margin-bottom: 14px; }

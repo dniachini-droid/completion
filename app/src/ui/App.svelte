@@ -3,7 +3,7 @@
      a delve that ended while away shows its end; a run in progress shows the ring; an unseen arrival shows itself. */
   import { game } from './game.svelte';
   import { moment } from './moment.svelte';
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import type { Back, Go, Screen } from './nav';
   import { back } from './back.svelte';
   import { platform } from '../platform';
@@ -43,6 +43,19 @@
   let arg = $state<string | number | undefined>(undefined);
   /* a new day reached by coming back to the app opens as a cold start would: what waits is shown first (D-080) */
   let lastWoke = game.woke;
+  /* VoiceOver: a new screen's title is read first; focus moves to it, unless something on the screen already took it
+     (accessibility A, D-111) */
+  $effect(() => {
+    void screen; void arg;
+    void tick().then(() => {
+      const a = document.activeElement as HTMLElement | null;
+      if (a && a !== document.body && a.isConnected && a.tagName !== 'BUTTON') return;
+      const h = document.querySelector<HTMLElement>('.ui h1, .ui h2, h1, h2');
+      if (!h) return;
+      h.setAttribute('tabindex', '-1');
+      h.focus({ preventScroll: true });
+    });
+  });
   $effect(() => { if (game.woke !== lastWoke) { lastWoke = game.woke; screen = first(); arg = undefined; } });
 
   /* Back (review 2, D-088): the screens Dan looks through keep a trail, so the arrow and the phone's own back return to
@@ -123,7 +136,7 @@
     {:else if screen === 'welcome'}<Welcome {go} />
     {:else if screen === 'daybook'}<Daybook {go} week={typeof arg === 'string' ? arg : undefined} />
     {:else if screen === 'week'}<Week {go} week={typeof arg === 'string' ? arg : undefined} />
-    {:else if screen === 'rhythms'}<Rhythms {go} />
+    {:else if screen === 'rhythms'}{#key arg}<Rhythms {go} job={typeof arg === 'string' ? arg : undefined} />{/key}
     {:else if screen === 'satchel'}<Satchel {go} />
     {:else if screen === 'choose'}<Choose {go} />
     {:else if screen === 'settings'}<Settings {go} />{/if}

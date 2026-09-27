@@ -158,6 +158,8 @@
                 <div class="off">
                   {#if isAside(j, d.day)}<button class="text-link" onclick={() => moveTo(j, '', v.day)}><span>{t('week.putBack')}</span></button>{/if}
                   <button class="text-link" onclick={() => off(j)}><span>{t('week.off')}</span></button>
+                  <!-- the job itself: its name, length, first step… (D-112) -->
+                  <button class="text-link" onclick={() => go('rhythms', j.job)}><span>{t('job.change')}</span></button>
                 </div>
               </div>
             {/if}
@@ -182,7 +184,7 @@
   .none { margin: 8px 0 12px; }
   .none .soft { margin: 6px 0 16px; text-align: left; }
   .day { margin-top: 12px; }
-  .dname { font-family: var(--carve, inherit); font-size: 13px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); display: flex; gap: 10px; align-items: baseline;
+  .dname { font-family: var(--carve, inherit); font-size: 14px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); display: flex; gap: 10px; align-items: baseline;
     width: 100%; min-height: 36px; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; }
   .dname small { margin-left: auto; font-family: var(--life); font-style: italic; text-transform: none; letter-spacing: 0; font-size: 15px; color: var(--ink-3); }
   .chev { display: inline-block; width: 10px; font-size: 16px; line-height: 1; color: var(--ink-3); transform: rotate(90deg); transition: transform .2s ease; }
@@ -201,7 +203,7 @@
   .sheet { border: 1px solid var(--edge-2); background: rgba(10,9,24,.7); padding: 4px 14px 10px; margin: 6px 0 10px; }
   .sheet .label-line { margin-top: 8px; }
   .sheet .seg { margin-top: 6px; }
-  .days button { padding-left: 0; padding-right: 0; font-size: 13px; }
+  .days button { padding-left: 0; padding-right: 0; font-size: 14px; }
   .when { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 12px; }
   .clock-btn { position: relative; flex: 1; min-height: 44px; display: grid; place-items: center; border: 1px solid var(--edge-2); cursor: pointer; }
   .clock-btn span { font-size: 14px; letter-spacing: .14em; color: var(--ink-2); }

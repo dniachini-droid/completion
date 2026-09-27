@@ -45,6 +45,14 @@ export function live(c: Content, facts: Fact[], before?: string): Content {
       /* its job doesn't stay behind as a one-off (D-110) */
       const j = r ? jobs.findIndex(x => x.id === r.job) : -1;
       if (j >= 0 && !rhythms.some(x => x.job === r!.job)) jobs[j] = { ...jobs[j], stopped: true };
+    } else if (f.type === 'jobSaved') {
+      if (!changed) { jobs = jobs.slice(); rhythms = rhythms.slice(); changed = true; }
+      const j = jobs.findIndex(x => x.id === f.job.id);
+      if (j >= 0) jobs[j] = f.job; else jobs.push(f.job);
+    } else if (f.type === 'jobRemoved') {
+      if (!changed) { jobs = jobs.slice(); rhythms = rhythms.slice(); changed = true; }
+      jobs = jobs.filter(x => x.id !== f.id);
+      rhythms = rhythms.filter(x => x.job !== f.id);
     } else if (f.type === 'itemAdded') {
       if (!changed) { jobs = jobs.slice(); rhythms = rhythms.slice(); changed = true; }
       jobs.push({ id: f.id, name: f.name, delve: false, length: 25, doneBy: 'dan', item: true });
@@ -63,7 +71,7 @@ export interface Item { id: string; name: string; added: string; done: boolean; 
 /** Dan's lines, oldest first. Ticked ones stay ticked that day and leave the list the day after (D-110); dropped ones
     go; untouched for three weeks, someday (TOOLS §2). */
 export function items(facts: Fact[], day: string): Item[] {
-  const out = new Map<string, Item>(), touched = new Map<string, string>(), ticked = new Map<string, string>();
+  const out = new Map<string, Item>(), touched = new Map<string, string>(), ticked = new Map<string, string>(), gone = new Map<string, Item>();
   for (const f of facts) {
     if (f.type === 'itemAdded') { out.set(f.id, { id: f.id, name: f.name, added: f.day, done: false, someday: false }); touched.set(f.id, f.day); }
     else if (f.type === 'itemTicked' || (f.type === 'jobDone' && out.has(f.job))) {
@@ -71,6 +79,12 @@ export function items(facts: Fact[], day: string): Item[] {
       if (it && !it.done) { it.done = true; ticked.set(id, f.day); }
     }
     else if (f.type === 'itemDropped') out.delete(f.id);
+    /* the job editor (D-112): a line renamed, removed, or put back by Undo */
+    else if (f.type === 'jobSaved' && f.job.item) {
+      const it = out.get(f.job.id) ?? gone.get(f.job.id);
+      if (it) { it.name = f.job.name; out.set(it.id, it); gone.delete(it.id); }
+    }
+    else if (f.type === 'jobRemoved' && out.has(f.id)) { gone.set(f.id, out.get(f.id)!); out.delete(f.id); }
     else if (f.type === 'planAdded' && out.has(f.entry.job)) touched.set(f.entry.job, f.day);
   }
   for (const [id, d] of ticked) if (d < day) out.delete(id);

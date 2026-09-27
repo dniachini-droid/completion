@@ -47,7 +47,12 @@
     return () => clearTimeout(id);
   });
 
+  /* "Where did you stop?" after Finish here (D-112): optional; kept as the job's note, shown at its next Begin and in
+     "I can't start" */
+  let stopAt = $state('');
+  function keepNote() { if (end && stopAt.trim()) game.do({ do: 'noteJob', job: end.job.id, note: stopAt }); }
   function leave(to: 'today' | 'arrival') {
+    keepNote();
     if (end) game.do({ do: 'seen', what: 'step', ref: end.seq });
     go(to);
   }
@@ -139,6 +144,10 @@
               {:else if end.how === 'finishedHere' && end.minutes > 0}{t('delve.finished', { min: minutesWords(end.minutes), job: end.job.name })}
               {:else}{end.count > 1 ? t('delve.doneRun') : t('delve.doneOne')}{/if}
             </h2>
+            {#if end.how === 'finishedHere' && !end.enough && doneSeq === null}
+              <input class="line stop" bind:value={stopAt} maxlength="160" placeholder={t('delve.whereStopped')} aria-label={t('delve.whereStopped')}
+                enterkeyhint="done" onkeydown={e => { if (e.key === 'Enter') (e.currentTarget as HTMLInputElement).blur(); }} />
+            {/if}
             {#if doneSeq !== null}<Return {doneSeq} extraFinds={v.runFinds} {go} />
             {:else}<p class="say">{end.enough ? t('delve.enoughSay') : v.passage}</p><Return doneSeq={null} extraFinds={v.runFinds} />{/if}
           </div>
@@ -167,6 +176,8 @@
   .back { flex-direction: column; gap: 3px; padding-top: 10px; padding-bottom: 10px; line-height: 1.1; }
   .back .tail { font-family: var(--life); font-style: italic; font-weight: 500; font-size: 17px; letter-spacing: .01em; text-transform: none; }
   .cant { display: flex; justify-content: center; margin-top: 8px; }
+  input.stop { width: 100%; margin: 10px 0 4px; padding: 10px 12px; font: inherit; font-size: 16px; color: #fff; background: rgba(255,255,255,.06);
+    border: 1px solid var(--edge-2); border-radius: 0; }
   .pair { max-width: 340px; margin: 0 auto; }
   .breath-line i { transition: width .25s linear; }
   button.home { color: var(--ink-2); }

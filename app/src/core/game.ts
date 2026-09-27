@@ -521,7 +521,8 @@ export type Command =
   | { do: 'finishHere' }
   /** Dan was in another app from `from` to `to` (game-clock ms): the delve pauses where he left (D-094). */
   | { do: 'away'; from: number; to: number }
-  | { do: 'done'; job: string }
+  /** Done with no timer (a Begin, or none: recorded afterwards); `yesterday`: it happened yesterday (D-112) */
+  | { do: 'done'; job: string; yesterday?: boolean }
   | { do: 'cantStart'; job: string }
   | { do: 'seen'; what: 'step' | 'arrival' | 'morning' | 'welcome'; ref: number }
   | { do: 'guess'; mark: string; guess: string }
@@ -530,6 +531,11 @@ export type Command =
   /* slice 4 */
   | { do: 'saveRhythm'; rhythm: Rhythm; job: Job }
   | { do: 'stopRhythm'; id: string }
+  /* the job editor (D-112): any job, with or without a rhythm; removing it (Undo saves it again); its first step, its note */
+  | { do: 'saveJob'; job: Job; rhythm: Rhythm | null }
+  | { do: 'removeJob'; id: string }
+  | { do: 'firstStep'; job: string; step: string }
+  | { do: 'noteJob'; job: string; note: string }
   | { do: 'addItems'; lines: string[] }
   | { do: 'tick'; id: string }
   | { do: 'dropItem'; id: string }
@@ -618,16 +624,42 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       if (r) finishRun(w, c, r, nowMs, now);
       break;
     }
-    case 'done':
-      if (v.done.has(cmd.job)) break;
+    case 'done': {
+      /* "Did it yesterday" (D-112, reversing D-089 with Dan's OK): recorded afterwards, on yesterday */
+      const on = cmd.yesterday ? W.addDays(day, -1) : day;
+      if (!c.jobs.some(j => j.id === cmd.job) || doneOn(w.all, on).has(cmd.job)) break;
       /* Done with no Begin: recorded afterwards (the test's sharpest line, MVP.md) */
-      if (!begunOn(w.all, day, cmd.job)) w.put({ type: 'jobBegun', job: cmd.job, from: 'record' });
-      markDoneIn(w, c, cmd.job, now, day);
+      if (cmd.yesterday || !begunOn(w.all, day, cmd.job)) w.put({ type: 'jobBegun', job: cmd.job, from: 'record' }, now, on);
+      markDoneIn(w, c, cmd.job, now, on);
       break;
+    }
     case 'cantStart': w.put({ type: 'cantStartUsed', job: cmd.job }); break;
     /* Dan's own rhythms and lines: editing earns nothing and loses nothing (P16, D-038) */
     case 'saveRhythm': if (cmd.job.name.trim()) w.put({ type: 'rhythmSaved', rhythm: { ...cmd.rhythm, job: cmd.job.id }, job: { ...cmd.job, name: cmd.job.name.trim() } }); break;
     case 'stopRhythm': if (c.rhythms.some(r => r.id === cmd.id)) w.put({ type: 'rhythmStopped', id: cmd.id }); break;
+    case 'saveJob': {
+      const name = cmd.job.name.trim().slice(0, 120);
+      if (!name) break;
+      const job: Job = { ...cmd.job, name, length: Math.min(240, Math.max(5, Math.round(cmd.job.length))) };
+      delete job.stopped;
+      for (const k of ['firstStep', 'note'] as const) { const x = job[k]?.trim(); if (x) job[k] = x.slice(0, 160); else delete job[k]; }
+      if (cmd.rhythm) { w.put({ type: 'rhythmSaved', rhythm: { ...cmd.rhythm, job: job.id }, job }); break; }
+      /* "doesn't repeat": its rhythm ends (a one-off from now, until done), then the job as edited */
+      for (const r of c.rhythms.filter(x => x.job === job.id)) w.put({ type: 'rhythmStopped', id: r.id });
+      w.put({ type: 'jobSaved', job });
+      break;
+    }
+    case 'removeJob': if (c.jobs.some(j => j.id === cmd.id)) w.put({ type: 'jobRemoved', id: cmd.id }); break;
+    case 'firstStep': case 'noteJob': {
+      const j = c.jobs.find(x => x.id === cmd.job);
+      const text = (cmd.do === 'firstStep' ? cmd.step : cmd.note).trim().slice(0, 160), key = cmd.do === 'firstStep' ? 'firstStep' : 'note';
+      if (!j || (j[key] ?? '') === text) break;
+      const job: Job = { ...j };
+      delete job.stopped;
+      if (text) job[key] = text; else delete job[key];
+      w.put({ type: 'jobSaved', job });
+      break;
+    }
     case 'addItems': {
       let k = ofType(w.all, 'itemAdded').length;
       for (const line of cmd.lines.map(x => x.replace(/^[-*•\s]+/, '').trim()).filter(Boolean)) w.put({ type: 'itemAdded', id: `it-${++k}`, name: line.slice(0, 120) });

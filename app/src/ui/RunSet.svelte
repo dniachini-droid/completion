@@ -155,6 +155,7 @@
       <section class="job rise d1">
         <div class="label-line lit">{t('set.label')}</div>
         <h1 class="say-lg">{job.name}</h1>
+        {#if job.note}<p class="soft last">{t('set.stopped', { note: job.note })}</p>{/if}
       </section>
     </header>
 
@@ -242,4 +243,6 @@
 <style>
   .rs { display: contents; }
   button.home { color: var(--ink-2); }
+  /* where Dan stopped last time (D-112): one quiet line, never more */
+  .last { margin-top: 2px; font-style: italic; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; }
 </style>

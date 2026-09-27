@@ -386,6 +386,14 @@ await page.locator('textarea.lines').fill('Hoover the hall\nClear the desk\nWash
 await tap('Put it in'); await shot('satchel-lines', 1000);
 await tap('Put on today'); await shot('satchel-today', 800);
 await page.locator('.tickbox').nth(1).click(); await shot('satchel-ticked', 800);
+/* a line's editor (D-112): a tap on the line opens it; renamed, it is renamed in the satchel; let go, Undo brings it back */
+await page.locator('.item .t', { hasText: 'Wash the bedding' }).click(); await shot('job-edit', 800);
+await page.locator('.editor input.line').first().fill('Wash and change the bedding'); await tap('Save'); await page.clock.runFor(800);
+if (!(await page.locator('.item .t', { hasText: 'Wash and change the bedding' }).count())) errors.push('EDIT the line was not renamed in the satchel');
+await page.locator('.item .t', { hasText: 'Take the bottles out' }).click(); await page.clock.runFor(800);
+await tap('Let it go'); await shot('job-removed', 600);
+await tap('Undo'); await page.clock.runFor(800);
+if (!(await page.locator('.item .t', { hasText: 'Take the bottles out' }).count())) errors.push('EDIT Undo did not bring the line back');
 await home(); await page.clock.runFor(1500); await shot('today-with-line', 2000);
 await tap('Week'); await shot('week', 1500);
 /* a day folds away with a tap on its name, and opens again (Dan, review 2) */
@@ -460,6 +468,11 @@ await tap('Daybook'); await shot('daybook', 1500); await home(); await page.cloc
   await tap('Something else…'); await page.locator('.body button.row').first().click(); await page.clock.runFor(800);
   expect('choose → delves', await backSays(), 'back');
   await home();
+  /* "Already done" (D-112): from Choose a delve, yesterday, with no timer; it lands on the job's return */
+  await tap('Something else…'); await tap('Already done'); await tap('Yesterday'); await shot('choose-already', 600);
+  await page.locator('.body button.row:not([disabled])').first().click(); await page.clock.runFor(1500); await shot('already-yesterday', 1000);
+  if (await page.locator('.body .record').count()) errors.push('ALREADY a job tapped as done yesterday stayed on Choose a delve');
+  await home(); await page.clock.runFor(1500);
   if (!(await page.locator('nav.foot').count())) errors.push('BACK never reached Today');
 }
 /* away for four days: where you were, and a lighter day to come back to */

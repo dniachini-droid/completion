@@ -24,6 +24,8 @@ export interface Job {
   firstStep?: string;
   /** A line from the satchel or the week (TOOLS §2): offered on Today only when planned for the day. */
   item?: boolean;
+  /** One line of Dan's own: where he stopped, or anything to keep with the job (D-112). */
+  note?: string;
   /** Its rhythm was stopped (set by `live`): it leaves Today, the plan and Choose a delve until it repeats again. */
   stopped?: boolean;
 }
@@ -99,6 +101,9 @@ export type FactBody =
   /* the week and the gaps (slice 4): Dan's own rhythms and lines, the plan, bedtime, the week close, absence */
   | { type: 'rhythmSaved'; rhythm: Rhythm; job: Job }
   | { type: 'rhythmStopped'; id: string }
+  /** A job edited or added by itself (the job editor, D-112): its whole new shape. Removed: gone from every list. */
+  | { type: 'jobSaved'; job: Job }
+  | { type: 'jobRemoved'; id: string }
   | { type: 'itemAdded'; id: string; name: string }
   | { type: 'itemTicked'; id: string }
   | { type: 'itemDropped'; id: string }

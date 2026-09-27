@@ -1173,3 +1173,16 @@
 - **Rationale:** smallest version that answers the review's finding, built on what exists; bigger versions wait for evidence from Dan's own use (rule 12).
 - **Consequences:** the questions each page leaves for Dan (projects' name and which projects; the nudge's hour) are asked when that stage is built, not before.
 - **Reversible:** Yes; each is its own stage.
+
+## D-112 — Stage 2, the rest: one editor for every job, "Already done" today or yesterday, a note on each job (Claude's routine calls, D-006; within D-107)
+- **Date:** 2026-09-27
+- **Context:** the rest of Stage 2 (`product/PRODUCTIVITY_PLAN.md`), built once Stage 1 was merged in, since it shares its screens.
+- **Decision:**
+  1. **One job editor** (What repeats' editor, grown): name; how often, now with **Once** (doesn't repeat); each time; timer or not; a time and "Remind me" for a repeating job; **I tend to put this off**; **first small step**; **a note**; **Remove it** (a satchel line: Let it go), with an **Undo** line and no confirmation. It opens from What repeats (which now also lists the one-offs as "Other jobs"), from a tap on a satchel line, and from "Change the job" in a Week entry's sheet. A satchel line stays a line: it has no "How often".
+  2. **Facts:** `jobSaved` (the whole job as edited) and `jobRemoved`, folded in `live()`; a line's rename and removal follow in the satchel. Undo saves the job (and its rhythm) again, so it needs no fact of its own. Choosing Once for a repeating job ends its rhythm and keeps the job as a one-off until done. Editing earns nothing and loses nothing (P16).
+  3. **Already done** (reverses D-089 with Dan's OK, D-107): swiping a row on Today shows **Done** beside Not today; **Choose a delve → Already done** takes Today or **Yesterday**, then a tap on the job. Recorded as `jobBegun from: 'record'` (on yesterday's day for yesterday) + `jobDone`, earning what a job without a timer earns. A tap on a timed row still starts it (D-104).
+  4. **A note on each job:** after Finish here, "Where did you stop? (for next time)" (optional) keeps a note; it shows as "Last time: …" when the job's delve is next set up, and as the first step in "I can't start". A job with neither note nor first step makes "I can't start" ask "What's the first thing you'd touch?" and keeps the answer.
+  5. A short delve job (25 min or less) starts at once from Today, as a 25-minute one did.
+- **Alternatives:** a separate editor screen per kind of job; "Did it yesterday" on the delve's set-up (too tight on a small phone).
+- **Consequences:** two new fact types with their samples (D-106); 5 new rule tests; the screen walk now edits, lets go of and restores a satchel line, and records a job done yesterday.
+- **Reversible:** Yes.

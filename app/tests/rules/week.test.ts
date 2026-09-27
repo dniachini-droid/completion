@@ -615,3 +615,65 @@ describe('Stage 2 fixes and lengths (D-110)', () => {
     expect(presetRun({ id: 'x', name: 'x', delve: true, length: 180, enoughAt: 50, doneBy: 'enough' })).toEqual({ minutes: 25, count: 2 });
   });
 });
+
+describe('Edit anything (Stage 2, D-112)', () => {
+  const job = (p: ReturnType<typeof player>, id: string) => p.view().content.jobs.find(j => j.id === id);
+  it('any job can be renamed, resized, marked avoided and given a first step and a note', () => {
+    const p = player().do({ do: 'open' });
+    const gym = job(p, 'gym')!, r = p.view().content.rhythms.find(x => x.job === 'gym')!;
+    p.do({ do: 'saveJob', job: { ...gym, name: 'Gym', length: 45, avoided: true, firstStep: 'Pack the bag', note: '  ' }, rhythm: r });
+    expect(job(p, 'gym')).toMatchObject({ name: 'Gym', length: 45, avoided: true, firstStep: 'Pack the bag' });
+    expect(job(p, 'gym')!.note).toBeUndefined();
+    p.do({ do: 'noteJob', job: 'gym', note: 'legs next' }).do({ do: 'firstStep', job: 'gym', step: 'Shoes on' });
+    expect(job(p, 'gym')).toMatchObject({ note: 'legs next', firstStep: 'Shoes on' });
+    expect(p.view().content.rhythms.some(x => x.job === 'gym')).toBe(true);
+  });
+  it('"doesn’t repeat" ends the rhythm and keeps the job as a one-off', () => {
+    const p = player().do({ do: 'open' });
+    const tank = job(p, 'tank')!;
+    p.do({ do: 'saveJob', job: tank, rhythm: null });
+    expect(p.view().content.rhythms.some(x => x.job === 'tank')).toBe(false);
+    expect(job(p, 'tank')!.stopped).toBeFalsy();
+    p.do({ do: 'done', job: 'tank' });
+    expect(p.view().done.has('tank')).toBe(true);
+  });
+  it('a removed job leaves Today, the plan and the lists; Undo (saving it again) brings it back as it was', () => {
+    const p = player().do({ do: 'open' });
+    const post = job(p, 'post')!;
+    p.do({ do: 'removeJob', id: 'post' });
+    expect(job(p, 'post')).toBeUndefined();
+    expect(p.view().slate).not.toContain('post');
+    expect(W.weekOf(p.view().content, p.facts, MON, MON).days.flatMap(d => d.jobs).some(j => j.job === 'post')).toBe(false);
+    p.do({ do: 'saveJob', job: post, rhythm: null });
+    expect(job(p, 'post')).toEqual(post);
+    const gym = job(p, 'gym')!, r = p.view().content.rhythms.find(x => x.job === 'gym')!;
+    p.do({ do: 'removeJob', id: 'gym' });
+    expect(p.view().content.rhythms.some(x => x.job === 'gym')).toBe(false);
+    p.do({ do: 'saveJob', job: gym, rhythm: r });
+    expect(p.view().content.rhythms.find(x => x.job === 'gym')).toEqual(r);
+  });
+  it('a satchel line can be renamed, removed and put back', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['post the parcle'] });
+    const [it] = W.items(p.facts, MON), line = job(p, it.id)!;
+    p.do({ do: 'saveJob', job: { ...line, name: 'Post the parcel' }, rhythm: null });
+    expect(W.items(p.facts, MON).map(i => i.name)).toEqual(['Post the parcel']);
+    expect(job(p, it.id)!.item).toBe(true);
+    p.do({ do: 'removeJob', id: it.id });
+    expect(W.items(p.facts, MON)).toEqual([]);
+    p.do({ do: 'saveJob', job: line, rhythm: null });
+    expect(W.items(p.facts, MON).map(i => i.id)).toEqual([it.id]);
+  });
+  it('"Did it yesterday": recorded afterwards on yesterday, earns what a job without a timer earns, and only once', () => {
+    const p = player().do({ do: 'open' }).next().do({ do: 'open' });
+    const walked = p.view().walked, n = p.facts.length;
+    p.do({ do: 'done', job: 'meal', yesterday: true });
+    const added = p.facts.slice(n);
+    expect(added.find(f => f.type === 'jobBegun')).toMatchObject({ from: 'record', day: MON });
+    expect(added.find(f => f.type === 'jobDone')).toMatchObject({ job: 'meal', day: MON, minutes: 60 });
+    expect(p.view().walked).toBeGreaterThan(walked);
+    expect(p.view().done.has('meal')).toBe(false);
+    const m = p.facts.length;
+    p.do({ do: 'done', job: 'meal', yesterday: true });
+    expect(p.facts.length).toBe(m);
+  });
+});

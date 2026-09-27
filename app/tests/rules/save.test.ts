@@ -61,6 +61,8 @@ const ONE: { [T in FactBody['type']]: Extract<FactBody, { type: T }> } = {
   welcomed: { type: 'welcomed', since: '2026-09-20', question: null },
   reminderSet: { type: 'reminderSet', target: 'e:p20260928-3', lead: 15 },
   remindersSwitched: { type: 'remindersSwitched', on: false },
+  jobSaved: { type: 'jobSaved', job: { id: 'j-x', name: 'Renew the passport', delve: false, length: 30, doneBy: 'dan', avoided: true, firstStep: 'Find the old one', note: 'photo booth at the station' } },
+  jobRemoved: { type: 'jobRemoved', id: 'post' },
 };
 const every: Fact[] = Object.values(ONE).map((b, i) => ({ seq: i + 1, at: '2026-09-28T09:00:00+01:00', day: '2026-09-28', ...b }) as Fact);
 const save = (facts: Fact[], version = SAVE_VERSION): Save => ({ version, content: C.version, facts });

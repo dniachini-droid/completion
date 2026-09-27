@@ -13,7 +13,13 @@
   const job = $derived(game.job(jobId)!);
   const teaser = game.view.teaser ?? t('cant.fallback');
 
+  /* the first step: where Dan stopped last time, else the job's own first step; with neither, it asks once and keeps
+     the answer as the job's first step (D-112) */
+  const first = $derived(job.note ?? job.firstStep ?? null);
+  let answer = $state('');
+  function keep() { if (answer.trim()) game.do({ do: 'firstStep', job: jobId, step: answer }); }
   function ten() {
+    keep();
     platform.sound.unlock();
     game.do({ do: 'startRun', job: jobId, minutes: 10, count: 1 });
     go('delve');
@@ -33,11 +39,17 @@
     <p class="say-lg rise d1">{teaser}</p>
   </div>
   <section class="bottom col center">
-    <p class="soft rise d2">{t('cant.first')}</p>
-    <p class="say step rise d2">{job.firstStep ?? job.name}</p>
+    {#if first}
+      <p class="soft rise d2">{t('cant.first')}</p>
+      <p class="say step rise d2">{first}</p>
+    {:else}
+      <p class="soft rise d2">{t('cant.ask')}</p>
+      <input class="line ask rise d2" bind:value={answer} maxlength="160" aria-label={t('cant.ask')} enterkeyhint="done"
+        onkeydown={e => { if (e.key === 'Enter') (e.currentTarget as HTMLInputElement).blur(); }} />
+    {/if}
     <div class="rise d3">
       <button class="btn" onclick={ten}>{t('cant.ten')}</button>
-      <div class="later"><button class="text-link" onclick={() => go('today')}><span>{t('cant.notNow')}</span></button></div>
+      <div class="later"><button class="text-link" onclick={() => { keep(); go('today'); }}><span>{t('cant.notNow')}</span></button></div>
     </div>
   </section>
 </div>
@@ -46,6 +58,8 @@
   .tease { display: flex; flex-direction: column; justify-content: center; gap: 18px; }
   .tease .say-lg { font-size: 25px; line-height: 1.25; }
   .step { font-size: 20px; margin: 6px 0 24px; }
+  input.ask { width: 100%; margin: 8px 0 20px; padding: 10px 12px; font: inherit; font-size: 17px; color: #fff; background: rgba(255,255,255,.06);
+    border: 1px solid var(--edge-2); border-radius: 0; }
   .later { display: flex; justify-content: center; margin-top: 8px; }
   button.home { color: var(--ink-2); }
 </style>
