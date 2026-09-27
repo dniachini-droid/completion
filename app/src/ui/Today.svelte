@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Deleted from './Deleted.svelte';
   /* Today (the morning screen, UX_PRINCIPLES → "The morning screen carries"): where you are, the sealed thing ahead,
      the one next job (no Low / Normal / High, and no "Already done": Dan, D-089) with one button, today's other jobs as plain rows, "I can't start".
      A tap on a row starts that job, as its own button would (D-100: it used to swap the row with the next job, and the
@@ -59,25 +60,28 @@
   /* after the day's work: a timed job still ahead today is named, so "done" never hides it (review 2) */
   const still = $derived(v.slate.filter(id => !v.done.has(id) && v.times[id]).map(id => `${job(id).name} ${t('row.at', { time: v.times[id] })}`));
 
-  /* a row slides left to show "Not today" (the phone's own gesture for taking something off a list) */
+  /* a row slides left to show "Not today" and "Delete" (the phone's own gesture for taking something off a list); a
+     done row shows only "Delete" (Dan, D-125) */
   let swiped = $state<string | null>(null), drag = $state<{ id: string; x0: number; y0: number; dx: number } | null>(null);
-  const OPEN = 112;
-  function down(e: PointerEvent, id: string) { if (!v.done.has(id) && !v.run) drag = { id, x0: e.clientX, y0: e.clientY, dx: swiped === id ? -OPEN : 0 }; }
+  const ACTION = 96;
+  const openOf = (id: string) => (v.done.has(id) ? 1 : 2) * ACTION;
+  function down(e: PointerEvent, id: string) { if (!v.run) drag = { id, x0: e.clientX, y0: e.clientY, dx: swiped === id ? -openOf(id) : 0 }; }
   function move(e: PointerEvent) {
     if (!drag) return;
-    const base = swiped === drag.id ? -OPEN : 0, dx = e.clientX - drag.x0, dy = e.clientY - drag.y0;
+    const open = openOf(drag.id), base = swiped === drag.id ? -open : 0, dx = e.clientX - drag.x0, dy = e.clientY - drag.y0;
     if (Math.abs(dy) > Math.abs(dx) && Math.abs(dx) < 12) return;
-    drag.dx = Math.min(0, Math.max(-OPEN - 24, base + dx));
+    drag.dx = Math.min(0, Math.max(-open - 24, base + dx));
   }
   function up() {
     if (!drag) return;
-    const moved = Math.abs(drag.dx - (swiped === drag.id ? -OPEN : 0)) > 8;
-    if (moved) { swiped = drag.dx < -OPEN / 2 ? drag.id : null; suppress = true; }
+    const open = openOf(drag.id), moved = Math.abs(drag.dx - (swiped === drag.id ? -open : 0)) > 8;
+    if (moved) { swiped = drag.dx < -open / 2 ? drag.id : null; suppress = true; }
     drag = null;
   }
   let suppress = false;
-  function tapRow(id: string) { if (suppress) { suppress = false; return; } start(id); }
-  const offset = (id: string) => drag?.id === id ? drag.dx : swiped === id ? -OPEN : 0;
+  function tapRow(id: string) { if (suppress) { suppress = false; return; } if (!v.done.has(id)) start(id); }
+  const offset = (id: string) => drag?.id === id ? drag.dx : swiped === id ? -openOf(id) : 0;
+  function remove(id: string) { swiped = null; game.remove(id); }
 
   /* the evening (D-093): going to bed lives on Today, no page of its own. From five hours before bedtime (when Go to
      sleep counts, D-083) Today carries "Tonight": the bedtime, one tap to change it, and Go to sleep. Once said, the
@@ -236,22 +240,28 @@
       </div>
     {/if}
 
+    <Deleted />
     {#if lastAside && !v.order.includes(lastAside) && !v.done.has(lastAside)}
       <p class="said">{t('today.aside.said')} <button class="text-link" onclick={putBack}><span>{t('today.putBack')}</span></button></p>
     {/if}
     <div class="rows" onpointermove={move} onpointerup={up} onpointercancel={up}>
       {#each others as id (id)}
         {@const j = job(id)}
-        <div class="swipe">
-          <!-- VoiceOver can't swipe: "Not today", heard but not seen (accessibility A, D-111) -->
-          {#if !v.done.has(id) && offset(id) >= 0}
-            <button class="sr" onclick={() => aside(id)}>{t('row.srAside', { job: job(id).name })}</button>
+        <!-- the swipe starts on the row's strip, so a done row (its button disabled) slides too (D-125) -->
+        <div class="swipe" onpointerdown={(e) => down(e, id)}>
+          <!-- VoiceOver can't swipe: "Not today" and "Delete", heard but not seen (accessibility A, D-111) -->
+          {#if offset(id) >= 0}
+            {#if !v.done.has(id)}<button class="sr" onclick={() => aside(id)}>{t('row.srAside', { job: j.name })}</button>{/if}
+            <button class="sr" onclick={() => remove(id)}>{t('row.srDelete', { job: j.name })}</button>
           {/if}
-          {#if !v.done.has(id) && offset(id) < 0}
-            <button class="aside" tabindex={swiped === id ? 0 : -1} onclick={() => aside(id)}>{t('row.notToday')}</button>
+          {#if offset(id) < 0}
+            <div class="acts">
+              {#if !v.done.has(id)}<button class="aside" tabindex={swiped === id ? 0 : -1} onclick={() => aside(id)}>{t('row.notToday')}</button>{/if}
+              <button class="aside del" tabindex={swiped === id ? 0 : -1} onclick={() => remove(id)}>{t('job.delete')}</button>
+            </div>
           {/if}
           <button class="row" class:done={v.done.has(id)} style:transform={`translateX(${offset(id)}px)`} class:still={drag?.id === id}
-            onpointerdown={(e) => down(e, id)} onclick={() => tapRow(id)} disabled={v.done.has(id) || !!v.run}>
+            onclick={() => tapRow(id)} disabled={!!v.run} aria-disabled={v.done.has(id)}>
             <span class="pip" class:done={v.done.has(id)}></span>
             <span class="t">{j.name}</span>
             <span class="s">{sayDone(j) ? '' : rowNote(j)}</span>
@@ -312,8 +322,10 @@
   @supports (overflow: clip) { .swipe { overflow-x: clip; overflow-y: visible; } }
   .swipe .row { position: relative; z-index: 1; transition: transform .22s ease; touch-action: pan-y; }
   .swipe .row.still { transition: none; }
-  .aside { position: absolute; right: 18px; z-index: 0; top: 1px; bottom: 0; width: 112px; font-family: var(--life); font-style: italic; font-size: 16px;
+  .acts { position: absolute; right: 18px; z-index: 0; top: 1px; bottom: 0; display: flex; }
+  .aside { width: 96px; font-family: var(--life); font-style: italic; font-size: 16px;
     color: var(--ink); background: rgba(var(--violet-rgb), .28); }
+  .aside.del { background: rgba(var(--violet-rgb), .5); }
   .sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
   .row-done { position: absolute; z-index: 2; right: 18px; top: 50%; transform: translateY(-50%); min-height: 40px; padding: 0 0 0 12px; }
   .row-done span { font-size: 16px; color: var(--violet-hi); }

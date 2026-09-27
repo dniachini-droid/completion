@@ -7,6 +7,7 @@
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
   import { back } from './back.svelte';
+  import Deleted from './Deleted.svelte';
 
   let { go }: { go: Go } = $props();
   const v = $derived(game.view);
@@ -46,11 +47,15 @@
   </header>
 
   <div class="body col rise d1">
+    <Deleted />
     {#if todays.length}
       <div class="label-line lit">{t('choose.today')}</div>
       <div class="rows">
         {#each todays as id (id)}
-          <button class="row" onclick={() => pick(id)}><span class="pip"></span><span class="t">{game.job(id)?.name}</span><span class="s"></span></button>
+          <div class="line">
+            <button class="row" onclick={() => pick(id)}><span class="pip"></span><span class="t">{game.job(id)?.name}</span><span class="s"></span></button>
+            <button class="text-link del" aria-label={t('row.srDelete', { job: game.job(id)?.name ?? '' })} onclick={() => game.remove(id)}><span>{t('job.delete')}</span></button>
+          </div>
         {/each}
       </div>
     {/if}
@@ -58,7 +63,10 @@
       <div class="label-line">{todays.length ? t('choose.other') : t('choose.all')}</div>
       <div class="rows">
         {#each others as j (j.id)}
-          <button class="row" class:done={v.done.has(j.id)} onclick={() => pick(j.id)}><span class="pip" class:done={v.done.has(j.id)}></span><span class="t">{j.name}</span><span class="s">{note(j.id)}</span></button>
+          <div class="line">
+            <button class="row" class:done={v.done.has(j.id)} onclick={() => pick(j.id)}><span class="pip" class:done={v.done.has(j.id)}></span><span class="t">{j.name}</span><span class="s">{note(j.id)}</span></button>
+            <button class="text-link del" aria-label={t('row.srDelete', { job: j.name })} onclick={() => game.remove(j.id)}><span>{t('job.delete')}</span></button>
+          </div>
         {/each}
       </div>
     {/if}
@@ -76,6 +84,10 @@
   .say-note { margin-top: 4px; text-align: left; }
   .label-line { margin-top: 18px; margin-bottom: 4px; }
   button.row { width: 100%; text-align: left; }
+  /* each job with its Delete at the end of the line (Dan, D-125) */
+  .line { display: flex; align-items: center; gap: 4px; }
+  .line .row { flex: 1; min-width: 0; }
+  .del { flex: none; min-height: 44px; padding: 0 0 0 10px; font-size: 15px; color: var(--ink-3); }
   .new { display: flex; gap: 10px; margin-top: 8px; }
   .new input { flex: 1; min-width: 0; min-height: 44px; padding: 0 12px; font: inherit; font-size: 17px; color: #fff;
     background: rgba(255, 255, 255, .06); border: 1px solid var(--edge-2); border-radius: 0; }

@@ -983,3 +983,40 @@ describe('one story, a new place every 150 minutes (Dan, D-123)', () => {
     expect(p.facts.filter(f => f.type === 'arrived' && f.kind === 'place' && f.how !== 'key').length).toBeGreaterThanOrEqual(2);
   });
 });
+
+describe('Delete, everywhere (Dan, D-125)', () => {
+  it('a job taken off the week with "Not this week", then another job done: the Done counts (it used to throw)', () => {
+    const p = player().do({ do: 'open' });
+    const e = W.planOf(p.facts, MON)!.find(x => x.day >= MON)!;
+    p.do({ do: 'movePlan', entry: e.id, day: null });
+    const id = p.view().slate.find(x => x !== e.job)!;
+    const walked = p.view().walked;
+    expect(() => p.did(id)).not.toThrow();
+    expect(p.view().done.has(id)).toBe(true);
+    expect(p.view().walked).toBeGreaterThan(walked);
+  });
+  it('a done job deleted leaves Today and the Week; the minutes it counted for stay; saved again, it is back', () => {
+    const p = player().do({ do: 'open' });
+    const id = p.view().slate.find(x => !C.rhythms.some(r => r.job === x))!;
+    p.did(id);
+    const walked = p.view().walked;
+    const job = p.view().content.jobs.find(j => j.id === id)!;
+    p.do({ do: 'removeJob', id });
+    expect(p.view().slate).not.toContain(id);
+    expect(W.weekOf(p.view().content, p.facts, MON, p.view().day).days.flatMap(d => d.jobs).some(j => j.job === id)).toBe(false);
+    expect(p.view().walked).toBe(walked);
+    p.do({ do: 'saveJob', job, rhythm: null });
+    expect(p.view().slate).toContain(id);
+    expect(p.view().done.has(id)).toBe(true);
+  });
+  it('a repeating job deleted takes its repeat with it; Undo brings both back', () => {
+    const p = player().do({ do: 'open' });
+    const r = C.rhythms[0], job = p.view().content.jobs.find(j => j.id === r.job)!;
+    p.do({ do: 'removeJob', id: job.id });
+    expect(p.view().content.rhythms.some(x => x.job === job.id)).toBe(false);
+    expect(p.view().slate).not.toContain(job.id);
+    p.do({ do: 'saveJob', job, rhythm: r });
+    expect(p.view().content.rhythms.some(x => x.id === r.id)).toBe(true);
+  });
+});
+

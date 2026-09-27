@@ -424,7 +424,7 @@ await page.locator('button.row', { hasText: 'Call the bank' }).first().click(); 
 await page.locator('.editor input.line').first().fill('Call the bank about the card'); await tap('Save'); await page.clock.runFor(800);
 if (!(await page.locator('button.row', { hasText: 'Call the bank about the card' }).count())) errors.push('EDIT the job was not renamed');
 await page.locator('button.row', { hasText: 'Call the bank about the card' }).first().click(); await page.clock.runFor(800);
-await tap('Remove it'); await shot('job-removed', 600);
+await tap('Delete'); await shot('job-removed', 600);
 await tap('Undo'); await page.clock.runFor(800);
 if (!(await page.locator('button.row', { hasText: 'Call the bank about the card' }).count())) errors.push('EDIT Undo did not bring the job back');
 await home(); await page.clock.runFor(1500); await shot('today-with-line', 2000);

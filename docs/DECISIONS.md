@@ -1306,3 +1306,15 @@
   3. Stopping early already counts exactly the minutes run (D-121): 2 × 30 set, stopped at 50, counts 50.
 - **Consequences:** supersedes D-110's "a short job starts on the stop that holds it" and D-038's "a short delve job starts at once". Rule tests updated; a new test for old saves.
 - **Reversible:** Yes.
+
+## D-125 — Delete, everywhere; "Another day…" is the app's own calendar; Done after "Not this week" (Dan; a bug fix)
+- **Date:** 2026-09-27
+- **Context:** Dan on TestFlight: "Not this week" took a job off the Week, but it was still under Keep going, and the only delete was buried in the job editor ("There should be a delete option. For everything including stuff I did"). Choosing "Another day…" showed the phone's calendar for two seconds, then it vanished. While testing, a crash was found: a "Not this week" record stores its target day as none, which stands in for the record's own day; the rule that reads the job list read it as a date and threw, so every Done with minutes after a "Not this week" failed.
+- **Decision:**
+  1. **Delete is available everywhere.** On Today, a row slides left to "Not today" and "Delete" (a done row to "Delete" only). In Choose a delve (Something else… / Keep going), each job has a Delete at the end of its line. In the Week, a job's sheet has Delete, and a done job opens to Delete. The job editor's "Remove it" is now "Delete". Every Delete shows Undo on that screen.
+  2. **Deleting a done job deletes the record of the job, not the minutes it counted for** (Dan): it leaves Today, the Week and the lists, and the expedition keeps its progress. A repeating job deleted takes its repeat with it. Undo brings both back.
+  3. **"Another day…" opens the app's own calendar** of the four weeks after the one shown. The phone's date picker closed itself on the iPhone. The keyboard fitting (D-120) also now leaves the screen alone while any date picker is open (the job editor's dates).
+  4. **The crash is fixed** by passing over plan-change records before any day is read. Saves already on the phone are repaired by that too; no data changes.
+- **Alternatives:** a confirmation before Delete (Undo is quieter, as D-112); keep the phone's date picker and only stop the keyboard fitting (not testable here; the app's own calendar is certain).
+- **Consequences:** a new screen check, `tests/flows/delete-day.mjs`, runs in CI (Chromium and WebKit). Rule tests cover deleting a done job, deleting a repeating job and Undo, and Done after "Not this week".
+- **Reversible:** Yes.

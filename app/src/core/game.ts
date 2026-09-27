@@ -1083,8 +1083,10 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
     slate.push(id);
   }
   slate.sort((a, b) => order.indexOf(a) - order.indexOf(b));
-  for (const id of order) if (done.has(id) && !slate.includes(id)) slate.push(id);   /* off-plan counts in full */
-  for (const id of done) if (!slate.includes(id)) slate.push(id);   /* so does something chosen from outside the list (D-077) */
+  /* a job deleted after it was done leaves the list; the minutes it counted for stay (Dan, D-125) */
+  const kept = (id: string) => c.jobs.some(j => j.id === id);
+  for (const id of order) if (done.has(id) && !slate.includes(id) && kept(id)) slate.push(id);   /* off-plan counts in full */
+  for (const id of done) if (!slate.includes(id) && kept(id)) slate.push(id);   /* so does something chosen from outside the list (D-077) */
   const complete = completedOn(facts, day);
   /* "under way" was a job without a timer begun away from the phone; every job is a delve now (D-117), so an old Begin
      in a save leaves nothing under way */

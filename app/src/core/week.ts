@@ -36,6 +36,10 @@ export const weekDays = (monday: string) => Array.from({ length: 7 }, (_, i) => 
 export function live(c: Content, facts: Fact[], before?: string): Content {
   let jobs = c.jobs, rhythms = c.rhythms, changed = false;
   for (const f of facts) {
+    /* a plan change carries its own "day" (where the entry moves to, or none for "Not this week"), which stands in for
+       the fact's day; it never edits the jobs, so it is passed over before any day is read. Read as a date, "none"
+       threw, and every Done after a "Not this week" failed (Dan, D-125). */
+    if (f.type === 'planChanged') continue;
     if (before && calendarWeek(f.day) >= before) continue;
     if (f.type === 'rhythmSaved') {
       if (!changed) { jobs = jobs.slice(); rhythms = rhythms.slice(); changed = true; }
@@ -272,7 +276,8 @@ export function weekOf(c: Content, facts: Fact[], week: string, today: string): 
   const at = (d: string) => days.find(x => x.day === d);
   const done = doneIn(facts, week);
   /* what was done, on the day it was done */
-  for (const f of done) if (f.day <= today) at(f.day)?.jobs.push({ entry: null, job: f.job, done: true });
+  /* a job deleted after it was done no longer shows; the minutes it counted for stay (Dan, D-125) */
+  for (const f of done) if (f.day <= today && c.jobs.some(j => j.id === f.job)) at(f.day)?.jobs.push({ entry: null, job: f.job, done: true });
   if (!plan) return { week, planned: false, days };
   const rhythm = (job: string) => c.rhythms.find(r => r.job === job);
   const met = (job: string) => { const r = rhythm(job); return r ? sessions(facts, r, week) >= need(r) : done.some(f => f.job === job) || ofType(facts, 'jobDone').some(f => f.job === job); };

@@ -6,7 +6,7 @@ import { act, alertsAfter, see, settle, type Command, type RunView } from '../co
 import type { RunMark } from '../core/run';
 import { panelOf } from './panel';
 import { epochOf, momentOf, type Moment } from '../core/time';
-import type { Fact } from '../core/types';
+import type { Fact, Job, Rhythm } from '../core/types';
 import { content } from '../content/world';
 import { platform } from '../platform';
 import { t } from '../content/copy/en';
@@ -116,6 +116,22 @@ class Game {
 
   /** A job as Dan has it now (his edits and the jobs he added included). */
   job(id: string) { return this.view.content.jobs.find(j => j.id === id); }
+
+  /** The job just deleted, for its Undo (D-125): shown until Dan goes to another screen. */
+  deleted = $state<{ job: Job; rhythm: Rhythm | null } | null>(null);
+  /** Delete a job from everywhere, done or not (Dan, D-125): the minutes it already counted for stay. */
+  remove(id: string) {
+    const job = this.job(id);
+    if (!job) return;
+    this.deleted = { job: { ...job }, rhythm: this.view.content.rhythms.find(r => r.job === id) ?? null };
+    this.do({ do: 'removeJob', id });
+  }
+  undoRemove() {
+    const d = this.deleted;
+    if (!d) return;
+    this.deleted = null;
+    this.do({ do: 'saveJob', job: d.job, rhythm: d.rhythm });
+  }
 
   get saveKey() { return this.proto.rehearsal ? 'save.rehearsal' : 'save.v1'; }
 

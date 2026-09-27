@@ -15,8 +15,11 @@ function home() {
 }
 
 let last = '';
+/* The phone's date picker is not a keyboard: while one is open the screen is left exactly as it is. Resizing or
+   scrolling under it moved the box it was opened from, and the phone closed the calendar at once (Dan, D-125). */
+const picking = () => { const a = document.activeElement; return a instanceof HTMLInputElement && /^(date|month|week|datetime-local)$/.test(a.type); };
 function fit() {
-  if (!vv) return;
+  if (!vv || picking()) return;
   /* the keyboard is up when the visible part is clearly shorter than the page (not a few points of browser bar) */
   const up = window.innerHeight - vv.height > 80;
   const h = up ? `${Math.round(vv.height)}px` : '';
