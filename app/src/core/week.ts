@@ -35,6 +35,7 @@ export const weekDays = (monday: string) => Array.from({ length: 7 }, (_, i) => 
  */
 export function live(c: Content, facts: Fact[], before?: string): Content {
   let jobs = c.jobs, rhythms = c.rhythms, changed = false;
+  const gone = new Map<string, number>();
   for (const f of facts) {
     /* a plan change carries its own "day" (where the entry moves to, or none for "Not this week"), which stands in for
        the fact's day; it never edits the jobs, so it is passed over before any day is read. Read as a date, "none"
@@ -44,7 +45,7 @@ export function live(c: Content, facts: Fact[], before?: string): Content {
     if (f.type === 'rhythmSaved') {
       if (!changed) { jobs = jobs.slice(); rhythms = rhythms.slice(); changed = true; }
       const j = jobs.findIndex(x => x.id === f.job.id), r = rhythms.findIndex(x => x.id === f.rhythm.id);
-      if (j >= 0) jobs[j] = f.job; else jobs.push(f.job);
+      if (j >= 0) jobs[j] = f.job; else if (gone.has(f.job.id)) jobs.splice(Math.min(gone.get(f.job.id)!, jobs.length), 0, f.job); else jobs.push(f.job);
       if (r >= 0) rhythms[r] = f.rhythm; else rhythms.push(f.rhythm);
     } else if (f.type === 'rhythmStopped') {
       if (!changed) { jobs = jobs.slice(); rhythms = rhythms.slice(); changed = true; }
@@ -56,9 +57,12 @@ export function live(c: Content, facts: Fact[], before?: string): Content {
     } else if (f.type === 'jobSaved') {
       if (!changed) { jobs = jobs.slice(); rhythms = rhythms.slice(); changed = true; }
       const j = jobs.findIndex(x => x.id === f.job.id);
-      if (j >= 0) jobs[j] = f.job; else jobs.push(f.job);
+      /* a job brought back by Undo returns to its place (D-125 review) */
+      if (j >= 0) jobs[j] = f.job; else if (gone.has(f.job.id)) jobs.splice(Math.min(gone.get(f.job.id)!, jobs.length), 0, f.job); else jobs.push(f.job);
     } else if (f.type === 'jobRemoved') {
       if (!changed) { jobs = jobs.slice(); rhythms = rhythms.slice(); changed = true; }
+      const at = jobs.findIndex(x => x.id === f.id);
+      if (at >= 0) gone.set(f.id, at);
       jobs = jobs.filter(x => x.id !== f.id);
       rhythms = rhythms.filter(x => x.job !== f.id);
     } else if (f.type === 'itemAdded') {
@@ -419,14 +423,25 @@ export function comingUp(c: Content, facts: Fact[], day: string): { day: string;
  */
 export function satchelOf(c: Content, facts: Fact[], day: string): Job[] {
   const rhythmJob = new Set(c.rhythms.map(r => r.job));
-  const finished = new Set(ofType(facts, 'jobDone').map(f => f.job));
+  /* finished: done since it last stopped repeating (a repeating job made a one-off is not finished by its old sessions,
+     review, D-126) */
+  const rhythmOfId = new Map((c.base ?? c).rhythms.map(r => [r.id, r.job]));
+  const stoppedAt = new Map<string, number>(), finished = new Set<string>();
+  for (const f of facts) {
+    if (f.type === 'rhythmSaved') rhythmOfId.set(f.rhythm.id, f.rhythm.job);
+    else if (f.type === 'rhythmStopped') { const job = rhythmOfId.get(f.id); if (job) { stoppedAt.set(job, f.seq); finished.delete(job); } }
+    else if (f.type === 'jobDone') finished.add(f.job);
+  }
+  /* set aside today ("Not today"): today's place doesn't hold it, so it waits here (review, D-126) */
+  const aside = new Set<string>();
+  for (const f of facts) if (f.day === day) { if (f.type === 'setAside') aside.add(f.job); else if (f.type === 'putBack') aside.delete(f.job); }
   const weeks = new Set<string>();
   for (const f of facts) {
     if (f.type === 'planMade' && f.week >= calendarWeek(day)) weeks.add(f.week);
     else if (f.type === 'planAdded' && f.entry.day >= day) weeks.add(calendarWeek(f.entry.day));
   }
   const placed = new Set<string>();
-  for (const wk of weeks) for (const e of planOf(facts, wk) ?? []) if (e.day >= day) placed.add(e.job);
+  for (const wk of weeks) for (const e of planOf(facts, wk) ?? []) if (e.day > day || (e.day === day && !aside.has(e.job))) placed.add(e.job);
   return c.jobs.filter(j => !j.stopped && !rhythmJob.has(j.id) && !finished.has(j.id) && !placed.has(j.id)).reverse();
 }
 

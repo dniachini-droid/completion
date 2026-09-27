@@ -4,7 +4,9 @@
   import { t } from '../content/copy/en';
 </script>
 
-{#if game.deleted}
+{#if game.cantDelete}
+  <p class="said deleted" role="status">{t('job.cantDelete', { job: game.cantDelete })}</p>
+{:else if game.deleted}
   <p class="said deleted" role="status">{t('job.removed', { name: game.deleted.job.name })} <button class="text-link" onclick={() => game.undoRemove()}><span>{t('job.undo')}</span></button></p>
 {/if}
 

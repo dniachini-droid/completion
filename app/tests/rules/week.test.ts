@@ -3,7 +3,7 @@
  * Ids only: no story text is asserted here.
  */
 import { describe, expect, it } from 'vitest';
-import { act, presetRun, returnOf, see, settle, STRUCK, type Command } from '../../src/core/game';
+import { act, LIST_MAX, presetRun, returnOf, see, settle, type Command } from '../../src/core/game';
 import * as W from '../../src/core/week';
 import * as S from '../../src/core/story';
 import { calendarWeek, weekdayOf } from '../../src/core/time';
@@ -257,6 +257,25 @@ describe('Absence and the deep push', () => {
     const p = player().do({ do: 'open' }).next(2).do({ do: 'open' });
     expect(p.view().welcome).toBeNull();
     expect(p.view().capacity).toBe('normal');
+  });
+  it('pushing deeper is doing more: past a normal day’s jobs the deep beat plays, with no setting chosen (Dan, D-127)', () => {
+    const p = sim().week('normal');
+    const at0 = '2026-10-06T09:00:00+01:00';
+    let log = p.facts.concat(act(p.facts, C, { do: 'open' }, at0));
+    expect(S.nextDeep(C.story, S.storyState(log, C.story))).not.toBeNull();
+    let t = Date.parse(at0);
+    const iso = (ms: number) => new Date(ms + 3_600_000).toISOString().slice(0, 19) + '+01:00';
+    /* a job past a normal day's that lands a Key brings the Key; the deep beat comes with the next (D-054) */
+    const deep = () => log.some(f => f.type === 'beatPlayed' && S.beatOf(C.story, f.id)?.kind === 'deep');
+    for (let k = 0; k < 6 && !deep(); k++) {
+      const v = see(log, C, iso(t));
+      const job = v.next?.job ?? C.jobs.find(j => !v.done.has(j.id))!.id;
+      log = log.concat(act(log, C, { do: 'startRun', job, minutes: 25, count: 1 }, iso(t)));
+      t += 30 * 60_000; log = log.concat(settle(log, C, iso(t)));
+      if (!see(log, C, iso(t)).done.has(job)) log = log.concat(act(log, C, { do: 'done', job }, iso(t)));
+    }
+    expect(log.some(f => f.type === 'capacityChosen')).toBe(false);
+    expect(log.some(f => f.type === 'beatPlayed' && S.beatOf(C.story, f.id)?.kind === 'deep')).toBe(true);
   });
   it('the deep push called in the morning plays once a Normal day’s jobs are done', () => {
     const p = sim().week('normal');
@@ -997,16 +1016,54 @@ describe('The satchel: jobs with no day, and a job\'s list (Dan, D-126)', () => 
   it('a job keeps a list a line at a time; lines struck off in a delve go when it ends; the rest stay for next time', () => {
     const p = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['Shopping'] });
     const id = p.view().content.jobs.find(j => j.name === 'Shopping')!.id;
-    const list = () => p.view().content.jobs.find(j => j.id === id)!.list;
+    const job = () => p.view().content.jobs.find(j => j.id === id)!;
     p.do({ do: 'listJob', job: id, list: 'shampoo' });
-    p.next().do({ do: 'open' }).do({ do: 'listJob', job: id, list: 'shampoo\nmilk\n\n' });
-    expect(list()).toBe('shampoo\nmilk');
-    p.do({ do: 'startRun', job: id, minutes: 25, count: 1 }).do({ do: 'listJob', job: id, list: `${STRUCK}shampoo\nmilk` });
+    p.next().do({ do: 'open' }).do({ do: 'listJob', job: id, list: 'shampoo\nmilk\n\n~ 2kg rice' });
+    expect(job().list).toBe('shampoo\nmilk\n~ 2kg rice');
+    /* no strike outside its own delve */
+    p.do({ do: 'strikeLine', job: id, k: 0 });
+    expect(job().struck).toBeUndefined();
+    p.do({ do: 'startRun', job: id, minutes: 25, count: 1 }).do({ do: 'strikeLine', job: id, k: 0 }).do({ do: 'strikeLine', job: id, k: 1 }).do({ do: 'strikeLine', job: id, k: 1 });
+    expect(job().struck).toEqual([0]);
     p.wait(26);
-    expect(list()).toBe('milk');
+    /* a line typed with "~ " is Dan's, never taken for a struck one (review) */
+    expect(job().list).toBe('milk\n~ 2kg rice');
+    expect(job().struck).toBeUndefined();
     p.do({ do: 'listJob', job: id, list: '' });
-    expect(list()).toBeUndefined();
+    expect(job().list).toBeUndefined();
   });
+  it('struck lines go at every end of a delve: Finish here, and Done while it runs', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['Errands'] });
+    const id = p.view().content.jobs.find(j => j.name === 'Errands')!.id;
+    const job = () => p.view().content.jobs.find(j => j.id === id)!;
+    p.do({ do: 'listJob', job: id, list: 'stamps\nbread' }).do({ do: 'startRun', job: id, minutes: 25, count: 1 }).do({ do: 'strikeLine', job: id, k: 1 }).wait(3).do({ do: 'finishHere' });
+    expect(job().list).toBe('stamps');
+    p.do({ do: 'listJob', job: id, list: 'stamps\nbread' }).do({ do: 'startRun', job: id, minutes: 25, count: 1 }).do({ do: 'strikeLine', job: id, k: 0 }).wait(3).do({ do: 'done', job: id });
+    expect(job().list).toBe('bread');
+  });
+  it('a list keeps whole lines up to its length', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['Long'] });
+    const id = p.view().content.jobs.find(j => j.name === 'Long')!.id;
+    p.do({ do: 'listJob', job: id, list: Array.from({ length: 400 }, (_, i) => `item number ${i}`).join('\n') });
+    const list = p.view().content.jobs.find(j => j.id === id)!.list!;
+    expect(list.length).toBeLessThanOrEqual(LIST_MAX);
+    expect(list.split('\n').every(l => /^item number \d+$/.test(l))).toBe(true);
+  });
+  it('a repeating job made a one-off is in the satchel; a job set aside today waits there too', () => {
+    const p = player().do({ do: 'open' });
+    const gym = p.view().content.jobs.find(j => j.id === 'gym')!;
+    p.did('gym').next().do({ do: 'open' });
+    p.do({ do: 'saveJob', job: { ...gym }, rhythm: null });
+    /* once the week it was planned in has passed, it is in no plan: the satchel holds it (review) */
+    p.next(7).do({ do: 'open' });
+    expect(bag(p)).toContain(gym.name);
+    const q = player().do({ do: 'open' }).do({ do: 'addToWeek', line: 'Wash the car', day: MON });
+    const car = q.view().content.jobs.find(j => j.name === 'Wash the car')!;
+    expect(W.satchelOf(q.view().content, q.facts, MON).some(j => j.id === car.id)).toBe(false);
+    q.do({ do: 'setAside', job: car.id });
+    expect(W.satchelOf(q.view().content, q.facts, MON).some(j => j.id === car.id)).toBe(true);
+  });
+
 });
 
 describe('Delete, everywhere (Dan, D-125)', () => {
@@ -1047,6 +1104,12 @@ describe('Delete, everywhere (Dan, D-125)', () => {
     expect(p.view().walked).toBe(walked);
     p.do({ do: 'hideDone', job: r.job, on: day, back: true });
     expect(p.view().slate).toContain(r.job);
+  });
+  it('Undo puts a deleted job back in its place', () => {
+    const p = player().do({ do: 'open' });
+    const ids = p.view().content.jobs.map(j => j.id), k = 2, job = p.view().content.jobs[k];
+    p.do({ do: 'removeJob', id: job.id }).do({ do: 'saveJob', job, rhythm: C.rhythms.find(r => r.job === job.id) ?? null });
+    expect(p.view().content.jobs.map(j => j.id)).toEqual(ids);
   });
   it('a repeating job deleted takes its repeat with it; Undo brings both back', () => {
     const p = player().do({ do: 'open' });

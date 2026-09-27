@@ -27,18 +27,26 @@ await put('Shopping'); await put('Errands'); await put('Old plan');
 const names = await page.locator('.item .t').allTextContents();
 if (names.slice(0, 3).join('|') !== 'Old plan|Errands|Shopping') fails.push(`the satchel is not newest first: ${names.join(', ')}`);
 /* 2. a list, a line at a time */
-await item('Shopping').getByRole('button', { name: 'List', exact: true }).click(); await page.keyboard.type('shampoo'); await item('Shopping').getByRole('button', { name: 'Done', exact: true }).click(); await page.clock.runFor(400);
-await item('Shopping').getByRole('button', { name: 'List', exact: true }).click(); await page.keyboard.type('milk'); await item('Shopping').getByRole('button', { name: 'Done', exact: true }).click(); await page.clock.runFor(400);
+await item('Shopping').getByRole('button', { name: /^List:/ }).click(); await page.keyboard.type('shampoo'); await item('Shopping').getByRole('button', { name: /^Done:/ }).click(); await page.clock.runFor(400);
+await item('Shopping').getByRole('button', { name: /^List:/ }).click(); await page.keyboard.type('milk'); await item('Shopping').getByRole('button', { name: /^Done:/ }).click(); await page.clock.runFor(400);
 const pv = await item('Shopping').locator('.preview').innerText().catch(() => '');
 if (pv !== 'shampoo · milk') fails.push(`the list reads "${pv}", not "shampoo · milk"`);
+/* 2b. typed, then left by the way back (not Done): what was typed is kept (review, D-126) */
+await item('Shopping').getByRole('button', { name: /^List:/ }).click(); await page.keyboard.type('bread');
+await page.locator('button.home').click(); await page.clock.runFor(800);
+await btn('Satchel').click(); await page.clock.runFor(1000);
+const pv2 = await item('Shopping').locator('.preview').innerText().catch(() => '');
+if (pv2 !== 'shampoo · milk · bread') fails.push(`left by the way back, the list reads "${pv2}"`);
+await item('Shopping').getByRole('button', { name: /^List:/ }).click(); await page.keyboard.press('Backspace'); for (let i = 0; i < 6; i++) await page.keyboard.press('Backspace');
+await item('Shopping').getByRole('button', { name: /^Done:/ }).click(); await page.clock.runFor(400);
 /* 3. Put on a day: out of the satchel, onto that day */
-await item('Errands').getByRole('button', { name: 'Put on a day', exact: true }).click(); await page.clock.runFor(400);
+await item('Errands').getByRole('button', { name: /^Put on a day:/ }).click(); await page.clock.runFor(400);
 const cells = item('Errands').locator('.cal button');
 if (!(await cells.count())) fails.push('Put on a day shows no days');
 else { await cells.nth(2).click(); await page.clock.runFor(800);
   if (await item('Errands').count()) fails.push('Errands, put on a day, is still in the satchel'); }
 /* 4. Delete, and Undo */
-await item('Old plan').getByRole('button', { name: 'Delete', exact: true }).click(); await page.clock.runFor(600);
+await item('Old plan').getByRole('button', { name: /: delete$/ }).click(); await page.clock.runFor(600);
 if (await item('Old plan').count()) fails.push('Old plan, deleted, is still in the satchel');
 await btn('Undo').click(); await page.clock.runFor(600);
 if (!(await item('Old plan').count())) fails.push('Undo did not bring Old plan back');

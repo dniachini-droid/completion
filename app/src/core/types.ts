@@ -28,9 +28,10 @@ export interface Job {
   by?: string;
   /** One line of Dan's own: where he stopped, or anything to keep with the job (D-112). */
   note?: string;
-  /** Dan's list for the job, a line at a time (a shopping list: "shampoo", then "milk" days later) (D-126). A line struck
-      off during a delve starts with "~ " and goes when that delve ends. */
+  /** Dan's list for the job, a line at a time (a shopping list: "shampoo", then "milk" days later) (D-126). */
   list?: string;
+  /** The list's lines struck off in the delve under way (their places in the list): they go when it ends (D-126). */
+  struck?: number[];
   /** Its rhythm was stopped (set by `live`): it leaves Today, the plan and Choose a delve until it repeats again. */
   stopped?: boolean;
 }

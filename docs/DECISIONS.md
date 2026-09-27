@@ -1330,6 +1330,15 @@
   4. **The artwork** is the satchel by the lamp from direction D's mock-up, rendered once to `app/src/ui/scene/satchel.jpg`.
   5. No counts, ages, overdue marks or red (rule 9). The look-ahead's weekly "Still wanted?" remains the only tidying.
 - **Alternatives:** a "Pack" or "Journal" name (Dan chose Satchel); a separate checklist per job (two kinds of thing again: the note with strike-through is enough); letting the planner place Siri jobs (Dan's jots are his to place).
+- **After a fresh adversarial review (same night):**
+  - What's typed in a list is kept whenever the box loses focus and when the screen is left by any way, not only on Done.
+  - Struck lines are kept apart from the text (the job's `struck` places, set only by `strikeLine` in that job's own delve), so a line Dan types starting "~ " is his own.
+  - A list keeps whole lines up to 2,000 characters.
+  - A repeating job made a one-off counts as finished only by sessions done after it stopped repeating.
+  - A job set aside today waits in the Satchel.
+  - Buttons carry the job's name for VoiceOver.
+  - Delete on the job of a delve under way says why it can't.
+  - Undo puts a job back in its place.
 - **Consequences:** a new screen check, `tests/flows/satchel.mjs`, runs in CI. Rule tests cover the Satchel's contents and the list. Siri's reply now says "It's in your satchel."
 - **Reversible:** Yes.
 
@@ -1337,5 +1346,5 @@
 - **Date:** 2026-09-27
 - **Context:** The day-size choice (D-114, Stage 3 item 13) showed on Today at the day's first open. Dan: "Remove it. I'll set my days. It's clutter."
 - **Decision:** The choice and its hints are removed from Today. The rules keep `capacity` (old saves, tests), but nothing in the app sets it now, so every day is as planned.
-- **Consequences:** The "Push deeper" offer (D-054) appeared only on a Fuller day, so it no longer appears; flagged for the UI review and Dan's morning overview. Dan sets his days in the Week.
+- **Consequences:** Dan sets his days in the Week. Pushing deeper is now simply doing more (Dan): past a normal day's jobs, the deep push's next story moment plays by itself, once a day (a Key earned on that job comes first; the moment comes with the next). Going on after a normal day's work counts as a push for reaching places, too. Nothing else read the setting except a High day's one extra suggested job, which goes with it.
 - **Reversible:** Yes.

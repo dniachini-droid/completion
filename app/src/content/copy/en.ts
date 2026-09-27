@@ -354,7 +354,7 @@ export const copy = {
   'job.avoided': 'I tend to put this off', 'job.yes': 'Yes', 'job.no': 'No',
   'job.step': 'First small step', 'job.stepHint': 'What would you touch first?',
   'job.note': 'A note', 'job.noteHint': 'Where you stopped, or anything to keep with it',
-  'job.remove': 'Delete', 'job.delete': 'Delete', 'job.removed': '{name} is gone from your lists.', 'job.undo': 'Undo',
+  'job.remove': 'Delete', 'job.delete': 'Delete', 'job.cantDelete': '{job} is in a delve: finish it first.', 'job.removed': '{name} is gone from your lists.', 'job.undo': 'Undo',
   'rhythms.less': 'Fewer', 'rhythms.more': 'More', 'rhythms.shorter': 'Shorter', 'rhythms.longer': 'Longer',
   'days.short.0': 'Sun', 'days.short.1': 'Mon', 'days.short.2': 'Tue', 'days.short.3': 'Wed', 'days.short.4': 'Thu', 'days.short.5': 'Fri', 'days.short.6': 'Sat',
   'days.plural.0': 'Sundays', 'days.plural.1': 'Mondays', 'days.plural.2': 'Tuesdays', 'days.plural.3': 'Wednesdays', 'days.plural.4': 'Thursdays', 'days.plural.5': 'Fridays', 'days.plural.6': 'Saturdays',

@@ -328,7 +328,8 @@ function openSeal(w: W, c: Content, seal: Seal, at: Moment, day: string, job?: n
 
 function pushOn(facts: Fact[], day: string): boolean {
   const today = onDay(facts, day), dc = today.find(f => f.type === 'dayCompleted');
-  return capacityOn(facts, day) === 'high' || today.some(f => f.type === 'deepCalled')
+  /* doing more than a normal day's jobs is pushing deeper, with no setting to choose (Dan, D-127) */
+  return capacityOn(facts, day) === 'high' || today.some(f => f.type === 'deepCalled') || workedOn(facts, day).size > DAY_SIZE.normal
     || (!!dc && today.some(f => f.type === 'stepsGained' && f.seq > dc.seq));   /* Keep going: effort after the day's work */
 }
 
@@ -400,7 +401,9 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string) {
   if (!keyed) {
     const st = S.storyState(w.all, c.story), step = S.nextStep(c.story, st);
     const n = workedOn(w.all, day).size, called = onDay(w.all, day).some(f => f.type === 'deepCalled');
-    const deep = capacityOn(w.all, day) === 'high' && (n > DAY_SIZE.normal || (called && n >= DAY_SIZE.normal))
+    /* pushing deeper is doing more: past a normal day's jobs, the deep push's next beat plays, once a day, with no
+       setting to choose first (Dan, D-127; a High day or a morning call did it before, D-054) */
+    const deep = (n > DAY_SIZE.normal || (called && n >= DAY_SIZE.normal))
       && !ofType(onDay(w.all, day), 'beatPlayed').some(f => S.beatOf(c.story, f.id)?.kind === 'deep') ? S.nextDeep(c.story, st) : null;
     if (deep) { w.put({ type: 'beatPlayed', id: deep.id, job: done.seq }, at, day); show(w, c, deep.carries?.records, at, day); }
     else if (step) { w.put({ type: 'beatPlayed', id: step.id, job: done.seq }, at, day); show(w, c, step.carries?.records, at, day); }
@@ -420,14 +423,17 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string) {
 const sessionEnds = (all: Fact[], day: string, j: Job, minutes: number) =>
   j.doneBy === 'enough' && minutes > 0 && !doneOn(all, day).has(j.id);
 
+/** How long a job's list may be, in characters (D-126). */
+export const LIST_MAX = 2000;
+/** The lines of a job's list, as kept. */
+export const listLines = (j: Job | undefined) => (j?.list ?? '').split('\n').filter(l => l.trim());
 /** A delve's end takes the lines struck off during it out of the job's list (D-126). */
-export const STRUCK = '~ ';
 function clearStruck(w: W, c: Content, id: string, at: Moment, day: string) {
   const j = c.jobs.find(x => x.id === id);
-  if (!j?.list || !j.list.split('\n').some(l => l.startsWith(STRUCK))) return;
-  const list = j.list.split('\n').filter(l => !l.startsWith(STRUCK)).join('\n');
+  if (!j?.struck?.length) return;
+  const gone = new Set(j.struck), list = listLines(j).filter((_, k) => !gone.has(k)).join('\n');
   const job: Job = { ...j };
-  delete job.stopped;
+  delete job.stopped; delete job.struck;
   if (list) job.list = list; else delete job.list;
   w.put({ type: 'jobSaved', job }, at, day);
 }
@@ -643,6 +649,8 @@ export type Command =
   | { do: 'noteJob'; job: string; note: string }
   /* the job's list (D-126): its whole text, as Dan leaves it */
   | { do: 'listJob'; job: string; list: string }
+  /* a line of the job's list struck off (or back) in its delve (D-126) */
+  | { do: 'strikeLine'; job: string; k: number }
   | { do: 'addItems'; lines: string[] }
   /** Lines from outside the app (D-113), each added once, whatever happens between writing and clearing */
   | { do: 'takeInbox'; lines: { id: string; text: string }[] }
@@ -789,11 +797,28 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     }
     case 'listJob': {
       const j = c.jobs.find(x => x.id === cmd.job);
-      const list = cmd.list.split('\n').map(l => l.replace(/\s+$/, '')).filter(l => l.trim()).join('\n').slice(0, 2000);
+      /* whole lines only, up to LIST_MAX characters (review, D-126) */
+      const kept: string[] = [];
+      let n = 0;
+      for (const l of cmd.list.split('\n').map(x => x.replace(/\s+$/, '')).filter(x => x.trim())) { if (n + l.length > LIST_MAX) break; kept.push(l); n += l.length + 1; }
+      const list = kept.join('\n');
       if (!j || (j.list ?? '') === list) break;
       const job: Job = { ...j };
-      delete job.stopped;
+      /* a list edited afresh starts with nothing struck */
+      delete job.stopped; delete job.struck;
       if (list) job.list = list; else delete job.list;
+      w.put({ type: 'jobSaved', job });
+      break;
+    }
+    case 'strikeLine': {
+      /* only in the job's own delve, running or paused: a strike never outlives it (review, D-126) */
+      const j = c.jobs.find(x => x.id === cmd.job), r = activeRun(w.all);
+      if (!j || !r || r.fact.job !== j.id || cmd.k < 0 || cmd.k >= listLines(j).length) break;
+      const set = new Set(j.struck ?? []);
+      if (set.has(cmd.k)) set.delete(cmd.k); else set.add(cmd.k);
+      const job: Job = { ...j, struck: [...set].sort((a, b) => a - b) };
+      delete job.stopped;
+      if (!job.struck!.length) delete job.struck;
       w.put({ type: 'jobSaved', job });
       break;
     }

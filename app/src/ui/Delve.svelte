@@ -13,7 +13,7 @@
   import Return from './Return.svelte';
   import { steady } from './taps';
   import { unslide } from './keyboard';
-  import { STRUCK } from '../core/game';
+  import { listLines } from '../core/game';
   import './scene/tunnel.css';
 
   let { go }: { go: Go } = $props();
@@ -65,19 +65,16 @@
   const told = $derived(!!end && (doneSeq !== null || v.runFinds.length > 0));
   /* the job's list (D-126): a tap strikes a line off (the shampoo is in the basket) or back; struck lines go when the
      delve ends, the rest stay for next time */
-  const lines = (id: string) => (game.job(id)?.list ?? '').split('\n').filter(l => l.trim());
-  function strike(id: string, k: number) {
-    const ls = lines(id);
-    ls[k] = ls[k].startsWith(STRUCK) ? ls[k].slice(STRUCK.length) : STRUCK + ls[k];
-    game.do({ do: 'listJob', job: id, list: ls.join('\n') });
-  }
+  const lines = (id: string) => listLines(game.job(id));
+  const struck = (id: string, k: number) => !!game.job(id)?.struck?.includes(k);
+  function strike(id: string, k: number) { game.do({ do: 'strikeLine', job: id, k }); }
 </script>
 
 {#snippet theList(id: string)}
   {#if lines(id).length}
     <ul class="list" aria-label={t('delve.list')}>
       {#each lines(id) as l, k (k)}
-        <li><button class:struck={l.startsWith(STRUCK)} aria-pressed={l.startsWith(STRUCK)} onclick={() => strike(id, k)}>{l.startsWith(STRUCK) ? l.slice(STRUCK.length) : l}</button></li>
+        <li><button class:struck={struck(id, k)} aria-pressed={struck(id, k)} onclick={() => strike(id, k)}>{l}</button></li>
       {/each}
     </ul>
   {/if}

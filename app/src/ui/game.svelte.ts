@@ -119,11 +119,15 @@ class Game {
 
   /** What was just deleted, for its Undo (D-125): shown until Dan goes to another screen. */
   deleted = $state<{ job: Job; rhythm: Rhythm | null; on?: string } | null>(null);
+  /** A job that couldn't be deleted because its delve is under way: said once, where Dan tried (D-126 review). */
+  cantDelete = $state<string | null>(null);
   /** Delete a job from everywhere (Dan, D-125): the minutes it already counted for stay. Never the job of a delve that
       is running or paused: its end still has to be answered. */
   remove(id: string) {
     const job = this.job(id);
-    if (!job || this.view.run?.job.id === id) return;
+    if (!job) return;
+    if (this.view.run?.job.id === id) { this.deleted = null; this.cantDelete = job.name; return; }
+    this.cantDelete = null;
     this.deleted = { job: { ...job }, rhythm: this.view.content.rhythms.find(r => r.job === id) ?? null };
     this.do({ do: 'removeJob', id });
   }

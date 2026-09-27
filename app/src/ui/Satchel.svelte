@@ -6,7 +6,7 @@
   import { game } from './game.svelte';
   import { t, byWords } from '../content/copy/en';
   import { satchelOf } from '../core/week';
-  import { STRUCK } from '../core/game';
+  import { LIST_MAX } from '../core/game';
   import type { Job } from '../core/types';
   import Scene from './Scene.svelte';
   import Deleted from './Deleted.svelte';
@@ -28,29 +28,33 @@
   function put() {
     const lines = text.split('\n').filter(l => l.trim());
     if (!lines.length) return;
-    game.do({ do: 'addItems', lines }); text = '';
+    game.do({ do: 'addItems', lines }); text = ''; said = null;
   }
-  const preview = (j: Job) => (j.list ?? '').split('\n').filter(l => l.trim() && !l.startsWith(STRUCK)).join(' · ');
+  const preview = (j: Job) => (j.list ?? '').split('\n').filter(l => l.trim()).join(' · ');
   function openList(j: Job) {
-    placing = null;
+    placing = null; said = null;
     if (listing === j.id) { saveList(); return; }
     saveList();
-    listing = j.id; draft = (j.list ?? '').split('\n').filter(l => !l.startsWith(STRUCK)).join('\n');
+    listing = j.id; draft = j.list ?? '';
     /* a new line to type on straight away, as the phone's keyboard opens */
     if (draft) draft += '\n';
     flushSync(); box?.focus(); box?.setSelectionRange(draft.length, draft.length);
   }
+  /* what's typed is kept whenever the box loses the finger, and when the screen goes by any way (the phone's back
+     included), not only on Done (review, D-126) */
+  function keep() { if (listing) game.do({ do: 'listJob', job: listing, list: draft }); }
   function saveList() {
     if (!listing) return;
-    game.do({ do: 'listJob', job: listing, list: draft });
+    keep();
     listing = null;
   }
-  function openDays(j: Job) { saveList(); placing = placing === j.id ? null : j.id; }
+  $effect(() => () => keep());
+  function openDays(j: Job) { saveList(); said = null; placing = placing === j.id ? null : j.id; }
   function place(j: Job, day: string) {
     game.do({ do: 'planJob', job: j.id, day });
     placing = null; said = t('satchel.placed', { job: j.name, day: day === v.day ? t('pick.today') : byWords(day).replace(/^by /, '') });
   }
-  function remove(j: Job) { saveList(); placing = null; game.remove(j.id); }
+  function remove(j: Job) { saveList(); placing = null; said = null; game.remove(j.id); }
 </script>
 
 <Scene painting={v.here.painting} blur />
@@ -79,15 +83,15 @@
           <span class="pip"></span><span class="t">{j.name}</span><span class="s">{j.by ? byWords(j.by) : ''}</span>
         </button>
         {#if listing === j.id}
-          <textarea class="list" bind:this={box} bind:value={draft} rows="4" aria-label={t('satchel.list.label', { job: j.name })}
+          <textarea class="list" bind:this={box} bind:value={draft} rows="4" maxlength={LIST_MAX} onblur={keep} aria-label={t('satchel.list.label', { job: j.name })}
             placeholder={t('satchel.list.hint')}></textarea>
         {:else if preview(j)}
           <button class="preview" onclick={() => openList(j)}>{preview(j)}</button>
         {/if}
         <div class="acts">
-          <button class="text-link" aria-expanded={listing === j.id} onclick={() => openList(j)}><span>{listing === j.id ? t('satchel.list.done') : t('satchel.list')}</span></button>
-          <button class="text-link" aria-expanded={placing === j.id} onclick={() => openDays(j)}><span>{t('satchel.day')}</span></button>
-          <button class="text-link" onclick={() => remove(j)}><span>{t('job.delete')}</span></button>
+          <button class="text-link" aria-expanded={listing === j.id} aria-label={`${listing === j.id ? t('satchel.list.done') : t('satchel.list')}: ${j.name}`} onclick={() => openList(j)}><span>{listing === j.id ? t('satchel.list.done') : t('satchel.list')}</span></button>
+          <button class="text-link" aria-expanded={placing === j.id} aria-label={`${t('satchel.day')}: ${j.name}`} onclick={() => openDays(j)}><span>{t('satchel.day')}</span></button>
+          <button class="text-link" aria-label={t('row.srDelete', { job: j.name })} onclick={() => remove(j)}><span>{t('job.delete')}</span></button>
         </div>
         {#if placing === j.id}<DayPick from={v.day} label={t('satchel.day')} pick={d => place(j, d)} />{/if}
       </div>
