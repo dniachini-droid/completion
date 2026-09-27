@@ -14,9 +14,11 @@ const drawn = async () => { await page.locator('.rows button.row:not(.else) .t')
 {
   await drawn();
   const rows = await names();
+  /* a row still to do shows its minutes, or nothing (D-130: no "a delve" on every row); a done row says "done" */
   const notes = await page.locator('.rows button.row:not(.else) .s').allTextContents();
-  const k = notes.findIndex(n => /delve/i.test(n));
-  if (k < 0) fails.push('no delve row on Today');
+  const k = notes.findIndex(n => !/done/i.test(n));
+  if (notes.some(n => /delve/i.test(n))) fails.push('a row still says "a delve"');
+  if (k < 0) fails.push('no row still to do on Today');
   else {
     const name = rows[k];
     await page.locator('.rows button.row:not(.else)').nth(k).click(); await page.clock.runFor(1200);

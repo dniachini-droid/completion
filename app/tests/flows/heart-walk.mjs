@@ -418,8 +418,8 @@ if (await has('I can’t start')) { await tap('I can’t start'); await shot('ca
   const row = page.locator('.rows button.row', { hasText: 'Call the bank' });
   if (!(await row.count())) errors.push('CAPTURE the job is not on today');
   else if (/one-off|about/i.test(await row.first().innerText())) errors.push('CAPTURE the job is shown as one without a timer'); }
-/* the job editor (D-112), from What repeats' other jobs: renamed; removed, Undo brings it back */
-await tap('Week'); await page.clock.runFor(1200); await tap('What repeats'); await page.clock.runFor(1200);
+/* the job editor (D-112), from Recurring jobs' other jobs: renamed; removed, Undo brings it back */
+await tap('Week'); await page.clock.runFor(1200); await tap('Recurring jobs'); await page.clock.runFor(1200);
 await page.locator('button.row', { hasText: 'Call the bank' }).first().click(); await shot('job-edit', 800);
 await page.locator('.editor input.line').first().fill('Call the bank about the card'); await tap('Save'); await page.clock.runFor(800);
 if (!(await page.locator('button.row', { hasText: 'Call the bank about the card' }).count())) errors.push('EDIT the job was not renamed');
@@ -466,26 +466,27 @@ if (await row.count()) {
   await shot('week-adding', 500);
   await page.keyboard.type('The dentist'); await page.keyboard.press('Enter'); await page.clock.runFor(500);
   if (!(await page.locator('.day:not(.past)').first().locator('button.row', { hasText: 'The dentist' }).count())) errors.push('WEEK the one-off did not land on its day'); }
-await tap('What repeats'); await shot('rhythms', 1200);
+await tap('Recurring jobs'); await shot('rhythms', 1200);
 await page.locator('button.row').first().click(); await shot('rhythm-edit', 800);
 await page.locator('.body').evaluate(e => e.scrollTo(0, e.scrollHeight)); await shot('rhythm-edit-end', 500);
 await tap('Cancel'); await page.clock.runFor(500);
 await tap('This week'); await page.clock.runFor(500); await tap('Next week'); await shot('week-next', 1000);
 await home(); await page.clock.runFor(1500);
-await tap('Daybook'); await shot('daybook', 1500); await home(); await page.clock.runFor(1500);
+await tap('Daybook'); await shot('daybook', 1500); if (await has('Settings')) errors.push('SETTINGS still in the Daybook (D-130: the gear on Today)'); await home(); await page.clock.runFor(1500);
 /* the back trail (review 2, D-088): each arrow returns where its screen was opened from, and says so */
 {
   const expect = (what, got, want) => { if (got !== want) errors.push(`BACK ${what}: arrow says "${got}", expected "${want}"`); };
   await tap('Week'); await tap('Map'); await page.clock.runFor(1500); expect('week → map', await backSays(), 'this week');
   await page.locator('button.home').first().click(); await page.clock.runFor(1200);
   if (!(await page.locator('h1', { hasText: /this week/i }).count())) errors.push('BACK map → week did not return to the week');
-  await tap('What repeats'); expect('week → what repeats', await backSays(), 'this week');
+  await tap('Recurring jobs'); expect('week → recurring jobs', await backSays(), 'this week');
   await page.locator('button.home').first().click(); await page.clock.runFor(800);
   await tap('Next week'); expect('this week → next week', await backSays(), 'this week');
   await page.goBack(); await page.clock.runFor(800);
   if (!(await page.locator('h1', { hasText: /this week/i }).count())) errors.push('BACK the phone’s own back did not step back one screen');
   await home();
-  await tap('Daybook'); await tap('Settings'); await page.clock.runFor(1500); expect('daybook → settings', await backSays(), 'daybook');
+  /* Settings: the gear at the top of Today (D-130), no longer inside the Daybook */
+  await tap('Settings'); await page.clock.runFor(1500); expect('today → settings', await backSays(), 'today');
   await page.locator('.remind button', { hasText: '1 h before' }).click(); await shot('settings', 800);
   /* Save a copy, then Restore from it (D-107): the copy is read back, asked about, and restored */
   { const [dl] = await Promise.all([page.waitForEvent('download'), tap('Save a copy')]);
@@ -504,7 +505,7 @@ await tap('Daybook'); await shot('daybook', 1500); await home(); await page.cloc
     await page.locator('button.home').first().click(); await page.clock.runFor(800); await home(); await page.clock.runFor(1200);
     await tap('Week'); await page.clock.runFor(1200); await shot('week-calendar', 800);
     if (!(await page.locator('.event', { hasText: 'Dentist (calendar)' }).count())) errors.push('CALENDAR the event is not in the week');
-    await home(); await page.clock.runFor(800); await tap('Daybook'); await tap('Settings'); await page.clock.runFor(1200); }
+    await home(); await page.clock.runFor(800); await tap('Settings'); await page.clock.runFor(1200); }
   await tap('The trial’s own controls'); await page.clock.runFor(1500); expect('settings → trial', await backSays(), 'settings');
   await home();
   await tap('Something else…'); await page.locator('.body button.row').first().click(); await page.clock.runFor(800);

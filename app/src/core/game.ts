@@ -97,14 +97,10 @@ export function suggestedOn(facts: Fact[], day: string): { capacity: Capacity; b
   return { capacity: late >= LATE_NIGHT ? 'low' : 'normal', by: 'bedtime' };
 }
 
-/** The day's size: Low 2, Normal 3, High 5; opened after 14:00 one fewer, after 19:00 one job completes it (§6). */
-export function daySize(capacity: Capacity, firstOpen: Moment | null): number {
-  const base = DAY_SIZE[capacity];
-  if (!firstOpen) return base;
-  const h = wallClock(firstOpen).h;
-  if (h >= 19 || h < 4) return 1;
-  if (h >= 14) return Math.max(1, base - 1);
-  return base;
+/** How many jobs a week not laid out puts on today's list: Low 2, Normal 3, High 5 (§6). Opening the app late no longer
+    lowers it (Dan, D-130: no hidden count, no discount; the day is done when its list is). */
+export function daySize(capacity: Capacity): number {
+  return DAY_SIZE[capacity];
 }
 /** Whether Dan laid this week out with Plan my week: then Today follows the plan (D-078). A line or appointment added by
     hand to a week not laid out is an extra on its day, never a takeover (D-107). */
@@ -117,8 +113,7 @@ function plannedCount(c: Content, facts: Fact[], day: string): number {
 /** The day's size: from capacity; on a planned week, never more than the plan puts on the day (at least one) (D-078).
     On a week not laid out, the entries Dan added to the day come on top of it (D-107). */
 function sizeOn(facts: Fact[], day: string, c?: Content) {
-  const first = onDay(facts, day).find(f => f.type === 'opened');
-  const size = daySize(capacityOn(facts, day), first ? first.at : null);
+  const size = daySize(capacityOn(facts, day));
   if (!c) return size;
   const n = plannedCount(c, facts, day);
   if (!planLeads(facts, day)) return size + n;
@@ -359,7 +354,7 @@ function gifts(w: W, c: Content, at: Moment, day: string) {
   };
   /* a place plays the moment it is reached, not held for day complete (Dan, 2026-09-24, D-073) */
   if (!completedOn(w.all, day)) {
-    if (workedOn(w.all, day).size < sizeOn(w.all, day, c)) { reach(); return; }
+    if (!listDone(c, w.all, day, at)) { reach(); return; }
     w.put({ type: 'dayCompleted' }, at, day);
     const earlier = ofType(onDay(w.all, day), 'arrived').some(a => a.kind === 'place');
     if (reach() === 0 && !earlier) {
@@ -386,8 +381,13 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string) {
   const j = jobOf(c, job), timed = delveMinutesOn(w.all, day, job) + crossedIn(w.all, day, job);
   /* a delve's minutes have already moved Dan (counted once, even across 04:00, D-120). Every job is a delve (D-117): one
      said done with no whole minute behind it is off the list, but earns no minutes and brings no return: no step of the
-     story, no find, no Key, and it doesn't count towards the day's completion (rule 10) */
-  if (timed === 0) { w.put({ type: 'jobDone', job, minutes: 0 }, at, day); return; }
+     story, no find, no Key, and it is no work towards the day (rule 10). It is off the list, though: if it was the list's
+     last job and the day has had real work, the day is done (D-130) */
+  if (timed === 0) {
+    w.put({ type: 'jobDone', job, minutes: 0 }, at, day);
+    if (!completedOn(w.all, day) && listDone(c, w.all, day, at)) gifts(w, c, at, day);
+    return;
+  }
   /* a session of a minute or two is done and its minutes have moved Dan, but a few one-minute stops never open the story
      or complete a day (rule 10, D-121) */
   if (timed < S.RETURN_MIN) { w.put({ type: 'jobDone', job, minutes: timed }, at, day); gifts(w, c, at, day); return; }
@@ -946,8 +946,15 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     }
     case 'nudge': { const s = ofType(w.all, 'nudgeChosen'); if ((s.length ? s[s.length - 1].on : false) !== cmd.on) w.put({ type: 'nudgeChosen', on: cmd.on }); break; }
   }
+  /* taking the list's last job still to do off today (Not today, Delete, moved to another day) finishes a day that has
+     had its work, as doing it would (D-130) */
+  if (SHORTENS.has(cmd.do) && w.out.length && !completedOn(w.all, day)) {
+    const now2 = W.live(base, w.all);
+    if (listDone(now2, w.all, day, now)) gifts(w, now2, now, day);
+  }
   return w.out;
 }
+const SHORTENS = new Set<Command['do']>(['setAside', 'removeJob', 'dropItem', 'movePlan']);
 
 /** Facts the clock alone has made due (call on open and while a run is on screen). */
 export function settle(facts: Fact[], c: Content, now: Moment): Fact[] {
@@ -1137,20 +1144,24 @@ function rawReturn(c: Content, facts: Fact[], doneSeq: number): Return {
   return { beat: b.id, line: b.line ?? '', key: b.kind === 'stepKey', guess, choice: b.choice, records: [...(b.carries?.records ?? []), ...(viaSeal?.carries?.records ?? [])], finds, ...(part ? { part } : {}) };
 }
 
-export function see(facts: Fact[], base: Content, now: Moment): View {
-  const c = W.live(base, facts);
-  const day = gameDay(now), nowMs = epochOf(now), clock = now.slice(11, 16);
-  const capacity = capacityOn(facts, day), size = sizeOn(facts, day, c);
+/** Today's list, as Today shows it and as the day's finish line reads it (D-130): on a planned week, every job the plan
+    puts on the day (with what Dan chose himself); without a plan, the first of the day's jobs by capacity, "Not today"
+    taking one off rather than bringing in the next. Done jobs stay on it, and anything done from outside it joins it. */
+function slateOf(c: Content, facts: Fact[], day: string, clock: string) {
+  const size = sizeOn(facts, day, c);
   const done = doneOn(facts, day), order = orderOn(c, facts, day, clock);
   /* an appointment planned for today stays on the slate whatever the day's size (P10); the rest fill it in order */
   const planned = W.plannedToday(c, facts, day, clock);
   const times: Record<string, string> = {};
   for (const p of planned) if (p.time) times[p.job] = p.time;
-  /* on a planned week Today shows every job planned for the day, as the Week does; capacity only sets how many make
-     the day complete (review finding, D-080). Without a plan, capacity sizes the list as before. */
-  const slate = planLeads(facts, day) ? order.slice() : order.slice(0, size);
+  /* on a planned week Today shows every job planned for the day, as the Week does (review finding, D-080). Without a
+     plan, capacity sizes the list; a job Dan said "Not today" to shortens it, as on a planned week (D-130) */
+  const entries = new Set(planned.map(p => p.job)), aside = asideOn(facts, day);
+  const off = [...aside].filter(id => !entries.has(id) && c.jobs.some(j => j.id === id)).length;
+  const slate = planLeads(facts, day) ? order.slice() : order.slice(0, Math.max(0, size - off));
   for (const id of Object.keys(times)) {
-    if (slate.includes(id)) continue;
+    /* an appointment Dan said "Not today" to is off the list like any job (D-130) */
+    if (slate.includes(id) || aside.has(id)) continue;
     let k = slate.length - 1;
     while (k >= 0 && (times[slate[k]] || done.has(slate[k]))) k--;
     if (k >= 0) slate.splice(k, 1);
@@ -1163,6 +1174,22 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   for (const id of done) if (!slate.includes(id) && kept(id)) slate.push(id);   /* so does something chosen from outside the list (D-077) */
   /* a done record deleted leaves even a planned place on the list (D-125) */
   for (let i = slate.length - 1; i >= 0; i--) if (done.has(slate[i]) && hidden.has(`${slate[i]}|${day}`)) slate.splice(i, 1);
+  return { size, done, order, times, slate };
+}
+/** The day's finish line (Dan, D-130): every job on today's list is done, with no hidden count and nothing lowered for
+    opening late. At least one of the day's jobs must have real minutes behind it, so a list said done without any work
+    never completes a day (rule 10). An empty list completes with the first job worked on, which then is the list. */
+function listDone(c: Content, facts: Fact[], day: string, at: Moment): boolean {
+  if (!workedOn(facts, day).size) return false;
+  const { slate, done } = slateOf(c, facts, day, at.slice(11, 16));
+  return slate.every(id => done.has(id));
+}
+
+export function see(facts: Fact[], base: Content, now: Moment): View {
+  const c = W.live(base, facts);
+  const day = gameDay(now), nowMs = epochOf(now), clock = now.slice(11, 16);
+  const capacity = capacityOn(facts, day);
+  const { size, done, order, times, slate } = slateOf(c, facts, day, clock);
   const complete = completedOn(facts, day);
   /* "under way" was a job without a timer begun away from the phone; every job is a delve now (D-117), so an old Begin
      in a save leaves nothing under way */

@@ -1,6 +1,7 @@
 <script lang="ts">
-  /* A day from today on, in the app's own small calendar: five weeks from this Monday (D-125, D-126). The phone's date
-     picker closed itself on the iPhone; this one stays until a day is chosen. */
+  /* A day from today on, in the app's own small calendar: five weeks from this Monday (D-125, D-126). The one calendar
+     everywhere: the Satchel's "Put on a day" and the Week's "Another day…" (D-130). The phone's date picker closed
+     itself on the iPhone; this one stays until a day is chosen. */
   import { t, dayName } from '../content/copy/en';
   import { addDays } from '../core/week';
   import { calendarWeek } from '../core/time';
@@ -23,7 +24,8 @@
 </div>
 
 <style>
-  .cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; margin-top: 6px; }
+  /* a thin gap, so each day stays a 44-point target at 360 wide (D-130) */
+  .cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px; margin-top: 6px; }
   .wd { text-align: center; font-size: 14px; letter-spacing: .08em; color: var(--ink-3); }
   button { min-height: 44px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0;
     font: inherit; font-size: 17px; color: var(--ink); background: transparent; border: 1px solid var(--edge-2); cursor: pointer; }

@@ -14,6 +14,7 @@
   import { back } from './back.svelte';
   import { flushSync } from 'svelte';
   import Remind from './Remind.svelte';
+  import DayPick from './DayPick.svelte';
   import { entryTarget, reminderSettings, rhythmTarget, type Lead } from '../core/reminders';
 
   let { go, week }: { go: Go; week?: string } = $props();
@@ -108,10 +109,8 @@
   /* on a computer the time box opens its picker on any click too, as a phone's does */
   function pick(e: MouseEvent) { try { (e.currentTarget as HTMLInputElement).showPicker?.(); } catch { /* not every browser */ } }
   const short = (d: string) => t(`days.short.${new Date(`${d}T00:00:00Z`).getUTCDay()}` as never);
-  /* "Another day…": the four weeks after this one, as a small calendar (D-125) */
+  /* "Another day…": the app's one calendar (DayPick), from today on (D-125, D-130) */
   let otherOpen = $state(false);
-  const ahead = $derived(Array.from({ length: 28 }, (_, i) => addDays(wk, 7 + i)));
-  const monthOf = (d: string) => t(`month.${+d.slice(5, 7)}` as never);
 </script>
 
 <Scene painting={v.here.painting} blur />
@@ -174,18 +173,11 @@
                 <div class="seg days" role="group" aria-label={t('week.moveTo')}>
                   {#each days as x (x)}<button aria-pressed={d.day === x} onclick={() => moveTo(j, d.day, x)}>{short(x)}</button>{/each}
                 </div>
-                <!-- another week: off this one, and onto that day (D-114). The app's own four weeks, not the phone's
-                     date picker, which closed itself within seconds on the iPhone (Dan, D-125) -->
+                <!-- another day: the app's one calendar, as in the Satchel, from today on (D-130), not the phone's date
+                     picker, which closed itself within seconds on the iPhone (Dan, D-125) -->
                 <div class="other"><button class="text-link" aria-expanded={otherOpen} onclick={() => (otherOpen = !otherOpen)}><span>{t('week.otherDay')}</span></button></div>
                 {#if otherOpen}
-                  <div class="cal" role="group" aria-label={t('week.otherDay')}>
-                    {#each [1, 2, 3, 4, 5, 6, 0] as w (w)}<span class="wd" aria-hidden="true">{t(`days.short.${w}` as never)}</span>{/each}
-                    {#each ahead as x (x)}
-                      <button aria-label={`${dayName(x)} ${+x.slice(8)} ${monthOf(x)}`} onclick={() => toDay(j, x)}>
-                        <span>{+x.slice(8)}</span>{#if x === ahead[0] || x.endsWith('-01')}<small>{monthOf(x).slice(0, 3)}</small>{/if}
-                      </button>
-                    {/each}
-                  </div>
+                  <DayPick from={v.day} label={t('week.otherDay')} pick={x => toDay(j, x)} />
                 {/if}
                 <div class="when">
                   <!-- the time box is the phone's own: a tap opens its wheel, and what it's set to is kept (D-093) -->
@@ -232,7 +224,7 @@
   .none .soft { margin: 6px 0 16px; text-align: left; }
   .day { margin-top: 12px; }
   .dname { font-family: var(--carve, inherit); font-size: 14px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); display: flex; gap: 10px; align-items: baseline;
-    width: 100%; min-height: 36px; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; }
+    width: 100%; min-height: 44px; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; }
   .dname small.about { color: var(--ink-3); opacity: .8; }
   .dname small { margin-left: auto; font-family: var(--life); font-style: italic; text-transform: none; letter-spacing: 0; font-size: 15px; color: var(--ink-3); }
   .chev { display: inline-block; width: 10px; font-size: 16px; line-height: 1; color: var(--ink-3); transform: rotate(90deg); transition: transform .2s ease; }
@@ -246,7 +238,7 @@
   .dhead { display: flex; align-items: flex-start; }
   .dhead .dname { flex: 1; min-width: 0; }
   /* the + sits at the end of each day's line: a big enough target, quiet until wanted */
-  .plus { width: 44px; height: 30px; margin: -6px -12px 0 0; align-self: flex-start; display: grid; place-items: center; background: none; border: 0; color: var(--violet-hi); font-size: 22px; line-height: 1; cursor: pointer; }
+  .plus { width: 44px; height: 44px; margin: 0 -12px 0 0; align-self: flex-start; display: grid; place-items: center; background: none; border: 0; color: var(--violet-hi); font-size: 22px; line-height: 1; cursor: pointer; }
   .plus.on span { display: inline-block; transform: rotate(45deg); }
   .sheet { border: 1px solid var(--edge-2); background: rgba(10,9,24,.7); padding: 4px 14px 10px; margin: 6px 0 10px; }
   .sheet .label-line { margin-top: 8px; }
@@ -265,11 +257,8 @@
   .event.allday { color: var(--ink-3); }
   .event .what { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
   .other { display: flex; justify-content: center; margin-top: 8px; }
-  .cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; margin-top: 6px; }
-  .cal .wd { text-align: center; font-size: 14px; letter-spacing: .08em; color: var(--ink-3); }
-  .cal button { min-height: 44px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0;
-    font: inherit; font-size: 17px; color: var(--ink); background: transparent; border: 1px solid var(--edge-2); cursor: pointer; }
-  .cal button small { font-size: 14px; line-height: 1; color: var(--ink-3); }
+  /* the calendar reaches into the sheet's padding, so each day is a whole 44-point target on a small phone */
+  .sheet :global(.cal) { margin-left: -13px; margin-right: -13px; }
   .off { display: flex; justify-content: center; flex-wrap: wrap; gap: 0 14px; margin-top: 6px; }
   .btn.full { width: 100%; }
   .new { display: flex; gap: 10px; margin: 4px 0 8px; }

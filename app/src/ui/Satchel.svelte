@@ -56,6 +56,16 @@
     placing = null; said = t('satchel.placed', { job: j.name, day: day === v.day ? t('pick.today') : byWords(day).replace(/^by /, '') });
   }
   function remove(j: Job) { saveList(); placing = null; said = null; game.remove(j.id); }
+  /* the artwork shrinks as the list scrolls up (Dan, D-130): drawn smaller and fainter from its top edge, while the list
+     keeps its place, so nothing under the finger jumps */
+  let artEl = $state<HTMLImageElement | null>(null);
+  function shrink(e: Event) {
+    if (!artEl) return;
+    const h = artEl.offsetHeight || 1, k = Math.min(1, Math.max(0, (e.currentTarget as HTMLElement).scrollTop / h));
+    /* from its top edge and inside its own box: it never lies over the list */
+    artEl.style.transform = k ? `scale(${(1 - k * 0.5).toFixed(3)})` : '';
+    artEl.style.opacity = k ? (1 - k).toFixed(3) : '';
+  }
 </script>
 
 <Scene painting={v.here.painting} blur />
@@ -69,8 +79,8 @@
     <p class="soft say-note rise">{t('satchel.say')}</p>
   </header>
 
-  <div class="body col rise d1">
-    <img class="art" src={art} alt="" aria-hidden="true" />
+  <div class="body col rise d1" onscroll={shrink}>
+    <img class="art" bind:this={artEl} src={art} alt="" aria-hidden="true" />
     <form class="new" onsubmit={(e) => { e.preventDefault(); put(); }}>
       <input bind:value={text} aria-label={t('satchel.add')} placeholder={t('satchel.add.hint')} maxlength="120" enterkeyhint="done" />
       <button class="btn-quiet" type="submit" disabled={!text.trim()}><span>{t('satchel.put')}</span></button>
@@ -111,7 +121,7 @@
     -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 80%, transparent 100%), linear-gradient(to right, transparent 0, #000 10%, #000 90%, transparent 100%);
     -webkit-mask-composite: source-in;
     mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 80%, transparent 100%), linear-gradient(to right, transparent 0, #000 10%, #000 90%, transparent 100%);
-    mask-composite: intersect; }
+    mask-composite: intersect; transform-origin: 50% 0; will-change: transform, opacity; }
   .new { display: flex; gap: 10px; margin: 4px 0 10px; }
   .new input { flex: 1; min-width: 0; min-height: 44px; padding: 0 12px; font: inherit; font-size: 17px; color: #fff;
     background: rgba(255, 255, 255, .06); border: 1px solid var(--edge-2); border-radius: 0; }
@@ -126,7 +136,7 @@
     background: rgba(255, 255, 255, .06); border: 1px solid var(--edge-2); border-radius: 0; resize: vertical; }
   .full { margin: -2px 0 6px; font-size: 15px; font-style: italic; }
   .acts { display: flex; flex-wrap: wrap; gap: 0 16px; padding-left: 22px; }
-  .acts .text-link { min-height: 40px; font-size: 15px; }
+  .acts .text-link { min-height: 44px; min-width: 44px; font-size: 15px; }
   .said { font-family: var(--life); font-style: italic; font-size: 15.5px; color: var(--ink-2); text-align: center; margin: 4px 0 8px; }
   button.home { color: var(--ink-2); }
 </style>

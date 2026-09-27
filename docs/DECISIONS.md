@@ -1368,3 +1368,25 @@
 - **Not decided here (Dan's):** the story still paced by Keys at 5 a calendar week (the review's finding 2): options in `docs/reviews/OVERVIEW.md`.
 - **Consequences:** a fresh adversarial review of the fixes found a day-assignment slip in the clock fix and an old-save case in the cross-week guard, both fixed with tests. Merging and the TestFlight send wait for Dan's go.
 - **Reversible:** Yes.
+
+## D-130 — UI tidy, step 1, and the day's finish line (Dan)
+- **Date:** 2026-09-27, night (built on `claude/ui-tidy-step1`; option C, D-129, is built in its own window and not touched here)
+- **Context:** The whole-app UI review (`docs/reviews/UI-REVIEW.md`) and its overview (`docs/reviews/OVERVIEW.md`, decisions 3 and 4). Dan approved step 1 of the tidy (no change to how anything works), a few small steps, and a clear finish line for the day.
+- **Decision (step 1, words and layout):**
+  1. The Daybook: "Next week" over the story's glimpse becomes "Further on"; each page is titled by its dates ("28 Sept – 4 Oct"), never "Week one" (one continuous story, D-123).
+  2. No "Enough" label or line at a recurring job's delve end (D-121). Today's rows show the job's usual minutes ("50 min") instead of "a delve"; a line jotted with + Add shows nothing, since its minutes were never set.
+  3. The job editor's "Each time" is "About how long", with a note that it is for planning the week (every delve opens at 30, D-124). The dead push-deeper offer (its words, the view's `deepOffer` and the `callDeep` command) is gone; an old save's `deepCalled` still counts. The trial's controls lose their stand-in words.
+  4. Settings is a small gear at the top of Today, no longer in the Daybook; the bedtime can be changed there at any hour (one shared bedtime control, also used by Tonight).
+  5. In the last hour before bedtime, Tonight (bedtime and Go to sleep) comes above the day's list; earlier in the evening it stays at the list's end.
+  6. One calendar everywhere: the Week's "Another day…" uses the Satchel's `DayPick` (from today, five weeks from this Monday), so the rest of this week can be chosen too.
+  7. Fixes: the story's words at a delve's end, an arrival and a job's return keep the column's margin (they ran to 6 px from the edge); the Map's forecast sits on its own line under "you are here" (it ran off the left edge); the Week's day headings and "+", the Satchel's links, the calendar's days and "Hide the words" are 44-point targets; the reminder and "How often" choices are 13 px, not 12; the Satchel's list button says "Close", so "Done" always means a job is done.
+  8. "Recurring jobs" wherever Dan reads it (the Week's link and its screen, "Stop it recurring", the Key's lines; the Key rules themselves are untouched).
+- **Decision (small steps, Dan's answers):** the delve's "Lock the phone and put it away…" note is gone, with no "?" (the warning that alerts are off stays, only when they are); the Satchel's artwork shrinks and fades as its list scrolls; a job's list lines in a delve have a small circle, ticked when struck, as in Reminders. Text size handling is unchanged.
+- **Decision (the day's finish line):** the day is done ("The day's work is done…", gold) when every job on today's list is done. No hidden count, and nothing lowered for opening the app late (the afternoon and evening discount is removed from `daySize`). "Not today" still shortens the day, and on the list's last job left it finishes a day that has had its work, as do Delete and moving it to another day. Jobs done from outside the list join it done and never hold it back. After the day turns gold, one quiet line: "Anything more takes you deeper."
+  - **Kept from rule 10:** a day completes only if at least one of its jobs had real minutes (5 or more): a list said done with no work is never a finished day.
+  - **An empty day:** a list emptied by "Not today" is not a finished day; the first job then worked on is the list, and finishes it (as a planned day of one job did before). On a week laid out by the planner, which every week is from its first opening, this is how it already behaved.
+  - **Unchanged:** the camp scene and its gifts at day complete; the deep story moments past a normal day's jobs (D-127), checked by a new test.
+  - **Found on the way and fixed:** an appointment Dan said "Not today" to stayed on today's list.
+- **Alternatives:** keeping a count (the plan's, or 3) as the finish line (the UI review saw "done" with a job still to come; Dan: no hidden count); counting a list said done with no minutes (rule 10).
+- **Consequences:** today's list is computed once (`slateOf` in `core/game.ts`) for Today and for the finish line. New rule tests (`tests/rules/finish.test.ts`) fail on the old rules. The flows' words follow the new wording. Not merged, not on TestFlight: waiting for Dan's OK (another window merges and sends).
+- **Reversible:** Yes.

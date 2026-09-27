@@ -23,6 +23,8 @@
     key: string; x: number; y: number;
     kind: 'here' | 'lit' | 'faint' | 'sealed' | 'waypoint';
     name?: string; sub?: string; subKind?: 'warm' | 'dim' | 'gold';
+    /** the forecast, on a line of its own under "you are here" */
+    sub2?: string;
     lx: number; ly: number; anchor: Anchor;
     box: { label: string; title: string; say: string };
   }
@@ -72,7 +74,8 @@
           sub: here ? t('map.here') : sealedOn(k).length ? t('map.sealed') : undefined, subKind: here ? 'warm' : 'dim',
           box: here ? hereBox
             : { label: sealedOn(k).length ? t('map.walkedSealed') : t('map.walked'), title: stretchName(k), say: names.length ? names.join(' · ') : t('map.wayIn') } });
-        if (fc) out[out.length - 1].sub += ` · ${fc}`;
+        /* on its own line: joined to "you are here" it ran off the screen's left edge (UI review, D-130) */
+        if (fc) out[out.length - 1].sub2 = fc;
       } else if (k === aheadOn) {
         out.push({ key: k, ...a, kind: 'faint',
           sub: ahead.length ? t('map.forecast', { day: dayName(ahead[0]) }) : t('map.ahead'), subKind: ahead.length ? 'gold' : 'dim',
@@ -220,6 +223,9 @@
           {/each}
           {#if l.sub}
             <text x={l.lx} y={l.ly + ls.length * 20 + (ls.length ? 0 : 4)} text-anchor={l.anchor} class="ns {l.subKind ?? ''}">{l.sub}</text>
+          {/if}
+          {#if l.sub2}
+            <text x={l.lx} y={l.ly + ls.length * 20 + (ls.length ? 0 : 4) + 20} text-anchor={l.anchor} class="ns gold">{l.sub2}</text>
           {/if}
         {/each}
       </g>

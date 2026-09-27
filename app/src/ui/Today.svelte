@@ -228,6 +228,8 @@
         {#if still.length}<p class="soft still">{t('today.stillToCome', { what: still.join(', ') })}</p>{/if}
         {#if evening}{@render tonight()}{/if}
         <div class="btn-row after"><button class="btn-quiet" onclick={() => go('choose')}><span>{t('today.keepGoing')}</span></button></div>
+        <!-- the one promise past the finish line: more work reaches the deep moments (D-127), said once, quietly (D-130) -->
+        <p class="soft deeper">{t('today.deeper')}</p>
         {#if lastPlace}<div class="cant"><button class="text-link" onclick={() => go('arrival')}><span>{t('today.look')}</span></button></div>{/if}
         <div class="gap"></div>
       </div>
@@ -302,6 +304,7 @@
   .cant .dot { color: var(--ink-3); }
   .gap { height: 12px; }
   .after { margin-top: 12px; }
+  .next .soft.deeper { font-style: italic; margin: 8px 0 4px; }
   .rows { margin-top: 2px; }
   button.row { width: 100%; text-align: left; }
   .lead .btn.full { width: 100%; }

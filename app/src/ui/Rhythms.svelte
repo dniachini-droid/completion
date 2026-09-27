@@ -313,7 +313,7 @@
   /* three choices on one line, even on a small phone (review 2) */
   .editor .seg:not(.days) button { letter-spacing: .08em; padding-left: 4px; padding-right: 4px; white-space: nowrap; }
   /* four choices of how often on one line, even on a small phone (D-112) */
-  .editor .seg.often button { letter-spacing: .03em; font-size: 12px; padding-left: 2px; padding-right: 2px; }
+  .editor .seg.often button { letter-spacing: .03em; font-size: 13px; padding-left: 2px; padding-right: 2px; }
   .editor .seg.often.more { margin-top: 4px; }
   .others { margin-top: 18px; }
   .passed { display: flex; flex-wrap: wrap; align-items: center; gap: 0 12px; padding: 2px 0 8px 22px; font-style: italic; font-size: 15px; color: var(--ink-2); }

@@ -37,12 +37,10 @@ describe('Today', () => {
     expect(v.next).toEqual({ job: v.slate[0], mode: 'begin' });
     expect(v.here.id).toBeNull();   /* before the first place: the way in */
   });
-  it('day sizes: Low 2, Normal 3, High 5; opened late, one fewer; in the evening, one', () => {
-    expect(daySize('low', '2026-09-24T09:00:00+01:00')).toBe(2);
-    expect(daySize('high', '2026-09-24T09:00:00+01:00')).toBe(5);
-    expect(daySize('normal', '2026-09-24T14:30:00+01:00')).toBe(2);
-    expect(daySize('high', '2026-09-24T19:10:00+01:00')).toBe(1);
-    expect(daySize('normal', '2026-09-25T02:00:00+01:00')).toBe(1);
+  it('day sizes (a week not laid out): Low 2, Normal 3, High 5; never lowered for opening late (D-130)', () => {
+    expect(daySize('low')).toBe(2);
+    expect(daySize('normal')).toBe(3);
+    expect(daySize('high')).toBe(5);
   });
   it('Swap brings in the next job of the day', () => {
     const p = player().do({ do: 'open' });
@@ -77,10 +75,15 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     expect(v.arrival).toMatchObject({ kind: 'place', id: 'b-1.A', completedDay: false });
     expect(v.here.id).toBeNull();   /* revealed on the arrival's own screen, not before */
     p.do({ do: 'seen', what: 'arrival', ref: v.arrival!.seq });
-    /* the gym, a delve like every job (D-117): its hour, done at its enough, completes the day, with no camp */
+    /* the gym, a delve like every job (D-117): its hour, done at its enough. Three jobs done, but the Spanish lesson is
+       still on today's list, so the day is not done: no hidden count (D-130) */
     p.do({ do: 'startRun', job: 'gym', minutes: 30, count: 2 }).wait(70);
+    expect(p.view().complete).toBe(false);
+    expect(p.view().next).toEqual({ job: 'lesson', mode: 'begin' });
+    /* the lesson, the list's last job, completes the day, with no camp (a place was reached today) */
+    p.do({ do: 'startRun', job: 'lesson', minutes: 30, count: 1 }).wait(31);
     expect(p.view().complete).toBe(true);
-    expect(p.view().walked).toBe(135);
+    expect(p.view().walked).toBe(165);
     expect(p.view().arrival).toBeNull();
     expect(p.view().here.id).toBe('b-1.A');
     expect(p.view().next).toBeNull();
@@ -91,9 +94,14 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     expect(p.view().walked).toBe(120);
     /* 120 minutes passes the first place (75): a named place */
     expect(p.view().arrival?.kind).toBe('place');
-    const q = player().do({ do: 'open' }).do({ do: 'capacity', capacity: 'low' });
-    q.do({ do: 'startRun', job: 'cat', minutes: 25, count: 1 }).wait(25).do({ do: 'done', job: 'cat' });
-    q.do({ do: 'startRun', job: 'post', minutes: 25, count: 1 }).wait(25).do({ do: 'done', job: 'post' });
+    /* today's whole list (the cat, the gym, the lesson) done in short delves, short of the first place: a camp */
+    const q = player().do({ do: 'open' });
+    expect(q.view().slate).toEqual(['cat', 'gym', 'lesson']);
+    for (const job of ['cat', 'gym', 'lesson']) {
+      q.do({ do: 'startRun', job, minutes: 20, count: 1 }).wait(20);
+      if (!q.view().done.has(job)) q.do({ do: 'done', job });
+    }
+    expect(q.view().walked).toBe(60);
     expect(q.view().arrival).toMatchObject({ kind: 'camp', completedDay: true });
     expect(q.view().arrival!.look).toBeTruthy();   /* a camp always has one thing to look at */
     expect(q.view().here.id).toBeNull();
@@ -105,12 +113,12 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     expect(q.facts.filter(f => f.type === 'jobBegun')).toEqual([expect.objectContaining({ job: 'gym', from: 'app' })]);
     expect(q.view().done.has('gym')).toBe(true);
   });
-  it('lowering capacity can complete the day, and day complete locks in', () => {
-    const p = player().do({ do: 'open' }).did('gym').did('tank');
+  it('"Not today" on the list’s last job to do completes a day that had its work, and day complete locks in (D-130)', () => {
+    const p = player().do({ do: 'open' }).did('cat').did('gym');
     expect(p.view().complete).toBe(false);
-    p.do({ do: 'capacity', capacity: 'low' });
+    p.do({ do: 'setAside', job: 'lesson' });
     expect(p.view().complete).toBe(true);
-    p.do({ do: 'capacity', capacity: 'high' });
+    p.do({ do: 'putBack', job: 'lesson' });
     expect(p.view().complete).toBe(true);
     expect(p.types().filter(t => t === 'dayCompleted')).toHaveLength(1);
   });

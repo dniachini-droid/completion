@@ -44,14 +44,19 @@ else {
 }
 await page.locator('button.home').click(); await page.clock.runFor(1200);
 
-/* 3. the Week: a job's sheet → Another day… → the app's four weeks stay open → a day → the job is there */
+/* 3. the Week: a job's sheet → Another day… → the app's one calendar (D-130: as in the Satchel, from today on, five
+   weeks from this Monday) stays open → a day → the job is there */
 await btn('Week').click(); await page.clock.runFor(1500);
 await page.locator('.day button.row', { hasText: 'Sweep the yard' }).first().click(); await page.clock.runFor(600);
 await btn('Another day…').click(); await page.clock.runFor(3000);
 const days = page.locator('.cal button');
-if ((await days.count()) !== 28) fails.push(`"Another day…" shows ${await days.count()} days, not four weeks`);
+const today = await page.locator('.cal button.today').count();
+if (!today || (await days.count()) < 28) fails.push(`"Another day…" shows ${await days.count()} days from today, not the app's calendar`);
 else {
-  await days.nth(9).click(); await page.clock.runFor(1200);   /* the Wednesday of the week after next */
+  /* the Wednesday of the week after next: the calendar begins with this week's Monday, today marked, days before it blank */
+  const cells = await page.locator('.cal > *:not(.wd)').count();
+  await page.locator('.cal > *:not(.wd)').nth(16).click(); await page.clock.runFor(1200);
+  if (cells !== 35) fails.push(`the calendar holds ${cells} places, not five weeks`);
   if (await page.locator('.day button.row', { hasText: 'Sweep the yard' }).count()) fails.push('Sweep the yard is still in this week after Another day');
   /* the week after next: it is there, on its Wednesday */
   await btn('Next week').click(); await page.clock.runFor(1200); await btn('The week after').click(); await page.clock.runFor(1200);

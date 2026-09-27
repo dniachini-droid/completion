@@ -26,6 +26,7 @@ export const copy = {
   'today.camped': 'You made your camp at {place}.',
   'today.look': 'See where you are',
   'today.keepGoing': 'Keep going',
+  'today.deeper': 'Anything more takes you deeper.',
   'row.done': 'done',
   'nav.proto': 'Trial',
   'nav.settings': 'Settings',

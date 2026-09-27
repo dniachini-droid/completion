@@ -32,12 +32,14 @@
   .scroll { max-height: 42vh; max-height: 42dvh; overflow-x: hidden; overflow-y: auto; overscroll-behavior: none; scrollbar-width: none;
     -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 12px, #000 calc(100% - 26px), transparent 100%);
             mask-image: linear-gradient(180deg, transparent 0, #000 12px, #000 calc(100% - 26px), transparent 100%);
-    padding: 8px 0 18px; transition: max-height .5s var(--ease); }
+    /* top and bottom only: the sides are the column's own (base.css → .col .scroll), so the words keep the same margin as
+       everything else; a zero here ran them to 6 px from the phone's edge (UI review, D-130) */
+    padding-top: 8px; padding-bottom: 18px; transition: max-height .5s var(--ease); }
   .scroll::-webkit-scrollbar { display: none; }
   .folded .scroll { max-height: 5.4em; overflow: hidden; }
   .folded .wash { opacity: .55; }
-  .plain .scroll { max-height: none; overflow: visible; -webkit-mask-image: none; mask-image: none; padding: 0; }
+  .plain .scroll { max-height: none; overflow: visible; -webkit-mask-image: none; mask-image: none; padding-top: 0; padding-bottom: 0; }
   .plain.folded .scroll { max-height: 5.4em; overflow: hidden;
     -webkit-mask-image: linear-gradient(180deg, #000 60%, transparent 100%); mask-image: linear-gradient(180deg, #000 60%, transparent 100%); }
-  .fold { align-self: flex-end; min-height: 36px; font-style: italic; color: var(--ink-2); }
+  .fold { align-self: flex-end; min-height: 44px; font-style: italic; color: var(--ink-2); }
 </style>
