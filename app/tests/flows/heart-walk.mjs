@@ -127,6 +127,12 @@ const has = async (text) => (await page.getByRole('button', { name: text, exact:
 const tap = async (text) => {
   const b = page.getByRole('button', { name: text, exact: true }).first();
   try { await b.click({ timeout: 8000 }); return; } catch { /* covered, or not there */ }
+  /* a delve that ended while the walk was elsewhere is shown when it ends, or on the way back to Today (D-120): the walk
+     takes its end as Dan would (Not yet, then back to Today) and goes on */
+  if (await page.locator('.dv').count() && !(await b.count())) {
+    for (const w of ['Not yet', 'Back to today']) { const x = page.getByRole('button', { name: w, exact: true }).first(); if (await x.count()) { await x.click(); await page.clock.runFor(1200); } }
+    try { await b.click({ timeout: 8000 }); return; } catch { /* still not there */ }
+  }
   try { await b.click({ force: true, timeout: 8000 }); return; } catch (e) {
     await page.screenshot({ path: `${out}/stuck-${text.replace(/\W+/g, '-')}.png` }).catch(() => {});
     const where = await page.evaluate(() => [...document.querySelectorAll('.phone > *, #app > *, .ui, main')].map(x => x.className?.baseVal ?? x.className).filter(Boolean).slice(0, 8).join(' | ')).catch(() => '?');
