@@ -3,7 +3,7 @@
      a delve that ended while away shows its end; a run in progress shows the ring; an unseen arrival shows itself. */
   import { game } from './game.svelte';
   import { moment } from './moment.svelte';
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import type { Back, Go, Screen } from './nav';
   import { back } from './back.svelte';
   import { platform } from '../platform';
@@ -55,7 +55,7 @@
   /* Records ⇄ Marks is a tab: the screen swaps in place, with nothing rising or fading in again (Dan, D-093) */
   let still = $state(false);
   const go: Go = (to, a) => {
-    steady();
+    steady(); void tick().then(() => steady());
     /* leaving a delve's end by any way out (the arrow, the phone's back): looked at, so it never comes back later (D-120) */
     const e = game.view.runEnd;
     if (screen === 'delve' && e && !game.view.run && to !== 'delve') game.do({ do: 'seen', what: 'step', ref: e.seq });

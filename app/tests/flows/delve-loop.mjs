@@ -80,7 +80,9 @@ if (await btn('Back to the delve').count()) fails.push('the delve on Bills still
 await toToday();
 /* 5. double taps: each makes one decision, never a second one on the screen that replaces it */
 const double = async (loc, what) => { const r = await loc.first().boundingBox().catch(() => null); if (!r) { fails.push(`no ${what}`); return; }
-  for (let i = 0; i < 2; i++) { await page.touchscreen.tap(r.x + r.width / 2, r.y + r.height / 2); await page.clock.runFor(250); } await page.clock.runFor(1200); };
+  /* a real double tap: the second straight after the first, as a finger does it */
+  for (let i = 0; i < 2; i++) await page.touchscreen.tap(r.x + r.width / 2, r.y + r.height / 2);
+  await page.clock.runFor(1200); };
 const choose = async (name) => { await tap(page.locator('.rows button.row.else, .after .btn-quiet'), 'Something else… or Keep going'); await tap(page.locator('.ui button').filter({ hasText: name }), name + ' in Choose'); };
 await choose('Course');
 await double(btn('Begin'), 'Begin');
