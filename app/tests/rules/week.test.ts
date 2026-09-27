@@ -640,3 +640,48 @@ describe('A line of Dan\'s own, begun, is done by Done (Dan, 2026-09-27, D-120)'
     doneBy(p, p.facts.find(f => f.type === 'itemAdded')!.id);
   });
 });
+
+describe('A delve job worked on today can be said done later (Dan, 2026-09-27, D-120)', () => {
+  it('after "Not yet" (or the question left), Done marks it, counting the delve\'s minutes once', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'startRun', job: 'cat', minutes: 25, count: 1 }).wait(10).do({ do: 'finishHere' });
+    const walked = p.facts.filter(f => f.type === 'stepsGained').reduce((n, f) => n + (f as { minutes: number }).minutes, 0);
+    expect(p.view().done.has('cat')).toBe(false);
+    const before = p.facts.length;
+    p.do({ do: 'done', job: 'cat' });
+    const out = p.facts.slice(before);
+    expect(out).toContainEqual(expect.objectContaining({ type: 'jobDone', job: 'cat', minutes: 10 }));
+    expect(out.some(f => f.type === 'stepsGained')).toBe(false);   /* the minutes already moved Dan: none again */
+    expect(p.facts.filter(f => f.type === 'stepsGained').reduce((n, f) => n + (f as { minutes: number }).minutes, 0)).toBe(walked);
+    expect(p.view().done.has('cat')).toBe(true);
+  });
+});
+
+describe('Done while its own delve still runs (Dan, 2026-09-27, D-120)', () => {
+  const walked = (facts: Fact[]) => facts.filter(f => f.type === 'stepsGained').reduce((n, f) => n + (f as { minutes: number }).minutes, 0);
+  it('Done on Today finishes the delve there: its minutes count once, and the delve ends', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'startRun', job: 'cat', minutes: 25, count: 1 }).wait(10);
+    const w0 = walked(p.facts);
+    p.do({ do: 'done', job: 'cat' });
+    expect(p.view().run).toBeNull();
+    expect(p.view().runEnd).toBeNull();   /* the job's return tells it; the delve's end doesn't come back */
+    expect(p.facts).toContainEqual(expect.objectContaining({ type: 'jobDone', job: 'cat', minutes: 10 }));
+    expect(walked(p.facts) - w0).toBe(10);
+    p.wait(30);
+    expect(walked(p.facts) - w0).toBe(10);   /* nothing more once the delve would have run out */
+  });
+  it('a satchel line ticked while delving on it: the same', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['Bills'] });
+    const id = p.facts.find(f => f.type === 'itemAdded')!.id;
+    p.do({ do: 'startRun', job: id, minutes: 25, count: 2 }).wait(12);
+    expect(p.view().slate).toContain(id);
+    const w0 = walked(p.facts);
+    p.do({ do: 'tick', id });
+    expect(p.view().run).toBeNull();
+    expect(p.view().done.has(id)).toBe(true);
+    expect(walked(p.facts.concat()) - w0).toBe(12);
+  });
+  it('a delve on another job is left running', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'begin', job: 'gym' }).do({ do: 'startRun', job: 'cat', minutes: 25, count: 1 }).wait(5).do({ do: 'done', job: 'gym' });
+    expect(p.view().run?.job.id).toBe('cat');
+  });
+});

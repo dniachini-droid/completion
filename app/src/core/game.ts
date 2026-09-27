@@ -377,6 +377,16 @@ function finishRun(w: W, c: Content, r: NonNullable<ReturnType<typeof activeRun>
   if (reachesEnough(w.all, rday, j)) markDoneIn(w, c, j.id, at, rday);
   else gifts(w, c, at, rday);
 }
+/** Said done while its own delve still runs (Done on Today, a tick in the satchel): the delve finishes there first, so
+    its minutes count once and the job is not paid twice (Dan, 2026-09-27, D-120). Its end is marked seen: the job's
+    return tells the story, and the delve's end doesn't come back later. */
+function endRunOn(w: W, c: Content, job: string, nowMs: number, now: Moment) {
+  const r = activeRun(w.all);
+  if (!r || r.fact.job !== job) return;
+  finishRun(w, c, r, nowMs, now);
+  const end = ofType(w.out, 'delveEnded').pop();
+  if (end) w.put({ type: 'seen', what: 'step', ref: end.seq });
+}
 /** Going into another app pauses the delve (D-094): at the moment Dan left, or, if he left in a breather, at the moment
     the next delve would have begun without him. Time away never counts; nothing already done is lost. */
 function pauseAway(w: W, from: number, to: number) {
@@ -620,6 +630,7 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     }
     case 'done':
       if (v.done.has(cmd.job)) break;
+      endRunOn(w, c, cmd.job, nowMs, now);
       /* Done with no Begin: recorded afterwards (the test's sharpest line, MVP.md) */
       if (!begunOn(w.all, day, cmd.job)) w.put({ type: 'jobBegun', job: cmd.job, from: 'record' });
       markDoneIn(w, c, cmd.job, now, day);
@@ -638,6 +649,7 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       if (!it || it.done) break;
       /* a line moves the expedition only as one of today's main jobs (TOOLS §2, P5); otherwise ticking just feels good */
       if (v.slate.includes(cmd.id)) {
+        endRunOn(w, c, cmd.id, nowMs, now);
         if (!begunOn(w.all, day, cmd.id)) w.put({ type: 'jobBegun', job: cmd.id, from: 'record' });
         markDoneIn(w, c, cmd.id, now, day);
       } else w.put({ type: 'itemTicked', id: cmd.id });

@@ -127,7 +127,7 @@
           </div>
         {:else if answer === 'no'}
           <div class="label-line centred">{t('delve.label')}</div>
-          <h2 class="m">{t('delve.kept', { min: minutesWords(end.minutes) })}</h2>
+          <h2 class="m">{end.minutes > 0 ? t('delve.kept', { min: minutesWords(end.minutes) }) : t('delve.keptNone')}</h2>
           <p class="say">{t('delve.keptSay')}</p>
           <button class="btn resting" onclick={() => leave('today')}>{t('delve.toToday')}</button>
         {:else}

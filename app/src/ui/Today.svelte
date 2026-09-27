@@ -47,6 +47,10 @@
     const d = f.find(x => x.type === 'jobDone');
     if (d) go('step', d.seq);
   }
+  /* a delve job worked on today, not yet said to be done: "Is it done?" answered "Not yet", or left unanswered. Its Done
+     is here, so it never needs another delve to be marked (Dan, 2026-09-27, D-120) */
+  const delvedOn = $derived(next && next.delve && next.doneBy === 'dan' && !v.done.has(next.id)
+    && game.facts.some(f => f.type === 'delveStarted' && f.job === next.id && f.day === v.day));
   function carry() { game.do({ do: 'resume' }); go('delve'); }
   function finish() { game.do({ do: 'finishHere' }); go('delve'); }
   /* a tap on a job starts that job, never another: nothing on the list moves (Dan, D-100) */
@@ -201,7 +205,8 @@
         {:else if v.deepCalled && !v.complete}<p class="deep">{t('today.deep.called')}</p>{/if}
         <div class="lead"><button class="btn full" onclick={() => begin(next)}>{next.delve ? t('today.delve') : t('today.begin')}</button></div>
         <div class="cant">
-          <button class="text-link" onclick={() => go('cant', next.id)}><span>{t('today.cantStart')}</span></button>
+          {#if delvedOn}<button class="text-link" onclick={() => done(next)}><span>{t('today.itsDone')}</span></button>
+          {:else}<button class="text-link" onclick={() => go('cant', next.id)}><span>{t('today.cantStart')}</span></button>{/if}
           <span class="dot" aria-hidden="true">·</span>
           <button class="text-link" onclick={() => aside(next.id)}><span>{t('today.notToday')}</span></button>
         </div>
