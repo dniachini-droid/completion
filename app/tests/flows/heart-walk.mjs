@@ -337,6 +337,26 @@ await shot('today', 2500);
 /* the day's plan leads Today (D-080); the Course is chosen through "Something else…" (D-077) */
 await tap('Something else…'); await shot('choose', 1000);
 await page.locator('.body button.row', { hasText: 'Course' }).first().click(); await shot('runset', 2000);
+/* the side chamber is a fixed point on the road, halfway to the next place (Dan, D-122): shown whatever the run, at the
+   same share of the way to the next place however long or many the delves */
+const chamberShare = () => page.evaluate(() => {
+  const svg = document.querySelector('.rs .route svg'), dash = svg?.querySelector('path[stroke-dasharray]');
+  const next = [...(svg?.querySelectorAll('g[transform^="translate"]') ?? [])].find(g => !g.getAttribute('transform').includes('scale'));
+  if (!dash || !next) return null;
+  const xb = +dash.getAttribute('d').slice(1).split(' ')[0], xg = +next.getAttribute('transform').match(/translate\(([\d.]+)/)[1];
+  return (xb - 8) / (xg - 8);
+});
+const shares = [];
+for (const [len, n] of [[10, 1], [25, 1], [45, 3], [25, 2]]) {
+  await page.getByRole('button', { name: `${len} minutes`, exact: true }).first().click(); await page.clock.runFor(700);
+  for (let k = 0; k < 8 && (await page.getByRole('button', { name: 'One delve fewer' }).isEnabled()); k++) { await page.getByRole('button', { name: 'One delve fewer' }).click(); }
+  for (let k = 1; k < n; k++) await page.getByRole('button', { name: 'One more delve' }).click();
+  await page.clock.runFor(300);
+  shares.push(await chamberShare());
+}
+console.log('runset: the side chamber at', shares.map(x => x?.toFixed(3)).join(' '), 'of the way to the next place');
+if (shares.some(x => x === null)) errors.push(`RUNSET the side chamber is missing from the run line (${JSON.stringify(shares)})`);
+else if (shares.some(x => Math.abs(x - shares[0]) > 0.03)) errors.push(`RUNSET the side chamber moved with the delves (${JSON.stringify(shares)})`);
 await tap('Begin'); await shot('delve', 10 * 60_000);
 await ff(26 * 60_000); await shot('breather', 2000);
 await ff(30 * 60_000); await shot('course-enough', 2000); await guessIfAny('course');
