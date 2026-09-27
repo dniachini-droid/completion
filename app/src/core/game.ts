@@ -363,10 +363,10 @@ function gifts(w: W, c: Content, at: Moment, day: string) {
            place back (Dan, D-129) */
         const way = S.onTheWay(c.story, st);
         if (!way) return n;
-        for (const b of way) {
-          if (b.kind === 'stepKey') openSeal(w, c, S.sealOf(c.story, b.seal!)!, at, day, undefined, true);
-          else { w.put({ type: 'beatPlayed', id: b.id }, at, day); show(w, c, b.carries?.records, at, day); }
-        }
+        /* one at a time, so a story week they finish begins before the next week's bits play */
+        const b = way[0];
+        if (b.kind === 'stepKey') openSeal(w, c, S.sealOf(c.story, b.seal!)!, at, day, undefined, true);
+        else { w.put({ type: 'beatPlayed', id: b.id }, at, day); show(w, c, b.carries?.records, at, day); }
         continue;
       }
       arrive(w, c, next, 'foot', at, day); n++;
@@ -1160,7 +1160,9 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
       keyed.push(...(road?.carries?.guess ?? []), ...(bx?.carries?.guess ?? []));
       if (road) i = j;
     }
-    const guess = [...new Set([...(b.carries?.guess ?? []), ...carried, ...keyed])].filter(m => S.markOf(c.story, m)?.confirmedBy !== b.id);
+    /* never a guess the screen itself answers: the place, or a bit on the way here (D-129) */
+    const answers = new Set([b.id, ...way.map(x => x.beat)]);
+    const guess = [...new Set([...(b.carries?.guess ?? []), ...carried, ...keyed])].filter(m => !answers.has(S.markOf(c.story, m)?.confirmedBy ?? ''));
     return { seq: f.seq, kind: 'place', opened, way, id: b.id, name: b.name ?? '', line: b.line ?? '', taps: b.taps, choice: b.choice,
       records: b.carries?.records ?? [], guess, look: null, stretch: b.stretch, painting: paintingOf(b.id, b.stretch), completedDay, byKey: f.how === 'key' };
   }

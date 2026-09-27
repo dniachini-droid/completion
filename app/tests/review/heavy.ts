@@ -34,7 +34,10 @@ export function whyHeld(st: S.StoryState): string {
   return out.join(' ');
 }
 /** `oneOffs`: how many one-off jobs of Dan's own share the hours left after the repeating ones. */
-export function heavy(days: number, hours: number, rhythmsToo = true, oneOffs = 1) {
+/** `afterDelve`: called with the facts after every delve's end; `neverDone`: Dan's own jobs are never said done (one big
+    project, delved on day after day). */
+export function heavy(days: number, hours: number, rhythmsToo = true, oneOffs = 1,
+  opts: { afterDelve?: (facts: Fact[], at: string) => void; neverDone?: boolean } = {}) {
   let facts: Fact[] = [];
   let now = Date.parse('2026-09-28T07:00:00Z');   /* a Monday, 08:00 at +01:00 */
   const at = () => new Date(now + 3_600_000).toISOString().slice(0, 19) + '+01:00';
@@ -53,7 +56,7 @@ export function heavy(days: number, hours: number, rhythmsToo = true, oneOffs = 
     }
   };
   const rows: { day: string; storyWeek: number; walked: number; nextAt: number | null; placesOnFoot: number; keyRowsWaiting: string[]; keyOnly: string[]; keysThisWeek: number; held: number; why: string }[] = [];
-  let n = 0;
+  let n = 0, project: string | undefined;
   for (let d = 0; d < days; d++) {
     const d0 = now;
     run({ do: 'open' }); answer();
@@ -65,12 +68,12 @@ export function heavy(days: number, hours: number, rhythmsToo = true, oneOffs = 
       run({ do: 'startRun', job, minutes: 60, count: 1 }); wait(61); answer(); budget -= 60;
     }
     for (let k = oneOffs; k > 0; k--) {
-      run({ do: 'addItems', lines: [`deep work ${++n}`] });
-      const id = see(facts, C, at()).content.jobs.at(-1)!.id;
+        if (!(opts.neverDone && project)) { run({ do: 'addItems', lines: [`deep work ${++n}`] }); project = see(facts, C, at()).content.jobs.at(-1)!.id; }
+      const id = project!;
       let mine = k === 1 ? budget : Math.floor(budget / k / 60) * 60;
       budget -= mine;
-      while (mine >= 60) { run({ do: 'startRun', job: id, minutes: 60, count: 1 }); wait(61); answer(); mine -= 60; }
-      run({ do: 'done', job: id }); answer();
+      while (mine >= 60) { run({ do: 'startRun', job: id, minutes: 60, count: 1 }); wait(61); answer(); opts.afterDelve?.(facts, at()); mine -= 60; }
+      if (!opts.neverDone) { run({ do: 'done', job: id }); answer(); }
     }
     const st = S.storyState(facts, C.story), vv = see(facts, C, at());
     const rw = C.story.route.find(r => r.w === st.week);

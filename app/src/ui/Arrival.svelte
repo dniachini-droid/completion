@@ -29,7 +29,7 @@
   const word = fresh && !!game.view.arrival && beatOf(content.story, game.view.arrival.id)?.kind === 'word';
   const cap = (x: string) => x.charAt(0).toUpperCase() + x.slice(1);
   /* marks seen here that can't be guessed yet: said gently, once, so a later guess doesn't come from nowhere (D-077) */
-  const later = $derived(a ? marksIn(content.story, a.records).filter(m => !a.guess.includes(m) && !mayGuess(content.story, v.story, m)
+  const later = $derived(a ? marksIn(content.story, [...a.records, ...a.way.flatMap(w => w.records)]).filter(m => !a.guess.includes(m) && !mayGuess(content.story, v.story, m)
     && !markHeld(markOf(content.story, m)!, v.story)) : []);
   /* a story bit that played on the way here (D-129) offers its record, or its small choice, here */
   function pickWay(beat: string, record: string) { game.do({ do: 'choose', beat, pick: a!.way.find(w => w.beat === beat)!.records.indexOf(record) }); go('records', record); }

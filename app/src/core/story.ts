@@ -224,7 +224,7 @@ function roadStep(s: Story, st: StoryState, b: Beat): boolean {
 /**
  * The story's bits that play on the way to the next place (Dan, D-129: long days never hold a place back). When the
  * minutes have reached the next place and only story bits stand between (a step, or a road row), the next ones in
- * order (up to four) play as Dan walks on and show on that place's arrival, with their records, choices and settled
+ * order (as many as stand in the way, across a story week's end) play as Dan walks on and show on that place's arrival, with their records, choices and settled
  * guesses. Null if nothing so near would open the way.
  */
 export function onTheWay(s: Story, st: StoryState): Beat[] | null { return wayTo(s, st)?.bits ?? null; }
@@ -233,9 +233,15 @@ export const placeAhead = (s: Story, st: StoryState): Beat | null => nextPlace(s
 function wayTo(s: Story, st: StoryState): { bits: Beat[]; place: Beat } | null {
   let t = st;
   const out: Beat[] = [];
-  for (let k = 0; k < 4; k++) {
+  /* as many bits as stand in the way, across a story week's end (bounded by the story's own steps) */
+  for (let k = 0; k < s.beats.length + s.seals.length; k++) {
+    const place = nextPlace(s, t);
+    if (place) return out.length ? { bits: out, place } : null;
     const b = nextStep(s, t);
-    if (!b) return null;
+    if (!b) {
+      if (weekDone(s, t) && s.route.some(r => r.w === t.week + 1)) { t = { ...t, week: t.week + 1 }; continue; }
+      return null;
+    }
     out.push(b);
     const x = b.kind === 'stepKey' ? sealOf(s, b.seal!) : undefined;
     const played = new Set(t.played); played.add(b.id);
@@ -243,9 +249,6 @@ function wayTo(s: Story, st: StoryState): { bits: Beat[]; place: Beat } | null {
     const offered = new Set(t.offered);
     [...(x?.carries?.guess ?? []), ...(b.carries?.guess ?? [])].forEach(m => offered.add(m));
     t = { ...t, played, opened, offered };
-    /* the place may be this story week's, or the next's once this bit finishes the week */
-    const place = nextPlace(s, t) ?? (weekDone(s, t) && s.route.some(r => r.w === t.week + 1) ? nextPlace(s, { ...t, week: t.week + 1 }) : null);
-    if (place) return { bits: out, place };
   }
   return null;
 }

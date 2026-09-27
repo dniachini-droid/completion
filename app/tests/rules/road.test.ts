@@ -85,12 +85,24 @@ describe('with no Keys at all, the story goes on by work alone (D-129)', () => {
 });
 
 describe('long days never hold a place back (Dan, D-129)', () => {
-  it('one long job a day: every place the minutes reach comes that day, in order', () => {
-    const { facts, rows } = heavy(7, 8, false, 1);
-    for (const r of rows) {
-      expect(r.nextAt, r.day).not.toBeNull();
-      expect(r.placesOnFoot, r.day).toBe(r.walked < 75 ? 0 : Math.floor((r.walked - 75) / 150) + 1);
-    }
+  const byMinutes = (m: number) => m < 75 ? 0 : Math.floor((m - 75) / 150) + 1;
+  /* checked after every delve's end, not only at the day's end */
+  const everyDelve = (bad: string[]) => (facts: Fact[], at: string) => {
+    const v = see(facts, C, at), st = S.storyState(facts, s);
+    if (v.nextAt === null) bad.push(`${at}: no next place`);
+    if (st.onFoot !== byMinutes(v.walked)) bad.push(`${at}: ${st.onFoot} places for ${v.walked} minutes`);
+  };
+  it('one long job a day: every place the minutes reach comes as soon as they reach it, in order', () => {
+    const bad: string[] = [];
+    const { facts } = heavy(7, 8, false, 1, { afterDelve: everyDelve(bad) });
+    expect(bad).toEqual([]);
+    expect(aheadOfDan(facts)).toEqual([]);
+    expect(outOfOrder(facts)).toEqual([]);
+  }, 60_000);
+  it('one big project, delved on all day and never said done: the places still come', () => {
+    const bad: string[] = [];
+    const { facts } = heavy(6, 8, false, 1, { afterDelve: everyDelve(bad), neverDone: true });
+    expect(bad).toEqual([]);
     expect(aheadOfDan(facts)).toEqual([]);
     expect(outOfOrder(facts)).toEqual([]);
   }, 60_000);
