@@ -14,10 +14,13 @@ let until = 0, last: { x: number; y: number } | null = null;
     tap that waited while it drew still counts as the same finger. */
 export function steady(ms = STEADY_MS) { until = Math.max(until, performance.now() + ms); }
 
+let touch = false;
 export function watchTaps() {
+  /* only a finger on the glass: a mouse or a keyboard (the screen checks, a laptop) is never held back */
+  document.addEventListener('pointerdown', e => { touch = e.pointerType === 'touch' || e.pointerType === 'pen'; }, true);
   document.addEventListener('click', e => {
     /* typing isn't a tap: Return in a box still puts its line in */
-    if (e.detail === 0) return;
+    if (e.detail === 0 || !touch) return;
     const again = performance.now() < until && last && Math.hypot(e.clientX - last.x, e.clientY - last.y) < NEAR_PX;
     if (again) { e.preventDefault(); e.stopImmediatePropagation(); return; }
     last = { x: e.clientX, y: e.clientY };
