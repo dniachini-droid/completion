@@ -2,14 +2,15 @@ import { Capacitor, registerPlugin } from '@capacitor/core';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { Haptics as CapHaptics, ImpactStyle } from '@capacitor/haptics';
 import { Preferences } from '@capacitor/preferences';
-import type { Away, Panel, PanelState, Platform } from './types';
+import type { Away, Copies, Panel, PanelState, Platform } from './types';
 import { sound } from './chime';
 import { adopt, sqlSaves, textSaves, type Db, type Saves } from './saves';
 
 /** The live saves (the real one and the rehearsal's): what's written the old way is brought into SQLite at start. */
 const LIVE = ['save.v1', 'save.rehearsal'];
 
-/* On the web link and in tests: the browser's own storage, the whole save as one text. */
+/* In the automated screen checks only (a browser on a server; the app is the phone's alone, D-108): the browser's own
+   storage, the whole save as one text. */
 const store = {
   get: (k: string) => { try { return localStorage.getItem(k); } catch { return null; } },
   set: (k: string, v: string) => { try { localStorage.setItem(k, v); } catch { /* private mode */ } },
@@ -87,8 +88,55 @@ async function openSaves() {
   }
 }
 
+/* A reminder's one action (D-107): "Again in 10 min" sounds it once more, ten minutes on, from the phone's own
+   notification without opening the app. Registered once, when the first reminder is laid out. */
+let againReady: Promise<void> | null = null, againNext = 0;
+function readyAgain(again: { label: string; ids: number[] }) {
+  return (againReady ??= (async () => {
+    await LocalNotifications.registerActionTypes({ types: [{ id: 'remind', actions: [{ id: 'again', title: again.label }] }] });
+    await LocalNotifications.addListener('localNotificationActionPerformed', async e => {
+      if (e.actionId !== 'again') return;
+      const x = (e.notification.extra ?? {}) as { title?: string; body?: string };
+      const id = again.ids[againNext++ % again.ids.length];
+      await LocalNotifications.schedule({ notifications: [{ id, title: x.title ?? e.notification.title, body: x.body ?? e.notification.body,
+        schedule: { at: new Date(Date.now() + 10 * 60_000), allowWhileIdle: true }, actionTypeId: 'remind', extra: x }] });
+    });
+  })().catch(() => { againReady = null; }));
+}
+
+/* Copies of the save (D-107): the app's own small plugin, ios/App/App/CopyPlugin.swift. */
+const CopyNative = registerPlugin<{
+  share(o: { name: string; text: string }): Promise<unknown>;
+  pick(): Promise<{ text?: string }>;
+  keep(o: { name: string; text: string; prefix: string; most: number }): Promise<void>;
+  list(o: { prefix: string }): Promise<{ names: string[] }>;
+}>('Copy');
+const nativeCopies: Copies = {
+  async share(name, text) { await CopyNative.share({ name, text }); },
+  async pick() { return (await CopyNative.pick()).text ?? null; },
+  keep: (name, text, prefix, most) => CopyNative.keep({ name, text, prefix, most }),
+  async list(prefix) { return (await CopyNative.list({ prefix })).names; },
+};
+/* In the screen checks: a download, and a file chosen by the check; no weekly copy. */
+const benchCopies: Copies = {
+  async share(name, text) {
+    const url = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
+    const a = Object.assign(document.createElement('a'), { href: url, download: name });
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10_000);
+  },
+  pick: () => new Promise(done => {
+    const input = Object.assign(document.createElement('input'), { type: 'file', accept: '.json,application/json,text/plain' });
+    input.addEventListener('change', async () => { const f = input.files?.[0]; done(f ? await f.text() : null); });
+    input.addEventListener('cancel', () => done(null));
+    input.click();
+  }),
+  keep: async () => {},
+  list: async () => [],
+};
+
 const native: Platform = {
-  store: nativeStore, sound, now: () => new Date(), app: true, away: nativeAway,
+  store: nativeStore, copies: nativeCopies, sound, now: () => new Date(), app: true, away: nativeAway,
   get saves() { return saves; }, get saveTrouble() { return saveTrouble; },
   ready: async () => { await readKept(); await openSaves(); nativeAway.first = await nativeAway.take(); },
   notifier: {
@@ -102,26 +150,30 @@ const native: Platform = {
       await LocalNotifications.schedule({ notifications: [{ id, title, body, schedule: { at: when, allowWhileIdle: true }, sound: undefined }] });
     },
     async cancel(ids) { await LocalNotifications.cancel({ notifications: ids.map(id => ({ id })) }); },
+    async remind(id, when, title, body, again) {
+      await readyAgain(again);
+      await LocalNotifications.schedule({ notifications: [{ id, title, body, schedule: { at: when, allowWhileIdle: true }, actionTypeId: 'remind', extra: { title, body } }] });
+    },
   },
   haptics: { tick: () => CapHaptics.impact({ style: ImpactStyle.Light }), ring: () => CapHaptics.vibrate({ duration: 450 }) },
   panel: nativePanel,
 };
 
-/* In a browser a lock and another tab can't be told apart: hiding the page during a delve pauses it (D-094). */
+/* In the screen checks: hiding the page during a delve pauses it, as leaving the app does (D-094). */
 let watching = false, hiddenAt: number | null = null;
 document.addEventListener('visibilitychange', () => { if (document.hidden && watching) hiddenAt = Date.now(); });
-const webAway: Away = {
+const benchAway: Away = {
   first: null,
   watch(on) { watching = on; },
   async take() { const at = hiddenAt; hiddenAt = null; return at; },
   async log() { return []; },
 };
 
-/* In a browser (the web link, tests): the end chimes if the page is open, and shows when you come back. */
-const webSaves = textSaves(store, 'browser');
-const web: Platform = {
-  store, sound, now: () => new Date(), ready: async () => {}, app: false, away: webAway, saves: webSaves, saveTrouble: null,
-  notifier: { locked: false, permit: async () => false, at: async () => {}, cancel: async () => {} },
+/* The screen checks' stand-in for the phone's services (never shipped to Dan as a page, D-108). */
+const benchSaves = textSaves(store, 'browser');
+const bench: Platform = {
+  store, sound, now: () => new Date(), ready: async () => {}, app: false, copies: benchCopies, away: benchAway, saves: benchSaves, saveTrouble: null,
+  notifier: { locked: false, permit: async () => false, at: async () => {}, cancel: async () => {}, remind: async () => {} },
   panel: { show: async () => {}, end: async () => {} },
   haptics: {
     tick: async () => { try { navigator.vibrate?.(8); } catch { /* */ } },
@@ -129,4 +181,4 @@ const web: Platform = {
   },
 };
 
-export const platform: Platform = Capacitor.isNativePlatform() ? native : web;
+export const platform: Platform = Capacitor.isNativePlatform() ? native : bench;

@@ -8,13 +8,15 @@
   import type { Go } from './nav';
   import { back } from './back.svelte';
   import type { Job, Rhythm } from '../core/types';
+  import Remind from './Remind.svelte';
+  import { reminderOf, rhythmTarget, type Lead } from '../core/reminders';
 
   let { go }: { go: Go } = $props();
   const v = $derived(game.view);
   const LEN = [5, 10, 15, 25, 30, 45, 60, 90, 120, 180, 240];   /* down to 5 min (D-110) */
   const DAYS = [1, 2, 3, 4, 5, 6, 0];
 
-  interface Draft { id: string | null; job: Job; often: 'week' | 'days' | 'fort'; times: number; days: number[]; len: number; enough: number | null; time: string | null; delve: boolean; }
+  interface Draft { id: string | null; job: Job; often: 'week' | 'days' | 'fort'; times: number; days: number[]; len: number; enough: number | null; time: string | null; delve: boolean; remind: Lead | null; }
   let d = $state<Draft | null>(null);
 
   function often(r: Rhythm) { return r.days ? r.days.map(x => t(`days.plural.${x}` as never)).join(', ') : r.every === 2 ? t('rhythms.every2') : t('rhythms.nWeek', { n: r.times ?? 1 }); }
@@ -25,7 +27,7 @@
   function open(r: Rhythm | null) {
     const j = r ? game.job(r.job)! : { id: `j-${Date.now().toString(36)}`, name: '', delve: false, length: 60, doneBy: 'dan' as const };
     d = { id: r?.id ?? null, job: j, often: r?.days ? 'days' : r?.every === 2 ? 'fort' : 'week', times: r?.times ?? 2, days: r?.days ?? [], len: j.length,
-      enough: j.enoughAt ?? null, time: r?.time ?? null, delve: j.delve };
+      enough: j.enoughAt ?? null, time: r?.time ?? null, delve: j.delve, remind: r ? reminderOf(game.facts, rhythmTarget(r.id)) : null };
   }
   const step = (xs: number[], x: number, k: number) => { const i = xs.findIndex(y => y >= x); return xs[Math.min(xs.length - 1, Math.max(0, (i < 0 ? xs.length - 1 : i) + k))]; };
   function shiftTime(min: number) {
@@ -42,6 +44,8 @@
     const rhythm: Rhythm = { id: d.id ?? `r-${Date.now().toString(36)}`, job: job.id,
       ...(d.often === 'week' ? { times: d.times } : d.often === 'days' ? { days: [...d.days].sort() } : { every: 2 as const }), ...(d.time ? { time: d.time } : {}) };
     game.do({ do: 'saveRhythm', rhythm, job });
+    /* "Remind me" (D-107) is kept with the rhythm; it alerts only while the rhythm has a time */
+    if (d.remind !== (d.id ? reminderOf(game.facts, rhythmTarget(rhythm.id)) : null)) game.do({ do: 'remind', target: rhythmTarget(rhythm.id), lead: d.remind });
     d = null;
   }
   function stop() { if (d?.id) game.do({ do: 'stopRhythm', id: d.id }); d = null; }
@@ -132,6 +136,7 @@
               onchange={e => (d!.time = e.currentTarget.value || d!.time)} />
             <button class="btn-quiet step" onclick={() => shiftTime(15)} aria-label={t('camp.later')}><span>+</span></button>
           </div>
+          <Remind lead={d.remind} pick={x => (d!.remind = x)} />
         {/if}
 
         <p class="soft val-note">{t('rhythms.newNumber')}</p>

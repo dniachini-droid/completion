@@ -8,6 +8,7 @@ class MainViewController: CAPBridgeViewController {
         bridge?.registerPluginInstance(DelvePanelPlugin())
         bridge?.registerPluginInstance(AwayPlugin())   // leaving the app pauses a delve (AwayPlugin.swift)
         bridge?.registerPluginInstance(SavePlugin())   // the save, in SQLite (SavePlugin.swift, D-106)
+        bridge?.registerPluginInstance(CopyPlugin())   // copies of the save: share, restore, the weekly copy (D-107)
     }
 }
 

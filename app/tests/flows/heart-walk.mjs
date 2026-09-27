@@ -368,8 +368,21 @@ await toClock(1, 9); await page.reload({ waitUntil: 'domcontentloaded' }); await
 await openers('last');
 if (await has('I can’t start')) { await tap('I can’t start'); await shot('cant-start', 2000); await tap('Not now'); await page.clock.runFor(1500); }
 /* slice 4's own screens, from Today's foot */
+/* one-tap capture (D-107): "+ Add" opens a box already typing; Return puts the line in the satchel, and Today stays */
+{ await page.clock.runFor(1500); await page.waitForTimeout(300);   /* the screen settled: no fading one still on it */
+  const rows0 = await page.locator('.rows button.row').allInnerTexts();
+  await tap('Add to the satchel'); await page.clock.runFor(300);
+  if (!(await page.evaluate(() => document.activeElement?.tagName === 'TEXTAREA'))) errors.push('CAPTURE the box was not already typing');
+  await page.keyboard.type('Call the bank'); await shot('today-capture', 300);
+  await page.keyboard.press('Enter'); await page.clock.runFor(500);
+  if (!(await page.locator('nav.foot').getByText('In the satchel').count())) errors.push('CAPTURE did not say it was put in');
+  if (!(await page.locator('nav.foot').count())) errors.push('CAPTURE left Today');
+  if (JSON.stringify(await page.locator('.rows button.row').allInnerTexts()) !== JSON.stringify(rows0)) errors.push(`CAPTURE changed Today’s list: ${JSON.stringify(rows0)} → ${JSON.stringify(await page.locator('.rows button.row').allInnerTexts())}`); }
 await tap('Satchel'); await shot('satchel', 1500);
-await tap('Add a line'); await page.locator('textarea.lines').fill('Hoover the hall\nClear the desk\nWash the bedding\nTake the bottles out\nFix the shelf bracket\nRenew the parking permit');
+if (!(await page.locator('.item .t', { hasText: 'Call the bank' }).count())) errors.push('CAPTURE the line is not in the satchel');
+await tap('Add a line');
+if (!(await page.evaluate(() => document.activeElement?.tagName === 'TEXTAREA'))) errors.push('SATCHEL Add a line was not already typing');
+await page.locator('textarea.lines').fill('Hoover the hall\nClear the desk\nWash the bedding\nTake the bottles out\nFix the shelf bracket\nRenew the parking permit');
 await tap('Put it in'); await shot('satchel-lines', 1000);
 await tap('Put on today'); await shot('satchel-today', 800);
 await page.locator('.tickbox').nth(1).click(); await shot('satchel-ticked', 800);
@@ -386,6 +399,10 @@ const row = page.locator('.day:not(.past) button.row:not([disabled])').first();
 if (await row.count()) {
   await row.click(); await page.locator('.sheet .clock-btn input').fill('14:30'); await page.locator('.sheet .clock-btn input').dispatchEvent('change');
   await shot('week-edit', 800);
+  /* "Remind me" where the time is set (D-107): off by default, one tap sets it */
+  if (!(await page.locator('.sheet .remind button[aria-pressed="true"]', { hasText: 'Off' }).count())) errors.push('REMIND a reminder was on before it was asked for');
+  await page.locator('.sheet .remind button', { hasText: '15 min before' }).click(); await page.clock.runFor(300);
+  if (!(await page.locator('.sheet .remind button[aria-pressed="true"]', { hasText: '15 min before' }).count())) errors.push('REMIND the choice was not kept');
   if (!(await page.locator('.day button.row', { hasText: '14:30' }).count())) errors.push('WEEK the time was not kept');
   /* followed by its name to the day it is moved to: counting the day it left is no test, since a job missed earlier in
      the week takes the freed place (D-080). The sheet's days run from today to Sunday, the week's last days on screen.
@@ -427,7 +444,18 @@ await tap('Daybook'); await shot('daybook', 1500); await home(); await page.cloc
   await page.goBack(); await page.clock.runFor(800);
   if (!(await page.locator('h1', { hasText: /this week/i }).count())) errors.push('BACK the phone’s own back did not step back one screen');
   await home();
-  await tap('Daybook'); await tap('Trial'); await page.clock.runFor(1500); expect('daybook → trial', await backSays(), 'daybook');
+  await tap('Daybook'); await tap('Settings'); await page.clock.runFor(1500); expect('daybook → settings', await backSays(), 'daybook');
+  await page.locator('.remind button', { hasText: '1 h before' }).click(); await shot('settings', 800);
+  /* Save a copy, then Restore from it (D-107): the copy is read back, asked about, and restored */
+  { const [dl] = await Promise.all([page.waitForEvent('download'), tap('Save a copy')]);
+    const file = `${out}/copy.json`; await dl.saveAs(file);
+    if (!/^Long Answer save \d{4}-\d{2}-\d{2}\.json$/.test(dl.suggestedFilename())) errors.push(`COPY named "${dl.suggestedFilename()}"`);
+    const [fc] = await Promise.all([page.waitForEvent('filechooser'), tap('Restore from a copy')]);
+    await fc.setFiles(file); await page.clock.runFor(500);
+    await shot('settings-restore', 500);
+    await tap('Restore it'); await page.clock.runFor(500);
+    if (!(await page.getByText('The copy is restored.').count())) errors.push('COPY the restore did not say it was done'); }
+  await tap('The trial’s own controls'); await page.clock.runFor(1500); expect('settings → trial', await backSays(), 'settings');
   await home();
   await tap('Something else…'); await page.locator('.body button.row').first().click(); await page.clock.runFor(800);
   expect('choose → delves', await backSays(), 'back');

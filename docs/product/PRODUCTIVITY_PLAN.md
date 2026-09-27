@@ -7,7 +7,7 @@
 > - rule tests cover the new rules;
 > - typecheck and build are clean;
 > - the screen walk passes at both sizes;
-> - it is committed and pushed, the web link is updated, and its line below is ticked.
+> - it is committed and pushed, and its line below is ticked. (There is no web link any more: the app is the iPhone app only, D-108.)
 >
 > Merging into `main` waits for Dan's OK (D-006). Numbers in brackets are the item numbers in `PRODUCTIVITY_REVIEW.md`.
 
@@ -17,25 +17,24 @@
 - **Reminders are only for things Dan gave a time or a date.** Never "you haven't opened the app". The one exception is the re-entry nudge (23), which is only scoped in Stage 4 and only built if Dan says yes.
 - **The central test's notes** (`MVP.md`) must be able to tell a start that followed a reminder from one that didn't, and a job recorded as already done from one begun in the app.
 
-## Stage 1: trust and safety (one session)
-- [ ] **(1) The planned-week bug.** A hand-added week entry (`planAdded`) or a satchel line put on a day must not turn the week into "planned".
+## Stage 1: trust and safety (one session) — done 2026-09-27 (D-109)
+- [x] **(1) The planned-week bug.** A hand-added week entry (`planAdded`) or a satchel line put on a day must not turn the week into "planned".
   - Today stays as it would be without a plan, plus the added entry.
   - Only **Plan my week** (`planMade`) makes Today follow the plan (D-078).
   - Code: `planOf` / `plannedToday` in `core/week.ts:76+` and `planLeads` / `orderOn` in `core/game.ts:147-170`.
   - Rule tests: one entry added to an unplanned week keeps the day's rhythms on Today, and a planned week behaves as before.
-- [ ] **(2) Reminders for things with a time.**
+- [x] **(2) Reminders for things with a time.**
   - What gets one: appointments (rhythms or entries with a time), planned entries with a time, and optionally bedtime.
   - **Opt-in per item:** a "Remind me" choice where the time is set, with a lead time of at the time, 15 min or 1 h. Default off, plus one global switch in the Daybook's settings.
   - **One alert per item,** in the app's voice, with an "Again in 10 min" action if cheap.
   - Build: a pure `core/reminders.ts` (what alerts, and when, from the content, facts and now), scheduled by `ui/game.svelte.ts` through `platform.notifier.at` in its own ID range beside the delve alerts. Rescheduled on every change and on start.
   - Rule tests.
   - Record a `reminded` note for the test, only if it can be done without a fact on every alert. Otherwise derive it.
-- [ ] **(3) Save a copy / restore.**
+- [x] **(3) Save a copy / restore.**
   - A settings screen (move the rehearsal "TRIAL" controls under it) with **Save a copy**: the save as a JSON file through the iOS share sheet, to Files or iCloud Drive.
   - **Restore from a copy:** read it with `readSave()`, keep the current save aside first, and confirm in plain words.
   - **Automatic:** once a week, write a copy into the app's Documents folder, visible in Files (set `UIFileSharingEnabled` and `LSSupportsOpeningDocumentsInPlace`). Keep the last 4.
-  - On the web link, say plainly that the save lives in this browser only.
-- [ ] **(7) One-tap capture.**
+- [x] **(7) One-tap capture.**
   - Today gets a quiet "+ Add" that writes a satchel line in one step, with the text box already focused. Pasting several lines works, as in the satchel.
   - The satchel's "Add a line" focuses its box at once (as `Week.svelte:startAdd` does).
   - This is capture only; it never starts a delve.

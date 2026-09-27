@@ -523,6 +523,58 @@ describe('Undoing a tap made by mistake (review 2, D-088)', () => {
   });
 });
 
+describe('A line added by hand is an extra, never a takeover (review bug 1, D-107)', () => {
+  it('one entry added to a week not laid out keeps the day’s rhythms on Today, plus the entry', () => {
+    const before = player().view().slate;
+    expect(before.length).toBeGreaterThan(0);
+    const p = player().do({ do: 'addToWeek', line: 'Dentist', day: MON, time: '15:00' });
+    const v = p.view(), id = p.facts.find(f => f.type === 'itemAdded')!.id;
+    for (const job of before) expect(v.slate).toContain(job);
+    expect(v.slate).toContain(id);
+    expect(v.slate).toHaveLength(before.length + 1);
+    expect(v.size).toBe(player().view().size + 1);
+  });
+  it('an appointment added to next week before it begins: that week is still laid out at its first opening', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addToWeek', line: 'Dentist', day: '2026-10-06', time: '15:00' });
+    const dentist = p.facts.find(f => f.type === 'itemAdded')!.id;
+    p.next(8).do({ do: 'open' });   /* Tuesday of next week */
+    const v = p.view();
+    expect(W.planMade(p.facts, '2026-10-05')).toBe(true);
+    expect(v.slate).toContain(dentist);
+    expect(v.slate.filter(id => id !== dentist).length).toBeGreaterThan(0);
+  });
+  it('a satchel line put on a day of a week not laid out is an extra too', () => {
+    const before = player().view().slate;
+    const p = player().do({ do: 'addItems', lines: ['Fix the bike'] });
+    p.do({ do: 'planJob', job: 'it-1', day: MON });
+    const v = p.view();
+    for (const job of before) expect(v.slate).toContain(job);
+    expect(v.slate).toContain('it-1');
+  });
+  it('a week laid out with Plan my week still leads Today, with the added entry on it', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addToWeek', line: 'Dentist', day: MON, time: '15:00' });
+    const v = p.view(), id = p.facts.filter(f => f.type === 'itemAdded').pop()!.id;
+    const planned = W.weekOf(v.content, p.facts, MON, v.day).days.find(x => x.day === v.day)!.jobs.filter(j => j.entry).map(j => j.job);
+    for (const job of v.slate) expect(planned).toContain(job);
+    expect(v.slate).toContain(id);
+  });
+});
+
+describe('One-tap capture (D-107)', () => {
+  it('puts each line in the satchel in one step, and never starts anything or changes Today', () => {
+    const p = player().do({ do: 'open' });
+    const before = p.view();
+    const n = p.facts.length;
+    p.do({ do: 'addItems', lines: ['Call the bank', '- Renew the passport', '', '  '] });
+    const added = p.facts.slice(n);
+    expect(added.map(f => f.type)).toEqual(['itemAdded', 'itemAdded']);
+    expect(W.items(p.facts, p.view().day).map(i => i.name)).toEqual(['Call the bank', 'Renew the passport']);
+    expect(p.view().slate).toEqual(before.slate);
+    expect(p.view().next).toEqual(before.next);
+    expect(p.view().run).toBeNull();
+  });
+});
+
 describe('Stage 2 fixes and lengths (D-110)', () => {
   it('a rhythm stopped before it was ever done leaves no one-off behind, and leaves the plan', () => {
     const p = player().do({ do: 'open' }).do({ do: 'stopRhythm', id: 'r-tank' });

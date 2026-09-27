@@ -10,6 +10,7 @@
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
   import { back } from './back.svelte';
+  import { flushSync } from 'svelte';
 
   let { go }: { go: Go } = $props();
   const v = $derived(game.view);
@@ -19,6 +20,9 @@
   let more = $state(false), showSomeday = $state(false), text = $state(''), adding = $state(false);
   const FIRST = 5;
   const shown = $derived(more ? open : open.slice(0, FIRST));
+  /* "Add a line" opens its box already typing (as the Week's + does, D-107) */
+  let box = $state<HTMLTextAreaElement | null>(null);
+  function startAdd() { adding = true; flushSync(); box?.focus(); box?.scrollIntoView({ block: 'nearest' }); }
 
   function put() {
     const lines = text.split('\n');
@@ -65,10 +69,10 @@
       <button class="text-link fold" onclick={() => (more = !more)}><span>{more ? t('satchel.less') : t('satchel.more')}</span></button>
     {/if}
     {#if adding}
-      <textarea class="lines" bind:value={text} rows="4" placeholder={t('satchel.addMany')}></textarea>
+      <textarea class="lines" bind:this={box} bind:value={text} rows="4" placeholder={t('satchel.addMany')}></textarea>
       <div class="btn-row"><button class="btn" onclick={put}>{t('satchel.put')}</button><button class="btn-quiet" onclick={() => (adding = false)}><span>{t('rhythms.cancel')}</span></button></div>
     {:else}
-      <div class="links"><button class="text-link" onclick={() => (adding = true)}><span>{t('satchel.add')}</span></button>
+      <div class="links"><button class="text-link" onclick={startAdd}><span>{t('satchel.add')}</span></button>
         {#if someday.length}<button class="text-link" onclick={() => (showSomeday = !showSomeday)}><span>{t('satchel.someday')}</span></button>{/if}</div>
     {/if}
     {#if showSomeday}

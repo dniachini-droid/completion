@@ -68,6 +68,11 @@
 	<string>Dark</string>
 	<key>UIRequiresFullScreen</key>
 	<true/>
+	<!-- the weekly copy of the save shows in the Files app, under On My iPhone (D-107) -->
+	<key>UIFileSharingEnabled</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
 	<key>NSSupportsLiveActivities</key>
 	<true/>
 	<key>ITSAppUsesNonExemptEncryption</key>

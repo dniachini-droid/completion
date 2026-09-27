@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:link": "vite build --mode link && node scripts/single-page.mjs",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "paint": "node paint/bake.mjs --out paint/view/img paint/samples/*.js",

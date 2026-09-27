@@ -1117,6 +1117,27 @@
   - Phase 10 starts after the track's first three stages unless Dan says otherwise.
 - **Reversible:** Yes. Each reminder is opt-in, and each stage stands alone.
 
+## D-108 — The app is the iPhone app only: the web page and every mention of it are gone (Dan)
+- **Date:** 2026-09-27
+- **Context:** Stage 1 of the productivity track added lines for the web link ("Reminders sound only in the phone app, not on this web page"; "your save lives in this browser only"). Dan: the app is a native iPhone app built with TestFlight; there is no need for a web app, and it only makes a mess.
+- **Decision:** the web link build (`npm run build:link`, `scripts/single-page.mjs`, the link mode in `vite.config.ts`) is removed, and the web link is no longer updated. Every line in the app about a web page is removed (the delve's "leave this page open", Settings' two web notes); the screens always speak as the phone app. A browser stand-in for the phone's services (`platform/index.ts` → `bench`) stays **only** so the automated screen checks (the walk, the tap and back checks, in CI) can run the screens; it never reaches Dan.
+- **Alternatives:** remove the browser stand-in too (rejected: every screen check in CI would stop, and nothing Dan sees would change).
+- **Consequences:** the D-064 web link and the productivity plan's "update the web link" step end. Dan sees changes on TestFlight only.
+- **Reversible:** Yes.
+
+## D-109 — Stage 1 of the productivity track, as built (Claude's routine calls, D-006; within D-107)
+- **Date:** 2026-09-27
+- **Decision:**
+  1. **The planned-week bug:** only Plan my week (`planMade`) makes Today follow the plan. On a week not laid out, an entry added by hand (or a satchel line put on a day) comes on top of the day's usual jobs and the day's size grows by it. A week is laid out at its first opening unless Plan my week has already run for it (before: any added entry stopped that).
+  2. **Reminders:** `core/reminders.ts` works out every alert from the content, the facts and the clock: appointments (a rhythm with a time), week entries with a time, bedtime. Off by default. "Remind me" (Off · At the time · 15 min before · 1 h before) sits where the time is set: the Week's job sheet (for that entry; it falls back to its rhythm's choice), the rhythm editor, and Settings for bedtime. One switch in Settings turns all off. One alert each, with "Again in 10 min" (the phone's own action; to be checked on the phone). Laid out a week ahead on every change and every opening, ids 200–229 (the delve's are 100–123, "again" 240–245). New facts `reminderSet`, `remindersSwitched`. Whether a start followed a reminder is derived, not written.
+  3. **Settings:** a new screen, from the Daybook's top right (where "Trial" was); the trial's controls sit under it.
+  4. **Save a copy / restore:** a small native plugin of the app's own (`CopyPlugin.swift`): the share sheet, the Files picker, and a weekly copy in the app's Documents folder (shown in Files; the last 4 kept). Restore reads the copy with `readSave`, asks once in plain words ("Restore the copy from … It holds … done"), and keeps the current save aside first.
+  5. **One-tap capture:** "+ Add" in Today's foot. The box takes the job list's place while typing (so nothing on Today moves), Return puts the line or a pasted list in the satchel, and "In the satchel" shows for a moment where "+ Add" was. The satchel's "Add a line" opens already typing.
+  6. The phone frame now clips its overflow (a hidden box could still be scrolled by the browser to show a caret, sliding the screen).
+- **Checks:** 181 rule tests (21 new), typecheck, build, the screen walk at 430 × 932 and 360 × 780, the tap and back checks, the iOS compile (runs 36283973158, 36284505924).
+- **Only on the phone:** reminders sounding, "Again in 10 min", the share sheet, the Files picker, and the weekly copy in Files.
+- **Reversible:** Yes.
+
 ## D-110 — Stage 2, the parts that run beside Stage 1: two list bugs, delve lengths 5–90, the laptop first step (Claude's routine calls, D-006)
 - **Date:** 2026-09-27
 - **Context:** Dan runs Stage 1 in one window and asked a second window to take the other stages without doubling up. Stage 2's job editor, notes and "Already done" share screens and saved data with Stage 1 (the "Remind me" choice lives where a time is set), so they wait for Stage 1. These four items touch none of Stage 1's files and go ahead now (`product/PRODUCTIVITY_PLAN.md`). Decision numbers: Stage 1 takes D-108 and D-109; this window starts at D-110.

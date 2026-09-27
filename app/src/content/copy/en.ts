@@ -36,6 +36,7 @@ export const copy = {
   'row.delve': 'a delve',
   'row.about': 'about {len}',
   'nav.proto': 'Trial',
+  'nav.settings': 'Settings',
 
   /* the run set-up (the dial) */
   'set.label': 'Delves',
@@ -68,7 +69,6 @@ export const copy = {
   'delve.more': 'This one is extra: the {ord} delve.',
   'delve.away.locked': 'Lock the phone and put it away: the delve goes on, and a sound will call you back when it is over. Going into another app pauses it.',
   'delve.away.noAlerts': 'Alerts are turned off for this app in Settings, so no sound will come while the phone is locked. Keep an eye on the time, or turn them on in Settings, then Notifications.',
-  'delve.away.web': 'Set the phone down and leave this page open: a chime will call you back. Leaving the page pauses the delve.',
   'delve.stepAway': 'Pause',
   'delve.paused': 'Paused',
   'delve.finishHere': 'Finish here',
@@ -352,6 +352,9 @@ export const copy = {
   'satchel.label': 'The satchel',
   'satchel.say': 'For the days that come with a list.',
   'satchel.add': 'Add a line',
+  'today.add': '+ Add', 'today.add.label': 'Add to the satchel',
+  'today.add.placeholder': 'Anything to remember. Several lines make several.',
+  'today.add.put': 'Put it in', 'today.add.said': 'In the satchel',
   'satchel.addMany': 'Write one item per line. You can paste in a whole list.',
   'satchel.put': 'Put it in',
   'satchel.more': 'Show the rest',
@@ -367,6 +370,35 @@ export const copy = {
   'month.7': 'July', 'month.8': 'August', 'month.9': 'September', 'month.10': 'October', 'month.11': 'November', 'month.12': 'December',
 
   /* the phone's alerts */
+  /* reminders (D-107): only for things Dan gave a time, only if he asked; calm, never "you haven't opened the app" */
+  'remind.label': 'Remind me',
+  'settings.label': 'Settings',
+  'settings.reminders': 'Reminders',
+  'settings.reminders.say': 'A reminder comes only for something you gave a time and asked to be reminded of: set it where you set the time, in the week or in what repeats. One alert each, and never to call you back to the app.',
+  'settings.reminders.on': 'On', 'settings.reminders.off': 'All off',
+  'settings.reminders.refused': 'The phone is not letting the app alert you. You can allow it in the phone’s Settings, under this app’s Notifications.',
+  'settings.bedtime': 'Bedtime, {time}',
+  'settings.trial': 'The trial’s own controls',
+  'settings.save': 'Your save',
+  'settings.save.app': 'Each week a copy is also written to the Files app, under On My iPhone, in Long Answer. The last four are kept.',
+  'settings.copy': 'Save a copy',
+  'settings.restore': 'Restore from a copy',
+  'settings.restore.ask': 'Restore the copy from {date}? It holds {n} done. What you have now is kept aside first, so nothing is lost.',
+  'settings.restore.empty': 'Restore this copy? It holds nothing done yet. What you have now is kept aside first, so nothing is lost.',
+  'settings.restore.yes': 'Restore it', 'settings.restore.no': 'Cancel',
+  'settings.restore.bad': 'That file is not a save this app can read. Nothing was changed.',
+  'settings.restore.done': 'The copy is restored.',
+  'settings.copy.failed': 'The copy could not be made. Nothing was changed.',
+  'jobs.one': '1 job', 'jobs.many': '{n} jobs',
+  'remind.off': 'Off', 'remind.at.0': 'At the time', 'remind.at.15': '15 min before', 'remind.at.60': '1 h before',
+  'remind.job.0': 'It is {time}, the time you set for it.',
+  'remind.job.15': 'In a quarter of an hour, at {time}.',
+  'remind.job.60': 'In an hour, at {time}.',
+  'remind.bed.title': 'Bed by {time}',
+  'remind.bed.0': 'It is the bedtime you chose. Go to sleep is waiting in the app.',
+  'remind.bed.15': 'A quarter of an hour to your bedtime. Time to begin winding down.',
+  'remind.bed.60': 'An hour to your bedtime.',
+  'remind.again': 'Again in 10 min',
   'notify.delveEnd.title': 'The delve is over',
   'notify.delveEnd.body': 'Come back up when you are ready.',
   'notify.breatherEnd.title': 'The next delve is starting',
@@ -413,6 +445,11 @@ export const delves = (n: number) => t(n === 1 ? 'delves.one' : 'delves.many', {
 export const inSentence = (name: string) => name.replace(/^The /, 'the ');
 /** "Monday", from a game day. */
 export const dayName = (day: string) => copy[`day.${new Date(`${day}T00:00:00Z`).getUTCDay()}` as CopyKey];
+/** "27 September 2026" */
+export function dateWords(day: string): string {
+  const d = new Date(`${day}T00:00:00Z`);
+  return `${d.getUTCDate()} ${copy[`month.${d.getUTCMonth() + 1}` as CopyKey]} ${d.getUTCFullYear()}`;
+}
 /** "once", "twice", "4 times" */
 export const timesWords = (n: number) => n === 1 ? copy['daybook.once'] : n === 2 ? copy['daybook.twice'] : t('daybook.many', { n });
 /** "a, b and c" */
