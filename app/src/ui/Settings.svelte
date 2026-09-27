@@ -10,12 +10,30 @@
   import { back } from './back.svelte';
   import { platform } from '../platform';
   import { flushSync } from 'svelte';
-  import { BEDTIME, reminderOf, remindersOn } from '../core/reminders';
+  import { BEDTIME, nudgeOn, reminderOf, remindersOn } from '../core/reminders';
+  import { calendarOf } from '../core/week';
 
   let { go }: { go: Go } = $props();
   const v = $derived(game.view);
   const on = $derived(remindersOn(game.facts));
   const bed = $derived(reminderOf(game.facts, BEDTIME));
+  const nudge = $derived(nudgeOn(game.facts));
+  /* the phone's calendar, read-only (D-115): off until turned on; asked once, in the tap that turns it on */
+  const cal = $derived(calendarOf(game.facts));
+  let cals = $state<{ id: string; title: string }[]>([]), calRefused = $state(false);
+  if (calendarOf(game.facts).on) void platform.calendar.calendars().then(x => (cals = x));
+  async function calOn() {
+    calRefused = false;
+    if (!(await platform.calendar.permit())) { calRefused = true; return; }
+    cals = await platform.calendar.calendars();
+    game.do({ do: 'calendarShow', on: true, calendars: null });
+    void game.readCalendar();
+  }
+  function calToggle(id: string) {
+    const now = cal.calendars ?? cals.map(c => c.id);
+    const next = now.includes(id) ? now.filter(x => x !== id) : [...now, id];
+    game.do({ do: 'calendarShow', on: true, calendars: next.length === cals.length ? null : next });
+  }
 
   /* the save's copies (D-107): Save a copy; Restore asks once, in plain words, and keeps what is there now aside */
   let asking = $state<Save | null>(null), said = $state('');
@@ -63,8 +81,33 @@
       {#if on}
         <p class="say bed">{t('settings.bedtime', { time: v.bedtime })}</p>
         <Remind lead={bed} pick={x => game.do({ do: 'remind', target: BEDTIME, lead: x })} />
+        <!-- the re-entry nudge (D-113): off by default; only after three quiet days, at most once a week -->
+        <div class="label-line nudge">{t('settings.nudge')}</div>
+        <p class="soft note">{t('settings.nudge.say')}</p>
+        <div class="seg" role="group" aria-label={t('settings.nudge')}>
+          <button aria-pressed={nudge} onclick={() => game.do({ do: 'nudge', on: true })}>{t('settings.nudge.on')}</button>
+          <button aria-pressed={!nudge} onclick={() => game.do({ do: 'nudge', on: false })}>{t('settings.nudge.off')}</button>
+        </div>
       {/if}
       {#if game.alertsOff}<p class="soft note">{t('settings.reminders.refused')}</p>{/if}
+    </section>
+
+    <section>
+      <div class="label-line">{t('settings.cal')}</div>
+      <p class="soft note">{t('settings.cal.say')}</p>
+      <div class="seg" role="group" aria-label={t('settings.cal')}>
+        <button aria-pressed={cal.on} onclick={calOn}>{t('settings.cal.on')}</button>
+        <button aria-pressed={!cal.on} onclick={() => game.do({ do: 'calendarShow', on: false, calendars: cal.calendars })}>{t('settings.cal.off')}</button>
+      </div>
+      {#if calRefused}<p class="soft note">{t('settings.cal.refused')}</p>{/if}
+      {#if cal.on && cals.length}
+        <div class="cals">
+          {#each cals as c (c.id)}
+            {@const shown = !cal.calendars || cal.calendars.includes(c.id)}
+            <button class="cal" aria-pressed={shown} onclick={() => calToggle(c.id)}><span class="pip" class:done={shown}></span><span>{c.title}</span></button>
+          {/each}
+        </div>
+      {/if}
     </section>
 
     <section>
@@ -93,6 +136,11 @@
   .label-line { margin-top: 14px; }
   .note { text-align: left; margin: 6px 0 10px; font-size: 15px; }
   .seg { margin-top: 6px; }
+  .nudge { margin-top: 16px; }
+  .cals { margin-top: 8px; }
+  .cal { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px; background: none; border: 0; border-bottom: 1px solid var(--edge-2);
+    color: var(--ink); font: inherit; font-size: 16px; text-align: left; padding: 0; cursor: pointer; }
+  .cal[aria-pressed='false'] span:last-child { color: var(--ink-3); }
   .bed { margin-top: 16px; color: var(--ink-2); }
   .full { width: 100%; }
   .gap { margin-top: 10px; }

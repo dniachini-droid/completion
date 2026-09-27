@@ -24,6 +24,10 @@ export interface Job {
   firstStep?: string;
   /** A line from the satchel or the week (TOOLS §2): offered on Today only when planned for the day. */
   item?: boolean;
+  /** Wanted by this date (YYYY-MM-DD): a satchel line or a one-off (D-114). Never a red mark or a count (D-038). */
+  by?: string;
+  /** One line of Dan's own: where he stopped, or anything to keep with the job (D-112). */
+  note?: string;
   /** Its rhythm was stopped (set by `live`): it leaves Today, the plan and Choose a delve until it repeats again. */
   stopped?: boolean;
 }
@@ -37,8 +41,14 @@ export interface Rhythm {
   times?: number;
   /** …or on set weekdays (0 Sunday … 6 Saturday)… */
   days?: number[];
-  /** …or once every 2 weeks. */
+  /** …or once every 2 weeks… */
   every?: 2;
+  /** …or monthly: a day of the month (31: the last day of a shorter month), or its nth weekday (nth -1: the last)… (D-114) */
+  monthly?: { day: number } | { nth: 1 | 2 | 3 | 4 | -1; weekday: number };
+  /** …or yearly, on "MM-DD" (birthdays, renewals)… */
+  yearly?: string;
+  /** …or every N days since it was last done. */
+  everyDays?: number;
   /** An appointment's time, "18:00". */
   time?: string;
 }
@@ -89,7 +99,7 @@ export type FactBody =
   | { type: 'keyHeld' }
   | { type: 'keyUsed' }
   | { type: 'sealOpened'; seal: string }
-  | { type: 'findGiven'; id: string; why: 'avoided' | 'switching' | 'chamber' | 'camp' | 'surplus' | 'morning'; job?: number }
+  | { type: 'findGiven'; id: string; why: 'avoided' | 'switching' | 'chamber' | 'camp' | 'surplus' | 'morning' | 'dated'; job?: number }
   | { type: 'recordShown'; id: string }
   | { type: 'storyWeekBegan'; w: number }
   /* Dan's small choices on a beat (never gating) and his guesses at marks */
@@ -99,7 +109,24 @@ export type FactBody =
   /* the week and the gaps (slice 4): Dan's own rhythms and lines, the plan, bedtime, the week close, absence */
   | { type: 'rhythmSaved'; rhythm: Rhythm; job: Job }
   | { type: 'rhythmStopped'; id: string }
-  | { type: 'itemAdded'; id: string; name: string }
+  /** A job edited or added by itself (the job editor, D-112): its whole new shape. Removed: gone from every list. */
+  | { type: 'jobSaved'; job: Job }
+  | { type: 'jobRemoved'; id: string }
+  /** The week's look-ahead in the Daybook (D-116): a line kept or put to someday by hand, the one thing that matters
+      most this week (null: nothing in particular), and whether the look-ahead was opened and finished (the test's notes). */
+  | { type: 'itemKept'; id: string }
+  | { type: 'itemSomeday'; id: string }
+  | { type: 'weekPinned'; week: string; job: string | null }
+  | { type: 'lookAheadSeen'; week: string; finished: boolean }
+  /** The phone's calendar, read-only (D-115): shown or not, and which calendars (null: all). */
+  | { type: 'calendarChosen'; on: boolean; calendars: string[] | null }
+  /** What the calendar held for the days ahead when it was last read: written only when it changed, so a plan made
+      from it can always be explained later (ARCHITECTURE → facts). Events never become jobs and earn nothing. */
+  | { type: 'calendarRead'; from: string; to: string; events: CalEvent[] }
+  /** The re-entry nudge, off unless Dan turns it on (D-113) */
+  | { type: 'nudgeChosen'; on: boolean }
+  /** `via`: said to Siri, Shortcuts or the Action button; `ref`: that line's own id, so it is never added twice (D-113) */
+  | { type: 'itemAdded'; id: string; name: string; via?: 'siri'; ref?: string }
   | { type: 'itemTicked'; id: string }
   | { type: 'itemDropped'; id: string }
   | { type: 'planMade'; week: string; entries: PlanEntry[] }
@@ -113,8 +140,12 @@ export type FactBody =
   | { type: 'offerAnswered'; week: string }
   | { type: 'welcomed'; since: string; question: string | null }
   /* reminders (D-107): opt-in, one per item, only for things with a time (core/reminders.ts); null turns one off */
-  | { type: 'reminderSet'; target: string; lead: 0 | 15 | 60 | null }
+  /** lead: minutes before a time; for a date (`d:<job>`, D-114) 0 is its morning and 1440 the day before */
+  | { type: 'reminderSet'; target: string; lead: 0 | 15 | 60 | 1440 | null }
   | { type: 'remindersSwitched'; on: boolean }
+
+/** One event from the phone's calendar (D-115): local wall-clock times ("YYYY-MM-DDTHH:MM"), all-day ones by date. */
+export interface CalEvent { id: string; cal: string; title: string; start: string; end: string; allDay: boolean; }
 
 /** One job placed on a day of the week plan (PLANNER.md). A forecast: moving it earns nothing and loses nothing. */
 export interface PlanEntry { id: string; job: string; day: string; time?: string; }

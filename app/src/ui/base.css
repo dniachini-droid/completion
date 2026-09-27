@@ -48,3 +48,6 @@ body.looking .vignette, body.looking .facelight { opacity: 0 !important; pointer
 /* the cool mist thins while looking, so a detail isn't hidden under it (it keeps drifting) */
 .fog:not(.warm) { transition: opacity .45s var(--ease); }
 body.looking .fog:not(.warm) { opacity: .4; }
+
+/* (a screen title is no longer focused: VoiceOver hears it from a live line, App.svelte) */
+h1[tabindex="-1"]:focus, h2[tabindex="-1"]:focus { outline: none; }

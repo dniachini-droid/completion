@@ -245,7 +245,8 @@ const quiet = async () => {
 /** Whatever waits on opening, once each: the morning after camp, the welcome back, the daybook's new page. */
 let closes = 0, mornings = 0;
 const openers = async (name) => {
-  for (let k = 0; k < 4; k++) {
+  /* up to eight screens can wait on an opening (arrivals, a morning, a welcome, a week close): each is seen in turn */
+  for (let k = 0; k < 8; k++) {
     /* a place reached overnight (the head start, D-083) opens the app */
     if (await page.locator('.arr').count() && !(await page.locator('button.rodbtn').count())) { await arrivals(name + '-open'); continue; }
     if (await has('On to today')) { if (mornings++ < 1) await shot(name + '-morning', 2500); await tap('On to today'); await page.clock.runFor(1500); continue; }
@@ -257,6 +258,16 @@ const openers = async (name) => {
         await tap('Plan it for me'); await shot(name + '-week-planned', 1500);
         await page.locator('.body').evaluate(e => e.scrollTo(0, e.scrollHeight)); await shot(name + '-week-end', 500);
         await home(); await page.clock.runFor(1500); await shot(name + '-today-planned', 2500);
+      } else if (closes === 2) {
+        /* the week's look-ahead (D-116): still wanted, coming up, what matters most, and on to the week */
+        await tap('Look ahead'); await page.clock.runFor(600); await shot(name + '-look', 600);
+        for (let n = 0; n < 3 && await has('Keep'); n++) { await tap('Keep'); await page.clock.runFor(300); }
+        if (await has('Next')) { await shot(name + '-coming', 500); await tap('Next'); await page.clock.runFor(400); }
+        await shot(name + '-matters', 500);
+        if (!(await has('Nothing in particular'))) errors.push('LOOK AHEAD never asked what matters most');
+        else { await page.locator('.offer button.row').first().click(); await page.clock.runFor(1500); }
+        if (!(await page.locator('h1', { hasText: /this week/i }).count())) errors.push('LOOK AHEAD did not end in the week');
+        await home(); await page.clock.runFor(1500);
       } else { await tap('Not now'); await page.clock.runFor(1500); }
       continue;
     }
@@ -392,6 +403,14 @@ await page.locator('textarea.lines').fill('Hoover the hall\nClear the desk\nWash
 await tap('Put it in'); await shot('satchel-lines', 1000);
 await tap('Put on today'); await shot('satchel-today', 800);
 await page.locator('.tickbox').nth(1).click(); await shot('satchel-ticked', 800);
+/* a line's editor (D-112): a tap on the line opens it; renamed, it is renamed in the satchel; let go, Undo brings it back */
+await page.locator('.item .t', { hasText: 'Wash the bedding' }).click(); await shot('job-edit', 800);
+await page.locator('.editor input.line').first().fill('Wash and change the bedding'); await tap('Save'); await page.clock.runFor(800);
+if (!(await page.locator('.item .t', { hasText: 'Wash and change the bedding' }).count())) errors.push('EDIT the line was not renamed in the satchel');
+await page.locator('.item .t', { hasText: 'Take the bottles out' }).click(); await page.clock.runFor(800);
+await tap('Let it go'); await shot('job-removed', 600);
+await tap('Undo'); await page.clock.runFor(800);
+if (!(await page.locator('.item .t', { hasText: 'Take the bottles out' }).count())) errors.push('EDIT Undo did not bring the line back');
 await home(); await page.clock.runFor(1500); await shot('today-with-line', 2000);
 await tap('Week'); await shot('week', 1500);
 /* a day folds away with a tap on its name, and opens again (Dan, review 2) */
@@ -461,11 +480,25 @@ await tap('Daybook'); await shot('daybook', 1500); await home(); await page.cloc
     await shot('settings-restore', 500);
     await tap('Restore it'); await page.clock.runFor(500);
     if (!(await page.getByText('The copy is restored.').count())) errors.push('COPY the restore did not say it was done'); }
+  /* the calendar, read-only (D-115): a made-up one stands for the phone's; turned on, its event shows in the week */
+  { const day = await page.evaluate(() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; });
+    await page.evaluate(d => localStorage.setItem('bench.calendar', JSON.stringify({ calendars: [{ id: 'w', title: 'Work' }],
+      events: [{ id: 'e1', cal: 'w', title: 'Dentist (calendar)', start: `${d}T21:00`, end: `${d}T21:30`, allDay: false }] })), day);
+    await tap('Show it'); await page.clock.runFor(800); await shot('settings-calendar', 600);
+    await page.locator('button.home').first().click(); await page.clock.runFor(800); await home(); await page.clock.runFor(1200);
+    await tap('Week'); await page.clock.runFor(1200); await shot('week-calendar', 800);
+    if (!(await page.locator('.event', { hasText: 'Dentist (calendar)' }).count())) errors.push('CALENDAR the event is not in the week');
+    await home(); await page.clock.runFor(800); await tap('Daybook'); await tap('Settings'); await page.clock.runFor(1200); }
   await tap('The trial’s own controls'); await page.clock.runFor(1500); expect('settings → trial', await backSays(), 'settings');
   await home();
   await tap('Something else…'); await page.locator('.body button.row').first().click(); await page.clock.runFor(800);
   expect('choose → delves', await backSays(), 'back');
   await home();
+  /* "Already done" (D-112): from Choose a delve, yesterday, with no timer; it lands on the job's return */
+  await tap('Something else…'); await tap('Already done'); await tap('Yesterday'); await shot('choose-already', 600);
+  await page.locator('.body button.row:not([disabled])').first().click(); await page.clock.runFor(1500); await shot('already-yesterday', 1000);
+  if (await page.locator('.body .record').count()) errors.push('ALREADY a job tapped as done yesterday stayed on Choose a delve');
+  await home(); await page.clock.runFor(1500);
   if (!(await page.locator('nav.foot').count())) errors.push('BACK never reached Today');
 }
 /* away for four days: where you were, and a lighter day to come back to */

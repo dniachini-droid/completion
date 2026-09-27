@@ -11,7 +11,8 @@ import { content } from '../content/world';
 import { platform } from '../platform';
 import { t } from '../content/copy/en';
 import { COPIES_KEPT, COPY_PREFIX, copyDue, copyName, readSave, SAVE_VERSION, type Save } from '../core/save';
-import { alertsDue, type Alert } from '../core/reminders';
+import { alertsDue, nudgeDay, NUDGE_HOUR, type Alert } from '../core/reminders';
+import { calendarOf } from '../core/week';
 
 export { content };
 
@@ -30,6 +31,10 @@ const ALERT_IDS = Array.from({ length: 24 }, (_, i) => 100 + i);
     With the delve's, well under the 64 alerts a phone keeps waiting at once. */
 const REMIND_IDS = Array.from({ length: 30 }, (_, i) => 200 + i);
 const AGAIN_IDS = Array.from({ length: 6 }, (_, i) => 240 + i);
+/** The re-entry nudge's one alert (D-113). */
+const NUDGE_ID = 250;
+/** How far ahead the calendar is read (D-115). */
+const CAL_DAYS = 14;
 
 class Game {
   proto = $state<Proto>(loadProto());
@@ -48,6 +53,9 @@ class Game {
     this.panel();
     void this.reminders();
     void this.weekly();
+    void this.drain();
+    void this.readCalendar();
+    platform.calendar.onChange(() => void this.readCalendar());
     this.#ticker = window.setInterval(() => this.tick(), 250);
     document.addEventListener('visibilitychange', () => { if (!document.hidden) void this.wake(); });
     window.addEventListener('focus', () => void this.wake());
@@ -72,7 +80,31 @@ class Game {
     this.native();
     void this.reminders();
     void this.weekly();
+    void this.drain();
+    void this.readCalendar();
     this.panel();   /* the panel may have run past what it knew while the app was away: put it right */
+  }
+
+  /** Lines said to Siri, typed in Shortcuts or sent from the Action button go into the satchel (D-113): written first,
+      then cleared; a line written but not cleared (the app closed in between) is recognised by its id next time. */
+  #draining = false;
+  async drain() {
+    if (this.#draining) return;
+    this.#draining = true;
+    try {
+      const lines = await platform.inbox.take();
+      if (!lines.length) return;
+      this.do({ do: 'takeInbox', lines });
+      await platform.inbox.clear(lines.map(x => x.id));
+    } finally { this.#draining = false; }
+  }
+
+  /** The phone's calendar, read-only (D-115): the next two weeks, read on opening, on return and when it changes;
+      written down only when it changed. Nothing is read while it's off. */
+  async readCalendar() {
+    if (!calendarOf(this.facts).on) return;
+    const events = await platform.calendar.events(CAL_DAYS);
+    this.do({ do: 'calendarRead', events, days: CAL_DAYS });
   }
 
   /** Dan went into another app at `leftAt` (the phone's ms) and is back now: the delve paused where he left (D-094).
@@ -218,12 +250,23 @@ class Game {
     if (!platform.notifier.locked) return;
     const list = alertsDue(content, this.facts, this.clock()).slice(0, REMIND_IDS.length);
     const words = list.map(a => ({ a, ...this.remindWords(a) }));
-    const key = JSON.stringify(words.map(w => [w.a.date, w.a.clock, w.title, w.body]));
+    /* the re-entry nudge (D-113): a nudge set earlier whose time has passed came while the app was closed */
+    const st = platform.store, set = Number(st.get('nudge.at') ?? 0);
+    if (set && set <= platform.now().getTime()) { st.set('nudge.last', st.get('nudge.day') ?? ''); st.remove('nudge.at'); }
+    const nday = nudgeDay(this.facts, st.get('nudge.last') || null);
+    const nwhen = nday ? this.realDate(new Date(+nday.slice(0, 4), +nday.slice(5, 7) - 1, +nday.slice(8, 10), NUDGE_HOUR, 0).getTime()) : null;
+    const nudge = nwhen && nwhen.getTime() > platform.now().getTime() ? nwhen : null;
+    const key = JSON.stringify([words.map(w => [w.a.date, w.a.clock, w.title, w.body]), nudge?.getTime() ?? 0]);
     if (key === this.#reminded) return;
     this.#reminded = key;
-    await platform.notifier.cancel(REMIND_IDS);
-    if (!list.length) return;
+    await platform.notifier.cancel([...REMIND_IDS, NUDGE_ID]);
+    if (!nudge) st.remove('nudge.at');
+    if (!list.length && !nudge) return;
     if (!(await platform.notifier.permit())) { this.alertsOff = true; return; }
+    if (nudge) {
+      await platform.notifier.at(NUDGE_ID, nudge, t('nudge.title'), t('nudge.body'));
+      st.set('nudge.at', String(nudge.getTime())); st.set('nudge.day', nday!);
+    }
     for (const [i, w] of words.entries()) {
       const [y, m, d] = w.a.date.split('-').map(Number), [h, min] = w.a.clock.split(':').map(Number);
       const when = this.realDate(new Date(y, m - 1, d, h, min).getTime());
@@ -232,8 +275,10 @@ class Game {
   }
   /** A reminder's words, in the app's voice. */
   remindWords(a: Alert): { title: string; body: string } {
-    if (a.kind === 'bedtime') return { title: t('remind.bed.title', { time: a.time }), body: t(`remind.bed.${a.lead}`) };
-    return { title: this.job(a.job ?? '')?.name ?? '', body: t(`remind.job.${a.lead}`, { time: a.time }) };
+    if (a.kind === 'bedtime') return { title: t('remind.bed.title', { time: a.time }), body: t(`remind.bed.${a.lead as 0 | 15 | 60}`) };
+    /* a date (D-114): its words never say "late" or count days */
+    if (a.kind === 'by') return { title: this.job(a.job ?? '')?.name ?? '', body: t(a.lead ? 'remind.by.before' : 'remind.by.day') };
+    return { title: this.job(a.job ?? '')?.name ?? '', body: t(`remind.job.${a.lead as 0 | 15 | 60}`, { time: a.time }) };
   }
 
   /** Dan's marks on a run (Start it now, Pause, Back to the delve), as the run's rules read them. */

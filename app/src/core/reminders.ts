@@ -7,16 +7,22 @@
  * Times are wall-clock ("HH:MM" on a calendar date), so a clock change between now and the alert moves with Dan.
  */
 import { calendarWeek, gameDay, weekdayOf, type Moment } from './time';
-import { addDays, live, planMade, weekOf } from './week';
+import { addDays, daysBetween, live, planMade, weekOf } from './week';
+import { fallsOn } from './repeat';
 import type { Content, Fact, FactBody, FactOf } from './types';
 
 /** How long before the time an alert comes: at the time, 15 minutes or an hour before. */
 export const LEADS = [0, 15, 60] as const;
-export type Lead = (typeof LEADS)[number];
+/** A date's reminder (D-114): on the morning of the date (0) or the day before (1440), at DATE_HOUR. */
+export const DATE_LEADS = [0, 1440] as const;
+export const DATE_HOUR = '09:00';
+export type Lead = (typeof LEADS)[number] | (typeof DATE_LEADS)[number];
 /** What a reminder is set on: a rhythm (`r:<id>`), one entry on the week (`e:<id>`), or bedtime. */
 export const rhythmTarget = (id: string) => `r:${id}`;
 export const entryTarget = (id: string) => `e:${id}`;
 export const BEDTIME = 'bedtime';
+/** A line's or one-off's date (D-114). */
+export const dateTarget = (job: string) => `d:${job}`;
 /** How far ahead alerts are laid out; the list is worked out again on every change and every opening. */
 export const AHEAD_DAYS = 7;
 /** A start within this long after an alert for its job counts as following it (the test's notes, MVP.md). */
@@ -25,7 +31,7 @@ export const FOLLOWED_MIN = 180;
 export interface Alert {
   /** One per item and day: `<target>@<game day>`. */
   key: string;
-  kind: 'job' | 'bedtime';
+  kind: 'job' | 'bedtime' | 'by';
   job: string | null;
   /** The game day it belongs to, and the item's own time. */
   day: string; time: string;
@@ -77,9 +83,15 @@ export function alertsOn(base: Content, facts: Fact[], day: string, today = day)
   }
   /* a week not laid out yet (next week, before its first opening): an appointment on its set days, at its own time */
   if (!planMade(facts, week)) for (const r of c.rhythms) {
-    if (!r.time || !r.days?.includes(weekdayOf(day)) || listed.has(r.job) || doneOn.has(r.job)) continue;
+    if (!r.time || !fallsOn(r, day) || listed.has(r.job) || doneOn.has(r.job)) continue;
     const lead = set.get(rhythmTarget(r.id)) ?? null;
     if (lead !== null) push(rhythmTarget(r.id), 'job', r.job, r.time, lead);
+  }
+  /* a date (D-114): the morning of it, or the day before, for work not yet done */
+  for (const j of c.jobs) {
+    if (j.by !== day || ofType(facts, 'jobDone').some(f => f.job === j.id)) continue;
+    const lead = set.get(dateTarget(j.id)) ?? null;
+    if (lead !== null) push(dateTarget(j.id), 'by', j.id, DATE_HOUR, lead);
   }
   /* bedtime, unless Dan has already gone to sleep that day */
   const bed = set.get(BEDTIME) ?? null;
@@ -111,4 +123,24 @@ export function followedReminder(c: Content, facts: Fact[], start: Fact): boolea
     const t = wallMs(`${a.date}T${a.clock}`);
     return t <= at && at - t <= FOLLOWED_MIN * 60_000;
   });
+}
+
+/* ---------- the re-entry nudge (D-113; scope 23 B) ---------- */
+
+/** After this many days without opening, one quiet word; never within a week of the last; at this hour. */
+export const NUDGE_DAYS = 3, NUDGE_GAP = 7, NUDGE_HOUR = 18;
+/** Off unless Dan turns it on; the "All off" switch silences it too. */
+export const nudgeOn = (facts: Fact[]) => { const s = ofType(facts, 'nudgeChosen'); return remindersOn(facts) && !!s.length && s[s.length - 1].on; };
+/**
+ * The day the nudge would come, at NUDGE_HOUR: three days after the last opening, and at least a week after the last
+ * nudge (`last`, the day one last came). Only after silence: every opening moves it on, so it never comes to a Dan who
+ * is using the app, and it comes once per silence. Null when off. It never counts the days away in its words.
+ */
+export function nudgeDay(facts: Fact[], last: string | null): string | null {
+  if (!nudgeOn(facts)) return null;
+  const opens = ofType(facts, 'opened');
+  if (!opens.length) return null;
+  let day = addDays(opens[opens.length - 1].day, NUDGE_DAYS);
+  if (last && daysBetween(last, day) < NUDGE_GAP) day = addDays(last, NUDGE_GAP);
+  return day;
 }

@@ -239,6 +239,13 @@ export const copy = {
 
   /* choosing what to do: any job, any time (D-077) */
   'row.notToday': 'Not today',
+  'row.already': 'Done',
+  'row.srDone': '{job}: already done', 'row.srAside': '{job}: not today',
+  'set.already': 'Already done', 'set.yesterday': 'Did it yesterday',
+  'choose.record.say': 'Tap what you did. It counts as it would with no timer.', 'choose.record.today': 'Today', 'choose.record.yesterday': 'Yesterday',
+  'set.stopped': 'Last time: {note}',
+  'delve.whereStopped': 'Where did you stop? (for next time)',
+  'cant.ask': 'What’s the first thing you’d touch?', 'cant.keep': 'Keep it',
   'today.notToday': 'Not today',
   'oops.say': 'Something went wrong on this screen. Your save is safe.',
   'today.running.say': 'Your delve is still going. The timer keeps time whether you watch it or not.',
@@ -295,6 +302,10 @@ export const copy = {
   'daybook.count': 'At {where}, a row of notches filled with light, and what it kept shut opened.',
   'daybook.offer': 'Shall the week ahead be planned for you?',
   'daybook.planIt': 'Plan it for me',
+  'look.offer': 'Look ahead at the week? About a minute.', 'look.go': 'Look ahead',
+  'look.still': 'Still wanted?', 'look.keep': 'Keep', 'look.someday': 'Someday', 'look.skip': 'Skip',
+  'look.coming': 'Coming up', 'look.nothing': 'Nothing fixed this week.', 'look.more': 'and more in the week',
+  'look.next': 'Next', 'look.matters': 'What matters most?', 'look.nothingParticular': 'Nothing in particular',
   'daybook.notNow': 'Not now',
   'daybook.close': 'Close',
   'daybook.earlier': 'Earlier',
@@ -338,6 +349,21 @@ export const copy = {
   'rhythms.onceWeek': 'Once a week',
   'rhythms.every2': 'every 2 weeks',
   'rhythms.every2long': 'Once every 2 weeks',
+  'slip.date': '{job} was wanted {date}. Still needed?', 'slip.appt': '{job}, on {day} at {time}, went by. Still needed?', 'slip.today': 'Put it on today',
+  'size.label': 'How much today', 'size.low': 'Lighter', 'size.normal': 'As planned', 'size.high': 'Fuller',
+  'size.hint.back': 'The first day back: a lighter one may suit.', 'size.hint.bedtime': 'After a late night, a lighter day may suit.',
+  'week.aboutMin': 'about {n} min', 'week.aboutH': 'about {n} h', 'week.replan': 'Lay out the rest of the week',
+  'week.later': 'A later week', 'week.after': 'The week after', 'week.otherDay': 'Another day…',
+  'by.date': 'by {date}', 'by.label': 'By a date', 'by.none': 'No date', 'by.set': 'By',
+  'by.passed': 'Its date has passed.', 'by.still': 'Still needed', 'by.new': 'New date', 'by.letGo': 'Let it go',
+  'rhythms.monthly': 'Monthly', 'rhythms.yearlyShort': 'Yearly', 'rhythms.everyShort': 'Every few days',
+  'rhythms.onADate': 'On a date', 'rhythms.onAWeekday': 'On a weekday',
+  'rhythms.monthDay': 'on the {n} of each month', 'rhythms.lastDay': 'last day',
+  'rhythms.monthNth': 'on the {nth} {day} of each month',
+  'rhythms.nth.1': 'first', 'rhythms.nth.2': 'second', 'rhythms.nth.3': 'third', 'rhythms.nth.4': 'fourth', 'rhythms.nth.-1': 'last',
+  'rhythms.yearly': 'every year on {date}',
+  'rhythms.everyN': 'every {n} days',
+  'rhythms.everySay': 'Counted from the day you last did it, not from a date.',
   'rhythms.each': 'Each time',
   'rhythms.enough': 'Enough at',
   'rhythms.all': 'All of it',
@@ -348,6 +374,12 @@ export const copy = {
   'rhythms.newNumber': 'A changed number counts from next week, but you can plan with it straight away.',
   'rhythms.save': 'Save', 'rhythms.cancel': 'Cancel',
   'rhythms.stop': 'Stop repeating',
+  'job.once': 'Once', 'job.onceSay': 'Once, until it is done.', 'job.onceUntil': 'once',
+  'job.others': 'Other jobs', 'job.change': 'Change the job', 'job.back': 'Back to {to}', 'job.gone': 'Gone from your lists.',
+  'job.avoided': 'I tend to put this off', 'job.yes': 'Yes', 'job.no': 'No',
+  'job.step': 'First small step', 'job.stepHint': 'What would you touch first?',
+  'job.note': 'A note', 'job.noteHint': 'Where you stopped, or anything to keep with it',
+  'job.remove': 'Remove it', 'job.removed': '{name} is gone from your lists.', 'job.undo': 'Undo',
   'rhythms.less': 'Fewer', 'rhythms.more': 'More', 'rhythms.shorter': 'Shorter', 'rhythms.longer': 'Longer',
   'days.short.0': 'Sun', 'days.short.1': 'Mon', 'days.short.2': 'Tue', 'days.short.3': 'Wed', 'days.short.4': 'Thu', 'days.short.5': 'Fri', 'days.short.6': 'Sat',
   'days.plural.0': 'Sundays', 'days.plural.1': 'Mondays', 'days.plural.2': 'Tuesdays', 'days.plural.3': 'Wednesdays', 'days.plural.4': 'Thursdays', 'days.plural.5': 'Fridays', 'days.plural.6': 'Saturdays',
@@ -379,6 +411,15 @@ export const copy = {
   'settings.reminders': 'Reminders',
   'settings.reminders.say': 'A reminder comes only for something you gave a time and asked to be reminded of: set it where you set the time, in the week or in what repeats. One alert each, and never to call you back to the app.',
   'settings.reminders.on': 'On', 'settings.reminders.off': 'All off',
+  'settings.cal': 'Your calendar',
+  'settings.cal.say': 'Shows the events in your phone’s calendar in the week, read-only, and gives a busy day less to do. A Google calendar shows if it is added in the phone’s Settings. Nothing is changed and nothing leaves your phone.',
+  'settings.cal.on': 'Show it', 'settings.cal.off': 'Off',
+  'settings.cal.refused': 'The phone isn’t letting the app read the calendar. You can allow it in the phone’s Settings, under this app, Calendars: Full Access.',
+  'settings.nudge': 'A word after a quiet spell',
+  'settings.nudge.say': 'If the app hasn’t been opened for three days, one quiet word at 6 pm. Never more than once a week, and never a count. Off unless you turn it on.',
+  'settings.nudge.on': 'On', 'settings.nudge.off': 'Off',
+  'nudge.title': 'Long Answer',
+  'nudge.body': 'Your place is kept. One small thing is enough, whenever you like.',
   'settings.reminders.refused': 'The phone is not letting the app alert you. You can allow it in the phone’s Settings, under this app’s Notifications.',
   'settings.bedtime': 'Bedtime, {time}',
   'settings.trial': 'The trial’s own controls',
@@ -402,6 +443,8 @@ export const copy = {
   'remind.bed.15': 'A quarter of an hour to your bedtime. Time to begin winding down.',
   'remind.bed.60': 'An hour to your bedtime.',
   'remind.again': 'Again in 10 min',
+  'remind.by.day': 'Today is the day you gave it.', 'remind.by.before': 'Tomorrow is the day you gave it.',
+  'remind.date.day': 'On the morning', 'remind.date.before': 'The day before',
   'notify.delveEnd.title': 'The delve is over',
   'notify.delveEnd.body': 'Come back up when you are ready.',
   'notify.breatherEnd.title': 'The next delve is starting',
@@ -449,6 +492,11 @@ export const inSentence = (name: string) => name.replace(/^The /, 'the ');
 /** "Monday", from a game day. */
 export const dayName = (day: string) => copy[`day.${new Date(`${day}T00:00:00Z`).getUTCDay()}` as CopyKey];
 /** "27 September 2026" */
+/** "by Fri 10 Oct": a line's date, in the quiet italic (D-114). */
+export function byWords(day: string): string {
+  const d = new Date(`${day}T00:00:00Z`);
+  return copy['by.date' as CopyKey].replace('{date}', `${copy[`days.short.${d.getUTCDay()}` as CopyKey]} ${d.getUTCDate()} ${copy[`month.${d.getUTCMonth() + 1}` as CopyKey].slice(0, 3)}`);
+}
 export function dateWords(day: string): string {
   const d = new Date(`${day}T00:00:00Z`);
   return `${d.getUTCDate()} ${copy[`month.${d.getUTCMonth() + 1}` as CopyKey]} ${d.getUTCFullYear()}`;

@@ -8,10 +8,11 @@
  */
 import { calendarWeek, epochOf, gameDay, momentOf, offsetOf, wallClock, weekdayOf, type Moment } from './time';
 import { runAt, alertsAfter, type RunMark, type RunNow, type RunPlan } from './run';
-import type { Capacity, Content, Fact, FactBody, FactOf, Job, Rhythm } from './types';
+import type { CalEvent, Capacity, Content, Fact, FactBody, FactOf, Job, Rhythm } from './types';
 import * as S from './story';
 import * as W from './week';
 import * as R from './reminders';
+import * as Rep from './repeat';
 import type { Beat, Seal, StretchId } from './story-types';
 
 export const STEP_MIN = 25;                                   /* BALANCING §1 */
@@ -49,8 +50,8 @@ function activeRun(facts: Fact[]) {
 
 function capacityOn(facts: Fact[], day: string): Capacity {
   const c = ofType(onDay(facts, day), 'capacityChosen');
-  /* Dan sets his days in the week and runs them: no Low / Normal / High on Today, nothing suggested (Dan, D-089).
-     A day is Normal; only calling the deep push (a High day's, kept in the rules) or an old save's choice changes it. */
+  /* the day as Dan chose it (Stage 3 item 13, D-114: an optional choice on the day's first open); not chosen, Normal:
+     a late night or days away never shrink a day by themselves (Dan, D-089), the choice only says a lighter one may suit */
   return c.length ? c[c.length - 1].capacity : 'normal';
 }
 
@@ -136,12 +137,20 @@ export const rhythmOf = (c: Content, job: string): Rhythm | undefined => c.rhyth
 function offeredOn(c: Content, facts: Fact[], day: string, j: Job, planned: Set<string>): boolean {
   if (j.stopped) return false;   /* a stopped rhythm leaves no one-off behind (D-110) */
   if (planned.has(j.id)) return true;
+  if (dueSoon(facts, j, day)) return true;
   if (j.item) return false;   /* a satchel line is offered only once it is planned for the day (TOOLS §2) */
   const r = rhythmOf(c, j.id);
-  if (r?.days) return r.days.includes(weekdayOf(day));
+  const on = r ? Rep.fallsOn(r, day) : null;
+  if (on !== null) return on;
+  /* every N days: offered once it falls due, until done (D-114) */
+  if (r?.everyDays) return Rep.dueFrom(facts, r, day) <= day || ofType(facts, 'jobDone').some(f => f.job === j.id && f.day === day);
   if (!r) return !ofType(facts, 'jobDone').some(f => f.job === j.id && f.day !== day);
   return true;
 }
+/** Dated work within three days of its date (or past it), not yet done: offered on Today even without a plan (D-114). */
+export const SOON_DAYS = 3;
+const dueSoon = (facts: Fact[], j: Job, day: string) =>
+  !!j.by && W.daysBetween(day, j.by) <= SOON_DAYS && !ofType(facts, 'jobDone').some(f => f.job === j.id && f.day !== day);
 /** A rhythm whose enough is met this week stops leading (PLANNER → How the week drives Today). */
 const metThisWeek = (c: Content, facts: Fact[], day: string, job: string) => {
   const r = rhythmOf(c, job);
@@ -153,6 +162,13 @@ const metThisWeek = (c: Content, facts: Fact[], day: string, job: string) => {
 function orderOn(c: Content, facts: Fact[], day: string, clock: string): string[] {
   const aside = asideOn(facts, day);
   const plan = W.plannedToday(c, facts, day, clock).map(p => p.job).filter(id => !aside.has(id));
+  /* the week's one thing that matters most leads Today on the day it is planned (D-116), after an appointment that is due */
+  const pin = W.pinnedIn(facts, calendarWeek(day)), times = W.plannedToday(c, facts, day, clock);
+  if (pin && plan.includes(pin)) {
+    plan.splice(plan.indexOf(pin), 1);
+    const due = times.filter(x => x.time && plan.indexOf(x.job) === 0).length;
+    plan.splice(due, 0, pin);
+  }
   const planned = new Set(plan);
   /* a week laid out with Plan my week: Today is the plan, nothing else slipped in (Dan, D-078); "Something else…" is there */
   /* on a planned week, a job Dan chose himself today (begun, delved on or tapped) joins the list after the plan's (D-080) */
@@ -162,7 +178,9 @@ function orderOn(c: Content, facts: Fact[], day: string, clock: string): string[
   const off = new Set(ofType(onDay(facts, day), 'jobDone').map(f => f.job).filter(id => !planned.has(id)));
   const extra = planLeads(facts, day) && capacityOn(facts, day) === 'high' && off.size === 0
     ? c.jobs.filter(j => !j.item && !planned.has(j.id) && !aside.has(j.id) && !chosen.includes(j) && offeredOn(c, facts, day, j, planned) && !metThisWeek(c, facts, day, j.id)).slice(0, 1) : [];
-  const offered = planLeads(facts, day) ? [...chosen, ...extra] : c.jobs.filter(j => offeredOn(c, facts, day, j, planned) && !planned.has(j.id) && !aside.has(j.id));
+  /* dated work near its date joins a planned day too (D-114) */
+  const soon = c.jobs.filter(j => !planned.has(j.id) && !aside.has(j.id) && !chosen.includes(j) && dueSoon(facts, j, day));
+  const offered = planLeads(facts, day) ? [...chosen, ...soon, ...extra.filter(j => !soon.includes(j))] : c.jobs.filter(j => offeredOn(c, facts, day, j, planned) && !planned.has(j.id) && !aside.has(j.id));
   const order = [...plan, ...offered.filter(j => !metThisWeek(c, facts, day, j.id)), ...offered.filter(j => metThisWeek(c, facts, day, j.id))].map(j => typeof j === 'string' ? j : j.id);
   for (const s of ofType(onDay(facts, day), 'swapped')) {
     const a = order.indexOf(s.from), b = order.indexOf(s.to);
@@ -196,6 +214,13 @@ function underWayOn(facts: Fact[], day: string): string | null {
   }
   for (let i = begun.length - 1; i >= 0; i--) if (!done.has(begun[i])) return begun[i];
   return null;
+}
+
+/** The day a job's current date was first set: its earliest save still carrying that date (D-114). */
+function datedSince(facts: Fact[], job: string): string | null {
+  let since: string | null = null, by: string | undefined;
+  for (const f of facts) if (f.type === 'jobSaved' && f.job.id === job) { if (f.job.by !== by) { by = f.job.by; since = by ? f.day : null; } }
+  return since;
 }
 
 /** Whether a job was begun today and the Begin still stands (not taken back since). */
@@ -369,6 +394,10 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string) {
   }
   /* an avoided job always brings a find (P5) */
   if (j.avoided) giveFind(w, c, 'avoided', at, day, done.seq);
+  /* dated work done before its date may bring a find, once a week: it rewards doing the work, never keeping to the plan;
+     a date set within two days of doing it doesn't count (rule 10, D-114) */
+  else if (j.by && day < j.by && datedSince(w.all, j.id) !== null && W.daysBetween(datedSince(w.all, j.id)!, day) >= 2
+    && !ofType(w.all, 'findGiven').some(f => f.why === 'dated' && calendarWeek(f.day) === calendarWeek(day))) giveFind(w, c, 'dated', at, day, done.seq);
   gifts(w, c, at, day);
 }
 
@@ -542,7 +571,9 @@ export type Command =
   | { do: 'finishHere' }
   /** Dan was in another app from `from` to `to` (game-clock ms): the delve pauses where he left (D-094). */
   | { do: 'away'; from: number; to: number }
-  | { do: 'done'; job: string; keepEnd?: boolean }
+  /** Done with no timer (a Begin, or none: recorded afterwards); `yesterday`: it happened yesterday (D-112); `keepEnd`:
+      a delve under way on it ends and its end screen stays (D-120) */
+  | { do: 'done'; job: string; yesterday?: boolean; keepEnd?: boolean }
   | { do: 'cantStart'; job: string }
   | { do: 'seen'; what: 'step' | 'arrival' | 'morning' | 'welcome'; ref: number }
   | { do: 'guess'; mark: string; guess: string }
@@ -551,10 +582,19 @@ export type Command =
   /* slice 4 */
   | { do: 'saveRhythm'; rhythm: Rhythm; job: Job }
   | { do: 'stopRhythm'; id: string }
+  /* the job editor (D-112): any job, with or without a rhythm; removing it (Undo saves it again); its first step, its note */
+  | { do: 'saveJob'; job: Job; rhythm: Rhythm | null }
+  | { do: 'removeJob'; id: string }
+  | { do: 'firstStep'; job: string; step: string }
+  | { do: 'noteJob'; job: string; note: string }
   | { do: 'addItems'; lines: string[] }
+  /** Lines from outside the app (D-113), each added once, whatever happens between writing and clearing */
+  | { do: 'takeInbox'; lines: { id: string; text: string }[] }
   | { do: 'tick'; id: string }
   | { do: 'dropItem'; id: string }
   | { do: 'planWeek'; week: string }
+  /** Lay out the rest of the week from today, keeping what Dan placed himself (D-114) */
+  | { do: 'replan' }
   | { do: 'movePlan'; entry: string; day: string | null; time?: string | null }
   | { do: 'planJob'; job: string; day: string; time?: string }
   | { do: 'addToWeek'; line: string; day: string; time?: string }
@@ -563,8 +603,17 @@ export type Command =
   | { do: 'callDeep' }
   | { do: 'closeRead'; week: string }
   | { do: 'offerAnswered'; week: string }
-  | { do: 'remind'; target: string; lead: 0 | 15 | 60 | null }
-  | { do: 'reminders'; on: boolean };
+  | { do: 'remind'; target: string; lead: R.Lead | null }
+  | { do: 'reminders'; on: boolean }
+  | { do: 'nudge'; on: boolean }
+  /* the week's look-ahead in the Daybook (D-116): earns nothing (P16) */
+  | { do: 'keepItem'; id: string }
+  | { do: 'somedayItem'; id: string }
+  | { do: 'pinWeek'; job: string | null }
+  | { do: 'lookAhead'; finished: boolean }
+  /* the phone's calendar, read-only (D-115) */
+  | { do: 'calendarShow'; on: boolean; calendars: string[] | null }
+  | { do: 'calendarRead'; events: CalEvent[]; days: number };
 
 /** The facts a command adds to the log (including anything the clock made due first). */
 export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fact[] {
@@ -597,7 +646,8 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     case 'choose': w.put({ type: 'choiceMade', beat: cmd.beat, pick: cmd.pick }); break;
     case 'read': w.put({ type: 'recordOpened', id: cmd.record }); break;
     case 'capacity':
-      if (cmd.capacity !== v.capacity) {
+      /* choosing the day as planned is an answer too: the choice has been seen (D-114) */
+      if (cmd.capacity !== v.capacity || !ofType(onDay(w.all, day), 'capacityChosen').length) {
         w.put({ type: 'capacityChosen', capacity: cmd.capacity, suggested: v.suggested });
         gifts(w, c, now, day);   /* lowering capacity can complete the day (D-043) */
       }
@@ -640,17 +690,55 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       if (r) finishRun(w, c, r, nowMs, now);
       break;
     }
-    case 'done':
-      if (v.done.has(cmd.job)) break;
-      endRunOn(w, c, cmd.job, nowMs, now, cmd.keepEnd);
+    case 'done': {
+      /* "Did it yesterday" (D-112, reversing D-089 with Dan's OK): recorded afterwards, on yesterday */
+      const on = cmd.yesterday ? W.addDays(day, -1) : day;
+      if (!c.jobs.some(j => j.id === cmd.job) || doneOn(w.all, on).has(cmd.job)) break;
+      /* done today while a delve on it runs: that delve ends first (D-120) */
+      if (!cmd.yesterday) endRunOn(w, c, cmd.job, nowMs, now, cmd.keepEnd);
       /* Done with no Begin: recorded afterwards (the test's sharpest line, MVP.md) */
-      if (!begunOn(w.all, day, cmd.job)) w.put({ type: 'jobBegun', job: cmd.job, from: 'record' });
-      markDoneIn(w, c, cmd.job, now, day);
+      if (cmd.yesterday || !begunOn(w.all, day, cmd.job)) w.put({ type: 'jobBegun', job: cmd.job, from: 'record' }, now, on);
+      markDoneIn(w, c, cmd.job, now, on);
       break;
+    }
     case 'cantStart': w.put({ type: 'cantStartUsed', job: cmd.job }); break;
     /* Dan's own rhythms and lines: editing earns nothing and loses nothing (P16, D-038) */
     case 'saveRhythm': if (cmd.job.name.trim()) w.put({ type: 'rhythmSaved', rhythm: { ...cmd.rhythm, job: cmd.job.id }, job: { ...cmd.job, name: cmd.job.name.trim() } }); break;
     case 'stopRhythm': if (c.rhythms.some(r => r.id === cmd.id)) w.put({ type: 'rhythmStopped', id: cmd.id }); break;
+    case 'saveJob': {
+      const name = cmd.job.name.trim().slice(0, 120);
+      if (!name) break;
+      const job: Job = { ...cmd.job, name, length: Math.min(240, Math.max(5, Math.round(cmd.job.length))) };
+      delete job.stopped;
+      for (const k of ['firstStep', 'note'] as const) { const x = job[k]?.trim(); if (x) job[k] = x.slice(0, 160); else delete job[k]; }
+      if (cmd.rhythm) { w.put({ type: 'rhythmSaved', rhythm: { ...cmd.rhythm, job: job.id }, job }); break; }
+      /* "doesn't repeat": its rhythm ends (a one-off from now, until done), then the job as edited */
+      for (const r of c.rhythms.filter(x => x.job === job.id)) w.put({ type: 'rhythmStopped', id: r.id });
+      w.put({ type: 'jobSaved', job });
+      break;
+    }
+    case 'removeJob': if (c.jobs.some(j => j.id === cmd.id)) w.put({ type: 'jobRemoved', id: cmd.id }); break;
+    case 'firstStep': case 'noteJob': {
+      const j = c.jobs.find(x => x.id === cmd.job);
+      const text = (cmd.do === 'firstStep' ? cmd.step : cmd.note).trim().slice(0, 160), key = cmd.do === 'firstStep' ? 'firstStep' : 'note';
+      if (!j || (j[key] ?? '') === text) break;
+      const job: Job = { ...j };
+      delete job.stopped;
+      if (text) job[key] = text; else delete job[key];
+      w.put({ type: 'jobSaved', job });
+      break;
+    }
+    case 'takeInbox': {
+      const seen = new Set(ofType(w.all, 'itemAdded').map(f => f.ref).filter(Boolean));
+      let k = ofType(w.all, 'itemAdded').length;
+      for (const x of cmd.lines) {
+        const name = String(x.text ?? '').trim().slice(0, 120);
+        if (!name || !x.id || seen.has(x.id)) continue;
+        seen.add(x.id);
+        w.put({ type: 'itemAdded', id: `it-${++k}`, name, via: 'siri', ref: x.id });
+      }
+      break;
+    }
     case 'addItems': {
       let k = ofType(w.all, 'itemAdded').length;
       for (const line of cmd.lines.map(x => x.replace(/^[-*•\s]+/, '').trim()).filter(Boolean)) w.put({ type: 'itemAdded', id: `it-${++k}`, name: line.slice(0, 120) });
@@ -669,6 +757,13 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     }
     case 'dropItem': if (W.items(w.all, day).some(x => x.id === cmd.id)) w.put({ type: 'itemDropped', id: cmd.id }); break;
     case 'planWeek': w.put({ type: 'planMade', week: cmd.week, entries: W.planWeek(c, w.all, cmd.week, day) }); break;
+    case 'replan': {
+      const wk = calendarWeek(day), plan = W.planOf(w.all, wk) ?? [];
+      const own = new Set(ofType(w.all, 'planAdded').map(f => f.entry.id));
+      const fixed = plan.filter(e => own.has(e.id));
+      w.put({ type: 'planMade', week: wk, entries: W.planWeek(c, w.all, wk, day, fixed) });
+      break;
+    }
     case 'movePlan': {
       w.put({ type: 'planChanged', entry: cmd.entry, day: cmd.day, ...(cmd.time !== undefined ? { time: cmd.time } : {}) });
       /* a job set aside today and placed on today again in the Week is back on today's list (review 2, D-088) */
@@ -715,9 +810,29 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     case 'seen': w.put({ type: 'seen', what: cmd.what, ref: cmd.ref }); break;
     /* reminders (D-107): settings only; nothing earned or lost */
     case 'remind':
-      if ((cmd.lead === null || R.LEADS.includes(cmd.lead)) && R.reminderSettings(w.all).get(cmd.target) !== cmd.lead) w.put({ type: 'reminderSet', target: cmd.target, lead: cmd.lead });
+      if ((cmd.lead === null || (cmd.target.startsWith('d:') ? (R.DATE_LEADS as readonly number[]) : (R.LEADS as readonly number[])).includes(cmd.lead)) && R.reminderSettings(w.all).get(cmd.target) !== cmd.lead) w.put({ type: 'reminderSet', target: cmd.target, lead: cmd.lead });
       break;
     case 'reminders': if (R.remindersOn(w.all) !== cmd.on) w.put({ type: 'remindersSwitched', on: cmd.on }); break;
+    case 'keepItem': if (W.items(w.all, day).some(i => i.id === cmd.id)) w.put({ type: 'itemKept', id: cmd.id }); break;
+    case 'somedayItem': if (W.items(w.all, day).some(i => i.id === cmd.id)) w.put({ type: 'itemSomeday', id: cmd.id }); break;
+    case 'pinWeek': if (cmd.job === null || c.jobs.some(j => j.id === cmd.job)) w.put({ type: 'weekPinned', week: calendarWeek(day), job: cmd.job }); break;
+    case 'lookAhead': w.put({ type: 'lookAheadSeen', week: calendarWeek(day), finished: cmd.finished }); break;
+    case 'calendarShow': {
+      const was = W.calendarOf(w.all);
+      if (was.on !== cmd.on || JSON.stringify(was.calendars) !== JSON.stringify(cmd.calendars)) w.put({ type: 'calendarChosen', on: cmd.on, calendars: cmd.calendars });
+      break;
+    }
+    case 'calendarRead': {
+      /* written only when what the calendar holds changed: the same facts, the same week (ARCHITECTURE) */
+      if (!W.calendarOf(w.all).on) break;
+      const events = cmd.events.filter(e => e && typeof e.start === 'string' && typeof e.end === 'string').slice(0, 400)
+        .map(e => ({ id: String(e.id), cal: String(e.cal), title: String(e.title ?? '').slice(0, 80), start: e.start.slice(0, 16), end: e.end.slice(0, 16), allDay: !!e.allDay }));
+      const reads = ofType(w.all, 'calendarRead'), last = reads[reads.length - 1];
+      if (last && JSON.stringify(last.events) === JSON.stringify(events)) break;
+      w.put({ type: 'calendarRead', from: day, to: W.addDays(day, cmd.days), events });
+      break;
+    }
+    case 'nudge': { const s = ofType(w.all, 'nudgeChosen'); if ((s.length ? s[s.length - 1].on : false) !== cmd.on) w.put({ type: 'nudgeChosen', on: cmd.on }); break; }
   }
   return w.out;
 }

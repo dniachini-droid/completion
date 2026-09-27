@@ -1174,6 +1174,67 @@
 - **Consequences:** the questions each page leaves for Dan (projects' name and which projects; the nudge's hour) are asked when that stage is built, not before.
 - **Reversible:** Yes; each is its own stage.
 
+## D-112 — Stage 2, the rest: one editor for every job, "Already done" today or yesterday, a note on each job (Claude's routine calls, D-006; within D-107)
+- **Date:** 2026-09-27
+- **Context:** the rest of Stage 2 (`product/PRODUCTIVITY_PLAN.md`), built once Stage 1 was merged in, since it shares its screens.
+- **Decision:**
+  1. **One job editor** (What repeats' editor, grown): name; how often, now with **Once** (doesn't repeat); each time; timer or not; a time and "Remind me" for a repeating job; **I tend to put this off**; **first small step**; **a note**; **Remove it** (a satchel line: Let it go), with an **Undo** line and no confirmation. It opens from What repeats (which now also lists the one-offs as "Other jobs"), from a tap on a satchel line, and from "Change the job" in a Week entry's sheet. A satchel line stays a line: it has no "How often".
+  2. **Facts:** `jobSaved` (the whole job as edited) and `jobRemoved`, folded in `live()`; a line's rename and removal follow in the satchel. Undo saves the job (and its rhythm) again, so it needs no fact of its own. Choosing Once for a repeating job ends its rhythm and keeps the job as a one-off until done. Editing earns nothing and loses nothing (P16).
+  3. **Already done** (reverses D-089 with Dan's OK, D-107): swiping a row on Today shows **Done** beside Not today; **Choose a delve → Already done** takes Today or **Yesterday**, then a tap on the job. Recorded as `jobBegun from: 'record'` (on yesterday's day for yesterday) + `jobDone`, earning what a job without a timer earns. A tap on a timed row still starts it (D-104).
+  4. **A note on each job:** after Finish here, "Where did you stop? (for next time)" (optional) keeps a note; it shows as "Last time: …" when the job's delve is next set up, and as the first step in "I can't start". A job with neither note nor first step makes "I can't start" ask "What's the first thing you'd touch?" and keeps the answer.
+  5. A short delve job (25 min or less) starts at once from Today, as a 25-minute one did.
+- **Alternatives:** a separate editor screen per kind of job; "Did it yesterday" on the delve's set-up (too tight on a small phone).
+- **Consequences:** two new fact types with their samples (D-106); 5 new rule tests; the screen walk now edits, lets go of and restores a satchel line, and records a job done yesterday.
+- **Reversible:** Yes.
+
+## D-113 — Stage 6: capture from Siri, Shortcuts and the Action button; the re-entry nudge, off by default (Claude's routine calls, D-006; within D-111)
+- **Date:** 2026-09-27
+- **Context:** Stage 6 of `product/PRODUCTIVITY_PLAN.md`: scope 10 option A and scope 23 option B, as Dan chose (D-111).
+- **Decision:**
+  1. **"Add to the satchel"** is an App Intent in the app itself (`ios/App/App/InboxPlugin.swift`): Siri ("Add to the satchel in Long Answer"), the Shortcuts app and the Action button. It asks "What should go in the satchel?", says "It's in the satchel." and doesn't open the app. Because the intent runs in the app's own process, the line waits in the app's own storage: **no App Group, no entitlements, no new target** (simpler than the scope page, which assumed one). On every opening and return the game takes the waiting lines into the satchel (`takeInbox`), then clears them; each keeps its own id (`itemAdded.ref`, with `via: 'siri'` for the test's notes), so a line is never added twice even if the app closes in between.
+  2. **The re-entry nudge** (Settings → "A word after a quiet spell"): **off unless Dan turns it on**, and silenced by "All off". One alert at 18:00 three days after the last opening, never within a week of the last one, in calm words that never count the days ("Your place is kept. One small thing is enough, whenever you like."). Every opening moves it on, so it comes only after silence and once per silence. The rule is `nudgeDay` in `core/reminders.ts`; the phone keeps only when the last one came.
+- **Alternatives:** the share sheet and the widget (scope 10 B and C), later if wanted; a nudge that says how long Dan has been away (rejected: rule 9).
+- **Consequences:** one new fact type (`nudgeChosen`) and two optional fields on `itemAdded`, with their samples; 5 new rule tests. **Only on the phone:** Siri hearing the phrase, the Action button (Settings → Action Button → Shortcut → Long Answer → Add to the satchel), the intent running without opening the app, and the nudge arriving.
+- **Reversible:** Yes.
+
+## D-114 — Stage 3: dates and time (Claude's routine calls, D-006; within D-107)
+- **Date:** 2026-09-27
+- **Context:** Stage 3 of `product/PRODUCTIVITY_PLAN.md`, all six items, built on the branch after Stages 1, 2, 5 and 6.
+- **Decision:**
+  1. **(5) Dates.** An optional **by** date on satchel lines and one-offs, in the job editor (the phone's date wheel), shown as "by Fri 10 Oct" in the quiet italic in the satchel, the Week and What repeats. Plan my week places dated work **first**, on the last day with room at least 2 days before the date (already closer: the first day with room; further off: its own week). Within 3 days of the date (or past it) it is on **Today** even without a plan. A dated line **never goes to someday**. A **passed date** asks one question in the satchel and in What repeats: *Still needed · New date · Let it go* (no red, no count, D-038). **Date reminders:** the morning of the date or the day before, at 09:00 (target `d:<job>`). **Game:** dated work done before its date brings a find (`why: 'dated'`), **once a week**, and only if the date was set at least two days before (rule 10: a date set to earn a find earns nothing). The Week **pages through any week ahead** ("The week after"), and a job's sheet has **"Another day…"** to move it to a day in another week.
+  2. **(6) More repeat kinds**, in one place (`core/repeat.ts`): **monthly** on a date (a 31st is a short month's last day) or on the nth weekday ("the last Friday"), **yearly** on a date (29 Feb: 28 Feb in other years), and **every N days since last done**. Each is offered and planned on its day (every N days: when due, then every N days); each needs one session in its period for Keys. The editor's How often gains a second row: Monthly · Yearly · Every few days. (The plan's "yearly items show two weeks ahead with Plan it" is left out for now: a yearly item already lands on its own day in the plan and can have a reminder; say if the fortnight's notice is wanted.)
+  3. **(11) Plan by minutes.** Plan my week fills a day up to about **3 h** (the lighter day about **1½ h**), by each job's room (a delve's enough, else its length), not by a count of 3; an appointment may pass it, and one long job may fill a day alone. A day of the Week shows a faint **"about 2 h"**. A job that didn't happen is re-placed on a day with room in minutes.
+  4. **(12) Lay out the rest of the week:** a quiet link in this week's Week; it plans again from today, keeping every entry Dan placed himself. Each laying-out of a week has entry ids of its own, so a reminder on an entry never moves to another job.
+  5. **(13) A lighter or fuller day:** on the day's first open, Today's header offers *Lighter · As planned · Fuller*, until Dan does anything with the day. **Not chosen, the day stays as planned:** a late night or days away still never shrink a day by themselves (Dan, D-089, kept); after one, the choice only says "a lighter day may suit". The plan had the suggestion pre-selected; that would have undone D-089 silently, so Dan decides if he wants it.
+  6. **(16) What slipped:** the welcome back names **one** thing that went by: the soonest passed date, else an appointment Dan added himself that fell away (a rhythm's comes round again and isn't named), with the same question (*Still needed / Put it on today · New date · Let it go*). Never a list, never a count.
+- **Consequences:** `Job.by`, three optional rhythm kinds, `findGiven.why: 'dated'`, a date lead (1440) on `reminderSet`; 16 new rule tests. The story's pace is unchanged in the continuity checks (planning by minutes moves jobs between days, not how many are planned).
+- **Reversible:** Yes.
+
+## D-115 — Stage 7: the phone's calendar, read-only (Claude's routine calls, D-006; within D-111, scope 9 B)
+- **Date:** 2026-09-27
+- **Context:** Stage 7 of `product/PRODUCTIVITY_PLAN.md`, option B of `product/scope/09-calendar-import.md`, as Dan chose (D-111; Dan again: "I still want calendar functionality").
+- **Decision:**
+  1. **Settings → Your calendar → Show it** (off until turned on) asks the phone once for full calendar access (iOS 17 needs full access to read), then lists the phone's calendars, each with its own switch. A Google calendar is there if its account is added in the phone's Settings. The app never writes to the calendar, and nothing leaves the phone.
+  2. **The Week** shows each day's events above its jobs, in the quiet italic ("21:00 Dentist"; all-day ones as a faint line). They are fixed points, not jobs: nothing to tap, begin or tick, and they earn nothing.
+  3. **Plan my week gives a busy day less:** half a day's busy time (07:00–22:00, overlaps once) comes off its room in minutes (D-114), and at least an hour always stays, so a working day in the calendar never empties the plan.
+  4. **Facts:** `calendarChosen` (shown, which calendars) and `calendarRead` (the next 14 days' events, written only when they changed), so the same facts always give the same week, and a plan can be explained later. Read on opening, on return, and when the phone says the calendar changed. Event titles are kept in the save (and so in its copies); an all-day event's last day is its own.
+  5. Native: `ios/App/App/CalendarPlugin.swift` (EventKit) and `NSCalendarsFullAccessUsageDescription` in Info.plist; no entitlement, no new target.
+- **Not in this option:** the "Also today" line on Today (scope 9 C), only if Dan finds he misses appointments with B.
+- **Consequences:** two new fact types with samples; 4 new rule tests; the screen walk turns a made-up calendar on and finds its event in the week. **Only on the phone:** the permission prompt, a Google calendar appearing, changes arriving.
+- **Reversible:** Yes: off hides every event at once.
+
+## D-116 — Stage 8: the week's look-ahead in the Daybook, with no reward (Claude's routine calls, D-006; within D-111, scope 18 C)
+- **Date:** 2026-09-27
+- **Context:** Stage 8 of `product/PRODUCTIVITY_PLAN.md`, option C of `product/scope/18-weekly-review.md`, as Dan chose (D-111).
+- **Decision:**
+  1. The week's Daybook page ends, as before, with one quiet offer, now "Look ahead at the week? About a minute." with **Look ahead**, **Plan it for me** (as before) and **Not now**. It is offered once a week, never as a notification, and every step can be skipped.
+  2. **Still wanted?** Up to three of the oldest open satchel lines (a week old or more; dated lines have their own question), one at a time: **Keep** (its three weeks toward someday start again) · **Someday** (there now) · **Let it go**. Never the pile, never a count.
+  3. **Coming up:** the week's fixed points from today, one line each (appointments and timed entries, dated work, monthly and yearly items), five at most, then "and more in the week".
+  4. **What matters most?** (this week) One job or line, or "Nothing in particular". Plan my week places it first, early in the week, and it leads Today on the day it is planned. It earns what it always earns: nothing extra for keeping to it (`PLANNER.md` rule 2, P16).
+  5. Then the rest of the week is laid out again from today (keeping Dan's own entries, D-114) and the Week opens.
+- **Facts:** `itemKept`, `itemSomeday`, `weekPinned`, `lookAheadSeen` (opened, finished or not: the test's notes), with samples. No reward in the world (the scope's option D would amend P16 and is not built).
+- **Consequences:** 3 new rule tests; the screen walk goes through the look-ahead at the second week close.
+
 ## D-120 — The done loop made whole: the keyboard, Done, delves across screens, pauses and 04:00 (Claude's routine calls, D-006; Dan's reports)
 - **Date:** 2026-09-27
 - **Context:** Dan on the TestFlight build from PR #47: "+ Add"'s box sat behind the under-way job's words above the keyboard; the under-way job's Done did nothing. (His reminder report turned out fine: "The reminder does work.") He then asked for the whole begin → delve → pause → done loop to be tried adversarially and made robust, since it was built in pieces. Two independent reviews (the rules; the screens) tried to break it; everything they found real is fixed here.

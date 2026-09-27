@@ -47,10 +47,10 @@ describe('Plan my week (PLANNER.md, fixed rules)', () => {
     const d = on('gym').map(x => Date.parse(x) / 864e5);
     for (let i = 1; i < d.length; i++) expect(d[i] - d[i - 1]).toBeGreaterThan(1);
   });
-  it('no day above a Normal day’s size, and one lighter day', () => {
-    const load = new Map<string, number>();
-    for (const e of plan()) if (!e.time) load.set(e.day, (load.get(e.day) ?? 0) + 1);
-    for (const n of load.values()) expect(n).toBeLessThanOrEqual(W.PLAN_DAY);
+  it('no day above a Normal day’s room in minutes (one long job alone aside), and one lighter day (D-114)', () => {
+    const load = new Map<string, number[]>();
+    for (const e of plan()) if (!e.time) load.set(e.day, [...(load.get(e.day) ?? []), W.roomOf(C.jobs.find(j => j.id === e.job)!)]);
+    for (const [d, m] of load) if (m.length > 1) expect(m.reduce((a, b) => a + b, 0)).toBeLessThanOrEqual(weekdayOf(d) === 6 ? W.PLAN_LIGHT : W.PLAN_MIN);
     expect(plan().filter(e => weekdayOf(e.day) === 6).length).toBeLessThanOrEqual(1);
   });
   it('avoided one-offs early in the week', () => {
@@ -613,6 +613,132 @@ describe('Stage 2 fixes and lengths (D-110)', () => {
     expect(presetRun({ id: 'x', name: 'x', delve: true, length: 10, doneBy: 'dan' })).toEqual({ minutes: 10, count: 1 });
     expect(presetRun({ id: 'x', name: 'x', delve: true, length: 25, doneBy: 'dan' })).toEqual({ minutes: 25, count: 1 });
     expect(presetRun({ id: 'x', name: 'x', delve: true, length: 180, enoughAt: 50, doneBy: 'enough' })).toEqual({ minutes: 25, count: 2 });
+  });
+});
+
+describe('Edit anything (Stage 2, D-112)', () => {
+  const job = (p: ReturnType<typeof player>, id: string) => p.view().content.jobs.find(j => j.id === id);
+  it('any job can be renamed, resized, marked avoided and given a first step and a note', () => {
+    const p = player().do({ do: 'open' });
+    const gym = job(p, 'gym')!, r = p.view().content.rhythms.find(x => x.job === 'gym')!;
+    p.do({ do: 'saveJob', job: { ...gym, name: 'Gym', length: 45, avoided: true, firstStep: 'Pack the bag', note: '  ' }, rhythm: r });
+    expect(job(p, 'gym')).toMatchObject({ name: 'Gym', length: 45, avoided: true, firstStep: 'Pack the bag' });
+    expect(job(p, 'gym')!.note).toBeUndefined();
+    p.do({ do: 'noteJob', job: 'gym', note: 'legs next' }).do({ do: 'firstStep', job: 'gym', step: 'Shoes on' });
+    expect(job(p, 'gym')).toMatchObject({ note: 'legs next', firstStep: 'Shoes on' });
+    expect(p.view().content.rhythms.some(x => x.job === 'gym')).toBe(true);
+  });
+  it('"doesn’t repeat" ends the rhythm and keeps the job as a one-off', () => {
+    const p = player().do({ do: 'open' });
+    const tank = job(p, 'tank')!;
+    p.do({ do: 'saveJob', job: tank, rhythm: null });
+    expect(p.view().content.rhythms.some(x => x.job === 'tank')).toBe(false);
+    expect(job(p, 'tank')!.stopped).toBeFalsy();
+    p.do({ do: 'done', job: 'tank' });
+    expect(p.view().done.has('tank')).toBe(true);
+  });
+  it('a removed job leaves Today, the plan and the lists; Undo (saving it again) brings it back as it was', () => {
+    const p = player().do({ do: 'open' });
+    const post = job(p, 'post')!;
+    p.do({ do: 'removeJob', id: 'post' });
+    expect(job(p, 'post')).toBeUndefined();
+    expect(p.view().slate).not.toContain('post');
+    expect(W.weekOf(p.view().content, p.facts, MON, MON).days.flatMap(d => d.jobs).some(j => j.job === 'post')).toBe(false);
+    p.do({ do: 'saveJob', job: post, rhythm: null });
+    expect(job(p, 'post')).toEqual(post);
+    const gym = job(p, 'gym')!, r = p.view().content.rhythms.find(x => x.job === 'gym')!;
+    p.do({ do: 'removeJob', id: 'gym' });
+    expect(p.view().content.rhythms.some(x => x.job === 'gym')).toBe(false);
+    p.do({ do: 'saveJob', job: gym, rhythm: r });
+    expect(p.view().content.rhythms.find(x => x.job === 'gym')).toEqual(r);
+  });
+  it('a satchel line can be renamed, removed and put back', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['post the parcle'] });
+    const [it] = W.items(p.facts, MON), line = job(p, it.id)!;
+    p.do({ do: 'saveJob', job: { ...line, name: 'Post the parcel' }, rhythm: null });
+    expect(W.items(p.facts, MON).map(i => i.name)).toEqual(['Post the parcel']);
+    expect(job(p, it.id)!.item).toBe(true);
+    p.do({ do: 'removeJob', id: it.id });
+    expect(W.items(p.facts, MON)).toEqual([]);
+    p.do({ do: 'saveJob', job: line, rhythm: null });
+    expect(W.items(p.facts, MON).map(i => i.id)).toEqual([it.id]);
+  });
+  it('"Did it yesterday": recorded afterwards on yesterday, earns what a job without a timer earns, and only once', () => {
+    const p = player().do({ do: 'open' }).next().do({ do: 'open' });
+    const walked = p.view().walked, n = p.facts.length;
+    p.do({ do: 'done', job: 'meal', yesterday: true });
+    const added = p.facts.slice(n);
+    expect(added.find(f => f.type === 'jobBegun')).toMatchObject({ from: 'record', day: MON });
+    expect(added.find(f => f.type === 'jobDone')).toMatchObject({ job: 'meal', day: MON, minutes: 60 });
+    expect(p.view().walked).toBeGreaterThan(walked);
+    expect(p.view().done.has('meal')).toBe(false);
+    const m = p.facts.length;
+    p.do({ do: 'done', job: 'meal', yesterday: true });
+    expect(p.facts.length).toBe(m);
+  });
+});
+
+describe('Undo puts a satchel line back in its place (D-112)', () => {
+  it('a line removed and put back keeps its order among the others', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['one', 'two', 'three'] });
+    const two = p.view().content.jobs.find(j => j.name === 'two')!;
+    p.do({ do: 'removeJob', id: two.id }).do({ do: 'saveJob', job: two, rhythm: null });
+    expect(W.items(p.facts, MON).map(i => i.name)).toEqual(['one', 'two', 'three']);
+  });
+});
+
+describe('Capture from Siri, Shortcuts and the Action button (D-113)', () => {
+  it('each line lands in the satchel once, marked as said to Siri, and changes nothing on Today', () => {
+    const p = player().do({ do: 'open' });
+    const before = p.view().slate;
+    const lines = [{ id: 'A1', text: ' Ring the vet ' }, { id: 'A2', text: '' }, { id: 'A3', text: 'Buy stamps' }];
+    p.do({ do: 'takeInbox', lines });
+    /* the app closed before the inbox was cleared: the same lines come again, and nothing is added twice */
+    p.do({ do: 'takeInbox', lines });
+    expect(W.items(p.facts, MON).map(i => i.name)).toEqual(['Ring the vet', 'Buy stamps']);
+    expect(p.facts.filter(f => f.type === 'itemAdded').every(f => (f as { via?: string }).via === 'siri')).toBe(true);
+    expect(p.view().slate).toEqual(before);
+  });
+});
+
+describe('Lay out the rest of the week (D-114)', () => {
+  it('re-plans from today, keeps what Dan placed himself, and gives the new entries ids of their own', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addToWeek', line: 'Dentist', day: '2026-10-01', time: '15:00' });
+    p.next(2).do({ do: 'open' });   /* Wednesday */
+    const before = W.planOf(p.facts, MON)!;
+    p.do({ do: 'replan' });
+    const after = W.planOf(p.facts, MON)!;
+    const dentist = before.find(e => e.id.startsWith('pa-'))!;
+    expect(after.filter(e => e.id === dentist.id)).toEqual([dentist]);
+    const fresh = after.filter(e => !e.id.startsWith('pa-'));
+    expect(fresh.every(e => e.day >= '2026-09-30')).toBe(true);
+    expect(fresh.some(e => before.some(b => b.id === e.id))).toBe(false);
+    expect(fresh.filter(e => e.job === 'gym').length).toBeGreaterThan(0);
+  });
+});
+
+describe('The week’s look-ahead (D-116)', () => {
+  it('still wanted: up to three of the oldest lines, a week old or more; kept, its three weeks start again; someday by hand', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['a', 'b', 'c', 'd'] });
+    expect(W.sweepOf(p.facts, W.addDays(MON, 6))).toEqual([]);
+    const [a, b] = W.sweepOf(p.facts, W.addDays(MON, 7));
+    expect(W.sweepOf(p.facts, W.addDays(MON, 7))).toHaveLength(3);
+    p.next(7).do({ do: 'open' }).do({ do: 'keepItem', id: a.id }).do({ do: 'somedayItem', id: b.id });
+    const it = (id: string, d: number) => W.items(p.facts, W.addDays(MON, d)).find(i => i.id === id)!;
+    expect(it(a.id, 27).someday).toBe(false);
+    expect(it(a.id, 28).someday).toBe(true);
+    expect(it(b.id, 7).someday).toBe(true);
+  });
+  it('what matters most is placed first in the week and leads Today on its day; it earns what it always does', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'pinWeek', job: 'post' }).do({ do: 'replan' });
+    const day = W.planOf(p.facts, MON)!.find(e => e.job === 'post')!.day;
+    expect(day).toBe(MON);
+    expect(p.view().slate[0]).toBe('post');
+    expect(p.facts.some(f => f.type === 'findGiven' || f.type === 'stepsGained')).toBe(false);
+  });
+  it('coming up: the week’s fixed points from today', () => {
+    const p = player().do({ do: 'open' });
+    expect(W.comingUp(p.view().content, p.facts, MON).map(x => [x.day, x.job, x.kind])).toContainEqual(['2026-10-01', 'lesson', 'time']);
   });
 });
 

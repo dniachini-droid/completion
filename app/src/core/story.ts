@@ -7,6 +7,7 @@
  * open route: camps with a view, passage lines and finds. Never a wall (D-039).
  */
 import { calendarWeek } from './time';
+import * as R from './repeat';
 import type { Fact, FactOf, FactBody, Rhythm } from './types';
 import type { Beat, Carries, Find, Mark, RecordFragment, Seal, StretchId, Story, Token } from './story-types';
 
@@ -192,13 +193,10 @@ export function nextSeal(s: Story, st: StoryState): Seal | null {
 }
 
 /** A rhythm's sessions done in the calendar week of `day` (every 2 weeks: in the fortnight). */
-export function sessionsIn(facts: Fact[], r: Rhythm, day: string): number {
-  const wk = calendarWeek(day);
-  return ofType(facts, 'jobDone').filter(f => f.job === r.job && (r.every === 2 ? sameFortnight(calendarWeek(f.day), wk) : calendarWeek(f.day) === wk)).length;
-}
-const sameFortnight = (a: string, b: string) => Math.floor(Date.parse(a) / (14 * 864e5)) === Math.floor(Date.parse(b) / (14 * 864e5));
+/** Sessions of a rhythm done in its period containing `day` (core/repeat.ts, D-114). */
+export const sessionsIn = R.sessionsIn;
 /** How many sessions make the rhythm met in its period. */
-export const needOf = (r: Rhythm) => r.days ? r.days.length : r.times ?? 1;
+export const needOf = R.needOf;
 export const keysIn = (facts: Fact[], day: string) => ofType(facts, 'keyEarned').filter(f => !f.rhythm.startsWith('floor:') && calendarWeek(f.day) === calendarWeek(day)).length;
 
 /* ---------- finds ---------- */

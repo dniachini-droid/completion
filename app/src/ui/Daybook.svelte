@@ -5,7 +5,8 @@
      gets a different kind of page, not a shorter one; a week with nothing done gets none. The newest page ends with one
      quiet offer to plan the week ahead (D-045), never repeated. */
   import { game, content } from './game.svelte';
-  import { t, card, timesWords } from '../content/copy/en';
+  import { t, card, timesWords, dayName, byWords } from '../content/copy/en';
+  import { comingUp, items, sweepOf } from '../core/week';
   import { calendarWeek } from '../core/time';
   import { beatOf, sealOf } from '../core/story';
   import Scene from './Scene.svelte';
@@ -48,7 +49,35 @@
     if (!game.facts.some(f => f.type === 'planMade' && f.week === wk)) game.do({ do: 'planWeek', week: wk });
     go('week');
   }
-  function notNow() { if (page) game.do({ do: 'offerAnswered', week: page.week }); leave(); }
+  function notNow() { if (page) game.do({ do: 'offerAnswered', week: page.week }); if (step > 0) game.do({ do: 'lookAhead', finished: false }); leave(); }
+
+  /* the week's look-ahead (D-116): about a minute, every step skippable, offered once; it earns nothing (P16) */
+  let step = $state(0);
+  const sweep = $state(sweepOf(game.facts, game.view.day));
+  let swept = $state(0);
+  const coming = $derived(step === 2 ? comingUp(v.content, game.facts, v.day) : []);
+  const pickable = $derived(step === 3 ? v.content.jobs.filter(j => !j.stopped && !(j.item && items(game.facts, v.day).find(i => i.id === j.id)?.done)) : []);
+  /* the page is marked read at the end, not here: marking it read ends the offer this look-ahead lives in */
+  function lookAhead() { step = sweep.length ? 1 : 2; }
+  function sweepAnswer(what: 'keep' | 'someday' | 'letGo') {
+    const it = sweep[swept];
+    if (it) game.do(what === 'keep' ? { do: 'keepItem', id: it.id } : what === 'someday' ? { do: 'somedayItem', id: it.id } : { do: 'dropItem', id: it.id });
+    swept++;
+    if (swept >= sweep.length) step = 2;
+  }
+  function pinIt(job: string | null) {
+    if (!page) return;
+    game.do({ do: 'pinWeek', job });
+    game.do({ do: 'replan' });
+    game.do({ do: 'offerAnswered', week: page.week });
+    game.do({ do: 'lookAhead', finished: true });
+    read();
+    go('week');
+  }
+  function comingLine(x: ReturnType<typeof comingUp>[number]) {
+    const name = game.job(x.job)?.name ?? '';
+    return x.kind === 'time' ? `${dayName(x.day)} ${x.time} · ${name}` : x.kind === 'date' ? `${name} · ${byWords(x.day)}` : `${dayName(x.day)} · ${name}`;
+  }
 </script>
 
 <Scene painting={v.here.painting} blur />
@@ -96,9 +125,31 @@
       {/if}
       {#if offer}
         <div class="offer">
-          <p class="say">{t('daybook.offer')}</p>
-          <button class="btn" onclick={planIt}>{t('daybook.planIt')}</button>
-          <div class="btn-row after"><button class="btn-quiet" onclick={notNow}><span>{t('daybook.notNow')}</span></button></div>
+          {#if step === 0}
+            <p class="say">{t('look.offer')}</p>
+            <button class="btn" onclick={lookAhead}>{t('look.go')}</button>
+            <div class="btn-row after"><button class="btn-quiet" onclick={planIt}><span>{t('daybook.planIt')}</span></button><button class="btn-quiet" onclick={notNow}><span>{t('daybook.notNow')}</span></button></div>
+          {:else if step === 1 && sweep[swept]}
+            <div class="label-line">{t('look.still')}</div>
+            <p class="say line">{sweep[swept].name}</p>
+            <div class="seg" role="group" aria-label={t('look.still')}>
+              <button onclick={() => sweepAnswer('keep')}>{t('look.keep')}</button>
+              <button onclick={() => sweepAnswer('someday')}>{t('look.someday')}</button>
+              <button onclick={() => sweepAnswer('letGo')}>{t('by.letGo')}</button>
+            </div>
+            <div class="btn-row after"><button class="btn-quiet" onclick={() => (step = 2)}><span>{t('look.skip')}</span></button></div>
+          {:else if step === 1 || step === 2}
+            <div class="label-line">{t('look.coming')}</div>
+            {#each coming.slice(0, 5) as x (x.day + x.job + x.kind)}<p class="say line">{comingLine(x)}</p>{:else}<p class="soft">{t('look.nothing')}</p>{/each}
+            {#if coming.length > 5}<p class="soft">{t('look.more')}</p>{/if}
+            <button class="btn next" onclick={() => (step = 3)}>{t('look.next')}</button>
+          {:else}
+            <div class="label-line">{t('look.matters')}</div>
+            <div class="rows">
+              {#each pickable as j (j.id)}<button class="row" onclick={() => pinIt(j.id)}><span class="pip"></span><span class="t">{j.name}</span><span class="s"></span></button>{/each}
+            </div>
+            <div class="btn-row after"><button class="btn-quiet" onclick={() => pinIt(null)}><span>{t('look.nothingParticular')}</span></button></div>
+          {/if}
         </div>
       {/if}
       <div class="pager">
@@ -122,6 +173,11 @@
   .offer { margin-top: 22px; border-top: 1px solid var(--edge-2); padding-top: 14px; }
   .offer .say { margin-bottom: 12px; }
   .after { margin-top: 12px; }
+  .offer .line { margin: 6px 0; }
+  .offer .seg { margin-top: 10px; }
+  .offer .next { margin-top: 14px; }
+
+  .offer button.row { width: 100%; text-align: left; }
   .pager { display: flex; justify-content: space-between; margin-top: 18px; }
   button.home { color: var(--ink-2); }
   .trial span { font-size: 12px; letter-spacing: .14em; color: var(--ink-3); }

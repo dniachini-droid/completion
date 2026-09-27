@@ -4,7 +4,7 @@
      the line is one of today's jobs ("Today" puts it there). No counts, no overdue marks; untouched lines go quietly to
      someday after three weeks, and nothing is announced. */
   import { game } from './game.svelte';
-  import { t } from '../content/copy/en';
+  import { t, byWords } from '../content/copy/en';
   import { items } from '../core/week';
   import { platform } from '../platform';
   import Scene from './Scene.svelte';
@@ -35,9 +35,9 @@
     const d = f.find(x => x.type === 'jobDone');
     if (d) go('step', d.seq);
   }
+  /* "Still needed": the line stays, without its date */
+  function still(id: string) { const j = game.job(id); if (j) { const job = { ...j }; delete job.by; game.do({ do: 'saveJob', job, rhythm: null }); } }
   function today(id: string) { game.do({ do: 'planJob', job: id, day: v.day }); }
-  let picked = $state<string | null>(null);
-  function drop(id: string) { game.do({ do: 'dropItem', id }); picked = null; }
 </script>
 
 <Scene painting={v.here.painting} blur />
@@ -56,20 +56,26 @@
     {#each shown as it (it.id)}
       <div class="item" class:done={it.done}>
         <button class="tickbox" aria-pressed={it.done} aria-label={t('satchel.tick', { name: it.name })} disabled={it.done} onclick={() => tick(it.id)}><span class="pip" class:done={it.done}></span></button>
-        <!-- a tap on the line shows "Let it go", for a line no longer wanted (review 2, D-088) -->
-        <button class="t" disabled={it.done || v.slate.includes(it.id)} onclick={() => (picked = picked === it.id ? null : it.id)}>{it.name}</button>
+        <!-- a tap on the line opens its editor: rename it, give it a length, a first step, or let it go (D-112) -->
+        <button class="t" disabled={it.done} onclick={() => go('rhythms', it.id)}>{it.name}{#if it.by}<small class="by">{byWords(it.by)}</small>{/if}</button>
         {#if !it.done}
           {#if v.slate.includes(it.id)}<span class="s">{t('satchel.onToday')}</span>
-          {:else if picked === it.id}<button class="text-link small" onclick={() => drop(it.id)}><span>{t('satchel.letGo')}</span></button>
           {:else}<button class="text-link small" onclick={() => today(it.id)}><span>{t('satchel.today')}</span></button>{/if}
         {/if}
       </div>
+      <!-- a date passed: one question, no red, no count (D-038, D-114) -->
+      {#if it.by && it.by < v.day && !it.done}
+        <div class="passed"><span>{t('by.passed')}</span>
+          <button class="text-link small" onclick={() => still(it.id)}><span>{t('by.still')}</span></button>
+          <button class="text-link small" onclick={() => go('rhythms', it.id)}><span>{t('by.new')}</span></button>
+          <button class="text-link small" onclick={() => game.do({ do: 'removeJob', id: it.id })}><span>{t('by.letGo')}</span></button></div>
+      {/if}
     {/each}
     {#if open.length > FIRST}
       <button class="text-link fold" onclick={() => (more = !more)}><span>{more ? t('satchel.less') : t('satchel.more')}</span></button>
     {/if}
     {#if adding}
-      <textarea class="lines" bind:this={box} bind:value={text} rows="4" placeholder={t('satchel.addMany')}></textarea>
+      <textarea class="lines" bind:this={box} bind:value={text} rows="4" aria-label={t('satchel.add')} placeholder={t('satchel.addMany')}></textarea>
       <div class="btn-row"><button class="btn" onclick={put}>{t('satchel.put')}</button><button class="btn-quiet" onclick={() => (adding = false)}><span>{t('rhythms.cancel')}</span></button></div>
     {:else}
       <div class="links"><button class="text-link" onclick={startAdd}><span>{t('satchel.add')}</span></button>
@@ -79,9 +85,8 @@
       {#each someday as it (it.id)}
         <div class="item someday">
           <button class="tickbox" aria-label={t('satchel.tick', { name: it.name })} onclick={() => tick(it.id)}><span class="pip"></span></button>
-          <button class="t" onclick={() => (picked = picked === it.id ? null : it.id)}>{it.name}</button>
-          {#if picked === it.id}<button class="text-link small" onclick={() => drop(it.id)}><span>{t('satchel.letGo')}</span></button>
-          {:else}<button class="text-link small" onclick={() => today(it.id)}><span>{t('satchel.today')}</span></button>{/if}
+          <button class="t" onclick={() => go('rhythms', it.id)}>{it.name}</button>
+          <button class="text-link small" onclick={() => today(it.id)}><span>{t('satchel.today')}</span></button>
         </div>
       {/each}
     {/if}
@@ -97,6 +102,8 @@
   .item .t:disabled { cursor: default; }
   .item.done .t { color: var(--ink-3); text-decoration: line-through; text-decoration-thickness: 1px; }
   .item .s { font-family: var(--life); font-size: 15px; color: var(--gold); }
+  .item .t small.by { display: block; font-style: italic; font-size: 14px; color: var(--ink-2); margin-top: 1px; }
+  .passed { display: flex; flex-wrap: wrap; align-items: center; gap: 0 12px; padding: 4px 0 8px 34px; font-style: italic; font-size: 15px; color: var(--ink-2); }
   .tickbox { width: 44px; height: 44px; display: grid; place-items: center; margin-left: -12px; }
   .small span { font-size: 15px; }
   .fold { margin-top: 8px; }

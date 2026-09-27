@@ -45,6 +45,16 @@
   let arg = $state<string | number | undefined>(undefined);
   /* a new day reached by coming back to the app opens as a cold start would: what waits is shown first (D-080) */
   let lastWoke = game.woke;
+  /* VoiceOver: a new screen's title is read out (accessibility A, D-111), through a quiet live line rather than by moving
+     focus: moving focus could slide a screen sideways (Dan, review 2) */
+  let announce = $state('');
+  $effect(() => {
+    void screen; void arg;
+    void tick().then(() => {
+      const h = document.querySelector<HTMLElement>('.ui h1, h1') ?? document.querySelector<HTMLElement>('.ui h2, h2');
+      announce = h?.textContent?.trim() ?? '';
+    });
+  });
   $effect(() => { if (game.woke !== lastWoke) { lastWoke = game.woke; screen = first(); arg = undefined; } });
 
   /* Back (review 2, D-088): the screens Dan looks through keep a trail, so the arrow and the phone's own back return to
@@ -122,6 +132,7 @@
 <main class="phone" class:still>
   <!-- a rehearsal's clock runs 60 times faster (an evening passes in minutes): said on every screen, so the day it
        shows is never mistaken for the real one (Dan, review 2). Today carries its own badge. -->
+  <div class="sr-live" aria-live="polite" aria-atomic="true">{announce}</div>
   {#if game.proto.rehearsal && !['today', 'proto'].includes(screen)}<div class="rehearsal" aria-live="polite">{t('proto.badge')}</div>{/if}
   <!-- a screen that fails shows a way back, never a blank phone; the save is untouched (review finding, D-080) -->
   <svelte:boundary onerror={(e) => console.error(e)}>
@@ -143,7 +154,7 @@
     {:else if screen === 'welcome'}<Welcome {go} />
     {:else if screen === 'daybook'}<Daybook {go} week={typeof arg === 'string' ? arg : undefined} />
     {:else if screen === 'week'}<Week {go} week={typeof arg === 'string' ? arg : undefined} />
-    {:else if screen === 'rhythms'}<Rhythms {go} />
+    {:else if screen === 'rhythms'}{#key arg}<Rhythms {go} job={typeof arg === 'string' ? arg : undefined} />{/key}
     {:else if screen === 'satchel'}<Satchel {go} />
     {:else if screen === 'choose'}<Choose {go} />
     {:else if screen === 'settings'}<Settings {go} />{/if}
@@ -161,4 +172,5 @@
   .still :global(.rise), .still :global(.scene), .still :global(.fade) { animation: none !important; }
   .rehearsal { position: absolute; z-index: 20; left: 50%; transform: translateX(-50%); top: calc(var(--safe-t, 0px) + 4px); pointer-events: none;
     font-family: var(--carve); font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); opacity: .85; white-space: nowrap; }
+  .sr-live { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 </style>

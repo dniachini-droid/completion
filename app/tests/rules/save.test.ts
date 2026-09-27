@@ -46,7 +46,7 @@ const ONE: { [T in FactBody['type']]: Extract<FactBody, { type: T }> } = {
   recordOpened: { type: 'recordOpened', id: 'r' },
   rhythmSaved: { type: 'rhythmSaved', rhythm: { id: 'r', job: 'a', days: [1, 3], time: '18:00' }, job: { id: 'a', name: 'Café “Ñandú” — 2×', delve: true, length: 50, enoughAt: 40, avoided: true, doneBy: 'enough', firstStep: 'Open the book\nat the mark' } },
   rhythmStopped: { type: 'rhythmStopped', id: 'r' },
-  itemAdded: { type: 'itemAdded', id: 'i', name: 'Renew the passport — by 3 Nov 🙂' },
+  itemAdded: { type: 'itemAdded', id: 'i', name: 'Renew the passport — by 3 Nov 🙂', via: 'siri', ref: '0E1B2C3D-0000-4000-8000-000000000001' },
   itemTicked: { type: 'itemTicked', id: 'i' },
   itemDropped: { type: 'itemDropped', id: 'i' },
   planMade: { type: 'planMade', week: '2026-09-28', entries: [{ id: 'e', job: 'a', day: '2026-09-29', time: '07:30' }] },
@@ -61,6 +61,17 @@ const ONE: { [T in FactBody['type']]: Extract<FactBody, { type: T }> } = {
   welcomed: { type: 'welcomed', since: '2026-09-20', question: null },
   reminderSet: { type: 'reminderSet', target: 'e:p20260928-3', lead: 15 },
   remindersSwitched: { type: 'remindersSwitched', on: false },
+  jobSaved: { type: 'jobSaved', job: { id: 'j-x', name: 'Renew the passport', delve: false, length: 30, doneBy: 'dan', avoided: true, firstStep: 'Find the old one', note: 'photo booth at the station' } },
+  jobRemoved: { type: 'jobRemoved', id: 'post' },
+  nudgeChosen: { type: 'nudgeChosen', on: true },
+  calendarChosen: { type: 'calendarChosen', on: true, calendars: ['work'] },
+  itemKept: { type: 'itemKept', id: 'it-1' },
+  itemSomeday: { type: 'itemSomeday', id: 'it-2' },
+  weekPinned: { type: 'weekPinned', week: '2026-09-28', job: 'cat' },
+  lookAheadSeen: { type: 'lookAheadSeen', week: '2026-09-28', finished: true },
+  calendarRead: { type: 'calendarRead', from: '2026-09-28', to: '2026-10-12', events: [
+    { id: 'e1', cal: 'work', title: 'Dentist', start: '2026-09-29T10:00', end: '2026-09-29T11:00', allDay: false },
+    { id: 'e2', cal: 'home', title: 'Mum’s birthday', start: '2026-10-03', end: '2026-10-03', allDay: true }] },
 };
 const every: Fact[] = Object.values(ONE).map((b, i) => ({ seq: i + 1, at: '2026-09-28T09:00:00+01:00', day: '2026-09-28', ...b }) as Fact);
 const save = (facts: Fact[], version = SAVE_VERSION): Save => ({ version, content: C.version, facts });
