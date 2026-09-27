@@ -10,9 +10,9 @@
 const { launch } = await import('./browser.mjs');
 const [,, url, secsArg = '20', w = '430', h = '932'] = process.argv;
 const secs = +secsArg, check = !!process.env.CHECK;
-/* a settled screen draws nothing; a running delve redraws its countdown and ring once a second (a frame or two for each
-   change, and a little slack for the chime and the clock) */
-const LIMITS = { still: { fps: 0.5, raf: 0.2, taskMs: 8 }, delve: { fps: 4, raf: 0.2, taskMs: 25 } };
+/* a settled screen draws nothing; a running delve changes its countdown and ring once a second, which this browser
+   shows as 2 to 5 frames (a page whose only change is one number a second makes about 2.4); before D-132, 75 */
+const LIMITS = { still: { fps: 0.5, raf: 0.2, taskMs: 8 }, delve: { fps: 7, raf: 0.2, taskMs: 25 } };
 
 const b = await launch();
 const page = await b.newPage({ viewport: { width: +w, height: +h }, deviceScaleFactor: 3, timezoneId: 'Europe/London' });
