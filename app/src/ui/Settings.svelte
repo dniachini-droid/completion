@@ -1,11 +1,12 @@
 <script lang="ts">
   /* Settings (D-107): reminders (the one switch, and bedtime's), the save's copies, and the trial's own controls below.
-     Reached from the Daybook, out of the day's way. Changing anything here earns nothing and loses nothing. */
+     Reached by the small gear at the top of Today (D-130), out of the day's way; the bedtime can be changed here. Changing anything here earns nothing and loses nothing. */
   import { game } from './game.svelte';
   import { t, dateWords } from '../content/copy/en';
   import { copySummary, readSave, type Save } from '../core/save';
   import Scene from './Scene.svelte';
   import Remind from './Remind.svelte';
+  import Bedtime from './Bedtime.svelte';
   import type { Go } from './nav';
   import { back } from './back.svelte';
   import { platform } from '../platform';
@@ -71,6 +72,12 @@
   </header>
 
   <div class="body col rise d1">
+    <!-- the bedtime, changed here at any hour; on Today only from the evening (D-130) -->
+    <section>
+      <div class="label-line">{t('camp.bedtime')}</div>
+      <Bedtime say={t('settings.bedtime.say')} />
+    </section>
+
     <section>
       <div class="label-line">{t('settings.reminders')}</div>
       <p class="soft note">{t('settings.reminders.say')}</p>

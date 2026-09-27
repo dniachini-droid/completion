@@ -1,5 +1,6 @@
 <script lang="ts">
   import Deleted from './Deleted.svelte';
+  import Bedtime from './Bedtime.svelte';
   import { steady } from './taps';
   /* Today (the morning screen, UX_PRINCIPLES → "The morning screen carries"): where you are, the sealed thing ahead,
      the one next job (no Low / Normal / High, and no "Already done": Dan, D-089) with one button, today's other jobs as plain rows, "I can't start".
@@ -7,10 +8,10 @@
      rows seemed to change places by themselves); a swipe takes it off today; the last row chooses a delve on anything (D-077). After day complete: the day as done, until Dan taps a job or keeps going.
      Mock-up: design/directions/d-combined/morning.html. */
   import { game, content } from './game.svelte';
-  import { presetRun, pastBedtime, BEDTIME_WINDOW } from '../core/game';
+  import { pastBedtime, BEDTIME_WINDOW } from '../core/game';
   import { beatOf } from '../core/story';
   import type { Job } from '../core/types';
-  import { t, minutesWords, delves, inSentence } from '../content/copy/en';
+  import { t, minutesWords, minutesShort, inSentence } from '../content/copy/en';
   import Scene from './Scene.svelte';
   import { flushSync } from 'svelte';
   import type { Go } from './nav';
@@ -26,9 +27,9 @@
   function rowNote(j: Job): string {
     if (v.done.has(j.id)) return t('row.done');
     if (v.times[j.id]) return v.times[j.id];
-    /* every job is a delve (D-117): its row says how it runs */
-    const r = presetRun(j);
-    return r.count === 1 ? t('row.delve') : t('row.delves', { n: delves(r.count), len: r.minutes });
+    /* every job is a delve (D-117), so a row never says "a delve": it says the job's usual minutes, when they were set
+       for it (a recurring job, or one made in the editor); a line jotted with + Add says nothing (D-130) */
+    return j.item ? '' : minutesShort(j.length);
   }
   function teaser(j: Job): string {
     if (j.avoided) return t('today.teaser.avoided');
@@ -94,9 +95,11 @@
      sleep counts, D-083) Today carries "Tonight": the bedtime, one tap to change it, and Go to sleep. Once said, the
      night's line shows here until morning. */
   const evening = $derived(!v.night && pastBedtime(v.bedtime, game.now) >= -BEDTIME_WINDOW);
+  /* in the last hour before bedtime, Tonight comes above the day's list, so going to bed is the next thing in view
+     (D-130); before that it waits at the list's end */
+  const BEDTIME_SOON = 60;
+  const nearBed = $derived(evening && !v.complete && !v.run && pastBedtime(v.bedtime, game.now) >= -BEDTIME_SOON);
   const nightLine = $derived(v.night?.beat ? beatOf(content.story, v.night.beat)?.line ?? '' : '');
-  function setBedtime(time: string) { if (time && time !== v.bedtime) game.do({ do: 'bedtime', time }); }
-  function pick(e: MouseEvent) { try { (e.currentTarget as HTMLInputElement).showPicker?.(); } catch { /* not every browser */ } }
   /* the story ahead folds to a few lines, so the next job is always in view; a tap reads it all (D-093) */
   let aheadOpen = $state(false);
 
@@ -124,11 +127,7 @@
 {#snippet tonight()}
   <div class="tonight">
     <div class="label-line gold">{t('today.tonight')}</div>
-    <!-- the bedtime is the phone's own time box: a tap opens its wheel, and what it's set to is kept -->
-    <label class="bed">
-      <span class="bed-say">{t('today.bedtime')}</span><span class="bed-time carve">{v.bedtime}</span><span class="change">{t('camp.change')}</span>
-      <input type="time" step="900" value={v.bedtime} aria-label={t('camp.bedtime')} onclick={pick} onchange={e => setBedtime(e.currentTarget.value)} />
-    </label>
+    <Bedtime />
     <p class="soft promise">{t('today.tonight.say', { bedtime: v.bedtime })}</p>
     <button class="btn gold resting" onclick={() => game.do({ do: 'goodnight' })}>{t('camp.goodnight')}</button>
   </div>
@@ -144,6 +143,8 @@
         {#if v.story.records.length}<button class="icon-link" onclick={() => go('records')}><span>{t('records.nav')}</span></button>{/if}
       <!-- the trial controls live at camp; here only while a rehearsal is on, so it can't be missed (D-080) -->
       {#if game.proto.rehearsal}<button class="icon-link proto" onclick={() => go('proto')}><span class="badge">{t('proto.badge')}</span></button>{/if}
+      <!-- Settings: a small gear, Apple's usual place for it, out of the day's way (D-130; it was inside the Daybook) -->
+      <button class="icon-link gear" aria-label={t('nav.settings')} onclick={() => go('settings')}><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2" /><path d="M12 2.8v2.6M12 18.6v2.6M21.2 12h-2.6M5.4 12H2.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8M18.5 18.5l-1.8-1.8M7.3 7.3 5.5 5.5" /><circle cx="12" cy="12" r="6.4" /></svg></button>
       </span>
     </div>
     <h1 class="carve lg rise">{v.here.name}</h1>
@@ -170,6 +171,7 @@
           <button class="btn-quiet" type="button" onclick={() => (capturing = false)}><span>{t('rhythms.cancel')}</span></button></div>
       </form>
     {:else}
+    {#if nearBed}<section class="tonight-top">{@render tonight()}</section>{/if}
     {#if v.night && !v.run}
       <div class="next">
         <div class="label-line gold">{t('today.tonight')}</div>
@@ -201,9 +203,6 @@
         <div class="label-line lit">{t('today.next')}</div>
         <h2 class="say-lg">{next.name}{#if v.times[next.id]}<span class="at"> · {v.times[next.id]}</span>{/if}</h2>
         <p class="soft">{teaser(next)}</p>
-        {#if v.deepOffer}
-          <p class="deep">{t('today.deep')} <button class="text-link" onclick={() => game.do({ do: 'callDeep' })}><span>{t('today.deep.call')}</span></button></p>
-        {:else if v.deepCalled && !v.complete}<p class="deep">{t('today.deep.called')}</p>{/if}
         <div class="lead"><button class="btn full" onclick={() => begin(next)}>{t('today.delve')}</button></div>
         <div class="cant">
           {#if delvedOn}<button class="text-link" onclick={() => done(next)}><span>{t('today.itsDone')}</span></button>
@@ -271,7 +270,7 @@
       {/if}
     </div>
     <!-- the evening, before the day's work is done: Tonight at the end of the day's list (D-093) -->
-    {#if evening && !v.complete && !v.run}<section class="tonight-end">{@render tonight()}</section>{/if}
+    {#if evening && !v.complete && !v.run && !nearBed}<section class="tonight-end">{@render tonight()}</section>{/if}
     {/if}
     </div>
     <nav class="foot" aria-label={t('today.label')}>
@@ -291,12 +290,8 @@
   .ahead-text { display: block; width: 100%; padding: 0; background: none; border: 0; text-align: left; cursor: pointer; color: inherit; }
   .ahead-text:not(.open) p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; line-clamp: 4; overflow: hidden; }
   .tonight-end { margin-top: 18px; }
+  .tonight-top { margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--edge-2); }
   .tonight { margin: 4px 0 6px; }
-  .bed { position: relative; display: flex; align-items: baseline; gap: 12px; margin-top: 8px; cursor: pointer; width: fit-content; }
-  .bed input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; border: 0; padding: 0; margin: 0; cursor: pointer; -webkit-appearance: none; appearance: none; }
-  .bed-say { font-family: var(--life); font-size: 18px; color: var(--ink-2); }
-  .bed-time { font-size: 28px; letter-spacing: .06em; color: #fff; }
-  .change { font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink-2); border-bottom: 1px solid var(--edge-3); }
   .next .tonight .promise { text-align: left; margin: 6px 0 14px; }
   .tonight .promise { text-align: left; margin: 6px 0 14px; }
   .night-line { font-style: italic; color: #fff; margin: 8px 0 10px; line-height: 1.45; }
@@ -332,8 +327,6 @@
   .still { margin: -12px 0 16px; }
   .said { font-family: var(--life); font-style: italic; font-size: 15.5px; color: var(--ink-2); display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 2px 6px; margin: -6px 0 6px; }
   .said .text-link { min-height: 0; padding: 4px; }
-  .deep { font-family: var(--life); font-size: 16px; color: var(--ink-2); margin: -10px 0 14px; text-align: left; }
-  .deep .text-link { display: inline-flex; padding: 0 4px; min-height: 0; }
   .capture { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
   .capture textarea { box-sizing: border-box; width: 100%; min-height: 64px; padding: 10px 12px; font: inherit; font-size: 17px; color: #fff; resize: none;
     background: rgba(255, 255, 255, .06); border: 1px solid var(--edge-2); border-radius: 0; }
@@ -349,6 +342,8 @@
   .navs { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0 4px; align-items: center; margin-right: -10px; min-width: 0; }
   .navs span { font-size: 14px; letter-spacing: .12em; color: var(--ink-2); }
   .proto .badge { color: var(--gold); }
+  .gear { min-width: 44px; justify-content: center; }
+  .gear svg { width: 20px; height: 20px; fill: none; stroke: var(--ink-2); stroke-width: 1.6; stroke-linecap: round; }
   @media (max-height: 800px) {
     .ahead { margin-top: 8px; } .ahead p { margin-top: 4px; } .next .soft { margin-bottom: 14px; }
     :global(.row) { min-height: 44px; }

@@ -284,11 +284,10 @@ describe('Absence and the deep push', () => {
     const at = '2026-10-06T09:00:00+01:00';
     let log = facts.concat(act(facts, C, { do: 'open' }, at));
     log = log.concat(act(log, C, { do: 'capacity', capacity: 'high' }, at));
-    const v = see(log, C, at);
     expect(S.nextDeep(C.story, S.storyState(log, C.story))).not.toBeNull();
-    expect(v.deepOffer).toBe(true);
-    log = log.concat(act(log, C, { do: 'callDeep' }, at));
-    expect(see(log, C, at).deepOffer).toBe(false);
+    /* the offer to call it is gone (D-130); a save that called it before still has the fact, and it still counts */
+    const last = log[log.length - 1];
+    log = log.concat({ seq: last.seq + 1, at: last.at, day: last.day, type: 'deepCalled' });
     let t = Date.parse(at);
     for (let k = 0; k < 3; k++) {
       const v2 = see(log, C, new Date(t + 3_600_000).toISOString().slice(0, 19) + '+01:00');

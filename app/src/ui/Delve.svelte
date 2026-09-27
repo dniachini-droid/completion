@@ -75,7 +75,8 @@
   {#if lines(id).length}
     <ul class="list" aria-label={t('delve.list')}>
       {#each lines(id) as l, k (k)}
-        <li><button class:struck={struck(id, k)} aria-pressed={struck(id, k)} onclick={() => strike(id, k)}>{l}</button></li>
+        <!-- a small circle beside each line, as in Reminders: ticked when struck (D-130) -->
+        <li><button class:struck={struck(id, k)} aria-pressed={struck(id, k)} onclick={() => strike(id, k)}><span class="tick" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M4.5 8.3 7 10.7l4.6-5.2" /></svg></span><span class="l">{l}</span></button></li>
       {/each}
     </ul>
   {/if}
@@ -113,7 +114,8 @@
         <h2>{run.job.name}</h2>
         <p class="soft of">{of}</p>
         {@render theList(run.job.id)}
-        <p class="say away">{t(game.alertsOff ? 'delve.away.noAlerts' : 'delve.away.locked')}</p>
+        <!-- no standing "lock the phone" note (Dan, D-130); only the warning that no sound will come, when alerts are off -->
+        {#if game.alertsOff}<p class="say away">{t('delve.away.noAlerts')}</p>{/if}
         <div class="two-quiet">
           <button class="btn-quiet" onclick={() => game.do({ do: 'stepAway' })}><span>{t('delve.stepAway')}</span></button>
           <button class="btn-quiet" onclick={() => game.do({ do: 'finishHere' })}><span>{t('delve.finishHere')}</span></button>
@@ -151,7 +153,8 @@
           <button class="btn resting" onclick={() => leave('today')}>{t('delve.toToday')}</button>
         {:else}
           <div class="scroll">
-            <div class="label-line centred" class:lit={end.enough}>{end.enough ? t('delve.enoughLabel') : t('delve.label')}</div>
+            <!-- no "Enough" at a recurring job's end: any session counts for its minutes (D-121, D-130) -->
+            <div class="label-line centred">{t('delve.label')}</div>
             <h2 class="m">
               {#if answer === 'yes'}{t('delve.yesSay')}
               {:else if end.enough}{t('delve.sessionComplete', { job: end.job.name, min: minutesWords(end.minutes) })}
@@ -163,7 +166,7 @@
                 enterkeyhint="done" onkeydown={e => { if (e.key === 'Enter') (e.currentTarget as HTMLInputElement).blur(); }} />
             {/if}
             {#if doneSeq !== null}<Return {doneSeq} extraFinds={v.runFinds} {go} />
-            {:else}<p class="say">{end.enough ? t('delve.enoughSay') : v.passage}</p><Return doneSeq={null} extraFinds={v.runFinds} />{/if}
+            {:else}<p class="say">{v.passage}</p><Return doneSeq={null} extraFinds={v.runFinds} />{/if}
           </div>
           {#if end.completedDay || game.view.arrival}
             <button class="btn" onclick={() => leave('arrival')}>{t('delve.see')}</button>
@@ -180,9 +183,14 @@
   /* the job's list, struck off a line at a time (D-126) */
   .list { list-style: none; margin: 4px auto 10px; padding: 0; max-width: 320px; max-height: 26vh; overflow-y: auto; overflow-x: hidden; text-align: left; }
   .list button { overflow-wrap: anywhere; }
-  .list button { display: block; width: 100%; min-height: 40px; padding: 4px 10px; text-align: left; background: none; border: 0;
+  .list button { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 44px; padding: 4px 10px; text-align: left; background: none; border: 0;
     border-bottom: 1px solid rgba(255, 255, 255, .08); font-family: var(--life); font-size: 17px; color: #fff; cursor: pointer; }
-  .list button.struck { text-decoration: line-through; color: var(--ink-3); }
+  .list .l { flex: 1; min-width: 0; }
+  .list button.struck .l { text-decoration: line-through; color: var(--ink-3); }
+  .tick { flex: none; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--ink-3); }
+  .tick svg { width: 14px; height: 14px; fill: none; stroke: #1a1030; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; opacity: 0; }
+  .list button.struck .tick { background: var(--violet-hi); border-color: var(--violet-hi); }
+  .list button.struck .tick svg { opacity: 1; }
   .dv { display: contents; }
   /* the ring takes the room left between the place's name and the words below, never more; when the end carries the
      story it steps back, and on a phone too short for it, it gives way altogether */

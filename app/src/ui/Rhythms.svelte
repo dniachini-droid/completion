@@ -237,6 +237,8 @@
           <span class="val">{minutesWords(d.len)}</span>
           <button class="btn-quiet step" disabled={d.len >= LEN[LEN.length - 1]} onclick={() => (d!.len = step(LEN, d!.len, 1))} aria-label={t('rhythms.longer')}><span>+</span></button>
         </div>
+        <!-- the minutes only tell the Week how full a day is: every delve opens at 30 (D-124, D-130) -->
+        <p class="soft val-note">{t('rhythms.each.say')}</p>
 
         <!-- a one-off's time is set where it sits in the Week -->
         {#if d.often !== 'once'}

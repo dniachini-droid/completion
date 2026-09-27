@@ -233,7 +233,7 @@ export function play(seed: number, steps: number, opts: { uiOnly?: boolean; back
     if (k < 76) return r.chance(0.5) ? { do: 'noteJob', job: anyJob(), note: r.pick(['', 'where I stopped', 'q'.repeat(500)]) } : { do: 'firstStep', job: anyJob(), step: r.pick(['', 'Shoes on']) };
     if (k < 78) return { do: 'goodnight' };
     if (k < 79) return { do: 'bedtime', time: r.pick(['22:30', '23:00', '01:30', '03:59']) };
-    if (k < 80) return { do: 'callDeep' };
+    if (k < 80) return { do: 'goodnight' };
     if (k < 81) return { do: 'capacity', capacity: r.pick(['low', 'normal', 'high'] as const) };
     if (k < 83) {
       const its = W.items(facts, v.day);

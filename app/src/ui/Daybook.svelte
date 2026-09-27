@@ -2,11 +2,12 @@
   import Deleted from './Deleted.svelte';
   /* The daybook: the week close (TOOLS §6; BALANCING §7; mock-up daybook.html). One short page a week, written from real
      completions: what the week held, where it went, up to three things learned, the month's "so far" on its first page,
-     the counts the week's Keys filled, and a glimpse of next week. No charts, no percentages, no comparisons. A thin week
+     the counts the week's Keys filled, and a glimpse further on (never "next week": one continuous story, D-123, D-130).
+     Each page is titled by its dates. No charts, no percentages, no comparisons. A thin week
      gets a different kind of page, not a shorter one; a week with nothing done gets none. The newest page ends with one
      quiet offer to plan the week ahead (D-045), never repeated. */
   import { game, content } from './game.svelte';
-  import { t, card, timesWords, dayName, byWords } from '../content/copy/en';
+  import { t, weekDatesShort, timesWords, dayName, byWords } from '../content/copy/en';
   import { comingUp, sweepOf } from '../core/week';
   import { calendarWeek } from '../core/time';
   import { hiddenDone } from '../core/game';
@@ -90,14 +91,11 @@
   <header class="top col">
     <div class="topbar rise">
       <button class="home" onclick={leave}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{back.label}</span></button>
-      <span></span>
-      <!-- settings (reminders, the save's copies; the trial's controls under it): in the daybook, out of the day's way
-           (D-080, D-093, D-107) -->
-      <button class="icon-link trial" onclick={() => go('settings')}><span>{t('nav.settings')}</span></button>
+      <span></span><span></span>
     </div>
     <div class="label-line rise">{t('daybook.label')}</div>
     {#if page}
-      <h1 class="carve lg rise">{t('daybook.week', { n: card(page.n) })}</h1>
+      <h1 class="carve lg rise">{weekDatesShort(page.week)}</h1>
       <p class="soft written rise">{t('daybook.written')}</p>
     {/if}
   </header>
@@ -187,5 +185,4 @@
   .offer button.row { width: 100%; text-align: left; }
   .pager { display: flex; justify-content: space-between; margin-top: 18px; }
   button.home { color: var(--ink-2); }
-  .trial span { font-size: 12px; letter-spacing: .14em; color: var(--ink-3); }
 </style>

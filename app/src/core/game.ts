@@ -671,7 +671,6 @@ export type Command =
   | { do: 'addToWeek'; line: string; day: string; time?: string }
   | { do: 'bedtime'; time: string }
   | { do: 'goodnight' }
-  | { do: 'callDeep' }
   | { do: 'closeRead'; week: string }
   | { do: 'offerAnswered'; week: string }
   | { do: 'remind'; target: string; lead: R.Lead | null }
@@ -918,11 +917,6 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       }
       break;
     }
-    case 'callDeep':
-      if (!v.deepOffer) break;
-      if (v.capacity !== 'high') w.put({ type: 'capacityChosen', capacity: 'high', suggested: v.suggested });
-      w.put({ type: 'deepCalled' });
-      break;
     case 'closeRead': if (!ofType(w.all, 'closeRead').some(f => f.week === cmd.week)) w.put({ type: 'closeRead', week: cmd.week }); break;
     case 'offerAnswered': if (!ofType(w.all, 'offerAnswered').some(f => f.week === cmd.week)) w.put({ type: 'offerAnswered', week: cmd.week }); break;
     case 'seen': w.put({ type: 'seen', what: cmd.what, ref: cmd.ref }); break;
@@ -1051,9 +1045,6 @@ export interface View {
   welcome: { seq: number; question: string | null; record: string | null } | null;
   /** The daybook's newest page, not yet read. */
   close: FactOf<'weekClosed'> | null;
-  /** A High day's morning: the deep push may be called (D-054). */
-  deepOffer: boolean;
-  deepCalled: boolean;
   /** Today's planned appointments (job → time). */
   times: Record<string, string>;
   /** Where the plan points: the day each next place would be reached (a forecast, never a promise). */
@@ -1246,16 +1237,13 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   const welcome = wf ? { seq: wf.seq, question: wf.question, record: st.records.length ? st.records[st.records.length - 1] : null } : null;
   const closes = ofType(facts, 'weekClosed'), lastClose = closes[closes.length - 1];
   const close = lastClose && !ofType(facts, 'closeRead').some(f => f.week === lastClose.week) ? lastClose : null;
-  const deepCalled = onDay(facts, day).some(f => f.type === 'deepCalled');
-  const deepToday = ofType(onDay(facts, day), 'beatPlayed').some(f => S.beatOf(c.story, f.id)?.kind === 'deep');
-  const deepOffer = capacity === 'high' && !deepCalled && !deepToday && !complete && done.size < DAY_SIZE.normal && !!S.nextDeep(c.story, st);
   const toNext = nextAt !== null ? Math.max(0, nextAt - w) : null;
   /* shown only while it holds a find to give */
   const chamber = S.pickFind(c.story, st, 'chamber') ? toChamber(shown, st) : null;
 
   return {
     suggestedBy: sugg.by, bedtime: bedtimeOf(facts), night: gn ? { kept: gn.kept, beat: campLine?.id ?? null } : null,
-    morning, welcome, close, deepOffer, deepCalled, times, content: c,
+    morning, welcome, close, times, content: c,
     forecast: W.forecast(c, facts, day, toNext, S.PLACE_GAP),
     day, capacity, suggested: sugg.capacity, size, order, slate, done, underWay, complete, next, run, runEnd, arrival,
     /* ahead: the sealed thing in view; before any, the way in (the first morning), then a line from just ahead */
