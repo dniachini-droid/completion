@@ -21,8 +21,9 @@ export const KEYS_A_WEEK = 5;
 export const KEY_FLOOR = 2;
 /** A long stretch on one job in a day, after which switching brings a find (§1). */
 export const LONG_STRETCH = 100;
-/** A session of a rhythm counts towards its Key only at this length or more: the dial's shortest delve (rule 10, D-121). */
-export const KEY_SESSION_MIN = 5;
+/** A job done with less than this behind it (the dial's shortest delve) moves Dan by its minutes and is done, but brings
+    no return: no story step, find or Key, and it doesn't count towards the day's completion (rule 10, D-121). */
+export const RETURN_MIN = 5;
 
 const ofType = <T extends FactBody['type']>(facts: Fact[], type: T) => facts.filter((f): f is FactOf<T> => f.type === type);
 

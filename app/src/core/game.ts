@@ -128,8 +128,8 @@ function sizeOn(facts: Fact[], day: string, c?: Content) {
 }
 
 const doneOn = (facts: Fact[], day: string) => new Set(ofType(onDay(facts, day), 'jobDone').map(f => f.job));
-/** Jobs done with minutes behind them: only these complete a day or call the deep push (rule 10, D-117). */
-const workedOn = (facts: Fact[], day: string) => new Set(ofType(onDay(facts, day), 'jobDone').filter(f => f.minutes > 0).map(f => f.job));
+/** Jobs done with real minutes behind them: only these complete a day or call the deep push (rule 10, D-117, D-121). */
+const workedOn = (facts: Fact[], day: string) => new Set(ofType(onDay(facts, day), 'jobDone').filter(f => f.minutes >= S.RETURN_MIN).map(f => f.job));
 const completedOn = (facts: Fact[], day: string) => onDay(facts, day).some(f => f.type === 'dayCompleted');
 export const delveMinutesOn = (facts: Fact[], day: string, job: string) =>
   ofType(onDay(facts, day), 'stepsGained').filter(f => f.job === job && f.run !== undefined).reduce((a, f) => a + f.minutes, 0);
@@ -373,6 +373,9 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string) {
      said done with no whole minute behind it is off the list, but earns no minutes and brings no return: no step of the
      story, no find, no Key, and it doesn't count towards the day's completion (rule 10) */
   if (timed === 0) { w.put({ type: 'jobDone', job, minutes: 0 }, at, day); return; }
+  /* a session of a minute or two is done and its minutes have moved Dan, but a few one-minute stops never open the story
+     or complete a day (rule 10, D-121) */
+  if (timed < S.RETURN_MIN) { w.put({ type: 'jobDone', job, minutes: timed }, at, day); gifts(w, c, at, day); return; }
   const done = w.put({ type: 'jobDone', job, minutes: timed }, at, day);
   storyClock(w, c, at, day);
   /* a rhythm met this week lands a Key, until the week's supply is used; past it, one find a week (§3). A rhythm Dan
@@ -381,7 +384,7 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string) {
   let keyed = false;
   /* any session meets the rhythm (Dan, D-121), but only sessions of the dial's shortest delve or more count towards its
      Key: a few one-minute sessions never open the story (rule 10) */
-  if (r && timed >= S.KEY_SESSION_MIN && S.sessionsIn(w.all, r, day, S.KEY_SESSION_MIN) === S.needOf(r)) {
+  if (r && S.sessionsIn(w.all, r, day, S.RETURN_MIN) === S.needOf(r)) {
     if (S.keysIn(w.all, day) < S.KEYS_A_WEEK) keyed = !!landKey(w, c, r.id, at, day, done.seq);
     else if (!ofType(w.all, 'findGiven').some(f => f.why === 'surplus' && calendarWeek(f.day) === calendarWeek(day))) giveFind(w, c, 'surplus', at, day, done.seq);
   }
@@ -422,13 +425,18 @@ function finishRun(w: W, c: Content, r: NonNullable<ReturnType<typeof activeRun>
   w.put({ type: 'delveEnded', job: j.id, minutes: counted, how: 'finishedHere', run: r.fact.seq }, at, rday);
   if (sessionEnds(w.all, rday, j, counted)) markDoneIn(w, c, j.id, at, rday);
   else gifts(w, c, at, rday);
+  /* a place reached on this delve starts a new stretch, whose halfway may already be behind Dan (an arrival held for
+     tomorrow, D-122) */
+  if (part > 0) sideChamber(w, c, at, rday);
 }
 /** Said done while its own delve still runs (Done on Today, a tick in the satchel): the delve finishes there first, so
     its minutes count once and the job is not paid twice (Dan, 2026-09-27, D-120). Its end is marked seen: the job's
     return tells the story, and the delve's end doesn't come back later. */
 function endRunOn(w: W, c: Content, job: string, nowMs: number, now: Moment, keepEnd = false) {
-  const r = activeRun(w.all);
+  const r = activeRun(w.all), from = w.all.length;
   if (r && r.fact.job === job) finishRun(w, c, r, nowMs, now);
+  /* a side chamber found on the delve Done ended is shown on its end, not swallowed (D-122) */
+  if (w.all.slice(from).some(f => f.type === 'findGiven' && f.why === 'chamber')) return;
   /* an end of this job's delve not yet looked at (it ended with Dan on another screen, or "Is it done?" was left) is
      answered by this Done: it doesn't come back on a later opening (D-120). The delve screen answering its own end
      keeps it, and marks it seen itself when Dan leaves. */
@@ -482,11 +490,12 @@ function settleIn(w: W, c: Content, nowMs: number) {
     const before = ofType(onDay(w.all, day), 'stepsGained').filter(g => g.run !== undefined);
     w.put({ type: 'stepsGained', minutes: r.plan.minutes, job: j.id, run: r.fact.seq }, at, day);
     /* halfway to the next place, a side chamber (D-122); the first delve on a new job after a long stretch brings a find (§1, D-044) */
-    sideChamber(w, c, at, day);
+    sideChamber(w, c, at, day);   /* before the place: the stretch it ends */
     const others = [...new Set(before.map(g => g.job))].filter(x => x !== j.id);
     if (before.length && before[before.length - 1].job !== j.id && others.some(x => delveMinutesOn(w.all, day, x) >= S.LONG_STRETCH)
       && !ofType(onDay(w.all, day), 'findGiven').some(f => f.why === 'switching')) giveFind(w, c, 'switching', at, day);
     gifts(w, c, at, day);
+    sideChamber(w, c, at, day);   /* after it: the new stretch's, if Dan is already past its halfway (a held arrival) */
   }
   /* stepped away and never back: after three hours, or once its day is over, it finishes where it was paused, on its day */
   const hold = r.marks[r.marks.length - 1];
@@ -716,8 +725,11 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     case 'done': {
       const on = day;
       if (!c.jobs.some(j => j.id === cmd.job) || doneOn(w.all, on).has(cmd.job)) break;
-      /* done while a delve on it runs: that delve ends first (D-120) */
+      /* done while a delve on it runs: that delve ends first (D-120); a repeating job's run is then its session, on the
+         run's day (D-121), and nothing more is written (not a second, empty session after 04:00) */
+      const from = w.all.length;
       endRunOn(w, c, cmd.job, nowMs, now, cmd.keepEnd);
+      if (w.all.slice(from).some(f => f.type === 'jobDone' && f.job === cmd.job)) break;
       /* Done with no Begin: recorded afterwards (the test's sharpest line, MVP.md) */
       if (!begunOn(w.all, day, cmd.job)) w.put({ type: 'jobBegun', job: cmd.job, from: 'record' }, now, on);
       markDoneIn(w, c, cmd.job, now, on);
@@ -1097,7 +1109,8 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
     const completedDay = facts.some(f => f.type === 'dayCompleted' && f.seq > last.run);
     runEnd = { seq: last.seq, job: j, minutes: last.minutes, how: last.how, ask: j.doneBy === 'dan' && !doneOn(facts, last.day).has(j.id) && !doneFact,
       enough: j.doneBy === 'enough' && !!doneFact, completedDay, count: start?.count ?? 1 };
-    runFinds = ofType(facts, 'findGiven').filter(f => f.seq > last.run && f.seq < last.seq && !f.job).map(f => f.id);
+    /* a side chamber is found at the delve's end, and can come just after it, once a place it reached starts a new stretch */
+    runFinds = ofType(facts, 'findGiven').filter(f => f.seq > last.run && !f.job && (f.seq < last.seq || f.why === 'chamber')).map(f => f.id);
   }
 
   const arrivals = ofType(facts, 'arrived');

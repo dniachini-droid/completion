@@ -894,7 +894,39 @@ describe('any job counts for the minutes it was run for (Dan, D-121)', () => {
   });
 });
 
+describe('rule 10 with sessions of any length (review of D-121)', () => {
+  it('one-minute sessions are done and move Dan, but play no story, complete no day and bring no floor Keys', () => {
+    const p = player().do({ do: 'open' });
+    for (let d = 0; d < 8; d++) {
+      if (d) p.next(1).do({ do: 'open' });
+      for (const job of ['gym', 'spanish', 'course', 'meal', 'tank']) p.do({ do: 'startRun', job, minutes: 5, count: 1 }).wait(1.5).do({ do: 'finishHere' });
+    }
+    expect(p.facts.filter(f => f.type === 'jobDone').every(f => (f as { minutes: number }).minutes === 1)).toBe(true);
+    expect(p.facts.some(f => f.type === 'dayCompleted' || f.type === 'keyEarned')).toBe(false);
+    expect(p.facts.filter(f => f.type === 'beatPlayed' && (f as { job?: number }).job)).toHaveLength(0);
+  });
+  it('Done during a repeating job’s run begun before 04:00: one session, on the run’s day, with its minutes', () => {
+    const p = player('2026-09-28T03:50:00+01:00').do({ do: 'open' }).do({ do: 'startRun', job: 'course', minutes: 30, count: 1 }).wait(20);
+    p.do({ do: 'done', job: 'course' });
+    expect(p.facts.filter(f => f.type === 'jobDone').map(f => [(f as { minutes: number }).minutes, f.day])).toEqual([[20, '2026-09-27']]);
+  });
+});
+
 describe('the side chamber is halfway to the next place, whatever the delves (Dan, D-122)', () => {
+  it('found by Done in the middle of a delve, it is still shown on the delve’s end', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'startRun', job: 'course', minutes: 60, count: 1 }).wait(45).do({ do: 'done', job: 'course' });
+    expect(p.facts.filter(f => f.type === 'findGiven' && f.why === 'chamber')).toHaveLength(1);
+    expect(p.view().runFinds).toHaveLength(1);
+  });
+  it('an arrival held for tomorrow: the new stretch’s chamber comes on the delve that reaches the place', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'capacity', capacity: 'normal' });
+    for (const job of ['course', 'gym', 'spanish', 'meal']) p.do({ do: 'startRun', job, minutes: 90, count: 1 }).wait(91);
+    expect(p.view().walked).toBe(360);   /* past the second place (225) and its stretch's halfway (300): arrival held */
+    p.next(1).do({ do: 'open' }).do({ do: 'startRun', job: 'cat', minutes: 5, count: 1 }).wait(6);
+    const n = p.facts.filter(f => f.type === 'findGiven' && f.why === 'chamber').length;
+    expect(p.facts.filter(f => f.type === 'arrived' && f.kind === 'place' && f.how !== 'key').length).toBe(2);
+    expect(n).toBe(3);
+  });
   const chamberFinds = (facts: Fact[]) => facts.filter(f => f.type === 'findGiven' && f.why === 'chamber');
   const walkedAt = (facts: Fact[], seq: number) => facts.filter(f => f.type === 'stepsGained' && f.seq < seq).reduce((a, f) => a + (f as { minutes: number }).minutes, 0);
   it('the first is at 38 minutes (halfway to the first place, 75), on the delve that passes it', () => {
