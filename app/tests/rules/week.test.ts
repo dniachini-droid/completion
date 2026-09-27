@@ -47,10 +47,10 @@ describe('Plan my week (PLANNER.md, fixed rules)', () => {
     const d = on('gym').map(x => Date.parse(x) / 864e5);
     for (let i = 1; i < d.length; i++) expect(d[i] - d[i - 1]).toBeGreaterThan(1);
   });
-  it('no day above a Normal day’s size, and one lighter day', () => {
-    const load = new Map<string, number>();
-    for (const e of plan()) if (!e.time) load.set(e.day, (load.get(e.day) ?? 0) + 1);
-    for (const n of load.values()) expect(n).toBeLessThanOrEqual(W.PLAN_DAY);
+  it('no day above a Normal day’s room in minutes (one long job alone aside), and one lighter day (D-114)', () => {
+    const load = new Map<string, number[]>();
+    for (const e of plan()) if (!e.time) load.set(e.day, [...(load.get(e.day) ?? []), W.roomOf(C.jobs.find(j => j.id === e.job)!)]);
+    for (const [d, m] of load) if (m.length > 1) expect(m.reduce((a, b) => a + b, 0)).toBeLessThanOrEqual(weekdayOf(d) === 6 ? W.PLAN_LIGHT : W.PLAN_MIN);
     expect(plan().filter(e => weekdayOf(e.day) === 6).length).toBeLessThanOrEqual(1);
   });
   it('avoided one-offs early in the week', () => {
@@ -698,5 +698,21 @@ describe('Capture from Siri, Shortcuts and the Action button (D-113)', () => {
     expect(W.items(p.facts, MON).map(i => i.name)).toEqual(['Ring the vet', 'Buy stamps']);
     expect(p.facts.filter(f => f.type === 'itemAdded').every(f => (f as { via?: string }).via === 'siri')).toBe(true);
     expect(p.view().slate).toEqual(before);
+  });
+});
+
+describe('Lay out the rest of the week (D-114)', () => {
+  it('re-plans from today, keeps what Dan placed himself, and gives the new entries ids of their own', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addToWeek', line: 'Dentist', day: '2026-10-01', time: '15:00' });
+    p.next(2).do({ do: 'open' });   /* Wednesday */
+    const before = W.planOf(p.facts, MON)!;
+    p.do({ do: 'replan' });
+    const after = W.planOf(p.facts, MON)!;
+    const dentist = before.find(e => e.id.startsWith('pa-'))!;
+    expect(after.filter(e => e.id === dentist.id)).toEqual([dentist]);
+    const fresh = after.filter(e => !e.id.startsWith('pa-'));
+    expect(fresh.every(e => e.day >= '2026-09-30')).toBe(true);
+    expect(fresh.some(e => before.some(b => b.id === e.id))).toBe(false);
+    expect(fresh.filter(e => e.job === 'gym').length).toBeGreaterThan(0);
   });
 });

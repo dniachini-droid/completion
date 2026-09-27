@@ -8,7 +8,7 @@
  */
 import { calendarWeek, epochOf, gameDay, momentOf, offsetOf, wallClock, weekdayOf, type Moment } from './time';
 import { runAt, alertsAfter, type RunMark, type RunNow, type RunPlan } from './run';
-import type { Capacity, Content, Fact, FactBody, FactOf, Job, Rhythm } from './types';
+import type { CalEvent, Capacity, Content, Fact, FactBody, FactOf, Job, Rhythm } from './types';
 import * as S from './story';
 import * as W from './week';
 import * as R from './reminders';
@@ -50,8 +50,8 @@ function activeRun(facts: Fact[]) {
 
 function capacityOn(facts: Fact[], day: string): Capacity {
   const c = ofType(onDay(facts, day), 'capacityChosen');
-  /* Dan sets his days in the week and runs them: no Low / Normal / High on Today, nothing suggested (Dan, D-089).
-     A day is Normal; only calling the deep push (a High day's, kept in the rules) or an old save's choice changes it. */
+  /* the day as Dan chose it (Stage 3 item 13, D-114: an optional choice on the day's first open); not chosen, Normal:
+     a late night or days away never shrink a day by themselves (Dan, D-089), the choice only says a lighter one may suit */
   return c.length ? c[c.length - 1].capacity : 'normal';
 }
 
@@ -564,6 +564,8 @@ export type Command =
   | { do: 'tick'; id: string }
   | { do: 'dropItem'; id: string }
   | { do: 'planWeek'; week: string }
+  /** Lay out the rest of the week from today, keeping what Dan placed himself (D-114) */
+  | { do: 'replan' }
   | { do: 'movePlan'; entry: string; day: string | null; time?: string | null }
   | { do: 'planJob'; job: string; day: string; time?: string }
   | { do: 'addToWeek'; line: string; day: string; time?: string }
@@ -574,7 +576,10 @@ export type Command =
   | { do: 'offerAnswered'; week: string }
   | { do: 'remind'; target: string; lead: R.Lead | null }
   | { do: 'reminders'; on: boolean }
-  | { do: 'nudge'; on: boolean };
+  | { do: 'nudge'; on: boolean }
+  /* the phone's calendar, read-only (D-115) */
+  | { do: 'calendarShow'; on: boolean; calendars: string[] | null }
+  | { do: 'calendarRead'; events: CalEvent[]; days: number };
 
 /** The facts a command adds to the log (including anything the clock made due first). */
 export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fact[] {
@@ -607,7 +612,8 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     case 'choose': w.put({ type: 'choiceMade', beat: cmd.beat, pick: cmd.pick }); break;
     case 'read': w.put({ type: 'recordOpened', id: cmd.record }); break;
     case 'capacity':
-      if (cmd.capacity !== v.capacity) {
+      /* choosing the day as planned is an answer too: the choice has been seen (D-114) */
+      if (cmd.capacity !== v.capacity || !ofType(onDay(w.all, day), 'capacityChosen').length) {
         w.put({ type: 'capacityChosen', capacity: cmd.capacity, suggested: v.suggested });
         gifts(w, c, now, day);   /* lowering capacity can complete the day (D-043) */
       }
@@ -713,6 +719,13 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     }
     case 'dropItem': if (W.items(w.all, day).some(x => x.id === cmd.id)) w.put({ type: 'itemDropped', id: cmd.id }); break;
     case 'planWeek': w.put({ type: 'planMade', week: cmd.week, entries: W.planWeek(c, w.all, cmd.week, day) }); break;
+    case 'replan': {
+      const wk = calendarWeek(day), plan = W.planOf(w.all, wk) ?? [];
+      const own = new Set(ofType(w.all, 'planAdded').map(f => f.entry.id));
+      const fixed = plan.filter(e => own.has(e.id));
+      w.put({ type: 'planMade', week: wk, entries: W.planWeek(c, w.all, wk, day, fixed) });
+      break;
+    }
     case 'movePlan': {
       w.put({ type: 'planChanged', entry: cmd.entry, day: cmd.day, ...(cmd.time !== undefined ? { time: cmd.time } : {}) });
       /* a job set aside today and placed on today again in the Week is back on today's list (review 2, D-088) */
@@ -762,6 +775,21 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       if ((cmd.lead === null || (cmd.target.startsWith('d:') ? (R.DATE_LEADS as readonly number[]) : (R.LEADS as readonly number[])).includes(cmd.lead)) && R.reminderSettings(w.all).get(cmd.target) !== cmd.lead) w.put({ type: 'reminderSet', target: cmd.target, lead: cmd.lead });
       break;
     case 'reminders': if (R.remindersOn(w.all) !== cmd.on) w.put({ type: 'remindersSwitched', on: cmd.on }); break;
+    case 'calendarShow': {
+      const was = W.calendarOf(w.all);
+      if (was.on !== cmd.on || JSON.stringify(was.calendars) !== JSON.stringify(cmd.calendars)) w.put({ type: 'calendarChosen', on: cmd.on, calendars: cmd.calendars });
+      break;
+    }
+    case 'calendarRead': {
+      /* written only when what the calendar holds changed: the same facts, the same week (ARCHITECTURE) */
+      if (!W.calendarOf(w.all).on) break;
+      const events = cmd.events.filter(e => e && typeof e.start === 'string' && typeof e.end === 'string').slice(0, 400)
+        .map(e => ({ id: String(e.id), cal: String(e.cal), title: String(e.title ?? '').slice(0, 80), start: e.start.slice(0, 16), end: e.end.slice(0, 16), allDay: !!e.allDay }));
+      const reads = ofType(w.all, 'calendarRead'), last = reads[reads.length - 1];
+      if (last && JSON.stringify(last.events) === JSON.stringify(events)) break;
+      w.put({ type: 'calendarRead', from: day, to: W.addDays(day, cmd.days), events });
+      break;
+    }
     case 'nudge': { const s = ofType(w.all, 'nudgeChosen'); if ((s.length ? s[s.length - 1].on : false) !== cmd.on) w.put({ type: 'nudgeChosen', on: cmd.on }); break; }
   }
   return w.out;

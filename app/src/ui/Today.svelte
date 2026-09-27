@@ -99,6 +99,9 @@
     /* focused inside the tap itself, so the phone's keyboard opens straight away */
     flushSync(); capEl?.focus({ preventScroll: true });
   }
+  /* the size choice shows until Dan does anything with the day (D-114) */
+  const sizeOffer = $derived(!v.run && !v.night && !v.complete && !game.facts.some(f => f.day === v.day
+    && (f.type === 'jobBegun' || f.type === 'delveStarted' || f.type === 'jobDone' || f.type === 'capacityChosen')));
   function capture() {
     const lines = captured.split('\n');
     /* said for a moment where "+ Add" was, so nothing on Today moves */
@@ -135,7 +138,16 @@
       </span>
     </div>
     <h1 class="carve lg rise">{v.here.name}</h1>
-    <!-- no Low / Normal / High here: Dan sets his days in the week and runs them (Dan, D-089) -->
+    <!-- a lighter or fuller day, only on the day's first open and never required: ignored, the day is as planned
+         (Stage 3 item 13, D-114; D-089 keeps a late night from shrinking a day by itself) -->
+    {#if sizeOffer}
+      <div class="size rise d1">
+        <div class="seg small" role="group" aria-label={t('size.label')}>
+          {#each ['low', 'normal', 'high'] as const as x (x)}<button aria-pressed={v.capacity === x} onclick={() => game.do({ do: 'capacity', capacity: x })}>{t(`size.${x}`)}</button>{/each}
+        </div>
+        {#if v.suggested !== 'normal' && v.suggestedBy && v.capacity === 'normal'}<p class="soft hint">{t(`size.hint.${v.suggestedBy}`)}</p>{/if}
+      </div>
+    {/if}
     {#if v.ahead}
       <section class="ahead rise d2">
         <div class="label-line">{t('today.ahead')}</div>
@@ -338,4 +350,7 @@
     .ahead { margin-top: 8px; } .ahead p { margin-top: 4px; } .next .soft { margin-bottom: 14px; }
     :global(.row) { min-height: 44px; }
   }
+  .size { margin-top: 10px; }
+  .size .seg.small button { font-size: 12px; letter-spacing: .1em; padding-top: 6px; padding-bottom: 6px; }
+  .size .hint { margin-top: 4px; font-style: italic; font-size: 14.5px; text-align: left; }
 </style>

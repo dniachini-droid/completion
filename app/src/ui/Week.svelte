@@ -6,7 +6,7 @@
   import { game } from './game.svelte';
   import { t, dayName, minutesWords, minutesShort, weekDates, byWords } from '../content/copy/en';
   import { calendarWeek } from '../core/time';
-  import { addDays, planMade, weekOf, type DayJob } from '../core/week';
+  import { addDays, dayMinutes, eventsOn, planMade, weekOf, type DayJob } from '../core/week';
   import { asideToday } from '../core/game';
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
@@ -86,6 +86,12 @@
   }
   function off(j: DayJob) { game.do({ do: 'movePlan', entry: j.entry!, day: null }); open = null; }
   function plan() { game.do({ do: 'planWeek', week: wk }); }
+  /* a faint "about 2 h": the day's shape, not a score (D-114) */
+  function about(m: number) {
+    if (m < 60) return t('week.aboutMin', { n: Math.max(5, Math.round(m / 5) * 5) });
+    const h = Math.round(m / 30) / 2;
+    return t('week.aboutH', { n: Number.isInteger(h) ? String(h) : `${Math.floor(h)}½` });
+  }
   function startAdd(day: string) {
     if (addingTo === day) { addingTo = null; return; }
     open = null; line = ''; addingTo = day; toggled[day] = false;
@@ -130,7 +136,8 @@
             <!-- a tap on a day's name folds its jobs away; days already gone start folded (Dan, review 2) -->
             <button class="dname" aria-expanded={!isFolded(d.day)} onclick={() => fold(d.day)}>
               <span class="chev" class:shut={isFolded(d.day)} aria-hidden="true">›</span>{dayName(d.day)}{#if d.day === v.day}<em>{t('week.today')}</em>{/if}
-              {#if isFolded(d.day) && d.jobs.length}<small>{summary(d.jobs)}</small>{/if}
+              {#if isFolded(d.day) && d.jobs.length}<small>{summary(d.jobs)}</small>
+              {:else if d.day >= v.day && dayMinutes(v.content, d) > 0}<small class="about">{about(dayMinutes(v.content, d))}</small>{/if}
             </button>
             {#if d.day >= v.day}
               <button class="plus" class:on={addingTo === d.day} aria-label={t('week.addTo', { day: dayName(d.day) })} onclick={() => startAdd(d.day)}><span aria-hidden="true">+</span></button>
@@ -143,6 +150,10 @@
             </form>
           {/if}
           {#if !isFolded(d.day)}
+          <!-- the phone's calendar (D-115): fixed points, not jobs; nothing to tap, nothing earned -->
+          {#each eventsOn(game.facts, d.day) as e (e.id)}
+            <div class="event" class:allday={e.allDay}>{#if !e.allDay}<span class="at">{e.start.slice(0, 10) < d.day ? '' : e.start.slice(11, 16)}</span>{/if}<span class="what">{e.title}</span></div>
+          {/each}
           {#each d.jobs as j (j.entry ?? j.job + j.done)}
             <button class="row" class:done={j.done} class:open={open === j.entry} onclick={() => edit(j, d.day)} disabled={j.done || d.day < v.day}>
               <span class="pip" class:done={j.done}></span><span class="t">{game.job(j.job)?.name ?? j.job}</span><span class="s">{note(j, d.day)}</span>
@@ -188,6 +199,8 @@
       <button class="text-link" onclick={() => go('week', isNext ? thisWeek : addDays(thisWeek, 7))}><span>{isNext ? t('week.this') : t('week.next')}</span></button>
       <!-- any week ahead, a week at a time (D-114) -->
       {#if isNext}<button class="text-link" onclick={() => go('week', addDays(wk, 7))}><span>{t('week.after')}</span></button>{/if}
+      <!-- a disrupted week: lay out the rest again from today, keeping what you placed yourself (D-114) -->
+      {#if !isNext && planMade(game.facts, wk)}<button class="text-link" onclick={() => game.do({ do: 'replan' })}><span>{t('week.replan')}</span></button>{/if}
     </div>
   </div>
 </div>
@@ -202,6 +215,7 @@
   .day { margin-top: 12px; }
   .dname { font-family: var(--carve, inherit); font-size: 14px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); display: flex; gap: 10px; align-items: baseline;
     width: 100%; min-height: 36px; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; }
+  .dname small.about { color: var(--ink-3); opacity: .8; }
   .dname small { margin-left: auto; font-family: var(--life); font-style: italic; text-transform: none; letter-spacing: 0; font-size: 15px; color: var(--ink-3); }
   .chev { display: inline-block; width: 10px; font-size: 16px; line-height: 1; color: var(--ink-3); transform: rotate(90deg); transition: transform .2s ease; }
   .chev.shut { transform: none; }
@@ -226,6 +240,10 @@
   .clock-btn span.set { font-size: 18px; color: #fff; }
   /* the phone's own time box, laid over the button so any tap on it opens the wheel */
   .clock-btn input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; border: 0; padding: 0; margin: 0; cursor: pointer; -webkit-appearance: none; appearance: none; }
+  .event { display: flex; gap: 10px; padding: 3px 0 3px 22px; font-style: italic; font-size: 15px; color: var(--ink-2); }
+  .event .at { font-variant-numeric: tabular-nums; color: var(--ink-3); min-width: 3.2em; }
+  .event.allday { color: var(--ink-3); }
+  .event .what { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
   .other { position: relative; display: flex; justify-content: center; margin-top: 8px; }
   .other input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; border: 0; padding: 0; margin: 0; -webkit-appearance: none; appearance: none; }
   .off { display: flex; justify-content: center; flex-wrap: wrap; gap: 0 14px; margin-top: 6px; }

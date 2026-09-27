@@ -7,10 +7,13 @@
  */
 import { calendarWeek, weekdayOf } from './time';
 import * as R from './repeat';
-import type { Content, Fact, FactBody, FactOf, Job, PlanEntry, Rhythm } from './types';
+import type { CalEvent, Content, Fact, FactBody, FactOf, Job, PlanEntry, Rhythm } from './types';
 
-/** A Normal day's size: the plan never puts more on a day (PLANNER → Plan my week). */
+/** A Normal day's size in jobs, before planning by minutes (kept for the forecast's older tests). */
 export const PLAN_DAY = 3;
+/** A day's room in minutes when Plan my week lays it out (D-114): a Normal day about 3 h, the lighter day about 1½ h.
+    An appointment is fixed and may pass it (P10); one long job alone may fill a day. */
+export const PLAN_MIN = 180, PLAN_LIGHT = 90;
 /** Satchel lines untouched this long go quietly to "someday" (TOOLS §2). */
 export const SOMEDAY_DAYS = 21;
 
@@ -64,6 +67,9 @@ export function live(c: Content, facts: Fact[], before?: string): Content {
 
 /** A job's room in a day, for planning and the forecast: a delve job's enough, any other job's usual length. */
 export const roomOf = (j: Job) => j.delve ? j.enoughAt ?? j.length : j.length;
+const jobRoom = (c: Content, id: string) => { const j = c.jobs.find(x => x.id === id); return j ? roomOf(j) : 25; };
+/** About how long a day of the week holds (not yet done), in minutes: a shape, not a score (D-114). */
+export const dayMinutes = (c: Content, d: { jobs: DayJob[] }) => d.jobs.filter(j => !j.done).reduce((a, j) => a + jobRoom(c, j.job), 0);
 
 /* ---------- the satchel ---------- */
 
@@ -132,16 +138,27 @@ const need = R.needOf;
  * same rhythm spread across days (never two days running where it can be avoided); no day above a Normal day's size;
  * one lighter day. Only days from `from` on; sessions already done this week are not planned again.
  */
-export function planWeek(c: Content, facts: Fact[], week: string, from: string): PlanEntry[] {
+export function planWeek(c: Content, facts: Fact[], week: string, from: string, fixed: PlanEntry[] = []): PlanEntry[] {
+  /* each laying-out of a week has its own entry ids, so a reminder on an entry never moves to another job */
+  const round = facts.filter(f => f.type === 'planMade' && f.week === week).length;
   const days = weekDays(week).filter(d => d >= from);
   if (!days.length) return [];
   const out: PlanEntry[] = [];
   let n = 0;
-  const put = (job: string, day: string, time?: string) => out.push({ id: `p${week.replace(/-/g, '')}-${++n}`, job, day, ...(time ? { time } : {}) });
-  const load = (d: string) => out.filter(e => e.day === d).length;
+  /* entries Dan placed himself stay where they are and take their room (Lay out the rest, D-114) */
+  for (const e of fixed) if (e.day >= from) out.push({ ...e });
+  const put = (job: string, day: string, time?: string) => out.push({ id: `p${week.replace(/-/g, '')}${round ? `.${round}` : ''}-${++n}`, job, day, ...(time ? { time } : {}) });
+  const size = (job: string) => { const j = c.jobs.find(x => x.id === job); return j ? roomOf(j) : 25; };
+  const load = (d: string) => out.filter(e => e.day === d).reduce((a, e) => a + size(e.job), 0);
   /* the lighter day: Saturday if it is still ahead, else the week's last day */
   const light = days.length > 2 ? (days.find(d => weekdayOf(d) === 6) ?? days[days.length - 1]) : null;
-  const cap = (d: string) => d === light ? 1 : PLAN_DAY;
+  const cap = (d: string) => d === light ? PLAN_LIGHT : PLAN_MIN;
+  /* a job fits a day with room for it, or an empty day (by minutes, not by count, D-114) */
+  /* a busy day in the calendar gets less work (D-115): half its busy time comes off the day's room, but at least an hour
+     stays, so a working day in the calendar never empties the plan */
+  const busy = new Map(days.map(d => [d, busyMinutes(facts, d)]));
+  const capLeft = (d: string) => cap(d) - Math.min(busy.get(d)! / 2, Math.max(0, cap(d) - 60));
+  const fits = (d: string, job: string) => load(d) === 0 || load(d) + size(job) <= capLeft(d);
   const done = doneIn(facts, week);
   const doneOnDay = (job: string, d: string) => done.some(f => f.job === job && f.day === d);
   const ever = new Set(ofType(facts, 'jobDone').map(f => f.job));
@@ -152,16 +169,17 @@ export function planWeek(c: Content, facts: Fact[], week: string, from: string):
   for (const j of c.jobs.filter(x => x.by && !x.stopped && !ever.has(x.id))) {
     const target = addDays(j.by!, -2);
     if (target > days[days.length - 1]) continue;
-    const room = (x: string) => load(x) < cap(x);
+    const room = (x: string) => fits(x, j.id);
     const d = [...days].reverse().find(x => x <= target && room(x)) ?? days.find(room);
     if (d) put(j.id, d);
   }
   /* appointments and set days first (they may pass a day's size: an appointment is fixed, P10) */
-  for (const r of c.rhythms) for (const d of days) if (R.fallsOn(r, d) && !doneOnDay(r.job, d)) put(r.job, d, r.time);
+  const placed = (job: string, d: string) => out.some(e => e.job === job && e.day === d);
+  for (const r of c.rhythms) for (const d of days) if (R.fallsOn(r, d) && !doneOnDay(r.job, d) && !placed(r.job, d)) put(r.job, d, r.time);
   /* every N days since last done: on the day it falls due, then every N days after (D-114) */
   for (const r of c.rhythms.filter(x => x.everyDays)) {
     for (let d = R.dueFrom(facts, r, days[0]); d <= days[days.length - 1]; d = addDays(d, r.everyDays!)) {
-      const on = days.find(x => x >= d && load(x) < cap(x) && !doneOnDay(r.job, x)) ?? null;
+      const on = days.find(x => x >= d && fits(x, r.job) && !doneOnDay(r.job, x)) ?? null;
       if (!on) break;
       put(r.job, on, r.time);
       d = on;
@@ -169,13 +187,13 @@ export function planWeek(c: Content, facts: Fact[], week: string, from: string):
   }
   /* avoided one-offs early in the week, one to a day where the week allows */
   for (const j of c.jobs.filter(x => x.avoided && !x.item && !x.stopped && !x.by && !rhythmJob.has(x.id) && !ever.has(x.id))) {
-    const d = days.find(x => load(x) < cap(x) && !out.some(e => e.day === x && c.jobs.find(k => k.id === e.job)?.avoided)) ?? days.find(x => load(x) < cap(x));
+    const d = days.find(x => fits(x, j.id) && !out.some(e => e.day === x && c.jobs.find(k => k.id === e.job)?.avoided)) ?? days.find(x => fits(x, j.id));
     if (d) put(j.id, d);
   }
   /* every 2 weeks: once in the fortnight, on the lightest day */
   for (const r of c.rhythms.filter(x => x.every === 2)) {
     if (sessions(facts, r, week) >= 1) continue;
-    const d = [...days].filter(x => load(x) < cap(x)).sort((a, b) => load(a) - load(b))[0];
+    const d = [...days].filter(x => fits(x, r.job)).sort((a, b) => load(a) - load(b))[0];
     if (d) put(r.job, d, r.time);
   }
   /* N a week, the most frequent first, spread evenly */
@@ -186,15 +204,15 @@ export function planWeek(c: Content, facts: Fact[], week: string, from: string):
       const ideal = (k + .5) * days.length / left - .5;
       let best: string | null = null, score = Infinity;
       for (const [i, d] of days.entries()) {
-        if (load(d) >= cap(d) || out.some(e => e.day === d && e.job === r.job) || doneOnDay(r.job, d)) continue;
+        if (!fits(d, r.job) || out.some(e => e.day === d && e.job === r.job) || doneOnDay(r.job, d)) continue;
         const next = (x: string) => out.some(e => e.job === r.job && e.day === x) || doneOnDay(r.job, x);
-        const s = (next(addDays(d, -1)) || next(addDays(d, 1)) ? 10 : 0) + load(d) * 1.5 + Math.abs(i - ideal);
+        const s = (next(addDays(d, -1)) || next(addDays(d, 1)) ? 10 : 0) + load(d) / 60 * 1.5 + Math.abs(i - ideal);
         if (s < score) { score = s; best = d; }
       }
       if (best) put(r.job, best, r.time);
     }
   }
-  return out.sort((a, b) => a.day.localeCompare(b.day) || (a.time ?? '99').localeCompare(b.time ?? '99'));
+  return out.filter(e => !fixed.some(x => x.id === e.id)).sort((a, b) => a.day.localeCompare(b.day) || (a.time ?? '99').localeCompare(b.time ?? '99'));
 }
 
 /** One job on a day of the week as it stands: planned (an entry), or done (off-plan counts in full). */
@@ -236,10 +254,10 @@ export function weekOf(c: Content, facts: Fact[], week: string, today: string): 
     if (left(e.job) > 0 && !at(e.day)!.jobs.some(x => x.job === e.job && !x.done)) place(e, e.day);   /* past enough, it quietly leaves */
   }
   /* released: the first day from today still below a Normal day's size and without this job; otherwise it falls away */
-  const size = (d: string) => at(d)!.jobs.filter(x => !x.done || x.entry).length;
+  const mins = (d: string) => at(d)!.jobs.filter(x => !x.done || x.entry).reduce((a, x) => a + jobRoom(c, x.job), 0);
   for (const e of released) {
     if (left(e.job) <= 0) continue;
-    const to = weekDays(week).find(d => d >= today && size(d) < PLAN_DAY && !at(d)!.jobs.some(x => x.job === e.job));
+    const to = weekDays(week).find(d => d >= today && mins(d) + jobRoom(c, e.job) <= PLAN_MIN && !at(d)!.jobs.some(x => x.job === e.job));
     if (to) place(e, to);
   }
   for (const d of days) d.jobs.sort((a, b) => Number(b.done) - Number(a.done) || (a.time ?? '99').localeCompare(b.time ?? '99'));
@@ -275,4 +293,53 @@ export function forecast(c: Content, facts: Fact[], today: string, toNext: numbe
     }
   }
   return out;
+}
+
+/* ---------- what slipped (D-114) ---------- */
+
+/** One thing that went by while Dan was away, for the welcome back: a date that passed (the soonest), else an
+    appointment he added himself that fell away. Never a list, never a count (P7); null if nothing did. Rhythms'
+    appointments come round again, so they are not named. */
+export function slipped(c: Content, facts: Fact[], since: string, today: string): { job: string; kind: 'date' | 'appt'; day: string; time?: string } | null {
+  const ever = new Set(ofType(facts, 'jobDone').map(f => f.job));
+  const passed = c.jobs.filter(j => j.by && j.by < today && !j.stopped && !ever.has(j.id)).sort((a, b) => a.by!.localeCompare(b.by!));
+  if (passed.length) return { job: passed[0].id, kind: 'date', day: passed[0].by! };
+  const rhythmJobs = new Set(c.rhythms.map(r => r.job));
+  for (const week of [...new Set([calendarWeek(since), calendarWeek(today)])]) {
+    const own = new Set(ofType(facts, 'planAdded').map(f => f.entry.id));
+    const missed = (planOf(facts, week) ?? []).filter(e => own.has(e.id) && e.time && e.day >= since && e.day < today && !rhythmJobs.has(e.job)
+      && c.jobs.some(j => j.id === e.job) && !ofType(facts, 'jobDone').some(f => f.job === e.job && f.day === e.day));
+    if (missed.length) return { job: missed[0].job, kind: 'appt', day: missed[0].day, time: missed[0].time };
+  }
+  return null;
+}
+
+/* ---------- the phone's calendar, read-only (D-115) ---------- */
+
+/** Whether the calendar is shown, and which calendars (null: all). */
+export function calendarOf(facts: Fact[]): { on: boolean; calendars: string[] | null } {
+  const c = ofType(facts, 'calendarChosen');
+  return c.length ? { on: c[c.length - 1].on, calendars: c[c.length - 1].calendars } : { on: false, calendars: null };
+}
+/** The events on a day, as last read: timed ones by start time, then all-day ones; none while the calendar is off. */
+export function eventsOn(facts: Fact[], day: string): CalEvent[] {
+  const ch = calendarOf(facts);
+  if (!ch.on) return [];
+  const reads = ofType(facts, 'calendarRead');
+  const last = reads[reads.length - 1];
+  if (!last) return [];
+  return last.events.filter(e => (!ch.calendars || ch.calendars.includes(e.cal))
+    && (e.allDay ? e.start.slice(0, 10) <= day && day <= e.end.slice(0, 10) : e.start.slice(0, 10) <= day && day <= e.end.slice(0, 10)))
+    .sort((a, b) => Number(a.allDay) - Number(b.allDay) || a.start.localeCompare(b.start));
+}
+/** Minutes a day's timed events take between 07:00 and 22:00 (overlaps counted once): the room they use when Plan my
+    week lays the day out. All-day events take none. */
+export function busyMinutes(facts: Fact[], day: string): number {
+  const mins = (s: string) => +s.slice(11, 13) * 60 + +s.slice(14, 16);
+  const spans = eventsOn(facts, day).filter(e => !e.allDay).map(e => [
+    e.start.slice(0, 10) < day ? 0 : mins(e.start), e.end.slice(0, 10) > day ? 24 * 60 : mins(e.end)] as [number, number])
+    .map(([a, b]) => [Math.max(a, 7 * 60), Math.min(b, 22 * 60)] as [number, number]).filter(([a, b]) => b > a).sort((x, y) => x[0] - y[0]);
+  let total = 0, end = -1;
+  for (const [a, b] of spans) { if (b <= end) continue; total += b - Math.max(a, end); end = b; }
+  return total;
 }

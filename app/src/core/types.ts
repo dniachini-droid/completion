@@ -112,6 +112,11 @@ export type FactBody =
   /** A job edited or added by itself (the job editor, D-112): its whole new shape. Removed: gone from every list. */
   | { type: 'jobSaved'; job: Job }
   | { type: 'jobRemoved'; id: string }
+  /** The phone's calendar, read-only (D-115): shown or not, and which calendars (null: all). */
+  | { type: 'calendarChosen'; on: boolean; calendars: string[] | null }
+  /** What the calendar held for the days ahead when it was last read: written only when it changed, so a plan made
+      from it can always be explained later (ARCHITECTURE → facts). Events never become jobs and earn nothing. */
+  | { type: 'calendarRead'; from: string; to: string; events: CalEvent[] }
   /** The re-entry nudge, off unless Dan turns it on (D-113) */
   | { type: 'nudgeChosen'; on: boolean }
   /** `via`: said to Siri, Shortcuts or the Action button; `ref`: that line's own id, so it is never added twice (D-113) */
@@ -132,6 +137,9 @@ export type FactBody =
   /** lead: minutes before a time; for a date (`d:<job>`, D-114) 0 is its morning and 1440 the day before */
   | { type: 'reminderSet'; target: string; lead: 0 | 15 | 60 | 1440 | null }
   | { type: 'remindersSwitched'; on: boolean }
+
+/** One event from the phone's calendar (D-115): local wall-clock times ("YYYY-MM-DDTHH:MM"), all-day ones by date. */
+export interface CalEvent { id: string; cal: string; title: string; start: string; end: string; allDay: boolean; }
 
 /** One job placed on a day of the week plan (PLANNER.md). A forecast: moving it earns nothing and loses nothing. */
 export interface PlanEntry { id: string; job: string; day: string; time?: string; }

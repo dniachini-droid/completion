@@ -10,6 +10,7 @@ class MainViewController: CAPBridgeViewController {
         bridge?.registerPluginInstance(SavePlugin())   // the save, in SQLite (SavePlugin.swift, D-106)
         bridge?.registerPluginInstance(CopyPlugin())   // copies of the save: share, restore, the weekly copy (D-107)
         bridge?.registerPluginInstance(InboxPlugin())   // lines said to Siri or the Action button (InboxPlugin.swift, D-113)
+        bridge?.registerPluginInstance(CalendarPlugin())   // the phone's calendar, read-only (CalendarPlugin.swift, D-115)
     }
 }
 

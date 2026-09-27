@@ -2,7 +2,8 @@ import { Capacitor, registerPlugin } from '@capacitor/core';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { Haptics as CapHaptics, ImpactStyle } from '@capacitor/haptics';
 import { Preferences } from '@capacitor/preferences';
-import type { Away, Copies, Inbox, Panel, PanelState, Platform } from './types';
+import type { Away, Calendar, Copies, Inbox, Panel, PanelState, Platform } from './types';
+import type { CalEvent } from '../core/types';
 import { sound } from './chime';
 import { adopt, sqlSaves, textSaves, type Db, type Saves } from './saves';
 
@@ -123,6 +124,28 @@ const nativeInbox: Inbox = {
   async take() { try { return (await InboxNative.take()).lines ?? []; } catch { return []; } },
   async clear(ids) { try { await InboxNative.clear({ ids }); } catch { /* kept for next time; never added twice */ } },
 };
+/* The phone's calendar, read-only (D-115): the app's own small plugin, ios/App/App/CalendarPlugin.swift. */
+const CalNative = registerPlugin<{
+  permit(): Promise<{ granted: boolean }>;
+  calendars(): Promise<{ calendars: { id: string; title: string }[] }>;
+  events(o: { days: number }): Promise<{ events: CalEvent[] }>;
+  addListener(e: 'changed', f: () => void): Promise<unknown>;
+}>('Calendar');
+const nativeCalendar: Calendar = {
+  async permit() { try { return (await CalNative.permit()).granted; } catch { return false; } },
+  async calendars() { try { return (await CalNative.calendars()).calendars ?? []; } catch { return []; } },
+  async events(days) { try { return (await CalNative.events({ days })).events ?? []; } catch { return []; } },
+  onChange(f) { void CalNative.addListener('changed', f).catch(() => {}); },
+};
+/* In the screen checks: a calendar the check puts under 'bench.calendar' ({ calendars, events }). */
+const benchCal = () => { try { return JSON.parse(localStorage.getItem('bench.calendar') ?? 'null') as { calendars: { id: string; title: string }[]; events: CalEvent[] } | null; } catch { return null; } };
+const benchCalendar: Calendar = {
+  permit: async () => !!benchCal(),
+  calendars: async () => benchCal()?.calendars ?? [],
+  events: async () => benchCal()?.events ?? [],
+  onChange() {},
+};
+
 /* In the screen checks: lines the check puts under 'bench.inbox' stand for what Siri heard. */
 const benchInbox: Inbox = {
   async take() { try { return JSON.parse(localStorage.getItem('bench.inbox') ?? '[]'); } catch { return []; } },
@@ -148,7 +171,7 @@ const benchCopies: Copies = {
 };
 
 const native: Platform = {
-  store: nativeStore, copies: nativeCopies, inbox: nativeInbox, sound, now: () => new Date(), app: true, away: nativeAway,
+  store: nativeStore, copies: nativeCopies, inbox: nativeInbox, calendar: nativeCalendar, sound, now: () => new Date(), app: true, away: nativeAway,
   get saves() { return saves; }, get saveTrouble() { return saveTrouble; },
   ready: async () => { await readKept(); await openSaves(); nativeAway.first = await nativeAway.take(); },
   notifier: {
@@ -184,7 +207,7 @@ const benchAway: Away = {
 /* The screen checks' stand-in for the phone's services (never shipped to Dan as a page, D-108). */
 const benchSaves = textSaves(store, 'browser');
 const bench: Platform = {
-  store, sound, now: () => new Date(), ready: async () => {}, app: false, copies: benchCopies, inbox: benchInbox, away: benchAway, saves: benchSaves, saveTrouble: null,
+  store, sound, now: () => new Date(), ready: async () => {}, app: false, copies: benchCopies, inbox: benchInbox, calendar: benchCalendar, away: benchAway, saves: benchSaves, saveTrouble: null,
   notifier: { locked: false, permit: async () => false, at: async () => {}, cancel: async () => {}, remind: async () => {} },
   panel: { show: async () => {}, end: async () => {} },
   haptics: {

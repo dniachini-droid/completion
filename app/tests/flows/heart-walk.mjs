@@ -463,6 +463,15 @@ await tap('Daybook'); await shot('daybook', 1500); await home(); await page.cloc
     await shot('settings-restore', 500);
     await tap('Restore it'); await page.clock.runFor(500);
     if (!(await page.getByText('The copy is restored.').count())) errors.push('COPY the restore did not say it was done'); }
+  /* the calendar, read-only (D-115): a made-up one stands for the phone's; turned on, its event shows in the week */
+  { const day = await page.evaluate(() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; });
+    await page.evaluate(d => localStorage.setItem('bench.calendar', JSON.stringify({ calendars: [{ id: 'w', title: 'Work' }],
+      events: [{ id: 'e1', cal: 'w', title: 'Dentist (calendar)', start: `${d}T21:00`, end: `${d}T21:30`, allDay: false }] })), day);
+    await tap('Show it'); await page.clock.runFor(800); await shot('settings-calendar', 600);
+    await page.locator('button.home').first().click(); await page.clock.runFor(800); await home(); await page.clock.runFor(1200);
+    await tap('Week'); await page.clock.runFor(1200); await shot('week-calendar', 800);
+    if (!(await page.locator('.event', { hasText: 'Dentist (calendar)' }).count())) errors.push('CALENDAR the event is not in the week');
+    await home(); await page.clock.runFor(800); await tap('Daybook'); await tap('Settings'); await page.clock.runFor(1200); }
   await tap('The trial’s own controls'); await page.clock.runFor(1500); expect('settings → trial', await backSays(), 'settings');
   await home();
   await tap('Something else…'); await page.locator('.body button.row').first().click(); await page.clock.runFor(800);

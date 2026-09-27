@@ -12,6 +12,7 @@ import { platform } from '../platform';
 import { t } from '../content/copy/en';
 import { COPIES_KEPT, COPY_PREFIX, copyDue, copyName, readSave, SAVE_VERSION, type Save } from '../core/save';
 import { alertsDue, nudgeDay, NUDGE_HOUR, type Alert } from '../core/reminders';
+import { calendarOf } from '../core/week';
 
 export { content };
 
@@ -32,6 +33,8 @@ const REMIND_IDS = Array.from({ length: 30 }, (_, i) => 200 + i);
 const AGAIN_IDS = Array.from({ length: 6 }, (_, i) => 240 + i);
 /** The re-entry nudge's one alert (D-113). */
 const NUDGE_ID = 250;
+/** How far ahead the calendar is read (D-115). */
+const CAL_DAYS = 14;
 
 class Game {
   proto = $state<Proto>(loadProto());
@@ -51,6 +54,8 @@ class Game {
     void this.reminders();
     void this.weekly();
     void this.drain();
+    void this.readCalendar();
+    platform.calendar.onChange(() => void this.readCalendar());
     this.#ticker = window.setInterval(() => this.tick(), 250);
     document.addEventListener('visibilitychange', () => { if (!document.hidden) void this.wake(); });
     window.addEventListener('focus', () => void this.wake());
@@ -76,6 +81,7 @@ class Game {
     void this.reminders();
     void this.weekly();
     void this.drain();
+    void this.readCalendar();
     this.panel();   /* the panel may have run past what it knew while the app was away: put it right */
   }
 
@@ -91,6 +97,14 @@ class Game {
       this.do({ do: 'takeInbox', lines });
       await platform.inbox.clear(lines.map(x => x.id));
     } finally { this.#draining = false; }
+  }
+
+  /** The phone's calendar, read-only (D-115): the next two weeks, read on opening, on return and when it changes;
+      written down only when it changed. Nothing is read while it's off. */
+  async readCalendar() {
+    if (!calendarOf(this.facts).on) return;
+    const events = await platform.calendar.events(CAL_DAYS);
+    this.do({ do: 'calendarRead', events, days: CAL_DAYS });
   }
 
   /** Dan went into another app at `leftAt` (the phone's ms) and is back now: the delve paused where he left (D-094).

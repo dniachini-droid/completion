@@ -64,6 +64,10 @@ const ONE: { [T in FactBody['type']]: Extract<FactBody, { type: T }> } = {
   jobSaved: { type: 'jobSaved', job: { id: 'j-x', name: 'Renew the passport', delve: false, length: 30, doneBy: 'dan', avoided: true, firstStep: 'Find the old one', note: 'photo booth at the station' } },
   jobRemoved: { type: 'jobRemoved', id: 'post' },
   nudgeChosen: { type: 'nudgeChosen', on: true },
+  calendarChosen: { type: 'calendarChosen', on: true, calendars: ['work'] },
+  calendarRead: { type: 'calendarRead', from: '2026-09-28', to: '2026-10-12', events: [
+    { id: 'e1', cal: 'work', title: 'Dentist', start: '2026-09-29T10:00', end: '2026-09-29T11:00', allDay: false },
+    { id: 'e2', cal: 'home', title: 'Mum’s birthday', start: '2026-10-03', end: '2026-10-03', allDay: true }] },
 };
 const every: Fact[] = Object.values(ONE).map((b, i) => ({ seq: i + 1, at: '2026-09-28T09:00:00+01:00', day: '2026-09-28', ...b }) as Fact);
 const save = (facts: Fact[], version = SAVE_VERSION): Save => ({ version, content: C.version, facts });

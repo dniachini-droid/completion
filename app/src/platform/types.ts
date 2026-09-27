@@ -61,6 +61,16 @@ export interface Copies {
   list(prefix: string): Promise<string[]>;
 }
 export interface Panel { show(p: PanelState): Promise<void>; end(): Promise<void>; }
+/** The phone's calendar, read-only (D-115). */
+export interface Calendar {
+  /** Ask once for access (in the tap that turns it on); whether it may be read. */
+  permit(): Promise<boolean>;
+  calendars(): Promise<{ id: string; title: string }[]>;
+  /** The next `days` days' events, as local wall-clock times. */
+  events(days: number): Promise<import('../core/types').CalEvent[]>;
+  /** Told when the calendar changes (the app reads it again). */
+  onChange(f: () => void): void;
+}
 /** Lines said to Siri, typed in Shortcuts or sent from the Action button, waiting for the satchel (D-113). */
 export interface Inbox {
   take(): Promise<{ id: string; text: string }[]>;
@@ -77,6 +87,7 @@ export interface Platform {
   panel: Panel;
   copies: Copies;
   inbox: Inbox;
+  calendar: Calendar;
   /** Inside the phone app (no browser around it: the app draws its own swipe back from the left edge). */
   readonly app: boolean;
   /** Wait for the save to be read, before the game starts. */

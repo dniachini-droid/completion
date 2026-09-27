@@ -62,3 +62,32 @@ describe('a date on a job (D-114)', () => {
     expect(R.alertsDue(C, p.facts, p.at).filter(a => a.kind === 'by')).toEqual([]);
   });
 });
+
+describe('What slipped, after days away (D-114)', () => {
+  it('names one passed date first, the soonest; never a list', () => {
+    const p = player().do({ do: 'open' })
+      .do({ do: 'saveJob', job: { ...tax, by: '2026-10-02' }, rhythm: null })
+      .do({ do: 'saveJob', job: { ...tax, id: 'visa', name: 'Visa form', by: '2026-09-30' }, rhythm: null });
+    expect(W.slipped(p.view().content, p.facts, MON, '2026-10-05')).toEqual({ job: 'visa', kind: 'date', day: '2026-09-30' });
+  });
+  it('else an appointment Dan added himself that went by; a rhythm’s comes round again and isn’t named', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addToWeek', line: 'Dentist', day: '2026-09-29', time: '15:00' });
+    const dentist = p.view().content.jobs.find(j => j.name === 'Dentist')!.id;
+    expect(W.slipped(p.view().content, p.facts, MON, '2026-10-02')).toEqual({ job: dentist, kind: 'appt', day: '2026-09-29', time: '15:00' });
+    const q = player().do({ do: 'open' });
+    expect(W.slipped(q.view().content, q.facts, MON, '2026-10-05')).toBeNull();   /* the lesson on Thursday isn't named */
+  });
+});
+
+describe('A lighter or fuller day, never required (D-114)', () => {
+  it('not chosen, the day is as planned even after a late night (D-089); chosen, it changes the day’s size', () => {
+    const p = player().do({ do: 'open' });
+    expect(p.view().capacity).toBe('normal');
+    const size = p.view().size;
+    p.do({ do: 'capacity', capacity: 'low' });
+    expect(p.view().capacity).toBe('low');
+    expect(p.view().size).toBeLessThanOrEqual(size);
+    const q = player().do({ do: 'open' }).do({ do: 'capacity', capacity: 'normal' });
+    expect(q.facts.filter(f => f.type === 'capacityChosen')).toHaveLength(1);   /* "as planned" is an answer too */
+  });
+});
