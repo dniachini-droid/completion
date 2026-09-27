@@ -90,6 +90,10 @@ export type FactBody =
   | { type: 'delveResumed' }
   | { type: 'delveEnded'; job: string; minutes: number; how: 'ranOut' | 'finishedHere'; run: number }
   | { type: 'jobDone'; job: string; minutes: number }
+  /** "Not done after all" (D-131): the latest done record of the job on `on` no longer counts; what it earned stays */
+  | { type: 'doneUndone'; job: string; on: string }
+  /** Tonight's "Tomorrow starts with" (D-131): the job Today opens with on `on` (the next game day); null: as planned */
+  | { type: 'firstChosen'; job: string | null; on: string }
   | { type: 'cantStartUsed'; job: string }
   | { type: 'seen'; what: 'step' | 'arrival' | 'morning' | 'welcome'; ref: number }
   /* what the world gave (worked out once, then kept) */

@@ -96,9 +96,9 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     expect(p.view().arrival?.kind).toBe('place');
     /* today's whole list (the cat, the gym, the lesson) done in short delves, short of the first place: a camp */
     const q = player().do({ do: 'open' });
-    expect(q.view().slate).toEqual(['cat', 'gym', 'lesson']);
-    for (const job of ['cat', 'gym', 'lesson']) {
-      q.do({ do: 'startRun', job, minutes: 20, count: 1 }).wait(20);
+    expect(q.view().line).toEqual(['cat', 'gym', 'course', 'lesson']);
+    for (const job of q.view().line) {
+      q.do({ do: 'startRun', job, minutes: 15, count: 1 }).wait(15);
       if (!q.view().done.has(job)) q.do({ do: 'done', job });
     }
     expect(q.view().walked).toBe(60);
@@ -114,7 +114,7 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     expect(q.view().done.has('gym')).toBe(true);
   });
   it('"Not today" on the list’s last job to do completes a day that had its work, and day complete locks in (D-130)', () => {
-    const p = player().do({ do: 'open' }).did('cat').did('gym');
+    const p = player().do({ do: 'open' }).did('cat').did('gym').did('course');
     expect(p.view().complete).toBe(false);
     p.do({ do: 'setAside', job: 'lesson' });
     expect(p.view().complete).toBe(true);

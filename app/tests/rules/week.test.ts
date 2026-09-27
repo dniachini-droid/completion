@@ -58,7 +58,8 @@ describe('Plan my week (PLANNER.md, fixed rules)', () => {
     const load = new Map<string, number[]>();
     for (const e of plan()) if (!e.time) load.set(e.day, [...(load.get(e.day) ?? []), W.roomOf(C.jobs.find(j => j.id === e.job)!)]);
     for (const [d, m] of load) if (m.length > 1) expect(m.reduce((a, b) => a + b, 0)).toBeLessThanOrEqual(weekdayOf(d) === 6 ? W.PLAN_LIGHT : W.PLAN_MIN);
-    expect(plan().filter(e => weekdayOf(e.day) === 6).length).toBeLessThanOrEqual(1);
+    /* the planning room is 7 hours, the lighter day 3½ (Dan, D-131) */
+    expect([W.PLAN_MIN, W.PLAN_LIGHT]).toEqual([420, 210]);
   });
   it('avoided one-offs early in the week', () => {
     for (const j of ['cat', 'post']) expect(weekdayOf(on(j)[0])).toBeLessThanOrEqual(2);
@@ -99,7 +100,12 @@ describe('How the week drives Today', () => {
     const wk = W.weekOf(C, p.facts, MON, '2026-09-29');
     expect(wk.days[0].jobs.map(j => j.job)).toEqual([monday[0]]);
     expect(wk.days[0].jobs.every(j => j.done)).toBe(true);
-    for (const d of wk.days.slice(1)) expect(d.jobs.filter(j => !j.time).length).toBeLessThanOrEqual(W.PLAN_DAY);
+    for (const d of wk.days.slice(1)) { const m = d.jobs.filter(j => !j.time && !j.done).map(j => W.roomOf(C.jobs.find(x => x.id === j.job)!)); if (m.length > 1) expect(m.reduce((a, b) => a + b, 0)).toBeLessThanOrEqual(W.PLAN_MIN); }
+    /* a one-off whose day passed undone is not placed again: it waits in the Satchel's "No day yet" (D-131) */
+    for (const j of monday.slice(1).filter(id => !C.rhythms.some(r => r.job === id))) {
+      expect(wk.days.slice(1).flatMap(d => d.jobs).some(x => x.job === j)).toBe(false);
+      expect(W.satchelOf(C, p.facts, '2026-09-29').map(x => x.id)).toContain(j);
+    }
   });
   it('once a rhythm’s enough for the week is met, its remaining planned sessions leave', () => {
     const p = player().do({ do: 'open' }).do({ do: 'planWeek', week: MON });

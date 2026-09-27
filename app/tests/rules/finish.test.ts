@@ -27,15 +27,22 @@ function player(start: string, from: Fact[] = []) {
 const SUN = '2026-10-04T09:00:00+01:00';   /* the plan puts four jobs on this Sunday */
 
 describe('the day’s finish line (D-130)', () => {
-  it('a list of four is done at four, not at a hidden three', () => {
+  it('the finish line is the first 3 hours of the day’s jobs, in order; the rest is "If there’s time" (D-131)', () => {
     const p = player(SUN).do({ do: 'open' });
-    const list = p.view().slate;
-    expect(list).toHaveLength(4);
-    for (const id of list.slice(0, 3)) p.did(id);
+    const { slate, line } = p.view();
+    expect(slate.length).toBeGreaterThan(line.length);
+    const mins = (ids: string[]) => ids.reduce((a, id) => a + C.jobs.find(j => j.id === id)!.length, 0);
+    /* at least 3 hours, and no job more than it takes to reach them */
+    expect(mins(line)).toBeGreaterThanOrEqual(180);
+    expect(mins(line.slice(0, -1))).toBeLessThan(180);
+    expect(slate.slice(0, line.length)).toEqual(line);
+    for (const id of line.slice(0, -1)) p.did(id);
     expect(p.view().complete).toBe(false);
-    expect(p.view().next?.job).toBe(list[3]);
-    p.did(list[3]);
+    expect(p.view().next?.job).toBe(line[line.length - 1]);
+    p.did(line[line.length - 1]);
     expect(p.view().complete).toBe(true);
+    /* the rest is still there to do, and doing more goes deeper */
+    for (const id of slate.slice(line.length)) expect(p.view().done.has(id)).toBe(false);
   });
   it('jobs added to today join the list the day needs', () => {
     const p = player('2026-09-28T09:00:00+01:00').do({ do: 'open' }).do({ do: 'addToWeek', line: 'Fix the shelf', day: '2026-09-28' });
