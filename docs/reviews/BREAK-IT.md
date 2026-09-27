@@ -41,7 +41,7 @@ Severity: **High** = crash, lost data or a broken promise to Dan; **Medium** = c
 - **Fix:** carry the id (`{ id: job, name, k }` at line 33) and key by `h.id`. Check the other keyed `{#each}` blocks for any key that isn't an id.
 
 ### 2. High (a design question for Dan): the story is still held back by the calendar week, through Keys
-> **Resolved by D-129 (Dan chose option c, 2026-09-28).** The probe now asserts. At 8 hours a day: story week 14, 67 places on foot (all the minutes allow), and 5 of 21 days with no next place in reach, each waiting on a story step, never on a Key. At 3 hours a day: story week 5.
+> **Resolved by D-129 (Dan chose option c, 2026-09-28).** The probe now asserts. At 8 hours a day: story week 14, 67 places on foot (all the minutes allow), and 0 of 21 days with no next place in reach. At 3 hours a day: story week 5.
 
 - **Reproduce:** `REVIEW_SLOW=1 npx vitest run tests/review/pace.test.ts` (from `app/`). A simulated player delves every day for three weeks from a Monday. Each day's end records the story week, minutes walked and what the story waits on.
 - **Result:**

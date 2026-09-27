@@ -222,27 +222,30 @@ function roadStep(s: Story, st: StoryState, b: Beat): boolean {
 }
 
 /**
- * The road's rows that open on the way to the next place (D-129): when the minutes have reached it and only a road row
- * in its turn stands between (at most two, in order), those rows open as Dan walks on and show on that place's arrival.
- * A row that settles a guess, or brings a record, keeps its own step, where the guess is settled or the record read. Null if nothing so near would open the way.
+ * The story's bits that play on the way to the next place (Dan, D-129: long days never hold a place back). When the
+ * minutes have reached the next place and only story bits stand between (a step, or a road row), the next ones in
+ * order (up to four) play as Dan walks on and show on that place's arrival, with their records, choices and settled
+ * guesses. Null if nothing so near would open the way.
  */
-export function onTheWay(s: Story, st: StoryState): Seal[] | null {
-  const ready = (t: StoryState) => s.seals.filter(x => !x.arrival && onRoad(s, x.id) && !t.opened.has(x.id) && inWeek(t, x) && mayOpen(s, t, x) && roadTurn(s, t, x)
-    && (!x.beat || (allMet(t, beatOf(s, x.beat)?.req ?? []) && t.visited.has(beatOf(s, x.beat)!.stretch))) && !s.marks.some(m => m.confirmedBy === (x.beat ?? x.id))
-    && !(x.carries?.records?.length || (x.beat && beatOf(s, x.beat)?.carries?.records?.length)))
-    .sort((a, b) => a.w - b.w || a.o - b.o)[0];
+export function onTheWay(s: Story, st: StoryState): Beat[] | null { return wayTo(s, st)?.bits ?? null; }
+/** The next place Dan is walking to: the next place in reach, or the one the story bits on the way will open (D-129). */
+export const placeAhead = (s: Story, st: StoryState): Beat | null => nextPlace(s, st) ?? wayTo(s, st)?.place ?? null;
+function wayTo(s: Story, st: StoryState): { bits: Beat[]; place: Beat } | null {
   let t = st;
-  const out: Seal[] = [];
-  for (let k = 0; k < 2; k++) {
-    const x = ready(t);
-    if (!x) return null;
-    out.push(x);
-    const played = new Set(t.played); played.add(x.beat ?? x.id);
-    const opened = new Set(t.opened); opened.add(x.id);
+  const out: Beat[] = [];
+  for (let k = 0; k < 4; k++) {
+    const b = nextStep(s, t);
+    if (!b) return null;
+    out.push(b);
+    const x = b.kind === 'stepKey' ? sealOf(s, b.seal!) : undefined;
+    const played = new Set(t.played); played.add(b.id);
+    const opened = new Set(t.opened); if (x) opened.add(x.id);
     const offered = new Set(t.offered);
-    [...(x.carries?.guess ?? []), ...(x.beat ? beatOf(s, x.beat)?.carries?.guess ?? [] : [])].forEach(m => offered.add(m));
+    [...(x?.carries?.guess ?? []), ...(b.carries?.guess ?? [])].forEach(m => offered.add(m));
     t = { ...t, played, opened, offered };
-    if (nextPlace(s, t)) return out;
+    /* the place may be this story week's, or the next's once this bit finishes the week */
+    const place = nextPlace(s, t) ?? (weekDone(s, t) && s.route.some(r => r.w === t.week + 1) ? nextPlace(s, { ...t, week: t.week + 1 }) : null);
+    if (place) return { bits: out, place };
   }
   return null;
 }

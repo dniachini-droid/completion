@@ -31,6 +31,8 @@
   /* marks seen here that can't be guessed yet: said gently, once, so a later guess doesn't come from nowhere (D-077) */
   const later = $derived(a ? marksIn(content.story, a.records).filter(m => !a.guess.includes(m) && !mayGuess(content.story, v.story, m)
     && !markHeld(markOf(content.story, m)!, v.story)) : []);
+  /* a story bit that played on the way here (D-129) offers its record, or its small choice, here */
+  function pickWay(beat: string, record: string) { game.do({ do: 'choose', beat, pick: a!.way.find(w => w.beat === beat)!.records.indexOf(record) }); go('records', record); }
   function pick(i: number) { if (!a) return; game.do({ do: 'choose', beat: a.id, pick: i }); go('records', a.records[i]); }
   /* after the cut: through the lintel to the stair (D-039), back to today, or later (the cut waits, unseen) */
   function cutLeave(to: 'through' | 'today' | 'later') {
@@ -78,12 +80,13 @@
         <Words {look} length={(a.line?.length ?? 0) + (a.look?.length ?? 0)}>
           <span class="soft on-scene">{a.line}</span>
           {#if a.look}<span class="soft on-scene look">{a.look}</span>{/if}
-          {#each a.way as line}<p class="soft on-scene look">{line}</p>{/each}
+          {#each a.way as w (w.beat)}<p class="soft on-scene look">{w.line}</p>{/each}
           {#each a.opened as line}<p class="soft on-scene look">{t('arrive.keyOpens')} {line}</p>{/each}
         </Words>
       </div>
       <div class="mid col">
         {#if a.id}
+          {#each a.way as w (w.beat)}<Settled beat={fresh ? w.beat : null} />{/each}
           <Settled beat={fresh ? a.id : null} />
           {#each a.guess as mark (mark)}<Guess {mark} at={a.id} />{/each}
           {#if later.length}<p class="soft later">{t('arrive.marksLater')}</p>{/if}
@@ -93,6 +96,12 @@
               {:else}<button class="text-link" onclick={() => go('records', a.records[0])}><span>{t('records.read')}</span></button>{/if}
             </div>
           {/if}
+          {#each a.way.filter(w => w.records.some(r => !a.records.includes(r))) as w (w.beat)}
+            <div class="choice">
+              {#if w.choice}{#each w.choice.slice(0, w.records.length) as c, i}<button class="text-link" onclick={() => pickWay(w.beat, w.records[i])}><span>{cap(c)}</span></button>{/each}
+              {:else}<button class="text-link" onclick={() => go('records', w.records[0])}><span>{t('records.read')}</span></button>{/if}
+            </div>
+          {/each}
           {#if a.completedDay}
             <p class="enough">{t('arrive.enough')} <em>{t('arrive.enough2')}</em></p>
           {/if}

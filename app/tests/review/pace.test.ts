@@ -26,7 +26,8 @@ describe.skipIf(!env.REVIEW_SLOW)('pace: a heavy worker and the calendar (D-129)
     };
     const l = report(3, light.rows), b = report(8, big.rows);
     /* the review: 19 of 21 days at eight hours ended with no next place in reach, all waiting on a Key */
-    expect(b.none).toBeLessThanOrEqual(6);   /* 5 at D-129: each waits on a story step, one per finished job (D-123) */
+    /* long days never hold a place back (Dan, D-129): the story bits in the way play on the way */
+    expect(b.none).toBe(0);
     /* nothing on the road ever waits on a row only a Key opens */
     expect(big.rows.flatMap(r => r.keyOnly)).toEqual([]);
     expect(light.rows.flatMap(r => r.keyOnly)).toEqual([]);
@@ -37,6 +38,13 @@ describe.skipIf(!env.REVIEW_SLOW)('pace: a heavy worker and the calendar (D-129)
     expect(b.last.placesOnFoot).toBeGreaterThanOrEqual(byMinutes(b.last.walked) - 3);
     /* and the story keeps its order and its places (D-079) */
     for (const run of [light, big]) { expect(aheadOfDan(run.facts)).toEqual([]); expect(outOfOrder(run.facts)).toEqual([]); }
+  }, 600_000);
+  it('one eight-hour job a day, no repeating jobs: every place the minutes reach comes, every day', () => {
+    const one = heavy(21, 8, false, 1);
+    expect(one.rows.filter(r => r.nextAt === null)).toEqual([]);
+    expect(one.rows.at(-1)!.placesOnFoot).toBe(byMinutes(one.rows.at(-1)!.walked));
+    expect(aheadOfDan(one.facts)).toEqual([]);
+    expect(outOfOrder(one.facts)).toEqual([]);
   }, 600_000);
   it('with no repeating jobs at all (no Keys but the floor), the road goes as far', () => {
     /* four jobs of Dan's own a day, as many as the repeating ones and the one-off above: a step plays per job done */

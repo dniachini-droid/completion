@@ -84,6 +84,18 @@ describe('with no Keys at all, the story goes on by work alone (D-129)', () => {
   }, 60_000);
 });
 
+describe('long days never hold a place back (Dan, D-129)', () => {
+  it('one long job a day: every place the minutes reach comes that day, in order', () => {
+    const { facts, rows } = heavy(7, 8, false, 1);
+    for (const r of rows) {
+      expect(r.nextAt, r.day).not.toBeNull();
+      expect(r.placesOnFoot, r.day).toBe(r.walked < 75 ? 0 : Math.floor((r.walked - 75) / 150) + 1);
+    }
+    expect(aheadOfDan(facts)).toEqual([]);
+    expect(outOfOrder(facts)).toEqual([]);
+  }, 60_000);
+});
+
 describe('Keys kept for later never pile up while a niche could open (D-129 review)', () => {
   it('two and three hours a day with repeating jobs: a kept Key waits only while no niche can be opened', () => {
     for (const h of [2, 3]) {
@@ -107,31 +119,36 @@ describe('Keys kept for later never pile up while a niche could open (D-129 revi
 
 describe('Keys open only the niches; the road opens its own rows on the way (D-129)', () => {
   const { facts } = heavy(14, 8);
-  it('a road row that opened on the way to a place shows on that place\'s arrival, with no Key\'s words', () => {
-    /* one job a day besides the repeating ones: the minutes run ahead of the steps, so rows open on the way */
-    let shown = 0;
+  it('a story bit that played on the way to a place shows on that place\'s arrival, with its record, and no Key\'s words', () => {
+    /* one job a day besides the repeating ones: the minutes run ahead of the story bits, so they play on the way */
+    let shown = 0, roadRows = 0, withRecords = 0;
     for (let i = 0; i < facts.length; i++) {
       const f = facts[i];
-      if (f.type !== 'sealOpened' || f.how !== 'road') continue;
-      const x = S.sealOf(s, f.seal)!;
-      const played = facts[i + 1 + facts.slice(i + 1).findIndex(g => g.type === 'beatPlayed')] as FactOf<'beatPlayed'>;
-      if (x.arrival || played.job !== undefined) continue;
-      /* a row that brings a record keeps its own step, where the record is read */
-      expect(!!(x.carries?.records?.length || (x.beat && S.beatOf(s, x.beat)!.carries?.records?.length)), f.seal).toBe(false);
-      /* opened on the way: the next arrival is a place, and shows the row's line and its guesses */
+      if (f.type !== 'beatPlayed' || f.job !== undefined || f.id === 'passage') continue;
+      const b = S.beatOf(s, f.id), x = S.sealOf(s, f.id) ?? (b?.kind === 'stepKey' ? S.sealOf(s, b.seal!) : undefined);
+      if (b?.kind !== 'step' && !(x && S.onRoad(s, x.id))) continue;   /* a Key's niche on the floor or a kept Key: not this */
+      if (x && !facts.some(g => g.type === 'sealOpened' && g.seal === x.id && g.how === 'road')) continue;
+      /* played on the way: the next arrival is a place, and shows the bit's line, its records and its guesses */
       const arr = facts.slice(i).find((g): g is FactOf<'arrived'> => g.type === 'arrived')!;
-      expect(arr.kind, f.seal).toBe('place');
+      expect(arr.kind, f.id).toBe('place');
       const upTo = facts.findIndex(g => g.type === 'seen' && g.what === 'arrival' && g.ref === arr.seq);
       const a = see(facts.slice(0, upTo), C, arr.at).arrival!;
-      expect(a.seq, f.seal).toBe(arr.seq);
-      const line = x.beat ? S.beatOf(s, x.beat)!.line : x.line;
-      expect(a.way.includes(line!), f.seal).toBe(true);
-      expect(a.opened.includes(line!), f.seal).toBe(false);
-      for (const m of [...(x.carries?.guess ?? []), ...(x.beat ? S.beatOf(s, x.beat)!.carries?.guess ?? [] : [])])
-        if (S.markOf(s, m)?.confirmedBy !== arr.id) expect(a.guess.includes(m), `${f.seal} ${m}`).toBe(true);
-      shown++;
+      expect(a.seq, f.id).toBe(arr.seq);
+      const line = b?.line ?? x?.line;
+      const w = a.way.find(v => v.beat === f.id);
+      expect(!!w && w.line === line, f.id).toBe(true);
+      expect(a.opened.includes(line!), f.id).toBe(false);
+      const recs = [...(x?.carries?.records ?? []), ...(b?.carries?.records ?? [])];
+      for (const r of recs) expect(w!.records.includes(r), `${f.id} ${r}`).toBe(true);
+      for (const m of [...(x?.carries?.guess ?? []), ...(b?.carries?.guess ?? [])])
+        if (S.markOf(s, m)?.confirmedBy !== arr.id) expect(a.guess.includes(m), `${f.id} ${m}`).toBe(true);
+      /* a bit with a small choice offers it here */
+      if (b?.choice) expect(w!.choice, f.id).toEqual(b.choice);
+      shown++; if (x) roadRows++; if (recs.length) withRecords++;
     }
     expect(shown).toBeGreaterThan(0);
+    expect(roadRows).toBeGreaterThan(0);
+    expect(withRecords).toBeGreaterThan(0);
   }, 60_000);
   it('every row a Key opened is a niche, and Keys still open some; their return says a Key', () => {
     const byKey = opened(facts).filter(f => f.how !== 'road');

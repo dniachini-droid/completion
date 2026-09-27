@@ -359,10 +359,14 @@ function gifts(w: W, c: Content, at: Moment, day: string) {
       const next = S.nextPlace(c.story, st, push);
       if (!next) {
         if (storyClock(w, c, at, day)) continue;
-        /* a road row in its turn that stands between Dan and a place he has walked to opens on the way (D-129) */
+        /* story bits that stand between Dan and a place he has walked to play on the way: a long day never holds a
+           place back (Dan, D-129) */
         const way = S.onTheWay(c.story, st);
         if (!way) return n;
-        for (const x of way) openSeal(w, c, x, at, day, undefined, true);
+        for (const b of way) {
+          if (b.kind === 'stepKey') openSeal(w, c, S.sealOf(c.story, b.seal!)!, at, day, undefined, true);
+          else { w.put({ type: 'beatPlayed', id: b.id }, at, day); show(w, c, b.carries?.records, at, day); }
+        }
         continue;
       }
       arrive(w, c, next, 'foot', at, day); n++;
@@ -1015,8 +1019,9 @@ export interface Arrival {
   /** A word cut in four taps: one line per tap. */
   taps?: string[];
   choice?: [string, string];
-  /** The lines of the road's rows that opened on the way here (D-129): no Key, so no Key's words. */
-  way: string[];
+  /** The story bits that played on the way here (D-129): each one's line, beat (for the guesses it settles) and records.
+      No Key's words. */
+  way: { beat: string; line: string; records: string[]; choice?: [string, string] }[];
   /** Records this place brought (a choice opens them to read). */
   records: string[];
   /** Marks offered for a guess here. */
@@ -1138,23 +1143,22 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
         keyed.push(...(x?.carries?.guess ?? []), ...(x?.beat ? S.beatOf(c.story, x.beat)?.carries?.guess ?? [] : []));
       }
     }
-    /* the road's rows opened on the way here, just before it: their lines, and the guesses they bring (D-129) */
-    const way: string[] = [];
+    /* the story bits that played on the way here, just before it: their lines, records and guesses (D-129) */
+    const way: Arrival['way'] = [];
     for (let i = all.findIndex(g => g.seq === f.seq) - 1; i >= 0; i--) {
       const g = all[i];
       if (g.type === 'recordShown' || g.type === 'storyWeekBegan' || (g.type === 'sealOpened' && g.how === 'road' && S.sealOf(c.story, g.seal)?.arrival === b.id)) continue;
+      if (g.type !== 'beatPlayed' || g.job !== undefined || g.id === 'passage') break;
       let j = i - 1;
       while (all[j]?.type === 'recordShown') j--;
       const o = all[j];
-      if (g.type === 'beatPlayed' && g.job === undefined && o?.type === 'sealOpened' && o.how === 'road'
-        && (S.sealOf(c.story, o.seal)?.beat ?? o.seal) === g.id) {
-        const x = S.sealOf(c.story, o.seal), bx = x?.beat ? S.beatOf(c.story, x.beat) : undefined;
-        const line = bx ? bx.line : x?.line;
-        if (line) way.unshift(line);
-        keyed.push(...(x?.carries?.guess ?? []), ...(bx?.carries?.guess ?? []));
-        i = j; continue;
-      }
-      break;
+      const road = o?.type === 'sealOpened' && o.how === 'road' && (S.sealOf(c.story, o.seal)?.beat ?? o.seal) === g.id ? S.sealOf(c.story, o.seal) : undefined;
+      const bx = S.beatOf(c.story, g.id);
+      if (!road && bx?.kind !== 'step') break;
+      const line = bx?.line ?? road?.line;
+      if (line) way.unshift({ beat: g.id, line, records: [...(road?.carries?.records ?? []), ...(bx?.carries?.records ?? [])], ...(bx?.choice ? { choice: bx.choice } : {}) });
+      keyed.push(...(road?.carries?.guess ?? []), ...(bx?.carries?.guess ?? []));
+      if (road) i = j;
     }
     const guess = [...new Set([...(b.carries?.guess ?? []), ...carried, ...keyed])].filter(m => S.markOf(c.story, m)?.confirmedBy !== b.id);
     return { seq: f.seq, kind: 'place', opened, way, id: b.id, name: b.name ?? '', line: b.line ?? '', taps: b.taps, choice: b.choice,
@@ -1277,7 +1281,9 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   const here: Here = lastPlace
     ? { id: lastPlace.id, name: lastPlace.name ?? stretch.name, line: lastPlace.line ?? '', stretch: st.stretch, painting: paintingOf(lastPlace.id, st.stretch) }
     : { id: null, name: stretch.name, line: opening?.line ?? '', stretch: st.stretch, painting: STAND_IN[st.stretch] };
-  const w = walked(facts), nextBeat = S.nextPlace(c.story, st, pushOn(facts, day)), nextAt = nextBeat ? S.nextPlaceAt(st) : null;
+  const w = walked(facts), nextBeat = S.nextPlace(c.story, st, pushOn(facts, day)),
+    /* a place the story bits on the way will open is still the next place (D-129) */
+    nextAt = nextBeat || S.placeAhead(c.story, st) ? S.nextPlaceAt(st) : null;
   const view = S.inView(c.story, st);
 
   /* slice 4: tonight, the morning after, the welcome back, the daybook's new page, the deep push */
