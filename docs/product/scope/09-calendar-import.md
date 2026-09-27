@@ -29,7 +29,7 @@ The review called this "the single biggest step from blind to credible". Today t
 ## 4. Native work and Apple permissions
 - **A small plugin of the app's own** (`app/ios/App/App/CalendarPlugin.swift`, like `SavePlugin.swift`). It asks for access, lists calendars, reads events in a date range and reports changes (the `EKEventStoreChanged` notice). EventKit expands repeating events itself.
 - **Info.plist:** `NSCalendarsFullAccessUsageDescription`. From iOS 17, reading needs *full* access, because "add only" access cannot read. No entitlement and no new extension target are needed.
-- **The web link** has no calendar. Tests use made-up events.
+- **Tests** use made-up events; the real calendar can only be proved on the phone.
 - **Only provable on the phone:** the permission prompt, a Google calendar appearing, how quickly a change made in Google reaches the phone (iOS syncs it on its own schedule), and all-day events and time zones.
 - **Docs to update:** `SECURITY_PRIVACY.md` says "no calendar permission".
 
