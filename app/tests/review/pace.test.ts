@@ -8,6 +8,7 @@ import { act, see, settle, type Command } from '../../src/core/game';
 import * as S from '../../src/core/story';
 import type { Fact } from '../../src/core/types';
 import { content as C } from '../../src/content/world';
+import { env } from './node';
 
 const kindOf = (id: string) => id.startsWith('seal-') ? 'seal' : id.startsWith('mk-') ? 'mark' : id.startsWith('fd-') ? 'find' : (S.beatOf(C.story, id)?.kind ?? 'other');
 /** What the story waits on: this week's and next week's unplayed places with their unmet reqs, and unplayed steps. */
@@ -66,7 +67,7 @@ function heavy(days: number, hours: number, rhythmsToo = true) {
   return { rows, facts };
 }
 
-describe('pace: a heavy worker and the calendar', () => {
+describe.skipIf(!env.REVIEW_SLOW)('pace: a heavy worker and the calendar', () => {
   it('records how far eight hours a day for three weeks gets, and what waits (report only)', () => {
     const { rows } = heavy(21, 8);
     const lines = rows.map(r => `${r.day} storyWeek ${r.storyWeek} walked ${r.walked} next ${r.nextAt ?? 'none'} onFoot ${r.placesOnFoot} keysThisWeek ${r.keysThisWeek} held ${r.held} waitingOnKey ${r.keyRowsWaiting.join(',') || '-'} | ${r.why}`);

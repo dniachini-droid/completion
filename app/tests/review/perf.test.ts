@@ -8,7 +8,7 @@ import { see, settle } from '../../src/core/game';
 import { content as C } from '../../src/content/world';
 import { sim } from '../rules/sim';
 
-it('see() on 1, 3 and 6 months of normal play (report)', () => {
+it.skipIf(!env.REVIEW_SLOW)('see() on 1, 3 and 6 months of normal play (report)', () => {
   const out: string[] = [];
   for (const weeks of [4, 13, 26]) {
     const p = sim('2026-09-28T08:00:00+01:00', m => m.candidates![0], 'kept');

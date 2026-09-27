@@ -11,12 +11,14 @@ const R = await L.start({ w: +w, h: +h, at: '2026-09-30T08:30:00+01:00', browser
 const foot = name => R.page.locator('.foot').getByRole('button', { name, exact: true });
 const cls = () => R.page.evaluate(() => [...document.querySelectorAll('.phone > *')].map(e => String(e.className?.baseVal ?? e.className).split(' ')[0]).filter(Boolean).slice(0, 5).join('|'));
 const visited = new Map();
+/* unique names: two done jobs with one name crash the week's Daybook page (same-name.mjs), which would hide the rest */
+let runs = 0;
 
 /* a long run on the next job: n delves of 60 minutes, run to its end */
 async function longRun(n) {
   await L.toToday(R);
   await L.tap(R, R.page.locator('.rows button.row.else'), 'Something else…');
-  await R.page.locator('form.new input').fill(`Run ${visited.size}`); await L.tap(R, R.page.locator('form.new button'), 'Delve on it');
+  await R.page.locator('form.new input').fill(`Run ${++runs}`); await L.tap(R, R.page.locator('form.new button'), 'Delve on it');
   await L.tap(R, R.page.getByRole('button', { name: '60 minutes', exact: true }), '60');
   for (let i = 1; i < n; i++) await L.tap(R, R.page.getByRole('button', { name: 'One more delve', exact: true }), '+', 300);
   await L.tap(R, 'Begin');

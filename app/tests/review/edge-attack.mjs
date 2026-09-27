@@ -96,6 +96,24 @@ await S(4, 'full list', async R => {
   await L.audit(R, '#4 full list');
 });
 
+/* 5. the same end reached while typing, with nothing deleted: is it shown on the way back to Today (D-120 point 3)? */
+await S(5, 'end while typing', async R => {
+  await L.tap(R, foot(R, 'Satchel'), 'Satchel'); await L.putSatchel(R, 'Victor');
+  await L.tap(R, L.item(R, 'Victor').locator('button.row'), 'Victor');
+  await L.tap(R, R.page.getByRole('button', { name: '5 minutes', exact: true }), '5'); await L.tap(R, 'Begin');
+  await L.tap(R, R.page.locator('button.home'), 'Today'); await L.tap(R, foot(R, 'Satchel'), 'Satchel');
+  await R.page.locator('form.new input').click(); await R.page.keyboard.type('typing');
+  await L.ff(R, 6 * 60_000); await R.page.clock.runFor(1500);
+  const seen = [await L.screen(R)];
+  await L.tap(R, R.page.locator('button.home'), 'the arrow'); seen.push(await L.screen(R));
+  await L.tap(R, foot(R, 'Week'), 'Week'); await L.tap(R, R.page.locator('button.home'), 'the arrow'); seen.push(await L.screen(R));
+  await L.ff(R, 3 * 3600_000); seen.push(await L.screen(R));
+  R.notes.push(`#5 end reached while typing in the Satchel; then: ${seen.join(' → ')}`);
+  if (!seen.slice(1).includes('delve')) R.fails.push('#5 a delve end reached while typing is never shown on the way back to Today (arrow, Week, 3 hours)');
+  await L.reload(R);
+  if ((await L.screen(R)) === 'delve') R.fails.push('#5 …and it appears, stale, at the next cold open');
+});
+
 await browser.close();
 console.log(`edge-attack ${w}x${h}: ${total.fails} problem(s), ${total.errors} page error(s)`);
 process.exit(total.errors ? 2 : total.fails ? 1 : 0);
