@@ -1368,3 +1368,23 @@
 - **Not decided here (Dan's):** the story still paced by Keys at 5 a calendar week (the review's finding 2): options in `docs/reviews/OVERVIEW.md`.
 - **Consequences:** a fresh adversarial review of the fixes found a day-assignment slip in the clock fix and an old-save case in the cross-week guard, both fixed with tests. Merging and the TestFlight send wait for Dan's go.
 - **Reversible:** Yes.
+
+## D-129 — The road never waits on a Key; a Key opens only the niches (Dan, option C)
+- **Date:** 2026-09-28
+- **Context:** The break-it review (finding 2, `docs/reviews/BREAK-IT.md`) found the story still held to the calendar through Keys. Many places and steps needed a sealed row opened first, and Keys come only from keeping up repeating jobs, at most 5 a calendar week. In its simulation, 8 hours a day for three weeks got no further than 3 hours a day (story week 6 both), and 19 of 21 days ended with no next place in reach. This went against D-123 (one continuous story, unlocked by work). Dan chose **option C** of `docs/reviews/OVERVIEW.md` (decision 2).
+- **Decision:**
+  1. **The road.** The sealed rows the story's main line passes through are opened by the road, with no Key. That means the places a Key used to play, each week's new symbols, and any row that a later place, step, word or symbol depends on. A place comes 150 minutes on, like any other place. A row's step plays after a finished job, like any other step. If Dan has already walked far enough for the next place and one of these rows is all that stands in the way, the row opens on the way and shows on that place's arrival screen. The rows keep the order Keys opened them in (story week, then row), so nothing comes before what it depends on.
+  2. **The niches.** Every other sealed row (records, objects, lines and side steps) opens **only with a Key**, as before: in the story's order, wherever Dan has been. A Key never opens a row of the road.
+  3. **Keys are unchanged.** They come only from keeping up repeating jobs: at most 5 a calendar week, plus the weekly floor, and only sessions of 5 minutes or more count (rule 10). A Key kept for later opens a niche when Dan arrives in the same part of the Site, never one far back along the road.
+  4. **What Dan sees.** A row the road opens is a step or a place like any other. It never says a Key was earned. The map's "sealed" mark and its "earn a Key" hint are only on rows a Key opens.
+  5. **Continuity (rules 5 and 6).** A check of the story found a few rows that later places rely on, or whose words belong to their own week. Those rows now go with the road, recorded in the story data as ordinary requirements. No story line was changed. One place line stops being offered once the thing it describes has opened. The story's truth is unchanged: the story never says what fills a count (the sealed notes record the details).
+  6. **The week close** puts the latest story week's learned lines first, so a niche opened long after its week never pushes them out.
+- **Alternatives:** A (Keys also earned by minutes: more Keys, and trivial work nearer to buying story, rule 10); B (a rhythm's Key counted from its sessions: still tied to rhythms); D (keep it: a heavy worker stalls). A lighter C, putting only the places on the road, left places waiting for symbols and steps that still needed Keys.
+- **Consequences:**
+  - The break-it pace probe (`tests/review/pace.test.ts`, `REVIEW_SLOW=1`) now asserts. At 8 hours a day for 21 days, the story reaches story week 14 with 67 places on foot, all 67 the minutes allow; at 3 hours a day, story week 5. At 8 hours a day, 5 of 21 days end with no next place in reach, against the review's 19. Each of those 5 waits for a story step (one plays per finished job, D-123), never for a Key. The probe finishes only about three jobs a day, so a day with more separate jobs does better.
+  - With no repeating jobs at all, the story goes as far as with them, given the same number of finished jobs.
+  - A light worker now reaches the places a Key used to bring by walking to them, 150 minutes each, like every other place (D-123's "a new location every 150 minutes"). In the probe, 3 hours a day ends in story week 5, where Keys used to bring it to week 6.
+  - Keys still open story: records, objects and side steps, about 40 niches in the first 14 weeks.
+  - New rule tests are in `tests/rules/road.test.ts`. The existing continuity tests pass unchanged: none of them encoded the old gating.
+  - A save waiting on a Key place reaches it on foot with the next minutes. If the minutes are already walked, several places may come at once, one time only.
+- **Reversible:** Yes (`roadSeals` in `core/story.ts`).

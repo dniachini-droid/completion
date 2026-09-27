@@ -125,7 +125,7 @@ export const seals: Seal[] = [
   // NOTE: rec-x-boy is not in MVP_CONTENT §4 (run-ahead); the id follows LIVES' X-boy.
   { id: 'seal-7-3', w: 7, o: 3, where: 'The Stair, the rail’s recess', stretch: 'st-stair', beat: 'b-7.3',
     plain: true },
-  { id: 'seal-7-4', w: 7, o: 4, where: 'The square gallery, a cache', stretch: 'st-square', beat: 'b-7.4',
+  { id: 'seal-7-4', w: 7, o: 4, road: true, where: 'The square gallery, a cache', stretch: 'st-square', beat: 'b-7.4',
     carries: { records: ['rec-x-wages'] } },
   // NOTE: rec-x-wages is not in MVP_CONTENT §4 (run-ahead); the id follows LIVES §12 "the wages".
   { id: 'seal-7-5', w: 7, o: 5, where: 'The Lamp Hall, the great door', stretch: 'st-hall', arrival: 'b-7.C',

@@ -78,6 +78,7 @@
         <Words {look} length={(a.line?.length ?? 0) + (a.look?.length ?? 0)}>
           <span class="soft on-scene">{a.line}</span>
           {#if a.look}<span class="soft on-scene look">{a.look}</span>{/if}
+          {#each a.way as line}<p class="soft on-scene look">{line}</p>{/each}
           {#each a.opened as line}<p class="soft on-scene look">{t('arrive.keyOpens')} {line}</p>{/each}
         </Words>
       </div>

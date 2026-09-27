@@ -273,13 +273,17 @@ function show(w: W, c: Content, ids: string[] | undefined, at: Moment, day: stri
   for (const id of ids ?? []) if (!st.records.includes(id)) w.put({ type: 'recordShown', id }, at, day);
 }
 function arrive(w: W, c: Content, b: Beat, how: 'foot' | 'key', at: Moment, day: string) {
+  /* a place a Key used to play, reached on foot: its row opens with it, with no Key (D-129) */
+  const x = how === 'foot' && b.seal ? S.sealOf(c.story, b.seal) : undefined;
+  if (x && !S.storyState(w.all, c.story).opened.has(x.id)) { w.put({ type: 'sealOpened', seal: x.id, how: 'road' }, at, day); show(w, c, x.carries?.records, at, day); }
   w.put({ type: 'arrived', kind: 'place', id: b.id, how }, at, day);
   show(w, c, b.carries?.records, at, day);
-  /* a Key kept for later opens what is sealed here, on the arrival itself (D-079) */
+  /* a Key kept for later opens what is sealed here, on the arrival itself (D-079): only here, so a niche far back along
+     the road never shows under a place it isn't in (D-129) */
   let st = S.storyState(w.all, c.story);
   while (st.held > 0) {
     const seal = S.nextSeal(c.story, st);
-    if (!seal || seal.arrival) break;
+    if (!seal || seal.arrival || seal.stretch !== b.stretch) break;
     w.put({ type: 'keyUsed' }, at, day);
     openSeal(w, c, seal, at, day);
     st = S.storyState(w.all, c.story);
@@ -324,8 +328,8 @@ function landKey(w: W, c: Content, rhythm: string, at: Moment, day: string, job?
   if (!seal) { w.put({ type: 'keyHeld' }, at, day); return null; }
   return openSeal(w, c, seal, at, day, job);
 }
-function openSeal(w: W, c: Content, seal: Seal, at: Moment, day: string, job?: number): Seal {
-  w.put({ type: 'sealOpened', seal: seal.id }, at, day);
+function openSeal(w: W, c: Content, seal: Seal, at: Moment, day: string, job?: number, road = false): Seal {
+  w.put({ type: 'sealOpened', seal: seal.id, ...(road ? { how: 'road' as const } : {}) }, at, day);
   show(w, c, seal.carries?.records, at, day);
   if (seal.arrival) { const b = S.beatOf(c.story, seal.arrival); if (b) arrive(w, c, b, 'key', at, day); }
   else w.put({ type: 'beatPlayed', id: seal.beat ?? seal.id, ...(job ? { job } : {}) }, at, day);
@@ -353,7 +357,14 @@ function gifts(w: W, c: Content, at: Moment, day: string) {
       const st = S.storyState(w.all, c.story);
       if (walked(w.all) < S.nextPlaceAt(st)) return n;
       const next = S.nextPlace(c.story, st, push);
-      if (!next) { if (storyClock(w, c, at, day)) continue; return n; }
+      if (!next) {
+        if (storyClock(w, c, at, day)) continue;
+        /* a road row in its turn that stands between Dan and a place he has walked to opens on the way (D-129) */
+        const way = S.onTheWay(c.story, st);
+        if (!way) return n;
+        for (const x of way) openSeal(w, c, x, at, day, undefined, true);
+        continue;
+      }
       arrive(w, c, next, 'foot', at, day); n++;
     }
   };
@@ -413,6 +424,8 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string) {
     const deep = (n > DAY_SIZE.normal || (called && n >= DAY_SIZE.normal))
       && !ofType(onDay(w.all, day), 'beatPlayed').some(f => S.beatOf(c.story, f.id)?.kind === 'deep') ? S.nextDeep(c.story, st) : null;
     if (deep) { w.put({ type: 'beatPlayed', id: deep.id, job: done.seq }, at, day); show(w, c, deep.carries?.records, at, day); }
+    /* a road row's step opens its sealed thing on the way, with no Key (D-129) */
+    else if (step?.kind === 'stepKey') openSeal(w, c, S.sealOf(c.story, step.seal!)!, at, day, done.seq, true);
     else if (step) { w.put({ type: 'beatPlayed', id: step.id, job: done.seq }, at, day); show(w, c, step.carries?.records, at, day); }
     else { const p = S.nextPassage(c.story, st); if (p) w.put({ type: 'beatPlayed', id: 'passage', passage: p, job: done.seq }, at, day); }
   }
@@ -566,7 +579,9 @@ function weekClose(w: W, c: Content, at: Moment, day: string, storyWeek: number)
   for (const wk of weeks) {
     const st = S.storyState(w.all, c.story);
     const before = new Set(ofType(w.all, 'weekClosed').flatMap(f => f.learned));
-    const learned = c.story.learned.filter(l => l.w <= storyWeek && !before.has(l.id) && l.req.every(r => S.met(st, r))).slice(0, 3).map(l => l.id);
+    /* the story's latest first: a niche opened long after its week never pushes out what this week learned (D-129) */
+    const learned = c.story.learned.filter(l => l.w <= storyWeek && !before.has(l.id) && l.req.every(r => S.met(st, r)))
+      .map((l, k) => ({ l, k })).sort((a, b) => b.l.w - a.l.w || a.k - b.k).slice(0, 3).map(({ l }) => l.id);
     const n = playWeek(w.all, wk);
     /* the first close of each month of play: weeks 1, 5, 9, 13… */
     const month = (n - 1) % 4 === 0 ? c.story.soFar[(n - 1) / 4] : undefined;
@@ -987,6 +1002,8 @@ export interface Arrival {
   /** A word cut in four taps: one line per tap. */
   taps?: string[];
   choice?: [string, string];
+  /** The lines of the road's rows that opened on the way here (D-129): no Key, so no Key's words. */
+  way: string[];
   /** Records this place brought (a choice opens them to read). */
   records: string[];
   /** Marks offered for a guess here. */
@@ -1108,14 +1125,33 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
         keyed.push(...(x?.carries?.guess ?? []), ...(x?.beat ? S.beatOf(c.story, x.beat)?.carries?.guess ?? [] : []));
       }
     }
+    /* the road's rows opened on the way here, just before it: their lines, and the guesses they bring (D-129) */
+    const way: string[] = [], wayRecords: string[] = [];
+    for (let i = all.findIndex(g => g.seq === f.seq) - 1; i >= 0; i--) {
+      const g = all[i];
+      if (g.type === 'recordShown' || g.type === 'storyWeekBegan' || (g.type === 'sealOpened' && g.how === 'road' && S.sealOf(c.story, g.seal)?.arrival === b.id)) continue;
+      let j = i - 1;
+      while (all[j]?.type === 'recordShown') j--;
+      const o = all[j];
+      if (g.type === 'beatPlayed' && g.job === undefined && o?.type === 'sealOpened' && o.how === 'road'
+        && (S.sealOf(c.story, o.seal)?.beat ?? o.seal) === g.id) {
+        const x = S.sealOf(c.story, o.seal), bx = x?.beat ? S.beatOf(c.story, x.beat) : undefined;
+        const line = bx ? bx.line : x?.line;
+        if (line) way.unshift(line);
+        wayRecords.unshift(...(x?.carries?.records ?? []), ...(bx?.carries?.records ?? []));
+        keyed.push(...(x?.carries?.guess ?? []), ...(bx?.carries?.guess ?? []));
+        i = j; continue;
+      }
+      break;
+    }
     const guess = [...new Set([...(b.carries?.guess ?? []), ...carried, ...keyed])].filter(m => S.markOf(c.story, m)?.confirmedBy !== b.id);
-    return { seq: f.seq, kind: 'place', opened, id: b.id, name: b.name ?? '', line: b.line ?? '', taps: b.taps, choice: b.choice,
-      records: b.carries?.records ?? [], guess, look: null, stretch: b.stretch, painting: paintingOf(b.id, b.stretch), completedDay, byKey: f.how === 'key' };
+    return { seq: f.seq, kind: 'place', opened, way, id: b.id, name: b.name ?? '', line: b.line ?? '', taps: b.taps, choice: b.choice,
+      records: b.choice ? b.carries?.records ?? [] : [...new Set([...(b.carries?.records ?? []), ...wayRecords])], guess, look: null, stretch: b.stretch, painting: paintingOf(b.id, b.stretch), completedDay, byKey: f.how === 'key' };
   }
   const k = c.story.camps.find(x => x.id === f.id)!;
   const find = all.find(g => g.type === 'findGiven' && g.why === 'camp' && g.seq > f.seq && g.seq <= f.seq + 1) as FactOf<'findGiven'> | undefined;
   const look = find ? c.story.finds.find(x => x.id === find.id)?.line ?? null : 'line' in k.look ? k.look.line : null;
-  return { seq: f.seq, kind: 'camp', opened: [], id: k.id, name: k.name, line: k.line, records: [], guess: [], look, stretch: k.stretch, painting: paintingOf(k.id, k.stretch), completedDay, byKey: false };
+  return { seq: f.seq, kind: 'camp', opened: [], way: [], id: k.id, name: k.name, line: k.line, records: [], guess: [], look, stretch: k.stretch, painting: paintingOf(k.id, k.stretch), completedDay, byKey: false };
 }
 
 /** What a job's return (a jobDone fact) shows. A guess it brings moves to the place the same job reached (D-077). */
@@ -1138,12 +1174,14 @@ function rawReturn(c: Content, facts: Fact[], doneSeq: number): Return {
   if (!beat) return { beat: null, line: '', key: false, guess: [], records: [], finds };
   if (beat.id === 'passage') return { beat: null, line: c.story.passages.find(p => p.id === beat.passage)?.line ?? '', key: false, guess: [], records: [], finds };
   const seal = S.sealOf(c.story, beat.id);
-  if (seal) return { beat: seal.id, line: seal.line ?? '', key: true, guess: seal.carries?.guess ?? [], records: seal.carries?.records ?? [], finds };
+  if (seal) return { beat: seal.id, line: seal.line ?? '', key: !facts.some(f => f.type === 'sealOpened' && f.seal === seal.id && f.how === 'road'), guess: seal.carries?.guess ?? [], records: seal.carries?.records ?? [], finds };
   const b = S.beatOf(c.story, beat.id)!;
   const viaSeal = b.seal ? S.sealOf(c.story, b.seal) : undefined;
   const guess = [...new Set([...(b.carries?.guess ?? []), ...(viaSeal?.carries?.guess ?? [])])];
   const part = b.carries?.partial && b.carries.seen?.[0] ? { el: b.carries.partial, mark: b.carries.seen[0] } : undefined;
-  return { beat: b.id, line: b.line ?? '', key: b.kind === 'stepKey', guess, choice: b.choice, records: [...(b.carries?.records ?? []), ...(viaSeal?.carries?.records ?? [])], finds, ...(part ? { part } : {}) };
+  /* a Key's return says so; a row the road opened is a step like any other (D-129) */
+  const byRoad = facts.some(f => f.type === 'sealOpened' && f.seal === b.seal && f.how === 'road');
+  return { beat: b.id, line: b.line ?? '', key: b.kind === 'stepKey' && !byRoad, guess, choice: b.choice, records: [...(b.carries?.records ?? []), ...(viaSeal?.carries?.records ?? [])], finds, ...(part ? { part } : {}) };
 }
 
 export function see(facts: Fact[], base: Content, now: Moment): View {

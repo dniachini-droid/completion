@@ -102,7 +102,8 @@ export type FactBody =
   /** A Key earned while nothing Dan has reached is sealed: kept, and used on the next arrival that has one (D-079). */
   | { type: 'keyHeld' }
   | { type: 'keyUsed' }
-  | { type: 'sealOpened'; seal: string }
+  /** `road`: opened by the road on foot, with no Key (D-129). */
+  | { type: 'sealOpened'; seal: string; how?: 'road' }
   | { type: 'findGiven'; id: string; why: 'avoided' | 'switching' | 'chamber' | 'camp' | 'surplus' | 'morning' | 'dated'; job?: number }
   | { type: 'recordShown'; id: string }
   | { type: 'storyWeekBegan'; w: number }

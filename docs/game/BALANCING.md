@@ -20,8 +20,9 @@ There are **two clocks**. **Time moves the Site:** every real minute moves Dan, 
 
 ## 2. The story clock
 - The story is written in **story weeks**. A story week holds about **5 arrivals, 2–3 record fragments, 3–5 Key openings and 1–2 signs**; words about one a month after the first in week 2–3 (D-013).
-- **One continuous story, no calendar wait (Dan, D-123; was at most one story week per calendar week).** A new place every 150 minutes walked, as many a day as Dan walks. The story's own order still holds (a word to cut, a door a Key opens, a story step on a finished job); nothing waits for a new calendar week or a day's limit. When the written story runs out, more is written. _(Before: **At most one story week per calendar week.** A story week lasts as long as it takes to deliver its beats: a thin week stretches it into the next, and a week away pauses it (the world waits; P8). A big week can't start the next one early.)_
+- **One continuous story, no calendar wait (Dan, D-123; was at most one story week per calendar week).** A new place every 150 minutes walked, as many a day as Dan walks. The story's own order still holds (a word to cut, a story step on a finished job); since D-129 a Key never holds the road; nothing waits for a new calendar week or a day's limit. When the written story runs out, more is written. _(Before: **At most one story week per calendar week.** A story week lasts as long as it takes to deliver its beats: a thin week stretches it into the next, and a week away pauses it (the world waits; P8). A big week can't start the next one early.)_
 - Beats arrive **on real action**, in order: a story line on a job's return, an arrival on day complete, a sealed thing when a Key lands. Minutes move the map; they don't hurry the story.
+- **The road never waits on a Key (Dan, D-129, option C).** The sealed rows the story's main line runs through (the places a Key used to play, each week's sign, and any row a later place, step or word needs) open on the road, in the order Keys opened them, with no Key: a place 150 minutes on, a step on a finished job. Keys open only the **niches** (records, objects, lines, side steps), in the story's order, as many as Dan earns.
 - **Places may run ahead by up to one story week** (the deep push's rule). A record found early is seen, and reads in its turn. Signs never come early; a **partial sign** at most, and only where one is written (D-013).
 - Past that, extra effort goes to the **open route** (section 5).
 
@@ -30,7 +31,7 @@ There are **two clocks**. **Time moves the Site:** every real minute moves Dan, 
 |---|---|---|
 | Useful Keys a week (the bounded supply) | **5** | About 250 sealed things are written for the year (≈ 5 a week). Adding rhythms never raises it (D-047 invariant) |
 | How they're earned | each rhythm met = 1 Key, the moment it's met, until the week's 5 are used | Dan's six rhythms meet about 5 in a full week (the tank clean is fortnightly), so an honest full week reaches the supply |
-| Where a Key goes | to the next **story** count in view first, then a side count | the story's pace comes first (D-035, D-043 F6) |
+| Where a Key goes | to the next niche in view (a story one first, then a plain one); never a row of the road, which opens on foot (D-129) | the story's pace comes first (D-035, D-043 F6); since D-129 it no longer waits on Keys |
 | A rhythm met after the supply is used | **one find** (at most one a week) | effort is never turned away (D-039) without adding Keys |
 | **The weekly floor** | a week with **at least one day complete** brings **at least 2 Keys**; the week close opens the rest | keeps the story moving through a bad week and protects the first word in week 2–3 (D-043) |
 | A new rhythm or changed number | counts from its next full week | D-043 F7 |
