@@ -51,7 +51,7 @@
       if (more && to === 'today') { go('arrival', more.seq); return; }
     }
     /* Keep going: Dan chooses what next (D-077) */
-    if (to === 'set') go('choose');
+    if (to === 'set') go('satchel');
     else go('today');
   }
 </script>

@@ -33,28 +33,30 @@ const testRow = page.locator('.rows button.row', { hasText: 'Test' }).first();
 if (!(await testRow.count())) fails.push('Test, added on today in the Week, is not on Today');
 else if (/one-off|about/i.test(await testRow.innerText())) fails.push('Test is shown as a job without a timer');
 
-/* "+ Add", with the keyboard up */
+/* "+ Add" opens the Satchel's one box, ready to type in, with the keyboard up (D-131) */
 await page.locator('.foot .add').click();
 await page.evaluate(k => window.__keyboard(k), KB); await page.clock.runFor(600);
 await page.keyboard.type('milk');
 const box = await page.evaluate(() => {
-  const ta = document.querySelector('.capture textarea'), r = ta.getBoundingClientRect(), phone = document.querySelector('.phone').getBoundingClientRect();
+  const ta = document.querySelector('.satchel-add input'), r = ta.getBoundingClientRect(), phone = document.querySelector('.phone').getBoundingClientRect();
   const pts = [[r.left + 6, r.top + 6], [r.right - 6, r.top + 6], [r.left + r.width / 2, r.top + r.height / 2], [r.left + 6, r.bottom - 6], [r.right - 6, r.bottom - 6]];
-  return { top: r.top, bottom: r.bottom, phone: phone.height, covered: pts.filter(([x, y]) => document.elementFromPoint(x, y) !== ta).length,
-    words: [...document.querySelectorAll('.next')].length, focused: document.activeElement === ta };
+  const later = [...document.querySelectorAll('.satchel-add button')].pop().getBoundingClientRect();
+  return { top: r.top, bottom: Math.max(r.bottom, later.bottom), phone: phone.height, covered: pts.filter(([x, y]) => document.elementFromPoint(x, y) !== ta).length,
+    focused: document.activeElement === ta };
 });
 if (!box.focused) fails.push('the box is not the one being typed in');
-if (box.bottom > H - KB || box.top < 0) fails.push(`the box is not wholly above the keyboard (${Math.round(box.top)}–${Math.round(box.bottom)}, keyboard from ${H - KB})`);
+if (box.bottom > H - KB || box.top < 0) fails.push(`the box and its buttons are not wholly above the keyboard (${Math.round(box.top)}–${Math.round(box.bottom)}, keyboard from ${H - KB})`);
 if (box.covered) fails.push(`something is drawn over the box at ${box.covered} of 5 points`);
-if (box.words) fails.push('the next job\'s words are still shown under the box');
 if (Math.abs(box.phone - (H - KB)) > 1) fails.push(`the phone frame is ${box.phone}px, not the ${H - KB}px above the keyboard`);
 await page.keyboard.press('Enter'); await page.clock.runFor(300);
 await page.evaluate(() => { document.activeElement?.blur(); window.__keyboard(0); }); await page.clock.runFor(800);
 const after = await page.evaluate(() => ({ phone: document.querySelector('.phone').getBoundingClientRect().height, y: scrollY, vvh: document.documentElement.style.getPropertyValue('--vvh') }));
 if (Math.abs(after.phone - H) > 1 || after.y || after.vvh) fails.push(`the page is not back in place after the keyboard (${JSON.stringify(after)})`);
 
-/* what was put in with "+ Add" is on today (D-117) */
-if (!(await page.locator('.rows button.row', { hasText: 'milk' }).count())) fails.push('"milk", put in with + Add, is not on Today');
+/* Return saves it for later: it is in the Satchel's "No day yet", not on Today (D-131) */
+if (!(await page.locator('.item button.row', { hasText: 'milk' }).count())) fails.push('"milk", put in with + Add, is not in the Satchel');
+await page.locator('.home').click(); await page.clock.runFor(1500);
+if (await page.locator('.rows button.row', { hasText: 'milk' }).count()) fails.push('"milk", saved for later, is on Today too');
 
 /* a tap on Test opens its set-up, Begin starts its delve (D-124); finished and said done, it is done (Dan, D-117) */
 await page.locator('.rows button.row', { hasText: 'Test' }).first().click(); await page.clock.runFor(1500);

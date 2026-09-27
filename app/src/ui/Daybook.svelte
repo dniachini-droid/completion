@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { doneFacts } from '../core/done';
   import Deleted from './Deleted.svelte';
   /* The daybook: the week close (TOOLS §6; BALANCING §7; mock-up daybook.html). One short page a week, written from real
      completions: what the week held, where it went, up to three things learned, the month's "so far" on its first page,
@@ -31,7 +32,7 @@
     const n = new Map<string, number>();
     /* a deleted job, or a deleted record, leaves the page too (D-125) */
     const hidden = hiddenDone(game.facts);
-    for (const f of game.facts) if (f.type === 'jobDone' && calendarWeek(f.day) === page.week && game.job(f.job) && !hidden.has(`${f.job}|${f.day}`)) n.set(f.job, (n.get(f.job) ?? 0) + 1);
+    for (const f of doneFacts(game.facts)) if (calendarWeek(f.day) === page.week && game.job(f.job) && !hidden.has(`${f.job}|${f.day}`)) n.set(f.job, (n.get(f.job) ?? 0) + 1);
     return [...n].map(([job, k]) => ({ id: job, name: game.job(job)!.name, k }));
   });
   const places = $derived(page ? game.facts.filter((f): f is FactOf<'arrived'> => f.type === 'arrived' && f.kind === 'place' && calendarWeek(f.day) === page.week)
@@ -61,7 +62,7 @@
   const sweep = $state(sweepOf(game.facts, game.view.day));
   let swept = $state(0);
   const coming = $derived(step === 2 ? comingUp(v.content, game.facts, v.day) : []);
-  const pickable = $derived(step === 3 ? v.content.jobs.filter(j => !j.stopped && !(game.facts.some(f => f.type === 'jobDone' && f.job === j.id) && !v.content.rhythms.some(r => r.job === j.id))) : []);
+  const pickable = $derived(step === 3 ? v.content.jobs.filter(j => !j.stopped && !(doneFacts(game.facts).some(f => f.job === j.id) && !v.content.rhythms.some(r => r.job === j.id))) : []);
   /* the page is marked read at the end, not here: marking it read ends the offer this look-ahead lives in */
   function lookAhead() { step = sweep.length ? 1 : 2; }
   function sweepAnswer(what: 'keep' | 'letGo') {

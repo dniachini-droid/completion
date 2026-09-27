@@ -226,15 +226,18 @@ export const copy = {
   'today.else': 'Something else…',
   'today.clear': 'Nothing more is on today’s list.',
   'today.clear.say': 'Choose something else to delve on, or rest. The road will keep.',
-  'choose.label': 'Choose a delve',
-  'choose.say': 'Pick one, or name something new.',
-  'choose.today': 'On today’s list',
-  'choose.other': 'Your other jobs',
-  'choose.all': 'Your jobs',
-  'choose.new': 'Something else',
-  'choose.new.hint': 'Name it',
-  'choose.new.go': 'Delve on it',
-  'choose.aside': 'set aside today',
+  /* the day's finish line is its first 3 hours; the rest waits below (D-131) */
+  'today.ifTime': 'If there’s time',
+  /* the one job menu (D-131, step 3) */
+  'job.more': 'More…',
+  'week.about.why': '{job} usually takes you about {min}.', 'week.about.set': 'From the minutes set for each job.',
+  'menu.delve': 'Delve', 'menu.edit': 'Edit', 'menu.srEdit': '{job}: edit',
+  /* a done job taken back, to work on it more (D-131) */
+  'row.notDone': 'Not done after all', 'row.srNotDone': '{job}: not done after all',
+  /* Tonight, in the last hour before bed (D-131): both optional, neither ever mentioned if skipped */
+  'tonight.first': 'Tomorrow starts with:', 'tonight.first.none': 'Choose a job', 'tonight.first.label': 'Choose what tomorrow starts with',
+  'tonight.first.planned': 'Planned for tomorrow', 'tonight.first.others': 'Other jobs', 'tonight.first.keep': 'Keep it',
+  'tonight.mind': 'Anything on your mind?', 'tonight.mind.hint': 'One line: it goes in the satchel', 'tonight.mind.put': 'Put in', 'tonight.mind.said': 'In the satchel.',
 
   'camp.bedtime': 'Bedtime',
   'camp.change': 'Change',
@@ -349,15 +352,16 @@ export const copy = {
   /* the satchel (D-126): the jobs with no day yet */
   'nav.satchel': 'Satchel', 'delve.list': 'The list',
   'satchel.label': 'The Satchel',
-  'satchel.say': 'Jobs with no day yet. Delve on one whenever you like.',
-  'satchel.add': 'Put a job in the satchel', 'satchel.add.hint': 'No day needed', 'satchel.put': 'Put in',
-  'satchel.empty': 'Nothing in the satchel. When something comes to mind with no day yet, it goes here.',
+  'satchel.say': 'Every job that isn’t on today. Delve on one whenever you like.',
+  'satchel.add': 'A new job', 'satchel.add.hint': 'A new job', 'satchel.now': 'Delve now', 'satchel.later': 'Save for later',
+  'satchel.saved': '{job}: in the satchel.',
+  'satchel.noDay': 'No day yet', 'satchel.coming': 'Coming up', 'satchel.recurring': 'Recurring jobs',
+  'satchel.recurring.add': 'Add a recurring job', 'satchel.move': '{job}: on {day}. Tap to move it',
+  'satchel.empty': 'Nothing here with no day yet. When something comes to mind, it goes here.',
   'satchel.list': 'List', 'satchel.list.done': 'Close', 'satchel.list.label': 'The list for {job}', 'satchel.list.hint': 'A line at a time', 'satchel.list.full': 'The list is full: take a line out to add another.',
   'satchel.day': 'Put on a day', 'satchel.placed': '{job}: on {day}.',
-  'pick.today': 'today',
-    'today.add': '+ Add', 'today.add.label': 'Add a job to today',
-  'today.add.placeholder': 'Something to do today. Several lines make several.',
-  'today.add.put': 'Put it in', 'today.add.said': 'On today',
+  'pick.today': 'today', 'pick.prev': 'The month before', 'pick.next': 'The next month',
+  'today.add': '+ Add', 'today.add.label': 'Add a job: the satchel’s box',
 
   'month.1': 'January', 'month.2': 'February', 'month.3': 'March', 'month.4': 'April', 'month.5': 'May', 'month.6': 'June',
   'month.7': 'July', 'month.8': 'August', 'month.9': 'September', 'month.10': 'October', 'month.11': 'November', 'month.12': 'December',
@@ -479,4 +483,20 @@ export function weekDates(monday: string): string {
   const a = new Date(`${monday}T00:00:00Z`), b = new Date(a.getTime() + 6 * 864e5);
   const m = (d: Date) => copy[`month.${d.getUTCMonth() + 1}` as CopyKey];
   return a.getUTCMonth() === b.getUTCMonth() ? `${a.getUTCDate()} – ${b.getUTCDate()} ${m(b)}` : `${a.getUTCDate()} ${m(a)} – ${b.getUTCDate()} ${m(b)}`;
+}
+/** "the 1st", "the 31st" (a 31st is the last day of a shorter month) */
+export const dayOrd = (n: number) => n >= 31 ? t('rhythms.lastDay') : `${n}${n % 10 === 1 && n !== 11 ? 'st' : n % 10 === 2 && n !== 12 ? 'nd' : n % 10 === 3 && n !== 13 ? 'rd' : 'th'}`;
+/** "3 March", from "03-03" */
+export const yearWords = (md: string) => new Date(`2000-${md}T00:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', timeZone: 'UTC' });
+/** How often a recurring job comes round: "4 a week", "Thursdays", "every 3 days"… */
+export function oftenWords(r: { days?: number[]; every?: 2; times?: number; everyDays?: number; yearly?: string; monthly?: { day: number } | { nth: number; weekday: number } }): string {
+  if (r.monthly) return 'day' in r.monthly ? t('rhythms.monthDay', { n: dayOrd(r.monthly.day) }) : t('rhythms.monthNth', { nth: t(`rhythms.nth.${r.monthly.nth}` as CopyKey), day: t(`day.${r.monthly.weekday}` as CopyKey) });
+  if (r.yearly) return t('rhythms.yearly', { date: yearWords(r.yearly) });
+  if (r.everyDays) return t('rhythms.everyN', { n: r.everyDays });
+  return r.days ? r.days.map(x => t(`days.plural.${x}` as CopyKey)).join(', ') : r.every === 2 ? t('rhythms.every2') : t('rhythms.nWeek', { n: r.times ?? 1 });
+}
+/** "Thu 2 Oct": a day, short */
+export function dayShort(day: string): string {
+  const d = new Date(`${day}T00:00:00Z`);
+  return `${copy[`days.short.${d.getUTCDay()}` as CopyKey]} ${d.getUTCDate()} ${copy[`month.${d.getUTCMonth() + 1}` as CopyKey].slice(0, 3)}`;
 }

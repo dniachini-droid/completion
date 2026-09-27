@@ -58,6 +58,10 @@ jobs:
       - name: '"+ Add" above the keyboard, and Done takes the tap (D-120)'
         if: matrix.short
         run: node tests/flows/capture-done.mjs http://localhost:4173/
+      # a press and hold moves no row, and opens the job menu; the rest of step 2 in Chromium only (D-106, D-131)
+      - name: 'A press leaves a row still; the job menu; Not done after all; Tonight (D-131)'
+        if: matrix.short || matrix.walk
+        run: node tests/flows/step2.mjs http://localhost:4173/ ${{ matrix.size }}
       # both delve on a job, and Linux's WebKit crashes in a delve's end now and then (D-106): Chromium, at both sizes
       - name: Delete everywhere, and "Another day…" (D-125)
         if: matrix.walk

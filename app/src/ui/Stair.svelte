@@ -73,7 +73,7 @@
 
   function down() {
     /* Go down: Dan chooses what to delve on, never a job picked for him (D-080) */
-    go('choose');
+    go('satchel');
   }
   function today() { go(v.arrival ? 'arrival' : 'today'); }
 </script>

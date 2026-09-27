@@ -154,7 +154,7 @@ describe('Tonight: tomorrow starts with (D-131)', () => {
     const p = player('2026-09-28T21:30:00+01:00').do({ do: 'open' }).do({ do: 'addItems', lines: ['Write to Ana'] });
     const id = p.satchel().noDay[0].id;
     p.do({ do: 'firstJob', job: id });
-    expect(tomorrowFirst(C, p.facts, p.at)).toEqual({ job: id, chosen: true });
+    expect(tomorrowFirst(C, p.facts, p.at)).toMatchObject({ job: id, chosen: true });
     p.to('2026-09-29T08:00:00+01:00').do({ do: 'open' });
     expect(p.view().next?.job).toBe(id);
     expect(p.view().line[0]).toBe(id);

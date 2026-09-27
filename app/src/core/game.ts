@@ -169,14 +169,14 @@ export function firstChosen(facts: Fact[], day: string): string | null {
 }
 /** What tomorrow starts with, for Tonight's prefill (D-131): Dan's own choice, else the first job planned for tomorrow
     (the plan as it stands, or as Plan my week would lay tomorrow's week out). Nothing is written by looking. */
-export function tomorrowFirst(base: Content, facts: Fact[], now: Moment): { job: string | null; chosen: boolean } {
+export function tomorrowFirst(base: Content, facts: Fact[], now: Moment): { job: string | null; chosen: boolean; planned: string[] } {
   const c = W.live(base, facts), on = W.addDays(gameDay(now), 1);
   const own = firstChosen(facts, on);
-  if (own && c.jobs.some(j => j.id === own && !j.stopped)) return { job: own, chosen: true };
   const wk = calendarWeek(on);
-  const planned = W.planMade(facts, wk) ? W.plannedToday(c, facts, on, '00:00').map(p => p.job)
-    : W.planWeek(c, facts, wk, on).filter(e => e.day === on).sort((a, b) => (a.time ?? '99').localeCompare(b.time ?? '99')).map(e => e.job);
-  return { job: planned[0] ?? null, chosen: false };
+  const planned = [...new Set(W.planMade(facts, wk) ? W.plannedToday(c, facts, on, '00:00').map(p => p.job)
+    : W.planWeek(c, facts, wk, on).filter(e => e.day === on).sort((a, b) => (a.time ?? '99').localeCompare(b.time ?? '99')).map(e => e.job))];
+  if (own && c.jobs.some(j => j.id === own && !j.stopped)) return { job: own, chosen: true, planned };
+  return { job: planned[0] ?? null, chosen: false, planned };
 }
 
 /** Today's jobs in order: today's plan first (an appointment as its time nears), then the content's order, rhythms

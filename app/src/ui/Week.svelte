@@ -7,7 +7,9 @@
   import { game } from './game.svelte';
   import { t, dayName, minutesWords, weekDates, byWords } from '../content/copy/en';
   import { calendarWeek } from '../core/time';
-  import { addDays, dayMinutes, eventsOn, planMade, weekOf, type DayJob } from '../core/week';
+  import { addDays, dayMinutes, eventsOn, planMade, realMinutes, weekOf, type DayJob } from '../core/week';
+  import { hold } from './hold';
+  import { openMenu } from './menu.svelte';
   import { asideToday } from '../core/game';
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
@@ -89,6 +91,14 @@
   }
   function off(j: DayJob) { game.do({ do: 'movePlan', entry: j.entry!, day: null }); open = null; }
   function plan() { game.do({ do: 'planWeek', week: wk }); }
+  /* a tap on "about 2 h" says where it comes from, in one line a job (D-131): how long a job usually takes Dan, once
+     the planner has learned it; otherwise the minutes set for each job */
+  let why = $state<string | null>(null);
+  function whyOf(d: { jobs: DayJob[] }): string[] {
+    const ids = [...new Set(d.jobs.filter(j => !j.done).map(j => j.job))];
+    const out = ids.flatMap(id => { const m = realMinutes(game.facts, id), j = game.job(id); return m && j ? [t('week.about.why', { job: j.name, min: minutesWords(m) })] : []; });
+    return out.length ? out : [t('week.about.set')];
+  }
   /* a faint "about 2 h": the day's shape, not a score (D-114) */
   function about(m: number) {
     if (m < 60) return t('week.aboutMin', { n: Math.max(5, Math.round(m / 5) * 5) });
@@ -143,12 +153,16 @@
             <button class="dname" aria-expanded={!isFolded(d.day)} onclick={() => fold(d.day)}>
               <span class="chev" class:shut={isFolded(d.day)} aria-hidden="true">›</span>{dayName(d.day)}{#if d.day === v.day}<em>{t('week.today')}</em>{/if}
               {#if isFolded(d.day) && d.jobs.length}<small>{summary(d.jobs)}</small>
-              {:else if d.day >= v.day && dayMinutes(v.content, d) > 0}<small class="about">{about(dayMinutes(v.content, d))}</small>{/if}
+              {/if}
             </button>
+            {#if !isFolded(d.day) && d.day >= v.day && dayMinutes(v.content, d, game.facts) > 0}
+              <button class="about" aria-expanded={why === d.day} onclick={() => (why = why === d.day ? null : d.day)}>{about(dayMinutes(v.content, d, game.facts))}</button>
+            {/if}
             {#if d.day >= v.day}
               <button class="plus" class:on={addingTo === d.day} aria-label={t('week.addTo', { day: dayName(d.day) })} onclick={() => startAdd(d.day)}><span aria-hidden="true">+</span></button>
             {/if}
           </div>
+          {#if why === d.day && !isFolded(d.day)}<div class="why" role="status">{#each whyOf(d) as line (line)}<p>{line}</p>{/each}</div>{/if}
           {#if addingTo === d.day}
             <form class="new" onsubmit={(e) => { e.preventDefault(); add(); }}>
               <input bind:this={lineEl} bind:value={line} placeholder={t('week.addPlaceholder')} maxlength="120" enterkeyhint="done" aria-label={t('week.addTo', { day: dayName(d.day) })} />
@@ -161,7 +175,8 @@
             <div class="event" class:allday={e.allDay}>{#if !e.allDay}<span class="at">{e.start.slice(0, 10) < d.day ? '' : e.start.slice(11, 16)}</span>{/if}<span class="what">{e.title}</span></div>
           {/each}
           {#each d.jobs as j (j.entry ?? j.job + j.done)}
-            <button class="row" class:done={j.done} class:open={open === keyOf(j, d.day)} onclick={() => edit(j, d.day)} disabled={!j.done && d.day < v.day}>
+            <button class="row" class:done={j.done} class:open={open === keyOf(j, d.day)} onclick={() => edit(j, d.day)} disabled={!j.done && d.day < v.day}
+              use:hold={() => { open = null; openMenu(j.job, go); }}>
               <span class="pip" class:done={j.done}></span><span class="t">{game.job(j.job)?.name ?? j.job}</span><span class="s">{note(j, d.day)}</span>
             </button>
             {#if open && j.done && open === keyOf(j, d.day)}
@@ -205,7 +220,8 @@
     {/each}
 
     <div class="links">
-      <button class="text-link" onclick={() => go('rhythms')}><span>{t('week.rhythms')}</span></button>
+      <!-- the recurring jobs live in the Satchel (D-131): this opens it there -->
+      <button class="text-link" onclick={() => go('satchel', 'recurring')}><span>{t('week.rhythms')}</span></button>
       <button class="text-link" onclick={() => go('week', isNext ? thisWeek : addDays(thisWeek, 7))}><span>{isNext ? t('week.this') : t('week.next')}</span></button>
       <!-- any week ahead, a week at a time (D-114) -->
       {#if isNext}<button class="text-link" onclick={() => go('week', addDays(wk, 7))}><span>{t('week.after')}</span></button>{/if}
@@ -225,7 +241,11 @@
   .day { margin-top: 12px; }
   .dname { font-family: var(--carve, inherit); font-size: 14px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); display: flex; gap: 10px; align-items: baseline;
     width: 100%; min-height: 44px; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; }
-  .dname small.about { color: var(--ink-3); opacity: .8; }
+  .about { flex: none; min-height: 44px; padding: 0 10px; background: none; border: 0; cursor: pointer;
+    font-family: var(--life); font-style: italic; font-size: 15px; color: var(--ink-3); text-decoration: underline dotted; text-underline-offset: 3px; }
+  .why { margin: 0 0 6px 22px; }
+  .why p { font-family: var(--life); font-style: italic; font-size: 15px; color: var(--ink-2); margin: 2px 0; }
+  .row { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
   .dname small { margin-left: auto; font-family: var(--life); font-style: italic; text-transform: none; letter-spacing: 0; font-size: 15px; color: var(--ink-3); }
   .chev { display: inline-block; width: 10px; font-size: 16px; line-height: 1; color: var(--ink-3); transform: rotate(90deg); transition: transform .2s ease; }
   .chev.shut { transform: none; }

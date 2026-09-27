@@ -21,9 +21,11 @@
 </script>
 
 {#if r && r.line}
-  {#if r.key}<div class="label-line centred lit key">{t('step.key')}</div>{/if}
   <!-- the story's words and any find keep to the lower half and scroll there; they can be folded away (D-085) -->
-  <Words plain {look} length={r.line.length + finds.reduce((n, f) => n + f!.line.length, 0)}>
+  <Words plain {look} length={r.line.length + finds.reduce((n, f) => n + f!.line.length, 0) + (r.key ? t('step.key').length : 0)}>
+    <!-- a Key's note is two sentences of plain text, as wide as the story's words, with room after it: never squeezed into a
+         carved label's short line (Dan: "very very bad styling", D-131) -->
+    {#if r.key}<p class="key-note on-scene">{t('step.key')}</p>{/if}
     <p class="say story on-scene">{r.line}</p>
     {#each finds as f (f!.id)}
       <div class="find">
@@ -62,7 +64,8 @@
 {/if}
 
 <style>
-  .key { margin-top: 6px; }
+  .key-note { margin: 6px 0 28px; font-family: var(--life); font-size: 16.5px; line-height: 1.45; font-style: italic;
+    color: var(--violet-hi); text-align: center; text-transform: none; letter-spacing: normal; }
   .story { font-size: 18px; line-height: 1.42; margin: 10px 0 12px; }
   .choice { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; margin: -2px 0 8px; }
   .find { margin: 10px 0 6px; }

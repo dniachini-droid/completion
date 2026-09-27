@@ -1,35 +1,55 @@
 <script lang="ts">
-  /* The satchel (Dan, D-126): the jobs with no day yet. Written down as they come to mind (no day, no questions), there
-     whenever Dan wants them, by day or at night; a tap delves on one. A job can keep a list (the shopping: shampoo, then
-     milk days later), shown here and in its delve. "Put on a day" places one; Delete lets it go, with Undo. No counts,
-     no ages, nothing red (rule 9). Every job in it is a delve like any other (D-117). */
-  import { game } from './game.svelte';
-  import { t, byWords } from '../content/copy/en';
-  import { satchelOf } from '../core/week';
-  import { LIST_MAX } from '../core/game';
+  /* The Satchel (D-126; one place for every job, D-131): every job that isn't on today, each in one place. "No day yet"
+     (one-offs with no day, newest first, with their lists), "Coming up" (one-offs put on a later day, each with its
+     day: a tap on the day moves it), "Recurring jobs". On its day a job moves to Today; if the day passes undone it
+     comes back to "No day yet"; done, it is in the Daybook. One box to add a job: "Delve now" (a one-off on today, its
+     delve begun at once) or "Save for later" (no day). A tap delves; a slide shows Edit and Delete (with Undo). No
+     counts, no ages, nothing red (rule 9). */
+  import { game, content } from './game.svelte';
+  import { t, byWords, dayShort, oftenWords, minutesShort } from '../content/copy/en';
+  import { satchelView, LIST_MAX } from '../core/game';
   import type { Job } from '../core/types';
   import Scene from './Scene.svelte';
   import Deleted from './Deleted.svelte';
   import DayPick from './DayPick.svelte';
+  import SwipeRow from './SwipeRow.svelte';
   import type { Go } from './nav';
   import { back } from './back.svelte';
-  import { flushSync } from 'svelte';
+  import { flushSync, onMount } from 'svelte';
   import { steady } from './taps';
+  import { openMenu } from './menu.svelte';
   import art from './scene/satchel.jpg';
 
-  let { go }: { go: Go } = $props();
+  /* `to`: 'add' opens with the box ready to type in (Today's "+ Add"); 'recurring' opens at that section (the Week) */
+  let { go, to }: { go: Go; to?: string } = $props();
   const v = $derived(game.view);
-  const jobs = $derived(satchelOf(v.content, game.facts, v.day));
+  const s = $derived(satchelView(content, game.facts, game.now));
   let text = $state('');
+  let input = $state<HTMLInputElement | null>(null);
   /* one job at a time has its list open, or its days */
   let listing = $state<string | null>(null), placing = $state<string | null>(null), draft = $state('');
   let said = $state<string | null>(null);
   let box = $state<HTMLTextAreaElement | null>(null);
+  let recurringEl = $state<HTMLElement | null>(null);
 
-  function put() {
-    const lines = text.split('\n').filter(l => l.trim());
-    if (!lines.length) return;
-    steady(); game.do({ do: 'addItems', lines }); text = ''; said = null;
+  onMount(() => {
+    if (to === 'add' && document.activeElement !== input) input?.focus({ preventScroll: true });
+    if (to === 'recurring') recurringEl?.scrollIntoView({ block: 'start' });
+  });
+
+  /* "Delve now": a one-off on today, its delve begun at once (D-131); "Save for later": no day */
+  function now() {
+    const line = text.trim();
+    if (!line || v.run) return;
+    steady(); saveList();
+    game.do({ do: 'delveNow', line });
+    text = '';
+    if (game.view.run) go('delve');
+  }
+  function later() {
+    const line = text.trim();
+    if (!line) return;
+    steady(); game.do({ do: 'addItems', lines: [line] }); text = ''; said = t('satchel.saved', { job: line });
   }
   const preview = (j: Job) => (j.list ?? '').split('\n').filter(l => l.trim()).join(' · ');
   function openList(j: Job) {
@@ -42,7 +62,7 @@
     flushSync(); box?.focus(); box?.setSelectionRange(draft.length, draft.length);
   }
   /* what's typed is kept whenever the box loses the finger, and when the screen goes by any way (the phone's back
-     included), not only on Done (review, D-126) */
+     included), not only on Close (review, D-126) */
   function keep() { if (listing) game.do({ do: 'listJob', job: listing, list: draft }); }
   function saveList() {
     if (!listing) return;
@@ -52,10 +72,19 @@
   $effect(() => () => keep());
   function openDays(j: Job) { saveList(); said = null; placing = placing === j.id ? null : j.id; }
   function place(j: Job, day: string) {
-    steady(); game.do({ do: 'planJob', job: j.id, day });
-    placing = null; said = t('satchel.placed', { job: j.name, day: day === v.day ? t('pick.today') : byWords(day).replace(/^by /, '') });
+    steady(); game.do({ do: 'putOnDay', job: j.id, day });
+    placing = null; said = t('satchel.placed', { job: j.name, day: day === v.day ? t('pick.today') : dayShort(day) });
   }
   function remove(j: Job) { saveList(); placing = null; said = null; game.remove(j.id); }
+  function delve(j: Job) { saveList(); go('set', j.id); }
+  function edit(j: Job) { saveList(); go('rhythms', j.id); }
+  const acts = (j: Job) => [
+    { label: t('menu.edit'), sr: t('menu.srEdit', { job: j.name }), run: () => edit(j) },
+    { label: t('job.delete'), sr: t('row.srDelete', { job: j.name }), run: () => remove(j), del: true },
+  ];
+  const menu = (j: Job) => () => { saveList(); openMenu(j.id, go); };
+  const rhythmOf = (j: Job) => v.content.rhythms.find(r => r.job === j.id);
+
   /* the artwork shrinks as the list scrolls up (Dan, D-130): drawn smaller and fainter from its top edge, while the list
      keeps its place, so nothing under the finger jumps */
   let artEl = $state<HTMLImageElement | null>(null);
@@ -77,23 +106,30 @@
     </div>
     <h1 class="carve lg rise">{t('satchel.label')}</h1>
     <p class="soft say-note rise">{t('satchel.say')}</p>
+    <!-- the one box for a new job (D-131): delve on it now, or keep it for later -->
+    <form class="new satchel-add rise" onsubmit={(e) => { e.preventDefault(); later(); }}>
+      <input bind:this={input} bind:value={text} aria-label={t('satchel.add')} placeholder={t('satchel.add.hint')} maxlength="120" enterkeyhint="done" />
+      <div class="two">
+        <button class="btn-quiet" type="button" disabled={!text.trim() || !!v.run} onclick={now}><span>{t('satchel.now')}</span></button>
+        <button class="btn-quiet" type="submit" disabled={!text.trim()}><span>{t('satchel.later')}</span></button>
+      </div>
+    </form>
   </header>
 
   <div class="body col rise d1" onscroll={shrink}>
     <img class="art" bind:this={artEl} src={art} alt="" aria-hidden="true" />
-    <form class="new" onsubmit={(e) => { e.preventDefault(); put(); }}>
-      <input bind:value={text} aria-label={t('satchel.add')} placeholder={t('satchel.add.hint')} maxlength="120" enterkeyhint="done" />
-      <button class="btn-quiet" type="submit" disabled={!text.trim()}><span>{t('satchel.put')}</span></button>
-    </form>
     <Deleted />
     {#if said}<p class="said" role="status">{said}</p>{/if}
-    {#if !jobs.length}<p class="soft empty">{t('satchel.empty')}</p>{/if}
-    {#each jobs as j (j.id)}
+
+    <div class="label-line">{t('satchel.noDay')}</div>
+    {#if !s.noDay.length}<p class="soft empty">{t('satchel.empty')}</p>{/if}
+    <div class="rows">
+    {#each s.noDay as j (j.id)}
       <div class="item">
         <!-- while a delve runs, a tap here can't start another: as on Today (break-it review 6) -->
-        <button class="row" disabled={!!v.run} onclick={() => { saveList(); go('set', j.id); }}>
-          <span class="pip"></span><span class="t">{j.name}</span><span class="s">{j.by ? byWords(j.by) : ''}</span>
-        </button>
+        <SwipeRow key={`s:${j.id}`} actions={acts(j)} tap={() => delve(j)} hold={menu(j)} disabled={!!v.run}>
+          {#snippet row()}<span class="pip"></span><span class="t">{j.name}</span><span class="s">{j.by ? byWords(j.by) : ''}</span>{/snippet}
+        </SwipeRow>
         {#if listing === j.id}
           <textarea class="list" bind:this={box} bind:value={draft} rows="4" maxlength={LIST_MAX} onblur={keep} aria-label={t('satchel.list.label', { job: j.name })}
             placeholder={t('satchel.list.hint')}></textarea>
@@ -104,11 +140,38 @@
         <div class="acts">
           <button class="text-link" aria-expanded={listing === j.id} aria-label={`${listing === j.id ? t('satchel.list.done') : t('satchel.list')}: ${j.name}`} onclick={() => openList(j)}><span>{listing === j.id ? t('satchel.list.done') : t('satchel.list')}</span></button>
           <button class="text-link" aria-expanded={placing === j.id} aria-label={`${t('satchel.day')}: ${j.name}`} onclick={() => openDays(j)}><span>{t('satchel.day')}</span></button>
-          <button class="text-link" aria-label={t('row.srDelete', { job: j.name })} onclick={() => remove(j)}><span>{t('job.delete')}</span></button>
         </div>
         {#if placing === j.id}<DayPick from={v.day} label={t('satchel.day')} pick={d => place(j, d)} />{/if}
       </div>
     {/each}
+    </div>
+
+    {#if s.coming.length}
+      <div class="label-line">{t('satchel.coming')}</div>
+      <div class="rows">
+      {#each s.coming as x (x.job.id)}
+        <div class="item">
+          <SwipeRow key={`s:${x.job.id}`} actions={acts(x.job)} tap={() => delve(x.job)} hold={menu(x.job)} disabled={!!v.run}>
+            {#snippet row()}<span class="pip"></span><span class="t">{x.job.name}</span><span class="s ghost" aria-hidden="true">{dayShort(x.day)}</span>{/snippet}
+            <!-- the day is its own button: a tap on it moves the job (D-131) -->
+            {#snippet over()}<button class="text-link day" aria-expanded={placing === x.job.id} aria-label={t('satchel.move', { job: x.job.name, day: dayShort(x.day) })} onclick={() => openDays(x.job)}><span>{dayShort(x.day)}</span></button>{/snippet}
+          </SwipeRow>
+          {#if placing === x.job.id}<DayPick from={v.day} label={t('satchel.day')} pick={d => place(x.job, d)} />{/if}
+        </div>
+      {/each}
+      </div>
+    {/if}
+
+    <div class="label-line" bind:this={recurringEl}>{t('satchel.recurring')}</div>
+    <div class="rows">
+    {#each s.recurring as j (j.id)}
+      {@const r = rhythmOf(j)}
+      <SwipeRow key={`s:${j.id}`} actions={acts(j)} tap={() => delve(j)} hold={menu(j)} disabled={!!v.run}>
+        {#snippet row()}<span class="pip"></span><span class="t">{j.name}{#if r}<small>{oftenWords(r)} · {minutesShort(j.length)}</small>{/if}</span><span class="s">{r?.time ?? ''}</span>{/snippet}
+      </SwipeRow>
+    {/each}
+    </div>
+    <div class="links"><button class="text-link" onclick={() => go('rhythms', 'new')}><span>{t('satchel.recurring.add')}</span></button></div>
   </div>
 </div>
 
@@ -122,21 +185,27 @@
     -webkit-mask-composite: source-in;
     mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 80%, transparent 100%), linear-gradient(to right, transparent 0, #000 10%, #000 90%, transparent 100%);
     mask-composite: intersect; transform-origin: 50% 0; will-change: transform, opacity; }
-  .new { display: flex; gap: 10px; margin: 4px 0 10px; }
-  .new input { flex: 1; min-width: 0; min-height: 44px; padding: 0 12px; font: inherit; font-size: 17px; color: #fff;
+  .new { display: flex; flex-direction: column; gap: 8px; margin: 10px 0 4px; }
+  .new input { min-width: 0; min-height: 44px; padding: 0 12px; font: inherit; font-size: 17px; color: #fff;
     background: rgba(255, 255, 255, .06); border: 1px solid var(--edge-2); border-radius: 0; }
-  .new .btn-quiet { padding: 0 14px; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .new .btn-quiet { padding: 0 8px; min-height: 44px; }
   .new .btn-quiet:disabled { opacity: .5; }
-  .empty { margin-top: 10px; }
-  .item { border-bottom: 1px solid var(--edge-1, rgba(255, 255, 255, .06)); padding-bottom: 4px; }
-  button.row { width: 100%; text-align: left; border-bottom: 0; }
-  .preview { display: block; width: 100%; text-align: left; padding: 0 0 4px 22px; background: none; border: 0; cursor: pointer;
+  .label-line { margin-top: 18px; margin-bottom: 4px; }
+  .empty { margin: 6px 0 4px; text-align: left; }
+  .item { padding-bottom: 2px; }
+  .rows :global(.row small) { display: block; font-size: 14px; color: var(--ink-2); margin-top: 2px; }
+  .ghost { visibility: hidden; }
+  .day { min-height: 44px; padding: 0 0 0 12px; }
+  .day span { font-size: 16px; color: var(--violet-hi); }
+  .preview { display: block; width: 100%; text-align: left; padding: 0 0 4px 32px; background: none; border: 0; cursor: pointer;
     font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink-2); }
   .list { display: block; width: 100%; margin: 2px 0 6px; padding: 8px 12px; font: inherit; font-size: 17px; line-height: 1.4; color: #fff;
     background: rgba(255, 255, 255, .06); border: 1px solid var(--edge-2); border-radius: 0; resize: vertical; }
   .full { margin: -2px 0 6px; font-size: 15px; font-style: italic; }
-  .acts { display: flex; flex-wrap: wrap; gap: 0 16px; padding-left: 22px; }
+  .acts { display: flex; flex-wrap: wrap; gap: 0 16px; padding-left: 32px; }
   .acts .text-link { min-height: 44px; min-width: 44px; font-size: 15px; }
   .said { font-family: var(--life); font-style: italic; font-size: 15.5px; color: var(--ink-2); text-align: center; margin: 4px 0 8px; }
+  .links { display: flex; justify-content: center; margin-top: 12px; }
   button.home { color: var(--ink-2); }
 </style>

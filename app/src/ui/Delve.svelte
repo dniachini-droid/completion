@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { doneFacts } from '../core/done';
   /* The delve (INTERACTION_NOTES → the delve; D-028, D-036, D-037, D-047). The glowing ring fills with the time left;
      the destination is the headline; the tunnel moves so the world is visibly travelling. Only two ideas, always in
      the same words: Pause (once Step away; review 2, D-088) and Finish here. The scene is the approved mock-up's own (delve.html, revision 3). */
@@ -58,7 +59,7 @@
     if (!end) return null;
     const start = game.facts.find(f => f.type === 'delveEnded' && f.seq === end.seq);
     /* on any day: a delve begun before 04:00 is answered on the next game day */
-    const d = game.facts.find(f => f.type === 'jobDone' && f.job === end.job.id && start && f.seq > (start as { run: number }).run);
+    const d = doneFacts(game.facts).find(f => f.job === end.job.id && start && f.seq > (start as { run: number }).run);
     return d ? d.seq : null;
   });
   /* the end carries the story (a step, a mark to guess, a find) */

@@ -1,7 +1,7 @@
 // Delete, everywhere, and "Another day…" (Dan, 2026-09-27, D-125). A row on Today slides left to Delete, and Undo brings
-// it back; Choose a delve deletes a job; in the Week a job is deleted from its sheet, and a done job can be deleted too
-// (its minutes stay); "Another day…" opens the app's own four weeks, which stay open until a day is chosen, and the job
-// lands on that day. Usage: node tests/flows/delete-day.mjs http://localhost:4173/ [width height]
+// it back; "Something else…" opens the Satchel (D-131); in the Week a job is deleted from its sheet, and a done job can be
+// deleted too (its minutes stay); "Another day…" opens the app's one calendar, a month at a time (D-131: on the last day
+// of a month, the next month is one tap away), which stays open until a day is chosen, and the job lands on that day. Usage: node tests/flows/delete-day.mjs http://localhost:4173/ [width height]
 const { launch } = await import('./browser.mjs');
 const [,, url, w = '440', h = '956'] = process.argv;
 const b = await launch();
@@ -15,7 +15,9 @@ for (let k = 0; k < 8 && !(await page.locator('.foot .add').count()); k++) { awa
 const fails = [];
 const btn = (name) => page.getByRole('button', { name, exact: true });
 const rowNamed = (name) => page.locator('.rows button.row', { hasText: name });
-const add = async (name) => { await page.locator('.foot .add').click(); await page.keyboard.type(name); await page.keyboard.press('Enter'); await page.clock.runFor(800); };
+/* a job on today: the Week's + on today (D-131: "+ Add" is the Satchel's box, for no day) */
+const add = async (name) => { await btn('Week').click(); await page.clock.runFor(1200); await page.locator('button.plus').first().click(); await page.keyboard.type(name); await page.keyboard.press('Enter'); await page.clock.runFor(800);
+  await page.locator('.home').click(); await page.clock.runFor(1200); };
 
 /* 1. Today: a row slides left to "Not today" and "Delete"; Delete, then Undo */
 await add('Sweep the yard'); await add('Wash the car');
@@ -25,6 +27,8 @@ if (!r) fails.push('no Sweep the yard row');
 else {
   await page.mouse.move(r.x + r.width - 30, r.y + r.height / 2); await page.mouse.down();
   await page.mouse.move(r.x + r.width - 260, r.y + r.height / 2, { steps: 8 }); await page.mouse.up(); await page.clock.runFor(600);
+  const del = await strip.getByRole('button', { name: 'Delete', exact: true }).evaluate(e => getComputedStyle(e).backgroundColor).catch(() => ''), not = await strip.getByRole('button', { name: 'Not today', exact: true }).evaluate(e => getComputedStyle(e).backgroundColor).catch(() => '');
+  if (del && del === not) fails.push('Delete looks like "Not today" on the slide');
   if (!(await strip.getByRole('button', { name: 'Not today', exact: true }).count())) fails.push('the swipe shows no "Not today"');
   await strip.getByRole('button', { name: 'Delete', exact: true }).click(); await page.clock.runFor(800);
   if (await rowNamed('Sweep the yard').count()) fails.push('Sweep the yard, deleted, is still on Today');
@@ -33,30 +37,23 @@ else {
   if (!(await rowNamed('Sweep the yard').count())) fails.push('Undo did not bring Sweep the yard back');
 }
 
-/* 2. Something else… (Choose a delve): Delete on a job's line */
+/* 2. Something else… opens the Satchel (D-131), where a job on today is not */
 await page.locator('.rows button.row.else').click(); await page.clock.runFor(1200);
-const line = page.locator('.line', { hasText: 'Wash the car' }).first();
-if (!(await line.count())) fails.push('Wash the car is not in Choose a delve');
-else {
-  await line.getByRole('button', { name: /delete/i }).click(); await page.clock.runFor(800);
-  if (await page.locator('.line', { hasText: 'Wash the car' }).count()) fails.push('Wash the car, deleted in Choose, is still there');
-  if (!(await btn('Undo').count())) fails.push('no Undo after Delete in Choose');
-}
+if (!(await page.locator('h1', { hasText: /satchel/i }).count())) fails.push('"Something else…" does not open the Satchel');
+if (await page.locator('.item', { hasText: 'Wash the car' }).count()) fails.push('Wash the car, on today, is in the Satchel too');
 await page.locator('button.home').click(); await page.clock.runFor(1200);
 
-/* 3. the Week: a job's sheet → Another day… → the app's one calendar (D-130: as in the Satchel, from today on, five
-   weeks from this Monday) stays open → a day → the job is there */
+/* 3. the Week: a job's sheet → Another day… → the app's one calendar (D-130, D-131: a month at a time, from today on)
+   stays open → the next month → a day → the job is there */
 await btn('Week').click(); await page.clock.runFor(1500);
 await page.locator('.day button.row', { hasText: 'Sweep the yard' }).first().click(); await page.clock.runFor(600);
 await btn('Another day…').click(); await page.clock.runFor(3000);
-const days = page.locator('.cal button');
 const today = await page.locator('.cal button.today').count();
-if (!today || (await days.count()) < 28) fails.push(`"Another day…" shows ${await days.count()} days from today, not the app's calendar`);
+if (!today || !/September 2026/i.test(await page.locator('.cal .title').innerText())) fails.push('"Another day…" is not the app\'s calendar on this month, today marked');
 else {
-  /* the Wednesday of the week after next: the calendar begins with this week's Monday, today marked, days before it blank */
-  const cells = await page.locator('.cal > *:not(.wd)').count();
-  await page.locator('.cal > *:not(.wd)').nth(16).click(); await page.clock.runFor(1200);
-  if (cells !== 35) fails.push(`the calendar holds ${cells} places, not five weeks`);
+  /* the last day of September: the next month is one tap away (Dan, D-131), and Wednesday 14 October is the week after next */
+  await page.locator('.cal').getByRole('button', { name: 'The next month' }).click(); await page.clock.runFor(400);
+  await page.locator('.cal').getByRole('button', { name: /^Wednesday 14 October/ }).click(); await page.clock.runFor(1200);
   if (await page.locator('.day button.row', { hasText: 'Sweep the yard' }).count()) fails.push('Sweep the yard is still in this week after Another day');
   /* the week after next: it is there, on its Wednesday */
   await btn('Next week').click(); await page.clock.runFor(1200); await btn('The week after').click(); await page.clock.runFor(1200);

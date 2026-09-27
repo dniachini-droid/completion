@@ -25,8 +25,9 @@
   import Week from './Week.svelte';
   import Rhythms from './Rhythms.svelte';
   import Satchel from './Satchel.svelte';
-  import Choose from './Choose.svelte';
   import Settings from './Settings.svelte';
+  import JobMenu from './JobMenu.svelte';
+  import { closeMenu } from './menu.svelte';
   import { t } from '../content/copy/en';
   import { steady } from './taps';
   import { unslide } from './keyboard';
@@ -60,7 +61,7 @@
   /* Back (review 2, D-088): the screens Dan looks through keep a trail, so the arrow and the phone's own back return to
      where each was opened from. Today and the day's own moments (a delve, a place reached, the stair, the morning)
      start the trail again; their way out stays Today. */
-  const LOOK = new Set<Screen>(['map', 'records', 'marks', 'week', 'rhythms', 'daybook', 'choose', 'set', 'proto', 'cant', 'settings', 'satchel']);
+  const LOOK = new Set<Screen>(['map', 'records', 'marks', 'week', 'rhythms', 'daybook', 'set', 'proto', 'cant', 'settings', 'satchel']);
   const TABS = new Set<Screen>(['records', 'marks']);
   let trail = $state<Back[]>([]);
   /* Records ⇄ Marks is a tab: the screen swaps in place, with nothing rising or fading in again (Dan, D-093) */
@@ -71,6 +72,7 @@
     const e = game.view.runEnd;
     if (screen === 'delve' && e && !game.view.run && to !== 'delve') game.do({ do: 'seen', what: 'step', ref: e.seq });
     still = TABS.has(screen) && TABS.has(to);
+    closeMenu();
     game.deleted = null; game.cantDelete = null;   /* a delete's Undo stays on the screen it was made on (D-125) */
     /* back to Today goes the way "Today" does, past what waits: a delve that ended while Dan typed elsewhere is shown
        (break-it review 5) */
@@ -124,7 +126,7 @@
   /* a day finished away from a delve's end ("Not today" or Delete on the list's last job, a short job said done, a job
      moved off today in the Week): its camp or place is shown at once, as a delve's end would lead to it (D-130). The
      day's own moments route themselves. */
-  const QUIET = new Set<Screen>(['today', 'week', 'rhythms', 'satchel', 'choose', 'settings', 'daybook']);
+  const QUIET = new Set<Screen>(['today', 'week', 'rhythms', 'satchel', 'settings', 'daybook']);
   let lastArr = game.view.arrival?.seq ?? 0;
   $effect(() => {
     const a = game.view.arrival;
@@ -170,8 +172,7 @@
     {:else if screen === 'daybook'}<Daybook {go} week={typeof arg === 'string' ? arg : undefined} />
     {:else if screen === 'week'}<Week {go} week={typeof arg === 'string' ? arg : undefined} />
     {:else if screen === 'rhythms'}{#key arg}<Rhythms {go} job={typeof arg === 'string' ? arg : undefined} />{/key}
-    {:else if screen === 'choose'}<Choose {go} />
-    {:else if screen === 'satchel'}<Satchel {go} />
+    {:else if screen === 'satchel'}<Satchel {go} to={typeof arg === 'string' ? arg : undefined} />
     {:else if screen === 'settings'}<Settings {go} />{/if}
   {/key}
     {#snippet failed(_error, reset)}
@@ -181,6 +182,7 @@
       </section></div>
     {/snippet}
   </svelte:boundary>
+  <JobMenu />
 </main>
 
 <style>
