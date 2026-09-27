@@ -96,7 +96,7 @@ await toToday();
 {
   await choose('Sort the post'); await tap(btn('Begin'), 'Begin');
   await tap(page.locator('.home'), 'Today'); await tap(btn('Week'), 'Week');
-  await ff(26 * 60_000); await page.clock.runFor(1500);
+  await ff(31 * 60_000); await page.clock.runFor(1500);   /* the set-up opens at one delve of 30 minutes (D-124) */
   if (!(await page.locator('.dv').count())) fails.push('a delve that ended in the Week was not shown');
   await tap(page.locator('.home'), 'the arrow from the end');
   await tap(page.getByRole('button', { name: 'It’s done', exact: true }), 'It’s done for the post');

@@ -54,8 +54,9 @@ if (Math.abs(after.phone - H) > 1 || after.y || after.vvh) fails.push(`the page 
 /* what was put in with "+ Add" is on today (D-117) */
 if (!(await page.locator('.rows button.row', { hasText: 'milk' }).count())) fails.push('"milk", put in with + Add, is not on Today');
 
-/* a tap on Test starts its delve; finished and said done, it is done: the one-off's Done works (Dan, D-117) */
+/* a tap on Test opens its set-up, Begin starts its delve (D-124); finished and said done, it is done (Dan, D-117) */
 await page.locator('.rows button.row', { hasText: 'Test' }).first().click(); await page.clock.runFor(1500);
+if (await page.locator('.rs').count()) { await page.getByRole('button', { name: 'Begin', exact: true }).click(); await page.clock.runFor(1500); }
 if (!(await page.locator('.dv').count())) fails.push('a tap on Test did not start its delve');
 else {
   await page.clock.runFor(5 * 60_000);

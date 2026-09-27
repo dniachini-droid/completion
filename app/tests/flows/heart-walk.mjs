@@ -143,6 +143,8 @@ const tap = async (text) => {
 const screensSoFar = () => i;
 /** Today's one button: Delve on a delve job, Begin on one done away from the phone (D-077). */
 const start = async () => { if (await has('Delve')) await tap('Delve'); else await tap('Begin'); };
+/** Dan sets the length on the set-up, which opens at one 30-minute delve (D-124): an hour, as a day of real work. */
+const setHour = async () => { const b = page.getByRole('button', { name: '60 minutes', exact: true }); if (await b.count()) { await b.first().click(); await page.clock.runFor(700); } };
 /** Answer whatever guess the screen offers (the first option). */
 const guessIfAny = async (name) => {
   const opts = page.locator('.opts .btn-quiet');
@@ -227,7 +229,7 @@ const arrivals = async (name) => {
 /** Today's next job without pictures (the days between), answering guesses and playing arrivals. */
 const quiet = async () => {
   if (await has('Done')) await tap('Done');
-  else { await start(); await page.clock.runFor(900); if (await has('Begin')) await tap('Begin'); await ff(75 * 60_000); if (await has('Done')) await tap('Done'); }
+  else { await start(); await page.clock.runFor(900); if (await has('Begin')) { await setHour(); await tap('Begin'); } await ff(75 * 60_000); if (await has('Done')) await tap('Done'); }
   await page.clock.runFor(2500);
   const opts = page.locator('.opts .btn-quiet'); if (await opts.count()) await opts.first().click();
   if (await has('See where you are')) {
@@ -290,7 +292,7 @@ const doNext = async (name) => {
   if (await has('Done')) await tap('Done');
   else {
     await start(); await page.clock.runFor(900);
-    if (await has('Begin')) { await shot(name + '-set', 800); await tap('Begin'); }
+    if (await has('Begin')) { await setHour(); await shot(name + '-set', 800); await tap('Begin'); }
     await ff(75 * 60_000);
     if (await has('Done')) await tap('Done');
   }
