@@ -34,7 +34,7 @@ enum SatchelInbox {
     }
 }
 
-/// "Add a job": one line becomes a delve job (every job is a delve, D-117), and the app doesn't open. Calm words.
+/// "Add a job": one line becomes a delve job in the satchel, with no day (D-117, D-126), and the app doesn’t open. Calm words.
 struct AddToSatchel: AppIntent {
     static var title: LocalizedStringResource = "Add a job"
     static var description = IntentDescription("Adds a job to Long Answer, without opening it.")
@@ -47,7 +47,7 @@ struct AddToSatchel: AppIntent {
         let text = line.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !text.isEmpty else { return .result(dialog: "Nothing was added.") }
         try SatchelInbox.add(String(text.prefix(120)))
-        return .result(dialog: "It’s with your jobs.")
+        return .result(dialog: "It’s in your satchel.")
     }
 }
 

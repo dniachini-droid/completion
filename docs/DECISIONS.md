@@ -1306,3 +1306,45 @@
   3. Stopping early already counts exactly the minutes run (D-121): 2 × 30 set, stopped at 50, counts 50.
 - **Consequences:** supersedes D-110's "a short job starts on the stop that holds it" and D-038's "a short delve job starts at once". Rule tests updated; a new test for old saves.
 - **Reversible:** Yes.
+
+## D-125 — Delete, everywhere; "Another day…" is the app's own calendar; Done after "Not this week" (Dan; a bug fix)
+- **Date:** 2026-09-27
+- **Context:** Dan on TestFlight: "Not this week" took a job off the Week, but it was still under Keep going, and the only delete was buried in the job editor ("There should be a delete option. For everything including stuff I did"). Choosing "Another day…" showed the phone's calendar for two seconds, then it vanished. While testing, a crash was found: a "Not this week" record stores its target day as none, which stands in for the record's own day; the rule that reads the job list read it as a date and threw, so every Done with minutes after a "Not this week" failed.
+- **Decision:**
+  1. **Delete is available everywhere.** On Today, a row slides left to "Not today" and "Delete" (a done row to "Delete" only). In Choose a delve (Something else… / Keep going), each job has a Delete at the end of its line. In the Week, a job's sheet has Delete, and a done job opens to Delete. The job editor's "Remove it" is now "Delete". Every Delete shows Undo on that screen.
+  2. **Deleting a done job deletes the record of the job, not the minutes it counted for** (Dan): it leaves Today, the Week, the Daybook and the lists, and the expedition keeps its progress. On a done row of a repeating job, Delete removes only that day's record (a new `doneHidden` fact); the repeat carries on and the session still counts. A done one-off, being finished, is deleted as a job. Deleting a repeating job itself (from its sheet, Choose or the editor) takes its repeat with it. Undo brings any of them back. The job of a delve that is running or paused can't be deleted (its end still has to be answered).
+  3. **"Another day…" opens the app's own calendar** of the four weeks after the one shown. The phone's date picker closed itself on the iPhone. The keyboard fitting (D-120) also now leaves the screen alone while any date picker is open (the job editor's dates).
+  4. **The crash is fixed** by passing over plan-change records before any day is read. Saves already on the phone are repaired by that too; no data changes.
+- **Alternatives:** a confirmation before Delete (Undo is quieter, as D-112); keep the phone's date picker and only stop the keyboard fitting (not testable here; the app's own calendar is certain).
+- **After a fresh adversarial review:** the fixes above for the running delve and repeating jobs' done rows. A tap on "It's done" or on the slid-out buttons never starts a slide. The Daybook leaves deleted jobs out. A backup's "last day played" skips plan changes.
+- **Consequences:** a new screen check, `tests/flows/delete-day.mjs`, runs in CI (Chromium and WebKit). Rule tests cover deleting a done job, deleting a repeating job and Undo, and Done after "Not this week".
+- **Reversible:** Yes.
+
+## D-126 — The Satchel returns as the place for jobs with no day, with a list on any job (Dan)
+- **Date:** 2026-09-27
+- **Context:** After D-117 there was no way to see the jobs with no day except "Something else…" by day and "Keep going" at night, and nowhere to jot a job as it comes to mind. Dan wanted a list he can write into at any time without choosing a day, open whenever he likes and delve from. He also wanted notes on a job, e.g. a "Shopping" delve holding shampoo, then milk days later. The research (Things' Inbox and Anytime, Todoist, Reminders, Zelda's Adventure Log; Masicampo & Baumeister 2011 on plans quieting unfinished goals; Habitica's red to-dos and Skyrim's misc log as warnings) favoured one quiet undated list, capture that never asks a question, a plain note shown in the task, and no counts, ages or red. Dan chose the name "Satchel" and its artwork from the Phase 4 mock-up, "obviously not the old functionality".
+- **Decision:**
+  1. **The Satchel** (Today's foot: + Add · Satchel · Week · Daybook, by day and at night) lists every one-off job with no place in any plan from today on, newest first. Its sources: anything put in there, what Siri / Shortcuts adds (the planner no longer places those, reversing D-117's auto-placement), a job taken off a week ("Not this week"), and a job whose day passed. Repeating jobs, jobs done and deleted jobs are never in it.
+  2. **Adding asks nothing:** type, Put in (or Return). A tap on a job opens its delve set-up. Each job has **List**, **Put on a day** (the app's own calendar, from today, five weeks) and **Delete** (with Undo, D-125).
+  3. **A job's list** (a new `list` field on the job; no new fact type): lines added a line at a time; shown as a one-line preview in the Satchel and on the set-up, and in full on the delve screen, where a tap strikes a line off (or back). Struck lines go when the delve ends; the rest stay for next time.
+  4. **The artwork** is the satchel by the lamp from direction D's mock-up, rendered once to `app/src/ui/scene/satchel.jpg`.
+  5. No counts, ages, overdue marks or red (rule 9). The look-ahead's weekly "Still wanted?" remains the only tidying.
+- **Alternatives:** a "Pack" or "Journal" name (Dan chose Satchel); a separate checklist per job (two kinds of thing again: the note with strike-through is enough); letting the planner place Siri jobs (Dan's jots are his to place).
+- **After a fresh adversarial review (same night):**
+  - What's typed in a list is kept whenever the box loses focus and when the screen is left by any way, not only on Done.
+  - Struck lines are kept apart from the text (the job's `struck` places, set only by `strikeLine` in that job's own delve), so a line Dan types starting "~ " is his own.
+  - A list keeps whole lines up to 2,000 characters.
+  - A repeating job made a one-off counts as finished only by sessions done after it stopped repeating.
+  - A job set aside today waits in the Satchel.
+  - Buttons carry the job's name for VoiceOver.
+  - Delete on the job of a delve under way says why it can't.
+  - Undo puts a job back in its place.
+- **Consequences:** a new screen check, `tests/flows/satchel.mjs`, runs in CI. Rule tests cover the Satchel's contents and the list. Siri's reply now says "It's in your satchel."
+- **Reversible:** Yes.
+
+## D-127 — Lighter · As planned · Fuller is removed from Today (Dan)
+- **Date:** 2026-09-27
+- **Context:** The day-size choice (D-114, Stage 3 item 13) showed on Today at the day's first open. Dan: "Remove it. I'll set my days. It's clutter."
+- **Decision:** The choice and its hints are removed from Today. The rules keep `capacity` (old saves, tests), but nothing in the app sets it now, so every day is as planned.
+- **Consequences:** Dan sets his days in the Week. Pushing deeper is now simply doing more (Dan): past a normal day's jobs, the deep push's next story moment plays by itself, once a day (a Key earned on that job comes first; the moment comes with the next). Going on after a normal day's work counts as a push for reaching places, too. Nothing else read the setting except a High day's one extra suggested job, which goes with it.
+- **Reversible:** Yes.

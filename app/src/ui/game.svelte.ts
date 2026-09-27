@@ -6,7 +6,7 @@ import { act, alertsAfter, see, settle, type Command, type RunView } from '../co
 import type { RunMark } from '../core/run';
 import { panelOf } from './panel';
 import { epochOf, momentOf, type Moment } from '../core/time';
-import type { Fact } from '../core/types';
+import type { Fact, Job, Rhythm } from '../core/types';
 import { content } from '../content/world';
 import { platform } from '../platform';
 import { t } from '../content/copy/en';
@@ -116,6 +116,37 @@ class Game {
 
   /** A job as Dan has it now (his edits and the jobs he added included). */
   job(id: string) { return this.view.content.jobs.find(j => j.id === id); }
+
+  /** What was just deleted, for its Undo (D-125): shown until Dan goes to another screen. */
+  deleted = $state<{ job: Job; rhythm: Rhythm | null; on?: string } | null>(null);
+  /** A job that couldn't be deleted because its delve is under way: said once, where Dan tried (D-126 review). */
+  cantDelete = $state<string | null>(null);
+  /** Delete a job from everywhere (Dan, D-125): the minutes it already counted for stay. Never the job of a delve that
+      is running or paused: its end still has to be answered. */
+  remove(id: string) {
+    const job = this.job(id);
+    if (!job) return;
+    if (this.view.run?.job.id === id) { this.deleted = null; this.cantDelete = job.name; return; }
+    this.cantDelete = null;
+    this.deleted = { job: { ...job }, rhythm: this.view.content.rhythms.find(r => r.job === id) ?? null };
+    this.do({ do: 'removeJob', id });
+  }
+  /** Delete a done record (Dan: "just delete the record of the job, not the minutes"): a repeating job keeps repeating
+      and only that day's record goes; a one-off, finished, goes altogether. */
+  removeDone(id: string, on: string) {
+    const job = this.job(id);
+    if (!job) return;
+    if (!this.view.content.rhythms.some(r => r.job === id)) { this.remove(id); return; }
+    this.deleted = { job: { ...job }, rhythm: null, on };
+    this.do({ do: 'hideDone', job: id, on });
+  }
+  undoRemove() {
+    const d = this.deleted;
+    if (!d) return;
+    this.deleted = null;
+    if (d.on) this.do({ do: 'hideDone', job: d.job.id, on: d.on, back: true });
+    else this.do({ do: 'saveJob', job: d.job, rhythm: d.rhythm });
+  }
 
   get saveKey() { return this.proto.rehearsal ? 'save.rehearsal' : 'save.v1'; }
 

@@ -11,8 +11,8 @@ const [,, url, out, w = '390', h = '844'] = process.argv;
 const browser = await launch();
 const page = await browser.newPage({ viewport: { width: +w, height: +h }, deviceScaleFactor: 2, timezoneId: 'Europe/London' });
 const errors = [];
-page.on('pageerror', e => errors.push(e.message));
-page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
+page.on('pageerror', e => { errors.push(e.message); if (process.env.DEBUG) console.log('PAGEERR', e.stack); });
+page.on('console', m => { if (m.type() === 'error') { errors.push(m.text()); if (process.env.DEBUG) console.log('CONSOLEERR', m.text(), JSON.stringify(m.location())); } });
 page.on('request', r => { if (!r.url().startsWith(url) && !r.url().startsWith('data:') && !r.url().startsWith('blob:')) errors.push('NETWORK ' + r.url()); });
 /* FREEZE=1: every animation stopped at the same instant for each picture, and chance made repeatable, so two builds'
    pictures can be compared pixel for pixel (a change meant to leave the look alone, D-103) */
@@ -424,7 +424,7 @@ await page.locator('button.row', { hasText: 'Call the bank' }).first().click(); 
 await page.locator('.editor input.line').first().fill('Call the bank about the card'); await tap('Save'); await page.clock.runFor(800);
 if (!(await page.locator('button.row', { hasText: 'Call the bank about the card' }).count())) errors.push('EDIT the job was not renamed');
 await page.locator('button.row', { hasText: 'Call the bank about the card' }).first().click(); await page.clock.runFor(800);
-await tap('Remove it'); await shot('job-removed', 600);
+await tap('Delete'); await shot('job-removed', 600);
 await tap('Undo'); await page.clock.runFor(800);
 if (!(await page.locator('button.row', { hasText: 'Call the bank about the card' }).count())) errors.push('EDIT Undo did not bring the job back');
 await home(); await page.clock.runFor(1500); await shot('today-with-line', 2000);

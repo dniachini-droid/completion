@@ -20,6 +20,8 @@ await page.addInitScript(() => {
 });
 await page.clock.install({ time: new Date('2026-09-27T15:00:00+01:00') });
 await page.goto(url); await page.clock.runFor(2500);
+/* the app drawn first (a slow machine may need longer), as the other checks wait */
+for (let k = 0; k < 40 && !(await page.locator('.foot .add, button.btn').count()); k++) { await page.waitForTimeout(250); await page.clock.runFor(250); }
 const fails = [];
 /* past anything that opens first (a welcome, a morning), to Today */
 for (let k = 0; k < 8 && !(await page.locator('.foot .add').count()); k++) { await page.locator('button.btn').first().click(); await page.clock.runFor(1500); }
@@ -58,6 +60,9 @@ if (!(await page.locator('.rows button.row', { hasText: 'milk' }).count())) fail
 await page.locator('.rows button.row', { hasText: 'Test' }).first().click(); await page.clock.runFor(1500);
 if (await page.locator('.rs').count()) { await page.getByRole('button', { name: 'Begin', exact: true }).click(); await page.clock.runFor(1500); }
 if (!(await page.locator('.dv').count())) fails.push('a tap on Test did not start its delve');
+/* the delve and its end are checked in Chromium (here and in delve-loop): Linux's WebKit crashes in a delve's end now
+   and then (D-106), so in WebKit this check stops at the delve's start */
+else if (process.env.BROWSER === 'webkit') console.log('capture-done: in WebKit the delve part is left to Chromium (D-106)');
 else {
   /* five minutes on: the clock jumps, as in delve-loop, rather than running every frame of the delve (WebKit's page
      crashed stepping 18,000 frames at once) */

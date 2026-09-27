@@ -63,6 +63,7 @@ const ONE: { [T in FactBody['type']]: Extract<FactBody, { type: T }> } = {
   remindersSwitched: { type: 'remindersSwitched', on: false },
   jobSaved: { type: 'jobSaved', job: { id: 'j-x', name: 'Renew the passport', delve: false, length: 30, doneBy: 'dan', avoided: true, firstStep: 'Find the old one', note: 'photo booth at the station' } },
   jobRemoved: { type: 'jobRemoved', id: 'post' },
+  doneHidden: { type: 'doneHidden', job: 'gym', on: '2026-09-28' },
   nudgeChosen: { type: 'nudgeChosen', on: true },
   calendarChosen: { type: 'calendarChosen', on: true, calendars: ['work'] },
   itemKept: { type: 'itemKept', id: 'it-1' },

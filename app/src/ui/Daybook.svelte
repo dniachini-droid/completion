@@ -8,6 +8,7 @@
   import { t, card, timesWords, dayName, byWords } from '../content/copy/en';
   import { comingUp, sweepOf } from '../core/week';
   import { calendarWeek } from '../core/time';
+  import { hiddenDone } from '../core/game';
   import { beatOf, sealOf } from '../core/story';
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
@@ -26,8 +27,10 @@
   const held = $derived.by(() => {
     if (!page) return [];
     const n = new Map<string, number>();
-    for (const f of game.facts) if (f.type === 'jobDone' && calendarWeek(f.day) === page.week) n.set(f.job, (n.get(f.job) ?? 0) + 1);
-    return [...n].map(([job, k]) => ({ name: game.job(job)?.name ?? job, k }));
+    /* a deleted job, or a deleted record, leaves the page too (D-125) */
+    const hidden = hiddenDone(game.facts);
+    for (const f of game.facts) if (f.type === 'jobDone' && calendarWeek(f.day) === page.week && game.job(f.job) && !hidden.has(`${f.job}|${f.day}`)) n.set(f.job, (n.get(f.job) ?? 0) + 1);
+    return [...n].map(([job, k]) => ({ name: game.job(job)!.name, k }));
   });
   const places = $derived(page ? game.facts.filter((f): f is FactOf<'arrived'> => f.type === 'arrived' && f.kind === 'place' && calendarWeek(f.day) === page.week)
     .map(f => beatOf(s, f.id)?.name).filter((x): x is string => !!x) : []);

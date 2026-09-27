@@ -35,12 +35,17 @@ export const weekDays = (monday: string) => Array.from({ length: 7 }, (_, i) => 
  */
 export function live(c: Content, facts: Fact[], before?: string): Content {
   let jobs = c.jobs, rhythms = c.rhythms, changed = false;
+  const gone = new Map<string, number>();
   for (const f of facts) {
+    /* a plan change carries its own "day" (where the entry moves to, or none for "Not this week"), which stands in for
+       the fact's day; it never edits the jobs, so it is passed over before any day is read. Read as a date, "none"
+       threw, and every Done after a "Not this week" failed (Dan, D-125). */
+    if (f.type === 'planChanged') continue;
     if (before && calendarWeek(f.day) >= before) continue;
     if (f.type === 'rhythmSaved') {
       if (!changed) { jobs = jobs.slice(); rhythms = rhythms.slice(); changed = true; }
       const j = jobs.findIndex(x => x.id === f.job.id), r = rhythms.findIndex(x => x.id === f.rhythm.id);
-      if (j >= 0) jobs[j] = f.job; else jobs.push(f.job);
+      if (j >= 0) jobs[j] = f.job; else if (gone.has(f.job.id)) jobs.splice(Math.min(gone.get(f.job.id)!, jobs.length), 0, f.job); else jobs.push(f.job);
       if (r >= 0) rhythms[r] = f.rhythm; else rhythms.push(f.rhythm);
     } else if (f.type === 'rhythmStopped') {
       if (!changed) { jobs = jobs.slice(); rhythms = rhythms.slice(); changed = true; }
@@ -52,9 +57,12 @@ export function live(c: Content, facts: Fact[], before?: string): Content {
     } else if (f.type === 'jobSaved') {
       if (!changed) { jobs = jobs.slice(); rhythms = rhythms.slice(); changed = true; }
       const j = jobs.findIndex(x => x.id === f.job.id);
-      if (j >= 0) jobs[j] = f.job; else jobs.push(f.job);
+      /* a job brought back by Undo returns to its place (D-125 review) */
+      if (j >= 0) jobs[j] = f.job; else if (gone.has(f.job.id)) jobs.splice(Math.min(gone.get(f.job.id)!, jobs.length), 0, f.job); else jobs.push(f.job);
     } else if (f.type === 'jobRemoved') {
       if (!changed) { jobs = jobs.slice(); rhythms = rhythms.slice(); changed = true; }
+      const at = jobs.findIndex(x => x.id === f.id);
+      if (at >= 0) gone.set(f.id, at);
       jobs = jobs.filter(x => x.id !== f.id);
       rhythms = rhythms.filter(x => x.job !== f.id);
     } else if (f.type === 'itemAdded') {
@@ -155,9 +163,6 @@ const doneIn = (facts: Fact[], week: string) => ofType(facts, 'jobDone').filter(
 const sessions = (facts: Fact[], r: Rhythm, week: string) => R.sessionsIn(facts, r, r.everyDays ? addDays(week, 6) : week);
 const need = R.needOf;
 
-/** How recent a job added with no day of its own must be for the planner to place it (D-117 review). */
-export const ADDED_DAYS = 7;
-
 /**
  * "Plan my week" (PLANNER.md): fixed rules, no learning. Appointments and set days first; avoided one-offs early; the
  * same rhythm spread across days (never two days running where it can be avoided); no day above a Normal day's size;
@@ -245,15 +250,8 @@ export function planWeek(c: Content, facts: Fact[], week: string, from: string, 
       if (best) put(r.job, best, r.time);
     }
   }
-  /* a job added lately with no day of its own (from Siri, D-117): where a day has room, oldest first, at most one such
-     job to a day. Older lines, and lines put to someday, wait in Dan's jobs for him to choose; they never flood a week. */
-  const shelved = new Set(ofType(facts, 'itemSomeday').map(f => f.id));
-  const recent = new Set(ofType(facts, 'itemAdded').filter(f => f.day <= from && daysBetween(f.day, from) <= ADDED_DAYS).map(f => f.id));
-  const extra = new Set<string>();
-  for (const j of c.jobs.filter(x => recent.has(x.id) && !shelved.has(x.id) && !x.stopped && !x.by && !x.avoided && !rhythmJob.has(x.id) && !ever.has(x.id) && !hand.has(x.id) && !out.some(e => e.job === x.id))) {
-    const d = days.find(x => !extra.has(x) && fits(x, j.id));
-    if (d) { put(j.id, d); extra.add(d); }
-  }
+  /* a job with no day of its own (added in the satchel, by Siri, or taken off a week) waits in the satchel until Dan
+     puts it on a day or delves on it: the planner never places it (D-126) */
   return out.filter(e => !fixed.some(x => x.id === e.id)).sort((a, b) => a.day.localeCompare(b.day) || (a.time ?? '99').localeCompare(b.time ?? '99'));
 }
 
@@ -272,7 +270,10 @@ export function weekOf(c: Content, facts: Fact[], week: string, today: string): 
   const at = (d: string) => days.find(x => x.day === d);
   const done = doneIn(facts, week);
   /* what was done, on the day it was done */
-  for (const f of done) if (f.day <= today) at(f.day)?.jobs.push({ entry: null, job: f.job, done: true });
+  /* a job deleted after it was done no longer shows; the minutes it counted for stay (Dan, D-125) */
+  const hidden = new Set<string>();
+  for (const f of ofType(facts, 'doneHidden')) { const k = `${f.job}|${f.on}`; if (f.back) hidden.delete(k); else hidden.add(k); }
+  for (const f of done) if (f.day <= today && c.jobs.some(j => j.id === f.job) && !hidden.has(`${f.job}|${f.day}`)) at(f.day)?.jobs.push({ entry: null, job: f.job, done: true });
   if (!plan) return { week, planned: false, days };
   const rhythm = (job: string) => c.rhythms.find(r => r.job === job);
   const met = (job: string) => { const r = rhythm(job); return r ? sessions(facts, r, week) >= need(r) : done.some(f => f.job === job) || ofType(facts, 'jobDone').some(f => f.job === job); };
@@ -290,6 +291,7 @@ export function weekOf(c: Content, facts: Fact[], week: string, today: string): 
   const released: PlanEntry[] = [];
   for (const e of plan) {
     if (!c.jobs.some(j => j.id === e.job && !j.stopped)) continue;
+    if (e.day <= today && hidden.has(`${e.job}|${e.day}`)) continue;   /* done there, and its record deleted (D-125) */
     const dj = at(e.day)?.jobs.find(x => x.done && x.job === e.job && x.entry === null);
     if (e.day <= today && dj) { dj.entry = e.id; if (e.time) dj.time = e.time; continue; }   /* done as planned */
     if (e.day < today) { if (!e.time) released.push(e); continue; }   /* a missed appointment falls away (D-080) */
@@ -411,3 +413,35 @@ export function comingUp(c: Content, facts: Fact[], day: string): { day: string;
   }
   return out;
 }
+
+/* ---------- the satchel (D-126) ---------- */
+
+/**
+ * The jobs with no day (D-126): one-offs not finished, with no place in any plan from `day` on, newest first. A job
+ * added in the satchel or by Siri, a job taken off a week ("Not this week"), a job whose day has passed. A repeating
+ * job is never here: it comes round by itself. A job done today stays on Today, not here.
+ */
+export function satchelOf(c: Content, facts: Fact[], day: string): Job[] {
+  const rhythmJob = new Set(c.rhythms.map(r => r.job));
+  /* finished: done since it last stopped repeating (a repeating job made a one-off is not finished by its old sessions,
+     review, D-126) */
+  const rhythmOfId = new Map((c.base ?? c).rhythms.map(r => [r.id, r.job]));
+  const stoppedAt = new Map<string, number>(), finished = new Set<string>();
+  for (const f of facts) {
+    if (f.type === 'rhythmSaved') rhythmOfId.set(f.rhythm.id, f.rhythm.job);
+    else if (f.type === 'rhythmStopped') { const job = rhythmOfId.get(f.id); if (job) { stoppedAt.set(job, f.seq); finished.delete(job); } }
+    else if (f.type === 'jobDone') finished.add(f.job);
+  }
+  /* set aside today ("Not today"): today's place doesn't hold it, so it waits here (review, D-126) */
+  const aside = new Set<string>();
+  for (const f of facts) if (f.day === day) { if (f.type === 'setAside') aside.add(f.job); else if (f.type === 'putBack') aside.delete(f.job); }
+  const weeks = new Set<string>();
+  for (const f of facts) {
+    if (f.type === 'planMade' && f.week >= calendarWeek(day)) weeks.add(f.week);
+    else if (f.type === 'planAdded' && f.entry.day >= day) weeks.add(calendarWeek(f.entry.day));
+  }
+  const placed = new Set<string>();
+  for (const wk of weeks) for (const e of planOf(facts, wk) ?? []) if (e.day > day || (e.day === day && !aside.has(e.job))) placed.add(e.job);
+  return c.jobs.filter(j => !j.stopped && !rhythmJob.has(j.id) && !finished.has(j.id) && !placed.has(j.id)).reverse();
+}
+

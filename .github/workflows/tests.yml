@@ -51,12 +51,20 @@ jobs:
       - name: A tap on a job starts that job (D-104)
         if: matrix.short
         run: node tests/flows/tap-row.mjs http://localhost:4173/
+      # it delves to reach a place, and Linux's WebKit crashes in a delve's end now and then (D-106): Chromium
       - name: Back from a record returns to the place
-        if: matrix.short
+        if: matrix.short && matrix.browser == 'chromium'
         run: node tests/flows/back-from-record.mjs http://localhost:4173/
       - name: '"+ Add" above the keyboard, and Done takes the tap (D-120)'
         if: matrix.short
         run: node tests/flows/capture-done.mjs http://localhost:4173/
+      # both delve on a job, and Linux's WebKit crashes in a delve's end now and then (D-106): Chromium, at both sizes
+      - name: Delete everywhere, and "Another day…" (D-125)
+        if: matrix.walk
+        run: node tests/flows/delete-day.mjs http://localhost:4173/ ${{ matrix.size }}
+      - name: The satchel, the jobs with no day (D-126)
+        if: matrix.walk
+        run: node tests/flows/satchel.mjs http://localhost:4173/ ${{ matrix.size }}
       # it jumps the clock across hours and days like the whole walk, which Linux's WebKit crashes on (D-106): Chromium only
       - name: The begin, delve, pause and done loop, double taps included (D-120)
         if: matrix.walk

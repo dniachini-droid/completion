@@ -28,6 +28,10 @@ export interface Job {
   by?: string;
   /** One line of Dan's own: where he stopped, or anything to keep with the job (D-112). */
   note?: string;
+  /** Dan's list for the job, a line at a time (a shopping list: "shampoo", then "milk" days later) (D-126). */
+  list?: string;
+  /** The list's lines struck off in the delve under way (their places in the list): they go when it ends (D-126). */
+  struck?: number[];
   /** Its rhythm was stopped (set by `live`): it leaves Today, the plan and Choose a delve until it repeats again. */
   stopped?: boolean;
 }
@@ -112,6 +116,8 @@ export type FactBody =
   /** A job edited or added by itself (the job editor, D-112): its whole new shape. Removed: gone from every list. */
   | { type: 'jobSaved'; job: Job }
   | { type: 'jobRemoved'; id: string }
+  /* a done record deleted (D-125): that day's record of a repeating job leaves the lists; its minutes stay. `back`: Undo */
+  | { type: 'doneHidden'; job: string; on: string; back?: boolean }
   /** The week's look-ahead in the Daybook (D-116): a line kept or put to someday by hand, the one thing that matters
       most this week (null: nothing in particular), and whether the look-ahead was opened and finished (the test's notes). */
   | { type: 'itemKept'; id: string }

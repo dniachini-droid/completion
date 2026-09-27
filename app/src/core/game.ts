@@ -129,6 +129,12 @@ function sizeOn(facts: Fact[], day: string, c?: Content) {
 const doneOn = (facts: Fact[], day: string) => new Set(ofType(onDay(facts, day), 'jobDone').map(f => f.job));
 /** Jobs done with real minutes behind them: only these complete a day or call the deep push (rule 10, D-117, D-121). */
 const workedOn = (facts: Fact[], day: string) => new Set(ofType(onDay(facts, day), 'jobDone').filter(f => f.minutes >= S.RETURN_MIN).map(f => f.job));
+/** Done records Dan deleted (D-125), as "job|day": they leave the lists; the minutes they counted for stay. */
+export function hiddenDone(facts: Fact[]): Set<string> {
+  const out = new Set<string>();
+  for (const f of ofType(facts, 'doneHidden')) { const k = `${f.job}|${f.on}`; if (f.back) out.delete(k); else out.add(k); }
+  return out;
+}
 const completedOn = (facts: Fact[], day: string) => onDay(facts, day).some(f => f.type === 'dayCompleted');
 export const delveMinutesOn = (facts: Fact[], day: string, job: string) =>
   ofType(onDay(facts, day), 'stepsGained').filter(f => f.job === job && f.run !== undefined).reduce((a, f) => a + f.minutes, 0);
@@ -322,7 +328,8 @@ function openSeal(w: W, c: Content, seal: Seal, at: Moment, day: string, job?: n
 
 function pushOn(facts: Fact[], day: string): boolean {
   const today = onDay(facts, day), dc = today.find(f => f.type === 'dayCompleted');
-  return capacityOn(facts, day) === 'high' || today.some(f => f.type === 'deepCalled')
+  /* doing more than a normal day's jobs is pushing deeper, with no setting to choose (Dan, D-127) */
+  return capacityOn(facts, day) === 'high' || today.some(f => f.type === 'deepCalled') || workedOn(facts, day).size > DAY_SIZE.normal
     || (!!dc && today.some(f => f.type === 'stepsGained' && f.seq > dc.seq));   /* Keep going: effort after the day's work */
 }
 
@@ -394,7 +401,9 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string) {
   if (!keyed) {
     const st = S.storyState(w.all, c.story), step = S.nextStep(c.story, st);
     const n = workedOn(w.all, day).size, called = onDay(w.all, day).some(f => f.type === 'deepCalled');
-    const deep = capacityOn(w.all, day) === 'high' && (n > DAY_SIZE.normal || (called && n >= DAY_SIZE.normal))
+    /* pushing deeper is doing more: past a normal day's jobs, the deep push's next beat plays, once a day, with no
+       setting to choose first (Dan, D-127; a High day or a morning call did it before, D-054) */
+    const deep = (n > DAY_SIZE.normal || (called && n >= DAY_SIZE.normal))
       && !ofType(onDay(w.all, day), 'beatPlayed').some(f => S.beatOf(c.story, f.id)?.kind === 'deep') ? S.nextDeep(c.story, st) : null;
     if (deep) { w.put({ type: 'beatPlayed', id: deep.id, job: done.seq }, at, day); show(w, c, deep.carries?.records, at, day); }
     else if (step) { w.put({ type: 'beatPlayed', id: step.id, job: done.seq }, at, day); show(w, c, step.carries?.records, at, day); }
@@ -414,6 +423,21 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string) {
 const sessionEnds = (all: Fact[], day: string, j: Job, minutes: number) =>
   j.doneBy === 'enough' && minutes > 0 && !doneOn(all, day).has(j.id);
 
+/** How long a job's list may be, in characters (D-126). */
+export const LIST_MAX = 2000;
+/** The lines of a job's list, as kept. */
+export const listLines = (j: Job | undefined) => (j?.list ?? '').split('\n').filter(l => l.trim());
+/** A delve's end takes the lines struck off during it out of the job's list (D-126). */
+function clearStruck(w: W, c: Content, id: string, at: Moment, day: string) {
+  const j = c.jobs.find(x => x.id === id);
+  if (!j?.struck?.length) return;
+  const gone = new Set(j.struck), list = listLines(j).filter((_, k) => !gone.has(k)).join('\n');
+  const job: Job = { ...j };
+  delete job.stopped; delete job.struck;
+  if (list) job.list = list; else delete job.list;
+  w.put({ type: 'jobSaved', job }, at, day);
+}
+
 /** Finish a run at an instant: every minute counts; a repeating job's run is its session. */
 function finishRun(w: W, c: Content, r: NonNullable<ReturnType<typeof activeRun>>, atMs: number, at: Moment) {
   const s = runAt(r.plan, r.marks, atMs), rday = r.fact.day, j = jobOf(c, r.fact.job);
@@ -424,6 +448,7 @@ function finishRun(w: W, c: Content, r: NonNullable<ReturnType<typeof activeRun>
     sideChamber(w, c, at, rday);
   }
   w.put({ type: 'delveEnded', job: j.id, minutes: counted, how: 'finishedHere', run: r.fact.seq }, at, rday);
+  clearStruck(w, c, j.id, at, rday);
   if (sessionEnds(w.all, rday, j, counted)) markDoneIn(w, c, j.id, at, rday);
   else gifts(w, c, at, rday);
   /* a place reached on this delve starts a new stretch, whose halfway may already be behind Dan (an arrival held for
@@ -508,6 +533,7 @@ function settleIn(w: W, c: Content, nowMs: number) {
   if (s.phase === 'ended' && s.how === 'ranOut') {
     const at = momentOf(s.endedAt!, w.off), minutes = Math.round(s.countedMs / MIN);
     w.put({ type: 'delveEnded', job: j.id, minutes, how: 'ranOut', run: r.fact.seq }, at, day);
+    clearStruck(w, c, j.id, at, day);
     /* a repeating job's run is its session, at the run's end (D-121) */
     if (sessionEnds(w.all, day, j, minutes)) markDoneIn(w, c, j.id, at, day);
   }
@@ -618,8 +644,13 @@ export type Command =
   /* the job editor (D-112): any job, with or without a rhythm; removing it (Undo saves it again); its first step, its note */
   | { do: 'saveJob'; job: Job; rhythm: Rhythm | null }
   | { do: 'removeJob'; id: string }
+  | { do: 'hideDone'; job: string; on: string; back?: boolean }
   | { do: 'firstStep'; job: string; step: string }
   | { do: 'noteJob'; job: string; note: string }
+  /* the job's list (D-126): its whole text, as Dan leaves it */
+  | { do: 'listJob'; job: string; list: string }
+  /* a line of the job's list struck off (or back) in its delve (D-126) */
+  | { do: 'strikeLine'; job: string; k: number }
   | { do: 'addItems'; lines: string[] }
   /** Lines from outside the app (D-113), each added once, whatever happens between writing and clearing */
   | { do: 'takeInbox'; lines: { id: string; text: string }[] }
@@ -753,6 +784,7 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       break;
     }
     case 'removeJob': if (c.jobs.some(j => j.id === cmd.id)) w.put({ type: 'jobRemoved', id: cmd.id }); break;
+    case 'hideDone': if (doneOn(w.all, cmd.on).has(cmd.job)) w.put({ type: 'doneHidden', job: cmd.job, on: cmd.on, ...(cmd.back ? { back: true } : {}) }); break;
     case 'firstStep': case 'noteJob': {
       const j = c.jobs.find(x => x.id === cmd.job);
       const text = (cmd.do === 'firstStep' ? cmd.step : cmd.note).trim().slice(0, 160), key = cmd.do === 'firstStep' ? 'firstStep' : 'note';
@@ -760,6 +792,33 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       const job: Job = { ...j };
       delete job.stopped;
       if (text) job[key] = text; else delete job[key];
+      w.put({ type: 'jobSaved', job });
+      break;
+    }
+    case 'listJob': {
+      const j = c.jobs.find(x => x.id === cmd.job);
+      /* whole lines only, up to LIST_MAX characters (review, D-126) */
+      const kept: string[] = [];
+      let n = 0;
+      for (const l of cmd.list.split('\n').map(x => x.replace(/\s+$/, '')).filter(x => x.trim())) { if (n + l.length > LIST_MAX) break; kept.push(l); n += l.length + 1; }
+      const list = kept.join('\n');
+      if (!j || (j.list ?? '') === list) break;
+      const job: Job = { ...j };
+      /* a list edited afresh starts with nothing struck */
+      delete job.stopped; delete job.struck;
+      if (list) job.list = list; else delete job.list;
+      w.put({ type: 'jobSaved', job });
+      break;
+    }
+    case 'strikeLine': {
+      /* only in the job's own delve, running or paused: a strike never outlives it (review, D-126) */
+      const j = c.jobs.find(x => x.id === cmd.job), r = activeRun(w.all);
+      if (!j || !r || r.fact.job !== j.id || cmd.k < 0 || cmd.k >= listLines(j).length) break;
+      const set = new Set(j.struck ?? []);
+      if (set.has(cmd.k)) set.delete(cmd.k); else set.add(cmd.k);
+      const job: Job = { ...j, struck: [...set].sort((a, b) => a - b) };
+      delete job.stopped;
+      if (!job.struck!.length) delete job.struck;
       w.put({ type: 'jobSaved', job });
       break;
     }
@@ -1083,8 +1142,12 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
     slate.push(id);
   }
   slate.sort((a, b) => order.indexOf(a) - order.indexOf(b));
-  for (const id of order) if (done.has(id) && !slate.includes(id)) slate.push(id);   /* off-plan counts in full */
-  for (const id of done) if (!slate.includes(id)) slate.push(id);   /* so does something chosen from outside the list (D-077) */
+  /* a job deleted after it was done leaves the list; the minutes it counted for stay (Dan, D-125) */
+  const hidden = hiddenDone(facts), kept = (id: string) => c.jobs.some(j => j.id === id) && !hidden.has(`${id}|${day}`);
+  for (const id of order) if (done.has(id) && !slate.includes(id) && kept(id)) slate.push(id);   /* off-plan counts in full */
+  for (const id of done) if (!slate.includes(id) && kept(id)) slate.push(id);   /* so does something chosen from outside the list (D-077) */
+  /* a done record deleted leaves even a planned place on the list (D-125) */
+  for (let i = slate.length - 1; i >= 0; i--) if (done.has(slate[i]) && hidden.has(`${slate[i]}|${day}`)) slate.splice(i, 1);
   const complete = completedOn(facts, day);
   /* "under way" was a job without a timer begun away from the phone; every job is a delve now (D-117), so an old Begin
      in a save leaves nothing under way */

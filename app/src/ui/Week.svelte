@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Deleted from './Deleted.svelte';
   /* The week (PLANNER.md, locked D-048; mock-up week.html). On request only, never the opening screen. One row per day,
      each day's jobs in plain words with a time where one is set; no hour grid, no tray of unplaced jobs. "Plan my week"
      lays it out; a tap moves a job, gives it a time, or takes it off this week. The past shows only what was done. The
@@ -57,10 +58,15 @@
   /* a job's sheet: a tap on a day moves it there at once; the time opens the phone's own wheel and keeps what it's set
      to; nothing to save (D-093) */
   function edit(j: DayJob, day: string) {
-    if (j.done || !j.entry || day < v.day) return;
+    /* a done job opens too, to be deleted: its record goes, the minutes it counted for stay (Dan, D-125) */
+    if (!j.done && (!j.entry || day < v.day)) return;
     addingTo = null;
-    open = open === j.entry ? null : j.entry;
+    open = open === keyOf(j, day) ? null : keyOf(j, day);
   }
+  $effect(() => { void open; otherOpen = false; });
+  const keyOf = (j: DayJob, day: string) => j.done ? `done:${day}:${j.job}` : j.entry!;
+  /* a done row: only that day's record goes (its minutes stay); otherwise the job (D-125) */
+  function remove(j: DayJob, day: string) { open = null; if (j.done) game.removeDone(j.job, day); else game.remove(j.job); }
   function moveTo(j: DayJob, from: string, day: string) {
     if (day !== from) game.do({ do: 'movePlan', entry: j.entry!, day });
     open = null;
@@ -102,6 +108,10 @@
   /* on a computer the time box opens its picker on any click too, as a phone's does */
   function pick(e: MouseEvent) { try { (e.currentTarget as HTMLInputElement).showPicker?.(); } catch { /* not every browser */ } }
   const short = (d: string) => t(`days.short.${new Date(`${d}T00:00:00Z`).getUTCDay()}` as never);
+  /* "Another day…": the four weeks after this one, as a small calendar (D-125) */
+  let otherOpen = $state(false);
+  const ahead = $derived(Array.from({ length: 28 }, (_, i) => addDays(wk, 7 + i)));
+  const monthOf = (d: string) => t(`month.${+d.slice(5, 7)}` as never);
 </script>
 
 <Scene painting={v.here.painting} blur />
@@ -118,6 +128,7 @@
   </header>
 
   <div class="body col rise d1">
+    <Deleted />
     {#if !planMade(game.facts, wk)}
       <div class="none">
         {#if !view.planned}<h2 class="say-lg">{isNext ? t('week.none.next') : t('week.none')}</h2>{/if}
@@ -151,21 +162,31 @@
             <div class="event" class:allday={e.allDay}>{#if !e.allDay}<span class="at">{e.start.slice(0, 10) < d.day ? '' : e.start.slice(11, 16)}</span>{/if}<span class="what">{e.title}</span></div>
           {/each}
           {#each d.jobs as j (j.entry ?? j.job + j.done)}
-            <button class="row" class:done={j.done} class:open={open === j.entry} onclick={() => edit(j, d.day)} disabled={j.done || d.day < v.day}>
+            <button class="row" class:done={j.done} class:open={open === keyOf(j, d.day)} onclick={() => edit(j, d.day)} disabled={!j.done && d.day < v.day}>
               <span class="pip" class:done={j.done}></span><span class="t">{game.job(j.job)?.name ?? j.job}</span><span class="s">{note(j, d.day)}</span>
             </button>
-            {#if open && open === j.entry}
+            {#if open && j.done && open === keyOf(j, d.day)}
+              <!-- a done job: only Delete; the minutes it counted for stay (Dan, D-125) -->
+              <div class="sheet"><div class="off"><button class="text-link" onclick={() => remove(j, d.day)}><span>{t('job.delete')}</span></button></div></div>
+            {:else if open && open === j.entry}
               <div class="sheet">
                 <div class="label-line">{t('week.moveTo')}</div>
                 <div class="seg days" role="group" aria-label={t('week.moveTo')}>
                   {#each days as x (x)}<button aria-pressed={d.day === x} onclick={() => moveTo(j, d.day, x)}>{short(x)}</button>{/each}
                 </div>
-                <!-- another week: off this one, and onto that day (D-114) -->
-                <label class="other">
-                  <span class="text-link"><span>{t('week.otherDay')}</span></span>
-                  <input type="date" min={v.day} aria-label={t('week.otherDay')} onclick={pick}
-                    onchange={e => { const x = e.currentTarget.value; if (x) toDay(j, x); }} />
-                </label>
+                <!-- another week: off this one, and onto that day (D-114). The app's own four weeks, not the phone's
+                     date picker, which closed itself within seconds on the iPhone (Dan, D-125) -->
+                <div class="other"><button class="text-link" aria-expanded={otherOpen} onclick={() => (otherOpen = !otherOpen)}><span>{t('week.otherDay')}</span></button></div>
+                {#if otherOpen}
+                  <div class="cal" role="group" aria-label={t('week.otherDay')}>
+                    {#each [1, 2, 3, 4, 5, 6, 0] as w (w)}<span class="wd" aria-hidden="true">{t(`days.short.${w}` as never)}</span>{/each}
+                    {#each ahead as x (x)}
+                      <button aria-label={`${dayName(x)} ${+x.slice(8)} ${monthOf(x)}`} onclick={() => toDay(j, x)}>
+                        <span>{+x.slice(8)}</span>{#if x === ahead[0] || x.endsWith('-01')}<small>{monthOf(x).slice(0, 3)}</small>{/if}
+                      </button>
+                    {/each}
+                  </div>
+                {/if}
                 <div class="when">
                   <!-- the time box is the phone's own: a tap opens its wheel, and what it's set to is kept (D-093) -->
                   <label class="clock-btn">
@@ -181,6 +202,7 @@
                   <button class="text-link" onclick={() => off(j)}><span>{t('week.off')}</span></button>
                   <!-- the job itself: its name, length, first step… (D-112) -->
                   <button class="text-link" onclick={() => go('rhythms', j.job)}><span>{t('job.change')}</span></button>
+                  {#if v.run?.job.id !== j.job}<button class="text-link" onclick={() => remove(j, d.day)}><span>{t('job.delete')}</span></button>{/if}
                 </div>
               </div>
             {/if}
@@ -242,8 +264,12 @@
   .event .at { font-variant-numeric: tabular-nums; color: var(--ink-3); min-width: 3.2em; }
   .event.allday { color: var(--ink-3); }
   .event .what { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
-  .other { position: relative; display: flex; justify-content: center; margin-top: 8px; }
-  .other input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; border: 0; padding: 0; margin: 0; -webkit-appearance: none; appearance: none; }
+  .other { display: flex; justify-content: center; margin-top: 8px; }
+  .cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; margin-top: 6px; }
+  .cal .wd { text-align: center; font-size: 14px; letter-spacing: .08em; color: var(--ink-3); }
+  .cal button { min-height: 44px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0;
+    font: inherit; font-size: 17px; color: var(--ink); background: transparent; border: 1px solid var(--edge-2); cursor: pointer; }
+  .cal button small { font-size: 14px; line-height: 1; color: var(--ink-3); }
   .off { display: flex; justify-content: center; flex-wrap: wrap; gap: 0 14px; margin-top: 6px; }
   .btn.full { width: 100%; }
   .new { display: flex; gap: 10px; margin: 4px 0 8px; }
