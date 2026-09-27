@@ -333,8 +333,6 @@ export const copy = {
   'rhythms.every2': 'every 2 weeks',
   'rhythms.every2long': 'Once every 2 weeks',
   'slip.date': '{job} was wanted {date}. Still needed?', 'slip.appt': '{job}, on {day} at {time}, went by. Still needed?', 'slip.today': 'Put it on today',
-  'size.label': 'How much today', 'size.low': 'Lighter', 'size.normal': 'As planned', 'size.high': 'Fuller',
-  'size.hint.back': 'The first day back: a lighter one may suit.', 'size.hint.bedtime': 'After a late night, a lighter day may suit.',
   'week.aboutMin': 'about {n} min', 'week.aboutH': 'about {n} h', 'week.replan': 'Lay out the rest of the week',
   'week.later': 'A later week', 'week.after': 'The week after', 'week.otherDay': 'Another day…',
   'by.date': 'by {date}', 'by.label': 'By a date', 'by.none': 'No date', 'by.set': 'By',

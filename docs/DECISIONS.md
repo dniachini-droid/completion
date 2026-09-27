@@ -1332,3 +1332,10 @@
 - **Alternatives:** a "Pack" or "Journal" name (Dan chose Satchel); a separate checklist per job (two kinds of thing again: the note with strike-through is enough); letting the planner place Siri jobs (Dan's jots are his to place).
 - **Consequences:** a new screen check, `tests/flows/satchel.mjs`, runs in CI. Rule tests cover the Satchel's contents and the list. Siri's reply now says "It's in your satchel."
 - **Reversible:** Yes.
+
+## D-127 — Lighter · As planned · Fuller is removed from Today (Dan)
+- **Date:** 2026-09-27
+- **Context:** The day-size choice (D-114, Stage 3 item 13) showed on Today at the day's first open. Dan: "Remove it. I'll set my days. It's clutter."
+- **Decision:** The choice and its hints are removed from Today. The rules keep `capacity` (old saves, tests), but nothing in the app sets it now, so every day is as planned.
+- **Consequences:** The "Push deeper" offer (D-054) appeared only on a Fuller day, so it no longer appears; flagged for the UI review and Dan's morning overview. Dan sets his days in the Week.
+- **Reversible:** Yes.
