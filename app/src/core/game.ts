@@ -15,7 +15,7 @@ import type { Beat, Seal, StretchId } from './story-types';
 
 export const STEP_MIN = 25;                                   /* BALANCING §1 */
 export const DAY_SIZE: Record<Capacity, number> = { low: 2, normal: 3, high: 5 };   /* §6 */
-export const DIAL = [25, 30, 45, 60] as const;                /* the dial's stops (D-033) */
+export const DIAL = [5, 10, 15, 25, 30, 45, 60, 90] as const;   /* the dial's stops (D-033; 5–15 and 90, D-110) */
 const MIN = 60_000;
 
 /* ---------- reading the log ---------- */
@@ -131,6 +131,7 @@ export const delveMinutesOn = (facts: Fact[], day: string, job: string) =>
 export const rhythmOf = (c: Content, job: string): Rhythm | undefined => c.rhythms.find(r => r.job === job);
 /** Whether a job belongs in today's suggestion at all: a set-day rhythm on its day; a one-off until it's done. */
 function offeredOn(c: Content, facts: Fact[], day: string, j: Job, planned: Set<string>): boolean {
+  if (j.stopped) return false;   /* a stopped rhythm leaves no one-off behind (D-110) */
   if (planned.has(j.id)) return true;
   if (j.item) return false;   /* a satchel line is offered only once it is planned for the day (TOOLS §2) */
   const r = rhythmOf(c, j.id);
@@ -386,6 +387,13 @@ function pauseAway(w: W, from: number, to: number) {
   if (runAt(r.plan, r.marks, at).phase === 'delve') w.put({ type: 'delveHeld', why: 'away' }, momentOf(at, w.off));
 }
 
+/** Whether the n-th delve of a run is the one that reaches a side chamber: the first with at least four delves and at
+    least 100 minutes behind it (with delves of 25 minutes or more, simply the fourth) (D-110). */
+export const chamberAt = (n: number, minutes: number) => {
+  const reached = (k: number) => k >= S.CHAMBER_RUN && k * minutes >= S.CHAMBER_MIN;
+  return reached(n) && !reached(n - 1);
+};
+
 /** A delve left stepped-away this long ends by itself where it was paused (review finding, D-080). */
 export const HOLD_MAX = 3 * 60 * MIN;
 
@@ -401,7 +409,7 @@ function settleIn(w: W, c: Content, nowMs: number) {
     const before = ofType(onDay(w.all, day), 'stepsGained').filter(g => g.run !== undefined);
     w.put({ type: 'stepsGained', minutes: r.plan.minutes, job: j.id, run: r.fact.seq }, at, day);
     /* a long delve reaches a side chamber; the first delve on a new job after a long stretch brings a find (§1, D-044) */
-    if (k + 1 === S.CHAMBER_RUN) giveFind(w, c, 'chamber', at, day);
+    if (chamberAt(k + 1, r.plan.minutes)) giveFind(w, c, 'chamber', at, day);
     const others = [...new Set(before.map(g => g.job))].filter(x => x !== j.id);
     if (before.length && before[before.length - 1].job !== j.id && others.some(x => delveMinutesOn(w.all, day, x) >= S.LONG_STRETCH)
       && !ofType(onDay(w.all, day), 'findGiven').some(f => f.why === 'switching')) giveFind(w, c, 'switching', at, day);
@@ -990,9 +998,11 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
 /** The run set-up for a job (INTERACTION_NOTES → the morning): a job that takes hours opens set to its enough. */
 export function presetRun(j: Job): { minutes: number; count: number } {
   const need = enoughOf(j);
-  if (need <= DIAL[0]) return { minutes: DIAL[0], count: 1 };
-  for (const m of DIAL.slice(0, 2)) if (need % m === 0) return { minutes: m, count: need / m };
-  return { minutes: DIAL[0], count: Math.ceil(need / DIAL[0]) };
+  /* a short job: one delve on the first stop that holds it; otherwise 25s or 30s, as before (D-110) */
+  if (need < STEP_MIN) return { minutes: DIAL.find(m => m >= need) ?? STEP_MIN, count: 1 };
+  if (need === STEP_MIN) return { minutes: STEP_MIN, count: 1 };
+  for (const m of [25, 30]) if (need % m === 0) return { minutes: m, count: need / m };
+  return { minutes: STEP_MIN, count: Math.ceil(need / STEP_MIN) };
 }
 
 export { alertsAfter, runAt };

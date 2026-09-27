@@ -40,7 +40,11 @@ export function live(c: Content, facts: Fact[], before?: string): Content {
       if (r >= 0) rhythms[r] = f.rhythm; else rhythms.push(f.rhythm);
     } else if (f.type === 'rhythmStopped') {
       if (!changed) { jobs = jobs.slice(); rhythms = rhythms.slice(); changed = true; }
-      rhythms = rhythms.filter(r => r.id !== f.id);
+      const r = rhythms.find(x => x.id === f.id);
+      rhythms = rhythms.filter(x => x.id !== f.id);
+      /* its job doesn't stay behind as a one-off (D-110) */
+      const j = r ? jobs.findIndex(x => x.id === r.job) : -1;
+      if (j >= 0 && !rhythms.some(x => x.job === r!.job)) jobs[j] = { ...jobs[j], stopped: true };
     } else if (f.type === 'itemAdded') {
       if (!changed) { jobs = jobs.slice(); rhythms = rhythms.slice(); changed = true; }
       jobs.push({ id: f.id, name: f.name, delve: false, length: 25, doneBy: 'dan', item: true });
@@ -56,15 +60,20 @@ export const roomOf = (j: Job) => j.delve ? j.enoughAt ?? j.length : j.length;
 
 export interface Item { id: string; name: string; added: string; done: boolean; someday: boolean; }
 
-/** Dan's lines, oldest first. Ticked ones stay ticked; dropped ones go; untouched for three weeks, someday (TOOLS §2). */
+/** Dan's lines, oldest first. Ticked ones stay ticked that day and leave the list the day after (D-110); dropped ones
+    go; untouched for three weeks, someday (TOOLS §2). */
 export function items(facts: Fact[], day: string): Item[] {
-  const out = new Map<string, Item>(), touched = new Map<string, string>();
+  const out = new Map<string, Item>(), touched = new Map<string, string>(), ticked = new Map<string, string>();
   for (const f of facts) {
     if (f.type === 'itemAdded') { out.set(f.id, { id: f.id, name: f.name, added: f.day, done: false, someday: false }); touched.set(f.id, f.day); }
-    else if (f.type === 'itemTicked' || (f.type === 'jobDone' && out.has(f.job))) { const id = f.type === 'itemTicked' ? f.id : f.job; const it = out.get(id); if (it) it.done = true; }
+    else if (f.type === 'itemTicked' || (f.type === 'jobDone' && out.has(f.job))) {
+      const id = f.type === 'itemTicked' ? f.id : f.job, it = out.get(id);
+      if (it && !it.done) { it.done = true; ticked.set(id, f.day); }
+    }
     else if (f.type === 'itemDropped') out.delete(f.id);
     else if (f.type === 'planAdded' && out.has(f.entry.job)) touched.set(f.entry.job, f.day);
   }
+  for (const [id, d] of ticked) if (d < day) out.delete(id);
   for (const it of out.values()) it.someday = !it.done && daysBetween(touched.get(it.id)!, day) >= SOMEDAY_DAYS;
   return [...out.values()];
 }
@@ -123,7 +132,7 @@ export function planWeek(c: Content, facts: Fact[], week: string, from: string):
   /* appointments and set days first (they may pass a day's size: an appointment is fixed, P10) */
   for (const r of c.rhythms.filter(x => x.days)) for (const d of days) if (r.days!.includes(weekdayOf(d)) && !doneOnDay(r.job, d)) put(r.job, d, r.time);
   /* avoided one-offs early in the week, one to a day where the week allows */
-  for (const j of c.jobs.filter(x => x.avoided && !x.item && !rhythmJob.has(x.id) && !ever.has(x.id))) {
+  for (const j of c.jobs.filter(x => x.avoided && !x.item && !x.stopped && !rhythmJob.has(x.id) && !ever.has(x.id))) {
     const d = days.find(x => load(x) < cap(x) && !out.some(e => e.day === x && c.jobs.find(k => k.id === e.job)?.avoided)) ?? days.find(x => load(x) < cap(x));
     if (d) put(j.id, d);
   }
@@ -183,7 +192,7 @@ export function weekOf(c: Content, facts: Fact[], week: string, today: string): 
   };
   const released: PlanEntry[] = [];
   for (const e of plan) {
-    if (!c.jobs.some(j => j.id === e.job)) continue;
+    if (!c.jobs.some(j => j.id === e.job && !j.stopped)) continue;
     const dj = at(e.day)?.jobs.find(x => x.done && x.job === e.job && x.entry === null);
     if (e.day <= today && dj) { dj.entry = e.id; if (e.time) dj.time = e.time; continue; }   /* done as planned */
     if (e.day < today) { if (!e.time) released.push(e); continue; }   /* a missed appointment falls away (D-080) */

@@ -24,6 +24,8 @@ export interface Job {
   firstStep?: string;
   /** A line from the satchel or the week (TOOLS §2): offered on Today only when planned for the day. */
   item?: boolean;
+  /** Its rhythm was stopped (set by `live`): it leaves Today, the plan and Choose a delve until it repeats again. */
+  stopped?: boolean;
 }
 
 /** What repeats (PLANNER.md → Rhythms; DATA_MODEL.md → Rhythm). Dan's own data; editing arrives with the planner (slice 4). */

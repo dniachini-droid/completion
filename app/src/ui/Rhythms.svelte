@@ -11,7 +11,7 @@
 
   let { go }: { go: Go } = $props();
   const v = $derived(game.view);
-  const LEN = [25, 30, 45, 60, 90, 120, 180, 240];
+  const LEN = [5, 10, 15, 25, 30, 45, 60, 90, 120, 180, 240];   /* down to 5 min (D-110) */
   const DAYS = [1, 2, 3, 4, 5, 6, 0];
 
   interface Draft { id: string | null; job: Job; often: 'week' | 'days' | 'fort'; times: number; days: number[]; len: number; enough: number | null; time: string | null; delve: boolean; }

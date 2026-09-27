@@ -22,6 +22,8 @@ export const KEY_FLOOR = 2;
 export const LONG_STRETCH = 100;
 /** Delves in one sitting that reach a side chamber (§1). */
 export const CHAMBER_RUN = 4;
+/** …and at least this much of them: short delves (5–15 min) reach it only with the same effort (rule 10, D-110). */
+export const CHAMBER_MIN = 100;
 
 const ofType = <T extends FactBody['type']>(facts: Fact[], type: T) => facts.filter((f): f is FactOf<T> => f.type === type);
 

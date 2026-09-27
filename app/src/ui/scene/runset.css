@@ -53,6 +53,14 @@
 .rs .stop.past{ color: var(--ink-2); }
 .rs .stop:focus-visible{ outline: 1px solid var(--edge); outline-offset: -4px; }
 .rs .stops{ --R: min(236px, 60vw, 29vh); position:absolute; left:0; top:0; }
+/* the long delve's stop sits under the dial, past the 30 (D-110) */
+.rs .stop.long{ --R: min(236px, 60vw, 29vh); width:auto; margin:0; padding:0 12px; white-space:nowrap; font-size:15px; letter-spacing:.04em;
+  transform: translate(-50%, calc(var(--R) / 2 + 52px)); }
+/* a short phone has no room under the dial: it waits in the free corner by the 45, on two lines */
+@media (max-height: 760px){
+  .rs .stop.long{ width:84px; padding:0; white-space:normal; line-height:1.2; text-align:center; font-size:14px;
+    transform: translate(calc(var(--R) / -2 - 76px), calc(var(--R) / -2 - 34px)); }
+}
 .rs .run{ text-align:center; margin-top: 6px; }
 .rs .run h2{ font-size: 19px; letter-spacing: .12em; padding-left: .12em; color: #eceaff; white-space: nowrap;
   text-shadow: 0 -1px 0 rgba(0,0,0,.9), 0 0 16px rgba(var(--violet-rgb), .7), 0 0 44px rgba(var(--violet-rgb), .35);

@@ -40,6 +40,7 @@ export const copy = {
   /* the run set-up (the dial) */
   'set.label': 'Delves',
   'set.minutes': 'minutes',
+  'set.long': '{n} · one long delve',
   'set.towards': 'Towards {place}',
   'set.to': 'To {place}',
   'set.onward': 'Further in',

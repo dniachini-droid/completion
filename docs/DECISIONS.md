@@ -1116,3 +1116,16 @@
   - New fact types need sample saves (D-106).
   - Phase 10 starts after the track's first three stages unless Dan says otherwise.
 - **Reversible:** Yes. Each reminder is opt-in, and each stage stands alone.
+
+## D-110 — Stage 2, the parts that run beside Stage 1: two list bugs, delve lengths 5–90, the laptop first step (Claude's routine calls, D-006)
+- **Date:** 2026-09-27
+- **Context:** Dan runs Stage 1 in one window and asked a second window to take the other stages without doubling up. Stage 2's job editor, notes and "Already done" share screens and saved data with Stage 1 (the "Remind me" choice lives where a time is set), so they wait for Stage 1. These four items touch none of Stage 1's files and go ahead now (`product/PRODUCTIVITY_PLAN.md`). Decision numbers: Stage 1 takes D-108 and D-109; this window starts at D-110.
+- **Decision:**
+  1. **A stopped rhythm leaves nothing behind.** Stopping a rhythm marks its job stopped (`live`): it leaves Today, the rest of the week's plan and Choose a delve. Saving the rhythm again brings it back. Before, a rhythm stopped before it was ever done came back as a one-off every day.
+  2. **A ticked satchel line leaves the list the day after it is ticked.** Ticked that day, it stays ticked, as before.
+  3. **Delve lengths 5, 10 and 15 min** join the dial's face (a stop's angle is its minutes on the hour face), and **one long 90** has its own stop under the dial (in the free corner by the 45 on a short phone). What repeats offers lengths down to 5 min. A short job's delve starts on the first stop that holds it.
+  4. **Balance at the new ends (rule 10):** steps stay in proportion to minutes, so a 5-minute delve earns 5 minutes. A side chamber now needs four delves **and** 100 minutes in the sitting: with delves of 25 minutes or more that is simply the fourth, as before; eight 5- or 10-minute delves can't reach it; seven 15s can. The switching find already counted minutes (100).
+  5. **The cat's medication's first step** is "Open the vet's page on your laptop."
+- **Alternatives:** 90 as a second lap of the ring (hard to read at a glance); lengths under 25 not allowed as delves (the review asked for them, for starting when starting is hard).
+- **Consequences:** 5 new rule tests (the two bugs fail on the old code). `Job` gains `stopped` (set by the rules, never saved: no new fact type, no save version). Taste call for Dan: where the 90 sits.
+- **Reversible:** Yes.

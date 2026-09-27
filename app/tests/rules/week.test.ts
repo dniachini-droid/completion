@@ -3,10 +3,10 @@
  * Ids only: no story text is asserted here.
  */
 import { describe, expect, it } from 'vitest';
-import { act, returnOf, see, settle, type Command } from '../../src/core/game';
+import { act, chamberAt, presetRun, returnOf, see, settle, type Command } from '../../src/core/game';
 import * as W from '../../src/core/week';
 import * as S from '../../src/core/story';
-import { weekdayOf } from '../../src/core/time';
+import { calendarWeek, weekdayOf } from '../../src/core/time';
 import type { Fact } from '../../src/core/types';
 import { content as C } from '../../src/content/world';
 import { sim } from './sim';
@@ -520,5 +520,46 @@ describe('Undoing a tap made by mistake (review 2, D-088)', () => {
     const begun = p.facts.filter(f => f.type === 'jobBegun' && f.job === away);
     expect(begun[begun.length - 1]).toMatchObject({ from: 'record' });
     expect(p.view().walked).toBeGreaterThan(walked);
+  });
+});
+
+describe('Stage 2 fixes and lengths (D-110)', () => {
+  it('a rhythm stopped before it was ever done leaves no one-off behind, and leaves the plan', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'stopRhythm', id: 'r-tank' });
+    for (let d = 0; d < 14; d++) {
+      expect(p.view().slate).not.toContain('tank');
+      expect(p.view().order).not.toContain('tank');
+      const wk = W.weekOf(p.view().content, p.facts, calendarWeek(p.view().day), p.view().day);
+      expect(wk.days.flatMap(x => x.jobs).filter(j => !j.done).map(j => j.job)).not.toContain('tank');
+      p.next().do({ do: 'open' });
+    }
+    expect(p.view().content.jobs.find(j => j.id === 'tank')?.stopped).toBe(true);
+  });
+  it('a stopped rhythm saved again repeats again', () => {
+    const p = player().do({ do: 'stopRhythm', id: 'r-meal' });
+    const job = { ...C.jobs.find(j => j.id === 'meal')! };
+    p.do({ do: 'saveRhythm', rhythm: { id: 'r-meal', job: 'meal', days: [0] }, job }).do({ do: 'open' });
+    expect(p.view().content.jobs.find(j => j.id === 'meal')?.stopped).toBeFalsy();
+    expect(W.planOf(p.facts, MON)!.some(e => e.job === 'meal')).toBe(true);
+  });
+  it('a ticked satchel line stays ticked that day and leaves the list the day after', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['post the parcel', 'clear the desk'] });
+    const [a, b] = W.items(p.facts, MON);
+    p.do({ do: 'tick', id: a.id });
+    expect(W.items(p.facts, MON).map(i => [i.id, i.done])).toEqual([[a.id, true], [b.id, false]]);
+    expect(W.items(p.facts, W.addDays(MON, 1)).map(i => i.id)).toEqual([b.id]);
+  });
+  it('a side chamber needs four delves and 100 minutes: short delves can’t reach it cheaper (rule 10)', () => {
+    expect([1, 2, 3, 4, 5].map(n => chamberAt(n, 25))).toEqual([false, false, false, true, false]);
+    expect([3, 4].map(n => chamberAt(n, 90))).toEqual([false, true]);
+    expect([4, 6, 7, 8].map(n => chamberAt(n, 15))).toEqual([false, false, true, false]);
+    for (let n = 1; n <= 8; n++) { expect(chamberAt(n, 5)).toBe(false); expect(chamberAt(n, 10)).toBe(false); }
+  });
+  it('a 5-minute delve earns 5 minutes, and a short job starts on the stop that holds it', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'startRun', job: 'spanish', minutes: 5, count: 1 }).wait(6);
+    expect(p.facts.filter(f => f.type === 'stepsGained').map(f => (f as { minutes: number }).minutes)).toEqual([5]);
+    expect(presetRun({ id: 'x', name: 'x', delve: true, length: 10, doneBy: 'dan' })).toEqual({ minutes: 10, count: 1 });
+    expect(presetRun({ id: 'x', name: 'x', delve: true, length: 25, doneBy: 'dan' })).toEqual({ minutes: 25, count: 1 });
+    expect(presetRun({ id: 'x', name: 'x', delve: true, length: 180, enoughAt: 50, doneBy: 'enough' })).toEqual({ minutes: 25, count: 2 });
   });
 });

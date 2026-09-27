@@ -41,6 +41,7 @@
   - This is capture only; it never starts a delve.
 
 ## Stage 2: edit anything (one session)
+> **Running beside Stage 1 (D-110):** the four items below that touch none of Stage 1's files were built on `claude/productivity-app-review-8txb0y` while Stage 1 runs on `claude/productivity-app-review-kazbf7`. The job editor (4), "Already done" (15) and notes (14) wait for Stage 1, because they share its screens and its saved data.
 - [ ] **(4) Edit any job.** One job editor, opened from What repeats, from the satchel and from a job on the Week. It covers:
   - name, length, and timer or no timer;
   - repeats (optional: "doesn't repeat");
@@ -52,17 +53,17 @@
   - New facts `jobSaved` and `jobRemoved`, folded in `live()` (`core/week.ts:32`).
   - Satchel lines can be renamed.
   - A new job asks for its first step (optional). If it has none, "I can't start" asks "What's the first thing you'd touch?" and keeps the answer.
-- [ ] **Bug: a stopped rhythm comes back.** Stopping a rhythm that was never done must not leave a one-off behind (`offeredOn`, `core/game.ts:132`). Stopped jobs leave Choose a delve. Rule test.
-- [ ] **Bug: ticked satchel lines never leave.** A ticked line leaves the list the day after it is ticked (`items()`, `core/week.ts:60`).
+- [x] **Bug: a stopped rhythm comes back.** Stopping a rhythm that was never done must not leave a one-off behind (`offeredOn`, `core/game.ts:132`). Stopped jobs leave Choose a delve. Rule test.
+- [x] **Bug: ticked satchel lines never leave.** A ticked line leaves the list the day after it is ticked (`items()`, `core/week.ts:60`).
 - [ ] **(15) Already done / did it yesterday** (reverses D-089, Dan's OK 2026-09-27).
   - Any job, timed or not, can be marked done without starting a timer, today or yesterday.
   - Recorded as `jobBegun from: 'record'` + `jobDone` (the test's "logged afterwards"). It earns what a no-timer job earns (BALANCING §1).
   - A tap on a timed row still starts it (D-104). "Already done" sits in the row's swipe or in Choose a delve.
-- [ ] **(8, lengths only) Delve lengths 5, 10, 15 and 90 min** beside 25/30/45/60 (`RunSet.svelte`), and repeat lengths down to 5 min (`LEN`, `Rhythms.svelte`). Check the step, reward and run rules at the new ends (BALANCING).
+- [x] **(8, lengths only) Delve lengths 5, 10, 15 and 90 min** beside 25/30/45/60 (`RunSet.svelte`), and repeat lengths down to 5 min (`LEN`, `Rhythms.svelte`). Check the step, reward and run rules at the new ends (BALANCING).
 - [ ] **(14) A note on each job.**
   - One line, editable in the job editor.
   - "Finish here" offers "Where did you stop?" (optional). The answer shows on that job's next Begin, and in "I can't start" as its first step.
-- [ ] **Starter set:** the cat's medication first step becomes "Open the vet's page on your laptop" (Dan works on his laptop).
+- [x] **Starter set:** the cat's medication first step becomes "Open the vet's page on your laptop" (Dan works on his laptop).
 
 ## Stage 3: dates and time (one session, maybe two)
 - [ ] **(5) Deadlines.** An optional **by** date on satchel lines and one-offs, set with the phone's date wheel. The satchel and the Week show "by Fri 10 Oct" in the quiet italic.
