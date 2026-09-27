@@ -302,7 +302,7 @@ export const copy = {
   'look.offer': 'Look ahead at the week? About a minute.', 'look.go': 'Look ahead',
   'look.still': 'Still wanted?', 'look.keep': 'Keep', 'look.someday': 'Someday', 'look.skip': 'Skip',
   'look.coming': 'Coming up', 'look.nothing': 'Nothing fixed this week.', 'look.more': 'and more in the week',
-  'look.next': 'Next', 'look.matters': 'What matters most this week?', 'look.nothingParticular': 'Nothing in particular',
+  'look.next': 'Next', 'look.matters': 'What matters most?', 'look.nothingParticular': 'Nothing in particular',
   'daybook.notNow': 'Not now',
   'daybook.close': 'Close',
   'daybook.earlier': 'Earlier',

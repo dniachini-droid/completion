@@ -43,19 +43,14 @@
   let arg = $state<string | number | undefined>(undefined);
   /* a new day reached by coming back to the app opens as a cold start would: what waits is shown first (D-080) */
   let lastWoke = game.woke;
-  /* VoiceOver: a new screen's title is read first; focus moves to it, unless something on the screen already took it
-     (accessibility A, D-111) */
+  /* VoiceOver: a new screen's title is read out (accessibility A, D-111), through a quiet live line rather than by moving
+     focus: moving focus could slide a screen sideways (Dan, review 2) */
+  let announce = $state('');
   $effect(() => {
     void screen; void arg;
     void tick().then(() => {
-      const a = document.activeElement as HTMLElement | null;
-      if (a && a !== document.body && a.isConnected && a.tagName !== 'BUTTON') return;
       const h = document.querySelector<HTMLElement>('.ui h1, h1') ?? document.querySelector<HTMLElement>('.ui h2, h2');
-      if (!h) return;
-      h.setAttribute('tabindex', '-1');
-      h.focus({ preventScroll: true });
-      /* a focus must never slide the screen sideways (Dan, review 2) */
-      for (let e: HTMLElement | null = h.parentElement; e; e = e.parentElement) if (e.scrollLeft) e.scrollLeft = 0;
+      announce = h?.textContent?.trim() ?? '';
     });
   });
   $effect(() => { if (game.woke !== lastWoke) { lastWoke = game.woke; screen = first(); arg = undefined; } });
@@ -117,6 +112,7 @@
 <main class="phone" class:still>
   <!-- a rehearsal's clock runs 60 times faster (an evening passes in minutes): said on every screen, so the day it
        shows is never mistaken for the real one (Dan, review 2). Today carries its own badge. -->
+  <div class="sr-live" aria-live="polite" aria-atomic="true">{announce}</div>
   {#if game.proto.rehearsal && !['today', 'proto'].includes(screen)}<div class="rehearsal" aria-live="polite">{t('proto.badge')}</div>{/if}
   <!-- a screen that fails shows a way back, never a blank phone; the save is untouched (review finding, D-080) -->
   <svelte:boundary onerror={(e) => console.error(e)}>
@@ -156,4 +152,5 @@
   .still :global(.rise), .still :global(.scene), .still :global(.fade) { animation: none !important; }
   .rehearsal { position: absolute; z-index: 20; left: 50%; transform: translateX(-50%); top: calc(var(--safe-t, 0px) + 4px); pointer-events: none;
     font-family: var(--carve); font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); opacity: .85; white-space: nowrap; }
+  .sr-live { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 </style>

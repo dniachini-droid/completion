@@ -1230,7 +1230,7 @@
   1. The week's Daybook page ends, as before, with one quiet offer, now "Look ahead at the week? About a minute." with **Look ahead**, **Plan it for me** (as before) and **Not now**. It is offered once a week, never as a notification, and every step can be skipped.
   2. **Still wanted?** Up to three of the oldest open satchel lines (a week old or more; dated lines have their own question), one at a time: **Keep** (its three weeks toward someday start again) · **Someday** (there now) · **Let it go**. Never the pile, never a count.
   3. **Coming up:** the week's fixed points from today, one line each (appointments and timed entries, dated work, monthly and yearly items), five at most, then "and more in the week".
-  4. **What matters most this week?** One job or line, or "Nothing in particular". Plan my week places it first, early in the week, and it leads Today on the day it is planned. It earns what it always earns: nothing extra for keeping to it (`PLANNER.md` rule 2, P16).
+  4. **What matters most?** (this week) One job or line, or "Nothing in particular". Plan my week places it first, early in the week, and it leads Today on the day it is planned. It earns what it always earns: nothing extra for keeping to it (`PLANNER.md` rule 2, P16).
   5. Then the rest of the week is laid out again from today (keeping Dan's own entries, D-114) and the Week opens.
 - **Facts:** `itemKept`, `itemSomeday`, `weekPinned`, `lookAheadSeen` (opened, finished or not: the test's notes), with samples. No reward in the world (the scope's option D would amend P16 and is not built).
 - **Consequences:** 3 new rule tests; the screen walk goes through the look-ahead at the second week close.

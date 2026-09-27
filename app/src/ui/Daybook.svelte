@@ -176,8 +176,7 @@
   .offer .line { margin: 6px 0; }
   .offer .seg { margin-top: 10px; }
   .offer .next { margin-top: 14px; }
-  /* room for the last row's glow, so the page scrolls only for what is in it */
-  .offer { padding-bottom: 24px; }
+
   .offer button.row { width: 100%; text-align: left; }
   .pager { display: flex; justify-content: space-between; margin-top: 18px; }
   button.home { color: var(--ink-2); }
