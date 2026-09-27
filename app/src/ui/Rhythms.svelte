@@ -1,6 +1,6 @@
 <script lang="ts">
   /* What repeats (PLANNER.md → Rhythms; mock-up rhythms.html). Dan's own rhythms, preloaded and all his to change: what,
-     how often (N a week, set days, every 2 weeks), how long each time, enough at (as delves), a time (an appointment),
+     how often (N a week, set days, every 2 weeks), how long each time (for the plan), a time (an appointment),
      every job a delve (D-117). One number is enough; no ranges. Stop repeating ends future sessions only; no confirmation. */
   import { game } from './game.svelte';
   import { t, minutesWords, byWords } from '../content/copy/en';
@@ -19,7 +19,7 @@
   const DAYS = [1, 2, 3, 4, 5, 6, 0];
 
   interface Draft { id: string | null; job: Job; often: 'once' | 'week' | 'days' | 'fort' | 'month' | 'year' | 'every'; times: number;
-    mode: 'date' | 'nth'; mday: number; nth: 1 | 2 | 3 | 4 | -1; wday: number; ydate: string; every: number; days: number[]; len: number; enough: number | null; time: string | null; delve: boolean; remind: Lead | null;
+    mode: 'date' | 'nth'; mday: number; nth: 1 | 2 | 3 | 4 | -1; wday: number; ydate: string; every: number; days: number[]; len: number; time: string | null; delve: boolean; remind: Lead | null;
     avoided: boolean; step: string; note: string; isNew: boolean; by: string | null; dremind: 0 | 1440 | null; }
   let d = $state<Draft | null>(null);
   /* a job just removed, for its Undo (D-112) */
@@ -38,13 +38,12 @@
   const dayOrd = (n: number) => n >= 31 ? t('rhythms.lastDay') : `${n}${n % 10 === 1 && n !== 11 ? 'st' : n % 10 === 2 && n !== 12 ? 'nd' : n % 10 === 3 && n !== 13 ? 'rd' : 'th'}`;
   const yearWords = (md: string) => new Date(`2000-${md}T00:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', timeZone: 'UTC' });
   function size(j: Job) {
-    const len = minutesWords(j.length);
-    return j.delve && j.enoughAt && j.enoughAt < j.length ? t('rhythms.enoughRoom', { enough: minutesWords(j.enoughAt), len }) : len;
+    return minutesWords(j.length);
   }
   function open(r: Rhythm | null) {
     if (r) { edit(game.job(r.job)!, r); return; }
     const j: Job = { id: `j-${Date.now().toString(36)}`, name: '', delve: true, length: 60, doneBy: 'enough' };
-    d = { id: null, job: j, often: 'week', times: 2, days: [], len: 60, enough: null, time: null, delve: true, remind: null, avoided: false, step: '', note: '', isNew: true, by: null, dremind: null, ...kinds(null) };
+    d = { id: null, job: j, often: 'week', times: 2, days: [], len: 60, time: null, delve: true, remind: null, avoided: false, step: '', note: '', isNew: true, by: null, dremind: null, ...kinds(null) };
   }
   /** The monthly, yearly and every-N-days settings of a rhythm, or their starting values (D-114). */
   function kinds(r: Rhythm | null) {
@@ -57,7 +56,7 @@
   function edit(j: Job, r = v.content.rhythms.find(x => x.job === j.id) ?? null) {
     removed = null;
     d = { ...kinds(r), id: r?.id ?? null, job: { ...j }, often: !r ? 'once' : r.days ? 'days' : r.every === 2 ? 'fort' : r.monthly ? 'month' : r.yearly ? 'year' : r.everyDays ? 'every' : 'week', times: r?.times ?? 2, days: r?.days ?? [], len: j.length,
-      enough: j.enoughAt ?? null, time: r?.time ?? null, delve: j.delve, remind: r ? reminderOf(game.facts, rhythmTarget(r.id)) : null,
+      time: r?.time ?? null, delve: j.delve, remind: r ? reminderOf(game.facts, rhythmTarget(r.id)) : null,
       avoided: !!j.avoided, step: j.firstStep ?? '', note: j.note ?? '', isNew: false, by: j.by ?? null, dremind: reminderOf(game.facts, dateTarget(j.id)) as 0 | 1440 | null };
   }
   if (jobArg) { const j = game.job(jobArg); if (j) edit(j); }
@@ -73,11 +72,9 @@
   function save() {
     if (!d || !d.job.name.trim() || (d.often === 'days' && !d.days.length)) return;
     const once = d.often === 'once';
-    /* every job is a delve (D-117): a repeating one is done at its enough, a one-off when Dan says so after delving */
-    const enough = !once && d.enough !== null && d.enough < d.len ? d.enough : undefined;
-    const job: Job = { ...d.job, length: d.len, delve: true, doneBy: !once ? 'enough' : 'dan', ...(enough ? { enoughAt: enough } : {}),
-      firstStep: d.step, note: d.note };
-    if (!enough) delete job.enoughAt;
+    /* every job is a delve (D-117): a repeating one is that day's session once delved on (D-121), a one-off when Dan says so */
+    const job: Job = { ...d.job, length: d.len, delve: true, doneBy: !once ? 'enough' : 'dan', firstStep: d.step, note: d.note };
+    delete job.enoughAt;
     if (d.avoided) job.avoided = true; else delete job.avoided;
     /* a date only for a one-off or a line (D-114) */
     if (once && d.by) job.by = d.by; else delete job.by;
@@ -234,15 +231,6 @@
           <span class="val">{minutesWords(d.len)}</span>
           <button class="btn-quiet step" disabled={d.len >= LEN[LEN.length - 1]} onclick={() => (d!.len = step(LEN, d!.len, 1))} aria-label={t('rhythms.longer')}><span>+</span></button>
         </div>
-
-        {#if d.often !== 'once'}
-          <div class="label-line">{t('rhythms.enough')}</div>
-          <div class="stepper">
-            <button class="btn-quiet step" disabled={(d.enough ?? d.len) <= LEN[0]} onclick={() => (d!.enough = step(LEN.filter(x => x <= d!.len), d!.enough ?? d!.len, -1))} aria-label={t('rhythms.less')}><span>−</span></button>
-            <span class="val">{d.enough === null || d.enough >= d.len ? t('rhythms.all') : minutesWords(d.enough)}</span>
-            <button class="btn-quiet step" disabled={d.enough === null || d.enough >= d.len} onclick={() => { const x = step(LEN, d!.enough ?? d!.len, 1); d!.enough = x >= d!.len ? null : x; }} aria-label={t('rhythms.more')}><span>+</span></button>
-          </div>
-        {/if}
 
         <!-- a one-off's time is set where it sits in the Week -->
         {#if d.often !== 'once'}

@@ -34,10 +34,8 @@
   }
 
   function begin(j: Job) {
-    const r = presetRun(j);
-    /* Starting needs no decision: a short delve job starts at once; a longer one opens set to its enough (D-038, D-047) */
-    if (r.count === 1 && r.minutes <= 25) { game.do({ do: 'startRun', job: j.id, ...r }); go('delve'); }
-    else go('set', j.id);
+    /* every job opens the set-up at one delve of 30 minutes; Dan sets the minutes and the delves (D-124) */
+    go('set', j.id);
   }
   function done(j: Job) {
     const f = game.do({ do: 'done', job: j.id });

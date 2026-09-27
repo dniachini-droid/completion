@@ -25,7 +25,6 @@ const MIN = 60_000;
 const ofType = <T extends FactBody['type']>(facts: Fact[], type: T) => facts.filter((f): f is FactOf<T> => f.type === type);
 const onDay = (facts: Fact[], day: string) => facts.filter(f => f.day === day);
 const jobOf = (c: Content, id: string): Job => c.jobs.find(j => j.id === id) ?? { id, name: id, delve: false, length: STEP_MIN, doneBy: 'dan' };
-export const enoughOf = (j: Job) => j.enoughAt ?? j.length;
 
 /** The run in progress, if any, with Dan's marks on it. */
 function activeRun(facts: Fact[]) {
@@ -1179,14 +1178,11 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   };
 }
 
-/** The run set-up for a job (INTERACTION_NOTES → the morning): a job that takes hours opens set to its enough. */
-export function presetRun(j: Job): { minutes: number; count: number } {
-  const need = enoughOf(j);
-  /* a short job: one delve on the first stop that holds it; otherwise 25s or 30s, as before (D-110) */
-  if (need < STEP_MIN) return { minutes: DIAL.find(m => m >= need) ?? STEP_MIN, count: 1 };
-  if (need === STEP_MIN) return { minutes: STEP_MIN, count: 1 };
-  for (const m of [25, 30]) if (need % m === 0) return { minutes: m, count: need / m };
-  return { minutes: STEP_MIN, count: Math.ceil(need / STEP_MIN) };
+/** The run set-up for a job: every job opens at one delve of 30 minutes; Dan sets the minutes and the delves himself
+    (Dan, D-124). */
+export const PRESET = { minutes: 30, count: 1 } as const;
+export function presetRun(_j?: Job): { minutes: number; count: number } {
+  return { ...PRESET };
 }
 
 export { alertsAfter, runAt };

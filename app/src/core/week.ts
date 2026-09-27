@@ -71,6 +71,8 @@ export function live(c: Content, facts: Fact[], before?: string): Content {
   /* everything is a delve (Dan, D-117): a job saved before as "no timer", or as a line of the satchel, is read as a
      delve; a repeating one is done at its enough, a one-off when Dan says so after delving on it */
   jobs = jobs.map(j => {
+    /* no "usual session" (Dan, D-124): an old one becomes the job's minutes, so a week's plan doesn't change */
+    if (j.enoughAt !== undefined) { j = { ...j, length: Math.min(j.length, j.enoughAt) }; delete j.enoughAt; }
     if (j.delve && !j.item) return j;
     const k: Job = { ...j, delve: true };
     delete k.item;
@@ -80,8 +82,8 @@ export function live(c: Content, facts: Fact[], before?: string): Content {
   return { ...c, jobs, rhythms, base: c.base ?? c };
 }
 
-/** A job's room in a day, for planning and the forecast: a delve job's enough, any other job's usual length. */
-export const roomOf = (j: Job) => j.delve ? j.enoughAt ?? j.length : j.length;
+/** A job's room in a day, for planning and the forecast: its minutes (D-124). */
+export const roomOf = (j: Job) => j.length;
 const jobRoom = (c: Content, id: string) => { const j = c.jobs.find(x => x.id === id); return j ? roomOf(j) : 25; };
 /** About how long a day of the week holds (not yet done), in minutes: a shape, not a score (D-114). */
 export const dayMinutes = (c: Content, d: { jobs: DayJob[] }) => d.jobs.filter(j => !j.done).reduce((a, j) => a + jobRoom(c, j.job), 0);

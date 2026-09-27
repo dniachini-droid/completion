@@ -51,10 +51,8 @@ describe('Today', () => {
     expect(p.view().next?.job).toBe(b);
     expect(p.view().slate).toContain(a);
   });
-  it('a job that takes hours opens set to its enough', () => {
-    expect(presetRun(C.jobs.find(j => j.id === 'course')!)).toEqual({ minutes: 25, count: 2 });
-    expect(presetRun(C.jobs.find(j => j.id === 'spanish')!)).toEqual({ minutes: 30, count: 2 });
-    expect(presetRun(C.jobs.find(j => j.id === 'cat')!)).toEqual({ minutes: 25, count: 1 });
+  it('every job opens at one delve of 30 minutes; Dan sets the rest (D-124)', () => {
+    for (const j of C.jobs) expect(presetRun(j)).toEqual({ minutes: 30, count: 1 });
   });
 });
 

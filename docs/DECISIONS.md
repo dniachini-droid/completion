@@ -1296,3 +1296,13 @@
   4. When the written story runs out, the minutes go on to the open road (passages, camps, finds) until more is written.
 - **Consequences:** reverses BALANCING §2's "at most one story week per calendar week" and the one-place-a-day rule. The pace tests now check order and continuity, not speed; a new test shows a long day reaching several places. Story content will run out sooner for a big worker: writing the following weeks becomes a standing job.
 - **Reversible:** Yes.
+
+## D-124 — Every job opens at one 30-minute delve; no "usual session" (Dan)
+- **Date:** 2026-09-27
+- **Context:** Dan: "I think every job should open at 30 minutes as one delve. No usual minutes. Nothing. I set the minutes and the rounds. And stopping early still contributes that minutes. If I set two delves 30 mins each for the gym, and I finish in 50 minutes it just counts that."
+- **Decision:**
+  1. **Every job opens the delve set-up at one delve of 30 minutes**; Dan sets the minutes and the number of delves. A tap on a job always opens the set-up (a short job no longer starts at once).
+  2. **The "usual session" (formerly "Enough at", D-047) is gone** from the job editor, the Week and What repeats. A job has its minutes, used only by the Week to judge how full a day is. An old "usual session" in a save, and the Course's (50 of 180), becomes the job's minutes, so the plan doesn't change.
+  3. Stopping early already counts exactly the minutes run (D-121): 2 × 30 set, stopped at 50, counts 50.
+- **Consequences:** supersedes D-110's "a short job starts on the stop that holds it" and D-038's "a short delve job starts at once". Rule tests updated; a new test for old saves.
+- **Reversible:** Yes.

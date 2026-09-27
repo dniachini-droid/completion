@@ -5,7 +5,7 @@
 import type { Job, Rhythm } from '../../core/types';
 
 export const jobs: Job[] = [
-  { id: 'course', name: 'Course', delve: true, length: 180, enoughAt: 50, doneBy: 'enough', firstStep: 'Open the course and find where you stopped.' },
+  { id: 'course', name: 'Course', delve: true, length: 50, doneBy: 'enough', firstStep: 'Open the course and find where you stopped.' },
   { id: 'gym', name: 'Gym, then the sauna', delve: true, length: 60, doneBy: 'enough', firstStep: 'Put your gym shoes on.' },
   { id: 'spanish', name: 'Spanish study', delve: true, length: 60, doneBy: 'enough', firstStep: 'Open the book at the last page you used.' },
   { id: 'lesson', name: 'Spanish lesson', delve: true, length: 60, doneBy: 'enough', firstStep: 'Open the lesson link and sit down with it.' },

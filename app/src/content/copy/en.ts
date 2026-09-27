@@ -224,7 +224,6 @@ export const copy = {
   'today.deep.called': 'You will push deeper today. When a normal day’s work is done, the way goes further down.',
   'nav.week': 'Week', 'nav.daybook': 'Daybook', 'nav.back': 'Back',
   'row.at': 'at {time}',
-  'row.room': '{enough} · up to {len}',
 
   /* choosing what to do: any job, any time (D-077) */
   'row.notToday': 'Not today', 'row.srAside': '{job}: not today',
@@ -349,9 +348,6 @@ export const copy = {
   'rhythms.everyN': 'every {n} days',
   'rhythms.everySay': 'Counted from the day you last did it, not from a date.',
   'rhythms.each': 'Each time',
-  'rhythms.enough': 'A usual session',
-  'rhythms.all': 'All of it',
-  'rhythms.enoughRoom': '{enough} a session, with room for {len}',
   'rhythms.newNumber': 'A changed number counts from next week, but you can plan with it straight away.',
   'rhythms.save': 'Save', 'rhythms.cancel': 'Cancel',
   'rhythms.stop': 'Stop repeating',

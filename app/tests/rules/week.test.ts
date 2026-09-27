@@ -598,12 +598,18 @@ describe('Stage 2 fixes and lengths (D-110)', () => {
     expect(W.items(p.facts, MON).map(i => [i.id, i.done])).toEqual([[a.id, true], [b.id, false]]);
     expect(W.items(p.facts, W.addDays(MON, 1)).map(i => i.id)).toEqual([b.id]);
   });
-  it('a 5-minute delve earns 5 minutes, and a short job starts on the stop that holds it', () => {
+  it('a 5-minute delve earns 5 minutes; every job opens at 30 × 1 (D-124)', () => {
     const p = player().do({ do: 'open' }).do({ do: 'startRun', job: 'spanish', minutes: 5, count: 1 }).wait(6);
     expect(p.facts.filter(f => f.type === 'stepsGained').map(f => (f as { minutes: number }).minutes)).toEqual([5]);
-    expect(presetRun({ id: 'x', name: 'x', delve: true, length: 10, doneBy: 'dan' })).toEqual({ minutes: 10, count: 1 });
-    expect(presetRun({ id: 'x', name: 'x', delve: true, length: 25, doneBy: 'dan' })).toEqual({ minutes: 25, count: 1 });
-    expect(presetRun({ id: 'x', name: 'x', delve: true, length: 180, enoughAt: 50, doneBy: 'enough' })).toEqual({ minutes: 25, count: 2 });
+    expect(presetRun({ id: 'x', name: 'x', delve: true, length: 10, doneBy: 'dan' })).toEqual({ minutes: 30, count: 1 });
+    expect(presetRun({ id: 'x', name: 'x', delve: true, length: 180, doneBy: 'enough' })).toEqual({ minutes: 30, count: 1 });
+  });
+  it('an old “usual session” in a save becomes the job’s minutes, so the plan doesn’t change (D-124)', () => {
+    const job = { id: 'course', name: 'Course', delve: true, length: 180, enoughAt: 50, doneBy: 'enough' as const };
+    const p = player().do({ do: 'saveRhythm', rhythm: C.rhythms.find(r => r.job === 'course')!, job });
+    const j = p.view().content.jobs.find(x => x.id === 'course')!;
+    expect(j.length).toBe(50);
+    expect(j.enoughAt).toBeUndefined();
   });
 });
 

@@ -4,7 +4,7 @@
      lays it out; a tap moves a job, gives it a time, or takes it off this week. The past shows only what was done. The
      forecast is one line in the world's terms: predictive, never contractual. Nothing here earns anything. */
   import { game } from './game.svelte';
-  import { t, dayName, minutesWords, minutesShort, weekDates, byWords } from '../content/copy/en';
+  import { t, dayName, minutesWords, weekDates, byWords } from '../content/copy/en';
   import { calendarWeek } from '../core/time';
   import { addDays, dayMinutes, eventsOn, planMade, weekOf, type DayJob } from '../core/week';
   import { asideToday } from '../core/game';
@@ -36,8 +36,6 @@
     const job = game.job(j.job);
     if (!job) return '';
     if (job.by) return byWords(job.by);
-    /* every job is a delve (D-117): its length, or its enough with room */
-    if (job.enoughAt && job.enoughAt < job.length) return t('row.room', { enough: minutesShort(job.enoughAt), len: minutesShort(job.length) });
     return minutesWords(job.length);
   }
   const forecast = $derived.by(() => {
