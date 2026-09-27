@@ -90,10 +90,14 @@ async function measure(name, kind = 'still') {
 await page.goto(url);
 await setNow(new Date('2026-09-30T09:00:00+01:00').getTime());
 await page.reload();
-for (let k = 0; k < 40 && !(await page.locator('nav.foot').count()); k++) {
-  if (await page.locator('button.btn').count()) await page.locator('button.btn').first().click().catch(() => {});
-  await page.waitForTimeout(500);
+/* past whatever the day opens with (the morning, a welcome) to Today; each screen given time to draw first, and never a
+   tap on Today's own Delve, which a slow first drawing once offered before the foot of Today was there */
+for (let k = 0; k < 20 && !(await page.locator('nav.foot').count()); k++) {
+  await page.waitForTimeout(1500);
+  if (await page.locator('nav.foot').count()) break;
+  if (!(await page.locator('.next').count()) && await page.locator('button.btn').count()) await page.locator('button.btn').first().click().catch(() => {});
 }
+if (!(await page.locator('nav.foot').count())) { console.log('FAIL: Today never came'); process.exit(1); }
 await measure('today-morning');
 for (const [name, label] of [['week', 'Week'], ['satchel', 'Satchel'], ['daybook', 'Daybook'], ['map', 'Map']]) {
   if (!(await has(label))) { fails.push(`no ${label} on Today`); continue; }
