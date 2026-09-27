@@ -1285,3 +1285,14 @@
 - **Alternatives:** keep a run-based chamber with a fixed minute total (still tied to one sitting, not to the road).
 - **Consequences:** `S.CHAMBER_RUN` and `S.CHAMBER_MIN` are gone; `chamberAt` now takes the story state. No new fact type: "found this stretch" is read as a chamber find since the last place reached on foot. The screen walk checks the chamber stays at the same share of the way to the next place for four delve lengths and counts. BALANCING §1, PLANNER, PROGRESSION, INTERACTION_NOTES and TEST_STRATEGY updated.
 - **Reversible:** Yes.
+
+## D-123 — One continuous story: a new place every 150 minutes, no daily or weekly limit (Dan)
+- **Date:** 2026-09-27
+- **Context:** Dan, on learning that only one place could be reached on foot a day and one story week a calendar week: "Drop the one new place a day limit. Let's also drop the weekly limit. I shouldn't be discouraged from working more. If the story runs out we simply make the following weeks. I shouldn't be given a holding position after I accomplish my work just because the story has to last." And: "One story, one new location every 150 minutes. I finish the story whenever I finish the story." Places stay 150 minutes apart (Dan).
+- **Decision:**
+  1. **No one-place-a-day limit** (the review rule of 2026-09-25 is gone): every 150 minutes walked reaches the next place, as many a day as Dan walks.
+  2. **No calendar wait:** the next part of the story opens as soon as the current part's places and steps are done, the same day if so; its plain side places can be reached on any day, not only on a deep push. "Story weeks" stay only as the story's internal order; Dan never sees them.
+  3. **What still holds, because it is the story's own order, not a time limit:** a place that needs a word cut, a sealed door opened by a Key, or a story step (one plays per finished job) waits for that; the continuity guard (nothing plays where Dan hasn't been, D-079) is unchanged. Keys stay 5 a calendar week (they come from rhythms, not minutes).
+  4. When the written story runs out, the minutes go on to the open road (passages, camps, finds) until more is written.
+- **Consequences:** reverses BALANCING §2's "at most one story week per calendar week" and the one-place-a-day rule. The pace tests now check order and continuity, not speed; a new test shows a long day reaching several places. Story content will run out sooner for a big worker: writing the following weeks becomes a standing job.
+- **Reversible:** Yes.

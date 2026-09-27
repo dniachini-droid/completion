@@ -124,7 +124,7 @@ export function nextPlace(s: Story, st: StoryState, push = false): Beat | null {
       if (p.k || st.played.has(p.id)) continue;
       const b = beatOf(s, p.id);
       if (!b) continue;
-      const ahead = push && rw.w === st.week + 1 && p.id.startsWith('pl-');
+      const ahead = rw.w === st.week + 1 && p.id.startsWith('pl-');   /* one story, no waiting (D-123) */
       if (!(inWeek(st, b) || ahead)) continue;
       if (b.kind === 'word' && !EARLY.has(b.id) && b.w > st.week) continue;
       if (allMet(st, b.req)) return b;
@@ -231,9 +231,10 @@ export function weekDone(s: Story, st: StoryState): boolean {
   if (!rw.places.every(p => st.played.has(p.id))) return false;
   return s.beats.filter(b => b.w === st.week && b.kind === 'step').every(b => st.played.has(b.id));
 }
-/** The next story week may begin: this one is done and a later calendar week has begun (at most one a week). */
-export const mayAdvance = (s: Story, st: StoryState, day: string) =>
-  st.weekBegan !== null && weekDone(s, st) && calendarWeek(day) > st.weekBegan && s.route.some(r => r.w === st.week + 1);
+/** The next story week may begin as soon as this one is done: no calendar-week wait, so more work is never held back
+    (Dan, D-123; was at most one story week a calendar week). */
+export const mayAdvance = (s: Story, st: StoryState, _day?: string) =>
+  st.weekBegan !== null && weekDone(s, st) && s.route.some(r => r.w === st.week + 1);
 
 /* ---------- what's in view, and "I can't start" ---------- */
 

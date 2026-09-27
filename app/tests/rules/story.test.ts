@@ -34,12 +34,11 @@ describe('the story content holds together', () => {
 });
 
 describe('six weeks of play', () => {
-  it('Normal weeks: the story reaches week 6, one story week per calendar week, never ahead', () => {
+  it('Normal weeks: the story reaches week 6, in order, never ahead (no calendar wait, D-123)', () => {
     const p = sim();
     for (let w = 1; w <= 6; w++) {
       p.week('normal');
       const st = p.st();
-      expect(st.week, `calendar week ${w}`).toBeLessThanOrEqual(w);
       /* nothing plays before its week (places: at most one week ahead, and only plain ones) */
       for (const id of st.played) {
         const b = S.beatOf(C.story, id);

@@ -967,3 +967,13 @@ describe('the side chamber is halfway to the next place, whatever the delves (Da
     expect(chamberFinds(p.facts)).toHaveLength(2);   /* 155: past 150 */
   });
 });
+
+describe('one story, a new place every 150 minutes (Dan, D-123)', () => {
+  it('a long day reaches several places, with no one-a-day limit and no wait for the calendar week', () => {
+    const p = player().do({ do: 'open' });
+    for (const job of ['course', 'gym', 'spanish', 'meal', 'tank']) p.do({ do: 'startRun', job, minutes: 90, count: 1 }).wait(91);
+    expect(p.view().walked).toBe(450);
+    /* 75, 225 and 375: three places the same day, unless the story itself holds one (a word to cut, a door a Key opens) */
+    expect(p.facts.filter(f => f.type === 'arrived' && f.kind === 'place' && f.how !== 'key').length).toBeGreaterThanOrEqual(2);
+  });
+});

@@ -284,11 +284,13 @@ function giveFind(w: W, c: Content, why: FactOf<'findGiven'>['why'], at: Moment,
   if (f.told) show(w, c, [f.told], at, day);
 }
 
-/** The story's week: the first begins on the first opening; the next when this one is done and a new calendar week has come. */
-function storyClock(w: W, c: Content, at: Moment, day: string) {
+/** The story's week: the first begins on the first opening; the next as soon as this one is done (D-123). Returns
+    whether a week began. */
+function storyClock(w: W, c: Content, at: Moment, day: string): boolean {
   const st = S.storyState(w.all, c.story);
-  if (st.weekBegan === null) { w.put({ type: 'storyWeekBegan', w: 1 }, at, day); return; }
-  if (S.mayAdvance(c.story, st, day)) w.put({ type: 'storyWeekBegan', w: st.week + 1 }, at, day);
+  if (st.weekBegan === null) { w.put({ type: 'storyWeekBegan', w: 1 }, at, day); return true; }
+  if (S.mayAdvance(c.story, st, day)) { w.put({ type: 'storyWeekBegan', w: st.week + 1 }, at, day); return true; }
+  return false;
 }
 
 /** The weekly floor: a week that had a day complete brings at least 2 Keys; the new week's first opening lands the rest (§3). */
@@ -319,8 +321,6 @@ function openSeal(w: W, c: Content, seal: Seal, at: Moment, day: string, job?: n
   return seal;
 }
 
-/** Places reached on foot in a day that isn’t a deep push: one; the rest of the distance is kept for tomorrow (review, 2026-09-25). */
-const FOOT_A_DAY = 1;
 function pushOn(facts: Fact[], day: string): boolean {
   const today = onDay(facts, day), dc = today.find(f => f.type === 'dayCompleted');
   return capacityOn(facts, day) === 'high' || today.some(f => f.type === 'deepCalled')
@@ -332,13 +332,15 @@ function gifts(w: W, c: Content, at: Moment, day: string) {
   storyClock(w, c, at, day);
   /* a deep push (a High day, a called push, or Keep going after the day's work) may go on to next week's places (§0.2) */
   const push = pushOn(w.all, day);
+  /* every 150 minutes reaches a place, as many a day as Dan walks (Dan, D-123: no one-a-day limit); a story week done on
+     the way opens the next at once, so its places can be reached too */
   const reach = () => {
     let n = 0;
     for (;;) {
-      const st = S.storyState(w.all, c.story), next = S.nextPlace(c.story, st, push);
-      if (!next || walked(w.all) < S.nextPlaceAt(st)) return n;
-      /* otherwise one place a day on foot: the rest of the distance is kept, and plays tomorrow (nothing is lost) */
-      if (!push && ofType(onDay(w.all, day), 'arrived').filter(a => a.kind === 'place' && a.how !== 'key').length >= FOOT_A_DAY) return n;
+      const st = S.storyState(w.all, c.story);
+      if (walked(w.all) < S.nextPlaceAt(st)) return n;
+      const next = S.nextPlace(c.story, st, push);
+      if (!next) { if (storyClock(w, c, at, day)) continue; return n; }
       arrive(w, c, next, 'foot', at, day); n++;
     }
   };

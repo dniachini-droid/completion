@@ -20,7 +20,7 @@ There are **two clocks**. **Time moves the Site:** every real minute moves Dan, 
 
 ## 2. The story clock
 - The story is written in **story weeks**. A story week holds about **5 arrivals, 2–3 record fragments, 3–5 Key openings and 1–2 signs**; words about one a month after the first in week 2–3 (D-013).
-- **At most one story week per calendar week.** A story week lasts as long as it takes to deliver its beats: a thin week stretches it into the next, and a week away pauses it (the world waits; P8). A big week can't start the next one early.
+- **One continuous story, no calendar wait (Dan, D-123; was at most one story week per calendar week).** A new place every 150 minutes walked, as many a day as Dan walks. The story's own order still holds (a word to cut, a door a Key opens, a story step on a finished job); nothing waits for a new calendar week or a day's limit. When the written story runs out, more is written. _(Before: **At most one story week per calendar week.** A story week lasts as long as it takes to deliver its beats: a thin week stretches it into the next, and a week away pauses it (the world waits; P8). A big week can't start the next one early.)_
 - Beats arrive **on real action**, in order: a story line on a job's return, an arrival on day complete, a sealed thing when a Key lands. Minutes move the map; they don't hurry the story.
 - **Places may run ahead by up to one story week** (the deep push's rule). A record found early is seen, and reads in its turn. Signs never come early; a **partial sign** at most, and only where one is written (D-013).
 - Past that, extra effort goes to the **open route** (section 5).

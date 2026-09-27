@@ -28,7 +28,7 @@ Dan loses nothing, sees nothing early, and the rules do what the design docs say
 - **Exploit regressions:** every farming route found in play gets a test that keeps it closed (§73).
 
 ## 2. Story order and locked information
-- Beats arrive **in order**, at most one story week per calendar week; a big week never starts the next one early.
+- Beats arrive **in order**, never ahead of where Dan is; a big day or week goes as far as its minutes reach (D-123).
 - Places run ahead **by one story week at most**; signs never early; a partial sign only where written, at most one a week.
 - **The "can see now" view never contains a locked item**, in any simulated state (tested by generating many states, not a few examples).
 - Every content item's conditions can actually be met (no unreachable story), and every id referenced exists.
