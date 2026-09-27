@@ -14,6 +14,7 @@
   import type { Go } from './nav';
   import { back } from './back.svelte';
   import { flushSync } from 'svelte';
+  import { steady } from './taps';
   import art from './scene/satchel.jpg';
 
   let { go }: { go: Go } = $props();
@@ -28,7 +29,7 @@
   function put() {
     const lines = text.split('\n').filter(l => l.trim());
     if (!lines.length) return;
-    game.do({ do: 'addItems', lines }); text = ''; said = null;
+    steady(); game.do({ do: 'addItems', lines }); text = ''; said = null;
   }
   const preview = (j: Job) => (j.list ?? '').split('\n').filter(l => l.trim()).join(' · ');
   function openList(j: Job) {
@@ -51,7 +52,7 @@
   $effect(() => () => keep());
   function openDays(j: Job) { saveList(); said = null; placing = placing === j.id ? null : j.id; }
   function place(j: Job, day: string) {
-    game.do({ do: 'planJob', job: j.id, day });
+    steady(); game.do({ do: 'planJob', job: j.id, day });
     placing = null; said = t('satchel.placed', { job: j.name, day: day === v.day ? t('pick.today') : byWords(day).replace(/^by /, '') });
   }
   function remove(j: Job) { saveList(); placing = null; said = null; game.remove(j.id); }
@@ -79,7 +80,8 @@
     {#if !jobs.length}<p class="soft empty">{t('satchel.empty')}</p>{/if}
     {#each jobs as j (j.id)}
       <div class="item">
-        <button class="row" onclick={() => { saveList(); go('set', j.id); }}>
+        <!-- while a delve runs, a tap here can't start another: as on Today (break-it review 6) -->
+        <button class="row" disabled={!!v.run} onclick={() => { saveList(); go('set', j.id); }}>
           <span class="pip"></span><span class="t">{j.name}</span><span class="s">{j.by ? byWords(j.by) : ''}</span>
         </button>
         {#if listing === j.id}

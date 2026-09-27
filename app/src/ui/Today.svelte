@@ -1,5 +1,6 @@
 <script lang="ts">
   import Deleted from './Deleted.svelte';
+  import { steady } from './taps';
   /* Today (the morning screen, UX_PRINCIPLES → "The morning screen carries"): where you are, the sealed thing ahead,
      the one next job (no Low / Normal / High, and no "Already done": Dan, D-089) with one button, today's other jobs as plain rows, "I can't start".
      A tap on a row starts that job, as its own button would (D-100: it used to swap the row with the next job, and the
@@ -53,7 +54,7 @@
   function finish() { game.do({ do: 'finishHere' }); go('delve'); }
   /* a tap on a job starts that job, never another: nothing on the list moves (Dan, D-100) */
   function start(id: string) { if (swiped) { swiped = null; return; } if (!v.done.has(id)) begin(job(id)); }
-  function aside(id: string) { swiped = null; game.do({ do: 'setAside', job: id }); lastAside = id; }
+  function aside(id: string) { steady(); swiped = null; game.do({ do: 'setAside', job: id }); lastAside = id; }
   /* "Not today" said once, with a way to take it back while Today is still open (review 2, D-088) */
   let lastAside = $state<string | null>(null);
   function putBack() { if (lastAside) game.do({ do: 'putBack', job: lastAside }); lastAside = null; }

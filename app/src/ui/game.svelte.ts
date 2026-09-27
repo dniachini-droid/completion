@@ -5,6 +5,7 @@
 import { act, alertsAfter, see, settle, type Command, type RunView } from '../core/game';
 import type { RunMark } from '../core/run';
 import { panelOf } from './panel';
+import { steady } from './taps';
 import { epochOf, momentOf, type Moment } from '../core/time';
 import type { Fact, Job, Rhythm } from '../core/types';
 import { content } from '../content/world';
@@ -124,9 +125,12 @@ class Game {
   /** Delete a job from everywhere (Dan, D-125): the minutes it already counted for stay. Never the job of a delve that
       is running or paused: its end still has to be answered. */
   remove(id: string) {
+    /* the list moves under the finger: a quick second tap is not a second Delete (break-it review 3) */
+    steady();
     const job = this.job(id);
     if (!job) return;
-    if (this.view.run?.job.id === id) { this.deleted = null; this.cantDelete = job.name; return; }
+    /* nor the job whose delve's end is still to be answered (break-it review, R5) */
+    if (this.view.run?.job.id === id || this.view.runEnd?.job.id === id) { this.deleted = null; this.cantDelete = job.name; return; }
     this.cantDelete = null;
     this.deleted = { job: { ...job }, rhythm: this.view.content.rhythms.find(r => r.job === id) ?? null };
     this.do({ do: 'removeJob', id });
@@ -134,6 +138,7 @@ class Game {
   /** Delete a done record (Dan: "just delete the record of the job, not the minutes"): a repeating job keeps repeating
       and only that day's record goes; a one-off, finished, goes altogether. */
   removeDone(id: string, on: string) {
+    steady();
     const job = this.job(id);
     if (!job) return;
     if (!this.view.content.rhythms.some(r => r.job === id)) { this.remove(id); return; }
@@ -141,6 +146,7 @@ class Game {
     this.do({ do: 'hideDone', job: id, on });
   }
   undoRemove() {
+    steady();
     const d = this.deleted;
     if (!d) return;
     this.deleted = null;

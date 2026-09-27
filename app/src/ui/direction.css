@@ -376,7 +376,7 @@ body.s-evening  { --a1: .5;  --aw: 120%; --ah: 44%; --a2: .38; --h2: 22%; }
 
 /* rows: the day's other jobs, on hairlines, in the open (no panel) */
 .rows { border-bottom: 1px solid var(--edge-4); }
-.row { display: grid; grid-template-columns: 20px 1fr auto; align-items: center; column-gap: 12px;
+.row { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; align-items: center; column-gap: 12px;
   min-height: 48px; border-top: 1px solid var(--edge-4); }
 .row .mk { width: 12px; height: 12px; justify-self: center; }
 .row .t { font-family: var(--life); font-size: 17px; color: var(--ink); line-height: 1.25; }
@@ -440,3 +440,8 @@ body.s-evening  { --a1: .5;  --aw: 120%; --ah: 44%; --a2: .38; --h2: 22%; }
 .world-drift > * { pointer-events: none; }
 @keyframes world-drift { from { transform: none; } to { transform: scale(1.04) translate(-.5%, .9%); } }
 @media (prefers-reduced-motion: reduce) { .world-drift { animation: none; } }
+
+/* a long unbroken word (a pasted link) wraps rather than running off the screen's edge (break-it review 9) */
+.row .t, .say, .say-lg, h1, h2, .preview, .soft { overflow-wrap: anywhere; }
+.row .t { min-width: 0; }
+.btn:disabled { opacity: .45; cursor: default; }

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Deleted from './Deleted.svelte';
   /* The daybook: the week close (TOOLS §6; BALANCING §7; mock-up daybook.html). One short page a week, written from real
      completions: what the week held, where it went, up to three things learned, the month's "so far" on its first page,
      the counts the week's Keys filled, and a glimpse of next week. No charts, no percentages, no comparisons. A thin week
@@ -30,7 +31,7 @@
     /* a deleted job, or a deleted record, leaves the page too (D-125) */
     const hidden = hiddenDone(game.facts);
     for (const f of game.facts) if (f.type === 'jobDone' && calendarWeek(f.day) === page.week && game.job(f.job) && !hidden.has(`${f.job}|${f.day}`)) n.set(f.job, (n.get(f.job) ?? 0) + 1);
-    return [...n].map(([job, k]) => ({ name: game.job(job)!.name, k }));
+    return [...n].map(([job, k]) => ({ id: job, name: game.job(job)!.name, k }));
   });
   const places = $derived(page ? game.facts.filter((f): f is FactOf<'arrived'> => f.type === 'arrived' && f.kind === 'place' && calendarWeek(f.day) === page.week)
     .map(f => beatOf(s, f.id)?.name).filter((x): x is string => !!x) : []);
@@ -64,7 +65,8 @@
   function lookAhead() { step = sweep.length ? 1 : 2; }
   function sweepAnswer(what: 'keep' | 'letGo') {
     const it = sweep[swept];
-    if (it) game.do(what === 'keep' ? { do: 'keepItem', id: it.id } : { do: 'removeJob', id: it.id });
+    /* letting go is a Delete like any other: guarded, with Undo (break-it review 7) */
+    if (it) { if (what === 'keep') game.do({ do: 'keepItem', id: it.id }); else game.remove(it.id); }
     swept++;
     if (swept >= sweep.length) step = 2;
   }
@@ -101,11 +103,14 @@
   </header>
 
   <div class="body col rise d1">
+    <Deleted />
     {#if !page}
       <p class="soft">{t('daybook.none')}</p>
     {:else}
       <div class="rows">
-        {#each held as h (h.name)}
+        <!-- keyed by the job, not its name: two jobs may share a name ("Shopping" twice), and a repeated key crashed
+             the page on every opening (break-it review 1) -->
+        {#each held as h (h.id)}
           <div class="row still"><span class="pip done"></span><span class="t">{h.name}</span><span class="s">{timesWords(h.k)}</span></div>
         {/each}
       </div>
@@ -142,7 +147,7 @@
             <div class="btn-row after"><button class="btn-quiet" onclick={() => (step = 2)}><span>{t('look.skip')}</span></button></div>
           {:else if step === 1 || step === 2}
             <div class="label-line">{t('look.coming')}</div>
-            {#each coming.slice(0, 5) as x (x.day + x.job + x.kind)}<p class="say line">{comingLine(x)}</p>{:else}<p class="soft">{t('look.nothing')}</p>{/each}
+            {#each coming.slice(0, 5) as x, i (x.day + x.job + x.kind + i)}<p class="say line">{comingLine(x)}</p>{:else}<p class="soft">{t('look.nothing')}</p>{/each}
             {#if coming.length > 5}<p class="soft">{t('look.more')}</p>{/if}
             <button class="btn next" onclick={() => (step = 3)}>{t('look.next')}</button>
           {:else}

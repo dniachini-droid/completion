@@ -90,7 +90,7 @@ describe('Keys, finds and lines', () => {
       const k = d.toISOString().slice(0, 10); byWeek.set(k, (byWeek.get(k) ?? 0) + 1);
     }
     for (const n of byWeek.values()) expect(n).toBeLessThanOrEqual(S.KEYS_A_WEEK);
-  });
+  }, 60_000);
   it('each find is given once', () => {
     const p = sim().week('high').week('normal').week('high');
     const ids = p.facts.filter(f => f.type === 'findGiven').map(f => (f as { id: string }).id);

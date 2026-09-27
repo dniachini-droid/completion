@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Deleted from './Deleted.svelte';
   /* Back after days away (CORE_LOOPS → absence; D-043 F9): "where you were": the last place, the sealed thing in view,
      the last record, and the one open question for the story week. No counts, no summary of what was missed. The day is
      suggested Low; one small real job picks the route up. */
@@ -26,7 +27,7 @@
     else game.do({ do: 'planJob', job: slip.job, day: v.day });
     answered = true;
   }
-  function letGo() { if (slip?.kind === 'date') game.do({ do: 'removeJob', id: slip.job }); answered = true; }
+  function letGo() { if (slip?.kind === 'date') game.remove(slip.job); answered = true; }
   function leave(to: 'today' | 'records') {
     if (w) game.do({ do: 'seen', what: 'welcome', ref: w.seq });
     if (to === 'records' && w?.record) go('records', w.record); else go('today');
@@ -57,6 +58,7 @@
         <button class="text-link" onclick={letGo}><span>{t('by.letGo')}</span></button>
       </div>
     {/if}
+    <Deleted />
     {#if w?.record}<div class="center"><button class="text-link" onclick={() => leave('records')}><span>{t('welcome.record')}</span></button></div>{/if}
     <button class="btn" onclick={() => leave('today')}>{t('welcome.go')}</button>
     <div class="gap"></div>
