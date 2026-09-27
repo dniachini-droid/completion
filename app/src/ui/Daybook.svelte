@@ -8,6 +8,7 @@
   import { t, card, timesWords, dayName, byWords } from '../content/copy/en';
   import { comingUp, sweepOf } from '../core/week';
   import { calendarWeek } from '../core/time';
+  import { hiddenDone } from '../core/game';
   import { beatOf, sealOf } from '../core/story';
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
