@@ -49,8 +49,9 @@
   }
   /* a delve job worked on today, not yet said to be done: "Is it done?" answered "Not yet", or left unanswered. Its Done
      is here, so it never needs another delve to be marked (Dan, 2026-09-27, D-120) */
-  const delvedOn = $derived(next && next.delve && next.doneBy === 'dan' && !v.done.has(next.id)
-    && game.facts.some(f => f.type === 'delveStarted' && f.job === next.id && f.day === v.day));
+  const delvedToday = $derived(new Set(game.facts.filter(f => f.type === 'delveStarted' && f.day === v.day).map(f => f.job)));
+  const sayDone = (j: Job) => j.delve && j.doneBy === 'dan' && !v.done.has(j.id) && delvedToday.has(j.id);
+  const delvedOn = $derived(!!next && sayDone(next));
   function carry() { game.do({ do: 'resume' }); go('delve'); }
   function finish() { game.do({ do: 'finishHere' }); go('delve'); }
   /* a tap on a job starts that job, never another: nothing on the list moves (Dan, D-100) */
@@ -245,8 +246,10 @@
             onpointerdown={(e) => down(e, id)} onclick={() => tapRow(id)} disabled={v.done.has(id) || !!v.run}>
             <span class="pip" class:done={v.done.has(id)}></span>
             <span class="t">{j.name}</span>
-            <span class="s">{rowNote(j)}</span>
+            <span class="s">{sayDone(j) ? '' : rowNote(j)}</span>
           </button>
+          <!-- the same "It's done" on a row further down: a tap on the row itself still starts a delve (D-100, D-120) -->
+          {#if sayDone(j) && !v.run && offset(id) === 0}<button class="text-link row-done" onclick={() => done(j)}><span>{t('today.itsDone')}</span></button>{/if}
         </div>
       {/each}
       {#if !v.run && v.next?.mode !== 'underWay' && !(v.complete && !v.next)}
@@ -304,6 +307,8 @@
   .swipe .row.still { transition: none; }
   .aside { position: absolute; right: 18px; z-index: 0; top: 1px; bottom: 0; width: 112px; font-family: var(--life); font-style: italic; font-size: 16px;
     color: var(--ink); background: rgba(var(--violet-rgb), .28); }
+  .row-done { position: absolute; z-index: 2; right: 18px; top: 50%; transform: translateY(-50%); min-height: 40px; padding: 0 0 0 12px; }
+  .row-done span { font-size: 16px; color: var(--violet-hi); }
   .row.else .t { color: var(--ink-2); font-style: italic; }
   .plus { justify-self: center; color: var(--violet-hi); font-size: 20px; line-height: 1; }
   button.row:disabled { cursor: default; }

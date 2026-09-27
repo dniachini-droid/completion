@@ -101,3 +101,17 @@ describe('Double and stray commands change nothing', () => {
     expect(p.view().next?.job).not.toBe('cat');
   });
 });
+
+describe('Done closes its delve\'s end (D-120)', () => {
+  it('an end not looked at (the delve ran out on another screen) is answered by Done on Today: it doesn\'t come back', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'startRun', job: 'cat', minutes: 25, count: 1 }).wait(30);
+    expect(p.view().runEnd).toMatchObject({ ask: true });
+    p.do({ do: 'done', job: 'cat' });
+    expect(p.view().runEnd).toBeNull();
+  });
+  it('answered on the delve screen itself, the end stays until Dan leaves it (its return is shown there)', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'startRun', job: 'cat', minutes: 25, count: 1 }).wait(30);
+    p.do({ do: 'done', job: 'cat', keepEnd: true });
+    expect(p.view().runEnd).toMatchObject({ job: expect.objectContaining({ id: 'cat' }) });
+  });
+});

@@ -1,7 +1,8 @@
 // The begin → delve → pause → done loop, tried the ways Dan uses it (2026-09-27, D-120): a delve left for another app
 // and carried on, from the delve and from Today; Finish here straight away; "Is it done?" answered "Not yet", then said
 // done from Today; a satchel line put on today, begun and ticked; a satchel line delved on through "Something else…" and
-// ticked mid-delve (the delve ends there). Leaving the app is stood in for by hiding the page, as the screen checks do.
+// ticked mid-delve (the delve ends there); a double tap on Begin, Finish here and Done makes one decision; a delve that
+// ends while Dan is in the Week is shown to him, and once said done it never comes back. Leaving the app is stood in for by hiding the page, as the screen checks do.
 // Usage: node tests/flows/delve-loop.mjs http://localhost:4173/ [width height]
 const { launch } = await import('./browser.mjs');
 const [,, url, w = '440', h = '956'] = process.argv;
@@ -27,7 +28,13 @@ const btn = (name) => page.getByRole('button', { name, exact: true });
 const screen = async () => (await page.locator('.dv').count()) ? 'delve' : (await page.locator('.rs').count()) ? 'set' : (await page.locator('.route').count()) ? 'step' : (await page.locator('.foot .add').count()) ? 'today' : '?';
 const expectOn = async (want, when) => { const s = await screen(); if (s !== want) fails.push(`${when}: on ${s}, not ${want}`); return s === want; };
 const has = async (name, when) => { if (!(await btn(name).count())) fails.push(`${when}: no "${name}"`); };
-const toToday = async () => { if ((await screen()) !== 'today') await tap(page.locator('.home'), 'way back to Today'); };
+/* back to Today, past whatever the day brings first (a place reached, the stair) */
+const toToday = async () => {
+  for (let k = 0; k < 6 && (await screen()) !== 'today'; k++) {
+    const way = (await page.locator('.home').count()) ? page.locator('.home') : page.getByRole('button', { name: /today/i }).or(page.locator('button.btn'));
+    await tap(way, 'way back to Today');
+  }
+};
 
 /* 1. the next job's delve; another app; Carry on; Today; another app from Today; Carry on there; Finish here straight */
 await tap(page.locator('.next button.btn'), 'Delve');
@@ -69,6 +76,32 @@ await tap(page.locator('.home'), 'Today'); await tap(btn('Satchel'), 'Satchel');
 await tap(page.locator('.item', { hasText: 'Bills' }).locator('.tickbox'), 'tick on Bills'); await expectOn('step', 'ticking Bills mid-delve');
 await toToday();
 if (await btn('Back to the delve').count()) fails.push('the delve on Bills still runs after Bills was ticked');
+
+await toToday();
+/* 5. double taps: each makes one decision, never a second one on the screen that replaces it */
+const double = async (loc, what) => { const r = await loc.first().boundingBox().catch(() => null); if (!r) { fails.push(`no ${what}`); return; }
+  for (let i = 0; i < 2; i++) { await page.touchscreen.tap(r.x + r.width / 2, r.y + r.height / 2); await page.clock.runFor(250); } await page.clock.runFor(1200); };
+const choose = async (name) => { await tap(page.locator('.rows button.row.else, .after .btn-quiet'), 'Something else… or Keep going'); await tap(page.locator('.ui button').filter({ hasText: name }), name + ' in Choose'); };
+await choose('Course');
+await double(btn('Begin'), 'Begin');
+if (!(await btn('Pause').count())) fails.push('Begin tapped twice did not leave the delve running');
+await double(btn('Finish here'), 'Finish here');
+if (await btn('Finish here').count() || !(await page.locator('.dv').count())) fails.push('Finish here tapped twice did not end on the delve\'s end');
+if (await btn('Done').count()) { await double(btn('Done'), 'Done'); if (!(await page.locator('.dv').count())) fails.push('Done tapped twice skipped the job\'s return'); }
+await toToday();
+
+/* 6. a delve that ends while Dan is in the Week is shown to him; said done, it never comes back */
+{
+  await choose('Sort the post'); await tap(btn('Begin'), 'Begin');
+  await tap(page.locator('.home'), 'Today'); await tap(btn('Week'), 'Week');
+  await ff(26 * 60_000); await page.clock.runFor(1500);
+  if (!(await page.locator('.dv').count())) fails.push('a delve that ended in the Week was not shown');
+  await tap(page.locator('.home'), 'the arrow from the end');
+  await tap(page.getByRole('button', { name: 'It’s done', exact: true }), 'It’s done for the post');
+  await toToday();
+  await page.reload(); await page.clock.runFor(2500);
+  if (await page.locator('.dv').count()) fails.push('the delve\'s end came back after it was said done');
+}
 
 if (errors.length) fails.push(...errors.map(e => 'page error: ' + e));
 await b.close();

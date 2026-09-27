@@ -388,12 +388,14 @@ function finishRun(w: W, c: Content, r: NonNullable<ReturnType<typeof activeRun>
 /** Said done while its own delve still runs (Done on Today, a tick in the satchel): the delve finishes there first, so
     its minutes count once and the job is not paid twice (Dan, 2026-09-27, D-120). Its end is marked seen: the job's
     return tells the story, and the delve's end doesn't come back later. */
-function endRunOn(w: W, c: Content, job: string, nowMs: number, now: Moment) {
+function endRunOn(w: W, c: Content, job: string, nowMs: number, now: Moment, keepEnd = false) {
   const r = activeRun(w.all);
-  if (!r || r.fact.job !== job) return;
-  finishRun(w, c, r, nowMs, now);
-  const end = ofType(w.out, 'delveEnded').pop();
-  if (end) w.put({ type: 'seen', what: 'step', ref: end.seq });
+  if (r && r.fact.job === job) finishRun(w, c, r, nowMs, now);
+  /* an end of this job's delve not yet looked at (it ended with Dan on another screen, or "Is it done?" was left) is
+     answered by this Done: it doesn't come back on a later opening (D-120). The delve screen answering its own end
+     keeps it, and marks it seen itself when Dan leaves. */
+  const end = ofType(w.all, 'delveEnded').pop();
+  if (!keepEnd && end && end.job === job && !w.all.some(f => f.type === 'seen' && f.ref === end.seq)) w.put({ type: 'seen', what: 'step', ref: end.seq });
 }
 /** Going into another app pauses the delve (D-094): at the moment Dan left, or, if he left in a breather, at the moment
     the next delve would have begun without him. Time away never counts; nothing already done is lost. */
@@ -540,7 +542,7 @@ export type Command =
   | { do: 'finishHere' }
   /** Dan was in another app from `from` to `to` (game-clock ms): the delve pauses where he left (D-094). */
   | { do: 'away'; from: number; to: number }
-  | { do: 'done'; job: string }
+  | { do: 'done'; job: string; keepEnd?: boolean }
   | { do: 'cantStart'; job: string }
   | { do: 'seen'; what: 'step' | 'arrival' | 'morning' | 'welcome'; ref: number }
   | { do: 'guess'; mark: string; guess: string }
@@ -640,7 +642,7 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     }
     case 'done':
       if (v.done.has(cmd.job)) break;
-      endRunOn(w, c, cmd.job, nowMs, now);
+      endRunOn(w, c, cmd.job, nowMs, now, cmd.keepEnd);
       /* Done with no Begin: recorded afterwards (the test's sharpest line, MVP.md) */
       if (!begunOn(w.all, day, cmd.job)) w.put({ type: 'jobBegun', job: cmd.job, from: 'record' });
       markDoneIn(w, c, cmd.job, now, day);

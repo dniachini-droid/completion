@@ -4,6 +4,7 @@ import './direction.css';
 import './base.css';
 import { platform } from '../platform';
 import { watchKeyboard } from './keyboard';
+import { watchTaps } from './taps';
 
 /* the light blooms where you tap (direction D; motion only) */
 if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -22,6 +23,8 @@ for (const g of ['gesturestart', 'gesturechange', 'gestureend']) document.addEve
 
 /* the keyboard never slides the page, nor leaves it slid (D-120) */
 watchKeyboard();
+/* a tap that changes the screen never lands a second time on what replaces it (D-120) */
+watchTaps();
 
 /* sound may play only after a tap, and again after each return from the background */
 document.addEventListener('pointerdown', () => platform.sound.unlock());   /* every tap: iOS suspends sound after the background */

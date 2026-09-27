@@ -1173,3 +1173,20 @@
 - **Rationale:** smallest version that answers the review's finding, built on what exists; bigger versions wait for evidence from Dan's own use (rule 12).
 - **Consequences:** the questions each page leaves for Dan (projects' name and which projects; the nudge's hour) are asked when that stage is built, not before.
 - **Reversible:** Yes; each is its own stage.
+
+## D-120 — The done loop made whole: the keyboard, Done, delves across screens, pauses and 04:00 (Claude's routine calls, D-006; Dan's reports)
+- **Date:** 2026-09-27
+- **Context:** Dan on the TestFlight build from PR #47: "+ Add"'s box sat behind the under-way job's words above the keyboard; the under-way job's Done did nothing. (His reminder report turned out fine: "The reminder does work.") He then asked for the whole begin → delve → pause → done loop to be tried adversarially and made robust, since it was built in pieces. Two independent reviews (the rules; the screens) tried to break it; everything they found real is fixed here.
+- **Decision:**
+  1. **The keyboard** (`ui/keyboard.ts`): on the iPhone the keyboard covers the page and the phone slid the whole page up to show the box; the app never scrolls as a page, so that slide drew Today's words over the box, and could stay behind so a tap landed away from where it was aimed (the likely cause of Done doing nothing; it could not be reproduced off the phone). While the keyboard is up the phone frame is the part of the screen above it, and the page is always put back at the top. While typing on Today, the box stands alone where the next job was.
+  2. **One tap, one decision** (`ui/taps.ts`): for half a second after a tap changes the screen or the delve's phase, taps are let go by. Before, a double tap made a second choice on the screen underneath (Begin twice ended the delve at once; Finish here twice answered "Not yet"; Done twice skipped the job's return).
+  3. **A delve's end is shown wherever Dan is** (not while he is typing), and returning to Today shows an end not yet looked at; leaving it by any way out (the arrow, the phone's back) marks it looked at. Before, an end reached on Today, the Week, the satchel or the map was never shown, then came back stale on a later opening.
+  4. **"It's done" after a delve:** a delve job (done by Dan) worked on today and not yet said done ("Not yet", or the question left) shows "It's done" on Today, as the next job or on its row. Before, only another delve could mark it.
+  5. **Done during its own delve** (Done, or a satchel tick) finishes the delve there first; its minutes count once. Done anywhere closes the job's unseen delve end.
+  6. **Across 04:00:** a delve begun before 04:00 and said done after is paid once (it was paid twice); a run begun before 04:00 and paused after can be carried on (it was ended at once): a pause is ended by the day only once the day has turned since the pause, or after three hours.
+  7. **The log keeps time order** after a long pause and when an away is reported before an earlier delve's end was settled. **startRun** takes only what the dial can set.
+  8. "Every minute counts: 0 minutes so far" after an immediate Finish here now reads "It will keep."
+- **Left for Dan (a question of balance, not built):** a short delve and then Done earns only the delve's minutes (1 minute earns 1), while Done alone earns the job's usual length (25). Topping a short delve up to the usual length would never pay twice and never be less than Done alone.
+- **Checks:** 203 rule tests (22 new, in `week.test.ts` and the new `loop.test.ts`); typecheck; the screen walk at 430 × 932 and 360 × 780; tap-row and back-from-record; two new flow checks, `capture-done.mjs` (a stand-in iPhone keyboard) and `delve-loop.mjs` (the loop, double taps, an end reached in the Week), each at 440 × 956 and 360 × 780 and failing on the old build.
+- **Only on the phone:** the keyboard's real behaviour, and whether Done now takes Dan's tap.
+- **Reversible:** Yes.
