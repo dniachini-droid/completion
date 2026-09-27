@@ -15,7 +15,15 @@ _Last updated: 2026-09-27, evening (the done loop made whole, D-120: the keyboar
 Build the whole MVP (`product/MVP.md` → build order): **slice 2** the Quiet answers (the map at two levels, records, a sealed thing in view, rhythms and Keys, finds), **slice 3** learning the Cut (signs and guessing, the first word, the cutting cinematic, the stair), **slice 4** the week and the gaps (the planner, the satchel, camp and bedtime, the daybook week close, absence). Each slice thin, complete and good-feeling before the next (rule 13), on the heart as built. The sealed story job is **done** (D-066, D-067), so each slice loads the real content for six story weeks from `narrative/sealed/` as it is built (never shown to Dan outside the game), and the real places' paintings are made from its briefs with the painting kit. Dan sees each change on TestFlight (the app is the iPhone app only, D-108).
 
 ## Resume here (next session)
-**The productivity track (D-107), on `claude/productivity-app-review-8txb0y`.** Stage 1, Stage 2's first part, Stage 4 and Stage 5's first part are **in `main` (PR #47, Dan's OK) and the build reached Apple** (run 36289224564, 2026-09-27). Since then on the branch, not yet in `main`: the rest of Stages 2 and 5, Stage 6 and Stage 3 (D-112 to D-114). The plan is in `product/PRODUCTIVITY_PLAN.md`, following the review (`product/PRODUCTIVITY_REVIEW.md`).
+**The productivity track: Stages 1–8 are in `main` and on TestFlight** (PR #50 merged with Dan's OK, together with the delve-loop fixes of PR #48 / D-120; **the build reached Apple, run 36300698027, 2026-09-27**). Dan's test on this build:
+  1. Edit a job from What repeats, and a satchel line by tapping it; remove one and Undo.
+  2. Swipe a row on Today → Done; Choose a delve → Already done → Yesterday.
+  3. Give a satchel line a date; see it in the Week and the satchel; try a monthly or yearly repeat.
+  4. The Week: "about 2 h" per day, "Lay out the rest of the week", "The week after".
+  5. Settings → Your calendar → Show it (allow access): your events in the Week.
+  6. Siri: "Add to the satchel in Long Answer" (or the Action button: Settings → Action Button → Shortcut → Long Answer).
+  7. At the next week close, the Daybook's "Look ahead".
+**Earlier notes on the branch, kept for the record:** Stage 1, Stage 2's first part, Stage 4 and Stage 5's first part are **in `main` (PR #47, Dan's OK) and the build reached Apple** (run 36289224564, 2026-09-27). Since then on the branch, not yet in `main`: the rest of Stages 2 and 5, Stage 6 and Stage 3 (D-112 to D-114). The plan is in `product/PRODUCTIVITY_PLAN.md`, following the review (`product/PRODUCTIVITY_REVIEW.md`).
 - **Stage 1 (done, D-109):** the planned-week bug; opt-in reminders for things with a time; Settings (from the Daybook) with Save a copy, Restore and a weekly copy in Files; one-tap "+ Add" on Today.
 - **The app is the iPhone app only (D-108):** no web page.
 - **Stage 2, part (done, D-110):** a stopped rhythm leaves nothing behind; ticked satchel lines leave the next day; delve lengths 5, 10, 15 and 90; the laptop first step.
