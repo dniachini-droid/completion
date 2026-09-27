@@ -159,9 +159,6 @@ const doneIn = (facts: Fact[], week: string) => ofType(facts, 'jobDone').filter(
 const sessions = (facts: Fact[], r: Rhythm, week: string) => R.sessionsIn(facts, r, r.everyDays ? addDays(week, 6) : week);
 const need = R.needOf;
 
-/** How recent a job added with no day of its own must be for the planner to place it (D-117 review). */
-export const ADDED_DAYS = 7;
-
 /**
  * "Plan my week" (PLANNER.md): fixed rules, no learning. Appointments and set days first; avoided one-offs early; the
  * same rhythm spread across days (never two days running where it can be avoided); no day above a Normal day's size;
@@ -249,15 +246,8 @@ export function planWeek(c: Content, facts: Fact[], week: string, from: string, 
       if (best) put(r.job, best, r.time);
     }
   }
-  /* a job added lately with no day of its own (from Siri, D-117): where a day has room, oldest first, at most one such
-     job to a day. Older lines, and lines put to someday, wait in Dan's jobs for him to choose; they never flood a week. */
-  const shelved = new Set(ofType(facts, 'itemSomeday').map(f => f.id));
-  const recent = new Set(ofType(facts, 'itemAdded').filter(f => f.day <= from && daysBetween(f.day, from) <= ADDED_DAYS).map(f => f.id));
-  const extra = new Set<string>();
-  for (const j of c.jobs.filter(x => recent.has(x.id) && !shelved.has(x.id) && !x.stopped && !x.by && !x.avoided && !rhythmJob.has(x.id) && !ever.has(x.id) && !hand.has(x.id) && !out.some(e => e.job === x.id))) {
-    const d = days.find(x => !extra.has(x) && fits(x, j.id));
-    if (d) { put(j.id, d); extra.add(d); }
-  }
+  /* a job with no day of its own (added in the satchel, by Siri, or taken off a week) waits in the satchel until Dan
+     puts it on a day or delves on it: the planner never places it (D-126) */
   return out.filter(e => !fixed.some(x => x.id === e.id)).sort((a, b) => a.day.localeCompare(b.day) || (a.time ?? '99').localeCompare(b.time ?? '99'));
 }
 
@@ -419,3 +409,24 @@ export function comingUp(c: Content, facts: Fact[], day: string): { day: string;
   }
   return out;
 }
+
+/* ---------- the satchel (D-126) ---------- */
+
+/**
+ * The jobs with no day (D-126): one-offs not finished, with no place in any plan from `day` on, newest first. A job
+ * added in the satchel or by Siri, a job taken off a week ("Not this week"), a job whose day has passed. A repeating
+ * job is never here: it comes round by itself. A job done today stays on Today, not here.
+ */
+export function satchelOf(c: Content, facts: Fact[], day: string): Job[] {
+  const rhythmJob = new Set(c.rhythms.map(r => r.job));
+  const finished = new Set(ofType(facts, 'jobDone').map(f => f.job));
+  const weeks = new Set<string>();
+  for (const f of facts) {
+    if (f.type === 'planMade' && f.week >= calendarWeek(day)) weeks.add(f.week);
+    else if (f.type === 'planAdded' && f.entry.day >= day) weeks.add(calendarWeek(f.entry.day));
+  }
+  const placed = new Set<string>();
+  for (const wk of weeks) for (const e of planOf(facts, wk) ?? []) if (e.day >= day) placed.add(e.job);
+  return c.jobs.filter(j => !j.stopped && !rhythmJob.has(j.id) && !finished.has(j.id) && !placed.has(j.id)).reverse();
+}
+

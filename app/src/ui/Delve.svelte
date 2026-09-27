@@ -13,6 +13,7 @@
   import Return from './Return.svelte';
   import { steady } from './taps';
   import { unslide } from './keyboard';
+  import { STRUCK } from '../core/game';
   import './scene/tunnel.css';
 
   let { go }: { go: Go } = $props();
@@ -62,7 +63,25 @@
   });
   /* the end carries the story (a step, a mark to guess, a find) */
   const told = $derived(!!end && (doneSeq !== null || v.runFinds.length > 0));
+  /* the job's list (D-126): a tap strikes a line off (the shampoo is in the basket) or back; struck lines go when the
+     delve ends, the rest stay for next time */
+  const lines = (id: string) => (game.job(id)?.list ?? '').split('\n').filter(l => l.trim());
+  function strike(id: string, k: number) {
+    const ls = lines(id);
+    ls[k] = ls[k].startsWith(STRUCK) ? ls[k].slice(STRUCK.length) : STRUCK + ls[k];
+    game.do({ do: 'listJob', job: id, list: ls.join('\n') });
+  }
 </script>
+
+{#snippet theList(id: string)}
+  {#if lines(id).length}
+    <ul class="list" aria-label={t('delve.list')}>
+      {#each lines(id) as l, k (k)}
+        <li><button class:struck={l.startsWith(STRUCK)} aria-pressed={l.startsWith(STRUCK)} onclick={() => strike(id, k)}>{l.startsWith(STRUCK) ? l.slice(STRUCK.length) : l}</button></li>
+      {/each}
+    </ul>
+  {/if}
+{/snippet}
 
 <div class="dv" class:told bind:this={root}>
   {@html tunnel}
@@ -95,6 +114,7 @@
       {#if run?.phase === 'delve'}
         <h2>{run.job.name}</h2>
         <p class="soft of">{of}</p>
+        {@render theList(run.job.id)}
         <p class="say away">{t(game.alertsOff ? 'delve.away.noAlerts' : 'delve.away.locked')}</p>
         <div class="two-quiet">
           <button class="btn-quiet" onclick={() => game.do({ do: 'stepAway' })}><span>{t('delve.stepAway')}</span></button>
@@ -105,6 +125,7 @@
         <div class="label-line centred">{run.away ? t('delve.awayLabel') : t('delve.paused')}</div>
         <h2 class="m">{run.job.name}</h2>
         <p class="say">{run.away ? t('delve.away.say') : t('delve.held.say')}</p>
+        {@render theList(run.job.id)}
         <button class="btn resting back" onclick={() => game.do({ do: 'resume' })}>
           <span>{run.away ? t('delve.carryOn') : t('delve.back')}</span><span class="tail">{t('delve.back.left', { min: minutesWords(Math.max(1, Math.ceil(run.leftMs / 60000))) })}</span>
         </button>
@@ -158,6 +179,11 @@
 </div>
 
 <style>
+  /* the job's list, struck off a line at a time (D-126) */
+  .list { list-style: none; margin: 4px auto 10px; padding: 0; max-width: 320px; max-height: 26vh; overflow-y: auto; text-align: left; }
+  .list button { display: block; width: 100%; min-height: 40px; padding: 4px 10px; text-align: left; background: none; border: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, .08); font-family: var(--life); font-size: 17px; color: #fff; cursor: pointer; }
+  .list button.struck { text-decoration: line-through; color: var(--ink-3); }
   .dv { display: contents; }
   /* the ring takes the room left between the place's name and the words below, never more; when the end carries the
      story it steps back, and on a phone too short for it, it gives way altogether */

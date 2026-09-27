@@ -288,6 +288,8 @@
     </div>
     <nav class="foot" aria-label={t('today.label')}>
       <button class="text-link add" class:on={capturing} aria-label={t('today.add.label')} aria-expanded={capturing} onclick={startCapture}><span>{capSaid ? t('today.add.said') : t('today.add')}</span></button>
+      <!-- the jobs with no day, by day and at night (D-126) -->
+      <button class="text-link" onclick={() => go('satchel')}><span>{t('nav.satchel')}</span></button>
       <button class="text-link" onclick={() => go('week')}><span>{t('nav.week')}</span></button>
       <button class="text-link" onclick={() => go('daybook')}><span>{t('nav.daybook')}</span></button>
     </nav>

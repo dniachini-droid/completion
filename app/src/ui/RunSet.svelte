@@ -150,6 +150,8 @@
         <div class="label-line lit">{t('set.label')}</div>
         <h1 class="say-lg">{job.name}</h1>
         {#if job.note}<p class="soft last">{t('set.stopped', { note: job.note })}</p>{/if}
+        <!-- the job's list (D-126): struck off a line at a time in the delve -->
+        {#if job.list}<p class="soft last">{job.list.split('\n').filter(l => l.trim()).map(l => l.replace(/^~ /, '')).join(' · ')}</p>{/if}
       </section>
     </header>
 

@@ -1319,3 +1319,16 @@
 - **After a fresh adversarial review:** the fixes above for the running delve and repeating jobs' done rows. A tap on "It's done" or on the slid-out buttons never starts a slide. The Daybook leaves deleted jobs out. A backup's "last day played" skips plan changes.
 - **Consequences:** a new screen check, `tests/flows/delete-day.mjs`, runs in CI (Chromium and WebKit). Rule tests cover deleting a done job, deleting a repeating job and Undo, and Done after "Not this week".
 - **Reversible:** Yes.
+
+## D-126 — The Satchel returns as the place for jobs with no day, with a list on any job (Dan)
+- **Date:** 2026-09-27
+- **Context:** After D-117 there was no way to see the jobs with no day except "Something else…" by day and "Keep going" at night, and nowhere to jot a job as it comes to mind. Dan wanted a list he can write into at any time without choosing a day, open whenever he likes and delve from. He also wanted notes on a job, e.g. a "Shopping" delve holding shampoo, then milk days later. The research (Things' Inbox and Anytime, Todoist, Reminders, Zelda's Adventure Log; Masicampo & Baumeister 2011 on plans quieting unfinished goals; Habitica's red to-dos and Skyrim's misc log as warnings) favoured one quiet undated list, capture that never asks a question, a plain note shown in the task, and no counts, ages or red. Dan chose the name "Satchel" and its artwork from the Phase 4 mock-up, "obviously not the old functionality".
+- **Decision:**
+  1. **The Satchel** (Today's foot: + Add · Satchel · Week · Daybook, by day and at night) lists every one-off job with no place in any plan from today on, newest first. Its sources: anything put in there, what Siri / Shortcuts adds (the planner no longer places those, reversing D-117's auto-placement), a job taken off a week ("Not this week"), and a job whose day passed. Repeating jobs, jobs done and deleted jobs are never in it.
+  2. **Adding asks nothing:** type, Put in (or Return). A tap on a job opens its delve set-up. Each job has **List**, **Put on a day** (the app's own calendar, from today, five weeks) and **Delete** (with Undo, D-125).
+  3. **A job's list** (a new `list` field on the job; no new fact type): lines added a line at a time; shown as a one-line preview in the Satchel and on the set-up, and in full on the delve screen, where a tap strikes a line off (or back). Struck lines go when the delve ends; the rest stay for next time.
+  4. **The artwork** is the satchel by the lamp from direction D's mock-up, rendered once to `app/src/ui/scene/satchel.jpg`.
+  5. No counts, ages, overdue marks or red (rule 9). The look-ahead's weekly "Still wanted?" remains the only tidying.
+- **Alternatives:** a "Pack" or "Journal" name (Dan chose Satchel); a separate checklist per job (two kinds of thing again: the note with strike-through is enough); letting the planner place Siri jobs (Dan's jots are his to place).
+- **Consequences:** a new screen check, `tests/flows/satchel.mjs`, runs in CI. Rule tests cover the Satchel's contents and the list. Siri's reply now says "It's in your satchel."
+- **Reversible:** Yes.

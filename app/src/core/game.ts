@@ -420,6 +420,18 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string) {
 const sessionEnds = (all: Fact[], day: string, j: Job, minutes: number) =>
   j.doneBy === 'enough' && minutes > 0 && !doneOn(all, day).has(j.id);
 
+/** A delve's end takes the lines struck off during it out of the job's list (D-126). */
+export const STRUCK = '~ ';
+function clearStruck(w: W, c: Content, id: string, at: Moment, day: string) {
+  const j = c.jobs.find(x => x.id === id);
+  if (!j?.list || !j.list.split('\n').some(l => l.startsWith(STRUCK))) return;
+  const list = j.list.split('\n').filter(l => !l.startsWith(STRUCK)).join('\n');
+  const job: Job = { ...j };
+  delete job.stopped;
+  if (list) job.list = list; else delete job.list;
+  w.put({ type: 'jobSaved', job }, at, day);
+}
+
 /** Finish a run at an instant: every minute counts; a repeating job's run is its session. */
 function finishRun(w: W, c: Content, r: NonNullable<ReturnType<typeof activeRun>>, atMs: number, at: Moment) {
   const s = runAt(r.plan, r.marks, atMs), rday = r.fact.day, j = jobOf(c, r.fact.job);
@@ -430,6 +442,7 @@ function finishRun(w: W, c: Content, r: NonNullable<ReturnType<typeof activeRun>
     sideChamber(w, c, at, rday);
   }
   w.put({ type: 'delveEnded', job: j.id, minutes: counted, how: 'finishedHere', run: r.fact.seq }, at, rday);
+  clearStruck(w, c, j.id, at, rday);
   if (sessionEnds(w.all, rday, j, counted)) markDoneIn(w, c, j.id, at, rday);
   else gifts(w, c, at, rday);
   /* a place reached on this delve starts a new stretch, whose halfway may already be behind Dan (an arrival held for
@@ -514,6 +527,7 @@ function settleIn(w: W, c: Content, nowMs: number) {
   if (s.phase === 'ended' && s.how === 'ranOut') {
     const at = momentOf(s.endedAt!, w.off), minutes = Math.round(s.countedMs / MIN);
     w.put({ type: 'delveEnded', job: j.id, minutes, how: 'ranOut', run: r.fact.seq }, at, day);
+    clearStruck(w, c, j.id, at, day);
     /* a repeating job's run is its session, at the run's end (D-121) */
     if (sessionEnds(w.all, day, j, minutes)) markDoneIn(w, c, j.id, at, day);
   }
@@ -627,6 +641,8 @@ export type Command =
   | { do: 'hideDone'; job: string; on: string; back?: boolean }
   | { do: 'firstStep'; job: string; step: string }
   | { do: 'noteJob'; job: string; note: string }
+  /* the job's list (D-126): its whole text, as Dan leaves it */
+  | { do: 'listJob'; job: string; list: string }
   | { do: 'addItems'; lines: string[] }
   /** Lines from outside the app (D-113), each added once, whatever happens between writing and clearing */
   | { do: 'takeInbox'; lines: { id: string; text: string }[] }
@@ -768,6 +784,16 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       const job: Job = { ...j };
       delete job.stopped;
       if (text) job[key] = text; else delete job[key];
+      w.put({ type: 'jobSaved', job });
+      break;
+    }
+    case 'listJob': {
+      const j = c.jobs.find(x => x.id === cmd.job);
+      const list = cmd.list.split('\n').map(l => l.replace(/\s+$/, '')).filter(l => l.trim()).join('\n').slice(0, 2000);
+      if (!j || (j.list ?? '') === list) break;
+      const job: Job = { ...j };
+      delete job.stopped;
+      if (list) job.list = list; else delete job.list;
       w.put({ type: 'jobSaved', job });
       break;
     }
