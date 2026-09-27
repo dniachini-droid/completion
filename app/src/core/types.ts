@@ -39,8 +39,14 @@ export interface Rhythm {
   times?: number;
   /** …or on set weekdays (0 Sunday … 6 Saturday)… */
   days?: number[];
-  /** …or once every 2 weeks. */
+  /** …or once every 2 weeks… */
   every?: 2;
+  /** …or monthly: a day of the month (31: the last day of a shorter month), or its nth weekday (nth -1: the last)… (D-114) */
+  monthly?: { day: number } | { nth: 1 | 2 | 3 | 4 | -1; weekday: number };
+  /** …or yearly, on "MM-DD" (birthdays, renewals)… */
+  yearly?: string;
+  /** …or every N days since it was last done. */
+  everyDays?: number;
   /** An appointment's time, "18:00". */
   time?: string;
 }

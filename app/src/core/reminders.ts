@@ -8,6 +8,7 @@
  */
 import { calendarWeek, gameDay, weekdayOf, type Moment } from './time';
 import { addDays, daysBetween, live, planMade, weekOf } from './week';
+import { fallsOn } from './repeat';
 import type { Content, Fact, FactBody, FactOf } from './types';
 
 /** How long before the time an alert comes: at the time, 15 minutes or an hour before. */
@@ -77,7 +78,7 @@ export function alertsOn(base: Content, facts: Fact[], day: string, today = day)
   }
   /* a week not laid out yet (next week, before its first opening): an appointment on its set days, at its own time */
   if (!planMade(facts, week)) for (const r of c.rhythms) {
-    if (!r.time || !r.days?.includes(weekdayOf(day)) || listed.has(r.job) || doneOn.has(r.job)) continue;
+    if (!r.time || !fallsOn(r, day) || listed.has(r.job) || doneOn.has(r.job)) continue;
     const lead = set.get(rhythmTarget(r.id)) ?? null;
     if (lead !== null) push(rhythmTarget(r.id), 'job', r.job, r.time, lead);
   }

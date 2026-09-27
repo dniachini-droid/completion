@@ -6,6 +6,7 @@
  * done; a released job is re-placed only on a later day below its Normal size, otherwise it falls away (no avalanche).
  */
 import { calendarWeek, weekdayOf } from './time';
+import * as R from './repeat';
 import type { Content, Fact, FactBody, FactOf, Job, PlanEntry, Rhythm } from './types';
 
 /** A Normal day's size: the plan never puts more on a day (PLANNER → Plan my week). */
@@ -120,12 +121,10 @@ export function planOf(facts: Fact[], week: string): PlanEntry[] | null {
 export const planMade = (facts: Fact[], week: string) => facts.some(f => f.type === 'planMade' && f.week === week);
 
 const doneIn = (facts: Fact[], week: string) => ofType(facts, 'jobDone').filter(f => calendarWeek(f.day) === week);
-const sameFortnight = (a: string, b: string) => Math.floor(Date.parse(a) / (14 * 864e5)) === Math.floor(Date.parse(b) / (14 * 864e5));
-/** Sessions of a rhythm done in its period containing `week` (every 2 weeks: the fortnight). */
-function sessions(facts: Fact[], r: Rhythm, week: string): number {
-  return ofType(facts, 'jobDone').filter(f => f.job === r.job && (r.every === 2 ? sameFortnight(calendarWeek(f.day), week) : calendarWeek(f.day) === week)).length;
-}
-const need = (r: Rhythm) => r.days ? r.days.length : r.times ?? 1;
+/** Sessions of a rhythm done in its period containing `week` (core/repeat.ts; a period of days counts back from the
+    week's end, D-114). */
+const sessions = (facts: Fact[], r: Rhythm, week: string) => R.sessionsIn(facts, r, r.everyDays ? addDays(week, 6) : week);
+const need = R.needOf;
 
 /**
  * "Plan my week" (PLANNER.md): fixed rules, no learning. Appointments and set days first; avoided one-offs early; the
@@ -148,7 +147,16 @@ export function planWeek(c: Content, facts: Fact[], week: string, from: string):
   const rhythmJob = new Set(c.rhythms.map(r => r.job));
 
   /* appointments and set days first (they may pass a day's size: an appointment is fixed, P10) */
-  for (const r of c.rhythms.filter(x => x.days)) for (const d of days) if (r.days!.includes(weekdayOf(d)) && !doneOnDay(r.job, d)) put(r.job, d, r.time);
+  for (const r of c.rhythms) for (const d of days) if (R.fallsOn(r, d) && !doneOnDay(r.job, d)) put(r.job, d, r.time);
+  /* every N days since last done: on the day it falls due, then every N days after (D-114) */
+  for (const r of c.rhythms.filter(x => x.everyDays)) {
+    for (let d = R.dueFrom(facts, r, days[0]); d <= days[days.length - 1]; d = addDays(d, r.everyDays!)) {
+      const on = days.find(x => x >= d && load(x) < cap(x) && !doneOnDay(r.job, x)) ?? null;
+      if (!on) break;
+      put(r.job, on, r.time);
+      d = on;
+    }
+  }
   /* avoided one-offs early in the week, one to a day where the week allows */
   for (const j of c.jobs.filter(x => x.avoided && !x.item && !x.stopped && !rhythmJob.has(x.id) && !ever.has(x.id))) {
     const d = days.find(x => load(x) < cap(x) && !out.some(e => e.day === x && c.jobs.find(k => k.id === e.job)?.avoided)) ?? days.find(x => load(x) < cap(x));
@@ -161,7 +169,7 @@ export function planWeek(c: Content, facts: Fact[], week: string, from: string):
     if (d) put(r.job, d, r.time);
   }
   /* N a week, the most frequent first, spread evenly */
-  const weekly = c.rhythms.filter(x => !x.days && x.every !== 2).sort((a, b) => (b.times ?? 1) - (a.times ?? 1));
+  const weekly = c.rhythms.filter(x => !x.days && R.weekly(x)).sort((a, b) => (b.times ?? 1) - (a.times ?? 1));
   for (const r of weekly) {
     const left = Math.max(0, need(r) - sessions(facts, r, week));
     for (let k = 0; k < left; k++) {
@@ -201,7 +209,8 @@ export function weekOf(c: Content, facts: Fact[], week: string, today: string): 
   /* how many more sessions the plan may still hold of a job: a rhythm's enough left this period; a one-off, one */
   const room = new Map<string, number>();
   const left = (job: string) => {
-    if (!room.has(job)) { const r = rhythm(job); room.set(job, r ? Math.max(0, need(r) - sessions(facts, r, week)) : met(job) ? 0 : 1); }
+    /* every N days: as many as the plan placed; each falls due again after the last (D-114) */
+    if (!room.has(job)) { const r = rhythm(job); room.set(job, r?.everyDays ? 7 : r ? Math.max(0, need(r) - sessions(facts, r, week)) : met(job) ? 0 : 1); }
     return room.get(job)!;
   };
   const place = (e: PlanEntry, day: string) => {

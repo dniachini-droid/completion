@@ -12,6 +12,7 @@ import type { Capacity, Content, Fact, FactBody, FactOf, Job, Rhythm } from './t
 import * as S from './story';
 import * as W from './week';
 import * as R from './reminders';
+import * as Rep from './repeat';
 import type { Beat, Seal, StretchId } from './story-types';
 
 export const STEP_MIN = 25;                                   /* BALANCING §1 */
@@ -138,7 +139,10 @@ function offeredOn(c: Content, facts: Fact[], day: string, j: Job, planned: Set<
   if (planned.has(j.id)) return true;
   if (j.item) return false;   /* a satchel line is offered only once it is planned for the day (TOOLS §2) */
   const r = rhythmOf(c, j.id);
-  if (r?.days) return r.days.includes(weekdayOf(day));
+  const on = r ? Rep.fallsOn(r, day) : null;
+  if (on !== null) return on;
+  /* every N days: offered once it falls due, until done (D-114) */
+  if (r?.everyDays) return Rep.dueFrom(facts, r, day) <= day || ofType(facts, 'jobDone').some(f => f.job === j.id && f.day === day);
   if (!r) return !ofType(facts, 'jobDone').some(f => f.job === j.id && f.day !== day);
   return true;
 }
