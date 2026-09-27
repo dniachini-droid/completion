@@ -3,6 +3,7 @@
   import Bedtime from './Bedtime.svelte';
   import SwipeRow from './SwipeRow.svelte';
   import { openMenu } from './menu.svelte';
+  import { undoneFacts } from '../core/done';
   import { steady } from './taps';
   /* Today (the morning screen, UX_PRINCIPLES → "The morning screen carries"): where you are, the sealed thing ahead,
      the one next job (no Low / Normal / High, and no "Already done": Dan, D-089) with one button, today's other jobs as plain rows, "I can't start".
@@ -48,7 +49,9 @@
     const f = game.do({ do: 'done', job: j.id });
     /* a job with no whole minute behind it goes off the list and brings no return (rule 10, D-117) */
     const d = f.find(x => x.type === 'jobDone');
-    if (d && d.type === 'jobDone' && d.minutes > 0) go('step', d.seq);
+    /* its return, when there are minutes it hasn't shown before (said done again after "Not done after all", only the new
+       ones, D-131) */
+    if (d && d.type === 'jobDone' && d.minutes - takenBack(d.job, d.day) > 0) go('step', d.seq);
   }
   /* a delve job worked on today, not yet said to be done: "Is it done?" answered "Not yet", or left unanswered. Its Done
      is here, so it never needs another delve to be marked (Dan, 2026-09-27, D-120) */
@@ -76,6 +79,8 @@
          { label: t('job.delete'), sr: t('row.srDelete', { job: name }), run: () => remove(j.id), del: true }];
   }
   /* "Not done after all" (D-131): it is a job to do again; what it earned stays, and is never paid twice */
+  /* the minutes a job's taken-back done record already counted today */
+  const takenBack = (job: string, day: string) => undoneFacts(game.facts).filter(f => f.job === job && f.day === day).reduce((a, f) => Math.max(a, f.minutes), 0);
   function notDone(id: string) { steady(); game.do({ do: 'notDone', job: id }); }
   /* a done row: only that day's record goes (its minutes stay); otherwise the job (D-125) */
   function remove(id: string) { if (v.done.has(id)) game.removeDone(id, v.day); else game.remove(id); }
@@ -95,7 +100,7 @@
   /* "+ Add" (D-107) opens the Satchel's one box, ready to type in (D-131): focused inside the tap itself, so the phone's
      keyboard opens straight away */
   function add() {
-    go('satchel', 'add');
+    go('satchel');
     flushSync();
     document.querySelector<HTMLInputElement>('.satchel-add input')?.focus({ preventScroll: true });
   }
@@ -247,7 +252,7 @@
     {/if}
     {#snippet jobRow(id: string)}
       {@const j = job(id)}
-      <SwipeRow key={`t:${id}`} actions={acts(j)} tap={() => start(id)} hold={() => openMenu(id, go)} disabled={!!v.run} done={v.done.has(id)}>
+      <SwipeRow key={`t:${id}`} actions={acts(j)} tap={() => start(id)} hold={() => openMenu(id, go, v.done.has(id) ? v.day : null)} disabled={!!v.run} done={v.done.has(id)}>
         {#snippet row()}<span class="pip" class:done={v.done.has(id)}></span><span class="t">{j.name}</span><span class="s">{sayDone(j) ? '' : rowNote(j)}</span>{/snippet}
         <!-- the same "It's done" on a row further down: a tap on the row itself still starts a delve (D-100, D-120) -->
         {#snippet over()}{#if sayDone(j) && !v.run}<button class="text-link row-done" onclick={() => done(j)}><span>{t('today.itsDone')}</span></button>{/if}{/snippet}

@@ -260,7 +260,7 @@
 
         {#if d.often !== 'once'}<p class="soft val-note">{t('rhythms.newNumber')}</p>{/if}
         <div class="btn-row lead"><button class="btn" disabled={!d.job.name.trim() || (d.often === 'days' && !d.days.length)} onclick={save}>{t('rhythms.save')}</button><button class="btn-quiet" onclick={close}><span>{t('rhythms.cancel')}</span></button></div>
-        {#if !d.isNew}<div class="links"><button class="text-link" onclick={remove}><span>{t('job.remove')}</span></button></div>{/if}
+        {#if !d.isNew}<div class="links"><button class="text-link del" onclick={remove}><span>{t('job.remove')}</span></button></div>{/if}
       </div>
     {/if}
   </div>

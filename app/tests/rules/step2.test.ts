@@ -213,3 +213,58 @@ describe('the planner learns (D-131)', () => {
     expect(hand.line.filter(id => !hand.done.has(id))).toEqual(handAm.line.filter(id => !handAm.done.has(id)));
   });
 });
+
+describe('the fresh review of D-131: what it broke, now held', () => {
+  it('a one-off chosen for tomorrow and done tonight is finished: it doesn’t come back, and pays once', () => {
+    const p = player('2026-09-28T21:30:00+01:00').do({ do: 'open' }).do({ do: 'addItems', lines: ['Write to Ana'] });
+    const id = p.satchel().noDay[0].id;
+    p.do({ do: 'firstJob', job: id }).did(id, 20);
+    const paid = p.paid();
+    p.to('2026-09-29T08:00:00+01:00').do({ do: 'open' });
+    expect(p.view().slate).not.toContain(id);
+    expect(tomorrowFirst(C, p.facts, p.at).job).not.toBe(id);
+    /* and a finished one-off can't be chosen, or put on a day, again */
+    expect(act(p.facts, C, { do: 'firstJob', job: id }, p.at)).toEqual([]);
+    expect(act(p.facts, C, { do: 'putOnDay', job: id, day: '2026-09-30' }, p.at)).toEqual([]);
+    expect(p.paid()).toBe(paid);
+  });
+  it('the finish line counts a done job by the minutes worked, never by how long it was meant to take (rule 10)', () => {
+    const p = player().do({ do: 'open' });
+    const big = { id: 'big', name: 'Big', delve: true, length: 240, doneBy: 'dan' as const };
+    p.do({ do: 'saveJob', job: big, rhythm: null }).do({ do: 'putOnDay', job: 'big', day: '2026-09-28' }).did('big', 5);
+    expect(p.view().done.has('big')).toBe(true);
+    expect(p.view().complete).toBe(false);
+    expect(p.view().line.length).toBeGreaterThan(1);
+  });
+  it('work done off the plan counts as the day’s real minutes: a line done completes the day', () => {
+    const p = player().do({ do: 'open' });
+    const line = p.view().line;
+    p.did('post', 30);
+    for (const id of line) { p.do({ do: 'startRun', job: id, minutes: 1, count: 1 }).wait(2); if (!p.view().done.has(id)) p.do({ do: 'done', job: id }); }
+    expect(line.every(id => p.view().done.has(id))).toBe(true);
+    expect(p.view().complete).toBe(true);
+  });
+  it('a recurring job done today keeps its place today; put on a later day it is planned there too', () => {
+    const p = player().do({ do: 'open' }).did('gym', 30);
+    const line = p.view().line;
+    expect(act(p.facts, C, { do: 'putOnDay', job: 'gym', day: '2026-09-28' }, p.at)).toEqual([]);
+    p.do({ do: 'putOnDay', job: 'gym', day: '2026-09-30' });
+    expect(p.view().line).toEqual(line);
+  });
+  it('"Not done after all" never follows a deleted record; a taken-back legacy line is still a line', () => {
+    const p = player().do({ do: 'open' }).did('gym', 30).do({ do: 'hideDone', job: 'gym', on: '2026-09-28' });
+    expect(act(p.facts, C, { do: 'notDone', job: 'gym' }, p.at)).toEqual([]);
+    const q = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['Old line'] });
+    const id = q.satchel().noDay[0].id;
+    q.did(id, 10).do({ do: 'notDone', job: id }).to('2026-09-29T09:00:00+01:00').do({ do: 'open' });
+    expect(W.items(q.facts, '2026-09-29').find(i => i.id === id)?.done).toBe(false);
+  });
+  it('"Delve now" waits while a delve’s end is still to be answered; a week whose only record was taken back gets no page', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'startRun', job: 'cat', minutes: 10, count: 1 }).wait(11);
+    expect(p.view().runEnd).toBeTruthy();
+    expect(act(p.facts, C, { do: 'delveNow', line: 'Another' }, p.at)).toEqual([]);
+    const q = player().do({ do: 'open' }).did('cat', 10).do({ do: 'notDone', job: 'cat' });
+    q.to('2026-10-05T09:00:00+01:00').do({ do: 'open' });
+    expect(q.facts.some(f => f.type === 'weekClosed' && f.week === '2026-09-28')).toBe(false);
+  });
+});

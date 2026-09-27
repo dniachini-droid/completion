@@ -176,12 +176,12 @@
           {/each}
           {#each d.jobs as j (j.entry ?? j.job + j.done)}
             <button class="row" class:done={j.done} class:open={open === keyOf(j, d.day)} onclick={() => edit(j, d.day)} disabled={!j.done && d.day < v.day}
-              use:hold={() => { open = null; openMenu(j.job, go); }}>
+              use:hold={() => { open = null; openMenu(j.job, go, j.done ? d.day : null); }}>
               <span class="pip" class:done={j.done}></span><span class="t">{game.job(j.job)?.name ?? j.job}</span><span class="s">{note(j, d.day)}</span>
             </button>
             {#if open && j.done && open === keyOf(j, d.day)}
               <!-- a done job: only Delete; the minutes it counted for stay (Dan, D-125) -->
-              <div class="sheet"><div class="off"><button class="text-link" onclick={() => remove(j, d.day)}><span>{t('job.delete')}</span></button></div></div>
+              <div class="sheet"><div class="off"><button class="text-link del" onclick={() => remove(j, d.day)}><span>{t('job.delete')}</span></button></div></div>
             {:else if open && open === j.entry}
               <div class="sheet">
                 <div class="label-line">{t('week.moveTo')}</div>
@@ -209,8 +209,9 @@
                   <button class="text-link" onclick={() => off(j)}><span>{t('week.off')}</span></button>
                   <!-- the job itself: its name, length, first step… (D-112) -->
                   <button class="text-link" onclick={() => go('rhythms', j.job)}><span>{t('job.change')}</span></button>
-                  {#if v.run?.job.id !== j.job}<button class="text-link" onclick={() => remove(j, d.day)}><span>{t('job.delete')}</span></button>{/if}
                 </div>
+                <!-- Delete on a line of its own, at the sheet's end (D-131) -->
+                {#if v.run?.job.id !== j.job}<div class="off"><button class="text-link del" onclick={() => remove(j, d.day)}><span>{t('job.delete')}</span></button></div>{/if}
               </div>
             {/if}
           {/each}

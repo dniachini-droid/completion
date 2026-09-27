@@ -28,6 +28,7 @@
   import Settings from './Settings.svelte';
   import JobMenu from './JobMenu.svelte';
   import { closeMenu } from './menu.svelte';
+  import { closeRows } from './SwipeRow.svelte';
   import { t } from '../content/copy/en';
   import { steady } from './taps';
   import { unslide } from './keyboard';
@@ -72,10 +73,12 @@
     const e = game.view.runEnd;
     if (screen === 'delve' && e && !game.view.run && to !== 'delve') game.do({ do: 'seen', what: 'step', ref: e.seq });
     still = TABS.has(screen) && TABS.has(to);
-    closeMenu();
+    closeMenu(); closeRows();
     game.deleted = null; game.cantDelete = null;   /* a delete's Undo stays on the screen it was made on (D-125) */
     /* back to Today goes the way "Today" does, past what waits: a delve that ended while Dan typed elsewhere is shown
        (break-it review 5) */
+    /* a delve's set-up for a job since deleted (from its editor) is passed by on the way back (D-131) */
+    while (to === 'back' && trail.length && trail[trail.length - 1].screen === 'set' && !game.job(String(trail[trail.length - 1].arg))) trail.pop();
     if (to === 'back') { const p = trail.pop(); if (p && p.screen !== 'today') { screen = p.screen; arg = p.arg; } else go('today'); return; }
     if (to === 'cant' && typeof a === 'string') game.do({ do: 'cantStart', job: a });
     /* "Today" never skips what waits: a place just reached, the morning, the welcome back, a new daybook page (D-080).

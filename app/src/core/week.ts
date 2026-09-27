@@ -143,9 +143,11 @@ export interface Item { id: string; name: string; added: string; done: boolean; 
     go; untouched for three weeks, someday (TOOLS §2). */
 export function items(facts: Fact[], day: string): Item[] {
   const out = new Map<string, Item>(), touched = new Map<string, string>(), ticked = new Map<string, string>(), gone = new Map<string, Item>(), shelved = new Set<string>();
+  const live = new Set<Fact>(doneFacts(facts));
   for (const f of facts) {
     if (f.type === 'itemAdded') { out.set(f.id, { id: f.id, name: f.name, added: f.day, done: false, someday: false }); touched.set(f.id, f.day); }
-    else if (f.type === 'itemTicked' || (f.type === 'jobDone' && out.has(f.job))) {
+    /* a done record taken back ("Not done after all", D-131) doesn't tick it */
+    else if (f.type === 'itemTicked' || (f.type === 'jobDone' && out.has(f.job) && live.has(f))) {
       const id = f.type === 'itemTicked' ? f.id : f.job, it = out.get(id);
       if (it && !it.done) { it.done = true; ticked.set(id, f.day); }
     }
@@ -303,7 +305,16 @@ export interface WeekView { week: string; planned: boolean; days: { day: string;
  * job that didn't happen is re-placed on the next day still below a Normal day's size, or falls away. Once a rhythm's
  * enough for the week is met, its remaining planned sessions quietly leave; a one-off done leaves the plan.
  */
+/* the week as it stands is asked for many times while one screen is drawn: kept for the same log, content and day */
+const weeks = new WeakMap<Fact[], { n: number; c: Content; views: Map<string, WeekView> }>();
 export function weekOf(c: Content, facts: Fact[], week: string, today: string): WeekView {
+  let m = weeks.get(facts);
+  if (!m || m.n !== facts.length || m.c !== c) { m = { n: facts.length, c, views: new Map() }; weeks.set(facts, m); }
+  const key = `${week}|${today}`;
+  if (!m.views.has(key)) m.views.set(key, weekAt(c, facts, week, today));
+  return m.views.get(key)!;
+}
+function weekAt(c: Content, facts: Fact[], week: string, today: string): WeekView {
   const plan = planOf(facts, week);
   const days = weekDays(week).map(day => ({ day, jobs: [] as DayJob[] }));
   const at = (d: string) => days.find(x => x.day === d);

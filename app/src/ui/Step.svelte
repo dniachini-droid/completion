@@ -3,6 +3,7 @@
      a line of the passage, then out. Settled within a moment; a tap is all it needs. */
   import { game, content } from './game.svelte';
   import { t } from '../content/copy/en';
+  import { undoneFacts } from '../core/done';
   import Scene from './Scene.svelte';
   import Return from './Return.svelte';
   import Look from './Look.svelte';
@@ -13,7 +14,8 @@
   const fact = $derived(game.facts.find(f => f.seq === seq));
   const job = $derived(fact && fact.type === 'jobDone' ? game.job(fact.job) : undefined);
   const completedDay = $derived(game.facts.some(f => f.seq > seq && f.type === 'dayCompleted'));
-  const gained = $derived(fact && fact.type === 'jobDone' ? fact.minutes : 0);
+  /* said done again after "Not done after all" (D-131): only the minutes it hasn't counted before */
+  const gained = $derived(fact && fact.type === 'jobDone' ? Math.max(0, fact.minutes - undoneFacts(game.facts).filter(f => f.job === fact.job && f.day === fact.day).reduce((a, f) => Math.max(a, f.minutes), 0)) : 0);
 
   /* the route: from where Dan was to where he is, towards the next place */
   const W = 300, y = 20;

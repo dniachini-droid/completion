@@ -167,6 +167,10 @@ export function firstChosen(facts: Fact[], day: string): string | null {
   const f = ofType(facts, 'firstChosen').filter(x => x.on === day).pop();
   return f?.job ?? null;
 }
+/** A one-off done (and not taken back) before `day`, or on it, is finished: it is never offered, chosen or put on a day
+    again (review of D-131: one chosen for tomorrow and done tonight came back the next morning and paid twice). */
+const finishedBy = (c: Content, facts: Fact[], job: string, day: string) =>
+  !c.rhythms.some(r => r.job === job) && doneFacts(facts).some(f => f.job === job && f.day <= day);
 /** What tomorrow starts with, for Tonight's prefill (D-131): Dan's own choice, else the first job planned for tomorrow
     (the plan as it stands, or as Plan my week would lay tomorrow's week out). Nothing is written by looking. */
 export function tomorrowFirst(base: Content, facts: Fact[], now: Moment): { job: string | null; chosen: boolean; planned: string[] } {
@@ -175,7 +179,7 @@ export function tomorrowFirst(base: Content, facts: Fact[], now: Moment): { job:
   const wk = calendarWeek(on);
   const planned = [...new Set(W.planMade(facts, wk) ? W.plannedToday(c, facts, on, '00:00').map(p => p.job)
     : W.planWeek(c, facts, wk, on).filter(e => e.day === on).sort((a, b) => (a.time ?? '99').localeCompare(b.time ?? '99')).map(e => e.job))];
-  if (own && c.jobs.some(j => j.id === own && !j.stopped)) return { job: own, chosen: true, planned };
+  if (own && c.jobs.some(j => j.id === own && !j.stopped) && !finishedBy(c, facts, own, on)) return { job: own, chosen: true, planned };
   return { job: planned[0] ?? null, chosen: false, planned };
 }
 
@@ -192,7 +196,7 @@ function orderOn(c: Content, facts: Fact[], day: string, clock: string): string[
     plan.splice(due, 0, pin);
   }
   /* the job chosen last night leads the day (Tonight, D-131): first on the list, planned or not */
-  const first = ((f: string | null) => f && !aside.has(f) && c.jobs.some(j => j.id === f && !j.stopped) ? f : null)(firstChosen(facts, day));
+  const first = ((f: string | null) => f && !aside.has(f) && c.jobs.some(j => j.id === f && !j.stopped) && !finishedBy(c, facts, f, W.addDays(day, -1)) ? f : null)(firstChosen(facts, day));
   if (first) { if (plan.includes(first)) plan.splice(plan.indexOf(first), 1); plan.unshift(first); }
   const planned = new Set(plan);
   /* a week laid out with Plan my week: Today is the plan, nothing else slipped in (Dan, D-078); "Something else…" is there */
@@ -354,7 +358,8 @@ function openSeal(w: W, c: Content, seal: Seal, at: Moment, day: string, job?: n
 function pushOn(facts: Fact[], day: string): boolean {
   const today = onDay(facts, day), dc = today.find(f => f.type === 'dayCompleted');
   /* doing more than a normal day's jobs is pushing deeper, with no setting to choose (Dan, D-127) */
-  return capacityOn(facts, day) === 'high' || today.some(f => f.type === 'deepCalled') || workedOn(facts, day).size > DAY_SIZE.normal
+  /* past the finish line is pushing deeper (D-131: the line is the day's first 3 hours, so "more" is work after it) */
+  return capacityOn(facts, day) === 'high' || today.some(f => f.type === 'deepCalled')
     || (!!dc && today.some(f => f.type === 'stepsGained' && f.seq > dc.seq));   /* Keep going: effort after the day's work */
 }
 
@@ -418,7 +423,7 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string) {
   storyClock(w, c, at, day);
   /* said done again after "Not done after all" (D-131): its minutes already moved Dan and its return was already given,
      so nothing is paid twice: no story step, find or Key. A one-off has one return ever; a recurring job one a day. */
-  if (paidBefore(w.all, c, job, day)) { gifts(w, c, at, day); return; }
+  if (paidBefore(w.all, c, job, day, done.seq)) { gifts(w, c, at, day); return; }
   /* a rhythm met this week lands a Key, until the week's supply is used; past it, one find a week (§3). A rhythm Dan
      added or changed counts for Keys from its next full period (D-043 F7): the rhythms as they stood when the week began. */
   const r = rhythmOf(W.live(c.base ?? c, w.all, calendarWeek(day)), job);
@@ -436,9 +441,10 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string) {
   if (!keyed) {
     const st = S.storyState(w.all, c.story), step = S.nextStep(c.story, st);
     const n = workedOn(w.all, day).size, called = onDay(w.all, day).some(f => f.type === 'deepCalled');
-    /* pushing deeper is doing more: past a normal day's jobs, the deep push's next beat plays, once a day, with no
-       setting to choose first (Dan, D-127; a High day or a morning call did it before, D-054) */
-    const deep = (n > DAY_SIZE.normal || (called && n >= DAY_SIZE.normal))
+    /* pushing deeper is doing more: past the day's finish line (its first 3 hours, D-131), the deep push's next beat
+       plays, once a day, with no setting to choose first (Dan, D-127; a High day or a morning call did it before, D-054) */
+    const past = ofType(onDay(w.all, day), 'dayCompleted').some(f => f.seq < done.seq);
+    const deep = (past || (called && n >= DAY_SIZE.normal))
       && !ofType(onDay(w.all, day), 'beatPlayed').some(f => S.beatOf(c.story, f.id)?.kind === 'deep') ? S.nextDeep(c.story, st) : null;
     if (deep) { w.put({ type: 'beatPlayed', id: deep.id, job: done.seq }, at, day); show(w, c, deep.carries?.records, at, day); }
     else if (step) { w.put({ type: 'beatPlayed', id: step.id, job: done.seq }, at, day); show(w, c, step.carries?.records, at, day); }
@@ -455,9 +461,11 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string) {
 
 /** Whether a job's return was already paid by a done record since taken back (D-131): for a recurring job, that day's;
     for a one-off, any. */
-function paidBefore(facts: Fact[], c: Content, job: string, day: string): boolean {
+function paidBefore(facts: Fact[], c: Content, job: string, day: string, self: number): boolean {
   const recurring = c.rhythms.some(r => r.job === job);
-  return undoneFacts(facts).some(f => f.job === job && f.minutes >= S.RETURN_MIN && (!recurring || f.day === day));
+  if (undoneFacts(facts).some(f => f.job === job && f.minutes >= S.RETURN_MIN && (!recurring || f.day === day))) return true;
+  /* a one-off has one return ever, however it came to be done twice */
+  return !recurring && doneFacts(facts).some(f => f.job === job && f.seq !== self && f.minutes >= S.RETURN_MIN);
 }
 
 /** A repeating job counts for the minutes it was run for (Dan, D-121): a run on it that ends with a whole minute or more
@@ -597,7 +605,7 @@ function playWeek(facts: Fact[], week: string): number {
  */
 function weekClose(w: W, c: Content, at: Moment, day: string, storyWeek: number) {
   const closed = new Set(ofType(w.all, 'weekClosed').map(f => f.week));
-  const weeks = [...new Set(ofType(w.all, 'jobDone').map(f => calendarWeek(f.day)))].filter(x => x < calendarWeek(day) && !closed.has(x)).sort();
+  const weeks = [...new Set(doneFacts(w.all).map(f => calendarWeek(f.day)))].filter(x => x < calendarWeek(day) && !closed.has(x)).sort();
   for (const wk of weeks) {
     const st = S.storyState(w.all, c.story);
     const before = new Set(ofType(w.all, 'weekClosed').flatMap(f => f.learned));
@@ -819,11 +827,12 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     }
     case 'notDone':
       /* only a job done today and still done; never while a delve on it runs (its end answers it) */
-      if (doneOn(w.all, day).has(cmd.job) && activeRun(w.all)?.fact.job !== cmd.job) w.put({ type: 'doneUndone', job: cmd.job, on: day });
+      if (doneOn(w.all, day).has(cmd.job) && activeRun(w.all)?.fact.job !== cmd.job && !hiddenDone(w.all).has(`${cmd.job}|${day}`)) w.put({ type: 'doneUndone', job: cmd.job, on: day });
       break;
     case 'firstJob': {
       const on = W.addDays(day, 1), was = firstChosen(w.all, on);
-      if ((cmd.job === null || c.jobs.some(j => j.id === cmd.job && !j.stopped)) && was !== cmd.job) w.put({ type: 'firstChosen', job: cmd.job, on });
+      /* never a one-off already done: it is finished */
+      if ((cmd.job === null || (c.jobs.some(j => j.id === cmd.job && !j.stopped) && !finishedBy(c, w.all, cmd.job, on))) && was !== cmd.job) w.put({ type: 'firstChosen', job: cmd.job, on });
       break;
     }
     case 'cantStart': w.put({ type: 'cantStartUsed', job: cmd.job }); break;
@@ -951,10 +960,13 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       const j = c.jobs.find(x => x.id === cmd.job && !x.stopped);
       if (!j || cmd.day < day || !/^\d{4}-\d{2}-\d{2}$/.test(cmd.day)) break;
       const recurring = c.rhythms.some(x => x.job === j.id);
+      /* a one-off done is finished (review of D-131); a recurring job done today keeps today's place, its record there */
+      if (!recurring && doneFacts(w.all).some(f => f.job === j.id)) break;
+      if (recurring && v.done.has(j.id) && cmd.day === day) break;
       /* where it is now, from today on: a one-off's every place; a recurring job's place today only */
       const weeks = new Set([calendarWeek(day), ...ofType(w.all, 'planMade').map(f => f.week), ...ofType(w.all, 'planAdded').map(f => calendarWeek(f.entry.day))]);
       const at = [...weeks].filter(x => x >= calendarWeek(day)).flatMap(x => W.planOf(w.all, x) ?? [])
-        .filter(e => e.job === j.id && (recurring ? e.day === day : e.day >= day));
+        .filter(e => e.job === j.id && (recurring ? e.day === day && !v.done.has(j.id) : e.day >= day));
       if (at.length === 1 && at[0].day === cmd.day && !asideOn(w.all, day).has(j.id)) break;
       for (const e of at) w.put({ type: 'planChanged', entry: e.id, day: null });
       const n = ofType(w.all, 'planAdded').length + 1;
@@ -966,7 +978,8 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     }
     case 'delveNow': {
       const name = cmd.line.trim().slice(0, 120);
-      if (!name || v.run) break;
+      /* never over a delve under way, or one whose end is still to be answered */
+      if (!name || v.run || v.runEnd) break;
       const id = `it-${ofType(w.all, 'itemAdded').length + 1}`, n = ofType(w.all, 'planAdded').length + 1;
       w.put({ type: 'itemAdded', id, name });
       w.put({ type: 'planAdded', entry: { id: `pa-${n}`, job: id, day } });
@@ -1256,19 +1269,25 @@ function slateOf(c: Content, facts: Fact[], day: string, clock: string) {
   for (const id of done) if (!slate.includes(id) && kept(id)) slate.push(id);   /* so does something chosen from outside the list (D-077) */
   /* a done record deleted leaves even a planned place on the list (D-125) */
   for (let i = slate.length - 1; i >= 0; i--) if (done.has(slate[i]) && hidden.has(`${slate[i]}|${day}`)) slate.splice(i, 1);
-  /* the finish line (Dan, D-131): the first 3 hours' worth of the day's jobs, in order. Work done on the day's planned
-     jobs fills it first, then the jobs still to do, each counted by how long it takes (learned, or its minutes); the
-     rest wait below, "If there's time". A job done from outside the list never holds the line back, and fills it only
-     when nothing else is on the day. */
+  /* the finish line (Dan, D-131): the first 3 hours' worth of the day's jobs, in order; the rest wait below, "If there's
+     time". Its jobs are fixed by the day's order, not by what is done first, so doing a job out of order never pulls it in
+     or pushes another out (review of D-131): the job chosen last night, then the plan's jobs in the order the plan laid
+     them, then jobs Dan chose himself today; each counted by how long it takes (learned, or its minutes), until 3 hours
+     are reached. An appointment is always on it (P10: the day is never gold with one still to come). A job done from
+     outside the list never holds the line back, and is the line only when nothing else is on the day. */
   const room = (id: string) => W.roomOf(jobOf(c, id), facts);
-  const ownFirst = firstChosen(facts, day);
-  const todays = W.weekOf(c, facts, calendarWeek(day), day).days.find(d => d.day === day)!.jobs;
-  const plannedIds = new Set([...todays.filter(j => j.entry).map(j => j.job), ...(ownFirst ? [ownFirst] : [])]);
-  let cand = [...slate.filter(id => done.has(id) && plannedIds.has(id)), ...slate.filter(id => !done.has(id))];
+  const ownFirst = firstChosen(facts, day), wk = calendarWeek(day);
+  const todays = W.weekOf(c, facts, wk, day).days.find(d => d.day === day)!.jobs;
+  const planIdx = new Map((W.planOf(facts, wk) ?? []).map((e, k) => [e.id, k]));
+  const byPlan = todays.filter(j => j.entry).sort((a, b) => (planIdx.get(a.entry!) ?? -1) - (planIdx.get(b.entry!) ?? -1)).map(j => j.job);
+  const plannedIds = new Set([...byPlan, ...(ownFirst ? [ownFirst] : [])]);
+  const onSlate = new Set(slate);
+  let cand = [...new Set([...(ownFirst ? [ownFirst] : []), ...byPlan, ...order, ...slate])].filter(id => onSlate.has(id) && (plannedIds.has(id) || !done.has(id)));
   if (!cand.length) cand = slate.slice();
-  const line: string[] = [];
+  const inLine = new Set<string>();
   let sum = 0;
-  for (const id of cand) { if (sum >= W.FINISH_MIN) break; line.push(id); sum += room(id); }
+  for (const id of cand) if (times[id] || sum < W.FINISH_MIN || !inLine.size) { inLine.add(id); sum += room(id); }
+  const line = slate.filter(id => inLine.has(id));
   /* good hours (D-131): among the line's jobs still to do, the planner's own entries usually started around this hour
      come first. Never a job Dan placed or moved himself, an appointment, the week's pinned job, the one chosen last
      night or one he swapped; never another day's job; any job can still be tapped */
@@ -1312,11 +1331,11 @@ export function satchelView(base: Content, facts: Fact[], now: Moment): { noDay:
     opening late. At least one of the day's jobs must have real minutes behind it, so a list said done without any work
     never completes a day (rule 10). An empty list completes with the first job worked on, which then is the list. */
 function listDone(c: Content, facts: Fact[], day: string, at: Moment): boolean {
-  const { line, done } = slateOf(c, facts, day, at.slice(11, 16));
-  /* the real minutes must be on the line itself: a done record deleted (D-125) leaves it, and an emptied list is not a
-     finished day */
+  const { line, slate, done } = slateOf(c, facts, day, at.slice(11, 16));
+  /* the real minutes must be on today's list: a done record deleted (D-125) leaves it, and an emptied list is not a
+     finished day. Anywhere on it: work done off the plan counts too (review of D-131) */
   const worked = workedOn(facts, day);
-  return line.some(id => worked.has(id)) && line.every(id => done.has(id));
+  return slate.some(id => worked.has(id)) && line.every(id => done.has(id));
 }
 
 export function see(facts: Fact[], base: Content, now: Moment): View {

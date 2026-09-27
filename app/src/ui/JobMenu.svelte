@@ -23,10 +23,14 @@
     closeMenu(); closeRows();
   }
   function remove() {
-    const id = j!.id;
+    const id = j!.id, on = menu.on;
     steady(); closeMenu(); closeRows();
-    if (v.done.has(id) && v.content.rhythms.some(r => r.job === id)) game.removeDone(id, v.day); else game.remove(id);
+    /* a done row held: only that day's record of a recurring job goes (its minutes stay); otherwise the job (D-125) */
+    if (on) game.removeDone(id, on); else game.remove(id);
   }
+  const recurring = $derived(!!j && v.content.rhythms.some(r => r.job === j.id));
+  /* a one-off done is finished: no more delving on it, and no day to put it on; a recurring job can always be delved again */
+  const finished = $derived(!!j && !recurring && (v.done.has(j.id) || !!menu.on));
   function key(e: KeyboardEvent) { if (e.key === 'Escape') closeMenu(); }
 </script>
 
@@ -35,9 +39,9 @@
   <div class="scrim" role="presentation" onclick={closeMenu}></div>
   <div class="menu" role="dialog" aria-modal="true" aria-label={j.name}>
     <p class="name">{j.name}</p>
-    <button class="item" disabled={!!v.run || v.done.has(j.id)} onclick={delve}>{t('menu.delve')}</button>
+    <button class="item" disabled={!!v.run || finished} onclick={delve}>{t('menu.delve')}</button>
     <button class="item" onclick={edit}>{t('menu.edit')}</button>
-    <button class="item" aria-expanded={placing} onclick={() => (placing = !placing)}>{t('satchel.day')}</button>
+    {#if !finished && !menu.on}<button class="item" aria-expanded={placing} onclick={() => (placing = !placing)}>{t('satchel.day')}</button>{/if}
     {#if placing}<div class="cal"><DayPick from={v.day} label={t('satchel.day')} pick={place} /></div>{/if}
     <button class="item del" disabled={v.run?.job.id === j.id || v.runEnd?.job.id === j.id} onclick={remove}>{t('job.delete')}</button>
     <button class="item cancel" onclick={closeMenu}>{t('rhythms.cancel')}</button>

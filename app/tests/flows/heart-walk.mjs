@@ -88,10 +88,12 @@ const fits = async (name) => {
     const shown = el => { for (let p = el; p; p = p.parentElement) { const s = getComputedStyle(p); if (s.display === 'none' || s.visibility === 'hidden' || +s.opacity < 0.05) return false; } return true; };
     /* text still fading in (a moment mid-animation) is not judged until it has settled */
     const settled = el => { let o = 1; for (let p = el; p; p = p.parentElement) o *= +getComputedStyle(p).opacity; return o >= 0.6; };
-    const texts = [...document.querySelectorAll('p, h1, h2, h3, span, li, em, blockquote')].filter(el =>
+    /* a sheet over the screen (the job menu, D-131) is judged alone: the screen under it is covered, not overlapped */
+    const top = document.querySelector('[aria-modal="true"]') ?? document;
+    const texts = [...top.querySelectorAll('p, h1, h2, h3, span, li, em, blockquote')].filter(el =>
       [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim()) && !el.closest('button, svg') && shown(el) && settled(el));
     /* each button as it is actually seen: cut to the box it scrolls in (a row scrolled out of view covers nothing) */
-    const buttons = [...document.querySelectorAll('button')].filter(shown).map(b => {
+    const buttons = [...top.querySelectorAll('button')].filter(shown).map(b => {
       /* a quiet text link's tap area is taller than what it shows: measure its visible words, not its hit box */
       const vis = b.classList.contains('text-link') || b.classList.contains('home') ? (b.querySelector('span') ?? b) : b;
       const r = vis.getBoundingClientRect(), sc = scroller(b), c = sc ? sc.getBoundingClientRect() : { top: 0, bottom: H };
@@ -471,7 +473,7 @@ if (!(await page.locator('.rows button.row', { hasText: 'Gym' }).count())) error
 await holdOn(page.locator('.rows button.row', { hasText: 'Gym' }).first()); await tap('Edit'); await shot('rhythm-edit', 800);
 await page.locator('.body').evaluate(e => e.scrollTo(0, e.scrollHeight)); await shot('rhythm-edit-end', 500);
 await tap('Cancel'); await page.clock.runFor(500);
-await page.locator('button.home').first().click(); await page.clock.runFor(1200);
+/* the editor goes back to the Satchel, and its arrow to the week ("This week") */
 await tap('This week'); await page.clock.runFor(500); await tap('Next week'); await shot('week-next', 1000);
 await home(); await page.clock.runFor(1500);
 await tap('Daybook'); await shot('daybook', 1500); if (await has('Settings')) errors.push('SETTINGS still in the Daybook (D-130: the gear on Today)'); await home(); await page.clock.runFor(1500);

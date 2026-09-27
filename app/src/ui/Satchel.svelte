@@ -20,7 +20,8 @@
   import { openMenu } from './menu.svelte';
   import art from './scene/satchel.jpg';
 
-  /* `to`: 'add' opens with the box ready to type in (Today's "+ Add"); 'recurring' opens at that section (the Week) */
+  /* `to`: 'recurring' opens at that section (the Week). Today's "+ Add" focuses the box itself, inside its tap, so the
+     phone's keyboard opens; nothing here focuses it again on the way back (review of D-131) */
   let { go, to }: { go: Go; to?: string } = $props();
   const v = $derived(game.view);
   const s = $derived(satchelView(content, game.facts, game.now));
@@ -33,14 +34,13 @@
   let recurringEl = $state<HTMLElement | null>(null);
 
   onMount(() => {
-    if (to === 'add' && document.activeElement !== input) input?.focus({ preventScroll: true });
     if (to === 'recurring') recurringEl?.scrollIntoView({ block: 'start' });
   });
 
   /* "Delve now": a one-off on today, its delve begun at once (D-131); "Save for later": no day */
   function now() {
     const line = text.trim();
-    if (!line || v.run) return;
+    if (!line || v.run || v.runEnd) return;
     steady(); saveList();
     game.do({ do: 'delveNow', line });
     text = '';
@@ -110,7 +110,7 @@
     <form class="new satchel-add rise" onsubmit={(e) => { e.preventDefault(); later(); }}>
       <input bind:this={input} bind:value={text} aria-label={t('satchel.add')} placeholder={t('satchel.add.hint')} maxlength="120" enterkeyhint="done" />
       <div class="two">
-        <button class="btn-quiet" type="button" disabled={!text.trim() || !!v.run} onclick={now}><span>{t('satchel.now')}</span></button>
+        <button class="btn-quiet" type="button" disabled={!text.trim() || !!v.run || !!v.runEnd} onclick={now}><span>{t('satchel.now')}</span></button>
         <button class="btn-quiet" type="submit" disabled={!text.trim()}><span>{t('satchel.later')}</span></button>
       </div>
     </form>
