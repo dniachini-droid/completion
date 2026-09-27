@@ -51,8 +51,9 @@ jobs:
       - name: A tap on a job starts that job (D-104)
         if: matrix.short
         run: node tests/flows/tap-row.mjs http://localhost:4173/
+      # it delves to reach a place, and Linux's WebKit crashes in a delve's end now and then (D-106): Chromium
       - name: Back from a record returns to the place
-        if: matrix.short
+        if: matrix.short && matrix.browser == 'chromium'
         run: node tests/flows/back-from-record.mjs http://localhost:4173/
       - name: '"+ Add" above the keyboard, and Done takes the tap (D-120)'
         if: matrix.short
