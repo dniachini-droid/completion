@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-26, late (Phase 9: the save in SQLite and the flows in CI, D-106; Look, the painting without the words, pinch to zoom, D-105; a tap starts that job, no hard edges, D-104; the whole app audited for battery, D-103; the lock-screen panel says Paused, D-102; the AI repaint, D-100, D-101)_
+_Last updated: 2026-09-27 (the productivity review and plan, D-107); before that 2026-09-26, late (Phase 9: the save in SQLite and the flows in CI, D-106; Look, the painting without the words, pinch to zoom, D-105; a tap starts that job, no hard edges, D-104; the whole app audited for battery, D-103; the lock-screen panel says Paused, D-102; the AI repaint, D-100, D-101)_
 
 ## Current phase
 
@@ -15,6 +15,13 @@ _Last updated: 2026-09-26, late (Phase 9: the save in SQLite and the flows in CI
 Build the whole MVP (`product/MVP.md` → build order): **slice 2** the Quiet answers (the map at two levels, records, a sealed thing in view, rhythms and Keys, finds), **slice 3** learning the Cut (signs and guessing, the first word, the cutting cinematic, the stair), **slice 4** the week and the gaps (the planner, the satchel, camp and bedtime, the daybook week close, absence). Each slice thin, complete and good-feeling before the next (rule 13), on the heart as built. The sealed story job is **done** (D-066, D-067), so each slice loads the real content for six story weeks from `narrative/sealed/` as it is built (never shown to Dan outside the game), and the real places' paintings are made from its briefs with the painting kit. Dan sees each slice on the web link as it lands, then on TestFlight.
 
 ## Resume here (next session)
+**The productivity track (D-107, Dan 2026-09-27): Stage 1 is next, in its own session.** The plan is in `product/PRODUCTIVITY_PLAN.md`. It follows the review (`product/PRODUCTIVITY_REVIEW.md`: about 2.5/5 overall, 3.5/5 for ADHD).
+- **Stage 1:** the planned-week bug, opt-in reminders for timed things, save a copy / restore, and one-tap capture.
+- **Stage 2:** edit anything.
+- **Stage 3:** dates and time.
+- **Stage 4:** scope the larger ideas with Dan.
+
+Leaving the phone still pauses a delve (Dan works on his laptop). Work on the branch `claude/productivity-app-review-kazbf7`. Each stage ticks its boxes in the plan, updates this file and starts the next stage's session (D-069). Merging into `main` waits for Dan's OK.
 **Each slice runs in its own session, started by the previous one (D-069).** Review 2 (PR #16), one map (PR #17) and the paintings, 47 of 48 (PR #18, D-091) are in `main`; the 48th, `pt-b-6.A`, followed. **Builds:** only from `main` with [testflight], or started by hand on a branch (D-080).
 **The AI repaint of every place (D-100, D-101): merged into `main` with Dan's OK ("Super happy") (PR #30); the build reached Apple (run 36216940641, 2026-09-26).** 82 of 89 places now have the detailed repaint, including all 41 places of weeks 8–14, which showed stand-ins before; 7 keep their kit painting (a story detail still read wrong when the credits ran out). All 14 story weeks now have a real painting for every place. Dan saw the week 1–2 BEFORE/AFTER sheets ("SO MUCH BETTER"). The credits are used up; the 7 can be redone later (about 12 credits a try) if Dan tops up.
 0. **Review 2 (D-088, D-089):** merged into `main` (PR #16) and sent to TestFlight.
