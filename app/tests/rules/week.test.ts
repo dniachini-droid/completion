@@ -677,3 +677,26 @@ describe('Edit anything (Stage 2, D-112)', () => {
     expect(p.facts.length).toBe(m);
   });
 });
+
+describe('Undo puts a satchel line back in its place (D-112)', () => {
+  it('a line removed and put back keeps its order among the others', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['one', 'two', 'three'] });
+    const two = p.view().content.jobs.find(j => j.name === 'two')!;
+    p.do({ do: 'removeJob', id: two.id }).do({ do: 'saveJob', job: two, rhythm: null });
+    expect(W.items(p.facts, MON).map(i => i.name)).toEqual(['one', 'two', 'three']);
+  });
+});
+
+describe('Capture from Siri, Shortcuts and the Action button (D-113)', () => {
+  it('each line lands in the satchel once, marked as said to Siri, and changes nothing on Today', () => {
+    const p = player().do({ do: 'open' });
+    const before = p.view().slate;
+    const lines = [{ id: 'A1', text: ' Ring the vet ' }, { id: 'A2', text: '' }, { id: 'A3', text: 'Buy stamps' }];
+    p.do({ do: 'takeInbox', lines });
+    /* the app closed before the inbox was cleared: the same lines come again, and nothing is added twice */
+    p.do({ do: 'takeInbox', lines });
+    expect(W.items(p.facts, MON).map(i => i.name)).toEqual(['Ring the vet', 'Buy stamps']);
+    expect(p.facts.filter(f => f.type === 'itemAdded').every(f => (f as { via?: string }).via === 'siri')).toBe(true);
+    expect(p.view().slate).toEqual(before);
+  });
+});

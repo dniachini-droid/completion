@@ -7,7 +7,7 @@
  * Times are wall-clock ("HH:MM" on a calendar date), so a clock change between now and the alert moves with Dan.
  */
 import { calendarWeek, gameDay, weekdayOf, type Moment } from './time';
-import { addDays, live, planMade, weekOf } from './week';
+import { addDays, daysBetween, live, planMade, weekOf } from './week';
 import type { Content, Fact, FactBody, FactOf } from './types';
 
 /** How long before the time an alert comes: at the time, 15 minutes or an hour before. */
@@ -111,4 +111,24 @@ export function followedReminder(c: Content, facts: Fact[], start: Fact): boolea
     const t = wallMs(`${a.date}T${a.clock}`);
     return t <= at && at - t <= FOLLOWED_MIN * 60_000;
   });
+}
+
+/* ---------- the re-entry nudge (D-113; scope 23 B) ---------- */
+
+/** After this many days without opening, one quiet word; never within a week of the last; at this hour. */
+export const NUDGE_DAYS = 3, NUDGE_GAP = 7, NUDGE_HOUR = 18;
+/** Off unless Dan turns it on; the "All off" switch silences it too. */
+export const nudgeOn = (facts: Fact[]) => { const s = ofType(facts, 'nudgeChosen'); return remindersOn(facts) && !!s.length && s[s.length - 1].on; };
+/**
+ * The day the nudge would come, at NUDGE_HOUR: three days after the last opening, and at least a week after the last
+ * nudge (`last`, the day one last came). Only after silence: every opening moves it on, so it never comes to a Dan who
+ * is using the app, and it comes once per silence. Null when off. It never counts the days away in its words.
+ */
+export function nudgeDay(facts: Fact[], last: string | null): string | null {
+  if (!nudgeOn(facts)) return null;
+  const opens = ofType(facts, 'opened');
+  if (!opens.length) return null;
+  let day = addDays(opens[opens.length - 1].day, NUDGE_DAYS);
+  if (last && daysBetween(last, day) < NUDGE_GAP) day = addDays(last, NUDGE_GAP);
+  return day;
 }

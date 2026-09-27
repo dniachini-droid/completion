@@ -23,7 +23,9 @@ Build the whole MVP (`product/MVP.md` → build order): **slice 2** the Quiet an
 - **Stage 5, part (done):** a label on Choose's box; no carved label under 14 px on Records and Marks; Increase Contrast honoured; "To today" already shows at once.
 - **Stage 2, the rest (done on the branch, D-112):** one editor for every job (from What repeats, a satchel line, or "Change the job" in the Week), with Once, "I tend to put this off", first step, note, Remove with Undo; "Already done" by swiping a row on Today, or today/yesterday from Choose a delve; "Where did you stop?" after Finish here.
 - **Stage 5, the rest (done on the branch):** screen titles read by VoiceOver, Done and Not today reachable without a swipe, no carved label under 14 px, the satchel box labelled.
-- **Next:** Stage 6 (Siri / Shortcuts / Action-button capture, and the nudge, off by default), then Stage 3 (dates and time), then 7–9.
+- **Stage 6 (done on the branch, D-113):** "Add to the satchel" by Siri, Shortcuts or the Action button (no App Group needed); the re-entry nudge in Settings, off by default.
+- **Fixes from Dan's first try on the phone** run in their own window (branch `claude/testflight-fixes-reminder-capture-done`): the capture box hidden behind the "Under way" words, and Done on an under-way job doing nothing. (The reminder did come: not a bug.)
+- **Next:** Stage 3 (dates and time), then 7–9.
 - **Dan's test once merged and on TestFlight:**
   1. In the Week, give a job a time and choose "15 min before"; the alert should come, and "Again in 10 min" should bring it back.
   2. In Settings, Save a copy to Files, then Restore from it; Files → On My iPhone → Long Answer should hold a weekly copy.

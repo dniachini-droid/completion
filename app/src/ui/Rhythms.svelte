@@ -89,20 +89,23 @@
       <span></span><span></span>
     </div>
     <!-- editing: the arrow says where it goes (What repeats), the title what this is (review 2) -->
-    <h1 class="carve lg rise">{d ? t(d.id ? 'rhythms.editing' : 'rhythms.adding') : t('rhythms.label')}</h1>
-    {#if !d}<p class="soft say-note rise">{t('rhythms.say')}</p>{/if}
+    {#if !d && jobArg && removed}
+      <h1 class="carve lg rise">{removed.job.name}</h1>
+    {:else}
+      <h1 class="carve lg rise">{d ? t(d.id || !d.isNew ? 'rhythms.editing' : 'rhythms.adding') : t('rhythms.label')}</h1>
+      {#if !d}<p class="soft say-note rise">{t('rhythms.say')}</p>{/if}
+    {/if}
   </header>
 
   <div class="body col rise d1">
     {#if !d}
       {#if removed}
-        <!-- a job removed: one quiet line, and Undo (D-112) -->
-        <p class="said">{t('job.removed', { name: removed.job.name })} <button class="text-link" onclick={undo}><span>{t('job.undo')}</span></button></p>
+        <!-- a job removed: one quiet line, and Undo (D-112); opened on that one job, also the way back -->
+        <p class="said">{jobArg ? t('job.gone') : t('job.removed', { name: removed.job.name })}</p>
+        <div class="links undo"><button class="text-link" onclick={undo}><span>{t('job.undo')}</span></button>
+          {#if jobArg}<button class="text-link" onclick={() => go('back')}><span>{t('job.back', { to: back.label })}</span></button>{/if}</div>
       {/if}
-      <!-- opened on one job (from the satchel or the Week) and it was removed: only the Undo, and the way back -->
-      {#if jobArg && removed}
-        <div class="links"><button class="text-link" onclick={() => go('back')}><span>{t('job.back', { to: back.label })}</span></button></div>
-      {:else}
+      {#if !(jobArg && removed)}
       {#each v.content.rhythms as r (r.id)}
         {@const j = game.job(r.job)}
         {#if j}
@@ -231,7 +234,8 @@
   /* four choices of how often on one line, even on a small phone (D-112) */
   .editor .seg.often button { letter-spacing: .03em; font-size: 12px; padding-left: 2px; padding-right: 2px; }
   .others { margin-top: 18px; }
-  .said { margin: 0 0 10px; color: var(--ink-2); font-style: italic; }
+  .said { margin: 8px 0 0; color: var(--ink-2); font-style: italic; }
+  .links.undo { margin: 4px 0 14px; }
   .stepper input.val { flex: 1; }
   .days button { padding-left: 0; padding-right: 0; font-size: 14px; }
   .stepper { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; border: 1px solid var(--edge-2); background: rgba(10,9,24,.55); }

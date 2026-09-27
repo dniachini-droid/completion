@@ -50,10 +50,12 @@
     void tick().then(() => {
       const a = document.activeElement as HTMLElement | null;
       if (a && a !== document.body && a.isConnected && a.tagName !== 'BUTTON') return;
-      const h = document.querySelector<HTMLElement>('.ui h1, .ui h2, h1, h2');
+      const h = document.querySelector<HTMLElement>('.ui h1, h1') ?? document.querySelector<HTMLElement>('.ui h2, h2');
       if (!h) return;
       h.setAttribute('tabindex', '-1');
       h.focus({ preventScroll: true });
+      /* a focus must never slide the screen sideways (Dan, review 2) */
+      for (let e: HTMLElement | null = h.parentElement; e; e = e.parentElement) if (e.scrollLeft) e.scrollLeft = 0;
     });
   });
   $effect(() => { if (game.woke !== lastWoke) { lastWoke = game.woke; screen = first(); arg = undefined; } });

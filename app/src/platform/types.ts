@@ -61,6 +61,12 @@ export interface Copies {
   list(prefix: string): Promise<string[]>;
 }
 export interface Panel { show(p: PanelState): Promise<void>; end(): Promise<void>; }
+/** Lines said to Siri, typed in Shortcuts or sent from the Action button, waiting for the satchel (D-113). */
+export interface Inbox {
+  take(): Promise<{ id: string; text: string }[]>;
+  /** Forget the lines the game has written. */
+  clear(ids: string[]): Promise<void>;
+}
 export interface Platform {
   notifier: Notifier; haptics: Haptics; store: Store; sound: Sound; now(): Date; away: Away;
   /** The save (D-106): SQLite on the phone (the screen checks keep it in the browser's storage). */
@@ -70,6 +76,7 @@ export interface Platform {
   /** The delve's panel on the lock screen and in the Dynamic Island . */
   panel: Panel;
   copies: Copies;
+  inbox: Inbox;
   /** Inside the phone app (no browser around it: the app draws its own swipe back from the left edge). */
   readonly app: boolean;
   /** Wait for the save to be read, before the game starts. */

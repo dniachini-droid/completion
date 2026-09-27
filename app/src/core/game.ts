@@ -537,6 +537,8 @@ export type Command =
   | { do: 'firstStep'; job: string; step: string }
   | { do: 'noteJob'; job: string; note: string }
   | { do: 'addItems'; lines: string[] }
+  /** Lines from outside the app (D-113), each added once, whatever happens between writing and clearing */
+  | { do: 'takeInbox'; lines: { id: string; text: string }[] }
   | { do: 'tick'; id: string }
   | { do: 'dropItem'; id: string }
   | { do: 'planWeek'; week: string }
@@ -549,7 +551,8 @@ export type Command =
   | { do: 'closeRead'; week: string }
   | { do: 'offerAnswered'; week: string }
   | { do: 'remind'; target: string; lead: 0 | 15 | 60 | null }
-  | { do: 'reminders'; on: boolean };
+  | { do: 'reminders'; on: boolean }
+  | { do: 'nudge'; on: boolean };
 
 /** The facts a command adds to the log (including anything the clock made due first). */
 export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fact[] {
@@ -660,6 +663,17 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       w.put({ type: 'jobSaved', job });
       break;
     }
+    case 'takeInbox': {
+      const seen = new Set(ofType(w.all, 'itemAdded').map(f => f.ref).filter(Boolean));
+      let k = ofType(w.all, 'itemAdded').length;
+      for (const x of cmd.lines) {
+        const name = String(x.text ?? '').trim().slice(0, 120);
+        if (!name || !x.id || seen.has(x.id)) continue;
+        seen.add(x.id);
+        w.put({ type: 'itemAdded', id: `it-${++k}`, name, via: 'siri', ref: x.id });
+      }
+      break;
+    }
     case 'addItems': {
       let k = ofType(w.all, 'itemAdded').length;
       for (const line of cmd.lines.map(x => x.replace(/^[-*•\s]+/, '').trim()).filter(Boolean)) w.put({ type: 'itemAdded', id: `it-${++k}`, name: line.slice(0, 120) });
@@ -726,6 +740,7 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       if ((cmd.lead === null || R.LEADS.includes(cmd.lead)) && R.reminderSettings(w.all).get(cmd.target) !== cmd.lead) w.put({ type: 'reminderSet', target: cmd.target, lead: cmd.lead });
       break;
     case 'reminders': if (R.remindersOn(w.all) !== cmd.on) w.put({ type: 'remindersSwitched', on: cmd.on }); break;
+    case 'nudge': { const s = ofType(w.all, 'nudgeChosen'); if ((s.length ? s[s.length - 1].on : false) !== cmd.on) w.put({ type: 'nudgeChosen', on: cmd.on }); break; }
   }
   return w.out;
 }

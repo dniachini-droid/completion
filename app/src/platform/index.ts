@@ -2,7 +2,7 @@ import { Capacitor, registerPlugin } from '@capacitor/core';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { Haptics as CapHaptics, ImpactStyle } from '@capacitor/haptics';
 import { Preferences } from '@capacitor/preferences';
-import type { Away, Copies, Panel, PanelState, Platform } from './types';
+import type { Away, Copies, Inbox, Panel, PanelState, Platform } from './types';
 import { sound } from './chime';
 import { adopt, sqlSaves, textSaves, type Db, type Saves } from './saves';
 
@@ -117,6 +117,18 @@ const nativeCopies: Copies = {
   keep: (name, text, prefix, most) => CopyNative.keep({ name, text, prefix, most }),
   async list(prefix) { return (await CopyNative.list({ prefix })).names; },
 };
+/* Capture from Siri, Shortcuts and the Action button (D-113): the app's own small plugin, ios/App/App/InboxPlugin.swift. */
+const InboxNative = registerPlugin<{ take(): Promise<{ lines: { id: string; text: string }[] }>; clear(o: { ids: string[] }): Promise<void> }>('Inbox');
+const nativeInbox: Inbox = {
+  async take() { try { return (await InboxNative.take()).lines ?? []; } catch { return []; } },
+  async clear(ids) { try { await InboxNative.clear({ ids }); } catch { /* kept for next time; never added twice */ } },
+};
+/* In the screen checks: lines the check puts under 'bench.inbox' stand for what Siri heard. */
+const benchInbox: Inbox = {
+  async take() { try { return JSON.parse(localStorage.getItem('bench.inbox') ?? '[]'); } catch { return []; } },
+  async clear(ids) { try { localStorage.setItem('bench.inbox', JSON.stringify((JSON.parse(localStorage.getItem('bench.inbox') ?? '[]') as { id: string }[]).filter(x => !ids.includes(x.id)))); } catch { /* */ } },
+};
+
 /* In the screen checks: a download, and a file chosen by the check; no weekly copy. */
 const benchCopies: Copies = {
   async share(name, text) {
@@ -136,7 +148,7 @@ const benchCopies: Copies = {
 };
 
 const native: Platform = {
-  store: nativeStore, copies: nativeCopies, sound, now: () => new Date(), app: true, away: nativeAway,
+  store: nativeStore, copies: nativeCopies, inbox: nativeInbox, sound, now: () => new Date(), app: true, away: nativeAway,
   get saves() { return saves; }, get saveTrouble() { return saveTrouble; },
   ready: async () => { await readKept(); await openSaves(); nativeAway.first = await nativeAway.take(); },
   notifier: {
@@ -172,7 +184,7 @@ const benchAway: Away = {
 /* The screen checks' stand-in for the phone's services (never shipped to Dan as a page, D-108). */
 const benchSaves = textSaves(store, 'browser');
 const bench: Platform = {
-  store, sound, now: () => new Date(), ready: async () => {}, app: false, copies: benchCopies, away: benchAway, saves: benchSaves, saveTrouble: null,
+  store, sound, now: () => new Date(), ready: async () => {}, app: false, copies: benchCopies, inbox: benchInbox, away: benchAway, saves: benchSaves, saveTrouble: null,
   notifier: { locked: false, permit: async () => false, at: async () => {}, cancel: async () => {}, remind: async () => {} },
   panel: { show: async () => {}, end: async () => {} },
   haptics: {

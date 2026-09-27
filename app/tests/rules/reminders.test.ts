@@ -116,3 +116,24 @@ describe('The test can tell a start that followed a reminder (MVP.md, D-107)', (
     expect(R.followedReminder(C, p.facts, b)).toBe(false);
   });
 });
+
+describe('The re-entry nudge (D-113)', () => {
+  it('off unless Dan turns it on; "All off" silences it too', () => {
+    const p = player().do({ do: 'open' });
+    expect(R.nudgeDay(p.facts, null)).toBeNull();
+    p.do({ do: 'nudge', on: true });
+    expect(R.nudgeDay(p.facts, null)).toBe('2026-10-01');
+    p.do({ do: 'reminders', on: false });
+    expect(R.nudgeDay(p.facts, null)).toBeNull();
+  });
+  it('three days after the last opening; every opening moves it on', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'nudge', on: true });
+    p.to('2026-09-30T09:00:00+01:00').do({ do: 'open' });
+    expect(R.nudgeDay(p.facts, null)).toBe('2026-10-03');
+  });
+  it('never within a week of the last one', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'nudge', on: true });
+    expect(R.nudgeDay(p.facts, '2026-09-27')).toBe('2026-10-04');
+    expect(R.nudgeDay(p.facts, '2026-09-20')).toBe('2026-10-01');
+  });
+});

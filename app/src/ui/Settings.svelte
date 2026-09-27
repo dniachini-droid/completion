@@ -10,12 +10,13 @@
   import { back } from './back.svelte';
   import { platform } from '../platform';
   import { flushSync } from 'svelte';
-  import { BEDTIME, reminderOf, remindersOn } from '../core/reminders';
+  import { BEDTIME, nudgeOn, reminderOf, remindersOn } from '../core/reminders';
 
   let { go }: { go: Go } = $props();
   const v = $derived(game.view);
   const on = $derived(remindersOn(game.facts));
   const bed = $derived(reminderOf(game.facts, BEDTIME));
+  const nudge = $derived(nudgeOn(game.facts));
 
   /* the save's copies (D-107): Save a copy; Restore asks once, in plain words, and keeps what is there now aside */
   let asking = $state<Save | null>(null), said = $state('');
@@ -63,6 +64,13 @@
       {#if on}
         <p class="say bed">{t('settings.bedtime', { time: v.bedtime })}</p>
         <Remind lead={bed} pick={x => game.do({ do: 'remind', target: BEDTIME, lead: x })} />
+        <!-- the re-entry nudge (D-113): off by default; only after three quiet days, at most once a week -->
+        <div class="label-line nudge">{t('settings.nudge')}</div>
+        <p class="soft note">{t('settings.nudge.say')}</p>
+        <div class="seg" role="group" aria-label={t('settings.nudge')}>
+          <button aria-pressed={nudge} onclick={() => game.do({ do: 'nudge', on: true })}>{t('settings.nudge.on')}</button>
+          <button aria-pressed={!nudge} onclick={() => game.do({ do: 'nudge', on: false })}>{t('settings.nudge.off')}</button>
+        </div>
       {/if}
       {#if game.alertsOff}<p class="soft note">{t('settings.reminders.refused')}</p>{/if}
     </section>
@@ -93,6 +101,7 @@
   .label-line { margin-top: 14px; }
   .note { text-align: left; margin: 6px 0 10px; font-size: 15px; }
   .seg { margin-top: 6px; }
+  .nudge { margin-top: 16px; }
   .bed { margin-top: 16px; color: var(--ink-2); }
   .full { width: 100%; }
   .gap { margin-top: 10px; }

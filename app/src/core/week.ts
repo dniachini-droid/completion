@@ -88,6 +88,10 @@ export function items(facts: Fact[], day: string): Item[] {
     else if (f.type === 'planAdded' && out.has(f.entry.job)) touched.set(f.entry.job, f.day);
   }
   for (const [id, d] of ticked) if (d < day) out.delete(id);
+  /* a line put back by Undo returns to its place (D-112) */
+  const order = [...new Set(ofType(facts, 'itemAdded').map(f => f.id))];
+  const sorted = [...out.values()].sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
+  out.clear(); for (const it of sorted) out.set(it.id, it);
   for (const it of out.values()) it.someday = !it.done && daysBetween(touched.get(it.id)!, day) >= SOMEDAY_DAYS;
   return [...out.values()];
 }

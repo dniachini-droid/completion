@@ -123,6 +123,8 @@ One session each unless noted; a stage waits for the earlier stages it builds on
   - [x] Increase Contrast honoured (the quiet ink colours lifted, `direction.css`)
   - [x] "To today" visible at once on every return and arrival, with no wait: already so (every story screen has "Today" at the top left with no delay; the welcome back's button shows within 0.2 s); nothing to build
 - **Stage 6: capture and the nudge** (`scope/10-widget-share-siri.md` A, `scope/23-re-entry-nudge.md` B, off by default). After Stage 1.
+  - [x] "Add to the satchel" from Siri, Shortcuts and the Action button (D-113)
+  - [x] the re-entry nudge, off by default (D-113)
 - **Stage 7: calendar import** (`scope/09-calendar-import.md` B). After Stage 3.
 - **Stage 8: the weekly look-ahead** (`scope/18-weekly-review.md` C, no reward). After Stage 3.
 - **Stage 9: projects** (`scope/17-expeditions.md`, B then its door). After Stages 2–3, once Dan names a real project; its name is chosen then.

@@ -1186,3 +1186,13 @@
 - **Alternatives:** a separate editor screen per kind of job; "Did it yesterday" on the delve's set-up (too tight on a small phone).
 - **Consequences:** two new fact types with their samples (D-106); 5 new rule tests; the screen walk now edits, lets go of and restores a satchel line, and records a job done yesterday.
 - **Reversible:** Yes.
+
+## D-113 — Stage 6: capture from Siri, Shortcuts and the Action button; the re-entry nudge, off by default (Claude's routine calls, D-006; within D-111)
+- **Date:** 2026-09-27
+- **Context:** Stage 6 of `product/PRODUCTIVITY_PLAN.md`: scope 10 option A and scope 23 option B, as Dan chose (D-111).
+- **Decision:**
+  1. **"Add to the satchel"** is an App Intent in the app itself (`ios/App/App/InboxPlugin.swift`): Siri ("Add to the satchel in Long Answer"), the Shortcuts app and the Action button. It asks "What should go in the satchel?", says "It's in the satchel." and doesn't open the app. Because the intent runs in the app's own process, the line waits in the app's own storage: **no App Group, no entitlements, no new target** (simpler than the scope page, which assumed one). On every opening and return the game takes the waiting lines into the satchel (`takeInbox`), then clears them; each keeps its own id (`itemAdded.ref`, with `via: 'siri'` for the test's notes), so a line is never added twice even if the app closes in between.
+  2. **The re-entry nudge** (Settings → "A word after a quiet spell"): **off unless Dan turns it on**, and silenced by "All off". One alert at 18:00 three days after the last opening, never within a week of the last one, in calm words that never count the days ("Your place is kept. One small thing is enough, whenever you like."). Every opening moves it on, so it comes only after silence and once per silence. The rule is `nudgeDay` in `core/reminders.ts`; the phone keeps only when the last one came.
+- **Alternatives:** the share sheet and the widget (scope 10 B and C), later if wanted; a nudge that says how long Dan has been away (rejected: rule 9).
+- **Consequences:** one new fact type (`nudgeChosen`) and two optional fields on `itemAdded`, with their samples; 5 new rule tests. **Only on the phone:** Siri hearing the phrase, the Action button (Settings → Action Button → Shortcut → Long Answer → Add to the satchel), the intent running without opening the app, and the nudge arriving.
+- **Reversible:** Yes.

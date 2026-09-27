@@ -104,7 +104,10 @@ export type FactBody =
   /** A job edited or added by itself (the job editor, D-112): its whole new shape. Removed: gone from every list. */
   | { type: 'jobSaved'; job: Job }
   | { type: 'jobRemoved'; id: string }
-  | { type: 'itemAdded'; id: string; name: string }
+  /** The re-entry nudge, off unless Dan turns it on (D-113) */
+  | { type: 'nudgeChosen'; on: boolean }
+  /** `via`: said to Siri, Shortcuts or the Action button; `ref`: that line's own id, so it is never added twice (D-113) */
+  | { type: 'itemAdded'; id: string; name: string; via?: 'siri'; ref?: string }
   | { type: 'itemTicked'; id: string }
   | { type: 'itemDropped'; id: string }
   | { type: 'planMade'; week: string; entries: PlanEntry[] }
