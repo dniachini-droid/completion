@@ -40,9 +40,11 @@ describe.skipIf(!env.REVIEW_SLOW)('pace: a heavy worker and the calendar (D-129)
   }, 600_000);
   it('with no repeating jobs at all (no Keys but the floor), the road goes as far', () => {
     /* four jobs of Dan's own a day, as many as the repeating ones and the one-off above: a step plays per job done */
-    const none = heavy(21, 8, false, 4), withKeys = heavy(21, 8);
+    /* compared at a week, before the written story runs out for either */
+    const none = heavy(7, 8, false, 4), withKeys = heavy(7, 8);
     expect(none.facts.filter(f => f.type === 'keyEarned' && !f.rhythm.startsWith('floor:'))).toEqual([]);
-    expect(none.rows.at(-1)!.storyWeek).toBeGreaterThanOrEqual(withKeys.rows.at(-1)!.storyWeek - 1);
+    expect(none.rows.at(-1)!.storyWeek).toBeGreaterThanOrEqual(withKeys.rows.at(-1)!.storyWeek);
+    expect(none.rows.at(-1)!.placesOnFoot).toBeGreaterThanOrEqual(withKeys.rows.at(-1)!.placesOnFoot - 1);
     expect(none.rows.flatMap(r => r.keyOnly)).toEqual([]);
     expect(aheadOfDan(none.facts)).toEqual([]);
     expect(outOfOrder(none.facts)).toEqual([]);

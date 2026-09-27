@@ -62,7 +62,9 @@
 {/if}
 
 <style>
-  .key { margin-top: 6px; }
+  /* a sentence, not a heading: no rules beside it, so it keeps the full width (the rules squeezed it into a tall column) */
+  .key { margin-top: 6px; text-align: center; }
+  .key::before, .key::after { display: none; }
   .story { font-size: 18px; line-height: 1.42; margin: 10px 0 12px; }
   .choice { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; margin: -2px 0 8px; }
   .find { margin: 10px 0 6px; }

@@ -5,6 +5,7 @@
 import { describe, expect, it } from 'vitest';
 import * as S from '../../src/core/story';
 import { returnOf, see } from '../../src/core/game';
+import { calendarWeek } from '../../src/core/time';
 import type { Fact, FactOf } from '../../src/core/types';
 import { content as C } from '../../src/content/world';
 import { heavy } from '../review/heavy';
@@ -22,6 +23,17 @@ describe('the road and the niches (D-129)', () => {
       'seal-5-1', 'seal-5-2', 'seal-6-1', 'seal-6-2', 'seal-7-1', 'seal-7-2', 'seal-7-4', 'seal-7-5', 'seal-8-1', 'seal-8-4', 'seal-9-1', 'seal-9-2', 'seal-9-5']);
     /* each plays: a place, a step, or its own line as a step */
     for (const id of road) { const x = S.sealOf(s, id)!; expect(!!(x.beat || x.arrival || x.line), id).toBe(true); expect(x.seenOnly, id).toBeFalsy(); }
+    /* each can open on the road: its step is a Key's step, its place is on the route, and whatever brings it into view is
+       on the road too (else the road would wait on a Key) */
+    const places = new Set(s.route.flatMap(r => r.places.map(p => p.id)));
+    const roadBeat = (b: { id: string; kind: string; seal?: string }) => places.has(b.id) || b.kind === 'step' || b.kind === 'word' || (b.kind === 'stepKey' && road.has(b.seal!));
+    for (const id of road) {
+      const x = S.sealOf(s, id)!;
+      if (x.beat) expect(S.beatOf(s, x.beat)!.kind, id).toBe('stepKey');
+      if (x.arrival) expect(places.has(x.arrival), id).toBe(true);
+      const by = s.beats.filter(b => b.carries?.inView?.includes(id));
+      if (by.length) expect(by.some(roadBeat), id).toBe(true);
+    }
     /* every place a Key used to play is on the road */
     for (const rw of s.route) for (const p of rw.places) if (p.k) expect(road.has(S.beatOf(s, p.id)!.seal!), p.id).toBe(true);
   });
@@ -72,6 +84,27 @@ describe('with no Keys at all, the story goes on by work alone (D-129)', () => {
   }, 60_000);
 });
 
+describe('Keys kept for later never pile up while a niche could open (D-129 review)', () => {
+  it('two and three hours a day with repeating jobs: a kept Key waits only while no niche can be opened', () => {
+    for (const h of [2, 3]) {
+      const { facts } = heavy(35, h);
+      /* kept Keys drain, one on each job's return, whenever a niche can open: they never pile up (the review saw 25) */
+      for (const day of new Set(facts.map(f => f.day))) {
+        const st = S.storyState(facts.filter(f => f.day <= day), s);
+        expect(st.held <= 2 || S.nextSeal(s, st) === null, `${h} h, ${day}: ${st.held} kept`).toBe(true);
+      }
+      const end = S.storyState(facts, s);
+      expect(end.held <= 1 || S.nextSeal(s, end) === null, `${h} h: ${end.held} kept at the end`).toBe(true);
+      /* a Key with nothing to open still brings the week's one surplus find with it */
+      for (const k of facts.filter(g => g.type === 'keyHeld')) {
+        const earned = facts.filter(g => g.seq < k.seq && g.type === 'keyEarned').pop()!;
+        if (earned.type === 'keyEarned' && earned.rhythm.startsWith('floor:')) continue;
+        expect(facts.some(g => g.type === 'findGiven' && g.why === 'surplus' && calendarWeek(g.day) === calendarWeek(k.day)), k.day).toBe(true);
+      }
+    }
+  }, 120_000);
+});
+
 describe('Keys open only the niches; the road opens its own rows on the way (D-129)', () => {
   const { facts } = heavy(14, 8);
   it('a road row that opened on the way to a place shows on that place\'s arrival, with no Key\'s words', () => {
@@ -83,6 +116,8 @@ describe('Keys open only the niches; the road opens its own rows on the way (D-1
       const x = S.sealOf(s, f.seal)!;
       const played = facts[i + 1 + facts.slice(i + 1).findIndex(g => g.type === 'beatPlayed')] as FactOf<'beatPlayed'>;
       if (x.arrival || played.job !== undefined) continue;
+      /* a row that brings a record keeps its own step, where the record is read */
+      expect(!!(x.carries?.records?.length || (x.beat && S.beatOf(s, x.beat)!.carries?.records?.length)), f.seal).toBe(false);
       /* opened on the way: the next arrival is a place, and shows the row's line and its guesses */
       const arr = facts.slice(i).find((g): g is FactOf<'arrived'> => g.type === 'arrived')!;
       expect(arr.kind, f.seal).toBe('place');

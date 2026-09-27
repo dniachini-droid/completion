@@ -224,11 +224,12 @@ function roadStep(s: Story, st: StoryState, b: Beat): boolean {
 /**
  * The road's rows that open on the way to the next place (D-129): when the minutes have reached it and only a road row
  * in its turn stands between (at most two, in order), those rows open as Dan walks on and show on that place's arrival.
- * A row that settles a guess keeps its own step, where the guess is settled. Null if nothing so near would open the way.
+ * A row that settles a guess, or brings a record, keeps its own step, where the guess is settled or the record read. Null if nothing so near would open the way.
  */
 export function onTheWay(s: Story, st: StoryState): Seal[] | null {
   const ready = (t: StoryState) => s.seals.filter(x => !x.arrival && onRoad(s, x.id) && !t.opened.has(x.id) && inWeek(t, x) && mayOpen(s, t, x) && roadTurn(s, t, x)
-    && (!x.beat || (allMet(t, beatOf(s, x.beat)?.req ?? []) && t.visited.has(beatOf(s, x.beat)!.stretch))) && !s.marks.some(m => m.confirmedBy === (x.beat ?? x.id)))
+    && (!x.beat || (allMet(t, beatOf(s, x.beat)?.req ?? []) && t.visited.has(beatOf(s, x.beat)!.stretch))) && !s.marks.some(m => m.confirmedBy === (x.beat ?? x.id))
+    && !(x.carries?.records?.length || (x.beat && beatOf(s, x.beat)?.carries?.records?.length)))
     .sort((a, b) => a.w - b.w || a.o - b.o)[0];
   let t = st;
   const out: Seal[] = [];

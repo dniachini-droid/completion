@@ -411,8 +411,17 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string) {
   /* any session meets the rhythm (Dan, D-121), but only sessions of the dial's shortest delve or more count towards its
      Key: a few one-minute sessions never open the story (rule 10) */
   if (r && S.sessionsIn(w.all, r, day, S.RETURN_MIN) === S.needOf(r)) {
-    if (S.keysIn(w.all, day) < S.KEYS_A_WEEK) keyed = !!landKey(w, c, r.id, at, day, done.seq);
-    else if (!ofType(w.all, 'findGiven').some(f => f.why === 'surplus' && calendarWeek(f.day) === calendarWeek(day))) giveFind(w, c, 'surplus', at, day, done.seq);
+    const surplus = () => { if (!ofType(w.all, 'findGiven').some(f => f.why === 'surplus' && calendarWeek(f.day) === calendarWeek(day))) giveFind(w, c, 'surplus', at, day, done.seq); };
+    if (S.keysIn(w.all, day) < S.KEYS_A_WEEK) {
+      keyed = !!landKey(w, c, r.id, at, day, done.seq);
+      /* a Key with no niche in reach is kept, and the job still brings something: the week's one surplus find (D-129) */
+      if (!keyed) surplus();
+    } else surplus();
+  }
+  /* a Key kept for later opens the next niche on this job's return, wherever it is, so kept Keys never pile up (D-129) */
+  if (!keyed && S.storyState(w.all, c.story).held > 0) {
+    const seal = S.nextSeal(c.story, S.storyState(w.all, c.story));
+    if (seal) { w.put({ type: 'keyUsed' }, at, day); openSeal(w, c, seal, at, day, done.seq); keyed = true; }
   }
   /* the return: the deep push's next beat (once a day) on a High day past a Normal day's size, or once a Normal day's
      jobs are done if Dan called the push in the morning (D-054); else the story's next step; else a line of the passage */
@@ -579,9 +588,13 @@ function weekClose(w: W, c: Content, at: Moment, day: string, storyWeek: number)
   for (const wk of weeks) {
     const st = S.storyState(w.all, c.story);
     const before = new Set(ofType(w.all, 'weekClosed').flatMap(f => f.learned));
-    /* the story's latest first: a niche opened long after its week never pushes out what this week learned (D-129) */
+    /* the story weeks played in this calendar week first, in order; then the oldest: a niche opened long after its week
+       never pushes out what this week learned (D-129) */
+    const began = ofType(w.all, 'storyWeekBegan'), weekAt = (d: string) => began.filter(f => f.day < d).pop()?.w ?? 1;
+    const from = weekAt(wk), to = Math.max(from, ...began.filter(f => calendarWeek(f.day) === wk).map(f => f.w));
     const learned = c.story.learned.filter(l => l.w <= storyWeek && !before.has(l.id) && l.req.every(r => S.met(st, r)))
-      .map((l, k) => ({ l, k })).sort((a, b) => b.l.w - a.l.w || a.k - b.k).slice(0, 3).map(({ l }) => l.id);
+      .map((l, k) => ({ l, k, here: l.w >= from && l.w <= to ? 0 : 1 })).sort((a, b) => a.here - b.here || a.l.w - b.l.w || a.k - b.k)
+      .slice(0, 3).map(({ l }) => l.id);
     const n = playWeek(w.all, wk);
     /* the first close of each month of play: weeks 1, 5, 9, 13… */
     const month = (n - 1) % 4 === 0 ? c.story.soFar[(n - 1) / 4] : undefined;
@@ -1126,7 +1139,7 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
       }
     }
     /* the road's rows opened on the way here, just before it: their lines, and the guesses they bring (D-129) */
-    const way: string[] = [], wayRecords: string[] = [];
+    const way: string[] = [];
     for (let i = all.findIndex(g => g.seq === f.seq) - 1; i >= 0; i--) {
       const g = all[i];
       if (g.type === 'recordShown' || g.type === 'storyWeekBegan' || (g.type === 'sealOpened' && g.how === 'road' && S.sealOf(c.story, g.seal)?.arrival === b.id)) continue;
@@ -1138,7 +1151,6 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
         const x = S.sealOf(c.story, o.seal), bx = x?.beat ? S.beatOf(c.story, x.beat) : undefined;
         const line = bx ? bx.line : x?.line;
         if (line) way.unshift(line);
-        wayRecords.unshift(...(x?.carries?.records ?? []), ...(bx?.carries?.records ?? []));
         keyed.push(...(x?.carries?.guess ?? []), ...(bx?.carries?.guess ?? []));
         i = j; continue;
       }
@@ -1146,7 +1158,7 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
     }
     const guess = [...new Set([...(b.carries?.guess ?? []), ...carried, ...keyed])].filter(m => S.markOf(c.story, m)?.confirmedBy !== b.id);
     return { seq: f.seq, kind: 'place', opened, way, id: b.id, name: b.name ?? '', line: b.line ?? '', taps: b.taps, choice: b.choice,
-      records: b.choice ? b.carries?.records ?? [] : [...new Set([...(b.carries?.records ?? []), ...wayRecords])], guess, look: null, stretch: b.stretch, painting: paintingOf(b.id, b.stretch), completedDay, byKey: f.how === 'key' };
+      records: b.carries?.records ?? [], guess, look: null, stretch: b.stretch, painting: paintingOf(b.id, b.stretch), completedDay, byKey: f.how === 'key' };
   }
   const k = c.story.camps.find(x => x.id === f.id)!;
   const find = all.find(g => g.type === 'findGiven' && g.why === 'camp' && g.seq > f.seq && g.seq <= f.seq + 1) as FactOf<'findGiven'> | undefined;
