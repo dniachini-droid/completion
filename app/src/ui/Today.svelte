@@ -47,6 +47,11 @@
     const d = f.find(x => x.type === 'jobDone');
     if (d) go('step', d.seq);
   }
+  /* a delve job worked on today, not yet said to be done: "Is it done?" answered "Not yet", or left unanswered. Its Done
+     is here, so it never needs another delve to be marked (Dan, 2026-09-27, D-120) */
+  const delvedToday = $derived(new Set(game.facts.filter(f => f.type === 'delveStarted' && f.day === v.day).map(f => f.job)));
+  const sayDone = (j: Job) => j.delve && j.doneBy === 'dan' && !v.done.has(j.id) && delvedToday.has(j.id);
+  const delvedOn = $derived(!!next && sayDone(next));
   function carry() { game.do({ do: 'resume' }); go('delve'); }
   function finish() { game.do({ do: 'finishHere' }); go('delve'); }
   /* a tap on a job starts that job, never another: nothing on the list moves (Dan, D-100) */
@@ -134,7 +139,7 @@
     </div>
     <h1 class="carve lg rise">{v.here.name}</h1>
     <!-- no Low / Normal / High here: Dan sets his days in the week and runs them (Dan, D-089) -->
-    {#if v.ahead}
+    {#if v.ahead && !capturing}
       <section class="ahead rise d2">
         <div class="label-line">{t('today.ahead')}</div>
         <button class="ahead-text" class:open={aheadOpen} aria-expanded={aheadOpen} onclick={() => (aheadOpen = !aheadOpen)}><p class="say on-scene">{v.ahead}</p></button>
@@ -147,6 +152,16 @@
   <section class="bottom fit col rise d3">
     <!-- on a short phone the day scrolls; the foot's links never leave the screen (review finding ui-11) -->
     <div class="scroll">
+    <!-- while Dan types, the box stands alone above the keyboard: the next job and the list come back when he is done
+         (Dan, 2026-09-27: the under-way job's words were drawn over the box) (D-120) -->
+    {#if capturing}
+      <form class="capture" onsubmit={(e) => { e.preventDefault(); capture(); }}>
+        <textarea bind:this={capEl} bind:value={captured} rows="2" maxlength="2000" enterkeyhint="done" onkeydown={capKey}
+          placeholder={t('today.add.placeholder')} aria-label={t('today.add.label')}></textarea>
+        <div class="btn-row"><button class="btn-quiet" type="submit" disabled={!captured.trim()}><span>{t('today.add.put')}</span></button>
+          <button class="btn-quiet" type="button" onclick={() => (capturing = false)}><span>{t('rhythms.cancel')}</span></button></div>
+      </form>
+    {:else}
     {#if v.night && !v.run}
       <div class="next">
         <div class="label-line gold">{t('today.tonight')}</div>
@@ -191,7 +206,8 @@
         {:else if v.deepCalled && !v.complete}<p class="deep">{t('today.deep.called')}</p>{/if}
         <div class="lead"><button class="btn full" onclick={() => begin(next)}>{next.delve ? t('today.delve') : t('today.begin')}</button></div>
         <div class="cant">
-          <button class="text-link" onclick={() => go('cant', next.id)}><span>{t('today.cantStart')}</span></button>
+          {#if delvedOn}<button class="text-link" onclick={() => done(next)}><span>{t('today.itsDone')}</span></button>
+          {:else}<button class="text-link" onclick={() => go('cant', next.id)}><span>{t('today.cantStart')}</span></button>{/if}
           <span class="dot" aria-hidden="true">·</span>
           <button class="text-link" onclick={() => aside(next.id)}><span>{t('today.notToday')}</span></button>
         </div>
@@ -221,15 +237,6 @@
     {#if lastAside && !v.order.includes(lastAside) && !v.done.has(lastAside)}
       <p class="said">{t('today.aside.said')} <button class="text-link" onclick={putBack}><span>{t('today.putBack')}</span></button></p>
     {/if}
-    <!-- one-tap capture (D-107): while typing, the box takes the list's place, so nothing on Today is pushed away -->
-    {#if capturing}
-      <form class="capture" onsubmit={(e) => { e.preventDefault(); capture(); }}>
-        <textarea bind:this={capEl} bind:value={captured} rows="2" maxlength="2000" enterkeyhint="done" onkeydown={capKey}
-          placeholder={t('today.add.placeholder')} aria-label={t('today.add.label')}></textarea>
-        <div class="btn-row"><button class="btn-quiet" type="submit" disabled={!captured.trim()}><span>{t('today.add.put')}</span></button>
-          <button class="btn-quiet" type="button" onclick={() => (capturing = false)}><span>{t('rhythms.cancel')}</span></button></div>
-      </form>
-    {:else}
     <div class="rows" onpointermove={move} onpointerup={up} onpointercancel={up}>
       {#each others as id (id)}
         {@const j = job(id)}
@@ -239,8 +246,10 @@
             onpointerdown={(e) => down(e, id)} onclick={() => tapRow(id)} disabled={v.done.has(id) || !!v.run}>
             <span class="pip" class:done={v.done.has(id)}></span>
             <span class="t">{j.name}</span>
-            <span class="s">{rowNote(j)}</span>
+            <span class="s">{sayDone(j) ? '' : rowNote(j)}</span>
           </button>
+          <!-- the same "It's done" on a row further down: a tap on the row itself still starts a delve (D-100, D-120) -->
+          {#if sayDone(j) && !v.run && offset(id) === 0}<button class="text-link row-done" onclick={() => done(j)}><span>{t('today.itsDone')}</span></button>{/if}
         </div>
       {/each}
       {#if !v.run && v.next?.mode !== 'underWay' && !(v.complete && !v.next)}
@@ -249,9 +258,9 @@
         </button>
       {/if}
     </div>
-    {/if}
     <!-- the evening, before the day's work is done: Tonight at the end of the day's list (D-093) -->
     {#if evening && !v.complete && !v.run}<section class="tonight-end">{@render tonight()}</section>{/if}
+    {/if}
     </div>
     <nav class="foot" aria-label={t('today.label')}>
       <button class="text-link add" class:on={capturing} aria-label={t('today.add.label')} aria-expanded={capturing} onclick={startCapture}><span>{capSaid ? t('today.add.said') : t('today.add')}</span></button>
@@ -298,6 +307,8 @@
   .swipe .row.still { transition: none; }
   .aside { position: absolute; right: 18px; z-index: 0; top: 1px; bottom: 0; width: 112px; font-family: var(--life); font-style: italic; font-size: 16px;
     color: var(--ink); background: rgba(var(--violet-rgb), .28); }
+  .row-done { position: absolute; z-index: 2; right: 18px; top: 50%; transform: translateY(-50%); min-height: 40px; padding: 0 0 0 12px; }
+  .row-done span { font-size: 16px; color: var(--violet-hi); }
   .row.else .t { color: var(--ink-2); font-style: italic; }
   .plus { justify-self: center; color: var(--violet-hi); font-size: 20px; line-height: 1; }
   button.row:disabled { cursor: default; }

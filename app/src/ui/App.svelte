@@ -3,7 +3,7 @@
      a delve that ended while away shows its end; a run in progress shows the ring; an unseen arrival shows itself. */
   import { game } from './game.svelte';
   import { moment } from './moment.svelte';
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import type { Back, Go, Screen } from './nav';
   import { back } from './back.svelte';
   import { platform } from '../platform';
@@ -28,6 +28,8 @@
   import Choose from './Choose.svelte';
   import Settings from './Settings.svelte';
   import { t } from '../content/copy/en';
+  import { steady } from './taps';
+  import { unslide } from './keyboard';
 
   function first(): Screen {
     const v = game.view;
@@ -54,12 +56,16 @@
   /* Records ⇄ Marks is a tab: the screen swaps in place, with nothing rising or fading in again (Dan, D-093) */
   let still = $state(false);
   const go: Go = (to, a) => {
+    steady(); void tick().then(() => { steady(); unslide(); });
+    /* leaving a delve's end by any way out (the arrow, the phone's back): looked at, so it never comes back later (D-120) */
+    const e = game.view.runEnd;
+    if (screen === 'delve' && e && !game.view.run && to !== 'delve') game.do({ do: 'seen', what: 'step', ref: e.seq });
     still = TABS.has(screen) && TABS.has(to);
     if (to === 'back') { const p = trail.pop(); if (p) { screen = p.screen; arg = p.arg; } else go('today'); return; }
     if (to === 'cant' && typeof a === 'string') game.do({ do: 'cantStart', job: a });
     /* "Today" never skips what waits: a place just reached, the morning, the welcome back, a new daybook page (D-080).
        'stay' is the one way past it: the word left to cut later. */
-    if (to === 'today' && a !== 'stay') { const f = first(); if (f !== 'today' && f !== 'delve') to = f; }
+    if (to === 'today' && a !== 'stay') { const f = first(); if (f !== 'today' && (f !== 'delve' || !game.view.run)) to = f; }
     if (LOOK.has(to)) {
       const top = trail[trail.length - 1];
       if (top && top.screen === to && top.arg === a) trail.pop();                  /* going where back would go */
@@ -91,6 +97,20 @@
     addEventListener('pointerdown', down); addEventListener('pointerup', up);
     return () => { removeEventListener('popstate', pop); removeEventListener('pointerdown', down); removeEventListener('pointerup', up); };
   });
+
+  /* a delve that ends while Dan is on another screen: its end is shown (as it is on opening), unless he is typing; the
+     chime has already called him (D-120). A change of the delve's phase or of Today's next job steadies taps too. */
+  let lastEnd = game.view.runEnd?.seq ?? 0;
+  $effect(() => {
+    const e = game.view.runEnd;
+    if (!e || e.seq === lastEnd) return;
+    lastEnd = e.seq;
+    const typing = document.activeElement instanceof HTMLInputElement || document.activeElement instanceof HTMLTextAreaElement;
+    if (screen !== 'delve' && !typing) go('delve');
+  });
+  const phaseKey = $derived.by(() => { const v = game.view; return `${v.run?.phase}.${v.run?.k}.${v.runEnd?.seq}.${v.next?.mode}.${v.next?.job}`; });
+  let lastMoment = '';
+  $effect(() => { if (phaseKey !== lastMoment) { if (lastMoment) { steady(); unslide(); } lastMoment = phaseKey; } });
 
   /* the day's light: gold once the day has turned (DESIGN_SYSTEM → colour) */
   $effect(() => {

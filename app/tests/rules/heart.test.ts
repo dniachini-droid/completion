@@ -59,7 +59,7 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     expect(p.view().run).toMatchObject({ phase: 'delve', k: 1 });
     p.wait(20);
     expect(p.view().runEnd).toMatchObject({ ask: true, minutes: 25 });
-    p.do({ do: 'done', job: 'cat' }).do({ do: 'seen', what: 'step', ref: p.view().runEnd!.seq });
+    p.do({ do: 'done', job: 'cat', keepEnd: true }).do({ do: 'seen', what: 'step', ref: p.view().runEnd!.seq });   /* answered on the delve's end */
     expect(p.view().done.has('cat')).toBe(true);
     /* the Course: its hour is two delves of 25; it's done at enough */
     p.do({ do: 'startRun', job: 'course', minutes: 25, count: 2 }).wait(60);
@@ -115,7 +115,7 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     const id = (p.facts[p.facts.length - 1] as { id: string }).id;
     p.do({ do: 'startRun', job: id, minutes: 25, count: 1 }).sleep(8 * 60).wait(0).do({ do: 'open' });
     expect(p.view().runEnd).toMatchObject({ ask: true });
-    p.do({ do: 'done', job: id });
+    p.do({ do: 'done', job: id, keepEnd: true });   /* answered on the delve's end */
     expect(p.view().done.has(id)).toBe(true);
     expect(p.view().runEnd).toMatchObject({ ask: false });
   });

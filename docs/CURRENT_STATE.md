@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-27, later (productivity Stage 1 built, D-109; the app is the iPhone app only, D-108); before that 2026-09-27 (the productivity review and plan, D-107); before that 2026-09-26, late (Phase 9: the save in SQLite and the flows in CI, D-106; Look, the painting without the words, pinch to zoom, D-105; a tap starts that job, no hard edges, D-104; the whole app audited for battery, D-103; the lock-screen panel says Paused, D-102; the AI repaint, D-100, D-101)_
+_Last updated: 2026-09-27, evening (the done loop made whole, D-120: the keyboard, Done, delves across screens, pauses and 04:00); before that 2026-09-27, later (productivity Stage 1 built, D-109; the app is the iPhone app only, D-108); before that 2026-09-27 (the productivity review and plan, D-107); before that 2026-09-26, late (Phase 9: the save in SQLite and the flows in CI, D-106; Look, the painting without the words, pinch to zoom, D-105; a tap starts that job, no hard edges, D-104; the whole app audited for battery, D-103; the lock-screen panel says Paused, D-102; the AI repaint, D-100, D-101)_
 
 ## Current phase
 
@@ -41,7 +41,13 @@ Leaving the phone still pauses a delve (Dan works on his laptop).
 4. **TestFlight:** Dan finished Apple setup sitting 2 (all four secrets in; TestFlight installed). **The first build reached Apple** (workflow run 36011344034, 2026-09-24: signed in the cloud and uploaded in under 4 minutes): trial (d), the pipeline, passes. It carried slices 1–2. **The whole first playable reached Apple** (run 36021450486, 2026-09-24, started by hand: a commit touching no app files does not start the workflow). Dan does sitting 3 (trials b and c) when he tests, and reports.
 5. **The web link: retired (D-108).** Dan: the app is the iPhone app only. It is no longer built or updated; changes reach Dan on TestFlight.
 
-## Last session (2026-09-27, the productivity track's Stage 1, D-109; web page gone, D-108)
+## Last session (2026-09-27, evening: TestFlight fixes and the done loop, D-120; branch `claude/testflight-fixes-reminder-capture-done`)
+Dan's reports on the build from PR #47. **Reminders:** they work (Dan), nothing changed. **"+ Add"'s box behind the under-way words, and Done doing nothing:** the iPhone's keyboard slid the whole page up, and could leave it slid so taps landed off target; now the frame fits above the keyboard and the page is put back, and while typing the box stands alone. Then Dan asked for the whole begin → delve → pause → done loop to be broken on purpose and made robust; two independent reviews (the rules, the screens) found, and this session fixed: double taps making a second choice; a delve's end reached on another screen never shown and coming back stale; no way to say a delved job done but another delve; Done mid-delve paying twice; a delve across 04:00 paid twice, or ended when paused; the log out of time order; runs the dial can't set. Details in D-120.
+- **Checks:** 203 rule tests; typecheck; the screen walk at both sizes; tap-row, back-from-record; new `capture-done.mjs` and `delve-loop.mjs` at 440 × 956 and 360 × 780.
+- **Question for Dan (balance):** a short delve then Done earns only the delve's minutes, less than Done alone; top it up to the usual length?
+- **Dan's test on TestFlight:** with a job under way, tap "+ Add": the box should sit above the keyboard with nothing over it; then tap Done. Start a delve, go to the Week and let it run out: its end should show. Answer "Not yet": "It's done" should be on Today.
+
+## Earlier (2026-09-27, the productivity track's Stage 1, D-109; web page gone, D-108)
 Stage 1 of D-107 built, one pushed commit per item:
 - **Planned-week bug:** a line or appointment added by hand no longer turns the week into "planned". Only Plan my week makes Today follow the plan.
 - **Reminders:** opt-in "Remind me" (at the time, 15 min or 1 h before) where a time is set: a week entry, a rhythm, or bedtime in Settings. There is one switch for all of them, one alert each, with "Again in 10 min". The rules are in `core/reminders.ts`. Whether a start followed a reminder is worked out for the test's notes, not written.

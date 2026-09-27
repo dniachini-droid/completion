@@ -13,6 +13,8 @@ export const copy = {
   'today.delve': 'Delve',
   'today.swap': 'Swap',
   'today.cantStart': 'I can’t start',
+  /* a delve job worked on today and not yet said to be done (after "Not yet", or the question left): it can be (D-120) */
+  'today.itsDone': 'It’s done',
   'today.underWay': 'Under way',
   'today.underWay.say': 'The road will keep until you return. When the work is done, come back and mark it so.',
   'today.unbegin': 'I haven’t started',
@@ -95,6 +97,7 @@ export const copy = {
   'delve.notYet': 'Not yet',
   'delve.yesSay': 'It is done, and the day goes on.',
   'delve.kept': 'Every minute counts: {min} so far.',
+  'delve.keptNone': 'It will keep.',
   'delve.keptSay': 'Nothing is lost. It will be waiting when you come back to it.',
   'delve.toToday': 'Back to today',
   'delve.see': 'See where you are',
