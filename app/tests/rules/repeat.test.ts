@@ -3,7 +3,7 @@
  * Ids only: no story text is asserted here.
  */
 import { describe, expect, it } from 'vitest';
-import { act, see, type Command } from '../../src/core/game';
+import { act, see, settle, type Command } from '../../src/core/game';
 import * as Rep from '../../src/core/repeat';
 import * as W from '../../src/core/week';
 import type { Fact, Job, Rhythm } from '../../src/core/types';
@@ -18,6 +18,8 @@ function player(start = '2026-09-28T09:00:00+01:00') {   /* a Monday */
     get facts() { return facts; },
     do(cmd: Command) { facts = facts.concat(act(facts, C, cmd, at())); return this; },
     to(day: string) { now = Date.parse(`${day}T09:00:00+01:00`); return this; },
+    /** Worked on, as every job is (D-117): a 10-minute delve, then said done. */
+    did(job: string) { this.do({ do: 'startRun', job, minutes: 10, count: 1 }); now += 11 * 60_000; facts = facts.concat(settle(facts, C, at())); return this.do({ do: 'done', job }); },
     view() { return see(facts, C, at()); },
   };
 }
@@ -56,7 +58,7 @@ describe('Today and the plan follow the new kinds', () => {
     expect(p.view().slate).not.toContain('rent');
     p.to('2026-10-01').do({ do: 'open' });
     expect(p.view().slate).toContain('rent');
-    p.do({ do: 'done', job: 'rent' });
+    p.did('rent');
     expect(Rep.sessionsIn(p.facts, { id: 'r-rent', job: 'rent', monthly: { day: 1 } }, '2026-10-20')).toBe(1);
   });
   it('every 3 days: planned when due, then every 3 days; done early, it moves on', () => {

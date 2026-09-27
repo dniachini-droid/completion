@@ -108,7 +108,7 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     expect(q.view().done.has('gym')).toBe(true);
   });
   it('lowering capacity can complete the day, and day complete locks in', () => {
-    const p = player().do({ do: 'open' }).do({ do: 'done', job: 'gym' }).do({ do: 'done', job: 'tank' });
+    const p = player().do({ do: 'open' }).did('gym').did('tank');
     expect(p.view().complete).toBe(false);
     p.do({ do: 'capacity', capacity: 'low' });
     expect(p.view().complete).toBe(true);

@@ -128,6 +128,8 @@ function sizeOn(facts: Fact[], day: string, c?: Content) {
 }
 
 const doneOn = (facts: Fact[], day: string) => new Set(ofType(onDay(facts, day), 'jobDone').map(f => f.job));
+/** Jobs done with minutes behind them: only these complete a day or call the deep push (rule 10, D-117). */
+const workedOn = (facts: Fact[], day: string) => new Set(ofType(onDay(facts, day), 'jobDone').filter(f => f.minutes > 0).map(f => f.job));
 const completedOn = (facts: Fact[], day: string) => onDay(facts, day).some(f => f.type === 'dayCompleted');
 export const delveMinutesOn = (facts: Fact[], day: string, job: string) =>
   ofType(onDay(facts, day), 'stepsGained').filter(f => f.job === job && f.run !== undefined).reduce((a, f) => a + f.minutes, 0);
@@ -342,7 +344,7 @@ function gifts(w: W, c: Content, at: Moment, day: string) {
   };
   /* a place plays the moment it is reached, not held for day complete (Dan, 2026-09-24, D-073) */
   if (!completedOn(w.all, day)) {
-    if (doneOn(w.all, day).size < sizeOn(w.all, day, c)) { reach(); return; }
+    if (workedOn(w.all, day).size < sizeOn(w.all, day, c)) { reach(); return; }
     w.put({ type: 'dayCompleted' }, at, day);
     const earlier = ofType(onDay(w.all, day), 'arrived').some(a => a.kind === 'place');
     if (reach() === 0 && !earlier) {
@@ -368,9 +370,9 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string) {
   if (doneOn(w.all, day).has(job)) return;
   const j = jobOf(c, job), timed = delveMinutesOn(w.all, day, job) + crossedIn(w.all, day, job);
   /* a delve's minutes have already moved Dan (counted once, even across 04:00, D-120). Every job is a delve (D-117): one
-     said done with no whole minute behind it counts as done for the day, but earns no minutes and brings no return: no
-     step of the story, no find, no Key (rule 10) */
-  if (timed === 0) { w.put({ type: 'jobDone', job, minutes: 0 }, at, day); gifts(w, c, at, day); return; }
+     said done with no whole minute behind it is off the list, but earns no minutes and brings no return: no step of the
+     story, no find, no Key, and it doesn't count towards the day's completion (rule 10) */
+  if (timed === 0) { w.put({ type: 'jobDone', job, minutes: 0 }, at, day); return; }
   const done = w.put({ type: 'jobDone', job, minutes: timed }, at, day);
   storyClock(w, c, at, day);
   /* a rhythm met this week lands a Key, until the week's supply is used; past it, one find a week (§3). A rhythm Dan
@@ -385,7 +387,7 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string) {
      jobs are done if Dan called the push in the morning (D-054); else the story's next step; else a line of the passage */
   if (!keyed) {
     const st = S.storyState(w.all, c.story), step = S.nextStep(c.story, st);
-    const n = doneOn(w.all, day).size, called = onDay(w.all, day).some(f => f.type === 'deepCalled');
+    const n = workedOn(w.all, day).size, called = onDay(w.all, day).some(f => f.type === 'deepCalled');
     const deep = capacityOn(w.all, day) === 'high' && (n > DAY_SIZE.normal || (called && n >= DAY_SIZE.normal))
       && !ofType(onDay(w.all, day), 'beatPlayed').some(f => S.beatOf(c.story, f.id)?.kind === 'deep') ? S.nextDeep(c.story, st) : null;
     if (deep) { w.put({ type: 'beatPlayed', id: deep.id, job: done.seq }, at, day); show(w, c, deep.carries?.records, at, day); }

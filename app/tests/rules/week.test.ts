@@ -64,7 +64,7 @@ describe('Plan my week (PLANNER.md, fixed rules)', () => {
     for (const j of ['cat', 'post']) expect(weekdayOf(on(j)[0])).toBeLessThanOrEqual(2);
   });
   it('planned mid-week: only the days left, and nothing already done is planned again', () => {
-    const p = player('2026-09-30T09:00:00+01:00').do({ do: 'open' }).do({ do: 'done', job: 'gym' });
+    const p = player('2026-09-30T09:00:00+01:00').do({ do: 'open' }).did('gym');
     const e = W.planWeek(C, p.facts, MON, '2026-09-30');
     expect(e.every(x => x.day >= '2026-09-30')).toBe(true);
     expect(e.filter(x => x.job === 'gym').length).toBeLessThanOrEqual(3);
@@ -103,7 +103,7 @@ describe('How the week drives Today', () => {
   });
   it('once a rhythm’s enough for the week is met, its remaining planned sessions leave', () => {
     const p = player().do({ do: 'open' }).do({ do: 'planWeek', week: MON });
-    for (let i = 0; i < 2; i++) { p.do({ do: 'done', job: 'spanish' }).next(); p.do({ do: 'open' }); }
+    for (let i = 0; i < 2; i++) { p.did('spanish').next(); p.do({ do: 'open' }); }
     const wk = W.weekOf(C, p.facts, MON, '2026-09-30');
     expect(wk.days.slice(2).flatMap(d => d.jobs).filter(j => j.job === 'spanish' && !j.done)).toEqual([]);
   });
@@ -314,7 +314,7 @@ describe('Choosing what to do: Not today, and a delve on anything (D-077)', () =
   });
   it('after the day is complete, any job can still be delved on, and its minutes move Dan', () => {
     const p = player().do({ do: 'open' });
-    for (const id of p.view().slate) p.do({ do: 'done', job: id });
+    for (const id of p.view().slate) p.did(id);
     expect(p.view().complete).toBe(true);
     const other = C.jobs.find(j => !p.view().done.has(j.id) && !j.item)!.id;
     const walked = p.view().walked;
@@ -467,7 +467,7 @@ describe('A High day adds one job beyond the plan, and only one (Dan, D-082)', (
     const v = p.view();
     expect(v.slate.length).toBe(planned + 1);
     const extra = v.slate[v.slate.length - 1];
-    for (const id of v.slate) p.do({ do: 'done', job: id });
+    for (const id of v.slate) p.did(id);
     expect(p.view().complete).toBe(true);
     expect(p.view().slate.filter(id => !p.view().done.has(id))).toEqual([]);   /* nothing further is added */
     expect(p.view().done.has(extra)).toBe(true);
@@ -803,6 +803,16 @@ describe('Everything is a delve (Dan, D-117)', () => {
     expect(p.view().walked).toBe(walked);
     expect(after.find(f => f.type === 'jobDone')).toMatchObject({ minutes: 0 });
     expect(after.some(f => f.type === 'beatPlayed' || f.type === 'findGiven' || f.type === 'keyEarned')).toBe(false);
+  });
+  it('zero-minute Dones never complete a day, bring a camp, or count as a rhythm’s sessions (rule 10)', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'capacity', capacity: 'low' });
+    for (const id of p.view().slate) p.do({ do: 'startRun', job: id, minutes: 25, count: 1 }).do({ do: 'finishHere' }).do({ do: 'done', job: id });
+    expect(p.view().slate.every(id => p.view().done.has(id))).toBe(true);
+    expect(p.view().complete).toBe(false);
+    expect(p.facts.some(f => f.type === 'dayCompleted' || f.type === 'arrived' || f.type === 'findGiven')).toBe(false);
+    const gym = C.rhythms.find(r => r.job === 'gym')!;
+    p.next().do({ do: 'open' }).do({ do: 'startRun', job: 'gym', minutes: 25, count: 1 }).do({ do: 'finishHere' }).do({ do: 'done', job: 'gym' });
+    expect(S.sessionsIn(p.facts, gym, p.view().day)).toBe(0);
   });
   it('old satchel lines dropped or ticked off stay gone: they are not jobs and never planned', () => {
     const p = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['old one', 'ticked one', 'kept one'] });

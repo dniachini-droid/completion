@@ -49,7 +49,7 @@ export function samePeriod(r: Rhythm, done: string, day: string): boolean {
 
 /** Sessions of a rhythm done in its period containing `day`. */
 export const sessionsIn = (facts: Fact[], r: Rhythm, day: string) =>
-  facts.filter(f => f.type === 'jobDone' && f.job === r.job && samePeriod(r, f.day, day)).length;
+  facts.filter(f => f.type === 'jobDone' && f.job === r.job && f.minutes > 0 && samePeriod(r, f.day, day)).length;
 
 /** The day an every-N-days rhythm is next due, from `from` on: N days after it was last done (before `from`), or
     `from` if it never was or is already due. */
