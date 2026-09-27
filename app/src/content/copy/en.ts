@@ -353,7 +353,7 @@ export const copy = {
   'satchel.add': 'Add a line',
   'today.add': '+ Add', 'today.add.label': 'Add to the satchel',
   'today.add.placeholder': 'Anything to remember. Several lines make several.',
-  'today.add.put': 'Put it in the satchel', 'today.add.said': 'In the satchel.',
+  'today.add.put': 'Put it in', 'today.add.said': 'In the satchel',
   'satchel.addMany': 'Write one item per line. You can paste in a whole list.',
   'satchel.put': 'Put it in',
   'satchel.more': 'Show the rest',

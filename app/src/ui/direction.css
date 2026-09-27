@@ -103,7 +103,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .phone {
   position: relative; width: 100%; max-width: 430px;
   height: 100vh; height: 100dvh; min-height: 600px;
-  overflow: hidden; background: var(--stone-0); isolation: isolate;
+  /* clip, not hidden: a hidden box can still be scrolled by the browser (to show a caret, D-107), sliding the screen */
+  overflow: hidden; overflow: clip; background: var(--stone-0); isolation: isolate;
 }
 
 /* the painting (layers, back to front) ----------------------------------- */

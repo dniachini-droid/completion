@@ -95,11 +95,12 @@
     if (capturing) { capturing = false; return; }
     capturing = true; capSaid = false; captured = '';
     /* focused inside the tap itself, so the phone's keyboard opens straight away */
-    flushSync(); capEl?.focus();
+    flushSync(); capEl?.focus({ preventScroll: true });
   }
   function capture() {
     const lines = captured.split('\n');
-    if (lines.some(l => l.trim())) { game.do({ do: 'addItems', lines }); capSaid = true; }
+    /* said for a moment where "+ Add" was, so nothing on Today moves */
+    if (lines.some(l => l.trim())) { game.do({ do: 'addItems', lines }); capSaid = true; setTimeout(() => (capSaid = false), 4000); }
     captured = ''; capturing = false;
   }
   /* Return puts it in (a pasted list keeps its lines); Shift-Return starts a new line */
@@ -220,6 +221,15 @@
     {#if lastAside && !v.order.includes(lastAside) && !v.done.has(lastAside)}
       <p class="said">{t('today.aside.said')} <button class="text-link" onclick={putBack}><span>{t('today.putBack')}</span></button></p>
     {/if}
+    <!-- one-tap capture (D-107): while typing, the box takes the list's place, so nothing on Today is pushed away -->
+    {#if capturing}
+      <form class="capture" onsubmit={(e) => { e.preventDefault(); capture(); }}>
+        <textarea bind:this={capEl} bind:value={captured} rows="2" maxlength="2000" enterkeyhint="done" onkeydown={capKey}
+          placeholder={t('today.add.placeholder')} aria-label={t('today.add.label')}></textarea>
+        <div class="btn-row"><button class="btn-quiet" type="submit" disabled={!captured.trim()}><span>{t('today.add.put')}</span></button>
+          <button class="btn-quiet" type="button" onclick={() => (capturing = false)}><span>{t('rhythms.cancel')}</span></button></div>
+      </form>
+    {:else}
     <div class="rows" onpointermove={move} onpointerup={up} onpointercancel={up}>
       {#each others as id (id)}
         {@const j = job(id)}
@@ -239,18 +249,12 @@
         </button>
       {/if}
     </div>
+    {/if}
     <!-- the evening, before the day's work is done: Tonight at the end of the day's list (D-093) -->
     {#if evening && !v.complete && !v.run}<section class="tonight-end">{@render tonight()}</section>{/if}
     </div>
-    {#if capturing}
-      <form class="capture" onsubmit={(e) => { e.preventDefault(); capture(); }}>
-        <textarea bind:this={capEl} bind:value={captured} rows="2" maxlength="2000" enterkeyhint="done" onkeydown={capKey}
-          placeholder={t('today.add.placeholder')} aria-label={t('today.add.label')}></textarea>
-        <button class="btn-quiet" type="submit" disabled={!captured.trim()}><span>{t('today.add.put')}</span></button>
-      </form>
-    {:else if capSaid}<p class="said">{t('today.add.said')}</p>{/if}
     <nav class="foot" aria-label={t('today.label')}>
-      <button class="text-link add" class:on={capturing} aria-label={t('today.add.label')} aria-expanded={capturing} onclick={startCapture}><span>{t('today.add')}</span></button>
+      <button class="text-link add" class:on={capturing} aria-label={t('today.add.label')} aria-expanded={capturing} onclick={startCapture}><span>{capSaid ? t('today.add.said') : t('today.add')}</span></button>
       <button class="text-link" onclick={() => go('satchel')}><span>{t('nav.satchel')}</span></button>
       <button class="text-link" onclick={() => go('week')}><span>{t('nav.week')}</span></button>
       <button class="text-link" onclick={() => go('daybook')}><span>{t('nav.daybook')}</span></button>
@@ -299,10 +303,9 @@
   .said .text-link { min-height: 0; padding: 4px; }
   .deep { font-family: var(--life); font-size: 16px; color: var(--ink-2); margin: -10px 0 14px; text-align: left; }
   .deep .text-link { display: inline-flex; padding: 0 4px; min-height: 0; }
-  .capture { display: flex; flex-direction: column; gap: 8px; margin: 10px 0 2px; }
-  .capture textarea { width: 100%; min-height: 64px; padding: 10px 12px; font: inherit; font-size: 17px; color: #fff; resize: none;
+  .capture { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+  .capture textarea { box-sizing: border-box; width: 100%; min-height: 64px; padding: 10px 12px; font: inherit; font-size: 17px; color: #fff; resize: none;
     background: rgba(255, 255, 255, .06); border: 1px solid var(--edge-2); border-radius: 0; }
-  .capture .btn-quiet { align-self: stretch; }
   .capture .btn-quiet:disabled { opacity: .5; }
   .foot .add span { color: var(--violet-hi); }
   .foot { display: flex; justify-content: space-around; margin: 6px -10px 0; }

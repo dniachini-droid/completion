@@ -369,14 +369,15 @@ await openers('last');
 if (await has('I can’t start')) { await tap('I can’t start'); await shot('cant-start', 2000); await tap('Not now'); await page.clock.runFor(1500); }
 /* slice 4's own screens, from Today's foot */
 /* one-tap capture (D-107): "+ Add" opens a box already typing; Return puts the line in the satchel, and Today stays */
-{ const rows0 = await page.locator('.rows button.row').allInnerTexts();
+{ await page.clock.runFor(1500); await page.waitForTimeout(300);   /* the screen settled: no fading one still on it */
+  const rows0 = await page.locator('.rows button.row').allInnerTexts();
   await tap('Add to the satchel'); await page.clock.runFor(300);
   if (!(await page.evaluate(() => document.activeElement?.tagName === 'TEXTAREA'))) errors.push('CAPTURE the box was not already typing');
   await page.keyboard.type('Call the bank'); await shot('today-capture', 300);
   await page.keyboard.press('Enter'); await page.clock.runFor(500);
-  if (!(await page.getByText('In the satchel.').count())) errors.push('CAPTURE did not say it was put in');
+  if (!(await page.locator('nav.foot').getByText('In the satchel').count())) errors.push('CAPTURE did not say it was put in');
   if (!(await page.locator('nav.foot').count())) errors.push('CAPTURE left Today');
-  if (JSON.stringify(await page.locator('.rows button.row').allInnerTexts()) !== JSON.stringify(rows0)) errors.push('CAPTURE changed Today’s list'); }
+  if (JSON.stringify(await page.locator('.rows button.row').allInnerTexts()) !== JSON.stringify(rows0)) errors.push(`CAPTURE changed Today’s list: ${JSON.stringify(rows0)} → ${JSON.stringify(await page.locator('.rows button.row').allInnerTexts())}`); }
 await tap('Satchel'); await shot('satchel', 1500);
 if (!(await page.locator('.item .t', { hasText: 'Call the bank' }).count())) errors.push('CAPTURE the line is not in the satchel');
 await tap('Add a line');
