@@ -70,6 +70,7 @@ export async function away(R, ms) { await hide(R, true); await ff(R, ms); await 
 /** A finger's tap where the thing is drawn. Returns false (and records it) if it isn't there. */
 export async function tap(R, loc, what, settle = 1200) {
   const l = typeof loc === 'string' ? btn(R, loc) : loc;
+  await l.first().scrollIntoViewIfNeeded({ timeout: 1500 }).catch(() => {});
   const r = await l.first().boundingBox().catch(() => null);
   if (!r) { R.fails.push(`[${R.label}] no ${what ?? loc} to tap (screen: ${await screen(R)})`); return false; }
   await R.page.touchscreen.tap(r.x + r.width / 2, r.y + r.height / 2);
@@ -79,6 +80,7 @@ export async function tap(R, loc, what, settle = 1200) {
 /** Taps `n` times at the same point, `gap` ms of the app's clock apart. */
 export async function multiTap(R, loc, n, gap, what) {
   const l = typeof loc === 'string' ? btn(R, loc) : loc;
+  await l.first().scrollIntoViewIfNeeded({ timeout: 1500 }).catch(() => {});
   const r = await l.first().boundingBox().catch(() => null);
   if (!r) { R.fails.push(`[${R.label}] no ${what ?? loc} to multi-tap`); return false; }
   /* real time between and after the taps: the fake clock also flows in real time, so the app sees the taps as far apart
@@ -131,7 +133,8 @@ export async function audit(R, name) {
   R.label = name;
   const { page } = R;
   /* let one-shot animations settle (looping ones don't count) */
-  for (let k = 0; k < 16 && await page.evaluate(() => document.getAnimations().some(a => a.playState === 'running' && a.effect?.getComputedTiming().iterations !== Infinity)); k++) { await page.clock.runFor(200); await page.waitForTimeout(40); }
+  /* CSS animations run on real time, not the fake clock: wait in real time (as heart-walk's fits() does) */
+  for (let k = 0; k < 24 && await page.evaluate(() => document.getAnimations().some(a => a.playState === 'running' && a.effect?.getComputedTiming().iterations !== Infinity)); k++) { await page.clock.runFor(100); await page.waitForTimeout(150); }
   const out = await page.evaluate(() => {
     const W = innerWidth, H = innerHeight, bad = [];
     const cls = e => { const c = e.className?.baseVal ?? e.className; return e.tagName.toLowerCase() + (c ? '.' + String(c).trim().split(/\s+/).slice(0, 2).join('.') : ''); };
@@ -145,12 +148,12 @@ export async function audit(R, name) {
     for (const e of document.querySelectorAll('.phone *')) {
       if (e.closest('svg') && e.tagName.toLowerCase() !== 'svg') continue;
       const s = getComputedStyle(e);
-      if (e.scrollLeft > 0) bad.push(`${path(e)} scrolled sideways by ${e.scrollLeft}px`);
+      if (e.scrollLeft > 0 && !/^(INPUT|TEXTAREA)$/.test(e.tagName)) bad.push(`${path(e)} scrolled sideways by ${e.scrollLeft}px`);
       if (e.dataset?.pan === 'map' || e.closest('[data-pan="map"]')) continue;
       if ((s.overflowX === 'auto' || s.overflowX === 'scroll') && e.scrollWidth > e.clientWidth + 1) bad.push(`${path(e)} can scroll sideways (${e.scrollWidth} > ${e.clientWidth})`);
     }
     /* words: every line of text as drawn (Range rects), on the screen sideways and not clipped by a box around it */
-    const clipBox = el => { for (let p = el.parentElement; p && p !== document.body; p = p.parentElement) { const ps = getComputedStyle(p); if (ps.overflowX !== 'visible' || ps.overflowY !== 'visible') return p; } return null; };
+    const clipBox = el => { for (let p = el; p && p !== document.body; p = p.parentElement) { const ps = getComputedStyle(p); if (ps.overflowX !== 'visible' || ps.overflowY !== 'visible') return p; } return null; };
     const walker = document.createTreeWalker(document.querySelector('.phone') ?? document.body, NodeFilter.SHOW_TEXT);
     const seen = new Set();
     for (let n = walker.nextNode(); n; n = walker.nextNode()) {
@@ -161,7 +164,11 @@ export async function audit(R, name) {
       const rects = [...rg.getClientRects()].filter(r => r.width > 1 && r.height > 1);
       if (!rects.length) continue;
       const box = clipBox(el), br = box?.getBoundingClientRect();
-      const inSwipe = box?.classList.contains('swipe');
+      /* a row slid aside (Not today / Delete showing) is clipped by design; a row at rest is not */
+      const slid = el.closest('.swipe button.row')?.style.transform;
+      const inSwipe = box?.classList.contains('swipe') && !!slid && !/translateX\(0px\)/.test(slid);
+      const ellipsisOwn = box === el && getComputedStyle(el).textOverflow === 'ellipsis';
+      if (ellipsisOwn) { if (el.scrollWidth > el.clientWidth + 1 && !seen.has('ell' + path(el))) { seen.add('ell' + path(el)); bad.push(`${path(el)} truncated with an ellipsis (by design?)`); } continue; }
       for (const r of rects) {
         const key = path(el);
         if ((r.right > W + 1 || r.left < -1) && !inSwipe && !seen.has('side' + key)) { seen.add('side' + key); bad.push(`${key} text runs off the side (${Math.round(r.left)}..${Math.round(r.right)} of ${W})`); }
@@ -173,6 +180,17 @@ export async function audit(R, name) {
         }
       }
       if (getComputedStyle(el).textOverflow === 'ellipsis' && el.scrollWidth > el.clientWidth + 1 && !seen.has('ell' + path(el))) { seen.add('ell' + path(el)); bad.push(`${path(el)} truncated with an ellipsis`); }
+    }
+    /* controls that can't be reached: drawn above or below the screen, with no box that scrolls to bring them in */
+    /* a control's words, only when they are the app's own chrome (never story words) */
+    const CH = /^(\+ Add|Satchel|Week|Daybook|Delve|I can’t start|Not today|Something else…|Map|Records|Begin|Pause|Finish here|Done|Not yet|Back to today|Back to the delve|Carry on|Delete|Undo|List|Put on a day|Put in|Go to sleep|Keep going|Plan my week|Settings|Today|It’s done|Put it back|Delve on it|Add|Another day…|Not this week|Change the job)$/;
+    const chrome = el => { const x = (el.getAttribute('aria-label') || el.innerText || '').trim().replace(/\s+/g, ' '); return CH.test(x) ? `"${x}"` : `(${el.tagName.toLowerCase()})`; };
+    const scroller = el => { for (let p = el.parentElement; p; p = p.parentElement) { const o = getComputedStyle(p).overflowY; if ((o === 'auto' || o === 'scroll') && p.scrollHeight > p.clientHeight + 1) return p; } return null; };
+    for (const e of document.querySelectorAll('.phone button, .phone input, .phone textarea, .phone label.bed')) {
+      if (e.closest('.sr') || e.classList.contains('sr') || !shown(e) || e.disabled) continue;
+      if (e.closest('[data-pan="map"]')) continue;
+      const r = e.getBoundingClientRect(); if (r.width < 2 || r.height < 2) continue;
+      if ((r.top >= H - 2 || r.bottom > H + 8 || r.bottom <= 0) && !scroller(e)) bad.push(`UNREACHABLE ${path(e)} ${chrome(e)} at y ${Math.round(r.top)}..${Math.round(r.bottom)} of ${H}, nothing scrolls to it`);
     }
     /* controls themselves (a button or box) off the side of the screen */
     for (const e of document.querySelectorAll('.phone button, .phone input, .phone textarea')) {

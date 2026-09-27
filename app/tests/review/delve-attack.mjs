@@ -167,8 +167,11 @@ await S(6, 'reloads', '2026-09-30T09:00:00+01:00', async R => {
   const b = await left();
   R.notes.push(`#6 time left before reload ${a}, after ${b}`);
   await L.tap(R, 'Pause'); await L.reload(R);
-  if (!(await resumeBtn(R).count())) R.fails.push(`#6 reload while paused: no way back to the delve (on ${await L.screen(R)})`);
-  await L.tap(R, resumeBtn(R), 'resume');
+  /* a paused delve opens on Today (App.first()), whose Carry on / Back to the delve leads back to it */
+  const way = (await resumeBtn(R).count()) ? resumeBtn(R) : L.btn(R, 'Carry on').or(L.btn(R, 'Back to the delve'));
+  if (!(await way.count())) R.fails.push(`#6 reload while paused: no way back to the delve (on ${await L.screen(R)})`);
+  await L.tap(R, way, 'resume');
+  if (await resumeBtn(R).count()) await L.tap(R, resumeBtn(R), 'resume on the delve');
   await L.ff(R, 2 * 60_000);
   await L.tap(R, 'Finish here'); await L.reload(R);
   if (!(await L.has(R, 'Done'))) R.fails.push(`#6 reload on "Is it done?": the question is gone (on ${await L.screen(R)})`);
@@ -224,12 +227,19 @@ await S(8, 'delete the running job via the editor', '2026-09-30T09:00:00+01:00',
   const s = await L.screen(R);
   await L.audit(R, '#8 after Delete in the editor');
   const removed = (await L.facts(R)).some(f => f.type === 'jobRemoved');
-  if (removed) R.fails.push(`#8 DATA: the running delve's job was deleted through the job editor (guard bypassed; now on ${s})`);
+  if (removed) R.fails.push(`#8 the running delve's job was deleted through the job editor (D-125's guard bypassed; now on ${s})`);
   /* and then: what does the delve do? */
   await L.toToday(R); await L.audit(R, '#8 today after');
   const onToday = await R.page.locator('.next').innerText().catch(() => '');
   R.notes.push(`#8 Today after: running-block present=${/Back to the delve/.test(onToday)}`);
-  if (await L.has(R, 'Back to the delve')) { await L.tap(R, 'Back to the delve'); await L.audit(R, '#8 the orphaned delve'); await L.ff(R, 60_000); if (await L.has(R, 'Finish here')) await L.tap(R, 'Finish here'); await L.audit(R, '#8 orphaned end'); if (await L.has(R, 'Done')) await L.tap(R, 'Done'); await L.audit(R, '#8 orphan done'); }
+  if (await L.has(R, 'Back to the delve')) {
+    await L.tap(R, 'Back to the delve'); await L.audit(R, '#8 the orphaned delve');
+    const title = await R.page.locator('.dv h2').first().innerText().catch(() => '');
+    if (/^it-\d+$/.test(title.trim())) R.fails.push(`#8 the orphaned delve's title is the job's internal id "${title.trim()}"`);
+    await L.ff(R, 60_000); if (await L.has(R, 'Finish here')) await L.tap(R, 'Finish here'); await L.audit(R, '#8 orphaned end');
+    if (await L.has(R, 'Done')) { await L.tap(R, 'Done'); await L.audit(R, '#8 orphan done');
+      if (!(await L.facts(R)).some(f => f.type === 'jobDone')) R.fails.push('#8 "Done" on the orphaned delve says it is done but records nothing'); }
+  }
   await L.toToday(R);
   await L.reload(R); await L.toToday(R); await L.audit(R, '#8 after reload');
 });
