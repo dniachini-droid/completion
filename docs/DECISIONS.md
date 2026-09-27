@@ -1348,3 +1348,23 @@
 - **Decision:** The choice and its hints are removed from Today. The rules keep `capacity` (old saves, tests), but nothing in the app sets it now, so every day is as planned.
 - **Consequences:** Dan sets his days in the Week. Pushing deeper is now simply doing more (Dan): past a normal day's jobs, the deep push's next story moment plays by itself, once a day (a Key earned on that job comes first; the moment comes with the next). Going on after a normal day's work counts as a push for reaching places, too. Nothing else read the setting except a High day's one extra suggested job, which goes with it.
 - **Reversible:** Yes.
+
+## D-128 — The break-it review's bugs fixed (Claude's routine calls, D-006); waiting for Dan's go to ship
+- **Date:** 2026-09-27, night
+- **Context:** A hostile review (`docs/reviews/BREAK-IT.md`) ran about 216,000 random actions through the rules, which held, and attacked every screen. It found real bugs in the screens and a few in the rules.
+- **Decision:** Fixed, each with a test; the review's own scripts come in under `app/tests/review/`, and its fixed findings are now ordinary tests:
+  1. The Daybook's week list is keyed by job, not name: two same-named jobs crashed it on every opening.
+  2. A quick second tap after Delete, Undo, Not today, Put in or Put on a day is not a second decision.
+  3. The job of a delve running, or of a delve's end not yet answered, can't be deleted, from any screen or in the rules. "Let it go" (What repeats, the look-ahead, the welcome back) is a guarded Delete with Undo.
+  4. Back to Today goes the way "Today" does, so a delve that ended while Dan typed elsewhere is shown.
+  5. The Satchel's jobs can't be started while another delve runs, as on Today.
+  6. Editing a list during its delve keeps the lines struck.
+  7. Long unbroken words wrap.
+  8. Save with an empty name is greyed.
+  9. A full list says so.
+  10. The phone's clock set back by hand never writes a fact earlier than the log's last one (the day stays the one the phone says).
+  11. A plan entry can't be moved across weeks by the rules.
+  12. A slow rules test gets a longer time limit.
+- **Not decided here (Dan's):** the story still paced by Keys at 5 a calendar week (the review's finding 2): options in `docs/reviews/OVERVIEW.md`.
+- **Consequences:** a fresh adversarial review of the fixes found a day-assignment slip in the clock fix and an old-save case in the cross-week guard, both fixed with tests. Merging and the TestFlight send wait for Dan's go.
+- **Reversible:** Yes.

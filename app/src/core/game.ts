@@ -257,7 +257,9 @@ function writer(facts: Fact[], now: Moment) {
   const last = facts.length ? facts[facts.length - 1].at : null;
   const nowAt = last && epochOf(now) < epochOf(last) ? last : now;
   const put = (body: FactBody, at0?: Moment, day0?: string): Fact => {
-    const at = at0 === undefined || at0 === now ? nowAt : at0, day = day0 ?? gameDay(at);
+    /* only the timestamp is held back: the fact stays on the day the phone says it is, as everything else reads it
+       (review of the break-it fixes) */
+    const at = at0 === undefined || at0 === now ? nowAt : at0, day = day0 ?? gameDay(at0 ?? now);
     const f = { seq: ++seq, at, day, ...body } as Fact;
     all.push(f); out.push(f); return f;
   };
@@ -875,7 +877,10 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       if (cmd.day) {
         const made = ofType(w.all, 'planMade').find(f => f.entries.some(x => x.id === cmd.entry));
         const added = ofType(w.all, 'planAdded').find(f => f.entry.id === cmd.entry);
-        const wk = made ? made.week : added ? calendarWeek(added.entry.day) : null;
+        /* the week the entry is in now: where it was last moved to (an old save may hold a move across weeks), else
+           where it was made */
+        const moved = ofType(w.all, 'planChanged').filter(f => f.entry === cmd.entry && f.day).pop();
+        const wk = moved?.day ? calendarWeek(moved.day) : made ? made.week : added ? calendarWeek(added.entry.day) : null;
         if (wk && calendarWeek(cmd.day) !== wk) break;
       }
       w.put({ type: 'planChanged', entry: cmd.entry, day: cmd.day, ...(cmd.time !== undefined ? { time: cmd.time } : {}) });
