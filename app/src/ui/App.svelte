@@ -29,6 +29,7 @@
   import Settings from './Settings.svelte';
   import { t } from '../content/copy/en';
   import { steady } from './taps';
+  import { unslide } from './keyboard';
 
   function first(): Screen {
     const v = game.view;
@@ -55,7 +56,7 @@
   /* Records ⇄ Marks is a tab: the screen swaps in place, with nothing rising or fading in again (Dan, D-093) */
   let still = $state(false);
   const go: Go = (to, a) => {
-    steady(); void tick().then(() => steady());
+    steady(); void tick().then(() => { steady(); unslide(); });
     /* leaving a delve's end by any way out (the arrow, the phone's back): looked at, so it never comes back later (D-120) */
     const e = game.view.runEnd;
     if (screen === 'delve' && e && !game.view.run && to !== 'delve') game.do({ do: 'seen', what: 'step', ref: e.seq });
@@ -109,7 +110,7 @@
   });
   const phaseKey = $derived.by(() => { const v = game.view; return `${v.run?.phase}.${v.run?.k}.${v.runEnd?.seq}.${v.next?.mode}.${v.next?.job}`; });
   let lastMoment = '';
-  $effect(() => { if (phaseKey !== lastMoment) { if (lastMoment) steady(); lastMoment = phaseKey; } });
+  $effect(() => { if (phaseKey !== lastMoment) { if (lastMoment) { steady(); unslide(); } lastMoment = phaseKey; } });
 
   /* the day's light: gold once the day has turned (DESIGN_SYSTEM → colour) */
   $effect(() => {

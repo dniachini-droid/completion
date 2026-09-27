@@ -13,6 +13,7 @@
   import type { Go } from './nav';
   import Return from './Return.svelte';
   import { steady } from './taps';
+  import { unslide } from './keyboard';
   import './scene/tunnel.css';
 
   let { go }: { go: Go } = $props();
@@ -52,7 +53,7 @@
     if (end) game.do({ do: 'seen', what: 'step', ref: end.seq });
     go(to);
   }
-  function yes() { if (end) { steady(); game.do({ do: 'done', job: end.job.id, keepEnd: true }); answer = 'yes'; } }
+  function yes() { if (end) { steady(); game.do({ do: 'done', job: end.job.id, keepEnd: true }); answer = 'yes'; unslide(); } }
   /* the job's return, if this run finished it (enough, or "Is it done?" answered) */
   const doneSeq = $derived.by(() => {
     if (!end) return null;
@@ -124,7 +125,7 @@
           <p class="say">{end.job.name}</p>
           <div class="btn-row pair">
             <button class="btn resting" onclick={yes}>{t('delve.yes')}</button>
-            <button class="btn-quiet" onclick={() => { steady(); answer = 'no'; }}><span>{t('delve.notYet')}</span></button>
+            <button class="btn-quiet" onclick={() => { steady(); answer = 'no'; unslide(); }}><span>{t('delve.notYet')}</span></button>
           </div>
         {:else if answer === 'no'}
           <div class="label-line centred">{t('delve.label')}</div>

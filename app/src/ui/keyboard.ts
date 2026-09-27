@@ -28,19 +28,11 @@ function fit() {
   home();
 }
 
-/* Nor does anything on a screen slide sideways (Dan, review 2): a box that clips its sides can still be scrolled by the
-   browser itself, to bring a caret or a button that overhangs the edge into view, and the whole screen then sat shifted
-   with its words cut off (seen on a delve's end, D-120). Any such sideways scroll of a clipped box is put back; the map,
-   which is dragged around on purpose, and text boxes are left alone. */
-let slid = new Set<HTMLElement>(), queued = false;
-function unslide(e: Event) {
-  const el = e.target;
-  /* only the screen's own boxes that clip their sides: never a text box (its line scrolls as Dan types), never the map */
-  if (!(el instanceof HTMLElement) || !el.scrollLeft || el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) return;
-  if (getComputedStyle(el).overflowX !== 'hidden') return;
-  slid.add(el);
-  /* put back once, on the next frame, not from inside the scroll itself */
-  if (!queued) { queued = true; requestAnimationFrame(() => { queued = false; for (const x of slid) x.scrollLeft = 0; slid = new Set(); }); }
+/* Nor does a screen sit scrolled sideways (Dan, review 2): a box that clips its sides can still be scrolled by the
+   browser to bring something into view, and the whole screen then sat shifted with its words cut off (seen on a delve's
+   end, D-120). Put straight whenever the screen changes, not by watching every scroll (Linux's WebKit crashed on that). */
+export function unslide() {
+  requestAnimationFrame(() => { for (const el of document.querySelectorAll<HTMLElement>('.ui, .ui .scroll, .ui .body')) if (el.scrollLeft) el.scrollLeft = 0; });
 }
 
 export function watchKeyboard() {
@@ -48,6 +40,5 @@ export function watchKeyboard() {
   /* the keyboard going: once it has finished closing, the page is put back again (the slide can come late) */
   document.addEventListener('focusout', () => { setTimeout(fit, 50); setTimeout(fit, 350); });
   document.addEventListener('focusin', () => { setTimeout(fit, 350); });
-  document.addEventListener('scroll', unslide, true);
   fit();
 }
