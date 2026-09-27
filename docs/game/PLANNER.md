@@ -23,12 +23,11 @@ Every rhythm is **Dan's own input**. He can add, change or delete any of them at
 
 **No ranges.** One number is enough. A third Spanish session is simply more.
 
-**When a session counts: each job's own enough (D-047).** There are no categories to manage; the app reads it from how the job is set up:
+**When a session counts (D-121, replacing D-047's "each job's own enough"; every job is a delve, D-117):**
 | How the job runs | Example | It counts when… |
 |---|---|---|
-| **As delves, repeating** (focus) | Course, Spanish study | its *enough at* is reached, in delve minutes across the day. By default that's its whole length; Dan can set it shorter once, as for the Course (1 hour of 3) |
-| **As delves, one-off** (completion) | the cat's medication | Dan says it's done ("Is it done?", D-036); finishing early counts in full (D-037 5a) |
-| **No timer** (activity or completion) | Gym, Tank clean, Meal prep | Dan marks it done. Its length is only for planning and steps: a tank clean isn't done because an hour passed |
+| **Repeating** | Gym, Course, Spanish, Tank clean | a delve on it ends (Finish here, or it runs out) with at least one whole minute: that is the day's session, credited with the minutes run. Its *enough at* only sets the delve's usual length and the plan's room (Course: 1 hour of 3). A session under 5 minutes meets the rhythm but doesn't count towards its Key (rule 10) |
+| **One-off** | the cat's medication | Dan says it's done ("Is it done?" at the delve's end, or "It's done" on Today, D-036, D-120); a job said done with no minute delved earns nothing (D-117) |
 
 Everything past enough is **more**: it moves Dan in full, uncapped (D-044), and is never shown as owed.
 

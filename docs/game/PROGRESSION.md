@@ -30,6 +30,6 @@ Dan said "whatever you think is best" on numbers (2026-09-23). This is reversibl
 ## Pacing
 - The first *word* comes in **week 2–3** (D-013), because new powers are what Dan loves most and the first playable is a short test. After that, signs come at roughly **1–2 a week**, and new words slow to about one a month (`CORE_LOOPS.md` → long-term loop).
 - Powers are authored, not generated: each word has a defined effect and a place in the world truth (Phase 3).
-- **Time moves you (D-037):** one step per 25 minutes of effort; named places about a working day apart (8 steps, D-049); a long delve (4+ in a sitting) reaches a side chamber. The story keeps its own clock: at most one story week per calendar week (`BALANCING.md` §2).
+- **Time moves you (D-037):** one step per 25 minutes of effort; named places about a working day apart (8 steps, D-049); halfway between two places, a side chamber (D-122). The story keeps its own clock: at most one story week per calendar week (`BALANCING.md` §2).
 - High days speed up the Site and records. Whole signs and words are paced by Keys, so a single huge day can't skip the story ahead of its foreshadowing.
 - **Partial signs (D-013).** Deep pushes on High days can turn up **part of a sign** (e.g. half of one). A partial sign already lets Dan read a little more of the records he found. The sign is completed by the next Key, so it can arrive a little sooner, but never ahead of the story's authored order. A big day always pays off in something usable.

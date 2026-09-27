@@ -3,7 +3,7 @@
      Stops 5 · 10 · 15 · 25 · 30 · 45 · 60 on a 60-minute face, and one long 90 under it (D-110); under it one route line where time is distance.
      Mock-up: design/directions/d-combined/delve-set.html (its CSS is ./scene/runset.css, scoped under .rs). */
   import { game, content } from './game.svelte';
-  import { DIAL, delveMinutesOn, enoughOf, presetRun } from '../core/game';
+  import { DIAL, presetRun } from '../core/game';
   import { t, delves, inSentence } from '../content/copy/en';
   import { platform } from '../platform';
   import Scene from './Scene.svelte';
@@ -29,9 +29,6 @@
   let dial: HTMLDivElement, routebox: HTMLDivElement;
   let W = $state(340);
 
-  /* what's left of the job's enough today (a gold mark on the line; past it is more, never owed) */
-  const enoughLeft = $derived(v.done.has(jobId) || job.doneBy !== 'enough' ? null
-    : Math.max(0, enoughOf(job) - delveMinutesOn(game.facts, v.day, jobId)) || null);
   const place = $derived(v.toNext !== null ? { name: t('set.nextPlace') } : null);
   const toPlace = $derived(v.toNext);
   const there = $derived(toPlace !== null && n * snap >= toPlace);
@@ -41,12 +38,8 @@
     let m = d.getHours() * 60 + d.getMinutes(); m = Math.round(m / 5) * 5 % 1440;
     return `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
   }
-  const when = $derived.by(() => {
-    const end = clockWords(n * snap + (n - 1) * BREATH);
-    if (!enoughLeft) return t('set.ends', { end });
-    const kE = Math.ceil(enoughLeft / snap), at = clockWords(enoughLeft + (kE - 1) * BREATH);
-    return n < kE ? t('set.ends', { end }) : n === kE ? t('set.enoughAt', { at }) : t('set.enoughAndEnds', { at, end });
-  });
+  /* a repeating job counts for the minutes it runs, whatever their length (D-121): no "enough" mark on the line */
+  const when = $derived(t('set.ends', { end: clockWords(n * snap + (n - 1) * BREATH) }));
 
   /* ---- the dial ---- */
   const clamp = (x: number, a: number, b: number) => Math.min(b, Math.max(a, x));
@@ -128,13 +121,14 @@
   const xg = $derived(toPlace !== null && toPlace <= span ? px(toPlace) : null);
   const lit = $derived(xg === null ? 0 : clamp((xe - xg + 6) / 8, 0, 1));
   const gAnchor = $derived(xg === null ? 'middle' : xg + 58 > W ? 'end' : xg - 58 < 0 ? 'start' : 'middle');
-  const xn = $derived(enoughLeft ? px(enoughLeft) : null);
+  /* the side chamber sits at its own place on the road, halfway to the next place (D-122): it lights once the run reaches it */
   const side = $derived.by(() => {
-    if (n < 4) return null;
-    let xb = xe - Math.min(18, (px(snap) - px(0)) * .45);
+    const m = v.toChamber;
+    if (m === null || m > span) return null;
+    let xb = px(Math.max(1, m));
     if (xg !== null && Math.abs(xb - xg) < 12) xb = xg - 12;
     const left = xb + 20 + 9 + 98 > W, dir = left ? -1 : 1;
-    return { xb, dir, left, cx: xb + dir * 20, cy: y - 19 };
+    return { xb, dir, left, cx: xb + dir * 20, cy: y - 19, lit: n * snap >= m };
   });
 
   function start() {
@@ -208,17 +202,11 @@
               </g>
               <text x={gAnchor === 'end' ? W : gAnchor === 'start' ? 0 : xg} y={y + 25} text-anchor={gAnchor} fill={lit > .5 ? '#eceaff' : '#a3a6cc'}>{inSentence(place.name)}</text>
             {/if}
-            {#if xn !== null}
-              <g opacity={n * snap >= (enoughLeft ?? 0) ? 1 : .55}>
-                <path d="M{xn.toFixed(1)} {y - 6}V{y + 6}" stroke="#f2c170" stroke-width="1.6" stroke-linecap="round" />
-                {#if xg === null || Math.abs(xn - xg) > 60}<text x={xn} y={y + 25} text-anchor="middle" fill={n * snap >= (enoughLeft ?? 0) ? '#e8cf9f' : '#a3a6cc'}>{t('set.enough')}</text>{/if}
-              </g>
-            {/if}
             <circle cx={x0} cy={y} r="3.4" fill="#ffd27a" style="filter:drop-shadow(0 0 5px #f2c170)" />
             <!-- "here" steps aside when the next place is right beside it, so the two words never print over each other (review 2) -->
             {#if xg === null || !place || xg - x0 > 90}<text x={x0 - 5} y={y + 25} fill="#a3a6cc">{t('set.here')}</text>{/if}
             {#if side}
-              <g opacity=".85">
+              <g opacity={side.lit ? .95 : .5} style={side.lit ? 'filter:drop-shadow(0 0 4px rgba(143,134,255,.9))' : ''}>
                 <path d="M{side.xb.toFixed(1)} {y} C{(side.xb + side.dir * 3).toFixed(1)} {y - 9} {(side.xb + side.dir * 9).toFixed(1)} {y - 15} {(side.cx - side.dir * 5).toFixed(1)} {side.cy + 2}" fill="none" stroke="#c9c5ff" stroke-width="1" stroke-dasharray="2 2.5" />
                 <g transform="translate({side.cx.toFixed(1)} {side.cy}) scale(.62)"><path d="{ARCH} Z" fill="#0b0b1c" /><path d={ARCH} fill="none" stroke="#d9d6ff" stroke-width="1.8" stroke-linecap="round" /></g>
                 <text x={side.cx + side.dir * 9} y={side.cy + 4} text-anchor={side.left ? 'end' : 'start'} fill="#c7c9e6">{t('set.side')}</text>

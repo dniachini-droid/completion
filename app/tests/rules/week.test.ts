@@ -3,7 +3,7 @@
  * Ids only: no story text is asserted here.
  */
 import { describe, expect, it } from 'vitest';
-import { act, chamberAt, presetRun, returnOf, see, settle, type Command } from '../../src/core/game';
+import { act, presetRun, returnOf, see, settle, type Command } from '../../src/core/game';
 import * as W from '../../src/core/week';
 import * as S from '../../src/core/story';
 import { calendarWeek, weekdayOf } from '../../src/core/time';
@@ -598,12 +598,6 @@ describe('Stage 2 fixes and lengths (D-110)', () => {
     expect(W.items(p.facts, MON).map(i => [i.id, i.done])).toEqual([[a.id, true], [b.id, false]]);
     expect(W.items(p.facts, W.addDays(MON, 1)).map(i => i.id)).toEqual([b.id]);
   });
-  it('a side chamber needs four delves and 100 minutes: short delves can’t reach it cheaper (rule 10)', () => {
-    expect([1, 2, 3, 4, 5].map(n => chamberAt(n, 25))).toEqual([false, false, false, true, false]);
-    expect([3, 4].map(n => chamberAt(n, 90))).toEqual([false, true]);
-    expect([4, 6, 7, 8].map(n => chamberAt(n, 15))).toEqual([false, false, true, false]);
-    for (let n = 1; n <= 8; n++) { expect(chamberAt(n, 5)).toBe(false); expect(chamberAt(n, 10)).toBe(false); }
-  });
   it('a 5-minute delve earns 5 minutes, and a short job starts on the stop that holds it', () => {
     const p = player().do({ do: 'open' }).do({ do: 'startRun', job: 'spanish', minutes: 5, count: 1 }).wait(6);
     expect(p.facts.filter(f => f.type === 'stepsGained').map(f => (f as { minutes: number }).minutes)).toEqual([5]);
@@ -848,5 +842,96 @@ describe('Everything is a delve (Dan, D-117)', () => {
     const id = W.items(p.facts, MON)[0].id;
     p.next(5).do({ do: 'open' }).do({ do: 'startRun', job: id, minutes: 25, count: 1 }).wait(26);
     expect(W.sweepOf(p.facts, W.addDays(MON, 8)).some(i => i.id === id)).toBe(false);
+  });
+});
+
+describe('any job counts for the minutes it was run for (Dan, D-121)', () => {
+  const keys = (facts: Fact[], rhythm: string) => facts.filter(f => f.type === 'keyEarned' && f.rhythm === rhythm).length;
+  it('a 10-minute gym session is that day’s session, credited with its 10 minutes', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'startRun', job: 'gym', minutes: 30, count: 2 }).wait(10).do({ do: 'finishHere' });
+    expect(p.view().done.has('gym')).toBe(true);
+    expect(p.facts.filter(f => f.type === 'jobDone')).toEqual([expect.objectContaining({ job: 'gym', minutes: 10 })]);
+    expect(p.view().runEnd).toMatchObject({ enough: true, minutes: 10, ask: false });
+    expect(S.sessionsIn(p.facts, C.rhythms.find(r => r.job === 'gym')!, MON)).toBe(1);
+    expect(p.view().walked).toBe(10);
+  });
+  it('a run that runs out short of the job’s usual length counts too, at the run’s end, never mid-run', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'startRun', job: 'spanish', minutes: 10, count: 2 }).wait(12);
+    expect(p.view().run?.phase).toBe('breather');
+    expect(p.view().done.has('spanish')).toBe(false);   /* not done between delves: the run is the session */
+    p.wait(20);
+    expect(p.facts.filter(f => f.type === 'jobDone')).toEqual([expect.objectContaining({ job: 'spanish', minutes: 20 })]);
+    expect(p.view().runEnd).toMatchObject({ enough: true, how: 'ranOut' });
+  });
+  it('a second run the same day moves Dan but is not a second session', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'startRun', job: 'gym', minutes: 10, count: 1 }).wait(11);
+    p.do({ do: 'startRun', job: 'gym', minutes: 25, count: 1 }).wait(26);
+    expect(p.facts.filter(f => f.type === 'jobDone')).toHaveLength(1);
+    expect(p.view().walked).toBe(35);
+  });
+  it('a zero-minute Finish here earns nothing and completes nothing (rule 10)', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'startRun', job: 'gym', minutes: 30, count: 1 }).wait(0.5).do({ do: 'finishHere' });
+    expect(p.view().done.has('gym')).toBe(false);
+    expect(p.facts.some(f => f.type === 'jobDone' || f.type === 'stepsGained')).toBe(false);
+  });
+  it('a one-off still asks “Is it done?” after a short delve', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'startRun', job: 'cat', minutes: 10, count: 1 }).wait(11);
+    expect(p.view().runEnd).toMatchObject({ ask: true, minutes: 10 });
+    expect(p.view().done.has('cat')).toBe(false);
+  });
+  it('tiny sessions meet the rhythm, but only sessions of 5 minutes or more buy its Key (rule 10)', () => {
+    const r = C.rhythms.find(x => x.job === 'spanish')!;
+    const tiny = player().do({ do: 'open' });
+    for (let d = 0; d < 2; d++) tiny.next(d ? 1 : 0).do({ do: 'open' }).do({ do: 'startRun', job: 'spanish', minutes: 5, count: 1 }).wait(3).do({ do: 'finishHere' });
+    expect(S.sessionsIn(tiny.facts, r, tiny.view().day)).toBe(S.needOf(r));
+    expect(keys(tiny.facts, r.id)).toBe(0);
+    /* the rhythm is met: its remaining planned sessions leave the week (the planner and Today treat it as done) */
+    const week = W.weekOf(tiny.view().content, tiny.facts, MON, tiny.view().day);
+    expect(week.days.filter(d => d.day > tiny.view().day).flatMap(d => d.jobs).some(j => j.job === 'spanish' && !j.done)).toBe(false);
+    const real = player().do({ do: 'open' });
+    for (let d = 0; d < 2; d++) real.next(d ? 1 : 0).do({ do: 'open' }).do({ do: 'startRun', job: 'spanish', minutes: 5, count: 1 }).wait(6);
+    expect(keys(real.facts, r.id)).toBe(1);
+  });
+});
+
+describe('the side chamber is halfway to the next place, whatever the delves (Dan, D-122)', () => {
+  const chamberFinds = (facts: Fact[]) => facts.filter(f => f.type === 'findGiven' && f.why === 'chamber');
+  const walkedAt = (facts: Fact[], seq: number) => facts.filter(f => f.type === 'stepsGained' && f.seq < seq).reduce((a, f) => a + (f as { minutes: number }).minutes, 0);
+  it('the first is at 38 minutes (halfway to the first place, 75), on the delve that passes it', () => {
+    const p = player().do({ do: 'open' });
+    expect(p.view().toChamber).toBe(38);
+    p.do({ do: 'startRun', job: 'course', minutes: 10, count: 1 }).wait(11);
+    expect(p.view().toChamber).toBe(28);
+    p.do({ do: 'startRun', job: 'course', minutes: 25, count: 1 }).wait(26);
+    expect(chamberFinds(p.facts)).toHaveLength(0);
+    p.do({ do: 'startRun', job: 'course', minutes: 5, count: 1 }).wait(6);
+    expect(chamberFinds(p.facts)).toHaveLength(1);
+    expect(p.view().runFinds).toEqual([(chamberFinds(p.facts)[0] as { id: string }).id]);   /* shown at the delve's end, as before */
+    expect(p.view().toChamber).toBeNull();
+  });
+  it('the same point for any lengths and jobs: one long delve, or many short ones on different jobs', () => {
+    const long = player().do({ do: 'open' }).do({ do: 'startRun', job: 'course', minutes: 60, count: 1 }).wait(61);
+    expect(chamberFinds(long.facts)).toHaveLength(1);
+    const short = player().do({ do: 'open' });
+    for (const job of ['course', 'gym', 'spanish', 'cat', 'course', 'gym', 'spanish', 'cat']) short.do({ do: 'startRun', job, minutes: 5, count: 1 }).wait(6);
+    const f = chamberFinds(short.facts);
+    expect(f).toHaveLength(1);
+    expect(walkedAt(short.facts, f[0].seq)).toBe(40);   /* the first 5-minute step past 38 */
+  });
+  it('once between two places, however far Dan walks; the next is halfway along the next stretch (150)', () => {
+    const p = player().do({ do: 'open' });
+    p.do({ do: 'startRun', job: 'course', minutes: 30, count: 2 }).wait(66);
+    expect(p.view().walked).toBe(60);
+    expect(chamberFinds(p.facts)).toHaveLength(1);
+    p.do({ do: 'startRun', job: 'gym', minutes: 25, count: 1 }).wait(26);
+    expect(chamberFinds(p.facts)).toHaveLength(1);
+    expect(p.facts.some(f => f.type === 'arrived' && f.kind === 'place')).toBe(true);   /* 85: the first place (75) reached */
+    expect(p.view().toChamber).toBeNull();   /* the new stretch shows once its arrival has been seen */
+    p.do({ do: 'seen', what: 'arrival', ref: p.view().arrival!.seq });
+    expect(p.view().toChamber).toBe(150 - 85);
+    p.do({ do: 'startRun', job: 'spanish', minutes: 60, count: 1 }).wait(61);
+    expect(chamberFinds(p.facts)).toHaveLength(1);   /* 145 */
+    p.do({ do: 'startRun', job: 'cat', minutes: 10, count: 1 }).wait(11);
+    expect(chamberFinds(p.facts)).toHaveLength(2);   /* 155: past 150 */
   });
 });

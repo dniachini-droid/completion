@@ -125,14 +125,14 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     expect(p.view().done.has(id)).toBe(true);
     expect(p.view().runEnd).toMatchObject({ ask: false });
   });
-  it('Step away keeps the minutes; Today offers Carry on; Finish here counts every minute', () => {
+  it('Step away keeps the minutes; Today offers Carry on; Finish here counts every minute, and the session (D-121)', () => {
     const p = player().do({ do: 'open' }).do({ do: 'startRun', job: 'course', minutes: 25, count: 2 }).wait(12).do({ do: 'stepAway' }).wait(120);
     expect(p.view().next).toEqual({ job: 'course', mode: 'carry' });
     expect(p.view().run).toMatchObject({ phase: 'held', leftMs: 13 * 60_000 });
     p.do({ do: 'resume' }).wait(3).do({ do: 'finishHere' });
-    expect(p.view().runEnd).toMatchObject({ minutes: 15, how: 'finishedHere', enough: false });
+    expect(p.view().runEnd).toMatchObject({ minutes: 15, how: 'finishedHere', enough: true });
     expect(p.view().walked).toBe(15);
-    expect(p.view().done.has('course')).toBe(false);
+    expect(p.view().done.has('course')).toBe(true);
   });
   it('going into another app pauses the delve where Dan left; the time away does not count (D-094)', () => {
     const p = player().do({ do: 'open' }).do({ do: 'startRun', job: 'course', minutes: 25, count: 2 }).wait(10);

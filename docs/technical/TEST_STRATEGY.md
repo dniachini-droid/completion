@@ -21,8 +21,8 @@ Dan loses nothing, sees nothing early, and the rules do what the design docs say
 - **Steps:** one per 25 minutes, in proportion; a no-timer job earns its length; splitting a job earns nothing extra.
 - **Days:** Low 2 / Normal 3 / High up to 5; opening after 14:00 and 19:00; an appointment counts as a main job; day complete locks in.
 - **Keys:** 5 a week at most, **however many rhythms exist** (the invariant, D-047); the floor of 2 with one day complete; a rhythm met past the supply gives one find; a new rhythm counts from its next full week.
-- **Finds:** an avoided job always brings one; switching after 4 delves on one job; side chambers.
-- **Delves and runs:** held delve keeps its minutes; pieces never earn more than an unbroken delve; Finish here counts every minute; the Course's enough at 60 minutes.
+- **Finds:** an avoided job always brings one; switching after 4 delves on one job; side chambers halfway between places, whatever the delves (D-122).
+- **Delves and runs:** held delve keeps its minutes; pieces never earn more than an unbroken delve; Finish here counts every minute; any run of a whole minute on a repeating job is its day's session, and only sessions of 5 minutes or more count towards a Key (D-121).
 - **Planner:** Plan my week's fixed rules; capacity overrides the plan; **no catch-up avalanche**; off-plan counts in full; the plan never holds more than a rhythm's enough.
 - **Absence:** 3+ days → welcome back after one small job; first day back suggested Low; no passed-date question that day.
 - **Exploit regressions:** every farming route found in play gets a test that keeps it closed (§73).

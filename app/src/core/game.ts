@@ -379,7 +379,9 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string) {
      added or changed counts for Keys from its next full period (D-043 F7): the rhythms as they stood when the week began. */
   const r = rhythmOf(W.live(c.base ?? c, w.all, calendarWeek(day)), job);
   let keyed = false;
-  if (r && S.sessionsIn(w.all, r, day) === S.needOf(r)) {
+  /* any session meets the rhythm (Dan, D-121), but only sessions of the dial's shortest delve or more count towards its
+     Key: a few one-minute sessions never open the story (rule 10) */
+  if (r && timed >= S.KEY_SESSION_MIN && S.sessionsIn(w.all, r, day, S.KEY_SESSION_MIN) === S.needOf(r)) {
     if (S.keysIn(w.all, day) < S.KEYS_A_WEEK) keyed = !!landKey(w, c, r.id, at, day, done.seq);
     else if (!ofType(w.all, 'findGiven').some(f => f.why === 'surplus' && calendarWeek(f.day) === calendarWeek(day))) giveFind(w, c, 'surplus', at, day, done.seq);
   }
@@ -403,17 +405,22 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string) {
   gifts(w, c, at, day);
 }
 
-const reachesEnough = (all: Fact[], day: string, j: Job) =>
-  j.doneBy === 'enough' && !doneOn(all, day).has(j.id) && delveMinutesOn(all, day, j.id) >= enoughOf(j);
+/** A repeating job counts for the minutes it was run for (Dan, D-121): a run on it that ends with a whole minute or more
+    is that day's session, whatever its enough (which only sets the delve's usual length and the plan's room). */
+const sessionEnds = (all: Fact[], day: string, j: Job, minutes: number) =>
+  j.doneBy === 'enough' && minutes > 0 && !doneOn(all, day).has(j.id);
 
-/** Finish a run at an instant: every minute counts; a repeating delve at its enough is done. */
+/** Finish a run at an instant: every minute counts; a repeating job's run is its session. */
 function finishRun(w: W, c: Content, r: NonNullable<ReturnType<typeof activeRun>>, atMs: number, at: Moment) {
   const s = runAt(r.plan, r.marks, atMs), rday = r.fact.day, j = jobOf(c, r.fact.job);
   const part = s.phase === 'delve' || s.phase === 'held' ? Math.floor(s.doneMs / MIN) : 0;
   const counted = s.ends.length * r.plan.minutes + part;
-  if (part > 0) w.put({ type: 'stepsGained', minutes: part, job: j.id, run: r.fact.seq }, at, rday);
+  if (part > 0) {
+    w.put({ type: 'stepsGained', minutes: part, job: j.id, run: r.fact.seq }, at, rday);
+    sideChamber(w, c, at, rday);
+  }
   w.put({ type: 'delveEnded', job: j.id, minutes: counted, how: 'finishedHere', run: r.fact.seq }, at, rday);
-  if (reachesEnough(w.all, rday, j)) markDoneIn(w, c, j.id, at, rday);
+  if (sessionEnds(w.all, rday, j, counted)) markDoneIn(w, c, j.id, at, rday);
   else gifts(w, c, at, rday);
 }
 /** Said done while its own delve still runs (Done on Today, a tick in the satchel): the delve finishes there first, so
@@ -441,12 +448,24 @@ function pauseAway(w: W, from: number, to: number) {
   if (runAt(r.plan, r.marks, at).phase === 'delve') w.put({ type: 'delveHeld', why: 'away' }, momentOf(at, w.off));
 }
 
-/** Whether the n-th delve of a run is the one that reaches a side chamber: the first with at least four delves and at
-    least 100 minutes behind it (with delves of 25 minutes or more, simply the fourth) (D-110). */
-export const chamberAt = (n: number, minutes: number) => {
-  const reached = (k: number) => k >= S.CHAMBER_RUN && k * minutes >= S.CHAMBER_MIN;
-  return reached(n) && !reached(n - 1);
-};
+/** Whether the side chamber between the last place reached on foot and the next has been found (D-122): once there. */
+function chamberFound(facts: Fact[]): boolean {
+  for (let i = facts.length - 1; i >= 0; i--) {
+    const f = facts[i];
+    if (f.type === 'findGiven' && f.why === 'chamber') return true;
+    if (f.type === 'arrived' && f.kind === 'place' && f.how !== 'key') return false;
+  }
+  return false;
+}
+/** Minutes of effort from here to the side chamber, if it is still ahead on this stretch of road (D-122). */
+export function toChamber(facts: Fact[], st: S.StoryState): number | null {
+  return chamberFound(facts) ? null : Math.max(0, S.chamberAt(st) - walked(facts));
+}
+/** The side chamber is halfway to the next place, the same distance whatever the delves' lengths or jobs (Dan, D-122):
+    reached once the minutes walked pass it, found on the delve that passes it (its find is shown at the delve's end). */
+function sideChamber(w: W, c: Content, at: Moment, day: string) {
+  if (toChamber(w.all, S.storyState(w.all, c.story)) === 0) giveFind(w, c, 'chamber', at, day);
+}
 
 /** A delve left stepped-away this long ends by itself where it was paused (review finding, D-080). */
 export const HOLD_MAX = 3 * 60 * MIN;
@@ -462,13 +481,12 @@ function settleIn(w: W, c: Content, nowMs: number) {
     const at = momentOf(e.at, w.off);
     const before = ofType(onDay(w.all, day), 'stepsGained').filter(g => g.run !== undefined);
     w.put({ type: 'stepsGained', minutes: r.plan.minutes, job: j.id, run: r.fact.seq }, at, day);
-    /* a long delve reaches a side chamber; the first delve on a new job after a long stretch brings a find (§1, D-044) */
-    if (chamberAt(k + 1, r.plan.minutes)) giveFind(w, c, 'chamber', at, day);
+    /* halfway to the next place, a side chamber (D-122); the first delve on a new job after a long stretch brings a find (§1, D-044) */
+    sideChamber(w, c, at, day);
     const others = [...new Set(before.map(g => g.job))].filter(x => x !== j.id);
     if (before.length && before[before.length - 1].job !== j.id && others.some(x => delveMinutesOn(w.all, day, x) >= S.LONG_STRETCH)
       && !ofType(onDay(w.all, day), 'findGiven').some(f => f.why === 'switching')) giveFind(w, c, 'switching', at, day);
-    if (reachesEnough(w.all, day, j)) markDoneIn(w, c, j.id, at, day);
-    else gifts(w, c, at, day);
+    gifts(w, c, at, day);
   }
   /* stepped away and never back: after three hours, or once its day is over, it finishes where it was paused, on its day */
   const hold = r.marks[r.marks.length - 1];
@@ -478,7 +496,10 @@ function settleIn(w: W, c: Content, nowMs: number) {
     return;
   }
   if (s.phase === 'ended' && s.how === 'ranOut') {
-    w.put({ type: 'delveEnded', job: j.id, minutes: Math.round(s.countedMs / MIN), how: 'ranOut', run: r.fact.seq }, momentOf(s.endedAt!, w.off), day);
+    const at = momentOf(s.endedAt!, w.off), minutes = Math.round(s.countedMs / MIN);
+    w.put({ type: 'delveEnded', job: j.id, minutes, how: 'ranOut', run: r.fact.seq }, at, day);
+    /* a repeating job's run is its session, at the run's end (D-121) */
+    if (sessionEnds(w.all, day, j, minutes)) markDoneIn(w, c, j.id, at, day);
   }
 }
 
@@ -850,8 +871,6 @@ export function settle(facts: Fact[], c: Content, now: Moment): Fact[] {
 
 export interface RunView extends RunNow {
   seq: number; job: Job; minutes: number; count: number;
-  /** The delve in which the job reaches its enough (1-based), if it does within this run. */
-  enoughK: number | null;
   /** Instants, for the screen's clock words. */
   startedAt: number;
   /** Held because Dan went into another app, not by Pause (D-094). */
@@ -861,7 +880,7 @@ export interface RunEnd {
   seq: number; job: Job; minutes: number; how: 'ranOut' | 'finishedHere';
   /** A one-off that isn't done yet: ask "Is it done?" */
   ask: boolean;
-  /** The job reached its enough in this run. */
+  /** A repeating job's session was done by this run (D-121). */
   enough: boolean;
   /** This run completed the day (the next screen is the arrival). */
   completedDay: boolean;
@@ -915,6 +934,8 @@ export interface View {
   toNext: number | null;
   /** The next place's distance mark, in minutes from the start. */
   nextAt: number | null;
+  /** Minutes of effort from here to the side chamber halfway to the next place, until it is found (D-122). */
+  toChamber: number | null;
   lastArrival: Arrival | null;
   story: S.StoryState;
   teaser: string | null;
@@ -1061,14 +1082,8 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   const r = activeRun(facts);
   if (r) {
     const s = runAt(r.plan, r.marks, nowMs), j = jobOf(c, r.fact.job);
-    let enoughK: number | null = null;
-    if (j.doneBy === 'enough' && !doneOn(facts, r.fact.day).has(j.id)) {
-      const before = delveMinutesOn(facts, r.fact.day, j.id) - s.ends.slice(0, r.rewarded).length * r.plan.minutes;
-      const k = Math.ceil((enoughOf(j) - before) / r.plan.minutes);
-      enoughK = k >= 1 && k <= r.plan.count ? k : null;
-    }
     const held = ofType(facts, 'delveHeld').filter(f => f.seq > r.fact.seq).pop();
-    if (s.phase !== 'ended') run = { ...s, seq: r.fact.seq, job: j, minutes: r.plan.minutes, count: r.plan.count, enoughK, startedAt: r.plan.startedAt,
+    if (s.phase !== 'ended') run = { ...s, seq: r.fact.seq, job: j, minutes: r.plan.minutes, count: r.plan.count, startedAt: r.plan.startedAt,
       away: s.phase === 'held' && held?.why === 'away' };
   }
 
@@ -1134,6 +1149,8 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   const deepToday = ofType(onDay(facts, day), 'beatPlayed').some(f => S.beatOf(c.story, f.id)?.kind === 'deep');
   const deepOffer = capacity === 'high' && !deepCalled && !deepToday && !complete && done.size < DAY_SIZE.normal && !!S.nextDeep(c.story, st);
   const toNext = nextAt !== null ? Math.max(0, nextAt - w) : null;
+  /* shown only while it holds a find to give */
+  const chamber = S.pickFind(c.story, st, 'chamber') ? toChamber(shown, st) : null;
 
   return {
     suggestedBy: sugg.by, bedtime: bedtimeOf(facts), night: gn ? { kept: gn.kept, beat: campLine?.id ?? null } : null,
@@ -1141,7 +1158,7 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
     forecast: W.forecast(c, facts, day, toNext, S.PLACE_GAP),
     day, capacity, suggested: sugg.capacity, size, order, slate, done, underWay, complete, next, run, runEnd, arrival,
     /* ahead: the sealed thing in view; before any, the way in (the first morning), then a line from just ahead */
-    here, ahead: view ? view.where : here.id === null ? here.line || S.teaser(c.story, st) : S.teaser(c.story, st), walked: w, toNext, nextAt,
+    here, ahead: view ? view.where : here.id === null ? here.line || S.teaser(c.story, st) : S.teaser(c.story, st), walked: w, toNext, nextAt, toChamber: chamber,
     lastArrival: lastArr, story: S.storyState(facts, c.story), teaser: S.teaser(c.story, st), runFinds,
     passage: c.story.passages.find(p => p.id === S.nextPassage(c.story, st))?.line ?? '',
   };

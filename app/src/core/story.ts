@@ -21,10 +21,8 @@ export const KEYS_A_WEEK = 5;
 export const KEY_FLOOR = 2;
 /** A long stretch on one job in a day, after which switching brings a find (§1). */
 export const LONG_STRETCH = 100;
-/** Delves in one sitting that reach a side chamber (§1). */
-export const CHAMBER_RUN = 4;
-/** …and at least this much of them: short delves (5–15 min) reach it only with the same effort (rule 10, D-110). */
-export const CHAMBER_MIN = 100;
+/** A session of a rhythm counts towards its Key only at this length or more: the dial's shortest delve (rule 10, D-121). */
+export const KEY_SESSION_MIN = 5;
 
 const ofType = <T extends FactBody['type']>(facts: Fact[], type: T) => facts.filter((f): f is FactOf<T> => f.type === type);
 
@@ -108,6 +106,11 @@ const inWeek = (st: StoryState, b: { id: string; w: number }) => b.w <= st.week 
 
 /** Minutes of effort from the start to the next place reached on foot. */
 export const nextPlaceAt = (st: StoryState) => st.onFoot === 0 ? FIRST_GAP : FIRST_GAP + st.onFoot * PLACE_GAP;
+/** Minutes of effort from the start to the last place reached on foot (0 before the first). */
+export const lastPlaceAt = (st: StoryState) => st.onFoot === 0 ? 0 : FIRST_GAP + (st.onFoot - 1) * PLACE_GAP;
+/** The side chamber on the road: halfway between the last place reached on foot and the next, the same distance
+    whatever the delves' lengths or jobs (Dan, D-122). */
+export const chamberAt = (st: StoryState) => Math.ceil((lastPlaceAt(st) + nextPlaceAt(st)) / 2);
 
 /**
  * The next named place that can be reached on foot, in route order: this story week's first (places whose req is not

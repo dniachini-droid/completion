@@ -13,10 +13,9 @@ import { card, ord, t } from '../content/copy/en';
 const MIN = 60_000;
 
 /** "the second of three delves", "one delve", "This one is extra: the fourth delve." (the delve screen's line too) */
-export function ofLine(run: { count: number; enoughK: number | null }, k: number, past: boolean): string {
-  const N = run.count, kE = run.enoughK;
+export function ofLine(run: { count: number }, k: number, past: boolean): string {
+  const N = run.count;
   if (past) return t('delve.more', { ord: ord(k) });
-  if (kE) return Math.min(N, kE) === 1 ? (N === 1 ? t('delve.single') : t('delve.enoughAfter')) : t('delve.ofRun', { ord: ord(k), card: card(kE) });
   return N === 1 ? t('delve.single') : t('delve.ofRun', { ord: ord(k), card: card(N) });
 }
 

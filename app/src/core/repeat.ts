@@ -47,9 +47,10 @@ export function samePeriod(r: Rhythm, done: string, day: string): boolean {
   return calendarWeek(done) === calendarWeek(day);
 }
 
-/** Sessions of a rhythm done in its period containing `day`. */
-export const sessionsIn = (facts: Fact[], r: Rhythm, day: string) =>
-  facts.filter(f => f.type === 'jobDone' && f.job === r.job && f.minutes > 0 && samePeriod(r, f.day, day)).length;
+/** Sessions of a rhythm done in its period containing `day`: any with a whole minute behind it (Dan, D-121), or, with
+    `min`, only those at least that long (the Key's count, rule 10). */
+export const sessionsIn = (facts: Fact[], r: Rhythm, day: string, min = 1) =>
+  facts.filter(f => f.type === 'jobDone' && f.job === r.job && f.minutes >= min && samePeriod(r, f.day, day)).length;
 
 /** The day an every-N-days rhythm is next due, from `from` on: N days after it was last done (before `from`), or
     `from` if it never was or is already due. */
