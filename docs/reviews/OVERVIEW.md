@@ -42,7 +42,7 @@ The break-it review found these in the build you have now. All are fixed on the 
   - Save with an empty name did nothing and said nothing;
   - setting the phone's clock back by hand could jumble the record.
 
-**Say "send the fixes" and it goes to TestFlight.**
+The fixes are in [pull request #56](https://github.com/dniachini-droid/completion/pull/56), which is ready and not merged. **Say "send the fixes" and it goes to TestFlight.**
 
 ### 2. The story is still paced by calendar weeks, through Keys → **my recommendation: option C**
 You decided the story is one continuous story, unlocked by work. The tester found one thing still holding it to the calendar:
