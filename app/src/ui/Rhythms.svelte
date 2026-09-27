@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Deleted from './Deleted.svelte';
   /* What repeats (PLANNER.md → Rhythms; mock-up rhythms.html). Dan's own rhythms, preloaded and all his to change: what,
      how often (N a week, set days, every 2 weeks), how long each time (for the plan), a time (an appointment),
      every job a delve (D-117). One number is enough; no ranges. Stop repeating ends future sessions only; no confirmation. */
@@ -95,8 +96,12 @@
     if (!d || d.isNew) return;
     const job = game.job(d.job.id);
     if (!job) return;
-    removed = { job: { ...job }, rhythm: v.content.rhythms.find(x => x.job === job.id) ?? null };
-    game.do({ do: 'removeJob', id: job.id });
+    /* through the one guarded delete: never the job of a delve under way (break-it review 4) */
+    const rhythm = v.content.rhythms.find(x => x.job === job.id) ?? null;
+    game.remove(job.id);
+    if (game.deleted?.job.id !== job.id) return;
+    game.deleted = null;   /* this screen shows its own Undo */
+    removed = { job: { ...job }, rhythm };
     d = null;
   }
   function undo() { if (removed) { game.do({ do: 'saveJob', job: removed.job, rhythm: removed.rhythm }); removed = null; if (jobArg) go('back'); } }
@@ -120,6 +125,7 @@
   </header>
 
   <div class="body col rise d1">
+    <Deleted />
     {#if !d}
       {#if removed}
         <!-- a job removed: one quiet line, and Undo (D-112); opened on that one job, also the way back -->
@@ -151,7 +157,7 @@
             <div class="passed"><span>{t('by.passed')}</span>
               <button class="text-link small" onclick={() => { const job = { ...j }; delete job.by; game.do({ do: 'saveJob', job, rhythm: null }); }}><span>{t('by.still')}</span></button>
               <button class="text-link small" onclick={() => edit(j)}><span>{t('by.new')}</span></button>
-              <button class="text-link small" onclick={() => game.do({ do: 'removeJob', id: j.id })}><span>{t('by.letGo')}</span></button></div>
+              <button class="text-link small" onclick={() => game.remove(j.id)}><span>{t('by.letGo')}</span></button></div>
           {/if}
         {/each}
       {/if}
@@ -286,7 +292,7 @@
         <input class="line" bind:value={d.note} maxlength="160" placeholder={t('job.noteHint')} aria-label={t('job.note')} />
 
         {#if d.often !== 'once'}<p class="soft val-note">{t('rhythms.newNumber')}</p>{/if}
-        <div class="btn-row lead"><button class="btn" onclick={save}>{t('rhythms.save')}</button><button class="btn-quiet" onclick={close}><span>{t('rhythms.cancel')}</span></button></div>
+        <div class="btn-row lead"><button class="btn" disabled={!d.job.name.trim() || (d.often === 'days' && !d.days.length)} onclick={save}>{t('rhythms.save')}</button><button class="btn-quiet" onclick={close}><span>{t('rhythms.cancel')}</span></button></div>
         {#if !d.isNew}<div class="links"><button class="text-link" onclick={remove}><span>{t('job.remove')}</span></button></div>{/if}
       </div>
     {/if}

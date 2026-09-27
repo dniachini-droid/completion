@@ -67,7 +67,8 @@
      delve ends, the rest stay for next time */
   const lines = (id: string) => listLines(game.job(id));
   const struck = (id: string, k: number) => !!game.job(id)?.struck?.includes(k);
-  function strike(id: string, k: number) { game.do({ do: 'strikeLine', job: id, k }); }
+  /* a quick second tap is not a second strike (break-it review) */
+  function strike(id: string, k: number) { steady(); game.do({ do: 'strikeLine', job: id, k }); }
 </script>
 
 {#snippet theList(id: string)}
@@ -177,7 +178,8 @@
 
 <style>
   /* the job's list, struck off a line at a time (D-126) */
-  .list { list-style: none; margin: 4px auto 10px; padding: 0; max-width: 320px; max-height: 26vh; overflow-y: auto; text-align: left; }
+  .list { list-style: none; margin: 4px auto 10px; padding: 0; max-width: 320px; max-height: 26vh; overflow-y: auto; overflow-x: hidden; text-align: left; }
+  .list button { overflow-wrap: anywhere; }
   .list button { display: block; width: 100%; min-height: 40px; padding: 4px 10px; text-align: left; background: none; border: 0;
     border-bottom: 1px solid rgba(255, 255, 255, .08); font-family: var(--life); font-size: 17px; color: #fff; cursor: pointer; }
   .list button.struck { text-decoration: line-through; color: var(--ink-3); }

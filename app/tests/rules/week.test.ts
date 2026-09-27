@@ -1122,3 +1122,37 @@ describe('Delete, everywhere (Dan, D-125)', () => {
   });
 });
 
+describe('The break-it fixes (D-128)', () => {
+  it('the phone clock set back across 04:00: facts stay on the day the phone says, in time order, and Not today still works', () => {
+    const p = player('2026-09-28T10:00:00+01:00').do({ do: 'open' });
+    /* on to Tuesday 09:00, where something happens; then the clock is set back to 03:00, still Monday's game day */
+    p.next().do({ do: 'open' }).wait(-6 * 60);
+    const v = p.view();
+    expect(v.day).toBe(MON);
+    const id = v.slate.find(x => !v.done.has(x) && x !== v.next?.job)!;
+    p.do({ do: 'setAside', job: id });
+    const k = p.facts.findIndex(x => x.type === 'setAside'), f = p.facts[k];
+    expect(f.day).toBe(MON);
+    expect(Date.parse(f.at)).toBeGreaterThanOrEqual(Date.parse(p.facts[k - 1].at));
+    expect(p.view().slate).not.toContain(id);
+  });
+  it('a move to a day in another week is refused; a move within the week still works', () => {
+    const p = player().do({ do: 'open' });
+    const e = W.planOf(p.facts, MON)!.find(x => x.day > MON)!;
+    p.do({ do: 'movePlan', entry: e.id, day: W.addDays(MON, 9) });
+    expect(W.planOf(p.facts, MON)!.find(x => x.id === e.id)!.day).toBe(e.day);
+    p.do({ do: 'movePlan', entry: e.id, day: W.addDays(MON, 6) });
+    expect(W.planOf(p.facts, MON)!.find(x => x.id === e.id)!.day).toBe(W.addDays(MON, 6));
+  });
+  it('the job of a running delve, or of an end not yet answered, is not deleted', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['Paint'] });
+    const id = p.view().content.jobs.find(j => j.name === 'Paint')!.id;
+    p.do({ do: 'startRun', job: id, minutes: 25, count: 1 }).do({ do: 'removeJob', id });
+    expect(p.view().content.jobs.some(j => j.id === id)).toBe(true);
+    p.wait(26).do({ do: 'removeJob', id });
+    expect(p.view().content.jobs.some(j => j.id === id)).toBe(true);
+    p.do({ do: 'seen', what: 'step', ref: p.view().runEnd!.seq }).do({ do: 'removeJob', id });
+    expect(p.view().content.jobs.some(j => j.id === id)).toBe(false);
+  });
+});
+

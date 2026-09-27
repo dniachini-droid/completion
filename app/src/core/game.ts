@@ -252,7 +252,14 @@ function writer(facts: Fact[], now: Moment) {
   const all = facts.slice(), out: Fact[] = [];
   let seq = facts.length ? facts[facts.length - 1].seq : 0;
   const off = offsetOf(now);
-  const put = (body: FactBody, at: Moment = now, day: string = gameDay(at)): Fact => {
+  /* the phone's clock set back by hand: what happens now is written no earlier than the log's last fact, so the log
+     keeps its time order (break-it review 11) */
+  const last = facts.length ? facts[facts.length - 1].at : null;
+  const nowAt = last && epochOf(now) < epochOf(last) ? last : now;
+  const put = (body: FactBody, at0?: Moment, day0?: string): Fact => {
+    /* only the timestamp is held back: the fact stays on the day the phone says it is, as everything else reads it
+       (review of the break-it fixes) */
+    const at = at0 === undefined || at0 === now ? nowAt : at0, day = day0 ?? gameDay(at0 ?? now);
     const f = { seq: ++seq, at, day, ...body } as Fact;
     all.push(f); out.push(f); return f;
   };
@@ -783,7 +790,8 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       w.put({ type: 'jobSaved', job });
       break;
     }
-    case 'removeJob': if (c.jobs.some(j => j.id === cmd.id)) w.put({ type: 'jobRemoved', id: cmd.id }); break;
+    /* never the job of a delve under way: its end still has to be answered (break-it review 4) */
+    case 'removeJob': if (c.jobs.some(j => j.id === cmd.id) && activeRun(w.all)?.fact.job !== cmd.id && v.runEnd?.job.id !== cmd.id) w.put({ type: 'jobRemoved', id: cmd.id }); break;
     case 'hideDone': if (doneOn(w.all, cmd.on).has(cmd.job)) w.put({ type: 'doneHidden', job: cmd.job, on: cmd.on, ...(cmd.back ? { back: true } : {}) }); break;
     case 'firstStep': case 'noteJob': {
       const j = c.jobs.find(x => x.id === cmd.job);
@@ -804,9 +812,14 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       const list = kept.join('\n');
       if (!j || (j.list ?? '') === list) break;
       const job: Job = { ...j };
-      /* a list edited afresh starts with nothing struck */
       delete job.stopped; delete job.struck;
       if (list) job.list = list; else delete job.list;
+      /* a line struck off in the delve under way stays struck when the list is edited around it (break-it review 8) */
+      if (j.struck?.length) {
+        const gone = listLines(j).filter((_, k) => j.struck!.includes(k)), struck: number[] = [];
+        kept.forEach((l, k) => { const i = gone.indexOf(l); if (i >= 0) { struck.push(k); gone.splice(i, 1); } });
+        if (struck.length) job.struck = struck;
+      }
       w.put({ type: 'jobSaved', job });
       break;
     }
@@ -849,7 +862,7 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       } else w.put({ type: 'itemTicked', id: cmd.id });
       break;
     }
-    case 'dropItem': if (W.items(w.all, day).some(x => x.id === cmd.id)) w.put({ type: 'itemDropped', id: cmd.id }); break;
+    case 'dropItem': if (W.items(w.all, day).some(x => x.id === cmd.id) && activeRun(w.all)?.fact.job !== cmd.id) w.put({ type: 'itemDropped', id: cmd.id }); break;
     case 'planWeek': w.put({ type: 'planMade', week: cmd.week, entries: W.planWeek(c, w.all, cmd.week, day) }); break;
     case 'replan': {
       const wk = calendarWeek(day), plan = W.planOf(w.all, wk) ?? [];
@@ -859,6 +872,17 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       break;
     }
     case 'movePlan': {
+      /* within its own week only: another week is reached by taking it off this one and placing it there (the Week's
+         "Another day…", D-114); a move across weeks broke the Week (break-it review 12) */
+      if (cmd.day) {
+        const made = ofType(w.all, 'planMade').find(f => f.entries.some(x => x.id === cmd.entry));
+        const added = ofType(w.all, 'planAdded').find(f => f.entry.id === cmd.entry);
+        /* the week the entry is in now: where it was last moved to (an old save may hold a move across weeks), else
+           where it was made */
+        const moved = ofType(w.all, 'planChanged').filter(f => f.entry === cmd.entry && f.day).pop();
+        const wk = moved?.day ? calendarWeek(moved.day) : made ? made.week : added ? calendarWeek(added.entry.day) : null;
+        if (wk && calendarWeek(cmd.day) !== wk) break;
+      }
       w.put({ type: 'planChanged', entry: cmd.entry, day: cmd.day, ...(cmd.time !== undefined ? { time: cmd.time } : {}) });
       /* a job set aside today and placed on today again in the Week is back on today's list (review 2, D-088) */
       const e = W.planOf(w.all, calendarWeek(day))?.find(x => x.id === cmd.entry);
