@@ -28,10 +28,21 @@ function fit() {
   home();
 }
 
+/* Nor does anything on a screen slide sideways (Dan, review 2): a box that clips its sides can still be scrolled by the
+   browser itself, to bring a caret or a button that overhangs the edge into view, and the whole screen then sat shifted
+   with its words cut off (seen on a delve's end, D-120). Any such sideways scroll is put straight back; the map, which
+   is dragged around on purpose, is left alone. */
+function unslide(e: Event) {
+  const el = e.target;
+  if (!(el instanceof HTMLElement) || !el.scrollLeft || el.dataset.pan === 'map') return;
+  el.scrollLeft = 0;
+}
+
 export function watchKeyboard() {
   if (vv) { vv.addEventListener('resize', fit); vv.addEventListener('scroll', fit); }
   /* the keyboard going: once it has finished closing, the page is put back again (the slide can come late) */
   document.addEventListener('focusout', () => { setTimeout(fit, 50); setTimeout(fit, 350); });
   document.addEventListener('focusin', () => { setTimeout(fit, 350); });
+  document.addEventListener('scroll', unslide, true);
   fit();
 }
