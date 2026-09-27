@@ -259,10 +259,14 @@
   button.row { width: 100%; text-align: left; }
   .lead .btn.full { width: 100%; }
   /* a row slides over its "Not today" */
-  .swipe { position: relative; overflow: hidden; }
+  /* it clips a row sliding off, so it reaches out into the list's faded sides (base.css → .col .scroll), the words
+     staying where they were: cut at the column's edge, it sliced the glow of a done job's diamond into a hard line
+     (Dan, 2026-09-27) */
+  .swipe { position: relative; overflow: hidden; margin: 0 -18px; padding: 0 18px; }
+  @supports (overflow: clip) { .swipe { overflow-x: clip; overflow-y: visible; } }
   .swipe .row { position: relative; z-index: 1; transition: transform .22s ease; touch-action: pan-y; }
   .swipe .row.still { transition: none; }
-  .aside { position: absolute; right: 0; z-index: 0; top: 1px; bottom: 0; width: 112px; font-family: var(--life); font-style: italic; font-size: 16px;
+  .aside { position: absolute; right: 18px; z-index: 0; top: 1px; bottom: 0; width: 112px; font-family: var(--life); font-style: italic; font-size: 16px;
     color: var(--ink); background: rgba(var(--violet-rgb), .28); }
   .row.else .t { color: var(--ink-2); font-style: italic; }
   .plus { justify-self: center; color: var(--violet-hi); font-size: 20px; line-height: 1; }
