@@ -105,9 +105,8 @@ export function daySize(capacity: Capacity, firstOpen: Moment | null): number {
   if (h >= 14) return Math.max(1, base - 1);
   return base;
 }
-/** Whether the week was laid out (Plan my week, or its first opening): then Today follows the plan (D-078, D-080). An
-    entry Dan added by hand is an extra on its day, never a plan by itself (D-108). */
-const planLeads = (facts: Fact[], day: string) => W.planMade(facts, calendarWeek(day));
+/** Whether Dan laid this week out with Plan my week: then Today follows the plan (D-078). */
+const planLeads = (facts: Fact[], day: string) => W.planOf(facts, calendarWeek(day)) !== null;
 /** How many jobs the plan puts on a day (done as planned, or still to do), when the plan leads; else null. */
 function plannedCount(c: Content, facts: Fact[], day: string): number | null {
   if (!planLeads(facts, day)) return null;
@@ -546,8 +545,8 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       w.put({ type: 'opened' });
       if (first) welcomeBack(w, c, now, day);
       /* a week with no plan yet is laid out at its first opening, from today on, so the Week and Today always agree;
-         Dan changes it as he likes (Dan, D-078; review finding, D-080). An entry he added ahead doesn't stop it (D-108) */
-      if (!W.planMade(w.all, calendarWeek(day))) w.put({ type: 'planMade', week: calendarWeek(day), entries: W.planWeek(c, w.all, calendarWeek(day), day) });
+         Dan changes it as he likes (Dan, D-078; review finding, D-080) */
+      if (W.planOf(w.all, calendarWeek(day)) === null) w.put({ type: 'planMade', week: calendarWeek(day), entries: W.planWeek(c, w.all, calendarWeek(day), day) });
       storyClock(w, c, now, day); floor(w, c, now, day);
       weekClose(w, c, now, day, was);
       morningAfter(w, c, now, day);

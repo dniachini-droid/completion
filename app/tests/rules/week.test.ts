@@ -522,24 +522,3 @@ describe('Undoing a tap made by mistake (review 2, D-088)', () => {
     expect(p.view().walked).toBeGreaterThan(walked);
   });
 });
-
-describe('A hand-added entry is an extra, never a plan by itself (D-108)', () => {
-  const NEXT = '2026-10-05', TUE = '2026-10-06';
-  it('an entry added to a week not yet opened doesn’t stop its plan, and joins it on its day', () => {
-    const plain = player().do({ do: 'open' }).next(7).do({ do: 'open' });
-    const p = player().do({ do: 'open' }).do({ do: 'addToWeek', line: 'Dentist', day: TUE, time: '10:00' }).next(7).do({ do: 'open' });
-    expect(W.planMade(p.facts, NEXT)).toBe(true);
-    expect(p.view().slate).toEqual(plain.view().slate);
-    plain.next().do({ do: 'open' }); p.next().do({ do: 'open' });
-    const dentist = W.items(p.facts, TUE).find(i => i.name === 'Dentist')!.id;
-    expect(p.view().slate).toContain(dentist);
-    expect(p.view().slate.filter(id => id !== dentist)).toEqual(plain.view().slate);
-  });
-  it('a job put on a later day of the week before its first opening leaves today’s rhythms on Today', () => {
-    const plain = player().do({ do: 'open' });
-    const p = player().do({ do: 'planJob', job: 'post', day: '2026-09-30' }).do({ do: 'open' });
-    expect(W.planMade(p.facts, MON)).toBe(true);
-    expect(p.view().slate).toEqual(plain.view().slate);
-    expect(W.planOf(p.facts, MON)!.filter(e => e.job === 'post').map(e => e.day)).toContain('2026-09-30');
-  });
-});
