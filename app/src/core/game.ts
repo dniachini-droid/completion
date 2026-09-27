@@ -357,10 +357,18 @@ function gifts(w: W, c: Content, at: Moment, day: string) {
   } else reach();   /* after day complete, Keep going still arrives somewhere (no dead ends for effort, D-039) */
 }
 
+/** A job's delve minutes from runs begun on an earlier game day that ended on this one (a delve begun before 04:00 and
+    said done after it): they count for this day's Done, so they aren't paid again (D-120). */
+function crossedIn(facts: Fact[], day: string, job: string): number {
+  let n = 0;
+  for (const e of ofType(facts, 'delveEnded')) if (e.job === job && e.day < day && gameDay(e.at) === day && !doneOn(facts, e.day).has(job)) n += e.minutes;
+  return n;
+}
 function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string) {
   if (doneOn(w.all, day).has(job)) return;
-  const j = jobOf(c, job), timed = delveMinutesOn(w.all, day, job);
-  /* a delve's minutes have already moved Dan; a job without them earns its usual length (§1) */
+  const j = jobOf(c, job), timed = delveMinutesOn(w.all, day, job) + crossedIn(w.all, day, job);
+  /* a delve's minutes have already moved Dan (counted once, even across 04:00, D-120); a job without them earns its
+     usual length (§1) */
   const minutes = timed > 0 ? timed : enoughOf(j);
   const done = w.put({ type: 'jobDone', job, minutes }, at, day);
   if (timed === 0) w.put({ type: 'stepsGained', minutes, job }, at, day);
@@ -406,6 +414,18 @@ function finishRun(w: W, c: Content, r: NonNullable<ReturnType<typeof activeRun>
   if (reachesEnough(w.all, rday, j)) markDoneIn(w, c, j.id, at, rday);
   else gifts(w, c, at, rday);
 }
+/** Said done while its own delve still runs (Done on Today, a tick in the satchel): the delve finishes there first, so
+    its minutes count once and the job is not paid twice (Dan, 2026-09-27, D-120). Its end is marked seen: the job's
+    return tells the story, and the delve's end doesn't come back later. */
+function endRunOn(w: W, c: Content, job: string, nowMs: number, now: Moment, keepEnd = false) {
+  const r = activeRun(w.all);
+  if (r && r.fact.job === job) finishRun(w, c, r, nowMs, now);
+  /* an end of this job's delve not yet looked at (it ended with Dan on another screen, or "Is it done?" was left) is
+     answered by this Done: it doesn't come back on a later opening (D-120). The delve screen answering its own end
+     keeps it, and marks it seen itself when Dan leaves. */
+  const end = ofType(w.all, 'delveEnded').pop();
+  if (!keepEnd && end && end.job === job && !w.all.some(f => f.type === 'seen' && f.ref === end.seq)) w.put({ type: 'seen', what: 'step', ref: end.seq });
+}
 /** Going into another app pauses the delve (D-094): at the moment Dan left, or, if he left in a breather, at the moment
     the next delve would have begun without him. Time away never counts; nothing already done is lost. */
 function pauseAway(w: W, from: number, to: number) {
@@ -450,8 +470,9 @@ function settleIn(w: W, c: Content, nowMs: number) {
   }
   /* stepped away and never back: after three hours, or once its day is over, it finishes where it was paused, on its day */
   const hold = r.marks[r.marks.length - 1];
-  if (s.phase === 'held' && hold?.kind === 'hold' && (nowMs - hold.at > HOLD_MAX || gameDay(momentOf(nowMs, w.off)) !== r.fact.day)) {
-    finishRun(w, c, activeRun(w.all)!, hold.at, momentOf(hold.at, w.off));
+  if (s.phase === 'held' && hold?.kind === 'hold' && (nowMs - hold.at > HOLD_MAX || gameDay(momentOf(nowMs, w.off)) !== gameDay(momentOf(hold.at, w.off)))) {
+    /* its minutes as they were at the pause; written no earlier than the log's last fact, so the log keeps time order (D-120) */
+    finishRun(w, c, activeRun(w.all)!, hold.at, momentOf(Math.max(hold.at, epochOf(w.all[w.all.length - 1].at)), w.off));
     return;
   }
   if (s.phase === 'ended' && s.how === 'ranOut') {
@@ -550,8 +571,9 @@ export type Command =
   | { do: 'finishHere' }
   /** Dan was in another app from `from` to `to` (game-clock ms): the delve pauses where he left (D-094). */
   | { do: 'away'; from: number; to: number }
-  /** Done with no timer (a Begin, or none: recorded afterwards); `yesterday`: it happened yesterday (D-112) */
-  | { do: 'done'; job: string; yesterday?: boolean }
+  /** Done with no timer (a Begin, or none: recorded afterwards); `yesterday`: it happened yesterday (D-112); `keepEnd`:
+      a delve under way on it ends and its end screen stays (D-120) */
+  | { do: 'done'; job: string; yesterday?: boolean; keepEnd?: boolean }
   | { do: 'cantStart'; job: string }
   | { do: 'seen'; what: 'step' | 'arrival' | 'morning' | 'welcome'; ref: number }
   | { do: 'guess'; mark: string; guess: string }
@@ -597,7 +619,7 @@ export type Command =
 export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fact[] {
   const w = writer(facts, now), nowMs = epochOf(now), c = W.live(base, facts);
   /* before anything the clock made due: the time away must not have counted */
-  if (cmd.do === 'away') pauseAway(w, cmd.from, Math.min(cmd.to, nowMs));
+  if (cmd.do === 'away') { settleIn(w, c, Math.min(cmd.from, nowMs)); pauseAway(w, cmd.from, Math.min(cmd.to, nowMs)); }   /* what was due before he left first, in time order (D-120) */
   settleIn(w, c, nowMs);
   const day = gameDay(now), v = see(w.all, c, now);
   switch (cmd.do) {
@@ -655,7 +677,8 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     case 'unbegin': if (v.underWay === cmd.job) w.put({ type: 'beginUndone', job: cmd.job }); break;
     case 'putBack': if (asideOn(w.all, day).has(cmd.job)) w.put({ type: 'putBack', job: cmd.job }); break;
     case 'startRun':
-      if (v.run) break;
+      /* only a run the dial can set: whole minutes up to its longest stop, one to eight delves (D-120) */
+      if (v.run || !Number.isInteger(cmd.minutes) || cmd.minutes < 1 || cmd.minutes > DIAL[DIAL.length - 1] || !Number.isInteger(cmd.count) || cmd.count < 1 || cmd.count > 8) break;
       if (!begunOn(w.all, day, cmd.job)) w.put({ type: 'jobBegun', job: cmd.job, from: 'app' });
       w.put({ type: 'delveStarted', job: cmd.job, minutes: cmd.minutes, count: Math.max(1, cmd.count) });
       break;
@@ -671,6 +694,8 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       /* "Did it yesterday" (D-112, reversing D-089 with Dan's OK): recorded afterwards, on yesterday */
       const on = cmd.yesterday ? W.addDays(day, -1) : day;
       if (!c.jobs.some(j => j.id === cmd.job) || doneOn(w.all, on).has(cmd.job)) break;
+      /* done today while a delve on it runs: that delve ends first (D-120) */
+      if (!cmd.yesterday) endRunOn(w, c, cmd.job, nowMs, now, cmd.keepEnd);
       /* Done with no Begin: recorded afterwards (the test's sharpest line, MVP.md) */
       if (cmd.yesterday || !begunOn(w.all, day, cmd.job)) w.put({ type: 'jobBegun', job: cmd.job, from: 'record' }, now, on);
       markDoneIn(w, c, cmd.job, now, on);
@@ -724,6 +749,7 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       if (!it || it.done) break;
       /* a line moves the expedition only as one of today's main jobs (TOOLS §2, P5); otherwise ticking just feels good */
       if (v.slate.includes(cmd.id)) {
+        endRunOn(w, c, cmd.id, nowMs, now);
         if (!begunOn(w.all, day, cmd.id)) w.put({ type: 'jobBegun', job: cmd.id, from: 'record' });
         markDoneIn(w, c, cmd.id, now, day);
       } else w.put({ type: 'itemTicked', id: cmd.id });

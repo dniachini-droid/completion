@@ -54,6 +54,13 @@ jobs:
       - name: Back from a record returns to the place
         if: matrix.short
         run: node tests/flows/back-from-record.mjs http://localhost:4173/
+      - name: '"+ Add" above the keyboard, and Done takes the tap (D-120)'
+        if: matrix.short
+        run: node tests/flows/capture-done.mjs http://localhost:4173/
+      # it jumps the clock across hours and days like the whole walk, which Linux's WebKit crashes on (D-106): Chromium only
+      - name: The begin, delve, pause and done loop, double taps included (D-120)
+        if: matrix.walk
+        run: node tests/flows/delve-loop.mjs http://localhost:4173/ ${{ matrix.size }}
       - name: The whole first playable, walked day by day
         if: matrix.walk
         run: mkdir -p "$RUNNER_TEMP/screens" && node tests/flows/heart-walk.mjs http://localhost:4173/ "$RUNNER_TEMP/screens" ${{ matrix.size }}
