@@ -1093,3 +1093,26 @@
 - **Alternatives:** the community SQLite plugin (bundles SQLCipher, an encryption library that brings Apple's export-compliance questions, and a web engine the web link doesn't need); Capacitor's file storage (still the whole log per write); keeping the settings (no transactions; the whole log rewritten on every change); a saved snapshot (not needed at the measured cost; revisit if a year's log gets slow on the phone).
 - **Consequences:** 12 new tests (every fact type round-trips, a write failing part-way leaves the save as it was, the move from the settings in both directions, the upgrade chain, the sample save plays on); a new fact type without a sample there fails the typecheck. The native plugin compiles on the cloud Mac; it can only be proved on the phone: after installing, the trial screen (Daybook → Prototype) should say "In the phone's database". The checks were flaky on `main` and are now steady (D-104's open item): the tap check read Today's list before it was drawn; the walk missed a morning that follows a word cut on opening, counted the Week's jobs on the day a job left (a missed job takes the freed place, D-080, so the job is now followed by name to its new day), judged words mid-crossfade, and waited on WebKit's full page load under the fake clock. A stuck walk now leaves a picture and the screen's class names, never its words.
 - **Reversible:** Yes: the settings path is still in the app as the fallback.
+
+## D-107 — The productivity track: every review recommendation, staged; medium-to-large ideas scoped first (Dan)
+- **Date:** 2026-09-27
+- **Context:** Dan asked for an independent review of the app purely as a productivity app, setting the project's own rules aside (`product/PRODUCTIVITY_REVIEW.md`). Five reviewers gave it about 2.5/5 overall and 3.5/5 for ADHD. They found it best in class at starting, and weak at reminders, dates, capture, editing and backup. They also found one trust-breaking bug. Dan: "Let's do all of your suggestions, staged. Except for pausing the delve for cat meds. I use my laptop. The phone should be paused when you leave it." He also asked for the medium-to-large and big ideas to be scoped first.
+- **Decision:**
+  1. **A productivity track runs alongside Phase 9** in four stages (`product/PRODUCTIVITY_PLAN.md`). Each stage runs in its own session, started by the previous one (D-069).
+     - Stage 1: the planned-week bug, reminders for timed things, save a copy / restore, and one-tap capture.
+     - Stage 2: edit anything.
+     - Stage 3: dates and time.
+     - Stage 4: scope the larger items with Dan, then build them in his order.
+  2. **Reversed with Dan's OK, and only as far as written:**
+     - **"No notifications"** (MVP test design; anti-features) becomes **opt-in reminders, one per item, only for things Dan gave a time or date**. The once-a-week re-entry nudge is only scoped.
+     - **D-089** (no "Already done") becomes **Already done / did it yesterday**, recorded as logged afterwards so the test can still tell it apart.
+     - **"No hour-by-hour time-blocking"** is open again, but only as a scoping question (Stage 4).
+  3. **Kept:** leaving the phone pauses a delve (D-094). The cat's-medication first step is re-worded for the laptop.
+- **Alternatives:** keep the app as a pure starter and pair it with a separate calendar or reminders app (the critic's "pair it with a calendar"); build everything at once (against rule 13).
+- **Rationale:** the reviewers' biggest risks were missed appointments, lost data and a Today that silently drops habits. These are real-world costs, and they are small to fix without touching what makes the app distinctive. Dan chose usefulness as a planning tool as a goal alongside the game.
+- **Consequences:**
+  - This is a deliberate addition to Phase 9's scope (CLAUDE.md: deviations are recorded).
+  - The central test (`MVP.md`) now has reminders. Its notes must tell a start after a reminder from one without, and a logged-afterwards job from a begun one.
+  - New fact types need sample saves (D-106).
+  - Phase 10 starts after the track's first three stages unless Dan says otherwise.
+- **Reversible:** Yes. Each reminder is opt-in, and each stage stands alone.
