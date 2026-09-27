@@ -137,6 +137,7 @@ export const rhythmOf = (c: Content, job: string): Rhythm | undefined => c.rhyth
 function offeredOn(c: Content, facts: Fact[], day: string, j: Job, planned: Set<string>): boolean {
   if (j.stopped) return false;   /* a stopped rhythm leaves no one-off behind (D-110) */
   if (planned.has(j.id)) return true;
+  if (dueSoon(facts, j, day)) return true;
   if (j.item) return false;   /* a satchel line is offered only once it is planned for the day (TOOLS §2) */
   const r = rhythmOf(c, j.id);
   const on = r ? Rep.fallsOn(r, day) : null;
@@ -146,6 +147,10 @@ function offeredOn(c: Content, facts: Fact[], day: string, j: Job, planned: Set<
   if (!r) return !ofType(facts, 'jobDone').some(f => f.job === j.id && f.day !== day);
   return true;
 }
+/** Dated work within three days of its date (or past it), not yet done: offered on Today even without a plan (D-114). */
+export const SOON_DAYS = 3;
+const dueSoon = (facts: Fact[], j: Job, day: string) =>
+  !!j.by && W.daysBetween(day, j.by) <= SOON_DAYS && !ofType(facts, 'jobDone').some(f => f.job === j.id && f.day !== day);
 /** A rhythm whose enough is met this week stops leading (PLANNER → How the week drives Today). */
 const metThisWeek = (c: Content, facts: Fact[], day: string, job: string) => {
   const r = rhythmOf(c, job);
@@ -166,7 +171,9 @@ function orderOn(c: Content, facts: Fact[], day: string, clock: string): string[
   const off = new Set(ofType(onDay(facts, day), 'jobDone').map(f => f.job).filter(id => !planned.has(id)));
   const extra = planLeads(facts, day) && capacityOn(facts, day) === 'high' && off.size === 0
     ? c.jobs.filter(j => !j.item && !planned.has(j.id) && !aside.has(j.id) && !chosen.includes(j) && offeredOn(c, facts, day, j, planned) && !metThisWeek(c, facts, day, j.id)).slice(0, 1) : [];
-  const offered = planLeads(facts, day) ? [...chosen, ...extra] : c.jobs.filter(j => offeredOn(c, facts, day, j, planned) && !planned.has(j.id) && !aside.has(j.id));
+  /* dated work near its date joins a planned day too (D-114) */
+  const soon = c.jobs.filter(j => !planned.has(j.id) && !aside.has(j.id) && !chosen.includes(j) && dueSoon(facts, j, day));
+  const offered = planLeads(facts, day) ? [...chosen, ...soon, ...extra.filter(j => !soon.includes(j))] : c.jobs.filter(j => offeredOn(c, facts, day, j, planned) && !planned.has(j.id) && !aside.has(j.id));
   const order = [...plan, ...offered.filter(j => !metThisWeek(c, facts, day, j.id)), ...offered.filter(j => metThisWeek(c, facts, day, j.id))].map(j => typeof j === 'string' ? j : j.id);
   for (const s of ofType(onDay(facts, day), 'swapped')) {
     const a = order.indexOf(s.from), b = order.indexOf(s.to);
@@ -200,6 +207,13 @@ function underWayOn(facts: Fact[], day: string): string | null {
   }
   for (let i = begun.length - 1; i >= 0; i--) if (!done.has(begun[i])) return begun[i];
   return null;
+}
+
+/** The day a job's current date was first set: its earliest save still carrying that date (D-114). */
+function datedSince(facts: Fact[], job: string): string | null {
+  let since: string | null = null, by: string | undefined;
+  for (const f of facts) if (f.type === 'jobSaved' && f.job.id === job) { if (f.job.by !== by) { by = f.job.by; since = by ? f.day : null; } }
+  return since;
 }
 
 /** Whether a job was begun today and the Begin still stands (not taken back since). */
@@ -365,6 +379,10 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string) {
   }
   /* an avoided job always brings a find (P5) */
   if (j.avoided) giveFind(w, c, 'avoided', at, day, done.seq);
+  /* dated work done before its date may bring a find, once a week: it rewards doing the work, never keeping to the plan;
+     a date set within two days of doing it doesn't count (rule 10, D-114) */
+  else if (j.by && day < j.by && datedSince(w.all, j.id) !== null && W.daysBetween(datedSince(w.all, j.id)!, day) >= 2
+    && !ofType(w.all, 'findGiven').some(f => f.why === 'dated' && calendarWeek(f.day) === calendarWeek(day))) giveFind(w, c, 'dated', at, day, done.seq);
   gifts(w, c, at, day);
 }
 
@@ -554,7 +572,7 @@ export type Command =
   | { do: 'callDeep' }
   | { do: 'closeRead'; week: string }
   | { do: 'offerAnswered'; week: string }
-  | { do: 'remind'; target: string; lead: 0 | 15 | 60 | null }
+  | { do: 'remind'; target: string; lead: R.Lead | null }
   | { do: 'reminders'; on: boolean }
   | { do: 'nudge'; on: boolean };
 
@@ -741,7 +759,7 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     case 'seen': w.put({ type: 'seen', what: cmd.what, ref: cmd.ref }); break;
     /* reminders (D-107): settings only; nothing earned or lost */
     case 'remind':
-      if ((cmd.lead === null || R.LEADS.includes(cmd.lead)) && R.reminderSettings(w.all).get(cmd.target) !== cmd.lead) w.put({ type: 'reminderSet', target: cmd.target, lead: cmd.lead });
+      if ((cmd.lead === null || (cmd.target.startsWith('d:') ? (R.DATE_LEADS as readonly number[]) : (R.LEADS as readonly number[])).includes(cmd.lead)) && R.reminderSettings(w.all).get(cmd.target) !== cmd.lead) w.put({ type: 'reminderSet', target: cmd.target, lead: cmd.lead });
       break;
     case 'reminders': if (R.remindersOn(w.all) !== cmd.on) w.put({ type: 'remindersSwitched', on: cmd.on }); break;
     case 'nudge': { const s = ofType(w.all, 'nudgeChosen'); if ((s.length ? s[s.length - 1].on : false) !== cmd.on) w.put({ type: 'nudgeChosen', on: cmd.on }); break; }

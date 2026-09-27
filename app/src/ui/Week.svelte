@@ -4,7 +4,7 @@
      lays it out; a tap moves a job, gives it a time, or takes it off this week. The past shows only what was done. The
      forecast is one line in the world's terms: predictive, never contractual. Nothing here earns anything. */
   import { game } from './game.svelte';
-  import { t, dayName, minutesWords, minutesShort, weekDates } from '../content/copy/en';
+  import { t, dayName, minutesWords, minutesShort, weekDates, byWords } from '../content/copy/en';
   import { calendarWeek } from '../core/time';
   import { addDays, planMade, weekOf, type DayJob } from '../core/week';
   import { asideToday } from '../core/game';
@@ -35,6 +35,7 @@
     if (j.time) return j.time;
     const job = game.job(j.job);
     if (!job) return '';
+    if (job.by) return byWords(job.by);
     if (job.item) return t('row.oneOff');
     const r = v.content.rhythms.find(x => x.job === job.id);
     if (!r && job.avoided) return t('row.oneOff');
@@ -76,6 +77,13 @@
     return reminds.has(e) ? reminds.get(e)! : r ? reminds.get(rhythmTarget(r.id)) ?? null : null;
   }
   function remind(j: DayJob, lead: Lead | null) { game.do({ do: 'remind', target: entryTarget(j.entry!), lead }); }
+  /* to a day in another week: its entry leaves this week, and the job is put on that day */
+  function toDay(j: DayJob, day: string) {
+    if (calendarWeek(day) === wk) { moveTo(j, '', day); return; }
+    game.do({ do: 'movePlan', entry: j.entry!, day: null });
+    game.do({ do: 'planJob', job: j.job, day, ...(j.time ? { time: j.time } : {}) });
+    open = null;
+  }
   function off(j: DayJob) { game.do({ do: 'movePlan', entry: j.entry!, day: null }); open = null; }
   function plan() { game.do({ do: 'planWeek', week: wk }); }
   function startAdd(day: string) {
@@ -102,7 +110,7 @@
       <span></span>
       <button class="icon-link" onclick={() => go('map')}><span>{t('map.nav')}</span></button>
     </div>
-    <h1 class="carve lg rise">{isNext ? t('week.next') : t('week.label')}</h1>
+    <h1 class="carve lg rise">{!isNext ? t('week.label') : wk === addDays(thisWeek, 7) ? t('week.next') : t('week.later')}</h1>
     <p class="soft dates rise">{weekDates(wk)}</p>
     {#if forecast}<p class="say forecast rise d1">{forecast}</p>{/if}
   </header>
@@ -145,6 +153,12 @@
                 <div class="seg days" role="group" aria-label={t('week.moveTo')}>
                   {#each days as x (x)}<button aria-pressed={d.day === x} onclick={() => moveTo(j, d.day, x)}>{short(x)}</button>{/each}
                 </div>
+                <!-- another week: off this one, and onto that day (D-114) -->
+                <label class="other">
+                  <span class="text-link"><span>{t('week.otherDay')}</span></span>
+                  <input type="date" min={v.day} aria-label={t('week.otherDay')} onclick={pick}
+                    onchange={e => { const x = e.currentTarget.value; if (x) toDay(j, x); }} />
+                </label>
                 <div class="when">
                   <!-- the time box is the phone's own: a tap opens its wheel, and what it's set to is kept (D-093) -->
                   <label class="clock-btn">
@@ -172,6 +186,8 @@
     <div class="links">
       <button class="text-link" onclick={() => go('rhythms')}><span>{t('week.rhythms')}</span></button>
       <button class="text-link" onclick={() => go('week', isNext ? thisWeek : addDays(thisWeek, 7))}><span>{isNext ? t('week.this') : t('week.next')}</span></button>
+      <!-- any week ahead, a week at a time (D-114) -->
+      {#if isNext}<button class="text-link" onclick={() => go('week', addDays(wk, 7))}><span>{t('week.after')}</span></button>{/if}
     </div>
   </div>
 </div>
@@ -210,6 +226,8 @@
   .clock-btn span.set { font-size: 18px; color: #fff; }
   /* the phone's own time box, laid over the button so any tap on it opens the wheel */
   .clock-btn input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; border: 0; padding: 0; margin: 0; cursor: pointer; -webkit-appearance: none; appearance: none; }
+  .other { position: relative; display: flex; justify-content: center; margin-top: 8px; }
+  .other input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; border: 0; padding: 0; margin: 0; -webkit-appearance: none; appearance: none; }
   .off { display: flex; justify-content: center; flex-wrap: wrap; gap: 0 14px; margin-top: 6px; }
   .btn.full { width: 100%; }
   .new { display: flex; gap: 10px; margin: 4px 0 8px; }

@@ -3,13 +3,14 @@
      how often (N a week, set days, every 2 weeks), how long each time, enough at (as delves), a time (an appointment),
      delves or no timer. One number is enough; no ranges. Stop repeating ends future sessions only; no confirmation. */
   import { game } from './game.svelte';
-  import { t, minutesWords } from '../content/copy/en';
+  import { t, minutesWords, byWords } from '../content/copy/en';
+  import { addDays } from '../core/week';
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
   import { back } from './back.svelte';
   import type { Job, Rhythm } from '../core/types';
   import Remind from './Remind.svelte';
-  import { reminderOf, rhythmTarget, type Lead } from '../core/reminders';
+  import { dateTarget, reminderOf, rhythmTarget, type Lead } from '../core/reminders';
 
   /* `job`: opened straight on that job's editor (from the satchel or the Week, D-112); leaving it goes back there */
   let { go, job: jobArg }: { go: Go; job?: string } = $props();
@@ -17,15 +18,24 @@
   const LEN = [5, 10, 15, 25, 30, 45, 60, 90, 120, 180, 240];   /* down to 5 min (D-110) */
   const DAYS = [1, 2, 3, 4, 5, 6, 0];
 
-  interface Draft { id: string | null; job: Job; often: 'once' | 'week' | 'days' | 'fort'; times: number; days: number[]; len: number; enough: number | null; time: string | null; delve: boolean; remind: Lead | null;
-    avoided: boolean; step: string; note: string; isNew: boolean; }
+  interface Draft { id: string | null; job: Job; often: 'once' | 'week' | 'days' | 'fort' | 'month' | 'year' | 'every'; times: number;
+    mode: 'date' | 'nth'; mday: number; nth: 1 | 2 | 3 | 4 | -1; wday: number; ydate: string; every: number; days: number[]; len: number; enough: number | null; time: string | null; delve: boolean; remind: Lead | null;
+    avoided: boolean; step: string; note: string; isNew: boolean; by: string | null; dremind: 0 | 1440 | null; }
   let d = $state<Draft | null>(null);
   /* a job just removed, for its Undo (D-112) */
   let removed = $state<{ job: Job; rhythm: Rhythm | null } | null>(null);
   /* the one-offs (Dan's own and the starting set's), not lines of the satchel: every job can be reached and changed */
   const others = $derived(v.content.jobs.filter(j => !j.item && !j.stopped && !v.content.rhythms.some(r => r.job === j.id)));
 
-  function often(r: Rhythm) { return r.days ? r.days.map(x => t(`days.plural.${x}` as never)).join(', ') : r.every === 2 ? t('rhythms.every2') : t('rhythms.nWeek', { n: r.times ?? 1 }); }
+  function often(r: Rhythm) {
+    if (r.monthly) return 'day' in r.monthly ? t('rhythms.monthDay', { n: dayOrd(r.monthly.day) }) : t('rhythms.monthNth', { nth: t(`rhythms.nth.${r.monthly.nth}` as never), day: t(`day.${r.monthly.weekday}` as never) });
+    if (r.yearly) return t('rhythms.yearly', { date: yearWords(r.yearly) });
+    if (r.everyDays) return t('rhythms.everyN', { n: r.everyDays });
+    return r.days ? r.days.map(x => t(`days.plural.${x}` as never)).join(', ') : r.every === 2 ? t('rhythms.every2') : t('rhythms.nWeek', { n: r.times ?? 1 });
+  }
+  /* "the 1st", "the 31st" (a 31st is the last day of a shorter month) */
+  const dayOrd = (n: number) => n >= 31 ? t('rhythms.lastDay') : `${n}${n % 10 === 1 && n !== 11 ? 'st' : n % 10 === 2 && n !== 12 ? 'nd' : n % 10 === 3 && n !== 13 ? 'rd' : 'th'}`;
+  const yearWords = (md: string) => new Date(`2000-${md}T00:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', timeZone: 'UTC' });
   function size(j: Job) {
     const len = minutesWords(j.length);
     return j.delve && j.enoughAt && j.enoughAt < j.length ? t('rhythms.enoughRoom', { enough: minutesWords(j.enoughAt), len }) : len;
@@ -33,14 +43,21 @@
   function open(r: Rhythm | null) {
     if (r) { edit(game.job(r.job)!, r); return; }
     const j: Job = { id: `j-${Date.now().toString(36)}`, name: '', delve: false, length: 60, doneBy: 'dan' };
-    d = { id: null, job: j, often: 'week', times: 2, days: [], len: 60, enough: null, time: null, delve: false, remind: null, avoided: false, step: '', note: '', isNew: true };
+    d = { id: null, job: j, often: 'week', times: 2, days: [], len: 60, enough: null, time: null, delve: false, remind: null, avoided: false, step: '', note: '', isNew: true, by: null, dremind: null, ...kinds(null) };
+  }
+  /** The monthly, yearly and every-N-days settings of a rhythm, or their starting values (D-114). */
+  function kinds(r: Rhythm | null) {
+    const m = r?.monthly, today = v.day;
+    return { mode: (m && 'nth' in m ? 'nth' : 'date') as 'date' | 'nth', mday: m && 'day' in m ? m.day : +today.slice(8, 10),
+      nth: (m && 'nth' in m ? m.nth : 1) as 1 | 2 | 3 | 4 | -1, wday: m && 'weekday' in m ? m.weekday : 5,
+      ydate: r?.yearly ?? today.slice(5, 10), every: r?.everyDays ?? 3 };
   }
   /** Any job's editor: its rhythm if it has one, else "Once" (D-112). */
   function edit(j: Job, r = v.content.rhythms.find(x => x.job === j.id) ?? null) {
     removed = null;
-    d = { id: r?.id ?? null, job: { ...j }, often: !r ? 'once' : r.days ? 'days' : r.every === 2 ? 'fort' : 'week', times: r?.times ?? 2, days: r?.days ?? [], len: j.length,
+    d = { ...kinds(r), id: r?.id ?? null, job: { ...j }, often: !r ? 'once' : r.days ? 'days' : r.every === 2 ? 'fort' : r.monthly ? 'month' : r.yearly ? 'year' : r.everyDays ? 'every' : 'week', times: r?.times ?? 2, days: r?.days ?? [], len: j.length,
       enough: j.enoughAt ?? null, time: r?.time ?? null, delve: j.delve, remind: r ? reminderOf(game.facts, rhythmTarget(r.id)) : null,
-      avoided: !!j.avoided, step: j.firstStep ?? '', note: j.note ?? '', isNew: false };
+      avoided: !!j.avoided, step: j.firstStep ?? '', note: j.note ?? '', isNew: false, by: j.by ?? null, dremind: reminderOf(game.facts, dateTarget(j.id)) as 0 | 1440 | null };
   }
   if (jobArg) { const j = game.job(jobArg); if (j) edit(j); }
   /** Leave the editor: back to the list, or to where it was opened from. */
@@ -61,11 +78,18 @@
       firstStep: d.step, note: d.note };
     if (!enough) delete job.enoughAt;
     if (d.avoided) job.avoided = true; else delete job.avoided;
+    /* a date only for a one-off or a line (D-114) */
+    if (once && d.by) job.by = d.by; else delete job.by;
     const rhythm: Rhythm | null = once ? null : { id: d.id ?? `r-${Date.now().toString(36)}`, job: job.id,
-      ...(d.often === 'week' ? { times: d.times } : d.often === 'days' ? { days: [...d.days].sort() } : { every: 2 as const }), ...(d.time ? { time: d.time } : {}) };
+      ...(d.often === 'week' ? { times: d.times } : d.often === 'days' ? { days: [...d.days].sort() } : d.often === 'fort' ? { every: 2 as const }
+        : d.often === 'month' ? { monthly: d.mode === 'date' ? { day: d.mday } : { nth: d.nth, weekday: d.wday } }
+        : d.often === 'year' ? { yearly: d.ydate } : { everyDays: d.every }), ...(d.time ? { time: d.time } : {}) };
     game.do({ do: 'saveJob', job, rhythm });
     /* "Remind me" (D-107) is kept with the rhythm; it alerts only while the rhythm has a time */
     if (rhythm && d.remind !== (d.id ? reminderOf(game.facts, rhythmTarget(rhythm.id)) : null)) game.do({ do: 'remind', target: rhythmTarget(rhythm.id), lead: d.remind });
+    /* a date's reminder: the morning of it, or the day before (D-114) */
+    const dr = job.by ? d.dremind : null;
+    if (dr !== reminderOf(game.facts, dateTarget(job.id))) game.do({ do: 'remind', target: dateTarget(job.id), lead: dr });
     close();
   }
   /* Remove: gone from every list at once, with an Undo; no confirmation (D-112) */
@@ -121,9 +145,16 @@
         {#each others as j (j.id)}
           <button class="row" onclick={() => edit(j)}>
             <span class="pip"></span>
-            <span class="t">{j.name}<small>{t('job.onceUntil')} · {size(j)}{j.delve ? ' · ' + t('rhythms.asDelves') : ''}</small></span>
+            <span class="t">{j.name}<small>{j.by ? byWords(j.by) : t('job.onceUntil')} · {size(j)}{j.delve ? ' · ' + t('rhythms.asDelves') : ''}</small></span>
             <span class="s"></span>
           </button>
+          {#if j.by && j.by < v.day}
+            <!-- a date passed: one question, no red, no count (D-038, D-114) -->
+            <div class="passed"><span>{t('by.passed')}</span>
+              <button class="text-link small" onclick={() => { const job = { ...j }; delete job.by; game.do({ do: 'saveJob', job, rhythm: null }); }}><span>{t('by.still')}</span></button>
+              <button class="text-link small" onclick={() => edit(j)}><span>{t('by.new')}</span></button>
+              <button class="text-link small" onclick={() => game.do({ do: 'removeJob', id: j.id })}><span>{t('by.letGo')}</span></button></div>
+          {/if}
         {/each}
       {/if}
       <!-- the week is the arrow at the top: no second link to it (it said "Plan my week" and planned nothing; review 2) -->
@@ -143,6 +174,12 @@
           <button aria-pressed={d.often === 'days'} onclick={() => (d!.often = 'days')}>{t('rhythms.setDays')}</button>
           <button aria-pressed={d.often === 'fort'} onclick={() => (d!.often = 'fort')}>{t('rhythms.fortnight')}</button>
         </div>
+        <!-- the longer ones (D-114): rent on the 1st, a birthday, the haircut every few weeks -->
+        <div class="seg often more" role="group" aria-label={t('rhythms.often')}>
+          <button aria-pressed={d.often === 'month'} onclick={() => (d!.often = 'month')}>{t('rhythms.monthly')}</button>
+          <button aria-pressed={d.often === 'year'} onclick={() => (d!.often = 'year')}>{t('rhythms.yearlyShort')}</button>
+          <button aria-pressed={d.often === 'every'} onclick={() => (d!.often = 'every')}>{t('rhythms.everyShort')}</button>
+        </div>
         {#if d.often === 'week'}
           <div class="stepper">
             <button class="btn-quiet step" disabled={d.times <= 1} onclick={() => (d!.times = Math.max(1, d!.times - 1))} aria-label={t('rhythms.less')}><span>−</span></button>
@@ -155,6 +192,39 @@
           </div>
         {:else if d.often === 'fort'}
           <p class="soft val-note">{t('rhythms.every2long')}</p>
+        {:else if d.often === 'month'}
+          <div class="seg" role="group" aria-label={t('rhythms.monthly')}>
+            <button aria-pressed={d.mode === 'date'} onclick={() => (d!.mode = 'date')}>{t('rhythms.onADate')}</button>
+            <button aria-pressed={d.mode === 'nth'} onclick={() => (d!.mode = 'nth')}>{t('rhythms.onAWeekday')}</button>
+          </div>
+          {#if d.mode === 'date'}
+            <div class="stepper">
+              <button class="btn-quiet step" disabled={d.mday <= 1} onclick={() => (d!.mday -= 1)} aria-label={t('rhythms.less')}><span>−</span></button>
+              <span class="val">{t('rhythms.monthDay', { n: dayOrd(d.mday) })}</span>
+              <button class="btn-quiet step" disabled={d.mday >= 31} onclick={() => (d!.mday += 1)} aria-label={t('rhythms.more')}><span>+</span></button>
+            </div>
+          {:else}
+            <div class="seg days" role="group" aria-label={t('rhythms.onAWeekday')}>
+              {#each [1, 2, 3, 4, -1] as x (x)}<button aria-pressed={d.nth === x} onclick={() => (d!.nth = x as 1)}>{t(`rhythms.nth.${x}` as never)}</button>{/each}
+            </div>
+            <div class="seg days" role="group" aria-label={t('rhythms.onAWeekday')}>
+              {#each DAYS as x (x)}<button aria-pressed={d.wday === x} onclick={() => (d!.wday = x)}>{t(`days.short.${x}` as never)}</button>{/each}
+            </div>
+          {/if}
+          <p class="soft val-note">{often({ id: '', job: '', monthly: d.mode === 'date' ? { day: d.mday } : { nth: d.nth, weekday: d.wday } })}</p>
+        {:else if d.often === 'year'}
+          <div class="stepper">
+            <input class="clock val carve" type="date" value={`2026-${d.ydate}`} aria-label={t('rhythms.yearlyShort')}
+              onchange={e => { const x = e.currentTarget.value; if (x) d!.ydate = x.slice(5, 10); }} />
+          </div>
+          <p class="soft val-note">{t('rhythms.yearly', { date: yearWords(d.ydate) })}</p>
+        {:else if d.often === 'every'}
+          <div class="stepper">
+            <button class="btn-quiet step" disabled={d.every <= 2} onclick={() => (d!.every -= 1)} aria-label={t('rhythms.less')}><span>−</span></button>
+            <span class="val">{t('rhythms.everyN', { n: d.every })}</span>
+            <button class="btn-quiet step" disabled={d.every >= 90} onclick={() => (d!.every += 1)} aria-label={t('rhythms.more')}><span>+</span></button>
+          </div>
+          <p class="soft val-note">{t('rhythms.everySay')}</p>
         {:else}
           <p class="soft val-note">{t('job.onceSay')}</p>
         {/if}
@@ -199,6 +269,28 @@
         {/if}
         {/if}
 
+        {#if d.often === 'once' || d.job.item}
+          <!-- by a date (D-114): the plan works back from it; no red, no count -->
+          <div class="label-line">{t('by.label')}</div>
+          <div class="seg" role="group" aria-label={t('by.label')}>
+            <button aria-pressed={d.by === null} onclick={() => (d!.by = null)}>{t('by.none')}</button>
+            <button aria-pressed={d.by !== null} onclick={() => (d!.by ??= addDays(v.day, 7))}>{t('by.set')}</button>
+          </div>
+          {#if d.by !== null}
+            <div class="stepper">
+              <input class="clock val carve" type="date" value={d.by} min={v.day} aria-label={t('by.label')}
+                onchange={e => { const x = e.currentTarget.value; if (x) d!.by = x; }} />
+            </div>
+            <p class="soft val-note">{byWords(d.by)}</p>
+            <div class="label-line">{t('remind.label')}</div>
+            <div class="seg" role="group" aria-label={t('remind.label')}>
+              <button aria-pressed={d.dremind === null} onclick={() => (d!.dremind = null)}>{t('remind.off')}</button>
+              <button aria-pressed={d.dremind === 0} onclick={() => (d!.dremind = 0)}>{t('remind.date.day')}</button>
+              <button aria-pressed={d.dremind === 1440} onclick={() => (d!.dremind = 1440)}>{t('remind.date.before')}</button>
+            </div>
+          {/if}
+        {/if}
+
         <!-- "I tend to put this off" (D-030, P5): an avoided job is offered early, and brings a find when done -->
         <div class="label-line">{t('job.avoided')}</div>
         <div class="seg" role="group" aria-label={t('job.avoided')}>
@@ -233,7 +325,9 @@
   .editor .seg:not(.days) button { letter-spacing: .08em; padding-left: 4px; padding-right: 4px; white-space: nowrap; }
   /* four choices of how often on one line, even on a small phone (D-112) */
   .editor .seg.often button { letter-spacing: .03em; font-size: 12px; padding-left: 2px; padding-right: 2px; }
+  .editor .seg.often.more { margin-top: 4px; }
   .others { margin-top: 18px; }
+  .passed { display: flex; flex-wrap: wrap; align-items: center; gap: 0 12px; padding: 2px 0 8px 22px; font-style: italic; font-size: 15px; color: var(--ink-2); }
   .said { margin: 8px 0 0; color: var(--ink-2); font-style: italic; }
   .links.undo { margin: 4px 0 14px; }
   .stepper input.val { flex: 1; }

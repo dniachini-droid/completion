@@ -24,6 +24,8 @@ export interface Job {
   firstStep?: string;
   /** A line from the satchel or the week (TOOLS §2): offered on Today only when planned for the day. */
   item?: boolean;
+  /** Wanted by this date (YYYY-MM-DD): a satchel line or a one-off (D-114). Never a red mark or a count (D-038). */
+  by?: string;
   /** One line of Dan's own: where he stopped, or anything to keep with the job (D-112). */
   note?: string;
   /** Its rhythm was stopped (set by `live`): it leaves Today, the plan and Choose a delve until it repeats again. */
@@ -97,7 +99,7 @@ export type FactBody =
   | { type: 'keyHeld' }
   | { type: 'keyUsed' }
   | { type: 'sealOpened'; seal: string }
-  | { type: 'findGiven'; id: string; why: 'avoided' | 'switching' | 'chamber' | 'camp' | 'surplus' | 'morning'; job?: number }
+  | { type: 'findGiven'; id: string; why: 'avoided' | 'switching' | 'chamber' | 'camp' | 'surplus' | 'morning' | 'dated'; job?: number }
   | { type: 'recordShown'; id: string }
   | { type: 'storyWeekBegan'; w: number }
   /* Dan's small choices on a beat (never gating) and his guesses at marks */
@@ -127,7 +129,8 @@ export type FactBody =
   | { type: 'offerAnswered'; week: string }
   | { type: 'welcomed'; since: string; question: string | null }
   /* reminders (D-107): opt-in, one per item, only for things with a time (core/reminders.ts); null turns one off */
-  | { type: 'reminderSet'; target: string; lead: 0 | 15 | 60 | null }
+  /** lead: minutes before a time; for a date (`d:<job>`, D-114) 0 is its morning and 1440 the day before */
+  | { type: 'reminderSet'; target: string; lead: 0 | 15 | 60 | 1440 | null }
   | { type: 'remindersSwitched'; on: boolean }
 
 /** One job placed on a day of the week plan (PLANNER.md). A forecast: moving it earns nothing and loses nothing. */

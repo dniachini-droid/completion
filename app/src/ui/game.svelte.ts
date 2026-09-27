@@ -261,8 +261,10 @@ class Game {
   }
   /** A reminder's words, in the app's voice. */
   remindWords(a: Alert): { title: string; body: string } {
-    if (a.kind === 'bedtime') return { title: t('remind.bed.title', { time: a.time }), body: t(`remind.bed.${a.lead}`) };
-    return { title: this.job(a.job ?? '')?.name ?? '', body: t(`remind.job.${a.lead}`, { time: a.time }) };
+    if (a.kind === 'bedtime') return { title: t('remind.bed.title', { time: a.time }), body: t(`remind.bed.${a.lead as 0 | 15 | 60}`) };
+    /* a date (D-114): its words never say "late" or count days */
+    if (a.kind === 'by') return { title: this.job(a.job ?? '')?.name ?? '', body: t(a.lead ? 'remind.by.before' : 'remind.by.day') };
+    return { title: this.job(a.job ?? '')?.name ?? '', body: t(`remind.job.${a.lead as 0 | 15 | 60}`, { time: a.time }) };
   }
 
   /** Dan's marks on a run (Start it now, Pause, Back to the delve), as the run's rules read them. */

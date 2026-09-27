@@ -67,7 +67,7 @@ export const roomOf = (j: Job) => j.delve ? j.enoughAt ?? j.length : j.length;
 
 /* ---------- the satchel ---------- */
 
-export interface Item { id: string; name: string; added: string; done: boolean; someday: boolean; }
+export interface Item { id: string; name: string; added: string; done: boolean; someday: boolean; by?: string; }
 
 /** Dan's lines, oldest first. Ticked ones stay ticked that day and leave the list the day after (D-110); dropped ones
     go; untouched for three weeks, someday (TOOLS §2). */
@@ -83,7 +83,7 @@ export function items(facts: Fact[], day: string): Item[] {
     /* the job editor (D-112): a line renamed, removed, or put back by Undo */
     else if (f.type === 'jobSaved' && f.job.item) {
       const it = out.get(f.job.id) ?? gone.get(f.job.id);
-      if (it) { it.name = f.job.name; out.set(it.id, it); gone.delete(it.id); }
+      if (it) { it.name = f.job.name; if (f.job.by) it.by = f.job.by; else delete it.by; out.set(it.id, it); gone.delete(it.id); touched.set(it.id, f.day); }
     }
     else if (f.type === 'jobRemoved' && out.has(f.id)) { gone.set(f.id, out.get(f.id)!); out.delete(f.id); }
     else if (f.type === 'planAdded' && out.has(f.entry.job)) touched.set(f.entry.job, f.day);
@@ -93,7 +93,8 @@ export function items(facts: Fact[], day: string): Item[] {
   const order = [...new Set(ofType(facts, 'itemAdded').map(f => f.id))];
   const sorted = [...out.values()].sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
   out.clear(); for (const it of sorted) out.set(it.id, it);
-  for (const it of out.values()) it.someday = !it.done && daysBetween(touched.get(it.id)!, day) >= SOMEDAY_DAYS;
+  /* a dated line never goes to someday (D-114) */
+  for (const it of out.values()) it.someday = !it.done && !it.by && daysBetween(touched.get(it.id)!, day) >= SOMEDAY_DAYS;
   return [...out.values()];
 }
 
@@ -146,6 +147,15 @@ export function planWeek(c: Content, facts: Fact[], week: string, from: string):
   const ever = new Set(ofType(facts, 'jobDone').map(f => f.job));
   const rhythmJob = new Set(c.rhythms.map(r => r.job));
 
+  /* dated work first (D-114): on the last day with room at least 2 days before its date; already that close, the first
+     day with room. A date further off waits for its own week. */
+  for (const j of c.jobs.filter(x => x.by && !x.stopped && !ever.has(x.id))) {
+    const target = addDays(j.by!, -2);
+    if (target > days[days.length - 1]) continue;
+    const room = (x: string) => load(x) < cap(x);
+    const d = [...days].reverse().find(x => x <= target && room(x)) ?? days.find(room);
+    if (d) put(j.id, d);
+  }
   /* appointments and set days first (they may pass a day's size: an appointment is fixed, P10) */
   for (const r of c.rhythms) for (const d of days) if (R.fallsOn(r, d) && !doneOnDay(r.job, d)) put(r.job, d, r.time);
   /* every N days since last done: on the day it falls due, then every N days after (D-114) */
@@ -158,7 +168,7 @@ export function planWeek(c: Content, facts: Fact[], week: string, from: string):
     }
   }
   /* avoided one-offs early in the week, one to a day where the week allows */
-  for (const j of c.jobs.filter(x => x.avoided && !x.item && !x.stopped && !rhythmJob.has(x.id) && !ever.has(x.id))) {
+  for (const j of c.jobs.filter(x => x.avoided && !x.item && !x.stopped && !x.by && !rhythmJob.has(x.id) && !ever.has(x.id))) {
     const d = days.find(x => load(x) < cap(x) && !out.some(e => e.day === x && c.jobs.find(k => k.id === e.job)?.avoided)) ?? days.find(x => load(x) < cap(x));
     if (d) put(j.id, d);
   }

@@ -342,6 +342,17 @@ export const copy = {
   'rhythms.onceWeek': 'Once a week',
   'rhythms.every2': 'every 2 weeks',
   'rhythms.every2long': 'Once every 2 weeks',
+  'week.later': 'A later week', 'week.after': 'The week after', 'week.otherDay': 'Another day…',
+  'by.date': 'by {date}', 'by.label': 'By a date', 'by.none': 'No date', 'by.set': 'By',
+  'by.passed': 'Its date has passed.', 'by.still': 'Still needed', 'by.new': 'New date', 'by.letGo': 'Let it go',
+  'rhythms.monthly': 'Monthly', 'rhythms.yearlyShort': 'Yearly', 'rhythms.everyShort': 'Every few days',
+  'rhythms.onADate': 'On a date', 'rhythms.onAWeekday': 'On a weekday',
+  'rhythms.monthDay': 'on the {n} of each month', 'rhythms.lastDay': 'last day',
+  'rhythms.monthNth': 'on the {nth} {day} of each month',
+  'rhythms.nth.1': 'first', 'rhythms.nth.2': 'second', 'rhythms.nth.3': 'third', 'rhythms.nth.4': 'fourth', 'rhythms.nth.-1': 'last',
+  'rhythms.yearly': 'every year on {date}',
+  'rhythms.everyN': 'every {n} days',
+  'rhythms.everySay': 'Counted from the day you last did it, not from a date.',
   'rhythms.each': 'Each time',
   'rhythms.enough': 'Enough at',
   'rhythms.all': 'All of it',
@@ -417,6 +428,8 @@ export const copy = {
   'remind.bed.15': 'A quarter of an hour to your bedtime. Time to begin winding down.',
   'remind.bed.60': 'An hour to your bedtime.',
   'remind.again': 'Again in 10 min',
+  'remind.by.day': 'Today is the day you gave it.', 'remind.by.before': 'Tomorrow is the day you gave it.',
+  'remind.date.day': 'On the morning', 'remind.date.before': 'The day before',
   'notify.delveEnd.title': 'The delve is over',
   'notify.delveEnd.body': 'Come back up when you are ready.',
   'notify.breatherEnd.title': 'The next delve is starting',
@@ -464,6 +477,11 @@ export const inSentence = (name: string) => name.replace(/^The /, 'the ');
 /** "Monday", from a game day. */
 export const dayName = (day: string) => copy[`day.${new Date(`${day}T00:00:00Z`).getUTCDay()}` as CopyKey];
 /** "27 September 2026" */
+/** "by Fri 10 Oct": a line's date, in the quiet italic (D-114). */
+export function byWords(day: string): string {
+  const d = new Date(`${day}T00:00:00Z`);
+  return copy['by.date' as CopyKey].replace('{date}', `${copy[`days.short.${d.getUTCDay()}` as CopyKey]} ${d.getUTCDate()} ${copy[`month.${d.getUTCMonth() + 1}` as CopyKey].slice(0, 3)}`);
+}
 export function dateWords(day: string): string {
   const d = new Date(`${day}T00:00:00Z`);
   return `${d.getUTCDate()} ${copy[`month.${d.getUTCMonth() + 1}` as CopyKey]} ${d.getUTCFullYear()}`;
