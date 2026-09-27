@@ -1009,6 +1009,20 @@ describe('Delete, everywhere (Dan, D-125)', () => {
     expect(p.view().slate).toContain(id);
     expect(p.view().done.has(id)).toBe(true);
   });
+  it('a done session of a repeating job deleted: only that record goes; the repeat, its session and minutes stay; Undo', () => {
+    const p = player().do({ do: 'open' });
+    const r = C.rhythms.find(x => p.view().slate.includes(x.job))!;
+    p.did(r.job);
+    const walked = p.view().walked, day = p.view().day;
+    p.do({ do: 'hideDone', job: r.job, on: day });
+    expect(p.view().slate).not.toContain(r.job);
+    expect(W.weekOf(p.view().content, p.facts, MON, day).days.flatMap(d => d.jobs).some(j => j.job === r.job && j.done)).toBe(false);
+    expect(p.view().content.rhythms.some(x => x.id === r.id)).toBe(true);
+    expect(S.sessionsIn(p.facts, r, day)).toBe(1);
+    expect(p.view().walked).toBe(walked);
+    p.do({ do: 'hideDone', job: r.job, on: day, back: true });
+    expect(p.view().slate).toContain(r.job);
+  });
   it('a repeating job deleted takes its repeat with it; Undo brings both back', () => {
     const p = player().do({ do: 'open' });
     const r = C.rhythms[0], job = p.view().content.jobs.find(j => j.id === r.job)!;

@@ -65,7 +65,12 @@
   let swiped = $state<string | null>(null), drag = $state<{ id: string; x0: number; y0: number; dx: number } | null>(null);
   const ACTION = 96;
   const openOf = (id: string) => (v.done.has(id) ? 1 : 2) * ACTION;
-  function down(e: PointerEvent, id: string) { if (!v.run) drag = { id, x0: e.clientX, y0: e.clientY, dx: swiped === id ? -openOf(id) : 0 }; }
+  function down(e: PointerEvent, id: string) {
+    suppress = false;
+    /* a tap on "It's done" or on the slid-out buttons is a tap, never the start of a slide (review, D-125) */
+    if ((e.target as Element).closest?.('.row-done, .acts')) return;
+    if (!v.run) drag = { id, x0: e.clientX, y0: e.clientY, dx: swiped === id ? -openOf(id) : 0 };
+  }
   function move(e: PointerEvent) {
     if (!drag) return;
     const open = openOf(drag.id), base = swiped === drag.id ? -open : 0, dx = e.clientX - drag.x0, dy = e.clientY - drag.y0;
@@ -81,7 +86,8 @@
   let suppress = false;
   function tapRow(id: string) { if (suppress) { suppress = false; return; } if (!v.done.has(id)) start(id); }
   const offset = (id: string) => drag?.id === id ? drag.dx : swiped === id ? -openOf(id) : 0;
-  function remove(id: string) { swiped = null; game.remove(id); }
+  /* a done row: only that day's record goes (its minutes stay); otherwise the job (D-125) */
+  function remove(id: string) { swiped = null; if (v.done.has(id)) game.removeDone(id, v.day); else game.remove(id); }
 
   /* the evening (D-093): going to bed lives on Today, no page of its own. From five hours before bedtime (when Go to
      sleep counts, D-083) Today carries "Tonight": the bedtime, one tap to change it, and Go to sleep. Once said, the

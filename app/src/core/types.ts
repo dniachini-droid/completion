@@ -112,6 +112,8 @@ export type FactBody =
   /** A job edited or added by itself (the job editor, D-112): its whole new shape. Removed: gone from every list. */
   | { type: 'jobSaved'; job: Job }
   | { type: 'jobRemoved'; id: string }
+  /* a done record deleted (D-125): that day's record of a repeating job leaves the lists; its minutes stay. `back`: Undo */
+  | { type: 'doneHidden'; job: string; on: string; back?: boolean }
   /** The week's look-ahead in the Daybook (D-116): a line kept or put to someday by hand, the one thing that matters
       most this week (null: nothing in particular), and whether the look-ahead was opened and finished (the test's notes). */
   | { type: 'itemKept'; id: string }

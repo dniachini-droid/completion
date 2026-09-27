@@ -48,6 +48,7 @@ export function copyDue(names: string[], today: string): boolean {
 }
 /** What a copy holds, for the question before a restore: the last day played in it and how many jobs were done. */
 export function copySummary(s: Save): { day: string | null; done: number } {
-  const last = s.facts[s.facts.length - 1];
+  /* a plan change's "day" is where it moves to, not a day played (D-125) */
+  const last = [...s.facts].reverse().find(f => f.type !== 'planChanged');
   return { day: last?.day ?? null, done: s.facts.filter(f => f.type === 'jobDone').length };
 }

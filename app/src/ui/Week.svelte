@@ -65,7 +65,8 @@
   }
   $effect(() => { void open; otherOpen = false; });
   const keyOf = (j: DayJob, day: string) => j.done ? `done:${day}:${j.job}` : j.entry!;
-  function remove(j: DayJob) { open = null; game.remove(j.job); }
+  /* a done row: only that day's record goes (its minutes stay); otherwise the job (D-125) */
+  function remove(j: DayJob, day: string) { open = null; if (j.done) game.removeDone(j.job, day); else game.remove(j.job); }
   function moveTo(j: DayJob, from: string, day: string) {
     if (day !== from) game.do({ do: 'movePlan', entry: j.entry!, day });
     open = null;
@@ -166,7 +167,7 @@
             </button>
             {#if open && j.done && open === keyOf(j, d.day)}
               <!-- a done job: only Delete; the minutes it counted for stay (Dan, D-125) -->
-              <div class="sheet"><div class="off"><button class="text-link" onclick={() => remove(j)}><span>{t('job.delete')}</span></button></div></div>
+              <div class="sheet"><div class="off"><button class="text-link" onclick={() => remove(j, d.day)}><span>{t('job.delete')}</span></button></div></div>
             {:else if open && open === j.entry}
               <div class="sheet">
                 <div class="label-line">{t('week.moveTo')}</div>
@@ -201,7 +202,7 @@
                   <button class="text-link" onclick={() => off(j)}><span>{t('week.off')}</span></button>
                   <!-- the job itself: its name, length, first step… (D-112) -->
                   <button class="text-link" onclick={() => go('rhythms', j.job)}><span>{t('job.change')}</span></button>
-                  <button class="text-link" onclick={() => remove(j)}><span>{t('job.delete')}</span></button>
+                  {#if v.run?.job.id !== j.job}<button class="text-link" onclick={() => remove(j, d.day)}><span>{t('job.delete')}</span></button>{/if}
                 </div>
               </div>
             {/if}

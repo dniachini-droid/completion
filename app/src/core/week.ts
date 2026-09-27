@@ -277,7 +277,9 @@ export function weekOf(c: Content, facts: Fact[], week: string, today: string): 
   const done = doneIn(facts, week);
   /* what was done, on the day it was done */
   /* a job deleted after it was done no longer shows; the minutes it counted for stay (Dan, D-125) */
-  for (const f of done) if (f.day <= today && c.jobs.some(j => j.id === f.job)) at(f.day)?.jobs.push({ entry: null, job: f.job, done: true });
+  const hidden = new Set<string>();
+  for (const f of ofType(facts, 'doneHidden')) { const k = `${f.job}|${f.on}`; if (f.back) hidden.delete(k); else hidden.add(k); }
+  for (const f of done) if (f.day <= today && c.jobs.some(j => j.id === f.job) && !hidden.has(`${f.job}|${f.day}`)) at(f.day)?.jobs.push({ entry: null, job: f.job, done: true });
   if (!plan) return { week, planned: false, days };
   const rhythm = (job: string) => c.rhythms.find(r => r.job === job);
   const met = (job: string) => { const r = rhythm(job); return r ? sessions(facts, r, week) >= need(r) : done.some(f => f.job === job) || ofType(facts, 'jobDone').some(f => f.job === job); };
@@ -295,6 +297,7 @@ export function weekOf(c: Content, facts: Fact[], week: string, today: string): 
   const released: PlanEntry[] = [];
   for (const e of plan) {
     if (!c.jobs.some(j => j.id === e.job && !j.stopped)) continue;
+    if (e.day <= today && hidden.has(`${e.job}|${e.day}`)) continue;   /* done there, and its record deleted (D-125) */
     const dj = at(e.day)?.jobs.find(x => x.done && x.job === e.job && x.entry === null);
     if (e.day <= today && dj) { dj.entry = e.id; if (e.time) dj.time = e.time; continue; }   /* done as planned */
     if (e.day < today) { if (!e.time) released.push(e); continue; }   /* a missed appointment falls away (D-080) */

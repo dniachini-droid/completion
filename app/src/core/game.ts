@@ -129,6 +129,12 @@ function sizeOn(facts: Fact[], day: string, c?: Content) {
 const doneOn = (facts: Fact[], day: string) => new Set(ofType(onDay(facts, day), 'jobDone').map(f => f.job));
 /** Jobs done with real minutes behind them: only these complete a day or call the deep push (rule 10, D-117, D-121). */
 const workedOn = (facts: Fact[], day: string) => new Set(ofType(onDay(facts, day), 'jobDone').filter(f => f.minutes >= S.RETURN_MIN).map(f => f.job));
+/** Done records Dan deleted (D-125), as "job|day": they leave the lists; the minutes they counted for stay. */
+export function hiddenDone(facts: Fact[]): Set<string> {
+  const out = new Set<string>();
+  for (const f of ofType(facts, 'doneHidden')) { const k = `${f.job}|${f.on}`; if (f.back) out.delete(k); else out.add(k); }
+  return out;
+}
 const completedOn = (facts: Fact[], day: string) => onDay(facts, day).some(f => f.type === 'dayCompleted');
 export const delveMinutesOn = (facts: Fact[], day: string, job: string) =>
   ofType(onDay(facts, day), 'stepsGained').filter(f => f.job === job && f.run !== undefined).reduce((a, f) => a + f.minutes, 0);
@@ -618,6 +624,7 @@ export type Command =
   /* the job editor (D-112): any job, with or without a rhythm; removing it (Undo saves it again); its first step, its note */
   | { do: 'saveJob'; job: Job; rhythm: Rhythm | null }
   | { do: 'removeJob'; id: string }
+  | { do: 'hideDone'; job: string; on: string; back?: boolean }
   | { do: 'firstStep'; job: string; step: string }
   | { do: 'noteJob'; job: string; note: string }
   | { do: 'addItems'; lines: string[] }
@@ -753,6 +760,7 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       break;
     }
     case 'removeJob': if (c.jobs.some(j => j.id === cmd.id)) w.put({ type: 'jobRemoved', id: cmd.id }); break;
+    case 'hideDone': if (doneOn(w.all, cmd.on).has(cmd.job)) w.put({ type: 'doneHidden', job: cmd.job, on: cmd.on, ...(cmd.back ? { back: true } : {}) }); break;
     case 'firstStep': case 'noteJob': {
       const j = c.jobs.find(x => x.id === cmd.job);
       const text = (cmd.do === 'firstStep' ? cmd.step : cmd.note).trim().slice(0, 160), key = cmd.do === 'firstStep' ? 'firstStep' : 'note';
@@ -1084,9 +1092,11 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   }
   slate.sort((a, b) => order.indexOf(a) - order.indexOf(b));
   /* a job deleted after it was done leaves the list; the minutes it counted for stay (Dan, D-125) */
-  const kept = (id: string) => c.jobs.some(j => j.id === id);
+  const hidden = hiddenDone(facts), kept = (id: string) => c.jobs.some(j => j.id === id) && !hidden.has(`${id}|${day}`);
   for (const id of order) if (done.has(id) && !slate.includes(id) && kept(id)) slate.push(id);   /* off-plan counts in full */
   for (const id of done) if (!slate.includes(id) && kept(id)) slate.push(id);   /* so does something chosen from outside the list (D-077) */
+  /* a done record deleted leaves even a planned place on the list (D-125) */
+  for (let i = slate.length - 1; i >= 0; i--) if (done.has(slate[i]) && hidden.has(`${slate[i]}|${day}`)) slate.splice(i, 1);
   const complete = completedOn(facts, day);
   /* "under way" was a job without a timer begun away from the phone; every job is a delve now (D-117), so an old Begin
      in a save leaves nothing under way */
