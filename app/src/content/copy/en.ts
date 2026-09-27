@@ -372,11 +372,23 @@ export const copy = {
   'settings.label': 'Settings',
   'settings.reminders': 'Reminders',
   'settings.reminders.say': 'A reminder comes only for something you gave a time and asked to be reminded of: set it where you set the time, in the week or in what repeats. One alert each, and never to call you back to the app.',
-  'settings.reminders.on': 'Reminders on', 'settings.reminders.off': 'All off',
+  'settings.reminders.on': 'On', 'settings.reminders.off': 'All off',
   'settings.reminders.web': 'Reminders sound only in the phone app, not on this web page.',
   'settings.reminders.refused': 'The phone is not letting the app alert you. You can allow it in the phone’s Settings, under this app’s Notifications.',
   'settings.bedtime': 'Bedtime, {time}',
   'settings.trial': 'The trial’s own controls',
+  'settings.save': 'Your save',
+  'settings.save.app': 'Each week a copy is also written to the Files app, under On My iPhone, in Long Answer. The last four are kept.',
+  'settings.save.web': 'On this web page, your save lives in this browser only. Save a copy to keep it safe.',
+  'settings.copy': 'Save a copy',
+  'settings.restore': 'Restore from a copy',
+  'settings.restore.ask': 'Restore the copy from {date}? It holds {n} done. What you have now is kept aside first, so nothing is lost.',
+  'settings.restore.empty': 'Restore this copy? It holds nothing done yet. What you have now is kept aside first, so nothing is lost.',
+  'settings.restore.yes': 'Restore it', 'settings.restore.no': 'Cancel',
+  'settings.restore.bad': 'That file is not a save this app can read. Nothing was changed.',
+  'settings.restore.done': 'The copy is restored.',
+  'settings.copy.failed': 'The copy could not be made. Nothing was changed.',
+  'jobs.one': '1 job', 'jobs.many': '{n} jobs',
   'remind.off': 'Off', 'remind.at.0': 'At the time', 'remind.at.15': '15 min before', 'remind.at.60': '1 h before',
   'remind.job.0': 'It is {time}, the time you set for it.',
   'remind.job.15': 'In a quarter of an hour, at {time}.',
@@ -432,6 +444,11 @@ export const delves = (n: number) => t(n === 1 ? 'delves.one' : 'delves.many', {
 export const inSentence = (name: string) => name.replace(/^The /, 'the ');
 /** "Monday", from a game day. */
 export const dayName = (day: string) => copy[`day.${new Date(`${day}T00:00:00Z`).getUTCDay()}` as CopyKey];
+/** "27 September 2026" */
+export function dateWords(day: string): string {
+  const d = new Date(`${day}T00:00:00Z`);
+  return `${d.getUTCDate()} ${copy[`month.${d.getUTCMonth() + 1}` as CopyKey]} ${d.getUTCFullYear()}`;
+}
 /** "once", "twice", "4 times" */
 export const timesWords = (n: number) => n === 1 ? copy['daybook.once'] : n === 2 ? copy['daybook.twice'] : t('daybook.many', { n });
 /** "a, b and c" */

@@ -10,7 +10,7 @@ import type { Fact } from '../core/types';
 import { content } from '../content/world';
 import { platform } from '../platform';
 import { t } from '../content/copy/en';
-import { readSave, SAVE_VERSION, type Save } from '../core/save';
+import { COPIES_KEPT, COPY_PREFIX, copyDue, copyName, readSave, SAVE_VERSION, type Save } from '../core/save';
 import { alertsDue, type Alert } from '../core/reminders';
 
 export { content };
@@ -47,6 +47,7 @@ class Game {
     this.do({ do: 'open' });
     this.panel();
     void this.reminders();
+    void this.weekly();
     this.#ticker = window.setInterval(() => this.tick(), 250);
     document.addEventListener('visibilitychange', () => { if (!document.hidden) void this.wake(); });
     window.addEventListener('focus', () => void this.wake());
@@ -70,6 +71,7 @@ class Game {
     else this.tick();
     this.native();
     void this.reminders();
+    void this.weekly();
     this.panel();   /* the panel may have run past what it knew while the app was away: put it right */
   }
 
@@ -259,6 +261,35 @@ class Game {
     if (key === this.#panel) return;
     this.#panel = key;
     void platform.panel.show(p);
+  }
+
+  /* ---- copies of the save (D-107) ---- */
+  /** The save as a file: the same text the phone keeps, readable by `readSave` on any later build. */
+  copyText(): string { return JSON.stringify({ version: SAVE_VERSION, content: content.version, facts: this.facts } satisfies Save); }
+  /** Save a copy: the phone's share sheet (Files, iCloud Drive…), or a download on the web link. */
+  saveCopy() { return platform.copies.share(copyName(this.view.day), this.copyText()); }
+  /** Once a week, a copy into the app's Documents folder, which the Files app shows; the last four kept. The real save only. */
+  async weekly() {
+    if (!platform.app || this.proto.rehearsal) return;
+    try {
+      const day = this.view.day;
+      if (copyDue(await platform.copies.list(COPY_PREFIX), day)) await platform.copies.keep(copyName(day), this.copyText(), COPY_PREFIX, COPIES_KEPT);
+    } catch { /* no copy this time; the next opening tries again */ }
+  }
+  /** Restore from a copy: what Dan has now is kept aside first (never overwritten), then the copy becomes the save and
+      the game opens on it as on a cold start. */
+  restore(s: Save) {
+    const saves = platform.saves, now = saves.get(this.saveKey);
+    if (now) saves.keep(`${this.saveKey}.before-restore.${platform.now().getTime()}`, now);
+    saves.write(this.saveKey, s);
+    this.facts = s.facts;
+    this.now = this.clock();
+    this.append(settle(this.facts, content, this.now));
+    this.do({ do: 'open' });
+    this.#watched = '-'; this.native();
+    this.panel();
+    void this.alerts();
+    void this.reminders();
   }
 
   /* ---- prototype controls ---- */

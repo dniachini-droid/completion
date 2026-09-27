@@ -32,3 +32,22 @@ export function readSave(raw: string, to = SAVE_VERSION, steps = MIGRATIONS): { 
   }
   return { save: { version: s.version, content: String(s.content ?? ''), facts: s.facts as Fact[] }, from };
 }
+
+/* ---------- copies of the save (D-107) ---------- */
+
+/** A copy's file name: "Long Answer save 2026-09-27.json". Names sort by date. */
+export const COPY_PREFIX = 'Long Answer save ';
+export const copyName = (day: string) => `${COPY_PREFIX}${day}.json`;
+/** Weekly copies kept in the app's Documents folder. */
+export const COPIES_KEPT = 4;
+/** Whether the weekly copy is due today: none yet, or the newest is a week old. */
+export function copyDue(names: string[], today: string): boolean {
+  const days = names.map(n => n.slice(COPY_PREFIX.length, COPY_PREFIX.length + 10)).filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d)).sort();
+  if (!days.length) return true;
+  return (Date.parse(today) - Date.parse(days[days.length - 1])) / 864e5 >= 7;
+}
+/** What a copy holds, for the question before a restore: the last day played in it and how many jobs were done. */
+export function copySummary(s: Save): { day: string | null; done: number } {
+  const last = s.facts[s.facts.length - 1];
+  return { day: last?.day ?? null, done: s.facts.filter(f => f.type === 'jobDone').length };
+}

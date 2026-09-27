@@ -433,6 +433,15 @@ await tap('Daybook'); await shot('daybook', 1500); await home(); await page.cloc
   await home();
   await tap('Daybook'); await tap('Settings'); await page.clock.runFor(1500); expect('daybook → settings', await backSays(), 'daybook');
   await page.locator('.remind button', { hasText: '1 h before' }).click(); await shot('settings', 800);
+  /* Save a copy, then Restore from it (D-107): the file the web link gives back is read, asked about, and restored */
+  { const [dl] = await Promise.all([page.waitForEvent('download'), tap('Save a copy')]);
+    const file = `${out}/copy.json`; await dl.saveAs(file);
+    if (!/^Long Answer save \d{4}-\d{2}-\d{2}\.json$/.test(dl.suggestedFilename())) errors.push(`COPY named "${dl.suggestedFilename()}"`);
+    const [fc] = await Promise.all([page.waitForEvent('filechooser'), tap('Restore from a copy')]);
+    await fc.setFiles(file); await page.clock.runFor(500);
+    await shot('settings-restore', 500);
+    await tap('Restore it'); await page.clock.runFor(500);
+    if (!(await page.getByText('The copy is restored.').count())) errors.push('COPY the restore did not say it was done'); }
   await tap('The trial’s own controls'); await page.clock.runFor(1500); expect('settings → trial', await backSays(), 'settings');
   await home();
   await tap('Something else…'); await page.locator('.body button.row').first().click(); await page.clock.runFor(800);

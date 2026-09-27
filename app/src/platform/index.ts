@@ -2,7 +2,7 @@ import { Capacitor, registerPlugin } from '@capacitor/core';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { Haptics as CapHaptics, ImpactStyle } from '@capacitor/haptics';
 import { Preferences } from '@capacitor/preferences';
-import type { Away, Panel, PanelState, Platform } from './types';
+import type { Away, Copies, Panel, PanelState, Platform } from './types';
 import { sound } from './chime';
 import { adopt, sqlSaves, textSaves, type Db, type Saves } from './saves';
 
@@ -103,8 +103,39 @@ function readyAgain(again: { label: string; ids: number[] }) {
   })().catch(() => { againReady = null; }));
 }
 
+/* Copies of the save (D-107): the app's own small plugin, ios/App/App/CopyPlugin.swift. */
+const CopyNative = registerPlugin<{
+  share(o: { name: string; text: string }): Promise<unknown>;
+  pick(): Promise<{ text?: string }>;
+  keep(o: { name: string; text: string; prefix: string; most: number }): Promise<void>;
+  list(o: { prefix: string }): Promise<{ names: string[] }>;
+}>('Copy');
+const nativeCopies: Copies = {
+  async share(name, text) { await CopyNative.share({ name, text }); },
+  async pick() { return (await CopyNative.pick()).text ?? null; },
+  keep: (name, text, prefix, most) => CopyNative.keep({ name, text, prefix, most }),
+  async list(prefix) { return (await CopyNative.list({ prefix })).names; },
+};
+/* On the web link: a download, and a file chosen from the computer or phone; no weekly copy (the page can't write one). */
+const webCopies: Copies = {
+  async share(name, text) {
+    const url = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
+    const a = Object.assign(document.createElement('a'), { href: url, download: name });
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10_000);
+  },
+  pick: () => new Promise(done => {
+    const input = Object.assign(document.createElement('input'), { type: 'file', accept: '.json,application/json,text/plain' });
+    input.addEventListener('change', async () => { const f = input.files?.[0]; done(f ? await f.text() : null); });
+    input.addEventListener('cancel', () => done(null));
+    input.click();
+  }),
+  keep: async () => {},
+  list: async () => [],
+};
+
 const native: Platform = {
-  store: nativeStore, sound, now: () => new Date(), app: true, away: nativeAway,
+  store: nativeStore, copies: nativeCopies, sound, now: () => new Date(), app: true, away: nativeAway,
   get saves() { return saves; }, get saveTrouble() { return saveTrouble; },
   ready: async () => { await readKept(); await openSaves(); nativeAway.first = await nativeAway.take(); },
   notifier: {
@@ -140,7 +171,7 @@ const webAway: Away = {
 /* In a browser (the web link, tests): the end chimes if the page is open, and shows when you come back. */
 const webSaves = textSaves(store, 'browser');
 const web: Platform = {
-  store, sound, now: () => new Date(), ready: async () => {}, app: false, away: webAway, saves: webSaves, saveTrouble: null,
+  store, sound, now: () => new Date(), ready: async () => {}, app: false, copies: webCopies, away: webAway, saves: webSaves, saveTrouble: null,
   notifier: { locked: false, permit: async () => false, at: async () => {}, cancel: async () => {}, remind: async () => {} },
   panel: { show: async () => {}, end: async () => {} },
   haptics: {

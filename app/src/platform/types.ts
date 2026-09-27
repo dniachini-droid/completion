@@ -49,6 +49,17 @@ export interface PanelState {
       he left, with these words. `awayLen` is one delve's length on the game's clock, for the time left (0 while paused). */
   awayLabel: string; awayLine: string; awayLeft: string; awayLen: number;
 }
+/** Copies of the save outside the app (D-107): the game decides what a copy holds and what a restore does. */
+export interface Copies {
+  /** Hand a copy to the phone's share sheet (Save to Files, iCloud Drive…); on the web link, download it. */
+  share(name: string, text: string): Promise<void>;
+  /** Let Dan choose a copy (the Files picker; a file on the web link): its text, or null if he chose none. */
+  pick(): Promise<string | null>;
+  /** The weekly copy, written where the Files app shows it, keeping the newest `most` named with `prefix` (the app only). */
+  keep(name: string, text: string, prefix: string, most: number): Promise<void>;
+  /** The weekly copies there now, oldest first (none on the web link). */
+  list(prefix: string): Promise<string[]>;
+}
 export interface Panel { show(p: PanelState): Promise<void>; end(): Promise<void>; }
 export interface Platform {
   notifier: Notifier; haptics: Haptics; store: Store; sound: Sound; now(): Date; away: Away;
@@ -58,6 +69,7 @@ export interface Platform {
   readonly saveTrouble: string | null;
   /** The delve's panel on the lock screen and in the Dynamic Island (the app only; the web link has none). */
   panel: Panel;
+  copies: Copies;
   /** Inside the phone app (no browser around it: the app draws its own swipe back from the left edge). */
   readonly app: boolean;
   /** Wait for the save to be read, before the game starts. */

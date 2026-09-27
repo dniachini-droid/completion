@@ -2,18 +2,44 @@
   /* Settings (D-107): reminders (the one switch, and bedtime's), the save's copies, and the trial's own controls below.
      Reached from the Daybook, out of the day's way. Changing anything here earns nothing and loses nothing. */
   import { game } from './game.svelte';
-  import { t } from '../content/copy/en';
+  import { t, dateWords } from '../content/copy/en';
+  import { copySummary, readSave, type Save } from '../core/save';
   import Scene from './Scene.svelte';
   import Remind from './Remind.svelte';
   import type { Go } from './nav';
   import { back } from './back.svelte';
   import { platform } from '../platform';
+  import { flushSync } from 'svelte';
   import { BEDTIME, reminderOf, remindersOn } from '../core/reminders';
 
   let { go }: { go: Go } = $props();
   const v = $derived(game.view);
   const on = $derived(remindersOn(game.facts));
   const bed = $derived(reminderOf(game.facts, BEDTIME));
+
+  /* the save's copies (D-107): Save a copy; Restore asks once, in plain words, and keeps what is there now aside */
+  let asking = $state<Save | null>(null), said = $state('');
+  async function copy() {
+    said = '';
+    try { await game.saveCopy(); } catch { said = t('settings.copy.failed'); }
+  }
+  async function pick() {
+    said = ''; asking = null;
+    let text: string | null = null;
+    try { text = await platform.copies.pick(); } catch { /* chose none */ }
+    if (text === null) return;
+    const read = readSave(text);
+    if (!read) { said = t('settings.restore.bad'); return; }
+    asking = read.save;
+    flushSync(); askEl?.scrollIntoView({ block: 'nearest' });
+  }
+  let askEl = $state<HTMLDivElement | null>(null);
+  function ask(s: Save): string {
+    const { day, done } = copySummary(s);
+    const n = t(done === 1 ? 'jobs.one' : 'jobs.many', { n: done });
+    return day && done ? t('settings.restore.ask', { date: dateWords(day), n }) : t('settings.restore.empty');
+  }
+  function restore() { if (!asking) return; game.restore(asking); asking = null; said = t('settings.restore.done'); }
 </script>
 
 <Scene painting={v.here.painting} blur />
@@ -42,6 +68,21 @@
       {:else if game.alertsOff}<p class="soft note">{t('settings.reminders.refused')}</p>{/if}
     </section>
 
+    <section>
+      <div class="label-line">{t('settings.save')}</div>
+      <p class="soft note">{platform.app ? t('settings.save.app') : t('settings.save.web')}</p>
+      <button class="btn-quiet full" onclick={copy}><span>{t('settings.copy')}</span></button>
+      {#if asking}
+        <div class="ask" bind:this={askEl}>
+          <p class="say">{ask(asking)}</p>
+          <div class="btn-row"><button class="btn" onclick={restore}>{t('settings.restore.yes')}</button><button class="btn-quiet" onclick={() => (asking = null)}><span>{t('settings.restore.no')}</span></button></div>
+        </div>
+      {:else}
+        <button class="btn-quiet full gap" onclick={pick}><span>{t('settings.restore')}</span></button>
+      {/if}
+      {#if said}<p class="say said" aria-live="polite">{said}</p>{/if}
+    </section>
+
     <div class="links"><button class="text-link" onclick={() => go('proto')}><span>{t('settings.trial')}</span></button></div>
   </div>
 </div>
@@ -54,6 +95,11 @@
   .note { text-align: left; margin: 6px 0 10px; font-size: 15px; }
   .seg { margin-top: 6px; }
   .bed { margin-top: 16px; color: var(--ink-2); }
+  .full { width: 100%; }
+  .gap { margin-top: 10px; }
+  .ask { margin-top: 12px; border: 1px solid var(--edge-2); background: rgba(10,9,24,.7); padding: 12px 14px; }
+  .ask .say { margin-bottom: 12px; }
+  .said { margin-top: 10px; color: var(--ink-2); }
   .links { display: flex; justify-content: center; gap: 18px; margin-top: 22px; }
   button.home { color: var(--ink-2); }
 </style>

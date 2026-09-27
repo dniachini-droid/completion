@@ -5,7 +5,7 @@
  */
 import { describe, expect, test } from 'vitest';
 import { act, see, settle } from '../../src/core/game';
-import { readSave, SAVE_VERSION, type Migration, type Save } from '../../src/core/save';
+import { copyDue, copyName, copySummary, readSave, SAVE_VERSION, type Migration, type Save } from '../../src/core/save';
 import type { Fact, FactBody } from '../../src/core/types';
 import { adopt, sqlSaves, textSaves } from '../../src/platform/saves';
 import { content as C } from '../../src/content/world';
@@ -219,5 +219,39 @@ describe('versions and migrations', () => {
     expect(job).toBeTruthy();
     facts = facts.concat(act(facts, C, { do: 'begin', job: job! }, next));
     expect(facts.at(-1)!.type).toBe('jobBegun');
+  });
+});
+
+describe('copies of the save (D-107)', () => {
+  test('a copy is the save as it is: read back whole by readSave, and it plays on', () => {
+    const p = sim().week('normal');
+    const text = JSON.stringify(save(p.facts));
+    const r = readSave(text)!;
+    expect(r.save.facts).toEqual(p.facts);
+    const now = '2026-10-05T09:00:00+01:00';
+    const facts = r.save.facts.concat(act(r.save.facts, C, { do: 'open' }, now));
+    expect(see(facts, C, now).next).not.toBeNull();
+  });
+  test('a copy from an older version is brought up as any old save is; an unreadable or newer file is refused', () => {
+    for (const raw of Object.values(samples())) expect(readSave(raw)).not.toBeNull();
+    expect(readSave('{"hello": 1}')).toBeNull();
+    expect(readSave('not a save')).toBeNull();
+    expect(readSave(JSON.stringify(save([], SAVE_VERSION + 1)))).toBeNull();
+  });
+  test('the question before a restore says the copy’s last day and how much it holds', () => {
+    const p = sim().week('normal');
+    const s = copySummary(save(p.facts));
+    expect(s.day).toBe(p.facts.at(-1)!.day);
+    expect(s.done).toBe(p.facts.filter(f => f.type === 'jobDone').length);
+    expect(s.done).toBeGreaterThan(0);
+    expect(copySummary(save([]))).toEqual({ day: null, done: 0 });
+  });
+  test('the weekly copy: due with none yet, and again a week after the newest', () => {
+    expect(copyName('2026-09-27')).toBe('Long Answer save 2026-09-27.json');
+    expect(copyDue([], '2026-09-27')).toBe(true);
+    const names = ['2026-09-06', '2026-09-20', '2026-09-13'].map(copyName);
+    expect(copyDue(names, '2026-09-26')).toBe(false);
+    expect(copyDue(names, '2026-09-27')).toBe(true);
+    expect(copyDue(['something else.json'], '2026-09-27')).toBe(true);
   });
 });
