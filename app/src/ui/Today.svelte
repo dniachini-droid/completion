@@ -10,6 +10,7 @@
   import type { Job } from '../core/types';
   import { t, minutesWords, delves, inSentence } from '../content/copy/en';
   import Scene from './Scene.svelte';
+  import { flushSync } from 'svelte';
   import type { Go } from './nav';
 
   let { go }: { go: Go } = $props();
@@ -86,6 +87,24 @@
   function pick(e: MouseEvent) { try { (e.currentTarget as HTMLInputElement).showPicker?.(); } catch { /* not every browser */ } }
   /* the story ahead folds to a few lines, so the next job is always in view; a tap reads it all (D-093) */
   let aheadOpen = $state(false);
+
+  /* one-tap capture (D-107): "+ Add" opens a box already typing; what is put in goes to the satchel in one step, one
+     line or a pasted list. Capture only: it never starts anything, and nothing on Today changes */
+  let capturing = $state(false), captured = $state(''), capEl = $state<HTMLTextAreaElement | null>(null), capSaid = $state(false);
+  function startCapture() {
+    if (capturing) { capturing = false; return; }
+    capturing = true; capSaid = false; captured = '';
+    /* focused inside the tap itself, so the phone's keyboard opens straight away */
+    flushSync(); capEl?.focus({ preventScroll: true });
+  }
+  function capture() {
+    const lines = captured.split('\n');
+    /* said for a moment where "+ Add" was, so nothing on Today moves */
+    if (lines.some(l => l.trim())) { game.do({ do: 'addItems', lines }); capSaid = true; setTimeout(() => (capSaid = false), 4000); }
+    captured = ''; capturing = false;
+  }
+  /* Return puts it in (a pasted list keeps its lines); Shift-Return starts a new line */
+  function capKey(e: KeyboardEvent) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); capture(); } }
 </script>
 
 {#snippet tonight()}
@@ -202,6 +221,15 @@
     {#if lastAside && !v.order.includes(lastAside) && !v.done.has(lastAside)}
       <p class="said">{t('today.aside.said')} <button class="text-link" onclick={putBack}><span>{t('today.putBack')}</span></button></p>
     {/if}
+    <!-- one-tap capture (D-107): while typing, the box takes the list's place, so nothing on Today is pushed away -->
+    {#if capturing}
+      <form class="capture" onsubmit={(e) => { e.preventDefault(); capture(); }}>
+        <textarea bind:this={capEl} bind:value={captured} rows="2" maxlength="2000" enterkeyhint="done" onkeydown={capKey}
+          placeholder={t('today.add.placeholder')} aria-label={t('today.add.label')}></textarea>
+        <div class="btn-row"><button class="btn-quiet" type="submit" disabled={!captured.trim()}><span>{t('today.add.put')}</span></button>
+          <button class="btn-quiet" type="button" onclick={() => (capturing = false)}><span>{t('rhythms.cancel')}</span></button></div>
+      </form>
+    {:else}
     <div class="rows" onpointermove={move} onpointerup={up} onpointercancel={up}>
       {#each others as id (id)}
         {@const j = job(id)}
@@ -221,10 +249,12 @@
         </button>
       {/if}
     </div>
+    {/if}
     <!-- the evening, before the day's work is done: Tonight at the end of the day's list (D-093) -->
     {#if evening && !v.complete && !v.run}<section class="tonight-end">{@render tonight()}</section>{/if}
     </div>
     <nav class="foot" aria-label={t('today.label')}>
+      <button class="text-link add" class:on={capturing} aria-label={t('today.add.label')} aria-expanded={capturing} onclick={startCapture}><span>{capSaid ? t('today.add.said') : t('today.add')}</span></button>
       <button class="text-link" onclick={() => go('satchel')}><span>{t('nav.satchel')}</span></button>
       <button class="text-link" onclick={() => go('week')}><span>{t('nav.week')}</span></button>
       <button class="text-link" onclick={() => go('daybook')}><span>{t('nav.daybook')}</span></button>
@@ -277,6 +307,11 @@
   .said .text-link { min-height: 0; padding: 4px; }
   .deep { font-family: var(--life); font-size: 16px; color: var(--ink-2); margin: -10px 0 14px; text-align: left; }
   .deep .text-link { display: inline-flex; padding: 0 4px; min-height: 0; }
+  .capture { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+  .capture textarea { box-sizing: border-box; width: 100%; min-height: 64px; padding: 10px 12px; font: inherit; font-size: 17px; color: #fff; resize: none;
+    background: rgba(255, 255, 255, .06); border: 1px solid var(--edge-2); border-radius: 0; }
+  .capture .btn-quiet:disabled { opacity: .5; }
+  .foot .add span { color: var(--violet-hi); }
   .foot { display: flex; justify-content: space-around; margin: 6px -10px 0; }
   .foot span { font-size: 13px; letter-spacing: .12em; color: var(--ink-2); }
   .proto span { font-size: 14px; letter-spacing: .16em; color: var(--ink-3); }

@@ -15,7 +15,7 @@ There are **two clocks**. **Time moves the Site:** every real minute moves Dan, 
 | The Course's enough | **50 minutes** of delves (the hour on the clock) | P5, D-047 |
 | A breather | **5 minutes** | D-037 |
 | Between named places on the main line | **8 steps** (about 3 h 20 of effort: a full working day) | D-037 said 6–8. Dan's honest Normal week of rhythms comes to about 40 steps, and a story week holds about 5 places, so 8 keeps them in step |
-| A long delve | **4 delves in one sitting** reach a side chamber | D-037 |
+| A long delve | **4 delves in one sitting, and at least 100 minutes of them**, reach a side chamber (with 25-minute delves or longer, simply the fourth) | D-037; minutes added with the 5–15 min delves, D-110 |
 | A long stretch (the switching find) | **4 delves on the same job in a day** (100 minutes); the first delve on a different job then brings a find | D-044 said about 2 hours; matched to the long delve so there's one number to learn |
 
 ## 2. The story clock

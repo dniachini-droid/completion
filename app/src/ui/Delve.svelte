@@ -6,7 +6,6 @@
   import { game } from './game.svelte';
   import { t, minutesWords, ord } from '../content/copy/en';
   import { mmss, ofLine } from './panel';
-  import { platform } from '../platform';
   import { epochOf } from '../core/time';
   import tunnel from './scene/tunnel.html?raw';
   import fogFront from './scene/fog-front.html?raw';
@@ -96,7 +95,7 @@
       {#if run?.phase === 'delve'}
         <h2>{run.job.name}</h2>
         <p class="soft of">{of}</p>
-        <p class="say away">{platform.notifier.locked ? t(game.alertsOff ? 'delve.away.noAlerts' : 'delve.away.locked') : t('delve.away.web')}</p>
+        <p class="say away">{t(game.alertsOff ? 'delve.away.noAlerts' : 'delve.away.locked')}</p>
         <div class="two-quiet">
           <button class="btn-quiet" onclick={() => game.do({ do: 'stepAway' })}><span>{t('delve.stepAway')}</span></button>
           <button class="btn-quiet" onclick={() => game.do({ do: 'finishHere' })}><span>{t('delve.finishHere')}</span></button>

@@ -13,7 +13,7 @@
   const v = $derived(game.view);
   const todays = $derived(v.slate.filter(id => !v.done.has(id)));
   /* the rest of Dan's jobs, those not done today first (more on a done job still counts, D-043) */
-  const others = $derived(v.content.jobs.filter(j => !j.item && !todays.includes(j.id))
+  const others = $derived(v.content.jobs.filter(j => !j.item && !j.stopped && !todays.includes(j.id))
     .sort((a, b) => Number(v.done.has(a.id)) - Number(v.done.has(b.id))));
   const lines = $derived(items(game.facts, v.day).filter(i => !i.done && !todays.includes(i.id)));
   let name = $state('');
@@ -70,7 +70,7 @@
     {/if}
     <div class="label-line">{t('choose.new')}</div>
     <form class="new" onsubmit={(e) => { e.preventDefault(); fresh(); }}>
-      <input bind:value={name} placeholder={t('choose.new.hint')} maxlength="120" enterkeyhint="go" />
+      <input bind:value={name} aria-label={t('choose.new')} placeholder={t('choose.new.hint')} maxlength="120" enterkeyhint="go" />
       <button class="btn-quiet" type="submit" disabled={!name.trim()}><span>{t('choose.new.go')}</span></button>
     </form>
   </div>

@@ -57,8 +57,9 @@
     <div class="topbar rise">
       <button class="home" onclick={leave}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{back.label}</span></button>
       <span></span>
-      <!-- the trial's controls (rehearsal, starting again): in the daybook, out of the day's way (D-080, D-093) -->
-      <button class="icon-link trial" onclick={() => go('proto')}><span>{t('nav.proto')}</span></button>
+      <!-- settings (reminders, the save's copies; the trial's controls under it): in the daybook, out of the day's way
+           (D-080, D-093, D-107) -->
+      <button class="icon-link trial" onclick={() => go('settings')}><span>{t('nav.settings')}</span></button>
     </div>
     <div class="label-line rise">{t('daybook.label')}</div>
     {#if page}

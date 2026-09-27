@@ -1,6 +1,6 @@
 <script lang="ts">
   /* The run set-up, after Begin on a longer job (D-033 the dial, D-037 the run, D-047 enough).
-     Four stops, 25 · 30 · 45 · 60, on a 60-minute face; under it one route line where time is distance.
+     Stops 5 · 10 · 15 · 25 · 30 · 45 · 60 on a 60-minute face, and one long 90 under it (D-110); under it one route line where time is distance.
      Mock-up: design/directions/d-combined/delve-set.html (its CSS is ./scene/runset.css, scoped under .rs). */
   import { game, content } from './game.svelte';
   import { DIAL, delveMinutesOn, enoughOf, presetRun } from '../core/game';
@@ -16,10 +16,12 @@
   const v = $derived(game.view);
   const preset = presetRun(game.job(jobId)!);
   const reduce = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const ANG: Record<number, number> = { 25: 150, 30: 180, 45: 270, 60: 360 };
+  /* the face holds an hour: a stop's angle is its minutes; 90 fills the ring and has its own button under it */
+  const FACE = DIAL.filter(m => m <= 60), LONG = 90;
+  const ANG: Record<number, number> = Object.fromEntries(DIAL.map(m => [m, Math.min(60, m) * 6]));
   const MAXN = 8, BREATH = 5;
 
-  let val = $state<number>(preset.minutes);    /* the handle, in minutes (moves smoothly) */
+  let val = $state<number>(Math.min(60, preset.minutes));    /* the handle, in minutes (moves smoothly; 90 shows as a full ring) */
   let snap = $state<number>(preset.minutes);   /* the stop it rests on */
   let n = $state(preset.count);
   let dragging = $state(false);
@@ -48,7 +50,7 @@
 
   /* ---- the dial ---- */
   const clamp = (x: number, a: number, b: number) => Math.min(b, Math.max(a, x));
-  const nearest = (x: number) => DIAL.reduce((b, s) => (Math.abs(s - x) < Math.abs(b - x) ? s : b), DIAL[0] as number);
+  const nearest = (x: number) => FACE.reduce((b, s) => (Math.abs(s - x) < Math.abs(b - x) ? s : b), FACE[0] as number);
   const magnet = (x: number) => { const d = nearest(x), k = Math.abs(x - d); return k < 2.5 ? x + (d - x) * (1 - k / 2.5) * .6 : x; };
   function onSnap(s: number) {
     if (s === snap) return;
@@ -58,14 +60,14 @@
   let anim = 0;
   function settleTo(target: number, fromTap = false) {
     cancelAnimationFrame(anim); onSnap(target);
-    if (reduce) { val = target; return; }
-    const from = val, dur = fromTap ? 520 : 380; let t0: number | null = null;
+    if (reduce) { val = Math.min(60, target); return; }
+    const from = val, dur = fromTap ? 520 : 380, to = Math.min(60, target); let t0: number | null = null;
     const back = (k: number) => { const c1 = 1.2, c3 = c1 + 1; return 1 + c3 * Math.pow(k - 1, 3) + c1 * Math.pow(k - 1, 2); };
     const f = (ts: number) => {
       t0 ??= ts;
       const k = clamp((ts - t0) / dur, 0, 1);
-      val = clamp(from + (target - from) * back(k), 24, 61);
-      if (k < 1) anim = requestAnimationFrame(f); else val = target;
+      val = clamp(from + (to - from) * back(k), 4, 61);
+      if (k < 1) anim = requestAnimationFrame(f); else val = to;
     };
     anim = requestAnimationFrame(f);
   }
@@ -81,9 +83,9 @@
     dial.setPointerCapture(e.pointerId); dragging = true;
     const mv = (ev: PointerEvent) => {
       let a = angleAt(ev).a; const lastA = val * 6;
-      if (a < 150) a = lastA > 255 ? 360 : 150;      /* the empty arc holds at whichever end you came from */
+      if (a < 30) a = lastA > 195 ? 360 : 30;      /* the empty arc holds at whichever end you came from */
       if (Math.abs(a - lastA) > 120) a = lastA;
-      val = magnet(clamp(a / 6, 25, 60)); onSnap(nearest(val));
+      val = magnet(clamp(a / 6, 5, 60)); onSnap(nearest(val));
     };
     const up = () => { dragging = false; dial.removeEventListener('pointermove', mv); dial.removeEventListener('pointerup', up); dial.removeEventListener('pointercancel', up); settleTo(nearest(val)); };
     dial.addEventListener('pointermove', mv); dial.addEventListener('pointerup', up); dial.addEventListener('pointercancel', up);
@@ -92,7 +94,7 @@
   function dialKey(e: KeyboardEvent) {
     let i = DIAL.indexOf(snap as never);
     if (['ArrowRight', 'ArrowUp', '+', '='].includes(e.key)) i++; else if (['ArrowLeft', 'ArrowDown', '-'].includes(e.key)) i--; else return;
-    e.preventDefault(); settleTo(DIAL[clamp(i, 0, 3)], true);
+    e.preventDefault(); settleTo(DIAL[clamp(i, 0, DIAL.length - 1)], true);
   }
 
   /* ---- the route: one line, time is distance ---- */
@@ -160,24 +162,27 @@
       <div class="stage-in">
         <div class="dialwrap">
           <div class="dial" class:dragging bind:this={dial} role="slider" tabindex="0" aria-label={t('set.length')}
-            aria-valuemin={25} aria-valuemax={60} aria-valuenow={snap} style="--p:{(val * 6 / 360).toFixed(4)}"
+            aria-valuemin={DIAL[0]} aria-valuemax={LONG} aria-valuenow={snap} style="--p:{(val * 6 / 360).toFixed(4)}"
             onpointerdown={down} onkeydown={dialKey}>
             <div class="halo"></div><div class="disc"></div>
             <div class="band track"></div>
             <div class="glow wide"><div class="band fill"></div></div>
             <div class="glow"><div class="band fill"></div></div>
             <div class="band fill"></div>
-            {#each DIAL as m}<i class="notch" class:lit={m <= val + .01} style="--a:{ANG[m]}deg"></i>{/each}
+            {#each FACE as m}<i class="notch" class:lit={m <= val + .01} style="--a:{ANG[m]}deg"></i>{/each}
             {#key tickKey}<div class="pulse" class:go={tickKey > 0} style="--a:{ANG[snap]}deg"></div>{/key}
             <div class="handle"></div>
             <div class="inner">{#key tickKey}<span class="num" class:tick={tickKey > 0}>{snap}</span>{/key}<span class="unit">{t('set.minutes')}</span></div>
           </div>
           <div class="stops">
-            {#each DIAL as m}
+            {#each FACE as m}
               <button class="stop" class:on={m === snap} class:past={m < snap} type="button" style="--a:{m === 60 ? 0 : ANG[m]}deg"
                 aria-label={`${m} ${t('set.minutes')}`} onclick={() => settleTo(m, true)}>{m}</button>
             {/each}
           </div>
+          <!-- one long delve: past the hour, so it has its own stop under the dial (D-110) -->
+          <button class="stop long" class:on={snap === LONG} type="button" aria-pressed={snap === LONG}
+            aria-label={`${LONG} ${t('set.minutes')}`} onclick={() => settleTo(snap === LONG ? 60 : LONG, true)}>{t('set.long', { n: LONG })}</button>
         </div>
       </div>
     </div>

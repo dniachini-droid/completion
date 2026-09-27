@@ -12,6 +12,8 @@
   import type { Go } from './nav';
   import { back } from './back.svelte';
   import { flushSync } from 'svelte';
+  import Remind from './Remind.svelte';
+  import { entryTarget, reminderSettings, rhythmTarget, type Lead } from '../core/reminders';
 
   let { go, week }: { go: Go; week?: string } = $props();
   const v = $derived(game.view);
@@ -67,6 +69,13 @@
     open = null;
   }
   function setTime(j: DayJob, day: string, time: string | null) { game.do({ do: 'movePlan', entry: j.entry!, day, time }); }
+  /* "Remind me" on a job with a time (D-107): this entry's own choice, else its rhythm's */
+  const reminds = $derived(reminderSettings(game.facts));
+  function leadOf(j: DayJob): Lead | null {
+    const e = entryTarget(j.entry!), r = v.content.rhythms.find(x => x.job === j.job);
+    return reminds.has(e) ? reminds.get(e)! : r ? reminds.get(rhythmTarget(r.id)) ?? null : null;
+  }
+  function remind(j: DayJob, lead: Lead | null) { game.do({ do: 'remind', target: entryTarget(j.entry!), lead }); }
   function off(j: DayJob) { game.do({ do: 'movePlan', entry: j.entry!, day: null }); open = null; }
   function plan() { game.do({ do: 'planWeek', week: wk }); }
   function startAdd(day: string) {
@@ -145,6 +154,7 @@
                   </label>
                   {#if j.time}<button class="text-link" onclick={() => setTime(j, d.day, null)}><span>{t('week.anyTime')}</span></button>{/if}
                 </div>
+                {#if j.time}<Remind lead={leadOf(j)} pick={x => remind(j, x)} />{/if}
                 <div class="off">
                   {#if isAside(j, d.day)}<button class="text-link" onclick={() => moveTo(j, '', v.day)}><span>{t('week.putBack')}</span></button>{/if}
                   <button class="text-link" onclick={() => off(j)}><span>{t('week.off')}</span></button>

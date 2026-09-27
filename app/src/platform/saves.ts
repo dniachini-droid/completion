@@ -1,7 +1,7 @@
 /**
  * Where the save is kept (DATA_MODEL.md; ARCHITECTURE.md → "nothing is half-saved").
- * On the phone: SQLite, each new fact written in one transaction as it happens, never the whole log again. On the web
- * link and in tests: the browser's storage, the whole save as one text, as before. Both are read once at start and kept
+ * On the phone: SQLite, each new fact written in one transaction as it happens, never the whole log again. In the
+ * screen checks: the browser's storage, the whole save as one text, as before. Both are read once at start and kept
  * in memory, so the game reads them at once.
  */
 import type { Save } from '../core/save';

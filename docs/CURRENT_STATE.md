@@ -4,7 +4,7 @@
 > If Dan asks to work on something that skips substantially ahead of the current phase, point it out and ask whether he deliberately wants to deviate from the sequence (then record any deviation in `DECISIONS.md`).
 > **Spoiler-free file.** Dan reads it. Never put `docs/narrative/sealed/` content here (D-015).
 
-_Last updated: 2026-09-26, late (Phase 9: the save in SQLite and the flows in CI, D-106; Look, the painting without the words, pinch to zoom, D-105; a tap starts that job, no hard edges, D-104; the whole app audited for battery, D-103; the lock-screen panel says Paused, D-102; the AI repaint, D-100, D-101)_
+_Last updated: 2026-09-27, later (productivity Stage 1 built, D-109; the app is the iPhone app only, D-108); before that 2026-09-27 (the productivity review and plan, D-107); before that 2026-09-26, late (Phase 9: the save in SQLite and the flows in CI, D-106; Look, the painting without the words, pinch to zoom, D-105; a tap starts that job, no hard edges, D-104; the whole app audited for battery, D-103; the lock-screen panel says Paused, D-102; the AI repaint, D-100, D-101)_
 
 ## Current phase
 
@@ -12,9 +12,23 @@ _Last updated: 2026-09-26, late (Phase 9: the save in SQLite and the flows in CI
 
 ## Current objective
 
-Build the whole MVP (`product/MVP.md` → build order): **slice 2** the Quiet answers (the map at two levels, records, a sealed thing in view, rhythms and Keys, finds), **slice 3** learning the Cut (signs and guessing, the first word, the cutting cinematic, the stair), **slice 4** the week and the gaps (the planner, the satchel, camp and bedtime, the daybook week close, absence). Each slice thin, complete and good-feeling before the next (rule 13), on the heart as built. The sealed story job is **done** (D-066, D-067), so each slice loads the real content for six story weeks from `narrative/sealed/` as it is built (never shown to Dan outside the game), and the real places' paintings are made from its briefs with the painting kit. Dan sees each slice on the web link as it lands, then on TestFlight.
+Build the whole MVP (`product/MVP.md` → build order): **slice 2** the Quiet answers (the map at two levels, records, a sealed thing in view, rhythms and Keys, finds), **slice 3** learning the Cut (signs and guessing, the first word, the cutting cinematic, the stair), **slice 4** the week and the gaps (the planner, the satchel, camp and bedtime, the daybook week close, absence). Each slice thin, complete and good-feeling before the next (rule 13), on the heart as built. The sealed story job is **done** (D-066, D-067), so each slice loads the real content for six story weeks from `narrative/sealed/` as it is built (never shown to Dan outside the game), and the real places' paintings are made from its briefs with the painting kit. Dan sees each change on TestFlight (the app is the iPhone app only, D-108).
 
 ## Resume here (next session)
+**The productivity track (D-107), on `claude/productivity-app-review-8txb0y` (Stage 1 merged in from `claude/productivity-app-review-kazbf7`); not yet in `main`: merging waits for Dan's OK.** The plan is in `product/PRODUCTIVITY_PLAN.md`, following the review (`product/PRODUCTIVITY_REVIEW.md`).
+- **Stage 1 (done, D-109):** the planned-week bug; opt-in reminders for things with a time; Settings (from the Daybook) with Save a copy, Restore and a weekly copy in Files; one-tap "+ Add" on Today.
+- **The app is the iPhone app only (D-108):** no web page.
+- **Stage 2, part (done, D-110):** a stopped rhythm leaves nothing behind; ticked satchel lines leave the next day; delve lengths 5, 10, 15 and 90; the laptop first step.
+- **Stage 4 (done, D-111):** the scope pages (`product/scope/`), Dan took the recommendations; Stages 5–9 ordered in the plan. Calendar import stays (Stage 7, the iPhone's own calendar).
+- **Stage 5, part (done):** a label on Choose's box; no carved label under 14 px on Records and Marks; Increase Contrast honoured; "To today" already shows at once.
+- **Next:** the rest of Stage 2 (the job editor, notes, "Already done"), the rest of Stage 5, then Stage 6, then Stage 3.
+- **Dan's test once merged and on TestFlight:**
+  1. In the Week, give a job a time and choose "15 min before"; the alert should come, and "Again in 10 min" should bring it back.
+  2. In Settings, Save a copy to Files, then Restore from it; Files → On My iPhone → Long Answer should hold a weekly copy.
+  3. Tap "+ Add" on Today, type a line and press Return; it should land in the satchel.
+  4. Start a delve at 10 minutes, and try the 90 under the dial.
+
+Leaving the phone still pauses a delve (Dan works on his laptop).
 **Each slice runs in its own session, started by the previous one (D-069).** Review 2 (PR #16), one map (PR #17) and the paintings, 47 of 48 (PR #18, D-091) are in `main`; the 48th, `pt-b-6.A`, followed. **Builds:** only from `main` with [testflight], or started by hand on a branch (D-080).
 **The AI repaint of every place (D-100, D-101): merged into `main` with Dan's OK ("Super happy") (PR #30); the build reached Apple (run 36216940641, 2026-09-26).** 82 of 89 places now have the detailed repaint, including all 41 places of weeks 8–14, which showed stand-ins before; 7 keep their kit painting (a story detail still read wrong when the credits ran out). All 14 story weeks now have a real painting for every place. Dan saw the week 1–2 BEFORE/AFTER sheets ("SO MUCH BETTER"). The credits are used up; the 7 can be redone later (about 12 credits a try) if Dan tops up.
 0. **Review 2 (D-088, D-089):** merged into `main` (PR #16) and sent to TestFlight.
@@ -25,9 +39,32 @@ Build the whole MVP (`product/MVP.md` → build order): **slice 2** the Quiet an
 2. **The language pass: done (D-073, D-074).** The app's own lines had their first pass in the slice 4 session; the story's own lines were rewritten in their own session (D-074: every line as whole sentences in the voice of a told tale, facts and ids unchanged, a critic and one revision, the sealed docs kept in step). **Dan judges the voice on his phone**: the new words reached TestFlight (run 36023284892, 2026-09-24), and says what still reads badly.
 3. **The real paintings: all 48 in the game (D-091).** `pt-b-6.A`, the last, was repainted with a simpler scene and passed (`CRITIQUE-D091-B6A.md`). Every place was painted once with the kit (four painters in parallel); a separate critic checked each for **wrong readings only** (`app/paint/places/CRITIQUE-D085-*.md`, sealed); a failure got one second attempt. Then Dan asked for one polish pass: it barely changed the pictures (brighter, a little clearer, not richer), so it was stopped; 3 polished versions were kept, and it got two more stand-ins in. Honest view: the new paintings are clear and correct but plainer and darker than week 1's; the stair was built by three painters and may look different from place to place. **Dan sends back any painting he dislikes when he meets it** (D-091). Kit, method and tools: `app/paint/places/HOW-TO-PAINT.md` (its "Fast path" section is the quick way to repaint or add places) (updated for D-091); painted places are listed in `core/game.ts` (PAINTED) and carried in `ui/paintings.ts`; a test keeps the two in step. The Blender test (D-090) is paused on `claude/blender-meshy-round-2-1du0fv`, kept for any picture the kit can't get right.
 4. **TestFlight:** Dan finished Apple setup sitting 2 (all four secrets in; TestFlight installed). **The first build reached Apple** (workflow run 36011344034, 2026-09-24: signed in the cloud and uploaded in under 4 minutes): trial (d), the pipeline, passes. It carried slices 1–2. **The whole first playable reached Apple** (run 36021450486, 2026-09-24, started by hand: a commit touching no app files does not start the workflow). Dan does sitting 3 (trials b and c) when he tests, and reports.
-5. **The web link:** https://claude.ai/artifact/TcH91A1SxeEvEnLJbRE4pi (private; one link, updated in place each slice).
+5. **The web link: retired (D-108).** Dan: the app is the iPhone app only. It is no longer built or updated; changes reach Dan on TestFlight.
 
-## Last session (2026-09-27, Phase 9, the diamonds' hard edge)
+## Last session (2026-09-27, the productivity track's Stage 1, D-109; web page gone, D-108)
+Stage 1 of D-107 built, one pushed commit per item:
+- **Planned-week bug:** a line or appointment added by hand no longer turns the week into "planned". Only Plan my week makes Today follow the plan.
+- **Reminders:** opt-in "Remind me" (at the time, 15 min or 1 h before) where a time is set: a week entry, a rhythm, or bedtime in Settings. There is one switch for all of them, one alert each, with "Again in 10 min". The rules are in `core/reminders.ts`. Whether a start followed a reminder is worked out for the test's notes, not written.
+- **Settings:** a new screen, reached from the Daybook, with the trial's controls under it.
+- **Your save:**
+  - Save a copy through the share sheet.
+  - Restore from a copy through the Files picker. It asks once, in plain words, and keeps the current save aside first.
+  - A weekly copy in the Files app; the last 4 are kept.
+  - It is done by the app's own small plugin, `CopyPlugin.swift`.
+- **One-tap capture:** "+ Add" on Today. While Dan types, the box stands where the job list was.
+- **Web page gone:** Dan asked for every web-page part to go. The web link's build and every web line are gone (D-108).
+
+Checks:
+- 181 rule tests (21 new); typecheck and build clean.
+- The screen walk passes at 430 × 932 and 360 × 780, two at once. It now sets a reminder, saves and restores a copy, and captures a line.
+- The tap and back checks pass.
+- The iOS compile passed on the cloud Mac.
+
+Fixed along the way: opening the capture box could slide the whole screen (the phone frame now clips).
+
+**Only on the phone:** alerts, "Again in 10 min", the share sheet, the Files picker, the weekly copy.
+
+## Earlier (2026-09-27, Phase 9, the diamonds' hard edge)
 Dan (screenshot): a hard line still ran beside the done jobs' glowing diamonds on Today. Cause: each row's swipe box (it hides a row slid off to "Not today") ended at the column's edge and cut the glow; D-104's fix had only softened the list's own sides. The box now reaches 18px into the list's faded sides, words where they were. Checked by before/after screenshots; typecheck, 160 rule tests and the tap check pass. Merged into `main` with Dan's OK (PR #45); **the build reached Apple** (run 36281847546, 2026-09-27). **Dan's test:** finish a job; its diamond's glow should fade out with no line beside it.
 
 ## Earlier (2026-09-26, Phase 9, the save in SQLite and the flows in CI, D-106)

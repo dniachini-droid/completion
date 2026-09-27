@@ -24,6 +24,8 @@ export interface Job {
   firstStep?: string;
   /** A line from the satchel or the week (TOOLS §2): offered on Today only when planned for the day. */
   item?: boolean;
+  /** Its rhythm was stopped (set by `live`): it leaves Today, the plan and Choose a delve until it repeats again. */
+  stopped?: boolean;
 }
 
 /** What repeats (PLANNER.md → Rhythms; DATA_MODEL.md → Rhythm). Dan's own data; editing arrives with the planner (slice 4). */
@@ -110,6 +112,9 @@ export type FactBody =
   | { type: 'closeRead'; week: string }
   | { type: 'offerAnswered'; week: string }
   | { type: 'welcomed'; since: string; question: string | null }
+  /* reminders (D-107): opt-in, one per item, only for things with a time (core/reminders.ts); null turns one off */
+  | { type: 'reminderSet'; target: string; lead: 0 | 15 | 60 | null }
+  | { type: 'remindersSwitched'; on: boolean }
 
 /** One job placed on a day of the week plan (PLANNER.md). A forecast: moving it earns nothing and loses nothing. */
 export interface PlanEntry { id: string; job: string; day: string; time?: string; }

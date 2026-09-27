@@ -141,7 +141,7 @@
   .grid.small .cell::before { width: 46px; margin-left: -23px; height: 46px; }
   h1 { margin-top: 8px; }
   .lv { margin: 0; width: auto; grid-template-columns: 1fr 1fr; }
-  .lv button { padding: 6px 12px; font-size: 13px; min-width: 104px; }
+  .lv button { padding: 6px 12px; font-size: 14px; min-width: 104px; }
   button.home { color: var(--ink-2); }
   /* every glyph in the same square, every label on one line beneath (as the record's strip) */
   .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); row-gap: 6px; margin: 0 calc(var(--gutter) * -.4); }
@@ -152,7 +152,7 @@
   .cap .q { color: var(--cold-hi); }
   .cap.unk { color: var(--ink-3); }
   /* "new" is a state, not a meaning: set as a small carved label, never in the italic that meanings read in */
-  .cap.new { font-family: var(--carve); font-style: normal; font-weight: 600; font-size: 11px; letter-spacing: .2em; padding-left: .2em;
+  .cap.new { font-family: var(--carve); font-style: normal; font-weight: 600; font-size: 14px; letter-spacing: .14em; padding-left: .14em;
     text-transform: uppercase; color: var(--violet-hi); }
   .cap.known { color: #fff; }
   .cell.sel .cap { color: #fff; }

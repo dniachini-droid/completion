@@ -1093,3 +1093,83 @@
 - **Alternatives:** the community SQLite plugin (bundles SQLCipher, an encryption library that brings Apple's export-compliance questions, and a web engine the web link doesn't need); Capacitor's file storage (still the whole log per write); keeping the settings (no transactions; the whole log rewritten on every change); a saved snapshot (not needed at the measured cost; revisit if a year's log gets slow on the phone).
 - **Consequences:** 12 new tests (every fact type round-trips, a write failing part-way leaves the save as it was, the move from the settings in both directions, the upgrade chain, the sample save plays on); a new fact type without a sample there fails the typecheck. The native plugin compiles on the cloud Mac; it can only be proved on the phone: after installing, the trial screen (Daybook → Prototype) should say "In the phone's database". The checks were flaky on `main` and are now steady (D-104's open item): the tap check read Today's list before it was drawn; the walk missed a morning that follows a word cut on opening, counted the Week's jobs on the day a job left (a missed job takes the freed place, D-080, so the job is now followed by name to its new day), judged words mid-crossfade, and waited on WebKit's full page load under the fake clock. A stuck walk now leaves a picture and the screen's class names, never its words.
 - **Reversible:** Yes: the settings path is still in the app as the fallback.
+
+## D-107 — The productivity track: every review recommendation, staged; medium-to-large ideas scoped first (Dan)
+- **Date:** 2026-09-27
+- **Context:** Dan asked for an independent review of the app purely as a productivity app, setting the project's own rules aside (`product/PRODUCTIVITY_REVIEW.md`). Five reviewers gave it about 2.5/5 overall and 3.5/5 for ADHD. They found it best in class at starting, and weak at reminders, dates, capture, editing and backup. They also found one trust-breaking bug. Dan: "Let's do all of your suggestions, staged. Except for pausing the delve for cat meds. I use my laptop. The phone should be paused when you leave it." He also asked for the medium-to-large and big ideas to be scoped first.
+- **Decision:**
+  1. **A productivity track runs alongside Phase 9** in four stages (`product/PRODUCTIVITY_PLAN.md`). Each stage runs in its own session, started by the previous one (D-069).
+     - Stage 1: the planned-week bug, reminders for timed things, save a copy / restore, and one-tap capture.
+     - Stage 2: edit anything.
+     - Stage 3: dates and time.
+     - Stage 4: scope the larger items with Dan, then build them in his order.
+  2. **Reversed with Dan's OK, and only as far as written:**
+     - **"No notifications"** (MVP test design; anti-features) becomes **opt-in reminders, one per item, only for things Dan gave a time or date**. The once-a-week re-entry nudge is only scoped.
+     - **D-089** (no "Already done") becomes **Already done / did it yesterday**, recorded as logged afterwards so the test can still tell it apart.
+     - **"No hour-by-hour time-blocking"** is open again, but only as a scoping question (Stage 4).
+  3. **Kept:** leaving the phone pauses a delve (D-094). The cat's-medication first step is re-worded for the laptop.
+- **Alternatives:** keep the app as a pure starter and pair it with a separate calendar or reminders app (the critic's "pair it with a calendar"); build everything at once (against rule 13).
+- **Rationale:** the reviewers' biggest risks were missed appointments, lost data and a Today that silently drops habits. These are real-world costs, and they are small to fix without touching what makes the app distinctive. Dan chose usefulness as a planning tool as a goal alongside the game.
+- **Consequences:**
+  - This is a deliberate addition to Phase 9's scope (CLAUDE.md: deviations are recorded).
+  - The central test (`MVP.md`) now has reminders. Its notes must tell a start after a reminder from one without, and a logged-afterwards job from a begun one.
+  - New fact types need sample saves (D-106).
+  - Phase 10 starts after the track's first three stages unless Dan says otherwise.
+- **Reversible:** Yes. Each reminder is opt-in, and each stage stands alone.
+
+## D-108 — The app is the iPhone app only: the web page and every mention of it are gone (Dan)
+- **Date:** 2026-09-27
+- **Context:** Stage 1 of the productivity track added lines for the web link ("Reminders sound only in the phone app, not on this web page"; "your save lives in this browser only"). Dan: the app is a native iPhone app built with TestFlight; there is no need for a web app, and it only makes a mess.
+- **Decision:** the web link build (`npm run build:link`, `scripts/single-page.mjs`, the link mode in `vite.config.ts`) is removed, and the web link is no longer updated. Every line in the app about a web page is removed (the delve's "leave this page open", Settings' two web notes); the screens always speak as the phone app. A browser stand-in for the phone's services (`platform/index.ts` → `bench`) stays **only** so the automated screen checks (the walk, the tap and back checks, in CI) can run the screens; it never reaches Dan.
+- **Alternatives:** remove the browser stand-in too (rejected: every screen check in CI would stop, and nothing Dan sees would change).
+- **Consequences:** the D-064 web link and the productivity plan's "update the web link" step end. Dan sees changes on TestFlight only.
+- **Reversible:** Yes.
+
+## D-109 — Stage 1 of the productivity track, as built (Claude's routine calls, D-006; within D-107)
+- **Date:** 2026-09-27
+- **Decision:**
+  1. **The planned-week bug:** only Plan my week (`planMade`) makes Today follow the plan. On a week not laid out, an entry added by hand (or a satchel line put on a day) comes on top of the day's usual jobs and the day's size grows by it. A week is laid out at its first opening unless Plan my week has already run for it (before: any added entry stopped that).
+  2. **Reminders:** `core/reminders.ts` works out every alert from the content, the facts and the clock: appointments (a rhythm with a time), week entries with a time, bedtime. Off by default. "Remind me" (Off · At the time · 15 min before · 1 h before) sits where the time is set: the Week's job sheet (for that entry; it falls back to its rhythm's choice), the rhythm editor, and Settings for bedtime. One switch in Settings turns all off. One alert each, with "Again in 10 min" (the phone's own action; to be checked on the phone). Laid out a week ahead on every change and every opening, ids 200–229 (the delve's are 100–123, "again" 240–245). New facts `reminderSet`, `remindersSwitched`. Whether a start followed a reminder is derived, not written.
+  3. **Settings:** a new screen, from the Daybook's top right (where "Trial" was); the trial's controls sit under it.
+  4. **Save a copy / restore:** a small native plugin of the app's own (`CopyPlugin.swift`): the share sheet, the Files picker, and a weekly copy in the app's Documents folder (shown in Files; the last 4 kept). Restore reads the copy with `readSave`, asks once in plain words ("Restore the copy from … It holds … done"), and keeps the current save aside first.
+  5. **One-tap capture:** "+ Add" in Today's foot. The box takes the job list's place while typing (so nothing on Today moves), Return puts the line or a pasted list in the satchel, and "In the satchel" shows for a moment where "+ Add" was. The satchel's "Add a line" opens already typing.
+  6. The phone frame now clips its overflow (a hidden box could still be scrolled by the browser to show a caret, sliding the screen).
+- **Checks:** 181 rule tests (21 new), typecheck, build, the screen walk at 430 × 932 and 360 × 780, the tap and back checks, the iOS compile (runs 36283973158, 36284505924).
+- **Only on the phone:** reminders sounding, "Again in 10 min", the share sheet, the Files picker, and the weekly copy in Files.
+- **Reversible:** Yes.
+
+## D-110 — Stage 2, the parts that run beside Stage 1: two list bugs, delve lengths 5–90, the laptop first step (Claude's routine calls, D-006)
+- **Date:** 2026-09-27
+- **Context:** Dan runs Stage 1 in one window and asked a second window to take the other stages without doubling up. Stage 2's job editor, notes and "Already done" share screens and saved data with Stage 1 (the "Remind me" choice lives where a time is set), so they wait for Stage 1. These four items touch none of Stage 1's files and go ahead now (`product/PRODUCTIVITY_PLAN.md`). Decision numbers: Stage 1 takes D-108 and D-109; this window starts at D-110.
+- **Decision:**
+  1. **A stopped rhythm leaves nothing behind.** Stopping a rhythm marks its job stopped (`live`): it leaves Today, the rest of the week's plan and Choose a delve. Saving the rhythm again brings it back. Before, a rhythm stopped before it was ever done came back as a one-off every day.
+  2. **A ticked satchel line leaves the list the day after it is ticked.** Ticked that day, it stays ticked, as before.
+  3. **Delve lengths 5, 10 and 15 min** join the dial's face (a stop's angle is its minutes on the hour face), and **one long 90** has its own stop under the dial (in the free corner by the 45 on a short phone). What repeats offers lengths down to 5 min. A short job's delve starts on the first stop that holds it.
+  4. **Balance at the new ends (rule 10):** steps stay in proportion to minutes, so a 5-minute delve earns 5 minutes. A side chamber now needs four delves **and** 100 minutes in the sitting: with delves of 25 minutes or more that is simply the fourth, as before; eight 5- or 10-minute delves can't reach it; seven 15s can. The switching find already counted minutes (100).
+  5. **The cat's medication's first step** is "Open the vet's page on your laptop."
+- **Alternatives:** 90 as a second lap of the ring (hard to read at a glance); lengths under 25 not allowed as delves (the review asked for them, for starting when starting is hard).
+- **Consequences:** 5 new rule tests (the two bugs fail on the old code). `Job` gains `stopped` (set by the rules, never saved: no new fact type, no save version). Taste call for Dan: where the 90 sits.
+- **Reversible:** Yes.
+
+## D-111 — Stage 4 chosen: the scope pages' recommendations, and the stages after it (Dan)
+- **Date:** 2026-09-27
+- **Context:** the Stage 4 scope pages (`product/scope/`, index in `scope/README.md`) gave each larger idea options from smallest to fullest and a recommendation. Dan: "Go with your recommendations for Stage 4."
+- **Decision (each item as recommended):**
+  - **(9) Calendar import: B.** Apple Calendar through EventKit, read-only; events show in the Week and Plan my week gives busy days less work. After Stage 3.
+  - **(10) Capture: A.** Siri, Shortcuts and the Action button add to the satchel through an App Group inbox. The widget (C) only if Dan later finds he forgets to open the app.
+  - **(17) Projects: C, built as B first and its door second**, after Stages 2–3, and only once Dan names a real project beyond the Course. It needs its own name ("expedition" is taken).
+  - **(18) The weekly look-ahead: C**, in the Daybook, after Stage 3, **with no reward** for doing it (P16 kept).
+  - **(19) Make it smaller: not now.** Stage 2's first step first; look again after a few weeks of use.
+  - **(20) Month view: B**, an "Ahead" list, two weeks after Stage 3 is in use, and only if paging the Week isn't enough.
+  - **(21) Hour-by-hour today: not now.** "No time-blocking" stays; look again with calendar import.
+  - **(22) Body doubling: A**, nothing built; Focusmate on the laptop works with a delve on the locked phone.
+  - **(23) Re-entry nudge: B**, once a week at most after 3 quiet days, **off by default**. After Stage 1's reminders.
+  - **Accessibility: A** (a title read on each screen, "Not today" reachable, labels on three boxes, no carved label under 14 px, Increase Contrast honoured). B (text follows the phone's size) only if Dan uses larger text. No light mode.
+  - **Search: not now.** The "last done" line (C) can join Stage 2's job editor if "when did I last…" turns out to matter.
+  - **"I'll read it later": A**, "To today" visible at once on every return; look again at week 4 of real play.
+  - **Onboarding: A, not now**, unless someone else will use the app.
+- **Order (Stage 5 onwards, in `product/PRODUCTIVITY_PLAN.md`):** 5 accessibility A and read-it-later A · 6 capture (10 A) and the nudge (23 B) · 7 calendar import (9 B) · 8 the weekly look-ahead (18 C) · 9 projects (17), when Dan names one · then the month view (20 B), if still wanted. Stages 2 and 3 come first where these depend on them.
+- **Alternatives:** the fuller options on each page.
+- **Rationale:** smallest version that answers the review's finding, built on what exists; bigger versions wait for evidence from Dan's own use (rule 12).
+- **Consequences:** the questions each page leaves for Dan (projects' name and which projects; the nudge's hour) are asked when that stage is built, not before.
+- **Reversible:** Yes; each is its own stage.
