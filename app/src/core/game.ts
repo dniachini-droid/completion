@@ -105,22 +105,24 @@ export function daySize(capacity: Capacity, firstOpen: Moment | null): number {
   if (h >= 14) return Math.max(1, base - 1);
   return base;
 }
-/** Whether Dan laid this week out with Plan my week: then Today follows the plan (D-078). */
-const planLeads = (facts: Fact[], day: string) => W.planOf(facts, calendarWeek(day)) !== null;
-/** How many jobs the plan puts on a day (done as planned, or still to do), when the plan leads; else null. */
-function plannedCount(c: Content, facts: Fact[], day: string): number | null {
-  if (!planLeads(facts, day)) return null;
-  /* a job set aside ("Not today") no longer counts toward the day (review finding, D-080) */
+/** Whether Dan laid this week out with Plan my week: then Today follows the plan (D-078). A line or appointment added by
+    hand to a week not laid out is an extra on its day, never a takeover (D-107). */
+const planLeads = (facts: Fact[], day: string) => W.planMade(facts, calendarWeek(day));
+/** How many jobs the week puts on a day (done as planned, or still to do; a job set aside no longer counts, D-080). */
+function plannedCount(c: Content, facts: Fact[], day: string): number {
   const aside = asideOn(facts, day);
   return W.weekOf(c, facts, calendarWeek(day), day).days.find(d => d.day === day)!.jobs.filter(j => j.entry && (j.done || !aside.has(j.job))).length;
 }
-/** The day's size: from capacity; on a planned week, never more than the plan puts on the day (at least one) (D-078). */
+/** The day's size: from capacity; on a planned week, never more than the plan puts on the day (at least one) (D-078).
+    On a week not laid out, the entries Dan added to the day come on top of it (D-107). */
 function sizeOn(facts: Fact[], day: string, c?: Content) {
   const first = onDay(facts, day).find(f => f.type === 'opened');
   const size = daySize(capacityOn(facts, day), first ? first.at : null);
-  const n = c ? plannedCount(c, facts, day) : null;
+  if (!c) return size;
+  const n = plannedCount(c, facts, day);
+  if (!planLeads(facts, day)) return size + n;
   /* a High day holds one more than the plan (D-082) */
-  return n === null ? size : Math.max(1, Math.min(size, n + (capacityOn(facts, day) === 'high' ? 1 : 0)));
+  return Math.max(1, Math.min(size, n + (capacityOn(facts, day) === 'high' ? 1 : 0)));
 }
 
 const doneOn = (facts: Fact[], day: string) => new Set(ofType(onDay(facts, day), 'jobDone').map(f => f.job));
@@ -546,7 +548,7 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       if (first) welcomeBack(w, c, now, day);
       /* a week with no plan yet is laid out at its first opening, from today on, so the Week and Today always agree;
          Dan changes it as he likes (Dan, D-078; review finding, D-080) */
-      if (W.planOf(w.all, calendarWeek(day)) === null) w.put({ type: 'planMade', week: calendarWeek(day), entries: W.planWeek(c, w.all, calendarWeek(day), day) });
+      if (!W.planMade(w.all, calendarWeek(day))) w.put({ type: 'planMade', week: calendarWeek(day), entries: W.planWeek(c, w.all, calendarWeek(day), day) });
       storyClock(w, c, now, day); floor(w, c, now, day);
       weekClose(w, c, now, day, was);
       morningAfter(w, c, now, day);
