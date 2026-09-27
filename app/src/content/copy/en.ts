@@ -364,7 +364,7 @@ export const copy = {
   'satchel.say': 'Jobs with no day yet. Delve on one whenever you like.',
   'satchel.add': 'Put a job in the satchel', 'satchel.add.hint': 'No day needed', 'satchel.put': 'Put in',
   'satchel.empty': 'Nothing in the satchel. When something comes to mind with no day yet, it goes here.',
-  'satchel.list': 'List', 'satchel.list.done': 'Done', 'satchel.list.label': 'The list for {job}', 'satchel.list.hint': 'A line at a time',
+  'satchel.list': 'List', 'satchel.list.done': 'Done', 'satchel.list.label': 'The list for {job}', 'satchel.list.hint': 'A line at a time', 'satchel.list.full': 'The list is full: take a line out to add another.',
   'satchel.day': 'Put on a day', 'satchel.placed': '{job}: on {day}.',
   'pick.today': 'today',
     'today.add': '+ Add', 'today.add.label': 'Add a job to today',

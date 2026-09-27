@@ -87,6 +87,7 @@
         {#if listing === j.id}
           <textarea class="list" bind:this={box} bind:value={draft} rows="4" maxlength={LIST_MAX} onblur={keep} aria-label={t('satchel.list.label', { job: j.name })}
             placeholder={t('satchel.list.hint')}></textarea>
+          {#if draft.length >= LIST_MAX}<p class="soft full">{t('satchel.list.full')}</p>{/if}
         {:else if preview(j)}
           <button class="preview" onclick={() => openList(j)}>{preview(j)}</button>
         {/if}
@@ -123,6 +124,7 @@
     font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink-2); }
   .list { display: block; width: 100%; margin: 2px 0 6px; padding: 8px 12px; font: inherit; font-size: 17px; line-height: 1.4; color: #fff;
     background: rgba(255, 255, 255, .06); border: 1px solid var(--edge-2); border-radius: 0; resize: vertical; }
+  .full { margin: -2px 0 6px; font-size: 15px; font-style: italic; }
   .acts { display: flex; flex-wrap: wrap; gap: 0 16px; padding-left: 22px; }
   .acts .text-link { min-height: 40px; font-size: 15px; }
   .said { font-family: var(--life); font-style: italic; font-size: 15.5px; color: var(--ink-2); text-align: center; margin: 4px 0 8px; }
