@@ -36,10 +36,8 @@
     const job = game.job(j.job);
     if (!job) return '';
     if (job.by) return byWords(job.by);
-    if (job.item) return t('row.oneOff');
-    const r = v.content.rhythms.find(x => x.job === job.id);
-    if (!r && job.avoided) return t('row.oneOff');
-    if (job.delve && job.enoughAt && job.enoughAt < job.length) return t('row.room', { enough: minutesShort(job.enoughAt), len: minutesShort(job.length) });
+    /* every job is a delve (D-117): its length, or its enough with room */
+    if (job.enoughAt && job.enoughAt < job.length) return t('row.room', { enough: minutesShort(job.enoughAt), len: minutesShort(job.length) });
     return minutesWords(job.length);
   }
   const forecast = $derived.by(() => {

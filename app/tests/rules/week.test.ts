@@ -409,15 +409,13 @@ describe('A delve left paused ends by itself (review finding, D-080)', () => {
     expect(end?.minutes).toBe(10);
     expect(v.next?.mode).not.toBe('carry');
   });
-  it('a job delved on earlier in the day can still be begun away from the phone (Dan, 2026-09-26)', () => {
+  it('an old Begin in a save (from when jobs had no timer) leaves nothing under way (D-117)', () => {
     const p = player().do({ do: 'open' });
-    p.do({ do: 'startRun', job: 'lesson', minutes: 25, count: 1 }).wait(5).do({ do: 'finishHere' });
-    p.do({ do: 'seen', what: 'step', ref: p.view().runEnd!.seq });
-    p.do({ do: 'focus', job: 'lesson' }).do({ do: 'begin', job: 'lesson' });
-    expect(p.view().underWay).toBe('lesson');
-    expect(p.view().next).toEqual({ job: 'lesson', mode: 'underWay' });
-    p.do({ do: 'done', job: 'lesson' });
-    expect(p.view().done.has('lesson')).toBe(true);
+    const f = p.facts[p.facts.length - 1];
+    const old = p.facts.concat({ ...f, seq: f.seq + 1, type: 'jobBegun', job: 'gym', from: 'app' } as Fact);
+    const v = see(old, C, p.at);
+    expect(v.underWay).toBeNull();
+    expect(v.next?.mode).not.toBe('underWay');
   });
   it('a Begin followed by a delve on the same job is no longer "under way" once the delve stops', () => {
     const p = player().do({ do: 'open' });
@@ -507,19 +505,6 @@ describe('Undoing a tap made by mistake (review 2, D-088)', () => {
     const entry = W.planOf(p.facts, W.weekOf(C, p.facts, '2026-09-28', v.day).days[0].day)!.find(e => e.job === id && e.day === v.day)!;
     p.do({ do: 'movePlan', entry: entry.id, day: v.day });
     expect(p.view().order).toContain(id);
-  });
-  it('a Begin can be taken back: the job is no longer under way, and a later Done counts as recorded afterwards', () => {
-    const p = player().do({ do: 'open' });
-    const away = p.view().slate.find(id => !C.jobs.find(j => j.id === id)!.delve)!;
-    p.do({ do: 'begin', job: away });
-    expect(p.view().underWay).toBe(away);
-    p.do({ do: 'unbegin', job: away });
-    expect(p.view().underWay).toBe(null);
-    const walked = p.view().walked;
-    p.do({ do: 'done', job: away });
-    const begun = p.facts.filter(f => f.type === 'jobBegun' && f.job === away);
-    expect(begun[begun.length - 1]).toMatchObject({ from: 'record' });
-    expect(p.view().walked).toBeGreaterThan(walked);
   });
 });
 
@@ -652,50 +637,29 @@ describe('Edit anything (Stage 2, D-112)', () => {
     p.do({ do: 'saveJob', job: gym, rhythm: r });
     expect(p.view().content.rhythms.find(x => x.job === 'gym')).toEqual(r);
   });
-  it('a satchel line can be renamed, removed and put back', () => {
+  it('a job added from anywhere is a delve, and can be renamed, removed and put back (D-117)', () => {
     const p = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['post the parcle'] });
-    const [it] = W.items(p.facts, MON), line = job(p, it.id)!;
+    const line = p.view().content.jobs.find(j => j.name === 'post the parcle')!;
+    expect(line).toMatchObject({ delve: true, doneBy: 'dan' });
+    expect(line.item).toBeUndefined();
     p.do({ do: 'saveJob', job: { ...line, name: 'Post the parcel' }, rhythm: null });
-    expect(W.items(p.facts, MON).map(i => i.name)).toEqual(['Post the parcel']);
-    expect(job(p, it.id)!.item).toBe(true);
-    p.do({ do: 'removeJob', id: it.id });
-    expect(W.items(p.facts, MON)).toEqual([]);
+    expect(job(p, line.id)!.name).toBe('Post the parcel');
+    p.do({ do: 'removeJob', id: line.id });
+    expect(job(p, line.id)).toBeUndefined();
     p.do({ do: 'saveJob', job: line, rhythm: null });
-    expect(W.items(p.facts, MON).map(i => i.id)).toEqual([it.id]);
-  });
-  it('"Did it yesterday": recorded afterwards on yesterday, earns what a job without a timer earns, and only once', () => {
-    const p = player().do({ do: 'open' }).next().do({ do: 'open' });
-    const walked = p.view().walked, n = p.facts.length;
-    p.do({ do: 'done', job: 'meal', yesterday: true });
-    const added = p.facts.slice(n);
-    expect(added.find(f => f.type === 'jobBegun')).toMatchObject({ from: 'record', day: MON });
-    expect(added.find(f => f.type === 'jobDone')).toMatchObject({ job: 'meal', day: MON, minutes: 60 });
-    expect(p.view().walked).toBeGreaterThan(walked);
-    expect(p.view().done.has('meal')).toBe(false);
-    const m = p.facts.length;
-    p.do({ do: 'done', job: 'meal', yesterday: true });
-    expect(p.facts.length).toBe(m);
-  });
-});
-
-describe('Undo puts a satchel line back in its place (D-112)', () => {
-  it('a line removed and put back keeps its order among the others', () => {
-    const p = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['one', 'two', 'three'] });
-    const two = p.view().content.jobs.find(j => j.name === 'two')!;
-    p.do({ do: 'removeJob', id: two.id }).do({ do: 'saveJob', job: two, rhythm: null });
-    expect(W.items(p.facts, MON).map(i => i.name)).toEqual(['one', 'two', 'three']);
+    expect(job(p, line.id)!.name).toBe('post the parcle');
   });
 });
 
 describe('Capture from Siri, Shortcuts and the Action button (D-113)', () => {
-  it('each line lands in the satchel once, marked as said to Siri, and changes nothing on Today', () => {
+  it('each line becomes a delve job once, marked as said to Siri, and changes nothing on Today (D-117)', () => {
     const p = player().do({ do: 'open' });
     const before = p.view().slate;
     const lines = [{ id: 'A1', text: ' Ring the vet ' }, { id: 'A2', text: '' }, { id: 'A3', text: 'Buy stamps' }];
     p.do({ do: 'takeInbox', lines });
     /* the app closed before the inbox was cleared: the same lines come again, and nothing is added twice */
     p.do({ do: 'takeInbox', lines });
-    expect(W.items(p.facts, MON).map(i => i.name)).toEqual(['Ring the vet', 'Buy stamps']);
+    expect(p.view().content.jobs.filter(j => ['Ring the vet', 'Buy stamps'].includes(j.name)).map(j => [j.name, j.delve])).toEqual([['Ring the vet', true], ['Buy stamps', true]]);
     expect(p.facts.filter(f => f.type === 'itemAdded').every(f => (f as { via?: string }).via === 'siri')).toBe(true);
     expect(p.view().slate).toEqual(before);
   });
@@ -742,28 +706,22 @@ describe('The week’s look-ahead (D-116)', () => {
   });
 });
 
-describe('A line of Dan\'s own, begun, is done by Done (Dan, 2026-09-27, D-120)', () => {
-  const doneBy = (p: ReturnType<typeof player>, job: string) => {
-    p.do({ do: 'begin', job });
-    expect(p.view().next).toEqual({ job, mode: 'underWay' });
-    const before = p.facts.length;
+describe('A job added on a day is a delve on that day; delved on, It\'s done marks it (D-117, D-120)', () => {
+  const delveDone = (p: ReturnType<typeof player>, job: string) => {
+    expect(p.view().slate).toContain(job);
+    p.do({ do: 'startRun', job, minutes: 25, count: 1 }).wait(10).do({ do: 'finishHere' });
+    p.do({ do: 'seen', what: 'step', ref: p.view().runEnd!.seq });
     p.do({ do: 'done', job });
-    expect(p.facts.slice(before).some(f => f.type === 'jobDone' && f.job === job)).toBe(true);
-    expect(p.view().underWay).toBeNull();
     expect(p.view().done.has(job)).toBe(true);
+    expect(p.facts.filter(f => f.type === 'jobBegun' && f.job === job).map(f => (f as { from: string }).from)).toEqual(['app']);
   };
   it('added on today in the Week', () => {
     const p = player().do({ do: 'open' }).do({ do: 'addToWeek', line: 'Test', day: MON });
-    doneBy(p, p.facts.find(f => f.type === 'itemAdded')!.id);
-  });
-  it('put in the satchel with "+ Add", then planned for today', () => {
-    const p = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['Test'] });
-    const id = p.facts.find(f => f.type === 'itemAdded')!.id;
-    doneBy(p.do({ do: 'planJob', job: id, day: MON }), id);
+    delveDone(p, p.facts.find(f => f.type === 'itemAdded')!.id);
   });
   it('with a time set in the Week', () => {
     const p = player().do({ do: 'open' }).do({ do: 'addToWeek', line: 'Test', day: MON, time: '15:00' });
-    doneBy(p, p.facts.find(f => f.type === 'itemAdded')!.id);
+    delveDone(p, p.facts.find(f => f.type === 'itemAdded')!.id);
   });
 });
 
@@ -809,5 +767,18 @@ describe('Done while its own delve still runs (Dan, 2026-09-27, D-120)', () => {
   it('a delve on another job is left running', () => {
     const p = player().do({ do: 'open' }).do({ do: 'begin', job: 'gym' }).do({ do: 'startRun', job: 'cat', minutes: 25, count: 1 }).wait(5).do({ do: 'done', job: 'gym' });
     expect(p.view().run?.job.id).toBe('cat');
+  });
+});
+
+describe('Everything is a delve (Dan, D-117)', () => {
+  it('a job added mid-week (Siri) is placed by the next laying-out of the week where a day has room', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'takeInbox', lines: [{ id: 'S1', text: 'Ring the vet' }] });
+    const vet = p.view().content.jobs.find(j => j.name === 'Ring the vet')!;
+    expect(vet).toMatchObject({ delve: true, doneBy: 'dan' });
+    p.do({ do: 'replan' });
+    expect(W.planOf(p.facts, MON)!.some(e => e.job === vet.id)).toBe(true);
+  });
+  it('the starting set has no job without a timer', () => {
+    expect(C.jobs.every(j => j.delve)).toBe(true);
   });
 });

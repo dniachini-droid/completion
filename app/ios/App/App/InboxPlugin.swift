@@ -3,7 +3,7 @@ import Capacitor
 import Foundation
 
 /// Capture from outside the app (D-113): a line said to Siri, typed in the Shortcuts app or sent from the Action button
-/// waits here, in the app's own storage, until the game takes it into the satchel (ui/game.svelte.ts → drain). The
+/// waits here, in the app's own storage, until the game takes it in as a job (ui/game.svelte.ts → drain). The
 /// intent runs in the app's own process, so no App Group is needed. Each line keeps its id, so the game never adds it
 /// twice, and it is cleared only after the game has written it.
 enum SatchelInbox {
@@ -34,20 +34,20 @@ enum SatchelInbox {
     }
 }
 
-/// "Add to the satchel": one line, and the app doesn't open. Calm words, never a count.
+/// "Add a job": one line becomes a delve job (every job is a delve, D-117), and the app doesn't open. Calm words.
 struct AddToSatchel: AppIntent {
-    static var title: LocalizedStringResource = "Add to the satchel"
-    static var description = IntentDescription("Puts a line in the satchel of Long Answer, without opening it.")
+    static var title: LocalizedStringResource = "Add a job"
+    static var description = IntentDescription("Adds a job to Long Answer, without opening it.")
     static var openAppWhenRun = false
 
-    @Parameter(title: "Line", requestValueDialog: "What should go in the satchel?")
+    @Parameter(title: "Line", requestValueDialog: "What’s the job?")
     var line: String
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
         let text = line.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !text.isEmpty else { return .result(dialog: "Nothing was added.") }
         try SatchelInbox.add(String(text.prefix(120)))
-        return .result(dialog: "It’s in the satchel.")
+        return .result(dialog: "It’s with your jobs.")
     }
 }
 
@@ -56,9 +56,9 @@ struct SatchelShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
         AppShortcut(
             intent: AddToSatchel(),
-            phrases: ["Add to the satchel in \(.applicationName)", "Put something in the satchel in \(.applicationName)"],
-            shortTitle: "Add to the satchel",
-            systemImageName: "bag"
+            phrases: ["Add a job in \(.applicationName)", "Add a job to \(.applicationName)"],
+            shortTitle: "Add a job",
+            systemImageName: "plus.circle"
         )
     }
 }

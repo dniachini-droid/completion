@@ -59,10 +59,21 @@ export function live(c: Content, facts: Fact[], before?: string): Content {
       rhythms = rhythms.filter(x => x.job !== f.id);
     } else if (f.type === 'itemAdded') {
       if (!changed) { jobs = jobs.slice(); rhythms = rhythms.slice(); changed = true; }
-      jobs.push({ id: f.id, name: f.name, delve: false, length: 25, doneBy: 'dan', item: true });
+      /* a job added from anywhere (+ Add, the Week, Siri) is a delve like any other (D-117) */
+      jobs.push({ id: f.id, name: f.name, delve: true, length: 25, doneBy: 'dan' });
     }
   }
-  return changed ? { ...c, jobs, rhythms, base: c.base ?? c } : c;
+  if (!changed) return c;
+  /* everything is a delve (Dan, D-117): a job saved before as "no timer", or as a line of the satchel, is read as a
+     delve; a repeating one is done at its enough, a one-off when Dan says so after delving on it */
+  jobs = jobs.map(j => {
+    if (j.delve && !j.item) return j;
+    const k: Job = { ...j, delve: true };
+    delete k.item;
+    if (rhythms.some(r => r.job === j.id)) k.doneBy = 'enough';
+    return k;
+  });
+  return { ...c, jobs, rhythms, base: c.base ?? c };
 }
 
 /** A job's room in a day, for planning and the forecast: a delve job's enough, any other job's usual length. */
@@ -73,7 +84,7 @@ export const dayMinutes = (c: Content, d: { jobs: DayJob[] }) => d.jobs.filter(j
 
 /* ---------- the satchel ---------- */
 
-export interface Item { id: string; name: string; added: string; done: boolean; someday: boolean; by?: string; }
+export interface Item { id: string; name: string; added: string; done: boolean; someday: boolean; by?: string; touched?: string; }
 
 /** Dan's lines, oldest first. Ticked ones stay ticked that day and leave the list the day after (D-110); dropped ones
     go; untouched for three weeks, someday (TOOLS §2). */
@@ -103,7 +114,7 @@ export function items(facts: Fact[], day: string): Item[] {
   const sorted = [...out.values()].sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
   out.clear(); for (const it of sorted) out.set(it.id, it);
   /* a dated line never goes to someday (D-114) */
-  for (const it of out.values()) it.someday = !it.done && !it.by && (shelved.has(it.id) || daysBetween(touched.get(it.id)!, day) >= SOMEDAY_DAYS);
+  for (const it of out.values()) { it.touched = touched.get(it.id); it.someday = !it.done && !it.by && (shelved.has(it.id) || daysBetween(touched.get(it.id)!, day) >= SOMEDAY_DAYS); }
   return [...out.values()];
 }
 
@@ -195,7 +206,7 @@ export function planWeek(c: Content, facts: Fact[], week: string, from: string, 
     }
   }
   /* avoided one-offs early in the week, one to a day where the week allows */
-  for (const j of c.jobs.filter(x => x.avoided && !x.item && !x.stopped && !x.by && !rhythmJob.has(x.id) && !ever.has(x.id))) {
+  for (const j of c.jobs.filter(x => x.avoided && !x.stopped && !x.by && !rhythmJob.has(x.id) && !ever.has(x.id))) {
     const d = days.find(x => fits(x, j.id) && !out.some(e => e.day === x && c.jobs.find(k => k.id === e.job)?.avoided)) ?? days.find(x => fits(x, j.id));
     if (d) put(j.id, d);
   }
@@ -220,6 +231,11 @@ export function planWeek(c: Content, facts: Fact[], week: string, from: string, 
       }
       if (best) put(r.job, best, r.time);
     }
+  }
+  /* the other jobs Dan added (from + Add, the Week or Siri), not done yet: where a day has room, oldest first (D-117) */
+  for (const j of c.jobs.filter(x => !x.stopped && !x.by && !x.avoided && !rhythmJob.has(x.id) && !ever.has(x.id) && !out.some(e => e.job === x.id))) {
+    const d = days.find(x => fits(x, j.id));
+    if (d) put(j.id, d);
   }
   return out.filter(e => !fixed.some(x => x.id === e.id)).sort((a, b) => a.day.localeCompare(b.day) || (a.time ?? '99').localeCompare(b.time ?? '99'));
 }
@@ -360,10 +376,10 @@ export function pinnedIn(facts: Fact[], week: string): string | null {
   const p = ofType(facts, 'weekPinned').filter(f => f.week === week);
   return p.length ? p[p.length - 1].job : null;
 }
-/** "Still wanted?": up to three of the oldest open lines, never the whole list, never a count (P7). Dated lines have
-    their own question. */
+/** "Still wanted?": up to three of the oldest jobs Dan added, not done and untouched for a week or more (kept or put on
+    a day counts as touched), never the whole list, never a count (P7). Dated jobs have their own question. */
 export function sweepOf(facts: Fact[], day: string, most = 3): Item[] {
-  return items(facts, day).filter(i => !i.done && !i.by && !i.someday && daysBetween(i.added, day) >= 7).slice(0, most);
+  return items(facts, day).filter(i => !i.done && !i.by && daysBetween(i.touched ?? i.added, day) >= 7).slice(0, most);
 }
 /** "Coming up": the week's fixed points from `day`, one line each: appointments and entries with a time, dated work,
     and monthly or yearly rhythms on their day. The caller shows five and folds the rest. */

@@ -571,9 +571,9 @@ export type Command =
   | { do: 'finishHere' }
   /** Dan was in another app from `from` to `to` (game-clock ms): the delve pauses where he left (D-094). */
   | { do: 'away'; from: number; to: number }
-  /** Done with no timer (a Begin, or none: recorded afterwards); `yesterday`: it happened yesterday (D-112); `keepEnd`:
-      a delve under way on it ends and its end screen stays (D-120) */
-  | { do: 'done'; job: string; yesterday?: boolean; keepEnd?: boolean }
+  /** "It's done": a job delved on said done (every job is a delve, D-117; "Already done" and "yesterday" are gone);
+      `keepEnd`: a delve under way on it ends and its end screen stays (D-120) */
+  | { do: 'done'; job: string; keepEnd?: boolean }
   | { do: 'cantStart'; job: string }
   | { do: 'seen'; what: 'step' | 'arrival' | 'morning' | 'welcome'; ref: number }
   | { do: 'guess'; mark: string; guess: string }
@@ -691,13 +691,12 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       break;
     }
     case 'done': {
-      /* "Did it yesterday" (D-112, reversing D-089 with Dan's OK): recorded afterwards, on yesterday */
-      const on = cmd.yesterday ? W.addDays(day, -1) : day;
+      const on = day;
       if (!c.jobs.some(j => j.id === cmd.job) || doneOn(w.all, on).has(cmd.job)) break;
-      /* done today while a delve on it runs: that delve ends first (D-120) */
-      if (!cmd.yesterday) endRunOn(w, c, cmd.job, nowMs, now, cmd.keepEnd);
+      /* done while a delve on it runs: that delve ends first (D-120) */
+      endRunOn(w, c, cmd.job, nowMs, now, cmd.keepEnd);
       /* Done with no Begin: recorded afterwards (the test's sharpest line, MVP.md) */
-      if (cmd.yesterday || !begunOn(w.all, day, cmd.job)) w.put({ type: 'jobBegun', job: cmd.job, from: 'record' }, now, on);
+      if (!begunOn(w.all, day, cmd.job)) w.put({ type: 'jobBegun', job: cmd.job, from: 'record' }, now, on);
       markDoneIn(w, c, cmd.job, now, on);
       break;
     }
@@ -1051,7 +1050,9 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   for (const id of order) if (done.has(id) && !slate.includes(id)) slate.push(id);   /* off-plan counts in full */
   for (const id of done) if (!slate.includes(id)) slate.push(id);   /* so does something chosen from outside the list (D-077) */
   const complete = completedOn(facts, day);
-  const underWay = underWayOn(facts, day);
+  /* "under way" was a job without a timer begun away from the phone; every job is a delve now (D-117), so an old Begin
+     in a save leaves nothing under way */
+  const underWay = ((u: string | null) => u && !jobOf(c, u).delve ? u : null)(underWayOn(facts, day));
   const seen = new Set(ofType(facts, 'seen').map(f => f.ref));
 
   let run: RunView | null = null;

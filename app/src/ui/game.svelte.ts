@@ -85,7 +85,7 @@ class Game {
     this.panel();   /* the panel may have run past what it knew while the app was away: put it right */
   }
 
-  /** Lines said to Siri, typed in Shortcuts or sent from the Action button go into the satchel (D-113): written first,
+  /** Lines said to Siri, typed in Shortcuts or sent from the Action button become jobs (D-113, D-117): written first,
       then cleared; a line written but not cleared (the app closed in between) is recognised by its id next time. */
   #draining = false;
   async drain() {
@@ -114,7 +114,7 @@ class Game {
     this.do({ do: 'away', from: this.gameMs(leftAt), to: this.clockMs() });
   }
 
-  /** A job as Dan has it now (his edits and satchel lines included). */
+  /** A job as Dan has it now (his edits and the jobs he added included). */
   job(id: string) { return this.view.content.jobs.find(j => j.id === id); }
 
   get saveKey() { return this.proto.rehearsal ? 'save.rehearsal' : 'save.v1'; }

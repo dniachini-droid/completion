@@ -6,12 +6,12 @@ import type { Job, Rhythm } from '../../core/types';
 
 export const jobs: Job[] = [
   { id: 'course', name: 'Course', delve: true, length: 180, enoughAt: 50, doneBy: 'enough', firstStep: 'Open the course and find where you stopped.' },
-  { id: 'gym', name: 'Gym, then the sauna', delve: false, length: 60, doneBy: 'dan', firstStep: 'Put your gym shoes on.' },
+  { id: 'gym', name: 'Gym, then the sauna', delve: true, length: 60, doneBy: 'enough', firstStep: 'Put your gym shoes on.' },
   { id: 'spanish', name: 'Spanish study', delve: true, length: 60, doneBy: 'enough', firstStep: 'Open the book at the last page you used.' },
-  { id: 'lesson', name: 'Spanish lesson', delve: false, length: 60, doneBy: 'dan', firstStep: 'Open the lesson link and sit down with it.' },
+  { id: 'lesson', name: 'Spanish lesson', delve: true, length: 60, doneBy: 'enough', firstStep: 'Open the lesson link and sit down with it.' },
   { id: 'cat', name: 'Order the cat’s medication', delve: true, length: 25, doneBy: 'dan', avoided: true, firstStep: 'Open the vet’s page on your laptop.' },
-  { id: 'meal', name: 'Meal prep', delve: false, length: 60, doneBy: 'dan', firstStep: 'Take one pan out and put it on the hob.' },
-  { id: 'tank', name: 'Tank clean', delve: false, length: 60, doneBy: 'dan', firstStep: 'Fill the bucket.' },
+  { id: 'meal', name: 'Meal prep', delve: true, length: 60, doneBy: 'enough', firstStep: 'Take one pan out and put it on the hob.' },
+  { id: 'tank', name: 'Tank clean', delve: true, length: 60, doneBy: 'enough', firstStep: 'Fill the bucket.' },
   { id: 'post', name: 'Sort the post', delve: true, length: 25, doneBy: 'dan', avoided: true, firstStep: 'Bring the pile to the table.' },
 ];
 

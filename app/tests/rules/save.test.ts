@@ -228,8 +228,8 @@ describe('versions and migrations', () => {
     expect(before.here.name).toBeTruthy();
     const job = v.next?.job ?? v.order[0];
     expect(job).toBeTruthy();
-    facts = facts.concat(act(facts, C, { do: 'begin', job: job! }, next));
-    expect(facts.at(-1)!.type).toBe('jobBegun');
+    facts = facts.concat(act(facts, C, { do: 'startRun', job: job!, minutes: 25, count: 1 }, next));
+    expect(facts.some(f => f.type === 'delveStarted' && f.job === job)).toBe(true);
   });
 });
 

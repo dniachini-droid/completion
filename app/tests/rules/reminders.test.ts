@@ -94,24 +94,24 @@ describe('What alerts (D-107)', () => {
 });
 
 describe('The test can tell a start that followed a reminder (MVP.md, D-107)', () => {
-  const started = (p: ReturnType<typeof player>) => p.facts.filter(f => f.type === 'jobBegun').pop()!;
-  it('a Begin within three hours after the alert followed it', () => {
+  const started = (p: ReturnType<typeof player>) => p.facts.filter(f => f.type === 'delveStarted').pop()!;
+  it('a delve begun within three hours after the alert followed it', () => {
     const p = player().do({ do: 'open' }).do({ do: 'remind', target: R.rhythmTarget('r-lesson'), lead: 15 });
-    p.to('2026-10-01T17:50:00+01:00').do({ do: 'open' }).do({ do: 'focus', job: 'lesson' }).do({ do: 'begin', job: 'lesson' });
+    p.to('2026-10-01T17:50:00+01:00').do({ do: 'open' }).do({ do: 'startRun', job: 'lesson', minutes: 30, count: 2 });
     expect(R.followedReminder(C, p.facts, started(p))).toBe(true);
   });
-  it('a Begin with no reminder set, or before the alert, did not', () => {
+  it('a delve begun with no reminder set, or before the alert, did not', () => {
     const p = player().do({ do: 'open' });
-    p.to('2026-10-01T17:50:00+01:00').do({ do: 'open' }).do({ do: 'focus', job: 'lesson' }).do({ do: 'begin', job: 'lesson' });
+    p.to('2026-10-01T17:50:00+01:00').do({ do: 'open' }).do({ do: 'startRun', job: 'lesson', minutes: 30, count: 2 });
     expect(R.followedReminder(C, p.facts, started(p))).toBe(false);
     const q = player().do({ do: 'open' }).do({ do: 'remind', target: R.rhythmTarget('r-lesson'), lead: 0 });
-    q.to('2026-10-01T10:00:00+01:00').do({ do: 'open' }).do({ do: 'focus', job: 'lesson' }).do({ do: 'begin', job: 'lesson' });
+    q.to('2026-10-01T10:00:00+01:00').do({ do: 'open' }).do({ do: 'startRun', job: 'lesson', minutes: 30, count: 2 });
     expect(R.followedReminder(C, q.facts, started(q))).toBe(false);
   });
   it('a job recorded as already done is told apart from one begun in the app', () => {
     const p = player().do({ do: 'open' }).do({ do: 'remind', target: R.rhythmTarget('r-lesson'), lead: 15 });
     p.to('2026-10-01T19:10:00+01:00').do({ do: 'open' }).do({ do: 'done', job: 'lesson' });
-    const b = started(p) as Fact & { from: string };
+    const b = p.facts.filter(f => f.type === 'jobBegun').pop() as Fact & { from: string };
     expect(b.from).toBe('record');
     expect(R.followedReminder(C, p.facts, b)).toBe(false);
   });

@@ -1,8 +1,9 @@
-// Dan's reports (2026-09-27, D-120): with a job under way, "+ Add"'s box sat behind the job's words above the keyboard;
-// and the under-way job's Done did nothing. On the iPhone the keyboard covers the page (the visible part shrinks, the
+// Dan's reports (2026-09-27, D-120, D-117): "+ Add"'s box sat behind the next job's words above the keyboard; and a
+// one-off job's Done did nothing. Every job is a delve now (D-117): a job added is a delve on its day, and it is done by
+// delving on it and saying so. On the iPhone the keyboard covers the page (the visible part shrinks, the
 // page does not), so the check stands one in: the visual viewport is made shorter while the page stays its size, as there.
-// The box must be wholly above the keyboard with nothing over it; after it closes, the page is back in place and Done,
-// tapped, marks the job done. Usage: node tests/flows/capture-done.mjs http://localhost:4173/ [width height]
+// The box must be wholly above the keyboard with nothing over it; after it closes, the page is back in place, the line is
+// on today, and a job added in the Week, delved on and said done, is done. Usage: node tests/flows/capture-done.mjs http://localhost:4173/ [width height]
 const { launch } = await import('./browser.mjs');
 const [,, url, w = '440', h = '956'] = process.argv;
 const W = +w, H = +h, KB = Math.round(H * 0.36);   /* an iPhone keyboard with its word bar: about a third of the screen */
@@ -22,12 +23,13 @@ await page.goto(url); await page.clock.runFor(2500);
 const fails = [];
 /* past anything that opens first (a welcome, a morning), to Today */
 for (let k = 0; k < 8 && !(await page.locator('.foot .add').count()); k++) { await page.locator('button.btn').first().click(); await page.clock.runFor(1500); }
-/* a job added on today in the Week, then begun from Today: under way */
+/* a job added on today in the Week: a delve on today (D-117) */
 await page.getByRole('button', { name: /^Week$/i }).click(); await page.clock.runFor(1500);
 await page.locator('button.plus').first().click(); await page.keyboard.type('Test'); await page.keyboard.press('Enter'); await page.clock.runFor(800);
 await page.locator('.home').click(); await page.clock.runFor(1500);
-await page.locator('.rows button.row', { hasText: 'Test' }).click(); await page.clock.runFor(1500);
-if ((await page.locator('.next h2').first().textContent())?.trim() !== 'Test') fails.push('Test is not under way');
+const testRow = page.locator('.rows button.row', { hasText: 'Test' }).first();
+if (!(await testRow.count())) fails.push('Test, added on today in the Week, is not on Today');
+else if (/one-off|about/i.test(await testRow.innerText())) fails.push('Test is shown as a job without a timer');
 
 /* "+ Add", with the keyboard up */
 await page.locator('.foot .add').click();
@@ -49,15 +51,24 @@ await page.evaluate(() => { document.activeElement?.blur(); window.__keyboard(0)
 const after = await page.evaluate(() => ({ phone: document.querySelector('.phone').getBoundingClientRect().height, y: scrollY, vvh: document.documentElement.style.getPropertyValue('--vvh') }));
 if (Math.abs(after.phone - H) > 1 || after.y || after.vvh) fails.push(`the page is not back in place after the keyboard (${JSON.stringify(after)})`);
 
-/* Done, tapped as a finger would, where it is drawn */
-const done = page.locator('.next button.btn');
-const r = await done.boundingBox();
-if (!r) fails.push('no Done under way');
+/* what was put in with "+ Add" is on today (D-117) */
+if (!(await page.locator('.rows button.row', { hasText: 'milk' }).count())) fails.push('"milk", put in with + Add, is not on Today');
+
+/* a tap on Test starts its delve; finished and said done, it is done: the one-off's Done works (Dan, D-117) */
+await page.locator('.rows button.row', { hasText: 'Test' }).first().click(); await page.clock.runFor(1500);
+if (!(await page.locator('.dv').count())) fails.push('a tap on Test did not start its delve');
 else {
-  const hit = await page.evaluate(([x, y]) => document.elementFromPoint(x, y)?.closest('button')?.textContent?.trim(), [r.x + r.width / 2, r.y + r.height / 2]);
-  if (!/done/i.test(hit ?? '')) fails.push(`a tap on Done lands on ${hit ?? 'nothing'}`);
-  await page.touchscreen.tap(r.x + r.width / 2, r.y + r.height / 2); await page.clock.runFor(1500);
-  if (!(await page.locator('.route').count())) fails.push('Done did nothing: no step shown');
+  await page.clock.runFor(5 * 60_000);
+  await page.getByRole('button', { name: 'Finish here', exact: true }).first().click(); await page.clock.runFor(1500);
+  const yes = page.getByRole('button', { name: 'Done', exact: true }).first();
+  if (!(await yes.count())) fails.push('no "Is it done?" after finishing Test');
+  else {
+    const r = await yes.boundingBox();
+    await page.touchscreen.tap(r.x + r.width / 2, r.y + r.height / 2); await page.clock.runFor(1500);
+    await page.getByRole('button', { name: 'Back to today', exact: true }).first().click().catch(() => {}); await page.clock.runFor(1500);
+    const row = page.locator('.rows button.row', { hasText: 'Test' }).first();
+    if (!(await row.count()) || !/done/i.test(await row.innerText())) fails.push('Test, delved on and said done, is not done on Today');
+  }
 }
 if (errors.length) fails.push(...errors.map(e => 'page error: ' + e));
 await b.close();

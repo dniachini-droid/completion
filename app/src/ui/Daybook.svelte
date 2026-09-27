@@ -6,7 +6,7 @@
      quiet offer to plan the week ahead (D-045), never repeated. */
   import { game, content } from './game.svelte';
   import { t, card, timesWords, dayName, byWords } from '../content/copy/en';
-  import { comingUp, items, sweepOf } from '../core/week';
+  import { comingUp, sweepOf } from '../core/week';
   import { calendarWeek } from '../core/time';
   import { beatOf, sealOf } from '../core/story';
   import Scene from './Scene.svelte';
@@ -56,12 +56,12 @@
   const sweep = $state(sweepOf(game.facts, game.view.day));
   let swept = $state(0);
   const coming = $derived(step === 2 ? comingUp(v.content, game.facts, v.day) : []);
-  const pickable = $derived(step === 3 ? v.content.jobs.filter(j => !j.stopped && !(j.item && items(game.facts, v.day).find(i => i.id === j.id)?.done)) : []);
+  const pickable = $derived(step === 3 ? v.content.jobs.filter(j => !j.stopped && !(game.facts.some(f => f.type === 'jobDone' && f.job === j.id) && !v.content.rhythms.some(r => r.job === j.id))) : []);
   /* the page is marked read at the end, not here: marking it read ends the offer this look-ahead lives in */
   function lookAhead() { step = sweep.length ? 1 : 2; }
-  function sweepAnswer(what: 'keep' | 'someday' | 'letGo') {
+  function sweepAnswer(what: 'keep' | 'letGo') {
     const it = sweep[swept];
-    if (it) game.do(what === 'keep' ? { do: 'keepItem', id: it.id } : what === 'someday' ? { do: 'somedayItem', id: it.id } : { do: 'dropItem', id: it.id });
+    if (it) game.do(what === 'keep' ? { do: 'keepItem', id: it.id } : { do: 'removeJob', id: it.id });
     swept++;
     if (swept >= sweep.length) step = 2;
   }
@@ -134,7 +134,6 @@
             <p class="say line">{sweep[swept].name}</p>
             <div class="seg" role="group" aria-label={t('look.still')}>
               <button onclick={() => sweepAnswer('keep')}>{t('look.keep')}</button>
-              <button onclick={() => sweepAnswer('someday')}>{t('look.someday')}</button>
               <button onclick={() => sweepAnswer('letGo')}>{t('by.letGo')}</button>
             </div>
             <div class="btn-row after"><button class="btn-quiet" onclick={() => (step = 2)}><span>{t('look.skip')}</span></button></div>

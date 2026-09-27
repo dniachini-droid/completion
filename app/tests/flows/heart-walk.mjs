@@ -3,7 +3,7 @@
 //   node tests/flows/heart-walk.mjs http://localhost:4173/ <out-dir> [width height]
 // Day 1 (a Thursday): the Course, the gym, Spanish study → the first place; the map; records. Then more days (one busier,
 // for a deep push) until the first word is cut (slice 3): the cut, the stair, the marks. Slice 4: camp and Goodnight on
-// day 1, the morning after, the week close on the first Monday (with Plan it for me and the week), the satchel, the
+// day 1, the morning after, the week close on the first Monday (with Plan it for me and the week), + Add and the job editor, the
 // rhythms, and a return after days away. The map on day 1 and again after the first word (every light tapped, one stretch
 // looked at closer). No story text is asserted.
 const { launch } = await import('./browser.mjs');
@@ -385,32 +385,26 @@ await toClock(1, 9); await page.reload({ waitUntil: 'domcontentloaded' }); await
 await openers('last');
 if (await has('I can’t start')) { await tap('I can’t start'); await shot('cant-start', 2000); await tap('Not now'); await page.clock.runFor(1500); }
 /* slice 4's own screens, from Today's foot */
-/* one-tap capture (D-107): "+ Add" opens a box already typing; Return puts the line in the satchel, and Today stays */
+/* one-tap capture (D-107, D-117): "+ Add" opens a box already typing; Return puts the job on today, a delve */
 { await page.clock.runFor(1500); await page.waitForTimeout(300);   /* the screen settled: no fading one still on it */
-  const rows0 = await page.locator('.rows button.row').allInnerTexts();
-  await tap('Add to the satchel'); await page.clock.runFor(300);
+  await tap('Add a job to today'); await page.clock.runFor(300);
   if (!(await page.evaluate(() => document.activeElement?.tagName === 'TEXTAREA'))) errors.push('CAPTURE the box was not already typing');
   await page.keyboard.type('Call the bank'); await shot('today-capture', 300);
   await page.keyboard.press('Enter'); await page.clock.runFor(500);
-  if (!(await page.locator('nav.foot').getByText('In the satchel').count())) errors.push('CAPTURE did not say it was put in');
+  if (!(await page.locator('nav.foot').getByText('On today').count())) errors.push('CAPTURE did not say it was put on today');
   if (!(await page.locator('nav.foot').count())) errors.push('CAPTURE left Today');
-  if (JSON.stringify(await page.locator('.rows button.row').allInnerTexts()) !== JSON.stringify(rows0)) errors.push(`CAPTURE changed Today’s list: ${JSON.stringify(rows0)} → ${JSON.stringify(await page.locator('.rows button.row').allInnerTexts())}`); }
-await tap('Satchel'); await shot('satchel', 1500);
-if (!(await page.locator('.item .t', { hasText: 'Call the bank' }).count())) errors.push('CAPTURE the line is not in the satchel');
-await tap('Add a line');
-if (!(await page.evaluate(() => document.activeElement?.tagName === 'TEXTAREA'))) errors.push('SATCHEL Add a line was not already typing');
-await page.locator('textarea.lines').fill('Hoover the hall\nClear the desk\nWash the bedding\nTake the bottles out\nFix the shelf bracket\nRenew the parking permit');
-await tap('Put it in'); await shot('satchel-lines', 1000);
-await tap('Put on today'); await shot('satchel-today', 800);
-await page.locator('.tickbox').nth(1).click(); await shot('satchel-ticked', 800);
-/* a line's editor (D-112): a tap on the line opens it; renamed, it is renamed in the satchel; let go, Undo brings it back */
-await page.locator('.item .t', { hasText: 'Wash the bedding' }).click(); await shot('job-edit', 800);
-await page.locator('.editor input.line').first().fill('Wash and change the bedding'); await tap('Save'); await page.clock.runFor(800);
-if (!(await page.locator('.item .t', { hasText: 'Wash and change the bedding' }).count())) errors.push('EDIT the line was not renamed in the satchel');
-await page.locator('.item .t', { hasText: 'Take the bottles out' }).click(); await page.clock.runFor(800);
-await tap('Let it go'); await shot('job-removed', 600);
+  const row = page.locator('.rows button.row', { hasText: 'Call the bank' });
+  if (!(await row.count())) errors.push('CAPTURE the job is not on today');
+  else if (/one-off|about/i.test(await row.first().innerText())) errors.push('CAPTURE the job is shown as one without a timer'); }
+/* the job editor (D-112), from What repeats' other jobs: renamed; removed, Undo brings it back */
+await tap('Week'); await page.clock.runFor(1200); await tap('What repeats'); await page.clock.runFor(1200);
+await page.locator('button.row', { hasText: 'Call the bank' }).first().click(); await shot('job-edit', 800);
+await page.locator('.editor input.line').first().fill('Call the bank about the card'); await tap('Save'); await page.clock.runFor(800);
+if (!(await page.locator('button.row', { hasText: 'Call the bank about the card' }).count())) errors.push('EDIT the job was not renamed');
+await page.locator('button.row', { hasText: 'Call the bank about the card' }).first().click(); await page.clock.runFor(800);
+await tap('Remove it'); await shot('job-removed', 600);
 await tap('Undo'); await page.clock.runFor(800);
-if (!(await page.locator('.item .t', { hasText: 'Take the bottles out' }).count())) errors.push('EDIT Undo did not bring the line back');
+if (!(await page.locator('button.row', { hasText: 'Call the bank about the card' }).count())) errors.push('EDIT Undo did not bring the job back');
 await home(); await page.clock.runFor(1500); await shot('today-with-line', 2000);
 await tap('Week'); await shot('week', 1500);
 /* a day folds away with a tap on its name, and opens again (Dan, review 2) */
@@ -494,10 +488,6 @@ await tap('Daybook'); await shot('daybook', 1500); await home(); await page.cloc
   await tap('Something else…'); await page.locator('.body button.row').first().click(); await page.clock.runFor(800);
   expect('choose → delves', await backSays(), 'back');
   await home();
-  /* "Already done" (D-112): from Choose a delve, yesterday, with no timer; it lands on the job's return */
-  await tap('Something else…'); await tap('Already done'); await tap('Yesterday'); await shot('choose-already', 600);
-  await page.locator('.body button.row:not([disabled])').first().click(); await page.clock.runFor(1500); await shot('already-yesterday', 1000);
-  if (await page.locator('.body .record').count()) errors.push('ALREADY a job tapped as done yesterday stayed on Choose a delve');
   await home(); await page.clock.runFor(1500);
   if (!(await page.locator('nav.foot').count())) errors.push('BACK never reached Today');
 }

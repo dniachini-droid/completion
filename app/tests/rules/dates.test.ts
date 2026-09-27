@@ -38,13 +38,6 @@ describe('a date on a job (D-114)', () => {
     p.to('2026-10-02').do({ do: 'open' });
     expect(p.view().slate).toContain('tax');
   });
-  it('a dated satchel line never goes to someday', () => {
-    const p = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['Renew the passport'] });
-    const line = p.view().content.jobs.find(j => j.item)!;
-    p.do({ do: 'saveJob', job: { ...line, by: '2026-12-01' }, rhythm: null });
-    const [it] = W.items(p.facts, W.addDays(MON, 30));
-    expect(it).toMatchObject({ by: '2026-12-01', someday: false });
-  });
   it('done before its date brings a find, once a week, and only for a date set two days or more before', () => {
     const finds = (p: ReturnType<typeof player>) => p.facts.filter(f => f.type === 'findGiven' && (f as { why: string }).why === 'dated').length;
     const early = player().do({ do: 'open' }).do({ do: 'saveJob', job: { ...tax, by: '2026-10-09' }, rhythm: null });

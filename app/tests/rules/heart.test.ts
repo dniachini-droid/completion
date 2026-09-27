@@ -72,10 +72,8 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     expect(v.arrival).toMatchObject({ kind: 'place', id: 'b-1.A', completedDay: false });
     expect(v.here.id).toBeNull();   /* revealed on the arrival's own screen, not before */
     p.do({ do: 'seen', what: 'arrival', ref: v.arrival!.seq });
-    /* the gym: Begin marks it under way; Done plays its hour and completes the day, with no camp (a place was reached) */
-    p.do({ do: 'begin', job: 'gym' });
-    expect(p.view().next).toEqual({ job: 'gym', mode: 'underWay' });
-    p.wait(70).do({ do: 'done', job: 'gym' });
+    /* the gym, a delve like every job (D-117): its hour, done at its enough, completes the day, with no camp */
+    p.do({ do: 'startRun', job: 'gym', minutes: 30, count: 2 }).wait(70);
     expect(p.view().complete).toBe(true);
     expect(p.view().walked).toBe(135);
     expect(p.view().arrival).toBeNull();
@@ -95,11 +93,12 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     expect(q.view().arrival!.look).toBeTruthy();   /* a camp always has one thing to look at */
     expect(q.view().here.id).toBeNull();
   });
-  it('Done with no Begin is recorded as afterwards; Begin then Done as from the app', () => {
+  it('Done with no delve is recorded as afterwards; a delve to its enough counts as from the app (D-117)', () => {
     const p = player().do({ do: 'open' }).do({ do: 'done', job: 'gym' });
     expect(p.facts.find(f => f.type === 'jobBegun')).toMatchObject({ job: 'gym', from: 'record' });
-    const q = player().do({ do: 'open' }).do({ do: 'begin', job: 'gym' }).do({ do: 'done', job: 'gym' });
+    const q = player().do({ do: 'open' }).do({ do: 'startRun', job: 'gym', minutes: 30, count: 2 }).wait(70);
     expect(q.facts.filter(f => f.type === 'jobBegun')).toEqual([expect.objectContaining({ job: 'gym', from: 'app' })]);
+    expect(q.view().done.has('gym')).toBe(true);
   });
   it('lowering capacity can complete the day, and day complete locks in', () => {
     const p = player().do({ do: 'open' }).do({ do: 'done', job: 'gym' }).do({ do: 'done', job: 'tank' });
