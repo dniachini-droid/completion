@@ -59,7 +59,9 @@ await page.locator('.rows button.row', { hasText: 'Test' }).first().click(); awa
 if (await page.locator('.rs').count()) { await page.getByRole('button', { name: 'Begin', exact: true }).click(); await page.clock.runFor(1500); }
 if (!(await page.locator('.dv').count())) fails.push('a tap on Test did not start its delve');
 else {
-  await page.clock.runFor(5 * 60_000);
+  /* five minutes on: the clock jumps, as in delve-loop, rather than running every frame of the delve (WebKit's page
+     crashed stepping 18,000 frames at once) */
+  { const n = await page.evaluate(() => Date.now()); await page.clock.setSystemTime(n + 5 * 60_000); await page.clock.runFor(500); await page.waitForTimeout(200); await page.clock.runFor(250); }
   await page.getByRole('button', { name: 'Finish here', exact: true }).first().click(); await page.clock.runFor(1500);
   const yes = page.getByRole('button', { name: 'Done', exact: true }).first();
   if (!(await yes.count())) fails.push('no "Is it done?" after finishing Test');
