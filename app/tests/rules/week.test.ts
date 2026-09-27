@@ -615,3 +615,28 @@ describe('Stage 2 fixes and lengths (D-110)', () => {
     expect(presetRun({ id: 'x', name: 'x', delve: true, length: 180, enoughAt: 50, doneBy: 'enough' })).toEqual({ minutes: 25, count: 2 });
   });
 });
+
+describe('A line of Dan\'s own, begun, is done by Done (Dan, 2026-09-27, D-120)', () => {
+  const doneBy = (p: ReturnType<typeof player>, job: string) => {
+    p.do({ do: 'begin', job });
+    expect(p.view().next).toEqual({ job, mode: 'underWay' });
+    const before = p.facts.length;
+    p.do({ do: 'done', job });
+    expect(p.facts.slice(before).some(f => f.type === 'jobDone' && f.job === job)).toBe(true);
+    expect(p.view().underWay).toBeNull();
+    expect(p.view().done.has(job)).toBe(true);
+  };
+  it('added on today in the Week', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addToWeek', line: 'Test', day: MON });
+    doneBy(p, p.facts.find(f => f.type === 'itemAdded')!.id);
+  });
+  it('put in the satchel with "+ Add", then planned for today', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['Test'] });
+    const id = p.facts.find(f => f.type === 'itemAdded')!.id;
+    doneBy(p.do({ do: 'planJob', job: id, day: MON }), id);
+  });
+  it('with a time set in the Week', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addToWeek', line: 'Test', day: MON, time: '15:00' });
+    doneBy(p, p.facts.find(f => f.type === 'itemAdded')!.id);
+  });
+});

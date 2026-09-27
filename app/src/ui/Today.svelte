@@ -134,7 +134,7 @@
     </div>
     <h1 class="carve lg rise">{v.here.name}</h1>
     <!-- no Low / Normal / High here: Dan sets his days in the week and runs them (Dan, D-089) -->
-    {#if v.ahead}
+    {#if v.ahead && !capturing}
       <section class="ahead rise d2">
         <div class="label-line">{t('today.ahead')}</div>
         <button class="ahead-text" class:open={aheadOpen} aria-expanded={aheadOpen} onclick={() => (aheadOpen = !aheadOpen)}><p class="say on-scene">{v.ahead}</p></button>
@@ -147,6 +147,16 @@
   <section class="bottom fit col rise d3">
     <!-- on a short phone the day scrolls; the foot's links never leave the screen (review finding ui-11) -->
     <div class="scroll">
+    <!-- while Dan types, the box stands alone above the keyboard: the next job and the list come back when he is done
+         (Dan, 2026-09-27: the under-way job's words were drawn over the box) (D-120) -->
+    {#if capturing}
+      <form class="capture" onsubmit={(e) => { e.preventDefault(); capture(); }}>
+        <textarea bind:this={capEl} bind:value={captured} rows="2" maxlength="2000" enterkeyhint="done" onkeydown={capKey}
+          placeholder={t('today.add.placeholder')} aria-label={t('today.add.label')}></textarea>
+        <div class="btn-row"><button class="btn-quiet" type="submit" disabled={!captured.trim()}><span>{t('today.add.put')}</span></button>
+          <button class="btn-quiet" type="button" onclick={() => (capturing = false)}><span>{t('rhythms.cancel')}</span></button></div>
+      </form>
+    {:else}
     {#if v.night && !v.run}
       <div class="next">
         <div class="label-line gold">{t('today.tonight')}</div>
@@ -221,15 +231,6 @@
     {#if lastAside && !v.order.includes(lastAside) && !v.done.has(lastAside)}
       <p class="said">{t('today.aside.said')} <button class="text-link" onclick={putBack}><span>{t('today.putBack')}</span></button></p>
     {/if}
-    <!-- one-tap capture (D-107): while typing, the box takes the list's place, so nothing on Today is pushed away -->
-    {#if capturing}
-      <form class="capture" onsubmit={(e) => { e.preventDefault(); capture(); }}>
-        <textarea bind:this={capEl} bind:value={captured} rows="2" maxlength="2000" enterkeyhint="done" onkeydown={capKey}
-          placeholder={t('today.add.placeholder')} aria-label={t('today.add.label')}></textarea>
-        <div class="btn-row"><button class="btn-quiet" type="submit" disabled={!captured.trim()}><span>{t('today.add.put')}</span></button>
-          <button class="btn-quiet" type="button" onclick={() => (capturing = false)}><span>{t('rhythms.cancel')}</span></button></div>
-      </form>
-    {:else}
     <div class="rows" onpointermove={move} onpointerup={up} onpointercancel={up}>
       {#each others as id (id)}
         {@const j = job(id)}
@@ -249,9 +250,9 @@
         </button>
       {/if}
     </div>
-    {/if}
     <!-- the evening, before the day's work is done: Tonight at the end of the day's list (D-093) -->
     {#if evening && !v.complete && !v.run}<section class="tonight-end">{@render tonight()}</section>{/if}
+    {/if}
     </div>
     <nav class="foot" aria-label={t('today.label')}>
       <button class="text-link add" class:on={capturing} aria-label={t('today.add.label')} aria-expanded={capturing} onclick={startCapture}><span>{capSaid ? t('today.add.said') : t('today.add')}</span></button>
