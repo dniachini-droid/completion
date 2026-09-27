@@ -716,3 +716,28 @@ describe('Lay out the rest of the week (D-114)', () => {
     expect(fresh.filter(e => e.job === 'gym').length).toBeGreaterThan(0);
   });
 });
+
+describe('The week’s look-ahead (D-116)', () => {
+  it('still wanted: up to three of the oldest lines, a week old or more; kept, its three weeks start again; someday by hand', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['a', 'b', 'c', 'd'] });
+    expect(W.sweepOf(p.facts, W.addDays(MON, 6))).toEqual([]);
+    const [a, b] = W.sweepOf(p.facts, W.addDays(MON, 7));
+    expect(W.sweepOf(p.facts, W.addDays(MON, 7))).toHaveLength(3);
+    p.next(7).do({ do: 'open' }).do({ do: 'keepItem', id: a.id }).do({ do: 'somedayItem', id: b.id });
+    const it = (id: string, d: number) => W.items(p.facts, W.addDays(MON, d)).find(i => i.id === id)!;
+    expect(it(a.id, 27).someday).toBe(false);
+    expect(it(a.id, 28).someday).toBe(true);
+    expect(it(b.id, 7).someday).toBe(true);
+  });
+  it('what matters most is placed first in the week and leads Today on its day; it earns what it always does', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'pinWeek', job: 'post' }).do({ do: 'replan' });
+    const day = W.planOf(p.facts, MON)!.find(e => e.job === 'post')!.day;
+    expect(day).toBe(MON);
+    expect(p.view().slate[0]).toBe('post');
+    expect(p.facts.some(f => f.type === 'findGiven' || f.type === 'stepsGained')).toBe(false);
+  });
+  it('coming up: the week’s fixed points from today', () => {
+    const p = player().do({ do: 'open' });
+    expect(W.comingUp(p.view().content, p.facts, MON).map(x => [x.day, x.job, x.kind])).toContainEqual(['2026-10-01', 'lesson', 'time']);
+  });
+});

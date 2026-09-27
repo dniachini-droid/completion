@@ -126,7 +126,7 @@ One session each unless noted; a stage waits for the earlier stages it builds on
   - [x] "Add to the satchel" from Siri, Shortcuts and the Action button (D-113)
   - [x] the re-entry nudge, off by default (D-113)
 - **Stage 7 ✓ done: calendar import** (`scope/09-calendar-import.md` B, D-115). After Stage 3.
-- **Stage 8: the weekly look-ahead** (`scope/18-weekly-review.md` C, no reward). After Stage 3.
+- **Stage 8 ✓ done: the weekly look-ahead** (`scope/18-weekly-review.md` C, no reward, D-116). After Stage 3.
 - **Stage 9: projects** (`scope/17-expeditions.md`, B then its door). After Stages 2–3, once Dan names a real project; its name is chosen then.
 - **Later, if still wanted:** the month view as an "Ahead" list (`scope/20-month-view.md` B), two weeks after Stage 3 is in use.
 - **Not now** (look again as noted on each page): make it smaller (19), hour-by-hour today (21), body doubling beyond Focusmate on the laptop (22), search, onboarding.

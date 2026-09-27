@@ -162,6 +162,13 @@ const metThisWeek = (c: Content, facts: Fact[], day: string, job: string) => {
 function orderOn(c: Content, facts: Fact[], day: string, clock: string): string[] {
   const aside = asideOn(facts, day);
   const plan = W.plannedToday(c, facts, day, clock).map(p => p.job).filter(id => !aside.has(id));
+  /* the week's one thing that matters most leads Today on the day it is planned (D-116), after an appointment that is due */
+  const pin = W.pinnedIn(facts, calendarWeek(day)), times = W.plannedToday(c, facts, day, clock);
+  if (pin && plan.includes(pin)) {
+    plan.splice(plan.indexOf(pin), 1);
+    const due = times.filter(x => x.time && plan.indexOf(x.job) === 0).length;
+    plan.splice(due, 0, pin);
+  }
   const planned = new Set(plan);
   /* a week laid out with Plan my week: Today is the plan, nothing else slipped in (Dan, D-078); "Something else…" is there */
   /* on a planned week, a job Dan chose himself today (begun, delved on or tapped) joins the list after the plan's (D-080) */
@@ -577,6 +584,11 @@ export type Command =
   | { do: 'remind'; target: string; lead: R.Lead | null }
   | { do: 'reminders'; on: boolean }
   | { do: 'nudge'; on: boolean }
+  /* the week's look-ahead in the Daybook (D-116): earns nothing (P16) */
+  | { do: 'keepItem'; id: string }
+  | { do: 'somedayItem'; id: string }
+  | { do: 'pinWeek'; job: string | null }
+  | { do: 'lookAhead'; finished: boolean }
   /* the phone's calendar, read-only (D-115) */
   | { do: 'calendarShow'; on: boolean; calendars: string[] | null }
   | { do: 'calendarRead'; events: CalEvent[]; days: number };
@@ -775,6 +787,10 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       if ((cmd.lead === null || (cmd.target.startsWith('d:') ? (R.DATE_LEADS as readonly number[]) : (R.LEADS as readonly number[])).includes(cmd.lead)) && R.reminderSettings(w.all).get(cmd.target) !== cmd.lead) w.put({ type: 'reminderSet', target: cmd.target, lead: cmd.lead });
       break;
     case 'reminders': if (R.remindersOn(w.all) !== cmd.on) w.put({ type: 'remindersSwitched', on: cmd.on }); break;
+    case 'keepItem': if (W.items(w.all, day).some(i => i.id === cmd.id)) w.put({ type: 'itemKept', id: cmd.id }); break;
+    case 'somedayItem': if (W.items(w.all, day).some(i => i.id === cmd.id)) w.put({ type: 'itemSomeday', id: cmd.id }); break;
+    case 'pinWeek': if (cmd.job === null || c.jobs.some(j => j.id === cmd.job)) w.put({ type: 'weekPinned', week: calendarWeek(day), job: cmd.job }); break;
+    case 'lookAhead': w.put({ type: 'lookAheadSeen', week: calendarWeek(day), finished: cmd.finished }); break;
     case 'calendarShow': {
       const was = W.calendarOf(w.all);
       if (was.on !== cmd.on || JSON.stringify(was.calendars) !== JSON.stringify(cmd.calendars)) w.put({ type: 'calendarChosen', on: cmd.on, calendars: cmd.calendars });

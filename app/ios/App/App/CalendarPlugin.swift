@@ -66,13 +66,15 @@ public class CalendarPlugin: CAPPlugin, CAPBridgedPlugin {
         let list: [[String: Any]] = found.prefix(400).map { e in
             let allDay = e.isAllDay
             /* an all-day event's end is the next midnight: its last day is the day before */
-            let last = allDay ? (cal.date(byAdding: .second, value: -1, to: e.endDate) ?? e.endDate) : e.endDate
+            let begins: Date = e.startDate ?? Date()
+            let ends: Date = e.endDate ?? begins
+            let last: Date = allDay ? (cal.date(byAdding: .second, value: -1, to: ends) ?? ends) : ends
             return [
                 /* stable across launches (a Swift hash is not): the event and the day it starts */
-                "id": e.calendarItemIdentifier + "@" + wall.string(from: e.startDate),
+                "id": e.calendarItemIdentifier + "@" + wall.string(from: begins),
                 "cal": e.calendar.calendarIdentifier,
                 "title": String((e.title ?? "").prefix(80)),
-                "start": allDay ? date.string(from: e.startDate) : wall.string(from: e.startDate),
+                "start": allDay ? date.string(from: begins) : wall.string(from: begins),
                 "end": allDay ? date.string(from: last) : wall.string(from: last),
                 "allDay": allDay,
             ]

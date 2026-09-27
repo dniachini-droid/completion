@@ -65,6 +65,10 @@ const ONE: { [T in FactBody['type']]: Extract<FactBody, { type: T }> } = {
   jobRemoved: { type: 'jobRemoved', id: 'post' },
   nudgeChosen: { type: 'nudgeChosen', on: true },
   calendarChosen: { type: 'calendarChosen', on: true, calendars: ['work'] },
+  itemKept: { type: 'itemKept', id: 'it-1' },
+  itemSomeday: { type: 'itemSomeday', id: 'it-2' },
+  weekPinned: { type: 'weekPinned', week: '2026-09-28', job: 'cat' },
+  lookAheadSeen: { type: 'lookAheadSeen', week: '2026-09-28', finished: true },
   calendarRead: { type: 'calendarRead', from: '2026-09-28', to: '2026-10-12', events: [
     { id: 'e1', cal: 'work', title: 'Dentist', start: '2026-09-29T10:00', end: '2026-09-29T11:00', allDay: false },
     { id: 'e2', cal: 'home', title: 'Mum’s birthday', start: '2026-10-03', end: '2026-10-03', allDay: true }] },

@@ -233,7 +233,9 @@
   .sheet { border: 1px solid var(--edge-2); background: rgba(10,9,24,.7); padding: 4px 14px 10px; margin: 6px 0 10px; }
   .sheet .label-line { margin-top: 8px; }
   .sheet .seg { margin-top: 6px; }
-  .days button { padding-left: 0; padding-right: 0; font-size: 14px; }
+  /* seven days on one line at 14 px, even on a small phone (D-111): the carved spacing is tightened, not the size */
+  .days button { padding-left: 0; padding-right: 0; font-size: 14px; letter-spacing: .02em; min-width: 0; }
+  .seg.days { grid-auto-columns: minmax(0, 1fr); gap: 4px; }
   .when { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 12px; }
   .clock-btn { position: relative; flex: 1; min-height: 44px; display: grid; place-items: center; border: 1px solid var(--edge-2); cursor: pointer; }
   .clock-btn span { font-size: 14px; letter-spacing: .14em; color: var(--ink-2); }

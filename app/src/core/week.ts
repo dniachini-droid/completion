@@ -78,7 +78,7 @@ export interface Item { id: string; name: string; added: string; done: boolean; 
 /** Dan's lines, oldest first. Ticked ones stay ticked that day and leave the list the day after (D-110); dropped ones
     go; untouched for three weeks, someday (TOOLS §2). */
 export function items(facts: Fact[], day: string): Item[] {
-  const out = new Map<string, Item>(), touched = new Map<string, string>(), ticked = new Map<string, string>(), gone = new Map<string, Item>();
+  const out = new Map<string, Item>(), touched = new Map<string, string>(), ticked = new Map<string, string>(), gone = new Map<string, Item>(), shelved = new Set<string>();
   for (const f of facts) {
     if (f.type === 'itemAdded') { out.set(f.id, { id: f.id, name: f.name, added: f.day, done: false, someday: false }); touched.set(f.id, f.day); }
     else if (f.type === 'itemTicked' || (f.type === 'jobDone' && out.has(f.job))) {
@@ -92,7 +92,10 @@ export function items(facts: Fact[], day: string): Item[] {
       if (it) { it.name = f.job.name; if (f.job.by) it.by = f.job.by; else delete it.by; out.set(it.id, it); gone.delete(it.id); touched.set(it.id, f.day); }
     }
     else if (f.type === 'jobRemoved' && out.has(f.id)) { gone.set(f.id, out.get(f.id)!); out.delete(f.id); }
-    else if (f.type === 'planAdded' && out.has(f.entry.job)) touched.set(f.entry.job, f.day);
+    else if (f.type === 'planAdded' && out.has(f.entry.job)) { touched.set(f.entry.job, f.day); shelved.delete(f.entry.job); }
+    /* the look-ahead (D-116): kept, its three weeks start again; put to someday by hand, it goes there now */
+    else if (f.type === 'itemKept' && out.has(f.id)) { touched.set(f.id, f.day); shelved.delete(f.id); }
+    else if (f.type === 'itemSomeday' && out.has(f.id)) shelved.add(f.id);
   }
   for (const [id, d] of ticked) if (d < day) out.delete(id);
   /* a line put back by Undo returns to its place (D-112) */
@@ -100,7 +103,7 @@ export function items(facts: Fact[], day: string): Item[] {
   const sorted = [...out.values()].sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
   out.clear(); for (const it of sorted) out.set(it.id, it);
   /* a dated line never goes to someday (D-114) */
-  for (const it of out.values()) it.someday = !it.done && !it.by && daysBetween(touched.get(it.id)!, day) >= SOMEDAY_DAYS;
+  for (const it of out.values()) it.someday = !it.done && !it.by && (shelved.has(it.id) || daysBetween(touched.get(it.id)!, day) >= SOMEDAY_DAYS);
   return [...out.values()];
 }
 
@@ -164,6 +167,12 @@ export function planWeek(c: Content, facts: Fact[], week: string, from: string, 
   const ever = new Set(ofType(facts, 'jobDone').map(f => f.job));
   const rhythmJob = new Set(c.rhythms.map(r => r.job));
 
+  /* the one thing that matters most this week (the look-ahead, D-116): first, early in the week */
+  const pin = pinnedIn(facts, week);
+  if (pin && c.jobs.some(j => j.id === pin && !j.stopped) && !(ever.has(pin) && !c.rhythms.some(r => r.job === pin)) && !done.some(f => f.job === pin)) {
+    const d = days.find(x => fits(x, pin));
+    if (d) put(pin, d);
+  }
   /* dated work first (D-114): on the last day with room at least 2 days before its date; already that close, the first
      day with room. A date further off waits for its own week. */
   for (const j of c.jobs.filter(x => x.by && !x.stopped && !ever.has(x.id))) {
@@ -342,4 +351,30 @@ export function busyMinutes(facts: Fact[], day: string): number {
   let total = 0, end = -1;
   for (const [a, b] of spans) { if (b <= end) continue; total += b - Math.max(a, end); end = b; }
   return total;
+}
+
+/* ---------- the week's look-ahead (D-116) ---------- */
+
+/** The one thing Dan said matters most this week, if he said one. */
+export function pinnedIn(facts: Fact[], week: string): string | null {
+  const p = ofType(facts, 'weekPinned').filter(f => f.week === week);
+  return p.length ? p[p.length - 1].job : null;
+}
+/** "Still wanted?": up to three of the oldest open lines, never the whole list, never a count (P7). Dated lines have
+    their own question. */
+export function sweepOf(facts: Fact[], day: string, most = 3): Item[] {
+  return items(facts, day).filter(i => !i.done && !i.by && !i.someday && daysBetween(i.added, day) >= 7).slice(0, most);
+}
+/** "Coming up": the week's fixed points from `day`, one line each: appointments and entries with a time, dated work,
+    and monthly or yearly rhythms on their day. The caller shows five and folds the rest. */
+export function comingUp(c: Content, facts: Fact[], day: string): { day: string; job: string; time?: string; kind: 'time' | 'date' | 'repeat' }[] {
+  const out: { day: string; job: string; time?: string; kind: 'time' | 'date' | 'repeat' }[] = [];
+  const ever = new Set(ofType(facts, 'jobDone').map(f => f.job));
+  for (let i = 0; i < 7; i++) {
+    const d = addDays(day, i), wk = weekOf(c, facts, calendarWeek(d), day).days.find(x => x.day === d)!;
+    for (const j of wk.jobs) if (j.time && !j.done) out.push({ day: d, job: j.job, time: j.time, kind: 'time' });
+    for (const j of c.jobs) if (j.by === d && !ever.has(j.id)) out.push({ day: d, job: j.id, kind: 'date' });
+    for (const r of c.rhythms) if ((r.monthly || r.yearly) && R.fallsOn(r, d) && !wk.jobs.some(x => x.job === r.job && x.time)) out.push({ day: d, job: r.job, kind: 'repeat' });
+  }
+  return out;
 }

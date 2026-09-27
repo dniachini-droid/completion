@@ -239,7 +239,8 @@ const quiet = async () => {
 /** Whatever waits on opening, once each: the morning after camp, the welcome back, the daybook's new page. */
 let closes = 0, mornings = 0;
 const openers = async (name) => {
-  for (let k = 0; k < 4; k++) {
+  /* up to eight screens can wait on an opening (arrivals, a morning, a welcome, a week close): each is seen in turn */
+  for (let k = 0; k < 8; k++) {
     /* a place reached overnight (the head start, D-083) opens the app */
     if (await page.locator('.arr').count() && !(await page.locator('button.rodbtn').count())) { await arrivals(name + '-open'); continue; }
     if (await has('On to today')) { if (mornings++ < 1) await shot(name + '-morning', 2500); await tap('On to today'); await page.clock.runFor(1500); continue; }
@@ -251,6 +252,16 @@ const openers = async (name) => {
         await tap('Plan it for me'); await shot(name + '-week-planned', 1500);
         await page.locator('.body').evaluate(e => e.scrollTo(0, e.scrollHeight)); await shot(name + '-week-end', 500);
         await home(); await page.clock.runFor(1500); await shot(name + '-today-planned', 2500);
+      } else if (closes === 2) {
+        /* the week's look-ahead (D-116): still wanted, coming up, what matters most, and on to the week */
+        await tap('Look ahead'); await page.clock.runFor(600); await shot(name + '-look', 600);
+        for (let n = 0; n < 3 && await has('Keep'); n++) { await tap('Keep'); await page.clock.runFor(300); }
+        if (await has('Next')) { await shot(name + '-coming', 500); await tap('Next'); await page.clock.runFor(400); }
+        await shot(name + '-matters', 500);
+        if (!(await has('Nothing in particular'))) errors.push('LOOK AHEAD never asked what matters most');
+        else { await page.locator('.offer button.row').first().click(); await page.clock.runFor(1500); }
+        if (!(await page.locator('h1', { hasText: /this week/i }).count())) errors.push('LOOK AHEAD did not end in the week');
+        await home(); await page.clock.runFor(1500);
       } else { await tap('Not now'); await page.clock.runFor(1500); }
       continue;
     }

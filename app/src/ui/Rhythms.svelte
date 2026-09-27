@@ -331,7 +331,8 @@
   .said { margin: 8px 0 0; color: var(--ink-2); font-style: italic; }
   .links.undo { margin: 4px 0 14px; }
   .stepper input.val { flex: 1; }
-  .days button { padding-left: 0; padding-right: 0; font-size: 14px; }
+  .days button { padding-left: 0; padding-right: 0; font-size: 14px; letter-spacing: .02em; min-width: 0; }
+  .seg.days { grid-auto-columns: minmax(0, 1fr); gap: 4px; }
   .stepper { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; border: 1px solid var(--edge-2); background: rgba(10,9,24,.55); }
   .stepper .val { color: #fff; font-size: 17px; }
   .step { min-width: 52px; }
