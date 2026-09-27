@@ -134,11 +134,9 @@ export function live(host, meta, opts = {}) {
     const q = { t: Math.random(), x: Math.random(), r: .5 + Math.random() * 1.2, a: .12 + Math.random() * .4, p: Math.random() * 6.28, vy: .02 + Math.random() * .05 };
     const [xa, ya] = place(0, q.x), [xb, yb] = place(1, q.x);
     const m = document.createElement('i'), tw = document.createElement('b');
-    m.style.cssText = `position:absolute;left:${(xa - q.r).toFixed(1)}px;top:${(ya - q.r).toFixed(1)}px;width:${(2 * q.r).toFixed(2)}px;height:${(2 * q.r).toFixed(2)}px;will-change:transform,opacity`;
+    m.style.cssText = `position:absolute;left:${(xa - q.r).toFixed(1)}px;top:${(ya - q.r).toFixed(1)}px;width:${(2 * q.r).toFixed(2)}px;height:${(2 * q.r).toFixed(2)}px` + (still ? '' : ';will-change:transform,opacity');
     tw.style.cssText = `position:absolute;inset:0;border-radius:50%;background:rgba(${tint},${q.a.toFixed(3)})`;
     m.appendChild(tw); layer.appendChild(m);
-    /* the twinkle between .2 and 1 of its light, about every 9 s; the sway of about 15 px either side, every 19 s */
-    const sway = W * .036;
     if (still) {
       const [x, y] = place(q.t, q.x);
       m.style.transform = `translate(${(x - xa).toFixed(1)}px,${(y - ya).toFixed(1)}px)`;
@@ -147,19 +145,18 @@ export function live(host, meta, opts = {}) {
     }
     /* a rise takes as long as it did at 30 steps a second */
     const rise = 1 / (q.vy * .004 * (beam ? .5 : 1) * 30) * 1000;
-    anims.push(m.animate([
+    const go = (el, frames, o) => { const a = el.animate(frames, { iterations: Infinity, ...o }); if (document.documentElement.hasAttribute('data-resting')) a.pause(); anims.push(a); };
+    go(m, [
       { transform: 'translate(0,0)', opacity: 0 },
       { transform: `translate(${((xb - xa) * .125).toFixed(1)}px,${((yb - ya) * .125).toFixed(1)}px)`, opacity: 1, offset: .125 },
       { transform: `translate(${((xb - xa) * .875).toFixed(1)}px,${((yb - ya) * .875).toFixed(1)}px)`, opacity: 1, offset: .875 },
       { transform: `translate(${(xb - xa).toFixed(1)}px,${(yb - ya).toFixed(1)}px)`, opacity: 0 },
-    ], { duration: rise, iterations: Infinity, delay: -q.t * rise, easing: 'linear' }));
-    anims.push(tw.animate([
-      { transform: `translateX(${(-sway).toFixed(1)}px)`, opacity: .2 },
-      { opacity: 1, offset: .25 },
-      { transform: `translateX(${sway.toFixed(1)}px)`, opacity: .2, offset: .5 },
-      { opacity: 1, offset: .75 },
-      { transform: `translateX(${(-sway).toFixed(1)}px)`, opacity: .2 },
-    ], { duration: 17600, iterations: Infinity, delay: -(q.p / 6.28) * 17600, easing: 'ease-in-out' }));
+    ], { duration: rise, delay: -q.t * rise, easing: 'linear' });
+    /* the twinkle between .2 and 1 of its light, about every 9 s; the sway either side, every 19 s: .036 of the width it
+       moves in (the screen's, or a shaft's), as the old drift of its place across it */
+    const across = beam ? (beam[0][2] + beam[1][2]) * .5 * W : W, sway = across * .036;
+    go(tw, [{ opacity: .2 }, { opacity: 1 }], { duration: 4400, direction: 'alternate', delay: -(q.p / 6.28) * 8800, easing: 'ease-in-out' });
+    go(tw, [{ transform: `translateX(${(-sway).toFixed(1)}px)` }, { transform: `translateX(${sway.toFixed(1)}px)` }], { duration: 9400, direction: 'alternate', delay: -(q.p / 6.28) * 18800, easing: 'ease-in-out' });
   }
   return { stop() { for (const a of anims) a.cancel(); } };
 }

@@ -71,3 +71,54 @@ Checked and not a cause:
 | Goodnight | 79 | 41.6 | 21.4 | 4 | 64 | 15 |
 
 (Headless Chromium draws in software and paces its frames loosely, hence counts above 60.)
+
+## What was done (D-132)
+
+1. **The world rests** (`app/src/ui/rest.ts`). Ambient motion plays when a screen opens and while Dan touches it; after
+   15 s untouched every looping animation is held exactly where it is (style animations by a `data-rest` mark that
+   `direction.css` reads as `animation-play-state: paused`, so the stylesheet keeps charge of them; script animations
+   paused and played). A touch, scroll, key, new screen, the delve's moment changing, or coming back to the app wakes
+   it. Hidden: at rest at once. One-off animations (entrances, the cut, the stair's reveal, a delve's end) always play
+   through.
+2. **No script frame loops** on Today, the places or the delve. The paintings' motes (`app/paint/kit/live.js`) and the
+   tunnel's dust (`app/src/ui/scene/light.js`) are small layers moved and faded by the graphics chip along the same
+   paths. The ring's arc, trail and tip are drawn only when the fill moves a pixel (at most once a second); the tip's
+   breath, glint and sparks are small layers on top. The stair's dust stops at rest.
+3. **The ring's halo and disc** follow the fill in half-percent steps again (a later style rule had undone D-103's steps).
+4. **The clock** looks once a second, just after each whole second (it looked four times).
+5. **The standing check:** `CHECK=1` in CI, limits: a settled screen ≤ 1 frame/s, ≤ 0.2 script frames/s,
+   ≤ 8 ms/s; a running delve ≤ 7 frames/s (its once-a-second change), ≤ 25 ms/s.
+
+### Readings after (same screens; "moving" = 10 s from 3 s after opening, "settled" = 20 s from 17 s after opening)
+
+| Screen | moving: frames/s | moving: rAF/s | settled: frames/s | settled: rAF/s | timers/s | settled: task ms/s |
+|---|---:|---:|---:|---:|---:|---:|
+| Today, morning | 60 | 0 | **0** | 0 | 1 | 1.2 |
+| Week | 60 | 0 | **0** | 0 | 1 | 0.6 |
+| Satchel | 60 | 0 | **0** | 0 | 1 | 0.2 |
+| Daybook | 60 | 0 | **0** | 0 | 1 | 0.2 |
+| Map | 60 | 0 | **0** | 0 | 1 | 0.4 |
+| A delve running | 61 | 0 | **5.2** (1 change/s) | 0 | 1 | 7 |
+| A delve's end | 60 | 0 | **0** | 0 | 1 | 0.3 |
+| Today, day done (gold) | 60 | 0 | **0** | 0 | 1 | 0.4 |
+| Today, evening (Tonight) | 60 | 0 | **0** | 0 | 1 | 0.3 |
+| Goodnight | 60 | 0 | **0** | 0 | 1 | 0.4 |
+
+(A page whose only change is one number a second shows about 2.4 frames a second in this browser; the delve changes its
+countdown and its ring once a second.)
+
+## What changed visually
+
+- Left untouched for 15 s, the scene's drift, mist, fog, flames, motes, the button's breath, the map's pool and spark,
+  and the delve's tunnel come to a soft stop where they are (they move slowly, so the stop is gentle). Any touch brings
+  them back from there. A delve left open keeps its countdown and filling ring, over a still tunnel.
+- While moving: the same look. Compared side by side with the old build: Today, the delve, the ring's tip (drawn as
+  before). Small differences: the dust in the tunnel is laid over the scene rather than added to itself, and each mote
+  repeats its own path rather than starting a new random one.
+
+## What only the phone can tell
+
+The browser here has no graphics chip, so heat and battery can only be judged on the iPhone. Dan's test is in
+`CURRENT_STATE.md` (Settings → Battery before and after a day; Today left untouched for 10 minutes; a delve left open).
+If the phone still warms while the motion runs, the next candidates are the full-screen grain (blended over the moving
+scene) and the four fog layers, which could be baked into fewer layers.

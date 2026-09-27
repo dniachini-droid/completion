@@ -25,7 +25,8 @@ export function tunnelLight(root) {
   var DOTURL = 'url(' + DOT.toDataURL() + ')', HAZEURL = 'url(' + HAZE.toDataURL() + ')';
   function rnd(a,b){ return a + Math.random() * (b - a); }
   function el(tag, css, parent){ var e = document.createElement(tag); e.style.cssText = css; if (parent) parent.appendChild(e); return e; }
-  function play(e, frames, opts){ if (still) return; anims.push(e.animate(frames, Object.assign({ iterations: Infinity }, opts))); }
+  /* made while the world rests (rest.ts): it starts paused, and the next touch plays it */
+  function play(e, frames, opts){ if (still) return; var a = e.animate(frames, Object.assign({ iterations: Infinity }, opts)); if (document.documentElement.hasAttribute('data-resting')) a.pause(); anims.push(a); }
   var CROSS = 'background:linear-gradient(90deg,rgba(217,214,255,0),rgba(255,255,255,.95),rgba(217,214,255,0))';
 
   /* ---- the ring ---- */
@@ -88,8 +89,8 @@ export function tunnelLight(root) {
   }
 
   /* the tip's motion: turned to the fill's end by --p, it breathes, glints and sheds sparks behind the point of light
-     drawn with the arc. Its pieces add their light to the ring's (plus-lighter), as they did drawn in its canvas. */
-  var tip = el('div', 'position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none;transform:rotate(calc(var(--p) * 1turn))', null);
+     drawn with the arc. It adds its light to the ring's (plus-lighter), as it did drawn in the ring's canvas. */
+  var tip = el('div', 'position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none;transform:rotate(calc(var(--p) * 1turn));mix-blend-mode:plus-lighter', null);
   tip.className = 'tipfx'; tip.setAttribute('aria-hidden', 'true');
   var arm = el('div', 'position:absolute;left:0;top:0;width:0;height:0;transform:translateY(calc(var(--R) * -.47))', tip);
   ring.insertBefore(tip, ring.querySelector('.fog-front'));
@@ -98,18 +99,18 @@ export function tunnelLight(root) {
     var hs = R * .16, gl = R * .07;
     var sparkBox = el('div', 'position:absolute;left:0;top:0', arm);
     /* its breath (the tip swelling by 6% and back, every 4 s): a faint haze over it that brightens and fades */
-    var breath = el('i', 'mix-blend-mode:plus-lighter;position:absolute;left:' + (-hs) + 'px;top:' + (-hs) + 'px;width:' + (2 * hs) + 'px;height:' + (2 * hs) + 'px;opacity:0;background:' + HAZEURL + ' center/100% 100%', arm);
+    var breath = el('i', 'position:absolute;left:' + (-hs) + 'px;top:' + (-hs) + 'px;width:' + (2 * hs) + 'px;height:' + (2 * hs) + 'px;opacity:0;background:' + HAZEURL + ' center/100% 100%', arm);
     play(breath, [{ opacity: 0, transform: 'scale(.94)' }, { opacity: .16, transform: 'scale(1.06)' }], { duration: 1963, direction: 'alternate', easing: 'ease-in-out' });
     if (still) return;
     /* the glint: a small cross of light, its arms 2 × R(.07 ± .015) long */
-    var g = el('div', 'position:absolute;left:0;top:0;width:0;height:0;opacity:.45;mix-blend-mode:plus-lighter', arm);
+    var g = el('div', 'position:absolute;left:0;top:0;width:0;height:0;opacity:.45', arm);
     el('i', 'position:absolute;left:' + (-gl) + 'px;top:-.5px;width:' + (2 * gl) + 'px;height:1px;' + CROSS, g);
     el('i', 'position:absolute;left:-.5px;top:' + (-gl) + 'px;width:1px;height:' + (2 * gl) + 'px;' + CROSS.replace('90deg', '180deg'), g);
     play(g, [{ transform: 'scale(.79)' }, { transform: 'scale(1.21)' }], { duration: 2417, direction: 'alternate', easing: 'ease-in-out' });
     /* sparks: one shed every .42 s, drifting back along the ring and outwards, fading as they go */
     for (var i = 0; i < 5; i++) {
       var life = rnd(1.4, 2.05), out = rnd(-.4, 1), r = rnd(1.4, 2.6), s = r * 3.2, k = life / 2.1;
-      var sp = el('i', 'mix-blend-mode:plus-lighter;position:absolute;left:' + (-s) + 'px;top:' + (-s) + 'px;width:' + (2 * s) + 'px;height:' + (2 * s) + 'px;opacity:0;background:' + DOTURL + ' center/100% 100%', sparkBox);
+      var sp = el('i', 'position:absolute;left:' + (-s) + 'px;top:' + (-s) + 'px;width:' + (2 * s) + 'px;height:' + (2 * s) + 'px;opacity:0;background:' + DOTURL + ' center/100% 100%', sparkBox);
       play(sp, [
         { transform: 'translate(0,0) scale(1)', opacity: .8 },
         { transform: 'translate(' + (-3 * life) + 'px,' + (-3.5 * out * life) + 'px) scale(.8)', opacity: .2, offset: k / 2 },
@@ -192,12 +193,15 @@ export function tunnelLight(root) {
     var d = Math.min(2, window.devicePixelRatio || 1), r = ring.offsetWidth, w = phone.clientWidth, h = phone.clientHeight;
     var key = [d, r, w, h].join('|');
     if (key === sizeKey) return;
+    /* the dust is laid out again only when the screen changes size; the ring's size alone leaves it where it is */
+    var screen = w !== PW || h !== PH;
     sizeKey = key; dpr = d; R = r; RW = R * 1.6; PW = w; PH = h;
     rc.width = Math.round(RW * dpr); rc.height = Math.round(RW * dpr); arcKey = '';
     if (stage) stage.style.setProperty('--k', String(Math.max(PW / 390, PH / 844)));
-    for (var i = 0; i < anims.length; i++) anims[i].cancel();
-    anims = [];
-    buildTip(); buildDust(); drawRing();
+    var keep = [];
+    for (var i = 0; i < anims.length; i++) { if (screen || arm.contains(anims[i].effect.target)) anims[i].cancel(); else keep.push(anims[i]); }
+    anims = keep;
+    buildTip(); if (screen) buildDust(); drawRing();
   }
   var ro = typeof ResizeObserver === 'function' ? new ResizeObserver(fit) : null;
   fit(); if (ro) { ro.observe(ring); ro.observe(phone); } else window.addEventListener('resize', fit);
