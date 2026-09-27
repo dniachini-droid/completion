@@ -83,6 +83,22 @@ describe('the day’s finish line (D-130)', () => {
     expect(p.view().slate).toEqual(['course']);
     expect(p.view().complete).toBe(true);
   });
+  it('any change that shortens the list finishes a day that had its work: a recurring job stopped (review, D-130)', () => {
+    const p = player('2026-09-28T09:00:00+01:00').do({ do: 'open' });
+    expect(p.view().slate).toEqual(['cat', 'gym']);
+    p.did('cat');
+    const r = p.view().content.rhythms.find(x => x.job === 'gym')!;
+    p.do({ do: 'stopRhythm', id: r.id });
+    expect(p.view().slate).toEqual(['cat']);
+    expect(p.view().complete).toBe(true);
+  });
+  it('a done record deleted leaves the list, and a list emptied that way is not a finished day (review, D-130)', () => {
+    const p = player('2026-09-28T09:00:00+01:00').do({ do: 'open' });
+    const [a, b] = p.view().slate;
+    p.did(a).do({ do: 'hideDone', job: a, on: p.view().day }).do({ do: 'setAside', job: b });
+    expect(p.view().slate).toEqual([]);
+    expect(p.view().complete).toBe(false);
+  });
   it('a list said done without real minutes never finishes the day (rule 10)', () => {
     const p = player('2026-09-28T09:00:00+01:00').do({ do: 'open' });
     for (const id of p.view().slate) p.did(id, 2);

@@ -946,15 +946,15 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     }
     case 'nudge': { const s = ofType(w.all, 'nudgeChosen'); if ((s.length ? s[s.length - 1].on : false) !== cmd.on) w.put({ type: 'nudgeChosen', on: cmd.on }); break; }
   }
-  /* taking the list's last job still to do off today (Not today, Delete, moved to another day) finishes a day that has
-     had its work, as doing it would (D-130) */
-  if (SHORTENS.has(cmd.do) && w.out.length && !completedOn(w.all, day)) {
+  /* taking the list's last job still to do off today (Not today, Delete, moved to another day, a rhythm stopped, the
+     week laid out again…) finishes a day that has had its work, as doing it would (D-130): checked after anything
+     written, since many things can shorten the list */
+  if (w.out.length && !completedOn(w.all, day)) {
     const now2 = W.live(base, w.all);
     if (listDone(now2, w.all, day, now)) gifts(w, now2, now, day);
   }
   return w.out;
 }
-const SHORTENS = new Set<Command['do']>(['setAside', 'removeJob', 'dropItem', 'movePlan']);
 
 /** Facts the clock alone has made due (call on open and while a run is on screen). */
 export function settle(facts: Fact[], c: Content, now: Moment): Fact[] {
@@ -1180,9 +1180,11 @@ function slateOf(c: Content, facts: Fact[], day: string, clock: string) {
     opening late. At least one of the day's jobs must have real minutes behind it, so a list said done without any work
     never completes a day (rule 10). An empty list completes with the first job worked on, which then is the list. */
 function listDone(c: Content, facts: Fact[], day: string, at: Moment): boolean {
-  if (!workedOn(facts, day).size) return false;
   const { slate, done } = slateOf(c, facts, day, at.slice(11, 16));
-  return slate.every(id => done.has(id));
+  /* the real minutes must be on the list itself: a done record deleted (D-125) leaves it, and an emptied list is not a
+     finished day */
+  const worked = workedOn(facts, day);
+  return slate.some(id => worked.has(id)) && slate.every(id => done.has(id));
 }
 
 export function see(facts: Fact[], base: Content, now: Moment): View {

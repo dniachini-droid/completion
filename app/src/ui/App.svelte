@@ -121,6 +121,18 @@
     const typing = document.activeElement instanceof HTMLInputElement || document.activeElement instanceof HTMLTextAreaElement;
     if (screen !== 'delve' && !typing) go('delve');
   });
+  /* a day finished away from a delve's end ("Not today" or Delete on the list's last job, a short job said done, a job
+     moved off today in the Week): its camp or place is shown at once, as a delve's end would lead to it (D-130). The
+     day's own moments route themselves. */
+  const QUIET = new Set<Screen>(['today', 'week', 'rhythms', 'satchel', 'choose', 'settings', 'daybook']);
+  let lastArr = game.view.arrival?.seq ?? 0;
+  $effect(() => {
+    const a = game.view.arrival;
+    if (!a || a.seq === lastArr) return;
+    lastArr = a.seq;
+    const typing = document.activeElement instanceof HTMLInputElement || document.activeElement instanceof HTMLTextAreaElement;
+    if (QUIET.has(screen) && !typing && !game.view.run && !game.view.runEnd) go('arrival');
+  });
   const phaseKey = $derived.by(() => { const v = game.view; return `${v.run?.phase}.${v.run?.k}.${v.runEnd?.seq}.${v.next?.mode}.${v.next?.job}`; });
   let lastMoment = '';
   $effect(() => { if (phaseKey !== lastMoment) { if (lastMoment) { steady(); unslide(); } lastMoment = phaseKey; } });
