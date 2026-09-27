@@ -11,6 +11,7 @@ import { runAt, alertsAfter, type RunMark, type RunNow, type RunPlan } from './r
 import type { Capacity, Content, Fact, FactBody, FactOf, Job, Rhythm } from './types';
 import * as S from './story';
 import * as W from './week';
+import * as R from './reminders';
 import type { Beat, Seal, StretchId } from './story-types';
 
 export const STEP_MIN = 25;                                   /* BALANCING §1 */
@@ -532,7 +533,9 @@ export type Command =
   | { do: 'goodnight' }
   | { do: 'callDeep' }
   | { do: 'closeRead'; week: string }
-  | { do: 'offerAnswered'; week: string };
+  | { do: 'offerAnswered'; week: string }
+  | { do: 'remind'; target: string; lead: 0 | 15 | 60 | null }
+  | { do: 'reminders'; on: boolean };
 
 /** The facts a command adds to the log (including anything the clock made due first). */
 export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fact[] {
@@ -678,6 +681,11 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     case 'closeRead': if (!ofType(w.all, 'closeRead').some(f => f.week === cmd.week)) w.put({ type: 'closeRead', week: cmd.week }); break;
     case 'offerAnswered': if (!ofType(w.all, 'offerAnswered').some(f => f.week === cmd.week)) w.put({ type: 'offerAnswered', week: cmd.week }); break;
     case 'seen': w.put({ type: 'seen', what: cmd.what, ref: cmd.ref }); break;
+    /* reminders (D-107): settings only; nothing earned or lost */
+    case 'remind':
+      if ((cmd.lead === null || R.LEADS.includes(cmd.lead)) && R.reminderSettings(w.all).get(cmd.target) !== cmd.lead) w.put({ type: 'reminderSet', target: cmd.target, lead: cmd.lead });
+      break;
+    case 'reminders': if (R.remindersOn(w.all) !== cmd.on) w.put({ type: 'remindersSwitched', on: cmd.on }); break;
   }
   return w.out;
 }

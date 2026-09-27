@@ -11,6 +11,7 @@ import { content } from '../content/world';
 import { platform } from '../platform';
 import { t } from '../content/copy/en';
 import { readSave, SAVE_VERSION, type Save } from '../core/save';
+import { alertsDue, type Alert } from '../core/reminders';
 
 export { content };
 
@@ -25,6 +26,10 @@ function loadProto(): Proto {
 export const REHEARSAL_SPEED = 60;
 /** The delve's alerts' ids on the phone: one per delve and breather end (alerts). */
 const ALERT_IDS = Array.from({ length: 24 }, (_, i) => 100 + i);
+/** Reminders' ids (D-107): the week ahead's, laid out again on every change; and "Again in 10 min"'s, left alone by that.
+    With the delve's, well under the 64 alerts a phone keeps waiting at once. */
+const REMIND_IDS = Array.from({ length: 30 }, (_, i) => 200 + i);
+const AGAIN_IDS = Array.from({ length: 6 }, (_, i) => 240 + i);
 
 class Game {
   proto = $state<Proto>(loadProto());
@@ -41,6 +46,7 @@ class Game {
     this.append(settle(this.facts, content, this.now));
     this.do({ do: 'open' });
     this.panel();
+    void this.reminders();
     this.#ticker = window.setInterval(() => this.tick(), 250);
     document.addEventListener('visibilitychange', () => { if (!document.hidden) void this.wake(); });
     window.addEventListener('focus', () => void this.wake());
@@ -63,6 +69,7 @@ class Game {
     if (!this.facts.some(f => f.type === 'opened' && f.day === today)) { this.do({ do: 'open' }); this.woke++; }
     else this.tick();
     this.native();
+    void this.reminders();
     this.panel();   /* the panel may have run past what it knew while the app was away: put it right */
   }
 
@@ -137,6 +144,7 @@ class Game {
     this.append(f);
     if (['startRun', 'skipBreather', 'stepAway', 'resume', 'finishHere', 'away'].includes(cmd.do) || (before && !this.view.run)) { void this.alerts(); this.panel(); }
     this.native();
+    if (f.length) void this.reminders();
     return f;
   }
 
@@ -197,6 +205,33 @@ class Game {
       await platform.notifier.at(ids[i], this.realDate(a.at), t(a.what === 'delveEnd' ? 'notify.delveEnd.title' : 'notify.breatherEnd.title'),
         t(a.what === 'delveEnd' ? 'notify.delveEnd.body' : 'notify.breatherEnd.body'));
     }
+  }
+
+  /** The reminders Dan asked for (D-107), laid out for the week ahead: worked out by the rules (core/reminders.ts),
+      and put on the phone again only when the list changes. Nothing is asked of the phone until one is wanted. */
+  #reminded = '';
+  #reminding: Promise<void> = Promise.resolve();
+  reminders() { return (this.#reminding = this.#reminding.then(() => this.#remind()).catch(() => {})); }
+  async #remind() {
+    if (!platform.notifier.locked) return;
+    const list = alertsDue(content, this.facts, this.clock()).slice(0, REMIND_IDS.length);
+    const words = list.map(a => ({ a, ...this.remindWords(a) }));
+    const key = JSON.stringify(words.map(w => [w.a.date, w.a.clock, w.title, w.body]));
+    if (key === this.#reminded) return;
+    this.#reminded = key;
+    await platform.notifier.cancel(REMIND_IDS);
+    if (!list.length) return;
+    if (!(await platform.notifier.permit())) { this.alertsOff = true; return; }
+    for (const [i, w] of words.entries()) {
+      const [y, m, d] = w.a.date.split('-').map(Number), [h, min] = w.a.clock.split(':').map(Number);
+      const when = this.realDate(new Date(y, m - 1, d, h, min).getTime());
+      await platform.notifier.remind(REMIND_IDS[i], when, w.title, w.body, { label: t('remind.again'), ids: AGAIN_IDS });
+    }
+  }
+  /** A reminder's words, in the app's voice. */
+  remindWords(a: Alert): { title: string; body: string } {
+    if (a.kind === 'bedtime') return { title: t('remind.bed.title', { time: a.time }), body: t(`remind.bed.${a.lead}`) };
+    return { title: this.job(a.job ?? '')?.name ?? '', body: t(`remind.job.${a.lead}`, { time: a.time }) };
   }
 
   /** Dan's marks on a run (Start it now, Pause, Back to the delve), as the run's rules read them. */

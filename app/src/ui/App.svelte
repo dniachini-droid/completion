@@ -26,6 +26,7 @@
   import Rhythms from './Rhythms.svelte';
   import Satchel from './Satchel.svelte';
   import Choose from './Choose.svelte';
+  import Settings from './Settings.svelte';
   import { t } from '../content/copy/en';
 
   function first(): Screen {
@@ -47,7 +48,7 @@
   /* Back (review 2, D-088): the screens Dan looks through keep a trail, so the arrow and the phone's own back return to
      where each was opened from. Today and the day's own moments (a delve, a place reached, the stair, the morning)
      start the trail again; their way out stays Today. */
-  const LOOK = new Set<Screen>(['map', 'records', 'marks', 'week', 'rhythms', 'satchel', 'daybook', 'choose', 'set', 'proto', 'cant']);
+  const LOOK = new Set<Screen>(['map', 'records', 'marks', 'week', 'rhythms', 'satchel', 'daybook', 'choose', 'set', 'proto', 'cant', 'settings']);
   const TABS = new Set<Screen>(['records', 'marks']);
   let trail = $state<Back[]>([]);
   /* Records ⇄ Marks is a tab: the screen swaps in place, with nothing rising or fading in again (Dan, D-093) */
@@ -70,7 +71,7 @@
   };
   /* what the arrow says: the screen it returns to */
   const NAMES: Partial<Record<Screen, string>> = { today: 'delve.today', map: 'map.nav', records: 'records.nav', marks: 'marks.nav',
-    rhythms: 'rhythms.label', satchel: 'nav.satchel', daybook: 'nav.daybook' };
+    rhythms: 'rhythms.label', satchel: 'nav.satchel', daybook: 'nav.daybook', settings: 'nav.settings' };
   $effect(() => {
     const top = trail[trail.length - 1];
     back.label = !top ? t('delve.today') : top.screen === 'week' ? t(top.arg ? 'week.next' : 'week.label')
@@ -125,7 +126,8 @@
     {:else if screen === 'week'}<Week {go} week={typeof arg === 'string' ? arg : undefined} />
     {:else if screen === 'rhythms'}<Rhythms {go} />
     {:else if screen === 'satchel'}<Satchel {go} />
-    {:else if screen === 'choose'}<Choose {go} />{/if}
+    {:else if screen === 'choose'}<Choose {go} />
+    {:else if screen === 'settings'}<Settings {go} />{/if}
   {/key}
     {#snippet failed(_error, reset)}
       <div class="ui"><section class="col oops">

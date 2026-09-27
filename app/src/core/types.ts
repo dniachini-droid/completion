@@ -110,6 +110,9 @@ export type FactBody =
   | { type: 'closeRead'; week: string }
   | { type: 'offerAnswered'; week: string }
   | { type: 'welcomed'; since: string; question: string | null }
+  /* reminders (D-107): opt-in, one per item, only for things with a time (core/reminders.ts); null turns one off */
+  | { type: 'reminderSet'; target: string; lead: 0 | 15 | 60 | null }
+  | { type: 'remindersSwitched'; on: boolean }
 
 /** One job placed on a day of the week plan (PLANNER.md). A forecast: moving it earns nothing and loses nothing. */
 export interface PlanEntry { id: string; job: string; day: string; time?: string; }

@@ -8,6 +8,8 @@ export interface Notifier {
   /** Sound an alert at a moment, even with the phone locked. */
   at(id: number, when: Date, title: string, body: string): Promise<void>;
   cancel(ids: number[]): Promise<void>;
+  /** A reminder (D-107): like `at`, with one action on it, "Again in 10 min", which sounds it once more (ids `again`). */
+  remind(id: number, when: Date, title: string, body: string, again: { label: string; ids: number[] }): Promise<void>;
 }
 /** tick: a small tap (the rod settling, a mark cut); ring: one long buzz (a word locking, the story job's §7). */
 export interface Haptics { tick(): Promise<void>; ring(): Promise<void>; }

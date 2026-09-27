@@ -87,6 +87,22 @@ async function openSaves() {
   }
 }
 
+/* A reminder's one action (D-107): "Again in 10 min" sounds it once more, ten minutes on, from the phone's own
+   notification without opening the app. Registered once, when the first reminder is laid out. */
+let againReady: Promise<void> | null = null, againNext = 0;
+function readyAgain(again: { label: string; ids: number[] }) {
+  return (againReady ??= (async () => {
+    await LocalNotifications.registerActionTypes({ types: [{ id: 'remind', actions: [{ id: 'again', title: again.label }] }] });
+    await LocalNotifications.addListener('localNotificationActionPerformed', async e => {
+      if (e.actionId !== 'again') return;
+      const x = (e.notification.extra ?? {}) as { title?: string; body?: string };
+      const id = again.ids[againNext++ % again.ids.length];
+      await LocalNotifications.schedule({ notifications: [{ id, title: x.title ?? e.notification.title, body: x.body ?? e.notification.body,
+        schedule: { at: new Date(Date.now() + 10 * 60_000), allowWhileIdle: true }, actionTypeId: 'remind', extra: x }] });
+    });
+  })().catch(() => { againReady = null; }));
+}
+
 const native: Platform = {
   store: nativeStore, sound, now: () => new Date(), app: true, away: nativeAway,
   get saves() { return saves; }, get saveTrouble() { return saveTrouble; },
@@ -102,6 +118,10 @@ const native: Platform = {
       await LocalNotifications.schedule({ notifications: [{ id, title, body, schedule: { at: when, allowWhileIdle: true }, sound: undefined }] });
     },
     async cancel(ids) { await LocalNotifications.cancel({ notifications: ids.map(id => ({ id })) }); },
+    async remind(id, when, title, body, again) {
+      await readyAgain(again);
+      await LocalNotifications.schedule({ notifications: [{ id, title, body, schedule: { at: when, allowWhileIdle: true }, actionTypeId: 'remind', extra: { title, body } }] });
+    },
   },
   haptics: { tick: () => CapHaptics.impact({ style: ImpactStyle.Light }), ring: () => CapHaptics.vibrate({ duration: 450 }) },
   panel: nativePanel,
@@ -121,7 +141,7 @@ const webAway: Away = {
 const webSaves = textSaves(store, 'browser');
 const web: Platform = {
   store, sound, now: () => new Date(), ready: async () => {}, app: false, away: webAway, saves: webSaves, saveTrouble: null,
-  notifier: { locked: false, permit: async () => false, at: async () => {}, cancel: async () => {} },
+  notifier: { locked: false, permit: async () => false, at: async () => {}, cancel: async () => {}, remind: async () => {} },
   panel: { show: async () => {}, end: async () => {} },
   haptics: {
     tick: async () => { try { navigator.vibrate?.(8); } catch { /* */ } },

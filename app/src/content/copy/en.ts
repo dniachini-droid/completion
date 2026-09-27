@@ -36,6 +36,7 @@ export const copy = {
   'row.delve': 'a delve',
   'row.about': 'about {len}',
   'nav.proto': 'Trial',
+  'nav.settings': 'Settings',
 
   /* the run set-up (the dial) */
   'set.label': 'Delves',
@@ -366,6 +367,25 @@ export const copy = {
   'month.7': 'July', 'month.8': 'August', 'month.9': 'September', 'month.10': 'October', 'month.11': 'November', 'month.12': 'December',
 
   /* the phone's alerts */
+  /* reminders (D-107): only for things Dan gave a time, only if he asked; calm, never "you haven't opened the app" */
+  'remind.label': 'Remind me',
+  'settings.label': 'Settings',
+  'settings.reminders': 'Reminders',
+  'settings.reminders.say': 'A reminder comes only for something you gave a time and asked to be reminded of: set it where you set the time, in the week or in what repeats. One alert each, and never to call you back to the app.',
+  'settings.reminders.on': 'Reminders on', 'settings.reminders.off': 'All off',
+  'settings.reminders.web': 'Reminders sound only in the phone app, not on this web page.',
+  'settings.reminders.refused': 'The phone is not letting the app alert you. You can allow it in the phone’s Settings, under this app’s Notifications.',
+  'settings.bedtime': 'Bedtime, {time}',
+  'settings.trial': 'The trial’s own controls',
+  'remind.off': 'Off', 'remind.at.0': 'At the time', 'remind.at.15': '15 min before', 'remind.at.60': '1 h before',
+  'remind.job.0': 'It is {time}, the time you set for it.',
+  'remind.job.15': 'In a quarter of an hour, at {time}.',
+  'remind.job.60': 'In an hour, at {time}.',
+  'remind.bed.title': 'Bed by {time}',
+  'remind.bed.0': 'It is the bedtime you chose. Go to sleep is waiting in the app.',
+  'remind.bed.15': 'A quarter of an hour to your bedtime. Time to begin winding down.',
+  'remind.bed.60': 'An hour to your bedtime.',
+  'remind.again': 'Again in 10 min',
   'notify.delveEnd.title': 'The delve is over',
   'notify.delveEnd.body': 'Come back up when you are ready.',
   'notify.breatherEnd.title': 'The next delve is starting',

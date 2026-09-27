@@ -386,6 +386,10 @@ const row = page.locator('.day:not(.past) button.row:not([disabled])').first();
 if (await row.count()) {
   await row.click(); await page.locator('.sheet .clock-btn input').fill('14:30'); await page.locator('.sheet .clock-btn input').dispatchEvent('change');
   await shot('week-edit', 800);
+  /* "Remind me" where the time is set (D-107): off by default, one tap sets it */
+  if (!(await page.locator('.sheet .remind button[aria-pressed="true"]', { hasText: 'Off' }).count())) errors.push('REMIND a reminder was on before it was asked for');
+  await page.locator('.sheet .remind button', { hasText: '15 min before' }).click(); await page.clock.runFor(300);
+  if (!(await page.locator('.sheet .remind button[aria-pressed="true"]', { hasText: '15 min before' }).count())) errors.push('REMIND the choice was not kept');
   if (!(await page.locator('.day button.row', { hasText: '14:30' }).count())) errors.push('WEEK the time was not kept');
   /* followed by its name to the day it is moved to: counting the day it left is no test, since a job missed earlier in
      the week takes the freed place (D-080). The sheet's days run from today to Sunday, the week's last days on screen.
@@ -427,7 +431,9 @@ await tap('Daybook'); await shot('daybook', 1500); await home(); await page.cloc
   await page.goBack(); await page.clock.runFor(800);
   if (!(await page.locator('h1', { hasText: /this week/i }).count())) errors.push('BACK the phone’s own back did not step back one screen');
   await home();
-  await tap('Daybook'); await tap('Trial'); await page.clock.runFor(1500); expect('daybook → trial', await backSays(), 'daybook');
+  await tap('Daybook'); await tap('Settings'); await page.clock.runFor(1500); expect('daybook → settings', await backSays(), 'daybook');
+  await page.locator('.remind button', { hasText: '1 h before' }).click(); await shot('settings', 800);
+  await tap('The trial’s own controls'); await page.clock.runFor(1500); expect('settings → trial', await backSays(), 'settings');
   await home();
   await tap('Something else…'); await page.locator('.body button.row').first().click(); await page.clock.runFor(800);
   expect('choose → delves', await backSays(), 'back');
