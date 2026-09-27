@@ -20,6 +20,8 @@ await page.addInitScript(() => {
 });
 await page.clock.install({ time: new Date('2026-09-27T15:00:00+01:00') });
 await page.goto(url); await page.clock.runFor(2500);
+/* the app drawn first (a slow machine may need longer), as the other checks wait */
+for (let k = 0; k < 40 && !(await page.locator('.foot .add, button.btn').count()); k++) { await page.waitForTimeout(250); await page.clock.runFor(250); }
 const fails = [];
 /* past anything that opens first (a welcome, a morning), to Today */
 for (let k = 0; k < 8 && !(await page.locator('.foot .add').count()); k++) { await page.locator('button.btn').first().click(); await page.clock.runFor(1500); }
