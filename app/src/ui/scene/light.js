@@ -70,7 +70,10 @@ export function tunnelLight(root) {
   function drawRing(){
     if (!R) return;
     var p = Math.max(0, Math.min(1, parseFloat(ring.style.getPropertyValue('--p')) || 0));
-    var quiet = ring.classList.contains('hold') || ring.classList.contains('rest');
+    /* at a delve's end the count's own arc and sparkle take the ring's place (EndRing, D-133): only the groove is drawn */
+    var tallying = ring.classList.contains('tallying');
+    if (tallying) p = 0;
+    var quiet = ring.classList.contains('hold') || ring.classList.contains('rest') || tallying;
     /* the arc's end moves one pixel of the ring's picture at a time */
     var steps = Math.max(1, Math.round(TAU * R * .47 * dpr)), pa = p > .998 ? 1 : Math.round(p * steps) / steps;
     var key = pa + '|' + RW + '|' + dpr + '|' + quiet;

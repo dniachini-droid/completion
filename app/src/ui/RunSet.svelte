@@ -3,8 +3,8 @@
      Stops 5 · 10 · 15 · 25 · 30 · 45 · 60 on a 60-minute face, and one long 90 under it (D-110); under it one route line where time is distance.
      Mock-up: design/directions/d-combined/delve-set.html (its CSS is ./scene/runset.css, scoped under .rs). */
   import { game, content } from './game.svelte';
-  import { DIAL, presetRun } from '../core/game';
-  import { t, delves, inSentence } from '../content/copy/en';
+  import { DIAL, presetRun, carriedOf } from '../core/game';
+  import { t, delves, inSentence, minutesWords } from '../content/copy/en';
   import { platform } from '../platform';
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
@@ -15,6 +15,8 @@
   const job = $derived(game.job(jobId)!);
   const v = $derived(game.view);
   const preset = presetRun(game.job(jobId)!);
+  /* a one-off left "Not yet" carries on from its minutes (D-133): one quiet line says so */
+  const carry = $derived(carriedOf(game.facts, v.content, jobId));
   const reduce = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   /* the face holds an hour: a stop's angle is its minutes; 90 fills the ring and has its own button under it */
   const FACE = DIAL.filter(m => m <= 60), LONG = 90;
@@ -151,6 +153,7 @@
       <section class="job rise d1">
         <div class="label-line lit">{t('set.label')}</div>
         <h1 class="say-lg">{job.name}</h1>
+        {#if carry > 0}<p class="soft last carry">{t('set.carry', { min: minutesWords(carry) })}</p>{/if}
         {#if job.note}<p class="soft last">{t('set.stopped', { note: job.note })}</p>{/if}
         <!-- the job's list (D-126): struck off a line at a time in the delve -->
         {#if job.list}<p class="soft last">{job.list.split('\n').filter(l => l.trim()).join(' · ')}</p>{/if}

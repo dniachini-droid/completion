@@ -169,3 +169,6 @@
 .dv .ring .tipfx{ transition: opacity .8s var(--ease); }
 .dv .ring.rest .tipfx, .dv .ring.hold .tipfx{ opacity:0; transition: opacity 1.2s var(--ease); }
 .dv .motes{ overflow:hidden; }
+
+/* a delve's end: the count's arc and sparkle take the ring's place (EndRing, D-133) */
+.dv .ring.tallying .tipfx{ opacity:0; transition:none; }
