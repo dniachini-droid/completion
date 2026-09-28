@@ -275,9 +275,10 @@ describe('Absence and the deep push', () => {
     const deep = () => log.some(f => f.type === 'beatPlayed' && S.beatOf(C.story, f.id)?.kind === 'deep');
     for (let k = 0; k < 6 && !deep(); k++) {
       const v = see(log, C, iso(t));
-      const job = v.next?.job ?? C.jobs.find(j => !v.done.has(j.id))!.id;
-      log = log.concat(act(log, C, { do: 'startRun', job, minutes: 25, count: 1 }, iso(t)));
-      t += 30 * 60_000; log = log.concat(settle(log, C, iso(t)));
+      /* a recurring job not yet done today (a one-off finished last week is finished, D-131), an hour at a time */
+      const job = v.next?.job ?? C.jobs.find(j => !v.done.has(j.id) && C.rhythms.some(r => r.job === j.id))!.id;
+      log = log.concat(act(log, C, { do: 'startRun', job, minutes: 60, count: 1 }, iso(t)));
+      t += 65 * 60_000; log = log.concat(settle(log, C, iso(t)));
       if (!see(log, C, iso(t)).done.has(job)) log = log.concat(act(log, C, { do: 'done', job }, iso(t)));
     }
     expect(log.some(f => f.type === 'capacityChosen')).toBe(false);

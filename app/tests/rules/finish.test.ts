@@ -121,7 +121,10 @@ describe('the day’s finish line (D-130)', () => {
     expect(p.view().complete).toBe(true);
     const deep = () => p.facts.filter(f => f.type === 'beatPlayed' && S.beatOf(C.story, f.id)?.kind === 'deep').length;
     expect(deep()).toBe(0);
-    for (const j of C.jobs.filter(x => !list.includes(x.id) && !x.item).slice(0, 4)) p.did(j.id);
+    /* real work past the line (D-131: three hours delved today, or more than a normal day's jobs), on jobs not yet finished */
+    p.do({ do: 'addItems', lines: ['Paint the fence', 'Clear the loft'] });
+    const extra = p.facts.filter(f => f.type === 'itemAdded').slice(-2).map(f => (f as { id: string }).id);
+    for (const id of extra) p.did(id, 90);
     expect(deep()).toBe(1);
   });
 });

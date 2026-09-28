@@ -4,7 +4,7 @@
      underneath (D-125), and looks like no other choice. A tap outside closes it. */
   import { game } from './game.svelte';
   import { t } from '../content/copy/en';
-  import { menu, closeMenu } from './menu.svelte';
+  import { menu, closeMenu, settling } from './menu.svelte';
   import { closeRows } from './SwipeRow.svelte';
   import { steady } from './taps';
   import DayPick from './DayPick.svelte';
@@ -14,15 +14,16 @@
   let placing = $state(false);
   $effect(() => { void menu.job; placing = false; });
 
-  function to(f: () => void) { const go = menu.go; steady(); closeMenu(); closeRows(); if (go) f(); }
+  function to(f: () => void) { if (settling()) return; const go = menu.go; steady(); closeMenu(); closeRows(); if (go) f(); }
   function delve() { const id = j!.id, go = menu.go!; to(() => go('set', id)); }
   function edit() { const id = j!.id, go = menu.go!; to(() => go('rhythms', id)); }
   function place(day: string) {
     const id = j!.id;
-    steady(); game.do({ do: 'putOnDay', job: id, day });
+    steady(); game.do({ do: 'putOnDay', job: id, day, ...(menu.entry ? { entry: menu.entry } : {}) });
     closeMenu(); closeRows();
   }
   function remove() {
+    if (settling()) return;
     const id = j!.id, on = menu.on;
     steady(); closeMenu(); closeRows();
     /* a done row held: only that day's record of a recurring job goes (its minutes stay); otherwise the job (D-125) */
@@ -36,15 +37,15 @@
 
 <svelte:window onkeydown={key} />
 {#if j}
-  <div class="scrim" role="presentation" onclick={closeMenu}></div>
+  <div class="scrim" role="presentation" onclick={() => { if (!settling()) closeMenu(); }}></div>
   <div class="menu" role="dialog" aria-modal="true" aria-label={j.name}>
     <p class="name">{j.name}</p>
     <button class="item" disabled={!!v.run || finished} onclick={delve}>{t('menu.delve')}</button>
     <button class="item" onclick={edit}>{t('menu.edit')}</button>
-    {#if !finished && !menu.on}<button class="item" aria-expanded={placing} onclick={() => (placing = !placing)}>{t('satchel.day')}</button>{/if}
+    {#if !finished && !menu.on}<button class="item" aria-expanded={placing} onclick={() => { if (!settling()) placing = !placing; }}>{t('satchel.day')}</button>{/if}
     {#if placing}<div class="cal"><DayPick from={v.day} label={t('satchel.day')} pick={place} /></div>{/if}
     <button class="item del" disabled={v.run?.job.id === j.id || v.runEnd?.job.id === j.id} onclick={remove}>{t('job.delete')}</button>
-    <button class="item cancel" onclick={closeMenu}>{t('rhythms.cancel')}</button>
+    <button class="item cancel" onclick={() => { if (!settling()) closeMenu(); }}>{t('rhythms.cancel')}</button>
   </div>
 {/if}
 

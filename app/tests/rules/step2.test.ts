@@ -8,6 +8,8 @@ import { act, satchelView, see, settle, tomorrowFirst, type Command } from '../.
 import * as W from '../../src/core/week';
 import type { Fact } from '../../src/core/types';
 import { content as C } from '../../src/content/world';
+import * as S from '../../src/core/story';
+import { sim } from './sim';
 
 function player(start = '2026-09-28T09:00:00+01:00', from: Fact[] = []) {   /* a Monday */
   let facts: Fact[] = from.slice();
@@ -266,5 +268,67 @@ describe('the fresh review of D-131: what it broke, now held', () => {
     const q = player().do({ do: 'open' }).did('cat', 10).do({ do: 'notDone', job: 'cat' });
     q.to('2026-10-05T09:00:00+01:00').do({ do: 'open' });
     expect(q.facts.some(f => f.type === 'weekClosed' && f.week === '2026-09-28')).toBe(false);
+  });
+});
+
+describe('the second fresh review of D-131: what it broke, now held', () => {
+  it('a recurring job made a one-off is not finished by its old sessions: it can be placed, chosen and pays its return', () => {
+    const p = player().do({ do: 'open' }).did('gym', 30);
+    p.to('2026-09-29T09:00:00+01:00').do({ do: 'open' });
+    const gym = W.live(C, p.facts).jobs.find(j => j.id === 'gym')!;
+    p.do({ do: 'saveJob', job: { ...gym, doneBy: 'dan' }, rhythm: null });
+    const s = p.satchel(), v = p.view();
+    const places = [v.slate.includes('gym'), s.noDay.some(j => j.id === 'gym'), s.coming.some(x => x.job.id === 'gym')].filter(Boolean);
+    expect(places).toHaveLength(1);
+    p.do({ do: 'putOnDay', job: 'gym', day: '2026-10-01' });
+    expect(p.satchel().coming.find(x => x.job.id === 'gym')?.day).toBe('2026-10-01');
+    const paid = p.paid();
+    p.to('2026-10-01T09:00:00+01:00').do({ do: 'open' }).did('gym', 30);
+    expect(p.paid()).toBeGreaterThan(paid);
+  });
+  it('the finish line doesn’t change while Dan works: what it learns today counts from tomorrow', () => {
+    const p = player().do({ do: 'open' });
+    const line = p.view().line;
+    for (const id of line) { p.did(id, 5); expect(p.view().line).toEqual(line); }
+  });
+  it('the deep moment needs real work past the line: a line emptied by "Not today" and ten minutes is no push (rule 10)', () => {
+    const p = player('2026-10-06T09:00:00+01:00', sim().week('normal').facts as Fact[]).do({ do: 'open' });
+    expect(S.nextDeep(C.story, S.storyState(p.facts, C.story))).not.toBeNull();
+    for (const id of p.view().slate) p.do({ do: 'setAside', job: id });
+    p.did('gym', 5).did('spanish', 5);
+    expect(p.facts.some(f => f.type === 'beatPlayed' && S.beatOf(C.story, f.id)?.kind === 'deep')).toBe(false);
+  });
+  it('a session held in the Week and put on another day moves itself, not another', () => {
+    const p = player().do({ do: 'open' });
+    const gyms = W.planOf(p.facts, '2026-09-28')!.filter(e => e.job === 'gym');
+    const held = gyms.find(e => e.day > '2026-09-28')!;
+    const others = gyms.filter(e => e !== held).map(e => e.day);
+    p.do({ do: 'putOnDay', job: 'gym', day: '2026-10-03', entry: held.id });
+    const now = W.planOf(p.facts, '2026-09-28')!.filter(e => e.job === 'gym').map(e => e.day).sort();
+    expect(now).toEqual([...others, '2026-10-03'].sort());
+  });
+  it('put on a later day, a dated one-off stays there; chosen for tomorrow, a one-off leaves its later day, and back', () => {
+    const p = player().do({ do: 'open' });
+    const post = W.live(C, p.facts).jobs.find(j => j.id === 'post')!;
+    p.do({ do: 'saveJob', job: { ...post, by: '2026-10-02' }, rhythm: null }).do({ do: 'putOnDay', job: 'post', day: '2026-10-01' });
+    p.to('2026-09-29T09:00:00+01:00').do({ do: 'open' });
+    expect(p.view().slate).not.toContain('post');
+    expect(p.satchel().coming.find(x => x.job.id === 'post')?.day).toBe('2026-10-01');
+    /* chosen for tomorrow: tomorrow's, and no longer on Thursday */
+    p.to('2026-09-29T22:30:00+01:00').do({ do: 'firstJob', job: 'post' });
+    expect(p.satchel().coming.some(x => x.job.id === 'post')).toBe(false);
+    p.to('2026-09-30T08:00:00+01:00').do({ do: 'open' });
+    expect(p.view().next?.job).toBe('post');
+    expect(W.weekOf(W.live(C, p.facts), p.facts, '2026-09-28', '2026-09-30').days.filter(d => d.day > '2026-09-30').some(d => d.jobs.some(j => j.job === 'post'))).toBe(false);
+    /* put elsewhere at night, tomorrow's choice goes with it */
+    p.to('2026-09-30T22:30:00+01:00').do({ do: 'firstJob', job: 'cat' }).do({ do: 'putOnDay', job: 'cat', day: '2026-10-03' });
+    expect(tomorrowFirst(C, p.facts, p.at).job).not.toBe('cat');
+  });
+  it('delved on from Coming up, a one-off is today’s only', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['Tidy the shed'] });
+    const id = p.satchel().noDay[0].id;
+    p.do({ do: 'putOnDay', job: id, day: '2026-10-02' }).do({ do: 'startRun', job: id, minutes: 10, count: 1 });
+    expect(p.satchel().coming.some(x => x.job.id === id)).toBe(false);
+    expect(W.weekOf(W.live(C, p.facts), p.facts, '2026-09-28', '2026-09-28').days.some(d => d.day > '2026-09-28' && d.jobs.some(j => j.job === id))).toBe(false);
   });
 });

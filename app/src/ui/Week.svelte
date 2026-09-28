@@ -97,7 +97,8 @@
   function whyOf(d: { jobs: DayJob[] }): string[] {
     const ids = [...new Set(d.jobs.filter(j => !j.done).map(j => j.job))];
     const out = ids.flatMap(id => { const m = realMinutes(game.facts, id), j = game.job(id); return m && j ? [t('week.about.why', { job: j.name, min: minutesWords(m) })] : []; });
-    return out.length ? out : [t('week.about.set')];
+    /* the rest, from the minutes set for them */
+    return out.length === ids.length ? out : [...out, t(out.length ? 'week.about.rest' : 'week.about.set')];
   }
   /* a faint "about 2 h": the day's shape, not a score (D-114) */
   function about(m: number) {
@@ -162,7 +163,7 @@
               <button class="plus" class:on={addingTo === d.day} aria-label={t('week.addTo', { day: dayName(d.day) })} onclick={() => startAdd(d.day)}><span aria-hidden="true">+</span></button>
             {/if}
           </div>
-          {#if why === d.day && !isFolded(d.day)}<div class="why" role="status">{#each whyOf(d) as line (line)}<p>{line}</p>{/each}</div>{/if}
+          {#if why === d.day && !isFolded(d.day)}<div class="why" role="status">{#each whyOf(d) as line, k (k)}<p>{line}</p>{/each}</div>{/if}
           {#if addingTo === d.day}
             <form class="new" onsubmit={(e) => { e.preventDefault(); add(); }}>
               <input bind:this={lineEl} bind:value={line} placeholder={t('week.addPlaceholder')} maxlength="120" enterkeyhint="done" aria-label={t('week.addTo', { day: dayName(d.day) })} />
@@ -176,7 +177,7 @@
           {/each}
           {#each d.jobs as j (j.entry ?? j.job + j.done)}
             <button class="row" class:done={j.done} class:open={open === keyOf(j, d.day)} onclick={() => edit(j, d.day)} disabled={!j.done && d.day < v.day}
-              use:hold={() => { open = null; openMenu(j.job, go, j.done ? d.day : null); }}>
+              use:hold={() => { open = null; openMenu(j.job, go, j.done ? d.day : null, j.done ? null : j.entry); }}>
               <span class="pip" class:done={j.done}></span><span class="t">{game.job(j.job)?.name ?? j.job}</span><span class="s">{note(j, d.day)}</span>
             </button>
             {#if open && j.done && open === keyOf(j, d.day)}

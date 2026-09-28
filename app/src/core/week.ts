@@ -102,22 +102,23 @@ const learned = new WeakMap<Fact[], { n: number; mins: Map<string, number | null
 /** How long a job really takes Dan, for planning: the median of its last 5 delves of 5 minutes or more, once there are
     3, rounded to 5 minutes. Null until then (its written minutes are used). The job's own minutes are never changed, and
     every delve still opens at 30 (D-124). A delve here is one run: its minutes as counted at its end. */
-export function realMinutes(facts: Fact[], job: string): number | null {
+export function realMinutes(facts: Fact[], job: string, before?: string): number | null {
   let m = learned.get(facts);
   if (!m || m.n !== facts.length) { m = { n: facts.length, mins: new Map() }; learned.set(facts, m); }
-  if (m.mins.has(job)) return m.mins.get(job)!;
-  const runs = ofType(facts, 'delveEnded').filter(f => f.job === job && f.minutes >= LEARN_MIN).slice(-LEARN_LAST).map(f => f.minutes).sort((a, b) => a - b);
+  const key = `${job}|${before ?? ''}`;
+  if (m.mins.has(key)) return m.mins.get(key)!;
+  const runs = ofType(facts, 'delveEnded').filter(f => f.job === job && f.minutes >= LEARN_MIN && (!before || f.day < before)).slice(-LEARN_LAST).map(f => f.minutes).sort((a, b) => a - b);
   let out: number | null = null;
   if (runs.length >= LEARN_FROM) {
     const k = runs.length >> 1, med = runs.length % 2 ? runs[k] : (runs[k - 1] + runs[k]) / 2;
     out = Math.max(5, Math.round(med / 5) * 5);
   }
-  m.mins.set(job, out);
+  m.mins.set(key, out);
   return out;
 }
 /** A job's room in a day, for planning and the forecast: how long it really takes, once learned, else its minutes
     (D-124, D-131). */
-export const roomOf = (j: Job, facts?: Fact[]) => (facts && realMinutes(facts, j.id)) || j.length;
+export const roomOf = (j: Job, facts?: Fact[], before?: string) => (facts && realMinutes(facts, j.id, before)) || j.length;
 const jobRoom = (c: Content, id: string, facts?: Fact[]) => { const j = c.jobs.find(x => x.id === id); return j ? roomOf(j, facts) : 25; };
 /** About how long a day of the week holds (not yet done), in minutes: a shape, not a score (D-114). */
 export const dayMinutes = (c: Content, d: { jobs: DayJob[] }, facts?: Fact[]) => d.jobs.filter(j => !j.done).reduce((a, j) => a + jobRoom(c, j.job, facts), 0);
@@ -133,6 +134,23 @@ export function goodHour(facts: Fact[], job: string, clock: string, bedtime?: st
   if (starts.length < HOURS_FROM) return null;
   const now = mins(clock), near = starts.filter(x => { const d = Math.abs(x - now) % 1440; return Math.min(d, 1440 - d) <= 60; }).length;
   return near * 2 >= starts.length;
+}
+
+/** The done records that finish a one-off: those since it last stopped recurring (a recurring job made a one-off in the
+    editor is not finished by its old sessions, D-126; second review of D-131). */
+const finishing = new WeakMap<Fact[], { n: number; c: Content; out: FactOf<'jobDone'>[] }>();
+export function oneOffDone(c: Content, facts: Fact[]): FactOf<'jobDone'>[] {
+  const m = finishing.get(facts);
+  if (m && m.n === facts.length && m.c === c) return m.out;
+  const rhythmOfId = new Map((c.base ?? c).rhythms.map(r => [r.id, r.job]));
+  const stoppedAt = new Map<string, number>();
+  for (const f of facts) {
+    if (f.type === 'rhythmSaved') rhythmOfId.set(f.rhythm.id, f.rhythm.job);
+    else if (f.type === 'rhythmStopped') { const job = rhythmOfId.get(f.id); if (job) stoppedAt.set(job, f.seq); }
+  }
+  const out = doneFacts(facts).filter(f => f.seq > (stoppedAt.get(f.job) ?? -1));
+  finishing.set(facts, { n: facts.length, c, out });
+  return out;
 }
 
 /* ---------- the satchel ---------- */
@@ -232,7 +250,7 @@ export function planWeek(c: Content, facts: Fact[], week: string, from: string, 
   const fits = (d: string, job: string) => load(d) === 0 || load(d) + size(job) <= capLeft(d);
   const done = doneIn(facts, week);
   const doneOnDay = (job: string, d: string) => done.some(f => f.job === job && f.day === d);
-  const ever = new Set(doneFacts(facts).map(f => f.job));
+  const ever = new Set(oneOffDone(c, facts).map(f => f.job));
   const rhythmJob = new Set(c.rhythms.map(r => r.job));
   /* a one-off Dan placed himself this week stays where he put it: the planner never places it again (D-117 review) */
   const hand = new Set(ofType(facts, 'planAdded').filter(f => calendarWeek(f.entry.day) === week && !rhythmJob.has(f.entry.job)).map(f => f.entry.job));
@@ -326,7 +344,7 @@ function weekAt(c: Content, facts: Fact[], week: string, today: string): WeekVie
   for (const f of done) if (f.day <= today && c.jobs.some(j => j.id === f.job) && !hidden.has(`${f.job}|${f.day}`)) at(f.day)?.jobs.push({ entry: null, job: f.job, done: true });
   if (!plan) return { week, planned: false, days };
   const rhythm = (job: string) => c.rhythms.find(r => r.job === job);
-  const met = (job: string) => { const r = rhythm(job); return r ? sessions(facts, r, week) >= need(r) : done.some(f => f.job === job) || doneFacts(facts).some(f => f.job === job); };
+  const met = (job: string) => { const r = rhythm(job); return r ? sessions(facts, r, week) >= need(r) : oneOffDone(c, facts).some(f => f.job === job); };
   /* how many more sessions the plan may still hold of a job: a rhythm's enough left this period; a one-off, one */
   const room = new Map<string, number>();
   const left = (job: string) => {

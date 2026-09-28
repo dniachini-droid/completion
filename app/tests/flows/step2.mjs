@@ -27,6 +27,8 @@ const boxes = () => page.evaluate(() => [...document.querySelectorAll('.rows but
 async function pressStill(where, row) {
   /* brought into view first, and let settle (a scroll runs on the real clock, not the page's) */
   await row.scrollIntoViewIfNeeded(); await page.clock.runFor(300); await page.waitForTimeout(500);
+  /* and the screen's own arrival (its rise and fade run on the real clock) has finished: only looping glows go on */
+  for (let k = 0; k < 30 && await page.evaluate(() => document.getAnimations().some(a => a.playState === 'running' && a.effect?.getComputedTiming().iterations !== Infinity)); k++) await page.waitForTimeout(150);
   const before = await boxes(), r = await row.boundingBox(), x = r.x + r.width / 2, y = r.y + r.height / 2;
   await page.mouse.move(x, y); await page.mouse.down();
   let worst = 0, how = '';

@@ -230,7 +230,7 @@ export const copy = {
   'today.ifTime': 'If there’s time',
   /* the one job menu (D-131, step 3) */
   'job.more': 'More…',
-  'week.about.why': '{job} usually takes you about {min}.', 'week.about.set': 'From the minutes set for each job.',
+  'week.about.why': '{job} usually takes you about {min}.', 'week.about.set': 'From the minutes set for each job.', 'week.about.rest': 'The rest, from the minutes set for them.',
   'menu.delve': 'Delve', 'menu.edit': 'Edit', 'menu.srEdit': '{job}: edit',
   /* a done job taken back, to work on it more (D-131) */
   'row.notDone': 'Not done after all', 'row.srNotDone': '{job}: not done after all',
