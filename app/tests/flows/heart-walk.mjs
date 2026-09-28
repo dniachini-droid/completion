@@ -88,10 +88,12 @@ const fits = async (name) => {
     const shown = el => { for (let p = el; p; p = p.parentElement) { const s = getComputedStyle(p); if (s.display === 'none' || s.visibility === 'hidden' || +s.opacity < 0.05) return false; } return true; };
     /* text still fading in (a moment mid-animation) is not judged until it has settled */
     const settled = el => { let o = 1; for (let p = el; p; p = p.parentElement) o *= +getComputedStyle(p).opacity; return o >= 0.6; };
-    const texts = [...document.querySelectorAll('p, h1, h2, h3, span, li, em, blockquote')].filter(el =>
+    /* a sheet over the screen (the job menu, D-131) is judged alone: the screen under it is covered, not overlapped */
+    const top = document.querySelector('[aria-modal="true"]') ?? document;
+    const texts = [...top.querySelectorAll('p, h1, h2, h3, span, li, em, blockquote')].filter(el =>
       [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim()) && !el.closest('button, svg') && shown(el) && settled(el));
     /* each button as it is actually seen: cut to the box it scrolls in (a row scrolled out of view covers nothing) */
-    const buttons = [...document.querySelectorAll('button')].filter(shown).map(b => {
+    const buttons = [...top.querySelectorAll('button')].filter(shown).map(b => {
       /* a quiet text link's tap area is taller than what it shows: measure its visible words, not its hit box */
       const vis = b.classList.contains('text-link') || b.classList.contains('home') ? (b.querySelector('span') ?? b) : b;
       const r = vis.getBoundingClientRect(), sc = scroller(b), c = sc ? sc.getBoundingClientRect() : { top: 0, bottom: H };
@@ -336,8 +338,8 @@ const mapWalk = async (name) => {
 };
 await shot('today', 2500);
 /* the Course: Begin opens the run set to its hour; a breather; enough */
-/* the day's plan leads Today (D-080); the Course is chosen through "Something else…" (D-077) */
-await tap('Something else…'); await shot('choose', 1000);
+/* the day's plan leads Today (D-080); the Course is chosen through "Something else…", which opens the Satchel (D-077, D-131) */
+await tap('Something else…'); await shot('satchel-else', 1000);
 await page.locator('.body button.row', { hasText: 'Course' }).first().click(); await shot('runset', 2000);
 /* the side chamber is a fixed point on the road, halfway to the next place (Dan, D-122): shown whatever the run, at the
    same share of the way to the next place however long or many the delves */
@@ -407,26 +409,25 @@ await toClock(1, 9); await page.reload({ waitUntil: 'domcontentloaded' }); await
 await openers('last');
 if (await has('I can’t start')) { await tap('I can’t start'); await shot('cant-start', 2000); await tap('Not now'); await page.clock.runFor(1500); }
 /* slice 4's own screens, from Today's foot */
-/* one-tap capture (D-107, D-117): "+ Add" opens a box already typing; Return puts the job on today, a delve */
+/* one-tap capture (D-107, D-131): "+ Add" opens the Satchel's one box, already typing; Return saves the job for later */
 { await page.clock.runFor(1500); await page.waitForTimeout(300);   /* the screen settled: no fading one still on it */
-  await tap('Add a job to today'); await page.clock.runFor(300);
-  if (!(await page.evaluate(() => document.activeElement?.tagName === 'TEXTAREA'))) errors.push('CAPTURE the box was not already typing');
-  await page.keyboard.type('Call the bank'); await shot('today-capture', 300);
+  await page.locator('nav.foot .add').click(); await page.clock.runFor(300);
+  if (!(await page.evaluate(() => !!document.activeElement?.closest('.satchel-add')))) errors.push('CAPTURE the box was not already typing');
+  await page.keyboard.type('Call the bank'); await shot('satchel-capture', 300);
   await page.keyboard.press('Enter'); await page.clock.runFor(500);
-  if (!(await page.locator('nav.foot').getByText('On today').count())) errors.push('CAPTURE did not say it was put on today');
-  if (!(await page.locator('nav.foot').count())) errors.push('CAPTURE left Today');
-  const row = page.locator('.rows button.row', { hasText: 'Call the bank' });
-  if (!(await row.count())) errors.push('CAPTURE the job is not on today');
-  else if (/one-off|about/i.test(await row.first().innerText())) errors.push('CAPTURE the job is shown as one without a timer'); }
-/* the job editor (D-112), from What repeats' other jobs: renamed; removed, Undo brings it back */
-await tap('Week'); await page.clock.runFor(1200); await tap('What repeats'); await page.clock.runFor(1200);
-await page.locator('button.row', { hasText: 'Call the bank' }).first().click(); await shot('job-edit', 800);
+  if (!(await page.locator('.item button.row', { hasText: 'Call the bank' }).count())) errors.push('CAPTURE the job is not in the Satchel'); }
+/** a press and hold on a row: the job menu (D-131, step 3) */
+const holdOn = async (row) => { await row.scrollIntoViewIfNeeded(); await page.clock.runFor(200); const r = await row.boundingBox();
+  await page.mouse.move(r.x + r.width / 2, r.y + r.height / 2); await page.mouse.down(); await page.clock.runFor(700); await page.mouse.up(); await page.clock.runFor(300); };
+/* the job editor (D-112), from the job menu: renamed; removed, Undo brings it back */
+await holdOn(page.locator('.item button.row', { hasText: 'Call the bank' }).first()); await shot('job-menu', 400);
+await tap('Edit'); await shot('job-edit', 800);
 await page.locator('.editor input.line').first().fill('Call the bank about the card'); await tap('Save'); await page.clock.runFor(800);
-if (!(await page.locator('button.row', { hasText: 'Call the bank about the card' }).count())) errors.push('EDIT the job was not renamed');
-await page.locator('button.row', { hasText: 'Call the bank about the card' }).first().click(); await page.clock.runFor(800);
+if (!(await page.locator('.item button.row', { hasText: 'Call the bank about the card' }).count())) errors.push('EDIT the job was not renamed');
+await holdOn(page.locator('.item button.row', { hasText: 'Call the bank about the card' }).first()); await tap('Edit'); await page.clock.runFor(800);
 await tap('Delete'); await shot('job-removed', 600);
 await tap('Undo'); await page.clock.runFor(800);
-if (!(await page.locator('button.row', { hasText: 'Call the bank about the card' }).count())) errors.push('EDIT Undo did not bring the job back');
+if (!(await page.locator('.item button.row', { hasText: 'Call the bank about the card' }).count())) errors.push('EDIT Undo did not bring the job back');
 await home(); await page.clock.runFor(1500); await shot('today-with-line', 2000);
 await tap('Week'); await shot('week', 1500);
 /* a day folds away with a tap on its name, and opens again (Dan, review 2) */
@@ -466,26 +467,30 @@ if (await row.count()) {
   await shot('week-adding', 500);
   await page.keyboard.type('The dentist'); await page.keyboard.press('Enter'); await page.clock.runFor(500);
   if (!(await page.locator('.day:not(.past)').first().locator('button.row', { hasText: 'The dentist' }).count())) errors.push('WEEK the one-off did not land on its day'); }
-await tap('What repeats'); await shot('rhythms', 1200);
-await page.locator('button.row').first().click(); await shot('rhythm-edit', 800);
+/* the recurring jobs live in the Satchel (D-131): the Week's link opens it there */
+await tap('Recurring jobs'); await shot('satchel-recurring', 1200);
+if (!(await page.locator('.rows button.row', { hasText: 'Gym' }).count())) errors.push('RECURRING the gym is not in the Satchel');
+await holdOn(page.locator('.rows button.row', { hasText: 'Gym' }).first()); await tap('Edit'); await shot('rhythm-edit', 800);
 await page.locator('.body').evaluate(e => e.scrollTo(0, e.scrollHeight)); await shot('rhythm-edit-end', 500);
 await tap('Cancel'); await page.clock.runFor(500);
+/* the editor goes back to the Satchel, and its arrow to the week ("This week") */
 await tap('This week'); await page.clock.runFor(500); await tap('Next week'); await shot('week-next', 1000);
 await home(); await page.clock.runFor(1500);
-await tap('Daybook'); await shot('daybook', 1500); await home(); await page.clock.runFor(1500);
+await tap('Daybook'); await shot('daybook', 1500); if (await has('Settings')) errors.push('SETTINGS still in the Daybook (D-130: the gear on Today)'); await home(); await page.clock.runFor(1500);
 /* the back trail (review 2, D-088): each arrow returns where its screen was opened from, and says so */
 {
   const expect = (what, got, want) => { if (got !== want) errors.push(`BACK ${what}: arrow says "${got}", expected "${want}"`); };
   await tap('Week'); await tap('Map'); await page.clock.runFor(1500); expect('week → map', await backSays(), 'this week');
   await page.locator('button.home').first().click(); await page.clock.runFor(1200);
   if (!(await page.locator('h1', { hasText: /this week/i }).count())) errors.push('BACK map → week did not return to the week');
-  await tap('What repeats'); expect('week → what repeats', await backSays(), 'this week');
+  await tap('Recurring jobs'); expect('week → recurring jobs', await backSays(), 'this week');
   await page.locator('button.home').first().click(); await page.clock.runFor(800);
   await tap('Next week'); expect('this week → next week', await backSays(), 'this week');
   await page.goBack(); await page.clock.runFor(800);
   if (!(await page.locator('h1', { hasText: /this week/i }).count())) errors.push('BACK the phone’s own back did not step back one screen');
   await home();
-  await tap('Daybook'); await tap('Settings'); await page.clock.runFor(1500); expect('daybook → settings', await backSays(), 'daybook');
+  /* Settings: the gear at the top of Today (D-130), no longer inside the Daybook */
+  await tap('Settings'); await page.clock.runFor(1500); expect('today → settings', await backSays(), 'today');
   await page.locator('.remind button', { hasText: '1 h before' }).click(); await shot('settings', 800);
   /* Save a copy, then Restore from it (D-107): the copy is read back, asked about, and restored */
   { const [dl] = await Promise.all([page.waitForEvent('download'), tap('Save a copy')]);
@@ -504,11 +509,11 @@ await tap('Daybook'); await shot('daybook', 1500); await home(); await page.cloc
     await page.locator('button.home').first().click(); await page.clock.runFor(800); await home(); await page.clock.runFor(1200);
     await tap('Week'); await page.clock.runFor(1200); await shot('week-calendar', 800);
     if (!(await page.locator('.event', { hasText: 'Dentist (calendar)' }).count())) errors.push('CALENDAR the event is not in the week');
-    await home(); await page.clock.runFor(800); await tap('Daybook'); await tap('Settings'); await page.clock.runFor(1200); }
+    await home(); await page.clock.runFor(800); await tap('Settings'); await page.clock.runFor(1200); }
   await tap('The trial’s own controls'); await page.clock.runFor(1500); expect('settings → trial', await backSays(), 'settings');
   await home();
   await tap('Something else…'); await page.locator('.body button.row').first().click(); await page.clock.runFor(800);
-  expect('choose → delves', await backSays(), 'back');
+  expect('satchel → delves', await backSays(), 'satchel');
   await home();
   await home(); await page.clock.runFor(1500);
   if (!(await page.locator('nav.foot').count())) errors.push('BACK never reached Today');

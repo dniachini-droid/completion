@@ -5,6 +5,7 @@
  */
 import { calendarWeek, weekdayOf } from './time';
 import type { Fact, Rhythm } from './types';
+import { doneFacts } from './done';
 
 const addDays = (day: string, n: number) => { const d = new Date(`${day}T00:00:00Z`); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
 const between = (a: string, b: string) => Math.round((Date.parse(b) - Date.parse(a)) / 864e5);
@@ -50,14 +51,14 @@ export function samePeriod(r: Rhythm, done: string, day: string): boolean {
 /** Sessions of a rhythm done in its period containing `day`: any with a whole minute behind it (Dan, D-121), or, with
     `min`, only those at least that long (the Key's count, rule 10). */
 export const sessionsIn = (facts: Fact[], r: Rhythm, day: string, min = 1) =>
-  facts.filter(f => f.type === 'jobDone' && f.job === r.job && f.minutes >= min && samePeriod(r, f.day, day)).length;
+  doneFacts(facts).filter(f => f.job === r.job && f.minutes >= min && samePeriod(r, f.day, day)).length;
 
 /** The day an every-N-days rhythm is next due, from `from` on: N days after it was last done (before `from`), or
     `from` if it never was or is already due. */
 export function dueFrom(facts: Fact[], r: Rhythm, from: string): string {
   const n = r.everyDays ?? 1;
   let last: string | null = null;
-  for (const f of facts) if (f.type === 'jobDone' && f.job === r.job && f.day < from && (!last || f.day > last)) last = f.day;
+  for (const f of doneFacts(facts)) if (f.job === r.job && f.day < from && (!last || f.day > last)) last = f.day;
   if (!last) return from;
   const due = addDays(last, n);
   return due > from ? due : from;

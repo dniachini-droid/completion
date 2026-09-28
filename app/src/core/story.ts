@@ -3,7 +3,7 @@
  * Pure: the fact log + the authored story in, what has played and what is due out. Nothing here is story content.
  *
  * Two clocks (BALANCING §2): time moves the Site (every minute is distance, uncapped); the story keeps its order
- * (beats arrive in a fixed sequence, at most one story week per calendar week). Past the story, effort goes to the
+ * (beats arrive in a fixed sequence, as fast as Dan works, D-123; the road never waits on a Key, D-129). Past the story, effort goes to the
  * open route: camps with a view, passage lines and finds. Never a wall (D-039).
  */
 import { calendarWeek } from './time';
@@ -103,6 +103,58 @@ const allMet = (st: StoryState, req: string[]) => req.every(r => met(st, r));
 const EARLY = new Set(['b-3.A']);
 const inWeek = (st: StoryState, b: { id: string; w: number }) => b.w <= st.week || (EARLY.has(b.id) && b.w === st.week + 1);
 
+/* ---------- the road and the niches (D-129) ---------- */
+
+const roadCache = new WeakMap<Story, Set<string>>();
+/**
+ * The sealed rows the road takes with it (Dan, D-129, option C): opened on foot, in the story's order, with no Key. They
+ * are the rows that play a place on the route, the ones that carry a sign to guess (signs come in the story's order,
+ * never late, D-013), and every row something on the road needs first (a place, a step, a word, a stretch, or a road
+ * row's own step): the story's main line never waits on the calendar. Every other row (the niches: a record, an object,
+ * a line, a side step) opens only with a Key, as before.
+ */
+export function roadSeals(s: Story): Set<string> {
+  const hit = roadCache.get(s);
+  if (hit) return hit;
+  const road = new Set<string>();
+  const needs: string[] = [];
+  const need = (ids: string[]) => { for (const r of ids) needs.push(r); };
+  const places = new Set(s.route.flatMap(r => r.places.map(p => p.id)));
+  for (const b of s.beats) if (places.has(b.id) || b.kind === 'step' || b.kind === 'word') need([b.id, ...b.req]);
+  for (const w of s.words) need(w.req);
+  for (const x of s.stretches) need(x.req);
+  const offers = (x: Seal) => [...(x.carries?.guess ?? []), ...(x.beat ? beatOf(s, x.beat)?.carries?.guess ?? [] : [])];
+  const take = (x: Seal) => {
+    if (road.has(x.id) || x.seenOnly) return;
+    road.add(x.id);
+    const b = beatOf(s, x.beat ?? x.arrival ?? '');
+    if (b) need(b.req);
+  };
+  /* a row that settles a sign the road offers comes in the sign's order too (a guess is never left standing) */
+  const settles = (x: Seal) => x.beat ? s.marks.some(m => m.confirmedBy === x.beat) : false;
+  for (const x of s.seals) if ((x.arrival && places.has(x.arrival)) || offers(x).length || x.road || settles(x)) take(x);
+  const seen = new Set<string>();
+  while (needs.length) {
+    const id = needs.pop()!;
+    if (seen.has(id)) continue;
+    seen.add(id);
+    const b = beatOf(s, id);
+    if (b) { need(b.req); if (b.seal) { const x = sealOf(s, b.seal); if (x) take(x); } }
+    const x = id.startsWith('seal-') ? sealOf(s, id) : undefined;
+    if (x) take(x);
+    /* a mark the road needs comes with the row that offers it */
+    if (id.startsWith('mk-')) for (const y of s.seals) if (offers(y).includes(id)) take(y);
+  }
+  roadCache.set(s, road);
+  return road;
+}
+/** Whether a sealed row opens on the road, with no Key (D-129). */
+export const onRoad = (s: Story, id: string | undefined) => !!id && roadSeals(s).has(id);
+/** A road row opens in the order Keys opened it (story week, then row), so a place never comes before the sign it
+    confirms, or a row before the one it follows (D-129). */
+const roadTurn = (s: Story, st: StoryState, x: Seal) =>
+  s.seals.every(y => !onRoad(s, y.id) || st.opened.has(y.id) || y.w > x.w || (y.w === x.w && y.o >= x.o));
+
 /* ---------- the route: places reached on foot ---------- */
 
 /** Minutes of effort from the start to the next place reached on foot. */
@@ -115,15 +167,17 @@ export const chamberAt = (st: StoryState) => Math.ceil((lastPlaceAt(st) + nextPl
 
 /**
  * The next named place that can be reached on foot, in route order: this story week's first (places whose req is not
- * met are skipped for now); then, only on a deep push (`push`: a High day, a called push, or Keep going after the day's
- * work), next week's plain places (never a story arrival ahead of its week) (MVP_CONTENT §0.2).
+ * met are skipped for now); then next week's plain places (never a story arrival ahead of its week) (MVP_CONTENT §0.2).
+ * A place a Key used to play is on foot too (D-129).
  */
 export function nextPlace(s: Story, st: StoryState, push = false): Beat | null {
   for (const rw of s.route) {
     for (const p of rw.places) {
-      if (p.k || st.played.has(p.id)) continue;
+      if (st.played.has(p.id)) continue;
       const b = beatOf(s, p.id);
       if (!b) continue;
+      /* a place a Key used to play is reached on foot now, once its sealed thing could be opened (D-129) */
+      if (p.k) { const x = b.seal ? sealOf(s, b.seal) : undefined; if (x && (st.opened.has(x.id) || !mayOpen(s, st, x) || !roadTurn(s, st, x))) continue; }
       const ahead = rw.w === st.week + 1 && p.id.startsWith('pl-');   /* one story, no waiting (D-123) */
       if (!(inWeek(st, b) || ahead)) continue;
       if (b.kind === 'word' && !EARLY.has(b.id) && b.w > st.week) continue;
@@ -151,10 +205,52 @@ export function nextCamp(s: Story, st: StoryState): { id: string; find?: string;
 
 /** The next ordered step beat (after a main job): this story week's, in table order, each after its arrival. */
 export function nextStep(s: Story, st: StoryState): Beat | null {
-  /* never about a stretch Dan hasn't been to (D-079) */
-  const steps = s.beats.filter(b => b.kind === 'step' && !st.played.has(b.id) && inWeek(st, b) && allMet(st, b.req) && st.visited.has(b.stretch));
+  /* never about a stretch Dan hasn't been to (D-079); a road row's step plays in its turn, with no Key (D-129), and a
+     road row with only a line plays as a step of its own */
+  const lineRows: Beat[] = s.seals.filter(x => !x.beat && !x.arrival && onRoad(s, x.id))
+    .map(x => ({ id: x.id, kind: 'stepKey', w: x.w, o: x.o, seal: x.id, req: [], stretch: x.stretch }));
+  const steps = [...s.beats, ...lineRows].filter(b => (b.kind === 'step' || roadStep(s, st, b)) && !st.played.has(b.id) && inWeek(st, b) && allMet(st, b.req) && st.visited.has(b.stretch));
   steps.sort((a, b) => a.w - b.w || a.o - b.o);
   return steps[0] ?? null;
+}
+
+/** A step a Key used to play, whose row the road now opens: once its sealed thing could be opened (D-129). */
+function roadStep(s: Story, st: StoryState, b: Beat): boolean {
+  if (b.kind !== 'stepKey' || !onRoad(s, b.seal)) return false;
+  const x = sealOf(s, b.seal!);
+  return !!x && !st.opened.has(x.id) && mayOpen(s, st, x) && roadTurn(s, st, x);
+}
+
+/**
+ * The story's bits that play on the way to the next place (Dan, D-129: long days never hold a place back). When the
+ * minutes have reached the next place and only story bits stand between (a step, or a road row), the next ones in
+ * order (as many as stand in the way, across a story week's end) play as Dan walks on and show on that place's arrival, with their records, choices and settled
+ * guesses. Null if nothing so near would open the way.
+ */
+export function onTheWay(s: Story, st: StoryState): Beat[] | null { return wayTo(s, st)?.bits ?? null; }
+/** The next place Dan is walking to: the next place in reach, or the one the story bits on the way will open (D-129). */
+export const placeAhead = (s: Story, st: StoryState): Beat | null => nextPlace(s, st) ?? wayTo(s, st)?.place ?? null;
+function wayTo(s: Story, st: StoryState): { bits: Beat[]; place: Beat } | null {
+  let t = st;
+  const out: Beat[] = [];
+  /* as many bits as stand in the way, across a story week's end (bounded by the story's own steps) */
+  for (let k = 0; k < s.beats.length + s.seals.length; k++) {
+    const place = nextPlace(s, t);
+    if (place) return out.length ? { bits: out, place } : null;
+    const b = nextStep(s, t);
+    if (!b) {
+      if (weekDone(s, t) && s.route.some(r => r.w === t.week + 1)) { t = { ...t, week: t.week + 1 }; continue; }
+      return null;
+    }
+    out.push(b);
+    const x = b.kind === 'stepKey' ? sealOf(s, b.seal!) : undefined;
+    const played = new Set(t.played); played.add(b.id);
+    const opened = new Set(t.opened); if (x) opened.add(x.id);
+    const offered = new Set(t.offered);
+    [...(x?.carries?.guess ?? []), ...(b.carries?.guess ?? [])].forEach(m => offered.add(m));
+    t = { ...t, played, opened, offered };
+  }
+  return null;
 }
 
 /** A passage line for where Dan is, never repeating on a stretch until its list is used (the open route, §5). */
@@ -185,9 +281,9 @@ export function mayOpen(s: Story, st: StoryState, x: Seal): boolean {
 }
 
 /** The sealed thing the next Key opens: the story's own first (any week up to this one, in order), then the plain ones;
-    a surplus opens next week's plain ones. */
+    a surplus opens next week's plain ones. The road's rows are never a Key's: a Key opens only a niche (D-129). */
 export function nextSeal(s: Story, st: StoryState): Seal | null {
-  const shut = s.seals.filter(x => !x.seenOnly && !st.opened.has(x.id));
+  const shut = s.seals.filter(x => !x.seenOnly && !st.opened.has(x.id) && !onRoad(s, x.id));
   const order = (a: Seal, b: Seal) => a.w - b.w || a.o - b.o;
   const due = shut.filter(x => x.w <= st.week);
   const early = shut.filter(x => x.w === st.week + 1 && x.plain).sort(order);
@@ -224,12 +320,14 @@ export function pickFind(s: Story, st: StoryState, why: string): Find | null {
 
 /* ---------- the story week ---------- */
 
-/** A story week ends when its places and ordered steps have all played (Key rows wait for their Keys). */
+/** A story week ends when its places and ordered steps have all played, the road's rows among them; the niches wait
+    for Keys without holding the story (D-129). */
 export function weekDone(s: Story, st: StoryState): boolean {
   const rw = s.route.find(r => r.w === st.week);
   if (!rw) return false;
   if (!rw.places.every(p => st.played.has(p.id))) return false;
-  return s.beats.filter(b => b.w === st.week && b.kind === 'step').every(b => st.played.has(b.id));
+  return s.beats.filter(b => b.w === st.week && b.kind === 'step').every(b => st.played.has(b.id))
+    && s.seals.every(x => x.w !== st.week || !onRoad(s, x.id) || st.opened.has(x.id));
 }
 /** The next story week may begin as soon as this one is done: no calendar-week wait, so more work is never held back
     (Dan, D-123; was at most one story week a calendar week). */

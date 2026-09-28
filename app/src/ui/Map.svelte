@@ -6,7 +6,7 @@
      named; the way ahead is a faint light, unnamed. Never a count of what's left (UX 6). */
   import { game, content } from './game.svelte';
   import { t, dayName } from '../content/copy/en';
-  import { nextPlace } from '../core/story';
+  import { placeAhead, onRoad } from '../core/story';
   import skyUrl from './scene/map-sky.svg?url';
   import type { Go } from './nav';
   import { back } from './back.svelte';
@@ -23,6 +23,8 @@
     key: string; x: number; y: number;
     kind: 'here' | 'lit' | 'faint' | 'sealed' | 'waypoint';
     name?: string; sub?: string; subKind?: 'warm' | 'dim' | 'gold';
+    /** the forecast, on a line of its own under "you are here" */
+    sub2?: string;
     lx: number; ly: number; anchor: Anchor;
     box: { label: string; title: string; say: string };
   }
@@ -49,9 +51,10 @@
   const placed = $derived(s.beats.filter(b => (b.kind === 'arrival' || b.kind === 'arrivalKey' || b.kind === 'word') && v.story.played.has(b.id)));
   const walkedOn = $derived(new Set<StretchId>([s.stretches[0].id, v.here.stretch, ...placed.map(b => b.stretch)]));   /* the way in is always walked */
   /* the stretch the next place is on: a faint light, unnamed */
-  const aheadOn = $derived(nextPlace(s, v.story)?.stretch ?? null);
+  const aheadOn = $derived(placeAhead(s, v.story)?.stretch ?? null);
   const stretchName = (id: StretchId) => s.stretches.find(x => x.id === id)!.name;
-  const sealedOn = (id: StretchId) => s.seals.filter(x => !x.seenOnly && !v.story.opened.has(x.id) && x.stretch === id
+  /* only what a Key opens: the road's own rows open on foot (D-129) */
+  const sealedOn = (id: StretchId) => s.seals.filter(x => !x.seenOnly && !onRoad(s, x.id) && !v.story.opened.has(x.id) && x.stretch === id
     && s.beats.some(b => v.story.played.has(b.id) && b.carries?.inView?.includes(x.id)));
   /* the plan's forecast (PLANNER → the forecast): where the next places would be reached; gone the moment the plan changes */
   const ahead = $derived(v.forecast.slice(0, 2));
@@ -72,7 +75,8 @@
           sub: here ? t('map.here') : sealedOn(k).length ? t('map.sealed') : undefined, subKind: here ? 'warm' : 'dim',
           box: here ? hereBox
             : { label: sealedOn(k).length ? t('map.walkedSealed') : t('map.walked'), title: stretchName(k), say: names.length ? names.join(' · ') : t('map.wayIn') } });
-        if (fc) out[out.length - 1].sub += ` · ${fc}`;
+        /* on its own line: joined to "you are here" it ran off the screen's left edge (UI review, D-130) */
+        if (fc) out[out.length - 1].sub2 = fc;
       } else if (k === aheadOn) {
         out.push({ key: k, ...a, kind: 'faint',
           sub: ahead.length ? t('map.forecast', { day: dayName(ahead[0]) }) : t('map.ahead'), subKind: ahead.length ? 'gold' : 'dim',
@@ -220,6 +224,9 @@
           {/each}
           {#if l.sub}
             <text x={l.lx} y={l.ly + ls.length * 20 + (ls.length ? 0 : 4)} text-anchor={l.anchor} class="ns {l.subKind ?? ''}">{l.sub}</text>
+          {/if}
+          {#if l.sub2}
+            <text x={l.lx} y={l.ly + ls.length * 20 + (ls.length ? 0 : 4) + 20} text-anchor={l.anchor} class="ns gold">{l.sub2}</text>
           {/if}
         {/each}
       </g>

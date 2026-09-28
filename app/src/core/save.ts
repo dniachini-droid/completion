@@ -3,6 +3,7 @@
  * A save is the fact log plus the version of its shape and of the content it last ran with.
  */
 import type { Fact } from './types';
+import { doneFacts } from './done';
 
 /** 2: the story (slice 2); version 1 saves (the heart prototype) started afresh and are not upgraded. */
 export const SAVE_VERSION = 2;
@@ -50,5 +51,5 @@ export function copyDue(names: string[], today: string): boolean {
 export function copySummary(s: Save): { day: string | null; done: number } {
   /* a plan change's "day" is where it moves to, not a day played (D-125) */
   const last = [...s.facts].reverse().find(f => f.type !== 'planChanged');
-  return { day: last?.day ?? null, done: s.facts.filter(f => f.type === 'jobDone').length };
+  return { day: last?.day ?? null, done: doneFacts(s.facts).length };
 }

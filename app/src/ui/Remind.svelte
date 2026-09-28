@@ -17,5 +17,5 @@
   .label-line { margin-top: 12px; }
   .seg { margin-top: 6px; }
   /* four choices on one line, even on a small phone */
-  .remind button { letter-spacing: .04em; padding-left: 2px; padding-right: 2px; font-size: 12px; white-space: normal; line-height: 1.15; }
+  .remind button { letter-spacing: .04em; padding-left: 2px; padding-right: 2px; font-size: 13px; white-space: normal; line-height: 1.15; }
 </style>

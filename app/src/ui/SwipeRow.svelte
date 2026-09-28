@@ -1,0 +1,106 @@
+<script lang="ts" module>
+  /* one row slid open at a time, anywhere */
+  let openKey = $state<string | null>(null);
+  export const closeRows = () => { openKey = null; };
+</script>
+
+<script lang="ts">
+  /* A job's row that slides left to show its actions (Today, the Satchel: D-125, D-131), and opens the job menu on a
+     press and hold (D-131, step 3). A press leaves the row perfectly still (Dan's screenshot, D-131): nothing moves until
+     the finger has slid sideways past a small dead zone, and then only by whole pixels; the phone's own long-press
+     (text selection, the callout, the tap highlight) is off. VoiceOver hears the actions as buttons (accessibility A). */
+  import type { Snippet } from 'svelte';
+  import { steady } from './taps';
+
+  interface Action { label: string; sr: string; run: () => void; del?: boolean }
+  let { key, actions, tap, hold, disabled = false, done = false, row, over }: {
+    key: string; actions: Action[]; tap: () => void; hold?: () => void; disabled?: boolean; done?: boolean;
+    row: Snippet; over?: Snippet;
+  } = $props();
+
+  const W = 96, DEAD = 10, HOLD_MS = 480;
+  const open = $derived(openKey === key);
+  const width = $derived(actions.length * W);
+  let dx = $state(0), sliding = $state(false);
+  let start: { x: number; y: number; base: number; id: number } | null = null;
+  let timer = 0, held = false, moved = false;
+
+  function down(e: PointerEvent) {
+    if (e.button > 0 || disabled) return;
+    /* a tap on a slid-out action, or on a link over the row, is a tap, never the start of a slide (review, D-125) */
+    if ((e.target as Element).closest?.('.acts, .over')) return;
+    held = false; moved = false;
+    start = { x: e.clientX, y: e.clientY, base: open ? -width : 0, id: e.pointerId };
+    if (hold) timer = window.setTimeout(() => { if (start && !sliding) { held = true; start = null; if (navigator.vibrate) navigator.vibrate(8); hold!(); } }, HOLD_MS);
+    addEventListener('pointermove', move); addEventListener('pointerup', up); addEventListener('pointercancel', cancel);
+  }
+  function move(e: PointerEvent) {
+    if (!start || e.pointerId !== start.id) return;
+    const x = e.clientX - start.x, y = e.clientY - start.y;
+    if (!sliding) {
+      /* inside the dead zone, or mostly up and down (a scroll): the row stays exactly where it is */
+      if (Math.abs(x) < DEAD || Math.abs(y) > Math.abs(x)) { if (Math.hypot(x, y) > DEAD) { clearTimeout(timer); if (Math.abs(y) > Math.abs(x)) cancel(); } return; }
+      sliding = true; clearTimeout(timer);
+    }
+    moved = true;
+    const from = x > 0 ? x - DEAD : x + DEAD;
+    dx = Math.round(Math.min(0, Math.max(-width - 24, start.base + from)) - start.base);
+  }
+  function up() {
+    clearTimeout(timer);
+    if (start && sliding) {
+      const at = start.base + dx;
+      openKey = at < -width / 2 ? key : openKey === key ? null : openKey;
+      steady();
+    }
+    reset();
+  }
+  function cancel() { clearTimeout(timer); reset(); }
+  function reset() {
+    start = null; sliding = false; dx = 0;
+    removeEventListener('pointermove', move); removeEventListener('pointerup', up); removeEventListener('pointercancel', cancel);
+  }
+  $effect(() => () => { clearTimeout(timer); reset(); });
+  function click() {
+    /* the lift after a slide or a hold is not a tap */
+    if (moved || held) { moved = false; held = false; return; }
+    if (open) { openKey = null; return; }
+    if (openKey) { openKey = null; return; }
+    if (!disabled && !done) tap();
+  }
+  const offset = $derived(sliding ? (open ? -width : 0) + dx : open ? -width : 0);
+</script>
+
+<div class="swipe" onpointerdown={down} role="presentation">
+  {#if offset >= 0}
+    {#each actions as a (a.sr)}<button class="sr" onclick={() => { openKey = null; a.run(); }}>{a.sr}</button>{/each}
+  {/if}
+  {#if offset < 0}
+    <div class="acts">
+      {#each actions as a (a.sr)}<button class="act" class:del={a.del} tabindex={open ? 0 : -1} onclick={() => { openKey = null; a.run(); }}>{a.label}</button>{/each}
+    </div>
+  {/if}
+  <button class="row" class:done class:moving={sliding} style:transform={offset ? `translate3d(${offset}px,0,0)` : null}
+    onclick={click} oncontextmenu={(e) => e.preventDefault()} aria-disabled={disabled || done}>
+    {@render row()}
+  </button>
+  {#if over && offset === 0}<div class="over">{@render over()}</div>{/if}
+</div>
+
+<style>
+  /* it clips a row sliding off, reaching out into the list's faded sides (base.css → .col .scroll), the words staying
+     where they were (Dan, 2026-09-27: cut at the column's edge it sliced a done diamond's glow) */
+  .swipe { position: relative; overflow: hidden; margin: 0 -18px; padding: 0 18px; }
+  @supports (overflow: clip) { .swipe { overflow-x: clip; overflow-y: visible; } }
+  /* a press never moves, selects or highlights anything (D-131): no text selection, no callout, no tap highlight, no
+     transform until a slide begins */
+  .swipe, .swipe .row { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }
+  .swipe .row { position: relative; z-index: 1; width: 100%; text-align: left; touch-action: pan-y; transition: transform .22s ease; }
+  .swipe .row.moving { transition: none; }
+  .acts { position: absolute; right: 18px; z-index: 0; top: 1px; bottom: 0; display: flex; }
+  .act { width: 96px; font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink); background: rgba(var(--violet-rgb), .28); }
+  /* Delete never looks like every other link (D-131): its own colour, on the slide only */
+  .act.del { background: rgba(160, 64, 88, .55); color: #fff; }
+  .over { position: absolute; z-index: 2; right: 18px; top: 50%; transform: translateY(-50%); }
+  .sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+</style>

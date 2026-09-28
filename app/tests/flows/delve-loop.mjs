@@ -1,7 +1,7 @@
 // The begin → delve → pause → done loop, tried the ways Dan uses it (2026-09-27, D-120): a delve left for another app
 // and carried on, from the delve and from Today; Finish here straight away; "Is it done?" answered "Not yet", then said
 // done from Today; a job added with "+ Add" (every job a delve, D-117), delved on and said done; a job named in
-// "Something else…", delved on, left "Not yet" and said done from its row on Today; a double tap on Begin, Finish here and Done makes one decision; a delve that
+// "Something else…" (the Satchel, D-131), delved on, left "Not yet" and said done from its row on Today; a double tap on Begin, Finish here and Done makes one decision; a delve that
 // ends while Dan is in the Week is shown to him, and once said done it never comes back. Leaving the app is stood in for by hiding the page, as the screen checks do.
 // Usage: node tests/flows/delve-loop.mjs http://localhost:4173/ [width height]
 const { launch } = await import('./browser.mjs');
@@ -20,6 +20,8 @@ const hide = async (on) => { await page.evaluate(on => { Object.defineProperty(d
 const away = async (ms) => { await hide(true); await ff(ms); await hide(false); await page.clock.runFor(1500); };
 /* a tap as a finger makes it, where the button is drawn */
 const tap = async (loc, what) => {
+  /* brought into view first: in the Satchel the recurring jobs can sit below the fold on a small phone (D-131) */
+  await loc.first().scrollIntoViewIfNeeded({ timeout: 2000 }).catch(() => {}); await page.waitForTimeout(300);
   const r = await loc.first().boundingBox().catch(() => null);
   if (!r) { fails.push(`no ${what}`); return false; }
   await page.touchscreen.tap(r.x + r.width / 2, r.y + r.height / 2); await page.clock.runFor(1200); return true;
@@ -83,7 +85,7 @@ const double = async (loc, what) => { const r = await loc.first().boundingBox().
   /* a real double tap: the second straight after the first, as a finger does it */
   for (let i = 0; i < 2; i++) await page.touchscreen.tap(r.x + r.width / 2, r.y + r.height / 2);
   await page.clock.runFor(1200); };
-const choose = async (name) => { await tap(page.locator('.rows button.row.else, .after .btn-quiet'), 'Something else… or Keep going'); await tap(page.locator('.ui button').filter({ hasText: name }), name + ' in Choose'); };
+const choose = async (name) => { await tap(page.locator('.rows button.row.else, .after .btn-quiet'), 'Something else… or Keep going'); await tap(page.locator('.ui button').filter({ hasText: name }), name + ' in the Satchel'); };
 await choose('Course');
 await double(btn('Begin'), 'Begin');
 if (!(await btn('Pause').count())) fails.push('Begin tapped twice did not leave the delve running');

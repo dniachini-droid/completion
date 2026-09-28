@@ -42,10 +42,13 @@ describe('the calendar (D-115)', () => {
     expect(W.busyMinutes(p.facts, '2026-10-03')).toBe(0);
   });
   it('a busy day gets less placed on it, but never nothing; events never become jobs', () => {
-    const plain = W.planWeek(C, [], MON, MON);
+    /* a full week, so the 7-hour planning room (D-131) is what limits the Tuesday */
+    const extra = ['x1', 'x2', 'x3', 'x4', 'x5'].map(id => ({ id, name: id, delve: true, length: 60, doneBy: 'enough' as const }));
+    const F = { ...C, jobs: [...C.jobs, ...extra], rhythms: [...C.rhythms, ...extra.map(j => ({ id: `r-${j.id}`, job: j.id, times: 7 }))] };
+    const plain = W.planWeek(F, [], MON, MON);
     const p = player().do({ do: 'calendarShow', on: true, calendars: null }).do({ do: 'calendarRead', events: busyTue, days: 14 });
-    const busy = W.planWeek(C, p.facts, MON, MON);
-    const mins = (plan: typeof plain, d: string) => plan.filter(e => e.day === d && !e.time).reduce((a, e) => a + W.roomOf(C.jobs.find(j => j.id === e.job)!), 0);
+    const busy = W.planWeek(F, p.facts, MON, MON);
+    const mins = (plan: typeof plain, d: string) => plan.filter(e => e.day === d && !e.time).reduce((a, e) => a + W.roomOf(F.jobs.find(j => j.id === e.job)!), 0);
     expect(mins(busy, TUE)).toBeLessThan(mins(plain, TUE));
     expect(busy.filter(e => e.day === TUE).length).toBeGreaterThan(0);
     p.do({ do: 'open' });

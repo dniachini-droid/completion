@@ -354,6 +354,9 @@ body.s-evening  { --a1: .5;  --aw: 120%; --ah: 44%; --a2: .38; --h2: 22%; }
   font-family: var(--life); font-style: italic; font-size: 17px; color: var(--ink-2); }
 .text-link > span { border-bottom: 1px solid var(--edge-3); padding-bottom: 1px; }
 .text-link:hover, .text-link:focus-visible { color: var(--ink); }
+/* Delete never looks like every other link (D-131): its own quiet rose, no underline */
+.text-link.del { color: #f0a0b0; }
+.text-link.del > span { border-bottom: 0; }
 
 /* .seg: selectable boxes (Low / Normal / High). Markup:
    <div class="seg" role="group"><button aria-pressed="false">Low</button><button aria-pressed="true">Normal</button>…</div>
@@ -445,3 +448,6 @@ body.s-evening  { --a1: .5;  --aw: 120%; --ah: 44%; --a2: .38; --h2: 22%; }
 .row .t, .say, .say-lg, h1, h2, .preview, .soft { overflow-wrap: anywhere; }
 .row .t { min-width: 0; }
 .btn:disabled { opacity: .45; cursor: default; }
+
+/* the world at rest (rest.ts, D-132): a looping animation whose element is marked is held where it is */
+[data-rest], [data-rest-before]::before, [data-rest-after]::after { animation-play-state: paused !important; }

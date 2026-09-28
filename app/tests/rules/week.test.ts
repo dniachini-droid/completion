@@ -58,7 +58,8 @@ describe('Plan my week (PLANNER.md, fixed rules)', () => {
     const load = new Map<string, number[]>();
     for (const e of plan()) if (!e.time) load.set(e.day, [...(load.get(e.day) ?? []), W.roomOf(C.jobs.find(j => j.id === e.job)!)]);
     for (const [d, m] of load) if (m.length > 1) expect(m.reduce((a, b) => a + b, 0)).toBeLessThanOrEqual(weekdayOf(d) === 6 ? W.PLAN_LIGHT : W.PLAN_MIN);
-    expect(plan().filter(e => weekdayOf(e.day) === 6).length).toBeLessThanOrEqual(1);
+    /* the planning room is 7 hours, the lighter day 3½ (Dan, D-131) */
+    expect([W.PLAN_MIN, W.PLAN_LIGHT]).toEqual([420, 210]);
   });
   it('avoided one-offs early in the week', () => {
     for (const j of ['cat', 'post']) expect(weekdayOf(on(j)[0])).toBeLessThanOrEqual(2);
@@ -99,7 +100,12 @@ describe('How the week drives Today', () => {
     const wk = W.weekOf(C, p.facts, MON, '2026-09-29');
     expect(wk.days[0].jobs.map(j => j.job)).toEqual([monday[0]]);
     expect(wk.days[0].jobs.every(j => j.done)).toBe(true);
-    for (const d of wk.days.slice(1)) expect(d.jobs.filter(j => !j.time).length).toBeLessThanOrEqual(W.PLAN_DAY);
+    for (const d of wk.days.slice(1)) { const m = d.jobs.filter(j => !j.time && !j.done).map(j => W.roomOf(C.jobs.find(x => x.id === j.job)!)); if (m.length > 1) expect(m.reduce((a, b) => a + b, 0)).toBeLessThanOrEqual(W.PLAN_MIN); }
+    /* a one-off whose day passed undone is not placed again: it waits in the Satchel's "No day yet" (D-131) */
+    for (const j of monday.slice(1).filter(id => !C.rhythms.some(r => r.job === id))) {
+      expect(wk.days.slice(1).flatMap(d => d.jobs).some(x => x.job === j)).toBe(false);
+      expect(W.satchelOf(C, p.facts, '2026-09-29').map(x => x.id)).toContain(j);
+    }
   });
   it('once a rhythm’s enough for the week is met, its remaining planned sessions leave', () => {
     const p = player().do({ do: 'open' }).do({ do: 'planWeek', week: MON });
@@ -269,9 +275,10 @@ describe('Absence and the deep push', () => {
     const deep = () => log.some(f => f.type === 'beatPlayed' && S.beatOf(C.story, f.id)?.kind === 'deep');
     for (let k = 0; k < 6 && !deep(); k++) {
       const v = see(log, C, iso(t));
-      const job = v.next?.job ?? C.jobs.find(j => !v.done.has(j.id))!.id;
-      log = log.concat(act(log, C, { do: 'startRun', job, minutes: 25, count: 1 }, iso(t)));
-      t += 30 * 60_000; log = log.concat(settle(log, C, iso(t)));
+      /* a recurring job not yet done today (a one-off finished last week is finished, D-131), an hour at a time */
+      const job = v.next?.job ?? C.jobs.find(j => !v.done.has(j.id) && C.rhythms.some(r => r.job === j.id))!.id;
+      log = log.concat(act(log, C, { do: 'startRun', job, minutes: 60, count: 1 }, iso(t)));
+      t += 65 * 60_000; log = log.concat(settle(log, C, iso(t)));
       if (!see(log, C, iso(t)).done.has(job)) log = log.concat(act(log, C, { do: 'done', job }, iso(t)));
     }
     expect(log.some(f => f.type === 'capacityChosen')).toBe(false);
@@ -284,11 +291,10 @@ describe('Absence and the deep push', () => {
     const at = '2026-10-06T09:00:00+01:00';
     let log = facts.concat(act(facts, C, { do: 'open' }, at));
     log = log.concat(act(log, C, { do: 'capacity', capacity: 'high' }, at));
-    const v = see(log, C, at);
     expect(S.nextDeep(C.story, S.storyState(log, C.story))).not.toBeNull();
-    expect(v.deepOffer).toBe(true);
-    log = log.concat(act(log, C, { do: 'callDeep' }, at));
-    expect(see(log, C, at).deepOffer).toBe(false);
+    /* the offer to call it is gone (D-130); a save that called it before still has the fact, and it still counts */
+    const last = log[log.length - 1];
+    log = log.concat({ seq: last.seq + 1, at: last.at, day: last.day, type: 'deepCalled' });
     let t = Date.parse(at);
     for (let k = 0; k < 3; k++) {
       const v2 = see(log, C, new Date(t + 3_600_000).toISOString().slice(0, 19) + '+01:00');

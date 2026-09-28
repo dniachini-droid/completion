@@ -8,6 +8,7 @@
   import type { Go } from './nav';
   import './scene/lamp.js';
   import './scene/hall.js';
+  import { onRest } from './rest';
 
   let { go }: { go: Go } = $props();
   const v = $derived(game.view);
@@ -68,12 +69,14 @@
       }
     };
     raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    /* the dust rests with the rest of the world when nothing is touched, and while the app is hidden (D-132) */
+    const off = onRest(r => { cancelAnimationFrame(raf); if (!r) raf = requestAnimationFrame(tick); });
+    return () => { off(); cancelAnimationFrame(raf); };
   });
 
   function down() {
     /* Go down: Dan chooses what to delve on, never a job picked for him (D-080) */
-    go('choose');
+    go('satchel');
   }
   function today() { go(v.arrival ? 'arrival' : 'today'); }
 </script>

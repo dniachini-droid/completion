@@ -51,6 +51,11 @@ jobs:
       - name: A tap on a job starts that job (D-104)
         if: matrix.short
         run: node tests/flows/tap-row.mjs http://localhost:4173/
+      # the phone's heat (D-132): every main screen, left untouched, settles and draws nothing (a running delve only its
+      # countdown, once a second). Real time, so it runs once, in Chromium, whose trace counts the frames.
+      - name: An untouched screen rests (D-132)
+        if: matrix.short && matrix.browser == 'chromium'
+        run: CHECK=1 node tests/flows/idle.mjs http://localhost:4173/ 5 390 844
       # it delves to reach a place, and Linux's WebKit crashes in a delve's end now and then (D-106): Chromium
       - name: Back from a record returns to the place
         if: matrix.short && matrix.browser == 'chromium'
@@ -58,6 +63,10 @@ jobs:
       - name: '"+ Add" above the keyboard, and Done takes the tap (D-120)'
         if: matrix.short
         run: node tests/flows/capture-done.mjs http://localhost:4173/
+      # a press and hold moves no row, and opens the job menu; the rest of step 2 in Chromium only (D-106, D-131)
+      - name: 'A press leaves a row still; the job menu; Not done after all; Tonight (D-131)'
+        if: matrix.short || matrix.walk
+        run: node tests/flows/step2.mjs http://localhost:4173/ ${{ matrix.size }}
       # both delve on a job, and Linux's WebKit crashes in a delve's end now and then (D-106): Chromium, at both sizes
       - name: Delete everywhere, and "Another day…" (D-125)
         if: matrix.walk

@@ -144,7 +144,9 @@
     <header class="top col">
       <div class="topbar rise">
         <button class="home" onclick={() => go('back')}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{back.label}</span></button>
-        <span></span><span></span>
+        <span></span>
+        <!-- the job itself, one quiet tap away from every delve (D-131, step 3) -->
+        <button class="icon-link change" onclick={() => go('rhythms', job.id)}><span>{t('job.change')}</span></button>
       </div>
       <section class="job rise d1">
         <div class="label-line lit">{t('set.label')}</div>
@@ -234,5 +236,6 @@
   .rs { display: contents; }
   button.home { color: var(--ink-2); }
   /* where Dan stopped last time (D-112): one quiet line, never more */
+  .change span { font-family: var(--life); font-style: italic; font-size: 15px; letter-spacing: 0; text-transform: none; color: var(--ink-2); }
   .last { margin-top: 2px; font-style: italic; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; }
 </style>

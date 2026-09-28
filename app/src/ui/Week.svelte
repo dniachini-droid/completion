@@ -7,13 +7,16 @@
   import { game } from './game.svelte';
   import { t, dayName, minutesWords, weekDates, byWords } from '../content/copy/en';
   import { calendarWeek } from '../core/time';
-  import { addDays, dayMinutes, eventsOn, planMade, weekOf, type DayJob } from '../core/week';
+  import { addDays, dayMinutes, eventsOn, planMade, realMinutes, weekOf, type DayJob } from '../core/week';
+  import { hold } from './hold';
+  import { openMenu } from './menu.svelte';
   import { asideToday } from '../core/game';
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
   import { back } from './back.svelte';
   import { flushSync } from 'svelte';
   import Remind from './Remind.svelte';
+  import DayPick from './DayPick.svelte';
   import { entryTarget, reminderSettings, rhythmTarget, type Lead } from '../core/reminders';
 
   let { go, week }: { go: Go; week?: string } = $props();
@@ -88,6 +91,15 @@
   }
   function off(j: DayJob) { game.do({ do: 'movePlan', entry: j.entry!, day: null }); open = null; }
   function plan() { game.do({ do: 'planWeek', week: wk }); }
+  /* a tap on "about 2 h" says where it comes from, in one line a job (D-131): how long a job usually takes Dan, once
+     the planner has learned it; otherwise the minutes set for each job */
+  let why = $state<string | null>(null);
+  function whyOf(d: { jobs: DayJob[] }): string[] {
+    const ids = [...new Set(d.jobs.filter(j => !j.done).map(j => j.job))];
+    const out = ids.flatMap(id => { const m = realMinutes(game.facts, id), j = game.job(id); return m && j ? [t('week.about.why', { job: j.name, min: minutesWords(m) })] : []; });
+    /* the rest, from the minutes set for them */
+    return out.length === ids.length ? out : [...out, t(out.length ? 'week.about.rest' : 'week.about.set')];
+  }
   /* a faint "about 2 h": the day's shape, not a score (D-114) */
   function about(m: number) {
     if (m < 60) return t('week.aboutMin', { n: Math.max(5, Math.round(m / 5) * 5) });
@@ -108,10 +120,8 @@
   /* on a computer the time box opens its picker on any click too, as a phone's does */
   function pick(e: MouseEvent) { try { (e.currentTarget as HTMLInputElement).showPicker?.(); } catch { /* not every browser */ } }
   const short = (d: string) => t(`days.short.${new Date(`${d}T00:00:00Z`).getUTCDay()}` as never);
-  /* "Another day…": the four weeks after this one, as a small calendar (D-125) */
+  /* "Another day…": the app's one calendar (DayPick), from today on (D-125, D-130) */
   let otherOpen = $state(false);
-  const ahead = $derived(Array.from({ length: 28 }, (_, i) => addDays(wk, 7 + i)));
-  const monthOf = (d: string) => t(`month.${+d.slice(5, 7)}` as never);
 </script>
 
 <Scene painting={v.here.painting} blur />
@@ -144,12 +154,16 @@
             <button class="dname" aria-expanded={!isFolded(d.day)} onclick={() => fold(d.day)}>
               <span class="chev" class:shut={isFolded(d.day)} aria-hidden="true">›</span>{dayName(d.day)}{#if d.day === v.day}<em>{t('week.today')}</em>{/if}
               {#if isFolded(d.day) && d.jobs.length}<small>{summary(d.jobs)}</small>
-              {:else if d.day >= v.day && dayMinutes(v.content, d) > 0}<small class="about">{about(dayMinutes(v.content, d))}</small>{/if}
+              {/if}
             </button>
+            {#if !isFolded(d.day) && d.day >= v.day && dayMinutes(v.content, d, game.facts) > 0}
+              <button class="about" aria-expanded={why === d.day} onclick={() => (why = why === d.day ? null : d.day)}>{about(dayMinutes(v.content, d, game.facts))}</button>
+            {/if}
             {#if d.day >= v.day}
               <button class="plus" class:on={addingTo === d.day} aria-label={t('week.addTo', { day: dayName(d.day) })} onclick={() => startAdd(d.day)}><span aria-hidden="true">+</span></button>
             {/if}
           </div>
+          {#if why === d.day && !isFolded(d.day)}<div class="why" role="status">{#each whyOf(d) as line, k (k)}<p>{line}</p>{/each}</div>{/if}
           {#if addingTo === d.day}
             <form class="new" onsubmit={(e) => { e.preventDefault(); add(); }}>
               <input bind:this={lineEl} bind:value={line} placeholder={t('week.addPlaceholder')} maxlength="120" enterkeyhint="done" aria-label={t('week.addTo', { day: dayName(d.day) })} />
@@ -162,30 +176,24 @@
             <div class="event" class:allday={e.allDay}>{#if !e.allDay}<span class="at">{e.start.slice(0, 10) < d.day ? '' : e.start.slice(11, 16)}</span>{/if}<span class="what">{e.title}</span></div>
           {/each}
           {#each d.jobs as j (j.entry ?? j.job + j.done)}
-            <button class="row" class:done={j.done} class:open={open === keyOf(j, d.day)} onclick={() => edit(j, d.day)} disabled={!j.done && d.day < v.day}>
+            <button class="row" class:done={j.done} class:open={open === keyOf(j, d.day)} onclick={() => edit(j, d.day)} disabled={!j.done && d.day < v.day}
+              use:hold={() => { open = null; openMenu(j.job, go, j.done ? d.day : null, j.done ? null : j.entry); }}>
               <span class="pip" class:done={j.done}></span><span class="t">{game.job(j.job)?.name ?? j.job}</span><span class="s">{note(j, d.day)}</span>
             </button>
             {#if open && j.done && open === keyOf(j, d.day)}
               <!-- a done job: only Delete; the minutes it counted for stay (Dan, D-125) -->
-              <div class="sheet"><div class="off"><button class="text-link" onclick={() => remove(j, d.day)}><span>{t('job.delete')}</span></button></div></div>
+              <div class="sheet"><div class="off"><button class="text-link del" onclick={() => remove(j, d.day)}><span>{t('job.delete')}</span></button></div></div>
             {:else if open && open === j.entry}
               <div class="sheet">
                 <div class="label-line">{t('week.moveTo')}</div>
                 <div class="seg days" role="group" aria-label={t('week.moveTo')}>
                   {#each days as x (x)}<button aria-pressed={d.day === x} onclick={() => moveTo(j, d.day, x)}>{short(x)}</button>{/each}
                 </div>
-                <!-- another week: off this one, and onto that day (D-114). The app's own four weeks, not the phone's
-                     date picker, which closed itself within seconds on the iPhone (Dan, D-125) -->
+                <!-- another day: the app's one calendar, as in the Satchel, from today on (D-130), not the phone's date
+                     picker, which closed itself within seconds on the iPhone (Dan, D-125) -->
                 <div class="other"><button class="text-link" aria-expanded={otherOpen} onclick={() => (otherOpen = !otherOpen)}><span>{t('week.otherDay')}</span></button></div>
                 {#if otherOpen}
-                  <div class="cal" role="group" aria-label={t('week.otherDay')}>
-                    {#each [1, 2, 3, 4, 5, 6, 0] as w (w)}<span class="wd" aria-hidden="true">{t(`days.short.${w}` as never)}</span>{/each}
-                    {#each ahead as x (x)}
-                      <button aria-label={`${dayName(x)} ${+x.slice(8)} ${monthOf(x)}`} onclick={() => toDay(j, x)}>
-                        <span>{+x.slice(8)}</span>{#if x === ahead[0] || x.endsWith('-01')}<small>{monthOf(x).slice(0, 3)}</small>{/if}
-                      </button>
-                    {/each}
-                  </div>
+                  <DayPick from={v.day} label={t('week.otherDay')} pick={x => toDay(j, x)} />
                 {/if}
                 <div class="when">
                   <!-- the time box is the phone's own: a tap opens its wheel, and what it's set to is kept (D-093) -->
@@ -202,8 +210,9 @@
                   <button class="text-link" onclick={() => off(j)}><span>{t('week.off')}</span></button>
                   <!-- the job itself: its name, length, first step… (D-112) -->
                   <button class="text-link" onclick={() => go('rhythms', j.job)}><span>{t('job.change')}</span></button>
-                  {#if v.run?.job.id !== j.job}<button class="text-link" onclick={() => remove(j, d.day)}><span>{t('job.delete')}</span></button>{/if}
                 </div>
+                <!-- Delete on a line of its own, at the sheet's end (D-131) -->
+                {#if v.run?.job.id !== j.job}<div class="off"><button class="text-link del" onclick={() => remove(j, d.day)}><span>{t('job.delete')}</span></button></div>{/if}
               </div>
             {/if}
           {/each}
@@ -213,7 +222,8 @@
     {/each}
 
     <div class="links">
-      <button class="text-link" onclick={() => go('rhythms')}><span>{t('week.rhythms')}</span></button>
+      <!-- the recurring jobs live in the Satchel (D-131): this opens it there -->
+      <button class="text-link" onclick={() => go('satchel', 'recurring')}><span>{t('week.rhythms')}</span></button>
       <button class="text-link" onclick={() => go('week', isNext ? thisWeek : addDays(thisWeek, 7))}><span>{isNext ? t('week.this') : t('week.next')}</span></button>
       <!-- any week ahead, a week at a time (D-114) -->
       {#if isNext}<button class="text-link" onclick={() => go('week', addDays(wk, 7))}><span>{t('week.after')}</span></button>{/if}
@@ -232,8 +242,12 @@
   .none .soft { margin: 6px 0 16px; text-align: left; }
   .day { margin-top: 12px; }
   .dname { font-family: var(--carve, inherit); font-size: 14px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); display: flex; gap: 10px; align-items: baseline;
-    width: 100%; min-height: 36px; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; }
-  .dname small.about { color: var(--ink-3); opacity: .8; }
+    width: 100%; min-height: 44px; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; }
+  .about { flex: none; min-height: 44px; padding: 0 10px; background: none; border: 0; cursor: pointer;
+    font-family: var(--life); font-style: italic; font-size: 15px; color: var(--ink-3); text-decoration: underline dotted; text-underline-offset: 3px; }
+  .why { margin: 0 0 6px 22px; }
+  .why p { font-family: var(--life); font-style: italic; font-size: 15px; color: var(--ink-2); margin: 2px 0; }
+  .row { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
   .dname small { margin-left: auto; font-family: var(--life); font-style: italic; text-transform: none; letter-spacing: 0; font-size: 15px; color: var(--ink-3); }
   .chev { display: inline-block; width: 10px; font-size: 16px; line-height: 1; color: var(--ink-3); transform: rotate(90deg); transition: transform .2s ease; }
   .chev.shut { transform: none; }
@@ -246,7 +260,7 @@
   .dhead { display: flex; align-items: flex-start; }
   .dhead .dname { flex: 1; min-width: 0; }
   /* the + sits at the end of each day's line: a big enough target, quiet until wanted */
-  .plus { width: 44px; height: 30px; margin: -6px -12px 0 0; align-self: flex-start; display: grid; place-items: center; background: none; border: 0; color: var(--violet-hi); font-size: 22px; line-height: 1; cursor: pointer; }
+  .plus { width: 44px; height: 44px; margin: 0 -12px 0 0; align-self: flex-start; display: grid; place-items: center; background: none; border: 0; color: var(--violet-hi); font-size: 22px; line-height: 1; cursor: pointer; }
   .plus.on span { display: inline-block; transform: rotate(45deg); }
   .sheet { border: 1px solid var(--edge-2); background: rgba(10,9,24,.7); padding: 4px 14px 10px; margin: 6px 0 10px; }
   .sheet .label-line { margin-top: 8px; }
@@ -265,11 +279,8 @@
   .event.allday { color: var(--ink-3); }
   .event .what { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
   .other { display: flex; justify-content: center; margin-top: 8px; }
-  .cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; margin-top: 6px; }
-  .cal .wd { text-align: center; font-size: 14px; letter-spacing: .08em; color: var(--ink-3); }
-  .cal button { min-height: 44px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0;
-    font: inherit; font-size: 17px; color: var(--ink); background: transparent; border: 1px solid var(--edge-2); cursor: pointer; }
-  .cal button small { font-size: 14px; line-height: 1; color: var(--ink-3); }
+  /* the calendar reaches into the sheet's padding, so each day is a whole 44-point target on a small phone */
+  .sheet :global(.cal) { margin-left: -13px; margin-right: -13px; }
   .off { display: flex; justify-content: center; flex-wrap: wrap; gap: 0 14px; margin-top: 6px; }
   .btn.full { width: 100%; }
   .new { display: flex; gap: 10px; margin: 4px 0 8px; }

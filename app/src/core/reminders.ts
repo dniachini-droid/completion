@@ -9,6 +9,7 @@
 import { calendarWeek, gameDay, weekdayOf, type Moment } from './time';
 import { addDays, daysBetween, live, planMade, weekOf } from './week';
 import { fallsOn } from './repeat';
+import { doneFacts } from './done';
 import type { Content, Fact, FactBody, FactOf } from './types';
 
 /** How long before the time an alert comes: at the time, 15 minutes or an hour before. */
@@ -69,7 +70,7 @@ export function alertsOn(base: Content, facts: Fact[], day: string, today = day)
   const set = reminderSettings(facts), out: Alert[] = [];
   const push = (target: string, kind: Alert['kind'], job: string | null, time: string, lead: Lead) =>
     out.push({ key: `${target}@${day}`, kind, job, day, time, lead, ...wallOf(day, time, lead) });
-  const doneOn = new Set(ofType(facts, 'jobDone').filter(f => f.day === day).map(f => f.job));
+  const doneOn = new Set(doneFacts(facts).filter(f => f.day === day).map(f => f.job));
   const rhythmOf = (job: string) => c.rhythms.find(r => r.job === job);
   const week = calendarWeek(day);
   const listed = new Set<string>();
@@ -89,7 +90,7 @@ export function alertsOn(base: Content, facts: Fact[], day: string, today = day)
   }
   /* a date (D-114): the morning of it, or the day before, for work not yet done */
   for (const j of c.jobs) {
-    if (j.by !== day || ofType(facts, 'jobDone').some(f => f.job === j.id)) continue;
+    if (j.by !== day || doneFacts(facts).some(f => f.job === j.id)) continue;
     const lead = set.get(dateTarget(j.id)) ?? null;
     if (lead !== null) push(dateTarget(j.id), 'by', j.id, DATE_HOUR, lead);
   }

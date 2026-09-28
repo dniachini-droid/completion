@@ -1,16 +1,19 @@
 <script lang="ts">
   import Deleted from './Deleted.svelte';
-  /* What repeats (PLANNER.md → Rhythms; mock-up rhythms.html). Dan's own rhythms, preloaded and all his to change: what,
-     how often (N a week, set days, every 2 weeks), how long each time (for the plan), a time (an appointment),
-     every job a delve (D-117). One number is enough; no ranges. Stop repeating ends future sessions only; no confirmation. */
+  /* The job editor (D-112): any job, titled with its name (D-131). Recurring jobs are listed in the Satchel (D-131); this
+     screen opens on one job (`job`), or on a new recurring job ('new'), and goes back where it came from. How often
+     (N a week, set days, every 2 weeks, monthly, yearly, every N days, or once), about how long (for planning), a time,
+     a date for a one-off. A one-off shows only What, About how long and By a date; the rest is under "More…" (D-131).
+     One number is enough; no ranges. Stopping a repeat ends future sessions only; no confirmation. */
   import { game } from './game.svelte';
-  import { t, minutesWords, byWords } from '../content/copy/en';
+  import { t, minutesWords, byWords, dayOrd, yearWords, oftenWords } from '../content/copy/en';
   import { addDays } from '../core/week';
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
   import { back } from './back.svelte';
   import type { Job, Rhythm } from '../core/types';
   import Remind from './Remind.svelte';
+  import DayPick from './DayPick.svelte';
   import { dateTarget, reminderOf, rhythmTarget, type Lead } from '../core/reminders';
 
   /* `job`: opened straight on that job's editor (from the Week, D-112); leaving it goes back there */
@@ -25,22 +28,10 @@
   let d = $state<Draft | null>(null);
   /* a job just removed, for its Undo (D-112) */
   let removed = $state<{ job: Job; rhythm: Rhythm | null } | null>(null);
-  /* the one-offs (Dan's own and the starting set's), not yet finished: every job can be reached and changed (D-117) */
-  const others = $derived(v.content.jobs.filter(j => !j.stopped && !v.content.rhythms.some(r => r.job === j.id)
-    && !game.facts.some(f => f.type === 'jobDone' && f.job === j.id && f.day !== v.day)));
-
-  function often(r: Rhythm) {
-    if (r.monthly) return 'day' in r.monthly ? t('rhythms.monthDay', { n: dayOrd(r.monthly.day) }) : t('rhythms.monthNth', { nth: t(`rhythms.nth.${r.monthly.nth}` as never), day: t(`day.${r.monthly.weekday}` as never) });
-    if (r.yearly) return t('rhythms.yearly', { date: yearWords(r.yearly) });
-    if (r.everyDays) return t('rhythms.everyN', { n: r.everyDays });
-    return r.days ? r.days.map(x => t(`days.plural.${x}` as never)).join(', ') : r.every === 2 ? t('rhythms.every2') : t('rhythms.nWeek', { n: r.times ?? 1 });
-  }
-  /* "the 1st", "the 31st" (a 31st is the last day of a shorter month) */
-  const dayOrd = (n: number) => n >= 31 ? t('rhythms.lastDay') : `${n}${n % 10 === 1 && n !== 11 ? 'st' : n % 10 === 2 && n !== 12 ? 'nd' : n % 10 === 3 && n !== 13 ? 'rd' : 'th'}`;
-  const yearWords = (md: string) => new Date(`2000-${md}T00:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', timeZone: 'UTC' });
-  function size(j: Job) {
-    return minutesWords(j.length);
-  }
+  const often = oftenWords;
+  /* a one-off shows the three things it needs; the rest waits under "More…" (D-131) */
+  let more = $state(false), picking = $state(false);
+  const full = $derived(!!d && (d.often !== 'once' || more));
   function open(r: Rhythm | null) {
     if (r) { edit(game.job(r.job)!, r); return; }
     const j: Job = { id: `j-${Date.now().toString(36)}`, name: '', delve: true, length: 60, doneBy: 'enough' };
@@ -60,9 +51,10 @@
       time: r?.time ?? null, delve: j.delve, remind: r ? reminderOf(game.facts, rhythmTarget(r.id)) : null,
       avoided: !!j.avoided, step: j.firstStep ?? '', note: j.note ?? '', isNew: false, by: j.by ?? null, dremind: reminderOf(game.facts, dateTarget(j.id)) as 0 | 1440 | null };
   }
-  if (jobArg) { const j = game.job(jobArg); if (j) edit(j); }
-  /** Leave the editor: back to the list, or to where it was opened from. */
-  function close() { d = null; if (jobArg && !removed) go('back'); }
+  if (jobArg === 'new') open(null);
+  else if (jobArg) { const j = game.job(jobArg); if (j) edit(j); }
+  /** Leave the editor: back to where it was opened from. */
+  function close() { d = null; if (!removed) go('back'); }
   const step = (xs: number[], x: number, k: number) => { const i = xs.findIndex(y => y >= x); return xs[Math.min(xs.length - 1, Math.max(0, (i < 0 ? xs.length - 1 : i) + k))]; };
   function shiftTime(min: number) {
     if (!d) return;
@@ -112,15 +104,15 @@
 <div class="ui">
   <header class="top col">
     <div class="topbar rise">
-      <button class="home" onclick={() => (d ? close() : go('back'))}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{d && !jobArg ? t('rhythms.label') : back.label}</span></button>
+      <button class="home" onclick={() => (d ? close() : go('back'))}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{back.label}</span></button>
       <span></span><span></span>
     </div>
     <!-- editing: the arrow says where it goes (What repeats), the title what this is (review 2) -->
-    {#if !d && jobArg && removed}
+    <!-- titled with the job's name (D-131); a new one says so -->
+    {#if !d && removed}
       <h1 class="carve lg rise">{removed.job.name}</h1>
     {:else}
-      <h1 class="carve lg rise">{d ? t(d.id || !d.isNew ? 'rhythms.editing' : 'rhythms.adding') : t('rhythms.label')}</h1>
-      {#if !d}<p class="soft say-note rise">{t('rhythms.say')}</p>{/if}
+      <h1 class="carve lg rise title">{d && !d.isNew ? game.job(d.job.id)?.name ?? d.job.name : t('rhythms.adding')}</h1>
     {/if}
   </header>
 
@@ -129,46 +121,16 @@
     {#if !d}
       {#if removed}
         <!-- a job removed: one quiet line, and Undo (D-112); opened on that one job, also the way back -->
-        <p class="said">{jobArg ? t('job.gone') : t('job.removed', { name: removed.job.name })}</p>
+        <p class="said">{t('job.gone')}</p>
         <div class="links undo"><button class="text-link" onclick={undo}><span>{t('job.undo')}</span></button>
-          {#if jobArg}<button class="text-link" onclick={() => go('back')}><span>{t('job.back', { to: back.label })}</span></button>{/if}</div>
-      {/if}
-      {#if !(jobArg && removed)}
-      {#each v.content.rhythms as r (r.id)}
-        {@const j = game.job(r.job)}
-        {#if j}
-          <button class="row" onclick={() => open(r)}>
-            <span class="pip"></span>
-            <span class="t">{j.name}<small>{often(r)} · {size(j)}</small></span>
-            <span class="s">{r.time ?? ''}</span>
-          </button>
-        {/if}
-      {/each}
-      {#if others.length}
-        <div class="label-line others">{t('job.others')}</div>
-        {#each others as j (j.id)}
-          <button class="row" onclick={() => edit(j)}>
-            <span class="pip"></span>
-            <span class="t">{j.name}<small>{j.by ? byWords(j.by) : t('job.onceUntil')} · {size(j)}</small></span>
-            <span class="s"></span>
-          </button>
-          {#if j.by && j.by < v.day}
-            <!-- a date passed: one question, no red, no count (D-038, D-114) -->
-            <div class="passed"><span>{t('by.passed')}</span>
-              <button class="text-link small" onclick={() => { const job = { ...j }; delete job.by; game.do({ do: 'saveJob', job, rhythm: null }); }}><span>{t('by.still')}</span></button>
-              <button class="text-link small" onclick={() => edit(j)}><span>{t('by.new')}</span></button>
-              <button class="text-link small" onclick={() => game.remove(j.id)}><span>{t('by.letGo')}</span></button></div>
-          {/if}
-        {/each}
-      {/if}
-      <!-- the week is the arrow at the top: no second link to it (it said "Plan my week" and planned nothing; review 2) -->
-      <div class="links"><button class="text-link" onclick={() => open(null)}><span>{t('rhythms.add')}</span></button></div>
+          <button class="text-link" onclick={() => go('back')}><span>{t('job.back', { to: back.label })}</span></button></div>
       {/if}
     {:else}
       <div class="editor">
         <div class="label-line">{t('rhythms.name')}</div>
         <input class="line" bind:value={d.job.name} maxlength="60" aria-label={t('rhythms.name')} />
 
+        {#if full}
         <div class="label-line">{t('rhythms.often')}</div>
         <div class="seg often" role="group" aria-label={t('rhythms.often')}>
           <button aria-pressed={d.often === 'once'} onclick={() => (d!.often = 'once')}>{t('job.once')}</button>
@@ -213,7 +175,7 @@
               {#each DAYS as x (x)}<button aria-pressed={d.wday === x} onclick={() => (d!.wday = x)}>{t(`days.short.${x}` as never)}</button>{/each}
             </div>
           {/if}
-          <p class="soft val-note">{often({ id: '', job: '', monthly: d.mode === 'date' ? { day: d.mday } : { nth: d.nth, weekday: d.wday } })}</p>
+          <p class="soft val-note">{often({ monthly: d.mode === 'date' ? { day: d.mday } : { nth: d.nth, weekday: d.wday } })}</p>
         {:else if d.often === 'year'}
           <div class="stepper">
             <input class="clock val carve" type="date" value={`2026-${d.ydate}`} aria-label={t('rhythms.yearlyShort')}
@@ -230,6 +192,7 @@
         {:else}
           <p class="soft val-note">{t('job.onceSay')}</p>
         {/if}
+        {/if}
 
         <div class="label-line">{t('rhythms.each')}</div>
         <div class="stepper">
@@ -237,6 +200,8 @@
           <span class="val">{minutesWords(d.len)}</span>
           <button class="btn-quiet step" disabled={d.len >= LEN[LEN.length - 1]} onclick={() => (d!.len = step(LEN, d!.len, 1))} aria-label={t('rhythms.longer')}><span>+</span></button>
         </div>
+        <!-- the minutes only tell the Week how full a day is: every delve opens at 30 (D-124, D-130) -->
+        <p class="soft val-note">{t('rhythms.each.say')}</p>
 
         <!-- a one-off's time is set where it sits in the Week -->
         {#if d.often !== 'once'}
@@ -264,11 +229,10 @@
             <button aria-pressed={d.by !== null} onclick={() => (d!.by ??= addDays(v.day, 7))}>{t('by.set')}</button>
           </div>
           {#if d.by !== null}
-            <div class="stepper">
-              <input class="clock val carve" type="date" value={d.by} min={v.day} aria-label={t('by.label')}
-                onchange={e => { const x = e.currentTarget.value; if (x) d!.by = x; }} />
-            </div>
-            <p class="soft val-note">{byWords(d.by)}</p>
+            <!-- the app's one calendar (D-130, D-131): the phone's date picker closed itself on the iPhone -->
+            <div class="bydate"><span class="val">{byWords(d.by)}</span>
+              <button class="text-link" aria-expanded={picking} onclick={() => (picking = !picking)}><span>{t('camp.change')}</span></button></div>
+            {#if picking}<DayPick from={v.day} label={t('by.label')} pick={x => { d!.by = x; picking = false; }} />{/if}
             <div class="label-line">{t('remind.label')}</div>
             <div class="seg" role="group" aria-label={t('remind.label')}>
               <button aria-pressed={d.dremind === null} onclick={() => (d!.dremind = null)}>{t('remind.off')}</button>
@@ -278,6 +242,8 @@
           {/if}
         {/if}
 
+        {#if !full}<div class="links more"><button class="text-link" aria-expanded="false" onclick={() => (more = true)}><span>{t('job.more')}</span></button></div>
+        {:else}
         <!-- "I tend to put this off" (D-030, P5): an avoided job is offered early, and brings a find when done -->
         <div class="label-line">{t('job.avoided')}</div>
         <div class="seg" role="group" aria-label={t('job.avoided')}>
@@ -290,10 +256,11 @@
         <input class="line" bind:value={d.step} maxlength="160" placeholder={t('job.stepHint')} aria-label={t('job.step')} />
         <div class="label-line">{t('job.note')}</div>
         <input class="line" bind:value={d.note} maxlength="160" placeholder={t('job.noteHint')} aria-label={t('job.note')} />
+        {/if}
 
         {#if d.often !== 'once'}<p class="soft val-note">{t('rhythms.newNumber')}</p>{/if}
         <div class="btn-row lead"><button class="btn" disabled={!d.job.name.trim() || (d.often === 'days' && !d.days.length)} onclick={save}>{t('rhythms.save')}</button><button class="btn-quiet" onclick={close}><span>{t('rhythms.cancel')}</span></button></div>
-        {#if !d.isNew}<div class="links"><button class="text-link" onclick={remove}><span>{t('job.remove')}</span></button></div>{/if}
+        {#if !d.isNew}<div class="links"><button class="text-link del" onclick={remove}><span>{t('job.remove')}</span></button></div>{/if}
       </div>
     {/if}
   </div>
@@ -302,19 +269,18 @@
 <style>
   .body { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 28px; }
   h1 { margin-top: 4px; }
-  .say-note { margin-top: 4px; text-align: left; }
-  button.row { width: 100%; text-align: left; }
-  .row small { display: block; font-size: 14px; color: var(--ink-2); margin-top: 2px; }
+  .title { overflow-wrap: anywhere; }
+  .bydate { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 8px; min-height: 44px; }
+  .bydate .val { font-family: var(--life); font-style: italic; font-size: 17px; color: #fff; }
+  .links.more { justify-content: flex-start; margin-top: 12px; }
   .links { display: flex; justify-content: center; gap: 18px; margin-top: 16px; }
   .editor .label-line { margin-top: 14px; }
   .editor .seg { margin-top: 6px; }
   /* three choices on one line, even on a small phone (review 2) */
   .editor .seg:not(.days) button { letter-spacing: .08em; padding-left: 4px; padding-right: 4px; white-space: nowrap; }
   /* four choices of how often on one line, even on a small phone (D-112) */
-  .editor .seg.often button { letter-spacing: .03em; font-size: 12px; padding-left: 2px; padding-right: 2px; }
+  .editor .seg.often button { letter-spacing: .03em; font-size: 13px; padding-left: 2px; padding-right: 2px; }
   .editor .seg.often.more { margin-top: 4px; }
-  .others { margin-top: 18px; }
-  .passed { display: flex; flex-wrap: wrap; align-items: center; gap: 0 12px; padding: 2px 0 8px 22px; font-style: italic; font-size: 15px; color: var(--ink-2); }
   .said { margin: 8px 0 0; color: var(--ink-2); font-style: italic; }
   .links.undo { margin: 4px 0 14px; }
   .stepper input.val { flex: 1; }
