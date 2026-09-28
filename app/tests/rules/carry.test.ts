@@ -123,3 +123,26 @@ describe('The carry never double-counts', () => {
     expect(steps(p.facts, 'cat')).toBe(21);
   });
 });
+
+describe('Carried minutes are the job\'s, never another day\'s work (rule 10, fresh review of D-133)', () => {
+  /* day B: every other job on the day's list said done with no minute, then the one-off finished with no minute that day */
+  const dayB = (p: ReturnType<typeof player>) => {
+    p.sleep(24 * 60).do({ do: 'open' });
+    for (const id of p.view().slate) if (id !== 'cat') p.do({ do: 'done', job: id });
+    p.do({ do: 'startRun', job: 'cat', minutes: 30, count: 1 }).do({ do: 'finishHere' }).do({ do: 'done', job: 'cat', keepEnd: true });
+    return p.facts.filter(f => f.day === p.view().day);
+  };
+  it('"Not yet" yesterday, finished today with no minute: the job counts its minutes, the day is not completed by them', () => {
+    const p = player().do({ do: 'open' }).delve('cat', 27).leave();
+    const b = dayB(p);
+    expect(b.filter((f): f is FactOf<'jobDone'> => f.type === 'jobDone' && f.job === 'cat').map(f => [f.minutes, f.today])).toEqual([[27, 0]]);
+    expect(b.some(f => f.type === 'dayCompleted')).toBe(false);
+  });
+  it('done yesterday, taken back, done again today with no minute: no day completed, no camp find', () => {
+    const p = player().do({ do: 'open' }).delve('cat', 30).do({ do: 'done', job: 'cat', keepEnd: true }).leave().do({ do: 'notDone', job: 'cat' });
+    const b = dayB(p);
+    expect(b.some(f => f.type === 'dayCompleted')).toBe(false);
+    expect(b.some(f => f.type === 'findGiven' && f.why === 'camp')).toBe(false);
+  });
+});
+

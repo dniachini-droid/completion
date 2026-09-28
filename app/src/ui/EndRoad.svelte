@@ -27,14 +27,16 @@
     lit.style.transform = `scaleX(${end ? 1 : 0})`;
     flame.style.transform = `translateX(${px(end ? fTo : fFrom)}px)`;
   }
-  let played = false;
+  let played = false, anims: Animation[] = [];
   $effect(() => {
     const m = mode, w = W;
-    if (!lit || played || !w) return;
+    if (!lit || !w) return;
+    /* counted already, and the line changed size (a turn of the phone): its end, where it is now */
+    if (played) { for (const a of anims) a.cancel(); anims = []; put(true); return; }
     if (m === 'play' && !reduced()) {
       played = true;
-      once(lit, [{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }]);
-      once(flame, [{ transform: `translateX(${px(fFrom)}px)` }, { transform: `translateX(${px(fTo)}px)` }]);
+      anims = [once(lit, [{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }]),
+        once(flame, [{ transform: `translateX(${px(fFrom)}px)` }, { transform: `translateX(${px(fTo)}px)` }])];
     } else put(m !== 'from');
   });
   const ARCH = 'M-6 8 V-1 Q-6 -8 0 -8 Q6 -8 6 -1 V8';
@@ -43,7 +45,8 @@
 <div class="road" class:moving={mode === 'play'} bind:clientWidth={W} aria-hidden="true" style="--life:{TALLY_MS + TALLY_DELAY}ms">
   <i class="track"></i>
   <i class="was" style="transform:scaleX({fFrom})"></i>
-  <i class="lit" bind:this={lit} style="left:{px(fFrom)}px;width:{Math.max(0, px(fTo) - px(fFrom))}px"></i>
+  <!-- the lit part's place and length on its box, its growth on the element inside (its style is the count's alone) -->
+  <div class="litbox" style="left:{px(fFrom)}px;width:{Math.max(0, px(fTo) - px(fFrom))}px"><i class="lit" bind:this={lit}></i></div>
   <i class="start"></i>
   <!-- the side chamber, halfway (D-122) -->
   <div class="mark side" style="left:{px(fSide)}px">
@@ -67,9 +70,10 @@
   .track { left: 10px; right: 10px; top: 30px; height: 1px; background: linear-gradient(90deg, rgba(186, 186, 255, .34), rgba(186, 186, 255, .2)); }
   /* the way already walked on this stretch, gold as on the step's line; this delve's, lit violet-white */
   .was { left: 10px; right: 10px; }
-  .was, .lit { top: 29.5px; height: 2px; transform-origin: 0 50%; border-radius: 1px; }
+  .litbox { position: absolute; top: 29px; height: 3px; }
+  .was { top: 29.5px; height: 2px; transform-origin: 0 50%; border-radius: 1px; }
   .was { background: rgba(242, 193, 112, .55); }
-  .lit { top: 29px; height: 3px; background: linear-gradient(90deg, rgba(143, 134, 255, .5), #f1efff); box-shadow: 0 0 6px rgba(143, 134, 255, .95); transform: scaleX(0); will-change: transform; }
+  .lit { position: absolute; display: block; left: 0; top: 0; width: 100%; height: 3px; border-radius: 1px; transform-origin: 0 50%; background: linear-gradient(90deg, rgba(143, 134, 255, .5), #f1efff); box-shadow: 0 0 6px rgba(143, 134, 255, .95); transform: scaleX(0); will-change: transform; }
   .start { left: 7px; top: 27.5px; width: 6px; height: 6px; border-radius: 50%; background: rgba(242, 193, 112, .7); }
   .mark { position: absolute; top: 30px; width: 0; height: 0; }
   .mark svg { position: absolute; left: -9px; top: -13px; width: 18px; height: 21px; overflow: visible; }

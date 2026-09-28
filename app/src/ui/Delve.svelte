@@ -49,7 +49,8 @@
   const tally = $derived(!!end && !run);
   const road = $derived(v.road);
   const share = (m: number) => Math.max(0, Math.min(1, (m - road.from) / Math.max(1, road.to - road.from)));
-  const fromW = $derived(end ? Math.max(0, v.walked - end.gained) : v.walked);
+  const toW = $derived(end ? end.walked : v.walked);
+  const fromW = $derived(end ? Math.max(0, end.walked - end.gained) : v.walked);
   const mode = $derived<TallyMode>(!end ? 'still' : end.ask && answer === null ? 'from' : answer === 'no' ? 'still' : 'play');
 
   /* the ring settles after an end: lit, then resting */
@@ -124,7 +125,7 @@
             {#if soFar}<div class="left sofar">{t('delve.sofar', { min: minutesShort(soFar) })}</div>{/if}</div>
         {/if}
         {#if tally && end}
-          <EndRing from={share(fromW)} to={share(v.walked)} fromN={end.carried} toN={end.total} unit={t('set.minutes')} {mode} />
+          <EndRing from={share(fromW)} to={share(toW)} fromN={end.carried} toN={end.total} unit={t('set.minutes')} {mode} />
         {/if}
       </div>
     </div>
@@ -159,7 +160,7 @@
         <div class="cant"><button class="text-link" onclick={() => game.do({ do: 'finishHere' })}><span>{t('delve.finishHere')}</span></button></div>
       {:else if end}
         <!-- the road line, always, whichever way the delve ended (D-133) -->
-        <EndRoad {road} from={fromW} to={v.walked} {mode} />
+        <EndRoad {road} from={fromW} to={toW} {mode} />
         {#if end.ask && answer === null}
           <div class="label-line centred">{t('delve.label')}</div>
           <h2 class="m">{t('delve.ask')}</h2>

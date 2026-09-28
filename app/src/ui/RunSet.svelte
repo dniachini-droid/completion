@@ -153,7 +153,7 @@
       <section class="job rise d1">
         <div class="label-line lit">{t('set.label')}</div>
         <h1 class="say-lg">{job.name}</h1>
-        {#if carry > 0}<p class="soft last carry">{t('set.carry', { min: minutesWords(carry) })}</p>{/if}
+        {#if carry > 0}<p class="soft carryon">{t('set.carry', { min: minutesWords(carry) })}</p>{/if}
         {#if job.note}<p class="soft last">{t('set.stopped', { note: job.note })}</p>{/if}
         <!-- the job's list (D-126): struck off a line at a time in the delve -->
         {#if job.list}<p class="soft last">{job.list.split('\n').filter(l => l.trim()).join(' · ')}</p>{/if}
@@ -240,5 +240,5 @@
   button.home { color: var(--ink-2); }
   /* where Dan stopped last time (D-112): one quiet line, never more */
   .change span { font-family: var(--life); font-style: italic; font-size: 15px; letter-spacing: 0; text-transform: none; color: var(--ink-2); }
-  .last { margin-top: 2px; font-style: italic; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; }
+  .last, .carryon { margin-top: 2px; font-style: italic; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; }
 </style>

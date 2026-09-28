@@ -56,7 +56,7 @@
   const sparkLife = TALLY_MS + TALLY_DELAY;
 </script>
 
-<div class="tally" class:counting={mode !== 'from'} aria-hidden="true" style="--life:{sparkLife}ms">
+<div class="tally" class:counting={mode === 'play'} aria-hidden="true" style="--life:{sparkLife}ms">
   <div class="half r"><div class="rot" bind:this={rr}><i class="arcband"></i></div></div>
   <div class="half l"><div class="rot" bind:this={rl}><i class="arcband"></i></div></div>
   <div class="spark" bind:this={spark}>

@@ -85,6 +85,15 @@ if ((await ringNumber()) !== '42 minutes') fails.push(`the ring after Done shows
 const digits = await page.evaluate(() => [...document.querySelectorAll('.dv .ring .count .strip')].map(s => Math.round(-new DOMMatrix(getComputedStyle(s).transform).m42 / parseFloat(getComputedStyle(s).fontSize))));
 if (digits.join('') !== '42') fails.push(`the ring's digits rest on ${digits.join('')}, not 42`);
 await shot('4-done');
+/* the phone turned after the count: the lit way still ends where the flame stands */
+{
+  const edge = () => page.evaluate(() => { const l = document.querySelector('.dv .road .lit')?.getBoundingClientRect(), f = document.querySelector('.dv .road .flame')?.getBoundingClientRect();
+    return l && f ? { lit: l.right, flame: f.left } : null; });
+  await page.setViewportSize({ width: +w + 60, height: +h }); await page.waitForTimeout(600);
+  const e = await edge();
+  if (!e || Math.abs(e.lit - e.flame) > 3) fails.push(`after a resize the lit way ends at ${e?.lit}, the flame at ${e?.flame}`);
+  await page.setViewportSize({ width: +w, height: +h }); await page.waitForTimeout(400);
+}
 /* nothing keeps moving once the count is over (D-132) */
 const running = await page.evaluate(() => document.getAnimations().filter(a => a.playState === 'running' && a.effect?.getComputedTiming().iterations !== Infinity).length);
 if (running) fails.push(`${running} of the count's animations still running after it`);
