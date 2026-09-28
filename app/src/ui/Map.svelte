@@ -6,7 +6,7 @@
      named; the way ahead is a faint light, unnamed. Never a count of what's left (UX 6). */
   import { game, content } from './game.svelte';
   import { t, dayName } from '../content/copy/en';
-  import { nextPlace } from '../core/story';
+  import { placeAhead, onRoad } from '../core/story';
   import skyUrl from './scene/map-sky.svg?url';
   import type { Go } from './nav';
   import { back } from './back.svelte';
@@ -51,9 +51,10 @@
   const placed = $derived(s.beats.filter(b => (b.kind === 'arrival' || b.kind === 'arrivalKey' || b.kind === 'word') && v.story.played.has(b.id)));
   const walkedOn = $derived(new Set<StretchId>([s.stretches[0].id, v.here.stretch, ...placed.map(b => b.stretch)]));   /* the way in is always walked */
   /* the stretch the next place is on: a faint light, unnamed */
-  const aheadOn = $derived(nextPlace(s, v.story)?.stretch ?? null);
+  const aheadOn = $derived(placeAhead(s, v.story)?.stretch ?? null);
   const stretchName = (id: StretchId) => s.stretches.find(x => x.id === id)!.name;
-  const sealedOn = (id: StretchId) => s.seals.filter(x => !x.seenOnly && !v.story.opened.has(x.id) && x.stretch === id
+  /* only what a Key opens: the road's own rows open on foot (D-129) */
+  const sealedOn = (id: StretchId) => s.seals.filter(x => !x.seenOnly && !onRoad(s, x.id) && !v.story.opened.has(x.id) && x.stretch === id
     && s.beats.some(b => v.story.played.has(b.id) && b.carries?.inView?.includes(x.id)));
   /* the plan's forecast (PLANNER → the forecast): where the next places would be reached; gone the moment the plan changes */
   const ahead = $derived(v.forecast.slice(0, 2));

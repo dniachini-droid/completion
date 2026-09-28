@@ -169,6 +169,8 @@ export interface Seal {
   carries?: Carries;
   /** Carries neither a sign nor a record: a surplus Key may open it a week early. */
   plain?: boolean;
+  /** Opens on the road, in its turn, with no Key: its line is written for its own week (D-129). */
+  road?: boolean;
 }
 
 export interface Find {

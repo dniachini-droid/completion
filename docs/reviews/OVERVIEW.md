@@ -45,6 +45,8 @@ The break-it review found these in the build you have now. All are fixed on the 
 The fixes are in [pull request #56](https://github.com/dniachini-droid/completion/pull/56), which is ready and not merged. **Say "send the fixes" and it goes to TestFlight.**
 
 ### 2. The story is still paced by calendar weeks, through Keys → **my recommendation: option C**
+> **Dan chose C (2026-09-28).** It is built as D-129 on `claude/story-pace-option-c`, waiting for Dan's go. The story never waits for a Key; Keys open the sealed niches.
+
 You decided the story is one continuous story, unlocked by work. The tester found one thing still holding it to the calendar:
 - Many places wait for a **Key**, and Keys only come from keeping up your repeating jobs, **at most 5 a calendar week**.
 - In a simulation, working 8 hours a day for three weeks got **no further** into the story than working 3 hours a day. On 19 of 21 days, the extra work showed no next place.
@@ -111,7 +113,7 @@ The Safari-engine test browser used in the online checks crashes at the end of a
 ## Questions only you can answer
 
 1. **Send the bug fixes to TestFlight now?** (I recommend yes.)
-2. **The Keys and the story's pace:** A, B, C or D? (I recommend C.)
+2. ~~**The Keys and the story's pace:** A, B, C or D?~~ Dan chose C (D-129).
 3. **UI tidy:** go ahead with step 1? And step 2, merging "Choose a delve" into the Satchel?
 4. **The finish line:** "done" = today's list is done, plus the "Anything more takes you deeper" line?
 5. **Tonight's "tomorrow starts with…" and "anything on your mind?":** yes?

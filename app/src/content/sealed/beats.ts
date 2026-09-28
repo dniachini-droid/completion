@@ -562,7 +562,7 @@ export const beats: Beat[] = [
     o: 3,
     line: "Further in along the Salt Gallery, past the lone ring, the single large ring above the tally, you reach the last of the salt crusts grown over the carving. The row of notches on it fills with light, and the crust opens. Behind it is a tablet, a flat carved stone that sets small pictures beside symbols. Beside a doorway are two drops parted, the symbol you saw beside the blank on the great door, at the far end of the Lamp Hall. Beside a loaf is a hook closed on a drop over a bar: a drop inside the curve this time, not the dot of the tally's closing mark. Past the tablet, the tally carries on along the wall.",
     seal: "seal-6-1",
-    req: [],
+    req: ["seal-5-2"],   // D-129: follows the crust opened in week 5
     stretch: "st-salt",
     carries: {"guess": ["mk-open", "mk-eat"]},
   },
@@ -1171,7 +1171,7 @@ export const beats: Beat[] = [
     o: 2,
     line: "Below the Water, beside the lintel that smells of powder, the row of notches on the second niche, the one that did not hold the powder tin, fills with light, and it opens. Inside is a tablet, another flat carved stone that pairs small pictures with symbols. Beside a carved block, lifted into the air, is a drop with a rising bar: the short upright cut of a drop, with a slanting bar climbing past it. Beside carved water are three short bars, one above another. As on the other tablets, each symbol seems to go with its picture, like a label.",
     seal: "seal-10-1",
-    req: [],
+    req: ["seal-9-5"],   // D-129: names the niche beside it by what that one held
     stretch: "st-blast",
     carries: {"guess": ["mk-move", "mk-water"]},
   },
@@ -1504,7 +1504,7 @@ export const beats: Beat[] = [
     o: 2,
     name: "The shelf in the blast room",
     line: "At the back of the blast room, on the long shelf where the tin plate and knife lie, stands a wooden box with a hinged lid, the kind used for carrying letters and papers, stamped with a company's name and stained by water. A thin slate lies across its lid with a row of notches cut in it, like the slates over her things in the Survey Cut. Beside the box, a small niche in the shelf's back wall has a row of dark notches of its own.",
-    req: ["b-10.A"],
+    req: ["b-10.A", "seal-10-5"],   // D-129: shows where that row's things lie
     stretch: "st-blast",
     painting: "pt-pl-w12-shelf",
     carries: {"inView": ["seal-12-4", "seal-12-6"]},
