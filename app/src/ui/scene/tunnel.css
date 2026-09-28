@@ -111,8 +111,8 @@
 .dv .flow{ filter: blur(1.6px); opacity: .9; }
 .dv .motes{ position:absolute; inset:0; width:100%; height:100%; z-index:4; pointer-events:none; mix-blend-mode:screen; }
 .dv .ringcv{ position:absolute; left:-30%; top:-30%; width:160%; height:160%; pointer-events:none; }
-.dv .ring .halo{ inset:-26%; background: radial-gradient(circle, transparent 40%, rgba(143,134,255,calc(.1 + var(--p) * .32)) 50%, rgba(160,120,255,calc(.04 + var(--p) * .1)) 60%, transparent 70%); }
-.dv .ring .disc{ inset:4%; background: radial-gradient(circle, rgba(12,8,40,.42) 0%, rgba(20,14,62,.3) 48%, rgba(143,134,255,calc(.08 + var(--p) * .16)) 82%, rgba(185,168,255,calc(.12 + var(--p) * .2)) 93%, transparent 100%); }
+.dv .ring .halo{ inset:-26%; background: radial-gradient(circle, transparent 40%, rgba(143,134,255,calc(.1 + var(--pc, var(--p)) * .32)) 50%, rgba(160,120,255,calc(.04 + var(--pc, var(--p)) * .1)) 60%, transparent 70%); }
+.dv .ring .disc{ inset:4%; background: radial-gradient(circle, rgba(12,8,40,.42) 0%, rgba(20,14,62,.3) 48%, rgba(143,134,255,calc(.08 + var(--pc, var(--p)) * .16)) 82%, rgba(185,168,255,calc(.12 + var(--pc, var(--p)) * .2)) 93%, transparent 100%); }
 .dv .ring.rest .disc{ background: radial-gradient(circle, rgba(230,226,255,.42), rgba(143,134,255,.18) 55%, transparent 72%); }
 .dv .ring .time{ text-shadow: 0 0 2px rgba(10,6,34,.6), 0 0 22px rgba(143,134,255,.9), 0 0 60px rgba(160,130,255,.5); }
 .dv .ring .left{ color:#d6d4f2; text-shadow: 0 1px 10px rgba(10,6,34,.9); }
@@ -164,3 +164,8 @@
 .dv .nebula .n3{ background: radial-gradient(closest-side, rgba(200,120,255,.28), rgba(200,120,255,.17) 40%, rgba(200,120,255,.06) 75%, transparent); }
 .dv .opening .rays{ filter:none;
   background: repeating-conic-gradient(from 0deg, rgba(217,214,255,0) 0deg, rgba(217,214,255,.05) 2deg, rgba(217,214,255,.11) 4deg, rgba(217,214,255,.05) 6deg, rgba(217,214,255,0) 8.5deg, rgba(217,214,255,0) 17deg); }
+
+/* the comet's tip (light.js): fades with the ring's quiet, as its light did when drawn frame by frame (D-132) */
+.dv .ring .tipfx{ transition: opacity .8s var(--ease); }
+.dv .ring.rest .tipfx, .dv .ring.hold .tipfx{ opacity:0; transition: opacity 1.2s var(--ease); }
+.dv .motes{ overflow:hidden; }

@@ -114,41 +114,51 @@ export function live(host, meta, opts = {}) {
     el('circle', { cx: x, cy: y, r: rr, fill: 'url(#lvGlint)', style: still ? 'opacity:.5' : '' }, host2);
   });
 
-  /* 4. motes: rising through the scene, or floating in a shaft of light */
-  const cv = document.createElement('canvas');
-  cv.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none';
-  host.appendChild(cv);
-  /* soft points of light: drawn at the screen's own size, not doubled, they look the same for a quarter of the work
-     (as the delve's dust, D-093) */
-  const dpr = 1;
-  cv.width = W * dpr; cv.height = H * dpr;
-  const mx = cv.getContext('2d'); mx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  /* 4. motes: rising through the scene, or floating in a shaft of light. Each is a small layer the graphics chip moves
+     and fades by itself along the same straight path, with the same fade in and out at its ends, twinkle and sway: no
+     script runs while they move. Drawn before by script into a full-screen canvas 30 times a second, which kept the
+     phone busy for as long as a screen was open (D-132, Dan: the phone still warmed). */
+  const layer = document.createElement('div');
+  layer.style.cssText = 'position:absolute;inset:0;pointer-events:none;overflow:hidden';
+  host.appendChild(layer);
   const beam = A.beam && A.beam.length === 2 ? A.beam.map(b => map(b.u, b.v).concat(b.w || .08)) : null;
-  const P = [];
-  for (let i = 0; i < (beam ? 46 : 32); i++) P.push({ t: Math.random(), x: Math.random(), r: .5 + Math.random() * 1.2, a: .12 + Math.random() * .4, p: Math.random() * 6.28, vy: .02 + Math.random() * .05 });
-  function place(q) {
-    if (!beam) return [q.x * W, H * (.12 + (1 - q.t) * .78)];
-    const [x0, y0, w0] = beam[0], [x1, y1, w1] = beam[1], k = q.t;
-    const cx = x0 + (x1 - x0) * k, half = (w0 + (w1 - w0) * k) * W * .5;
-    return [cx + (q.x - .5) * 2 * half, y0 + (y1 - y0) * k];
+  const tint = meta.live && meta.live.gold ? warm : violet;
+  function place(t, qx) {
+    if (!beam) return [qx * W, H * (.12 + (1 - t) * .78)];
+    const [x0, y0, w0] = beam[0], [x1, y1, w1] = beam[1];
+    const cx = x0 + (x1 - x0) * t, half = (w0 + (w1 - w0) * t) * W * .5;
+    return [cx + (qx - .5) * 2 * half, y0 + (y1 - y0) * t];
   }
-
-  let last = 0, stop = false;
-  function tick(t) {
-    if (stop) return;
-    requestAnimationFrame(tick);
-    if (t - last < 33) return; last = t;
-    mx.clearRect(0, 0, W, H);
-    for (const q of P) {
-      q.t = (q.t + q.vy * .004 * (beam ? .5 : 1)) % 1;
-      q.x += Math.sin(t / 3000 + q.p) * .0004;
-      const [x, y] = place(q);
-      const al = q.a * (.6 + .4 * Math.sin(t / 1400 + q.p * 3)) * Math.min(1, q.t * 8, (1 - q.t) * 8);
-      mx.beginPath(); mx.arc(x, y, q.r, 0, 6.283); mx.fillStyle = `rgba(${meta.live && meta.live.gold ? warm : violet},${al.toFixed(3)})`; mx.fill();
+  const anims = [];
+  for (let i = 0; i < (beam ? 46 : 32); i++) {
+    const q = { t: Math.random(), x: Math.random(), r: .5 + Math.random() * 1.2, a: .12 + Math.random() * .4, p: Math.random() * 6.28, vy: .02 + Math.random() * .05 };
+    const [xa, ya] = place(0, q.x), [xb, yb] = place(1, q.x);
+    const m = document.createElement('i'), tw = document.createElement('b');
+    m.style.cssText = `position:absolute;left:${(xa - q.r).toFixed(1)}px;top:${(ya - q.r).toFixed(1)}px;width:${(2 * q.r).toFixed(2)}px;height:${(2 * q.r).toFixed(2)}px` + (still ? '' : ';will-change:transform,opacity');
+    tw.style.cssText = `position:absolute;inset:0;border-radius:50%;background:rgba(${tint},${q.a.toFixed(3)})`;
+    m.appendChild(tw); layer.appendChild(m);
+    if (still) {
+      const [x, y] = place(q.t, q.x);
+      m.style.transform = `translate(${(x - xa).toFixed(1)}px,${(y - ya).toFixed(1)}px)`;
+      m.style.opacity = String(Math.min(1, q.t * 8, (1 - q.t) * 8) * .8);
+      continue;
     }
+    /* a rise takes as long as it did at 30 steps a second */
+    const rise = 1 / (q.vy * .004 * (beam ? .5 : 1) * 30) * 1000;
+    const go = (el, frames, o) => { const a = el.animate(frames, { iterations: Infinity, ...o }); if (document.documentElement.hasAttribute('data-resting')) a.pause(); anims.push(a); };
+    go(m, [
+      { transform: 'translate(0,0)', opacity: 0 },
+      { transform: `translate(${((xb - xa) * .125).toFixed(1)}px,${((yb - ya) * .125).toFixed(1)}px)`, opacity: 1, offset: .125 },
+      { transform: `translate(${((xb - xa) * .875).toFixed(1)}px,${((yb - ya) * .875).toFixed(1)}px)`, opacity: 1, offset: .875 },
+      { transform: `translate(${(xb - xa).toFixed(1)}px,${(yb - ya).toFixed(1)}px)`, opacity: 0 },
+    ], { duration: rise, delay: -q.t * rise, easing: 'linear' });
+    /* the twinkle between .2 and 1 of its light, about every 9 s; the sway either side, every 19 s: .036 of the width it
+       moves in (the screen's, or a shaft's), as the old drift of its place across it */
+    const across = beam ? (beam[0][2] + beam[1][2]) * .5 * W : W, sway = across * .036;
+    go(tw, [{ opacity: .2 }, { opacity: 1 }], { duration: 4400, direction: 'alternate', delay: -(q.p / 6.28) * 8800, easing: 'ease-in-out' });
+    go(tw, [{ transform: `translateX(${(-sway).toFixed(1)}px)` }, { transform: `translateX(${sway.toFixed(1)}px)` }], { duration: 9400, direction: 'alternate', delay: -(q.p / 6.28) * 18800, easing: 'ease-in-out' });
   }
-  if (still) { tick(0); stop = true; } else requestAnimationFrame(tick);
-  return { stop() { stop = true; } };
+  return { stop() { for (const a of anims) a.cancel(); } };
 }
 
 /* the keyframes the layers use; added once */

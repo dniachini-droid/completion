@@ -32,6 +32,7 @@
   import { t } from '../content/copy/en';
   import { steady } from './taps';
   import { unslide } from './keyboard';
+  import { wake } from './rest';
 
   function first(): Screen {
     const v = game.view;
@@ -141,6 +142,8 @@
   const phaseKey = $derived.by(() => { const v = game.view; return `${v.run?.phase}.${v.run?.k}.${v.runEnd?.seq}.${v.next?.mode}.${v.next?.job}`; });
   let lastMoment = '';
   $effect(() => { if (phaseKey !== lastMoment) { if (lastMoment) { steady(); unslide(); } lastMoment = phaseKey; } });
+  /* a new screen, or the delve's moment changing, shows its motion again before it rests (D-132) */
+  $effect(() => { void screen; void arg; void phaseKey; wake(); });
 
   /* the day's light: gold once the day has turned (DESIGN_SYSTEM → colour) */
   $effect(() => {

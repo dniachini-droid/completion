@@ -448,3 +448,6 @@ body.s-evening  { --a1: .5;  --aw: 120%; --ah: 44%; --a2: .38; --h2: 22%; }
 .row .t, .say, .say-lg, h1, h2, .preview, .soft { overflow-wrap: anywhere; }
 .row .t { min-width: 0; }
 .btn:disabled { opacity: .45; cursor: default; }
+
+/* the world at rest (rest.ts, D-132): a looping animation whose element is marked is held where it is */
+[data-rest], [data-rest-before]::before, [data-rest-after]::after { animation-play-state: paused !important; }

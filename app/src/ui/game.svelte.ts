@@ -57,7 +57,7 @@ class Game {
     void this.drain();
     void this.readCalendar();
     platform.calendar.onChange(() => void this.readCalendar());
-    this.#ticker = window.setInterval(() => this.tick(), 250);
+    this.#beat();
     document.addEventListener('visibilitychange', () => { if (!document.hidden) void this.wake(); });
     window.addEventListener('focus', () => void this.wake());
     this.native();
@@ -236,6 +236,13 @@ class Game {
 
   #minute = 0;
   #second = 0;
+  /** The clock looks once a second, just after each whole second of the phone's clock, so a delve's countdown shows
+      each new second at once and the phone is woken once a second rather than four times (D-132). A rehearsal's
+      clock runs 60 times faster: it still looks four times a second. */
+  #beat() {
+    const wait = this.proto.rehearsal ? 250 : 1000 - (platform.now().getTime() % 1000) + 15;
+    this.#ticker = window.setTimeout(() => { try { this.tick(); } finally { this.#beat(); } }, wait);
+  }
   tick() {
     /* in the background, or just back and not yet told how long Dan was away: nothing is settled (D-094) */
     if (document.hidden || this.#waking) return;
@@ -243,8 +250,8 @@ class Game {
     /* with no delve running, the clock only matters by the minute: the view is not rebuilt four times a second */
     const ms = this.clockMs(), m = Math.floor(ms / 60_000), s = Math.floor(ms / 1000);
     if (!before && m === this.#minute) return;
-    /* during a delve, by the second: the countdown shows whole seconds, so the view is rebuilt once a second, not four
-       times (the tick still looks four times a second, so each new second shows within a quarter of it) (D-100) */
+    /* during a delve, by the second: the countdown shows whole seconds, so the view is rebuilt once a second (D-100);
+       the clock looks just after each whole second, so each new second shows at once (D-132) */
     if (before && s === this.#second) return;
     this.#minute = m; this.#second = s;
     this.now = this.clock();
