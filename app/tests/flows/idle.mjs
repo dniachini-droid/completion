@@ -20,10 +20,12 @@ const errors = [];
 page.on('pageerror', e => errors.push(e.message));
 /* the game's clock: Date shifted, everything else (timers, animation frames, performance.now) real */
 await page.addInitScript(() => {
-  const R = Date; let shift = 0;
+  /* the shift survives a reload (sessionStorage), so the page never falls back to the real date: a real week's turn
+     would open the week's close on its own and wake the world mid-reading */
+  const R = Date; let shift = +(sessionStorage.getItem('__shift') || 0);
   class D extends R { constructor(...a) { if (a.length) super(...a); else super(R.now() + shift); } static now() { return R.now() + shift; } }
   window.Date = D;
-  window.__at = (ms) => { shift = ms - R.now(); };
+  window.__at = (ms) => { shift = ms - R.now(); sessionStorage.setItem('__shift', String(shift)); };
 });
 const setNow = (ms) => page.evaluate(ms => window.__at(ms), ms);
 const now = () => page.evaluate(() => Date.now());
