@@ -15,7 +15,9 @@
   const job = $derived(fact && fact.type === 'jobDone' ? game.job(fact.job) : undefined);
   const completedDay = $derived(game.facts.some(f => f.seq > seq && f.type === 'dayCompleted'));
   /* said done again after "Not done after all" (D-131): only the minutes it hasn't counted before */
-  const gained = $derived(fact && fact.type === 'jobDone' ? Math.max(0, fact.minutes - undoneFacts(game.facts).filter(f => f.job === fact.job && f.day === fact.day).reduce((a, f) => Math.max(a, f.minutes), 0)) : 0);
+  /* and only that day's: a one-off's minutes carried from an earlier day moved Dan then (D-133) */
+  const own = (f: { minutes: number; today?: number }) => f.today ?? f.minutes;
+  const gained = $derived(fact && fact.type === 'jobDone' ? Math.max(0, own(fact) - undoneFacts(game.facts).filter(f => f.job === fact.job && f.day === fact.day).reduce((a, f) => Math.max(a, own(f)), 0)) : 0);
 
   /* the route: from where Dan was to where he is, towards the next place */
   const W = 300, y = 20;

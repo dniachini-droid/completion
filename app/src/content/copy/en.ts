@@ -81,7 +81,10 @@ export const copy = {
   'delve.yesSay': 'It is done, and the day goes on.',
   'delve.kept': 'Every minute counts: {min} so far.',
   'delve.keptNone': 'It will keep.',
-  'delve.keptSay': 'Nothing is lost. It will be waiting when you come back to it.',
+  'delve.keptSay': 'Nothing is lost. Your next delve on it carries on from here.',
+  /* a one-off's delve carrying on from its earlier minutes (D-133) */
+  'delve.sofar': '{min} on it so far',
+  'set.carry': 'Carries on from {min}.',
   'delve.toToday': 'Back to today',
   'delve.see': 'See where you are',
   'delve.today': 'Today',

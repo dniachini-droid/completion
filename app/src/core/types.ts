@@ -89,7 +89,8 @@ export type FactBody =
   | { type: 'delveHeld'; why?: 'away' }
   | { type: 'delveResumed' }
   | { type: 'delveEnded'; job: string; minutes: number; how: 'ranOut' | 'finishedHere'; run: number }
-  | { type: 'jobDone'; job: string; minutes: number }
+  /** `today`: of `minutes`, those delved on the record's own day, when fewer (a one-off's carried minutes, D-133) */
+  | { type: 'jobDone'; job: string; minutes: number; today?: number }
   /** "Not done after all" (D-131): the latest done record of the job on `on` no longer counts; what it earned stays */
   | { type: 'doneUndone'; job: string; on: string }
   /** Tonight's "Tomorrow starts with" (D-131): the job Today opens with on `on` (the next game day); null: as planned */

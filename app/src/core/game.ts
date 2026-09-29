@@ -125,7 +125,9 @@ function sizeOn(facts: Fact[], day: string, c?: Content) {
 /* what stands done: a done record taken back ("Not done after all", D-131) no longer counts */
 const doneOn = (facts: Fact[], day: string) => new Set(doneFacts(facts).filter(f => f.day === day).map(f => f.job));
 /** Jobs done with real minutes behind them: only these complete a day or call the deep push (rule 10, D-117, D-121). */
-const workedOn = (facts: Fact[], day: string) => new Set(doneFacts(facts).filter(f => f.day === day && f.minutes >= S.RETURN_MIN).map(f => f.job));
+/** A one-off's minutes carried from earlier days are its own, never that day's work (rule 10, D-133): only the minutes
+    delved on the day count here. */
+const workedOn = (facts: Fact[], day: string) => new Set(doneFacts(facts).filter(f => f.day === day && (f.today ?? f.minutes) >= S.RETURN_MIN).map(f => f.job));
 /** Done records Dan deleted (D-125), as "job|day": they leave the lists; the minutes they counted for stay. */
 export function hiddenDone(facts: Fact[]): Set<string> {
   const out = new Set<string>();
@@ -428,9 +430,27 @@ function crossedIn(facts: Fact[], day: string, job: string): number {
   for (const e of ofType(facts, 'delveEnded')) if (e.job === job && e.day < day && gameDay(e.at) === day && !doneOn(facts, e.day).has(job)) n += e.minutes;
   return n;
 }
+/** A one-off's minutes from its delves since it was last done, before the fact `before` (Dan, D-133): "Not yet" keeps
+    them, and its next delve carries on from them, on any day, until it is done. They moved Dan once, when each delve
+    ended; here they are only the job's own count (its done record, its return, the delve's end), never paid again. A
+    done record taken back ("Not done after all", D-131) no longer stands, so the job carries on from all its minutes;
+    what that record earned is never paid twice (paidBefore). A repeating job never carries: each run is its session. */
+export function carriedOf(facts: Fact[], c: Content, job: string, before = Infinity): number {
+  if (c.rhythms.some(r => r.job === job)) return 0;
+  const last = doneFacts(facts).filter(f => f.job === job && f.seq < before).pop();
+  const from = last ? last.seq : -1;
+  let n = 0;
+  for (const e of ofType(facts, 'delveEnded')) if (e.job === job && e.seq > from && e.seq < before) n += e.minutes;
+  return n;
+}
 function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string) {
   if (doneOn(w.all, day).has(job)) return;
-  const j = jobOf(c, job), timed = delveMinutesOn(w.all, day, job) + crossedIn(w.all, day, job);
+  /* a one-off counts all its minutes since it was last done, whatever day they were delved (D-133); a repeating job,
+     its day's (and a run begun before 04:00 that ended on this day, D-120) */
+  const ownDay = delveMinutesOn(w.all, day, job) + crossedIn(w.all, day, job);
+  const j = jobOf(c, job), timed = c.rhythms.some(r => r.job === job) ? ownDay : carriedOf(w.all, c, job);
+  /* what of them was delved on this day, when fewer: only that is the day's work (workedOn) */
+  const today = timed > ownDay ? { today: ownDay } : {};
   /* a delve's minutes have already moved Dan (counted once, even across 04:00, D-120). Every job is a delve (D-117): one
      said done with no whole minute behind it is off the list, but earns no minutes and brings no return: no step of the
      story, no find, no Key, and it is no work towards the day (rule 10). It is off the list, though: if it was the list's
@@ -442,8 +462,8 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string) {
   }
   /* a session of a minute or two is done and its minutes have moved Dan, but a few one-minute stops never open the story
      or complete a day (rule 10, D-121) */
-  if (timed < S.RETURN_MIN) { w.put({ type: 'jobDone', job, minutes: timed }, at, day); gifts(w, c, at, day); return; }
-  const done = w.put({ type: 'jobDone', job, minutes: timed }, at, day);
+  if (timed < S.RETURN_MIN) { w.put({ type: 'jobDone', job, minutes: timed, ...today }, at, day); gifts(w, c, at, day); return; }
+  const done = w.put({ type: 'jobDone', job, minutes: timed, ...today }, at, day);
   storyClock(w, c, at, day);
   /* said done again after "Not done after all" (D-131): its minutes already moved Dan and its return was already given,
      so nothing is paid twice: no story step, find or Key. A one-off has one return ever; a recurring job one a day. */
@@ -1122,9 +1142,18 @@ export interface RunView extends RunNow {
   startedAt: number;
   /** Held because Dan went into another app, not by Pause (D-094). */
   away: boolean;
+  /** A one-off's minutes from its earlier delves, which this one carries on from (D-133). */
+  carried: number;
 }
 export interface RunEnd {
   seq: number; job: Job; minutes: number; how: 'ranOut' | 'finishedHere';
+  /** A one-off's minutes carried into this run from its earlier delves, and the job's whole minutes with this run's
+      (D-133); 0 and the run's minutes for a repeating job. */
+  carried: number; total: number;
+  /** The minutes this run moved Dan along the road (its steps: counted once, when each delve ended). */
+  gained: number;
+  /** Where Dan stood on the road when it ended (minutes walked from the start). */
+  walked: number;
   /** A one-off that isn't done yet: ask "Is it done?" */
   ask: boolean;
   /** A repeating job's session was done by this run (D-121). */
@@ -1188,6 +1217,9 @@ export interface View {
   nextAt: number | null;
   /** Minutes of effort from here to the side chamber halfway to the next place, until it is found (D-122). */
   toChamber: number | null;
+  /** This stretch of road, in minutes from the start: the last place reached on foot, the side chamber halfway, the next
+      place; `place`: a next place is in reach (D-133: the line at a delve's end). */
+  road: { from: number; chamber: number; to: number; place: boolean };
   lastArrival: Arrival | null;
   story: S.StoryState;
   teaser: string | null;
@@ -1440,7 +1472,7 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
     const s = runAt(r.plan, r.marks, nowMs), j = jobOf(c, r.fact.job);
     const held = ofType(facts, 'delveHeld').filter(f => f.seq > r.fact.seq).pop();
     if (s.phase !== 'ended') run = { ...s, seq: r.fact.seq, job: j, minutes: r.plan.minutes, count: r.plan.count, startedAt: r.plan.startedAt,
-      away: s.phase === 'held' && held?.why === 'away' };
+      away: s.phase === 'held' && held?.why === 'away', carried: carriedOf(facts, c, j.id, r.fact.seq) };
   }
 
   let runEnd: RunEnd | null = null, runFinds: string[] = [];
@@ -1451,7 +1483,11 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
     /* answered on a later game day (a delve begun before 04:00, answered after): still this run's answer */
     const doneFact = doneFacts(facts).find(f => f.job === j.id && f.seq > last.run);
     const completedDay = facts.some(f => f.type === 'dayCompleted' && f.seq > last.run);
-    runEnd = { seq: last.seq, job: j, minutes: last.minutes, how: last.how, ask: j.doneBy === 'dan' && !doneOn(facts, last.day).has(j.id) && !doneFact,
+    const carried = carriedOf(facts, c, j.id, last.seq);
+    const gained = ofType(facts, 'stepsGained').filter(f => f.run === last.run).reduce((a, f) => a + f.minutes, 0);
+    /* where Dan stood when it ended: a night's head start after it never moves the count's start */
+    const at = ofType(facts, 'stepsGained').filter(f => f.seq < last.seq).reduce((a, f) => a + f.minutes, 0);
+    runEnd = { seq: last.seq, job: j, minutes: last.minutes, how: last.how, carried, total: carried + last.minutes, gained, walked: at, ask: j.doneBy === 'dan' && !doneOn(facts, last.day).has(j.id) && !doneFact,
       enough: j.doneBy === 'enough' && !!doneFact, completedDay, count: start?.count ?? 1 };
     /* a side chamber is found at the delve's end, and can come just after it, once a place it reached starts a new stretch */
     runFinds = ofType(facts, 'findGiven').filter(f => f.seq > last.run && !f.job && (f.seq < last.seq || f.why === 'chamber')).map(f => f.id);
@@ -1515,6 +1551,7 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
     day, capacity, suggested: sugg.capacity, size, order, slate, line, done, underWay, complete, next, run, runEnd, arrival,
     /* ahead: the sealed thing in view; before any, the way in (the first morning), then a line from just ahead */
     here, ahead: view ? view.where : here.id === null ? here.line || S.teaser(c.story, st) : S.teaser(c.story, st), walked: w, toNext, nextAt, toChamber: chamber,
+    road: { from: S.lastPlaceAt(st), chamber: S.chamberAt(st), to: S.nextPlaceAt(st), place: nextAt !== null },
     lastArrival: lastArr, story: S.storyState(facts, c.story), teaser: S.teaser(c.story, st), runFinds,
     passage: c.story.passages.find(p => p.id === S.nextPassage(c.story, st))?.line ?? '',
   };

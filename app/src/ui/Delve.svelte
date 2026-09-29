@@ -5,7 +5,7 @@
      the same words: Pause (once Step away; review 2, D-088) and Finish here. The scene is the approved mock-up's own (delve.html, revision 3). */
   import { onMount } from 'svelte';
   import { game } from './game.svelte';
-  import { t, minutesWords, ord } from '../content/copy/en';
+  import { t, minutesWords, minutesShort, ord } from '../content/copy/en';
   import { mmss, ofLine } from './panel';
   import tunnel from './scene/tunnel.html?raw';
   import fogFront from './scene/fog-front.html?raw';
@@ -15,6 +15,9 @@
   import { steady } from './taps';
   import { unslide } from './keyboard';
   import { listLines } from '../core/game';
+  import EndRing from './EndRing.svelte';
+  import EndRoad from './EndRoad.svelte';
+  import type { TallyMode } from './tally';
   import './scene/tunnel.css';
 
   let { go }: { go: Go } = $props();
@@ -36,6 +39,19 @@
   const past = $derived(!!run && v.done.has(run.job.id));
   const of = $derived(run ? ofLine(run, run.k, past) : '');
   const breathP = $derived(run?.phase === 'breather' ? 1 - run.breatherLeftMs / 300_000 : 0);
+  /* a one-off's delve carries on from its earlier minutes (D-133): the job's minutes so far, a whole minute at a time */
+  const soFar = $derived(!run || !run.carried ? 0
+    : run.carried + run.ends.length * run.minutes + (run.phase === 'delve' || run.phase === 'held' ? Math.floor(run.doneMs / 60_000) : 0));
+
+  /* the count at the end (D-133): the ring and the road line from where Dan was on this stretch to where he is now (only
+     this delve's minutes move him), and the job's minutes counted up in the ring. It waits while "Is it done?" is asked;
+     Done counts; "Not yet" shows the end as it is, without counting */
+  const tally = $derived(!!end && !run);
+  const road = $derived(v.road);
+  const share = (m: number) => Math.max(0, Math.min(1, (m - road.from) / Math.max(1, road.to - road.from)));
+  const toW = $derived(end ? end.walked : v.walked);
+  const fromW = $derived(end ? Math.max(0, end.walked - end.gained) : v.walked);
+  const mode = $derived<TallyMode>(!end ? 'still' : end.ask && answer === null ? 'from' : answer === 'no' ? 'still' : 'play');
 
   /* the ring settles after an end: lit, then resting */
   $effect(() => {
@@ -83,7 +99,7 @@
   {/if}
 {/snippet}
 
-<div class="dv" class:told bind:this={root}>
+<div class="dv" class:told class:tallying={tally} bind:this={root}>
   {@html tunnel}
   <div class="ui">
     <header class="top col">
@@ -99,13 +115,17 @@
     </header>
 
     <div class="mid">
-      <div class="ring rise d2" class:ended={!run || run.phase === 'breather'} class:rest={restful} class:hold={run?.phase === 'held'}
-        style="--p:{Math.min(1, p).toFixed(4)};--pc:{(Math.round(Math.min(1, p) * 200) / 200).toFixed(3)}" role="timer" aria-label={run ? `${left} ${t('delve.left', { len: run.minutes })}` : ''}>
+      <div class="ring rise d2" class:ended={!run || run.phase === 'breather'} class:rest={restful} class:hold={run?.phase === 'held'} class:tallying={tally}
+        style="--p:{tally ? 0 : Math.min(1, p).toFixed(4)};--pc:{(Math.round(Math.min(1, p) * 200) / 200).toFixed(3)}" role="timer" aria-label={run ? `${left} ${t('delve.left', { len: run.minutes })}` : ''}>
         <div class="halo"></div><div class="disc"></div>
         <canvas class="ringcv" aria-hidden="true"></canvas>
         <div class="fog-front" aria-hidden="true">{@html fogFront}</div>
         {#if run?.phase === 'delve'}
-          <div class="inner"><div class="time">{left}</div><div class="left">{t('delve.left', { len: run.minutes })}</div></div>
+          <div class="inner"><div class="time">{left}</div><div class="left">{t('delve.left', { len: run.minutes })}</div>
+            {#if soFar}<div class="left sofar">{t('delve.sofar', { min: minutesShort(soFar) })}</div>{/if}</div>
+        {/if}
+        {#if tally && end}
+          <EndRing from={share(fromW)} to={share(toW)} fromN={end.carried} toN={end.total} unit={t('set.minutes')} {mode} />
         {/if}
       </div>
     </div>
@@ -139,6 +159,8 @@
         <button class="btn resting" onclick={() => game.do({ do: 'skipBreather' })}>{t('delve.startNow')}</button>
         <div class="cant"><button class="text-link" onclick={() => game.do({ do: 'finishHere' })}><span>{t('delve.finishHere')}</span></button></div>
       {:else if end}
+        <!-- the road line, always, whichever way the delve ended (D-133) -->
+        <EndRoad {road} from={fromW} to={toW} {mode} />
         {#if end.ask && answer === null}
           <div class="label-line centred">{t('delve.label')}</div>
           <h2 class="m">{t('delve.ask')}</h2>
@@ -149,7 +171,7 @@
           </div>
         {:else if answer === 'no'}
           <div class="label-line centred">{t('delve.label')}</div>
-          <h2 class="m">{end.minutes > 0 ? t('delve.kept', { min: minutesWords(end.minutes) }) : t('delve.keptNone')}</h2>
+          <h2 class="m">{end.total > 0 ? t('delve.kept', { min: minutesWords(end.total) }) : t('delve.keptNone')}</h2>
           <p class="say">{t('delve.keptSay')}</p>
           <button class="btn resting" onclick={() => leave('today')}>{t('delve.toToday')}</button>
         {:else}
@@ -159,7 +181,7 @@
             <h2 class="m">
               {#if answer === 'yes'}{t('delve.yesSay')}
               {:else if end.enough}{t('delve.sessionComplete', { job: end.job.name, min: minutesWords(end.minutes) })}
-              {:else if end.how === 'finishedHere' && end.minutes > 0}{t('delve.finished', { min: minutesWords(end.minutes), job: end.job.name })}
+              {:else if end.how === 'finishedHere' && end.minutes > 0}{t('delve.finished', { min: minutesWords(end.total), job: end.job.name })}
               {:else}{end.count > 1 ? t('delve.doneRun') : t('delve.doneOne')}{/if}
             </h2>
             {#if end.how === 'finishedHere' && !end.enough && doneSeq === null}
@@ -198,9 +220,12 @@
   .dv :global(.mid) { container-type: size; }
   .dv :global(.ring) { --R: max(64px, min(250px, 66vw, 36vh, 86cqh)); }
   .dv.told :global(.ring) { --R: max(64px, min(170px, 44vw, 22vh, 76cqh)); }
-  @container (max-height: 120px) { .dv.told :global(.ring) { visibility: hidden; } }
+  @container (max-height: 120px) { .dv.told:not(.tallying) :global(.ring) { visibility: hidden; } }
+  /* at a delve's end the ring keeps room for its count, even with the story's words below it (D-133): they scroll */
+  .dv.told.tallying :global(.mid) { min-height: clamp(112px, 17vh, 160px); }
   .gone { opacity: 0; transition: opacity 1s var(--ease); }
   h2.m { margin-top: 10px; }
+  .sofar { margin-top: 2px; font-size: 14px; opacity: .85; }
   .dv :global(.bottom p.say) { margin: 6px 0 20px; font-size: 17px; color: var(--ink-2); }
   .back { flex-direction: column; gap: 3px; padding-top: 10px; padding-bottom: 10px; line-height: 1.1; }
   .back .tail { font-family: var(--life); font-style: italic; font-weight: 500; font-size: 17px; letter-spacing: .01em; text-transform: none; }

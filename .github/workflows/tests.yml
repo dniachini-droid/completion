@@ -78,6 +78,9 @@ jobs:
       - name: The begin, delve, pause and done loop, double taps included (D-120)
         if: matrix.walk
         run: node tests/flows/delve-loop.mjs http://localhost:4173/ ${{ matrix.size }}
+      - name: '"Not yet" keeps the minutes; the next delve carries on; the count at the end (D-133)'
+        if: matrix.walk
+        run: node tests/flows/carry.mjs http://localhost:4173/ ${{ matrix.size }}
       - name: The whole first playable, walked day by day
         if: matrix.walk
         run: mkdir -p "$RUNNER_TEMP/screens" && node tests/flows/heart-walk.mjs http://localhost:4173/ "$RUNNER_TEMP/screens" ${{ matrix.size }}
