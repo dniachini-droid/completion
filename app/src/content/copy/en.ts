@@ -384,6 +384,10 @@ export const copy = {
   'satchel.offer': '{job} keeps coming back. Make it repeat?', 'satchel.offer.yes': 'Make it repeat', 'satchel.offer.no': 'No thanks',
   'pick.today': 'today', 'pick.prev': 'The month before', 'pick.next': 'The next month',
   'today.addJob': 'Add a job',
+  /* a stray thought parked mid-delve (D-138) */
+  'park.link': 'Park a thought', 'park.label': 'A thought to park for later', 'park.hint': 'A thought, for later', 'park.save': 'Park it',
+  'park.cancel': 'Cancel', 'park.parked': 'Parked: {job}',
+  'park.count.1': 'One thought parked in the Satchel', 'park.count': '{n} thoughts parked in the Satchel',
 
   'month.1': 'January', 'month.2': 'February', 'month.3': 'March', 'month.4': 'April', 'month.5': 'May', 'month.6': 'June',
   'month.7': 'July', 'month.8': 'August', 'month.9': 'September', 'month.10': 'October', 'month.11': 'November', 'month.12': 'December',

@@ -809,6 +809,8 @@ export type Command =
   /* a line of the job's list struck off (or back) in its delve (D-126) */
   | { do: 'strikeLine'; job: string; k: number }
   | { do: 'addItems'; lines: string[] }
+  /** A stray thought parked mid-delve (D-138): a job with no day in the Satchel, the delve carrying on untouched */
+  | { do: 'park'; line: string }
   /** Lines from outside the app (D-113), each added once, whatever happens between writing and clearing */
   | { do: 'takeInbox'; lines: { id: string; text: string }[] }
   | { do: 'tick'; id: string }
@@ -1146,6 +1148,16 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       else if (v.slate.includes(j.id) && !v.done.has(j.id) && v.run?.job.id !== j.id && !asideOn(w.all, day).has(j.id)) w.put({ type: 'setAside', job: j.id });
       break;
     }
+    case 'park': {
+      /* one line, capped like every job's name; empty does nothing. It never touches the delve or earns anything. Typed
+         as the delve ran out, it is still kept, and still that delve's (its end not yet answered) */
+      const name = cmd.line.replace(/\s+/g, ' ').trim().slice(0, 120);
+      if (!name) break;
+      const r = activeRun(w.all), end = v.runEnd ? ofType(w.all, 'delveEnded').find(f => f.seq === v.runEnd!.seq) : undefined;
+      const run = r ? r.fact.seq : end?.run;
+      w.put({ type: 'itemAdded', id: `it-${ofType(w.all, 'itemAdded').length + 1}`, name, via: 'park', ...(run !== undefined ? { run } : {}) });
+      break;
+    }
     case 'delveNow': {
       const name = cleanLine(cmd.line);
       /* never over a delve under way, or one whose end is still to be answered */
@@ -1271,6 +1283,8 @@ export interface RunEnd {
   /** This run completed the day (the next screen is the arrival). */
   completedDay: boolean;
   count: number;
+  /** Thoughts parked in the Satchel during this run, still there (D-138). */
+  parked: number;
 }
 export interface Arrival {
   seq: number; kind: 'place' | 'camp'; id: string; name: string; line: string;
@@ -1613,7 +1627,8 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
     /* where Dan stood when it ended: a night's head start after it never moves the count's start */
     const at = ofType(facts, 'stepsGained').filter(f => f.seq < last.seq).reduce((a, f) => a + f.minutes, 0);
     runEnd = { seq: last.seq, job: j, minutes: last.minutes, how: last.how, carried, total: carried + last.minutes, gained, walked: at, ask: j.doneBy === 'dan' && !doneOn(facts, last.day).has(j.id) && !doneFact,
-      enough: j.doneBy === 'enough' && !!doneFact, completedDay, count: start?.count ?? 1 };
+      enough: j.doneBy === 'enough' && !!doneFact, completedDay, count: start?.count ?? 1,
+      parked: ofType(facts, 'itemAdded').filter(f => f.via === 'park' && f.run === last.run && c.jobs.some(x => x.id === f.id)).length };
     /* a side chamber is found at the delve's end, and can come just after it, once a place it reached starts a new stretch */
     /* (a chamber a tick reached since is the tick's, shown on its step screen, D-134) */
     const ticks = ofType(facts, 'stepsGained').filter(g => g.tick && g.seq > last.run);

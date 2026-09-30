@@ -145,8 +145,8 @@ export type FactBody =
   | { type: 'nudgeChosen'; on: boolean }
   /** `via`: said to Siri, Shortcuts or the Action button; `ref`: that line's own id, so it is never added twice (D-113);
       `from`: a job Dan had before, picked in the Satchel's box (D-136): the new job starts with its list, note, first
-      step, avoided mark and minutes */
-  | { type: 'itemAdded'; id: string; name: string; via?: 'siri'; ref?: string; from?: string }
+      step, avoided mark and minutes; or parked mid-delve, `run` being that delve's run (D-138) */
+  | { type: 'itemAdded'; id: string; name: string; via?: 'siri' | 'park'; ref?: string; from?: string; run?: number }
   /** "No thanks" to the Satchel's "keeps coming back" offer (D-136): never asked again for that name (as nameKey has it) */
   | { type: 'repeatDeclined'; name: string }
   | { type: 'itemTicked'; id: string }
