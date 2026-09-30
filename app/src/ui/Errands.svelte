@@ -8,7 +8,7 @@
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
   import { back } from './back.svelte';
-  import { errandPick } from './errands.svelte';
+  import { errandPick } from './errand-pick.svelte';
 
   let { go }: { go: Go } = $props();
   const v = $derived(game.view);
