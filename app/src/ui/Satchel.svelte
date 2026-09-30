@@ -10,7 +10,7 @@
   import { game, content } from './game.svelte';
   import { t, byWords, dayShort, oftenWords, minutesShort, minutesWords } from '../content/copy/en';
   import { satchelView, LIST_MAX } from '../core/game';
-  import { repeatOffer, suggest, tieFor, type Suggestion } from '../core/remember';
+  import { cleanLine, repeatOffer, suggest, tieFor, type Suggestion } from '../core/remember';
   import { nameKey } from '../core/week';
   import type { Job } from '../core/types';
   import Scene from './Scene.svelte';
@@ -61,7 +61,7 @@
     if (game.view.run) go('delve');
   }
   function later() {
-    const line = text.trim();
+    const line = cleanLine(text);
     if (!line) return;
     steady();
     const tie = tieFor(content, game.facts, line, tied ? picked! : undefined);
@@ -132,10 +132,11 @@
       <span></span><span></span>
     </div>
     <h1 class="carve lg rise">{t('satchel.label')}</h1>
-    {#if !before.length}<p class="soft say-note rise">{t('satchel.say')}</p>{/if}
+    <!-- kept in its place while the suggestions show, so the box never moves as Dan types (review of D-136) -->
+    <p class="soft say-note rise">{t('satchel.say')}</p>
     <!-- the one box for a new job (D-131): delve on it now, or keep it for later -->
     <form class="new satchel-add rise" onsubmit={(e) => { e.preventDefault(); later(); }}>
-      <input bind:this={input} bind:value={text} aria-label={t('satchel.add')} placeholder={t('satchel.add.hint')} maxlength="120" enterkeyhint="done" autocomplete="off" />
+      <input bind:this={input} bind:value={text} oninput={() => (said = null)} aria-label={t('satchel.add')} placeholder={t('satchel.add.hint')} maxlength="120" enterkeyhint="done" autocomplete="off" />
       <div class="two">
         <button class="btn-quiet" type="button" disabled={!text.trim() || !!v.run || !!v.runEnd} onclick={now}><span>{t('satchel.now')}</span></button>
         <button class="btn-quiet" type="submit" disabled={!text.trim()}><span>{t('satchel.later')}</span></button>
@@ -157,8 +158,8 @@
   <div class="body col rise d1" onscroll={shrink}>
     <!-- the one offer (D-136): a name added a third time in 28 days; "No thanks" and it is never asked again -->
     {#if offer}
-      <div class="offer" role="group" aria-label={t('satchel.offer', { job: offer.name })}>
-        <p>{t('satchel.offer', { job: offer.name })}</p>
+      <div class="offer" role="group" aria-labelledby="offer-q">
+        <p id="offer-q">{t('satchel.offer', { job: offer.name })}</p>
         <div class="acts center">
           <button class="text-link" onclick={() => { saveList(); go('rhythms', `repeat:${offer.job}`); }}><span>{t('satchel.offer.yes')}</span></button>
           <button class="text-link" onclick={() => game.do({ do: 'declineRepeat', name: offer.name })}><span>{t('satchel.offer.no')}</span></button>

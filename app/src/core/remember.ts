@@ -26,14 +26,12 @@ export interface Suggestion {
 function current(c: Content, facts: Fact[], j: Job): boolean {
   if (j.stopped) return false;
   if (c.rhythms.some(r => r.job === j.id)) return true;
-  return !finished(c, facts).has(j.id);
+  return !W.oneOffDone(c, facts).some(f => f.job === j.id);
 }
-const finishedOf = new WeakMap<Content, Set<string>>();
-function finished(c: Content, facts: Fact[]): Set<string> {
-  let s = finishedOf.get(c);
-  if (!s) { s = new Set(W.oneOffDone(c, facts).map(f => f.job)); finishedOf.set(c, s); }
-  return s;
-}
+
+/** A line as the Satchel's box adds it: a list's bullet dropped, trimmed, at most 120 characters (the same for Delve now
+    and Save for later, and for what the screen says, review of D-136). */
+export const cleanLine = (line: string) => line.replace(/^[-*•\s]+/, '').trim().slice(0, 120);
 
 /** Where a typed line matches a name: 0 the whole name, 1 its start, 2 the start of a later word; null: no match. */
 function match(q: string, name: string): 0 | 1 | 2 | null {
@@ -41,7 +39,8 @@ function match(q: string, name: string): 0 | 1 | 2 | null {
   if (!q || !n) return null;
   if (n === q) return 0;
   if (n.startsWith(q)) return 1;
-  for (let i = n.indexOf(q, 1); i > 0; i = n.indexOf(q, i + 1)) if (!/[\p{L}\p{N}]/u.test(n[i - 1])) return 2;
+  /* a word goes on through letters, accents, numbers and apostrophes ("s car" is not a word of "Dan's car") */
+  for (let i = n.indexOf(q, 1); i > 0; i = n.indexOf(q, i + 1)) if (!/[\p{L}\p{M}\p{N}']/u.test(n[i - 1])) return 2;
   return null;
 }
 
@@ -97,24 +96,29 @@ function pick(c: Content, facts: Fact[], jobs: Job[], touched: Map<string, numbe
  * from it.
  */
 export function tieFor(base: Content, facts: Fact[], line: string, from?: string): { job: Job; same: boolean } | null {
-  const q = W.nameKey(line);
+  const q = W.nameKey(cleanLine(line));
   if (!q) return null;
   const c = W.live(base, facts);
   const picked = from ? c.jobs.find(j => j.id === from) : undefined;
-  if (picked && W.nameKey(picked.name) === q) return { job: picked, same: current(c, facts, picked) };
-  const exact = suggest(base, facts, line, Infinity).find(s => W.nameKey(s.job.name) === q);
-  return exact ? { job: exact.job, same: exact.same } : null;
+  /* a finished job picked, while one of its name is still to do (added by Siri meanwhile): that one, never a third */
+  if (picked && W.nameKey(picked.name) === q && current(c, facts, picked)) return { job: picked, same: true };
+  const exact = suggest(base, facts, q, Infinity).find(s => W.nameKey(s.job.name) === q);
+  if (exact?.same) return { job: exact.job, same: true };
+  if (picked && W.nameKey(picked.name) === q) return { job: picked, same: false };
+  return exact ? { job: exact.job, same: false } : null;
 }
 
 /**
- * The one gentle offer (D-136): a name added a third time within 28 days, with no recurring job of that name, and never
- * answered "No thanks", is offered as a recurring job. `day`: today's game day (from 04:00). `job`: the one the editor opens on (a one-off still to do if
+ * The one gentle offer (D-136): a name added a third time within 28 days, with no recurring job of that name (now or
+ * ever), and never answered "No thanks", is offered as a recurring job. `day`: today's game day (from 04:00). `job`: the one the editor opens on (a one-off still to do if
  * there is one, else the latest of that name). The latest such name only; null when there is none.
  */
 export function repeatOffer(base: Content, facts: Fact[], day: string): { name: string; job: string } | null {
   const c = W.live(base, facts), since = W.addDays(day, -(OFFER_DAYS - 1));
   const declined = new Set(facts.filter((f): f is FactOf<'repeatDeclined'> => f.type === 'repeatDeclined').map(f => f.name));
-  const recurring = new Set(c.rhythms.map(r => c.jobs.find(j => j.id === r.job)).filter((j): j is Job => !!j && !j.stopped).map(j => W.nameKey(j.name)));
+  /* a name that repeats, or ever did (made to repeat, then stopped: that was the answer, review of D-136) */
+  const recurring = new Set([...c.rhythms, ...(c.base ?? c).rhythms].map(r => c.jobs.find(j => j.id === r.job)).filter((j): j is Job => !!j).map(j => W.nameKey(j.name)));
+  for (const f of facts) if (f.type === 'rhythmSaved') recurring.add(W.nameKey(f.job.name));
   const adds = new Map<string, { n: number; name: string }>();
   for (const f of facts) {
     if (f.type !== 'itemAdded' || f.day < since || f.day > day) continue;

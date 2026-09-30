@@ -269,3 +269,78 @@ describe('"… keeps coming back. Make it repeat?" (D-136)', () => {
     expect(repeatOffer(C, p.facts, gameDay(p.at))).toBeNull();
   });
 });
+
+describe('The fresh review of D-136', () => {
+  it('a job of the starting set done after it was suggested is finished: a new one is added, not the old delved again', () => {
+    const p = player().do({ do: 'open' });
+    expect(suggest(C, p.facts, 'sort the post')[0]).toMatchObject({ same: true, job: { id: 'post' } });
+    p.do({ do: 'tickOff', job: 'post', minutes: 15 }).leave();
+    expect(tieFor(C, p.facts, 'Sort the post')).toMatchObject({ same: false, job: { id: 'post' } });
+    p.do({ do: 'delveNow', line: 'Sort the post' });
+    expect(p.view().run?.job.id).not.toBe('post');
+    expect(adds(p.facts).pop()!.from).toBe('post');
+  });
+
+  it('a tick "on top of" delved minutes teaches one run of the whole sitting', () => {
+    const p = player();
+    for (let k = 0; k < 3; k++) {
+      p.do({ do: 'open' }).do({ do: 'saveForLater', line: 'Bank' });
+      const id = p.last();
+      p.do({ do: 'startRun', job: id, minutes: 30, count: 1 }).wait(15).do({ do: 'finishHere' }).leave();
+      p.do({ do: 'tickOff', job: id, minutes: 15 }).leave();
+      p.sleep(24 * 60);
+    }
+    expect(W.realMinutes(p.facts, p.last(), undefined, p.live())).toBe(30);
+    /* taken back and ticked again: one sitting still */
+    const q = player().do({ do: 'open' }).do({ do: 'tickOff', job: 'meal', minutes: 30 }).leave();
+    q.do({ do: 'notDone', job: 'meal' }).do({ do: 'tickOff', job: 'meal', minutes: 30 }).leave();
+    for (let k = 0; k < 2; k++) { q.sleep(24 * 60).do({ do: 'open' }).do({ do: 'tickOff', job: 'meal', minutes: 60 }).leave(); }
+    expect(W.realMinutes(q.facts, 'meal', undefined, q.live())).toBe(60);
+  });
+
+  it('a name once made to repeat, then stopped, is not offered again', () => {
+    const p = player().do({ do: 'open' });
+    for (let k = 0; k < 3; k++) p.do({ do: 'addItems', lines: ['Water the plants'] });
+    const o = repeatOffer(C, p.facts, gameDay(p.at))!;
+    p.do({ do: 'saveJob', job: { ...p.job(o.job)!, doneBy: 'enough' }, rhythm: { id: 'r-plants', job: o.job, times: 2 } });
+    p.do({ do: 'stopRhythm', id: 'r-plants' });
+    expect(repeatOffer(C, p.facts, gameDay(p.at))).toBeNull();
+  });
+
+  it('a bulleted line is the same line for both buttons', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'saveForLater', line: 'Buy stamps' });
+    expect(tieFor(C, p.facts, '- Buy stamps')).toMatchObject({ same: true });
+    p.do({ do: 'delveNow', line: '• Buy stamps' });
+    expect(adds(p.facts)).toHaveLength(1);
+    expect(p.view().run?.job.id).toBe(p.last());
+  });
+
+  it('a finished job picked while one of its name is still to do: that one, never a third', () => {
+    const p = player();
+    const was = bankTrip(p, 20);
+    p.do({ do: 'addItems', lines: ['Go to the bank'] });   /* by Siri or the Week meanwhile: never tied */
+    const still = p.last();
+    expect(tieFor(C, p.facts, 'Go to the bank', was)).toMatchObject({ same: true, job: { id: still } });
+    p.do({ do: 'saveForLater', line: 'Go to the bank', from: was });
+    expect(p.last()).toBe(still);
+  });
+
+  it('apostrophes: curly and straight alike; never the middle of a word', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'saveForLater', line: 'Wash Dan’s car' });
+    expect(suggest(C, p.facts, 's car')).toEqual([]);
+    expect(suggest(C, p.facts, "dan's").map(x => x.job.name)).toEqual(['Wash Dan’s car']);
+    p.do({ do: 'saveForLater', line: "Wash Dan's car" });
+    expect(adds(p.facts)).toHaveLength(1);
+  });
+
+  it('a job named like an id never shares another job\'s learning', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'saveForLater', line: 'Bank' });
+    const id = p.last();
+    for (let k = 0; k < 3; k++) p.do({ do: 'startRun', job: id, minutes: 30, count: 1 }).wait(30).leave();
+    expect(W.realMinutes(p.facts, id)).toBe(30);
+    p.do({ do: 'saveForLater', line: `#${id}` });
+    expect(W.realMinutes(p.facts, p.last(), undefined, p.live())).toBeNull();
+    expect(W.realMinutes(p.facts, id)).toBe(30);
+  });
+});
+

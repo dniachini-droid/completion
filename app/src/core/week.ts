@@ -105,8 +105,9 @@ export function live(c: Content, facts: Fact[], before?: string): Content {
 
 /* ---------- the planner learns (D-131): real minutes and good hours, from the delves alone; nothing to set up ---------- */
 
-/** A job's name as the planner and the Satchel's suggestions compare it (D-136): trimmed, lower case, single spaces. */
-export const nameKey = (name: string) => name.trim().toLowerCase().replace(/\s+/g, ' ');
+/** A job's name as the planner and the Satchel's suggestions compare it (D-136): trimmed, lower case, single spaces;
+    curly and straight apostrophes alike (the keyboard and Siri may give either). */
+export const nameKey = (name: string) => name.normalize('NFC').replace(/[’‘`]/g, "'").trim().toLowerCase().replace(/\s+/g, ' ');
 /** The jobs that share a job's history: every job in `c` with the same name (D-136), the job itself always. Without
     content, the job alone. */
 export function sameName(c: Content | undefined, job: string): Set<string> {
@@ -121,22 +122,32 @@ export const LEARN_MIN = 5, LEARN_FROM = 3, LEARN_LAST = 5;
 const learned = new WeakMap<Fact[], { n: number; mins: Map<string, number | null> }>();
 /** How long a job really takes Dan, for planning: the median of its last 5 runs of 5 minutes or more, once there are
     3, rounded to 5 minutes. Null until then (its written minutes are used). The job's own minutes are never changed, and
-    every delve still opens at 30 (D-124). A run here is one delve, its minutes as counted at its end, or the minutes Dan
-    gave a job he ticked off (D-134). With content, every job of the same name shares one history (D-136): "Go to the
-    bank" added again learns from every trip to the bank. */
+    every delve still opens at 30 (D-124). A run here is one delve, its minutes as counted at its end; a job ticked off
+    (D-134) is one run of all its minutes, the delves behind it included ("On top of the 27 minutes you delved": one
+    sitting of 27 + the time given, not two). With content, every job of the same name shares one history (D-136): "Go
+    to the bank" added again learns from every trip to the bank. */
 export function realMinutes(facts: Fact[], job: string, before?: string, c?: Content): number | null {
   let m = learned.get(facts);
   if (!m || m.n !== facts.length) { m = { n: facts.length, mins: new Map() }; learned.set(facts, m); }
   const j = c?.jobs.find(x => x.id === job);
-  const key = `${j ? nameKey(j.name) : `#${job}`}|${before ?? ''}`;
+  const key = `${j ? `n:${nameKey(j.name)}` : `j:${job}`}|${before ?? ''}`;
   if (m.mins.has(key)) return m.mins.get(key)!;
-  const ids = sameName(c, job);
-  const runs = facts.filter((f): f is FactOf<'delveEnded'> | FactOf<'stepsGained'> =>
-    (f.type === 'delveEnded' || (f.type === 'stepsGained' && !!f.tick)) && ids.has(f.job) && f.minutes >= LEARN_MIN && (!before || f.day < before))
-    .slice(-LEARN_LAST).map(f => f.minutes).sort((a, b) => a - b);
+  const ids = sameName(c, job), recurring = new Set(c?.rhythms.map(r => r.job) ?? []);
+  /* the done records still standing, for where a tick's sitting began (after the last of them, as the carry, D-133) */
+  const standing = doneFacts(facts);
+  let runs: { job: string; day: string; seq: number; minutes: number }[] = [];
+  for (const f of facts) {
+    if (f.type === 'delveEnded' && ids.has(f.job)) runs.push({ job: f.job, day: f.day, seq: f.seq, minutes: f.minutes });
+    else if (f.type === 'jobDone' && f.ticked && ids.has(f.job)) {
+      const from = standing.filter(d => d.job === f.job && d.seq < f.seq).pop()?.seq ?? -1;
+      runs = runs.filter(r => !(r.job === f.job && r.seq > from && (!recurring.has(f.job) || r.day === f.day)));
+      runs.push({ job: f.job, day: f.day, seq: f.seq, minutes: f.minutes });
+    }
+  }
+  const mins = runs.filter(r => r.minutes >= LEARN_MIN && (!before || r.day < before)).slice(-LEARN_LAST).map(r => r.minutes).sort((a, b) => a - b);
   let out: number | null = null;
-  if (runs.length >= LEARN_FROM) {
-    const k = runs.length >> 1, med = runs.length % 2 ? runs[k] : (runs[k - 1] + runs[k]) / 2;
+  if (mins.length >= LEARN_FROM) {
+    const k = mins.length >> 1, med = mins.length % 2 ? mins[k] : (mins[k - 1] + mins[k]) / 2;
     out = Math.max(5, Math.round(med / 5) * 5);
   }
   m.mins.set(key, out);

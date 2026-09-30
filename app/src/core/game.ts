@@ -14,7 +14,7 @@ import * as W from './week';
 import * as R from './reminders';
 import * as Rep from './repeat';
 import { doneFacts, undoneFacts } from './done';
-import { tieFor } from './remember';
+import { cleanLine, tieFor } from './remember';
 import type { Beat, Seal, StretchId } from './story-types';
 
 export const STEP_MIN = 25;
@@ -1102,7 +1102,7 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       break;
     }
     case 'delveNow': {
-      const name = cmd.line.trim().slice(0, 120);
+      const name = cleanLine(cmd.line);
       /* never over a delve under way, or one whose end is still to be answered */
       if (!name || v.run || v.runEnd) break;
       /* a job Dan has had before (D-136): one still his is delved on itself, as a tap on its row would, never added again */
@@ -1116,7 +1116,7 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       break;
     }
     case 'saveForLater': {
-      const name = cmd.line.replace(/^[-*•\s]+/, '').trim().slice(0, 120);
+      const name = cleanLine(cmd.line);
       if (!name) break;
       const tie = tieFor(base, w.all, name, cmd.from);
       /* a job still Dan's is already in its place: nothing is added (the Satchel says where it is) */
