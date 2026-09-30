@@ -3,7 +3,7 @@
   /* The delve (INTERACTION_NOTES → the delve; D-028, D-036, D-037, D-047). The glowing ring fills with the time left;
      the destination is the headline; the tunnel moves so the world is visibly travelling. Only two ideas, always in
      the same words: Pause (once Step away; review 2, D-088) and Finish here. The scene is the approved mock-up's own (delve.html, revision 3). */
-  import { onMount, flushSync } from 'svelte';
+  import { onMount, flushSync, tick } from 'svelte';
   import { game } from './game.svelte';
   import { t, minutesWords, minutesShort, ord } from '../content/copy/en';
   import { mmss, ofLine } from './panel';
@@ -91,14 +91,15 @@
      in the Satchel's No day yet; the delve runs on meanwhile, never paused by it. The box stays open, and keeps what is
      typed, if the delve ends meanwhile. Nothing here moves on its own: the "Parked" line comes and goes once. */
   let parking = $state(false), thought = $state(''), parkedSay = $state<string | null>(null);
-  let parkBox = $state<HTMLInputElement | null>(null);
+  let parkBox = $state<HTMLInputElement | null>(null), parkLink = $state<HTMLButtonElement | null>(null);
   let sayTimer: ReturnType<typeof setTimeout> | undefined;
   function openPark() {
     steady(); parkedSay = null; parking = true;
     /* the keyboard comes up with the tap itself, as the phone wants */
     flushSync(); parkBox?.focus();
   }
-  function closePark() { parking = false; thought = ''; }
+  /* back to the link, so VoiceOver keeps its place (review) */
+  function closePark() { parking = false; thought = ''; void tick().then(() => parkLink?.focus()); }
   function park() {
     const line = thought.replace(/\s+/g, ' ').trim();
     if (!line) return;
@@ -109,7 +110,8 @@
     clearTimeout(sayTimer);
     sayTimer = setTimeout(() => (parkedSay = null), 4000);
   }
-  onMount(() => () => clearTimeout(sayTimer));
+  /* leaving the delve with a thought typed (Today, the phone's back): it is kept, never lost (review) */
+  onMount(() => () => { clearTimeout(sayTimer); if (parking && thought.trim()) game.do({ do: 'park', line: thought }); });
   const canPark = $derived(!!run);
   /* at the end: the thoughts this delve parked, once its question is answered; a tap opens the Satchel */
   const parkedN = $derived(end && !run && !(end.ask && answer === null) ? end.parked : 0);
@@ -134,14 +136,15 @@
       <div class="topbar rise">
         <button class="home" onclick={() => (end ? leave('today') : go('today'))}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{t('delve.today')}</span></button>
         <span></span>
-        {#if canPark && !parking}<button class="text-link park-link" onclick={openPark}><span>{t('park.link')}</span></button>{:else}<span></span>{/if}
+        {#if canPark && !parking}<button class="text-link park-link" bind:this={parkLink} onclick={openPark}><span>{t('park.link')}</span></button>{:else}<span></span>{/if}
       </div>
       <div class="head rise d1">
         <div class="label-line centred lit">{t('delve.further')}</div>
         <h1 class="carve">{v.here.name}</h1>
         <p class="soft on-scene breath-hide" class:gone={!run || run.phase !== 'delve'}>{t('delve.moves')}</p>
       </div>
-      {#if parkedSay}<p class="parked-say" role="status">{parkedSay}</p>{/if}
+      <!-- always there, so VoiceOver reads the line when it is written (review) -->
+      <p class="parked-say" class:shown={!!parkedSay} role="status">{parkedSay ?? ''}</p>
     </header>
 
     <div class="mid">
@@ -228,7 +231,9 @@
           {/if}
         {/if}
         {#if parkedN > 0}
-          <div class="cant"><button class="text-link" onclick={toSatchel}><span>{parkedN === 1 ? t('park.count.1') : t('park.count', { n: parkedN })}</span></button></div>
+          <!-- a place waiting (the day done, an arrival): only said, so the way on stays the one button (review) -->
+          {#if end.completedDay || v.arrival}<p class="say parked-n">{parkedN === 1 ? t('park.count.1') : t('park.count', { n: parkedN })}</p>
+          {:else}<div class="cant"><button class="text-link" onclick={toSatchel}><span>{parkedN === 1 ? t('park.count.1') : t('park.count', { n: parkedN })}</span></button></div>{/if}
         {/if}
       {/if}
     </section>
@@ -295,7 +300,10 @@
   .parked-say { position: absolute; z-index: 6; left: 50%; transform: translateX(-50%); top: calc(var(--safe-t, 0px) + 50px); width: max-content;
     max-width: calc(100% - 32px); margin: 0; padding: 6px 14px; pointer-events: none; background: rgb(18, 16, 38); border: 1px solid var(--edge-2);
     font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink-2); text-align: center;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; animation: park-say .3s ease-out; }
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .parked-say:not(.shown) { position: absolute; width: 1px; height: 1px; padding: 0; border: 0; clip-path: inset(50%); }
+  .parked-say.shown { animation: park-say .3s ease-out; }
+  .dv :global(.bottom p.parked-n) { margin: 10px 0 0; font-size: 16px; font-style: italic; text-align: center; }
   @keyframes park-say { from { opacity: 0; } }
-  @media (prefers-reduced-motion: reduce) { .park, .parked-say { animation: none; } }
+  @media (prefers-reduced-motion: reduce) { .park, .parked-say.shown { animation: none; } }
 </style>

@@ -56,10 +56,11 @@ await ff(3 * 60_000);
 const before = await time();
 await typeAndPark('must email Sam', 'return');
 if (await page.locator('form.park').count()) fails.push('the box stayed open after Return');
-if (!(await page.getByText('Parked: must email Sam').count())) fails.push('no "Parked: must email Sam"');
+if ((await page.locator('.parked-say.shown').textContent().catch(() => '')) !== 'Parked: must email Sam') fails.push('no "Parked: must email Sam"');
+if (!(await page.evaluate(() => document.activeElement?.classList.contains('park-link')))) fails.push('the focus did not return to "Park a thought"');
 await shot('1-parked');
 await page.clock.runFor(5000); await page.waitForTimeout(200);
-if (await page.getByText('Parked: must email Sam').count()) fails.push('"Parked" stayed longer than a few seconds');
+if (await page.locator('.parked-say.shown').count()) fails.push('"Parked" stayed longer than a few seconds');
 const after = await time();
 if (!before || !after || before === after) fails.push(`the delve did not run on while parking (${before} → ${after})`);
 if (!(await btn('Pause').count())) fails.push('the delve is no longer running');
@@ -68,7 +69,7 @@ if (!(await btn('Pause').count())) fails.push('the delve is no longer running');
 await tap(btn('Park a thought'), 'Park a thought');
 if (!(await page.locator('form.park button[type=submit]:disabled').count())) fails.push('"Park it" is open with nothing typed');
 await page.keyboard.press('Enter'); await page.clock.runFor(300);
-if (await page.getByText(/^Parked:/).count()) fails.push('an empty thought was parked');
+if (await page.locator('.parked-say.shown').count()) fails.push('an empty thought was parked');
 await shot('2-open');
 await tap(btn('Cancel'), 'Cancel');
 if (await page.locator('form.park').count()) fails.push('Cancel left the box open');
@@ -91,15 +92,25 @@ const endless = await page.evaluate(() => document.getAnimations().filter(a => a
 if (endless) fails.push(`${endless} endless animation(s) in the park box`);
 await tap(btn('Cancel'), 'Cancel');
 
+/* 4b. a thought typed, then Today: it is kept, never lost; back to the delve */
+await tap(btn('Park a thought'), 'Park a thought');
+await page.keyboard.type('water the plants');
+await tap(page.locator('.home'), 'Today');
+await tap(page.locator('.foot').getByRole('button', { name: 'Satchel', exact: true }), 'Satchel');
+if (!(await page.getByText('water the plants', { exact: true }).count())) fails.push('a thought typed and left behind was lost');
+await tap(page.locator('.home'), 'back');
+await tap(page.getByRole('button', { name: /Back to the delve/ }), 'Back to the delve');
+if (!(await page.locator('.dv').count())) fails.push('no way back to the delve');
+
 /* 5. the end: "2 thoughts parked in the Satchel", a tap opens the Satchel with both */
 await ff(40 * 60_000);
 if (await btn('Not yet').count()) await tap(btn('Not yet'), 'Not yet');
-const line = page.getByRole('button', { name: '2 thoughts parked in the Satchel', exact: true });
-if (!(await line.count())) fails.push('no "2 thoughts parked in the Satchel" at the end');
+const line = page.getByRole('button', { name: '3 thoughts parked in the Satchel', exact: true });
+if (!(await line.count())) fails.push('no "3 thoughts parked in the Satchel" at the end');
 await shot('3-end');
 await tap(line, 'the parked line');
 if (!(await page.locator('form.satchel-add').count())) fails.push('the parked line did not open the Satchel');
-for (const x of ['must email Sam', 'book the dentist']) if (!(await page.getByText(x, { exact: true }).count())) fails.push(`${x} is not in the Satchel`);
+for (const x of ['must email Sam', 'book the dentist', 'water the plants']) if (!(await page.getByText(x, { exact: true }).count())) fails.push(`${x} is not in the Satchel`);
 /* never parked twice, never the end again */
 if ((await page.getByText('must email Sam', { exact: true }).count()) > 1) fails.push('must email Sam is in the Satchel twice');
 await tap(page.locator('.home'), 'back');
