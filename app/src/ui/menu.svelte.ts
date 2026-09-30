@@ -11,3 +11,8 @@ export function openMenu(job: string, go: Go, on: string | null = null, entry: s
 export function closeMenu() { menu.job = null; menu.go = null; menu.on = null; menu.entry = null; }
 /** Just opened: a tap now is the finger lifting from the hold. */
 export const settling = () => performance.now() - menu.at < 450;
+
+/** "How long did it take?" for a job ticked off without a delve (D-134), shown over the screen by App.svelte. */
+export const ticking = $state<{ job: string | null; go: Go | null; at: number }>({ job: null, go: null, at: 0 });
+export function openTick(job: string, go: Go) { ticking.job = job; ticking.go = go; ticking.at = performance.now(); }
+export function closeTick() { ticking.job = null; ticking.go = null; }

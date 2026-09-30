@@ -7,6 +7,8 @@
   import Scene from './Scene.svelte';
   import Return from './Return.svelte';
   import Look from './Look.svelte';
+  import EndRoad from './EndRoad.svelte';
+  import EndRing from './EndRing.svelte';
   import type { Go } from './nav';
 
   let { go, seq }: { go: Go; seq: number } = $props();
@@ -19,12 +21,13 @@
   const own = (f: { minutes: number; today?: number }) => f.today ?? f.minutes;
   const gained = $derived(fact && fact.type === 'jobDone' ? Math.max(0, own(fact) - undoneFacts(game.facts).filter(f => f.job === fact.job && f.day === fact.day).reduce((a, f) => Math.max(a, own(f)), 0)) : 0);
 
-  /* the route: from where Dan was to where he is, towards the next place */
-  const W = 300, y = 20;
-  const target = $derived(v.nextAt ?? v.walked + 200);
-  const from = $derived(Math.max(0, v.walked - gained));
-  const startAt = $derived(v.nextAt !== null ? Math.max(0, v.nextAt - 400) : from - 50);
-  const px = (m: number) => 8 + (W - 16) * Math.min(1, Math.max(0, (m - startAt) / Math.max(1, target - startAt)));
+
+  /* the count, as at a delve's end (D-133, D-134): the road line from where Dan was to where this moved him, the ring's
+     arc and sparkle in step with it, and the job's minutes counted up; a tick's own minutes are what moved him now */
+  const jd = $derived(fact && fact.type === 'jobDone' ? fact : null);
+  const moved = $derived(jd ? (jd.ticked ?? gained) : 0);
+  const atW = $derived(game.facts.filter(f => f.type === 'stepsGained' && f.seq < seq).reduce((a, f) => a + (f as { minutes: number }).minutes, 0));
+  const share = (m: number) => Math.max(0, Math.min(1, (m - v.road.from) / Math.max(1, v.road.to - v.road.from)));
 
   /* the painting, seen without the words (D-105) */
   let looking = $state(false);
@@ -42,20 +45,14 @@
     </div>
   </header>
   <!-- the painting, left clear: a tap on it looks at it -->
-  <div class="mid" onclick={look} role="presentation"></div>
+  <div class="mid" onclick={look} role="presentation">
+    {#if jd}<div class="tring"><EndRing from={share(atW - moved)} to={share(atW)} fromN={Math.max(0, jd.minutes - moved)} toN={jd.minutes} unit={t('set.minutes')} mode="play" /></div>{/if}
+  </div>
   <section class="bottom fit col center">
     <div class="scroll">
       <div class="label-line centred gold rise">{t('step.label')}</div>
       <h2 class="say-lg rise d1">{job ? t('step.done', { job: job.name }) : ''}</h2>
-      <svg class="route rise d2" viewBox="0 0 {W} 44" aria-hidden="true">
-        <path d="M8 {y}H{W - 8}" stroke="rgba(186,186,255,.22)" stroke-width="1" />
-        <path d="M8 {y}H{px(from)}" stroke="rgba(242,193,112,.55)" stroke-width="1.5" />
-        <path class="drawn" style="--len:{Math.max(1, px(v.walked) - px(from))}" d="M{px(from)} {y}H{px(v.walked)}" stroke="#f1efff" stroke-width="2" stroke-linecap="round" filter="drop-shadow(0 0 4px rgba(143,134,255,.95))" />
-        {#if v.nextAt !== null}
-          <g transform="translate({px(v.nextAt)} {y})"><path d="M-6 8 V-1 Q-6 -8 0 -8 Q6 -8 6 -1 V8 Z" fill="#0b0b1c" /><path d="M-6 8 V-1 Q-6 -8 0 -8 Q6 -8 6 -1 V8" fill="none" stroke="#ece9ff" stroke-width="1.3" /></g>
-        {/if}
-        <circle cx={px(v.walked)} cy={y} r="3.4" fill="#ffd27a" />
-      </svg>
+      {#if jd}<div class="rise d2"><EndRoad road={v.road} from={atW - moved} to={atW} mode="play" /></div>{/if}
       <div class="rise d3"><Return doneSeq={fact && fact.type === 'jobDone' ? seq : null} {go} {look} /></div>
     </div>
     <div class="go rise d3">
@@ -71,7 +68,14 @@
 
 <style>
   .bottom h2 { margin-top: 10px; }
-  .route { width: 100%; max-width: 300px; height: 44px; margin: 14px auto 4px; display: block; overflow: visible; }
+  /* the ring over the painting, as small as the room left for it; on a phone too short, it gives way */
+  /* it keeps room for the count, even with the story's words below it: they scroll (as at a delve's end, D-133) */
+  .mid { container-type: size; display: flex; align-items: center; justify-content: center; min-height: clamp(112px, 19vh, 180px); }
+  .tring { --R: min(170px, 46vw, 72cqh); position: relative; width: var(--R); height: var(--R); pointer-events: none; }
+  .tring::before { content: ""; position: absolute; inset: 3%; border-radius: 50%; border: 1.2px solid rgba(217, 214, 255, .3);
+    background: radial-gradient(circle, rgba(12, 8, 40, .5), rgba(12, 8, 40, .25) 60%, transparent 72%); }
+  @container (max-height: 96px) { .tring { display: none; } }
+  .bottom :global(.road) { margin-top: 12px; }
   .go { margin-top: 4px; }
   button.home { color: var(--ink-2); }
 </style>

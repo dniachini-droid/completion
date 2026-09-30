@@ -65,7 +65,7 @@
 </div>
 
 <style>
-  .road { position: relative; width: 100%; max-width: 340px; height: 50px; margin: 0 auto 4px; }
+  .road { position: relative; width: 100%; max-width: 340px; height: 50px; margin: 0 auto 14px; }
   .road > i { position: absolute; display: block; }
   .track { left: 10px; right: 10px; top: 30px; height: 1px; background: linear-gradient(90deg, rgba(186, 186, 255, .34), rgba(186, 186, 255, .2)); }
   /* the way already walked on this stretch, gold as on the step's line; this delve's, lit violet-white */

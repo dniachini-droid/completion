@@ -234,6 +234,9 @@ export const copy = {
   /* the one job menu (D-131, step 3) */
   'job.more': 'More…',
   'week.about.why': '{job} usually takes you about {min}.', 'week.about.set': 'From the minutes set for each job.', 'week.about.rest': 'The rest, from the minutes set for them.',
+  /* a job ticked off without a delve (D-134) */
+  'tick.off': 'Tick off', 'tick.sr': '{job}: tick off', 'tick.title': 'How long did it take?',
+  'tick.onTop': 'On top of the {min} you delved', 'tick.noMore': 'No more', 'tick.hour': '{n} h', 'tick.halfHour': '1½ h',
   'menu.delve': 'Delve', 'menu.edit': 'Edit', 'menu.srEdit': '{job}: edit',
   /* a done job taken back, to work on it more (D-131) */
   'row.notDone': 'Not done after all', 'row.srNotDone': '{job}: not done after all',

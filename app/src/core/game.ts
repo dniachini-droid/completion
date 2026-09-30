@@ -445,6 +445,11 @@ export function carriedOf(facts: Fact[], c: Content, job: string, before = Infin
   for (const e of ofType(facts, 'delveEnded')) if (e.job === job && e.seq > from && e.seq < before) n += e.minutes;
   return n;
 }
+/** The minutes a job already has behind it, for "On top of …" when it is ticked off (D-134): a one-off's carried minutes;
+    a repeating job's delve minutes on this day. */
+export function behindOf(facts: Fact[], c: Content, job: string, day: string): number {
+  return c.rhythms.some(r => r.job === job) ? delveMinutesOn(facts, day, job) + crossedIn(facts, day, job) : carriedOf(facts, c, job);
+}
 function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string, ticked = 0) {
   if (doneOn(w.all, day).has(job)) return;
   /* a one-off counts all its minutes since it was last done, whatever day they were delved (D-133); a repeating job,
@@ -904,11 +909,13 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       const j = c.jobs.find(x => x.id === cmd.job), recurring = c.rhythms.some(r => r.job === cmd.job);
       if (!j || doneOn(w.all, day).has(cmd.job) || activeRun(w.all)?.fact.job === cmd.job) break;
       if (!recurring && doneFacts(w.all).some(f => f.job === cmd.job)) break;   /* a one-off is finished once */
-      const behind = recurring ? delveMinutesOn(w.all, day, cmd.job) + crossedIn(w.all, day, cmd.job) : carriedOf(w.all, c, cmd.job);
+      const behind = behindOf(w.all, c, cmd.job, day);
       if (!(TICK_CHOICES as readonly number[]).includes(cmd.minutes) && !(cmd.minutes === 0 && behind > 0)) break;
       /* an end of its delve not yet looked at is answered by this (D-120) */
       endRunOn(w, c, cmd.job, nowMs, now);
       if (!begunOn(w.all, day, cmd.job)) w.put({ type: 'jobBegun', job: cmd.job, from: 'record' });
+      /* a one-off done today is today's: it leaves a later day it was put on, as a delve on it does (D-131) */
+      if (!recurring) for (const e of laterDays(w.all, day).get(cmd.job) ?? []) w.put({ type: 'planChanged', entry: e, day: null });
       if (cmd.minutes > 0) { w.put({ type: 'stepsGained', minutes: cmd.minutes, job: cmd.job, tick: true }); sideChamber(w, c, now, day); }
       markDoneIn(w, c, cmd.job, now, day, cmd.minutes);
       if (cmd.minutes > 0) sideChamber(w, c, now, day);
