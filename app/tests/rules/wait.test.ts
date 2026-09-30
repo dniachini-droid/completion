@@ -143,6 +143,16 @@ describe('Waiting on… (D-137)', () => {
     expect(p.facts).toHaveLength(n);
   });
 
+  it('"Back to it" just after waiting from Today (today): back on today\'s list, whatever its day', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'putOnDay', job: 'post', day: '2026-09-24' });
+    expect(p.view().slate).toContain('post');
+    p.do({ do: 'waitOn', job: 'post', until: '2026-09-28' });
+    expect(p.view().slate).not.toContain('post');
+    p.do({ do: 'backToIt', job: 'post', today: true });
+    expect(p.view().slate).toContain('post');
+    expect(p.satchel().waiting).toEqual([]);
+  });
+
   it('"It\'s done" (ticked off): done, the wait over, its minutes counted once, with the minutes delved before it', () => {
     const p = player().do({ do: 'open' }).delve('cat', 12).leave();
     expect(steps(p.facts, 'cat')).toBe(12);

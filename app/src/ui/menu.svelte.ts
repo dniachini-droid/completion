@@ -16,3 +16,7 @@ export const settling = () => performance.now() - menu.at < 450;
 export const ticking = $state<{ job: string | null; go: Go | null; at: number }>({ job: null, go: null, at: 0 });
 export function openTick(job: string, go: Go) { ticking.job = job; ticking.go = go; ticking.at = performance.now(); }
 export function closeTick() { ticking.job = null; ticking.go = null; }
+
+/** The job just set waiting on a reply (D-137): Today and the Satchel say where it went, with "Back to it" at hand. */
+export const waited = $state<{ job: string | null; until: string }>({ job: null, until: '' });
+export function sayWaited(job: string | null, until = '') { waited.job = job; waited.until = until; }

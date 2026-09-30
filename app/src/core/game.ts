@@ -775,8 +775,9 @@ export type Command =
   /** "Waiting on…" (D-137): a one-off set aside until someone replies, back on Today on `until`; `who` the short line
       ("the vet"; left out: the line it had). Again on a job waiting: "Still waiting", a new date */
   | { do: 'waitOn'; job: string; until: string; who?: string }
-  /** "Back to it" (D-137): an ordinary job again (on Today if it had come back there, else with no day) */
-  | { do: 'backToIt'; job: string }
+  /** "Back to it" (D-137): an ordinary job again (on Today if it had come back there, else with no day); `today`: back
+      on today's list whatever its day (taking back a wait just set from Today) */
+  | { do: 'backToIt'; job: string; today?: boolean }
   /** Tonight's "Tomorrow starts with" (D-131): the job tomorrow opens with (null: as planned) */
   | { do: 'firstJob'; job: string | null }
   | { do: 'cantStart'; job: string }
@@ -967,7 +968,7 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       if (!was || !c.jobs.some(j => j.id === cmd.job && !j.stopped)) break;
       w.put({ type: 'waitEnded', job: cmd.job });
       /* come back on Today: it stays on today's list, as an ordinary job; still ahead: with no day, in the Satchel */
-      if (was.until <= day) {
+      if (was.until <= day || cmd.today) {
         const n = ofType(w.all, 'planAdded').length + 1;
         w.put({ type: 'planAdded', entry: { id: `pa-${n}`, job: cmd.job, day } });
         if (asideOn(w.all, day).has(cmd.job)) w.put({ type: 'putBack', job: cmd.job });

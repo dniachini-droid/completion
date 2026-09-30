@@ -87,6 +87,9 @@ jobs:
       - name: 'Today with no job put forward; a place read again (D-135)'
         if: matrix.walk
         run: node tests/flows/today-list.mjs http://localhost:4173/ ${{ matrix.size }}
+      - name: 'Waiting on a reply: the Satchel''s Waiting, and "Did they reply?" on its day (D-137)'
+        if: matrix.walk
+        run: node tests/flows/wait.mjs http://localhost:4173/ ${{ matrix.size }}
       - name: The whole first playable, walked day by day
         if: matrix.walk
         run: mkdir -p "$RUNNER_TEMP/screens" && node tests/flows/heart-walk.mjs http://localhost:4173/ "$RUNNER_TEMP/screens" ${{ matrix.size }}

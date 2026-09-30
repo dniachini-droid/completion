@@ -17,7 +17,7 @@
   import { back } from './back.svelte';
   import { flushSync, onMount } from 'svelte';
   import { steady } from './taps';
-  import { openMenu, openTick } from './menu.svelte';
+  import { openMenu, openTick, waited, sayWaited } from './menu.svelte';
   import art from './scene/satchel.jpg';
 
   /* `to`: 'recurring' opens at that section (the Week). Today's "+ Add" focuses the box itself, inside its tap, so the
@@ -86,6 +86,12 @@
   ];
   const menu = (j: Job) => () => { saveList(); openMenu(j.id, go); };
   const rhythmOf = (j: Job) => v.content.rhythms.find(r => r.job === j.id);
+  /* waiting on a reply (D-137): "Back to it" at any time makes it an ordinary job again, with no day */
+  function backToIt(j: Job) { saveList(); steady(); game.do({ do: 'backToIt', job: j.id }); sayWaited(null); said = null; }
+  $effect(() => () => sayWaited(null));
+  /* a wait just set says so, in place of the last line said */
+  $effect(() => { if (waited.job) said = null; });
+  const waitedJob = $derived(waited.job && s.waiting.some(x => x.job.id === waited.job) ? game.job(waited.job) : undefined);
 
   /* the artwork shrinks as the list scrolls up (Dan, D-130): drawn smaller and fainter from its top edge, while the list
      keeps its place, so nothing under the finger jumps */
@@ -121,7 +127,8 @@
   <div class="body col rise d1" onscroll={shrink}>
     <img class="art" bind:this={artEl} src={art} alt="" aria-hidden="true" />
     <Deleted />
-    {#if said}<p class="said" role="status">{said}</p>{/if}
+    {#if said}<p class="said" role="status">{said}</p>
+    {:else if waitedJob}<p class="said" role="status">{t('wait.said', { job: waitedJob.name, day: dayShort(waited.until) })}</p>{/if}
 
     <div class="label-line">{t('satchel.noDay')}</div>
     {#if !s.noDay.length}<p class="soft empty">{t('satchel.empty')}</p>{/if}
@@ -161,6 +168,22 @@
             {#snippet over()}<button class="text-link day" aria-expanded={placing === x.job.id} aria-label={t('satchel.move', { job: x.job.name, day: dayShort(x.day) })} onclick={() => openDays(x.job)}><span>{dayShort(x.day)}</span></button>{/snippet}
           </SwipeRow>
           {#if placing === x.job.id}<DayPick from={v.day} label={t('satchel.day')} pick={d => place(x.job, d)} />{/if}
+        </div>
+      {/each}
+      </div>
+    {/if}
+
+    <!-- waiting on someone's reply (D-137): quiet, soonest first; on its day it goes back to Today -->
+    {#if s.waiting.length}
+      <div class="label-line">{t('wait.label')}</div>
+      <div class="rows waiting">
+      {#each s.waiting as x (x.job.id)}
+        <div class="item">
+          <SwipeRow key={`s:${x.job.id}`} actions={acts(x.job)} tap={() => delve(x.job)} hold={menu(x.job)} disabled={!!v.run}>
+            {#snippet lead()}{#if canTick(x.job)}<button class="tickbtn" aria-label={t('tick.sr', { job: x.job.name })} onclick={() => openTick(x.job.id, go)}><span class="ring"></span></button>{/if}{/snippet}
+            {#snippet row()}<span class="pip" class:under={canTick(x.job)}></span><span class="t">{x.job.name}<small>{x.who ? t('wait.on', { who: x.who, day: dayShort(x.until) }) : t('wait.plain', { day: dayShort(x.until) })}</small></span><span class="s"></span>{/snippet}
+          </SwipeRow>
+          <div class="acts"><button class="text-link" aria-label={t('wait.srBack', { job: x.job.name })} onclick={() => backToIt(x.job)}><span>{t('wait.back')}</span></button></div>
         </div>
       {/each}
       </div>
