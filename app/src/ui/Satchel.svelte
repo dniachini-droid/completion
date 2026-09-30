@@ -84,7 +84,7 @@
     { label: t('menu.edit'), sr: t('menu.srEdit', { job: j.name }), run: () => edit(j) },
     { label: t('job.delete'), sr: t('row.srDelete', { job: j.name }), run: () => remove(j), del: true },
   ];
-  const menu = (j: Job) => () => { saveList(); openMenu(j.id, go); };
+  const menu = (j: Job) => () => { saveList(); openMenu(j.id, go, null, null, 'satchel'); };
   const rhythmOf = (j: Job) => v.content.rhythms.find(r => r.job === j.id);
   /* waiting on a reply (D-137): "Back to it" at any time makes it an ordinary job again, with no day */
   function backToIt(j: Job) { saveList(); steady(); game.do({ do: 'backToIt', job: j.id }); sayWaited(null); said = null; }

@@ -31,10 +31,11 @@
   /* "Waiting on…" (D-137): off the lists until its day; "Back to it" an ordinary job again */
   const wait = $derived(j ? waitingOf(game.facts).get(j.id) : undefined);
   function waitOn(until: string, who: string) {
-    const id = j!.id;
+    const id = j!.id, from = menu.from, onToday = v.slate.includes(id) || v.replies.some(r => r.job === id);
     steady(); game.do({ do: 'waitOn', job: id, until, who });
     closeMenu(); closeRows();
-    sayWaited(waitingOf(game.facts).get(id)?.until === until ? id : null, until);
+    /* said only where Dan is, Today or the Satchel; never from the Week (review of D-137) */
+    if (from && waitingOf(game.facts).get(id)?.until === until) sayWaited(id, until, from === 'today' && onToday);
   }
   function backToIt() { if (settling()) return; const id = j!.id; steady(); closeMenu(); closeRows(); game.do({ do: 'backToIt', job: id }); sayWaited(null); }
   function remove() {

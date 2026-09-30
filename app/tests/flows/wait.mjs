@@ -136,6 +136,17 @@ if (await hold(rec, 'a recurring job')) {
 }
 await toToday();
 
+/* set waiting from the Week: said nowhere, and nothing stale is said on Today afterwards (review of D-137) */
+await tap(page.locator('.foot').getByRole('button', { name: 'Week', exact: true }), 'Week');
+const later = page.locator('button.row:not(.done):not([disabled])', { hasText: 'Sort the post' });
+if (!(await later.count())) fails.push('no Sort the post ahead in the Week');
+else if (await hold(later, 'Sort the post in the Week')) {
+  await tap(page.locator('.menu').getByRole('button', { name: 'Waiting on…', exact: true }), 'Waiting on… in the Week');
+  await tap(page.locator('.menu .wait-soon'), 'the default day');
+}
+await toToday();
+if (await page.getByText(/in the satchel until/).count()) fails.push('a wait set in the Week (or earlier) is still said on Today');
+
 /* 3. Friday: Vet results is back under Today's list, "Did they reply?"; Still waiting → Monday */
 await days(2);
 const ask = () => page.locator('.reply', { hasText: 'Vet results' });

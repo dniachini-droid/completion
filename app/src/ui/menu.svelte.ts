@@ -6,9 +6,12 @@ import type { Go } from './nav';
     record of a recurring job, as the row's own Delete does (D-125; review of D-131). */
 /** `entry`: the Week's session held, so "Put on a day" moves that one (second review of D-131). `at`: when it opened: the
     finger's lift after the hold is never a choice in it (on the iPhone the lift's click can land on what is now under it). */
-export const menu = $state<{ job: string | null; go: Go | null; on: string | null; entry: string | null; at: number }>({ job: null, go: null, on: null, entry: null, at: 0 });
-export function openMenu(job: string, go: Go, on: string | null = null, entry: string | null = null) { menu.job = job; menu.go = go; menu.on = on; menu.entry = entry; menu.at = performance.now(); }
-export function closeMenu() { menu.job = null; menu.go = null; menu.on = null; menu.entry = null; }
+/** `from`: Today or the Satchel, where a wait just set is said (D-137); elsewhere (the Week) nothing is said. */
+export const menu = $state<{ job: string | null; go: Go | null; on: string | null; entry: string | null; from: 'today' | 'satchel' | null; at: number }>({ job: null, go: null, on: null, entry: null, from: null, at: 0 });
+export function openMenu(job: string, go: Go, on: string | null = null, entry: string | null = null, from: 'today' | 'satchel' | null = null) {
+  menu.job = job; menu.go = go; menu.on = on; menu.entry = entry; menu.from = from; menu.at = performance.now(); sayWaited(null);
+}
+export function closeMenu() { menu.job = null; menu.go = null; menu.on = null; menu.entry = null; menu.from = null; }
 /** Just opened: a tap now is the finger lifting from the hold. */
 export const settling = () => performance.now() - menu.at < 450;
 
@@ -17,6 +20,7 @@ export const ticking = $state<{ job: string | null; go: Go | null; at: number }>
 export function openTick(job: string, go: Go) { ticking.job = job; ticking.go = go; ticking.at = performance.now(); }
 export function closeTick() { ticking.job = null; ticking.go = null; }
 
-/** The job just set waiting on a reply (D-137): Today and the Satchel say where it went, with "Back to it" at hand. */
-export const waited = $state<{ job: string | null; until: string }>({ job: null, until: '' });
-export function sayWaited(job: string | null, until = '') { waited.job = job; waited.until = until; }
+/** The job just set waiting on a reply (D-137): Today and the Satchel say where it went, with "Back to it" at hand;
+    `today`: it was on today's list, so taking the wait back puts it there again. */
+export const waited = $state<{ job: string | null; until: string; today: boolean }>({ job: null, until: '', today: false });
+export function sayWaited(job: string | null, until = '', today = false) { waited.job = job; waited.until = until; waited.today = today; }

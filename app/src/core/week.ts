@@ -181,6 +181,8 @@ export function items(facts: Fact[], day: string): Item[] {
     else if (f.type === 'itemKept' && out.has(f.id)) { touched.set(f.id, f.day); shelved.delete(f.id); }
     /* delved on, it's in hand: the look-ahead doesn't ask about it (D-117 review) */
     else if (f.type === 'delveStarted' && out.has(f.job)) { touched.set(f.job, f.day); shelved.delete(f.job); }
+    /* set waiting on a reply, or taken back from it: Dan's own choice about it, so "Still wanted?" doesn't ask (review of D-137) */
+    else if ((f.type === 'waitSet' || f.type === 'waitEnded') && out.has(f.job)) { touched.set(f.job, f.day); shelved.delete(f.job); }
     else if (f.type === 'itemSomeday' && out.has(f.id)) shelved.add(f.id);
   }
   for (const [id, d] of ticked) if (d < day) out.delete(id);
@@ -470,7 +472,9 @@ export function pinnedIn(facts: Fact[], week: string): string | null {
 /** "Still wanted?": up to three of the oldest jobs Dan added, not done and untouched for a week or more (kept or put on
     a day counts as touched), never the whole list, never a count (P7). Dated jobs have their own question. */
 export function sweepOf(facts: Fact[], day: string, most = 3): Item[] {
-  return items(facts, day).filter(i => !i.done && !i.by && daysBetween(i.touched ?? i.added, day) >= 7).slice(0, most);
+  /* never one waiting on a reply: Dan has parked it himself (review of D-137) */
+  const waiting = waitingOf(facts);
+  return items(facts, day).filter(i => !i.done && !i.by && !waiting.has(i.id) && daysBetween(i.touched ?? i.added, day) >= 7).slice(0, most);
 }
 /** "Coming up": the week's fixed points from `day`, one line each: appointments and entries with a time, dated work,
     and monthly or yearly rhythms on their day. The caller shows five and folds the rest. */

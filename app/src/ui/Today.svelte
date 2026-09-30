@@ -91,7 +91,7 @@
      It's done (ticked off, with the time it took). Unanswered, it simply stays here; it never holds the day back */
   let still = $state<string | null>(null);
   function backToIt(id: string, today = false) { steady(); still = null; game.do({ do: 'backToIt', job: id, ...(today ? { today } : {}) }); }
-  function stillWaiting(id: string, until: string, who: string) { steady(); still = null; game.do({ do: 'waitOn', job: id, until, who }); sayWaited(id, until); }
+  function stillWaiting(id: string, until: string, who: string) { steady(); still = null; game.do({ do: 'waitOn', job: id, until, who }); sayWaited(id, until, true); }
   const replyActs = (j: Job) => [{ label: t('job.delete'), sr: t('row.srDelete', { job: j.name }), run: () => remove(j.id), del: true }];
   /* the job just set waiting: where it went, and the way back (D-137); said only on this visit */
   $effect(() => () => sayWaited(null));
@@ -256,11 +256,11 @@
       <p class="said">{t('today.aside.said')} <button class="text-link" onclick={putBack}><span>{t('today.putBack')}</span></button></p>
     {/if}
     {#if waitedJob}
-      <p class="said" role="status">{t('wait.said', { job: waitedJob.name, day: dayShort(waited.until) })} <button class="text-link" aria-label={t('wait.srBack', { job: waitedJob.name })} onclick={() => { backToIt(waitedJob.id, true); sayWaited(null); }}><span>{t('wait.back')}</span></button></p>
+      <p class="said" role="status">{t('wait.said', { job: waitedJob.name, day: dayShort(waited.until) })} <button class="text-link" aria-label={t('wait.srBack', { job: waitedJob.name })} onclick={() => { backToIt(waitedJob.id, waited.today); sayWaited(null); }}><span>{t('wait.back')}</span></button></p>
     {/if}
     {#snippet jobRow(id: string)}
       {@const j = job(id)}
-      <SwipeRow key={`t:${id}`} actions={acts(j)} tap={() => start(id)} hold={() => openMenu(id, go, v.done.has(id) ? v.day : null)} disabled={!!v.run} done={v.done.has(id)}>
+      <SwipeRow key={`t:${id}`} actions={acts(j)} tap={() => start(id)} hold={() => openMenu(id, go, v.done.has(id) ? v.day : null, null, 'today')} disabled={!!v.run} done={v.done.has(id)}>
         {#snippet row()}<span class="pip" class:done={v.done.has(id)} class:under={canTick(id)}></span><span class="t">{j.name}</span><span class="s">{sayDone(j) ? '' : rowNote(j)}</span>{/snippet}
         <!-- the same "It's done" on a row further down: a tap on the row itself still starts a delve (D-100, D-120) -->
         <!-- the tick circle over the marker: done without a delve, with the time it took (D-134) -->
@@ -277,7 +277,7 @@
         {#each v.replies as r (r.job)}
           {@const j = job(r.job)}
           <div class="reply">
-            <SwipeRow key={`r:${r.job}`} actions={replyActs(j)} tap={() => start(r.job)} hold={() => openMenu(r.job, go)} disabled={!!v.run}>
+            <SwipeRow key={`r:${r.job}`} actions={replyActs(j)} tap={() => start(r.job)} hold={() => openMenu(r.job, go, null, null, 'today')} disabled={!!v.run}>
               {#snippet row()}<span class="pip" class:under={canTick(r.job)}></span><span class="t">{j.name}{#if r.who}<small>{t('wait.onNow', { who: r.who })}</small>{/if}</span><span class="s"></span>{/snippet}
               {#snippet lead()}{#if canTick(r.job)}<button class="tickbtn" aria-label={t('tick.sr', { job: j.name })} onclick={() => openTick(r.job, go)}><span class="ring"></span></button>{/if}{/snippet}
             </SwipeRow>

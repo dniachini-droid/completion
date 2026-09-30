@@ -183,7 +183,7 @@ export function tomorrowFirst(base: Content, facts: Fact[], now: Moment): { job:
   const wk = calendarWeek(on);
   const planned = [...new Set(W.planMade(facts, wk) ? W.plannedToday(c, facts, on, '00:00').map(p => p.job)
     : W.planWeek(c, facts, wk, on).filter(e => e.day === on).sort((a, b) => (a.time ?? '99').localeCompare(b.time ?? '99')).map(e => e.job))];
-  if (own && c.jobs.some(j => j.id === own && !j.stopped) && !finishedBy(c, facts, own, on)) return { job: own, chosen: true, planned };
+  if (own && c.jobs.some(j => j.id === own && !j.stopped) && !finishedBy(c, facts, own, on) && !W.waitingOf(facts).has(own)) return { job: own, chosen: true, planned };
   return { job: planned[0] ?? null, chosen: false, planned };
 }
 
@@ -978,7 +978,8 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     case 'firstJob': {
       const on = W.addDays(day, 1), was = firstChosen(w.all, on);
       /* never a one-off already done: it is finished */
-      if ((cmd.job === null || (c.jobs.some(j => j.id === cmd.job && !j.stopped) && !finishedBy(c, w.all, cmd.job, on))) && was !== cmd.job) {
+      /* never a job waiting on a reply: it comes back on its own day (review of D-137) */
+      if ((cmd.job === null || (c.jobs.some(j => j.id === cmd.job && !j.stopped) && !finishedBy(c, w.all, cmd.job, on) && !W.waitingOf(w.all).has(cmd.job))) && was !== cmd.job) {
         w.put({ type: 'firstChosen', job: cmd.job, on });
         /* a one-off chosen for tomorrow is tomorrow's: off any later day it was put on (second review of D-131) */
         if (cmd.job && !c.rhythms.some(r => r.job === cmd.job)) for (const e of laterDays(w.all, on).get(cmd.job) ?? []) w.put({ type: 'planChanged', entry: e, day: null });

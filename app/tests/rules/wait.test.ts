@@ -6,7 +6,7 @@
  */
 import { describe, expect, it } from 'vitest';
 import { act, satchelView, see, settle, tomorrowFirst, type Command } from '../../src/core/game';
-import { waitingOf, planOf } from '../../src/core/week';
+import { waitingOf, planOf, sweepOf } from '../../src/core/week';
 import type { Fact, FactOf } from '../../src/core/types';
 import { content as C } from '../../src/content/world';
 
@@ -228,6 +228,24 @@ describe('Waiting on… (D-137)', () => {
     p.do({ do: 'saveJob', job, rhythm: { id: 'r-cat', job: 'cat', times: 1 } });
     expect(waitingOf(p.facts).has('cat')).toBe(false);
     expect(p.satchel().waiting).toEqual([]);
+  });
+
+  it('review: a waiting job is never tomorrow\'s first job', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'waitOn', job: 'cat', until: '2026-09-28' });
+    const n = p.facts.length;
+    p.do({ do: 'firstJob', job: 'cat' });
+    expect(p.facts).toHaveLength(n);
+    expect(tomorrowFirst(C, p.facts, p.at()).job).not.toBe('cat');
+  });
+
+  it('review: the look-ahead\'s "Still wanted?" never asks about a job waiting on a reply', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['Insurance claim'] });
+    const id = p.satchel().noDay.find(j => j.name === 'Insurance claim')!.id;
+    p.sleep(8 * DAY).do({ do: 'open' });
+    expect(sweepOf(p.facts, p.view().day).map(i => i.id)).toContain(id);
+    p.do({ do: 'waitOn', job: id, until: '2026-10-12', who: 'the insurer' });
+    p.sleep(8 * DAY).do({ do: 'open' });
+    expect(sweepOf(p.facts, p.view().day).map(i => i.id)).not.toContain(id);
   });
 
   it('old saves: with no wait in them, nothing waits and nothing changes', () => {
