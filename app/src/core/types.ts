@@ -138,8 +138,9 @@ export type FactBody =
   | { type: 'calendarRead'; from: string; to: string; events: CalEvent[] }
   /** The re-entry nudge, off unless Dan turns it on (D-113) */
   | { type: 'nudgeChosen'; on: boolean }
-  /** `via`: said to Siri, Shortcuts or the Action button; `ref`: that line's own id, so it is never added twice (D-113) */
-  | { type: 'itemAdded'; id: string; name: string; via?: 'siri'; ref?: string }
+  /** `via`: said to Siri, Shortcuts or the Action button; `ref`: that line's own id, so it is never added twice (D-113);
+      or parked mid-delve, `run` being that delve's run (D-138) */
+  | { type: 'itemAdded'; id: string; name: string; via?: 'siri' | 'park'; ref?: string; run?: number }
   | { type: 'itemTicked'; id: string }
   | { type: 'itemDropped'; id: string }
   | { type: 'planMade'; week: string; entries: PlanEntry[] }
