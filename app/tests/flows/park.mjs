@@ -104,9 +104,11 @@ if (!(await page.locator('.dv').count())) fails.push('no way back to the delve')
 
 /* 5. the end: "2 thoughts parked in the Satchel", a tap opens the Satchel with both */
 await ff(40 * 60_000);
-if (await btn('Not yet').count()) await tap(btn('Not yet'), 'Not yet');
+/* the game's clock looks once a second (D-132): wait for the end's question, however slow the runner */
+const until = async (loc) => { for (let k = 0; k < 20 && !(await loc.count()); k++) { await page.clock.runFor(1000); await page.waitForTimeout(150); } return (await loc.count()) > 0; };
+if (await until(btn('Not yet'))) await tap(btn('Not yet'), 'Not yet'); else fails.push('no "Is it done?" at the end');
 const line = page.getByRole('button', { name: '3 thoughts parked in the Satchel', exact: true });
-if (!(await line.count())) fails.push('no "3 thoughts parked in the Satchel" at the end');
+if (!(await until(line))) fails.push('no "3 thoughts parked in the Satchel" at the end');
 await shot('3-end');
 await tap(line, 'the parked line');
 if (!(await page.locator('form.satchel-add').count())) fails.push('the parked line did not open the Satchel');
