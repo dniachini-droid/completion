@@ -43,7 +43,9 @@
   const pickedJob = $derived(picked ? v.content.jobs.find(j => j.id === picked) : undefined);
   const tied = $derived(!!pickedJob && nameKey(pickedJob.name) === nameKey(text));
   const before = $derived<Suggestion[]>(text.trim() && !tied ? suggest(content, game.facts, text) : []);
-  const offer = $derived(repeatOffer(content, game.facts, v.day));
+  /* the day alone, so the offer is worked out again only when the facts or the day change, not each second (D-132) */
+  const day = $derived(v.day);
+  const offer = $derived(repeatOffer(content, game.facts, day));
 
   onMount(() => {
     if (to === 'recurring') recurringEl?.scrollIntoView({ block: 'start' });
