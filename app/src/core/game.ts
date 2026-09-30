@@ -16,7 +16,9 @@ import * as Rep from './repeat';
 import { doneFacts, undoneFacts } from './done';
 import type { Beat, Seal, StretchId } from './story-types';
 
-export const STEP_MIN = 25;                                   /* BALANCING §1 */
+export const STEP_MIN = 25;
+/** "How long did it take?" for a job ticked off without a delve, in minutes (Dan, D-134). */
+export const TICK_CHOICES = [15, 30, 45, 60, 90, 120, 180] as const;                                   /* BALANCING §1 */
 export const DAY_SIZE: Record<Capacity, number> = { low: 2, normal: 3, high: 5 };   /* §6 */
 export const DIAL = [5, 10, 15, 25, 30, 45, 60, 90] as const;   /* the dial's stops (D-033; 5–15 and 90, D-110) */
 const MIN = 60_000;
@@ -443,14 +445,15 @@ export function carriedOf(facts: Fact[], c: Content, job: string, before = Infin
   for (const e of ofType(facts, 'delveEnded')) if (e.job === job && e.seq > from && e.seq < before) n += e.minutes;
   return n;
 }
-function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string) {
+function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string, ticked = 0) {
   if (doneOn(w.all, day).has(job)) return;
   /* a one-off counts all its minutes since it was last done, whatever day they were delved (D-133); a repeating job,
      its day's (and a run begun before 04:00 that ended on this day, D-120) */
-  const ownDay = delveMinutesOn(w.all, day, job) + crossedIn(w.all, day, job);
-  const j = jobOf(c, job), timed = c.rhythms.some(r => r.job === job) ? ownDay : carriedOf(w.all, c, job);
+  /* a job ticked off counts the minutes Dan gave it too, on this day (D-134) */
+  const ownDay = delveMinutesOn(w.all, day, job) + crossedIn(w.all, day, job) + ticked;
+  const j = jobOf(c, job), timed = (c.rhythms.some(r => r.job === job) ? ownDay - ticked : carriedOf(w.all, c, job)) + ticked;
   /* what of them was delved on this day, when fewer: only that is the day's work (workedOn) */
-  const today = timed > ownDay ? { today: ownDay } : {};
+  const today = { ...(timed > ownDay ? { today: ownDay } : {}), ...(ticked ? { ticked } : {}) };
   /* a delve's minutes have already moved Dan (counted once, even across 04:00, D-120). Every job is a delve (D-117): one
      said done with no whole minute behind it is off the list, but earns no minutes and brings no return: no step of the
      story, no find, no Key, and it is no work towards the day (rule 10). It is off the list, though: if it was the list's
@@ -499,7 +502,7 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string) {
     const past = ofType(onDay(w.all, day), 'dayCompleted').some(f => f.seq < done.seq);
     /* past the line, and more than a short day's work behind it: 3 hours delved today, or more than a normal day's jobs
        (a line emptied by "Not today" never makes ten minutes a push, rule 10; second review of D-131) */
-    const delved = ofType(onDay(w.all, day), 'stepsGained').filter(f => f.run !== undefined).reduce((a, f) => a + f.minutes, 0);
+    const delved = ofType(onDay(w.all, day), 'stepsGained').filter(f => f.run !== undefined || f.tick).reduce((a, f) => a + f.minutes, 0);
     const deep = ((past && (delved >= W.FINISH_MIN || n > DAY_SIZE.normal)) || (called && n >= DAY_SIZE.normal))
       && !ofType(onDay(w.all, day), 'beatPlayed').some(f => S.beatOf(c.story, f.id)?.kind === 'deep') ? S.nextDeep(c.story, st) : null;
     if (deep) { w.put({ type: 'beatPlayed', id: deep.id, job: done.seq }, at, day); show(w, c, deep.carries?.records, at, day); }
@@ -747,6 +750,9 @@ export type Command =
   /** "It's done": a job delved on said done (every job is a delve, D-117; "Already done" and "yesterday" are gone);
       `keepEnd`: a delve under way on it ends and its end screen stays (D-120) */
   | { do: 'done'; job: string; keepEnd?: boolean }
+  /** Ticked off without a delve, with the time it took (D-134): one of TICK_CHOICES, or 0 ("No more") for a job with
+      delved minutes behind it */
+  | { do: 'tickOff'; job: string; minutes: number }
   /** "Not done after all" (D-131): a job done today is to do again; what it earned stays and is never paid twice */
   | { do: 'notDone'; job: string }
   /** Tonight's "Tomorrow starts with" (D-131): the job tomorrow opens with (null: as planned) */
@@ -890,6 +896,22 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       /* Done with no Begin: recorded afterwards (the test's sharpest line, MVP.md) */
       if (!begunOn(w.all, day, cmd.job)) w.put({ type: 'jobBegun', job: cmd.job, from: 'record' }, now, on);
       markDoneIn(w, c, cmd.job, now, on);
+      break;
+    }
+    case 'tickOff': {
+      /* a job done without a delve, ticked off with the time it took (Dan, D-134): those minutes move Dan and the job is
+         done, with its story moment, as a delve's would be. "No more" (0) only for a job with delved minutes behind it */
+      const j = c.jobs.find(x => x.id === cmd.job), recurring = c.rhythms.some(r => r.job === cmd.job);
+      if (!j || doneOn(w.all, day).has(cmd.job) || activeRun(w.all)?.fact.job === cmd.job) break;
+      if (!recurring && doneFacts(w.all).some(f => f.job === cmd.job)) break;   /* a one-off is finished once */
+      const behind = recurring ? delveMinutesOn(w.all, day, cmd.job) + crossedIn(w.all, day, cmd.job) : carriedOf(w.all, c, cmd.job);
+      if (!(TICK_CHOICES as readonly number[]).includes(cmd.minutes) && !(cmd.minutes === 0 && behind > 0)) break;
+      /* an end of its delve not yet looked at is answered by this (D-120) */
+      endRunOn(w, c, cmd.job, nowMs, now);
+      if (!begunOn(w.all, day, cmd.job)) w.put({ type: 'jobBegun', job: cmd.job, from: 'record' });
+      if (cmd.minutes > 0) { w.put({ type: 'stepsGained', minutes: cmd.minutes, job: cmd.job, tick: true }); sideChamber(w, c, now, day); }
+      markDoneIn(w, c, cmd.job, now, day, cmd.minutes);
+      if (cmd.minutes > 0) sideChamber(w, c, now, day);
       break;
     }
     case 'notDone':
