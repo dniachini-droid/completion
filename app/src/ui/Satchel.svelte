@@ -4,10 +4,14 @@
      day: a tap on the day moves it), "Recurring jobs". On its day a job moves to Today; if the day passes undone it
      comes back to "No day yet"; done, it is in the Daybook. One box to add a job: "Delve now" (a one-off on today, its
      delve begun at once) or "Save for later" (no day). A tap delves; a slide shows Edit and Delete (with Undo). No
-     counts, no ages, nothing red (rule 9). */
+     counts, no ages, nothing red (rule 9). As Dan types, the jobs he has had before come up under the box (D-136): one
+     picked carries on from the one before; one still his (recurring, or still to do) is never added twice. A name added
+     a third time in 28 days is offered, once, as a recurring job. */
   import { game, content } from './game.svelte';
-  import { t, byWords, dayShort, oftenWords, minutesShort } from '../content/copy/en';
+  import { t, byWords, dayShort, oftenWords, minutesShort, minutesWords } from '../content/copy/en';
   import { satchelView, LIST_MAX } from '../core/game';
+  import { repeatOffer, suggest, tieFor, type Suggestion } from '../core/remember';
+  import { nameKey } from '../core/week';
   import type { Job } from '../core/types';
   import Scene from './Scene.svelte';
   import Deleted from './Deleted.svelte';
@@ -34,6 +38,12 @@
   let said = $state<string | null>(null);
   let box = $state<HTMLTextAreaElement | null>(null);
   let recurringEl = $state<HTMLElement | null>(null);
+  /* the job picked from under the box (D-136): it holds while the box still says its name */
+  let picked = $state<string | null>(null);
+  const pickedJob = $derived(picked ? v.content.jobs.find(j => j.id === picked) : undefined);
+  const tied = $derived(!!pickedJob && nameKey(pickedJob.name) === nameKey(text));
+  const before = $derived<Suggestion[]>(text.trim() && !tied ? suggest(content, game.facts, text) : []);
+  const offer = $derived(repeatOffer(content, game.facts, v.day));
 
   onMount(() => {
     if (to === 'recurring') recurringEl?.scrollIntoView({ block: 'start' });
@@ -44,15 +54,28 @@
     const line = text.trim();
     if (!line || v.run || v.runEnd) return;
     steady(); saveList();
-    game.do({ do: 'delveNow', line });
-    text = '';
+    game.do({ do: 'delveNow', line, ...(tied ? { from: picked! } : {}) });
+    text = ''; picked = null;
     if (game.view.run) go('delve');
   }
   function later() {
     const line = text.trim();
     if (!line) return;
-    steady(); game.do({ do: 'addItems', lines: [line] }); text = ''; said = t('satchel.saved', { job: line });
+    steady();
+    const tie = tieFor(content, game.facts, line, tied ? picked! : undefined);
+    text = ''; picked = null;
+    /* a job still Dan's is already in its place: say where (D-136) */
+    if (tie?.same) { said = where(tie.job); return; }
+    game.do({ do: 'saveForLater', line, ...(tie ? { from: tie.job.id } : {}) }); said = t('satchel.saved', { job: line });
   }
+  function where(j: Job): string {
+    if (s.recurring.some(x => x.id === j.id)) return t('satchel.have.recurring', { job: j.name });
+    const coming = s.coming.find(x => x.job.id === j.id);
+    if (coming) return t('satchel.have.coming', { job: j.name, day: dayShort(coming.day) });
+    return t(s.noDay.some(x => x.id === j.id) ? 'satchel.have.noDay' : 'satchel.have.today', { job: j.name });
+  }
+  /* a job from before fills the box; the box keeps the keyboard (no press takes its focus) */
+  function choose(x: Suggestion) { text = x.job.name; picked = x.job.id; said = null; }
   const preview = (j: Job) => (j.list ?? '').split('\n').filter(l => l.trim()).join(' · ');
   function openList(j: Job) {
     placing = null; said = null;
@@ -107,21 +130,43 @@
       <span></span><span></span>
     </div>
     <h1 class="carve lg rise">{t('satchel.label')}</h1>
-    <p class="soft say-note rise">{t('satchel.say')}</p>
+    {#if !before.length}<p class="soft say-note rise">{t('satchel.say')}</p>{/if}
     <!-- the one box for a new job (D-131): delve on it now, or keep it for later -->
     <form class="new satchel-add rise" onsubmit={(e) => { e.preventDefault(); later(); }}>
-      <input bind:this={input} bind:value={text} aria-label={t('satchel.add')} placeholder={t('satchel.add.hint')} maxlength="120" enterkeyhint="done" />
+      <input bind:this={input} bind:value={text} aria-label={t('satchel.add')} placeholder={t('satchel.add.hint')} maxlength="120" enterkeyhint="done" autocomplete="off" />
       <div class="two">
         <button class="btn-quiet" type="button" disabled={!text.trim() || !!v.run || !!v.runEnd} onclick={now}><span>{t('satchel.now')}</span></button>
         <button class="btn-quiet" type="submit" disabled={!text.trim()}><span>{t('satchel.later')}</span></button>
       </div>
+      <!-- the jobs Dan has had before (D-136): under the box and its buttons, so nothing he aims at moves as he types -->
+      {#if before.length}
+        <ul class="before" aria-label={t('satchel.before')}>
+          {#each before as x (x.job.id)}
+            <li><button type="button" class="pick" onpointerdown={e => e.preventDefault()} onclick={() => choose(x)}
+              aria-label={x.usual ? t('satchel.pick.sr', { job: x.job.name, min: minutesWords(x.usual) }) : x.job.name}>
+              <span class="t">{x.job.name}</span>{#if x.usual}<span class="u" aria-hidden="true">{t('satchel.usually', { min: minutesShort(x.usual) })}</span>{/if}
+            </button></li>
+          {/each}
+        </ul>
+      {/if}
     </form>
   </header>
 
   <div class="body col rise d1" onscroll={shrink}>
+    <!-- the one offer (D-136): a name added a third time in 28 days; "No thanks" and it is never asked again -->
+    {#if offer}
+      <div class="offer" role="group" aria-label={t('satchel.offer', { job: offer.name })}>
+        <p>{t('satchel.offer', { job: offer.name })}</p>
+        <div class="acts center">
+          <button class="text-link" onclick={() => { saveList(); go('rhythms', `repeat:${offer.job}`); }}><span>{t('satchel.offer.yes')}</span></button>
+          <button class="text-link" onclick={() => game.do({ do: 'declineRepeat', name: offer.name })}><span>{t('satchel.offer.no')}</span></button>
+        </div>
+      </div>
+    {/if}
+    <!-- what the box just did, under it, where the eye is (D-136) -->
+    {#if said}<p class="said" role="status">{said}</p>{/if}
     <img class="art" bind:this={artEl} src={art} alt="" aria-hidden="true" />
     <Deleted />
-    {#if said}<p class="said" role="status">{said}</p>{/if}
 
     <div class="label-line">{t('satchel.noDay')}</div>
     {#if !s.noDay.length}<p class="soft empty">{t('satchel.empty')}</p>{/if}
@@ -213,4 +258,13 @@
   .said { font-family: var(--life); font-style: italic; font-size: 15.5px; color: var(--ink-2); text-align: center; margin: 4px 0 8px; }
   .links { display: flex; justify-content: center; margin-top: 12px; }
   button.home { color: var(--ink-2); }
+  /* the jobs from before (D-136): quiet lines under the box, a finger high, the name first; nothing moves */
+  .before { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--edge-2); }
+  .pick { display: flex; align-items: baseline; gap: 12px; width: 100%; min-height: 44px; padding: 10px 12px; text-align: left;
+    background: rgba(255, 255, 255, .03); border: 0; border-bottom: 1px solid var(--edge-2); cursor: pointer; font: inherit; color: #fff; }
+  .pick .t { flex: 1; min-width: 0; font-size: 17px; overflow-wrap: anywhere; }
+  .pick .u { flex: none; font-family: var(--life); font-style: italic; font-size: 15px; color: var(--ink-2); }
+  .offer { margin: 8px 0 6px; padding: 10px 12px 2px; border: 1px solid var(--edge-2); background: rgba(255, 255, 255, .04); }
+  .offer p { margin: 0; font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink); text-align: center; }
+  .acts.center { justify-content: center; padding-left: 0; }
 </style>

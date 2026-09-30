@@ -369,6 +369,11 @@ export const copy = {
   'satchel.empty': 'Nothing here with no day yet. When something comes to mind, it goes here.',
   'satchel.list': 'List', 'satchel.list.done': 'Close', 'satchel.list.label': 'The list for {job}', 'satchel.list.hint': 'A line at a time', 'satchel.list.full': 'The list is full: take a line out to add another.',
   'satchel.day': 'Put on a day', 'satchel.placed': '{job}: on {day}.',
+  /* remembered jobs (D-136): the jobs Dan has had before, under the box as he types; the one offer to make a job repeat */
+  'satchel.before': 'Jobs you’ve had before', 'satchel.usually': 'usually {min}', 'satchel.pick.sr': '{job}, usually {min}',
+  'satchel.have.noDay': '{job} is already in your satchel.', 'satchel.have.coming': '{job} is already on {day}.',
+  'satchel.have.today': '{job} is already on today’s list.', 'satchel.have.recurring': '{job} is one of your recurring jobs: it comes round by itself.',
+  'satchel.offer': '{job} keeps coming back. Make it repeat?', 'satchel.offer.yes': 'Make it repeat', 'satchel.offer.no': 'No thanks',
   'pick.today': 'today', 'pick.prev': 'The month before', 'pick.next': 'The next month',
   'today.addJob': 'Add a job',
 

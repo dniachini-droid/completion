@@ -52,6 +52,8 @@
       avoided: !!j.avoided, step: j.firstStep ?? '', note: j.note ?? '', isNew: false, by: j.by ?? null, dremind: reminderOf(game.facts, dateTarget(j.id)) as 0 | 1440 | null };
   }
   if (jobArg === 'new') open(null);
+  /* "Make it repeat" in the Satchel (D-136): the job's editor with How often ready, twice a week to start */
+  else if (jobArg?.startsWith('repeat:')) { const j = game.job(jobArg.slice(7)); if (j) { edit(j); if (d && d.often === 'once') d.often = 'week'; } }
   else if (jobArg) { const j = game.job(jobArg); if (j) edit(j); }
   /** Leave the editor: back to where it was opened from. */
   function close() { d = null; if (!removed) go('back'); }

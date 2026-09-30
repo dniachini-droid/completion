@@ -138,8 +138,12 @@ export type FactBody =
   | { type: 'calendarRead'; from: string; to: string; events: CalEvent[] }
   /** The re-entry nudge, off unless Dan turns it on (D-113) */
   | { type: 'nudgeChosen'; on: boolean }
-  /** `via`: said to Siri, Shortcuts or the Action button; `ref`: that line's own id, so it is never added twice (D-113) */
-  | { type: 'itemAdded'; id: string; name: string; via?: 'siri'; ref?: string }
+  /** `via`: said to Siri, Shortcuts or the Action button; `ref`: that line's own id, so it is never added twice (D-113);
+      `from`: a job Dan had before, picked in the Satchel's box (D-136): the new job starts with its list, note, first
+      step, avoided mark and minutes */
+  | { type: 'itemAdded'; id: string; name: string; via?: 'siri'; ref?: string; from?: string }
+  /** "No thanks" to the Satchel's "keeps coming back" offer (D-136): never asked again for that name (as nameKey has it) */
+  | { type: 'repeatDeclined'; name: string }
   | { type: 'itemTicked'; id: string }
   | { type: 'itemDropped'; id: string }
   | { type: 'planMade'; week: string; entries: PlanEntry[] }

@@ -14,6 +14,7 @@ import * as W from './week';
 import * as R from './reminders';
 import * as Rep from './repeat';
 import { doneFacts, undoneFacts } from './done';
+import { tieFor } from './remember';
 import type { Beat, Seal, StretchId } from './story-types';
 
 export const STEP_MIN = 25;
@@ -266,6 +267,15 @@ function datedSince(facts: Fact[], job: string): string | null {
 }
 
 /** Whether a job was begun today and the Begin still stands (not taken back since). */
+/** A delve begun on a job (the set-up's Begin, or "Delve now" on a job Dan already has, D-136). A one-off delved on today
+    is today's: it leaves a later day it was put on, so it is in one place (second review of D-131); undone, it goes
+    back to No day yet. */
+function beginRun(w: W, c: Content, job: string, minutes: number, count: number, day: string) {
+  if (!begunOn(w.all, day, job)) w.put({ type: 'jobBegun', job, from: 'app' });
+  w.put({ type: 'delveStarted', job, minutes, count: Math.max(1, count) });
+  if (!c.rhythms.some(r => r.job === job)) for (const e of laterDays(w.all, day).get(job) ?? []) w.put({ type: 'planChanged', entry: e, day: null });
+}
+
 function begunOn(facts: Fact[], day: string, job: string): boolean {
   let on = false;
   for (const f of onDay(facts, day)) {
@@ -798,8 +808,15 @@ export type Command =
   /** Put a job on a day, from the Satchel or the job menu (D-131): a one-off leaves every other day it was on (a job is
       in one place); a recurring job's session moves off today if it was there */
   | { do: 'putOnDay'; job: string; day: string; entry?: string }
-  /** "Delve now" (D-131): a new one-off on today, its delve begun at once (one delve of 30 minutes, D-124) */
-  | { do: 'delveNow'; line: string }
+  /** "Delve now" (D-131): a new one-off on today, its delve begun at once (one delve of 30 minutes, D-124). `from`: a
+      job Dan had before, picked under the box (D-136): the new one carries on from it; a job still his (recurring, or a
+      one-off still to do) is delved on itself, never added twice */
+  | { do: 'delveNow'; line: string; from?: string }
+  /** "Save for later" in the Satchel's box (D-131): a new one-off with no day; tied as "Delve now" is (D-136), and a
+      job still Dan's is not added again */
+  | { do: 'saveForLater'; line: string; from?: string }
+  /** "No thanks" to "… keeps coming back. Make it repeat?" (D-136) */
+  | { do: 'declineRepeat'; name: string }
   | { do: 'addToWeek'; line: string; day: string; time?: string }
   | { do: 'bedtime'; time: string }
   | { do: 'goodnight' }
@@ -881,11 +898,7 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     case 'startRun':
       /* only a run the dial can set: whole minutes up to its longest stop, one to eight delves (D-120) */
       if (v.run || !Number.isInteger(cmd.minutes) || cmd.minutes < 1 || cmd.minutes > DIAL[DIAL.length - 1] || !Number.isInteger(cmd.count) || cmd.count < 1 || cmd.count > 8) break;
-      if (!begunOn(w.all, day, cmd.job)) w.put({ type: 'jobBegun', job: cmd.job, from: 'app' });
-      w.put({ type: 'delveStarted', job: cmd.job, minutes: cmd.minutes, count: Math.max(1, cmd.count) });
-      /* a one-off delved on today is today's: it leaves a later day it was put on, so it is in one place (second review of
-         D-131); undone, it goes back to No day yet */
-      if (!c.rhythms.some(r => r.job === cmd.job)) for (const e of laterDays(w.all, day).get(cmd.job) ?? []) w.put({ type: 'planChanged', entry: e, day: null });
+      beginRun(w, c, cmd.job, cmd.minutes, cmd.count, day);
       break;
     case 'skipBreather': if (v.run?.phase === 'breather') w.put({ type: 'breatherSkipped' }); break;
     case 'stepAway': if (v.run?.phase === 'delve') w.put({ type: 'delveHeld' }); break;
@@ -1092,11 +1105,28 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       const name = cmd.line.trim().slice(0, 120);
       /* never over a delve under way, or one whose end is still to be answered */
       if (!name || v.run || v.runEnd) break;
+      /* a job Dan has had before (D-136): one still his is delved on itself, as a tap on its row would, never added again */
+      const tie = tieFor(base, w.all, name, cmd.from);
+      if (tie?.same) { beginRun(w, c, tie.job.id, PRESET.minutes, PRESET.count, day); break; }
       const id = `it-${ofType(w.all, 'itemAdded').length + 1}`, n = ofType(w.all, 'planAdded').length + 1;
-      w.put({ type: 'itemAdded', id, name });
+      w.put({ type: 'itemAdded', id, name, ...(tie ? { from: tie.job.id } : {}) });
       w.put({ type: 'planAdded', entry: { id: `pa-${n}`, job: id, day } });
       w.put({ type: 'jobBegun', job: id, from: 'app' });
       w.put({ type: 'delveStarted', job: id, minutes: PRESET.minutes, count: PRESET.count });
+      break;
+    }
+    case 'saveForLater': {
+      const name = cmd.line.replace(/^[-*•\s]+/, '').trim().slice(0, 120);
+      if (!name) break;
+      const tie = tieFor(base, w.all, name, cmd.from);
+      /* a job still Dan's is already in its place: nothing is added (the Satchel says where it is) */
+      if (tie?.same) break;
+      w.put({ type: 'itemAdded', id: `it-${ofType(w.all, 'itemAdded').length + 1}`, name, ...(tie ? { from: tie.job.id } : {}) });
+      break;
+    }
+    case 'declineRepeat': {
+      const k = W.nameKey(cmd.name);
+      if (k && !ofType(w.all, 'repeatDeclined').some(f => f.name === k)) w.put({ type: 'repeatDeclined', name: k });
       break;
     }
     case 'addToWeek': {
@@ -1429,7 +1459,7 @@ function slateOf(c: Content, facts: Fact[], day: string, clock: string) {
      are reached. An appointment is always on it (P10: the day is never gold with one still to come). A job done from
      outside the list never holds the line back, and is the line only when nothing else is on the day. */
   /* learned from the days before today, so the line never changes while Dan works (second review of D-131) */
-  const room = (id: string) => W.roomOf(jobOf(c, id), facts, day);
+  const room = (id: string) => W.roomOf(jobOf(c, id), facts, day, c);
   const ownFirst = firstChosen(facts, day), wk = calendarWeek(day);
   const todays = W.weekOf(c, facts, wk, day).days.find(d => d.day === day)!.jobs;
   const planIdx = new Map((W.planOf(facts, wk) ?? []).map((e, k) => [e.id, k]));
@@ -1452,7 +1482,7 @@ function slateOf(c: Content, facts: Fact[], day: string, clock: string) {
   const pin = W.pinnedIn(facts, calendarWeek(day)), bed = bedtimeOf(facts);
   const movable = (id: string) => plannedIds.has(id) && !mine.has(id) && !times[id] && id !== pin && id !== ownFirst && !swapped.has(id);
   const slots = todo.map((id, i) => movable(id) ? i : -1).filter(i => i >= 0);
-  const moved = slots.map(i => todo[i]).map((id, k) => ({ id, k, good: W.goodHour(facts, id, clock, bed) === true }))
+  const moved = slots.map(i => todo[i]).map((id, k) => ({ id, k, good: W.goodHour(facts, id, clock, bed, c) === true }))
     .sort((a, b) => Number(b.good) - Number(a.good) || a.k - b.k).map(x => x.id);
   slots.forEach((i, k) => { todo[i] = moved[k]; });
   const lineOrdered = [...line.filter(id => done.has(id)), ...todo];
