@@ -1507,3 +1507,40 @@
 - **Alternatives:** matching anywhere inside a word (too many false matches on a phone's few letters); a list of past jobs to browse (administration, rule 11); merging same-named jobs into one (a finished one-off would come back from the Daybook, and its minutes and returns would be tangled); asking "Make it repeat?" on the spot after the third add (it would stand between Dan and a delve he just started); a setting to turn suggestions off (rule 11).
 - **Consequences:** new `core/remember.ts` (`suggest`, `tieFor`, `repeatOffer`); `nameKey` and `sameName` in `core/week.ts`; `realMinutes`, `goodHour` and `roomOf` take the content to know names (without it, the job alone, as before); `delveNow` takes `from`; new commands `saveForLater` and `declineRepeat`; new fact `repeatDeclined`; `itemAdded.from`. Old saves read as before (no `from`: a fresh job). The Satchel's line saying what the box did moved above the picture, under the box. The job editor opens on `repeat:<job>` with How often ready. 27 rule tests (`tests/rules/remember.test.ts`, 26 failing before); a new flow (`tests/flows/remember.mjs`) in CI at both sizes.
 - **Reversible:** Yes: the suggestions are one list in `Satchel.svelte`; the learning by name is `sameName`; the offer is one function.
+
+## D-137 — Waiting on…: a one-off that waits for someone's reply leaves the lists until its day, then asks "Did they reply?" (Dan)
+- **Date:** 2026-09-30
+- **Context:** Dan asked for a way to park jobs he can't finish until someone replies ("the vet to call back"). Until now such a job sat on Today or in No day yet like any other, looking like something he could do now. His brief: in every job's press-and-hold menu, "Waiting on…": a date (the app's own calendar, default in 3 days) and an optional short line of who or what ("the vet"). The job leaves Today's list and the Satchel's No day yet / Coming up, and sits in a quiet "Waiting" section of the Satchel ("Waiting on the vet · back Thu 3 Oct"). On that date it comes back to Today with "Did they reply?": Back to it · Still waiting (a new date) · It's done. "Back to it" is also on the Waiting row at any time. Waiting earns nothing and costs nothing, with no guilt words; an unanswered one simply stays on Today. Old saves unaffected; minutes delved before waiting are kept (D-133).
+- **Decision:**
+  1. **Two new facts**, `waitSet` (job, `until` a game day, optional `who`, at most 60 characters) and `waitEnded` ("Back to it"); commands `waitOn` and `backToIt`. What waits is worked out from the log (`waitingOf`, `core/week.ts`). No save version change: an old save has no wait and reads as before.
+  2. **Only one-offs wait** (Claude's call): a recurring job simply comes again on its next day, and "Not today" already covers skipping one. Refused too: a finished one-off, a stopped job, today or a past day, and a job whose own delve runs or whose delve end is still to be answered.
+  3. **Where it is:**
+     - Before its day, it is only in the Satchel's **Waiting** (soonest first). It is taken off every day it was put on from today on, and off tomorrow's first job, and the planner never lays it out. The look-ahead's "Still wanted?" never asks about it.
+     - From its day (at 04:00, the game day), it is **under Today's list**, never on it: not in the finish line, never holding the day's gold back, and never counted as the day's work (rule 10).
+     - Unanswered, it stays there day after day, with no mark against it.
+  4. **The answers:**
+     - **Back to it** makes it an ordinary job again: on today's list if it had come back to Today, otherwise in No day yet.
+     - **Still waiting** sets a new date on the same calendar, keeping the who-line.
+     - **It's done** is D-134's tick-off ("How long did it take?"), with "No more" when minutes were delved before.
+     - Anything that puts the job to work also ends the wait: a delve begun on it, the job done, put on a day by hand, or made a recurring job. Deleted and brought back by Undo, it is still waiting.
+     - "Not done after all" after "It's done" makes it an ordinary job, not a wait.
+  5. **Earns nothing, costs nothing:** waiting writes no minutes, no story and no mark; the road stays where it was. A one-off's carried minutes (D-133) stay with it and count once, when it is delved on again or ticked off.
+  6. **Screens:**
+     - The job menu has "Waiting on…" for a one-off still to do ("Still waiting" and "Back to it" when it already waits). It opens a who-or-what box, "Back on Sat 3 Oct" (in 3 days, one tap) and "Another day…" (the one calendar).
+     - Set from Today or the Satchel, a line says where it went ("…: in the satchel until Sat 3 Oct."), with "Back to it" beside it.
+     - The Satchel's Waiting rows read "Waiting on the vet · back Sat 3 Oct", with "Back to it".
+     - Today's returned rows show "Waiting on the vet" and "Did they reply?" with the three answers. Each has its own VoiceOver label naming the job and a 44-point target.
+     - Nothing moves or runs on its own (D-132).
+- **Alternatives:**
+  - Waiting as a kind of "Not today" with a date: no place to see what's waiting, and no question on its day.
+  - Letting recurring jobs wait: each session is that day's, so there is nothing to carry.
+  - Putting the returned job back on the finish line: an unanswered reply would hold the day's gold back, a cost Dan said waiting must not have.
+  - A notification on its day: Today is where it comes back; reminders stay opt-in (D-107).
+- **Review (a fresh adversarial reviewer, whole diff), fixed with tests:**
+  - A wait set from the Week left its "in the satchel until…" line waiting to be shown on Today. Its "Back to it" there then put the job on today's list. The line is now said only on Today and the Satchel, and cleared when any menu opens; "Back to it" puts a job on today only if it was on Today.
+  - Tomorrow's first job could be a waiting job; it can't now.
+  - The look-ahead's "Still wanted?" could ask about a parked job; it doesn't now.
+  - The reviewer found the minutes (never lost or doubled), old saves, 04:00, "Not done after all", runs, Delete and Undo, and one place per job sound.
+  - **Left for Dan:** a job with a "by" date set waiting past that date still gets its date reminder, but shows only in the Satchel's Waiting until its waiting day. Should the date bring it back to Today early?
+- **Consequences:** `View.replies`, `satchelView().waiting`, `WaitPick.svelte`; the job menu knows which screen opened it. Rule tests `tests/rules/wait.test.ts` (21, failing before); a new flow `tests/flows/wait.mjs` (Satchel, Today, the Week, Still waiting, It's done, Back to it, nothing cut off or sliding) in CI at both sizes.
+- **Reversible:** Yes: two fact types read in one function; with none written, everything is as before.

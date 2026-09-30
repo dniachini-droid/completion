@@ -95,6 +95,11 @@ export type FactBody =
   | { type: 'doneUndone'; job: string; on: string }
   /** Tonight's "Tomorrow starts with" (D-131): the job Today opens with on `on` (the next game day); null: as planned */
   | { type: 'firstChosen'; job: string | null; on: string }
+  /** "Waiting on…" (D-137): a one-off Dan can't finish until someone replies, set aside until `until` (a game day), with
+      an optional line of who or what (`who`: "the vet"). Set again: "Still waiting", a new date */
+  | { type: 'waitSet'; job: string; until: string; who?: string }
+  /** "Back to it" (D-137): an ordinary job again */
+  | { type: 'waitEnded'; job: string }
   | { type: 'cantStartUsed'; job: string }
   | { type: 'seen'; what: 'step' | 'arrival' | 'morning' | 'welcome'; ref: number }
   /* what the world gave (worked out once, then kept) */

@@ -241,6 +241,14 @@ export const copy = {
   'tick.off': 'Tick off', 'tick.sr': '{job}: tick off', 'tick.title': 'How long did it take?',
   'tick.onTop': 'On top of the {min} you delved', 'tick.noMore': 'No more', 'tick.hour': '{n} h', 'tick.halfHour': '1½ h',
   'menu.delve': 'Delve', 'menu.edit': 'Edit', 'menu.srEdit': '{job}: edit',
+  /* a one-off waiting on someone's reply (D-137): earns nothing, costs nothing, no word of blame */
+  'wait.menu': 'Waiting on…', 'wait.who': 'Who or what? (if you like)', 'wait.who.label': '{job}: waiting on who or what',
+  'wait.until': 'Back on {day}', 'wait.another': 'Another day…',
+  'wait.label': 'Waiting', 'wait.on': 'Waiting on {who} · back {day}', 'wait.plain': 'Waiting · back {day}',
+  'wait.onNow': 'Waiting on {who}', 'wait.ask': 'Did they reply?',
+  'wait.back': 'Back to it', 'wait.still': 'Still waiting', 'wait.done': 'It’s done',
+  'wait.srBack': '{job}: back to it', 'wait.srStill': '{job}: still waiting, choose a day', 'wait.srDone': '{job}: it’s done',
+  'wait.said': '{job}: in the satchel until {day}.',
   /* a done job taken back, to work on it more (D-131) */
   'row.notDone': 'Not done after all', 'row.srNotDone': '{job}: not done after all',
   /* Tonight, in the last hour before bed (D-131): both optional, neither ever mentioned if skipped */

@@ -90,6 +90,9 @@ jobs:
       - name: 'Jobs you have had before, under the Satchel''s box; the offer to make one repeat (D-136)'
         if: matrix.walk
         run: node tests/flows/remember.mjs http://localhost:4173/ ${{ matrix.size }}
+      - name: 'Waiting on a reply: the Satchel''s Waiting, and "Did they reply?" on its day (D-137)'
+        if: matrix.walk
+        run: node tests/flows/wait.mjs http://localhost:4173/ ${{ matrix.size }}
       - name: The whole first playable, walked day by day
         if: matrix.walk
         run: mkdir -p "$RUNNER_TEMP/screens" && node tests/flows/heart-walk.mjs http://localhost:4173/ "$RUNNER_TEMP/screens" ${{ matrix.size }}
