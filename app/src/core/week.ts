@@ -254,6 +254,8 @@ export function planWeek(c: Content, facts: Fact[], week: string, from: string, 
   const rhythmJob = new Set(c.rhythms.map(r => r.job));
   /* a one-off Dan placed himself this week stays where he put it: the planner never places it again (D-117 review) */
   const hand = new Set(ofType(facts, 'planAdded').filter(f => calendarWeek(f.entry.day) === week && !rhythmJob.has(f.entry.job)).map(f => f.entry.job));
+  /* a one-off waiting on a reply is never laid out: it comes back on its own day (D-137) */
+  for (const id of waitingOf(facts).keys()) hand.add(id);
 
   /* the one thing that matters most this week (the look-ahead, D-116): first, early in the week */
   const pin = pinnedIn(facts, week);
@@ -491,6 +493,27 @@ export function comingUp(c: Content, facts: Fact[], day: string): { day: string;
  * added in the satchel or by Siri, a job taken off a week ("Not this week"), a job whose day has passed. A repeating
  * job is never here: it comes round by itself. A job done today stays on Today, not here.
  */
+/** A one-off waiting on someone's reply (Dan, D-137): the day it comes back (`until`, a game day) and who or what it waits
+    on. "Back to it" ends the wait, and so does anything that puts the job to work again: a delve begun on it, the job
+    done, placed on a day by hand, or made a recurring job. A job deleted keeps its wait, so Undo brings it back as it
+    was. Waiting earns nothing and costs nothing: it only moves the job out of the lists until its day. */
+export interface Wait { until: string; who?: string; }
+const waits = new WeakMap<Fact[], { n: number; out: Map<string, Wait> }>();
+export function waitingOf(facts: Fact[]): Map<string, Wait> {
+  const m = waits.get(facts);
+  if (m && m.n === facts.length) return m.out;
+  const out = new Map<string, Wait>();
+  for (const f of facts) {
+    if (f.type === 'waitSet') out.set(f.job, { until: f.until, ...(f.who ? { who: f.who } : {}) });
+    else if (!out.size) continue;
+    else if (f.type === 'waitEnded' || f.type === 'delveStarted' || f.type === 'jobDone') out.delete(f.job);
+    else if (f.type === 'planAdded') out.delete(f.entry.job);
+    else if (f.type === 'rhythmSaved') out.delete(f.rhythm.job);
+  }
+  waits.set(facts, { n: facts.length, out });
+  return out;
+}
+
 export function satchelOf(c: Content, facts: Fact[], day: string): Job[] {
   const rhythmJob = new Set(c.rhythms.map(r => r.job));
   /* finished: done since it last stopped repeating (a repeating job made a one-off is not finished by its old sessions,
@@ -512,6 +535,8 @@ export function satchelOf(c: Content, facts: Fact[], day: string): Job[] {
   }
   const placed = new Set<string>();
   for (const wk of weeks) for (const e of planOf(facts, wk) ?? []) if (e.day > day || (e.day === day && !aside.has(e.job))) placed.add(e.job);
-  return c.jobs.filter(j => !j.stopped && !rhythmJob.has(j.id) && !finished.has(j.id) && !placed.has(j.id)).reverse();
+  /* waiting on a reply: in the Satchel's own Waiting, then back on Today on its day (D-137) */
+  const waiting = waitingOf(facts);
+  return c.jobs.filter(j => !j.stopped && !rhythmJob.has(j.id) && !finished.has(j.id) && !placed.has(j.id) && !waiting.has(j.id)).reverse();
 }
 

@@ -228,7 +228,10 @@ function orderOn(c: Content, facts: Fact[], day: string, clock: string): string[
     const a = order.indexOf(s.from), b = order.indexOf(s.to);
     if (a >= 0 && b >= 0) [order[a], order[b]] = [order[b], order[a]];
   }
-  return order;
+  /* a job waiting on a reply is never on the day's list, nor its finish line: on its day it comes back under the list,
+     asking "Did they reply?", and never holds the day back (D-137) */
+  const waiting = W.waitingOf(facts);
+  return waiting.size ? order.filter(id => !waiting.has(id)) : order;
 }
 
 /** Jobs taken off today's list ("Not today"), unless begun again after (D-077). Setting aside earns and costs nothing. */
@@ -546,6 +549,10 @@ const sessionEnds = (all: Fact[], day: string, j: Job, minutes: number) =>
 
 /** How long a job's list may be, in characters (D-126). */
 export const LIST_MAX = 2000;
+/** The longest "Waiting on…" line (D-137): a few words, "the vet". */
+export const WHO_MAX = 60;
+/** "Waiting on…" opens on the day this many days ahead (D-137). */
+export const WAIT_DAYS = 3;
 /** The lines of a job's list, as kept. */
 export const listLines = (j: Job | undefined) => (j?.list ?? '').split('\n').filter(l => l.trim());
 /** A delve's end takes the lines struck off during it out of the job's list (D-126). */
@@ -765,6 +772,11 @@ export type Command =
   | { do: 'tickOff'; job: string; minutes: number }
   /** "Not done after all" (D-131): a job done today is to do again; what it earned stays and is never paid twice */
   | { do: 'notDone'; job: string }
+  /** "Waiting on…" (D-137): a one-off set aside until someone replies, back on Today on `until`; `who` the short line
+      ("the vet"; left out: the line it had). Again on a job waiting: "Still waiting", a new date */
+  | { do: 'waitOn'; job: string; until: string; who?: string }
+  /** "Back to it" (D-137): an ordinary job again (on Today if it had come back there, else with no day) */
+  | { do: 'backToIt'; job: string }
   /** Tonight's "Tomorrow starts with" (D-131): the job tomorrow opens with (null: as planned) */
   | { do: 'firstJob'; job: string | null }
   | { do: 'cantStart'; job: string }
@@ -931,6 +943,37 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       /* only a job done today and still done; never while a delve on it runs (its end answers it) */
       if (doneOn(w.all, day).has(cmd.job) && activeRun(w.all)?.fact.job !== cmd.job && !hiddenDone(w.all).has(`${cmd.job}|${day}`)) w.put({ type: 'doneUndone', job: cmd.job, on: day });
       break;
+    case 'waitOn': {
+      /* only a one-off still to do: a recurring job simply comes again on its next day (D-137) */
+      const j = c.jobs.find(x => x.id === cmd.job && !x.stopped);
+      if (!j || c.rhythms.some(r => r.job === j.id) || W.oneOffDone(c, w.all).some(f => f.job === j.id)) break;
+      /* a later day: it comes back on it */
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(cmd.until) || cmd.until <= day) break;
+      /* never while its own delve runs, or that delve's end is still to be answered */
+      if (activeRun(w.all)?.fact.job === j.id || v.runEnd?.job.id === j.id) break;
+      const was = W.waitingOf(w.all).get(j.id);
+      const who = (cmd.who ?? was?.who ?? '').trim().slice(0, WHO_MAX);
+      if (was && was.until === cmd.until && (was.who ?? '') === who) break;
+      w.put({ type: 'waitSet', job: j.id, until: cmd.until, ...(who ? { who } : {}) });
+      /* it leaves every day it was put on, from today on: it comes back on its own day (a job is in one place, D-131) */
+      const weeks = new Set([calendarWeek(day), ...ofType(w.all, 'planMade').map(f => f.week), ...ofType(w.all, 'planAdded').map(f => calendarWeek(f.entry.day))]);
+      for (const wk of [...weeks].filter(x => x >= calendarWeek(day))) for (const e of W.planOf(w.all, wk) ?? []) if (e.job === j.id && e.day >= day) w.put({ type: 'planChanged', entry: e.id, day: null });
+      /* chosen for tomorrow: the choice goes with it */
+      if (firstChosen(w.all, W.addDays(day, 1)) === j.id) w.put({ type: 'firstChosen', job: null, on: W.addDays(day, 1) });
+      break;
+    }
+    case 'backToIt': {
+      const was = W.waitingOf(w.all).get(cmd.job);
+      if (!was || !c.jobs.some(j => j.id === cmd.job && !j.stopped)) break;
+      w.put({ type: 'waitEnded', job: cmd.job });
+      /* come back on Today: it stays on today's list, as an ordinary job; still ahead: with no day, in the Satchel */
+      if (was.until <= day) {
+        const n = ofType(w.all, 'planAdded').length + 1;
+        w.put({ type: 'planAdded', entry: { id: `pa-${n}`, job: cmd.job, day } });
+        if (asideOn(w.all, day).has(cmd.job)) w.put({ type: 'putBack', job: cmd.job });
+      }
+      break;
+    }
     case 'firstJob': {
       const on = W.addDays(day, 1), was = firstChosen(w.all, on);
       /* never a one-off already done: it is finished */
@@ -1280,6 +1323,9 @@ export interface View {
   forecast: string[];
   /** Dan's own data as it stands (his edits applied). */
   content: Content;
+  /** One-offs waiting on a reply whose day has come (D-137): under today's list, "Did they reply?"; never on the list or
+      its finish line. Soonest first. */
+  replies: { job: string; until: string; who?: string }[];
 }
 
 /** The stand-in painting for a place until its own is painted from its brief (PROTOTYPE_NOTES.md). */
@@ -1462,7 +1508,12 @@ function slateOf(c: Content, facts: Fact[], day: string, clock: string) {
 /** The Satchel (D-131): the one list of every job not on today, each in one place. "No day yet": one-offs with no
     day, newest first; "Coming up": one-offs put on a later day, soonest first, with their day; "Recurring jobs". A job
     on today's list is on Today, never here; done, it is in the Daybook. */
-export function satchelView(base: Content, facts: Fact[], now: Moment): { noDay: Job[]; coming: { job: Job; day: string }[]; recurring: Job[] } {
+/** The jobs waiting on a reply (D-137), soonest first: those whose day has come are on Today, the rest in the Satchel. */
+function waitsOf(c: Content, facts: Fact[]) {
+  return [...W.waitingOf(facts)].flatMap(([id, x]) => { const j = c.jobs.find(k => k.id === id && !k.stopped); return j && !c.rhythms.some(r => r.job === id) ? [{ job: j, ...x }] : []; })
+    .sort((a, b) => a.until.localeCompare(b.until));
+}
+export function satchelView(base: Content, facts: Fact[], now: Moment): { noDay: Job[]; coming: { job: Job; day: string }[]; recurring: Job[]; waiting: { job: Job; until: string; who?: string }[] } {
   const c = W.live(base, facts), day = gameDay(now);
   const { slate } = slateOf(c, facts, day, now.slice(11, 16));
   const today = new Set(slate);
@@ -1474,14 +1525,16 @@ export function satchelView(base: Content, facts: Fact[], now: Moment): { noDay:
   const weeks = new Set([...ofType(facts, 'planMade').map(f => f.week), ...ofType(facts, 'planAdded').map(f => calendarWeek(f.entry.day))]);
   const soonest = new Map<string, string>();
   for (const wk of [...weeks].filter(x => x >= calendarWeek(day))) for (const e of W.planOf(facts, wk) ?? []) {
-    if (e.day <= day || recurringIds.has(e.job) || finished.has(e.job) || today.has(e.job)) continue;
+    if (e.day <= day || recurringIds.has(e.job) || finished.has(e.job) || today.has(e.job) || W.waitingOf(facts).has(e.job)) continue;
     if (!soonest.has(e.job) || e.day < soonest.get(e.job)!) soonest.set(e.job, e.day);
   }
   const coming = [...soonest].flatMap(([id, d]) => { const j = c.jobs.find(x => x.id === id && !x.stopped); return j ? [{ job: j, day: d }] : []; })
     .sort((a, b) => a.day.localeCompare(b.day));
   const inComing = new Set(coming.map(x => x.job.id));
   const recurring = c.rhythms.map(r => c.jobs.find(j => j.id === r.job)).filter((j): j is Job => !!j && !j.stopped);
-  return { noDay: noDay.filter(j => !inComing.has(j.id)), coming, recurring: [...new Map(recurring.map(j => [j.id, j])).values()] };
+  /* waiting on a reply, until its day (then it is on Today, D-137) */
+  const waiting = waitsOf(c, facts).filter(x => x.until > day);
+  return { noDay: noDay.filter(j => !inComing.has(j.id)), coming, recurring: [...new Map(recurring.map(j => [j.id, j])).values()], waiting };
 }
 
 /** The day's finish line (Dan, D-130): every job on today's list is done, with no hidden count and nothing lowered for
@@ -1548,7 +1601,7 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   else if (!complete) { const id = slate.find(x => !done.has(x)); if (id) next = { job: id, mode: 'begin' }; }
   if (!next) {
     /* after the day's work (or with today's list cleared), the job Dan tapped, until it is done or set aside (D-077) */
-    const aside = asideOn(facts, day), picks = ofType(onDay(facts, day), 'picked').map(f => f.job).filter(id => !done.has(id) && !aside.has(id));
+    const aside = asideOn(facts, day), waiting = W.waitingOf(facts), picks = ofType(onDay(facts, day), 'picked').map(f => f.job).filter(id => !done.has(id) && !aside.has(id) && !waiting.has(id));
     if (picks.length) next = { job: picks[picks.length - 1], mode: 'begin' };
   }
 
@@ -1590,6 +1643,7 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   return {
     suggestedBy: sugg.by, bedtime: bedtimeOf(facts), night: gn ? { kept: gn.kept, beat: campLine?.id ?? null } : null,
     morning, welcome, close, times, content: c,
+    replies: waitsOf(c, facts).filter(x => x.until <= day).map(x => ({ job: x.job.id, until: x.until, ...(x.who ? { who: x.who } : {}) })),
     forecast: W.forecast(c, facts, day, toNext, S.PLACE_GAP),
     day, capacity, suggested: sugg.capacity, size, order, slate, line, done, underWay, complete, next, run, runEnd, arrival,
     /* ahead: the sealed thing in view; before any, the way in (the first morning), then a line from just ahead */
