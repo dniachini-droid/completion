@@ -85,6 +85,7 @@ export const copy = {
   /* a one-off's delve carrying on from its earlier minutes (D-133) */
   'delve.sofar': '{min} on it so far',
   'set.carry': 'Carries on from {min}.',
+  'set.avoided': 'Put off a while: something waits beyond it.',
   'delve.toToday': 'Back to today',
   'delve.see': 'See where you are',
   'delve.today': 'Today',
