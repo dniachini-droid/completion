@@ -22,12 +22,17 @@ export const TICK_CHOICES = [15, 30, 45, 60, 90, 120, 180] as const;            
 export const DAY_SIZE: Record<Capacity, number> = { low: 2, normal: 3, high: 5 };   /* §6 */
 export const DIAL = [5, 10, 15, 25, 30, 45, 60, 90] as const;   /* the dial's stops (D-033; 5–15 and 90, D-110) */
 const MIN = 60_000;
+/** The errand run (Dan, D-139): several jobs in one delve. Its run is on this job, which is no job of Dan's. */
+export const ERRAND_RUN = 'errand-run';
+/** How many errands one run can hold (two at least: one is a delve on that job). */
+export const ERRANDS_MIN = 2, ERRANDS_MAX = 12;
 
 /* ---------- reading the log ---------- */
 
 const ofType = <T extends FactBody['type']>(facts: Fact[], type: T) => facts.filter((f): f is FactOf<T> => f.type === type);
 const onDay = (facts: Fact[], day: string) => facts.filter(f => f.day === day);
-const jobOf = (c: Content, id: string): Job => c.jobs.find(j => j.id === id) ?? { id, name: id, delve: false, length: STEP_MIN, doneBy: 'dan' };
+const jobOf = (c: Content, id: string): Job => c.jobs.find(j => j.id === id)
+  ?? (id === ERRAND_RUN ? { id, name: 'Errand run', delve: true, length: PRESET.minutes, doneBy: 'dan' } : { id, name: id, delve: false, length: STEP_MIN, doneBy: 'dan' });
 
 /** The run in progress, if any, with Dan's marks on it. */
 function activeRun(facts: Fact[]) {
@@ -47,8 +52,13 @@ function activeRun(facts: Fact[]) {
     else if (m.type === 'delveResumed') marks.push({ kind: 'resume', at: epochOf(m.at) });
   }
   const rewarded = facts.slice(start + 1).filter(g => g.type === 'stepsGained' && g.run === f.seq).length;
-  return { fact: f, plan, marks, rewarded };
+  /* an errand run's errands struck off so far (D-139): each tap strikes one off, or back */
+  const struck = new Set<string>();
+  for (const g of facts.slice(start + 1)) if (g.type === 'errandStruck' && g.run === f.seq) { if (struck.has(g.job)) struck.delete(g.job); else struck.add(g.job); }
+  return { fact: f, plan, marks, rewarded, struck };
 }
+/** Whether a job is the delve under way's, or one of its errands (D-139): its end still has to be counted. */
+const inRun = (facts: Fact[], job: string) => { const r = activeRun(facts); return !!r && (r.fact.job === job || !!r.fact.errands?.includes(job)); };
 
 function capacityOn(facts: Fact[], day: string): Capacity {
   const c = ofType(onDay(facts, day), 'capacityChosen');
@@ -438,24 +448,29 @@ function crossedIn(facts: Fact[], day: string, job: string): number {
     done record taken back ("Not done after all", D-131) no longer stands, so the job carries on from all its minutes;
     what that record earned is never paid twice (paidBefore). A repeating job never carries: each run is its session. */
 export function carriedOf(facts: Fact[], c: Content, job: string, before = Infinity): number {
-  if (c.rhythms.some(r => r.job === job)) return 0;
+  /* an errand run's minutes are its errands', never carried as a run (D-139) */
+  if (job === ERRAND_RUN || c.rhythms.some(r => r.job === job)) return 0;
   const last = doneFacts(facts).filter(f => f.job === job && f.seq < before).pop();
   const from = last ? last.seq : -1;
   let n = 0;
   for (const e of ofType(facts, 'delveEnded')) if (e.job === job && e.seq > from && e.seq < before) n += e.minutes;
   /* and the minutes it was ticked off with, since (a tick taken back by "Not done after all" carries too, D-134) */
   for (const g of ofType(facts, 'stepsGained')) if (g.tick && g.job === job && g.seq > from && g.seq < before) n += g.minutes;
+  /* and its shares of errand runs, since (D-139) */
+  for (const g of ofType(facts, 'errandShare')) if (g.job === job && g.seq > from && g.seq < before) n += g.minutes;
   return n;
 }
 /** The minutes a job was ticked off with on a day (D-134). */
 const tickedOn = (facts: Fact[], day: string, job: string) =>
-  ofType(onDay(facts, day), 'stepsGained').filter(f => f.tick && f.job === job).reduce((a, f) => a + f.minutes, 0);
+  ofType(onDay(facts, day), 'stepsGained').filter(f => f.tick && f.job === job).reduce((a, f) => a + f.minutes, 0)
+  /* and its shares of errand runs on the day (D-139): the job's own minutes, as a tick's are */
+  + ofType(onDay(facts, day), 'errandShare').filter(f => f.job === job).reduce((a, f) => a + f.minutes, 0);
 /** The minutes a job already has behind it, for "On top of …" when it is ticked off (D-134): a one-off's carried minutes;
     a repeating job's delve minutes on this day. */
 export function behindOf(facts: Fact[], c: Content, job: string, day: string): number {
   return c.rhythms.some(r => r.job === job) ? delveMinutesOn(facts, day, job) + crossedIn(facts, day, job) + tickedOn(facts, day, job) : carriedOf(facts, c, job);
 }
-function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string, ticked = 0) {
+function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string, ticked = 0, errand?: number) {
   if (doneOn(w.all, day).has(job)) return;
   /* a one-off counts all its minutes since it was last done, whatever day they were delved (D-133); a repeating job,
      its day's (and a run begun before 04:00 that ended on this day, D-120) */
@@ -463,13 +478,13 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string, tick
   const ownDay = delveMinutesOn(w.all, day, job) + crossedIn(w.all, day, job) + tickedOn(w.all, day, job);
   const j = jobOf(c, job), timed = c.rhythms.some(r => r.job === job) ? ownDay : carriedOf(w.all, c, job);
   /* what of them was delved on this day, when fewer: only that is the day's work (workedOn) */
-  const today = { ...(timed > ownDay ? { today: ownDay } : {}), ...(ticked ? { ticked } : {}) };
+  const today = { ...(timed > ownDay ? { today: ownDay } : {}), ...(ticked ? { ticked } : {}), ...(errand ? { errand } : {}) };
   /* a delve's minutes have already moved Dan (counted once, even across 04:00, D-120). Every job is a delve (D-117): one
      said done with no whole minute behind it is off the list, but earns no minutes and brings no return: no step of the
      story, no find, no Key, and it is no work towards the day (rule 10). It is off the list, though: if it was the list's
      last job and the day has had real work, the day is done (D-130) */
   if (timed === 0) {
-    w.put({ type: 'jobDone', job, minutes: 0 }, at, day);
+    w.put({ type: 'jobDone', job, minutes: 0, ...(errand ? { errand } : {}) }, at, day);
     if (!completedOn(w.all, day) && listDone(c, w.all, day, at)) gifts(w, c, at, day);
     return;
   }
@@ -570,11 +585,34 @@ function finishRun(w: W, c: Content, r: NonNullable<ReturnType<typeof activeRun>
   }
   w.put({ type: 'delveEnded', job: j.id, minutes: counted, how: 'finishedHere', run: r.fact.seq }, at, rday);
   clearStruck(w, c, j.id, at, rday);
-  if (sessionEnds(w.all, rday, j, counted)) markDoneIn(w, c, j.id, at, rday);
+  if (r.fact.errands) errandsEnd(w, c, r, counted, at, rday);
+  else if (sessionEnds(w.all, rday, j, counted)) markDoneIn(w, c, j.id, at, rday);
   else gifts(w, c, at, rday);
   /* a place reached on this delve starts a new stretch, whose halfway may already be behind Dan (an arrival held for
      tomorrow, D-122) */
   if (part > 0) sideChamber(w, c, at, rday);
+}
+/** An errand run's end (Dan, D-139). Its minutes already moved Dan along the road, once, as each delve ended. Each errand
+    struck off is done on the run's day with an even share of them (whole minutes, the remainder to the first), counted
+    once as that job's own minutes, and brings its story moment, paid once (D-121, D-133, D-134). The errands not struck
+    off stay as they were; the minutes went to those done. With none struck off, the minutes are shared among the errands,
+    kept as each job's own: a one-off carries its share into its next delve or tick (D-133), so nothing is lost. */
+function errandsEnd(w: W, c: Content, r: NonNullable<ReturnType<typeof activeRun>>, minutes: number, at: Moment, day: string) {
+  const open = (r.fact.errands ?? []).filter(id => c.jobs.some(j => j.id === id) && !doneOn(w.all, day).has(id)
+    && (c.rhythms.some(x => x.job === id) || !W.oneOffDone(c, w.all).some(f => f.job === id)));
+  const struck = open.filter(id => r.struck.has(id)), to = struck.length ? struck : open;
+  if (!to.length) return;
+  const each = Math.floor(minutes / to.length);
+  to.forEach((id, k) => {
+    const m = each + (k === 0 ? minutes - each * to.length : 0);
+    if (m > 0) w.put({ type: 'errandShare', run: r.fact.seq, job: id, minutes: m }, at, day);
+  });
+  for (const id of struck) {
+    if (!begunOn(w.all, day, id)) w.put({ type: 'jobBegun', job: id, from: 'record' }, at, day);
+    /* a one-off done today is today's: it leaves a later day it was put on, as a tick does (D-134) */
+    if (!c.rhythms.some(x => x.job === id)) for (const e of laterDays(w.all, day).get(id) ?? []) w.put({ type: 'planChanged', entry: e, day: null }, at, day);
+    markDoneIn(w, c, id, at, day, 0, r.fact.seq);
+  }
 }
 /** Said done while its own delve still runs (Done on Today, a tick in the satchel): the delve finishes there first, so
     its minutes count once and the job is not paid twice (Dan, 2026-09-27, D-120). Its end is marked seen: the job's
@@ -655,8 +693,9 @@ function settleIn(w: W, c: Content, nowMs: number) {
     const at = momentOf(s.endedAt!, w.off), minutes = Math.round(s.countedMs / MIN);
     w.put({ type: 'delveEnded', job: j.id, minutes, how: 'ranOut', run: r.fact.seq }, at, day);
     clearStruck(w, c, j.id, at, day);
+    if (r.fact.errands) errandsEnd(w, c, r, minutes, at, day);
     /* a repeating job's run is its session, at the run's end (D-121) */
-    if (sessionEnds(w.all, day, j, minutes)) markDoneIn(w, c, j.id, at, day);
+    else if (sessionEnds(w.all, day, j, minutes)) markDoneIn(w, c, j.id, at, day);
   }
 }
 
@@ -751,6 +790,9 @@ export type Command =
   | { do: 'unbegin'; job: string }
   | { do: 'putBack'; job: string }
   | { do: 'startRun'; job: string; minutes: number; count: number }
+  /** An errand run (D-139): one delve over several jobs, each struck off as it is done */
+  | { do: 'startErrands'; jobs: string[]; minutes: number; count: number }
+  | { do: 'strikeErrand'; job: string }
   | { do: 'skipBreather' }
   | { do: 'stepAway' }
   | { do: 'resume' }
@@ -817,6 +859,16 @@ export type Command =
   | { do: 'calendarShow'; on: boolean; calendars: string[] | null }
   | { do: 'calendarRead'; events: CalEvent[]; days: number };
 
+/** Only a run the dial can set: whole minutes up to its longest stop, one to eight delves (D-120). */
+const dialRun = (minutes: number, count: number) =>
+  Number.isInteger(minutes) && minutes >= 1 && minutes <= DIAL[DIAL.length - 1] && Number.isInteger(count) && count >= 1 && count <= 8;
+/** A job that can go on an errand run (D-139): Dan's, not done today, and not a one-off already finished. */
+const errandable = (c: Content, facts: Fact[], day: string, id: string) => {
+  const j = c.jobs.find(x => x.id === id);
+  return !!j && !j.stopped && id !== ERRAND_RUN && !doneOn(facts, day).has(id)
+    && (c.rhythms.some(r => r.job === id) || !W.oneOffDone(c, facts).some(f => f.job === id));
+};
+
 /** The facts a command adds to the log (including anything the clock made due first). */
 export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fact[] {
   const w = writer(facts, now), nowMs = epochOf(now), c = W.live(base, facts);
@@ -880,13 +932,27 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     case 'putBack': if (asideOn(w.all, day).has(cmd.job)) w.put({ type: 'putBack', job: cmd.job }); break;
     case 'startRun':
       /* only a run the dial can set: whole minutes up to its longest stop, one to eight delves (D-120) */
-      if (v.run || !Number.isInteger(cmd.minutes) || cmd.minutes < 1 || cmd.minutes > DIAL[DIAL.length - 1] || !Number.isInteger(cmd.count) || cmd.count < 1 || cmd.count > 8) break;
+      if (v.run || !dialRun(cmd.minutes, cmd.count) || cmd.job === ERRAND_RUN) break;
       if (!begunOn(w.all, day, cmd.job)) w.put({ type: 'jobBegun', job: cmd.job, from: 'app' });
       w.put({ type: 'delveStarted', job: cmd.job, minutes: cmd.minutes, count: Math.max(1, cmd.count) });
       /* a one-off delved on today is today's: it leaves a later day it was put on, so it is in one place (second review of
          D-131); undone, it goes back to No day yet */
       if (!c.rhythms.some(r => r.job === cmd.job)) for (const e of laterDays(w.all, day).get(cmd.job) ?? []) w.put({ type: 'planChanged', entry: e, day: null });
       break;
+    case 'startErrands': {
+      /* never while another delve runs; only jobs still to do, each once (D-139) */
+      const jobs = Array.isArray(cmd.jobs) ? cmd.jobs : [];
+      if (v.run || !dialRun(cmd.minutes, cmd.count) || jobs.length < ERRANDS_MIN || jobs.length > ERRANDS_MAX || new Set(jobs).size !== jobs.length) break;
+      if (!jobs.every(id => errandable(c, w.all, day, id))) break;
+      w.put({ type: 'delveStarted', job: ERRAND_RUN, minutes: cmd.minutes, count: cmd.count, errands: jobs.slice() });
+      break;
+    }
+    case 'strikeErrand': {
+      /* in its own run only, running or paused: a strike never outlives it */
+      const r = activeRun(w.all);
+      if (r?.fact.errands?.includes(cmd.job)) w.put({ type: 'errandStruck', run: r.fact.seq, job: cmd.job });
+      break;
+    }
     case 'skipBreather': if (v.run?.phase === 'breather') w.put({ type: 'breatherSkipped' }); break;
     case 'stepAway': if (v.run?.phase === 'delve') w.put({ type: 'delveHeld' }); break;
     case 'resume': if (v.run?.phase === 'held') w.put({ type: 'delveResumed' }); break;
@@ -898,6 +964,8 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     case 'done': {
       const on = day;
       if (!c.jobs.some(j => j.id === cmd.job) || doneOn(w.all, on).has(cmd.job)) break;
+      /* an errand is done by being struck off in its run: its end counts it (D-139) */
+      if (activeRun(w.all)?.fact.errands?.includes(cmd.job)) break;
       /* done while a delve on it runs: that delve ends first (D-120); a repeating job's run is then its session, on the
          run's day (D-121), and nothing more is written (not a second, empty session after 04:00) */
       const from = w.all.length;
@@ -929,7 +997,7 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     }
     case 'notDone':
       /* only a job done today and still done; never while a delve on it runs (its end answers it) */
-      if (doneOn(w.all, day).has(cmd.job) && activeRun(w.all)?.fact.job !== cmd.job && !hiddenDone(w.all).has(`${cmd.job}|${day}`)) w.put({ type: 'doneUndone', job: cmd.job, on: day });
+      if (doneOn(w.all, day).has(cmd.job) && !inRun(w.all, cmd.job) && !hiddenDone(w.all).has(`${cmd.job}|${day}`)) w.put({ type: 'doneUndone', job: cmd.job, on: day });
       break;
     case 'firstJob': {
       const on = W.addDays(day, 1), was = firstChosen(w.all, on);
@@ -958,7 +1026,7 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       break;
     }
     /* never the job of a delve under way: its end still has to be answered (break-it review 4) */
-    case 'removeJob': if (c.jobs.some(j => j.id === cmd.id) && activeRun(w.all)?.fact.job !== cmd.id && v.runEnd?.job.id !== cmd.id) w.put({ type: 'jobRemoved', id: cmd.id }); break;
+    case 'removeJob': if (c.jobs.some(j => j.id === cmd.id) && !inRun(w.all, cmd.id) && v.runEnd?.job.id !== cmd.id && !v.runEnd?.errands?.some(e => e.job.id === cmd.id)) w.put({ type: 'jobRemoved', id: cmd.id }); break;
     case 'hideDone': if (doneOn(w.all, cmd.on).has(cmd.job)) w.put({ type: 'doneHidden', job: cmd.job, on: cmd.on, ...(cmd.back ? { back: true } : {}) }); break;
     case 'firstStep': case 'noteJob': {
       const j = c.jobs.find(x => x.id === cmd.job);
@@ -1179,6 +1247,8 @@ export interface RunView extends RunNow {
   away: boolean;
   /** A one-off's minutes from its earlier delves, which this one carries on from (D-133). */
   carried: number;
+  /** An errand run's errands, in the order chosen, each struck off or not (D-139); null for a delve on one job. */
+  errands: { job: Job; struck: boolean }[] | null;
 }
 export interface RunEnd {
   seq: number; job: Job; minutes: number; how: 'ranOut' | 'finishedHere';
@@ -1196,6 +1266,8 @@ export interface RunEnd {
   /** This run completed the day (the next screen is the arrival). */
   completedDay: boolean;
   count: number;
+  /** An errand run's errands (D-139): each one's share of the minutes, and its done record if it was struck off. */
+  errands: { job: Job; minutes: number; done: number | null }[] | null;
 }
 export interface Arrival {
   seq: number; kind: 'place' | 'camp'; id: string; name: string; line: string;
@@ -1484,6 +1556,14 @@ export function satchelView(base: Content, facts: Fact[], now: Moment): { noDay:
   return { noDay: noDay.filter(j => !inComing.has(j.id)), coming, recurring: [...new Map(recurring.map(j => [j.id, j])).values()] };
 }
 
+/** The errand run's pick list (D-139): today's jobs still to do, in Today's order, then the Satchel's one-offs (no day
+    yet, then coming up). Never a job done, a one-off finished, a recurring job not on today, or the delve under way's. */
+export function errandChoices(base: Content, facts: Fact[], now: Moment): string[] {
+  const c = W.live(base, facts), day = gameDay(now), { slate } = slateOf(c, facts, day, now.slice(11, 16)), s = satchelView(base, facts, now);
+  const ids = [...new Set([...slate, ...s.noDay.map(j => j.id), ...s.coming.map(x => x.job.id)])];
+  return ids.filter(id => errandable(c, facts, day, id) && !inRun(facts, id));
+}
+
 /** The day's finish line (Dan, D-130): every job on today's list is done, with no hidden count and nothing lowered for
     opening late. At least one of the day's jobs must have real minutes behind it, so a list said done without any work
     never completes a day (rule 10). An empty list completes with the first job worked on, which then is the list. */
@@ -1512,7 +1592,8 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
     const s = runAt(r.plan, r.marks, nowMs), j = jobOf(c, r.fact.job);
     const held = ofType(facts, 'delveHeld').filter(f => f.seq > r.fact.seq).pop();
     if (s.phase !== 'ended') run = { ...s, seq: r.fact.seq, job: j, minutes: r.plan.minutes, count: r.plan.count, startedAt: r.plan.startedAt,
-      away: s.phase === 'held' && held?.why === 'away', carried: carriedOf(facts, c, j.id, r.fact.seq) };
+      away: s.phase === 'held' && held?.why === 'away', carried: carriedOf(facts, c, j.id, r.fact.seq),
+      errands: r.fact.errands ? r.fact.errands.map(id => ({ job: jobOf(c, id), struck: r.struck.has(id) })) : null };
   }
 
   let runEnd: RunEnd | null = null, runFinds: string[] = [];
@@ -1527,8 +1608,13 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
     const gained = ofType(facts, 'stepsGained').filter(f => f.run === last.run).reduce((a, f) => a + f.minutes, 0);
     /* where Dan stood when it ended: a night's head start after it never moves the count's start */
     const at = ofType(facts, 'stepsGained').filter(f => f.seq < last.seq).reduce((a, f) => a + f.minutes, 0);
-    runEnd = { seq: last.seq, job: j, minutes: last.minutes, how: last.how, carried, total: carried + last.minutes, gained, walked: at, ask: j.doneBy === 'dan' && !doneOn(facts, last.day).has(j.id) && !doneFact,
-      enough: j.doneBy === 'enough' && !!doneFact, completedDay, count: start?.count ?? 1 };
+    /* an errand run asks nothing: its errands struck off are done at its end (D-139) */
+    const errands = start?.errands ? start.errands.map(id => ({ job: jobOf(c, id),
+      minutes: ofType(facts, 'errandShare').filter(f => f.run === last.run && f.job === id).reduce((a, f) => a + f.minutes, 0),
+      done: ofType(facts, 'jobDone').find(f => f.errand === last.run && f.job === id)?.seq ?? null })) : null;
+    runEnd = { seq: last.seq, job: j, minutes: last.minutes, how: last.how, carried, total: carried + last.minutes, gained, walked: at,
+      ask: !errands && j.doneBy === 'dan' && !doneOn(facts, last.day).has(j.id) && !doneFact,
+      enough: j.doneBy === 'enough' && !!doneFact, completedDay, count: start?.count ?? 1, errands };
     /* a side chamber is found at the delve's end, and can come just after it, once a place it reached starts a new stretch */
     /* (a chamber a tick reached since is the tick's, shown on its step screen, D-134) */
     const ticks = ofType(facts, 'stepsGained').filter(g => g.tick && g.seq > last.run);
