@@ -50,7 +50,7 @@
     <button class="item" onclick={edit}>{t('menu.edit')}</button>
     {#if !finished && !menu.on}<button class="item" aria-expanded={placing} onclick={() => { if (!settling()) placing = !placing; }}>{t('satchel.day')}</button>{/if}
     {#if placing}<div class="cal"><DayPick from={v.day} label={t('satchel.day')} pick={place} /></div>{/if}
-    <button class="item del" disabled={v.run?.job.id === j.id || v.runEnd?.job.id === j.id} onclick={remove}>{t('job.delete')}</button>
+    <button class="item del" disabled={v.run?.job.id === j.id || v.runEnd?.job.id === j.id || !!v.run?.errands?.some(e => e.job.id === j.id) || !!v.runEnd?.errands?.some(e => e.job.id === j.id)} onclick={remove}>{t('job.delete')}</button>
     <button class="item cancel" onclick={() => { if (!settling()) closeMenu(); }}>{t('rhythms.cancel')}</button>
   </div>
 {/if}

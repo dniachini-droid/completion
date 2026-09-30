@@ -11,7 +11,7 @@
      rows seemed to change places by themselves); a swipe takes it off today; the last row chooses a delve on anything (D-077). After day complete: the day as done, until Dan taps a job or keeps going.
      Mock-up: design/directions/d-combined/morning.html. */
   import { game, content } from './game.svelte';
-  import { pastBedtime, BEDTIME_WINDOW, tomorrowFirst, satchelView } from '../core/game';
+  import { pastBedtime, BEDTIME_WINDOW, tomorrowFirst, satchelView, errandChoices } from '../core/game';
   import { beatOf } from '../core/story';
   import type { Job } from '../core/types';
   import { t, minutesWords, minutesShort, inSentence } from '../content/copy/en';
@@ -97,6 +97,9 @@
   const nightLine = $derived(v.night?.beat ? beatOf(content.story, v.night.beat)?.line ?? '' : '');
   /* the story ahead folds to a few lines, so the next job is always in view; a tap reads it all (D-093) */
   let aheadOpen = $state(false);
+
+  /* the errand run (D-139): quietly at the list's end, when two jobs or more could go on one trip out */
+  const errandsOpen = $derived(!v.run && !v.night && errandChoices(content, game.facts, game.now).length >= 2);
 
   /* "+ Add" (D-107) opens the Satchel's one box, ready to type in (D-131): focused inside the tap itself, so the phone's
      keyboard opens straight away */
@@ -262,6 +265,7 @@
       <div class="label-line if-time">{t('today.ifTime')}</div>
       <div class="rows">{#each extra as id (id)}{@render jobRow(id)}{/each}</div>
     {/if}
+    {#if errandsOpen}<div class="cant errand"><button class="text-link" onclick={() => go('errands')}><span>{t('errand.link')}</span></button></div>{/if}
     <!-- the evening, before the day's work is done: Tonight at the end of the day's list (D-093) -->
     {#if evening && !v.complete && !v.run && !nearBed}<section class="tonight-end">{@render tonight()}</section>{/if}
     </div>
@@ -302,6 +306,7 @@
   .rows :global(.row-done) { min-height: 40px; padding: 0 0 0 12px; }
   .rows :global(.row-done span) { font-size: 16px; color: var(--violet-hi); }
   .if-time { margin: 18px 0 4px; }
+  .errand { margin-top: 6px; }
   .first { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin-top: 8px; }
   .first-say { font-family: var(--life); font-size: 18px; color: var(--ink-2); }
   .first-job span { font-size: 18px; color: #fff; }
