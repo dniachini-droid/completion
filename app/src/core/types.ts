@@ -83,18 +83,31 @@ export type FactBody =
   | { type: 'jobBegun'; job: string; from: 'app' | 'record' }
   /** Begin taken back ("I haven't started"): the job is no longer under way, as if Begin had never been tapped. */
   | { type: 'beginUndone'; job: string }
-  | { type: 'delveStarted'; job: string; minutes: number; count: number }
+  /** `errands`: an errand run (D-139): several jobs in one delve, struck off as they are done; `job` is then ERRAND_RUN */
+  | { type: 'delveStarted'; job: string; minutes: number; count: number; errands?: string[] }
+  /** An errand struck off (or back) in the errand run `run` (D-139) */
+  | { type: 'errandStruck'; run: number; job: string }
+  /** An errand's share of its run's minutes (D-139): the job's own count, never the road's (the run moved Dan once) */
+  | { type: 'errandShare'; run: number; job: string; minutes: number }
+  /** An errand run's errands counted, at its end, once Dan has struck off what got done (D-139) */
+  | { type: 'errandsCounted'; run: number }
   | { type: 'breatherSkipped' }
   /** Paused: by hand (Pause), or by going into another app (why 'away', D-094), stamped when Dan left. */
   | { type: 'delveHeld'; why?: 'away' }
   | { type: 'delveResumed' }
   | { type: 'delveEnded'; job: string; minutes: number; how: 'ranOut' | 'finishedHere'; run: number }
   /** `today`: of `minutes`, those delved on the record's own day, when fewer (a one-off's carried minutes, D-133) */
-  | { type: 'jobDone'; job: string; minutes: number; today?: number; ticked?: number }
+  /** `errand`: struck off in that errand run (D-139) */
+  | { type: 'jobDone'; job: string; minutes: number; today?: number; ticked?: number; errand?: number }
   /** "Not done after all" (D-131): the latest done record of the job on `on` no longer counts; what it earned stays */
   | { type: 'doneUndone'; job: string; on: string }
   /** Tonight's "Tomorrow starts with" (D-131): the job Today opens with on `on` (the next game day); null: as planned */
   | { type: 'firstChosen'; job: string | null; on: string }
+  /** "Waiting on…" (D-137): a one-off Dan can't finish until someone replies, set aside until `until` (a game day), with
+      an optional line of who or what (`who`: "the vet"). Set again: "Still waiting", a new date */
+  | { type: 'waitSet'; job: string; until: string; who?: string }
+  /** "Back to it" (D-137): an ordinary job again */
+  | { type: 'waitEnded'; job: string }
   | { type: 'cantStartUsed'; job: string }
   | { type: 'seen'; what: 'step' | 'arrival' | 'morning' | 'welcome'; ref: number }
   /* what the world gave (worked out once, then kept) */
@@ -138,8 +151,12 @@ export type FactBody =
   | { type: 'calendarRead'; from: string; to: string; events: CalEvent[] }
   /** The re-entry nudge, off unless Dan turns it on (D-113) */
   | { type: 'nudgeChosen'; on: boolean }
-  /** `via`: said to Siri, Shortcuts or the Action button; `ref`: that line's own id, so it is never added twice (D-113) */
-  | { type: 'itemAdded'; id: string; name: string; via?: 'siri'; ref?: string }
+  /** `via`: said to Siri, Shortcuts or the Action button; `ref`: that line's own id, so it is never added twice (D-113);
+      `from`: a job Dan had before, picked in the Satchel's box (D-136): the new job starts with its list, note, first
+      step, avoided mark and minutes; or parked mid-delve, `run` being that delve's run (D-138) */
+  | { type: 'itemAdded'; id: string; name: string; via?: 'siri' | 'park'; ref?: string; from?: string; run?: number }
+  /** "No thanks" to the Satchel's "keeps coming back" offer (D-136): never asked again for that name (as nameKey has it) */
+  | { type: 'repeatDeclined'; name: string }
   | { type: 'itemTicked'; id: string }
   | { type: 'itemDropped'; id: string }
   | { type: 'planMade'; week: string; entries: PlanEntry[] }

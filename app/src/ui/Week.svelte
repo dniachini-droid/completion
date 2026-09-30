@@ -96,7 +96,7 @@
   let why = $state<string | null>(null);
   function whyOf(d: { jobs: DayJob[] }): string[] {
     const ids = [...new Set(d.jobs.filter(j => !j.done).map(j => j.job))];
-    const out = ids.flatMap(id => { const m = realMinutes(game.facts, id), j = game.job(id); return m && j ? [t('week.about.why', { job: j.name, min: minutesWords(m) })] : []; });
+    const out = ids.flatMap(id => { const m = realMinutes(game.facts, id, undefined, v.content), j = game.job(id); return m && j ? [t('week.about.why', { job: j.name, min: minutesWords(m) })] : []; });
     /* the rest, from the minutes set for them */
     return out.length === ids.length ? out : [...out, t(out.length ? 'week.about.rest' : 'week.about.set')];
   }

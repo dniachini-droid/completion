@@ -9,14 +9,18 @@
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
   import { back } from './back.svelte';
+  import { errandPick } from './errands.svelte';
   import './scene/runset.css';
 
+  /* `jobId` 'errands': the errand run's set-up (D-139), for the jobs ticked on its pick list */
   let { go, jobId }: { go: Go; jobId: string } = $props();
-  const job = $derived(game.job(jobId)!);
+  const errands = jobId === 'errands' ? errandPick.jobs.slice() : null;
+  const job = $derived(errands ? null : game.job(jobId)!);
   const v = $derived(game.view);
-  const preset = presetRun(game.job(jobId)!);
+  const preset = presetRun(errands ? undefined : game.job(jobId)!);
   /* a one-off left "Not yet" carries on from its minutes (D-133): one quiet line says so */
-  const carry = $derived(carriedOf(game.facts, v.content, jobId));
+  const carry = $derived(errands ? 0 : carriedOf(game.facts, v.content, jobId));
+  const names = $derived((errands ?? []).map(id => game.job(id)?.name).filter(Boolean).join(' · '));
   const reduce = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   /* the face holds an hour: a stop's angle is its minutes; 90 fills the ring and has its own button under it */
   const FACE = DIAL.filter(m => m <= 60), LONG = 90;
@@ -135,7 +139,11 @@
 
   function start() {
     platform.sound.unlock();
-    game.do({ do: 'startRun', job: jobId, minutes: snap, count: n });
+    if (errands) {
+      game.do({ do: 'startErrands', jobs: errands, minutes: snap, count: n });
+      if (!game.view.run) return;
+      errandPick.jobs = [];
+    } else game.do({ do: 'startRun', job: jobId, minutes: snap, count: n });
     go('delve');
   }
 </script>
@@ -144,14 +152,20 @@
   <Scene painting={v.here.painting} />
   <div class="ui">
     <header class="top col">
-      <div class="topbar rise">
+      <!-- an errand run's set-up has no "Change the job": the way back takes the room (D-139) -->
+      <div class="topbar rise" class:solo={!job}>
         <button class="home" onclick={() => go('back')}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{back.label}</span></button>
         <span></span>
         <!-- the job itself, one quiet tap away from every delve (D-131, step 3) -->
-        <button class="icon-link change" onclick={() => go('rhythms', job.id)}><span>{t('job.change')}</span></button>
+        {#if job}<button class="icon-link change" onclick={() => go('rhythms', job.id)}><span>{t('job.change')}</span></button>{:else}<span></span>{/if}
       </div>
       <section class="job rise d1">
         <div class="label-line lit">{t('set.label')}</div>
+        {#if !job}
+          <!-- the errand run (D-139): its errands, struck off in the delve -->
+          <h1 class="say-lg">{t('errand.title')}</h1>
+          <p class="soft errands">{t('errand.set', { n: errands?.length ?? 0, names })}</p>
+        {:else}
         <h1 class="say-lg">{job.name}</h1>
         <!-- the job put off: what waits beyond it (it lived on Today's next job, D-135) -->
         {#if job.avoided}<p class="soft last">{t('set.avoided')}</p>{/if}
@@ -159,6 +173,7 @@
         {#if job.note}<p class="soft last">{t('set.stopped', { note: job.note })}</p>{/if}
         <!-- the job's list (D-126): struck off a line at a time in the delve -->
         {#if job.list}<p class="soft last">{job.list.split('\n').filter(l => l.trim()).join(' · ')}</p>{/if}
+        {/if}
       </section>
     </header>
 
@@ -240,7 +255,10 @@
 <style>
   .rs { display: contents; }
   button.home { color: var(--ink-2); }
+  .topbar.solo { grid-template-columns: auto 1fr auto; }
   /* where Dan stopped last time (D-112): one quiet line, never more */
   .change span { font-family: var(--life); font-style: italic; font-size: 15px; letter-spacing: 0; text-transform: none; color: var(--ink-2); }
+  /* the errands, two lines at most: the full list is on the delve */
+  .errands { margin-top: 2px; font-style: italic; font-size: 15px; text-align: left; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
   .last, .carryon { margin-top: 2px; font-style: italic; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; }
 </style>

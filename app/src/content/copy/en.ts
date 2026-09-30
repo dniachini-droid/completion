@@ -241,6 +241,14 @@ export const copy = {
   'tick.off': 'Tick off', 'tick.sr': '{job}: tick off', 'tick.title': 'How long did it take?',
   'tick.onTop': 'On top of the {min} you delved', 'tick.noMore': 'No more', 'tick.hour': '{n} h', 'tick.halfHour': '1½ h',
   'menu.delve': 'Delve', 'menu.edit': 'Edit', 'menu.srEdit': '{job}: edit',
+  /* a one-off waiting on someone's reply (D-137): earns nothing, costs nothing, no word of blame */
+  'wait.menu': 'Waiting on…', 'wait.who': 'Who or what? (if you like)', 'wait.who.label': '{job}: waiting on who or what',
+  'wait.until': 'Back on {day}', 'wait.another': 'Another day…',
+  'wait.label': 'Waiting', 'wait.on': 'Waiting on {who} · back {day}', 'wait.plain': 'Waiting · back {day}',
+  'wait.onNow': 'Waiting on {who}', 'wait.ask': 'Did they reply?',
+  'wait.back': 'Back to it', 'wait.still': 'Still waiting', 'wait.done': 'It’s done',
+  'wait.srBack': '{job}: back to it', 'wait.srStill': '{job}: still waiting, choose a day', 'wait.srDone': '{job}: it’s done',
+  'wait.said': '{job}: in the satchel until {day}.',
   /* a done job taken back, to work on it more (D-131) */
   'row.notDone': 'Not done after all', 'row.srNotDone': '{job}: not done after all',
   /* Tonight, in the last hour before bed (D-131): both optional, neither ever mentioned if skipped */
@@ -369,8 +377,29 @@ export const copy = {
   'satchel.empty': 'Nothing here with no day yet. When something comes to mind, it goes here.',
   'satchel.list': 'List', 'satchel.list.done': 'Close', 'satchel.list.label': 'The list for {job}', 'satchel.list.hint': 'A line at a time', 'satchel.list.full': 'The list is full: take a line out to add another.',
   'satchel.day': 'Put on a day', 'satchel.placed': '{job}: on {day}.',
+  /* remembered jobs (D-136): the jobs Dan has had before, under the box as he types; the one offer to make a job repeat */
+  'satchel.before': 'Jobs you’ve had before', 'satchel.usually': 'usually {min}', 'satchel.pick.sr': '{job}, usually {min}',
+  'satchel.have.noDay': '{job} is already in your satchel.', 'satchel.have.coming': '{job} is already on {day}.',
+  'satchel.have.waiting': '{job} is already waiting: back {day}.', 'satchel.have.today': '{job} is already on today’s list.', 'satchel.have.recurring': '{job} is one of your recurring jobs: it comes round by itself.',
+  'satchel.offer': '{job} keeps coming back. Make it repeat?', 'satchel.offer.yes': 'Make it repeat', 'satchel.offer.no': 'No thanks',
   'pick.today': 'today', 'pick.prev': 'The month before', 'pick.next': 'The next month',
   'today.addJob': 'Add a job',
+  /* a stray thought parked mid-delve (D-138) */
+  'park.link': 'Park a thought', 'park.label': 'A thought to park for later', 'park.hint': 'A thought, for later', 'park.save': 'Park it',
+  'park.cancel': 'Cancel', 'park.parked': 'Parked: {job}', 'park.have': '{job} is already on your list.',
+  'park.count.1': 'One thought parked in the Satchel', 'park.count': '{n} thoughts parked in the Satchel',
+  /* the errand run (D-139): several jobs in one delve, struck off as each is done */
+  'errand.link': 'Errand run', 'errand.title': 'Errand run',
+  'errand.say': 'Tick the jobs for one trip out. In the delve, strike each off as it is done.',
+  'errand.start': 'Start the run', 'errand.more': 'Tick two or more.',
+  'errand.none': 'An errand run takes two jobs or more. Nothing else is waiting just now.',
+  'errand.today': 'On today', 'errand.list': 'The errands', 'errand.sr': '{job}: take it on the run',
+  'errand.set': '{n} errands: {names}',
+  'errand.end': 'An errand run of {min}.', 'errand.endNone': 'The errand run is ended.',
+  'errand.ask': 'What got done?', 'errand.askSay': 'Strike off each one you did. The rest stay as they are.', 'errand.count': 'Count them',
+  'errand.doneRow': 'done · {min}', 'errand.leftRow': 'still to do',
+  'errand.carried': 'Nothing was struck off. Every minute moved you on, and each errand keeps its share.',
+  'errand.doneSay': '{job} is done.',
 
   'month.1': 'January', 'month.2': 'February', 'month.3': 'March', 'month.4': 'April', 'month.5': 'May', 'month.6': 'June',
   'month.7': 'July', 'month.8': 'August', 'month.9': 'September', 'month.10': 'October', 'month.11': 'November', 'month.12': 'December',

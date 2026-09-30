@@ -72,7 +72,16 @@ export function live(c: Content, facts: Fact[], before?: string): Content {
     } else if (f.type === 'itemAdded') {
       if (!changed) { jobs = jobs.slice(); rhythms = rhythms.slice(); changed = true; }
       /* a job added from anywhere (+ Add, the Week, Siri) is a delve like any other (D-117) */
-      jobs.push({ id: f.id, name: f.name, delve: true, length: 25, doneBy: 'dan' });
+      const job: Job = { id: f.id, name: f.name, delve: true, length: 25, doneBy: 'dan' };
+      /* picked from a job Dan had before (D-136): it carries on with what that job held, as it stood then; never its
+         day, its date, its minutes delved or its lines struck in a delve */
+      const was = f.from ? jobs.find(x => x.id === f.from) : undefined;
+      if (was) {
+        job.length = was.enoughAt !== undefined ? Math.min(was.length, was.enoughAt) : was.length;
+        for (const k of ['list', 'note', 'firstStep'] as const) if (was[k]) job[k] = was[k];
+        if (was.avoided) job.avoided = true;
+      }
+      jobs.push(job);
     } else if (f.type === 'itemDropped' || f.type === 'itemTicked') {
       /* an old satchel line dropped, or ticked off there, is finished with: it doesn't come back as a job (D-117) */
       if (!changed) { jobs = jobs.slice(); rhythms = rhythms.slice(); changed = true; }
@@ -96,41 +105,71 @@ export function live(c: Content, facts: Fact[], before?: string): Content {
 
 /* ---------- the planner learns (D-131): real minutes and good hours, from the delves alone; nothing to set up ---------- */
 
+/** A job's name as the planner and the Satchel's suggestions compare it (D-136): trimmed, lower case, single spaces;
+    curly and straight apostrophes alike (the keyboard and Siri may give either). */
+export const nameKey = (name: string) => name.normalize('NFC').replace(/[’‘`]/g, "'").trim().toLowerCase().replace(/\s+/g, ' ');
+/** The jobs that share a job's history: every job in `c` with the same name (D-136), the job itself always. Without
+    content, the job alone. */
+export function sameName(c: Content | undefined, job: string): Set<string> {
+  const j = c?.jobs.find(x => x.id === job);
+  if (!c || !j) return new Set([job]);
+  const k = nameKey(j.name);
+  return new Set([job, ...c.jobs.filter(x => nameKey(x.name) === k).map(x => x.id)]);
+}
+
 /** Delves of at least this many minutes teach the planner; this many of them first; the last this many are used. */
 export const LEARN_MIN = 5, LEARN_FROM = 3, LEARN_LAST = 5;
 const learned = new WeakMap<Fact[], { n: number; mins: Map<string, number | null> }>();
-/** How long a job really takes Dan, for planning: the median of its last 5 delves of 5 minutes or more, once there are
+/** How long a job really takes Dan, for planning: the median of its last 5 runs of 5 minutes or more, once there are
     3, rounded to 5 minutes. Null until then (its written minutes are used). The job's own minutes are never changed, and
-    every delve still opens at 30 (D-124). A delve here is one run: its minutes as counted at its end. */
-export function realMinutes(facts: Fact[], job: string, before?: string): number | null {
+    every delve still opens at 30 (D-124). A run here is one delve, its minutes as counted at its end; a job ticked off
+    (D-134) is one run of all its minutes, the delves behind it included ("On top of the 27 minutes you delved": one
+    sitting of 27 + the time given, not two). With content, every job of the same name shares one history (D-136): "Go
+    to the bank" added again learns from every trip to the bank. */
+export function realMinutes(facts: Fact[], job: string, before?: string, c?: Content): number | null {
   let m = learned.get(facts);
   if (!m || m.n !== facts.length) { m = { n: facts.length, mins: new Map() }; learned.set(facts, m); }
-  const key = `${job}|${before ?? ''}`;
+  const j = c?.jobs.find(x => x.id === job);
+  const key = `${j ? `n:${nameKey(j.name)}` : `j:${job}`}|${before ?? ''}`;
   if (m.mins.has(key)) return m.mins.get(key)!;
-  const runs = ofType(facts, 'delveEnded').filter(f => f.job === job && f.minutes >= LEARN_MIN && (!before || f.day < before)).slice(-LEARN_LAST).map(f => f.minutes).sort((a, b) => a - b);
+  const ids = sameName(c, job), recurring = new Set(c?.rhythms.map(r => r.job) ?? []);
+  /* the done records still standing, for where a tick's sitting began (after the last of them, as the carry, D-133) */
+  const standing = doneFacts(facts);
+  let runs: { job: string; day: string; seq: number; minutes: number }[] = [];
+  for (const f of facts) {
+    if (f.type === 'delveEnded' && ids.has(f.job)) runs.push({ job: f.job, day: f.day, seq: f.seq, minutes: f.minutes });
+    else if (f.type === 'jobDone' && f.ticked && ids.has(f.job)) {
+      const from = standing.filter(d => d.job === f.job && d.seq < f.seq).pop()?.seq ?? -1;
+      runs = runs.filter(r => !(r.job === f.job && r.seq > from && (!recurring.has(f.job) || r.day === f.day)));
+      runs.push({ job: f.job, day: f.day, seq: f.seq, minutes: f.minutes });
+    }
+  }
+  const mins = runs.filter(r => r.minutes >= LEARN_MIN && (!before || r.day < before)).slice(-LEARN_LAST).map(r => r.minutes).sort((a, b) => a - b);
   let out: number | null = null;
-  if (runs.length >= LEARN_FROM) {
-    const k = runs.length >> 1, med = runs.length % 2 ? runs[k] : (runs[k - 1] + runs[k]) / 2;
+  if (mins.length >= LEARN_FROM) {
+    const k = mins.length >> 1, med = mins.length % 2 ? mins[k] : (mins[k - 1] + mins[k]) / 2;
     out = Math.max(5, Math.round(med / 5) * 5);
   }
   m.mins.set(key, out);
   return out;
 }
 /** A job's room in a day, for planning and the forecast: how long it really takes, once learned, else its minutes
-    (D-124, D-131). */
-export const roomOf = (j: Job, facts?: Fact[], before?: string) => (facts && realMinutes(facts, j.id, before)) || j.length;
-const jobRoom = (c: Content, id: string, facts?: Fact[]) => { const j = c.jobs.find(x => x.id === id); return j ? roomOf(j, facts) : 25; };
+    (D-124, D-131); learned from every job of its name, given the content (D-136). */
+export const roomOf = (j: Job, facts?: Fact[], before?: string, c?: Content) => (facts && realMinutes(facts, j.id, before, c)) || j.length;
+const jobRoom = (c: Content, id: string, facts?: Fact[]) => { const j = c.jobs.find(x => x.id === id); return j ? roomOf(j, facts, undefined, c) : 25; };
 /** About how long a day of the week holds (not yet done), in minutes: a shape, not a score (D-114). */
 export const dayMinutes = (c: Content, d: { jobs: DayJob[] }, facts?: Fact[]) => d.jobs.filter(j => !j.done).reduce((a, j) => a + jobRoom(c, j.job, facts), 0);
 
 /** Starts of a job that teach its good hours: this many first (D-131). */
 export const HOURS_FROM = 4;
 /** Whether a job is usually started around this hour: at least half of its delves began within an hour of it, once it
-    has 4 starts (starts after bedtime are passed over, so late nights never become good hours). Null: not learned yet. */
-export function goodHour(facts: Fact[], job: string, clock: string, bedtime?: string): boolean | null {
+    has 4 starts (starts after bedtime are passed over, so late nights never become good hours). Null: not learned yet.
+    With content, the starts of every job of the same name count (D-136). */
+export function goodHour(facts: Fact[], job: string, clock: string, bedtime?: string, c?: Content): boolean | null {
   const mins = (t: string) => +t.slice(0, 2) * 60 + +t.slice(3, 5);
   const late = (at: string) => { if (!bedtime) return false; const s = (x: number) => x < 240 ? x + 1440 : x; return s(mins(at.slice(11, 16))) > s(mins(bedtime)); };
-  const starts = ofType(facts, 'delveStarted').filter(f => f.job === job && !late(f.at)).map(f => mins(f.at.slice(11, 16)));
+  const ids = sameName(c, job);
+  const starts = ofType(facts, 'delveStarted').filter(f => ids.has(f.job) && !late(f.at)).map(f => mins(f.at.slice(11, 16)));
   if (starts.length < HOURS_FROM) return null;
   const now = mins(clock), near = starts.filter(x => { const d = Math.abs(x - now) % 1440; return Math.min(d, 1440 - d) <= 60; }).length;
   return near * 2 >= starts.length;
@@ -181,6 +220,8 @@ export function items(facts: Fact[], day: string): Item[] {
     else if (f.type === 'itemKept' && out.has(f.id)) { touched.set(f.id, f.day); shelved.delete(f.id); }
     /* delved on, it's in hand: the look-ahead doesn't ask about it (D-117 review) */
     else if (f.type === 'delveStarted' && out.has(f.job)) { touched.set(f.job, f.day); shelved.delete(f.job); }
+    /* set waiting on a reply, or taken back from it: Dan's own choice about it, so "Still wanted?" doesn't ask (review of D-137) */
+    else if ((f.type === 'waitSet' || f.type === 'waitEnded') && out.has(f.job)) { touched.set(f.job, f.day); shelved.delete(f.job); }
     else if (f.type === 'itemSomeday' && out.has(f.id)) shelved.add(f.id);
   }
   for (const [id, d] of ticked) if (d < day) out.delete(id);
@@ -237,7 +278,7 @@ export function planWeek(c: Content, facts: Fact[], week: string, from: string, 
   /* entries Dan placed himself stay where they are and take their room (Lay out the rest, D-114) */
   for (const e of fixed) if (e.day >= from) out.push({ ...e });
   const put = (job: string, day: string, time?: string) => out.push({ id: `p${week.replace(/-/g, '')}${round ? `.${round}` : ''}-${++n}`, job, day, ...(time ? { time } : {}) });
-  const size = (job: string) => { const j = c.jobs.find(x => x.id === job); return j ? roomOf(j, facts) : 25; };
+  const size = (job: string) => { const j = c.jobs.find(x => x.id === job); return j ? roomOf(j, facts, undefined, c) : 25; };
   const load = (d: string) => out.filter(e => e.day === d).reduce((a, e) => a + size(e.job), 0);
   /* the lighter day: Saturday if it is still ahead, else the week's last day */
   const light = days.length > 2 ? (days.find(d => weekdayOf(d) === 6) ?? days[days.length - 1]) : null;
@@ -254,6 +295,8 @@ export function planWeek(c: Content, facts: Fact[], week: string, from: string, 
   const rhythmJob = new Set(c.rhythms.map(r => r.job));
   /* a one-off Dan placed himself this week stays where he put it: the planner never places it again (D-117 review) */
   const hand = new Set(ofType(facts, 'planAdded').filter(f => calendarWeek(f.entry.day) === week && !rhythmJob.has(f.entry.job)).map(f => f.entry.job));
+  /* a one-off waiting on a reply is never laid out: it comes back on its own day (D-137) */
+  for (const id of waitingOf(facts).keys()) hand.add(id);
 
   /* the one thing that matters most this week (the look-ahead, D-116): first, early in the week */
   const pin = pinnedIn(facts, week);
@@ -402,7 +445,7 @@ export function forecast(c: Content, facts: Fact[], today: string, toNext: numbe
     if (!w.planned) continue;
     for (const d of w.days) {
       if (d.day < today) continue;
-      for (const j of d.jobs) if (!j.done) { const job = c.jobs.find(x => x.id === j.job); if (job) sum += roomOf(job, facts); }
+      for (const j of d.jobs) if (!j.done) { const job = c.jobs.find(x => x.id === j.job); if (job) sum += roomOf(job, facts, undefined, c); }
       while (sum >= need && out.length < 4) { out.push(d.day); need += gap; }
     }
   }
@@ -468,7 +511,9 @@ export function pinnedIn(facts: Fact[], week: string): string | null {
 /** "Still wanted?": up to three of the oldest jobs Dan added, not done and untouched for a week or more (kept or put on
     a day counts as touched), never the whole list, never a count (P7). Dated jobs have their own question. */
 export function sweepOf(facts: Fact[], day: string, most = 3): Item[] {
-  return items(facts, day).filter(i => !i.done && !i.by && daysBetween(i.touched ?? i.added, day) >= 7).slice(0, most);
+  /* never one waiting on a reply: Dan has parked it himself (review of D-137) */
+  const waiting = waitingOf(facts);
+  return items(facts, day).filter(i => !i.done && !i.by && !waiting.has(i.id) && daysBetween(i.touched ?? i.added, day) >= 7).slice(0, most);
 }
 /** "Coming up": the week's fixed points from `day`, one line each: appointments and entries with a time, dated work,
     and monthly or yearly rhythms on their day. The caller shows five and folds the rest. */
@@ -491,6 +536,27 @@ export function comingUp(c: Content, facts: Fact[], day: string): { day: string;
  * added in the satchel or by Siri, a job taken off a week ("Not this week"), a job whose day has passed. A repeating
  * job is never here: it comes round by itself. A job done today stays on Today, not here.
  */
+/** A one-off waiting on someone's reply (Dan, D-137): the day it comes back (`until`, a game day) and who or what it waits
+    on. "Back to it" ends the wait, and so does anything that puts the job to work again: a delve begun on it, the job
+    done, placed on a day by hand, or made a recurring job. A job deleted keeps its wait, so Undo brings it back as it
+    was. Waiting earns nothing and costs nothing: it only moves the job out of the lists until its day. */
+export interface Wait { until: string; who?: string; }
+const waits = new WeakMap<Fact[], { n: number; out: Map<string, Wait> }>();
+export function waitingOf(facts: Fact[]): Map<string, Wait> {
+  const m = waits.get(facts);
+  if (m && m.n === facts.length) return m.out;
+  const out = new Map<string, Wait>();
+  for (const f of facts) {
+    if (f.type === 'waitSet') out.set(f.job, { until: f.until, ...(f.who ? { who: f.who } : {}) });
+    else if (!out.size) continue;
+    else if (f.type === 'waitEnded' || f.type === 'delveStarted' || f.type === 'jobDone') out.delete(f.job);
+    else if (f.type === 'planAdded') out.delete(f.entry.job);
+    else if (f.type === 'rhythmSaved') out.delete(f.rhythm.job);
+  }
+  waits.set(facts, { n: facts.length, out });
+  return out;
+}
+
 export function satchelOf(c: Content, facts: Fact[], day: string): Job[] {
   const rhythmJob = new Set(c.rhythms.map(r => r.job));
   /* finished: done since it last stopped repeating (a repeating job made a one-off is not finished by its old sessions,
@@ -512,6 +578,8 @@ export function satchelOf(c: Content, facts: Fact[], day: string): Job[] {
   }
   const placed = new Set<string>();
   for (const wk of weeks) for (const e of planOf(facts, wk) ?? []) if (e.day > day || (e.day === day && !aside.has(e.job))) placed.add(e.job);
-  return c.jobs.filter(j => !j.stopped && !rhythmJob.has(j.id) && !finished.has(j.id) && !placed.has(j.id)).reverse();
+  /* waiting on a reply: in the Satchel's own Waiting, then back on Today on its day (D-137) */
+  const waiting = waitingOf(facts);
+  return c.jobs.filter(j => !j.stopped && !rhythmJob.has(j.id) && !finished.has(j.id) && !placed.has(j.id) && !waiting.has(j.id)).reverse();
 }
 

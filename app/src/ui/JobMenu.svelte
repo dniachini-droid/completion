@@ -4,15 +4,17 @@
      underneath (D-125), and looks like no other choice. A tap outside closes it. */
   import { game } from './game.svelte';
   import { t } from '../content/copy/en';
-  import { menu, closeMenu, settling, openTick } from './menu.svelte';
+  import { menu, closeMenu, settling, openTick, sayWaited } from './menu.svelte';
   import { closeRows } from './SwipeRow.svelte';
   import { steady } from './taps';
   import DayPick from './DayPick.svelte';
+  import WaitPick from './WaitPick.svelte';
+  import { waitingOf } from '../core/week';
 
   const j = $derived(menu.job ? game.job(menu.job) : undefined);
   const v = $derived(game.view);
-  let placing = $state(false);
-  $effect(() => { void menu.job; placing = false; });
+  let placing = $state(false), waiting = $state(false);
+  $effect(() => { void menu.job; placing = false; waiting = false; });
 
   function to(f: () => void) { if (settling()) return; const go = menu.go; steady(); closeMenu(); closeRows(); if (go) f(); }
   function delve() { const id = j!.id, go = menu.go!; to(() => go('set', id)); }
@@ -26,6 +28,16 @@
     steady(); game.do({ do: 'putOnDay', job: id, day, ...(menu.entry ? { entry: menu.entry } : {}) });
     closeMenu(); closeRows();
   }
+  /* "Waiting on…" (D-137): off the lists until its day; "Back to it" an ordinary job again */
+  const wait = $derived(j ? waitingOf(game.facts).get(j.id) : undefined);
+  function waitOn(until: string, who: string) {
+    const id = j!.id, from = menu.from, onToday = v.slate.includes(id) || v.replies.some(r => r.job === id);
+    steady(); game.do({ do: 'waitOn', job: id, until, who });
+    closeMenu(); closeRows();
+    /* said only where Dan is, Today or the Satchel; never from the Week (review of D-137) */
+    if (from && waitingOf(game.facts).get(id)?.until === until) sayWaited(id, until, from === 'today' && onToday);
+  }
+  function backToIt() { if (settling()) return; const id = j!.id; steady(); closeMenu(); closeRows(); game.do({ do: 'backToIt', job: id }); sayWaited(null); }
   function remove() {
     if (settling()) return;
     const id = j!.id, on = menu.on;
@@ -48,9 +60,15 @@
     {#if !v.done.has(j.id) && !finished}<button class="item" disabled={!!v.run} onclick={tick}>{t('tick.off')}</button>{/if}
     {#if !v.done.has(j.id) && !finished}<button class="item" disabled={!!v.run} onclick={cant}>{t('today.cantStart')}</button>{/if}
     <button class="item" onclick={edit}>{t('menu.edit')}</button>
-    {#if !finished && !menu.on}<button class="item" aria-expanded={placing} onclick={() => { if (!settling()) placing = !placing; }}>{t('satchel.day')}</button>{/if}
+    {#if !finished && !menu.on}<button class="item" aria-expanded={placing} onclick={() => { if (!settling()) { placing = !placing; waiting = false; } }}>{t('satchel.day')}</button>{/if}
     {#if placing}<div class="cal"><DayPick from={v.day} label={t('satchel.day')} pick={place} /></div>{/if}
-    <button class="item del" disabled={v.run?.job.id === j.id || v.runEnd?.job.id === j.id} onclick={remove}>{t('job.delete')}</button>
+    <!-- only a one-off still to do can wait on a reply; a recurring job simply comes again (D-137) -->
+    {#if !recurring && !finished && !v.done.has(j.id)}
+      {#if wait}<button class="item" onclick={backToIt}>{t('wait.back')}</button>{/if}
+      <button class="item" aria-expanded={waiting} disabled={v.run?.job.id === j.id || v.runEnd?.job.id === j.id || !!v.run?.errands?.some(e => e.job.id === j.id) || !!v.runEnd?.errands?.some(e => e.job.id === j.id)} onclick={() => { if (!settling()) { waiting = !waiting; placing = false; } }}>{wait ? t('wait.still') : t('wait.menu')}</button>
+      {#if waiting}<div class="cal"><WaitPick day={v.day} who={wait?.who ?? ''} name={j.name} pick={waitOn} /></div>{/if}
+    {/if}
+    <button class="item del" disabled={v.run?.job.id === j.id || v.runEnd?.job.id === j.id || !!v.run?.errands?.some(e => e.job.id === j.id) || !!v.runEnd?.errands?.some(e => e.job.id === j.id)} onclick={remove}>{t('job.delete')}</button>
     <button class="item cancel" onclick={() => { if (!settling()) closeMenu(); }}>{t('rhythms.cancel')}</button>
   </div>
 {/if}

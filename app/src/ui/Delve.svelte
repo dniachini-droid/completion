@@ -3,10 +3,11 @@
   /* The delve (INTERACTION_NOTES → the delve; D-028, D-036, D-037, D-047). The glowing ring fills with the time left;
      the destination is the headline; the tunnel moves so the world is visibly travelling. Only two ideas, always in
      the same words: Pause (once Step away; review 2, D-088) and Finish here. The scene is the approved mock-up's own (delve.html, revision 3). */
-  import { onMount } from 'svelte';
-  import { game } from './game.svelte';
+  import { onMount, flushSync, tick } from 'svelte';
+  import { game, content } from './game.svelte';
   import { t, minutesWords, minutesShort, ord } from '../content/copy/en';
   import { mmss, ofLine } from './panel';
+  import { tieFor } from '../core/remember';
   import tunnel from './scene/tunnel.html?raw';
   import fogFront from './scene/fog-front.html?raw';
   import { tunnelLight } from './scene/light.js';
@@ -14,7 +15,7 @@
   import Return from './Return.svelte';
   import { steady } from './taps';
   import { unslide } from './keyboard';
-  import { listLines } from '../core/game';
+  import { listLines, returnOf } from '../core/game';
   import EndRing from './EndRing.svelte';
   import EndRoad from './EndRoad.svelte';
   import type { TallyMode } from './tally';
@@ -51,7 +52,7 @@
   const share = (m: number) => Math.max(0, Math.min(1, (m - road.from) / Math.max(1, road.to - road.from)));
   const toW = $derived(end ? end.walked : v.walked);
   const fromW = $derived(end ? Math.max(0, end.walked - end.gained) : v.walked);
-  const mode = $derived<TallyMode>(!end ? 'still' : end.ask && answer === null ? 'from' : answer === 'no' ? 'still' : 'play');
+  const mode = $derived<TallyMode>(!end ? 'still' : (end.ask && answer === null) || end.pending ? 'from' : answer === 'no' ? 'still' : 'play');
 
   /* the ring settles after an end: lit, then resting */
   $effect(() => {
@@ -78,18 +79,68 @@
     const d = doneFacts(game.facts).find(f => f.job === end.job.id && start && f.seq > (start as { run: number }).run);
     return d ? d.seq : null;
   });
+  /* an errand run's errands struck off, each with its story moment (D-139): the ones with words to show */
+  const errandsDone = $derived(end?.errands?.filter(e => e.done !== null) ?? []);
+  const errandStory = $derived(errandsDone.filter(e => { const r = returnOf(content, game.facts, e.done!); return !!r.line || r.finds.length > 0; }));
   /* the end carries the story (a step, a mark to guess, a find) */
-  const told = $derived(!!end && (doneSeq !== null || v.runFinds.length > 0));
+  const told = $derived(!!end && (doneSeq !== null || v.runFinds.length > 0 || errandStory.length > 0));
+  /* an errand run is named as one, never by a job (D-139) */
+  const title = (r: { errands: unknown; job: { name: string } }) => r.errands ? t('errand.title') : r.job.name;
+  /* an errand struck off (or back) with a tap, as a job's list line is (D-126) */
+  function strikeErrand(id: string) { steady(); game.do({ do: 'strikeErrand', job: id }); }
   /* the job's list (D-126): a tap strikes a line off (the shampoo is in the basket) or back; struck lines go when the
      delve ends, the rest stay for next time */
   const lines = (id: string) => listLines(game.job(id));
   const struck = (id: string, k: number) => !!game.job(id)?.struck?.includes(k);
   /* a quick second tap is not a second strike (break-it review) */
   function strike(id: string, k: number) { steady(); game.do({ do: 'strikeLine', job: id, k }); }
+
+  /* Park a thought (D-138): a stray thought ("must email Sam") typed in one line over the lower part of the screen, kept
+     in the Satchel's No day yet; the delve runs on meanwhile, never paused by it. The box stays open, and keeps what is
+     typed, if the delve ends meanwhile. Nothing here moves on its own: the "Parked" line comes and goes once. */
+  let parking = $state(false), thought = $state(''), parkedSay = $state<string | null>(null);
+  let parkBox = $state<HTMLInputElement | null>(null), parkLink = $state<HTMLButtonElement | null>(null);
+  let sayTimer: ReturnType<typeof setTimeout> | undefined;
+  function openPark() {
+    steady(); parkedSay = null; parking = true;
+    /* the keyboard comes up with the tap itself, as the phone wants */
+    flushSync(); parkBox?.focus();
+  }
+  /* back to the link, so VoiceOver keeps its place (review) */
+  function closePark() { parking = false; thought = ''; void tick().then(() => parkLink?.focus()); }
+  function park() {
+    const line = thought.replace(/\s+/g, ' ').trim();
+    if (!line) return;
+    steady();
+    /* a job still Dan's is not parked twice (D-136): it says so instead */
+    const have = tieFor(content, game.facts, line);
+    game.do({ do: 'park', line });
+    parkBox?.blur(); closePark();
+    parkedSay = have?.same ? t('park.have', { job: have.job.name }) : t('park.parked', { job: line.slice(0, 120) });
+    clearTimeout(sayTimer);
+    sayTimer = setTimeout(() => (parkedSay = null), 4000);
+  }
+  /* leaving the delve with a thought typed (Today, the phone's back): it is kept, never lost (review) */
+  onMount(() => () => { clearTimeout(sayTimer); if (parking && thought.trim()) game.do({ do: 'park', line: thought }); });
+  const canPark = $derived(!!run);
+  /* at the end: the thoughts this delve parked, once its question is answered; a tap opens the Satchel */
+  const parkedN = $derived(end && !run && !end.pending && !(end.ask && answer === null) ? end.parked : 0);
+  function toSatchel() { keepNote(); go('satchel'); }
 </script>
 
+{#snippet errandList(es: { job: { id: string; name: string }; struck: boolean }[])}
+  <ul class="list" aria-label={t('errand.list')}>
+    {#each es as e (e.job.id)}
+      <li><button class:struck={e.struck} aria-pressed={e.struck} onclick={() => strikeErrand(e.job.id)}><span class="tick" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M4.5 8.3 7 10.7l4.6-5.2" /></svg></span><span class="l">{e.job.name}</span></button></li>
+    {/each}
+  </ul>
+{/snippet}
+
 {#snippet theList(id: string)}
-  {#if lines(id).length}
+  {#if run?.errands}
+    <!-- the errand run (D-139): its errands, struck off one by one as each is done -->
+    {@render errandList(run.errands)}
+  {:else if lines(id).length}
     <ul class="list" aria-label={t('delve.list')}>
       {#each lines(id) as l, k (k)}
         <!-- a small circle beside each line, as in Reminders: ticked when struck (D-130) -->
@@ -105,13 +156,16 @@
     <header class="top col">
       <div class="topbar rise">
         <button class="home" onclick={() => (end ? leave('today') : go('today'))}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{t('delve.today')}</span></button>
-        <span></span><span></span>
+        <span></span>
+        {#if canPark && !parking}<button class="text-link park-link" bind:this={parkLink} onclick={openPark}><span>{t('park.link')}</span></button>{:else}<span></span>{/if}
       </div>
       <div class="head rise d1">
         <div class="label-line centred lit">{t('delve.further')}</div>
         <h1 class="carve">{v.here.name}</h1>
         <p class="soft on-scene breath-hide" class:gone={!run || run.phase !== 'delve'}>{t('delve.moves')}</p>
       </div>
+      <!-- always there, so VoiceOver reads the line when it is written (review) -->
+      <p class="parked-say" class:shown={!!parkedSay} role="status">{parkedSay ?? ''}</p>
     </header>
 
     <div class="mid">
@@ -132,7 +186,7 @@
 
     <section class="bottom col rise d3" class:fit={told}>
       {#if run?.phase === 'delve'}
-        <h2>{run.job.name}</h2>
+        <h2>{title(run)}</h2>
         <p class="soft of">{of}</p>
         {@render theList(run.job.id)}
         <!-- no standing "lock the phone" note (Dan, D-130); only the warning that no sound will come, when alerts are off -->
@@ -144,7 +198,7 @@
       {:else if run?.phase === 'held'}
         <!-- paused by Pause, or by going into another app: then it says so, and offers Carry on or Finish here (D-094) -->
         <div class="label-line centred">{run.away ? t('delve.awayLabel') : t('delve.paused')}</div>
-        <h2 class="m">{run.job.name}</h2>
+        <h2 class="m">{title(run)}</h2>
         <p class="say">{run.away ? t('delve.away.say') : t('delve.held.say')}</p>
         {@render theList(run.job.id)}
         <button class="btn resting back" onclick={() => game.do({ do: 'resume' })}>
@@ -169,6 +223,42 @@
             <button class="btn resting" onclick={yes}>{t('delve.yes')}</button>
             <button class="btn-quiet" onclick={() => { steady(); answer = 'no'; unslide(); }}><span>{t('delve.notYet')}</span></button>
           </div>
+        {:else if end.errands && end.pending}
+          <!-- the run ended (it may have run out while Dan was still out): what got done is struck off here, then counted
+               once (D-139) -->
+          <div class="scroll">
+            <div class="label-line centred">{t('errand.title')}</div>
+            <h2 class="m">{t('errand.ask')}</h2>
+            <p class="say">{t('errand.askSay')}</p>
+            {@render errandList(end.errands)}
+          </div>
+          <button class="btn resting" onclick={() => { steady(); game.do({ do: 'countErrands' }); unslide(); }}>{t('errand.count')}</button>
+        {:else if end.errands}
+          <!-- the errand run's end (D-139): the run's minutes, each errand struck off done with its share, then each one's
+               story moment in turn; the ones left stay as they were -->
+          <div class="scroll">
+            <div class="label-line centred">{t('errand.title')}</div>
+            <h2 class="m">{end.minutes > 0 ? t('errand.end', { min: minutesWords(end.minutes) }) : t('errand.endNone')}</h2>
+            <ul class="errs">
+              {#each end.errands as e (e.job.id)}
+                <li class:done={e.done !== null}><span class="pip" class:done={e.done !== null}></span><span class="t">{e.job.name}</span><span class="s">{e.done !== null ? t('errand.doneRow', { min: minutesShort(e.minutes) }) : t('errand.leftRow')}</span></li>
+              {/each}
+            </ul>
+            {#if !errandsDone.length && end.minutes > 0}<p class="say">{t('errand.carried')}</p>{/if}
+            {#each errandStory as e, i (e.job.id)}
+              <div class="errand-story">
+                <!-- the errand's name over its story moment: plain words, never a carved label (D-131) -->
+                <p class="errand-name">{t('errand.doneSay', { job: e.job.name })}</p>
+                <Return doneSeq={e.done} extraFinds={i === 0 ? v.runFinds : []} {go} />
+              </div>
+            {/each}
+            {#if !errandStory.length}<p class="say">{v.passage}</p><Return doneSeq={null} extraFinds={v.runFinds} />{/if}
+          </div>
+          {#if end.completedDay || game.view.arrival}
+            <button class="btn" onclick={() => leave('arrival')}>{t('delve.see')}</button>
+          {:else}
+            <button class="btn resting" onclick={() => leave('today')}>{t('delve.toToday')}</button>
+          {/if}
         {:else if answer === 'no'}
           <div class="label-line centred">{t('delve.label')}</div>
           <h2 class="m">{end.total > 0 ? t('delve.kept', { min: minutesWords(end.total) }) : t('delve.keptNone')}</h2>
@@ -197,14 +287,30 @@
             <button class="btn resting" onclick={() => leave('today')}>{t('delve.toToday')}</button>
           {/if}
         {/if}
+        {#if parkedN > 0}
+          <!-- a place waiting (the day done, an arrival): only said, so the way on stays the one button (review) -->
+          {#if end.completedDay || v.arrival}<p class="say parked-n">{parkedN === 1 ? t('park.count.1') : t('park.count', { n: parkedN })}</p>
+          {:else}<div class="cant"><button class="text-link" onclick={toSatchel}><span>{parkedN === 1 ? t('park.count.1') : t('park.count', { n: parkedN })}</span></button></div>{/if}
+        {/if}
       {/if}
     </section>
   </div>
+  {#if parking}
+    <!-- the one line for a thought (D-138): Return or Park it keeps it; the delve's own screen stays in view above -->
+    <form class="park" aria-label={t('park.link')} onsubmit={(e) => { e.preventDefault(); park(); }}>
+      <input bind:this={parkBox} bind:value={thought} aria-label={t('park.label')} placeholder={t('park.hint')} maxlength="120"
+        enterkeyhint="done" autocomplete="off" onkeydown={(e) => { if (e.key === 'Escape') closePark(); }} />
+      <div class="two">
+        <button class="btn-quiet" type="button" onclick={closePark}><span>{t('park.cancel')}</span></button>
+        <button class="btn-quiet" type="submit" disabled={!thought.trim()}><span>{t('park.save')}</span></button>
+      </div>
+    </form>
+  {/if}
 </div>
 
 <style>
   /* the job's list, struck off a line at a time (D-126) */
-  .list { list-style: none; margin: 4px auto 10px; padding: 0; max-width: 320px; max-height: 26vh; overflow-y: auto; overflow-x: hidden; text-align: left; }
+  .list { list-style: none; margin: 4px auto 10px; padding: 0; width: 100%; max-width: 320px; max-height: 26vh; overflow-y: auto; overflow-x: hidden; text-align: left; }
   .list button { overflow-wrap: anywhere; }
   .list button { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 44px; padding: 4px 10px; text-align: left; background: none; border: 0;
     border-bottom: 1px solid rgba(255, 255, 255, .08); font-family: var(--life); font-size: 17px; color: #fff; cursor: pointer; }
@@ -215,6 +321,15 @@
   .list button.struck .tick { background: var(--violet-hi); border-color: var(--violet-hi); }
   .list button.struck .tick svg { opacity: 1; }
   .dv { display: contents; }
+  /* the errand run's end (D-139): each errand, done with its minutes or still to do */
+  .errs { list-style: none; margin: 8px auto 10px; padding: 0; max-width: 340px; text-align: left; }
+  .errs li { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; align-items: center; column-gap: 12px; min-height: 40px; border-top: 1px solid var(--edge-4); }
+  .errs li:last-child { border-bottom: 1px solid var(--edge-4); }
+  .errs .t { font-family: var(--life); font-size: 17px; color: var(--ink); overflow-wrap: anywhere; min-width: 0; }
+  .errs .s { font-family: var(--life); font-style: italic; font-size: 15px; color: var(--ink-2); text-align: right; }
+  .errs li.done .s { color: #ecc890; }
+  .errand-story { margin-top: 14px; }
+  .errand-name { margin: 0 0 2px; font-family: var(--life); font-style: italic; font-size: 16.5px; color: #ecc890; text-align: center; overflow-wrap: anywhere; }
   /* the ring takes the room left between the place's name and the words below, never more; when the end carries the
      story it steps back, and on a phone too short for it, it gives way altogether */
   .dv :global(.mid) { container-type: size; }
@@ -235,4 +350,26 @@
   .pair { max-width: 340px; margin: 0 auto; }
   .breath-line i { transition: width .25s linear; }
   button.home { color: var(--ink-2); }
+  /* Park a thought (D-138): a quiet link in the top bar; the box over the lower part of the screen, above the keyboard
+     (the phone frame is the part above it, keyboard.ts); the "Parked" line under the top bar for a few seconds */
+  .park-link { font-size: 16px; }
+  .park { position: absolute; z-index: 20; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; gap: 8px;
+    padding: 12px 16px calc(var(--safe-b, 0px) + 4px); background: rgb(18, 16, 38); border-top: 1px solid var(--edge-2);
+    animation: park-up .18s ease-out; }
+  :global(html.kb) .park { padding-bottom: 12px; }
+  @keyframes park-up { from { opacity: 0; } }
+  .park input { min-width: 0; min-height: 44px; padding: 0 12px; font: inherit; font-size: 17px; color: #fff;
+    background: rgba(255, 255, 255, .06); border: 1px solid var(--edge-2); border-radius: 0; }
+  .park .two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .park .btn-quiet { padding: 0 8px; min-height: 44px; }
+  .park .btn-quiet:disabled { opacity: .5; }
+  .parked-say { position: absolute; z-index: 6; left: 50%; transform: translateX(-50%); top: calc(var(--safe-t, 0px) + 50px); width: max-content;
+    max-width: calc(100% - 32px); margin: 0; padding: 6px 14px; pointer-events: none; background: rgb(18, 16, 38); border: 1px solid var(--edge-2);
+    font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink-2); text-align: center;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .parked-say:not(.shown) { position: absolute; width: 1px; height: 1px; padding: 0; border: 0; clip-path: inset(50%); }
+  .parked-say.shown { animation: park-say .3s ease-out; }
+  .dv :global(.bottom p.parked-n) { margin: 10px 0 0; font-size: 16px; font-style: italic; text-align: center; }
+  @keyframes park-say { from { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .park, .parked-say.shown { animation: none; } }
 </style>

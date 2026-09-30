@@ -4,10 +4,14 @@
      day: a tap on the day moves it), "Recurring jobs". On its day a job moves to Today; if the day passes undone it
      comes back to "No day yet"; done, it is in the Daybook. One box to add a job: "Delve now" (a one-off on today, its
      delve begun at once) or "Save for later" (no day). A tap delves; a slide shows Edit and Delete (with Undo). No
-     counts, no ages, nothing red (rule 9). */
+     counts, no ages, nothing red (rule 9). As Dan types, the jobs he has had before come up under the box (D-136): one
+     picked carries on from the one before; one still his (recurring, or still to do) is never added twice. A name added
+     a third time in 28 days is offered, once, as a recurring job. */
   import { game, content } from './game.svelte';
-  import { t, byWords, dayShort, oftenWords, minutesShort } from '../content/copy/en';
-  import { satchelView, LIST_MAX } from '../core/game';
+  import { t, byWords, dayShort, oftenWords, minutesShort, minutesWords } from '../content/copy/en';
+  import { satchelView, errandChoices, LIST_MAX } from '../core/game';
+  import { cleanLine, repeatOffer, suggest, tieFor, type Suggestion } from '../core/remember';
+  import { nameKey } from '../core/week';
   import type { Job } from '../core/types';
   import Scene from './Scene.svelte';
   import Deleted from './Deleted.svelte';
@@ -17,7 +21,7 @@
   import { back } from './back.svelte';
   import { flushSync, onMount } from 'svelte';
   import { steady } from './taps';
-  import { openMenu, openTick } from './menu.svelte';
+  import { openMenu, openTick, waited, sayWaited } from './menu.svelte';
   import art from './scene/satchel.jpg';
 
   /* `to`: 'recurring' opens at that section (the Week). Today's "+ Add" focuses the box itself, inside its tap, so the
@@ -27,6 +31,8 @@
   /* a job not done today can be ticked off, done without a delve (D-134); not while a delve runs */
   const canTick = (j: Job) => !v.done.has(j.id) && !v.run;
   const s = $derived(satchelView(content, game.facts, game.now));
+  /* the errand run (D-139): several jobs on one trip out, when there are two to take and no delve is under way */
+  const errandsOpen = $derived(!v.run && errandChoices(content, game.facts, game.now).length >= 2);
   let text = $state('');
   let input = $state<HTMLInputElement | null>(null);
   /* one job at a time has its list open, or its days */
@@ -34,6 +40,14 @@
   let said = $state<string | null>(null);
   let box = $state<HTMLTextAreaElement | null>(null);
   let recurringEl = $state<HTMLElement | null>(null);
+  /* the job picked from under the box (D-136): it holds while the box still says its name */
+  let picked = $state<string | null>(null);
+  const pickedJob = $derived(picked ? v.content.jobs.find(j => j.id === picked) : undefined);
+  const tied = $derived(!!pickedJob && nameKey(pickedJob.name) === nameKey(text));
+  const before = $derived<Suggestion[]>(text.trim() && !tied ? suggest(content, game.facts, text) : []);
+  /* the day alone, so the offer is worked out again only when the facts or the day change, not each second (D-132) */
+  const day = $derived(v.day);
+  const offer = $derived(repeatOffer(content, game.facts, day));
 
   onMount(() => {
     if (to === 'recurring') recurringEl?.scrollIntoView({ block: 'start' });
@@ -44,15 +58,30 @@
     const line = text.trim();
     if (!line || v.run || v.runEnd) return;
     steady(); saveList();
-    game.do({ do: 'delveNow', line });
-    text = '';
+    game.do({ do: 'delveNow', line, ...(tied ? { from: picked! } : {}) });
+    text = ''; picked = null;
     if (game.view.run) go('delve');
   }
   function later() {
-    const line = text.trim();
+    const line = cleanLine(text);
     if (!line) return;
-    steady(); game.do({ do: 'addItems', lines: [line] }); text = ''; said = t('satchel.saved', { job: line });
+    steady();
+    const tie = tieFor(content, game.facts, line, tied ? picked! : undefined);
+    text = ''; picked = null;
+    /* a job still Dan's is already in its place: say where (D-136) */
+    if (tie?.same) { said = where(tie.job); return; }
+    game.do({ do: 'saveForLater', line, ...(tie ? { from: tie.job.id } : {}) }); said = t('satchel.saved', { job: line });
   }
+  function where(j: Job): string {
+    if (s.recurring.some(x => x.id === j.id)) return t('satchel.have.recurring', { job: j.name });
+    const waits = s.waiting.find(x => x.job.id === j.id);
+    if (waits) return t('satchel.have.waiting', { job: j.name, day: dayShort(waits.until) });
+    const coming = s.coming.find(x => x.job.id === j.id);
+    if (coming) return t('satchel.have.coming', { job: j.name, day: dayShort(coming.day) });
+    return t(s.noDay.some(x => x.id === j.id) ? 'satchel.have.noDay' : 'satchel.have.today', { job: j.name });
+  }
+  /* a job from before fills the box; the box keeps the keyboard (no press takes its focus) */
+  function choose(x: Suggestion) { text = x.job.name; picked = x.job.id; said = null; }
   const preview = (j: Job) => (j.list ?? '').split('\n').filter(l => l.trim()).join(' · ');
   function openList(j: Job) {
     placing = null; said = null;
@@ -84,8 +113,14 @@
     { label: t('menu.edit'), sr: t('menu.srEdit', { job: j.name }), run: () => edit(j) },
     { label: t('job.delete'), sr: t('row.srDelete', { job: j.name }), run: () => remove(j), del: true },
   ];
-  const menu = (j: Job) => () => { saveList(); openMenu(j.id, go); };
+  const menu = (j: Job) => () => { saveList(); openMenu(j.id, go, null, null, 'satchel'); };
   const rhythmOf = (j: Job) => v.content.rhythms.find(r => r.job === j.id);
+  /* waiting on a reply (D-137): "Back to it" at any time makes it an ordinary job again, with no day */
+  function backToIt(j: Job) { saveList(); steady(); game.do({ do: 'backToIt', job: j.id }); sayWaited(null); said = null; }
+  $effect(() => () => sayWaited(null));
+  /* a wait just set says so, in place of the last line said */
+  $effect(() => { if (waited.job) said = null; });
+  const waitedJob = $derived(waited.job && s.waiting.some(x => x.job.id === waited.job) ? game.job(waited.job) : undefined);
 
   /* the artwork shrinks as the list scrolls up (Dan, D-130): drawn smaller and fainter from its top edge, while the list
      keeps its place, so nothing under the finger jumps */
@@ -107,21 +142,46 @@
       <span></span><span></span>
     </div>
     <h1 class="carve lg rise">{t('satchel.label')}</h1>
+    <!-- kept in its place while the suggestions show, so the box never moves as Dan types (review of D-136) -->
     <p class="soft say-note rise">{t('satchel.say')}</p>
     <!-- the one box for a new job (D-131): delve on it now, or keep it for later -->
     <form class="new satchel-add rise" onsubmit={(e) => { e.preventDefault(); later(); }}>
-      <input bind:this={input} bind:value={text} aria-label={t('satchel.add')} placeholder={t('satchel.add.hint')} maxlength="120" enterkeyhint="done" />
+      <input bind:this={input} bind:value={text} oninput={() => (said = null)} aria-label={t('satchel.add')} placeholder={t('satchel.add.hint')} maxlength="120" enterkeyhint="done" autocomplete="off" />
       <div class="two">
         <button class="btn-quiet" type="button" disabled={!text.trim() || !!v.run || !!v.runEnd} onclick={now}><span>{t('satchel.now')}</span></button>
         <button class="btn-quiet" type="submit" disabled={!text.trim()}><span>{t('satchel.later')}</span></button>
       </div>
+      <!-- the jobs Dan has had before (D-136): under the box and its buttons, so nothing he aims at moves as he types -->
+      {#if before.length}
+        <ul class="before" aria-label={t('satchel.before')}>
+          {#each before as x (x.job.id)}
+            <li><button type="button" class="pick" onpointerdown={e => e.preventDefault()} onclick={() => choose(x)}
+              aria-label={x.usual ? t('satchel.pick.sr', { job: x.job.name, min: minutesWords(x.usual) }) : x.job.name}>
+              <span class="t">{x.job.name}</span>{#if x.usual}<span class="u" aria-hidden="true">{t('satchel.usually', { min: minutesShort(x.usual) })}</span>{/if}
+            </button></li>
+          {/each}
+        </ul>
+      {/if}
     </form>
   </header>
 
   <div class="body col rise d1" onscroll={shrink}>
+    <!-- the one offer (D-136): a name added a third time in 28 days; "No thanks" and it is never asked again -->
+    {#if offer}
+      <div class="offer" role="group" aria-labelledby="offer-q">
+        <p id="offer-q">{t('satchel.offer', { job: offer.name })}</p>
+        <div class="acts center">
+          <button class="text-link" onclick={() => { saveList(); go('rhythms', `repeat:${offer.job}`); }}><span>{t('satchel.offer.yes')}</span></button>
+          <button class="text-link" onclick={() => game.do({ do: 'declineRepeat', name: offer.name })}><span>{t('satchel.offer.no')}</span></button>
+        </div>
+      </div>
+    {/if}
+    <!-- what the box just did, under it, where the eye is (D-136) -->
+    {#if said}<p class="said" role="status">{said}</p>
+    {:else if waitedJob}<p class="said" role="status">{t('wait.said', { job: waitedJob.name, day: dayShort(waited.until) })}</p>{/if}
     <img class="art" bind:this={artEl} src={art} alt="" aria-hidden="true" />
     <Deleted />
-    {#if said}<p class="said" role="status">{said}</p>{/if}
+    {#if errandsOpen}<div class="links errand"><button class="text-link" onclick={() => { saveList(); go('errands'); }}><span>{t('errand.link')}</span></button></div>{/if}
 
     <div class="label-line">{t('satchel.noDay')}</div>
     {#if !s.noDay.length}<p class="soft empty">{t('satchel.empty')}</p>{/if}
@@ -161,6 +221,22 @@
             {#snippet over()}<button class="text-link day" aria-expanded={placing === x.job.id} aria-label={t('satchel.move', { job: x.job.name, day: dayShort(x.day) })} onclick={() => openDays(x.job)}><span>{dayShort(x.day)}</span></button>{/snippet}
           </SwipeRow>
           {#if placing === x.job.id}<DayPick from={v.day} label={t('satchel.day')} pick={d => place(x.job, d)} />{/if}
+        </div>
+      {/each}
+      </div>
+    {/if}
+
+    <!-- waiting on someone's reply (D-137): quiet, soonest first; on its day it goes back to Today -->
+    {#if s.waiting.length}
+      <div class="label-line">{t('wait.label')}</div>
+      <div class="rows waiting">
+      {#each s.waiting as x (x.job.id)}
+        <div class="item">
+          <SwipeRow key={`s:${x.job.id}`} actions={acts(x.job)} tap={() => delve(x.job)} hold={menu(x.job)} disabled={!!v.run}>
+            {#snippet lead()}{#if canTick(x.job)}<button class="tickbtn" aria-label={t('tick.sr', { job: x.job.name })} onclick={() => openTick(x.job.id, go)}><span class="ring"></span></button>{/if}{/snippet}
+            {#snippet row()}<span class="pip" class:under={canTick(x.job)}></span><span class="t">{x.job.name}<small>{x.who ? t('wait.on', { who: x.who, day: dayShort(x.until) }) : t('wait.plain', { day: dayShort(x.until) })}</small></span><span class="s"></span>{/snippet}
+          </SwipeRow>
+          <div class="acts"><button class="text-link" aria-label={t('wait.srBack', { job: x.job.name })} onclick={() => backToIt(x.job)}><span>{t('wait.back')}</span></button></div>
         </div>
       {/each}
       </div>
@@ -212,5 +288,15 @@
   .acts .text-link { min-height: 44px; min-width: 44px; font-size: 15px; }
   .said { font-family: var(--life); font-style: italic; font-size: 15.5px; color: var(--ink-2); text-align: center; margin: 4px 0 8px; }
   .links { display: flex; justify-content: center; margin-top: 12px; }
+  .links.errand { margin-top: 0; }
   button.home { color: var(--ink-2); }
+  /* the jobs from before (D-136): quiet lines under the box, a finger high, the name first; nothing moves */
+  .before { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--edge-2); }
+  .pick { display: flex; align-items: baseline; gap: 12px; width: 100%; min-height: 44px; padding: 10px 12px; text-align: left;
+    background: rgba(255, 255, 255, .03); border: 0; border-bottom: 1px solid var(--edge-2); cursor: pointer; font: inherit; color: #fff; }
+  .pick .t { flex: 1; min-width: 0; font-size: 17px; overflow-wrap: anywhere; }
+  .pick .u { flex: none; font-family: var(--life); font-style: italic; font-size: 15px; color: var(--ink-2); }
+  .offer { margin: 8px 0 6px; padding: 10px 12px 2px; border: 1px solid var(--edge-2); background: rgba(255, 255, 255, .04); }
+  .offer p { margin: 0; font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink); text-align: center; }
+  .acts.center { justify-content: center; padding-left: 0; }
 </style>
