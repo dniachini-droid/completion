@@ -27,7 +27,7 @@ const tap = async (loc, what) => {
   await page.touchscreen.tap(r.x + r.width / 2, r.y + r.height / 2); await page.clock.runFor(1200); return true;
 };
 const btn = (name) => page.getByRole('button', { name, exact: true });
-const screen = async () => (await page.locator('.dv').count()) ? 'delve' : (await page.locator('.rs').count()) ? 'set' : (await page.locator('.route').count()) ? 'step' : (await page.locator('.today-add').count()) ? 'today' : '?';
+const screen = async () => (await page.locator('.dv').count()) ? 'delve' : (await page.locator('.rs').count()) ? 'set' : (await page.locator('.route').count()) ? 'step' : (await page.locator('nav.foot').count()) ? 'today' : '?';
 const expectOn = async (want, when) => { const s = await screen(); if (s !== want) fails.push(`${when}: on ${s}, not ${want}`); return s === want; };
 const has = async (name, when) => { if (!(await btn(name).count())) fails.push(`${when}: no "${name}"`); };
 /* back to Today, past whatever the day brings first (a place reached, the stair) */

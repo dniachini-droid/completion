@@ -323,8 +323,11 @@
   .box .say { color: var(--ink-2); font-size: 16.5px; line-height: 1.42; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
   .swap { animation: rise .45s var(--ease) both; }
   .box .say.short { -webkit-line-clamp: 2; line-clamp: 2; }
+  /* the places reached: all of them, scrolling inside the box if there are many (the box keeps its size, D-076) */
+  .box .swap:has(.reads) { overflow-y: auto; scrollbar-width: none; }
+  .box .say.reads { display: block; -webkit-line-clamp: unset; line-clamp: unset; overflow: visible; }
   .reads { margin: 2px 0 0; }
-  .read { min-height: 32px; padding: 2px 0; }
+  .read { min-height: 40px; padding: 2px 0; }
   .read span { font-family: var(--life); font-size: 16.5px; color: var(--ink); }
   .sep { color: var(--ink-3); }
   @media (prefers-reduced-motion: reduce) { .drawn, .dust, .pl, .labels, .reticle, .swap { animation: none; opacity: 1; } .drawn { opacity: 0; } .reticle { transition: none; } }

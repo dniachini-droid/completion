@@ -146,7 +146,7 @@ export const copy = {
   'stair.say': 'From here, every delve takes you further down into the deep.',
   'stair.down': 'Go down',
   'map.nav': 'Map',
-  'arrive.toMap': 'Back to the map',
+  'arrive.back': 'Back to {to}',
   'map.readAgain': 'Read again: {place}', 'map.readHere': 'Read it again',
   'map.label': 'The map',
   'map.regionLabel': 'The first region',
@@ -230,7 +230,7 @@ export const copy = {
   'today.running.go': 'Back to the delve',
   'today.else': 'Something else…',
   'today.clear': 'Nothing more is on today’s list.',
-  'today.clear.say': 'Choose something else to delve on, or rest. The road will keep.',
+  'today.clear.say': 'Add a job, or rest. The road will keep.',
   /* the day's finish line is its first 3 hours; the rest waits below (D-131) */
   'today.ifTime': 'If there’s time',
   /* the one job menu (D-131, step 3) */

@@ -143,8 +143,12 @@ const tap = async (text) => {
   }
 };
 const screensSoFar = () => i;
-/** Today's one button: Delve on a delve job, Begin on one done away from the phone (D-077). */
-const start = async () => { if (await has('Delve')) await tap('Delve'); else await tap('Begin'); };
+/** Today's next job: the top row still to do (no job is put forward, D-135); else a set-up's Begin. */
+const start = async () => {
+  const row = page.locator('.rows button.row:not(.done)').first();
+  if (await page.locator('nav.foot').count() && await row.count()) { await row.click(); return; }
+  if (await has('Delve')) await tap('Delve'); else await tap('Begin');
+};
 /** Dan sets the length on the set-up, which opens at one 30-minute delve (D-124): an hour, as a day of real work. */
 const setHour = async () => { const b = page.getByRole('button', { name: '60 minutes', exact: true }); if (await b.count()) { await b.first().click(); await page.clock.runFor(700); } };
 /** Answer whatever guess the screen offers (the first option). */
@@ -386,7 +390,9 @@ for (let d = 2; d <= 24 && !cut; d++) {
   const loud = d <= 3 || high;
   if (loud) await shot(`d${d}-today`, 2500);
   for (let k = 0; k < (high ? 5 : 3); k++) {
-    if (!(await has('Begin')) && !(await has('Delve')) && !(await has('Done'))) break;
+    /* a job still to do: a Begin or Done on the screen, or a row left on Today's list (no job is put forward, D-135) */
+    const left = await page.locator('nav.foot').count() && await page.locator('.rows button.row:not(.done)').count();
+    if (!left && !(await has('Begin')) && !(await has('Delve')) && !(await has('Done'))) break;
     if (loud) await doNext(`d${d}-${k}`); else await quiet();
     if (cut) break;
   }

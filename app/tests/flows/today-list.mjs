@@ -79,6 +79,9 @@ else {
   await shot('3-map-read');
   await tap(page.locator('.arr .home'), 'back from the entry');
   if (!(await page.locator('.field, .sky').count())) fails.push('the entry opened from the Map does not go back to the Map');
+  /* and the Map's own back goes on to Today: never back into the entry (review of D-135) */
+  await tap(page.locator('.home'), 'back from the Map');
+  if (!(await page.locator('nav.foot').count())) fails.push('back from the Map, after reading a place again, does not reach Today');
 }
 
 if (errors.length) fails.push(...errors.map(e => 'page error: ' + e));

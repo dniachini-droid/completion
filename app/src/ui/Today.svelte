@@ -24,8 +24,13 @@
   const job = (id: string) => game.job(id)!;
   const weekday = $derived(t(`day.${new Date(Date.UTC(+v.day.slice(0, 4), +v.day.slice(5, 7) - 1, +v.day.slice(8, 10))).getUTCDay()}` as never));
   /* the finish line's jobs (its first 3 hours, D-131), then the rest, "If there's time" */
-  const others = $derived(v.line);
-  const extra = $derived(v.slate.filter(id => !v.line.includes(id)));
+  /* the jobs still to do first, then those done (on a list with no job put forward, the next one is its top row, D-135);
+     a delve running or paused is on its own card, not the list */
+  const todoFirst = (ids: string[]) => [...ids.filter(id => !v.done.has(id)), ...ids.filter(id => v.done.has(id))].filter(id => id !== v.run?.job.id);
+  const others = $derived(todoFirst(v.line));
+  const extra = $derived(todoFirst(v.slate.filter(id => !v.line.includes(id))));
+  /* the last place reached (never a camp): its entry, read again from its name (D-135) */
+  const placeSeq = $derived(game.facts.filter(f => f.type === 'arrived' && f.kind === 'place').pop()?.seq ?? null);
   const lastPlace = $derived(v.lastArrival);
 
   function rowNote(j: Job): string {
@@ -163,7 +168,7 @@
       </span>
     </div>
     <!-- the place's name: a tap reads its entry again, with its painting, at any time of day (Dan, D-135) -->
-    {#if lastPlace}<h1 class="carve lg rise"><button class="here" onclick={() => go('arrival')}>{v.here.name}</button></h1>
+    {#if placeSeq !== null && v.here.id}<h1 class="carve lg rise"><button class="here" aria-label={t('map.readAgain', { place: v.here.name })} onclick={() => go('arrival', `again:${placeSeq}`)}>{v.here.name}</button></h1>
     {:else}<h1 class="carve lg rise">{v.here.name}</h1>{/if}
     {#if v.ahead}
       <section class="ahead rise d2">
@@ -210,7 +215,7 @@
     {:else if !v.complete}
       <!-- no job is put forward (Dan, D-135): the day's jobs are one list below, each started, ticked off or set aside
            from its row; the one button adds a job (the Satchel's box, ready to type) -->
-      <div class="next">
+      <div class="next addcard">
         <div class="label-line lit">{t('today.label')}</div>
         {#if !v.slate.some(id => !v.done.has(id))}
           <h2 class="say-lg">{t('today.clear')}</h2>
@@ -291,6 +296,9 @@
   .next .soft.deeper { font-style: italic; margin: 8px 0 4px; }
   .rows { margin-top: 2px; }
   .lead .btn.full { width: 100%; }
+  /* the day's label and the one button: room between them (Dan, D-135) */
+  .addcard .lead { margin: 18px 0 12px; }
+  .addcard .soft + .lead { margin-top: 0; }
   .rows :global(.row-done) { min-height: 40px; padding: 0 0 0 12px; }
   .rows :global(.row-done span) { font-size: 16px; color: var(--violet-hi); }
   .if-time { margin: 18px 0 4px; }
