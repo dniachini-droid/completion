@@ -143,8 +143,12 @@ const tap = async (text) => {
   }
 };
 const screensSoFar = () => i;
-/** Today's one button: Delve on a delve job, Begin on one done away from the phone (D-077). */
-const start = async () => { if (await has('Delve')) await tap('Delve'); else await tap('Begin'); };
+/** Today's next job: the top row still to do (no job is put forward, D-135); else a set-up's Begin. */
+const start = async () => {
+  const row = page.locator('.rows button.row:not(.done)').first();
+  if (await page.locator('nav.foot').count() && await row.count()) { await row.click(); return; }
+  if (await has('Delve')) await tap('Delve'); else await tap('Begin');
+};
 /** Dan sets the length on the set-up, which opens at one 30-minute delve (D-124): an hour, as a day of real work. */
 const setHour = async () => { const b = page.getByRole('button', { name: '60 minutes', exact: true }); if (await b.count()) { await b.first().click(); await page.clock.runFor(700); } };
 /** Answer whatever guess the screen offers (the first option). */
@@ -339,7 +343,7 @@ const mapWalk = async (name) => {
 await shot('today', 2500);
 /* the Course: Begin opens the run set to its hour; a breather; enough */
 /* the day's plan leads Today (D-080); the Course is chosen through "Something else…", which opens the Satchel (D-077, D-131) */
-await tap('Something else…'); await shot('satchel-else', 1000);
+await tap('Add a job'); await shot('satchel-else', 1000);
 await page.locator('.body button.row', { hasText: 'Course' }).first().click(); await shot('runset', 2000);
 /* the side chamber is a fixed point on the road, halfway to the next place (Dan, D-122): shown whatever the run, at the
    same share of the way to the next place however long or many the delves */
@@ -386,7 +390,9 @@ for (let d = 2; d <= 24 && !cut; d++) {
   const loud = d <= 3 || high;
   if (loud) await shot(`d${d}-today`, 2500);
   for (let k = 0; k < (high ? 5 : 3); k++) {
-    if (!(await has('Begin')) && !(await has('Delve')) && !(await has('Done'))) break;
+    /* a job still to do: a Begin or Done on the screen, or a row left on Today's list (no job is put forward, D-135) */
+    const left = await page.locator('nav.foot').count() && await page.locator('.rows button.row:not(.done)').count();
+    if (!left && !(await has('Begin')) && !(await has('Delve')) && !(await has('Done'))) break;
     if (loud) await doNext(`d${d}-${k}`); else await quiet();
     if (cut) break;
   }
@@ -411,7 +417,7 @@ if (await has('I can’t start')) { await tap('I can’t start'); await shot('ca
 /* slice 4's own screens, from Today's foot */
 /* one-tap capture (D-107, D-131): "+ Add" opens the Satchel's one box, already typing; Return saves the job for later */
 { await page.clock.runFor(1500); await page.waitForTimeout(300);   /* the screen settled: no fading one still on it */
-  await page.locator('nav.foot .add').click(); await page.clock.runFor(300);
+  await page.locator('.today-add').click(); await page.clock.runFor(300);
   if (!(await page.evaluate(() => !!document.activeElement?.closest('.satchel-add')))) errors.push('CAPTURE the box was not already typing');
   await page.keyboard.type('Call the bank'); await shot('satchel-capture', 300);
   await page.keyboard.press('Enter'); await page.clock.runFor(500);
@@ -512,7 +518,7 @@ await tap('Daybook'); await shot('daybook', 1500); if (await has('Settings')) er
     await home(); await page.clock.runFor(800); await tap('Settings'); await page.clock.runFor(1200); }
   await tap('The trial’s own controls'); await page.clock.runFor(1500); expect('settings → trial', await backSays(), 'settings');
   await home();
-  await tap('Something else…'); await page.locator('.body button.row').first().click(); await page.clock.runFor(800);
+  await tap('Add a job'); await page.locator('.body button.row').first().click(); await page.clock.runFor(800);
   expect('satchel → delves', await backSays(), 'satchel');
   await home();
   await home(); await page.clock.runFor(1500);

@@ -153,6 +153,8 @@
       <section class="job rise d1">
         <div class="label-line lit">{t('set.label')}</div>
         <h1 class="say-lg">{job.name}</h1>
+        <!-- the job put off: what waits beyond it (it lived on Today's next job, D-135) -->
+        {#if job.avoided}<p class="soft last">{t('set.avoided')}</p>{/if}
         {#if carry > 0}<p class="soft carryon">{t('set.carry', { min: minutesWords(carry) })}</p>{/if}
         {#if job.note}<p class="soft last">{t('set.stopped', { note: job.note })}</p>{/if}
         <!-- the job's list (D-126): struck off a line at a time in the delve -->

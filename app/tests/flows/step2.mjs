@@ -14,8 +14,8 @@ page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
 /* a Sunday: the plan puts more than 3 hours on it */
 await page.clock.install({ time: new Date('2026-10-04T09:00:00+01:00') });
 await page.goto(url);
-for (let k = 0; k < 40 && !(await page.locator('.foot .add, button.btn').count()); k++) { await page.waitForTimeout(250); await page.clock.runFor(250); }
-const toToday = async () => { for (let k = 0; k < 8 && !(await page.locator('.foot .add').count()); k++) { await page.locator('button.btn, .home').first().click().catch(() => {}); await page.clock.runFor(1500); } };
+for (let k = 0; k < 40 && !(await page.locator('nav.foot, button.btn').count()); k++) { await page.waitForTimeout(250); await page.clock.runFor(250); }
+const toToday = async () => { for (let k = 0; k < 8 && !(await page.locator('nav.foot').count()); k++) { await page.locator('button.btn, .home').first().click().catch(() => {}); await page.clock.runFor(1500); } };
 await toToday();
 const fails = [];
 const btn = (name) => page.getByRole('button', { name, exact: true });
@@ -49,7 +49,7 @@ async function pressStill(where, row) {
 if (!(await page.locator('.label-line', { hasText: /If there.s time/ }).count())) fails.push('no "If there\'s time" on a day planned past its first 3 hours');
 
 /* 2. Today: a press and hold leaves the rows still, and opens the job menu */
-const first = page.locator('.rows button.row:not(.else)').first();
+const first = page.locator('.rows button.row').first();
 const name = (await first.locator('.t').innerText()).trim();
 await pressStill('Today', first);
 const menu = page.locator('.menu[role=dialog]');
@@ -89,7 +89,7 @@ await toToday();
 if (process.env.BROWSER === 'webkit') { console.log('step2: in WebKit the delve and Tonight parts are left to Chromium (D-106)'); }
 else {
 /* 4. a done job slides to "Not done after all", and is a job to do again */
-const target = page.locator('.rows button.row:not(.else)').first();
+const target = page.locator('.rows button.row').first();
 const tname = (await target.locator('.t').innerText()).trim();
 await target.click(); await page.clock.runFor(1200);
 if (await page.locator('.rs').count()) { await btn('Begin').click(); await page.clock.runFor(1200); }
@@ -131,10 +131,10 @@ else {
   if (shown !== picked) fails.push(`tomorrow starts with "${shown}", not the "${picked}" chosen`);
   await page.getByRole('textbox', { name: 'Anything on your mind?' }).fill('Ring the vet'); await page.keyboard.press('Enter'); await page.clock.runFor(400);
   await btn('Go to sleep').click(); await page.clock.runFor(800);
-  /* the next morning: the chosen job is the big Delve */
+  /* the next morning: the chosen job leads the day's list (no job is put forward, D-135) */
   await page.clock.setSystemTime(new Date('2026-10-05T08:30:00+01:00')); await page.clock.runFor(2500);
   await toToday();
-  const next = (await page.locator('.next h2').first().innerText()).split(' · ')[0].trim();
+  const next = (await page.locator('.rows button.row .t').first().innerText()).split('\n')[0].trim();
   if (next !== picked) fails.push(`the morning opens with "${next}", not "${picked}"`);
   await btn('Satchel').click(); await page.clock.runFor(1200);
   if (!(await page.locator('.item', { hasText: 'Ring the vet' }).count())) fails.push('"Ring the vet", on your mind last night, is not in the Satchel');

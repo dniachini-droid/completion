@@ -86,7 +86,8 @@
     /* "Today" never skips what waits: a place just reached, the morning, the welcome back, a new daybook page (D-080).
        'stay' is the one way past it: the word left to cut later. */
     if (to === 'today' && a !== 'stay') { const f = first(); if (f !== 'today' && (f !== 'delve' || !game.view.run)) to = f; }
-    if (LOOK.has(to)) {
+    /* a place read again (the Map, Today's place name, D-135) is looked through: back returns where it was opened from */
+    if (LOOK.has(to) || (to === 'arrival' && typeof a === 'string' && a.startsWith('again:'))) {
       const top = trail[trail.length - 1];
       if (top && top.screen === to && top.arg === a) trail.pop();                  /* going where back would go */
       else if (screen === to && !(arg === undefined && a !== undefined)) { /* the same screen, another page: replaced */ }
@@ -96,7 +97,7 @@
     screen = to; arg = to === 'today' ? undefined : a;
   };
   /* what the arrow says: the screen it returns to */
-  const NAMES: Partial<Record<Screen, string>> = { today: 'delve.today', map: 'map.nav', records: 'records.nav', marks: 'marks.nav',
+  const NAMES: Partial<Record<Screen, string>> = { today: 'delve.today', arrival: 'nav.back', map: 'map.nav', records: 'records.nav', marks: 'marks.nav',
     rhythms: 'rhythms.label', daybook: 'nav.daybook', settings: 'nav.settings', satchel: 'nav.satchel' };
   $effect(() => {
     const top = trail[trail.length - 1];
@@ -167,7 +168,7 @@
     {:else if screen === 'set'}<RunSet {go} jobId={String(arg)} />
     {:else if screen === 'delve'}<Delve {go} />
     {:else if screen === 'step'}<Step {go} seq={Number(arg)} />
-    {:else if screen === 'arrival'}<Arrival {go} />
+    {:else if screen === 'arrival'}<Arrival {go} seq={typeof arg === 'string' && arg.startsWith('again:') ? +arg.slice(6) : null} />
     {:else if screen === 'cant'}<CantStart {go} jobId={String(arg)} />
     {:else if screen === 'proto'}<Proto {go} />
     {:else if screen === 'map'}<Map {go} />

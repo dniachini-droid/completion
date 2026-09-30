@@ -11,11 +11,16 @@
   import Words from './Words.svelte';
   import Look from './Look.svelte';
   import { beatOf, marksIn, mayGuess, markHeld, markOf } from '../core/story';
+  import { arrivalAt } from '../core/game';
+  import { back } from './back.svelte';
   import type { Go } from './nav';
 
-  let { go }: { go: Go } = $props();
+  /* `seq`: a place reached before, opened from the Map to read again (its arg is "again:<seq>", never the plain seq a
+     second new arrival is shown with, D-135); a new arrival waiting always comes first */
+  let { go, seq = null }: { go: Go; seq?: number | null } = $props();
   const v = $derived(game.view);
-  const a = $derived(v.arrival ?? v.lastArrival);
+  const again = $derived(!v.arrival && seq !== null ? arrivalAt(game.facts, content, seq) : null);
+  const a = $derived(v.arrival ?? again ?? v.lastArrival);
   const fresh = !!game.view.arrival;
   let root: HTMLDivElement;
 
@@ -52,6 +57,8 @@
       const more = game.view.arrival;
       if (more && to === 'today') { go('arrival', more.seq); return; }
     }
+    /* read again from the Map: back to the Map */
+    if (again && to === 'today') { go('back'); return; }
     /* Keep going: Dan chooses what next (D-077) */
     if (to === 'set') go('satchel');
     else go('today');
@@ -66,7 +73,7 @@
     <div class="facelight" aria-hidden="true"></div>
     <div class="ui fixed">
       <header class="topbar col">
-        <button class="home" onclick={() => leave('today')}><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" /></svg><span>{t('delve.today')}</span></button>
+        <button class="home" onclick={() => leave('today')}><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" /></svg><span>{again ? back.label : t('delve.today')}</span></button>
         <span></span><span></span>
       </header>
       <section class="col head">
@@ -102,14 +109,19 @@
               {:else}<button class="text-link" onclick={() => go('records', w.records[0])}><span>{t('records.read')}</span></button>{/if}
             </div>
           {/each}
-          {#if a.completedDay}
+          {#if a.completedDay && !again}
             <p class="enough">{t('arrive.enough')} <em>{t('arrive.enough2')}</em></p>
           {/if}
         {/if}
       </div>
       <section class="bottom col">
+        {#if again}
+          <!-- read again from the Map: nothing to decide, only the way back (D-135) -->
+          <button class="btn resting" onclick={() => leave('today')}>{t('arrive.back', { to: back.label })}</button>
+        {:else}
         <button class="btn resting" onclick={() => leave('today')}>{a.completedDay ? t('arrive.rest') : t('arrive.onward')}</button>
         <div class="btn-row"><button class="btn-quiet" onclick={() => leave('set')}><span>{t('today.keepGoing')}</span></button></div>
+        {/if}
       </section>
     </div>
     {#if looking}<Look close={() => (looking = false)} />{/if}

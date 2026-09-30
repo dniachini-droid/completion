@@ -5,8 +5,8 @@
   import { openMenu, openTick } from './menu.svelte';
   import { undoneFacts } from '../core/done';
   import { steady } from './taps';
-  /* Today (the morning screen, UX_PRINCIPLES → "The morning screen carries"): where you are, the sealed thing ahead,
-     the one next job (no Low / Normal / High, and no "Already done": Dan, D-089) with one button, today's other jobs as plain rows, "I can't start".
+  /* Today (the morning screen, UX_PRINCIPLES → "The morning screen carries"): where you are (a tap on its name reads it
+     again), the sealed thing ahead, one button to add a job, and the day's jobs as one list, none put forward (Dan, D-135).
      A tap on a row starts that job, as its own button would (D-100: it used to swap the row with the next job, and the
      rows seemed to change places by themselves); a swipe takes it off today; the last row chooses a delve on anything (D-077). After day complete: the day as done, until Dan taps a job or keeps going.
      Mock-up: design/directions/d-combined/morning.html. */
@@ -22,11 +22,15 @@
   let { go }: { go: Go } = $props();
   const v = $derived(game.view);
   const job = (id: string) => game.job(id)!;
-  const next = $derived(v.next ? job(v.next.job) : null);
   const weekday = $derived(t(`day.${new Date(Date.UTC(+v.day.slice(0, 4), +v.day.slice(5, 7) - 1, +v.day.slice(8, 10))).getUTCDay()}` as never));
   /* the finish line's jobs (its first 3 hours, D-131), then the rest, "If there's time" */
-  const others = $derived(v.line.filter(id => id !== v.next?.job));
-  const extra = $derived(v.slate.filter(id => !v.line.includes(id) && id !== v.next?.job));
+  /* the jobs still to do first, then those done (on a list with no job put forward, the next one is its top row, D-135);
+     a delve running or paused is on its own card, not the list */
+  const todoFirst = (ids: string[]) => [...ids.filter(id => !v.done.has(id)), ...ids.filter(id => v.done.has(id))].filter(id => id !== v.run?.job.id);
+  const others = $derived(todoFirst(v.line));
+  const extra = $derived(todoFirst(v.slate.filter(id => !v.line.includes(id))));
+  /* the last place reached (never a camp): its entry, read again from its name (D-135) */
+  const placeSeq = $derived(game.facts.filter(f => f.type === 'arrived' && f.kind === 'place').pop()?.seq ?? null);
   const lastPlace = $derived(v.lastArrival);
 
   function rowNote(j: Job): string {
@@ -35,10 +39,6 @@
     /* every job is a delve (D-117), so a row never says "a delve": it says the job's usual minutes, when they were set
        for it (a recurring job, or one made in the editor); a line jotted with + Add says nothing (D-130) */
     return j.item ? '' : minutesShort(j.length);
-  }
-  function teaser(j: Job): string {
-    if (j.avoided) return t('today.teaser.avoided');
-    return t('today.teaser.delve');
   }
 
   function begin(j: Job) {
@@ -57,7 +57,6 @@
      is here, so it never needs another delve to be marked (Dan, 2026-09-27, D-120) */
   const delvedToday = $derived(new Set(game.facts.filter(f => f.type === 'delveStarted' && f.day === v.day).map(f => f.job)));
   const sayDone = (j: Job) => j.delve && j.doneBy === 'dan' && !v.done.has(j.id) && delvedToday.has(j.id);
-  const delvedOn = $derived(!!next && sayDone(next));
   function carry() { game.do({ do: 'resume' }); go('delve'); }
   function finish() { game.do({ do: 'finishHere' }); go('delve'); }
   /* a tap on a job starts that job, never another: nothing on the list moves (Dan, D-100) */
@@ -168,7 +167,9 @@
       <button class="icon-link gear" aria-label={t('nav.settings')} onclick={() => go('settings')}><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2" /><path d="M12 2.8v2.6M12 18.6v2.6M21.2 12h-2.6M5.4 12H2.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8M18.5 18.5l-1.8-1.8M7.3 7.3 5.5 5.5" /><circle cx="12" cy="12" r="6.4" /></svg></button>
       </span>
     </div>
-    <h1 class="carve lg rise">{v.here.name}</h1>
+    <!-- the place's name: a tap reads its entry again, with its painting, at any time of day (Dan, D-135) -->
+    {#if placeSeq !== null && v.here.id}<h1 class="carve lg rise"><button class="here" aria-label={t('map.readAgain', { place: v.here.name })} onclick={() => go('arrival', `again:${placeSeq}`)}>{v.here.name}</button></h1>
+    {:else}<h1 class="carve lg rise">{v.here.name}</h1>{/if}
     {#if v.ahead}
       <section class="ahead rise d2">
         <div class="label-line">{t('today.ahead')}</div>
@@ -211,27 +212,16 @@
         <div class="lead"><button class="btn full" onclick={() => go('delve')}>{t('today.running.go')}</button></div>
         <div class="gap"></div>
       </div>
-    {:else if v.next && next}
-      <div class="next">
-        <div class="label-line lit">{t('today.next')}</div>
-        <h2 class="say-lg">{next.name}{#if v.times[next.id]}<span class="at"> · {v.times[next.id]}</span>{/if}</h2>
-        <p class="soft">{teaser(next)}</p>
-        <div class="lead"><button class="btn full" onclick={() => begin(next)}>{t('today.delve')}</button></div>
-        <div class="cant">
-          {#if delvedOn}<button class="text-link" onclick={() => done(next)}><span>{t('today.itsDone')}</span></button>
-          {:else}<button class="text-link" onclick={() => go('cant', next.id)}><span>{t('today.cantStart')}</span></button>{/if}
-          <span class="dot" aria-hidden="true">·</span>
-          <button class="text-link" onclick={() => openTick(next.id, go)}><span>{t('tick.off')}</span></button>
-          <span class="dot" aria-hidden="true">·</span>
-          <button class="text-link" onclick={() => aside(next.id)}><span>{t('today.notToday')}</span></button>
-        </div>
-      </div>
     {:else if !v.complete}
-      <div class="next">
+      <!-- no job is put forward (Dan, D-135): the day's jobs are one list below, each started, ticked off or set aside
+           from its row; the one button adds a job (the Satchel's box, ready to type) -->
+      <div class="next addcard">
         <div class="label-line lit">{t('today.label')}</div>
-        <h2 class="say-lg">{t('today.clear')}</h2>
-        <p class="soft">{t('today.clear.say')}</p>
-        <div class="gap"></div>
+        {#if !v.slate.some(id => !v.done.has(id))}
+          <h2 class="say-lg">{t('today.clear')}</h2>
+          <p class="soft">{t('today.clear.say')}</p>
+        {/if}
+        <div class="lead"><button class="btn full today-add" onclick={add}>{t('today.addJob')}</button></div>
       </div>
     {:else}
       <div class="next">
@@ -266,11 +256,6 @@
     {/snippet}
     <div class="rows">
       {#each others as id (id)}{@render jobRow(id)}{/each}
-      {#if !v.run && v.next?.mode !== 'underWay' && !(v.complete && !v.next)}
-        <button class="row else" onclick={() => go('satchel')}>
-          <span class="plus" aria-hidden="true">+</span><span class="t">{t('today.else')}</span><span class="s"></span>
-        </button>
-      {/if}
     </div>
     <!-- past the finish line: the day's other jobs, for a day with room (D-131); doing more goes deeper (D-127) -->
     {#if extra.length}
@@ -281,7 +266,6 @@
     {#if evening && !v.complete && !v.run && !nearBed}<section class="tonight-end">{@render tonight()}</section>{/if}
     </div>
     <nav class="foot" aria-label={t('today.label')}>
-      <button class="text-link add" aria-label={t('today.add.label')} onclick={add}><span>{t('today.add')}</span></button>
       <!-- the jobs with no day, by day and at night (D-126) -->
       <button class="text-link" onclick={() => go('satchel')}><span>{t('nav.satchel')}</span></button>
       <button class="text-link" onclick={() => go('week')}><span>{t('nav.week')}</span></button>
@@ -292,6 +276,7 @@
 
 <style>
   h1 { margin-top: 2px; }
+  h1 .here { font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit; text-shadow: inherit; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; }
   .ahead { margin-top: 12px; }
   .ahead p { font-size: 17.5px; line-height: 1.38; margin-top: 6px; }
   .ahead-text { display: block; width: 100%; padding: 0; background: none; border: 0; text-align: left; cursor: pointer; color: inherit; }
@@ -306,13 +291,14 @@
   .next h2 { margin: 8px 0 4px; }
   .next .soft { margin-bottom: 18px; }
   .cant { display: flex; justify-content: center; align-items: center; gap: 2px; margin-top: 4px; }
-  .cant .dot { color: var(--ink-3); }
   .gap { height: 12px; }
   .after { margin-top: 12px; }
   .next .soft.deeper { font-style: italic; margin: 8px 0 4px; }
   .rows { margin-top: 2px; }
-  button.row { width: 100%; text-align: left; }
   .lead .btn.full { width: 100%; }
+  /* the day's label and the one button: room between them (Dan, D-135) */
+  .addcard .lead { margin: 18px 0 12px; }
+  .addcard .soft + .lead { margin-top: 0; }
   .rows :global(.row-done) { min-height: 40px; padding: 0 0 0 12px; }
   .rows :global(.row-done span) { font-size: 16px; color: var(--violet-hi); }
   .if-time { margin: 18px 0 4px; }
@@ -329,14 +315,9 @@
   .mind .btn-quiet { padding: 0 14px; }
   .mind .btn-quiet:disabled { opacity: .5; }
   .said-mind { font-style: italic; margin: 4px 0 0; text-align: left; }
-  .row.else .t { color: var(--ink-2); font-style: italic; }
-  .plus { justify-self: center; color: var(--violet-hi); font-size: 20px; line-height: 1; }
-  button.row:disabled { cursor: default; }
-  .at { color: var(--ink-2); font-size: .8em; }
   .still { margin: -12px 0 16px; }
   .said { font-family: var(--life); font-style: italic; font-size: 15.5px; color: var(--ink-2); display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 2px 6px; margin: -6px 0 6px; }
   .said .text-link { min-height: 0; padding: 4px; }
-  .foot .add span { color: var(--violet-hi); }
   .foot { display: flex; justify-content: space-around; margin: 6px -10px 0; }
   .foot span { font-size: 14px; letter-spacing: .1em; color: var(--ink-2); }
   .proto span { font-size: 14px; letter-spacing: .16em; color: var(--ink-3); }

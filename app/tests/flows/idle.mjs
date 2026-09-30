@@ -107,7 +107,7 @@ for (const [name, label] of [['week', 'Week'], ['satchel', 'Satchel'], ['daybook
 }
 
 /* a delve running, then its end */
-await tap(page.locator('.next button.btn'));
+await tap(page.locator('.rows button.row:not(.done)').first());
 if (await has('Begin')) await tap(btn('Begin'));
 if (!(await page.locator('.dv').count())) fails.push('no delve after Delve');
 await measure('delve-running', 'delve');
@@ -117,8 +117,8 @@ if (await has('Done')) await tap(btn('Done'));
 await home();
 
 /* the day done: every job of the day delved to its end */
-for (let k = 0; k < 8 && (await page.locator('.next button.btn').count()); k++) {
-  await tap(page.locator('.next button.btn'));
+for (let k = 0; k < 8 && (await page.locator('.rows button.row:not(.done)').first().count()); k++) {
+  await tap(page.locator('.rows button.row:not(.done)').first());
   if (await has('Begin')) { if (await has('60 minutes')) await tap(btn('60 minutes')); await tap(btn('Begin')); }
   await jump(75 * 60_000);
   if (await has('Done')) await tap(btn('Done'));

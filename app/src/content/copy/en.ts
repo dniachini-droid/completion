@@ -85,6 +85,7 @@ export const copy = {
   /* a one-off's delve carrying on from its earlier minutes (D-133) */
   'delve.sofar': '{min} on it so far',
   'set.carry': 'Carries on from {min}.',
+  'set.avoided': 'Put off a while: something waits beyond it.',
   'delve.toToday': 'Back to today',
   'delve.see': 'See where you are',
   'delve.today': 'Today',
@@ -146,6 +147,8 @@ export const copy = {
   'stair.say': 'From here, every delve takes you further down into the deep.',
   'stair.down': 'Go down',
   'map.nav': 'Map',
+  'arrive.back': 'Back to {to}',
+  'map.readAgain': 'Read again: {place}', 'map.readHere': 'Read it again',
   'map.label': 'The map',
   'map.regionLabel': 'The first region',
   'map.regionName': 'The Quiet',
@@ -228,7 +231,7 @@ export const copy = {
   'today.running.go': 'Back to the delve',
   'today.else': 'Something else…',
   'today.clear': 'Nothing more is on today’s list.',
-  'today.clear.say': 'Choose something else to delve on, or rest. The road will keep.',
+  'today.clear.say': 'Add a job, or rest. The road will keep.',
   /* the day's finish line is its first 3 hours; the rest waits below (D-131) */
   'today.ifTime': 'If there’s time',
   /* the one job menu (D-131, step 3) */
@@ -367,7 +370,7 @@ export const copy = {
   'satchel.list': 'List', 'satchel.list.done': 'Close', 'satchel.list.label': 'The list for {job}', 'satchel.list.hint': 'A line at a time', 'satchel.list.full': 'The list is full: take a line out to add another.',
   'satchel.day': 'Put on a day', 'satchel.placed': '{job}: on {day}.',
   'pick.today': 'today', 'pick.prev': 'The month before', 'pick.next': 'The next month',
-  'today.add': '+ Add', 'today.add.label': 'Add a job: the satchel’s box',
+  'today.addJob': 'Add a job',
 
   'month.1': 'January', 'month.2': 'February', 'month.3': 'March', 'month.4': 'April', 'month.5': 'May', 'month.6': 'June',
   'month.7': 'July', 'month.8': 'August', 'month.9': 'September', 'month.10': 'October', 'month.11': 'November', 'month.12': 'December',

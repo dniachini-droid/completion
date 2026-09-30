@@ -10,8 +10,8 @@ const errors = [];
 page.on('pageerror', e => errors.push(e.message));
 await page.clock.install({ time: new Date('2026-09-30T09:00:00+01:00') });
 await page.goto(url);
-for (let k = 0; k < 40 && !(await page.locator('.foot .add, button.btn').count()); k++) { await page.waitForTimeout(250); await page.clock.runFor(250); }
-for (let k = 0; k < 8 && !(await page.locator('.foot .add').count()); k++) { await page.locator('button.btn').first().click(); await page.clock.runFor(1500); }
+for (let k = 0; k < 40 && !(await page.locator('nav.foot, button.btn').count()); k++) { await page.waitForTimeout(250); await page.clock.runFor(250); }
+for (let k = 0; k < 8 && !(await page.locator('nav.foot').count()); k++) { await page.locator('button.btn').first().click(); await page.clock.runFor(1500); }
 const fails = [];
 const btn = (name) => page.getByRole('button', { name, exact: true });
 const rowNamed = (name) => page.locator('.rows button.row', { hasText: name });
@@ -38,7 +38,7 @@ else {
 }
 
 /* 2. Something else… opens the Satchel (D-131), where a job on today is not */
-await page.locator('.rows button.row.else').click(); await page.clock.runFor(1200);
+await page.locator('.today-add').click(); await page.clock.runFor(1200);
 if (!(await page.locator('h1', { hasText: /satchel/i }).count())) fails.push('"Something else…" does not open the Satchel');
 if (await page.locator('.item', { hasText: 'Wash the car' }).count()) fails.push('Wash the car, on today, is in the Satchel too');
 await page.locator('button.home').click(); await page.clock.runFor(1200);
@@ -60,15 +60,15 @@ else {
   if (!(await page.locator('.day button.row', { hasText: 'Sweep the yard' }).count())) fails.push('Sweep the yard is not in the week it was moved to');
 }
 /* 4. a done job in the Week: Delete; it leaves the week and the minutes stay */
-for (let k = 0; k < 4 && !(await page.locator('.foot .add').count()); k++) { await page.locator('button.home').click(); await page.clock.runFor(1200); }
-await page.locator('.next button.btn').click(); await page.clock.runFor(1200);
+for (let k = 0; k < 4 && !(await page.locator('nav.foot').count()); k++) { await page.locator('button.home').click(); await page.clock.runFor(1200); }
+await page.locator('.rows button.row:not(.done)').first().click(); await page.clock.runFor(1200);
 if (await page.locator('.rs').count()) {
   /* the set-up opens at 30 × 1 (D-124): shorter, so the test is quick */
   await btn('Begin').click(); await page.clock.runFor(1200);
 }
 { const n = await page.evaluate(() => Date.now()); await page.clock.setSystemTime(n + 31 * 60_000); await page.clock.runFor(500); await page.waitForTimeout(200); await page.clock.runFor(1500); }
 if (await btn('Done').count()) { await btn('Done').click(); await page.clock.runFor(1500); }
-for (let k = 0; k < 6 && !(await page.locator('.foot .add').count()); k++) {
+for (let k = 0; k < 6 && !(await page.locator('nav.foot').count()); k++) {
   const way = (await page.locator('.home').count()) ? page.locator('.home') : page.locator('button.btn').first();
   await way.click().catch(() => {}); await page.clock.runFor(1500);
 }

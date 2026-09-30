@@ -21,10 +21,10 @@ await page.addInitScript(() => {
 await page.clock.install({ time: new Date('2026-09-27T15:00:00+01:00') });
 await page.goto(url); await page.clock.runFor(2500);
 /* the app drawn first (a slow machine may need longer), as the other checks wait */
-for (let k = 0; k < 40 && !(await page.locator('.foot .add, button.btn').count()); k++) { await page.waitForTimeout(250); await page.clock.runFor(250); }
+for (let k = 0; k < 40 && !(await page.locator('nav.foot, button.btn').count()); k++) { await page.waitForTimeout(250); await page.clock.runFor(250); }
 const fails = [];
 /* past anything that opens first (a welcome, a morning), to Today */
-for (let k = 0; k < 8 && !(await page.locator('.foot .add').count()); k++) { await page.locator('button.btn').first().click(); await page.clock.runFor(1500); }
+for (let k = 0; k < 8 && !(await page.locator('nav.foot').count()); k++) { await page.locator('button.btn').first().click(); await page.clock.runFor(1500); }
 /* a job added on today in the Week: a delve on today (D-117) */
 await page.getByRole('button', { name: /^Week$/i }).click(); await page.clock.runFor(1500);
 await page.locator('button.plus').first().click(); await page.keyboard.type('Test'); await page.keyboard.press('Enter'); await page.clock.runFor(800);
@@ -34,7 +34,7 @@ if (!(await testRow.count())) fails.push('Test, added on today in the Week, is n
 else if (/one-off|about/i.test(await testRow.innerText())) fails.push('Test is shown as a job without a timer');
 
 /* "+ Add" opens the Satchel's one box, ready to type in, with the keyboard up (D-131) */
-await page.locator('.foot .add').click();
+await page.locator('.today-add').click();
 await page.evaluate(k => window.__keyboard(k), KB); await page.clock.runFor(600);
 await page.keyboard.type('milk');
 const box = await page.evaluate(() => {
