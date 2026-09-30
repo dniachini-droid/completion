@@ -1114,7 +1114,8 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     }
     case 'tick': {
       const it = W.items(w.all, day).find(x => x.id === cmd.id);
-      if (!it || it.done || inRun(w.all, cmd.id)) break;
+      /* an errand of a run under way, or not yet counted, is done by its run's end (D-139) */
+      if (!it || it.done || (activeRun(w.all) ?? pendingErrands(w.all))?.fact.errands?.includes(cmd.id)) break;
       /* a line moves the expedition only as one of today's main jobs (TOOLS §2, P5); otherwise ticking just feels good */
       if (v.slate.includes(cmd.id)) {
         endRunOn(w, c, cmd.id, nowMs, now);
