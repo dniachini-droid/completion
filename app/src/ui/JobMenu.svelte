@@ -43,7 +43,7 @@
   <div class="menu" role="dialog" aria-modal="true" aria-label={j.name}>
     <p class="name">{j.name}</p>
     <button class="item" disabled={!!v.run || finished} onclick={delve}>{t('menu.delve')}</button>
-    {#if !v.done.has(j.id) && !finished}<button class="item" disabled={v.run?.job.id === j.id} onclick={tick}>{t('tick.off')}</button>{/if}
+    {#if !v.done.has(j.id) && !finished}<button class="item" disabled={!!v.run} onclick={tick}>{t('tick.off')}</button>{/if}
     <button class="item" onclick={edit}>{t('menu.edit')}</button>
     {#if !finished && !menu.on}<button class="item" aria-expanded={placing} onclick={() => { if (!settling()) placing = !placing; }}>{t('satchel.day')}</button>{/if}
     {#if placing}<div class="cal"><DayPick from={v.day} label={t('satchel.day')} pick={place} /></div>{/if}

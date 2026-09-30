@@ -27,6 +27,9 @@
   const jd = $derived(fact && fact.type === 'jobDone' ? fact : null);
   const moved = $derived(jd ? (jd.ticked ?? gained) : 0);
   const atW = $derived(game.facts.filter(f => f.type === 'stepsGained' && f.seq < seq).reduce((a, f) => a + (f as { minutes: number }).minutes, 0));
+  /* a side chamber the tick's minutes reached is shown here, on the tick's own screen (D-122, D-134) */
+  const tickAt = $derived(jd?.ticked ? game.facts.filter(f => f.type === 'stepsGained' && f.job === jd.job && (f as { tick?: true }).tick && f.seq < seq).pop() : undefined);
+  const chambers = $derived(tickAt ? game.facts.filter(f => f.type === 'findGiven' && f.why === 'chamber' && !f.job && f.seq > tickAt.seq && f.at === tickAt.at).map(f => (f as { id: string }).id) : []);
   const share = (m: number) => Math.max(0, Math.min(1, (m - v.road.from) / Math.max(1, v.road.to - v.road.from)));
 
   /* the painting, seen without the words (D-105) */
@@ -52,8 +55,8 @@
     <div class="scroll">
       <div class="label-line centred gold rise">{t('step.label')}</div>
       <h2 class="say-lg rise d1">{job ? t('step.done', { job: job.name }) : ''}</h2>
-      {#if jd}<div class="rise d2"><EndRoad road={v.road} from={atW - moved} to={atW} mode="play" /></div>{/if}
-      <div class="rise d3"><Return doneSeq={fact && fact.type === 'jobDone' ? seq : null} {go} {look} /></div>
+      {#if jd}<div class="rise d2 route"><EndRoad road={v.road} from={atW - moved} to={atW} mode="play" /></div>{/if}
+      <div class="rise d3"><Return doneSeq={fact && fact.type === 'jobDone' ? seq : null} extraFinds={chambers} {go} {look} /></div>
     </div>
     <div class="go rise d3">
       {#if v.arrival}
@@ -68,13 +71,12 @@
 
 <style>
   .bottom h2 { margin-top: 10px; }
-  /* the ring over the painting, as small as the room left for it; on a phone too short, it gives way */
+  /* the ring over the painting, as large as the room left for it (never under the room kept for it below) */
   /* it keeps room for the count, even with the story's words below it: they scroll (as at a delve's end, D-133) */
   .mid { container-type: size; display: flex; align-items: center; justify-content: center; min-height: clamp(112px, 19vh, 180px); }
   .tring { --R: min(170px, 46vw, 72cqh); position: relative; width: var(--R); height: var(--R); pointer-events: none; }
   .tring::before { content: ""; position: absolute; inset: 3%; border-radius: 50%; border: 1.2px solid rgba(217, 214, 255, .3);
     background: radial-gradient(circle, rgba(12, 8, 40, .5), rgba(12, 8, 40, .25) 60%, transparent 72%); }
-  @container (max-height: 96px) { .tring { display: none; } }
   .bottom :global(.road) { margin-top: 12px; }
   .go { margin-top: 4px; }
   button.home { color: var(--ink-2); }

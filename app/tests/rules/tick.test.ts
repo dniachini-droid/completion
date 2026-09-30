@@ -94,3 +94,41 @@ describe('Ticked off with the time it took (D-134)', () => {
     expect(dones(p.facts, 'cat').map(x => x.minutes)).toEqual([25]);
   });
 });
+
+describe('The fresh review of D-134', () => {
+  it('a job that used to repeat, made a one-off, can be ticked off', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'tickOff', job: 'gym', minutes: 60 }).sleep(24 * 60).do({ do: 'open' });
+    const gym = C.jobs.find(j => j.id === 'gym')!;
+    p.do({ do: 'saveJob', job: { ...gym, doneBy: 'dan' }, rhythm: null });
+    p.do({ do: 'tickOff', job: 'gym', minutes: 30 });
+    expect(dones(p.facts, 'gym').map(x => x.minutes)).toEqual([60, 30]);
+  });
+  it('a tick taken back by "Not done after all" carries: ticked again with "No more", nothing counts twice', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'tickOff', job: 'cat', minutes: 180 }).do({ do: 'notDone', job: 'cat' });
+    p.do({ do: 'tickOff', job: 'cat', minutes: 0 });
+    expect(steps(p.facts, 'cat')).toBe(180);
+    expect(dones(p.facts, 'cat').map(x => x.minutes)).toEqual([180, 180]);
+  });
+  it('a tick taken back carries into the next delve on the job (D-133)', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'tickOff', job: 'cat', minutes: 60 }).do({ do: 'notDone', job: 'cat' })
+      .do({ do: 'startRun', job: 'cat', minutes: 30, count: 1 }).wait(25).do({ do: 'finishHere' });
+    expect(p.view().runEnd).toMatchObject({ carried: 60, total: 85 });
+    p.do({ do: 'done', job: 'cat', keepEnd: true });
+    expect(dones(p.facts, 'cat').pop()!.minutes).toBe(85);
+    expect(steps(p.facts, 'cat')).toBe(85);
+  });
+  it('never while any delve runs', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'startRun', job: 'gym', minutes: 30, count: 1 }).wait(5);
+    const n = p.facts.length;
+    p.do({ do: 'tickOff', job: 'cat', minutes: 30 });
+    expect(p.facts).toHaveLength(n);
+  });
+  it('a side chamber a tick reaches is not shown on another delve\'s unseen end', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'startRun', job: 'course', minutes: 5, count: 1 }).wait(6);
+    expect(p.view().runEnd).not.toBeNull();
+    p.do({ do: 'tickOff', job: 'cat', minutes: 180 });
+    expect(p.facts.some(f => f.type === 'findGiven' && f.why === 'chamber')).toBe(true);
+    expect(p.view().runEnd?.job.id === 'course' ? p.view().runFinds : []).toEqual([]);
+  });
+});
+

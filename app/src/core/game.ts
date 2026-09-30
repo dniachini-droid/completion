@@ -443,20 +443,25 @@ export function carriedOf(facts: Fact[], c: Content, job: string, before = Infin
   const from = last ? last.seq : -1;
   let n = 0;
   for (const e of ofType(facts, 'delveEnded')) if (e.job === job && e.seq > from && e.seq < before) n += e.minutes;
+  /* and the minutes it was ticked off with, since (a tick taken back by "Not done after all" carries too, D-134) */
+  for (const g of ofType(facts, 'stepsGained')) if (g.tick && g.job === job && g.seq > from && g.seq < before) n += g.minutes;
   return n;
 }
+/** The minutes a job was ticked off with on a day (D-134). */
+const tickedOn = (facts: Fact[], day: string, job: string) =>
+  ofType(onDay(facts, day), 'stepsGained').filter(f => f.tick && f.job === job).reduce((a, f) => a + f.minutes, 0);
 /** The minutes a job already has behind it, for "On top of …" when it is ticked off (D-134): a one-off's carried minutes;
     a repeating job's delve minutes on this day. */
 export function behindOf(facts: Fact[], c: Content, job: string, day: string): number {
-  return c.rhythms.some(r => r.job === job) ? delveMinutesOn(facts, day, job) + crossedIn(facts, day, job) : carriedOf(facts, c, job);
+  return c.rhythms.some(r => r.job === job) ? delveMinutesOn(facts, day, job) + crossedIn(facts, day, job) + tickedOn(facts, day, job) : carriedOf(facts, c, job);
 }
 function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string, ticked = 0) {
   if (doneOn(w.all, day).has(job)) return;
   /* a one-off counts all its minutes since it was last done, whatever day they were delved (D-133); a repeating job,
      its day's (and a run begun before 04:00 that ended on this day, D-120) */
   /* a job ticked off counts the minutes Dan gave it too, on this day (D-134) */
-  const ownDay = delveMinutesOn(w.all, day, job) + crossedIn(w.all, day, job) + ticked;
-  const j = jobOf(c, job), timed = (c.rhythms.some(r => r.job === job) ? ownDay - ticked : carriedOf(w.all, c, job)) + ticked;
+  const ownDay = delveMinutesOn(w.all, day, job) + crossedIn(w.all, day, job) + tickedOn(w.all, day, job);
+  const j = jobOf(c, job), timed = c.rhythms.some(r => r.job === job) ? ownDay : carriedOf(w.all, c, job);
   /* what of them was delved on this day, when fewer: only that is the day's work (workedOn) */
   const today = { ...(timed > ownDay ? { today: ownDay } : {}), ...(ticked ? { ticked } : {}) };
   /* a delve's minutes have already moved Dan (counted once, even across 04:00, D-120). Every job is a delve (D-117): one
@@ -907,8 +912,9 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       /* a job done without a delve, ticked off with the time it took (Dan, D-134): those minutes move Dan and the job is
          done, with its story moment, as a delve's would be. "No more" (0) only for a job with delved minutes behind it */
       const j = c.jobs.find(x => x.id === cmd.job), recurring = c.rhythms.some(r => r.job === cmd.job);
-      if (!j || doneOn(w.all, day).has(cmd.job) || activeRun(w.all)?.fact.job === cmd.job) break;
-      if (!recurring && doneFacts(w.all).some(f => f.job === cmd.job)) break;   /* a one-off is finished once */
+      /* never while a delve runs (its own, or another's: Dan is in the middle of that one) */
+      if (!j || doneOn(w.all, day).has(cmd.job) || activeRun(w.all)) break;
+      if (!recurring && W.oneOffDone(c, w.all).some(f => f.job === cmd.job)) break;   /* a one-off is finished once */
       const behind = behindOf(w.all, c, cmd.job, day);
       if (!(TICK_CHOICES as readonly number[]).includes(cmd.minutes) && !(cmd.minutes === 0 && behind > 0)) break;
       /* an end of its delve not yet looked at is answered by this (D-120) */
@@ -1519,7 +1525,10 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
     runEnd = { seq: last.seq, job: j, minutes: last.minutes, how: last.how, carried, total: carried + last.minutes, gained, walked: at, ask: j.doneBy === 'dan' && !doneOn(facts, last.day).has(j.id) && !doneFact,
       enough: j.doneBy === 'enough' && !!doneFact, completedDay, count: start?.count ?? 1 };
     /* a side chamber is found at the delve's end, and can come just after it, once a place it reached starts a new stretch */
-    runFinds = ofType(facts, 'findGiven').filter(f => f.seq > last.run && !f.job && (f.seq < last.seq || f.why === 'chamber')).map(f => f.id);
+    /* (a chamber a tick reached since is the tick's, shown on its step screen, D-134) */
+    const ticks = ofType(facts, 'stepsGained').filter(g => g.tick && g.seq > last.run);
+    runFinds = ofType(facts, 'findGiven').filter(f => f.seq > last.run && !f.job && (f.seq < last.seq || f.why === 'chamber')
+      && !ticks.some(g => g.seq < f.seq && g.at === f.at)).map(f => f.id);
   }
 
   const arrivals = ofType(facts, 'arrived');

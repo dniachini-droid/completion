@@ -28,7 +28,7 @@
   function down(e: PointerEvent) {
     if (e.button > 0 || disabled) return;
     /* a tap on a slid-out action, or on a link over the row, is a tap, never the start of a slide (review, D-125) */
-    if ((e.target as Element).closest?.('.acts, .over, .lead')) return;
+    if ((e.target as Element).closest?.('.acts, .over, .swipe-lead')) return;
     held = false; moved = false;
     start = { x: e.clientX, y: e.clientY, base: open ? -width : 0, id: e.pointerId };
     if (hold) timer = window.setTimeout(() => { if (start && !sliding) { held = true; start = null; if (navigator.vibrate) navigator.vibrate(8); hold!(); } }, HOLD_MS);
@@ -86,7 +86,7 @@
   </button>
   {#if over && offset === 0}<div class="over">{@render over()}</div>{/if}
   <!-- a control over the row's marker, at its left (the tick circle on Today, D-134) -->
-  {#if lead && offset === 0}<div class="lead">{@render lead()}</div>{/if}
+  {#if lead && offset === 0}<div class="swipe-lead">{@render lead()}</div>{/if}
 </div>
 
 <style>
@@ -103,7 +103,7 @@
   .act { width: 96px; font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink); background: rgba(var(--violet-rgb), .28); }
   /* Delete never looks like every other link (D-131): its own colour, on the slide only */
   .act.del { background: rgba(160, 64, 88, .55); color: #fff; }
-  .lead { position: absolute; z-index: 2; left: 18px; top: 50%; transform: translateY(-50%); }
+  .swipe-lead { position: absolute; z-index: 2; left: 18px; top: 50%; transform: translateY(-50%); }
   .over { position: absolute; z-index: 2; right: 18px; top: 50%; transform: translateY(-50%); }
   .sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 </style>
