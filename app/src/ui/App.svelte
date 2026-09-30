@@ -25,6 +25,7 @@
   import Week from './Week.svelte';
   import Rhythms from './Rhythms.svelte';
   import Satchel from './Satchel.svelte';
+  import Errands from './Errands.svelte';
   import Settings from './Settings.svelte';
   import JobMenu from './JobMenu.svelte';
   import { closeMenu, closeTick } from './menu.svelte';
@@ -64,7 +65,7 @@
   /* Back (review 2, D-088): the screens Dan looks through keep a trail, so the arrow and the phone's own back return to
      where each was opened from. Today and the day's own moments (a delve, a place reached, the stair, the morning)
      start the trail again; their way out stays Today. */
-  const LOOK = new Set<Screen>(['map', 'records', 'marks', 'week', 'rhythms', 'daybook', 'set', 'proto', 'cant', 'settings', 'satchel']);
+  const LOOK = new Set<Screen>(['map', 'records', 'marks', 'week', 'rhythms', 'daybook', 'set', 'proto', 'cant', 'settings', 'satchel', 'errands']);
   const TABS = new Set<Screen>(['records', 'marks']);
   let trail = $state<Back[]>([]);
   /* Records ⇄ Marks is a tab: the screen swaps in place, with nothing rising or fading in again (Dan, D-093) */
@@ -80,7 +81,7 @@
     /* back to Today goes the way "Today" does, past what waits: a delve that ended while Dan typed elsewhere is shown
        (break-it review 5) */
     /* a delve's set-up for a job since deleted (from its editor) is passed by on the way back (D-131) */
-    while (to === 'back' && trail.length && trail[trail.length - 1].screen === 'set' && !game.job(String(trail[trail.length - 1].arg))) trail.pop();
+    while (to === 'back' && trail.length && trail[trail.length - 1].screen === 'set' && trail[trail.length - 1].arg !== 'errands' && !game.job(String(trail[trail.length - 1].arg))) trail.pop();
     if (to === 'back') { const p = trail.pop(); if (p && p.screen !== 'today') { screen = p.screen; arg = p.arg; } else go('today'); return; }
     if (to === 'cant' && typeof a === 'string') game.do({ do: 'cantStart', job: a });
     /* "Today" never skips what waits: a place just reached, the morning, the welcome back, a new daybook page (D-080).
@@ -98,7 +99,7 @@
   };
   /* what the arrow says: the screen it returns to */
   const NAMES: Partial<Record<Screen, string>> = { today: 'delve.today', arrival: 'nav.back', map: 'map.nav', records: 'records.nav', marks: 'marks.nav',
-    rhythms: 'rhythms.label', daybook: 'nav.daybook', settings: 'nav.settings', satchel: 'nav.satchel' };
+    rhythms: 'rhythms.label', daybook: 'nav.daybook', settings: 'nav.settings', satchel: 'nav.satchel', errands: 'errand.title' };
   $effect(() => {
     const top = trail[trail.length - 1];
     back.label = !top ? t('delve.today') : top.screen === 'week' ? t(top.arg ? 'week.next' : 'week.label')
@@ -132,7 +133,7 @@
   /* a day finished away from a delve's end ("Not today" or Delete on the list's last job, a short job said done, a job
      moved off today in the Week): its camp or place is shown at once, as a delve's end would lead to it (D-130). The
      day's own moments route themselves. */
-  const QUIET = new Set<Screen>(['today', 'week', 'rhythms', 'satchel', 'settings', 'daybook']);
+  const QUIET = new Set<Screen>(['today', 'week', 'rhythms', 'satchel', 'settings', 'daybook', 'errands']);
   let lastArr = game.view.arrival?.seq ?? 0;
   $effect(() => {
     const a = game.view.arrival;
@@ -181,6 +182,7 @@
     {:else if screen === 'week'}<Week {go} week={typeof arg === 'string' ? arg : undefined} />
     {:else if screen === 'rhythms'}{#key arg}<Rhythms {go} job={typeof arg === 'string' ? arg : undefined} />{/key}
     {:else if screen === 'satchel'}<Satchel {go} to={typeof arg === 'string' ? arg : undefined} />
+    {:else if screen === 'errands'}<Errands {go} />
     {:else if screen === 'settings'}<Settings {go} />{/if}
   {/key}
     {#snippet failed(_error, reset)}

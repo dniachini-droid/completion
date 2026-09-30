@@ -9,7 +9,7 @@
      a third time in 28 days is offered, once, as a recurring job. */
   import { game, content } from './game.svelte';
   import { t, byWords, dayShort, oftenWords, minutesShort, minutesWords } from '../content/copy/en';
-  import { satchelView, LIST_MAX } from '../core/game';
+  import { satchelView, errandChoices, LIST_MAX } from '../core/game';
   import { cleanLine, repeatOffer, suggest, tieFor, type Suggestion } from '../core/remember';
   import { nameKey } from '../core/week';
   import type { Job } from '../core/types';
@@ -31,6 +31,8 @@
   /* a job not done today can be ticked off, done without a delve (D-134); not while a delve runs */
   const canTick = (j: Job) => !v.done.has(j.id) && !v.run;
   const s = $derived(satchelView(content, game.facts, game.now));
+  /* the errand run (D-139): several jobs on one trip out, when there are two to take and no delve is under way */
+  const errandsOpen = $derived(!v.run && errandChoices(content, game.facts, game.now).length >= 2);
   let text = $state('');
   let input = $state<HTMLInputElement | null>(null);
   /* one job at a time has its list open, or its days */
@@ -177,6 +179,7 @@
     {:else if waitedJob}<p class="said" role="status">{t('wait.said', { job: waitedJob.name, day: dayShort(waited.until) })}</p>{/if}
     <img class="art" bind:this={artEl} src={art} alt="" aria-hidden="true" />
     <Deleted />
+    {#if errandsOpen}<div class="links errand"><button class="text-link" onclick={() => { saveList(); go('errands'); }}><span>{t('errand.link')}</span></button></div>{/if}
 
     <div class="label-line">{t('satchel.noDay')}</div>
     {#if !s.noDay.length}<p class="soft empty">{t('satchel.empty')}</p>{/if}
@@ -283,6 +286,7 @@
   .acts .text-link { min-height: 44px; min-width: 44px; font-size: 15px; }
   .said { font-family: var(--life); font-style: italic; font-size: 15.5px; color: var(--ink-2); text-align: center; margin: 4px 0 8px; }
   .links { display: flex; justify-content: center; margin-top: 12px; }
+  .links.errand { margin-top: 0; }
   button.home { color: var(--ink-2); }
   /* the jobs from before (D-136): quiet lines under the box, a finger high, the name first; nothing moves */
   .before { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--edge-2); }

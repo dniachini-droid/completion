@@ -65,10 +65,10 @@
     <!-- only a one-off still to do can wait on a reply; a recurring job simply comes again (D-137) -->
     {#if !recurring && !finished && !v.done.has(j.id)}
       {#if wait}<button class="item" onclick={backToIt}>{t('wait.back')}</button>{/if}
-      <button class="item" aria-expanded={waiting} disabled={v.run?.job.id === j.id || v.runEnd?.job.id === j.id} onclick={() => { if (!settling()) { waiting = !waiting; placing = false; } }}>{wait ? t('wait.still') : t('wait.menu')}</button>
+      <button class="item" aria-expanded={waiting} disabled={v.run?.job.id === j.id || v.runEnd?.job.id === j.id || !!v.run?.errands?.some(e => e.job.id === j.id) || !!v.runEnd?.errands?.some(e => e.job.id === j.id)} onclick={() => { if (!settling()) { waiting = !waiting; placing = false; } }}>{wait ? t('wait.still') : t('wait.menu')}</button>
       {#if waiting}<div class="cal"><WaitPick day={v.day} who={wait?.who ?? ''} name={j.name} pick={waitOn} /></div>{/if}
     {/if}
-    <button class="item del" disabled={v.run?.job.id === j.id || v.runEnd?.job.id === j.id} onclick={remove}>{t('job.delete')}</button>
+    <button class="item del" disabled={v.run?.job.id === j.id || v.runEnd?.job.id === j.id || !!v.run?.errands?.some(e => e.job.id === j.id) || !!v.runEnd?.errands?.some(e => e.job.id === j.id)} onclick={remove}>{t('job.delete')}</button>
     <button class="item cancel" onclick={() => { if (!settling()) closeMenu(); }}>{t('rhythms.cancel')}</button>
   </div>
 {/if}

@@ -130,7 +130,9 @@ class Game {
     const job = this.job(id);
     if (!job) return;
     /* nor the job whose delve's end is still to be answered (break-it review, R5) */
-    if (this.view.run?.job.id === id || this.view.runEnd?.job.id === id) { this.deleted = null; this.cantDelete = job.name; return; }
+    /* nor an errand of a run under way, or of one whose end is still to be looked at (D-139) */
+    const v = this.view;
+    if (v.run?.job.id === id || v.runEnd?.job.id === id || v.run?.errands?.some(e => e.job.id === id) || v.runEnd?.errands?.some(e => e.job.id === id)) { this.deleted = null; this.cantDelete = job.name; return; }
     this.cantDelete = null;
     this.deleted = { job: { ...job }, rhythm: this.view.content.rhythms.find(r => r.job === id) ?? null };
     this.do({ do: 'removeJob', id });
@@ -213,7 +215,7 @@ class Game {
     const before = this.view.run;
     const f = act(this.facts, content, cmd, this.now);
     this.append(f);
-    if (['startRun', 'skipBreather', 'stepAway', 'resume', 'finishHere', 'away'].includes(cmd.do) || (before && !this.view.run)) { void this.alerts(); this.panel(); }
+    if (['startRun', 'startErrands', 'skipBreather', 'stepAway', 'resume', 'finishHere', 'away'].includes(cmd.do) || (before && !this.view.run)) { void this.alerts(); this.panel(); }
     this.native();
     if (f.length) void this.reminders();
     return f;

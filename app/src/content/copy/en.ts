@@ -388,6 +388,18 @@ export const copy = {
   'park.link': 'Park a thought', 'park.label': 'A thought to park for later', 'park.hint': 'A thought, for later', 'park.save': 'Park it',
   'park.cancel': 'Cancel', 'park.parked': 'Parked: {job}',
   'park.count.1': 'One thought parked in the Satchel', 'park.count': '{n} thoughts parked in the Satchel',
+  /* the errand run (D-139): several jobs in one delve, struck off as each is done */
+  'errand.link': 'Errand run', 'errand.title': 'Errand run',
+  'errand.say': 'Tick the jobs for one trip out. In the delve, strike each off as it is done.',
+  'errand.start': 'Start the run', 'errand.more': 'Tick two or more.',
+  'errand.none': 'An errand run takes two jobs or more. Nothing else is waiting just now.',
+  'errand.today': 'On today', 'errand.list': 'The errands', 'errand.sr': '{job}: take it on the run',
+  'errand.set': '{n} errands: {names}',
+  'errand.end': 'An errand run of {min}.', 'errand.endNone': 'The errand run is ended.',
+  'errand.ask': 'What got done?', 'errand.askSay': 'Strike off each one you did. The rest stay as they are.', 'errand.count': 'Count them',
+  'errand.doneRow': 'done · {min}', 'errand.leftRow': 'still to do',
+  'errand.carried': 'Nothing was struck off. Every minute moved you on, and each errand keeps its share.',
+  'errand.doneSay': '{job} is done.',
 
   'month.1': 'January', 'month.2': 'February', 'month.3': 'March', 'month.4': 'April', 'month.5': 'May', 'month.6': 'June',
   'month.7': 'July', 'month.8': 'August', 'month.9': 'September', 'month.10': 'October', 'month.11': 'November', 'month.12': 'December',

@@ -4,7 +4,7 @@
      the destination is the headline; the tunnel moves so the world is visibly travelling. Only two ideas, always in
      the same words: Pause (once Step away; review 2, D-088) and Finish here. The scene is the approved mock-up's own (delve.html, revision 3). */
   import { onMount, flushSync, tick } from 'svelte';
-  import { game } from './game.svelte';
+  import { game, content } from './game.svelte';
   import { t, minutesWords, minutesShort, ord } from '../content/copy/en';
   import { mmss, ofLine } from './panel';
   import tunnel from './scene/tunnel.html?raw';
@@ -14,7 +14,7 @@
   import Return from './Return.svelte';
   import { steady } from './taps';
   import { unslide } from './keyboard';
-  import { listLines } from '../core/game';
+  import { listLines, returnOf } from '../core/game';
   import EndRing from './EndRing.svelte';
   import EndRoad from './EndRoad.svelte';
   import type { TallyMode } from './tally';
@@ -51,7 +51,7 @@
   const share = (m: number) => Math.max(0, Math.min(1, (m - road.from) / Math.max(1, road.to - road.from)));
   const toW = $derived(end ? end.walked : v.walked);
   const fromW = $derived(end ? Math.max(0, end.walked - end.gained) : v.walked);
-  const mode = $derived<TallyMode>(!end ? 'still' : end.ask && answer === null ? 'from' : answer === 'no' ? 'still' : 'play');
+  const mode = $derived<TallyMode>(!end ? 'still' : (end.ask && answer === null) || end.pending ? 'from' : answer === 'no' ? 'still' : 'play');
 
   /* the ring settles after an end: lit, then resting */
   $effect(() => {
@@ -78,8 +78,15 @@
     const d = doneFacts(game.facts).find(f => f.job === end.job.id && start && f.seq > (start as { run: number }).run);
     return d ? d.seq : null;
   });
+  /* an errand run's errands struck off, each with its story moment (D-139): the ones with words to show */
+  const errandsDone = $derived(end?.errands?.filter(e => e.done !== null) ?? []);
+  const errandStory = $derived(errandsDone.filter(e => { const r = returnOf(content, game.facts, e.done!); return !!r.line || r.finds.length > 0; }));
   /* the end carries the story (a step, a mark to guess, a find) */
-  const told = $derived(!!end && (doneSeq !== null || v.runFinds.length > 0));
+  const told = $derived(!!end && (doneSeq !== null || v.runFinds.length > 0 || errandStory.length > 0));
+  /* an errand run is named as one, never by a job (D-139) */
+  const title = (r: { errands: unknown; job: { name: string } }) => r.errands ? t('errand.title') : r.job.name;
+  /* an errand struck off (or back) with a tap, as a job's list line is (D-126) */
+  function strikeErrand(id: string) { steady(); game.do({ do: 'strikeErrand', job: id }); }
   /* the job's list (D-126): a tap strikes a line off (the shampoo is in the basket) or back; struck lines go when the
      delve ends, the rest stay for next time */
   const lines = (id: string) => listLines(game.job(id));
@@ -118,8 +125,19 @@
   function toSatchel() { keepNote(); go('satchel'); }
 </script>
 
+{#snippet errandList(es: { job: { id: string; name: string }; struck: boolean }[])}
+  <ul class="list" aria-label={t('errand.list')}>
+    {#each es as e (e.job.id)}
+      <li><button class:struck={e.struck} aria-pressed={e.struck} onclick={() => strikeErrand(e.job.id)}><span class="tick" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M4.5 8.3 7 10.7l4.6-5.2" /></svg></span><span class="l">{e.job.name}</span></button></li>
+    {/each}
+  </ul>
+{/snippet}
+
 {#snippet theList(id: string)}
-  {#if lines(id).length}
+  {#if run?.errands}
+    <!-- the errand run (D-139): its errands, struck off one by one as each is done -->
+    {@render errandList(run.errands)}
+  {:else if lines(id).length}
     <ul class="list" aria-label={t('delve.list')}>
       {#each lines(id) as l, k (k)}
         <!-- a small circle beside each line, as in Reminders: ticked when struck (D-130) -->
@@ -165,7 +183,7 @@
 
     <section class="bottom col rise d3" class:fit={told}>
       {#if run?.phase === 'delve'}
-        <h2>{run.job.name}</h2>
+        <h2>{title(run)}</h2>
         <p class="soft of">{of}</p>
         {@render theList(run.job.id)}
         <!-- no standing "lock the phone" note (Dan, D-130); only the warning that no sound will come, when alerts are off -->
@@ -177,7 +195,7 @@
       {:else if run?.phase === 'held'}
         <!-- paused by Pause, or by going into another app: then it says so, and offers Carry on or Finish here (D-094) -->
         <div class="label-line centred">{run.away ? t('delve.awayLabel') : t('delve.paused')}</div>
-        <h2 class="m">{run.job.name}</h2>
+        <h2 class="m">{title(run)}</h2>
         <p class="say">{run.away ? t('delve.away.say') : t('delve.held.say')}</p>
         {@render theList(run.job.id)}
         <button class="btn resting back" onclick={() => game.do({ do: 'resume' })}>
@@ -202,6 +220,42 @@
             <button class="btn resting" onclick={yes}>{t('delve.yes')}</button>
             <button class="btn-quiet" onclick={() => { steady(); answer = 'no'; unslide(); }}><span>{t('delve.notYet')}</span></button>
           </div>
+        {:else if end.errands && end.pending}
+          <!-- the run ended (it may have run out while Dan was still out): what got done is struck off here, then counted
+               once (D-139) -->
+          <div class="scroll">
+            <div class="label-line centred">{t('errand.title')}</div>
+            <h2 class="m">{t('errand.ask')}</h2>
+            <p class="say">{t('errand.askSay')}</p>
+            {@render errandList(end.errands)}
+          </div>
+          <button class="btn resting" onclick={() => { steady(); game.do({ do: 'countErrands' }); unslide(); }}>{t('errand.count')}</button>
+        {:else if end.errands}
+          <!-- the errand run's end (D-139): the run's minutes, each errand struck off done with its share, then each one's
+               story moment in turn; the ones left stay as they were -->
+          <div class="scroll">
+            <div class="label-line centred">{t('errand.title')}</div>
+            <h2 class="m">{end.minutes > 0 ? t('errand.end', { min: minutesWords(end.minutes) }) : t('errand.endNone')}</h2>
+            <ul class="errs">
+              {#each end.errands as e (e.job.id)}
+                <li class:done={e.done !== null}><span class="pip" class:done={e.done !== null}></span><span class="t">{e.job.name}</span><span class="s">{e.done !== null ? t('errand.doneRow', { min: minutesShort(e.minutes) }) : t('errand.leftRow')}</span></li>
+              {/each}
+            </ul>
+            {#if !errandsDone.length && end.minutes > 0}<p class="say">{t('errand.carried')}</p>{/if}
+            {#each errandStory as e, i (e.job.id)}
+              <div class="errand-story">
+                <!-- the errand's name over its story moment: plain words, never a carved label (D-131) -->
+                <p class="errand-name">{t('errand.doneSay', { job: e.job.name })}</p>
+                <Return doneSeq={e.done} extraFinds={i === 0 ? v.runFinds : []} {go} />
+              </div>
+            {/each}
+            {#if !errandStory.length}<p class="say">{v.passage}</p><Return doneSeq={null} extraFinds={v.runFinds} />{/if}
+          </div>
+          {#if end.completedDay || game.view.arrival}
+            <button class="btn" onclick={() => leave('arrival')}>{t('delve.see')}</button>
+          {:else}
+            <button class="btn resting" onclick={() => leave('today')}>{t('delve.toToday')}</button>
+          {/if}
         {:else if answer === 'no'}
           <div class="label-line centred">{t('delve.label')}</div>
           <h2 class="m">{end.total > 0 ? t('delve.kept', { min: minutesWords(end.total) }) : t('delve.keptNone')}</h2>
@@ -253,7 +307,7 @@
 
 <style>
   /* the job's list, struck off a line at a time (D-126) */
-  .list { list-style: none; margin: 4px auto 10px; padding: 0; max-width: 320px; max-height: 26vh; overflow-y: auto; overflow-x: hidden; text-align: left; }
+  .list { list-style: none; margin: 4px auto 10px; padding: 0; width: 100%; max-width: 320px; max-height: 26vh; overflow-y: auto; overflow-x: hidden; text-align: left; }
   .list button { overflow-wrap: anywhere; }
   .list button { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 44px; padding: 4px 10px; text-align: left; background: none; border: 0;
     border-bottom: 1px solid rgba(255, 255, 255, .08); font-family: var(--life); font-size: 17px; color: #fff; cursor: pointer; }
@@ -264,6 +318,15 @@
   .list button.struck .tick { background: var(--violet-hi); border-color: var(--violet-hi); }
   .list button.struck .tick svg { opacity: 1; }
   .dv { display: contents; }
+  /* the errand run's end (D-139): each errand, done with its minutes or still to do */
+  .errs { list-style: none; margin: 8px auto 10px; padding: 0; max-width: 340px; text-align: left; }
+  .errs li { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; align-items: center; column-gap: 12px; min-height: 40px; border-top: 1px solid var(--edge-4); }
+  .errs li:last-child { border-bottom: 1px solid var(--edge-4); }
+  .errs .t { font-family: var(--life); font-size: 17px; color: var(--ink); overflow-wrap: anywhere; min-width: 0; }
+  .errs .s { font-family: var(--life); font-style: italic; font-size: 15px; color: var(--ink-2); text-align: right; }
+  .errs li.done .s { color: #ecc890; }
+  .errand-story { margin-top: 14px; }
+  .errand-name { margin: 0 0 2px; font-family: var(--life); font-style: italic; font-size: 16.5px; color: #ecc890; text-align: center; overflow-wrap: anywhere; }
   /* the ring takes the room left between the place's name and the words below, never more; when the end carries the
      story it steps back, and on a phone too short for it, it gives way altogether */
   .dv :global(.mid) { container-type: size; }
