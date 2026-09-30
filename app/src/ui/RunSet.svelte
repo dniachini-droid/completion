@@ -9,7 +9,7 @@
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
   import { back } from './back.svelte';
-  import { errandPick } from './errands.svelte';
+  import { errandPick } from './errand-pick.svelte';
   import './scene/runset.css';
 
   /* `jobId` 'errands': the errand run's set-up (D-139), for the jobs ticked on its pick list */
