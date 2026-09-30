@@ -4,17 +4,14 @@
  * files under src/ may differ only in case, nor may a `.svelte.ts` module share its import name with a component.
  */
 import { describe, expect, it } from 'vitest';
-import { readdirSync } from 'node:fs';
-import { join } from 'node:path';
 
-function files(dir: string): string[] {
-  return readdirSync(dir, { withFileTypes: true }).flatMap(d => d.isDirectory() ? files(join(dir, d.name)) : [join(dir, d.name)]);
-}
+/* every file under src/, by its path (listed by the bundler, never loaded) */
+const files = () => Object.keys(import.meta.glob('../../src/**/*'));
 
 describe('File names that a Mac can tell apart', () => {
   it('no two files under src/ are the same name but for case, or import as the same name', () => {
     const seen = new Map<string, string>(), clash: string[] = [];
-    for (const f of files(join(__dirname, '../../src'))) {
+    for (const f of files()) {
       for (const key of new Set([f.toLowerCase(), f.toLowerCase().replace(/\.svelte\.ts$/, '.svelte')])) {
         const was = seen.get(key);
         if (was && was !== f) clash.push(`${was} / ${f}`); else seen.set(key, f);
