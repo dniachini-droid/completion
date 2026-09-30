@@ -90,7 +90,7 @@ export type FactBody =
   | { type: 'delveResumed' }
   | { type: 'delveEnded'; job: string; minutes: number; how: 'ranOut' | 'finishedHere'; run: number }
   /** `today`: of `minutes`, those delved on the record's own day, when fewer (a one-off's carried minutes, D-133) */
-  | { type: 'jobDone'; job: string; minutes: number; today?: number }
+  | { type: 'jobDone'; job: string; minutes: number; today?: number; ticked?: number }
   /** "Not done after all" (D-131): the latest done record of the job on `on` no longer counts; what it earned stays */
   | { type: 'doneUndone'; job: string; on: string }
   /** Tonight's "Tomorrow starts with" (D-131): the job Today opens with on `on` (the next game day); null: as planned */
@@ -98,7 +98,8 @@ export type FactBody =
   | { type: 'cantStartUsed'; job: string }
   | { type: 'seen'; what: 'step' | 'arrival' | 'morning' | 'welcome'; ref: number }
   /* what the world gave (worked out once, then kept) */
-  | { type: 'stepsGained'; minutes: number; job: string; run?: number }
+  /** `tick`: minutes Dan gave a job he ticked off without a delve (D-134) */
+  | { type: 'stepsGained'; minutes: number; job: string; run?: number; tick?: true }
   | { type: 'dayCompleted' }
   | { type: 'arrived'; kind: 'place' | 'camp'; id: string; how?: 'foot' | 'key' }
   /* the story (slice 2): each written once, when it happens */

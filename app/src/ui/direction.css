@@ -451,3 +451,10 @@ body.s-evening  { --a1: .5;  --aw: 120%; --ah: 44%; --a2: .38; --h2: 22%; }
 
 /* the world at rest (rest.ts, D-132): a looping animation whose element is marked is held where it is */
 [data-rest], [data-rest-before]::before, [data-rest-after]::after { animation-play-state: paused !important; }
+
+/* the tick circle over a row's marker (Today, the Satchel): done without a delve, with the time it took (D-134); a hollow
+   ring, its tap target a finger's width */
+.pip.under { visibility: hidden; }
+.tickbtn { display: grid; place-items: center; width: 44px; height: 44px; margin-left: -12px; padding: 0; background: none; border: 0; cursor: pointer; }
+.tickbtn .ring { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid rgba(var(--violet-rgb), .8); box-shadow: 0 0 8px rgba(var(--violet-rgb), .35); }
+.tickbtn:active .ring { background: rgba(var(--violet-rgb), .4); }

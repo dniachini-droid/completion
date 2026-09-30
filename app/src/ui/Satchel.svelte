@@ -17,13 +17,15 @@
   import { back } from './back.svelte';
   import { flushSync, onMount } from 'svelte';
   import { steady } from './taps';
-  import { openMenu } from './menu.svelte';
+  import { openMenu, openTick } from './menu.svelte';
   import art from './scene/satchel.jpg';
 
   /* `to`: 'recurring' opens at that section (the Week). Today's "+ Add" focuses the box itself, inside its tap, so the
      phone's keyboard opens; nothing here focuses it again on the way back (review of D-131) */
   let { go, to }: { go: Go; to?: string } = $props();
   const v = $derived(game.view);
+  /* a job not done today can be ticked off, done without a delve (D-134); not while a delve runs */
+  const canTick = (j: Job) => !v.done.has(j.id) && !v.run;
   const s = $derived(satchelView(content, game.facts, game.now));
   let text = $state('');
   let input = $state<HTMLInputElement | null>(null);
@@ -128,7 +130,8 @@
       <div class="item">
         <!-- while a delve runs, a tap here can't start another: as on Today (break-it review 6) -->
         <SwipeRow key={`s:${j.id}`} actions={acts(j)} tap={() => delve(j)} hold={menu(j)} disabled={!!v.run}>
-          {#snippet row()}<span class="pip"></span><span class="t">{j.name}</span><span class="s">{j.by ? byWords(j.by) : ''}</span>{/snippet}
+          {#snippet lead()}{#if canTick(j)}<button class="tickbtn" aria-label={t('tick.sr', { job: j.name })} onclick={() => openTick(j.id, go)}><span class="ring"></span></button>{/if}{/snippet}
+          {#snippet row()}<span class="pip" class:under={canTick(j)}></span><span class="t">{j.name}</span><span class="s">{j.by ? byWords(j.by) : ''}</span>{/snippet}
         </SwipeRow>
         {#if listing === j.id}
           <textarea class="list" bind:this={box} bind:value={draft} rows="4" maxlength={LIST_MAX} onblur={keep} aria-label={t('satchel.list.label', { job: j.name })}
@@ -152,7 +155,8 @@
       {#each s.coming as x (x.job.id)}
         <div class="item">
           <SwipeRow key={`s:${x.job.id}`} actions={acts(x.job)} tap={() => delve(x.job)} hold={menu(x.job)} disabled={!!v.run}>
-            {#snippet row()}<span class="pip"></span><span class="t">{x.job.name}</span><span class="s ghost" aria-hidden="true">{dayShort(x.day)}</span>{/snippet}
+            {#snippet lead()}{#if canTick(x.job)}<button class="tickbtn" aria-label={t('tick.sr', { job: x.job.name })} onclick={() => openTick(x.job.id, go)}><span class="ring"></span></button>{/if}{/snippet}
+            {#snippet row()}<span class="pip" class:under={canTick(x.job)}></span><span class="t">{x.job.name}</span><span class="s ghost" aria-hidden="true">{dayShort(x.day)}</span>{/snippet}
             <!-- the day is its own button: a tap on it moves the job (D-131) -->
             {#snippet over()}<button class="text-link day" aria-expanded={placing === x.job.id} aria-label={t('satchel.move', { job: x.job.name, day: dayShort(x.day) })} onclick={() => openDays(x.job)}><span>{dayShort(x.day)}</span></button>{/snippet}
           </SwipeRow>
@@ -167,7 +171,8 @@
     {#each s.recurring as j (j.id)}
       {@const r = rhythmOf(j)}
       <SwipeRow key={`s:${j.id}`} actions={acts(j)} tap={() => delve(j)} hold={menu(j)} disabled={!!v.run}>
-        {#snippet row()}<span class="pip"></span><span class="t">{j.name}{#if r}<small>{oftenWords(r)} · {minutesShort(j.length)}</small>{/if}</span><span class="s">{r?.time ?? ''}</span>{/snippet}
+        {#snippet lead()}{#if canTick(j)}<button class="tickbtn" aria-label={t('tick.sr', { job: j.name })} onclick={() => openTick(j.id, go)}><span class="ring"></span></button>{/if}{/snippet}
+        {#snippet row()}<span class="pip" class:under={canTick(j)}></span><span class="t">{j.name}{#if r}<small>{oftenWords(r)} · {minutesShort(j.length)}</small>{/if}</span><span class="s">{r?.time ?? ''}</span>{/snippet}
       </SwipeRow>
     {/each}
     </div>

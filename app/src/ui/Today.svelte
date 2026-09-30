@@ -2,7 +2,7 @@
   import Deleted from './Deleted.svelte';
   import Bedtime from './Bedtime.svelte';
   import SwipeRow from './SwipeRow.svelte';
-  import { openMenu } from './menu.svelte';
+  import { openMenu, openTick } from './menu.svelte';
   import { undoneFacts } from '../core/done';
   import { steady } from './taps';
   /* Today (the morning screen, UX_PRINCIPLES → "The morning screen carries"): where you are, the sealed thing ahead,
@@ -61,6 +61,8 @@
   function carry() { game.do({ do: 'resume' }); go('delve'); }
   function finish() { game.do({ do: 'finishHere' }); go('delve'); }
   /* a tap on a job starts that job, never another: nothing on the list moves (Dan, D-100) */
+  /* a job not yet done can be ticked off, done without a delve (D-134); not while a delve runs */
+  const canTick = (id: string) => !v.done.has(id) && !v.run;
   function start(id: string) { if (!v.done.has(id)) begin(job(id)); }
   function aside(id: string) { steady(); game.do({ do: 'setAside', job: id }); lastAside = id; }
   /* "Not today" said once, with a way to take it back while Today is still open (review 2, D-088) */
@@ -219,6 +221,8 @@
           {#if delvedOn}<button class="text-link" onclick={() => done(next)}><span>{t('today.itsDone')}</span></button>
           {:else}<button class="text-link" onclick={() => go('cant', next.id)}><span>{t('today.cantStart')}</span></button>{/if}
           <span class="dot" aria-hidden="true">·</span>
+          <button class="text-link" onclick={() => openTick(next.id, go)}><span>{t('tick.off')}</span></button>
+          <span class="dot" aria-hidden="true">·</span>
           <button class="text-link" onclick={() => aside(next.id)}><span>{t('today.notToday')}</span></button>
         </div>
       </div>
@@ -253,8 +257,10 @@
     {#snippet jobRow(id: string)}
       {@const j = job(id)}
       <SwipeRow key={`t:${id}`} actions={acts(j)} tap={() => start(id)} hold={() => openMenu(id, go, v.done.has(id) ? v.day : null)} disabled={!!v.run} done={v.done.has(id)}>
-        {#snippet row()}<span class="pip" class:done={v.done.has(id)}></span><span class="t">{j.name}</span><span class="s">{sayDone(j) ? '' : rowNote(j)}</span>{/snippet}
+        {#snippet row()}<span class="pip" class:done={v.done.has(id)} class:under={canTick(id)}></span><span class="t">{j.name}</span><span class="s">{sayDone(j) ? '' : rowNote(j)}</span>{/snippet}
         <!-- the same "It's done" on a row further down: a tap on the row itself still starts a delve (D-100, D-120) -->
+        <!-- the tick circle over the marker: done without a delve, with the time it took (D-134) -->
+        {#snippet lead()}{#if canTick(id)}<button class="tickbtn" aria-label={t('tick.sr', { job: j.name })} onclick={() => openTick(id, go)}><span class="ring"></span></button>{/if}{/snippet}
         {#snippet over()}{#if sayDone(j) && !v.run}<button class="text-link row-done" onclick={() => done(j)}><span>{t('today.itsDone')}</span></button>{/if}{/snippet}
       </SwipeRow>
     {/snippet}

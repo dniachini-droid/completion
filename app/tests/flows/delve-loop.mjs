@@ -85,7 +85,7 @@ const double = async (loc, what) => { const r = await loc.first().boundingBox().
   /* a real double tap: the second straight after the first, as a finger does it */
   for (let i = 0; i < 2; i++) await page.touchscreen.tap(r.x + r.width / 2, r.y + r.height / 2);
   await page.clock.runFor(1200); };
-const choose = async (name) => { await tap(page.locator('.rows button.row.else, .after .btn-quiet'), 'Something else… or Keep going'); await tap(page.locator('.ui button').filter({ hasText: name }), name + ' in the Satchel'); };
+const choose = async (name) => { await tap(page.locator('.rows button.row.else, .after .btn-quiet'), 'Something else… or Keep going'); await tap(page.locator('.ui button:not(.sr)').filter({ hasText: name }), name + ' in the Satchel'); };
 await choose('Course');
 await double(btn('Begin'), 'Begin');
 if (!(await btn('Pause').count())) fails.push('Begin tapped twice did not leave the delve running');

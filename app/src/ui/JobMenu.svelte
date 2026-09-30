@@ -4,7 +4,7 @@
      underneath (D-125), and looks like no other choice. A tap outside closes it. */
   import { game } from './game.svelte';
   import { t } from '../content/copy/en';
-  import { menu, closeMenu, settling } from './menu.svelte';
+  import { menu, closeMenu, settling, openTick } from './menu.svelte';
   import { closeRows } from './SwipeRow.svelte';
   import { steady } from './taps';
   import DayPick from './DayPick.svelte';
@@ -16,6 +16,8 @@
 
   function to(f: () => void) { if (settling()) return; const go = menu.go; steady(); closeMenu(); closeRows(); if (go) f(); }
   function delve() { const id = j!.id, go = menu.go!; to(() => go('set', id)); }
+  /* done without a delve: ticked off with the time it took (D-134) */
+  function tick() { const id = j!.id, go = menu.go!; to(() => openTick(id, go)); }
   function edit() { const id = j!.id, go = menu.go!; to(() => go('rhythms', id)); }
   function place(day: string) {
     const id = j!.id;
@@ -41,6 +43,7 @@
   <div class="menu" role="dialog" aria-modal="true" aria-label={j.name}>
     <p class="name">{j.name}</p>
     <button class="item" disabled={!!v.run || finished} onclick={delve}>{t('menu.delve')}</button>
+    {#if !v.done.has(j.id) && !finished}<button class="item" disabled={!!v.run} onclick={tick}>{t('tick.off')}</button>{/if}
     <button class="item" onclick={edit}>{t('menu.edit')}</button>
     {#if !finished && !menu.on}<button class="item" aria-expanded={placing} onclick={() => { if (!settling()) placing = !placing; }}>{t('satchel.day')}</button>{/if}
     {#if placing}<div class="cal"><DayPick from={v.day} label={t('satchel.day')} pick={place} /></div>{/if}

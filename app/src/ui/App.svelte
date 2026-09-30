@@ -27,7 +27,8 @@
   import Satchel from './Satchel.svelte';
   import Settings from './Settings.svelte';
   import JobMenu from './JobMenu.svelte';
-  import { closeMenu } from './menu.svelte';
+  import { closeMenu, closeTick } from './menu.svelte';
+  import TickSheet from './TickSheet.svelte';
   import { closeRows } from './SwipeRow.svelte';
   import { t } from '../content/copy/en';
   import { steady } from './taps';
@@ -74,7 +75,7 @@
     const e = game.view.runEnd;
     if (screen === 'delve' && e && !game.view.run && to !== 'delve') game.do({ do: 'seen', what: 'step', ref: e.seq });
     still = TABS.has(screen) && TABS.has(to);
-    closeMenu(); closeRows();
+    closeMenu(); closeTick(); closeRows();
     game.deleted = null; game.cantDelete = null;   /* a delete's Undo stays on the screen it was made on (D-125) */
     /* back to Today goes the way "Today" does, past what waits: a delve that ended while Dan typed elsewhere is shown
        (break-it review 5) */
@@ -189,6 +190,7 @@
     {/snippet}
   </svelte:boundary>
   <JobMenu />
+  <TickSheet />
 </main>
 
 <style>

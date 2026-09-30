@@ -112,7 +112,9 @@
   .count { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity .5s var(--ease); z-index: 3; }
   .count.shown { opacity: 1; }
   .num { display: flex; font-family: var(--life); font-weight: 300; font-size: calc(var(--R) * .27); line-height: 1; height: 1em; color: #f6f7ff;
-    font-variant-numeric: tabular-nums lining-nums; text-shadow: 0 0 2px rgba(10, 6, 34, .6), 0 0 22px rgba(143, 134, 255, .9), 0 0 60px rgba(160, 130, 255, .5); }
+    font-variant-numeric: tabular-nums lining-nums;
+    /* the glow on the number as a whole: a glow on each digit was cut square by its column's edges */
+    filter: drop-shadow(0 0 1px rgba(10, 6, 34, .6)) drop-shadow(0 0 10px rgba(143, 134, 255, .85)); }
   .digit { display: block; height: 1em; overflow: hidden; }
   .strip { display: flex; flex-direction: column; will-change: transform; }
   .strip span { display: block; height: 1em; line-height: 1; text-align: center; }
