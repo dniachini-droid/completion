@@ -380,13 +380,13 @@ export const copy = {
   /* remembered jobs (D-136): the jobs Dan has had before, under the box as he types; the one offer to make a job repeat */
   'satchel.before': 'Jobs you’ve had before', 'satchel.usually': 'usually {min}', 'satchel.pick.sr': '{job}, usually {min}',
   'satchel.have.noDay': '{job} is already in your satchel.', 'satchel.have.coming': '{job} is already on {day}.',
-  'satchel.have.today': '{job} is already on today’s list.', 'satchel.have.recurring': '{job} is one of your recurring jobs: it comes round by itself.',
+  'satchel.have.waiting': '{job} is already waiting: back {day}.', 'satchel.have.today': '{job} is already on today’s list.', 'satchel.have.recurring': '{job} is one of your recurring jobs: it comes round by itself.',
   'satchel.offer': '{job} keeps coming back. Make it repeat?', 'satchel.offer.yes': 'Make it repeat', 'satchel.offer.no': 'No thanks',
   'pick.today': 'today', 'pick.prev': 'The month before', 'pick.next': 'The next month',
   'today.addJob': 'Add a job',
   /* a stray thought parked mid-delve (D-138) */
   'park.link': 'Park a thought', 'park.label': 'A thought to park for later', 'park.hint': 'A thought, for later', 'park.save': 'Park it',
-  'park.cancel': 'Cancel', 'park.parked': 'Parked: {job}',
+  'park.cancel': 'Cancel', 'park.parked': 'Parked: {job}', 'park.have': '{job} is already on your list.',
   'park.count.1': 'One thought parked in the Satchel', 'park.count': '{n} thoughts parked in the Satchel',
   /* the errand run (D-139): several jobs in one delve, struck off as each is done */
   'errand.link': 'Errand run', 'errand.title': 'Errand run',

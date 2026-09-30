@@ -7,6 +7,7 @@
   import { game, content } from './game.svelte';
   import { t, minutesWords, minutesShort, ord } from '../content/copy/en';
   import { mmss, ofLine } from './panel';
+  import { tieFor } from '../core/remember';
   import tunnel from './scene/tunnel.html?raw';
   import fogFront from './scene/fog-front.html?raw';
   import { tunnelLight } from './scene/light.js';
@@ -111,9 +112,11 @@
     const line = thought.replace(/\s+/g, ' ').trim();
     if (!line) return;
     steady();
+    /* a job still Dan's is not parked twice (D-136): it says so instead */
+    const have = tieFor(content, game.facts, line);
     game.do({ do: 'park', line });
     parkBox?.blur(); closePark();
-    parkedSay = t('park.parked', { job: line.slice(0, 120) });
+    parkedSay = have?.same ? t('park.have', { job: have.job.name }) : t('park.parked', { job: line.slice(0, 120) });
     clearTimeout(sayTimer);
     sayTimer = setTimeout(() => (parkedSay = null), 4000);
   }
@@ -121,7 +124,7 @@
   onMount(() => () => { clearTimeout(sayTimer); if (parking && thought.trim()) game.do({ do: 'park', line: thought }); });
   const canPark = $derived(!!run);
   /* at the end: the thoughts this delve parked, once its question is answered; a tap opens the Satchel */
-  const parkedN = $derived(end && !run && !(end.ask && answer === null) ? end.parked : 0);
+  const parkedN = $derived(end && !run && !end.pending && !(end.ask && answer === null) ? end.parked : 0);
   function toSatchel() { keepNote(); go('satchel'); }
 </script>
 

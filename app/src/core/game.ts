@@ -920,7 +920,8 @@ const dialRun = (minutes: number, count: number) =>
 /** A job that can go on an errand run (D-139): Dan's, not done today, and not a one-off already finished. */
 const errandable = (c: Content, facts: Fact[], day: string, id: string) => {
   const j = c.jobs.find(x => x.id === id);
-  return !!j && !j.stopped && id !== ERRAND_RUN && !doneOn(facts, day).has(id)
+  /* a job waiting on a reply is not taken on a run until it is back (D-137) */
+  return !!j && !j.stopped && id !== ERRAND_RUN && !doneOn(facts, day).has(id) && !W.waitingOf(facts).has(id)
     && (c.rhythms.some(r => r.job === id) || !W.oneOffDone(c, facts).some(f => f.job === id));
 };
 
@@ -931,7 +932,8 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
   if (cmd.do === 'away') { settleIn(w, c, Math.min(cmd.from, nowMs)); pauseAway(w, cmd.from, Math.min(cmd.to, nowMs)); }   /* what was due before he left first, in time order (D-120) */
   settleIn(w, c, nowMs);
   /* an errand run's end not yet counted is counted before anything else Dan does, except striking on it (D-139) */
-  if (cmd.do !== 'strikeErrand' && cmd.do !== 'away') { const p = pendingErrands(w.all); if (p) errandsEnd(w, c, p, now); }
+  /* a thought parked on an errand run's end never counts it: its strikes are still to come (D-138 × D-139) */
+  if (cmd.do !== 'strikeErrand' && cmd.do !== 'away' && cmd.do !== 'park') { const p = pendingErrands(w.all); if (p) errandsEnd(w, c, p, now); }
   const day = gameDay(now), v = see(w.all, c, now);
   switch (cmd.do) {
     case 'open': {
@@ -1250,7 +1252,10 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       if (!name) break;
       const r = activeRun(w.all), end = v.runEnd ? ofType(w.all, 'delveEnded').find(f => f.seq === v.runEnd!.seq) : undefined;
       const run = r ? r.fact.seq : end?.run;
-      w.put({ type: 'itemAdded', id: `it-${ofType(w.all, 'itemAdded').length + 1}`, name, via: 'park', ...(run !== undefined ? { run } : {}) });
+      /* a job Dan has had before (D-136): one still his is never added twice; a finished one carries on */
+      const tie = tieFor(base, w.all, name);
+      if (tie?.same) break;
+      w.put({ type: 'itemAdded', id: `it-${ofType(w.all, 'itemAdded').length + 1}`, name, via: 'park', ...(run !== undefined ? { run } : {}), ...(tie ? { from: tie.job.id } : {}) });
       break;
     }
     case 'delveNow': {
