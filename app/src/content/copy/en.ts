@@ -146,6 +146,8 @@ export const copy = {
   'stair.say': 'From here, every delve takes you further down into the deep.',
   'stair.down': 'Go down',
   'map.nav': 'Map',
+  'arrive.toMap': 'Back to the map',
+  'map.readAgain': 'Read again: {place}', 'map.readHere': 'Read it again',
   'map.label': 'The map',
   'map.regionLabel': 'The first region',
   'map.regionName': 'The Quiet',
@@ -367,7 +369,7 @@ export const copy = {
   'satchel.list': 'List', 'satchel.list.done': 'Close', 'satchel.list.label': 'The list for {job}', 'satchel.list.hint': 'A line at a time', 'satchel.list.full': 'The list is full: take a line out to add another.',
   'satchel.day': 'Put on a day', 'satchel.placed': '{job}: on {day}.',
   'pick.today': 'today', 'pick.prev': 'The month before', 'pick.next': 'The next month',
-  'today.add': '+ Add', 'today.add.label': 'Add a job: the satchel’s box',
+  'today.addJob': 'Add a job',
 
   'month.1': 'January', 'month.2': 'February', 'month.3': 'March', 'month.4': 'April', 'month.5': 'May', 'month.6': 'June',
   'month.7': 'July', 'month.8': 'August', 'month.9': 'September', 'month.10': 'October', 'month.11': 'November', 'month.12': 'December',

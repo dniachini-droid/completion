@@ -1306,6 +1306,11 @@ function reachedBy(all: Fact[], doneSeq: number): FactOf<'arrived'> | null {
   return null;
 }
 
+/** A place reached before, to read again (the Map's "Read again", D-135). */
+export function arrivalAt(facts: Fact[], base: Content, seq: number): Arrival | null {
+  const f = facts.find(x => x.seq === seq);
+  return f && f.type === 'arrived' && f.kind === 'place' ? arrivalOf(W.live(base, facts), facts, f) : null;
+}
 function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
   /* one of the places played at day complete: nothing but the world's answers between the lock-in and it */
   const dc = all.find(g => g.type === 'dayCompleted' && g.day === f.day && g.seq < f.seq);

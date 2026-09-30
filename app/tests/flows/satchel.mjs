@@ -12,8 +12,8 @@ page.on('pageerror', e => errors.push(e.message));
 page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
 await page.clock.install({ time: new Date('2026-09-30T09:00:00+01:00') });
 await page.goto(url);
-for (let k = 0; k < 40 && !(await page.locator('.foot .add, button.btn').count()); k++) { await page.waitForTimeout(250); await page.clock.runFor(250); }
-for (let k = 0; k < 8 && !(await page.locator('.foot .add').count()); k++) { await page.locator('button.btn').first().click(); await page.clock.runFor(1500); }
+for (let k = 0; k < 40 && !(await page.locator('nav.foot, button.btn').count()); k++) { await page.waitForTimeout(250); await page.clock.runFor(250); }
+for (let k = 0; k < 8 && !(await page.locator('nav.foot').count()); k++) { await page.locator('button.btn').first().click(); await page.clock.runFor(1500); }
 const fails = [];
 const btn = (name) => page.getByRole('button', { name, exact: true });
 const item = (name) => page.locator('.item', { hasText: name }).first();
@@ -91,7 +91,7 @@ if (!(await page.locator('.dv').count())) fails.push('"Delve now" did not start 
 else {
   await btn('Finish here').click(); await page.clock.runFor(1200);
   if (await btn('Not yet').count()) { await btn('Not yet').click(); await page.clock.runFor(800); }
-  for (let k = 0; k < 4 && !(await page.locator('.foot .add').count()); k++) { await page.locator('.home').first().click().catch(() => {}); await page.clock.runFor(1200); }
+  for (let k = 0; k < 4 && !(await page.locator('nav.foot').count()); k++) { await page.locator('.home').first().click().catch(() => {}); await page.clock.runFor(1200); }
   if (!(await page.locator('.rows button.row', { hasText: 'Ring the vet' }).count() + (await page.locator('.next h2', { hasText: 'Ring the vet' }).count()))) fails.push('"Ring the vet", delved on now, is not on Today');
   await btn('Satchel').click(); await page.clock.runFor(1200);
   if (await item('Ring the vet').count()) fails.push('"Ring the vet" is on Today and in the Satchel');
@@ -108,7 +108,7 @@ else {
   { const n = await page.evaluate(() => Date.now()); await page.clock.setSystemTime(n + 3 * 60_000); await page.clock.runFor(500); await page.waitForTimeout(200); await page.clock.runFor(250); }
   await btn('Finish here').click(); await page.clock.runFor(1200);
   if (await btn('Not yet').count()) { await btn('Not yet').click(); await page.clock.runFor(800); }
-  for (let k = 0; k < 4 && !(await page.locator('.foot .add').count()); k++) { await page.locator('.home').first().click().catch(() => {}); await page.clock.runFor(1200); }
+  for (let k = 0; k < 4 && !(await page.locator('nav.foot').count()); k++) { await page.locator('.home').first().click().catch(() => {}); await page.clock.runFor(1200); }
   /* delved on and "Not yet": it is on Today now, and only there (D-131); its set-up shows what is left of the list */
   await btn('Satchel').click(); await page.clock.runFor(1200);
   if (await item('Shopping').count()) fails.push('Shopping, delved on today, is still in the Satchel');
@@ -122,7 +122,7 @@ else {
 }
 /* 6. at night the satchel is still one tap from Today */
 { const n = await page.evaluate(() => Date.now()); await page.clock.setSystemTime(n + 13 * 3600_000); await page.clock.runFor(2000); }
-for (let k = 0; k < 6 && !(await page.locator('.foot .add').count()); k++) { await page.locator('button.btn, .home').first().click().catch(() => {}); await page.clock.runFor(1500); }
+for (let k = 0; k < 6 && !(await page.locator('nav.foot').count()); k++) { await page.locator('button.btn, .home').first().click().catch(() => {}); await page.clock.runFor(1500); }
 if (!(await btn('Satchel').count())) fails.push('no Satchel on Today at night');
 if (errors.length) fails.push(...errors.map(e => 'page error: ' + e));
 await b.close();

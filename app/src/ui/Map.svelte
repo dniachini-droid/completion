@@ -11,6 +11,7 @@
   import type { Go } from './nav';
   import { back } from './back.svelte';
   import type { StretchId } from '../core/story-types';
+  import type { FactOf } from '../core/types';
 
   let { go }: { go: Go } = $props();
   const v = $derived(game.view);
@@ -27,6 +28,8 @@
     sub2?: string;
     lx: number; ly: number; anchor: Anchor;
     box: { label: string; title: string; say: string };
+    /** the places reached on this stretch, each to read again (D-135) */
+    reads?: { name: string; seq: number }[];
   }
 
   /* ---------- the region: one light per stretch, laid out as the mock-up lays out the first region ---------- */
@@ -64,6 +67,10 @@
   const unsaid = (where: string, name: string) => where.toLowerCase().startsWith(name.toLowerCase() + ', ') ? where.slice(name.length + 2) : where;
   const hereBox = $derived({ label: t('map.hereLabel'), title: v.here.name, say: v.ahead ? `${t('today.ahead')}: ${firstSentence(unsaid(v.ahead, v.here.name))}` : firstSentence(v.here.line) });
 
+  /* the places reached on foot or by Key, by stretch, in the order reached: each one's entry can be read again (D-135) */
+  const reached = $derived(game.facts.filter((f): f is FactOf<'arrived'> => f.type === 'arrived' && f.kind === 'place')
+    .map(f => ({ seq: f.seq, beat: s.beats.find(b => b.id === f.id) })).filter(x => x.beat?.name)
+    .map(x => ({ seq: x.seq, name: x.beat!.name!, stretch: x.beat!.stretch })));
   const region = $derived.by((): Light[] => {
     const out: Light[] = [];
     for (const k of Object.keys(AT) as StretchId[]) {
@@ -77,6 +84,8 @@
             : { label: sealedOn(k).length ? t('map.walkedSealed') : t('map.walked'), title: stretchName(k), say: names.length ? names.join(' · ') : t('map.wayIn') } });
         /* on its own line: joined to "you are here" it ran off the screen's left edge (UI review, D-130) */
         if (fc) out[out.length - 1].sub2 = fc;
+        const reads = reached.filter(r => r.stretch === k);
+        if (reads.length) out[out.length - 1].reads = reads;
       } else if (k === aheadOn) {
         out.push({ key: k, ...a, kind: 'faint',
           sub: ahead.length ? t('map.forecast', { day: dayName(ahead[0]) }) : t('map.ahead'), subKind: ahead.length ? 'gold' : 'dim',
@@ -255,7 +264,13 @@
           <div class="swap">
             <div class="label-line">{sel.box.label}</div>
             <h2 class="carve md">{sel.box.title}</h2>
-            <p class="say">{sel.box.say}</p>
+            {#if sel.reads?.length && sel.kind !== 'here'}
+              <!-- the places reached here, each a tap from its entry and painting (D-135) -->
+              <p class="say reads">{#each sel.reads as r, i (r.seq)}{#if i}<span class="sep" aria-hidden="true"> · </span>{/if}<button class="text-link read" aria-label={t('map.readAgain', { place: r.name })} onclick={() => go('arrival', `again:${r.seq}`)}><span>{r.name}</span></button>{/each}</p>
+            {:else}
+              <p class="say" class:short={!!sel.reads?.length}>{sel.box.say}</p>
+              {#if sel.reads?.length}<p class="reads"><button class="text-link read" onclick={() => go('arrival', `again:${sel.reads![sel.reads!.length - 1].seq}`)}><span>{t('map.readHere')}</span></button></p>{/if}
+            {/if}
           </div>
         {/key}
       </div>
@@ -307,5 +322,10 @@
   .box h2 { margin: 8px 0 6px; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .box .say { color: var(--ink-2); font-size: 16.5px; line-height: 1.42; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
   .swap { animation: rise .45s var(--ease) both; }
+  .box .say.short { -webkit-line-clamp: 2; line-clamp: 2; }
+  .reads { margin: 2px 0 0; }
+  .read { min-height: 32px; padding: 2px 0; }
+  .read span { font-family: var(--life); font-size: 16.5px; color: var(--ink); }
+  .sep { color: var(--ink-3); }
   @media (prefers-reduced-motion: reduce) { .drawn, .dust, .pl, .labels, .reticle, .swap { animation: none; opacity: 1; } .drawn { opacity: 0; } .reticle { transition: none; } }
 </style>

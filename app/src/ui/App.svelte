@@ -167,7 +167,7 @@
     {:else if screen === 'set'}<RunSet {go} jobId={String(arg)} />
     {:else if screen === 'delve'}<Delve {go} />
     {:else if screen === 'step'}<Step {go} seq={Number(arg)} />
-    {:else if screen === 'arrival'}<Arrival {go} />
+    {:else if screen === 'arrival'}<Arrival {go} seq={typeof arg === 'string' && arg.startsWith('again:') ? +arg.slice(6) : null} />
     {:else if screen === 'cant'}<CantStart {go} jobId={String(arg)} />
     {:else if screen === 'proto'}<Proto {go} />
     {:else if screen === 'map'}<Map {go} />

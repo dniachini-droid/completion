@@ -12,8 +12,8 @@ const errors = [];
 page.on('pageerror', e => errors.push(e.message));
 await page.clock.install({ time: new Date('2026-09-30T09:00:00+01:00') });
 await page.goto(url);
-for (let k = 0; k < 40 && !(await page.locator('.foot .add, button.btn').count()); k++) { await page.waitForTimeout(250); await page.clock.runFor(250); }
-for (let k = 0; k < 8 && !(await page.locator('.foot .add').count()); k++) { await page.locator('button.btn').first().click(); await page.clock.runFor(1500); }
+for (let k = 0; k < 40 && !(await page.locator('nav.foot, button.btn').count()); k++) { await page.waitForTimeout(250); await page.clock.runFor(250); }
+for (let k = 0; k < 8 && !(await page.locator('nav.foot').count()); k++) { await page.locator('button.btn').first().click(); await page.clock.runFor(1500); }
 const fails = [];
 const ff = async (ms) => { const n = await page.evaluate(() => Date.now()); await page.clock.setSystemTime(n + ms); await page.clock.runFor(500); await page.waitForTimeout(200); await page.clock.runFor(250); };
 const tap = async (loc, what) => {
@@ -39,7 +39,7 @@ const begin = async (job) => {
   if (!(await page.locator('.rs').count())) { fails.push(`${job}: no set-up`); return; }
 };
 
-await tap(page.locator('.foot .add'), '+ Add'); await page.keyboard.type('Tax return'); await page.keyboard.press('Enter'); await page.clock.runFor(800);
+await tap(page.locator('.today-add'), '+ Add'); await page.keyboard.type('Tax return'); await page.keyboard.press('Enter'); await page.clock.runFor(800);
 
 /* 1. 27 minutes, Finish here, Not yet */
 await begin('Tax return');

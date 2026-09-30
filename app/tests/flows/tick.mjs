@@ -11,8 +11,8 @@ const errors = [];
 page.on('pageerror', e => errors.push(e.message));
 await page.clock.install({ time: new Date('2026-09-30T09:00:00+01:00') });
 await page.goto(url);
-for (let k = 0; k < 40 && !(await page.locator('.foot .add, button.btn').count()); k++) { await page.waitForTimeout(250); await page.clock.runFor(250); }
-for (let k = 0; k < 8 && !(await page.locator('.foot .add').count()); k++) { await page.locator('button.btn').first().click(); await page.clock.runFor(1500); }
+for (let k = 0; k < 40 && !(await page.locator('nav.foot, button.btn').count()); k++) { await page.waitForTimeout(250); await page.clock.runFor(250); }
+for (let k = 0; k < 8 && !(await page.locator('nav.foot').count()); k++) { await page.locator('button.btn').first().click(); await page.clock.runFor(1500); }
 const fails = [];
 const ff = async (ms) => { const n = await page.evaluate(() => Date.now()); await page.clock.setSystemTime(n + ms); await page.clock.runFor(500); await page.waitForTimeout(200); await page.clock.runFor(250); };
 const tap = async (loc, what) => {
@@ -23,8 +23,8 @@ const tap = async (loc, what) => {
 };
 const btn = (name) => page.getByRole('button', { name, exact: true });
 const shot = async (name) => { if (shots) { await page.waitForTimeout(3600); await page.screenshot({ path: `${shots}/tick-${name}-${w}.png` }); } };
-const toToday = async () => { for (let k = 0; k < 6 && !(await page.locator('.foot .add').count()); k++) { const way = (await page.locator('.home').count()) ? page.locator('.home') : page.locator('button.btn'); await tap(way, 'way back to Today'); } };
-const add = async (name) => { await tap(page.locator('.foot .add'), '+ Add'); await page.keyboard.type(name); await page.keyboard.press('Enter'); await page.clock.runFor(800); };
+const toToday = async () => { for (let k = 0; k < 6 && !(await page.locator('nav.foot').count()); k++) { const way = (await page.locator('.home').count()) ? page.locator('.home') : page.locator('button.btn'); await tap(way, 'way back to Today'); } };
+const add = async (name) => { await tap(page.locator('.today-add'), '+ Add'); await page.keyboard.type(name); await page.keyboard.press('Enter'); await page.clock.runFor(800); };
 /* done: no tick circle for it anywhere, on Today or in the Satchel */
 const tickable = async (name) => {
   if (await page.getByRole('button', { name: `${name}: tick off`, exact: true }).count()) return true;
@@ -57,13 +57,13 @@ await shot('2-step');
 await toToday();
 if (await tickable('Bank')) fails.push('Bank, ticked off, can still be ticked off');
 
-/* 2. the next job's card: Tick off */
-if (await page.locator('.next').getByRole('button', { name: 'Tick off', exact: true }).count()) {
-  await tap(page.locator('.next').getByRole('button', { name: 'Tick off', exact: true }), 'Tick off on the next job');
+/* 2. a job on Today's list: its circle (no job is put forward any more, D-135) */
+if (await page.locator('.rows .tickbtn').count()) {
+  await tap(page.locator('.rows .tickbtn').first(), 'the first circle on Today');
   await tap(btn('1 h'), '1 h');
   if (!(await page.locator('.road').count())) fails.push('no road line after ticking the next job');
   await toToday();
-} else fails.push('no Tick off on the next job\'s card');
+} else fails.push('no tick circle on Today\'s list');
 
 /* 3. a job delved on and left "Not yet": "On top of …", then "No more" */
 await add('Letters');

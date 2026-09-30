@@ -153,6 +153,8 @@
       <section class="job rise d1">
         <div class="label-line lit">{t('set.label')}</div>
         <h1 class="say-lg">{job.name}</h1>
+        <!-- the job put off: what waits beyond it (it lived on Today's next job, D-135) -->
+        {#if job.avoided}<p class="soft avoided">{t('today.teaser.avoided')}</p>{/if}
         {#if carry > 0}<p class="soft carryon">{t('set.carry', { min: minutesWords(carry) })}</p>{/if}
         {#if job.note}<p class="soft last">{t('set.stopped', { note: job.note })}</p>{/if}
         <!-- the job's list (D-126): struck off a line at a time in the delve -->
@@ -240,5 +242,6 @@
   button.home { color: var(--ink-2); }
   /* where Dan stopped last time (D-112): one quiet line, never more */
   .change span { font-family: var(--life); font-style: italic; font-size: 15px; letter-spacing: 0; text-transform: none; color: var(--ink-2); }
+  .avoided { margin-top: 4px; font-style: italic; font-size: 15px; text-align: left; }
   .last, .carryon { margin-top: 2px; font-style: italic; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; }
 </style>

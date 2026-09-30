@@ -18,6 +18,8 @@
   function delve() { const id = j!.id, go = menu.go!; to(() => go('set', id)); }
   /* done without a delve: ticked off with the time it took (D-134) */
   function tick() { const id = j!.id, go = menu.go!; to(() => openTick(id, go)); }
+  /* "I can't start": the first small step, for any job not done (it lived on Today's next job, D-135) */
+  function cant() { const id = j!.id, go = menu.go!; to(() => go('cant', id)); }
   function edit() { const id = j!.id, go = menu.go!; to(() => go('rhythms', id)); }
   function place(day: string) {
     const id = j!.id;
@@ -44,6 +46,7 @@
     <p class="name">{j.name}</p>
     <button class="item" disabled={!!v.run || finished} onclick={delve}>{t('menu.delve')}</button>
     {#if !v.done.has(j.id) && !finished}<button class="item" disabled={!!v.run} onclick={tick}>{t('tick.off')}</button>{/if}
+    {#if !v.done.has(j.id) && !finished}<button class="item" disabled={!!v.run} onclick={cant}>{t('today.cantStart')}</button>{/if}
     <button class="item" onclick={edit}>{t('menu.edit')}</button>
     {#if !finished && !menu.on}<button class="item" aria-expanded={placing} onclick={() => { if (!settling()) placing = !placing; }}>{t('satchel.day')}</button>{/if}
     {#if placing}<div class="cal"><DayPick from={v.day} label={t('satchel.day')} pick={place} /></div>{/if}

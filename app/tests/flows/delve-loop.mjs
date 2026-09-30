@@ -12,8 +12,8 @@ const errors = [];
 page.on('pageerror', e => errors.push(e.message));
 await page.clock.install({ time: new Date('2026-09-30T09:00:00+01:00') });
 await page.goto(url);
-for (let k = 0; k < 40 && !(await page.locator('.foot .add, button.btn').count()); k++) { await page.waitForTimeout(250); await page.clock.runFor(250); }
-for (let k = 0; k < 8 && !(await page.locator('.foot .add').count()); k++) { await page.locator('button.btn').first().click(); await page.clock.runFor(1500); }
+for (let k = 0; k < 40 && !(await page.locator('nav.foot, button.btn').count()); k++) { await page.waitForTimeout(250); await page.clock.runFor(250); }
+for (let k = 0; k < 8 && !(await page.locator('nav.foot').count()); k++) { await page.locator('button.btn').first().click(); await page.clock.runFor(1500); }
 const fails = [];
 const ff = async (ms) => { const n = await page.evaluate(() => Date.now()); await page.clock.setSystemTime(n + ms); await page.clock.runFor(500); await page.waitForTimeout(200); await page.clock.runFor(250); };
 const hide = async (on) => { await page.evaluate(on => { Object.defineProperty(document, 'hidden', { get: () => on, configurable: true }); document.dispatchEvent(new Event('visibilitychange')); }, on); await page.clock.runFor(300); };
@@ -27,7 +27,7 @@ const tap = async (loc, what) => {
   await page.touchscreen.tap(r.x + r.width / 2, r.y + r.height / 2); await page.clock.runFor(1200); return true;
 };
 const btn = (name) => page.getByRole('button', { name, exact: true });
-const screen = async () => (await page.locator('.dv').count()) ? 'delve' : (await page.locator('.rs').count()) ? 'set' : (await page.locator('.route').count()) ? 'step' : (await page.locator('.foot .add').count()) ? 'today' : '?';
+const screen = async () => (await page.locator('.dv').count()) ? 'delve' : (await page.locator('.rs').count()) ? 'set' : (await page.locator('.route').count()) ? 'step' : (await page.locator('.today-add').count()) ? 'today' : '?';
 const expectOn = async (want, when) => { const s = await screen(); if (s !== want) fails.push(`${when}: on ${s}, not ${want}`); return s === want; };
 const has = async (name, when) => { if (!(await btn(name).count())) fails.push(`${when}: no "${name}"`); };
 /* back to Today, past whatever the day brings first (a place reached, the stair) */
@@ -39,7 +39,7 @@ const toToday = async () => {
 };
 
 /* 1. the next job's delve; another app; Carry on; Today; another app from Today; Carry on there; Finish here straight */
-await tap(page.locator('.next button.btn'), 'Delve');
+await tap(page.locator('.rows button.row:not(.done)').first(), 'Delve');
 if (await page.locator('.rs').count()) await tap(btn('Begin'), 'Begin on the set-up');
 await expectOn('delve', 'after Delve');
 await ff(3 * 60_000); await away(60_000);
@@ -60,7 +60,7 @@ await tap(btn('It’s done'), 'It’s done on Today'); await expectOn('step', 'I
 await toToday();
 
 /* 3. a job added with "+ Add": a delve on today; delved on, "Is it done?" → Done (D-117) */
-await tap(page.locator('.foot .add'), '+ Add'); await page.keyboard.type('Letters'); await page.keyboard.press('Enter'); await page.clock.runFor(800);
+await tap(page.locator('.today-add'), '+ Add'); await page.keyboard.type('Letters'); await page.keyboard.press('Enter'); await page.clock.runFor(800);
 await tap(page.locator('.rows button.row', { hasText: 'Letters' }), 'the Letters row');
 if (await page.locator('.rs').count()) await tap(btn('Begin'), 'Begin on the set-up');
 await expectOn('delve', 'a tap on Letters');
@@ -71,7 +71,7 @@ await toToday();
 if (!/done/i.test(await page.locator('.rows button.row', { hasText: 'Letters' }).first().innerText().catch(() => ''))) fails.push('Letters, said done, is not done on Today');
 
 /* 4. a job named in "Something else…": delved on, "Not yet", then It's done from its row on Today */
-await tap(page.locator('.rows button.row.else'), 'Something else…');
+await tap(page.locator('.today-add'), 'Something else…');
 await page.locator('form.new input').fill('Bills'); await tap(page.locator('form.new button'), 'Delve on it');
 if (await page.locator('.rs').count()) await tap(btn('Begin'), 'Begin'); await expectOn('delve', 'delving on Bills');
 await ff(4 * 60_000);
@@ -85,7 +85,7 @@ const double = async (loc, what) => { const r = await loc.first().boundingBox().
   /* a real double tap: the second straight after the first, as a finger does it */
   for (let i = 0; i < 2; i++) await page.touchscreen.tap(r.x + r.width / 2, r.y + r.height / 2);
   await page.clock.runFor(1200); };
-const choose = async (name) => { await tap(page.locator('.rows button.row.else, .after .btn-quiet'), 'Something else… or Keep going'); await tap(page.locator('.ui button:not(.sr)').filter({ hasText: name }), name + ' in the Satchel'); };
+const choose = async (name) => { await tap(page.locator('.today-add, .after .btn-quiet'), 'Something else… or Keep going'); await tap(page.locator('.ui button:not(.sr)').filter({ hasText: name }), name + ' in the Satchel'); };
 await choose('Course');
 await double(btn('Begin'), 'Begin');
 if (!(await btn('Pause').count())) fails.push('Begin tapped twice did not leave the delve running');

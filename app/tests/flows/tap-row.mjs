@@ -6,22 +6,21 @@ const page = await b.newPage({ viewport: { width: 440, height: 956 }, timezoneId
 await page.clock.install({ time: new Date('2026-09-30T09:00:00+01:00') });
 await page.goto(process.argv[2]); await page.clock.runFor(2500);
 const fails = [];
-const names = async () => page.locator('.rows button.row:not(.else) .t').allTextContents();
-const nextName = async () => (await page.locator('.next h2').first().textContent())?.split(' · ')[0].trim();
+const names = async () => page.locator('.rows button.row .t').allTextContents();
 /* Today's list fades in: it is read only once its rows are drawn (read too early, it came back empty, 2026-09-26) */
-const drawn = async () => { await page.locator('.rows button.row:not(.else) .t').first().waitFor(); await page.locator('.next h2').first().waitFor(); };
+const drawn = async () => { await page.locator('.rows button.row .t').first().waitFor(); };
 /* every job is a delve (D-117): a tap on a row opens that job's own set-up or delve, never another's */
 {
   await drawn();
   const rows = await names();
   /* a row still to do shows its minutes, or nothing (D-130: no "a delve" on every row); a done row says "done" */
-  const notes = await page.locator('.rows button.row:not(.else) .s').allTextContents();
+  const notes = await page.locator('.rows button.row .s').allTextContents();
   const k = notes.findIndex(n => !/done/i.test(n));
   if (notes.some(n => /delve/i.test(n))) fails.push('a row still says "a delve"');
   if (k < 0) fails.push('no row still to do on Today');
   else {
     const name = rows[k];
-    await page.locator('.rows button.row:not(.else)').nth(k).click(); await page.clock.runFor(1200);
+    await page.locator('.rows button.row').nth(k).click(); await page.clock.runFor(1200);
     const onSet = await page.locator('.rs').count(), onDelve = await page.locator('.dv').count();
     const shown = await page.locator('main, body').first().textContent();
     if (!onSet && !onDelve) fails.push(`a tap on ${name} opened neither its delve nor its set-up`);
