@@ -89,6 +89,8 @@ export type FactBody =
   | { type: 'errandStruck'; run: number; job: string }
   /** An errand's share of its run's minutes (D-139): the job's own count, never the road's (the run moved Dan once) */
   | { type: 'errandShare'; run: number; job: string; minutes: number }
+  /** An errand run's errands counted, at its end, once Dan has struck off what got done (D-139) */
+  | { type: 'errandsCounted'; run: number }
   | { type: 'breatherSkipped' }
   /** Paused: by hand (Pause), or by going into another app (why 'away', D-094), stamped when Dan left. */
   | { type: 'delveHeld'; why?: 'away' }

@@ -25,6 +25,7 @@ const ONE: { [T in FactBody['type']]: Extract<FactBody, { type: T }> } = {
   delveStarted: { type: 'delveStarted', job: 'a', minutes: 25, count: 3 },
   errandStruck: { type: 'errandStruck', run: 4, job: 'a' },
   errandShare: { type: 'errandShare', run: 4, job: 'a', minutes: 12 },
+  errandsCounted: { type: 'errandsCounted', run: 4 },
   breatherSkipped: { type: 'breatherSkipped' },
   delveHeld: { type: 'delveHeld', why: 'away' },
   delveResumed: { type: 'delveResumed' },

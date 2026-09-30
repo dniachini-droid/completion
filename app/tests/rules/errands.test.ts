@@ -63,6 +63,11 @@ describe('The errand run (D-139)', () => {
   it('Finish here: the road moves once by the run\'s minutes; each errand struck off is done with its share (the remainder to the first) and brings its story moment', () => {
     const p = errands().do({ do: 'startErrands', jobs: ['it-1', 'it-2', 'it-3'], minutes: 30, count: 1 }).wait(10)
       .do({ do: 'strikeErrand', job: 'it-2' }).wait(15).do({ do: 'strikeErrand', job: 'it-1' }).do({ do: 'finishHere' });
+    /* the end waits for "Count them", with the strikes as they stand */
+    expect(p.view().runEnd!.pending).toBe(true);
+    expect(dones(p.facts, 'it-1')).toEqual([]);
+    p.do({ do: 'countErrands' });
+    expect(p.view().runEnd!.pending).toBe(false);
     expect(road(p.facts)).toBe(25);
     const [bank, post] = [dones(p.facts, 'it-1'), dones(p.facts, 'it-2')];
     expect(bank.map(d => d.minutes)).toEqual([13]);
@@ -84,7 +89,7 @@ describe('The errand run (D-139)', () => {
 
   it('a run that runs out ends the same way, with nothing counted twice', () => {
     const p = errands().do({ do: 'startErrands', jobs: ['it-1', 'it-2'], minutes: 15, count: 2 }).wait(3)
-      .do({ do: 'strikeErrand', job: 'it-1' }).do({ do: 'strikeErrand', job: 'it-2' }).wait(40);
+      .do({ do: 'strikeErrand', job: 'it-1' }).do({ do: 'strikeErrand', job: 'it-2' }).wait(40).do({ do: 'countErrands' });
     expect(p.view().run).toBeNull();
     expect(road(p.facts)).toBe(30);
     expect(dones(p.facts, 'it-1').map(d => d.minutes)).toEqual([15]);
@@ -117,7 +122,7 @@ describe('The errand run (D-139)', () => {
   it('a repeating job struck off is that day\'s session with its share; unstruck, it is not', () => {
     const p = player().do({ do: 'open' }).do({ do: 'addItems', lines: ['Bank'] })
       .do({ do: 'startErrands', jobs: ['gym', 'it-1', 'meal'], minutes: 60, count: 1 }).wait(40)
-      .do({ do: 'strikeErrand', job: 'gym' }).do({ do: 'strikeErrand', job: 'it-1' }).do({ do: 'finishHere' });
+      .do({ do: 'strikeErrand', job: 'gym' }).do({ do: 'strikeErrand', job: 'it-1' }).do({ do: 'finishHere' }).leave();
     expect(dones(p.facts, 'gym').map(d => d.minutes)).toEqual([20]);
     expect(dones(p.facts, 'meal')).toEqual([]);
     expect(road(p.facts)).toBe(40);
@@ -132,7 +137,7 @@ describe('The errand run (D-139)', () => {
 
   it('a few minutes shared among many is done, but brings no story moment (rule 10)', () => {
     const p = errands().do({ do: 'startErrands', jobs: ['it-1', 'it-2', 'it-3'], minutes: 30, count: 1 }).wait(6)
-      .do({ do: 'strikeErrand', job: 'it-1' }).do({ do: 'strikeErrand', job: 'it-2' }).do({ do: 'strikeErrand', job: 'it-3' }).do({ do: 'finishHere' });
+      .do({ do: 'strikeErrand', job: 'it-1' }).do({ do: 'strikeErrand', job: 'it-2' }).do({ do: 'strikeErrand', job: 'it-3' }).do({ do: 'finishHere' }).do({ do: 'countErrands' });
     const d = ['it-1', 'it-2', 'it-3'].map(id => dones(p.facts, id)[0]);
     expect(d.map(x => x.minutes)).toEqual([2, 2, 2]);
     expect(d.some(x => returned(p.facts, x.seq))).toBe(false);
@@ -140,12 +145,9 @@ describe('The errand run (D-139)', () => {
   });
 
   it('"Not done after all" on an errand, done again: its return is never paid twice, its minutes never counted twice', () => {
-    const p = errands().do({ do: 'startErrands', jobs: ['it-1', 'it-2'], minutes: 30, count: 1 }).wait(30)
-      .do({ do: 'strikeErrand', job: 'it-1' });
-    /* struck after the run ran out: too late, the run is over */
-    expect(p.view().run).toBeNull();
     const q = errands().do({ do: 'startErrands', jobs: ['it-1', 'it-2'], minutes: 30, count: 1 }).wait(10)
       .do({ do: 'strikeErrand', job: 'it-1' }).do({ do: 'strikeErrand', job: 'it-2' }).wait(20).leave();
+    expect(q.view().runEnd).toBeNull();
     const first = dones(q.facts, 'it-1')[0];
     expect(first.minutes).toBe(15);
     q.do({ do: 'notDone', job: 'it-1' }).do({ do: 'tickOff', job: 'it-1', minutes: 0 });
@@ -159,7 +161,7 @@ describe('The errand run (D-139)', () => {
     const p = player('2026-09-24T03:40:00+01:00').do({ do: 'open' }).do({ do: 'addItems', lines: ['Bank', 'Post office'] });
     const day = p.view().day;
     p.do({ do: 'startErrands', jobs: ['it-1', 'it-2'], minutes: 45, count: 1 }).wait(10).do({ do: 'strikeErrand', job: 'it-1' })
-      .wait(30).do({ do: 'finishHere' });
+      .wait(30).do({ do: 'finishHere' }).do({ do: 'countErrands' });
     expect(p.view().day).not.toBe(day);
     expect(dones(p.facts, 'it-1').map(d => [d.day, d.minutes])).toEqual([[day, 40]]);
     expect(road(p.facts)).toBe(40);
@@ -167,7 +169,7 @@ describe('The errand run (D-139)', () => {
 
   it('left paused past three hours, it ends where it was paused, with the errands struck so far', () => {
     const p = errands().do({ do: 'startErrands', jobs: ['it-1', 'it-2'], minutes: 30, count: 1 }).wait(12)
-      .do({ do: 'strikeErrand', job: 'it-2' }).do({ do: 'stepAway' }).wait(200);
+      .do({ do: 'strikeErrand', job: 'it-2' }).do({ do: 'stepAway' }).wait(200).do({ do: 'open' });
     expect(p.view().run).toBeNull();
     expect(dones(p.facts, 'it-2').map(d => d.minutes)).toEqual([12]);
     expect(road(p.facts)).toBe(12);
@@ -175,7 +177,7 @@ describe('The errand run (D-139)', () => {
 
   it('a one-off struck off leaves a later day it was put on', () => {
     const p = errands().do({ do: 'putOnDay', job: 'it-1', day: '2026-09-28' });
-    p.do({ do: 'startErrands', jobs: ['it-1', 'it-2'], minutes: 30, count: 1 }).wait(20).do({ do: 'strikeErrand', job: 'it-1' }).do({ do: 'finishHere' });
+    p.do({ do: 'startErrands', jobs: ['it-1', 'it-2'], minutes: 30, count: 1 }).wait(20).do({ do: 'strikeErrand', job: 'it-1' }).do({ do: 'finishHere' }).do({ do: 'countErrands' });
     expect(p.facts.some(f => f.type === 'planChanged' && f.day === null)).toBe(true);
   });
 
@@ -190,6 +192,51 @@ describe('The errand run (D-139)', () => {
     expect(ids.filter(id => recurringOff.includes(id))).toEqual([]);
     p.do({ do: 'tickOff', job: 'it-2', minutes: 15 });
     expect(errandChoices(C, p.facts, p.at)).not.toContain('it-2');
+  });
+
+  it('the run ran out while Dan was still out: its end takes strikes, then counts them once', () => {
+    const p = errands().do({ do: 'startErrands', jobs: ['it-1', 'it-2', 'it-3'], minutes: 30, count: 1 }).wait(10)
+      .do({ do: 'strikeErrand', job: 'it-1' }).wait(45);
+    expect(p.view().run).toBeNull();
+    expect(p.view().runEnd!.errands!.map(e => e.struck)).toEqual([true, false, false]);
+    p.do({ do: 'strikeErrand', job: 'it-3' }).do({ do: 'countErrands' });
+    expect(dones(p.facts, 'it-1').map(d => d.minutes)).toEqual([15]);
+    expect(dones(p.facts, 'it-3').map(d => d.minutes)).toEqual([15]);
+    expect(dones(p.facts, 'it-2')).toEqual([]);
+    /* counted once: no strike after it, and nothing written twice */
+    const n = p.facts.length;
+    p.do({ do: 'strikeErrand', job: 'it-2' }).do({ do: 'countErrands' });
+    expect(p.facts).toHaveLength(n);
+    expect(road(p.facts)).toBe(30);
+  });
+
+  it('left without "Count them" (any other tap, the next opening), it is counted as struck', () => {
+    const p = errands().do({ do: 'startErrands', jobs: ['it-1', 'it-2'], minutes: 30, count: 1 }).wait(10)
+      .do({ do: 'strikeErrand', job: 'it-2' }).do({ do: 'finishHere' }).sleep(24 * 60).do({ do: 'open' });
+    expect(dones(p.facts, 'it-2').map(d => [d.minutes, d.day])).toEqual([[10, '2026-09-24']]);
+  });
+
+  it('a run of no minutes marks nothing done, whatever was struck (rule 10, review)', () => {
+    const p = player().do({ do: 'open' });
+    const before = p.view().complete;
+    p.do({ do: 'startErrands', jobs: ['gym', 'course', 'cat'], minutes: 30, count: 1 })
+      .do({ do: 'strikeErrand', job: 'gym' }).do({ do: 'strikeErrand', job: 'course' }).do({ do: 'strikeErrand', job: 'cat' })
+      .do({ do: 'finishHere' }).do({ do: 'countErrands' });
+    expect(p.facts.filter(f => f.type === 'jobDone')).toEqual([]);
+    expect(p.view().complete).toBe(before);
+    /* one minute among three: only the first has a minute of it */
+    const q = player().do({ do: 'open' }).do({ do: 'startErrands', jobs: ['gym', 'course', 'cat'], minutes: 30, count: 1 }).wait(1)
+      .do({ do: 'strikeErrand', job: 'gym' }).do({ do: 'strikeErrand', job: 'course' }).do({ do: 'strikeErrand', job: 'cat' })
+      .do({ do: 'finishHere' }).do({ do: 'countErrands' });
+    expect(q.facts.filter((f): f is FactOf<'jobDone'> => f.type === 'jobDone').map(f => [f.job, f.minutes])).toEqual([['gym', 1]]);
+  });
+
+  it('a Satchel line can\'t be ticked done by another way while its run is under way', () => {
+    const p = errands().do({ do: 'putOnDay', job: 'it-1', day: '2026-09-24' })
+      .do({ do: 'startErrands', jobs: ['it-1', 'it-2'], minutes: 30, count: 1 }).wait(5);
+    const n = p.facts.length;
+    p.do({ do: 'tick', id: 'it-1' });
+    expect(p.facts).toHaveLength(n);
   });
 
   it('a plain delve is as before: it asks "Is it done?" and is no errand run', () => {

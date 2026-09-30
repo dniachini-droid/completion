@@ -1,6 +1,7 @@
 // The errand run (Dan, D-139): three jobs saved in the Satchel (Bank, Post office, Chemist); the Satchel's "Errand run"
 // opens the pick list; all three ticked → "Start the run" → the usual set-up titled "Errand run" → Begin; in the delve the
-// errands are a list struck off with a tap (Bank, Post office); 20 minutes in, Finish here: the end names the run's 20
+// errands are a list struck off with a tap (Bank); 20 minutes in, Finish here: "What got done?" (Post office struck there),
+// "Count them": the end names the run's 20
 // minutes, Bank and Post office done with 10 each, Chemist still to do, and the ring counts 20 (the road moved once).
 // Bank and Post office are done on Today; Chemist waits in the Satchel. Today's own "Errand run" link opens the pick list.
 // Nothing slides sideways. SHOTS=<dir> saves pictures. Usage: node tests/flows/errand.mjs http://localhost:4173/ [width height]
@@ -64,14 +65,20 @@ await tap(btn('Begin'), 'Begin');
 if (!(await page.locator('.dv h2', { hasText: 'Errand run' }).count())) fails.push('the delve is not titled "Errand run"');
 await tap(btn('Bank'), 'Bank in the delve');
 await tap(btn('Chemist'), 'Chemist in the delve');
-await tap(btn('Chemist: struck off'), 'Chemist struck off, tapped back');
-await tap(btn('Post office'), 'Post office in the delve');
+await tap(btn('Chemist'), 'Chemist struck off, tapped back');
+if (await page.locator('.list button.struck', { hasText: 'Chemist' }).count()) fails.push('Chemist, tapped back, is still struck off');
 const struck = await page.locator('.list button.struck').count();
-if (struck !== 2) fails.push(`${struck} errands struck off, not 2`);
+if (struck !== 1) fails.push(`${struck} errands struck off, not 1`);
 await flat('the delve');
 await shot('3-delve');
 await ff(20 * 60_000 + 20_000);
 await tap(btn('Finish here'), 'Finish here');
+
+/* 5a. the end asks what got done (the run may have run out while Dan was still out): Post office struck off here */
+if (!(await page.getByText('What got done?').count())) fails.push('the end does not ask "What got done?"');
+await tap(btn('Post office'), 'Post office on the end');
+await shot('4a-ask');
+await tap(btn('Count them'), 'Count them');
 
 /* 5. the end: the run's minutes, each errand with its share, the ring counting the run's 20 minutes */
 await page.waitForTimeout(3600); await page.clock.runFor(3600);

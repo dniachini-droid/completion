@@ -58,7 +58,22 @@ function activeRun(facts: Fact[]) {
   return { fact: f, plan, marks, rewarded, struck };
 }
 /** Whether a job is the delve under way's, or one of its errands (D-139): its end still has to be counted. */
-const inRun = (facts: Fact[], job: string) => { const r = activeRun(facts); return !!r && (r.fact.job === job || !!r.fact.errands?.includes(job)); };
+/** An errand run that has ended but whose errands are not yet counted (D-139): its end screen still takes strikes (the
+    run may have run out while Dan was still out), until "Count them", or until he leaves it or does anything else. */
+function pendingErrands(facts: Fact[]) {
+  let end: FactOf<'delveEnded'> | undefined;
+  for (let i = facts.length - 1; i >= 0; i--) { const f = facts[i]; if (f.type === 'delveEnded') { end = f; break; } if (f.type === 'delveStarted') return null; }
+  if (!end) return null;
+  const e = end, fact = facts.find(f => f.seq === e.run) as FactOf<'delveStarted'> | undefined;
+  if (!fact?.errands || facts.some(f => f.type === 'errandsCounted' && f.run === fact.seq)) return null;
+  const struck = new Set<string>();
+  for (const g of facts) if (g.type === 'errandStruck' && g.run === fact.seq) { if (struck.has(g.job)) struck.delete(g.job); else struck.add(g.job); }
+  return { fact, struck, end: e };
+}
+const inRun = (facts: Fact[], job: string) => {
+  const r = activeRun(facts) ?? pendingErrands(facts);
+  return !!r && (r.fact.job === job || !!r.fact.errands?.includes(job));
+};
 
 function capacityOn(facts: Fact[], day: string): Capacity {
   const c = ofType(onDay(facts, day), 'capacityChosen');
@@ -585,7 +600,8 @@ function finishRun(w: W, c: Content, r: NonNullable<ReturnType<typeof activeRun>
   }
   w.put({ type: 'delveEnded', job: j.id, minutes: counted, how: 'finishedHere', run: r.fact.seq }, at, rday);
   clearStruck(w, c, j.id, at, rday);
-  if (r.fact.errands) errandsEnd(w, c, r, counted, at, rday);
+  /* an errand run's errands are counted once Dan has struck off what got done, on its end (D-139) */
+  if (r.fact.errands) gifts(w, c, at, rday);
   else if (sessionEnds(w.all, rday, j, counted)) markDoneIn(w, c, j.id, at, rday);
   else gifts(w, c, at, rday);
   /* a place reached on this delve starts a new stretch, whose halfway may already be behind Dan (an arrival held for
@@ -597,17 +613,22 @@ function finishRun(w: W, c: Content, r: NonNullable<ReturnType<typeof activeRun>
     once as that job's own minutes, and brings its story moment, paid once (D-121, D-133, D-134). The errands not struck
     off stay as they were; the minutes went to those done. With none struck off, the minutes are shared among the errands,
     kept as each job's own: a one-off carries its share into its next delve or tick (D-133), so nothing is lost. */
-function errandsEnd(w: W, c: Content, r: NonNullable<ReturnType<typeof activeRun>>, minutes: number, at: Moment, day: string) {
+function errandsEnd(w: W, c: Content, r: NonNullable<ReturnType<typeof pendingErrands>>, at: Moment) {
+  const day = r.end.day, minutes = r.end.minutes;
+  w.put({ type: 'errandsCounted', run: r.fact.seq }, at, day);
   const open = (r.fact.errands ?? []).filter(id => c.jobs.some(j => j.id === id) && !doneOn(w.all, day).has(id)
     && (c.rhythms.some(x => x.job === id) || !W.oneOffDone(c, w.all).some(f => f.job === id)));
   const struck = open.filter(id => r.struck.has(id)), to = struck.length ? struck : open;
   if (!to.length) return;
-  const each = Math.floor(minutes / to.length);
+  const each = Math.floor(minutes / to.length), share = new Map<string, number>();
   to.forEach((id, k) => {
     const m = each + (k === 0 ? minutes - each * to.length : 0);
+    share.set(id, m);
     if (m > 0) w.put({ type: 'errandShare', run: r.fact.seq, job: id, minutes: m }, at, day);
   });
-  for (const id of struck) {
+  /* an errand is done by the run only with a whole minute of it: a strike in a run of no minutes (or a minute shared
+     among many) marks nothing done (rule 10; review of D-139). It stays as it was. */
+  for (const id of struck.filter(x => (share.get(x) ?? 0) > 0)) {
     if (!begunOn(w.all, day, id)) w.put({ type: 'jobBegun', job: id, from: 'record' }, at, day);
     /* a one-off done today is today's: it leaves a later day it was put on, as a tick does (D-134) */
     if (!c.rhythms.some(x => x.job === id)) for (const e of laterDays(w.all, day).get(id) ?? []) w.put({ type: 'planChanged', entry: e, day: null }, at, day);
@@ -693,7 +714,7 @@ function settleIn(w: W, c: Content, nowMs: number) {
     const at = momentOf(s.endedAt!, w.off), minutes = Math.round(s.countedMs / MIN);
     w.put({ type: 'delveEnded', job: j.id, minutes, how: 'ranOut', run: r.fact.seq }, at, day);
     clearStruck(w, c, j.id, at, day);
-    if (r.fact.errands) errandsEnd(w, c, r, minutes, at, day);
+    if (r.fact.errands) gifts(w, c, at, day);
     /* a repeating job's run is its session, at the run's end (D-121) */
     else if (sessionEnds(w.all, day, j, minutes)) markDoneIn(w, c, j.id, at, day);
   }
@@ -793,6 +814,8 @@ export type Command =
   /** An errand run (D-139): one delve over several jobs, each struck off as it is done */
   | { do: 'startErrands'; jobs: string[]; minutes: number; count: number }
   | { do: 'strikeErrand'; job: string }
+  /** "Count them": the errand run's end counted as struck off (any other command counts it too) */
+  | { do: 'countErrands' }
   | { do: 'skipBreather' }
   | { do: 'stepAway' }
   | { do: 'resume' }
@@ -875,6 +898,8 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
   /* before anything the clock made due: the time away must not have counted */
   if (cmd.do === 'away') { settleIn(w, c, Math.min(cmd.from, nowMs)); pauseAway(w, cmd.from, Math.min(cmd.to, nowMs)); }   /* what was due before he left first, in time order (D-120) */
   settleIn(w, c, nowMs);
+  /* an errand run's end not yet counted is counted before anything else Dan does, except striking on it (D-139) */
+  if (cmd.do !== 'strikeErrand' && cmd.do !== 'away') { const p = pendingErrands(w.all); if (p) errandsEnd(w, c, p, now); }
   const day = gameDay(now), v = see(w.all, c, now);
   switch (cmd.do) {
     case 'open': {
@@ -948,11 +973,12 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       break;
     }
     case 'strikeErrand': {
-      /* in its own run only, running or paused: a strike never outlives it */
-      const r = activeRun(w.all);
+      /* in its own run, running or paused, or on its end before it is counted: a strike never outlives it */
+      const r = activeRun(w.all) ?? pendingErrands(w.all);
       if (r?.fact.errands?.includes(cmd.job)) w.put({ type: 'errandStruck', run: r.fact.seq, job: cmd.job });
       break;
     }
+    case 'countErrands': break;   /* counted above */
     case 'skipBreather': if (v.run?.phase === 'breather') w.put({ type: 'breatherSkipped' }); break;
     case 'stepAway': if (v.run?.phase === 'delve') w.put({ type: 'delveHeld' }); break;
     case 'resume': if (v.run?.phase === 'held') w.put({ type: 'delveResumed' }); break;
@@ -1088,7 +1114,7 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     }
     case 'tick': {
       const it = W.items(w.all, day).find(x => x.id === cmd.id);
-      if (!it || it.done) break;
+      if (!it || it.done || inRun(w.all, cmd.id)) break;
       /* a line moves the expedition only as one of today's main jobs (TOOLS §2, P5); otherwise ticking just feels good */
       if (v.slate.includes(cmd.id)) {
         endRunOn(w, c, cmd.id, nowMs, now);
@@ -1267,7 +1293,9 @@ export interface RunEnd {
   completedDay: boolean;
   count: number;
   /** An errand run's errands (D-139): each one's share of the minutes, and its done record if it was struck off. */
-  errands: { job: Job; minutes: number; done: number | null }[] | null;
+  errands: { job: Job; minutes: number; done: number | null; struck: boolean }[] | null;
+  /** An errand run's errands not yet counted: its end still takes strikes, then "Count them" (D-139). */
+  pending: boolean;
 }
 export interface Arrival {
   seq: number; kind: 'place' | 'camp'; id: string; name: string; line: string;
@@ -1609,12 +1637,13 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
     /* where Dan stood when it ended: a night's head start after it never moves the count's start */
     const at = ofType(facts, 'stepsGained').filter(f => f.seq < last.seq).reduce((a, f) => a + f.minutes, 0);
     /* an errand run asks nothing: its errands struck off are done at its end (D-139) */
-    const errands = start?.errands ? start.errands.map(id => ({ job: jobOf(c, id),
+    const pend = pendingErrands(facts);
+    const errands = start?.errands ? start.errands.map(id => ({ job: jobOf(c, id), struck: !!pend?.struck.has(id),
       minutes: ofType(facts, 'errandShare').filter(f => f.run === last.run && f.job === id).reduce((a, f) => a + f.minutes, 0),
       done: ofType(facts, 'jobDone').find(f => f.errand === last.run && f.job === id)?.seq ?? null })) : null;
     runEnd = { seq: last.seq, job: j, minutes: last.minutes, how: last.how, carried, total: carried + last.minutes, gained, walked: at,
       ask: !errands && j.doneBy === 'dan' && !doneOn(facts, last.day).has(j.id) && !doneFact,
-      enough: j.doneBy === 'enough' && !!doneFact, completedDay, count: start?.count ?? 1, errands };
+      enough: j.doneBy === 'enough' && !!doneFact, completedDay, count: start?.count ?? 1, errands, pending: !!pend };
     /* a side chamber is found at the delve's end, and can come just after it, once a place it reached starts a new stretch */
     /* (a chamber a tick reached since is the tick's, shown on its step screen, D-134) */
     const ticks = ofType(facts, 'stepsGained').filter(g => g.tick && g.seq > last.run);

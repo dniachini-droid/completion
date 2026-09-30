@@ -51,7 +51,7 @@
   const share = (m: number) => Math.max(0, Math.min(1, (m - road.from) / Math.max(1, road.to - road.from)));
   const toW = $derived(end ? end.walked : v.walked);
   const fromW = $derived(end ? Math.max(0, end.walked - end.gained) : v.walked);
-  const mode = $derived<TallyMode>(!end ? 'still' : end.ask && answer === null ? 'from' : answer === 'no' ? 'still' : 'play');
+  const mode = $derived<TallyMode>(!end ? 'still' : (end.ask && answer === null) || end.pending ? 'from' : answer === 'no' ? 'still' : 'play');
 
   /* the ring settles after an end: lit, then resting */
   $effect(() => {
@@ -95,14 +95,18 @@
   function strike(id: string, k: number) { steady(); game.do({ do: 'strikeLine', job: id, k }); }
 </script>
 
+{#snippet errandList(es: { job: { id: string; name: string }; struck: boolean }[])}
+  <ul class="list" aria-label={t('errand.list')}>
+    {#each es as e (e.job.id)}
+      <li><button class:struck={e.struck} aria-pressed={e.struck} onclick={() => strikeErrand(e.job.id)}><span class="tick" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M4.5 8.3 7 10.7l4.6-5.2" /></svg></span><span class="l">{e.job.name}</span></button></li>
+    {/each}
+  </ul>
+{/snippet}
+
 {#snippet theList(id: string)}
   {#if run?.errands}
     <!-- the errand run (D-139): its errands, struck off one by one as each is done -->
-    <ul class="list" aria-label={t('errand.list')}>
-      {#each run.errands as e (e.job.id)}
-        <li><button class:struck={e.struck} aria-pressed={e.struck} aria-label={e.struck ? t('errand.strikeSr', { job: e.job.name }) : e.job.name} onclick={() => strikeErrand(e.job.id)}><span class="tick" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M4.5 8.3 7 10.7l4.6-5.2" /></svg></span><span class="l">{e.job.name}</span></button></li>
-      {/each}
-    </ul>
+    {@render errandList(run.errands)}
   {:else if lines(id).length}
     <ul class="list" aria-label={t('delve.list')}>
       {#each lines(id) as l, k (k)}
@@ -183,12 +187,22 @@
             <button class="btn resting" onclick={yes}>{t('delve.yes')}</button>
             <button class="btn-quiet" onclick={() => { steady(); answer = 'no'; unslide(); }}><span>{t('delve.notYet')}</span></button>
           </div>
+        {:else if end.errands && end.pending}
+          <!-- the run ended (it may have run out while Dan was still out): what got done is struck off here, then counted
+               once (D-139) -->
+          <div class="scroll">
+            <div class="label-line centred">{t('errand.title')}</div>
+            <h2 class="m">{t('errand.ask')}</h2>
+            <p class="say">{t('errand.askSay')}</p>
+            {@render errandList(end.errands)}
+          </div>
+          <button class="btn resting" onclick={() => { steady(); game.do({ do: 'countErrands' }); unslide(); }}>{t('errand.count')}</button>
         {:else if end.errands}
           <!-- the errand run's end (D-139): the run's minutes, each errand struck off done with its share, then each one's
                story moment in turn; the ones left stay as they were -->
           <div class="scroll">
             <div class="label-line centred">{t('errand.title')}</div>
-            <h2 class="m">{t('errand.end', { min: minutesWords(end.minutes) })}</h2>
+            <h2 class="m">{end.minutes > 0 ? t('errand.end', { min: minutesWords(end.minutes) }) : t('errand.endNone')}</h2>
             <ul class="errs">
               {#each end.errands as e (e.job.id)}
                 <li class:done={e.done !== null}><span class="pip" class:done={e.done !== null}></span><span class="t">{e.job.name}</span><span class="s">{e.done !== null ? t('errand.doneRow', { min: minutesShort(e.minutes) }) : t('errand.leftRow')}</span></li>
@@ -202,7 +216,7 @@
                 <Return doneSeq={e.done} extraFinds={i === 0 ? v.runFinds : []} {go} />
               </div>
             {/each}
-            {#if !errandStory.length}<Return doneSeq={null} extraFinds={v.runFinds} />{/if}
+            {#if !errandStory.length}<p class="say">{v.passage}</p><Return doneSeq={null} extraFinds={v.runFinds} />{/if}
           </div>
           {#if end.completedDay || game.view.arrival}
             <button class="btn" onclick={() => leave('arrival')}>{t('delve.see')}</button>
@@ -244,7 +258,7 @@
 
 <style>
   /* the job's list, struck off a line at a time (D-126) */
-  .list { list-style: none; margin: 4px auto 10px; padding: 0; max-width: 320px; max-height: 26vh; overflow-y: auto; overflow-x: hidden; text-align: left; }
+  .list { list-style: none; margin: 4px auto 10px; padding: 0; width: 100%; max-width: 320px; max-height: 26vh; overflow-y: auto; overflow-x: hidden; text-align: left; }
   .list button { overflow-wrap: anywhere; }
   .list button { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 44px; padding: 4px 10px; text-align: left; background: none; border: 0;
     border-bottom: 1px solid rgba(255, 255, 255, .08); font-family: var(--life); font-size: 17px; color: #fff; cursor: pointer; }
