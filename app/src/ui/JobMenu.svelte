@@ -58,7 +58,7 @@
   <div class="scrim" role="presentation" onclick={() => { if (!settling()) closeMenu(); }}></div>
   <div class="menu" role="dialog" aria-modal="true" aria-label={j.name}>
     <p class="name">{j.name}</p>
-    <button class="item" disabled={!!v.run || finished} onclick={delve}>{v.done.has(j.id) && recurring ? t('menu.delveAgain') : t('menu.delve')}</button>
+    <button class="item" disabled={!!v.run || !!v.runEnd?.pending || finished} onclick={delve}>{v.done.has(j.id) && recurring ? t('menu.delveAgain') : t('menu.delve')}</button>
     {#if menu.on === v.day && v.done.has(j.id)}<button class="item" onclick={notDone}>{t('row.notDone')}</button>{/if}
     {#if !v.done.has(j.id) && !finished}<button class="item" disabled={!!v.run} onclick={tick}>{t('tick.off')}</button>{/if}
     {#if !v.done.has(j.id) && !finished}<button class="item" disabled={!!v.run} onclick={cant}>{t('today.cantStart')}</button>{/if}

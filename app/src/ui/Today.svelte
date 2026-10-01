@@ -75,7 +75,7 @@
      recurring job opens its menu too (Delve again, Not done after all, J11); a done one-off is finished */
   function start(id: string) {
     if (v.done.has(id)) { if (recurring(id)) openMenu(id, go, v.day, null, 'today'); return; }
-    if (v.run) { openMenu(id, go, null, null, 'today'); return; }
+    if (v.run || v.runEnd?.pending) { openMenu(id, go, null, null, 'today'); return; }
     begin(job(id));
   }
   function aside(id: string) { steady(); game.do({ do: 'setAside', job: id }); }
@@ -279,6 +279,14 @@
         <p class="soft">{t('today.running.say')}</p>
         <div class="lead"><button class="btn full" onclick={() => go('delve')}>{t('today.running.go')}</button></div>
         <div class="cant"><button class="text-link today-add" onclick={add}><span>{t('today.addJob')}</span></button></div>
+        <div class="gap"></div>
+      </div>
+    {:else if v.runEnd?.pending}
+      <!-- an errand run's "What got done?", left by the arrow: it waits here, never counted behind Dan's back (J1) -->
+      <div class="next">
+        <div class="label-line lit">{t('errand.title')}</div>
+        <h2 class="say-lg">{t('errand.waits')}</h2>
+        <div class="lead"><button class="btn full" onclick={() => go('delve')}>{t('errand.waitsGo')}</button></div>
         <div class="gap"></div>
       </div>
     {:else if !v.complete}

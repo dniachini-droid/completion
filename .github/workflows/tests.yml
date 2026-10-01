@@ -105,6 +105,9 @@ jobs:
       - name: 'Today after the flow review: Not today kept, menus during a delve, the hold hint, the avoided job named (D-143 C, E, G)'
         if: matrix.walk
         run: node tests/flows/today-flow.mjs http://localhost:4173/ ${{ matrix.size }}
+      - name: 'A delve''s end after the flow review: the errand question waits, where you stopped, minutes said, No more (J1, J3, J13, J14)'
+        if: matrix.walk
+        run: node tests/flows/delve-ends.mjs http://localhost:4173/ ${{ matrix.size }}
       - name: 'Keys and the Map: the link points where a Key can be used; back never loops; opened read again (D-143 A, B)'
         if: matrix.walk
         run: node tests/flows/keys-map.mjs http://localhost:4173/ ${{ matrix.size }}

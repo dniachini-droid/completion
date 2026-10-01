@@ -31,18 +31,18 @@
 - [x] 2.12 **Today's held card doesn't say "first of two delves"** (J18). Fix: add it, as the delve screen does.
 
 ## 3. Jobs: adding, delves, ends
-- [ ] 3.1 **Errand run: back on "What got done?" counts silently and loses the story** (J1). Fix: back leaves the question waiting (as "Is it done?" does); counting only by "Count them" or the next opening, and its story is then shown.
-- [ ] 3.2 **"Where did you stop?" never shows after Finish here → Not yet on a one-off** (J3). Fix: show it there.
+- [x] 3.1 **Errand run: back on "What got done?" counts silently and loses the story** (J1). Fix: back leaves the question waiting (as "Is it done?" does); counting only by "Count them" or the next opening, and its story is then shown.
+- [x] 3.2 **"Where did you stop?" never shows after Finish here → Not yet on a one-off** (J3). Fix: show it there.
 - [x] 3.3 **Duplicate jobs from the Week's +, Tonight's line and Siri** (J4). Fix: the same name check the Satchel box uses.
 - [x] 3.4 **"Delve now" on a remembered job skips the set-up** (J8). Fix: it opens the set-up (carry line, dial), like every other start.
-- [ ] 3.5 **"Is it done?" left by the arrow never says the minutes** (J10, J17). Fix: the question card says "N minutes on it".
-- [ ] 3.6 **Same-day "No more" / "It's done" replays the road and counts from 0** (J13). Fix: show the line still, at the job's total, with no replay.
-- [ ] 3.7 **"done for the day: 3 minutes"** (J14). Fix: under 5 minutes, "Counted: 3 minutes." without the congratulation.
+- [x] 3.5 **"Is it done?" left by the arrow never says the minutes** (J10, J17). Fix: the question card says "N minutes on it".
+- [x] 3.6 **Same-day "No more" / "It's done" replays the road and counts from 0** (J13). Fix: show the line still, at the job's total, with no replay.
+- [x] 3.7 **"done for the day: 3 minutes"** (J14). Fix: under 5 minutes, "Counted: 3 minutes." without the congratulation.
 - [x] 3.8 **The Satchel's box after "Add a job"** has no label or Return hint (J15). With D-143 C this box is Today's own; give it a label and "Return adds it".
 - [x] 3.9 **Satchel suggestions can't be dismissed** (J16). Fix: they hide on a tap outside; check 360 × 780.
-- [ ] 3.10 **Tick sheet: "No more" looks like a duration** (J20). Fix: set it apart (its own row).
-- [ ] 3.11 **The errand run's end is a wall** (L B5): summary, story, four guesses, two finds. Fix: one errand's story per screen with "Next", guesses after.
-- [ ] 3.12 **"1 minutes"** mid-count on the ring (L C6). Fix the grammar.
+- [x] 3.10 **Tick sheet: "No more" looks like a duration** (J20). Fix: set it apart (its own row).
+- [x] 3.11 **The errand run's end is a wall** (L B5): summary, story, four guesses, two finds. Fix: one errand's story per screen with "Next", guesses after.
+- [x] 3.12 **"1 minutes"** mid-count on the ring (L C6). Fix the grammar.
 
 ## 4. Getting around (back, exits, names)
 - [ ] 4.1 **A delve's end is lost after opening a link from it** (N bug 2; same on Morning / Welcome → a record). Fix: the end (and morning, welcome) is marked seen only when left for Today, not for a look.

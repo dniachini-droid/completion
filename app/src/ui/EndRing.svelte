@@ -4,6 +4,7 @@
      road line under it (EndRoad), by the same timing (tally.ts). Only transforms and opacity move: the arc is two halves
      of a ring turned into view, the number strips of digits moved in steps. It runs once, then rests (D-132). */
   import { eased, whenAt, once, reduced, TALLY_MS, TALLY_DELAY, type TallyMode } from './tally';
+  import { minutesWords } from '../content/copy/en';
 
   let { from, to, fromN, toN, unit, mode }: { from: number; to: number; fromN: number; toN: number; unit: string; mode: TallyMode } = $props();
 
@@ -66,7 +67,8 @@
 <div class="count" class:shown={mode !== 'from'}>
   <div class="num" aria-hidden="true">{#each Array(cols) as _, k (k)}<span class="digit"><span class="strip" bind:this={strips[k]}>{#each [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] as d}<span>{d}</span>{/each}<span>&nbsp;</span></span></span>{/each}</div>
   <div class="unit">{unit}</div>
-  <span class="sr">{toN} {unit}</span>
+  <!-- said in full words: the unit drawn under the count is short, so it never reads "1 minutes" mid-count (L C6) -->
+  <span class="sr">{minutesWords(toN)}</span>
 </div>
 
 <style>

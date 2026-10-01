@@ -36,8 +36,9 @@
     <p class="name">{j.name}</p>
     <h2>{t('tick.title')}</h2>
     {#if behind > 0}<p class="soft">{t('tick.onTop', { min: minutesWords(behind) })}</p>{/if}
+    <!-- "No more" is an answer, not a length of time: on its own row (J20) -->
+    {#if behind > 0}<button class="chip nomore" onclick={() => pick(0)}>{t('tick.noMore')}</button>{/if}
     <div class="grid">
-      {#if behind > 0}<button class="chip" onclick={() => pick(0)}>{t('tick.noMore')}</button>{/if}
       {#each TICK_CHOICES as m (m)}<button class="chip" onclick={() => pick(m)}>{label(m)}</button>{/each}
     </div>
     <button class="cancel" onclick={() => { if (!settling()) closeTick(); }}>{t('rhythms.cancel')}</button>
@@ -56,6 +57,7 @@
   .chip { min-height: 48px; font-family: var(--life); font-size: 17px; color: #fff; background: rgba(var(--violet-rgb), .16);
     border: 1px solid var(--edge-2); }
   .chip:active { background: rgba(var(--violet-rgb), .34); }
+  .chip.nomore { display: block; width: 100%; margin: 6px 0 0; font-style: italic; background: rgba(255, 255, 255, .06); }
   .cancel { display: block; width: 100%; min-height: 48px; margin-top: 4px; font-family: var(--life); font-size: 18px; color: var(--ink-2); border-top: 1px solid var(--edge-4); }
   @media (prefers-reduced-motion: reduce) { .sheet { animation: none; } }
 </style>
