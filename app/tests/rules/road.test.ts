@@ -110,6 +110,7 @@ describe('long days never hold a place back (Dan, D-129)', () => {
 
 describe('Keys kept for later never pile up while a niche could open (D-129 review)', () => {
   it('two and three hours a day with repeating jobs: a kept Key waits only while no niche can be opened', () => {
+    let idle = 0;
     for (const h of [2, 3]) {
       const { facts } = heavy(35, h);
       /* Dan uses his Keys on the Map at each day's end (D-143 A: never spent for him): a Key is left kept only while
@@ -118,13 +119,18 @@ describe('Keys kept for later never pile up while a niche could open (D-129 revi
         const st = S.storyState(facts.filter(f => f.day <= day), s);
         expect(st.held === 0 || S.openable(s, st).length === 0, `${h} h, ${day}: ${st.held} kept`).toBe(true);
       }
-      /* a Key with nothing to open still brings the week's one surplus find with it */
+      /* a Key with nothing it could open (every openable niche already has a kept Key) still brings the week's one surplus
+         find with it; a Key with something to open brings none of its own (BALANCING §3) */
       for (const k of facts.filter(g => g.type === 'keyHeld')) {
         const earned = facts.filter(g => g.seq < k.seq && g.type === 'keyEarned').pop()!;
         if (earned.type === 'keyEarned' && earned.rhythm.startsWith('floor:')) continue;
-        expect(facts.some(g => g.type === 'findGiven' && g.why === 'surplus' && calendarWeek(g.day) === calendarWeek(k.day)), k.day).toBe(true);
+        const st = S.storyState(facts.filter(g => g.seq <= k.seq), s);
+        const week = (g: { day: string }) => calendarWeek(g.day) === calendarWeek(k.day);
+        if (S.openable(s, st).length < st.held) { idle++; expect(facts.some(g => g.type === 'findGiven' && g.why === 'surplus' && week(g)), k.day).toBe(true); }
+        else expect(facts.some(g => g.type === 'findGiven' && g.why === 'surplus' && g.seq > k.seq && g.seq < k.seq + 4), k.day).toBe(false);
       }
     }
+    expect(idle, 'a Key earned with nothing to open').toBeGreaterThan(0);
   }, 120_000);
 });
 
