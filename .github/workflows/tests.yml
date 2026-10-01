@@ -55,7 +55,7 @@ jobs:
       # countdown, once a second). Real time, so it runs once, in Chromium, whose trace counts the frames.
       - name: An untouched screen rests (D-132)
         if: matrix.short && matrix.browser == 'chromium'
-        run: CHECK=1 node tests/flows/idle.mjs http://localhost:4173/ 5 390 844
+        run: mkdir -p "$RUNNER_TEMP/screens" && CHECK=1 SHOTS="$RUNNER_TEMP/screens" node tests/flows/idle.mjs http://localhost:4173/ 5 390 844
       # it delves to reach a place, and Linux's WebKit crashes in a delve's end now and then (D-106): Chromium
       - name: Back from a record returns to the place
         if: matrix.short && matrix.browser == 'chromium'
