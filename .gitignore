@@ -13,3 +13,6 @@ build/
 *.zip
 .claude/worktrees/
 __pycache__/
+
+# a flow run locally with no $RUNNER_TEMP writes its screens here
+app/undefined/
