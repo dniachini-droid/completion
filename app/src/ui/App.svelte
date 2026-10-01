@@ -12,6 +12,7 @@
   import Delve from './Delve.svelte';
   import Step from './Step.svelte';
   import Arrival from './Arrival.svelte';
+  import Opened from './Opened.svelte';
   import CantStart from './CantStart.svelte';
   import Proto from './Proto.svelte';
   import Map from './Map.svelte';
@@ -172,7 +173,7 @@
     {:else if screen === 'arrival'}<Arrival {go} seq={typeof arg === 'string' && arg.startsWith('again:') ? +arg.slice(6) : null} />
     {:else if screen === 'cant'}<CantStart {go} jobId={String(arg)} />
     {:else if screen === 'proto'}<Proto {go} />
-    {:else if screen === 'map'}<Map {go} />
+    {:else if screen === 'map'}<Map {go} focus={typeof arg === 'string' ? arg : undefined} />
     {:else if screen === 'records'}<Records {go} id={typeof arg === 'string' ? arg : undefined} />
     {:else if screen === 'marks'}<Marks {go} id={typeof arg === 'string' ? arg : undefined} />
     {:else if screen === 'stair'}<Stair {go} />
@@ -183,6 +184,7 @@
     {:else if screen === 'rhythms'}{#key arg}<Rhythms {go} job={typeof arg === 'string' ? arg : undefined} />{/key}
     {:else if screen === 'satchel'}<Satchel {go} to={typeof arg === 'string' ? arg : undefined} />
     {:else if screen === 'errands'}<Errands {go} />
+    {:else if screen === 'opened'}<Opened {go} id={String(arg)} />
     {:else if screen === 'settings'}<Settings {go} />{/if}
   {/key}
     {#snippet failed(_error, reset)}

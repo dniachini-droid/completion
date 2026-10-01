@@ -6,14 +6,15 @@
      named; the way ahead is a faint light, unnamed. Never a count of what's left (UX 6). */
   import { game, content } from './game.svelte';
   import { t, dayName } from '../content/copy/en';
-  import { placeAhead, onRoad } from '../core/story';
+  import { placeAhead, onRoad, openable } from '../core/story';
   import skyUrl from './scene/map-sky.svg?url';
   import type { Go } from './nav';
   import { back } from './back.svelte';
   import type { StretchId } from '../core/story-types';
   import type { FactOf } from '../core/types';
 
-  let { go }: { go: Go } = $props();
+  /* focus: a stretch to open on (Today's "Use it on the Map", D-142) */
+  let { go, focus }: { go: Go; focus?: string } = $props();
   const v = $derived(game.view);
   const s = content.story;
   const calm = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -59,6 +60,10 @@
   /* only what a Key opens: the road's own rows open on foot (D-129) */
   const sealedOn = (id: StretchId) => s.seals.filter(x => !x.seenOnly && !onRoad(s, x.id) && !v.story.opened.has(x.id) && x.stretch === id
     && s.beats.some(b => v.story.played.has(b.id) && b.carries?.inView?.includes(x.id)));
+  /* the locked things seen on a stretch, each with "Use a Key" when one can open it now (Dan, D-142): a Key opens by
+     itself only what is where Dan is; anything behind him waits here for him to choose */
+  const canOpen = $derived(new Set(openable(s, v.story).map(x => x.id)));
+  function useKey(id: string) { game.do({ do: 'useKey', seal: id }); go('opened', id); }
   /* the plan's forecast (PLANNER → the forecast): where the next places would be reached; gone the moment the plan changes */
   const ahead = $derived(v.forecast.slice(0, 2));
   const fcSay = (day: string) => t('map.forecastSay', { day: dayName(day) });
@@ -116,7 +121,7 @@
   const lights = $derived(region);
   const links = $derived(regionLinks);
   /* what the crosshair is on; it opens on where Dan is */
-  let picked = $state<string | null>(null);
+  let picked = $state<string | null>(focus ?? null);
   const sel = $derived(lights.find(l => l.key === picked) ?? lights.find(l => l.kind === 'here') ?? lights[0]);
   let turn = $state(0);   /* restarts the box's rise on each pick */
   /* Picking moves only the crosshair and the box's words: the box never changes size, so the sky and its lights never
@@ -137,7 +142,7 @@
   });
   let centred = false;
   $effect(() => {
-    const h = region.find(l => l.kind === 'here'), f = field, scale = k;
+    const h = (focus ? region.find(l => l.key === focus) : undefined) ?? region.find(l => l.kind === 'here'), f = field, scale = k;
     if (!f || !h || centred) return;
     requestAnimationFrame(() => { f.scrollLeft = h.x * scale - f.clientWidth / 2; f.scrollTop = h.y * scale - f.clientHeight / 2; centred = true; });
   });
@@ -264,6 +269,20 @@
           <div class="swap">
             <div class="label-line">{sel.box.label}</div>
             <h2 class="carve md">{sel.box.title}</h2>
+            <!-- the locked things first, so "Use a Key" is never below the box's fold (D-142) -->
+            {#if sel.kind === 'here' || sel.kind === 'lit'}
+              {@const locks = sealedOn(sel.key as StretchId)}
+              {#if locks.length}
+                <div class="locks">
+                  {#each locks as x (x.id)}
+                    <p class="lock"><span class="where">{x.where}</span>
+                      {#if v.keys && canOpen.has(x.id)}<button class="text-link use" onclick={() => useKey(x.id)}><span>{t('map.useKey')}</span></button>
+                      {:else}<span class="needs">{t('map.sealed')}</span>{/if}</p>
+                  {/each}
+                  {#if !v.keys}<p class="soft lock-say">{t('map.noKey')}</p>{/if}
+                </div>
+              {/if}
+            {/if}
             {#if sel.reads?.length && sel.kind !== 'here'}
               <!-- the places reached here, each a tap from its entry and painting (D-135) -->
               <p class="say reads">{#each sel.reads as r, i (r.seq)}{#if i}<span class="sep" aria-hidden="true"> · </span>{/if}<button class="text-link read" aria-label={t('map.readAgain', { place: r.name })} onclick={() => go('arrival', `again:${r.seq}`)}><span>{r.name}</span></button>{/each}</p>
@@ -327,6 +346,14 @@
   .box .swap:has(.reads) { overflow-y: auto; scrollbar-width: none; }
   .box .say.reads { display: block; -webkit-line-clamp: unset; line-clamp: unset; overflow: visible; }
   .reads { margin: 2px 0 0; }
+  /* the locked things on a stretch (D-142): the box keeps its size and scrolls (D-076) */
+  .box .swap:has(.locks) { overflow-y: auto; scrollbar-width: none; }
+  .locks { margin: 0 0 8px; border-bottom: 1px solid var(--edge-2); padding-bottom: 6px; }
+  .lock { margin: 4px 0; display: flex; gap: 10px; align-items: baseline; justify-content: space-between; font-size: 15px; line-height: 1.35; color: var(--ink-2); }
+  .lock .where { flex: 1; min-width: 0; }
+  .lock .use { flex: none; color: #f2c170; font-size: 15px; }
+  .lock .needs { flex: none; font-family: var(--life); font-style: italic; color: #e9d9b4; font-size: 14px; }
+  .lock-say { margin: 4px 0 0; font-size: 14px; }
   .read { min-height: 40px; padding: 2px 0; }
   .read span { font-family: var(--life); font-size: 16.5px; color: var(--ink); }
   .sep { color: var(--ink-3); }

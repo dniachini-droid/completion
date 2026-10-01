@@ -120,7 +120,8 @@ export type FactBody =
   | { type: 'keyEarned'; rhythm: string }
   /** A Key earned while nothing Dan has reached is sealed: kept, and used on the next arrival that has one (D-079). */
   | { type: 'keyHeld' }
-  | { type: 'keyUsed' }
+  /** `chosen`: used on a locked thing Dan picked on the Map, never part of an arrival or a job's return (D-142). */
+  | { type: 'keyUsed'; chosen?: true }
   /** `road`: opened by the road on foot, with no Key (D-129). */
   | { type: 'sealOpened'; seal: string; how?: 'road' }
   | { type: 'findGiven'; id: string; why: 'avoided' | 'switching' | 'chamber' | 'camp' | 'surplus' | 'morning' | 'dated'; job?: number }

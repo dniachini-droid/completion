@@ -204,7 +204,8 @@
       <svg viewBox="0 0 24 12" aria-hidden="true"><circle cx="5" cy="6" r="3.6" /><path d="M8.6 6H22M18 6v3.4M21.4 6v2.6" /></svg>
       <span>{v.keys === 0 ? t('today.keys.none') : v.keys === 1 ? t('today.keys.one') : t('today.keys.many', { n: v.keys })}</span>
     </button>
-    {#if keysOpen}<p class="soft keys-say">{t('today.keys.say')}</p>{/if}
+    {#if v.keyUse}<p class="key-use rise d2"><button class="text-link" onclick={() => go('map', v.keyUse!)}><span>{t('today.keys.use')}</span></button></p>{/if}
+    {#if keysOpen}<p class="soft keys-say">{t('today.keys.say')}{#if v.keys} {t('today.keys.useOnMap')}{/if}</p>{/if}
     {#if v.ahead}
       <section class="ahead rise d2">
         <div class="label-line">{t('today.ahead')}{#if v.aheadKey}<span class="needs-key"> · {t('today.aheadKey')}</span>{/if}</div>
@@ -342,6 +343,8 @@
   .keys { display: flex; align-items: center; gap: 8px; margin: 10px auto 6px; padding: 4px 8px; background: none; border: 0; cursor: pointer;
     font-family: var(--life); font-style: italic; font-size: 14px; color: #e9d9b4; }
   .keys svg { width: 22px; height: 11px; fill: none; stroke: #f2c170; stroke-width: 1.4; stroke-linecap: round; }
+  .key-use { margin: -4px 0 8px; text-align: center; font-size: 15px; }
+  .key-use .text-link { color: #f2c170; }
   .keys-say { margin: 0 0 8px; text-align: center; font-size: 14.5px; }
   .needs-key { color: #f2c170; }
   .ahead { margin-top: 12px; }

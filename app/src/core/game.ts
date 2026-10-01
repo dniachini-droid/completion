@@ -355,8 +355,8 @@ function arrive(w: W, c: Content, b: Beat, how: 'foot' | 'key', at: Moment, day:
      the road never shows under a place it isn't in (D-129) */
   let st = S.storyState(w.all, c.story);
   while (st.held > 0) {
-    const seal = S.nextSeal(c.story, st);
-    if (!seal || seal.arrival || seal.stretch !== b.stretch) break;
+    const seal = S.nextSeal(c.story, st, b.stretch);
+    if (!seal || seal.arrival) break;
     w.put({ type: 'keyUsed' }, at, day);
     openSeal(w, c, seal, at, day);
     st = S.storyState(w.all, c.story);
@@ -385,8 +385,8 @@ function storyClock(w: W, c: Content, at: Moment, day: string): boolean {
 /** A Key lands: the next sealed thing opens, and its line plays (as this job's return, if there is one). */
 function landKey(w: W, c: Content, rhythm: string, at: Moment, day: string, job?: number): Seal | null {
   w.put({ type: 'keyEarned', rhythm }, at, day);
-  const seal = S.nextSeal(c.story, S.storyState(w.all, c.story));
-  /* nothing sealed where Dan has been: the Key is kept, never lost (D-079) */
+  const st = S.storyState(w.all, c.story), seal = S.nextSeal(c.story, st, st.stretch);
+  /* nothing sealed where Dan is: the Key is kept, never lost (D-079), for Dan to use here later or on the Map (D-142) */
   if (!seal) { w.put({ type: 'keyHeld' }, at, day); return null; }
   return openSeal(w, c, seal, at, day, job);
 }
@@ -531,7 +531,7 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string, tick
   }
   /* a Key kept for later opens the next niche on this job's return, wherever it is, so kept Keys never pile up (D-129) */
   if (!keyed && S.storyState(w.all, c.story).held > 0) {
-    const seal = S.nextSeal(c.story, S.storyState(w.all, c.story));
+    const st = S.storyState(w.all, c.story), seal = S.nextSeal(c.story, st, st.stretch);
     if (seal) { w.put({ type: 'keyUsed' }, at, day); openSeal(w, c, seal, at, day, done.seq); keyed = true; }
   }
   /* the return: the deep push's next beat (once a day) on a High day past a Normal day's size, or once a Normal day's
@@ -865,6 +865,8 @@ export type Command =
   | { do: 'addItems'; lines: string[] }
   /** A stray thought parked mid-delve (D-138): a job with no day in the Satchel, the delve carrying on untouched */
   | { do: 'park'; line: string }
+  /** A kept Key used on a locked thing Dan chose on the Map (D-142). */
+  | { do: 'useKey'; seal: string }
   /** Lines from outside the app (D-113), each added once, whatever happens between writing and clearing */
   | { do: 'takeInbox'; lines: { id: string; text: string }[] }
   | { do: 'tick'; id: string }
@@ -1235,6 +1237,14 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       else if (v.slate.includes(j.id) && !v.done.has(j.id) && v.run?.job.id !== j.id && !asideOn(w.all, day).has(j.id)) w.put({ type: 'setAside', job: j.id });
       break;
     }
+    case 'useKey': {
+      /* only a niche a Key can open now, and only with a Key in hand: refused otherwise (a double tap opens one) */
+      const st = S.storyState(w.all, c.story), x = S.openable(c.story, st).find(y => y.id === cmd.seal);
+      if (!x || st.held < 1) break;
+      w.put({ type: 'keyUsed', chosen: true });
+      openSeal(w, c, x, now, day);
+      break;
+    }
     case 'park': {
       /* one line, capped like every job's name; empty does nothing. It never touches the delve or earns anything. Typed
          as the delve ran out, it is still kept, and still that delve's (its end not yet answered) */
@@ -1438,6 +1448,8 @@ export interface View {
   aheadKey: boolean;
   /** Keys earned and kept, not yet used (D-142). */
   keys: number;
+  /** Where a kept Key can open something now, chosen on the Map (its stretch), if anywhere (D-142). */
+  keyUse: StretchId | null;
   walked: number;
   /** Minutes of effort from here to the next named place, if one is reachable (never shown as steps owed). */
   toNext: number | null;
@@ -1521,7 +1533,7 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
     const opened: string[] = [], keyed: string[] = [];
     for (const g of all) {
       if (g.seq <= f.seq) continue;
-      if (g.type !== 'keyUsed' && !ANSWERS.has(g.type)) break;
+      if ((g.type !== 'keyUsed' || g.chosen) && !ANSWERS.has(g.type)) break;
       if (g.type === 'sealOpened' && all.some(k => k.type === 'keyUsed' && k.seq === g.seq - 1)) {
         const x = S.sealOf(c.story, g.seal), line = x?.beat ? S.beatOf(c.story, x.beat)?.line : x?.line;
         if (line) opened.push(line);
@@ -1835,6 +1847,7 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
     day, capacity, suggested: sugg.capacity, size, order, slate, line, done, underWay, complete, next, run, runEnd, arrival,
     /* ahead: the sealed thing in view; before any, the way in (the first morning), then a line from just ahead */
     aheadKey: !!view && !S.onRoad(c.story, view.id), keys: st.held,
+    keyUse: st.held ? S.openable(c.story, st)[0]?.stretch ?? null : null,
     here, ahead: view ? view.where : here.id === null ? here.line || S.teaser(c.story, st) : S.teaser(c.story, st), walked: w, toNext, nextAt, toChamber: chamber,
     road: { from: S.lastPlaceAt(st), chamber: S.chamberAt(st), to: S.nextPlaceAt(st), place: nextAt !== null },
     lastArrival: lastArr, story: S.storyState(facts, c.story), teaser: S.teaser(c.story, st), runFinds,

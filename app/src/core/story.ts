@@ -280,8 +280,10 @@ export function mayOpen(s: Story, st: StoryState, x: Seal): boolean {
 
 /** The sealed thing the next Key opens: the story's own first (any week up to this one, in order), then the plain ones;
     a surplus opens next week's plain ones. The road's rows are never a Key's: a Key opens only a niche (D-129). */
-export function nextSeal(s: Story, st: StoryState): Seal | null {
-  const shut = s.seals.filter(x => !x.seenOnly && !st.opened.has(x.id) && !onRoad(s, x.id));
+export function nextSeal(s: Story, st: StoryState, where?: StretchId): Seal | null {
+  /* `where`: a Key opens by itself only what is in the part of the road Dan is in; anything behind him waits for him to
+     choose it on the Map (Dan, D-142), so a scene never plays as if he had jumped back */
+  const shut = s.seals.filter(x => !x.seenOnly && !st.opened.has(x.id) && !onRoad(s, x.id) && (!where || x.stretch === where));
   const order = (a: Seal, b: Seal) => a.w - b.w || a.o - b.o;
   const due = shut.filter(x => x.w <= st.week);
   const early = shut.filter(x => x.w === st.week + 1 && x.plain).sort(order);
@@ -293,6 +295,12 @@ export function nextSeal(s: Story, st: StoryState): Seal | null {
   if (plain) return plain;
   /* next week's plain ones only once nothing of this week's is left shut (a surplus, as before) */
   return !story && !due.length && early[0] && mayOpen(s, st, early[0]) ? early[0] : null;
+}
+
+/** The niches a Key can open now, wherever they are: shut, seen, and reached (D-142: chosen on the Map). None depends on
+    another (a rule test pins it), so Dan may open them in any order. */
+export function openable(s: Story, st: StoryState): Seal[] {
+  return s.seals.filter(x => !x.seenOnly && !st.opened.has(x.id) && !onRoad(s, x.id) && mayOpen(s, st, x)).sort((a, b) => a.w - b.w || a.o - b.o);
 }
 
 /** A rhythm's sessions done in the calendar week of `day` (every 2 weeks: in the fortnight). */
