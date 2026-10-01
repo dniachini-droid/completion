@@ -17,15 +17,17 @@
   /* a small choice never gates anything: each option opens what it names (the record here), then comes back */
   function pick(i: number) { if (!r?.beat) return; game.do({ do: 'choose', beat: r.beat, pick: i }); if (r.records.length && go) go('records', r.records[i]); }
   const r = $derived(doneSeq !== null ? returnOf(content, game.facts, doneSeq) : null);
+  /* what Dan is told about a Key (D-141): earned by this job, kept from earlier, or earned and kept for later */
+  const keyLine = $derived(r?.keyNote === 'held' ? t('step.keyHeld') : r?.keyNote === 'kept' ? t('step.keyKept') : r?.key ? t('step.key') : '');
   const finds = $derived([...(r?.finds ?? []), ...extraFinds].map(id => content.story.finds.find(f => f.id === id)).filter(f => !!f));
 </script>
 
 {#if r && r.line}
   <!-- the story's words and any find keep to the lower half and scroll there; they can be folded away (D-085) -->
-  <Words plain {look} length={r.line.length + finds.reduce((n, f) => n + f!.line.length, 0) + (r.key ? t('step.key').length : 0)}>
+  <Words plain {look} length={r.line.length + finds.reduce((n, f) => n + f!.line.length, 0) + keyLine.length}>
     <!-- a Key's note is two sentences of plain text, as wide as the story's words, with room after it: never squeezed into a
          carved label's short line (Dan: "very very bad styling", D-131) -->
-    {#if r.key}<p class="key-note on-scene">{t('step.key')}</p>{/if}
+    {#if keyLine}<p class="key-note on-scene">{keyLine}</p>{/if}
     <p class="say story on-scene">{r.line}</p>
     {#each finds as f (f!.id)}
       <div class="find">
@@ -52,8 +54,9 @@
       {/if}
     </div>
   {/if}
-{:else if finds.length}
-  <Words plain {look} length={finds.reduce((n, f) => n + f!.line.length, 0)}>
+{:else if finds.length || keyLine}
+  <Words plain {look} length={finds.reduce((n, f) => n + f!.line.length, 0) + keyLine.length}>
+    {#if keyLine}<p class="key-note on-scene">{keyLine}</p>{/if}
     {#each finds as f (f!.id)}
       <div class="find">
         <div class="label-line centred gold">{t('find.label')}</div>

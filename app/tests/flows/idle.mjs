@@ -113,8 +113,19 @@ if (!(await page.locator('.dv').count())) fails.push('no delve after Delve');
 await measure('delve-running', 'delve');
 await jump(31 * 60_000);
 await measure('delve-end');
+/* a slow machine: the end's question may come a moment after the reading; never leave the delve unanswered */
+for (let k = 0; k < 20 && !(await has('Done')); k++) await page.waitForTimeout(500);
 if (await has('Done')) await tap(btn('Done'));
 await home();
+/* Today's rows are locked only while a delve is under way: after Done there is none (said plainly, with a picture) */
+const locked = async () => (await page.locator('.rows button.row:not(.done)').count()) > 0
+  && (await page.locator('.rows button.row:not(.done)').first().getAttribute('aria-disabled')) === 'true';
+for (let k = 0; k < 10 && await locked(); k++) await page.waitForTimeout(500);
+if (await locked()) {
+  if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/idle-locked.png` });
+  console.log('FAIL: a delve is still under way on Today after its end was answered Done');
+  process.exit(1);
+}
 
 /* the day done: every job of the day delved to its end */
 for (let k = 0; k < 8 && (await page.locator('.rows button.row:not(.done)').first().count()); k++) {

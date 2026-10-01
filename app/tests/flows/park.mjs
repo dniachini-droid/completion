@@ -104,8 +104,11 @@ if (!(await page.locator('.dv').count())) fails.push('no way back to the delve')
 
 /* 5. the end: "2 thoughts parked in the Satchel", a tap opens the Satchel with both */
 await ff(40 * 60_000);
-if (await btn('Not yet').count()) await tap(btn('Not yet'), 'Not yet');
 const line = page.getByRole('button', { name: '3 thoughts parked in the Satchel', exact: true });
+/* a slow machine: the end's question comes a moment after the clock jumps; wait for it (or the line) rather than look once */
+for (let k = 0; k < 20 && !(await btn('Not yet').count()) && !(await line.count()); k++) { await page.clock.runFor(500); await page.waitForTimeout(250); }
+if (await btn('Not yet').count()) await tap(btn('Not yet'), 'Not yet');
+for (let k = 0; k < 20 && !(await line.count()); k++) { await page.clock.runFor(500); await page.waitForTimeout(250); }
 if (!(await line.count())) fails.push('no "3 thoughts parked in the Satchel" at the end');
 await shot('3-end');
 await tap(line, 'the parked line');
