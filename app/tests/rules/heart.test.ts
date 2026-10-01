@@ -49,8 +49,12 @@ describe('Today', () => {
     expect(p.view().next?.job).toBe(b);
     expect(p.view().slate).toContain(a);
   });
-  it('every job opens at one delve of 30 minutes; Dan sets the rest (D-124)', () => {
-    for (const j of C.jobs) expect(presetRun(j)).toEqual({ minutes: 30, count: 1 });
+  it('a one-off opens at one delve of 30 minutes (D-124); a recurring job at the minutes Dan set for it (D-146)', () => {
+    for (const j of C.jobs) {
+      const p = presetRun(j, C);
+      if (C.rhythms.some(r => r.job === j.id)) expect(p.minutes * p.count, j.id).toBe(j.length);
+      else expect(p, j.id).toEqual({ minutes: 30, count: 1 });
+    }
   });
 });
 

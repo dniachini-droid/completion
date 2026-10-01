@@ -54,7 +54,7 @@
   const soFar = (j: Job) => { if (v.done.has(j.id) || recurring(j.id)) return ''; const m = carriedOf(game.facts, v.content, j.id); return m > 0 ? t('row.sofar', { min: minutesShort(m) }) : ''; };
 
   function begin(j: Job) {
-    /* every job opens the set-up at one delve of 30 minutes; Dan sets the minutes and the delves (D-124) */
+    /* the set-up: a one-off at one delve of 30 minutes (D-124), a recurring job at its own minutes (D-146) */
     go('set', j.id);
   }
   function done(j: Job) {

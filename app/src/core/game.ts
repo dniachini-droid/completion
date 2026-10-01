@@ -1331,7 +1331,7 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       if (!name || v.run || v.runEnd) break;
       /* a job Dan has had before (D-136): one still his is delved on itself, as a tap on its row would, never added again */
       const tie = tieFor(base, w.all, name, cmd.from);
-      if (tie?.same) { beginRun(w, c, tie.job.id, PRESET.minutes, PRESET.count, day); break; }
+      if (tie?.same) { const p = presetRun(tie.job, c); beginRun(w, c, tie.job.id, p.minutes, p.count, day); break; }
       const id = `it-${ofType(w.all, 'itemAdded').length + 1}`, n = ofType(w.all, 'planAdded').length + 1;
       w.put({ type: 'itemAdded', id, name, ...(tie ? { from: tie.job.id } : {}) });
       w.put({ type: 'planAdded', entry: { id: `pa-${n}`, job: id, day } });
@@ -1959,11 +1959,18 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   };
 }
 
-/** The run set-up for a job: every job opens at one delve of 30 minutes; Dan sets the minutes and the delves himself
-    (Dan, D-124). */
+/** The run set-up for a job: a one-off opens at one delve of 30 minutes (D-124); a recurring job at its own minutes, the
+    ones Dan set for it (Dan, D-146): one delve on a dial stop, else the fewest equal delves on a stop that make them
+    (120 → 2 × 60, 50 → 2 × 25), else the nearest stop. Dan still sets the minutes and the delves himself. */
 export const PRESET = { minutes: 30, count: 1 } as const;
-export function presetRun(_j?: Job): { minutes: number; count: number } {
-  return { ...PRESET };
+export function presetRun(j?: Job, c?: { rhythms: { job: string }[] }): { minutes: number; count: number } {
+  if (!j || !c?.rhythms.some(r => r.job === j.id) || !(j.length > 0)) return { ...PRESET };
+  for (let count = 1; count <= 8; count++) {
+    const m = j.length / count;
+    if ((DIAL as readonly number[]).includes(m)) return { minutes: m, count };
+  }
+  const near = [...DIAL].sort((a, b) => Math.abs(a - j.length) - Math.abs(b - j.length) || b - a)[0];
+  return { minutes: near, count: 1 };
 }
 
 export { alertsAfter, runAt };
