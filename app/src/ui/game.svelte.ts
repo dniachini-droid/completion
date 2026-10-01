@@ -39,17 +39,24 @@ const CAL_DAYS = 14;
 
 class Game {
   proto = $state<Proto>(loadProto());
-  facts = $state<Fact[]>([]);
+  /* raw: the log is only ever replaced, never changed in place, so it is not watched fact by fact (deep review F#1) */
+  facts = $state.raw<Fact[]>([]);
+  /* the true log, plain: a screen's teardown reads a signal's value from before the tap that closed it, so every write
+     works from this field, never from the signal; a teardown can then never shrink the log (deep review NEW-1) */
+  #log: Fact[] = [];
+  /** The log as it is now, whoever asks (a teardown included). */
+  get log(): Fact[] { return this.#log; }
+  #setLog(log: Fact[]) { this.#log = log; this.facts = log; }
   now = $state<Moment>('2000-01-01T00:00:00Z');
   view = $derived(see(this.facts, content, this.now));
   #ticker = 0;
 
   constructor() {
     this.now = this.clock();
-    this.facts = this.load();
+    this.#setLog(this.load());
     /* the phone closed the app while Dan was in another one: that time is taken off first (D-094) */
     if (platform.away.first !== null) this.away(platform.away.first);
-    this.append(settle(this.facts, content, this.now));
+    this.append(settle(this.#log, content, this.now));
     this.do({ do: 'open' });
     this.panel();
     void this.reminders();
@@ -74,9 +81,9 @@ class Game {
     const left = await platform.away.take();
     this.now = this.clock();
     if (left !== null) this.away(left);
-    this.append(settle(this.facts, content, this.now));
+    this.append(settle(this.#log, content, this.now));
     const today = this.view.day;
-    if (!this.facts.some(f => f.type === 'opened' && f.day === today)) { this.do({ do: 'open' }); this.woke++; }
+    if (!this.#log.some(f => f.type === 'opened' && f.day === today)) { this.do({ do: 'open' }); this.woke++; }
     else this.tick();
     this.native();
     void this.reminders();
@@ -103,7 +110,7 @@ class Game {
   /** The phone's calendar, read-only (D-115): the next two weeks, read on opening, on return and when it changes;
       written down only when it changed. Nothing is read while it's off. */
   async readCalendar() {
-    if (!calendarOf(this.facts).on) return;
+    if (!calendarOf(this.#log).on) return;
     const events = await platform.calendar.events(CAL_DAYS);
     this.do({ do: 'calendarRead', events, days: CAL_DAYS });
   }
@@ -200,12 +207,12 @@ class Game {
       if (prev) saves.keep(`${this.saveKey}.backup`, prev);
       this.#backedUp = day;
     }
-    const s: Save = { version: SAVE_VERSION, content: content.version, facts: this.facts };
+    const s: Save = { version: SAVE_VERSION, content: content.version, facts: this.#log };
     saves.write(this.saveKey, s);
   }
   append(f: Fact[]) {
     if (!f.length) return;
-    this.facts = this.facts.concat(f);
+    this.#setLog(this.#log.concat(f));
     this.save();
   }
 
@@ -213,9 +220,12 @@ class Game {
   do(cmd: Command): Fact[] {
     this.now = this.clock();
     const before = this.view.run;
-    const f = act(this.facts, content, cmd, this.now);
+    const f = act(this.#log, content, cmd, this.now);
     this.append(f);
-    if (['startRun', 'startErrands', 'skipBreather', 'stepAway', 'resume', 'finishHere', 'away'].includes(cmd.do) || (before && !this.view.run)) { void this.alerts(); this.panel(); }
+    /* any change of the run, whatever the command (Delve now, the Satchel's, the errand run…), lays out its alerts and
+       panel again: a list of commands missed some (deep review C#1) */
+    const after = this.view.run;
+    if (before?.seq !== after?.seq || before?.phase !== after?.phase || before?.k !== after?.k || cmd.do === 'away') { void this.alerts(); this.panel(); }
     this.native();
     if (f.length) void this.reminders();
     return f;
@@ -258,10 +268,10 @@ class Game {
     this.#minute = m; this.#second = s;
     this.now = this.clock();
     if (!before) {
-      if (!this.facts.some(f => f.type === 'opened' && f.day === this.view.day)) this.wake();   /* past 04:00 with the app open */
+      if (!this.#log.some(f => f.type === 'opened' && f.day === this.view.day)) this.wake();   /* past 04:00 with the app open */
       return;
     }
-    const f = settle(this.facts, content, this.now);
+    const f = settle(this.#log, content, this.now);
     this.append(f);
     const after = this.view.run;
     this.native();
@@ -294,12 +304,12 @@ class Game {
   reminders() { return (this.#reminding = this.#reminding.then(() => this.#remind()).catch(() => {})); }
   async #remind() {
     if (!platform.notifier.locked) return;
-    const list = alertsDue(content, this.facts, this.clock()).slice(0, REMIND_IDS.length);
+    const list = alertsDue(content, this.#log, this.clock()).slice(0, REMIND_IDS.length);
     const words = list.map(a => ({ a, ...this.remindWords(a) }));
     /* the re-entry nudge (D-113): a nudge set earlier whose time has passed came while the app was closed */
     const st = platform.store, set = Number(st.get('nudge.at') ?? 0);
     if (set && set <= platform.now().getTime()) { st.set('nudge.last', st.get('nudge.day') ?? ''); st.remove('nudge.at'); }
-    const nday = nudgeDay(this.facts, st.get('nudge.last') || null);
+    const nday = nudgeDay(this.#log, st.get('nudge.last') || null);
     const nwhen = nday ? this.realDate(new Date(+nday.slice(0, 4), +nday.slice(5, 7) - 1, +nday.slice(8, 10), NUDGE_HOUR, 0).getTime()) : null;
     const nudge = nwhen && nwhen.getTime() > platform.now().getTime() ? nwhen : null;
     const key = JSON.stringify([words.map(w => [w.a.date, w.a.clock, w.title, w.body]), nudge?.getTime() ?? 0]);
@@ -329,7 +339,7 @@ class Game {
 
   /** Dan's marks on a run (Start it now, Pause, Back to the delve), as the run's rules read them. */
   marks(r: RunView): RunMark[] {
-    return this.facts.filter(f => f.seq > r.seq && ['breatherSkipped', 'delveHeld', 'delveResumed'].includes(f.type))
+    return this.#log.filter(f => f.seq > r.seq && ['breatherSkipped', 'delveHeld', 'delveResumed'].includes(f.type))
       .map(f => ({ kind: f.type === 'breatherSkipped' ? 'skip' : f.type === 'delveHeld' ? 'hold' : 'resume', at: epochOf(f.at) }));
   }
 
@@ -356,7 +366,7 @@ class Game {
 
   /* ---- copies of the save (D-107) ---- */
   /** The save as a file: the same text the phone keeps, readable by `readSave` on any later build. */
-  copyText(): string { return JSON.stringify({ version: SAVE_VERSION, content: content.version, facts: this.facts } satisfies Save); }
+  copyText(): string { return JSON.stringify({ version: SAVE_VERSION, content: content.version, facts: this.#log } satisfies Save); }
   /** Save a copy: the phone's share sheet (Files, iCloud Drive…). */
   saveCopy() { return platform.copies.share(copyName(this.view.day), this.copyText()); }
   /** Once a week, a copy into the app's Documents folder, which the Files app shows; the last four kept. The real save only. */
@@ -373,9 +383,9 @@ class Game {
     const saves = platform.saves, now = saves.get(this.saveKey);
     if (now) saves.keep(`${this.saveKey}.before-restore.${platform.now().getTime()}`, now);
     saves.write(this.saveKey, s);
-    this.facts = s.facts;
+    this.#setLog(s.facts);
     this.now = this.clock();
-    this.append(settle(this.facts, content, this.now));
+    this.append(settle(this.#log, content, this.now));
     this.do({ do: 'open' });
     this.#watched = '-'; this.native();
     this.panel();
@@ -389,10 +399,10 @@ class Game {
     d.setHours(8, 0, 0, 0);    /* a rehearsal starts at 08:00 today, so the whole day is ahead of it */
     this.proto = { rehearsal: on, anchorReal: real, anchorFake: d.getTime() };
     platform.store.set(PROTO_KEY, JSON.stringify(this.proto));
-    this.facts = on ? [] : this.load();
+    this.#setLog(on ? [] : this.load());
     if (on) platform.saves.remove('save.rehearsal');
     this.now = this.clock();
-    this.append(settle(this.facts, content, this.now));
+    this.append(settle(this.#log, content, this.now));
     this.do({ do: 'open' });
     void this.alerts();   /* the other save's alerts go; this one's come back */
     this.#watched = '-'; this.native();
@@ -404,7 +414,7 @@ class Game {
     if (prev) platform.saves.keep(`${this.saveKey}.wiped`, prev);
     platform.saves.remove(this.saveKey);
     if (this.proto.rehearsal) { this.setRehearsal(true); return; }
-    this.facts = [];
+    this.#setLog([]);
     this.do({ do: 'open' });
     this.panel();
   }

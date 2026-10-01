@@ -76,7 +76,10 @@
   /* the end's job, held past the end being marked seen: the phone's back marks it before this screen goes (review of D-144) */
   let noteJob = '';
   $effect(() => { if (end) noteJob = end.job.id; });
-  function keepNote() { if (noteJob && stopAt.trim()) { game.do({ do: 'noteJob', job: noteJob, note: stopAt }); stopAt = ''; } }
+  /* plain, not watched: a teardown reads the box's text from before the tap that closed the screen, so the note kept
+     by that tap is known here and never written twice (deep review NEW-1) */
+  let keptNote = '';
+  function keepNote() { if (noteJob && stopAt.trim() && stopAt !== keptNote) { keptNote = stopAt; game.do({ do: 'noteJob', job: noteJob, note: stopAt }); stopAt = ''; } }
   function leave(to: 'today' | 'arrival') {
     keepNote();
     if (end) game.do({ do: 'seen', what: 'step', ref: end.seq });

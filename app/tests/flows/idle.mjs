@@ -3,6 +3,7 @@
 // callbacks are counted as they happen. The game's clock is moved (to the evening, to a delve's end) by shifting Date
 // alone, so nothing else is faked. Usage (from app/, with a build served):
 //   node tests/flows/idle.mjs http://localhost:4173/ [seconds per screen, default 20] [width height]
+// SAVE=months: from a played save of tests/flows/saves/ instead of a fresh one (deep review U4).
 // CHECK=1: fails if a settled screen keeps drawing frames, calling animation frames or burning processor time above the
 // thresholds below (the standing check in CI, so the heat can't creep back).
 // Frames are the compositor's (any moving layer, even one the graphics chip moves alone, makes the phone draw the screen
@@ -90,13 +91,24 @@ async function measure(name, kind = 'still') {
 }
 
 await page.goto(url);
-await setNow(new Date('2026-09-30T09:00:00+01:00').getTime());
+/* SAVE=<name>: a played save from tests/flows/saves/ (deep review U4: months of facts, walked routes on the Map), opened
+   the morning after its last day; otherwise a fresh save */
+const seeded = process.env.SAVE ? (await import('node:fs')).readFileSync(new URL(`./saves/${process.env.SAVE}.json`, import.meta.url), 'utf8') : null;
+let start = new Date('2026-09-30T09:00:00+01:00').getTime();
+if (seeded) {
+  const last = JSON.parse(seeded).facts.at(-1).at;
+  start = new Date(`${last.slice(0, 10)}T09:00:00Z`).getTime() + 86_400_000;
+  await page.evaluate(s => localStorage.setItem('save.v1', s), seeded);
+}
+await setNow(start);
 await page.reload();
 /* past whatever the day opens with (the morning, a welcome) to Today; each screen given time to draw first, and never a
    tap on Today's own Delve, which a slow first drawing once offered before the foot of Today was there */
 for (let k = 0; k < 20 && !(await page.locator('nav.foot').count()); k++) {
   await page.waitForTimeout(1500);
   if (await page.locator('nav.foot').count()) break;
+  /* a played save may open on the week's Daybook page: its arrow, never its Look ahead */
+  if (seeded && await page.locator('button.home').count()) { await page.locator('button.home').first().click().catch(() => {}); continue; }
   if (!(await page.locator('.next').count()) && await page.locator('button.btn').count()) await page.locator('button.btn').first().click().catch(() => {});
 }
 if (!(await page.locator('nav.foot').count())) { console.log('FAIL: Today never came'); process.exit(1); }

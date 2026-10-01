@@ -93,7 +93,7 @@ describe('Recurring job: a short first session, then "Delve again"', () => {
 });
 
 describe('Morning head start (HEAD_START) when no morning find is left', () => {
-  it('BUG: with no find to give, every later "open" (each cold start of the app) pays the 15-minute head start again', () => {
+  it('FIXED (U2): with no find to give, later opens the same morning never pay the head start again', () => {
     const noFinds: Content = { ...C, story: { ...C.story, finds: [] } };
     const p = player('2026-09-28T09:00:00+01:00', 60, noFinds).do({ do: 'open' });
     p.to('2026-09-28T22:45:00+01:00').do({ do: 'goodnight' });
@@ -101,18 +101,28 @@ describe('Morning head start (HEAD_START) when no morning find is left', () => {
     /* next morning: the app is cold-started five times (iOS closes it in the background) */
     for (const t of ['08:00', '09:30', '12:00', '15:00', '19:00']) p.to(`2026-09-29T${t}:00+01:00`).do({ do: 'open' });
     const sleep = of(p.facts, 'stepsGained').filter(f => f.job === 'sleep');
-    expect(sleep.length).toBe(5);
-    expect(walked(p.facts)).toBe(75);   /* 5 × 15 minutes for one night in bed on time */
-    /* and on every later day too, for as long as that night stays the last one kept */
+    expect(sleep.length).toBe(1);
+    expect(walked(p.facts)).toBe(15);   /* one night in bed on time, paid once */
+    /* nor on any later day while that night stays the last one kept */
     p.to('2026-10-02T09:00:00+01:00').do({ do: 'open' }).to('2026-10-02T13:00:00+01:00').do({ do: 'open' });
-    expect(walked(p.facts)).toBe(105);
+    expect(walked(p.facts)).toBe(15);
   });
-  it('BUG (real content): five weeks of on-time bedtimes, then four app starts on 2 Nov pay the head start four times', () => {
+  it('FIXED (U2, real content): five weeks of on-time bedtimes, then four app starts on 2 Nov pay the head start at most once', () => {
     const s = sim('2026-09-28T08:00:00+01:00', undefined, 'kept');
     for (let w = 0; w < 5; w++) s.week('normal');
     let f = s.facts;
     for (const t of ['09:00', '10:00', '11:00', '12:00']) f = f.concat(act(f, C, { do: 'open' }, `2026-11-02T${t}:00+01:00`));
-    expect(of(f, 'stepsGained').filter(x => x.job === 'sleep' && x.day === '2026-11-02').length).toBe(4);
+    expect(of(f, 'stepsGained').filter(x => x.job === 'sleep' && x.day === '2026-11-02').length).toBeLessThanOrEqual(1);
+  });
+  it('U2: an old save whose night has a morning find but no head start is not paid on the first open after the update', () => {
+    const p = player('2026-09-28T09:00:00+01:00').do({ do: 'open' });
+    p.to('2026-09-28T22:45:00+01:00').do({ do: 'goodnight' });
+    p.to('2026-09-29T08:00:00+01:00').do({ do: 'open' });
+    /* as a save from before D-083: drop the head start, keep the find */
+    const old = p.facts.filter(f => !(f.type === 'stepsGained' && f.job === 'sleep'));
+    expect(old.some(f => f.type === 'findGiven' && f.why === 'morning')).toBe(true);
+    const more = act(old, C, { do: 'open' }, '2026-09-29T10:00:00+01:00');
+    expect(more.some(f => f.type === 'stepsGained' && f.job === 'sleep')).toBe(false);
   });
 });
 

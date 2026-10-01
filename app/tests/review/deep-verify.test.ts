@@ -63,22 +63,32 @@ describe('ui glue (game.svelte.ts) on a recording phone', () => {
     expect(game.view.day).toBe('2026-10-05');
   });
 
-  it('CODE #1: "Delve now" starts a run but lays out no delve-end alerts and no panel', async () => {
-    rec.log.length = 0; rec.alertsAt.length = 0;
-    game.do({ do: 'delveNow', line: 'Call the bank' });
-    await settleAsync();
-    expect(!!game.view.run).toBe(true);
-    const shows = rec.log.filter(x => x.startsWith('panel:show'));
-    const ats = rec.log.filter(x => x.startsWith('at:'));
-    console.log('[CODE#1] after delveNow:', JSON.stringify(rec.log));
-    expect(ats.length).toBe(0);          /* bug: no alert scheduled */
-    expect(shows.length).toBe(0);        /* bug: no panel */
-    /* control: Pause then Back to the delve lays them out */
-    game.do({ do: 'stepAway' }); await settleAsync();
-    game.do({ do: 'resume' }); await settleAsync();
-    expect(rec.alertsAt.length).toBeGreaterThan(0);
-    game.do({ do: 'finishHere' }); await settleAsync();
-  });
+  /* U3 (CODE #1): every way of starting a delve lays out its end alerts and the lock-screen panel */
+  const starts: [string, () => unknown][] = [
+    ['delveNow', () => game.do({ do: 'delveNow', line: 'Call the bank' })],
+    ['startRun', () => game.do({ do: 'startRun', job: game.view.order.find((j: string) => !game.view.done.has(j)), minutes: 25, count: 1 })],
+    ['startErrands', () => {
+      game.do({ do: 'saveForLater', line: 'Post a letter' }); game.do({ do: 'saveForLater', line: 'Buy stamps' });
+      const ids = game.view.content.jobs.filter((j: any) => ['Post a letter', 'Buy stamps'].includes(j.name)).map((j: any) => j.id);
+      return game.do({ do: 'startErrands', jobs: ids, minutes: 25, count: 1 });
+    }],
+  ];
+  for (const [name, start] of starts) {
+    it(`FIXED (U3): "${name}" lays out the delve-end alerts and the panel`, async () => {
+      const end = game.view.runEnd;
+      if (end) game.do({ do: 'seen', what: 'step', ref: end.seq });
+      rec.clock += 2 * 60 * 60_000;
+      rec.log.length = 0; rec.alertsAt.length = 0;
+      start();
+      await settleAsync();
+      expect(!!game.view.run).toBe(true);
+      expect(rec.log.filter(x => x.startsWith('at:')).length).toBeGreaterThan(0);
+      expect(rec.log.filter(x => x.startsWith('panel:show')).length).toBeGreaterThan(0);
+      game.do({ do: 'finishHere' }); await settleAsync();
+      const e = game.view.runEnd;
+      if (e) game.do({ do: 'seen', what: 'step', ref: e.seq });
+    });
+  }
 
   it('CODE #7 / PLATFORM #7b: two alerts() calls close together leave alerts scheduled for a held run', async () => {
     /* start a fresh run */

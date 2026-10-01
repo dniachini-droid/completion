@@ -816,7 +816,9 @@ function morningAfter(w: W, c: Content, at: Moment, day: string) {
   }
   const nights = ofType(w.all, 'goodnight').filter(f => f.day < day && f.kept);
   const night = nights[nights.length - 1];
-  if (!night || w.all.some(f => f.seq > night.seq && f.type === 'findGiven' && f.why === 'morning')) return;
+  /* once per night: a later morning find (saves from before the head start) or a later head start (when no find was left
+     to give, every open paid it again: deep review R#1) says this night was already paid */
+  if (!night || w.all.some(f => f.seq > night.seq && ((f.type === 'findGiven' && f.why === 'morning') || (f.type === 'stepsGained' && f.job === 'sleep')))) return;
   /* in bed on time: the day begins a little further in (Dan, D-083); once per night, with the morning's find */
   w.put({ type: 'stepsGained', minutes: HEAD_START, job: 'sleep' }, at, day);
   gifts(w, c, at, day);

@@ -29,3 +29,8 @@ it.skipIf(!env.MAKE_SAVES)('word: three hours a day until the first word is reac
   const upTo = facts.filter((f, i) => i <= at || (f.at === facts[at].at && f.type !== 'seen'));
   out('word', upTo);
 });
+
+it.skipIf(!env.MAKE_SAVES)('months: four months of play, three hours a day, Keys used on the Map (the battery check on a played save, deep review U4)', () => {
+  const { facts } = heavy(120, 3, true, 2);
+  out('months', facts);
+}, 300_000);

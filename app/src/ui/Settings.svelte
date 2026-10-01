@@ -37,7 +37,8 @@
   }
 
   /* the save's copies (D-107): Save a copy; Restore asks once, in plain words, and keeps what is there now aside */
-  let asking = $state<Save | null>(null), said = $state('');
+  /* raw: a picked save is a whole log, never watched fact by fact (deep review F#3) */
+  let asking = $state.raw<Save | null>(null), said = $state('');
   async function copy() {
     said = '';
     try { await game.saveCopy(); } catch { said = t('settings.copy.failed'); }

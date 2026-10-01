@@ -14,7 +14,7 @@
   import { game, content } from './game.svelte';
   import { pastBedtime, BEDTIME_WINDOW, tomorrowFirst, satchelView, errandChoices, carriedOf } from '../core/game';
   import { tieFor } from '../core/remember';
-  import { moment } from './moment.svelte';
+  import { leaveWord, moment } from './moment.svelte';
   import { ofLine } from './panel';
   import { beatOf } from '../core/story';
   import type { Job } from '../core/types';
@@ -329,7 +329,7 @@
 
     <Deleted />
     <!-- a word left to cut later (A2), and a Daybook page written after days away (D-143 F): quiet lines back to them -->
-    {#if v.arrival && v.arrival.seq === moment.wordLater}<p class="said waits"><button class="text-link" onclick={() => { moment.wordLater = 0; go('arrival'); }}><span>{t('today.wordWaits')}</span></button></p>{/if}
+    {#if v.arrival && v.arrival.seq === moment.wordLater}<p class="said waits"><button class="text-link" onclick={() => { leaveWord(0); go('arrival'); }}><span>{t('today.wordWaits')}</span></button></p>{/if}
     {#if v.close}<p class="said waits"><button class="text-link" onclick={() => go('daybook')}><span>{t('today.pageWaits')}</span></button></p>{/if}
     {#if onlyAvoided}<p class="said only" role="status">{t('today.onlyAvoided', { job: onlyAvoided })}</p>{/if}
     {#if waitedJob}

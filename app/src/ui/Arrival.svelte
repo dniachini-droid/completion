@@ -13,7 +13,7 @@
   import { beatOf, marksIn, mayGuess, markHeld, markOf } from '../core/story';
   import { arrivalAt } from '../core/game';
   import { back } from './back.svelte';
-  import { moment } from './moment.svelte';
+  import { leaveWord, moment } from './moment.svelte';
   import { backTo } from './nav';
   import type { Go } from './nav';
 
@@ -44,7 +44,7 @@
   /* after the cut: through the lintel to the stair (D-039), back to today, or later (the cut waits, unseen) */
   function cutLeave(to: 'through' | 'today' | 'later') {
     /* left for later: Today, with a quiet line back to the word (the flow review, A2: it could not be left) */
-    if (to === 'later') { if (v.arrival) moment.wordLater = v.arrival.seq; go('today'); return; }
+    if (to === 'later') { if (v.arrival) leaveWord(v.arrival.seq); go('today'); return; }
     if (to === 'through' && v.arrival) { game.do({ do: 'seen', what: 'arrival', ref: v.arrival.seq }); go('stair'); return; }
     leave('today');
   }

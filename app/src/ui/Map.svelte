@@ -12,6 +12,11 @@
   import { back } from './back.svelte';
   import type { StretchId } from '../core/story-types';
   import type { FactOf } from '../core/types';
+  import { onMount } from 'svelte';
+  import { onRest } from './rest';
+  /* the sparks move by SMIL, which only the drawing's own clock pauses: opened while at rest, they rest too (F#2) */
+  let chart = $state<SVGSVGElement | null>(null);
+  onMount(() => onRest(r => { if (r) chart?.pauseAnimations(); else chart?.unpauseAnimations(); }));
 
   /* focus: a stretch to open on (Today's "Use it on the Map", D-142) */
   let { go, focus }: { go: Go; focus?: string } = $props();
@@ -191,7 +196,7 @@
   </header>
 
   <div class="field" data-pan="map" bind:this={field} onpointerdown={down} onpointermove={move} onpointerup={up} onpointerleave={up} role="presentation">
-    <svg viewBox="0 0 {RW} {RH}" width={RW * k} height={RH * k} role="group" aria-label={t('map.label')}>
+    <svg bind:this={chart} viewBox="0 0 {RW} {RH}" width={RW * k} height={RH * k} role="group" aria-label={t('map.label')}>
       <defs>
         <radialGradient id="litPool"><stop offset="0" stop-color="#f4f2ff" stop-opacity="1"/><stop offset=".1" stop-color="#cdc6ff" stop-opacity=".75"/><stop offset=".32" stop-color="#8a7cf0" stop-opacity=".38"/><stop offset=".65" stop-color="#4a3fb0" stop-opacity=".14"/><stop offset="1" stop-color="#1c1846" stop-opacity="0"/></radialGradient>
         <radialGradient id="seenPool"><stop offset="0" stop-color="#dfe2ff" stop-opacity=".85"/><stop offset=".12" stop-color="#9aa3f4" stop-opacity=".45"/><stop offset=".45" stop-color="#4a50b0" stop-opacity=".16"/><stop offset="1" stop-color="#141638" stop-opacity="0"/></radialGradient>

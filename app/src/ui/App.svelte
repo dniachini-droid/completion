@@ -3,7 +3,7 @@
      a delve that ended while away shows its end; a run in progress shows the ring; an unseen arrival shows itself. */
   import { game, content } from './game.svelte';
   import { arrivalAt } from '../core/game';
-  import { moment } from './moment.svelte';
+  import { leaveWord, moment } from './moment.svelte';
   import { onMount, tick } from 'svelte';
   import type { Back, Go, Screen } from './nav';
   import { back } from './back.svelte';
@@ -39,11 +39,14 @@
   import { unslide } from './keyboard';
   import { wake } from './rest';
 
+  const beatKind = (id: string) => content.story.beats.find(b => b.id === id)?.kind;
   function first(): Screen {
     const v = game.view;
     /* an errand run's "What got done?" left unanswered waits for Dan without holding Today: Today says it waits (J1) */
     if ((v.runEnd && !v.runEnd.pending) || (v.run && v.run.phase !== 'held')) return 'delve';
     /* a word left to cut later waits for Dan on Today's quiet line, never forced on him (A2) */
+    /* after days away the welcome back comes first: a word waiting then waits as Today's line (U5, W F8) */
+    if (v.arrival && v.arrival.seq !== moment.wordLater && v.welcome && beatKind(v.arrival.id) === 'word') leaveWord(v.arrival.seq);
     if (v.arrival && v.arrival.seq !== moment.wordLater) return 'arrival';
     /* then, once each: the morning after camp, the welcome back, the daybook's new page */
     if (v.morning) return 'morning';
@@ -97,7 +100,7 @@
        word to cut) does what its own arrow does, never nothing (N clumsy 5) */
     if (to === 'back' && !trail.length) {
       const v = game.view;
-      if (screen === 'arrival' && v.arrival && !(typeof arg === 'string' && arg.startsWith('again:'))) { if (beatKind(v.arrival.id) === 'word' && moment.cutDone !== v.arrival.seq) moment.wordLater = v.arrival.seq; else game.do({ do: 'seen', what: 'arrival', ref: v.arrival.seq }); }
+      if (screen === 'arrival' && v.arrival && !(typeof arg === 'string' && arg.startsWith('again:'))) { if (beatKind(v.arrival.id) === 'word' && moment.cutDone !== v.arrival.seq) leaveWord(v.arrival.seq); else game.do({ do: 'seen', what: 'arrival', ref: v.arrival.seq }); }
       else if (screen === 'morning' && v.morning) game.do({ do: 'seen', what: 'morning', ref: v.morning.seq });
       else if (screen === 'welcome' && v.welcome) game.do({ do: 'seen', what: 'welcome', ref: v.welcome.seq });
       else if (screen === 'daybook' && v.close) game.do({ do: 'closeRead', week: v.close.week });
@@ -127,7 +130,6 @@
   const NAMES: Partial<Record<Screen, string>> = { today: 'delve.today', map: 'map.nav', records: 'records.nav', marks: 'marks.nav',
     rhythms: 'rhythms.label', daybook: 'nav.daybook', settings: 'nav.settings', satchel: 'nav.satchel', errands: 'errand.title', opened: 'opened.nav',
     delve: 'delve.label', step: 'step.label', morning: 'morning.label', welcome: 'welcome.label', stair: 'stair.label', cant: 'cant.label', proto: 'nav.proto' };
-  const beatKind = (id: string) => content.story.beats.find(b => b.id === id)?.kind;
   function nameOf(top: Back): string {
     if (top.screen === 'week') return t(top.arg ? 'week.next' : 'week.label');
     /* the set-up: its job's name ("Back to Tax return", never "Back to Back") */

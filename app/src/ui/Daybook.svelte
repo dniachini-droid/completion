@@ -53,7 +53,10 @@
     return page.learned.filter(id => !(s.learned.find(l => l.id === id)?.req ?? []).every(r => covered.has(r)));
   });
 
-  function read() { if (page && fresh) game.do({ do: 'closeRead', week: page.week }); }
+  /* plain, not watched: once read by a tap, a teardown (which sees the page as it was before that tap) does nothing
+     (deep review NEW-1) */
+  let wasRead = false;
+  function read() { if (wasRead) return; if (page && fresh) { wasRead = true; game.do({ do: 'closeRead', week: page.week }); } }
   function leave() { read(); go('back'); }
   /* left by any way (the phone's back too): the page was shown, so it is read, as the arrow does (review of D-144) */
   onMount(() => () => read());
