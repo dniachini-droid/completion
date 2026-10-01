@@ -11,7 +11,7 @@ for (let i = 1; i <= 30; i++) {
   if (!(await page.locator('input').count())) await H.tap(H.btn('Add a job'), 'Add a job', 400);
   if (!(await page.locator('input').count())) { H.say('NO INPUT at ' + i + ': ' + await H.screen()); H.say((await H.buttons()).join('\n')); await S('noinput'); break; }
   const inp = page.locator('input').first();
-  await inp.fill(`Job number ${i}`); await page.keyboard.press('Enter'); await page.clock.runFor(400);
+  await inp.fill(`Job number ${i}`); await page.keyboard.press('Enter'); await page.clock.runFor(1200);
   
 }
 H.say('30 adds took ' + (Date.now() - t0) + ' ms');
