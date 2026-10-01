@@ -59,8 +59,10 @@
     game.do({ do: 'offerAnswered', week: page.week }); read();
     const wk = calendarWeek(v.day);
     if (!game.facts.some(f => f.type === 'planMade' && f.week === wk)) game.do({ do: 'planWeek', week: wk });
-    go('week');
+    toWeek();
   }
+  /* the week laid out, its arrow says Today: never back through the Daybook (L B4) */
+  function toWeek() { go('back'); go('week'); }
   function notNow() { if (page) game.do({ do: 'offerAnswered', week: page.week }); if (step > 0) game.do({ do: 'lookAhead', finished: false }); leave(); }
 
   /* the week's look-ahead (D-116): about a minute, every step skippable, offered once; it earns nothing (P16) */
@@ -85,7 +87,7 @@
     game.do({ do: 'offerAnswered', week: page.week });
     game.do({ do: 'lookAhead', finished: true });
     read();
-    go('week');
+    toWeek();
   }
   function comingLine(x: ReturnType<typeof comingUp>[number]) {
     const name = game.job(x.job)?.name ?? '';

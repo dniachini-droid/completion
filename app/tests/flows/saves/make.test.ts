@@ -20,3 +20,12 @@ it.skipIf(!env.MAKE_SAVES)('keys: two hours a day for ten days, the Map never us
   if (!v.keys || !v.keyUse || !S.openable(C.story, st).length) throw new Error(`no Key to use: ${v.keys} kept, ${v.keyUse}`);
   out('keys', facts);
 });
+
+it.skipIf(!env.MAKE_SAVES)('word: three hours a day until the first word is reached, its screen not yet looked at', () => {
+  const { facts } = heavy(24, 3, true, 1, { noMap: true });
+  const at = facts.findIndex(f => f.type === 'arrived' && C.story.beats.find(b => b.id === f.id)?.kind === 'word');
+  if (at < 0) throw new Error('no word reached');
+  /* the save as it stood when the word was reached: that command's facts, and no look at it */
+  const upTo = facts.filter((f, i) => i <= at || (f.at === facts[at].at && f.type !== 'seen'));
+  out('word', upTo);
+});

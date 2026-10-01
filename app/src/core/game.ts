@@ -1575,10 +1575,10 @@ function reachedBy(all: Fact[], doneSeq: number): FactOf<'arrived'> | null {
   return null;
 }
 
-/** A place reached before, to read again (the Map's "Read again", D-135). */
+/** A place or camp reached before, to read again (the Map's "Read again", D-135; camps too, the flow review). */
 export function arrivalAt(facts: Fact[], base: Content, seq: number): Arrival | null {
   const f = facts.find(x => x.seq === seq);
-  return f && f.type === 'arrived' && f.kind === 'place' ? arrivalOf(W.live(base, facts), facts, f) : null;
+  return f && f.type === 'arrived' ? arrivalOf(W.live(base, facts), facts, f) : null;
 }
 function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
   /* one of the places played at day complete: nothing but the world's answers between the lock-in and it */

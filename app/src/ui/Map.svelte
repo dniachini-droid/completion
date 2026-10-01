@@ -30,7 +30,7 @@
     lx: number; ly: number; anchor: Anchor;
     box: { label: string; title: string; say: string };
     /** the places reached on this stretch, each to read again (D-135) */
-    reads?: { name: string; seq: number }[];
+    reads?: { name: string; seq: number; camp?: boolean }[];
   }
 
   /* ---------- the region: one light per stretch, laid out as the mock-up lays out the first region ---------- */
@@ -76,10 +76,18 @@
   /* the light is named for the stretch, the box for the place: both said, so a glance never reads two places (L B7) */
   const hereBox = $derived({ label: v.here.name.toLowerCase() === stretchName(v.here.stretch).toLowerCase() ? t('map.hereLabel') : t('map.hereIn', { stretch: stretchName(v.here.stretch) }), title: v.here.name, say: v.ahead ? `${t('today.ahead')}: ${firstSentence(unsaid(v.ahead, v.here.name))}` : firstSentence(v.here.line) });
 
-  /* the places reached on foot or by Key, by stretch, in the order reached: each one's entry can be read again (D-135) */
-  const reached = $derived(game.facts.filter((f): f is FactOf<'arrived'> => f.type === 'arrived' && f.kind === 'place')
-    .map(f => ({ seq: f.seq, beat: s.beats.find(b => b.id === f.id) })).filter(x => x.beat?.name)
-    .map(x => ({ seq: x.seq, name: x.beat!.name!, stretch: x.beat!.stretch })));
+  /* the places reached on foot or by Key, by stretch, in the order reached: each one's entry can be read again (D-135);
+     and the camps made there, each once (its latest night), so an earlier camp's words are never lost (the flow review) */
+  const reached = $derived.by(() => {
+    const out: { seq: number; name: string; stretch: StretchId; camp?: boolean }[] = [], camps = new Map<string, number>();
+    for (const f of game.facts) {
+      if (f.type !== 'arrived') continue;
+      if (f.kind === 'place') { const b = s.beats.find(x => x.id === f.id); if (b?.name) out.push({ seq: f.seq, name: b.name, stretch: b.stretch }); }
+      else if (f.seq !== v.arrival?.seq) camps.set(f.id, f.seq);
+    }
+    for (const [id, seq] of camps) { const k = s.camps.find(x => x.id === id); if (k) out.push({ seq, name: k.name, stretch: k.stretch, camp: true }); }
+    return out.sort((a, b) => a.seq - b.seq);
+  });
   const region = $derived.by((): Light[] => {
     const out: Light[] = [];
     for (const k of Object.keys(AT) as StretchId[]) {
@@ -302,7 +310,10 @@
               <p class="say reads">{#each sel.reads as r, i (r.seq)}{#if i}<span class="sep" aria-hidden="true"> · </span>{/if}<button class="text-link read" aria-label={t('map.readAgain', { place: r.name })} onclick={() => go('arrival', `again:${r.seq}`)}><span>{r.name}</span></button>{/each}</p>
             {:else}
               <p class="say" class:short={!!sel.reads?.length}>{sel.box.say}</p>
-              {#if sel.reads?.length}<p class="reads"><button class="text-link read" onclick={() => go('arrival', `again:${sel.reads![sel.reads!.length - 1].seq}`)}><span>{t('map.readHere')}</span></button></p>{/if}
+              {@const place = sel.reads?.filter(r => !r.camp).pop()}
+              {@const camps = sel.reads?.filter(r => r.camp) ?? []}
+              {#if place}<p class="reads"><button class="text-link read" onclick={() => go('arrival', `again:${place.seq}`)}><span>{t('map.readHere')}</span></button></p>{/if}
+              {#if camps.length}<p class="say reads">{#each camps as r, i (r.seq)}{#if i}<span class="sep" aria-hidden="true"> · </span>{/if}<button class="text-link read" aria-label={t('map.readAgain', { place: r.name })} onclick={() => go('arrival', `again:${r.seq}`)}><span>{r.name}</span></button>{/each}</p>{/if}
             {/if}
           </div>
         {/key}

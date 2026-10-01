@@ -13,6 +13,8 @@
   import { beatOf, marksIn, mayGuess, markHeld, markOf } from '../core/story';
   import { arrivalAt } from '../core/game';
   import { back } from './back.svelte';
+  import { moment } from './moment.svelte';
+  import { backTo } from './nav';
   import type { Go } from './nav';
 
   /* `seq`: a place reached before, opened from the Map to read again (its arg is "again:<seq>", never the plain seq a
@@ -41,7 +43,8 @@
   function pick(i: number) { if (!a) return; game.do({ do: 'choose', beat: a.id, pick: i }); go('records', a.records[i]); }
   /* after the cut: through the lintel to the stair (D-039), back to today, or later (the cut waits, unseen) */
   function cutLeave(to: 'through' | 'today' | 'later') {
-    if (to === 'later') { go('today'); return; }
+    /* left for later: Today, with a quiet line back to the word (the flow review, A2: it could not be left) */
+    if (to === 'later') { if (v.arrival) moment.wordLater = v.arrival.seq; go('today'); return; }
     if (to === 'through' && v.arrival) { game.do({ do: 'seen', what: 'arrival', ref: v.arrival.seq }); go('stair'); return; }
     leave('today');
   }
@@ -117,10 +120,12 @@
       <section class="bottom col">
         {#if again}
           <!-- read again from the Map: nothing to decide, only the way back (D-135) -->
-          <button class="btn resting" onclick={() => leave('today')}>{t('arrive.back', { to: back.label })}</button>
+          <button class="btn resting" onclick={() => leave('today')}>{backTo(back.label)}</button>
         {:else}
         <button class="btn resting" onclick={() => leave('today')}>{a.completedDay ? t('arrive.rest') : t('arrive.onward')}</button>
         <div class="btn-row"><button class="btn-quiet" onclick={() => leave('set')}><span>{t('today.keepGoing')}</span></button></div>
+        <!-- where it goes, said (N clumsy 8) -->
+        <p class="soft to-satchel">{t('today.keepGoingSay')}</p>
         {/if}
       </section>
     </div>
@@ -129,6 +134,7 @@
 {/if}
 
 <style>
+  .to-satchel { margin: 2px 0 0; font-size: 14px; font-style: italic; text-align: center; }
   .arr { display: contents; }
   .later { text-align: center; margin: 2px 0 10px; font-style: italic; }
   .facelight { position: absolute; inset: 0; z-index: 1; pointer-events: none; mix-blend-mode: screen;

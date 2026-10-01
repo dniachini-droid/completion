@@ -58,20 +58,23 @@
   <div class="scrim" role="presentation" onclick={() => { if (!settling()) closeMenu(); }}></div>
   <div class="menu" role="dialog" aria-modal="true" aria-label={j.name}>
     <p class="name">{j.name}</p>
+    <!-- a calendar open takes the menu's place, Cancel always in view under it (360 × 780, N polish) -->
+    {#if placing}<div class="cal"><DayPick from={v.day} label={t('satchel.day')} pick={place} /></div>
+    {:else if waiting}<div class="cal"><WaitPick day={v.day} who={wait?.who ?? ''} name={j.name} pick={waitOn} /></div>
+    {:else}
     <button class="item" disabled={!!v.run || !!v.runEnd?.pending || finished} onclick={delve}>{v.done.has(j.id) && recurring ? t('menu.delveAgain') : t('menu.delve')}</button>
     {#if menu.on === v.day && v.done.has(j.id)}<button class="item" onclick={notDone}>{t('row.notDone')}</button>{/if}
     {#if !v.done.has(j.id) && !finished}<button class="item" disabled={!!v.run} onclick={tick}>{t('tick.off')}</button>{/if}
     {#if !v.done.has(j.id) && !finished}<button class="item" disabled={!!v.run} onclick={cant}>{t('today.cantStart')}</button>{/if}
     <button class="item" onclick={edit}>{t('menu.edit')}</button>
     {#if !finished && !menu.on}<button class="item" aria-expanded={placing} onclick={() => { if (!settling()) { placing = !placing; waiting = false; } }}>{t('satchel.day')}</button>{/if}
-    {#if placing}<div class="cal"><DayPick from={v.day} label={t('satchel.day')} pick={place} /></div>{/if}
     <!-- only a one-off still to do can wait on a reply; a recurring job simply comes again (D-137) -->
     {#if !recurring && !finished && !v.done.has(j.id)}
       {#if wait}<button class="item" onclick={backToIt}>{t('wait.back')}</button>{/if}
       <button class="item" aria-expanded={waiting} disabled={v.run?.job.id === j.id || v.runEnd?.job.id === j.id || !!v.run?.errands?.some(e => e.job.id === j.id) || !!v.runEnd?.errands?.some(e => e.job.id === j.id)} onclick={() => { if (!settling()) { waiting = !waiting; placing = false; } }}>{wait ? t('wait.still') : t('wait.menu')}</button>
-      {#if waiting}<div class="cal"><WaitPick day={v.day} who={wait?.who ?? ''} name={j.name} pick={waitOn} /></div>{/if}
     {/if}
     <button class="item del" disabled={v.run?.job.id === j.id || v.runEnd?.job.id === j.id || !!v.run?.errands?.some(e => e.job.id === j.id) || !!v.runEnd?.errands?.some(e => e.job.id === j.id)} onclick={remove}>{t('job.delete')}</button>
+    {/if}
     <button class="item cancel" onclick={() => { if (!settling()) closeMenu(); }}>{t('rhythms.cancel')}</button>
   </div>
 {/if}

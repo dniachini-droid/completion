@@ -21,7 +21,8 @@
   } = $props();
   const dead = $derived(quiet ?? done);
 
-  const W = 96, DEAD = 10, HOLD_MS = 480;
+  /* narrower actions on a small phone, so the job's name stays readable beside them (360 × 780, N polish) */
+  const W = typeof innerWidth === 'number' && innerWidth < 380 ? 78 : 96, DEAD = 10, HOLD_MS = 480;
   const open = $derived(openKey === key);
   const width = $derived(actions.length * W);
   let dx = $state(0), sliding = $state(false);
@@ -83,7 +84,10 @@
       {#each actions as a (a.sr)}<button class="act" class:del={a.del} tabindex={open ? 0 : -1} onclick={() => { openKey = null; a.run(); }}>{a.label}</button>{/each}
     </div>
   {/if}
-  <button class="row" class:done class:moving={sliding} style:transform={offset ? `translate3d(${offset}px,0,0)` : null}
+  <!-- slid open, the row narrows beside its actions rather than sliding off: the job's name stays in view, wrapping if it
+       must (a small phone hid it, N polish); only the finger's slide itself moves it -->
+  <button class="row" class:done class:moving={sliding} class:narrowed={open && !sliding} style:transform={sliding && offset ? `translate3d(${offset}px,0,0)` : null}
+    style:width={open && !sliding ? `calc(100% - ${width}px)` : null}
     onclick={click} oncontextmenu={(e) => e.preventDefault()} aria-disabled={disabled || dead}>
     {@render row()}
   </button>
@@ -102,8 +106,10 @@
   .swipe, .swipe .row { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }
   .swipe .row { position: relative; z-index: 1; width: 100%; text-align: left; touch-action: pan-y; transition: transform .22s ease; }
   .swipe .row.moving { transition: none; }
+  .swipe .row.narrowed { transition: width .22s ease; }
   .acts { position: absolute; right: 18px; z-index: 0; top: 1px; bottom: 0; display: flex; }
   .act { width: 96px; font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink); background: rgba(var(--violet-rgb), .28); }
+  @media (max-width: 379px) { .act { width: 78px; font-size: 15px; line-height: 1.15; padding: 0 4px; } }
   /* Delete never looks like every other link (D-131): its own colour, on the slide only */
   .act.del { background: rgba(160, 64, 88, .55); color: #fff; }
   .swipe-lead { position: absolute; z-index: 2; left: 18px; top: 50%; transform: translateY(-50%); }

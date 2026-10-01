@@ -11,6 +11,7 @@
   import Words from './Words.svelte';
   import type { Go } from './nav';
   import { back } from './back.svelte';
+  import { backTo } from './nav';
 
   let { go, id: arg }: { go: Go; id: string } = $props();
   const again = $derived(arg.startsWith('again:'));
@@ -54,7 +55,7 @@
     </div>
     <div class="go rise d3">
       <!-- one way back, the arrow's (N clumsy 7); Today quietly beside it when back is somewhere else (S polish) -->
-      <button class="btn resting" onclick={() => go('back')}>{back.label === t('map.nav') ? t('opened.toMap') : t('arrive.back', { to: back.label })}</button>
+      <button class="btn resting" onclick={() => go('back')}>{backTo(back.label)}</button>
       {#if back.label !== t('delve.today')}<div class="quiet"><button class="text-link" onclick={() => go('today')}><span>{t('delve.today')}</span></button></div>{/if}
     </div>
   </section>

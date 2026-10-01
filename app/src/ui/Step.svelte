@@ -8,7 +8,8 @@
   import Look from './Look.svelte';
   import EndRoad from './EndRoad.svelte';
   import EndRing from './EndRing.svelte';
-  import type { Go } from './nav';
+  import { backTo, type Go } from './nav';
+  import { back } from './back.svelte';
 
   let { go, seq }: { go: Go; seq: number } = $props();
   const v = $derived(game.view);
@@ -32,14 +33,15 @@
   let looking = $state(false);
   const look = () => (looking = true);
 
-  function leave() { go(v.arrival ? 'arrival' : 'today'); }
+  /* back where it was ticked off (Today, the Satchel, the Week), or on to a place it reached (N clumsy 3) */
+  function leave() { go(v.arrival ? 'arrival' : 'back'); }
 </script>
 
 <Scene painting={v.here.painting} />
 <div class="ui">
   <header class="top col">
     <div class="topbar rise">
-      <button class="home" onclick={() => go('today')}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{t('delve.today')}</span></button>
+      <button class="home" onclick={leave}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{v.arrival ? t('delve.see') : back.label}</span></button>
       <span></span><span></span>
     </div>
   </header>
@@ -58,7 +60,7 @@
       {#if v.arrival}
         <button class="btn" onclick={leave}>{t('delve.see')}</button>
       {:else}
-        <button class="btn resting" onclick={leave}>{t('delve.toToday')}</button>
+        <button class="btn resting" onclick={leave}>{backTo(back.label)}</button>
       {/if}
     </div>
   </section>

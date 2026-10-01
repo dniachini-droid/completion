@@ -20,9 +20,11 @@
   const record = m?.beat ? [...game.view.story.records].reverse().find(id => recordOf(s, id)?.cut?.some(l => l.some(tk => 's' in tk && typeof tk.s === 'string' && game.view.story.guessed.has(tk.s)))) ?? null : null;
 
   $effect(() => { if (!m) go('today'); });
+  /* a look at the record isn't leaving: back returns here (N bug 2); only going on to Today marks it seen */
   function leave(to: 'today' | 'records') {
+    if (to === 'records' && record) { go('records', record); return; }
     if (m) game.do({ do: 'seen', what: 'morning', ref: m.seq });
-    if (to === 'records' && record) go('records', record); else go('today');
+    go('today');
   }
 </script>
 

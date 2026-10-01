@@ -11,6 +11,7 @@
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
   import { back } from './back.svelte';
+  import { backTo } from './nav';
   import type { Job, Rhythm } from '../core/types';
   import Remind from './Remind.svelte';
   import DayPick from './DayPick.svelte';
@@ -125,7 +126,7 @@
         <!-- a job removed: one quiet line, and Undo (D-112); opened on that one job, also the way back -->
         <p class="said">{t('job.gone')}</p>
         <div class="links undo"><button class="text-link" onclick={undo}><span>{t('job.undo')}</span></button>
-          <button class="text-link" onclick={() => go('back')}><span>{t('job.back', { to: back.label })}</span></button></div>
+          <button class="text-link" onclick={() => go('back')}><span>{backTo(back.label)}</span></button></div>
       {/if}
     {:else}
       <div class="editor">

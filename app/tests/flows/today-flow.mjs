@@ -43,6 +43,30 @@ if (!(await page.getByText('Press and hold a job for more.').count())) fails.pus
 const catNote = (await row('Order the cat').locator('.s').textContent().catch(() => ''))?.trim();
 if (catNote) fails.push(`the cat's medication row says "${catNote}"`);
 await shot('1-fresh');
+/* N polish: no Daybook link before there is a page in it */
+if (await page.locator('.foot').getByRole('button', { name: 'Daybook', exact: true }).count()) fails.push('a Daybook link on a fresh save, with no page yet');
+
+/* N polish, small phone: the job menu's calendar takes its place, Cancel in view under it */
+if (await hold(row('Course'), 'Course')) {
+  await tap(page.locator('.menu').getByRole('button', { name: 'Put on a day', exact: true }), 'Put on a day');
+  const c = await page.locator('.menu .cancel').boundingBox().catch(() => null);
+  if (!c || c.y < 0 || c.y + c.height > +h) fails.push(`with the calendar open, Cancel is not in view (${JSON.stringify(c)})`);
+  if (await page.locator('.menu').getByRole('button', { name: 'Edit', exact: true }).count()) fails.push('the menu\'s other items stay under the open calendar');
+  await tap(page.locator('.menu .cancel'), 'Cancel');
+}
+/* N polish, small phone: a row slid open keeps the job's name in view */
+{
+  const strip = page.locator('.swipe').filter({ has: page.locator('.t', { hasText: /^Course/ }) }).first();
+  const r = await strip.boundingBox().catch(() => null);
+  if (r) {
+    await page.mouse.move(r.x + r.width - 30, r.y + r.height / 2); await page.mouse.down();
+    await page.mouse.move(r.x + r.width - 260, r.y + r.height / 2, { steps: 8 }); await page.mouse.up(); await page.clock.runFor(600); await page.waitForTimeout(400);
+    const t = await strip.locator('.t').boundingBox().catch(() => null);
+    if (!t || t.x < 0 || t.width < 40) fails.push(`a slid row hides the job's name (${JSON.stringify(t)})`);
+    await shot('1b-slid');
+    await tap(row('Course'), 'the Course row (closes the slide)');
+  }
+}
 
 /* G: the line's other jobs done, the avoided one is named */
 const line = await page.locator('.rows').first().locator('.t').allTextContents();

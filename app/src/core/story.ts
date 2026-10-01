@@ -86,6 +86,14 @@ export const beatOf = (s: Story, id: string): Beat | undefined => s.beats.find(b
 export const sealOf = (s: Story, id: string): Seal | undefined => s.seals.find(x => x.id === id);
 export const markOf = (s: Story, id: string): Mark | undefined => s.marks.find(m => m.id === id);
 export const recordOf = (s: Story, id: string): RecordFragment | undefined => s.records.find(r => r.id === id);
+/** Which of the records kept in one place this is (the notebook's pages, the log's entries), 1 on, in the story's order;
+    null when it is the only one there. Their titles differ by it (the flow review, L C3). */
+export function recordNumber(s: Story, id: string): number | null {
+  const r = recordOf(s, id);
+  if (!r) return null;
+  const same = s.records.filter(x => x.where.toLowerCase() === r.where.toLowerCase());
+  return same.length > 1 ? same.indexOf(r) + 1 : null;
+}
 
 /** Whether an id in a `req` list is satisfied: a beat or place played, a seal opened, a mark offered (a guess is
     optional, so the story never waits on one; the word asks it before the first tap), a find given. */

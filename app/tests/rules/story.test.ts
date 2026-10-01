@@ -122,3 +122,12 @@ describe('Keys, finds and lines', () => {
   });
   it('the game day is the 04:00 day', () => { expect(gameDay('2026-09-29T03:59:00+01:00')).toBe('2026-09-28'); });
 });
+
+describe('every record has a title of its own (the flow review, L C3)', () => {
+  it('records kept in one place are numbered, so no two titles are the same', async () => {
+    const { recordNumber } = await import('../../src/core/story');
+    const { content } = await import('../../src/content/world');
+    const titles = content.story.records.map(r => `${r.where.toLowerCase()}|${recordNumber(content.story, r.id) ?? ''}`);
+    expect(new Set(titles).size).toBe(titles.length);
+  });
+});

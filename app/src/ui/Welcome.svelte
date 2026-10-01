@@ -28,9 +28,11 @@
     answered = true;
   }
   function letGo() { if (slip?.kind === 'date') game.remove(slip.job); answered = true; }
+  /* a look at the record isn't leaving: back returns here (S9); only going on to Today marks it seen */
   function leave(to: 'today' | 'records') {
+    if (to === 'records' && w?.record) { go('records', w.record); return; }
     if (w) game.do({ do: 'seen', what: 'welcome', ref: w.seq });
-    if (to === 'records' && w?.record) go('records', w.record); else go('today');
+    go('today');
   }
   const cap = (x: string) => x.charAt(0).toUpperCase() + x.slice(1);
 </script>
@@ -38,13 +40,16 @@
 <Scene painting={v.here.painting} top="300px" bottom="56%" />
 <div class="ui">
   <header class="top col">
+    <!-- an arrow, as every screen has (N polish) -->
     <div class="topbar rise">
-      <span></span><span></span>
+      <button class="home" onclick={() => leave('today')}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{t('delve.today')}</span></button>
+      <span></span>
       <button class="icon-link" onclick={() => go('map')}><span>{t('map.nav')}</span></button>
     </div>
     <div class="label-line lit rise welcome">{t('welcome.label')}</div>
     <h1 class="carve lg rise">{v.here.name}</h1>
-    {#if view}<p class="say on-scene rise d1">{cap(view)}</p>{/if}
+    <!-- the locked thing in view, said as what it is (S9): ahead of him, or left behind him -->
+    {#if view}<p class="say on-scene rise d1">{v.aheadBehind ? `${t('today.behind')}: ${view}.` : t('welcome.ahead', { thing: view })}</p>{/if}
   </header>
   <div class="mid"></div>
   <section class="bottom col rise d2">
@@ -66,6 +71,7 @@
 </div>
 
 <style>
+  button.home { color: var(--ink-2); }
   h1 { margin-top: 10px; }
   .top .say { margin-top: 10px; }
   .question { font-style: italic; color: #fff; line-height: 1.45; margin-bottom: 12px; }

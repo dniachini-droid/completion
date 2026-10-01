@@ -14,6 +14,7 @@
   import { game, content } from './game.svelte';
   import { pastBedtime, BEDTIME_WINDOW, tomorrowFirst, satchelView, errandChoices, carriedOf } from '../core/game';
   import { tieFor } from '../core/remember';
+  import { moment } from './moment.svelte';
   import { ofLine } from './panel';
   import { beatOf } from '../core/story';
   import type { Job } from '../core/types';
@@ -310,6 +311,7 @@
         {#if stillToCome.length}<p class="soft still">{t('today.stillToCome', { what: stillToCome.join(', ') })}</p>{/if}
         {#if evening}{@render tonight()}{/if}
         <div class="btn-row after"><button class="btn-quiet" onclick={() => go('satchel')}><span>{t('today.keepGoing')}</span></button></div>
+        <p class="soft to-satchel">{t('today.keepGoingSay')}</p>
         <!-- the one promise past the finish line: more work reaches the deep moments (D-127), said once, quietly (D-130) -->
         <p class="soft deeper">{t('today.deeper')}</p>
         {#if lastPlace}<div class="cant"><button class="text-link" onclick={() => go('arrival')}><span>{t('today.look')}</span></button></div>{/if}
@@ -318,6 +320,9 @@
     {/if}
 
     <Deleted />
+    <!-- a word left to cut later (A2), and a Daybook page written after days away (D-143 F): quiet lines back to them -->
+    {#if v.arrival && v.arrival.seq === moment.wordLater}<p class="said waits"><button class="text-link" onclick={() => { moment.wordLater = 0; go('arrival'); }}><span>{t('today.wordWaits')}</span></button></p>{/if}
+    {#if v.close}<p class="said waits"><button class="text-link" onclick={() => go('daybook')}><span>{t('today.pageWaits')}</span></button></p>{/if}
     {#if onlyAvoided}<p class="said only" role="status">{t('today.onlyAvoided', { job: onlyAvoided })}</p>{/if}
     {#if waitedJob}
       <p class="said" role="status">{t('wait.said', { job: waitedJob.name, day: dayShort(waited.until) })} <button class="text-link" aria-label={t('wait.srBack', { job: waitedJob.name })} onclick={() => { backToIt(waitedJob.id, waited.today); sayWaited(null); }}><span>{t('wait.back')}</span></button></p>
@@ -379,7 +384,8 @@
       <!-- the jobs with no day, by day and at night (D-126) -->
       <button class="text-link" onclick={() => go('satchel')}><span>{t('nav.satchel')}</span></button>
       <button class="text-link" onclick={() => go('week')}><span>{t('nav.week')}</span></button>
-      <button class="text-link" onclick={() => go('daybook')}><span>{t('nav.daybook')}</span></button>
+      <!-- only once there is a page to read (N polish) -->
+      {#if game.facts.some(f => f.type === 'weekClosed')}<button class="text-link" onclick={() => go('daybook')}><span>{t('nav.daybook')}</span></button>{/if}
     </nav>
   </section>
 </div>
@@ -432,6 +438,9 @@
   .reply-acts .text-link span { font-size: 15px; }
   .reply-acts .text-link:disabled { opacity: .5; }
   .errand { margin-top: 6px; }
+  .waits { margin: 0 0 6px; }
+  .waits .text-link span { color: var(--gold-hi); }
+  .next .soft.to-satchel { margin: -8px 0 4px; font-size: 14px; font-style: italic; text-align: center; }
   .hold-hint { margin: 6px 0 0; text-align: center; font-size: 14px; font-style: italic; }
   .of { margin: -2px 0 4px !important; font-style: italic; }
   .only { margin: 2px 0 6px; }
