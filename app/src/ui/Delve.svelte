@@ -81,7 +81,7 @@
   });
   /* an errand run's errands struck off, each with its story moment (D-139): the ones with words to show */
   const errandsDone = $derived(end?.errands?.filter(e => e.done !== null) ?? []);
-  const errandStory = $derived(errandsDone.filter(e => { const r = returnOf(content, game.facts, e.done!); return !!r.line || r.finds.length > 0; }));
+  const errandStory = $derived(errandsDone.filter(e => { const r = returnOf(content, game.facts, e.done!); return !!r.line || r.finds.length > 0 || !!r.keyNote; }));
   /* the end carries the story (a step, a mark to guess, a find) */
   const told = $derived(!!end && (doneSeq !== null || v.runFinds.length > 0 || errandStory.length > 0));
   /* an errand run is named as one, never by a job (D-139) */

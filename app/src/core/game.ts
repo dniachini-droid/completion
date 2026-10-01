@@ -1414,6 +1414,10 @@ export interface Arrival {
 export interface Return {
   beat: string | null; line: string; key: boolean; guess: string[]; choice?: [string, string]; records: string[];
   finds: string[];
+  /** What Dan is told about a Key on this return (D-141): `earned` this job kept up its rhythm and its Key opened what
+      plays here; `kept` a Key kept from earlier opened it; `held` this job earned a Key with nothing sealed in reach, so it
+      is kept; null: no Key. */
+  keyNote: 'earned' | 'kept' | 'held' | null;
   /** A partial sign found on a deep push: its element, and the mark it belongs to (SCRIPT §8). */
   part?: { el: string; mark: string };
 }
@@ -1574,20 +1578,41 @@ function handedOn(c: Content, facts: Fact[], doneSeq: number): string[] {
   const here = S.marksIn(c.story, S.beatOf(c.story, a.id)?.carries?.records ?? []);
   return rawReturn(c, facts, doneSeq).guess.filter(m => here.includes(m) && S.markOf(c.story, m)?.confirmedBy !== a.id);
 }
+/** What a job's return says about a Key (D-141). A Key kept for later (no niche in reach when it was earned) used to be
+    told of only when it opened something, days on, as if the job then had just earned it (Dan, 2026-10-01). */
+function keyNoteOf(facts: Fact[], doneSeq: number, sealId: string | null): Return['keyNote'] {
+  if (sealId) {
+    const o = facts.find(f => f.type === 'sealOpened' && f.seal === sealId);
+    const before = o && facts.find(f => f.seq === o.seq - 1);
+    if (before?.type === 'keyUsed') return 'kept';
+    if (before?.type === 'keyEarned') return 'earned';
+  }
+  /* this job's own Key, kept: what the same Done wrote, before any later Done (only a Done lands a rhythm's Key) */
+  const done = facts.find(f => f.seq === doneSeq);
+  if (done?.type !== 'jobDone') return null;
+  for (const f of facts) {
+    if (f.seq <= doneSeq) continue;
+    if (f.type === 'jobDone' || f.day !== done.day) break;
+    if (f.type === 'keyEarned' && !f.rhythm.startsWith('floor:')) return facts.find(g => g.seq === f.seq + 1)?.type === 'keyHeld' ? 'held' : null;
+  }
+  return null;
+}
 function rawReturn(c: Content, facts: Fact[], doneSeq: number): Return {
   const beat = facts.find(f => f.type === 'beatPlayed' && f.job === doneSeq) as FactOf<'beatPlayed'> | undefined;
   const finds = facts.filter((f): f is FactOf<'findGiven'> => f.type === 'findGiven' && f.job === doneSeq).map(f => f.id);
-  if (!beat) return { beat: null, line: '', key: false, guess: [], records: [], finds };
-  if (beat.id === 'passage') return { beat: null, line: c.story.passages.find(p => p.id === beat.passage)?.line ?? '', key: false, guess: [], records: [], finds };
+  const seal0 = beat && beat.id !== 'passage' ? S.sealOf(c.story, beat.id) ?? (S.beatOf(c.story, beat.id)?.kind === 'stepKey' ? S.sealOf(c.story, S.beatOf(c.story, beat.id)!.seal!) : undefined) : undefined;
+  const keyNote = keyNoteOf(facts, doneSeq, seal0 && !facts.some(f => f.type === 'sealOpened' && f.seal === seal0.id && f.how === 'road') ? seal0.id : null);
+  if (!beat) return { beat: null, line: '', key: false, guess: [], records: [], finds, keyNote };
+  if (beat.id === 'passage') return { beat: null, line: c.story.passages.find(p => p.id === beat.passage)?.line ?? '', key: false, guess: [], records: [], finds, keyNote };
   const seal = S.sealOf(c.story, beat.id);
-  if (seal) return { beat: seal.id, line: seal.line ?? '', key: !facts.some(f => f.type === 'sealOpened' && f.seal === seal.id && f.how === 'road'), guess: seal.carries?.guess ?? [], records: seal.carries?.records ?? [], finds };
+  if (seal) return { beat: seal.id, line: seal.line ?? '', key: !facts.some(f => f.type === 'sealOpened' && f.seal === seal.id && f.how === 'road'), guess: seal.carries?.guess ?? [], records: seal.carries?.records ?? [], finds, keyNote };
   const b = S.beatOf(c.story, beat.id)!;
   const viaSeal = b.seal ? S.sealOf(c.story, b.seal) : undefined;
   const guess = [...new Set([...(b.carries?.guess ?? []), ...(viaSeal?.carries?.guess ?? [])])];
   const part = b.carries?.partial && b.carries.seen?.[0] ? { el: b.carries.partial, mark: b.carries.seen[0] } : undefined;
   /* a Key's return says so; a row the road opened is a step like any other (D-129) */
   const byRoad = facts.some(f => f.type === 'sealOpened' && f.seal === b.seal && f.how === 'road');
-  return { beat: b.id, line: b.line ?? '', key: b.kind === 'stepKey' && !byRoad, guess, choice: b.choice, records: [...(b.carries?.records ?? []), ...(viaSeal?.carries?.records ?? [])], finds, ...(part ? { part } : {}) };
+  return { beat: b.id, line: b.line ?? '', key: b.kind === 'stepKey' && !byRoad, guess, choice: b.choice, records: [...(b.carries?.records ?? []), ...(viaSeal?.carries?.records ?? [])], finds, keyNote, ...(part ? { part } : {}) };
 }
 
 /** Today's list, as Today shows it and as the day's finish line reads it (D-130): on a planned week, every job the plan
