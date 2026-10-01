@@ -1606,3 +1606,17 @@
 - **Alternatives:** keeping the floor, announced (Dan chose removal); showing Keys earned this week rather than kept (the kept count is what a locked thing needs); a Key opening the oldest niche by itself but framed as going back (Dan chose the Map); only niches where Dan is, the rest missed for good.
 - **Consequences:** `View.keys`, `View.aheadKey`, `View.keyUse`; `floor()` and `KEY_FLOOR` removed; `nextSeal(…, where)` and `openable()`; the `useKey` command and `keyUsed.chosen` (optional: old saves read as before); the `opened` screen; the Map takes a stretch to open on. At Dan's pace a Key rarely finds a niche where he is, so most Keys are used on the Map; the review simulator uses them there at each day's end. Rule tests: the Key count and "Needs a Key" against the story's own state; a kept Key never beside a plain niche it could open (fails on the old code from day 3); no floor Keys in a Low-week run. Dan's own save: any Key he holds beside an openable niche opens on his next finished job.
 - **Reversible:** Yes: the floor is one call; the display is Today's and the copy.
+
+## D-143 — The flow review's choices (Dan)
+- **Date:** 2026-10-01
+- **Context:** Four Fable reviewers reviewed the whole app's flow (`docs/reviews/FLOW-REVIEW.md`, reports in `docs/reviews/flow/`). Dan chose on each design question (all as recommended).
+- **Decision:**
+  - **A. Keys are always Dan's choice.** A Key is never spent for him (no auto-use on a job's return or on arrival). When he earns one and something is locked right where he is, the screen offers **Use it here** / **Keep it**. Everything else is opened from the Map, which lists **every** locked thing he has passed (the same test as Today's link: one definition of "a Key can open this"). Replaces D-142 point 6's automatic use where he is.
+  - **B. Opened things and finds can be read again.** An opened niche stays on the Map under its place, "Opened · Read again" (like places). Each Daybook week page lists that week's finds and opened niches.
+  - **C. Today's "Add a job" puts the job on today.** The Satchel's own box still adds to "No day yet".
+  - **D. A job left on "Not yet" stays on Today** the next day, marked "N min so far", until done or moved.
+  - **E. During a delve, other jobs can be added, edited, moved and deleted;** only a second delve is blocked.
+  - **F. After days away, the welcome back only;** the Daybook's new page waits as a quiet line on Today ("A page was written for you · Daybook").
+  - **G. The avoided job still holds the day,** but once it's the only one left Today says so ("Only [job] left: that's the one.").
+- **Also to fix (no decision needed):** the review's seven worst problems (moving finish line; the word screen that can't be left; the Map ↔ opened loop; "Use it on the Map" pointing nowhere; "Ahead · Needs a Key" behind Dan; the errand run's back counting silently; a delve's end lost after a link) and its smaller bugs and polish, each with a flow test.
+- **Reversible:** each one separately.
