@@ -103,7 +103,7 @@ describe('ui glue (game.svelte.ts) on a recording phone', () => {
 
   it('PLATFORM #2: after a time-zone change the reminders are not laid out again (same wall-clock key)', async () => {
     /* covered by reasoning; key is wall-clock only: check the source line */
-    const src: string = (await import('node:fs')).readFileSync(new URL('../../src/ui/game.svelte.ts', import.meta.url), 'utf8');
+    const src: string = ((globalThis as any).process.getBuiltinModule('node:fs') as { readFileSync(u: URL, e: string): string }).readFileSync(new URL('../../src/ui/game.svelte.ts', import.meta.url), 'utf8');
     expect(src).toMatch(/const key = JSON\.stringify\(\[words\.map\(w => \[w\.a\.date, w\.a\.clock, w\.title, w\.body\]\), nudge\?\.getTime\(\) \?\? 0\]\)/);
   });
 });
