@@ -1618,5 +1618,5 @@
   - **E. During a delve, other jobs can be added, edited, moved and deleted;** only a second delve is blocked.
   - **F. After days away, the welcome back only;** the Daybook's new page waits as a quiet line on Today ("A page was written for you · Daybook").
   - **G. The avoided job still holds the day,** but once it's the only one left Today says so ("Only [job] left: that's the one.").
-- **Also to fix (no decision needed):** the review's seven worst problems (moving finish line; the word screen that can't be left; the Map ↔ opened loop; "Use it on the Map" pointing nowhere; "Ahead · Needs a Key" behind Dan; the errand run's back counting silently; a delve's end lost after a link) and its smaller bugs and polish, each with a flow test.
+- **Also to fix (no decision needed):** the review's seven worst problems (moving finish line; the word screen that can't be left; the Map ↔ opened loop; "Use it on the Map" pointing nowhere; "Ahead · Needs a Key" behind Dan; the errand run's back counting silently; a delve's end lost after a link) and every smaller bug and polish item; the complete checklist is `docs/reviews/flow/FIX-LIST.md` (where a fix there is a routine call of Claude's, D-006, it is stated there).
 - **Reversible:** each one separately.

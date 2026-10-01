@@ -8,6 +8,8 @@
 > - **Getting around** ([`flow/NAVIGATION.md`](flow/NAVIGATION.md)): every screen's ways in and out, back, gestures, the small phone.
 > - **Two weeks of real life** ([`flow/TWO-WEEKS.md`](flow/TWO-WEEKS.md)): 15 days played from a fresh start, with a diary.
 >
+> **Every finding from all four reports is in one checklist: [`flow/FIX-LIST.md`](flow/FIX-LIST.md).** This page is the summary.
+>
 > They reviewed everything including the Key changes not yet merged (pull request #77). **Nothing has been changed yet.**
 
 ## The verdict in one paragraph
