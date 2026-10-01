@@ -623,11 +623,20 @@ describe('Stage 2 fixes and lengths (D-110)', () => {
     expect(W.items(p.facts, MON).map(i => [i.id, i.done])).toEqual([[a.id, true], [b.id, false]]);
     expect(W.items(p.facts, W.addDays(MON, 1)).map(i => i.id)).toEqual([b.id]);
   });
-  it('a 5-minute delve earns 5 minutes; every job opens at 30 × 1 (D-124)', () => {
+  it('a 5-minute delve earns 5 minutes; a one-off opens at 30 × 1 (D-124), a recurring job at its own minutes (D-146)', () => {
     const p = player().do({ do: 'open' }).do({ do: 'startRun', job: 'spanish', minutes: 5, count: 1 }).wait(6);
     expect(p.facts.filter(f => f.type === 'stepsGained').map(f => (f as { minutes: number }).minutes)).toEqual([5]);
+    /* a one-off opens at 30 × 1 whatever its minutes (D-124); a recurring job at its own (D-146) */
     expect(presetRun({ id: 'x', name: 'x', delve: true, length: 10, doneBy: 'dan' })).toEqual({ minutes: 30, count: 1 });
-    expect(presetRun({ id: 'x', name: 'x', delve: true, length: 180, doneBy: 'enough' })).toEqual({ minutes: 30, count: 1 });
+    expect(presetRun({ id: 'x', name: 'x', delve: true, length: 180, doneBy: 'enough' }, { rhythms: [] })).toEqual({ minutes: 30, count: 1 });
+    const r = { rhythms: [{ job: 'x' }] }, job = (length: number) => ({ id: 'x', name: 'x', delve: true, length, doneBy: 'enough' as const });
+    expect(presetRun(job(60), r)).toEqual({ minutes: 60, count: 1 });
+    expect(presetRun(job(5), r)).toEqual({ minutes: 5, count: 1 });
+    expect(presetRun(job(120), r)).toEqual({ minutes: 60, count: 2 });
+    expect(presetRun(job(180), r)).toEqual({ minutes: 90, count: 2 });
+    expect(presetRun(job(240), r)).toEqual({ minutes: 60, count: 4 });
+    expect(presetRun(job(50), r)).toEqual({ minutes: 25, count: 2 });
+    expect(presetRun(job(55), r)).toEqual({ minutes: 60, count: 1 });
   });
   it('an old “usual session” in a save becomes the job’s minutes, so the plan doesn’t change (D-124)', () => {
     const job = { id: 'course', name: 'Course', delve: true, length: 180, enoughAt: 50, doneBy: 'enough' as const };

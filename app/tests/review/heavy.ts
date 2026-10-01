@@ -37,7 +37,7 @@ export function whyHeld(st: S.StoryState): string {
 /** `afterDelve`: called with the facts after every delve's end; `neverDone`: Dan's own jobs are never said done (one big
     project, delved on day after day). */
 export function heavy(days: number, hours: number, rhythmsToo = true, oneOffs = 1,
-  opts: { afterDelve?: (facts: Fact[], at: string) => void; neverDone?: boolean } = {}) {
+  opts: { afterDelve?: (facts: Fact[], at: string) => void; neverDone?: boolean; noMap?: boolean } = {}) {
   let facts: Fact[] = [];
   let now = Date.parse('2026-09-28T07:00:00Z');   /* a Monday, 08:00 at +01:00 */
   const at = () => new Date(now + 3_600_000).toISOString().slice(0, 19) + '+01:00';
@@ -74,6 +74,12 @@ export function heavy(days: number, hours: number, rhythmsToo = true, oneOffs = 
       budget -= mine;
       while (mine >= 60) { run({ do: 'startRun', job: id, minutes: 60, count: 1 }); wait(61); answer(); opts.afterDelve?.(facts, at()); mine -= 60; }
       if (!opts.neverDone) { run({ do: 'done', job: id }); answer(); }
+    }
+    /* the day's end: Dan uses his Keys on the Map, on what they can open behind him (D-142), oldest first */
+    if (!opts.noMap) for (let g = 0; g < 10; g++) {
+      const st0 = S.storyState(facts, C.story), x = S.openable(C.story, st0)[0];
+      if (!st0.held || !x) break;
+      run({ do: 'useKey', seal: x.id });
     }
     const st = S.storyState(facts, C.story), vv = see(facts, C, at());
     const rw = C.story.route.find(r => r.w === st.week);

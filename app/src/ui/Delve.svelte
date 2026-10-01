@@ -3,7 +3,8 @@
   /* The delve (INTERACTION_NOTES → the delve; D-028, D-036, D-037, D-047). The glowing ring fills with the time left;
      the destination is the headline; the tunnel moves so the world is visibly travelling. Only two ideas, always in
      the same words: Pause (once Step away; review 2, D-088) and Finish here. The scene is the approved mock-up's own (delve.html, revision 3). */
-  import { onMount, flushSync, tick } from 'svelte';
+  import { onMount, flushSync, tick, untrack } from 'svelte';
+  import { moment } from './moment.svelte';
   import { game, content } from './game.svelte';
   import { t, minutesWords, minutesShort, ord } from '../content/copy/en';
   import { mmss, ofLine } from './panel';
@@ -16,6 +17,7 @@
   import { steady } from './taps';
   import { unslide } from './keyboard';
   import { listLines, returnOf } from '../core/game';
+  import { RETURN_MIN } from '../core/story';
   import EndRing from './EndRing.svelte';
   import EndRoad from './EndRoad.svelte';
   import type { TallyMode } from './tally';
@@ -26,7 +28,9 @@
   const run = $derived(v.run);
   const end = $derived(v.runEnd);
   /* keep the end on screen while its story plays (a guess, a choice), even after it's marked seen */
-  let answer = $state<'yes' | 'no' | null>(null);
+  /* as left, if Dan looked at a record or a niche from this end and came back (it is shown again, not replayed) */
+  const was = end ? moment.ends[end.seq] : undefined;
+  let answer = $state<'yes' | 'no' | null>(was?.answer ?? null);
   let root: HTMLDivElement;
   let restful = $state(false);
 
@@ -52,7 +56,12 @@
   const share = (m: number) => Math.max(0, Math.min(1, (m - road.from) / Math.max(1, road.to - road.from)));
   const toW = $derived(end ? end.walked : v.walked);
   const fromW = $derived(end ? Math.max(0, end.walked - end.gained) : v.walked);
-  const mode = $derived<TallyMode>(!end ? 'still' : (end.ask && answer === null) || end.pending ? 'from' : answer === 'no' ? 'still' : 'play');
+  const mode = $derived<TallyMode>(!end ? 'still' : (end.ask && answer === null) || end.pending ? 'from' : answer === 'no' || was?.played ? 'still' : 'play');
+  $effect(() => {
+    if (!end) return;
+    const seq = end.seq, a = answer, at = storyAt, playing = mode === 'play';
+    untrack(() => { moment.ends[seq] = { answer: a, storyAt: at, played: (moment.ends[seq]?.played ?? false) || playing }; });
+  });
 
   /* the ring settles after an end: lit, then resting */
   $effect(() => {
@@ -64,7 +73,10 @@
   /* "Where did you stop?" after Finish here (D-112): optional; kept as the job's note, shown at its next Begin and in
      "I can't start" */
   let stopAt = $state('');
-  function keepNote() { if (end && stopAt.trim()) game.do({ do: 'noteJob', job: end.job.id, note: stopAt }); }
+  /* the end's job, held past the end being marked seen: the phone's back marks it before this screen goes (review of D-144) */
+  let noteJob = '';
+  $effect(() => { if (end) noteJob = end.job.id; });
+  function keepNote() { if (noteJob && stopAt.trim()) { game.do({ do: 'noteJob', job: noteJob, note: stopAt }); stopAt = ''; } }
   function leave(to: 'today' | 'arrival') {
     keepNote();
     if (end) game.do({ do: 'seen', what: 'step', ref: end.seq });
@@ -84,6 +96,8 @@
   const errandStory = $derived(errandsDone.filter(e => { const r = returnOf(content, game.facts, e.done!); return !!r.line || r.finds.length > 0 || !!r.keyNote; }));
   /* the end carries the story (a step, a mark to guess, a find) */
   const told = $derived(!!end && (doneSeq !== null || v.runFinds.length > 0 || errandStory.length > 0));
+  /* the errand run's stories, one at a time (L B5) */
+  let storyAt = $state(was?.storyAt ?? 0);
   /* an errand run is named as one, never by a job (D-139) */
   const title = (r: { errands: unknown; job: { name: string } }) => r.errands ? t('errand.title') : r.job.name;
   /* an errand struck off (or back) with a tap, as a job's list line is (D-126) */
@@ -121,11 +135,13 @@
     sayTimer = setTimeout(() => (parkedSay = null), 4000);
   }
   /* leaving the delve with a thought typed (Today, the phone's back): it is kept, never lost (review) */
-  onMount(() => () => { clearTimeout(sayTimer); if (parking && thought.trim()) game.do({ do: 'park', line: thought }); });
+  /* where he stopped, typed and left by the phone's back, is kept as the arrow would keep it (review of D-144) */
+  onMount(() => () => { clearTimeout(sayTimer); if (parking && thought.trim()) game.do({ do: 'park', line: thought }); keepNote(); });
   const canPark = $derived(!!run);
   /* at the end: the thoughts this delve parked, once its question is answered; a tap opens the Satchel */
   const parkedN = $derived(end && !run && !end.pending && !(end.ask && answer === null) ? end.parked : 0);
-  function toSatchel() { keepNote(); go('satchel'); }
+  /* after "Not yet" the end is answered: marked seen first, so back from the Satchel never asks again */
+  function toSatchel() { keepNote(); if (answer === 'no' && end) game.do({ do: 'seen', what: 'step', ref: end.seq }); go('satchel'); }
 </script>
 
 {#snippet errandList(es: { job: { id: string; name: string }; struck: boolean }[])}
@@ -155,7 +171,8 @@
   <div class="ui">
     <header class="top col">
       <div class="topbar rise">
-        <button class="home" onclick={() => (end ? leave('today') : go('today'))}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{t('delve.today')}</span></button>
+        <!-- an errand run's "What got done?" is left waiting, never counted by the arrow (J1): Today says it waits -->
+        <button class="home" onclick={() => (end && !end.pending ? leave('today') : go('today'))}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{t('delve.today')}</span></button>
         <span></span>
         {#if canPark && !parking}<button class="text-link park-link" bind:this={parkLink} onclick={openPark}><span>{t('park.link')}</span></button>{:else}<span></span>{/if}
       </div>
@@ -179,7 +196,7 @@
             {#if soFar}<div class="left sofar">{t('delve.sofar', { min: minutesShort(soFar) })}</div>{/if}</div>
         {/if}
         {#if tally && end}
-          <EndRing from={share(fromW)} to={share(toW)} fromN={end.carried} toN={end.total} unit={t('set.minutes')} {mode} />
+          <EndRing from={share(fromW)} to={share(toW)} fromN={end.carried} toN={end.total} unit={t('tally.unit')} {mode} />
         {/if}
       </div>
     </div>
@@ -219,6 +236,8 @@
           <div class="label-line centred">{t('delve.label')}</div>
           <h2 class="m">{t('delve.ask')}</h2>
           <p class="say">{end.job.name}</p>
+          <!-- the minutes it has, so the answer is an informed one (J17) -->
+          {#if end.total > 0}<p class="soft on-it">{t('delve.onIt', { min: minutesWords(end.total) })}</p>{/if}
           <div class="btn-row pair">
             <button class="btn resting" onclick={yes}>{t('delve.yes')}</button>
             <button class="btn-quiet" onclick={() => { steady(); answer = 'no'; unslide(); }}><span>{t('delve.notYet')}</span></button>
@@ -245,16 +264,21 @@
               {/each}
             </ul>
             {#if !errandsDone.length && end.minutes > 0}<p class="say">{t('errand.carried')}</p>{/if}
+            <!-- one errand's story moment at a time, with Next: never a wall of stories and guesses at once (L B5) -->
             {#each errandStory as e, i (e.job.id)}
-              <div class="errand-story">
-                <!-- the errand's name over its story moment: plain words, never a carved label (D-131) -->
-                <p class="errand-name">{t('errand.doneSay', { job: e.job.name })}</p>
-                <Return doneSeq={e.done} extraFinds={i === 0 ? v.runFinds : []} {go} />
-              </div>
+              {#if i === storyAt}
+                <div class="errand-story">
+                  <!-- the errand's name over its story moment: plain words, never a carved label (D-131) -->
+                  <p class="errand-name">{t('errand.doneSay', { job: e.job.name })}</p>
+                  <Return doneSeq={e.done} extraFinds={i === 0 ? v.runFinds : []} {go} />
+                </div>
+              {/if}
             {/each}
             {#if !errandStory.length}<p class="say">{v.passage}</p><Return doneSeq={null} extraFinds={v.runFinds} />{/if}
           </div>
-          {#if end.completedDay || game.view.arrival}
+          {#if storyAt < errandStory.length - 1}
+            <button class="btn resting" onclick={() => { steady(); storyAt++; }}>{t('errand.next')}</button>
+          {:else if end.completedDay || game.view.arrival}
             <button class="btn" onclick={() => leave('arrival')}>{t('delve.see')}</button>
           {:else}
             <button class="btn resting" onclick={() => leave('today')}>{t('delve.toToday')}</button>
@@ -263,6 +287,9 @@
           <div class="label-line centred">{t('delve.label')}</div>
           <h2 class="m">{end.total > 0 ? t('delve.kept', { min: minutesWords(end.total) }) : t('delve.keptNone')}</h2>
           <p class="say">{t('delve.keptSay')}</p>
+          <!-- where Dan stopped, for next time: here, where it is useful (D-112, J3) -->
+          <input class="line stop" bind:value={stopAt} maxlength="160" placeholder={t('delve.whereStopped')} aria-label={t('delve.whereStopped')}
+            enterkeyhint="done" onkeydown={e => { if (e.key === 'Enter') (e.currentTarget as HTMLInputElement).blur(); }} />
           <button class="btn resting" onclick={() => leave('today')}>{t('delve.toToday')}</button>
         {:else}
           <div class="scroll">
@@ -270,7 +297,8 @@
             <div class="label-line centred">{t('delve.label')}</div>
             <h2 class="m">
               {#if answer === 'yes'}{t('delve.yesSay')}
-              {:else if end.enough}{t('delve.sessionComplete', { job: end.job.name, min: minutesWords(end.minutes) })}
+              <!-- a session of a few minutes is counted, never congratulated (J14) -->
+              {:else if end.enough}{end.minutes < RETURN_MIN ? t('delve.counted', { min: minutesWords(end.minutes) }) : t('delve.sessionComplete', { job: end.job.name, min: minutesWords(end.minutes) })}
               {:else if end.how === 'finishedHere' && end.minutes > 0}{t('delve.finished', { min: minutesWords(end.total), job: end.job.name })}
               {:else}{end.count > 1 ? t('delve.doneRun') : t('delve.doneOne')}{/if}
             </h2>
@@ -341,6 +369,7 @@
   .gone { opacity: 0; transition: opacity 1s var(--ease); }
   h2.m { margin-top: 10px; }
   .sofar { margin-top: 2px; font-size: 14px; opacity: .85; }
+  .dv :global(.bottom p.on-it) { margin: -12px 0 14px; font-style: italic; }
   .dv :global(.bottom p.say) { margin: 6px 0 20px; font-size: 17px; color: var(--ink-2); }
   .back { flex-direction: column; gap: 3px; padding-top: 10px; padding-bottom: 10px; line-height: 1.1; }
   .back .tail { font-family: var(--life); font-style: italic; font-weight: 500; font-size: 17px; letter-spacing: .01em; text-transform: none; }

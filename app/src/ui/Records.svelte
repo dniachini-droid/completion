@@ -3,7 +3,7 @@
      shows as its marks; every mark he holds reads as his guess or its meaning, the rest stay marks, carved pictures
      read in brackets (LIVES §0). Her sheet, where she made one, shows in her hand. Paper reads at once. */
   import { game, content } from './game.svelte';
-  import { marksHeld, render, recordOf } from '../core/story';
+  import { marksHeld, render, recordOf, recordNumber } from '../core/story';
   import { t } from '../content/copy/en';
   import Glyph from './Glyph.svelte';
   import type { Go } from './nav';
@@ -15,7 +15,11 @@
   const list = $derived([...v.story.records].reverse().map(r => recordOf(s, r)).filter(r => !!r));
   const open = $derived(id ? recordOf(s, id) : undefined);
   const held = $derived(marksHeld(s, v.story));
-  const title = (r: { where: string }) => r.where.charAt(0).toUpperCase() + r.where.slice(1);
+  /* records kept in one place (a notebook's pages) are told apart by their number (L C3) */
+  const title = (r: { id: string; where: string; kind: string }) => {
+    const n = recordNumber(content.story, r.id), w = r.where.charAt(0).toUpperCase() + r.where.slice(1);
+    return n === null ? w : `${w}, ${t(r.kind === 'paper' ? 'records.page' : 'records.part', { n })}`;
+  };
   function read(r: string) { game.do({ do: 'read', record: r }); go('records', r); }
   const isMark = (m: string) => s.marks.some(x => x.id === m);
   /* a record in the Cut says once that its marks can be opened */
@@ -86,7 +90,8 @@
   </div>
   {#if open}
     <section class="bottom col rise d2">
-      <button class="text-link" onclick={() => go(v.arrival ? 'arrival' : 'today')}><span>{t('records.done')}</span></button>
+      <!-- the arrow's way: back where the record was opened from (S8, N clumsy 7) -->
+      <button class="text-link" onclick={() => go('back')}><span>{t('records.done')}</span></button>
     </section>
   {/if}
 </div>

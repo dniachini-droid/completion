@@ -17,7 +17,7 @@
   const errands = jobId === 'errands' ? errandPick.jobs.slice() : null;
   const job = $derived(errands ? null : game.job(jobId)!);
   const v = $derived(game.view);
-  const preset = presetRun(errands ? undefined : game.job(jobId)!);
+  const preset = presetRun(errands ? undefined : game.job(jobId)!, game.view.content);
   /* a one-off left "Not yet" carries on from its minutes (D-133): one quiet line says so */
   const carry = $derived(errands ? 0 : carriedOf(game.facts, v.content, jobId));
   const names = $derived((errands ?? []).map(id => game.job(id)?.name).filter(Boolean).join(' · '));

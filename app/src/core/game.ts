@@ -181,6 +181,35 @@ function offeredOn(c: Content, facts: Fact[], day: string, j: Job, planned: Set<
   if (!r) return !doneFacts(facts).some(f => f.job === j.id && f.day !== day);
   return true;
 }
+/** One-offs left on "Not yet" (Dan, D-143 D): minutes behind them, not finished, and not moved since their last work
+    (put on a day, "Not today", waiting on a reply): they stay on Today, day after day, "N min so far", until done or
+    moved. */
+export function inProgress(c: Content, facts: Fact[]): Set<string> {
+  const last = new Map<string, number>(), moved = new Map<string, number>();
+  const entryJob = new Map<string, string>();
+  for (const f of facts) {
+    if (f.type === 'planMade') for (const e of f.entries) entryJob.set(e.id, e.job);
+    else if (f.type === 'planAdded') entryJob.set(f.entry.id, f.entry.job);
+    if (f.type === 'delveEnded' && f.minutes > 0) last.set(f.job, f.seq);
+    else if (f.type === 'stepsGained' && f.tick) last.set(f.job, f.seq);
+    /* an errand run's minutes shared over errands not struck off are no "Not yet": they stay where they were (review) */
+    else if (f.type === 'setAside' || f.type === 'waitSet') moved.set(f.job, f.seq);
+    /* "Put back" after "Not today" undoes the move: the job is on Today again (review of D-144) */
+    else if (f.type === 'putBack') moved.delete(f.job);
+    /* put on another day by Dan (a delve's own clearing of later days is part of its start, before its end) */
+    else if (f.type === 'planAdded') moved.set(f.entry.job, f.seq);
+    else if (f.type === 'planChanged' && f.day) { const j = entryJob.get(f.entry); if (j) moved.set(j, f.seq); }
+  }
+  const out = new Set<string>();
+  if (!last.size) return out;
+  const waiting = W.waitingOf(facts), finished = new Set(W.oneOffDone(c, facts).map(f => f.job));
+  for (const [job, seq] of last) {
+    if ((moved.get(job) ?? -1) > seq || finished.has(job) || waiting.has(job) || c.rhythms.some(r => r.job === job)) continue;
+    if (!c.jobs.some(j => j.id === job && !j.stopped) || job === ERRAND_RUN) continue;
+    if (carriedOf(facts, c, job) > 0) out.add(job);
+  }
+  return out;
+}
 /** Dated work within three days of its date (or past it), not yet done: offered on Today even without a plan (D-114). */
 export const SOON_DAYS = 3;
 const dueSoon = (facts: Fact[], j: Job, day: string) =>
@@ -248,7 +277,11 @@ function orderOn(c: Content, facts: Fact[], day: string, clock: string): string[
   /* …unless Dan put it on a later day himself (second review of D-131) */
   const later = laterDays(facts, day);
   const soon = c.jobs.filter(j => !planned.has(j.id) && !aside.has(j.id) && !chosen.includes(j) && dueSoon(facts, j, day) && !later.has(j.id));
-  const offered = planLeads(facts, day) ? [...chosen, ...soon, ...extra.filter(j => !soon.includes(j))] : c.jobs.filter(j => offeredOn(c, facts, day, j, planned) && !planned.has(j.id) && !aside.has(j.id));
+  /* a one-off left on "Not yet" stays on Today until done or moved (Dan, D-143 D) */
+  const prog = inProgress(c, facts);
+  const going = c.jobs.filter(j => prog.has(j.id) && !planned.has(j.id) && !aside.has(j.id) && !chosen.includes(j) && !soon.includes(j) && !later.has(j.id));
+  const offered = planLeads(facts, day) ? [...chosen, ...going, ...soon, ...extra.filter(j => !soon.includes(j) && !going.includes(j))]
+    : [...going, ...c.jobs.filter(j => !going.includes(j) && offeredOn(c, facts, day, j, planned) && !planned.has(j.id) && !aside.has(j.id))];
   const order = [...plan, ...offered.filter(j => !metThisWeek(c, facts, day, j.id)), ...offered.filter(j => metThisWeek(c, facts, day, j.id))].map(j => typeof j === 'string' ? j : j.id);
   for (const s of ofType(onDay(facts, day), 'swapped')) {
     const a = order.indexOf(s.from), b = order.indexOf(s.to);
@@ -351,16 +384,7 @@ function arrive(w: W, c: Content, b: Beat, how: 'foot' | 'key', at: Moment, day:
   if (x && !S.storyState(w.all, c.story).opened.has(x.id)) { w.put({ type: 'sealOpened', seal: x.id, how: 'road' }, at, day); show(w, c, x.carries?.records, at, day); }
   w.put({ type: 'arrived', kind: 'place', id: b.id, how }, at, day);
   show(w, c, b.carries?.records, at, day);
-  /* a Key kept for later opens what is sealed here, on the arrival itself (D-079): only here, so a niche far back along
-     the road never shows under a place it isn't in (D-129) */
-  let st = S.storyState(w.all, c.story);
-  while (st.held > 0) {
-    const seal = S.nextSeal(c.story, st);
-    if (!seal || seal.arrival || seal.stretch !== b.stretch) break;
-    w.put({ type: 'keyUsed' }, at, day);
-    openSeal(w, c, seal, at, day);
-    st = S.storyState(w.all, c.story);
-  }
+  /* a Key kept for later is never spent for Dan on arriving (D-143 A, was D-079): it is his to use, here or on the Map */
 }
 function giveFind(w: W, c: Content, why: FactOf<'findGiven'>['why'], at: Moment, day: string, job?: number) {
   /* a find comes from where Dan knows he is: a place reached but not yet shown on its arrival screen doesn't count yet,
@@ -382,24 +406,11 @@ function storyClock(w: W, c: Content, at: Moment, day: string): boolean {
   return false;
 }
 
-/** The weekly floor: a week that had a day complete brings at least 2 Keys; the new week's first opening lands the rest (§3). */
-function floor(w: W, c: Content, at: Moment, day: string) {
-  const thisWeek = calendarWeek(day);
-  const weeks = [...new Set(ofType(w.all, 'dayCompleted').map(f => calendarWeek(f.day)))].filter(x => x < thisWeek);
-  const last = weeks[weeks.length - 1];
-  if (!last || ofType(w.all, 'keyEarned').some(f => f.rhythm === `floor:${last}`)) return;
-  const had = S.keysIn(w.all, last);   /* the week's own Keys, not floor Keys landed in it for the week before */
-  for (let i = had; i < S.KEY_FLOOR; i++) landKey(w, c, `floor:${last}`, at, day);
-  if (had >= S.KEY_FLOOR) w.put({ type: 'keyEarned', rhythm: `floor:${last}` }, at, day);   /* noted, so it's checked once */
-}
-
-/** A Key lands: the next sealed thing opens, and its line plays (as this job's return, if there is one). */
-function landKey(w: W, c: Content, rhythm: string, at: Moment, day: string, job?: number): Seal | null {
+/** A Key lands: it is kept, never spent for Dan (D-143 A). Its job's return offers "Use it here" when something is locked
+    where he is; anything else is his to open on the Map (D-142). */
+function landKey(w: W, rhythm: string, at: Moment, day: string) {
   w.put({ type: 'keyEarned', rhythm }, at, day);
-  const seal = S.nextSeal(c.story, S.storyState(w.all, c.story));
-  /* nothing sealed where Dan has been: the Key is kept, never lost (D-079) */
-  if (!seal) { w.put({ type: 'keyHeld' }, at, day); return null; }
-  return openSeal(w, c, seal, at, day, job);
+  w.put({ type: 'keyHeld' }, at, day);
 }
 function openSeal(w: W, c: Content, seal: Seal, at: Moment, day: string, job?: number, road = false): Seal {
   w.put({ type: 'sealOpened', seal: seal.id, ...(road ? { how: 'road' as const } : {}) }, at, day);
@@ -527,7 +538,6 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string, tick
   /* a rhythm met this week lands a Key, until the week's supply is used; past it, one find a week (§3). A rhythm Dan
      added or changed counts for Keys from its next full period (D-043 F7): the rhythms as they stood when the week began. */
   const r = rhythmOf(W.live(c.base ?? c, w.all, calendarWeek(day)), job);
-  let keyed = false;
   /* any session meets the rhythm (Dan, D-121), but only sessions of the dial's shortest delve or more count towards its
      Key: a few one-minute sessions never open the story (rule 10) */
   /* one Key a rhythm a period, even if a session is taken back and done again (D-131) */
@@ -535,19 +545,17 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string, tick
   if (r && !keyedAlready && S.sessionsIn(w.all, r, day, S.RETURN_MIN) === S.needOf(r)) {
     const surplus = () => { if (!ofType(w.all, 'findGiven').some(f => f.why === 'surplus' && calendarWeek(f.day) === calendarWeek(day))) giveFind(w, c, 'surplus', at, day, done.seq); };
     if (S.keysIn(w.all, day) < S.KEYS_A_WEEK) {
-      keyed = !!landKey(w, c, r.id, at, day, done.seq);
-      /* a Key with no niche in reach is kept, and the job still brings something: the week's one surplus find (D-129) */
-      if (!keyed) surplus();
+      landKey(w, r.id, at, day);
+      /* the Key is kept (D-143 A); with nothing locked it could open (every such thing already has a kept Key for it),
+         the job still brings something: the week's one surplus find, as before (D-129, BALANCING §3) */
+      const st = S.storyState(w.all, c.story);
+      if (S.openable(c.story, st).length < st.held) surplus();
     } else surplus();
   }
-  /* a Key kept for later opens the next niche on this job's return, wherever it is, so kept Keys never pile up (D-129) */
-  if (!keyed && S.storyState(w.all, c.story).held > 0) {
-    const seal = S.nextSeal(c.story, S.storyState(w.all, c.story));
-    if (seal) { w.put({ type: 'keyUsed' }, at, day); openSeal(w, c, seal, at, day, done.seq); keyed = true; }
-  }
+  /* a Key kept for later is never spent for Dan on a job's return (D-143 A, was D-129): it is his to use */
   /* the return: the deep push's next beat (once a day) on a High day past a Normal day's size, or once a Normal day's
      jobs are done if Dan called the push in the morning (D-054); else the story's next step; else a line of the passage */
-  if (!keyed) {
+  {
     const st = S.storyState(w.all, c.story), step = S.nextStep(c.story, st);
     const n = workedOn(w.all, day).size, called = onDay(w.all, day).some(f => f.type === 'deepCalled');
     /* pushing deeper is doing more: past the day's finish line (its first 3 hours, D-131), the deep push's next beat
@@ -772,10 +780,25 @@ function weekClose(w: W, c: Content, at: Moment, day: string, storyWeek: number)
     const glimpse = c.story.beats.find(b => b.kind === 'close' && b.w <= storyWeek && !st.played.has(b.id) && st.visited.has(b.stretch)
       && !(b.until && S.met(st, b.until))) ?? null;
     if (glimpse) w.put({ type: 'beatPlayed', id: glimpse.id }, at, day);
-    const seals = ofType(w.all, 'keyEarned').filter(k => k.rhythm === `floor:${wk}`)
-      .map(k => w.all.find(f => f.seq === k.seq + 1)).filter((f): f is FactOf<'sealOpened'> => f?.type === 'sealOpened').map(f => f.seal);
+    /* every niche a Key opened in the week, however it came to be used (S4: built only from the old floor's Keys, it never
+       filled once D-142 took the floor away) */
+    const seals = keyOpenedIn(w.all, wk).map(f => f.seal);
     w.put({ type: 'weekClosed', week: wk, n, learned, soFar, glimpse: glimpse?.id ?? null, seals }, at, day);
   }
+}
+
+/** The niches a Key opened in a calendar week, in order: a sealOpened just after a Key was used (or, in an old save, just
+    after one was earned and spent at once). */
+function keyOpenedIn(facts: Fact[], week: string): FactOf<'sealOpened'>[] {
+  const bySeq = new Map(facts.map(f => [f.seq, f]));
+  return ofType(facts, 'sealOpened').filter(f => f.how !== 'road' && calendarWeek(f.day) === week
+    && (bySeq.get(f.seq - 1)?.type === 'keyUsed' || bySeq.get(f.seq - 1)?.type === 'keyEarned'));
+}
+/** What a calendar week kept for Dan to read again on its Daybook page (D-143 B): the finds it gave and the niches its
+    Keys opened, in the order they came. */
+export function weekKept(facts: Fact[], week: string): { finds: string[]; opened: string[] } {
+  const finds = [...new Set(ofType(facts, 'findGiven').filter(f => calendarWeek(f.day) === week).map(f => f.id))];
+  return { finds, opened: [...new Set(keyOpenedIn(facts, week).map(f => f.seal))] };
 }
 
 /**
@@ -876,6 +899,8 @@ export type Command =
   | { do: 'addItems'; lines: string[] }
   /** A stray thought parked mid-delve (D-138): a job with no day in the Satchel, the delve carrying on untouched */
   | { do: 'park'; line: string }
+  /** A kept Key used on a locked thing Dan chose on the Map (D-142). */
+  | { do: 'useKey'; seal: string }
   /** Lines from outside the app (D-113), each added once, whatever happens between writing and clearing */
   | { do: 'takeInbox'; lines: { id: string; text: string }[] }
   | { do: 'tick'; id: string }
@@ -898,6 +923,8 @@ export type Command =
   /** "No thanks" to "… keeps coming back. Make it repeat?" (D-136) */
   | { do: 'declineRepeat'; name: string }
   | { do: 'addToWeek'; line: string; day: string; time?: string }
+  /** Today's "Add a job" (D-143 C): a job on today; `from`: a job Dan had before, picked under the box (D-136) */
+  | { do: 'addToday'; line: string; from?: string }
   | { do: 'bedtime'; time: string }
   | { do: 'goodnight' }
   | { do: 'closeRead'; week: string }
@@ -925,6 +952,58 @@ const errandable = (c: Content, facts: Fact[], day: string, id: string) => {
     && (c.rhythms.some(r => r.job === id) || !W.oneOffDone(c, facts).some(f => f.job === id));
 };
 
+/** Put a job on a day (the Satchel, the job menu, a name typed again, D-131, D-143): a one-off leaves every other day it
+    was on (a job is in one place); a recurring job's session moves off today if it was there. */
+function putOn(w: W, c: Content, v: View, day: string, job: string, to: string, entry?: string) {
+  const j = c.jobs.find(x => x.id === job && !x.stopped);
+  if (!j || to < day || !/^\d{4}-\d{2}-\d{2}$/.test(to)) return;
+  const recurring = c.rhythms.some(x => x.job === j.id);
+  /* a one-off done is finished (review of D-131); a recurring job done today keeps today's place, its record there */
+  if (!recurring && W.oneOffDone(c, w.all).some(f => f.job === j.id)) return;
+  if (recurring && v.done.has(j.id) && to === day) return;
+  /* where it is now, from today on: a one-off's every place; a recurring job's place today only */
+  const weeks = new Set([calendarWeek(day), ...ofType(w.all, 'planMade').map(f => f.week), ...ofType(w.all, 'planAdded').map(f => calendarWeek(f.entry.day))]);
+  /* a session held in the Week moves itself, not another (second review of D-131) */
+  const all = [...weeks].filter(x => x >= calendarWeek(day)).flatMap(x => W.planOf(w.all, x) ?? []);
+  const held = entry ? all.find(e => e.id === entry && e.job === j.id && e.day >= day) : undefined;
+  if (entry && !held) return;
+  const at = held ? [held] : all.filter(e => e.job === j.id && (recurring ? e.day === day && !v.done.has(j.id) : e.day >= day));
+  if (held && held.day === day && recurring && v.done.has(j.id)) return;
+  /* chosen for tomorrow and put elsewhere: the choice goes with it */
+  if (firstChosen(w.all, W.addDays(day, 1)) === j.id && to !== W.addDays(day, 1) && !recurring) w.put({ type: 'firstChosen', job: null, on: W.addDays(day, 1) });
+  if (at.length === 1 && at[0].day === to && !asideOn(w.all, day).has(j.id)) return;
+  for (const e of at) w.put({ type: 'planChanged', entry: e.id, day: null });
+  const n = ofType(w.all, 'planAdded').length + 1;
+  w.put({ type: 'planAdded', entry: { id: `pa-${n}`, job: j.id, day: to } });
+  /* on today: back on the list if it was set aside; to a later day: off today's list, begun or not */
+  if (to === day) { if (asideOn(w.all, day).has(j.id)) w.put({ type: 'putBack', job: j.id }); }
+  else if (v.slate.includes(j.id) && !v.done.has(j.id) && v.run?.job.id !== j.id && !asideOn(w.all, day).has(j.id)) w.put({ type: 'setAside', job: j.id });
+}
+/** A new job typed in (the Week's +, Today's box, Tonight's line, Siri): one Dan still has is never added twice (D-136,
+    the flow review J4): it is put on the day instead (with no day: it is left where it is). Returns the job. */
+function addJob(w: W, c: Content, v: View, base: Content, day: string, line: string, on: string | null, from?: string, time?: string, extra: Partial<FactOf<'itemAdded'>> = {}): string | null {
+  const name = cleanLine(line);
+  if (!name) return null;
+  const tie = tieFor(base, w.all, name, from);
+  if (tie?.same) {
+    const recurring = c.rhythms.some(r => r.job === tie.job.id);
+    /* a recurring job typed for a later day is one more session there: today's stays where it is (review of D-144) */
+    if (on && recurring && on > day) {
+      const planned = [calendarWeek(on)].flatMap(x => W.planOf(w.all, x) ?? []).some(e => e.job === tie.job.id && e.day === on);
+      if (!planned) w.put({ type: 'planAdded', entry: { id: `pa-${ofType(w.all, 'planAdded').length + 1}`, job: tie.job.id, day: on, ...(time ? { time } : {}) } });
+    } else if (on && !(recurring && v.done.has(tie.job.id) && on === day)) {
+      putOn(w, c, v, day, tie.job.id, on);
+      const e = ofType(w.all, 'planAdded').pop();
+      if (time && e && e.entry.job === tie.job.id && e.entry.day === on) w.put({ type: 'planChanged', entry: e.entry.id, day: on, time });
+    }
+    return tie.job.id;
+  }
+  const id = `it-${ofType(w.all, 'itemAdded').length + 1}`;
+  w.put({ type: 'itemAdded', id, name, ...extra, ...(tie ? { from: tie.job.id } : {}) });
+  if (on) w.put({ type: 'planAdded', entry: { id: `pa-${ofType(w.all, 'planAdded').length + 1}`, job: id, day: on, ...(time ? { time } : {}) } });
+  return id;
+}
+
 /** The facts a command adds to the log (including anything the clock made due first). */
 export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fact[] {
   const w = writer(facts, now), nowMs = epochOf(now), c = W.live(base, facts);
@@ -933,7 +1012,9 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
   settleIn(w, c, nowMs);
   /* an errand run's end not yet counted is counted before anything else Dan does, except striking on it (D-139) */
   /* a thought parked on an errand run's end never counts it: its strikes are still to come (D-138 × D-139) */
-  if (cmd.do !== 'strikeErrand' && cmd.do !== 'away' && cmd.do !== 'park') { const p = pendingErrands(w.all); if (p) errandsEnd(w, c, p, now); }
+  /* a new delve never starts while its "What got done?" waits: counted then, its stories would be lost (review of D-144) */
+  const waits = !!pendingErrands(w.all);
+  if (cmd.do !== 'strikeErrand' && cmd.do !== 'away' && cmd.do !== 'park' && !(waits && (cmd.do === 'startRun' || cmd.do === 'startErrands'))) { const p = pendingErrands(w.all); if (p) errandsEnd(w, c, p, now); }
   const day = gameDay(now), v = see(w.all, c, now);
   switch (cmd.do) {
     case 'open': {
@@ -943,7 +1024,8 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       /* a week with no plan yet is laid out at its first opening, from today on, so the Week and Today always agree;
          Dan changes it as he likes (Dan, D-078; review finding, D-080) */
       if (!W.planMade(w.all, calendarWeek(day))) w.put({ type: 'planMade', week: calendarWeek(day), entries: W.planWeek(c, w.all, calendarWeek(day), day) });
-      storyClock(w, c, now, day); floor(w, c, now, day);
+      /* no weekly floor of Keys any more (Dan, D-142): a Key always means a recurring job kept up */
+      storyClock(w, c, now, day);
       weekClose(w, c, now, day, was);
       morningAfter(w, c, now, day);
       break;
@@ -991,13 +1073,13 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     case 'putBack': if (asideOn(w.all, day).has(cmd.job)) w.put({ type: 'putBack', job: cmd.job }); break;
     case 'startRun':
       /* only a run the dial can set: whole minutes up to its longest stop, one to eight delves (D-120) */
-      if (v.run || !dialRun(cmd.minutes, cmd.count) || cmd.job === ERRAND_RUN) break;
+      if (v.run || waits || !dialRun(cmd.minutes, cmd.count) || cmd.job === ERRAND_RUN) break;
       beginRun(w, c, cmd.job, cmd.minutes, cmd.count, day);
       break;
     case 'startErrands': {
       /* never while another delve runs; only jobs still to do, each once (D-139) */
       const jobs = Array.isArray(cmd.jobs) ? cmd.jobs : [];
-      if (v.run || !dialRun(cmd.minutes, cmd.count) || jobs.length < ERRANDS_MIN || jobs.length > ERRANDS_MAX || new Set(jobs).size !== jobs.length) break;
+      if (v.run || waits || !dialRun(cmd.minutes, cmd.count) || jobs.length < ERRANDS_MIN || jobs.length > ERRANDS_MAX || new Set(jobs).size !== jobs.length) break;
       if (!jobs.every(id => errandable(c, w.all, day, id))) break;
       w.put({ type: 'delveStarted', job: ERRAND_RUN, minutes: cmd.minutes, count: cmd.count, errands: jobs.slice() });
       break;
@@ -1159,21 +1241,24 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       break;
     }
     case 'takeInbox': {
-      const seen = new Set(ofType(w.all, 'itemAdded').map(f => f.ref).filter(Boolean));
+      const seen = new Set([...ofType(w.all, 'itemAdded').map(f => f.ref), ...ofType(w.all, 'inboxSkipped').map(f => f.ref)].filter(Boolean));
       let k = ofType(w.all, 'itemAdded').length;
       for (const x of cmd.lines) {
         const name = String(x.text ?? '').trim().slice(0, 120);
         if (!name || !x.id || seen.has(x.id)) continue;
         seen.add(x.id);
-        w.put({ type: 'itemAdded', id: `it-${++k}`, name, via: 'siri', ref: x.id });
+        /* a job Dan still has is not added again (J4) */
+        const tie = tieFor(base, w.all, name);
+        /* remembered as taken, so if the app closes before the phone's inbox is cleared it is never added later (review) */
+        if (tie?.same) { w.put({ type: 'inboxSkipped', ref: x.id }); continue; }
+        w.put({ type: 'itemAdded', id: `it-${++k}`, name, via: 'siri', ref: x.id, ...(tie ? { from: tie.job.id } : {}) });
       }
       break;
     }
-    case 'addItems': {
-      let k = ofType(w.all, 'itemAdded').length;
-      for (const line of cmd.lines.map(x => x.replace(/^[-*•\s]+/, '').trim()).filter(Boolean)) w.put({ type: 'itemAdded', id: `it-${++k}`, name: line.slice(0, 120) });
+    case 'addItems':
+      /* a job Dan still has is not added again (J4) */
+      for (const line of cmd.lines) addJob(w, c, v, base, day, line, null);
       break;
-    }
     case 'tick': {
       const it = W.items(w.all, day).find(x => x.id === cmd.id);
       /* an errand of a run under way, or not yet counted, is done by its run's end (D-139) */
@@ -1219,30 +1304,13 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       w.put({ type: 'planAdded', entry: { id: `pa-${n}`, job: cmd.job, day: cmd.day, ...(cmd.time ? { time: cmd.time } : {}) } });
       break;
     }
-    case 'putOnDay': {
-      const j = c.jobs.find(x => x.id === cmd.job && !x.stopped);
-      if (!j || cmd.day < day || !/^\d{4}-\d{2}-\d{2}$/.test(cmd.day)) break;
-      const recurring = c.rhythms.some(x => x.job === j.id);
-      /* a one-off done is finished (review of D-131); a recurring job done today keeps today's place, its record there */
-      if (!recurring && W.oneOffDone(c, w.all).some(f => f.job === j.id)) break;
-      if (recurring && v.done.has(j.id) && cmd.day === day) break;
-      /* where it is now, from today on: a one-off's every place; a recurring job's place today only */
-      const weeks = new Set([calendarWeek(day), ...ofType(w.all, 'planMade').map(f => f.week), ...ofType(w.all, 'planAdded').map(f => calendarWeek(f.entry.day))]);
-      /* a session held in the Week moves itself, not another (second review of D-131) */
-      const all = [...weeks].filter(x => x >= calendarWeek(day)).flatMap(x => W.planOf(w.all, x) ?? []);
-      const held = cmd.entry ? all.find(e => e.id === cmd.entry && e.job === j.id && e.day >= day) : undefined;
-      if (cmd.entry && !held) break;
-      const at = held ? [held] : all.filter(e => e.job === j.id && (recurring ? e.day === day && !v.done.has(j.id) : e.day >= day));
-      if (held && held.day === day && recurring && v.done.has(j.id)) break;
-      /* chosen for tomorrow and put elsewhere: the choice goes with it */
-      if (firstChosen(w.all, W.addDays(day, 1)) === j.id && cmd.day !== W.addDays(day, 1) && !recurring) w.put({ type: 'firstChosen', job: null, on: W.addDays(day, 1) });
-      if (at.length === 1 && at[0].day === cmd.day && !asideOn(w.all, day).has(j.id)) break;
-      for (const e of at) w.put({ type: 'planChanged', entry: e.id, day: null });
-      const n = ofType(w.all, 'planAdded').length + 1;
-      w.put({ type: 'planAdded', entry: { id: `pa-${n}`, job: j.id, day: cmd.day } });
-      /* on today: back on the list if it was set aside; to a later day: off today's list, begun or not */
-      if (cmd.day === day) { if (asideOn(w.all, day).has(j.id)) w.put({ type: 'putBack', job: j.id }); }
-      else if (v.slate.includes(j.id) && !v.done.has(j.id) && v.run?.job.id !== j.id && !asideOn(w.all, day).has(j.id)) w.put({ type: 'setAside', job: j.id });
+    case 'putOnDay': putOn(w, c, v, day, cmd.job, cmd.day, cmd.entry); break;
+    case 'useKey': {
+      /* only a niche a Key can open now, and only with a Key in hand: refused otherwise (a double tap opens one) */
+      const st = S.storyState(w.all, c.story), x = S.openable(c.story, st).find(y => y.id === cmd.seal);
+      if (!x || st.held < 1) break;
+      w.put({ type: 'keyUsed', chosen: true });
+      openSeal(w, c, x, now, day);
       break;
     }
     case 'park': {
@@ -1264,7 +1332,7 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       if (!name || v.run || v.runEnd) break;
       /* a job Dan has had before (D-136): one still his is delved on itself, as a tap on its row would, never added again */
       const tie = tieFor(base, w.all, name, cmd.from);
-      if (tie?.same) { beginRun(w, c, tie.job.id, PRESET.minutes, PRESET.count, day); break; }
+      if (tie?.same) { const p = presetRun(tie.job, c); beginRun(w, c, tie.job.id, p.minutes, p.count, day); break; }
       const id = `it-${ofType(w.all, 'itemAdded').length + 1}`, n = ofType(w.all, 'planAdded').length + 1;
       w.put({ type: 'itemAdded', id, name, ...(tie ? { from: tie.job.id } : {}) });
       w.put({ type: 'planAdded', entry: { id: `pa-${n}`, job: id, day } });
@@ -1286,14 +1354,10 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       if (k && !ofType(w.all, 'repeatDeclined').some(f => f.name === k)) w.put({ type: 'repeatDeclined', name: k });
       break;
     }
-    case 'addToWeek': {
-      const name = cmd.line.trim().slice(0, 120);
-      if (!name) break;
-      const id = `it-${ofType(w.all, 'itemAdded').length + 1}`, n = ofType(w.all, 'planAdded').length + 1;
-      w.put({ type: 'itemAdded', id, name });
-      w.put({ type: 'planAdded', entry: { id: `pa-${n}`, job: id, day: cmd.day, ...(cmd.time ? { time: cmd.time } : {}) } });
-      break;
-    }
+    /* a day gone by while the Week's + was open (past 04:00): the line goes on today, never lost (review of D-144) */
+    case 'addToWeek': if (/^\d{4}-\d{2}-\d{2}$/.test(cmd.day)) addJob(w, c, v, base, day, cmd.line, cmd.day >= day ? cmd.day : day, undefined, cmd.day >= day ? cmd.time : undefined); break;
+    /* Today's own "Add a job": on today (Dan, D-143 C); the Satchel's box still keeps a job with no day */
+    case 'addToday': addJob(w, c, v, base, day, cmd.line, day, cmd.from); break;
     case 'bedtime': if (/^\d\d:\d\d$/.test(cmd.time)) w.put({ type: 'bedtimeSet', time: cmd.time }); break;
     case 'goodnight': {
       if (ofType(onDay(w.all, day), 'goodnight').length) break;
@@ -1418,6 +1482,9 @@ export interface Return {
       plays here; `kept` a Key kept from earlier opened it; `held` this job earned a Key with nothing sealed in reach, so it
       is kept; null: no Key. */
   keyNote: 'earned' | 'kept' | 'held' | null;
+  /** A recurring job kept up again in a period whose Key it already earned (L C4): its period, said in one quiet line
+      ("Already earned this fortnight's Key"); null otherwise. */
+  keyAlready: 'week' | 'fortnight' | 'month' | 'year' | 'days' | null;
   /** A partial sign found on a deep push: its element, and the mark it belongs to (SCRIPT §8). */
   part?: { el: string; mark: string };
 }
@@ -1444,6 +1511,17 @@ export interface View {
   here: Here;
   /** The sealed thing ahead that Dan can see (where it is, in plain words). */
   ahead: string | null;
+  /** The sealed thing ahead opens only with a Key (a niche), not on foot (D-142). */
+  aheadKey: boolean;
+  /** Keys earned and kept, not yet used (D-142). */
+  keys: number;
+  /** Where a kept Key can open something now, chosen on the Map (its stretch), if anywhere (D-142): the stretch Dan is
+      in first. The Map lists it there (one definition, D-143 A). */
+  keyUse: StretchId | null;
+  /** A niche a kept Key can open in the stretch Dan is in ("Use it here", D-143 A). */
+  keyHere: string | null;
+  /** The sealed thing "ahead" is behind Dan, on another stretch: Today says so and opens the Map there (D-143). */
+  aheadBehind: StretchId | null;
   walked: number;
   /** Minutes of effort from here to the next named place, if one is reachable (never shown as steps owed). */
   toNext: number | null;
@@ -1482,6 +1560,8 @@ export interface View {
   /** One-offs waiting on a reply whose day has come (D-137): under today's list, "Did they reply?"; never on the list or
       its finish line. Soonest first. */
   replies: { job: string; until: string; who?: string }[];
+  /** Jobs taken off today ("Not today") and not done: Today keeps them, struck, with "Put back", all day (J7). */
+  aside: string[];
 }
 
 /** The stand-in painting for a place until its own is painted from its brief (PROTOTYPE_NOTES.md). */
@@ -1508,10 +1588,10 @@ function reachedBy(all: Fact[], doneSeq: number): FactOf<'arrived'> | null {
   return null;
 }
 
-/** A place reached before, to read again (the Map's "Read again", D-135). */
+/** A place or camp reached before, to read again (the Map's "Read again", D-135; camps too, the flow review). */
 export function arrivalAt(facts: Fact[], base: Content, seq: number): Arrival | null {
   const f = facts.find(x => x.seq === seq);
-  return f && f.type === 'arrived' && f.kind === 'place' ? arrivalOf(W.live(base, facts), facts, f) : null;
+  return f && f.type === 'arrived' ? arrivalOf(W.live(base, facts), facts, f) : null;
 }
 function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
   /* one of the places played at day complete: nothing but the world's answers between the lock-in and it */
@@ -1527,7 +1607,7 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
     const opened: string[] = [], keyed: string[] = [];
     for (const g of all) {
       if (g.seq <= f.seq) continue;
-      if (g.type !== 'keyUsed' && !ANSWERS.has(g.type)) break;
+      if ((g.type !== 'keyUsed' || g.chosen) && !ANSWERS.has(g.type)) break;
       if (g.type === 'sealOpened' && all.some(k => k.type === 'keyUsed' && k.seq === g.seq - 1)) {
         const x = S.sealOf(c.story, g.seal), line = x?.beat ? S.beatOf(c.story, x.beat)?.line : x?.line;
         if (line) opened.push(line);
@@ -1597,22 +1677,31 @@ function keyNoteOf(facts: Fact[], doneSeq: number, sealId: string | null): Retur
   }
   return null;
 }
+/** A recurring job's session done after its period's Key was already earned (L C4): the period, for one quiet line. */
+function keyAlreadyOf(c: Content, facts: Fact[], doneSeq: number): Return['keyAlready'] {
+  const done = facts.find(f => f.seq === doneSeq);
+  if (done?.type !== 'jobDone' || done.minutes < S.RETURN_MIN) return null;
+  const r = rhythmOf(c, done.job);
+  if (!r || !ofType(facts, 'keyEarned').some(k => k.rhythm === r.id && k.seq < doneSeq && Rep.samePeriod(r, k.day, done.day))) return null;
+  return r.every === 2 ? 'fortnight' : r.monthly ? 'month' : r.yearly ? 'year' : r.everyDays ? 'days' : 'week';
+}
 function rawReturn(c: Content, facts: Fact[], doneSeq: number): Return {
   const beat = facts.find(f => f.type === 'beatPlayed' && f.job === doneSeq) as FactOf<'beatPlayed'> | undefined;
+  const keyAlready = keyAlreadyOf(c, facts, doneSeq);
   const finds = facts.filter((f): f is FactOf<'findGiven'> => f.type === 'findGiven' && f.job === doneSeq).map(f => f.id);
   const seal0 = beat && beat.id !== 'passage' ? S.sealOf(c.story, beat.id) ?? (S.beatOf(c.story, beat.id)?.kind === 'stepKey' ? S.sealOf(c.story, S.beatOf(c.story, beat.id)!.seal!) : undefined) : undefined;
   const keyNote = keyNoteOf(facts, doneSeq, seal0 && !facts.some(f => f.type === 'sealOpened' && f.seal === seal0.id && f.how === 'road') ? seal0.id : null);
-  if (!beat) return { beat: null, line: '', key: false, guess: [], records: [], finds, keyNote };
-  if (beat.id === 'passage') return { beat: null, line: c.story.passages.find(p => p.id === beat.passage)?.line ?? '', key: false, guess: [], records: [], finds, keyNote };
+  if (!beat) return { beat: null, line: '', key: false, guess: [], records: [], finds, keyNote, keyAlready };
+  if (beat.id === 'passage') return { beat: null, line: c.story.passages.find(p => p.id === beat.passage)?.line ?? '', key: false, guess: [], records: [], finds, keyNote, keyAlready };
   const seal = S.sealOf(c.story, beat.id);
-  if (seal) return { beat: seal.id, line: seal.line ?? '', key: !facts.some(f => f.type === 'sealOpened' && f.seal === seal.id && f.how === 'road'), guess: seal.carries?.guess ?? [], records: seal.carries?.records ?? [], finds, keyNote };
+  if (seal) return { beat: seal.id, line: seal.line ?? '', key: !facts.some(f => f.type === 'sealOpened' && f.seal === seal.id && f.how === 'road'), guess: seal.carries?.guess ?? [], records: seal.carries?.records ?? [], finds, keyNote, keyAlready };
   const b = S.beatOf(c.story, beat.id)!;
   const viaSeal = b.seal ? S.sealOf(c.story, b.seal) : undefined;
   const guess = [...new Set([...(b.carries?.guess ?? []), ...(viaSeal?.carries?.guess ?? [])])];
   const part = b.carries?.partial && b.carries.seen?.[0] ? { el: b.carries.partial, mark: b.carries.seen[0] } : undefined;
   /* a Key's return says so; a row the road opened is a step like any other (D-129) */
   const byRoad = facts.some(f => f.type === 'sealOpened' && f.seal === b.seal && f.how === 'road');
-  return { beat: b.id, line: b.line ?? '', key: b.kind === 'stepKey' && !byRoad, guess, choice: b.choice, records: [...(b.carries?.records ?? []), ...(viaSeal?.carries?.records ?? [])], finds, keyNote, ...(part ? { part } : {}) };
+  return { beat: b.id, line: b.line ?? '', key: b.kind === 'stepKey' && !byRoad, guess, choice: b.choice, records: [...(b.carries?.records ?? []), ...(viaSeal?.carries?.records ?? [])], finds, keyNote, keyAlready, ...(part ? { part } : {}) };
 }
 
 /** Today's list, as Today shows it and as the day's finish line reads it (D-130): on a planned week, every job the plan
@@ -1659,7 +1748,11 @@ function slateOf(c: Content, facts: Fact[], day: string, clock: string) {
   const byPlan = todays.filter(j => j.entry).sort((a, b) => (planIdx.get(a.entry!) ?? -1) - (planIdx.get(b.entry!) ?? -1)).map(j => j.job);
   const plannedIds = new Set([...byPlan, ...(ownFirst ? [ownFirst] : [])]);
   const onSlate = new Set(slate);
-  let cand = [...new Set([...(ownFirst ? [ownFirst] : []), ...byPlan, ...order, ...slate])].filter(id => onSlate.has(id) && (plannedIds.has(id) || !done.has(id)));
+  /* a job on the line when it was done stays on it, whatever put it there (a rhythm falling due, a date near): the line
+     never refills because of a completion (L A1). Only a job done from outside the line never holds a place on it */
+  const stayed = new Set(doneFacts(facts).filter(f => f.day === day && !plannedIds.has(f.job) && wasOnLine(c, facts, f)).map(f => f.job));
+  /* …and keeps its place on it, ahead of the jobs still to do that came after it */
+  let cand = [...new Set([...(ownFirst ? [ownFirst] : []), ...byPlan, ...stayed, ...order, ...slate])].filter(id => onSlate.has(id) && (plannedIds.has(id) || !done.has(id) || stayed.has(id)));
   if (!cand.length) cand = slate.slice();
   const inLine = new Set<string>();
   let sum = 0;
@@ -1681,6 +1774,17 @@ function slateOf(c: Content, facts: Fact[], day: string, clock: string) {
   const lineOrdered = [...line.filter(id => done.has(id)), ...todo];
   const rest = slate.filter(id => !line.includes(id));
   return { size, done, order, times, slate: [...lineOrdered.filter(id => !done.has(id)), ...lineOrdered.filter(id => done.has(id)), ...rest], line: lineOrdered };
+}
+/** Whether a job was on the day's finish line just before it was done (L A1): worked out once for each done record,
+    from the log as it stood then (each earlier done record of the day is answered the same way, once). */
+const lineMemo = new WeakMap<Fact, boolean>();
+function wasOnLine(c: Content, facts: Fact[], f: FactOf<'jobDone'>): boolean {
+  const hit = lineMemo.get(f);
+  if (hit !== undefined) return hit;
+  const before = facts.filter(g => g.seq < f.seq);
+  const on = slateOf(W.live(c.base ?? c, before), before, f.day, f.at.slice(11, 16)).line.includes(f.job);
+  lineMemo.set(f, on);
+  return on;
 }
 /** The Satchel (D-131): the one list of every job not on today, each in one place. "No day yet": one-offs with no
     day, newest first; "Coming up": one-offs put on a later day, soonest first, with their day; "Recurring jobs". A job
@@ -1714,12 +1818,13 @@ export function satchelView(base: Content, facts: Fact[], now: Moment): { noDay:
   return { noDay: noDay.filter(j => !inComing.has(j.id)), coming, recurring: [...new Map(recurring.map(j => [j.id, j])).values()], waiting };
 }
 
-/** The errand run's pick list (D-139): today's jobs still to do, in Today's order, then the Satchel's one-offs (no day
-    yet, then coming up). Never a job done, a one-off finished, a recurring job not on today, or the delve under way's. */
+/** The errand run's pick list (D-139): today's one-offs still to do, in Today's order, then the Satchel's (no day yet,
+    then coming up). Never a job done, a one-off finished, a recurring job, or the delve under way's. */
 export function errandChoices(base: Content, facts: Fact[], now: Moment): string[] {
   const c = W.live(base, facts), day = gameDay(now), { slate } = slateOf(c, facts, day, now.slice(11, 16)), s = satchelView(base, facts, now);
   const ids = [...new Set([...slate, ...s.noDay.map(j => j.id), ...s.coming.map(x => x.job.id)])];
-  return ids.filter(id => errandable(c, facts, day, id) && !inRun(facts, id));
+  /* a recurring session (the gym, a course) is no errand (J12, L C2) */
+  return ids.filter(id => errandable(c, facts, day, id) && !inRun(facts, id) && !c.rhythms.some(r => r.job === id));
 }
 
 /** The day's finish line (Dan, D-130): every job on today's list is done, with no hidden count and nothing lowered for
@@ -1811,7 +1916,9 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   const w = walked(facts), nextBeat = S.nextPlace(c.story, st, pushOn(facts, day)),
     /* a place the story bits on the way will open is still the next place (D-129) */
     nextAt = nextBeat || S.placeAhead(c.story, st) ? S.nextPlaceAt(st) : null;
-  const view = S.inView(c.story, st);
+  /* one in the stretch Dan is in first: a thing behind him is never "ahead" (D-143) */
+  const view = S.inView(c.story, st, st.stretch);
+  const openNow = S.openable(c.story, st);
 
   /* slice 4: tonight, the morning after, the welcome back, the daybook's new page, the deep push */
   const sugg = suggestedOn(facts, day);
@@ -1837,9 +1944,15 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
     suggestedBy: sugg.by, bedtime: bedtimeOf(facts), night: gn ? { kept: gn.kept, beat: campLine?.id ?? null } : null,
     morning, welcome, close, times, content: c,
     replies: waitsOf(c, facts).filter(x => x.until <= day).map(x => ({ job: x.job.id, until: x.until, ...(x.who ? { who: x.who } : {}) })),
+    /* (a job moved to a later day was moved, not set aside: it is on its day) */
+    aside: ((later) => [...asideOn(facts, day)].filter(id => c.jobs.some(j => j.id === id && !j.stopped) && !done.has(id) && !W.waitingOf(facts).has(id) && !slate.includes(id) && !later.has(id)))(laterDays(facts, day)),
     forecast: W.forecast(c, facts, day, toNext, S.PLACE_GAP),
     day, capacity, suggested: sugg.capacity, size, order, slate, line, done, underWay, complete, next, run, runEnd, arrival,
     /* ahead: the sealed thing in view; before any, the way in (the first morning), then a line from just ahead */
+    aheadKey: !!view && !S.onRoad(c.story, view.id), keys: st.held,
+    aheadBehind: view && !S.onRoad(c.story, view.id) && view.stretch !== st.stretch ? view.stretch : null,
+    keyUse: st.held ? (openNow.find(x => x.stretch === st.stretch) ?? openNow[0])?.stretch ?? null : null,
+    keyHere: st.held ? openNow.find(x => x.stretch === st.stretch)?.id ?? null : null,
     here, ahead: view ? view.where : here.id === null ? here.line || S.teaser(c.story, st) : S.teaser(c.story, st), walked: w, toNext, nextAt, toChamber: chamber,
     road: { from: S.lastPlaceAt(st), chamber: S.chamberAt(st), to: S.nextPlaceAt(st), place: nextAt !== null },
     lastArrival: lastArr, story: S.storyState(facts, c.story), teaser: S.teaser(c.story, st), runFinds,
@@ -1847,11 +1960,18 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   };
 }
 
-/** The run set-up for a job: every job opens at one delve of 30 minutes; Dan sets the minutes and the delves himself
-    (Dan, D-124). */
+/** The run set-up for a job: a one-off opens at one delve of 30 minutes (D-124); a recurring job at its own minutes, the
+    ones Dan set for it (Dan, D-146): one delve on a dial stop, else the fewest equal delves on a stop that make them
+    (120 → 2 × 60, 50 → 2 × 25), else the nearest stop. Dan still sets the minutes and the delves himself. */
 export const PRESET = { minutes: 30, count: 1 } as const;
-export function presetRun(_j?: Job): { minutes: number; count: number } {
-  return { ...PRESET };
+export function presetRun(j?: Job, c?: { rhythms: { job: string }[] }): { minutes: number; count: number } {
+  if (!j || !c?.rhythms.some(r => r.job === j.id) || !(j.length > 0)) return { ...PRESET };
+  for (let count = 1; count <= 8; count++) {
+    const m = j.length / count;
+    if ((DIAL as readonly number[]).includes(m)) return { minutes: m, count };
+  }
+  const near = [...DIAL].sort((a, b) => Math.abs(a - j.length) - Math.abs(b - j.length) || b - a)[0];
+  return { minutes: near, count: 1 };
 }
 
 export { alertsAfter, runAt };

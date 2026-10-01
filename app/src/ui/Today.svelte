@@ -2,7 +2,7 @@
   import Deleted from './Deleted.svelte';
   import Bedtime from './Bedtime.svelte';
   import SwipeRow from './SwipeRow.svelte';
-  import { openMenu, openTick, waited, sayWaited } from './menu.svelte';
+  import { openMenu, openTick, waited, sayWaited, menu } from './menu.svelte';
   import WaitPick from './WaitPick.svelte';
   import { undoneFacts } from '../core/done';
   import { steady } from './taps';
@@ -12,7 +12,10 @@
      rows seemed to change places by themselves); a swipe takes it off today; the last row chooses a delve on anything (D-077). After day complete: the day as done, until Dan taps a job or keeps going.
      Mock-up: design/directions/d-combined/morning.html. */
   import { game, content } from './game.svelte';
-  import { pastBedtime, BEDTIME_WINDOW, tomorrowFirst, satchelView, errandChoices } from '../core/game';
+  import { pastBedtime, BEDTIME_WINDOW, tomorrowFirst, satchelView, errandChoices, carriedOf } from '../core/game';
+  import { tieFor } from '../core/remember';
+  import { moment } from './moment.svelte';
+  import { ofLine } from './panel';
   import { beatOf } from '../core/story';
   import type { Job } from '../core/types';
   import { t, minutesWords, minutesShort, inSentence, dayShort } from '../content/copy/en';
@@ -35,16 +38,23 @@
   const placeSeq = $derived(game.facts.filter(f => f.type === 'arrived' && f.kind === 'place').pop()?.seq ?? null);
   const lastPlace = $derived(v.lastArrival);
 
+  const recurring = (id: string) => v.content.rhythms.some(r => r.job === id);
+  /* minutes into the game day, which turns at 04:00: 01:00 comes after 18:00 (review of D-144) */
+  const fromFour = (hm: string) => ((+hm.slice(0, 2) + 20) % 24) * 60 + +hm.slice(3, 5);
   function rowNote(j: Job): string {
     if (v.done.has(j.id)) return t('row.done');
-    if (v.times[j.id]) return v.times[j.id];
-    /* every job is a delve (D-117), so a row never says "a delve": it says the job's usual minutes, when they were set
-       for it (a recurring job, or one made in the editor); a line jotted with + Add says nothing (D-130) */
-    return j.item ? '' : minutesShort(j.length);
+    /* an appointment gone by is noticed, never scolded (L C5) */
+    if (v.times[j.id]) return fromFour(game.now.slice(11, 16)) > fromFour(v.times[j.id]) ? t('row.wentBy', { time: v.times[j.id] }) : v.times[j.id];
+    /* every job is a delve (D-117), so a row never says "a delve". A recurring job says its usual minutes, which Dan set
+       for it; a one-off says the minutes it already has ("27 min so far", D-143 D), else nothing: never a number
+       nobody chose (J2) */
+    return recurring(j.id) ? minutesShort(j.length) : '';
   }
+  /* under a one-off's name, beside its "It's done" (J2, J10) */
+  const soFar = (j: Job) => { if (v.done.has(j.id) || recurring(j.id)) return ''; const m = carriedOf(game.facts, v.content, j.id); return m > 0 ? t('row.sofar', { min: minutesShort(m) }) : ''; };
 
   function begin(j: Job) {
-    /* every job opens the set-up at one delve of 30 minutes; Dan sets the minutes and the delves (D-124) */
+    /* the set-up: a one-off at one delve of 30 minutes (D-124), a recurring job at its own minutes (D-146) */
     go('set', j.id);
   }
   function done(j: Job) {
@@ -63,12 +73,19 @@
   function finish() { game.do({ do: 'finishHere' }); go('delve'); }
   /* a tap on a job starts that job, never another: nothing on the list moves (Dan, D-100) */
   /* a job not yet done can be ticked off, done without a delve (D-134); not while a delve runs */
-  const canTick = (id: string) => !v.done.has(id) && !v.run;
-  function start(id: string) { if (!v.done.has(id)) begin(job(id)); }
-  function aside(id: string) { steady(); game.do({ do: 'setAside', job: id }); lastAside = id; }
-  /* "Not today" said once, with a way to take it back while Today is still open (review 2, D-088) */
-  let lastAside = $state<string | null>(null);
-  function putBack() { if (lastAside) game.do({ do: 'putBack', job: lastAside }); lastAside = null; }
+  /* a delve under way, or an errand run's "What got done?" still waiting: anything that counts a job would count it first */
+  const busy = $derived(!!v.run || !!v.runEnd?.pending);
+  const canTick = (id: string) => !v.done.has(id) && !busy;
+  /* during a delve another job can be edited, moved or deleted, never started (D-143 E): a tap opens its menu. A done
+     recurring job opens its menu too (Delve again, Not done after all, J11); a done one-off is finished */
+  function start(id: string) {
+    if (v.done.has(id)) { if (recurring(id)) openMenu(id, go, v.day, null, 'today'); return; }
+    if (v.run || v.runEnd?.pending) { openMenu(id, go, null, null, 'today'); return; }
+    begin(job(id));
+  }
+  function aside(id: string) { steady(); game.do({ do: 'setAside', job: id }); }
+  /* "Not today": the row stays, struck, with "Put back", for the rest of the day (J7; was only while Today stayed open) */
+  function putBack(id: string) { steady(); game.do({ do: 'putBack', job: id }); }
   /* after the day's work: a timed job still ahead today is named, so "done" never hides it (review 2) */
   const stillToCome = $derived(v.slate.filter(id => !v.done.has(id) && v.times[id]).map(id => `${job(id).name} ${t('row.at', { time: v.times[id] })}`));
 
@@ -119,14 +136,15 @@
   ].join(', '));
   /* the story ahead folds to a few lines, so the next job is always in view; a tap reads it all (D-093) */
   let aheadOpen = $state(false);
+  let keysOpen = $state(false);
 
   /* the errand run (D-139): quietly at the list's end, when two jobs or more could go on one trip out */
-  const errandsOpen = $derived(!v.run && !v.night && errandChoices(content, game.facts, game.now).length >= 2);
+  const errandsOpen = $derived(!busy && !v.night && errandChoices(content, game.facts, game.now).length >= 2);
 
-  /* "+ Add" (D-107) opens the Satchel's one box, ready to type in (D-131): focused inside the tap itself, so the phone's
-     keyboard opens straight away */
+  /* "Add a job" opens the Satchel's one box, ready to type in (D-131), whose Return puts the job on today (Dan, D-143 C):
+     focused inside the tap itself, so the phone's keyboard opens straight away */
   function add() {
-    go('satchel');
+    go('satchel', 'today');
     flushSync();
     document.querySelector<HTMLInputElement>('.satchel-add input')?.focus({ preventScroll: true });
   }
@@ -143,11 +161,28 @@
     return [...new Set([...first.planned, ...s.noDay.map(j => j.id), ...s.coming.map(x => x.job.id), ...s.recurring.map(j => j.id)])].filter(id => game.job(id));
   });
   function chooseFirst(id: string) { steady(); if (id !== first?.job) game.do({ do: 'firstJob', job: id }); choosing = false; }
+  let mindHave = $state<string | null>(null);
   function putMind() {
     const line = mind.trim();
     if (!line) return;
+    /* a job Dan already has is not added twice (J4): it says so */
+    const tie = tieFor(content, game.facts, line);
+    mindHave = tie?.same ? tie.job.name : null;
     game.do({ do: 'addItems', lines: [line] }); mind = ''; mindSaid = true; setTimeout(() => (mindSaid = false), 4000);
   }
+  /* the avoided job, the only one left on the line: said, once it is all that holds the day (Dan, D-143 G) */
+  const onlyAvoided = $derived.by(() => {
+    const left = v.line.filter(id => !v.done.has(id));
+    return !v.complete && !v.run && left.length === 1 && v.line.length > 1 && game.job(left[0])?.avoided ? game.job(left[0])!.name : null;
+  });
+  /* "Press and hold a job for more", said until the first time the job menu is opened (J19) */
+  let held = $state(holdSeen());
+  function holdSeen() { try { return localStorage.getItem('hint.hold') === '1'; } catch { return true; } }
+  /* the menu found while Today is open: the hint goes once the menu closes, not at the next visit, and never while the
+     finger is still down (the rows under it would move, D-131) (review of D-144) */
+  let menuOpened = false;
+  $effect(() => { if (menu.job) menuOpened = true; else if (menuOpened) held = true; });
+  const holdHint = $derived(!held && !v.run && others.length > 0);
 </script>
 
 {#snippet tonight()}
@@ -171,7 +206,7 @@
         <input bind:value={mind} maxlength="120" enterkeyhint="done" aria-label={t('tonight.mind')} placeholder={t('tonight.mind')} />
         <button class="btn-quiet" type="submit" disabled={!mind.trim()}><span>{t('tonight.mind.put')}</span></button>
       </form>
-      {#if mindSaid}<p class="soft said-mind" role="status">{t('tonight.mind.said')}</p>{/if}
+      {#if mindSaid}<p class="soft said-mind" role="status">{mindHave ? t('park.have', { job: mindHave }) : t('tonight.mind.said')}</p>{/if}
     {/if}
     <p class="soft promise">{t('today.tonight.say', { bedtime: v.bedtime })}</p>
     <button class="btn gold resting" onclick={() => game.do({ do: 'goodnight' })}>{t('camp.goodnight')}</button>
@@ -198,10 +233,20 @@
     <section class="where rise d2" aria-label={roadSay || undefined}>
       <EndRoad road={v.road} from={v.walked} to={v.walked} mode="still" notes={roadNotes} />
     </section>
+    <!-- the Keys kept (Dan, D-142): always in view; a tap says what they are for -->
+    <button class="keys rise d2" aria-expanded={keysOpen} onclick={() => (keysOpen = !keysOpen)}>
+      <svg viewBox="0 0 24 12" aria-hidden="true"><circle cx="5" cy="6" r="3.6" /><path d="M8.6 6H22M18 6v3.4M21.4 6v2.6" /></svg>
+      <span>{v.keys === 0 ? t('today.keys.none') : v.keys === 1 ? t('today.keys.one') : t('today.keys.many', { n: v.keys })}</span>
+    </button>
+    <!-- the Map opens on where a Key can be used: here first (D-143 A); "one" when there are more (S polish) -->
+    {#if v.keyUse}<p class="key-use rise d2"><button class="text-link" onclick={() => go('map', v.keyUse!)}><span>{v.keyHere ? t(v.keys > 1 ? 'today.keys.hereMany' : 'today.keys.here') : t(v.keys > 1 ? 'today.keys.useMany' : 'today.keys.use')}</span></button></p>{/if}
+    {#if keysOpen}<p class="soft keys-say">{t('today.keys.say')}{#if v.keys} {t('today.keys.useOnMap')}{/if}</p>{/if}
     {#if v.ahead}
       <section class="ahead rise d2">
-        <div class="label-line">{t('today.ahead')}</div>
+        <!-- a locked thing left behind is never called "ahead": it is behind him, and on the Map (S3, D-143) -->
+        <div class="label-line">{v.aheadBehind ? t('today.behind') : t('today.ahead')}{#if v.aheadKey}<span class="needs-key"> · {t('today.aheadKey')}</span>{/if}</div>
         <button class="ahead-text" class:open={aheadOpen} aria-expanded={aheadOpen} onclick={() => (aheadOpen = !aheadOpen)}><p class="say on-scene">{v.ahead}</p></button>
+        {#if v.aheadBehind}<p class="behind-map"><button class="text-link" onclick={() => go('map', v.aheadBehind!)}><span>{t('today.behindMap')}</span></button></p>{/if}
       </section>
     {/if}
   </header>
@@ -225,11 +270,15 @@
       <div class="next">
         <div class="label-line lit">{t('today.next')}</div>
         <h2 class="say-lg">{t('today.carry', { job: v.run.job.name })}</h2>
+        <!-- which of the run's delves, as the delve screen says (J18) -->
+        {#if v.run.count > 1}<p class="soft of">{ofLine(v.run, v.run.k, false)}</p>{/if}
         <p class="soft">{t('today.carry.left', { min: minutesWords(Math.max(1, Math.ceil(v.run.leftMs / 60000))) })}</p>
         <div class="btn-row lead">
           <button class="btn" onclick={carry}>{t('today.carry.go')}</button>
           <button class="btn-quiet" onclick={finish}><span>{t('today.finishHere')}</span></button>
         </div>
+        <!-- another job can be added during a delve (D-143 E) -->
+        <div class="cant"><button class="text-link today-add" onclick={add}><span>{t('today.addJob')}</span></button></div>
       </div>
     {:else if v.next?.mode === 'running' && v.run}
       <!-- a delve running while Dan looks at Today: one way back to it, nothing else (review finding, D-080) -->
@@ -238,6 +287,15 @@
         <h2 class="say-lg">{v.run.job.name}</h2>
         <p class="soft">{t('today.running.say')}</p>
         <div class="lead"><button class="btn full" onclick={() => go('delve')}>{t('today.running.go')}</button></div>
+        <div class="cant"><button class="text-link today-add" onclick={add}><span>{t('today.addJob')}</span></button></div>
+        <div class="gap"></div>
+      </div>
+    {:else if v.runEnd?.pending}
+      <!-- an errand run's "What got done?", left by the arrow: it waits here, never counted behind Dan's back (J1) -->
+      <div class="next">
+        <div class="label-line lit">{t('errand.title')}</div>
+        <h2 class="say-lg">{t('errand.waits')}</h2>
+        <div class="lead"><button class="btn full" onclick={() => go('delve')}>{t('errand.waitsGo')}</button></div>
         <div class="gap"></div>
       </div>
     {:else if !v.complete}
@@ -261,6 +319,7 @@
         {#if stillToCome.length}<p class="soft still">{t('today.stillToCome', { what: stillToCome.join(', ') })}</p>{/if}
         {#if evening}{@render tonight()}{/if}
         <div class="btn-row after"><button class="btn-quiet" onclick={() => go('satchel')}><span>{t('today.keepGoing')}</span></button></div>
+        <p class="soft to-satchel">{t('today.keepGoingSay')}</p>
         <!-- the one promise past the finish line: more work reaches the deep moments (D-127), said once, quietly (D-130) -->
         <p class="soft deeper">{t('today.deeper')}</p>
         {#if lastPlace}<div class="cant"><button class="text-link" onclick={() => go('arrival')}><span>{t('today.look')}</span></button></div>{/if}
@@ -269,40 +328,51 @@
     {/if}
 
     <Deleted />
-    {#if lastAside && !v.order.includes(lastAside) && !v.done.has(lastAside)}
-      <p class="said">{t('today.aside.said')} <button class="text-link" onclick={putBack}><span>{t('today.putBack')}</span></button></p>
-    {/if}
+    <!-- a word left to cut later (A2), and a Daybook page written after days away (D-143 F): quiet lines back to them -->
+    {#if v.arrival && v.arrival.seq === moment.wordLater}<p class="said waits"><button class="text-link" onclick={() => { moment.wordLater = 0; go('arrival'); }}><span>{t('today.wordWaits')}</span></button></p>{/if}
+    {#if v.close}<p class="said waits"><button class="text-link" onclick={() => go('daybook')}><span>{t('today.pageWaits')}</span></button></p>{/if}
+    {#if onlyAvoided}<p class="said only" role="status">{t('today.onlyAvoided', { job: onlyAvoided })}</p>{/if}
     {#if waitedJob}
       <p class="said" role="status">{t('wait.said', { job: waitedJob.name, day: dayShort(waited.until) })} <button class="text-link" aria-label={t('wait.srBack', { job: waitedJob.name })} onclick={() => { backToIt(waitedJob.id, waited.today); sayWaited(null); }}><span>{t('wait.back')}</span></button></p>
     {/if}
     {#snippet jobRow(id: string)}
       {@const j = job(id)}
-      <SwipeRow key={`t:${id}`} actions={acts(j)} tap={() => start(id)} hold={() => openMenu(id, go, v.done.has(id) ? v.day : null, null, 'today')} disabled={!!v.run} done={v.done.has(id)}>
-        {#snippet row()}<span class="pip" class:done={v.done.has(id)} class:under={canTick(id)}></span><span class="t">{j.name}</span><span class="s">{sayDone(j) ? '' : rowNote(j)}</span>{/snippet}
+      <SwipeRow key={`t:${id}`} actions={acts(j)} tap={() => start(id)} hold={() => openMenu(id, go, v.done.has(id) ? v.day : null, null, 'today')} done={v.done.has(id)} quiet={v.done.has(id) && !recurring(id)}>
+        {#snippet row()}<span class="pip" class:done={v.done.has(id)} class:under={canTick(id)}></span><span class="t">{j.name}{#if soFar(j)}<small>{soFar(j)}</small>{/if}</span><span class="s">{sayDone(j) ? '' : rowNote(j)}</span>{/snippet}
         <!-- the same "It's done" on a row further down: a tap on the row itself still starts a delve (D-100, D-120) -->
         <!-- the tick circle over the marker: done without a delve, with the time it took (D-134) -->
         {#snippet lead()}{#if canTick(id)}<button class="tickbtn" aria-label={t('tick.sr', { job: j.name })} onclick={() => openTick(id, go)}><span class="ring"></span></button>{/if}{/snippet}
-        {#snippet over()}{#if sayDone(j) && !v.run}<button class="text-link row-done" onclick={() => done(j)}><span>{t('today.itsDone')}</span></button>{/if}{/snippet}
+        {#snippet over()}{#if sayDone(j) && !busy}<button class="text-link row-done" onclick={() => done(j)}><span>{t('today.itsDone')}</span></button>{/if}{/snippet}
       </SwipeRow>
     {/snippet}
     <div class="rows">
       {#each others as id (id)}{@render jobRow(id)}{/each}
     </div>
+    {#if holdHint}<p class="soft hold-hint">{t('today.holdHint')}</p>{/if}
+    <!-- taken off today: still here, struck, with Put back, all day (J7) -->
+    {#if v.aside.length}
+      <div class="rows aside">
+        {#each v.aside as id (id)}
+          <div class="row still aside-row"><span class="pip"></span><span class="t">{job(id).name}</span><span class="s">{t('row.notToday')}</span></div>
+          <div class="put-back"><button class="text-link" aria-label={t('today.srPutBack', { job: job(id).name })} onclick={() => putBack(id)}><span>{t('today.putBack')}</span></button></div>
+        {/each}
+      </div>
+    {/if}
     <!-- back from waiting on a reply (D-137): under the day's list, never on it -->
     {#if v.replies.length}
       <div class="rows replies">
         {#each v.replies as r (r.job)}
           {@const j = job(r.job)}
           <div class="reply">
-            <SwipeRow key={`r:${r.job}`} actions={replyActs(j)} tap={() => start(r.job)} hold={() => openMenu(r.job, go, null, null, 'today')} disabled={!!v.run}>
+            <SwipeRow key={`r:${r.job}`} actions={replyActs(j)} tap={() => start(r.job)} hold={() => openMenu(r.job, go, null, null, 'today')}>
               {#snippet row()}<span class="pip" class:under={canTick(r.job)}></span><span class="t">{j.name}{#if r.who}<small>{t('wait.onNow', { who: r.who })}</small>{/if}</span><span class="s"></span>{/snippet}
               {#snippet lead()}{#if canTick(r.job)}<button class="tickbtn" aria-label={t('tick.sr', { job: j.name })} onclick={() => openTick(r.job, go)}><span class="ring"></span></button>{/if}{/snippet}
             </SwipeRow>
             <p class="ask">{t('wait.ask')}</p>
             <div class="reply-acts">
-              <button class="text-link" aria-label={t('wait.srBack', { job: j.name })} disabled={!!v.run} onclick={() => backToIt(r.job)}><span>{t('wait.back')}</span></button>
-              <button class="text-link" aria-label={t('wait.srStill', { job: j.name })} aria-expanded={still === r.job} disabled={!!v.run} onclick={() => (still = still === r.job ? null : r.job)}><span>{t('wait.still')}</span></button>
-              <button class="text-link" aria-label={t('wait.srDone', { job: j.name })} disabled={!!v.run} onclick={() => openTick(r.job, go)}><span>{t('wait.done')}</span></button>
+              <button class="text-link" aria-label={t('wait.srBack', { job: j.name })} disabled={busy} onclick={() => backToIt(r.job)}><span>{t('wait.back')}</span></button>
+              <button class="text-link" aria-label={t('wait.srStill', { job: j.name })} aria-expanded={still === r.job} disabled={busy} onclick={() => (still = still === r.job ? null : r.job)}><span>{t('wait.still')}</span></button>
+              <button class="text-link" aria-label={t('wait.srDone', { job: j.name })} disabled={busy} onclick={() => openTick(r.job, go)}><span>{t('wait.done')}</span></button>
             </div>
             {#if still === r.job}<WaitPick day={v.day} who={r.who ?? ''} name={j.name} pick={(u, w) => stillWaiting(r.job, u, w)} />{/if}
           </div>
@@ -322,7 +392,8 @@
       <!-- the jobs with no day, by day and at night (D-126) -->
       <button class="text-link" onclick={() => go('satchel')}><span>{t('nav.satchel')}</span></button>
       <button class="text-link" onclick={() => go('week')}><span>{t('nav.week')}</span></button>
-      <button class="text-link" onclick={() => go('daybook')}><span>{t('nav.daybook')}</span></button>
+      <!-- only once there is a page to read (N polish) -->
+      {#if game.facts.some(f => f.type === 'weekClosed')}<button class="text-link" onclick={() => go('daybook')}><span>{t('nav.daybook')}</span></button>{/if}
     </nav>
   </section>
 </div>
@@ -331,7 +402,16 @@
   h1 { margin-top: 2px; }
   h1 .here { font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit; text-shadow: inherit; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; }
   .where { margin-top: 6px; }
-  .where :global(.road) { margin: 0 auto 14px; }
+  .where :global(.road) { margin: 0 auto 4px; }
+  .keys { display: flex; align-items: center; gap: 8px; margin: 10px auto 6px; padding: 4px 8px; background: none; border: 0; cursor: pointer;
+    font-family: var(--life); font-style: italic; font-size: 14px; color: #e9d9b4; }
+  .keys svg { width: 22px; height: 11px; fill: none; stroke: #f2c170; stroke-width: 1.4; stroke-linecap: round; }
+  .key-use { margin: -4px 0 8px; text-align: center; font-size: 15px; }
+  .key-use .text-link { color: #f2c170; }
+  .keys-say { margin: 0 0 8px; text-align: center; font-size: 14.5px; }
+  .needs-key { color: #f2c170; }
+  .behind-map { margin: 0; }
+  .behind-map .text-link { min-height: 36px; padding: 0; }
   .ahead { margin-top: 12px; }
   .ahead p { font-size: 17.5px; line-height: 1.38; margin-top: 6px; }
   .ahead-text { display: block; width: 100%; padding: 0; background: none; border: 0; text-align: left; cursor: pointer; color: inherit; }
@@ -366,6 +446,18 @@
   .reply-acts .text-link span { font-size: 15px; }
   .reply-acts .text-link:disabled { opacity: .5; }
   .errand { margin-top: 6px; }
+  .waits { margin: 0 0 6px; }
+  .waits .text-link span { color: var(--gold-hi); }
+  .next .soft.to-satchel { margin: -8px 0 4px; font-size: 14px; font-style: italic; text-align: center; }
+  .hold-hint { margin: 6px 0 0; text-align: center; font-size: 14px; font-style: italic; }
+  .of { margin: -2px 0 4px !important; font-style: italic; }
+  .only { margin: 2px 0 6px; }
+  .aside { margin-top: 8px; }
+  .aside-row { cursor: default; opacity: .62; }
+  .aside-row .t { text-decoration: line-through; }
+  .put-back { display: flex; justify-content: flex-end; margin: -8px 0 4px; }
+  .put-back .text-link { min-height: 36px; padding: 0; }
+  .put-back .text-link span { font-size: 15px; }
   .first { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin-top: 8px; }
   .first-say { font-family: var(--life); font-size: 18px; color: var(--ink-2); }
   .first-job span { font-size: 18px; color: #fff; }

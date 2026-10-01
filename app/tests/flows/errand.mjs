@@ -38,8 +38,8 @@ const flat = async (where) => {
 };
 const save = async (name) => { await page.keyboard.type(name); await page.keyboard.press('Enter'); await page.clock.runFor(800); };
 
-/* 1. three jobs saved for later in the Satchel ("Add a job" opens its box) */
-await tap(page.locator('.today-add'), 'Add a job');
+/* 1. three jobs saved for later in the Satchel (its own box keeps them with no day; Today's adds to today, D-143 C) */
+await tap(page.locator('.foot').getByRole('button', { name: 'Satchel', exact: true }), 'the Satchel'); await page.locator('.satchel-add input').focus();
 for (const n of ['Bank', 'Post office', 'Chemist']) { await page.locator('.satchel-add input').focus(); await save(n); }
 await page.locator('.satchel-add input').blur(); await page.clock.runFor(600);
 
@@ -91,6 +91,11 @@ if (ring !== null && ring !== '20 minutes') fails.push(`the ring counts to ${rin
 if (await page.getByText('Is it done?').count()) fails.push('an errand run asked "Is it done?"');
 await flat('the end');
 await shot('4-end');
+/* one errand's story moment at a time, with Next (L B5) */
+for (let k = 0; k < 6 && (await btn('Next').count()); k++) {
+  if ((await page.locator('.errand-story').count()) !== 1) fails.push(`${await page.locator('.errand-story').count()} errands' stories on one screen of the end`);
+  await tap(btn('Next'), 'Next');
+}
 const out = (await btn('See where you are').count()) ? btn('See where you are') : btn('Back to today');
 await tap(out, 'the way out of the end');
 await toToday();

@@ -31,9 +31,9 @@ There are **two clocks**. **Time moves the Site:** every real minute moves Dan, 
 |---|---|---|
 | Useful Keys a week (the bounded supply) | **5** | About 250 sealed things are written for the year (≈ 5 a week). Adding rhythms never raises it (D-047 invariant) |
 | How they're earned | each rhythm met = 1 Key, the moment it's met, until the week's 5 are used | Dan's six rhythms meet about 5 in a full week (the tank clean is fortnightly), so an honest full week reaches the supply |
-| Where a Key goes | to the next niche in view (a story one first, then a plain one); never a row of the road, which opens on foot (D-129) | the story's pace comes first (D-035, D-043 F6); since D-129 it no longer waits on Keys |
-| A rhythm met after the supply is used | **one find** (at most one a week) | effort is never turned away (D-039) without adding Keys |
-| **The weekly floor** | a week with **at least one day complete** brings **at least 2 Keys**; the week close opens the rest | keeps the story moving through a bad week and protects the first word in week 2–3 (D-043) |
+| Where a Key goes | kept, then used by Dan's choice on any niche a Key can open (`openable()`): where he is ("Use it here") or on the Map; never a row of the road, which opens on foot (D-129, D-143 A) | the story's pace comes first (D-035, D-043 F6); since D-129 it no longer waits on Keys, so nothing is lost by a Key waiting for Dan |
+| A rhythm met after the supply is used, or a Key earned with nothing it could open (every openable niche already has a kept Key) | **one find** (at most one a week) | effort is never turned away (D-039) without adding Keys |
+| ~~The weekly floor~~ | **Removed (Dan, D-142).** A Key comes only from a recurring job kept up. The road no longer waits on Keys (D-129), so the floor's reason (a bad week stalling the story) is gone | was: a week with a day complete brought at least 2 Keys (D-043) |
 | A new rhythm or changed number | counts from its next full week | D-043 F7 |
 | A rhythm far beyond its enough | pays in steps and finds, and no longer opens an extra sealed thing | the old "strongly exceeded target" opening would have broken the Key invariant (D-047) |
 | Milestone Keys (great doors) | one per real milestone, confirmed with one tap, and **only for that project's great door**, which has a fixed number of parts set when the project is added | outside the weekly supply, and bounded by the door itself |
@@ -76,7 +76,7 @@ So a story told in small pieces stays remembered, with no homework:
 
 ## 8. Checks
 - **Dan's honest Normal week** (his rhythms, `PLANNER.md`): gym 4 × 1 h ≈ 9.6 steps; Spanish study 2 × 1 h ≈ 4.8; the lesson ≈ 2.4; the Course 4 days at about 2 h ≈ 19; meal prep, tank clean and one-offs ≈ 5. **About 40 steps: about 5 named places**, one story week. Keys: 5.
-- **A Low week** (two days complete): about 8–10 steps, one or two places, and the floor's 2 Keys. The story week stretches; nothing is lost.
+- **A Low week** (two days complete): about 8–10 steps, one or two places, and a Key only for a recurring job kept up (D-142). The story week stretches; nothing is lost: a niche left shut waits for the next Key.
 - **A huge week** (High every day, about 100 steps): the story week's places, then next week's places, then the open route, side chambers and finds. Keys: still 5.
 - **Farming:** splitting work earns nothing (steps are time); more rhythms add no Keys; ten tiny jobs fill no extra slots; finds from switching need 100 minutes on one job first.
 - **The year:** about 260 arrivals, about 250 sealed things (5 a week), 52 signs, 9 words: what the sealed story holds.

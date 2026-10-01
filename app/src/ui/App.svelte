@@ -1,7 +1,8 @@
 <script lang="ts">
   /* The screens, one at a time, inside the phone. On opening, the next action is obvious (rule 16):
      a delve that ended while away shows its end; a run in progress shows the ring; an unseen arrival shows itself. */
-  import { game } from './game.svelte';
+  import { game, content } from './game.svelte';
+  import { arrivalAt } from '../core/game';
   import { moment } from './moment.svelte';
   import { onMount, tick } from 'svelte';
   import type { Back, Go, Screen } from './nav';
@@ -12,6 +13,7 @@
   import Delve from './Delve.svelte';
   import Step from './Step.svelte';
   import Arrival from './Arrival.svelte';
+  import Opened from './Opened.svelte';
   import CantStart from './CantStart.svelte';
   import Proto from './Proto.svelte';
   import Map from './Map.svelte';
@@ -32,18 +34,23 @@
   import TickSheet from './TickSheet.svelte';
   import { closeRows } from './SwipeRow.svelte';
   import { t } from '../content/copy/en';
+  import { sealOf } from '../core/story';
   import { steady } from './taps';
   import { unslide } from './keyboard';
   import { wake } from './rest';
 
   function first(): Screen {
     const v = game.view;
-    if (v.runEnd || (v.run && v.run.phase !== 'held')) return 'delve';
-    if (v.arrival) return 'arrival';
+    /* an errand run's "What got done?" left unanswered waits for Dan without holding Today: Today says it waits (J1) */
+    if ((v.runEnd && !v.runEnd.pending) || (v.run && v.run.phase !== 'held')) return 'delve';
+    /* a word left to cut later waits for Dan on Today's quiet line, never forced on him (A2) */
+    if (v.arrival && v.arrival.seq !== moment.wordLater) return 'arrival';
     /* then, once each: the morning after camp, the welcome back, the daybook's new page */
     if (v.morning) return 'morning';
     if (v.welcome) return 'welcome';
-    if (v.close) return 'daybook';
+    /* after days away, the welcome back only: the new page waits as a quiet line on Today (Dan, D-143 F) */
+    /* (still a line after 04:00: a welcome since the page was written keeps it so, review of D-144) */
+    if (v.close && !game.facts.some(f => f.type === 'welcomed' && f.day >= v.close!.day)) return 'daybook';
     return 'today';
   }
   let screen = $state<Screen>(first());
@@ -65,16 +72,20 @@
   /* Back (review 2, D-088): the screens Dan looks through keep a trail, so the arrow and the phone's own back return to
      where each was opened from. Today and the day's own moments (a delve, a place reached, the stair, the morning)
      start the trail again; their way out stays Today. */
-  const LOOK = new Set<Screen>(['map', 'records', 'marks', 'week', 'rhythms', 'daybook', 'set', 'proto', 'cant', 'settings', 'satchel', 'errands']);
+  /* a niche opened with a Key is looked through too: back from the Map never returns to it in a loop (S1, D-143); so is a
+     job's return (the step): back returns to the Satchel or the Week it was ticked off in (N clumsy 3) */
+  const LOOK = new Set<Screen>(['map', 'records', 'marks', 'week', 'rhythms', 'daybook', 'set', 'proto', 'cant', 'settings', 'satchel', 'errands', 'opened', 'step']);
   const TABS = new Set<Screen>(['records', 'marks']);
   let trail = $state<Back[]>([]);
   /* Records ⇄ Marks is a tab: the screen swaps in place, with nothing rising or fading in again (Dan, D-093) */
   let still = $state(false);
   const go: Go = (to, a) => {
     steady(); void tick().then(() => { steady(); unslide(); });
-    /* leaving a delve's end by any way out (the arrow, the phone's back): looked at, so it never comes back later (D-120) */
+    /* leaving a delve's end by any way out (the arrow, the phone's back): looked at, so it never comes back later (D-120).
+       A look at a record, the Satchel or a Key's niche from it isn't leaving: back returns to it (N bug 2). An errand
+       run's end still to count is never marked: its question waits (J1) */
     const e = game.view.runEnd;
-    if (screen === 'delve' && e && !game.view.run && to !== 'delve') game.do({ do: 'seen', what: 'step', ref: e.seq });
+    if (screen === 'delve' && e && !e.pending && !game.view.run && to !== 'delve' && !LOOK.has(to as Screen)) game.do({ do: 'seen', what: 'step', ref: e.seq });
     still = TABS.has(screen) && TABS.has(to);
     closeMenu(); closeTick(); closeRows();
     game.deleted = null; game.cantDelete = null;   /* a delete's Undo stays on the screen it was made on (D-125) */
@@ -82,6 +93,15 @@
        (break-it review 5) */
     /* a delve's set-up for a job since deleted (from its editor) is passed by on the way back (D-131) */
     while (to === 'back' && trail.length && trail[trail.length - 1].screen === 'set' && trail[trail.length - 1].arg !== 'errands' && !game.job(String(trail[trail.length - 1].arg))) trail.pop();
+    /* the phone's back on a moment that waits (a place just reached, the morning, the welcome back, a new Daybook page, a
+       word to cut) does what its own arrow does, never nothing (N clumsy 5) */
+    if (to === 'back' && !trail.length) {
+      const v = game.view;
+      if (screen === 'arrival' && v.arrival && !(typeof arg === 'string' && arg.startsWith('again:'))) { if (beatKind(v.arrival.id) === 'word' && moment.cutDone !== v.arrival.seq) moment.wordLater = v.arrival.seq; else game.do({ do: 'seen', what: 'arrival', ref: v.arrival.seq }); }
+      else if (screen === 'morning' && v.morning) game.do({ do: 'seen', what: 'morning', ref: v.morning.seq });
+      else if (screen === 'welcome' && v.welcome) game.do({ do: 'seen', what: 'welcome', ref: v.welcome.seq });
+      else if (screen === 'daybook' && v.close) game.do({ do: 'closeRead', week: v.close.week });
+    }
     if (to === 'back') { const p = trail.pop(); if (p && p.screen !== 'today') { screen = p.screen; arg = p.arg; } else go('today'); return; }
     if (to === 'cant' && typeof a === 'string') game.do({ do: 'cantStart', job: a });
     /* "Today" never skips what waits: a place just reached, the morning, the welcome back, a new daybook page (D-080).
@@ -91,19 +111,44 @@
     if (LOOK.has(to) || (to === 'arrival' && typeof a === 'string' && a.startsWith('again:'))) {
       const top = trail[trail.length - 1];
       if (top && top.screen === to && top.arg === a) trail.pop();                  /* going where back would go */
-      else if (screen === to && !(arg === undefined && a !== undefined)) { /* the same screen, another page: replaced */ }
-      else if (TABS.has(screen) && TABS.has(to) && arg === undefined && a === undefined) { /* Records ⇄ Marks: a tab */ }
+      /* the same screen, another page: replaced (the Daybook's Earlier and Later alike, N polish) */
+      else if (screen === to && (to === 'daybook' || !(arg === undefined && a !== undefined))) { /* replaced */ }
+      /* Records ⇄ Symbols by the tab bar: a tab, whatever was open on either, never a step back (N clumsy 1) */
+      else if (TABS.has(screen) && TABS.has(to) && screen !== to && a === undefined) {
+        /* a tab: the pages opened inside either go too, so the arrow and back lead out of both (review of D-144) */
+        while (trail.length && TABS.has(trail[trail.length - 1].screen)) trail.pop();
+      }
       else trail.push({ screen, arg });
     } else trail = [];
     screen = to; arg = to === 'today' ? undefined : a;
   };
   /* what the arrow says: the screen it returns to */
-  const NAMES: Partial<Record<Screen, string>> = { today: 'delve.today', arrival: 'nav.back', map: 'map.nav', records: 'records.nav', marks: 'marks.nav',
-    rhythms: 'rhythms.label', daybook: 'nav.daybook', settings: 'nav.settings', satchel: 'nav.satchel', errands: 'errand.title' };
+  /* every arrow names where it goes, deepest places included (N clumsy 6, bug 3) */
+  const NAMES: Partial<Record<Screen, string>> = { today: 'delve.today', map: 'map.nav', records: 'records.nav', marks: 'marks.nav',
+    rhythms: 'rhythms.label', daybook: 'nav.daybook', settings: 'nav.settings', satchel: 'nav.satchel', errands: 'errand.title', opened: 'opened.nav',
+    delve: 'delve.label', step: 'step.label', morning: 'morning.label', welcome: 'welcome.label', stair: 'stair.label', cant: 'cant.label', proto: 'nav.proto' };
+  const beatKind = (id: string) => content.story.beats.find(b => b.id === id)?.kind;
+  function nameOf(top: Back): string {
+    if (top.screen === 'week') return t(top.arg ? 'week.next' : 'week.label');
+    /* the set-up: its job's name ("Back to Tax return", never "Back to Back") */
+    if (top.screen === 'set') return top.arg === 'errands' ? t('errand.title') : game.job(String(top.arg))?.name ?? t('set.label');
+    /* a job's return and a delve's end: by the job (never "Back to Done", review of D-144) */
+    if (top.screen === 'step') { const f = game.facts.find(x => x.seq === top.arg); if (f?.type === 'jobDone') return game.job(f.job)?.name ?? t('step.label'); }
+    /* a delve's end already left goes on to Today, so the arrow says Today */
+    if (top.screen === 'delve') { const e = game.view.runEnd ?? game.view.run; return e ? (e.errands ? t('errand.title') : e.job.name) : t('delve.today'); }
+    /* a niche opened with a Key: by its own name */
+    if (top.screen === 'opened') { const x = sealOf(content.story, String(top.arg).replace(/^again:/, '')); if (x) return x.where; }
+    /* a place: its own name */
+    if (top.screen === 'arrival') {
+      const a = typeof top.arg === 'string' && top.arg.startsWith('again:') ? arrivalAt(game.facts, content, +top.arg.slice(6)) : game.view.arrival ?? game.view.lastArrival;
+      return a?.name || t('arrive.label');
+    }
+    return NAMES[top.screen] ? t(NAMES[top.screen] as never) : t('nav.back');
+  }
   $effect(() => {
     const top = trail[trail.length - 1];
-    back.label = !top ? t('delve.today') : top.screen === 'week' ? t(top.arg ? 'week.next' : 'week.label')
-      : NAMES[top.screen] ? t(NAMES[top.screen] as never) : t('nav.back');
+    back.label = !top ? t('delve.today') : nameOf(top);
+    back.today = first() === 'today';
   });
 
   /* back by history, one step at a time (the screen checks use it); on Today with nothing behind, nothing more */
@@ -122,11 +167,12 @@
 
   /* a delve that ends while Dan is on another screen: its end is shown (as it is on opening), unless he is typing; the
      chime has already called him (D-120). A change of the delve's phase or of Today's next job steadies taps too. */
-  let lastEnd = game.view.runEnd?.seq ?? 0;
+  /* an errand run's end counted from elsewhere (any other command counts it, J1) is shown then, with its story */
+  let lastEnd = game.view.runEnd?.seq ?? 0, lastPending = !!game.view.runEnd?.pending;
   $effect(() => {
     const e = game.view.runEnd;
-    if (!e || e.seq === lastEnd) return;
-    lastEnd = e.seq;
+    if (!e || (e.seq === lastEnd && (e.pending || !lastPending))) { lastPending = !!e?.pending; return; }
+    lastEnd = e.seq; lastPending = e.pending;
     const typing = document.activeElement instanceof HTMLInputElement || document.activeElement instanceof HTMLTextAreaElement;
     if (screen !== 'delve' && !typing) go('delve');
   });
@@ -172,7 +218,7 @@
     {:else if screen === 'arrival'}<Arrival {go} seq={typeof arg === 'string' && arg.startsWith('again:') ? +arg.slice(6) : null} />
     {:else if screen === 'cant'}<CantStart {go} jobId={String(arg)} />
     {:else if screen === 'proto'}<Proto {go} />
-    {:else if screen === 'map'}<Map {go} />
+    {:else if screen === 'map'}<Map {go} focus={typeof arg === 'string' ? arg : undefined} />
     {:else if screen === 'records'}<Records {go} id={typeof arg === 'string' ? arg : undefined} />
     {:else if screen === 'marks'}<Marks {go} id={typeof arg === 'string' ? arg : undefined} />
     {:else if screen === 'stair'}<Stair {go} />
@@ -183,6 +229,7 @@
     {:else if screen === 'rhythms'}{#key arg}<Rhythms {go} job={typeof arg === 'string' ? arg : undefined} />{/key}
     {:else if screen === 'satchel'}<Satchel {go} to={typeof arg === 'string' ? arg : undefined} />
     {:else if screen === 'errands'}<Errands {go} />
+    {:else if screen === 'opened'}<Opened {go} id={String(arg)} />
     {:else if screen === 'settings'}<Settings {go} />{/if}
   {/key}
     {#snippet failed(_error, reset)}

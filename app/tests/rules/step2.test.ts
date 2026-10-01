@@ -138,8 +138,9 @@ describe('the Satchel: one place for every job (D-131)', () => {
     expect(act(p.facts, C, { do: 'delveNow', line: 'Another' }, p.at)).toEqual([]);
     p.wait(31);
     expect(where(p, id)).toEqual(['today']);   /* "Not yet": it stays on Today */
+    /* the next day it stays on Today, its minutes so far kept (Dan, D-143 D: it used to go back to No day yet) */
     p.to('2026-09-29T09:00:00+01:00').do({ do: 'open' });
-    expect(where(p, id)).toEqual(['noDay']);
+    expect(where(p, id)).toEqual(['today']);
   });
 });
 

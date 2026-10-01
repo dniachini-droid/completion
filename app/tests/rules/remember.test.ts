@@ -248,7 +248,8 @@ describe('"… keeps coming back. Make it repeat?" (D-136)', () => {
     const p = player().do({ do: 'open' });
     for (let k = 0; k < 3; k++) p.do({ do: 'addItems', lines: ['Meal prep'] });
     expect(repeatOffer(C, p.facts, gameDay(p.at))).toBeNull();
-    for (let k = 0; k < 3; k++) p.do({ do: 'addItems', lines: ['Water the plants'] });
+    /* added a third time (a name still to do is never added twice, J4: each is done before it comes back) */
+    for (let k = 0; k < 3; k++) { p.do({ do: 'addItems', lines: ['Water the plants'] }); if (k < 2) p.tick(); }
     const o = repeatOffer(C, p.facts, gameDay(p.at))!;
     expect(o.name).toBe('Water the plants');
     p.do({ do: 'saveJob', job: { ...p.job(o.job)!, doneBy: 'enough' }, rhythm: { id: 'r-plants', job: o.job, times: 2 } });
@@ -262,9 +263,10 @@ describe('"… keeps coming back. Make it repeat?" (D-136)', () => {
     expect(repeatOffer(C, p.facts, gameDay(p.at))).toBeNull();   /* three different names */
     bankTrip(p, 20); ids.push(p.last());
     p.do({ do: 'addItems', lines: ['Go to the bank'] }); ids.push(p.last());
+    p.do({ do: 'tickOff', job: ids[1], minutes: 15 }).leave();
     p.do({ do: 'addItems', lines: ['Go to the bank'] }); ids.push(p.last());
-    p.do({ do: 'tickOff', job: ids[2], minutes: 15 }).leave();
-    expect(repeatOffer(C, p.facts, gameDay(p.at))!.job).toBe(ids[1]);
+    expect(new Set(ids).size).toBe(3);
+    expect(repeatOffer(C, p.facts, gameDay(p.at))!.job).toBe(ids[2]);
     for (const id of ids) p.do({ do: 'removeJob', id });
     expect(repeatOffer(C, p.facts, gameDay(p.at))).toBeNull();
   });
@@ -300,7 +302,7 @@ describe('The fresh review of D-136', () => {
 
   it('a name once made to repeat, then stopped, is not offered again', () => {
     const p = player().do({ do: 'open' });
-    for (let k = 0; k < 3; k++) p.do({ do: 'addItems', lines: ['Water the plants'] });
+    for (let k = 0; k < 3; k++) { p.do({ do: 'addItems', lines: ['Water the plants'] }); if (k < 2) p.tick(); }
     const o = repeatOffer(C, p.facts, gameDay(p.at))!;
     p.do({ do: 'saveJob', job: { ...p.job(o.job)!, doneBy: 'enough' }, rhythm: { id: 'r-plants', job: o.job, times: 2 } });
     p.do({ do: 'stopRhythm', id: 'r-plants' });
@@ -344,3 +346,37 @@ describe('The fresh review of D-136', () => {
   });
 });
 
+
+describe('one job, never two, from every way in; Today\'s box adds to today (the flow review J4, D-143 C)', () => {
+  const named = (facts: Fact[], name: string) => W.live(C, facts).jobs.filter(j => W.nameKey(j.name) === W.nameKey(name) && !j.stopped);
+  it('the Week\'s +, Tonight\'s line and Siri put the job Dan has on the day, or leave it be, never a twin', () => {
+    const p = player('2026-10-05T09:00:00+01:00').do({ do: 'open' }).do({ do: 'saveForLater', line: 'Bank' });
+    const id = named(p.facts, 'Bank')[0].id;
+    p.do({ do: 'addToWeek', line: 'bank', day: '2026-10-07' });
+    expect(named(p.facts, 'Bank').map(j => j.id)).toEqual([id]);
+    expect(satchelView(C, p.facts, p.at).coming.map(x => [x.job.id, x.day])).toContainEqual([id, '2026-10-07']);
+    p.do({ do: 'addItems', lines: ['BANK', ' - bank'] });
+    p.do({ do: 'takeInbox', lines: [{ id: 'siri-1', text: 'Bank' }] });
+    expect(named(p.facts, 'Bank').map(j => j.id)).toEqual([id]);
+    /* a recurring job typed into the Week goes on that day, not as a one-off twin */
+    p.do({ do: 'addToWeek', line: 'Tank clean', day: '2026-10-08' });
+    expect(named(p.facts, 'Tank clean').map(j => j.id)).toEqual(['tank']);
+    /* a finished job of that name is a new one, carrying on from it (D-136) */
+    p.do({ do: 'tickOff', job: id, minutes: 15 }).leave();
+    p.do({ do: 'addItems', lines: ['Bank'] });
+    expect(named(p.facts, 'Bank').length).toBe(2);
+  });
+  it('Today\'s "Add a job" puts a new job on today; a job Dan has comes onto today, once', () => {
+    const p = player('2026-10-05T09:00:00+01:00').do({ do: 'open' });
+    p.do({ do: 'addToday', line: 'Ring the vet' });
+    const id = named(p.facts, 'Ring the vet')[0].id;
+    expect(p.view().slate).toContain(id);
+    p.do({ do: 'saveForLater', line: 'Post office' });
+    const po = named(p.facts, 'Post office')[0].id;
+    expect(p.view().slate).not.toContain(po);
+    p.do({ do: 'addToday', line: 'post office' });
+    expect(named(p.facts, 'Post office').map(j => j.id)).toEqual([po]);
+    expect(p.view().slate).toContain(po);
+    expect(satchelView(C, p.facts, p.at).noDay.map(j => j.id)).not.toContain(po);
+  });
+});

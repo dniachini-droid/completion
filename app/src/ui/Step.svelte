@@ -3,29 +3,26 @@
      a line of the passage, then out. Settled within a moment; a tap is all it needs. */
   import { game, content } from './game.svelte';
   import { t } from '../content/copy/en';
-  import { undoneFacts } from '../core/done';
   import Scene from './Scene.svelte';
   import Return from './Return.svelte';
   import Look from './Look.svelte';
   import EndRoad from './EndRoad.svelte';
   import EndRing from './EndRing.svelte';
-  import type { Go } from './nav';
+  import { backTo, type Go } from './nav';
+  import { back } from './back.svelte';
 
   let { go, seq }: { go: Go; seq: number } = $props();
   const v = $derived(game.view);
   const fact = $derived(game.facts.find(f => f.seq === seq));
   const job = $derived(fact && fact.type === 'jobDone' ? game.job(fact.job) : undefined);
   const completedDay = $derived(game.facts.some(f => f.seq > seq && f.type === 'dayCompleted'));
-  /* said done again after "Not done after all" (D-131): only the minutes it hasn't counted before */
-  /* and only that day's: a one-off's minutes carried from an earlier day moved Dan then (D-133) */
-  const own = (f: { minutes: number; today?: number }) => f.today ?? f.minutes;
-  const gained = $derived(fact && fact.type === 'jobDone' ? Math.max(0, own(fact) - undoneFacts(game.facts).filter(f => f.job === fact.job && f.day === fact.day).reduce((a, f) => Math.max(a, own(f)), 0)) : 0);
-
 
   /* the count, as at a delve's end (D-133, D-134): the road line from where Dan was to where this moved him, the ring's
      arc and sparkle in step with it, and the job's minutes counted up; a tick's own minutes are what moved him now */
   const jd = $derived(fact && fact.type === 'jobDone' ? fact : null);
-  const moved = $derived(jd ? (jd.ticked ?? gained) : 0);
+  /* only a tick's own minutes move Dan here: a delve's moved him at its own end, so said done afterwards (It's done, No
+     more) the line and the count stand still at the job's minutes, never replayed as new (J13) */
+  const moved = $derived(jd ? (jd.ticked ?? 0) : 0);
   const atW = $derived(game.facts.filter(f => f.type === 'stepsGained' && f.seq < seq).reduce((a, f) => a + (f as { minutes: number }).minutes, 0));
   /* a side chamber the tick's minutes reached is shown here, on the tick's own screen (D-122, D-134) */
   const tickAt = $derived(jd?.ticked ? game.facts.filter(f => f.type === 'stepsGained' && f.job === jd.job && (f as { tick?: true }).tick && f.seq < seq).pop() : undefined);
@@ -36,33 +33,34 @@
   let looking = $state(false);
   const look = () => (looking = true);
 
-  function leave() { go(v.arrival ? 'arrival' : 'today'); }
+  /* back where it was ticked off (Today, the Satchel, the Week), or on to a place it reached (N clumsy 3) */
+  function leave() { go(v.arrival ? 'arrival' : 'back'); }
 </script>
 
 <Scene painting={v.here.painting} />
 <div class="ui">
   <header class="top col">
     <div class="topbar rise">
-      <button class="home" onclick={() => go('today')}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{t('delve.today')}</span></button>
+      <button class="home" onclick={leave}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{v.arrival ? t('delve.see') : back.label}</span></button>
       <span></span><span></span>
     </div>
   </header>
   <!-- the painting, left clear: a tap on it looks at it -->
   <div class="mid" onclick={look} role="presentation">
-    {#if jd}<div class="tring"><EndRing from={share(atW - moved)} to={share(atW)} fromN={Math.max(0, jd.minutes - moved)} toN={jd.minutes} unit={t('set.minutes')} mode="play" /></div>{/if}
+    {#if jd}<div class="tring"><EndRing from={share(atW - moved)} to={share(atW)} fromN={Math.max(0, jd.minutes - moved)} toN={jd.minutes} unit={t('tally.unit')} mode={moved ? 'play' : 'still'} /></div>{/if}
   </div>
   <section class="bottom fit col center">
     <div class="scroll">
       <div class="label-line centred gold rise">{t('step.label')}</div>
       <h2 class="say-lg rise d1">{job ? t('step.done', { job: job.name }) : ''}</h2>
-      {#if jd}<div class="rise d2 route"><EndRoad road={v.road} from={atW - moved} to={atW} mode="play" /></div>{/if}
+      {#if jd}<div class="rise d2 route"><EndRoad road={v.road} from={atW - moved} to={atW} mode={moved ? 'play' : 'still'} /></div>{/if}
       <div class="rise d3"><Return doneSeq={fact && fact.type === 'jobDone' ? seq : null} extraFinds={chambers} {go} {look} /></div>
     </div>
     <div class="go rise d3">
       {#if v.arrival}
         <button class="btn" onclick={leave}>{t('delve.see')}</button>
       {:else}
-        <button class="btn resting" onclick={leave}>{t('delve.toToday')}</button>
+        <button class="btn resting" onclick={leave}>{backTo(back.label)}</button>
       {/if}
     </div>
   </section>

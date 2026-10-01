@@ -132,7 +132,7 @@
       {#if said}<p class="say said" aria-live="polite">{said}</p>{/if}
     </section>
 
-    <div class="links"><button class="text-link" onclick={() => go('proto')}><span>{t('settings.trial')}</span></button></div>
+    <div class="links"><button class="text-link" onclick={() => go('proto')}><span>{t('settings.trialLink')}</span></button></div>
   </div>
 </div>
 

@@ -146,3 +146,44 @@ describe('Carried minutes are the job\'s, never another day\'s work (rule 10, fr
   });
 });
 
+
+describe('a job left on "Not yet" stays on Today, "N min so far", until done or moved (Dan, D-143 D)', () => {
+  it('it is on the next days\' lists, never in the Satchel\'s No day yet; done, or put on another day, or Not today, it goes', async () => {
+    const { satchelView, inProgress, carriedOf } = await import('../../src/core/game');
+    const p = player('2026-10-05T09:00:00+01:00').do({ do: 'open' }).do({ do: 'saveForLater', line: 'Tax return' });
+    const id = p.view().content.jobs.find(j => j.name === 'Tax return')!.id;
+    p.delve(id, 27).leave();
+    expect(carriedOf(p.facts, p.view().content, id)).toBe(27);
+    /* the next morning, and the one after: on Today */
+    for (const k of [1, 2]) {
+      p.sleep(24 * 60).do({ do: 'open' });
+      expect(p.view().slate, `day ${k}`).toContain(id);
+      expect(satchelView(C, p.facts, p.facts[p.facts.length - 1].at).noDay.map(j => j.id), `day ${k}`).not.toContain(id);
+    }
+    /* "Not today": off today, and it does not come back by itself */
+    p.do({ do: 'setAside', job: id });
+    expect(p.view().slate).not.toContain(id);
+    expect(inProgress(p.view().content, p.facts).has(id)).toBe(false);
+    p.sleep(24 * 60).do({ do: 'open' });
+    expect(p.view().slate).not.toContain(id);
+    /* delved on again: on Today again, until it is done */
+    p.delve(id, 10).leave();
+    p.sleep(24 * 60).do({ do: 'open' });
+    expect(p.view().slate).toContain(id);
+    p.do({ do: 'tickOff', job: id, minutes: 0 });
+    p.sleep(24 * 60).do({ do: 'open' });
+    expect(p.view().slate).not.toContain(id);
+    expect(inProgress(p.view().content, p.facts).has(id)).toBe(false);
+  });
+  it('put on a later day, it goes there and leaves Today', () => {
+    const p = player('2026-10-05T09:00:00+01:00').do({ do: 'open' }).do({ do: 'saveForLater', line: 'Garage' });
+    const id = p.view().content.jobs.find(j => j.name === 'Garage')!.id;
+    p.delve(id, 15).leave();
+    p.sleep(24 * 60).do({ do: 'open' });
+    expect(p.view().slate).toContain(id);
+    p.do({ do: 'putOnDay', job: id, day: '2026-10-09' });
+    expect(p.view().slate).not.toContain(id);
+    p.sleep(24 * 60).do({ do: 'open' });
+    expect(p.view().slate).not.toContain(id);
+  });
+});

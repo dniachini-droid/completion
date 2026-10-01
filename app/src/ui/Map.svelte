@@ -6,14 +6,15 @@
      named; the way ahead is a faint light, unnamed. Never a count of what's left (UX 6). */
   import { game, content } from './game.svelte';
   import { t, dayName } from '../content/copy/en';
-  import { placeAhead, onRoad } from '../core/story';
+  import { placeAhead, openable, lockedOn, openedNiches } from '../core/story';
   import skyUrl from './scene/map-sky.svg?url';
   import type { Go } from './nav';
   import { back } from './back.svelte';
   import type { StretchId } from '../core/story-types';
   import type { FactOf } from '../core/types';
 
-  let { go }: { go: Go } = $props();
+  /* focus: a stretch to open on (Today's "Use it on the Map", D-142) */
+  let { go, focus }: { go: Go; focus?: string } = $props();
   const v = $derived(game.view);
   const s = content.story;
   const calm = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -29,7 +30,7 @@
     lx: number; ly: number; anchor: Anchor;
     box: { label: string; title: string; say: string };
     /** the places reached on this stretch, each to read again (D-135) */
-    reads?: { name: string; seq: number }[];
+    reads?: { name: string; seq: number; camp?: boolean }[];
   }
 
   /* ---------- the region: one light per stretch, laid out as the mock-up lays out the first region ---------- */
@@ -56,21 +57,37 @@
   /* the stretch the next place is on: a faint light, unnamed */
   const aheadOn = $derived(placeAhead(s, v.story)?.stretch ?? null);
   const stretchName = (id: StretchId) => s.stretches.find(x => x.id === id)!.name;
-  /* only what a Key opens: the road's own rows open on foot (D-129) */
-  const sealedOn = (id: StretchId) => s.seals.filter(x => !x.seenOnly && !onRoad(s, x.id) && !v.story.opened.has(x.id) && x.stretch === id
-    && s.beats.some(b => v.story.played.has(b.id) && b.carries?.inView?.includes(x.id)));
+  /* only what a Key opens: the road's own rows open on foot (D-129). Every niche a Key can open there, and any other the
+     story has shown there: the same test as Today's "Use it on the Map", so the link never points at nothing (D-143 A) */
+  const sealedOn = (id: StretchId) => lockedOn(s, v.story, id);
+  /* the niches opened with a Key, under their stretch, each to read again (D-143 B) */
+  const opened = $derived(openedNiches(s, game.facts));
+  const openedOn = (id: StretchId) => opened.filter(x => x.stretch === id);
+  /* the locked things seen on a stretch, each with "Use a Key" when one can open it now (Dan, D-142): a Key opens by
+     itself only what is where Dan is; anything behind him waits here for him to choose */
+  const canOpen = $derived(new Set(openable(s, v.story).map(x => x.id)));
+  function useKey(id: string) { game.do({ do: 'useKey', seal: id }); go('opened', id); }
   /* the plan's forecast (PLANNER → the forecast): where the next places would be reached; gone the moment the plan changes */
   const ahead = $derived(v.forecast.slice(0, 2));
   const fcSay = (day: string) => t('map.forecastSay', { day: dayName(day) });
   const firstSentence = (line: string) => (line.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? line);
   /* "Ahead: The Survey Cut, the tin box…" under "The Survey Cut" says the name twice: the ahead line drops it */
   const unsaid = (where: string, name: string) => where.toLowerCase().startsWith(name.toLowerCase() + ', ') ? where.slice(name.length + 2) : where;
-  const hereBox = $derived({ label: t('map.hereLabel'), title: v.here.name, say: v.ahead ? `${t('today.ahead')}: ${firstSentence(unsaid(v.ahead, v.here.name))}` : firstSentence(v.here.line) });
+  /* the light is named for the stretch, the box for the place: both said, so a glance never reads two places (L B7) */
+  const hereBox = $derived({ label: v.here.name.toLowerCase() === stretchName(v.here.stretch).toLowerCase() ? t('map.hereLabel') : t('map.hereIn', { stretch: stretchName(v.here.stretch) }), title: v.here.name, say: v.ahead ? `${t('today.ahead')}: ${firstSentence(unsaid(v.ahead, v.here.name))}` : firstSentence(v.here.line) });
 
-  /* the places reached on foot or by Key, by stretch, in the order reached: each one's entry can be read again (D-135) */
-  const reached = $derived(game.facts.filter((f): f is FactOf<'arrived'> => f.type === 'arrived' && f.kind === 'place')
-    .map(f => ({ seq: f.seq, beat: s.beats.find(b => b.id === f.id) })).filter(x => x.beat?.name)
-    .map(x => ({ seq: x.seq, name: x.beat!.name!, stretch: x.beat!.stretch })));
+  /* the places reached on foot or by Key, by stretch, in the order reached: each one's entry can be read again (D-135);
+     and the camps made there, each once (its latest night), so an earlier camp's words are never lost (the flow review) */
+  const reached = $derived.by(() => {
+    const out: { seq: number; name: string; stretch: StretchId; camp?: boolean }[] = [], camps = new Map<string, number>();
+    for (const f of game.facts) {
+      if (f.type !== 'arrived') continue;
+      if (f.kind === 'place') { const b = s.beats.find(x => x.id === f.id); if (b?.name) out.push({ seq: f.seq, name: b.name, stretch: b.stretch }); }
+      else if (f.seq !== v.arrival?.seq) camps.set(f.id, f.seq);
+    }
+    for (const [id, seq] of camps) { const k = s.camps.find(x => x.id === id); if (k) out.push({ seq, name: k.name, stretch: k.stretch, camp: true }); }
+    return out.sort((a, b) => a.seq - b.seq);
+  });
   const region = $derived.by((): Light[] => {
     const out: Light[] = [];
     for (const k of Object.keys(AT) as StretchId[]) {
@@ -116,7 +133,7 @@
   const lights = $derived(region);
   const links = $derived(regionLinks);
   /* what the crosshair is on; it opens on where Dan is */
-  let picked = $state<string | null>(null);
+  let picked = $state<string | null>(focus ?? null);
   const sel = $derived(lights.find(l => l.key === picked) ?? lights.find(l => l.kind === 'here') ?? lights[0]);
   let turn = $state(0);   /* restarts the box's rise on each pick */
   /* Picking moves only the crosshair and the box's words: the box never changes size, so the sky and its lights never
@@ -137,7 +154,7 @@
   });
   let centred = false;
   $effect(() => {
-    const h = region.find(l => l.kind === 'here'), f = field, scale = k;
+    const h = (focus ? region.find(l => l.key === focus) : undefined) ?? region.find(l => l.kind === 'here'), f = field, scale = k;
     if (!f || !h || centred) return;
     requestAnimationFrame(() => { f.scrollLeft = h.x * scale - f.clientWidth / 2; f.scrollTop = h.y * scale - f.clientHeight / 2; centred = true; });
   });
@@ -264,12 +281,39 @@
           <div class="swap">
             <div class="label-line">{sel.box.label}</div>
             <h2 class="carve md">{sel.box.title}</h2>
+            <!-- the locked things first, so "Use a Key" is never below the box's fold (D-142) -->
+            {#if sel.kind === 'here' || sel.kind === 'lit'}
+              {@const locks = sealedOn(sel.key as StretchId)}
+              {@const done = openedOn(sel.key as StretchId)}
+              {#if locks.length}
+                <div class="locks">
+                  {#each locks as x (x.id)}
+                    <p class="lock"><span class="where">{x.where}</span>
+                      {#if v.keys && canOpen.has(x.id)}<button class="text-link use" aria-label={t('map.useKeySr', { where: x.where })} onclick={() => useKey(x.id)}><span>{t('map.useKey')}</span></button>
+                      {:else}<span class="needs">{t('map.sealed')}</span>{/if}</p>
+                  {/each}
+                  {#if !v.keys}<p class="soft lock-say">{t('map.noKey')}</p>{/if}
+                </div>
+              {/if}
+              {#if done.length}
+                <!-- opened with a Key: read again, as places are (D-143 B) -->
+                <div class="locks">
+                  {#each done as x (x.id)}
+                    <p class="lock"><span class="where">{x.where}</span>
+                      <button class="text-link use again" aria-label={t('map.openedSr', { where: x.where })} onclick={() => go('opened', `again:${x.id}`)}><span>{t('map.opened')}</span></button></p>
+                  {/each}
+                </div>
+              {/if}
+            {/if}
             {#if sel.reads?.length && sel.kind !== 'here'}
               <!-- the places reached here, each a tap from its entry and painting (D-135) -->
               <p class="say reads">{#each sel.reads as r, i (r.seq)}{#if i}<span class="sep" aria-hidden="true"> · </span>{/if}<button class="text-link read" aria-label={t('map.readAgain', { place: r.name })} onclick={() => go('arrival', `again:${r.seq}`)}><span>{r.name}</span></button>{/each}</p>
             {:else}
               <p class="say" class:short={!!sel.reads?.length}>{sel.box.say}</p>
-              {#if sel.reads?.length}<p class="reads"><button class="text-link read" onclick={() => go('arrival', `again:${sel.reads![sel.reads!.length - 1].seq}`)}><span>{t('map.readHere')}</span></button></p>{/if}
+              {@const place = sel.reads?.filter(r => !r.camp).pop()}
+              {@const camps = sel.reads?.filter(r => r.camp) ?? []}
+              {#if place}<p class="reads"><button class="text-link read" onclick={() => go('arrival', `again:${place.seq}`)}><span>{t('map.readHere')}</span></button></p>{/if}
+              {#if camps.length}<p class="say reads">{#each camps as r, i (r.seq)}{#if i}<span class="sep" aria-hidden="true"> · </span>{/if}<button class="text-link read" aria-label={t('map.readAgain', { place: r.name })} onclick={() => go('arrival', `again:${r.seq}`)}><span>{r.name}</span></button>{/each}</p>{/if}
             {/if}
           </div>
         {/key}
@@ -327,6 +371,15 @@
   .box .swap:has(.reads) { overflow-y: auto; scrollbar-width: none; }
   .box .say.reads { display: block; -webkit-line-clamp: unset; line-clamp: unset; overflow: visible; }
   .reads { margin: 2px 0 0; }
+  /* the locked things on a stretch (D-142): the box keeps its size and scrolls (D-076) */
+  .box .swap:has(.locks) { overflow-y: auto; scrollbar-width: none; }
+  .lock .use.again { color: var(--ink-2); }
+  .locks { margin: 0 0 8px; border-bottom: 1px solid var(--edge-2); padding-bottom: 6px; }
+  .lock { margin: 4px 0; display: flex; gap: 10px; align-items: baseline; justify-content: space-between; font-size: 15px; line-height: 1.35; color: var(--ink-2); }
+  .lock .where { flex: 1; min-width: 0; }
+  .lock .use { flex: none; color: #f2c170; font-size: 15px; }
+  .lock .needs { flex: none; font-family: var(--life); font-style: italic; color: #e9d9b4; font-size: 14px; }
+  .lock-say { margin: 4px 0 0; font-size: 14px; }
   .read { min-height: 40px; padding: 2px 0; }
   .read span { font-family: var(--life); font-size: 16.5px; color: var(--ink); }
   .sep { color: var(--ink-3); }

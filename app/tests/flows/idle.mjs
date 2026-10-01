@@ -102,6 +102,13 @@ for (let k = 0; k < 20 && !(await page.locator('nav.foot').count()); k++) {
 if (!(await page.locator('nav.foot').count())) { console.log('FAIL: Today never came'); process.exit(1); }
 await measure('today-morning');
 for (const [name, label] of [['week', 'Week'], ['satchel', 'Satchel'], ['daybook', 'Daybook'], ['map', 'Map']]) {
+  /* the Daybook is at Today's foot only once a page has been read; a page still waiting is reached by its line (D-143 F) */
+  if (name === 'daybook' && !(await has(label))) {
+    const waits = page.getByRole('button', { name: /A page was written for you/ });
+    if (await waits.count()) { await tap(waits); await measure(name); await home(); }
+    else console.log('idle: no Daybook page yet, so no Daybook to measure');
+    continue;
+  }
   if (!(await has(label))) { fails.push(`no ${label} on Today`); continue; }
   await tap(btn(label)); await measure(name); await home();
 }
@@ -130,7 +137,12 @@ if (await locked()) {
 /* the day done: every job of the day delved to its end */
 for (let k = 0; k < 8 && (await page.locator('.rows button.row:not(.done)').first().count()); k++) {
   await tap(page.locator('.rows button.row:not(.done)').first());
-  if (await has('Begin')) { if (await has('60 minutes')) await tap(btn('60 minutes')); await tap(btn('Begin')); }
+  if (await has('Begin')) {
+    if (await has('60 minutes')) await tap(btn('60 minutes'));
+    /* one delve: a recurring job opens at its own minutes, maybe as several (D-146) */
+    for (let n = 0; n < 8 && (await btn('One delve fewer').count()) && (await btn('One delve fewer').isEnabled()); n++) await tap(btn('One delve fewer'));
+    await tap(btn('Begin'));
+  }
   await jump(75 * 60_000);
   if (await has('Done')) await tap(btn('Done'));
   await home();

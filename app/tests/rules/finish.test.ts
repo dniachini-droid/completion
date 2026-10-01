@@ -128,3 +128,76 @@ describe('the day’s finish line (D-130)', () => {
     expect(deep()).toBe(1);
   });
 });
+
+describe('the finish line never moves under Dan (the flow review, L A1)', () => {
+  it('over three weeks of ticking off the line\'s jobs one by one, a completion never brings a new job onto the line', () => {
+    let facts: Fact[] = [];
+    let now = Date.parse('2026-10-01T07:00:00Z');
+    const at = () => new Date(now + 3_600_000).toISOString().slice(0, 19) + '+01:00';
+    const run = (cmd: Command) => { facts = facts.concat(act(facts, C, cmd, at())); };
+    let checked = 0, doneDays = 0;
+    for (let d = 0; d < 21; d++) {
+      run({ do: 'open' });
+      /* first, a job from off today's list, delved on: it joins the list as Dan begins it; done, it must not let the line
+         refill with the next jobs (the review's Sunday) */
+      {
+        const v = see(facts, C, at());
+        const off = C.jobs.find(j => !v.slate.includes(j.id) && !v.done.has(j.id) && C.rhythms.some(r => r.job === j.id));
+        if (off) {
+          run({ do: 'startRun', job: off.id, minutes: 60, count: 1 });
+          now += 61 * 60_000; facts = facts.concat(settle(facts, C, at()));
+          const mid = see(facts, C, at()), before = new Set(mid.line.filter(id => !mid.done.has(id)));
+          if (!mid.done.has(off.id)) run({ do: 'done', job: off.id });
+          while (see(facts, C, at()).runEnd) run({ do: 'seen', what: 'step', ref: see(facts, C, at()).runEnd!.seq });
+          const w = see(facts, C, at());
+          const added = w.line.filter(id => !w.done.has(id) && !before.has(id));
+          expect(added, `${w.day}: ${off.id}, delved from off the list, brought ${added.join(', ')} onto the line`).toEqual([]);
+          checked++;
+        }
+      }
+      for (let k = 0; k < 8; k++) {
+        const v = see(facts, C, at());
+        while (see(facts, C, at()).arrival) run({ do: 'seen', what: 'arrival', ref: see(facts, C, at()).arrival!.seq });
+        const todo = v.line.filter(id => !v.done.has(id));
+        if (!todo.length) break;
+        const before = new Set(todo);
+        run({ do: 'tickOff', job: todo[todo.length - 1], minutes: 60 });
+        now += 60 * 60_000;
+        const w = see(facts, C, at());
+        const added = w.line.filter(id => !w.done.has(id) && !before.has(id));
+        expect(added, `${w.day}: ${todo[todo.length - 1]} done brought ${added.join(', ')} onto the line`).toEqual([]);
+        checked++;
+      }
+      if (see(facts, C, at()).complete) doneDays++;
+      now = Date.parse('2026-10-01T07:00:00Z') + (d + 1) * 864e5;
+    }
+    expect(checked).toBeGreaterThan(20);
+    /* doing the line's jobs, and only those, finishes the day */
+    expect(doneDays).toBeGreaterThan(15);
+  }, 120_000);
+});
+
+describe('the review\'s Sunday (L A1): a missed session placed again on today keeps its place on the line when done', () => {
+  it('Thursday\'s and Friday\'s work, then Sunday\'s three jobs ticked off: the day is done, nothing climbs into the line', () => {
+    let facts: Fact[] = [];
+    let now = 0;
+    const set = (s: string) => { now = Date.parse(s); };
+    const at = () => new Date(now + 3_600_000).toISOString().slice(0, 19) + '+01:00';
+    const run = (cmd: Command) => { facts = facts.concat(act(facts, C, cmd, at())); };
+    const clear = () => { for (let g = 0; g < 20; g++) { const v = see(facts, C, at()); if (v.arrival) run({ do: 'seen', what: 'arrival', ref: v.arrival.seq }); else if (v.runEnd) run({ do: 'seen', what: 'step', ref: v.runEnd.seq }); else if (v.morning) run({ do: 'seen', what: 'morning', ref: v.morning.seq }); else break; } };
+    const delve = (job: string, min: number, count = 1) => { run({ do: 'startRun', job, minutes: min, count }); now += (min * count + 5 * (count - 1) + 1) * 60_000; facts = facts.concat(settle(facts, C, at())); if (!see(facts, C, at()).done.has(job)) run({ do: 'done', job }); clear(); };
+    set('2026-10-01T08:00:00Z'); run({ do: 'open' }); clear();
+    delve('course', 30, 2);
+    set('2026-10-01T14:00:00Z'); run({ do: 'tickOff', job: 'gym', minutes: 60 }); clear();
+    set('2026-10-01T18:10:00Z'); run({ do: 'tickOff', job: 'lesson', minutes: 60 }); clear();
+    set('2026-10-02T08:00:00Z'); run({ do: 'open' }); clear();
+    delve('course', 45);
+    set('2026-10-04T08:00:00Z'); run({ do: 'open' }); clear();
+    const first = see(facts, C, at()).line;
+    expect(first.length).toBeGreaterThan(1);
+    for (const id of first) { run({ do: 'tickOff', job: id, minutes: 60 }); clear(); now += 3_600_000; expect(see(facts, C, at()).line, id).toEqual(expect.arrayContaining(first)); }
+    const v = see(facts, C, at());
+    expect(v.line.filter(id => !first.includes(id))).toEqual([]);
+    expect(v.complete).toBe(true);
+  }, 60_000);
+});

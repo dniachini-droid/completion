@@ -49,7 +49,7 @@
     {/if}
     <div class="rise d3">
       <button class="btn" onclick={ten}>{t('cant.ten')}</button>
-      <div class="later"><button class="text-link" onclick={() => { keep(); go('today'); }}><span>{t('cant.notNow')}</span></button></div>
+      <div class="later"><button class="text-link" onclick={() => { keep(); go('back'); }}><span>{t('cant.notNow')}</span></button></div>
     </div>
   </section>
 </div>
