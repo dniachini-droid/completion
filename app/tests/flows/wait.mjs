@@ -76,7 +76,7 @@ const inSection = async (label, name) => page.evaluate(([label, name]) => {
 }, [label, name]);
 
 /* 1. a job saved for later, set waiting on the vet from its menu in the Satchel */
-await tap(page.locator('.today-add'), 'Add a job'); await page.keyboard.type('Vet results'); await page.keyboard.press('Enter'); await page.clock.runFor(800);
+await tap(page.locator('.foot').getByRole('button', { name: 'Satchel', exact: true }), 'the Satchel'); await page.locator('.satchel-add input').focus(); await page.keyboard.type('Vet results'); await page.keyboard.press('Enter'); await page.clock.runFor(800);
 if (!(await inSection('No day yet', 'Vet results'))) fails.push('Vet results is not in No day yet');
 if (await hold(page.locator('button.row', { hasText: 'Vet results' }), 'Vet results')) {
   await tap(page.locator('.menu').getByRole('button', { name: 'Waiting on…', exact: true }), 'Waiting on… in the menu');

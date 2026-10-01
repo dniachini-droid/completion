@@ -72,7 +72,7 @@ if (!/done/i.test(await page.locator('.rows button.row', { hasText: 'Letters' })
 
 /* 4. a job named in "Something else…": delved on, "Not yet", then It's done from its row on Today */
 await tap(page.locator('.today-add'), 'Something else…');
-await page.locator('form.new input').fill('Bills'); await tap(page.locator('form.new button'), 'Delve on it');
+await page.locator('form.new input').fill('Bills'); await tap(page.locator('form.new').getByRole('button', { name: 'Delve now', exact: true }), 'Delve on it');
 if (await page.locator('.rs').count()) await tap(btn('Begin'), 'Begin'); await expectOn('delve', 'delving on Bills');
 await ff(4 * 60_000);
 await tap(btn('Finish here'), 'Finish here on Bills');

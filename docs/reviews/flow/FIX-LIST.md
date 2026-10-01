@@ -17,29 +17,29 @@
 - [x] 1.12 **Map "you are here" light vs box name differ** (L B7: the stretch's name vs the place's). Fix: the box says "In {stretch}" under the place, or the same name on both.
 
 ## 2. Today and the finish line
-- [ ] 2.1 **The finish line moves after the shown jobs are done** (L A1). Fix: a job on the day's line stays on it when done, whatever put it there; the line never refills because of a completion. Rule test.
-- [ ] 2.2 **"Add a job" on Today doesn't add to today** (J5). D-143 C.
-- [ ] 2.3 **A half-done job vanishes overnight, minutes unseen** (J6). D-143 D ("N min so far" on Today).
-- [ ] 2.4 **Rows say "25 min" though the set-up opens at 30; carried minutes never shown on the row** (J2). Fix: rows show the set-up's minutes; with carried minutes, "N min so far".
-- [ ] 2.5 **During a delve, no "Add a job", no menus, no slides** (J9). D-143 E.
-- [ ] 2.6 **Avoided job holds the day with no word** (L B6). D-143 G ("Only [job] left: that's the one.").
-- [ ] 2.7 **"Not today" on a recurring job vanishes; undo only in the Week; "Put it back" dies on leaving Today** (J7). Fix: the row stays as "Not today · Put back" (struck, quiet) for the rest of the day.
-- [ ] 2.8 **A done recurring row ignores taps** (J11). Fix: a tap opens its menu (Delve again · Not done after all), as the hold does.
-- [ ] 2.9 **"Errand run" link from the first minute, with gym and study as errands** (J12, L C2). Fix: recurring jobs out of the errand pick list; the link only when two or more one-offs could go.
-- [ ] 2.10 **A passed appointment sits unremarked** (L C5). Fix: its time reads "18:00 · went by", no reproach.
-- [ ] 2.11 **"I can't start" only in the hold menu, undiscoverable** (J19, overview). Fix: one quiet hint once ("Press and hold a job for more"), and keep the menu.
-- [ ] 2.12 **Today's held card doesn't say "first of two delves"** (J18). Fix: add it, as the delve screen does.
+- [x] 2.1 **The finish line moves after the shown jobs are done** (L A1). Fix: a job on the day's line stays on it when done, whatever put it there; the line never refills because of a completion. Rule test.
+- [x] 2.2 **"Add a job" on Today doesn't add to today** (J5). D-143 C.
+- [x] 2.3 **A half-done job vanishes overnight, minutes unseen** (J6). D-143 D ("N min so far" on Today).
+- [x] 2.4 **Rows say "25 min" though the set-up opens at 30; carried minutes never shown on the row** (J2). Fix: rows show the set-up's minutes; with carried minutes, "N min so far".
+- [x] 2.5 **During a delve, no "Add a job", no menus, no slides** (J9). D-143 E.
+- [x] 2.6 **Avoided job holds the day with no word** (L B6). D-143 G ("Only [job] left: that's the one.").
+- [x] 2.7 **"Not today" on a recurring job vanishes; undo only in the Week; "Put it back" dies on leaving Today** (J7). Fix: the row stays as "Not today · Put back" (struck, quiet) for the rest of the day.
+- [x] 2.8 **A done recurring row ignores taps** (J11). Fix: a tap opens its menu (Delve again · Not done after all), as the hold does.
+- [x] 2.9 **"Errand run" link from the first minute, with gym and study as errands** (J12, L C2). Fix: recurring jobs out of the errand pick list; the link only when two or more one-offs could go.
+- [x] 2.10 **A passed appointment sits unremarked** (L C5). Fix: its time reads "18:00 · went by", no reproach.
+- [x] 2.11 **"I can't start" only in the hold menu, undiscoverable** (J19, overview). Fix: one quiet hint once ("Press and hold a job for more"), and keep the menu.
+- [x] 2.12 **Today's held card doesn't say "first of two delves"** (J18). Fix: add it, as the delve screen does.
 
 ## 3. Jobs: adding, delves, ends
 - [ ] 3.1 **Errand run: back on "What got done?" counts silently and loses the story** (J1). Fix: back leaves the question waiting (as "Is it done?" does); counting only by "Count them" or the next opening, and its story is then shown.
 - [ ] 3.2 **"Where did you stop?" never shows after Finish here → Not yet on a one-off** (J3). Fix: show it there.
-- [ ] 3.3 **Duplicate jobs from the Week's +, Tonight's line and Siri** (J4). Fix: the same name check the Satchel box uses.
-- [ ] 3.4 **"Delve now" on a remembered job skips the set-up** (J8). Fix: it opens the set-up (carry line, dial), like every other start.
+- [x] 3.3 **Duplicate jobs from the Week's +, Tonight's line and Siri** (J4). Fix: the same name check the Satchel box uses.
+- [x] 3.4 **"Delve now" on a remembered job skips the set-up** (J8). Fix: it opens the set-up (carry line, dial), like every other start.
 - [ ] 3.5 **"Is it done?" left by the arrow never says the minutes** (J10, J17). Fix: the question card says "N minutes on it".
 - [ ] 3.6 **Same-day "No more" / "It's done" replays the road and counts from 0** (J13). Fix: show the line still, at the job's total, with no replay.
 - [ ] 3.7 **"done for the day: 3 minutes"** (J14). Fix: under 5 minutes, "Counted: 3 minutes." without the congratulation.
-- [ ] 3.8 **The Satchel's box after "Add a job"** has no label or Return hint (J15). With D-143 C this box is Today's own; give it a label and "Return adds it".
-- [ ] 3.9 **Satchel suggestions can't be dismissed** (J16). Fix: they hide on a tap outside; check 360 × 780.
+- [x] 3.8 **The Satchel's box after "Add a job"** has no label or Return hint (J15). With D-143 C this box is Today's own; give it a label and "Return adds it".
+- [x] 3.9 **Satchel suggestions can't be dismissed** (J16). Fix: they hide on a tap outside; check 360 × 780.
 - [ ] 3.10 **Tick sheet: "No more" looks like a duration** (J20). Fix: set it apart (its own row).
 - [ ] 3.11 **The errand run's end is a wall** (L B5): summary, story, four guesses, two finds. Fix: one errand's story per screen with "Next", guesses after.
 - [ ] 3.12 **"1 minutes"** mid-count on the ring (L C6). Fix the grammar.

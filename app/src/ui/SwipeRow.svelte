@@ -13,10 +13,13 @@
   import { steady } from './taps';
 
   interface Action { label: string; sr: string; run: () => void; del?: boolean }
-  let { key, actions, tap, hold, disabled = false, done = false, row, over, lead }: {
-    key: string; actions: Action[]; tap: () => void; hold?: () => void; disabled?: boolean; done?: boolean;
+  /* `quiet`: a tap on the row does nothing (a finished job); `done` alone only marks it done (a done recurring job still
+     opens its menu with a tap, J11) */
+  let { key, actions, tap, hold, disabled = false, done = false, quiet = undefined, row, over, lead }: {
+    key: string; actions: Action[]; tap: () => void; hold?: () => void; disabled?: boolean; done?: boolean; quiet?: boolean;
     row: Snippet; over?: Snippet; lead?: Snippet;
   } = $props();
+  const dead = $derived(quiet ?? done);
 
   const W = 96, DEAD = 10, HOLD_MS = 480;
   const open = $derived(openKey === key);
@@ -66,7 +69,7 @@
     if (moved || held) { moved = false; held = false; return; }
     if (open) { openKey = null; return; }
     if (openKey) { openKey = null; return; }
-    if (!disabled && !done) tap();
+    if (!disabled && !dead) tap();
   }
   const offset = $derived(sliding ? (open ? -width : 0) + dx : open ? -width : 0);
 </script>
@@ -81,7 +84,7 @@
     </div>
   {/if}
   <button class="row" class:done class:moving={sliding} style:transform={offset ? `translate3d(${offset}px,0,0)` : null}
-    onclick={click} oncontextmenu={(e) => e.preventDefault()} aria-disabled={disabled || done}>
+    onclick={click} oncontextmenu={(e) => e.preventDefault()} aria-disabled={disabled || dead}>
     {@render row()}
   </button>
   {#if over && offset === 0}<div class="over">{@render over()}</div>{/if}

@@ -12,7 +12,9 @@
      rows seemed to change places by themselves); a swipe takes it off today; the last row chooses a delve on anything (D-077). After day complete: the day as done, until Dan taps a job or keeps going.
      Mock-up: design/directions/d-combined/morning.html. */
   import { game, content } from './game.svelte';
-  import { pastBedtime, BEDTIME_WINDOW, tomorrowFirst, satchelView, errandChoices } from '../core/game';
+  import { pastBedtime, BEDTIME_WINDOW, tomorrowFirst, satchelView, errandChoices, carriedOf } from '../core/game';
+  import { tieFor } from '../core/remember';
+  import { ofLine } from './panel';
   import { beatOf } from '../core/story';
   import type { Job } from '../core/types';
   import { t, minutesWords, minutesShort, inSentence, dayShort } from '../content/copy/en';
@@ -35,13 +37,18 @@
   const placeSeq = $derived(game.facts.filter(f => f.type === 'arrived' && f.kind === 'place').pop()?.seq ?? null);
   const lastPlace = $derived(v.lastArrival);
 
+  const recurring = (id: string) => v.content.rhythms.some(r => r.job === id);
   function rowNote(j: Job): string {
     if (v.done.has(j.id)) return t('row.done');
-    if (v.times[j.id]) return v.times[j.id];
-    /* every job is a delve (D-117), so a row never says "a delve": it says the job's usual minutes, when they were set
-       for it (a recurring job, or one made in the editor); a line jotted with + Add says nothing (D-130) */
-    return j.item ? '' : minutesShort(j.length);
+    /* an appointment gone by is noticed, never scolded (L C5) */
+    if (v.times[j.id]) return game.now.slice(11, 16) > v.times[j.id] ? t('row.wentBy', { time: v.times[j.id] }) : v.times[j.id];
+    /* every job is a delve (D-117), so a row never says "a delve". A recurring job says its usual minutes, which Dan set
+       for it; a one-off says the minutes it already has ("27 min so far", D-143 D), else nothing: never a number
+       nobody chose (J2) */
+    return recurring(j.id) ? minutesShort(j.length) : '';
   }
+  /* under a one-off's name, beside its "It's done" (J2, J10) */
+  const soFar = (j: Job) => { if (v.done.has(j.id) || recurring(j.id)) return ''; const m = carriedOf(game.facts, v.content, j.id); return m > 0 ? t('row.sofar', { min: minutesShort(m) }) : ''; };
 
   function begin(j: Job) {
     /* every job opens the set-up at one delve of 30 minutes; Dan sets the minutes and the delves (D-124) */
@@ -64,11 +71,16 @@
   /* a tap on a job starts that job, never another: nothing on the list moves (Dan, D-100) */
   /* a job not yet done can be ticked off, done without a delve (D-134); not while a delve runs */
   const canTick = (id: string) => !v.done.has(id) && !v.run;
-  function start(id: string) { if (!v.done.has(id)) begin(job(id)); }
-  function aside(id: string) { steady(); game.do({ do: 'setAside', job: id }); lastAside = id; }
-  /* "Not today" said once, with a way to take it back while Today is still open (review 2, D-088) */
-  let lastAside = $state<string | null>(null);
-  function putBack() { if (lastAside) game.do({ do: 'putBack', job: lastAside }); lastAside = null; }
+  /* during a delve another job can be edited, moved or deleted, never started (D-143 E): a tap opens its menu. A done
+     recurring job opens its menu too (Delve again, Not done after all, J11); a done one-off is finished */
+  function start(id: string) {
+    if (v.done.has(id)) { if (recurring(id)) openMenu(id, go, v.day, null, 'today'); return; }
+    if (v.run) { openMenu(id, go, null, null, 'today'); return; }
+    begin(job(id));
+  }
+  function aside(id: string) { steady(); game.do({ do: 'setAside', job: id }); }
+  /* "Not today": the row stays, struck, with "Put back", for the rest of the day (J7; was only while Today stayed open) */
+  function putBack(id: string) { steady(); game.do({ do: 'putBack', job: id }); }
   /* after the day's work: a timed job still ahead today is named, so "done" never hides it (review 2) */
   const stillToCome = $derived(v.slate.filter(id => !v.done.has(id) && v.times[id]).map(id => `${job(id).name} ${t('row.at', { time: v.times[id] })}`));
 
@@ -124,10 +136,10 @@
   /* the errand run (D-139): quietly at the list's end, when two jobs or more could go on one trip out */
   const errandsOpen = $derived(!v.run && !v.night && errandChoices(content, game.facts, game.now).length >= 2);
 
-  /* "+ Add" (D-107) opens the Satchel's one box, ready to type in (D-131): focused inside the tap itself, so the phone's
-     keyboard opens straight away */
+  /* "Add a job" opens the Satchel's one box, ready to type in (D-131), whose Return puts the job on today (Dan, D-143 C):
+     focused inside the tap itself, so the phone's keyboard opens straight away */
   function add() {
-    go('satchel');
+    go('satchel', 'today');
     flushSync();
     document.querySelector<HTMLInputElement>('.satchel-add input')?.focus({ preventScroll: true });
   }
@@ -144,11 +156,24 @@
     return [...new Set([...first.planned, ...s.noDay.map(j => j.id), ...s.coming.map(x => x.job.id), ...s.recurring.map(j => j.id)])].filter(id => game.job(id));
   });
   function chooseFirst(id: string) { steady(); if (id !== first?.job) game.do({ do: 'firstJob', job: id }); choosing = false; }
+  let mindHave = $state<string | null>(null);
   function putMind() {
     const line = mind.trim();
     if (!line) return;
+    /* a job Dan already has is not added twice (J4): it says so */
+    const tie = tieFor(content, game.facts, line);
+    mindHave = tie?.same ? tie.job.name : null;
     game.do({ do: 'addItems', lines: [line] }); mind = ''; mindSaid = true; setTimeout(() => (mindSaid = false), 4000);
   }
+  /* the avoided job, the only one left on the line: said, once it is all that holds the day (Dan, D-143 G) */
+  const onlyAvoided = $derived.by(() => {
+    const left = v.line.filter(id => !v.done.has(id));
+    return !v.complete && !v.run && left.length === 1 && v.line.length > 1 && game.job(left[0])?.avoided ? game.job(left[0])!.name : null;
+  });
+  /* "Press and hold a job for more", said until the first time the job menu is opened (J19) */
+  let held = $state(holdSeen());
+  function holdSeen() { try { return localStorage.getItem('hint.hold') === '1'; } catch { return true; } }
+  const holdHint = $derived(!held && !v.run && others.length > 0);
 </script>
 
 {#snippet tonight()}
@@ -172,7 +197,7 @@
         <input bind:value={mind} maxlength="120" enterkeyhint="done" aria-label={t('tonight.mind')} placeholder={t('tonight.mind')} />
         <button class="btn-quiet" type="submit" disabled={!mind.trim()}><span>{t('tonight.mind.put')}</span></button>
       </form>
-      {#if mindSaid}<p class="soft said-mind" role="status">{t('tonight.mind.said')}</p>{/if}
+      {#if mindSaid}<p class="soft said-mind" role="status">{mindHave ? t('park.have', { job: mindHave }) : t('tonight.mind.said')}</p>{/if}
     {/if}
     <p class="soft promise">{t('today.tonight.say', { bedtime: v.bedtime })}</p>
     <button class="btn gold resting" onclick={() => game.do({ do: 'goodnight' })}>{t('camp.goodnight')}</button>
@@ -236,11 +261,15 @@
       <div class="next">
         <div class="label-line lit">{t('today.next')}</div>
         <h2 class="say-lg">{t('today.carry', { job: v.run.job.name })}</h2>
+        <!-- which of the run's delves, as the delve screen says (J18) -->
+        {#if v.run.count > 1}<p class="soft of">{ofLine(v.run, v.run.k, false)}</p>{/if}
         <p class="soft">{t('today.carry.left', { min: minutesWords(Math.max(1, Math.ceil(v.run.leftMs / 60000))) })}</p>
         <div class="btn-row lead">
           <button class="btn" onclick={carry}>{t('today.carry.go')}</button>
           <button class="btn-quiet" onclick={finish}><span>{t('today.finishHere')}</span></button>
         </div>
+        <!-- another job can be added during a delve (D-143 E) -->
+        <div class="cant"><button class="text-link today-add" onclick={add}><span>{t('today.addJob')}</span></button></div>
       </div>
     {:else if v.next?.mode === 'running' && v.run}
       <!-- a delve running while Dan looks at Today: one way back to it, nothing else (review finding, D-080) -->
@@ -249,6 +278,7 @@
         <h2 class="say-lg">{v.run.job.name}</h2>
         <p class="soft">{t('today.running.say')}</p>
         <div class="lead"><button class="btn full" onclick={() => go('delve')}>{t('today.running.go')}</button></div>
+        <div class="cant"><button class="text-link today-add" onclick={add}><span>{t('today.addJob')}</span></button></div>
         <div class="gap"></div>
       </div>
     {:else if !v.complete}
@@ -280,16 +310,14 @@
     {/if}
 
     <Deleted />
-    {#if lastAside && !v.order.includes(lastAside) && !v.done.has(lastAside)}
-      <p class="said">{t('today.aside.said')} <button class="text-link" onclick={putBack}><span>{t('today.putBack')}</span></button></p>
-    {/if}
+    {#if onlyAvoided}<p class="said only" role="status">{t('today.onlyAvoided', { job: onlyAvoided })}</p>{/if}
     {#if waitedJob}
       <p class="said" role="status">{t('wait.said', { job: waitedJob.name, day: dayShort(waited.until) })} <button class="text-link" aria-label={t('wait.srBack', { job: waitedJob.name })} onclick={() => { backToIt(waitedJob.id, waited.today); sayWaited(null); }}><span>{t('wait.back')}</span></button></p>
     {/if}
     {#snippet jobRow(id: string)}
       {@const j = job(id)}
-      <SwipeRow key={`t:${id}`} actions={acts(j)} tap={() => start(id)} hold={() => openMenu(id, go, v.done.has(id) ? v.day : null, null, 'today')} disabled={!!v.run} done={v.done.has(id)}>
-        {#snippet row()}<span class="pip" class:done={v.done.has(id)} class:under={canTick(id)}></span><span class="t">{j.name}</span><span class="s">{sayDone(j) ? '' : rowNote(j)}</span>{/snippet}
+      <SwipeRow key={`t:${id}`} actions={acts(j)} tap={() => start(id)} hold={() => openMenu(id, go, v.done.has(id) ? v.day : null, null, 'today')} done={v.done.has(id)} quiet={v.done.has(id) && !recurring(id)}>
+        {#snippet row()}<span class="pip" class:done={v.done.has(id)} class:under={canTick(id)}></span><span class="t">{j.name}{#if soFar(j)}<small>{soFar(j)}</small>{/if}</span><span class="s">{sayDone(j) ? '' : rowNote(j)}</span>{/snippet}
         <!-- the same "It's done" on a row further down: a tap on the row itself still starts a delve (D-100, D-120) -->
         <!-- the tick circle over the marker: done without a delve, with the time it took (D-134) -->
         {#snippet lead()}{#if canTick(id)}<button class="tickbtn" aria-label={t('tick.sr', { job: j.name })} onclick={() => openTick(id, go)}><span class="ring"></span></button>{/if}{/snippet}
@@ -299,13 +327,23 @@
     <div class="rows">
       {#each others as id (id)}{@render jobRow(id)}{/each}
     </div>
+    {#if holdHint}<p class="soft hold-hint">{t('today.holdHint')}</p>{/if}
+    <!-- taken off today: still here, struck, with Put back, all day (J7) -->
+    {#if v.aside.length}
+      <div class="rows aside">
+        {#each v.aside as id (id)}
+          <div class="row still aside-row"><span class="pip"></span><span class="t">{job(id).name}</span><span class="s">{t('row.notToday')}</span></div>
+          <div class="put-back"><button class="text-link" aria-label={t('today.srPutBack', { job: job(id).name })} onclick={() => putBack(id)}><span>{t('today.putBack')}</span></button></div>
+        {/each}
+      </div>
+    {/if}
     <!-- back from waiting on a reply (D-137): under the day's list, never on it -->
     {#if v.replies.length}
       <div class="rows replies">
         {#each v.replies as r (r.job)}
           {@const j = job(r.job)}
           <div class="reply">
-            <SwipeRow key={`r:${r.job}`} actions={replyActs(j)} tap={() => start(r.job)} hold={() => openMenu(r.job, go, null, null, 'today')} disabled={!!v.run}>
+            <SwipeRow key={`r:${r.job}`} actions={replyActs(j)} tap={() => start(r.job)} hold={() => openMenu(r.job, go, null, null, 'today')}>
               {#snippet row()}<span class="pip" class:under={canTick(r.job)}></span><span class="t">{j.name}{#if r.who}<small>{t('wait.onNow', { who: r.who })}</small>{/if}</span><span class="s"></span>{/snippet}
               {#snippet lead()}{#if canTick(r.job)}<button class="tickbtn" aria-label={t('tick.sr', { job: j.name })} onclick={() => openTick(r.job, go)}><span class="ring"></span></button>{/if}{/snippet}
             </SwipeRow>
@@ -386,6 +424,15 @@
   .reply-acts .text-link span { font-size: 15px; }
   .reply-acts .text-link:disabled { opacity: .5; }
   .errand { margin-top: 6px; }
+  .hold-hint { margin: 6px 0 0; text-align: center; font-size: 14px; font-style: italic; }
+  .of { margin: -2px 0 4px !important; font-style: italic; }
+  .only { margin: 2px 0 6px; }
+  .aside { margin-top: 8px; }
+  .aside-row { cursor: default; opacity: .62; }
+  .aside-row .t { text-decoration: line-through; }
+  .put-back { display: flex; justify-content: flex-end; margin: -8px 0 4px; }
+  .put-back .text-link { min-height: 36px; padding: 0; }
+  .put-back .text-link span { font-size: 15px; }
   .first { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin-top: 8px; }
   .first-say { font-family: var(--life); font-size: 18px; color: var(--ink-2); }
   .first-job span { font-size: 18px; color: #fff; }

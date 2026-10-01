@@ -53,10 +53,13 @@ await page.evaluate(() => { document.activeElement?.blur(); window.__keyboard(0)
 const after = await page.evaluate(() => ({ phone: document.querySelector('.phone').getBoundingClientRect().height, y: scrollY, vvh: document.documentElement.style.getPropertyValue('--vvh') }));
 if (Math.abs(after.phone - H) > 1 || after.y || after.vvh) fails.push(`the page is not back in place after the keyboard (${JSON.stringify(after)})`);
 
-/* Return saves it for later: it is in the Satchel's "No day yet", not on Today (D-131) */
-if (!(await page.locator('.item button.row', { hasText: 'milk' }).count())) fails.push('"milk", put in with + Add, is not in the Satchel');
+/* Return from Today's "Add a job" puts it on today, and Today shows it (Dan, D-143 C); it is not in the Satchel */
+await page.clock.runFor(1200);
+if (!(await page.locator('nav.foot').count())) fails.push('Return in Today\'s box did not come back to Today');
+if (!(await page.locator('.rows button.row', { hasText: 'milk' }).count())) fails.push('"milk", added from Today, is not on Today');
+await page.locator('.foot').getByRole('button', { name: 'Satchel', exact: true }).click(); await page.clock.runFor(1500);
+if (await page.locator('.item button.row', { hasText: 'milk' }).count()) fails.push('"milk", added to today, is in the Satchel too');
 await page.locator('.home').click(); await page.clock.runFor(1500);
-if (await page.locator('.rows button.row', { hasText: 'milk' }).count()) fails.push('"milk", saved for later, is on Today too');
 
 /* a tap on Test opens its set-up, Begin starts its delve (D-124); finished and said done, it is done (Dan, D-117) */
 await page.locator('.rows button.row', { hasText: 'Test' }).first().click(); await page.clock.runFor(1500);

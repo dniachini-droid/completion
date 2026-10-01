@@ -181,15 +181,15 @@ describe('The errand run (D-139)', () => {
     expect(p.facts.some(f => f.type === 'planChanged' && f.day === null)).toBe(true);
   });
 
-  it('the pick list: today\'s jobs not done, then the one-offs with no day or a later day; never a job done, or a recurring job not on today', () => {
+  it('the pick list: today\'s one-offs not done, then the one-offs with no day or a later day; never a job done, or a recurring job (J12)', () => {
     const p = errands().do({ do: 'putOnDay', job: 'it-3', day: '2026-09-28' });
     const v = p.view();
     const ids = errandChoices(C, p.facts, p.at);
-    const todays = v.slate.filter(id => !v.done.has(id));
+    const recurring = new Set(C.rhythms.map(r => r.job));
+    const todays = v.slate.filter(id => !v.done.has(id) && !recurring.has(id));
     expect(ids.slice(0, todays.length)).toEqual(todays);
     expect(ids).toEqual(expect.arrayContaining(['it-1', 'it-2', 'it-3']));
-    const recurringOff = C.rhythms.map(r => r.job).filter(id => !v.slate.includes(id));
-    expect(ids.filter(id => recurringOff.includes(id))).toEqual([]);
+    expect(ids.filter(id => recurring.has(id))).toEqual([]);
     p.do({ do: 'tickOff', job: 'it-2', minutes: 15 });
     expect(errandChoices(C, p.facts, p.at)).not.toContain('it-2');
   });

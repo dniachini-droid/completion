@@ -23,6 +23,8 @@
   /* "I can't start": the first small step, for any job not done (it lived on Today's next job, D-135) */
   function cant() { const id = j!.id, go = menu.go!; to(() => go('cant', id)); }
   function edit() { const id = j!.id, go = menu.go!; to(() => go('rhythms', id)); }
+  /* a job done today, to do again (D-131): in the menu too, so a tap on a done row finds it (J11) */
+  function notDone() { if (settling()) return; const id = j!.id; steady(); closeMenu(); closeRows(); game.do({ do: 'notDone', job: id }); }
   function place(day: string) {
     const id = j!.id;
     steady(); game.do({ do: 'putOnDay', job: id, day, ...(menu.entry ? { entry: menu.entry } : {}) });
@@ -56,7 +58,8 @@
   <div class="scrim" role="presentation" onclick={() => { if (!settling()) closeMenu(); }}></div>
   <div class="menu" role="dialog" aria-modal="true" aria-label={j.name}>
     <p class="name">{j.name}</p>
-    <button class="item" disabled={!!v.run || finished} onclick={delve}>{t('menu.delve')}</button>
+    <button class="item" disabled={!!v.run || finished} onclick={delve}>{v.done.has(j.id) && recurring ? t('menu.delveAgain') : t('menu.delve')}</button>
+    {#if menu.on === v.day && v.done.has(j.id)}<button class="item" onclick={notDone}>{t('row.notDone')}</button>{/if}
     {#if !v.done.has(j.id) && !finished}<button class="item" disabled={!!v.run} onclick={tick}>{t('tick.off')}</button>{/if}
     {#if !v.done.has(j.id) && !finished}<button class="item" disabled={!!v.run} onclick={cant}>{t('today.cantStart')}</button>{/if}
     <button class="item" onclick={edit}>{t('menu.edit')}</button>

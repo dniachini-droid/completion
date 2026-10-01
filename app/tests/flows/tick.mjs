@@ -39,7 +39,7 @@ const tickOn = async (name) => {
   return tap(page.locator('.next').getByRole('button', { name: 'Tick off', exact: true }), `Tick off on ${name}'s card`);
 };
 
-/* 1. the circle on a row (in the Satchel, where "+ Add" puts it): 30 min → the step screen with its road line and count */
+/* 1. the circle on a row (on Today, where "Add a job" puts it, D-143 C): 30 min → the step screen with its road line and count */
 await add('Bank');
 await tap(page.getByRole('button', { name: 'Bank: tick off', exact: true }), 'the tick circle on Bank');
 if (!(await page.getByText('How long did it take?').count())) fails.push('no "How long did it take?" after the circle');
@@ -80,7 +80,9 @@ if (await tickable('Letters')) fails.push('Letters, ticked off with No more, can
 
 /* 4. the job menu's Tick off */
 await add('Post');
-const row = page.locator('button.row', { hasText: 'Post' }).first();
+/* "Post" only, never "Sort the post": the job is on Today now (D-143 C) */
+const row = page.locator('button.row').filter({ has: page.locator('.t', { hasText: /^Post$/ }) }).first();
+await row.scrollIntoViewIfNeeded({ timeout: 2000 }).catch(() => {}); await page.waitForTimeout(300);
 const r = await row.boundingBox();
 if (r) { await page.mouse.move(r.x + r.width / 2, r.y + r.height / 2); await page.mouse.down(); await page.clock.runFor(700); await page.waitForTimeout(300); await page.mouse.up(); await page.clock.runFor(600); }
 await page.waitForTimeout(500);

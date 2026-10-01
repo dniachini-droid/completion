@@ -38,8 +38,8 @@ const flat = async (where) => {
 };
 const save = async (name) => { await page.keyboard.type(name); await page.keyboard.press('Enter'); await page.clock.runFor(800); };
 
-/* 1. three jobs saved for later in the Satchel ("Add a job" opens its box) */
-await tap(page.locator('.today-add'), 'Add a job');
+/* 1. three jobs saved for later in the Satchel (its own box keeps them with no day; Today's adds to today, D-143 C) */
+await tap(page.locator('.foot').getByRole('button', { name: 'Satchel', exact: true }), 'the Satchel'); await page.locator('.satchel-add input').focus();
 for (const n of ['Bank', 'Post office', 'Chemist']) { await page.locator('.satchel-add input').focus(); await save(n); }
 await page.locator('.satchel-add input').blur(); await page.clock.runFor(600);
 

@@ -413,6 +413,10 @@ function weekAt(c: Content, facts: Fact[], week: string, today: string): WeekVie
   /* released: the first day from today still below a Normal day's size and without this job; otherwise it falls away */
   const mins = (d: string) => at(d)!.jobs.filter(x => !x.done || x.entry).reduce((a, x) => a + jobRoom(c, x.job, facts), 0);
   for (const e of released) {
+    /* a missed session placed again on today and done there is done as planned: it keeps its place on the day (the
+       flow review, L A1: it fell off the finish line when done, and the line refilled) */
+    const dj = today >= weekDays(week)[0] && today <= weekDays(week)[6] ? at(today)?.jobs.find(x => x.done && x.job === e.job && x.entry === null) : undefined;
+    if (dj) { dj.entry = e.id; continue; }
     if (left(e.job) <= 0) continue;
     const to = weekDays(week).find(d => d >= today && mins(d) + jobRoom(c, e.job, facts) <= PLAN_MIN && !at(d)!.jobs.some(x => x.job === e.job));
     if (to) place(e, to);
