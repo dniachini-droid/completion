@@ -53,3 +53,11 @@ await P(6, '2026-10-05T09:00:00+01:00', async R => {
   const seen = await D.delve(R, 'Big job', { min: 90, n: 1, tag: 'p6-notyet-note', ask: 'Not yet', stopAt: 'page 4' });
   D.say(R, 'p6 screens: ' + seen.join(' > '));
 });
+/* 7. Saturday week 1, 1 Key kept: "Use it on the Map" from Today, then each light */
+if (!only || only === '7') {
+  const R = await D.open({ at: '2026-10-10T11:30:00+01:00', from: 'save-w1-sat.json' });
+  await D.through(R, 'p7-waits'); await D.home(R);
+  await D.press(R, 'Use it on the Map'); await D.look(R, 'p7-map-from-today', { full: true });
+  D.say(R, 'p7 Use a Key buttons from the link: ' + await R.page.locator('button.use:not(.again)').count());
+  await D.done(R, 'probe 7');
+}

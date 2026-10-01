@@ -1,0 +1,27 @@
+// Hands-on review: from the keys save: "On the Map" for a thing behind, Records ⇄ Symbols, the Daybook, the place read again, the Week's first screen. Review only.
+import { readFileSync } from 'node:fs';
+import { open } from './deep-hands-lib.mjs';
+const [,, w = '390', h = '844'] = process.argv;
+const save = readFileSync(new URL('../flows/saves/keys.json', import.meta.url), 'utf8');
+const H = await open({ w: +w, h: +h, tag: 'keys2', save, at: '2026-10-08T09:00:00+01:00' });
+const { page } = H;
+const S = async n => { H.say(`== ${n}: ${await H.screen()}`); H.say('  ' + (await H.buttons()).filter(b => !/tick off|: not today|: delete/.test(b)).slice(0, 25).join('\n  ')); const o = await H.overflow(); if (o.length) H.say('  OVERFLOW ' + o.join(' | ')); await H.shot(n); };
+await H.toToday();
+await H.tap(page.getByRole('button', { name: 'On the Map' }), 'On the Map'); await S('on-the-map');
+await H.toToday();
+await H.tap(page.getByRole('button', { name: 'Records' }), 'Records'); await S('records');
+const tabs = await page.getByRole('tab').allInnerTexts().catch(() => []); H.say('tabs: ' + tabs.join('/'));
+await H.tap(page.getByRole('tab', { name: /symbols/i }).or(page.getByRole('button', { name: /^symbols$/i })), 'Symbols'); await S('symbols');
+await H.tap(page.locator('.phone .marks button, .phone .grid button').first(), 'a symbol'); await S('symbol-1');
+await H.tap(page.getByRole('tab', { name: /records/i }).or(page.getByRole('button', { name: /^records$/i })), 'Records tab'); await S('records-tab');
+await page.evaluate(() => history.back()); await page.clock.runFor(1200); await S('records-back');
+await H.toToday();
+await H.tap(page.locator('nav.foot').getByRole('button', { name: 'Daybook' }), 'Daybook'); await S('daybook');
+await H.tap(H.btn('Earlier'), 'Earlier'); await S('daybook-earlier');
+await H.tap(H.btn('Later'), 'Later'); await S('daybook-later');
+await H.tap(page.getByRole('button', { name: 'Settings' }), 'Settings from daybook'); await S('daybook-settings');
+await page.evaluate(() => history.back()); await page.clock.runFor(1200); await S('daybook-settings-back');
+await H.toToday();
+await H.tap(page.locator('button.here'), 'place name'); await S('place-again');
+await page.evaluate(() => history.back()); await page.clock.runFor(1200); await S('place-again-back');
+await H.close();
