@@ -137,7 +137,12 @@ if (await locked()) {
 /* the day done: every job of the day delved to its end */
 for (let k = 0; k < 8 && (await page.locator('.rows button.row:not(.done)').first().count()); k++) {
   await tap(page.locator('.rows button.row:not(.done)').first());
-  if (await has('Begin')) { if (await has('60 minutes')) await tap(btn('60 minutes')); await tap(btn('Begin')); }
+  if (await has('Begin')) {
+    if (await has('60 minutes')) await tap(btn('60 minutes'));
+    /* one delve: a recurring job opens at its own minutes, maybe as several (D-146) */
+    for (let n = 0; n < 8 && (await btn('One delve fewer').count()) && (await btn('One delve fewer').isEnabled()); n++) await tap(btn('One delve fewer'));
+    await tap(btn('Begin'));
+  }
   await jump(75 * 60_000);
   if (await has('Done')) await tap(btn('Done'));
   await home();

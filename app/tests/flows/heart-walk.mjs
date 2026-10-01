@@ -150,7 +150,12 @@ const start = async () => {
   if (await has('Delve')) await tap('Delve'); else await tap('Begin');
 };
 /** Dan sets the length on the set-up, which opens at one 30-minute delve (D-124): an hour, as a day of real work. */
-const setHour = async () => { const b = page.getByRole('button', { name: '60 minutes', exact: true }); if (await b.count()) { await b.first().click(); await page.clock.runFor(700); } };
+/* one delve of an hour: a recurring job opens at its own minutes, maybe as several delves (D-146) */
+const setHour = async () => {
+  const b = page.getByRole('button', { name: '60 minutes', exact: true }); if (await b.count()) { await b.first().click(); await page.clock.runFor(700); }
+  const fewer = page.getByRole('button', { name: 'One delve fewer' });
+  for (let k = 0; k < 8 && (await fewer.count()) && (await fewer.isEnabled()); k++) await fewer.click();
+};
 /** Answer whatever guess the screen offers (the first option). */
 const guessIfAny = async (name) => {
   const opts = page.locator('.opts .btn-quiet');
