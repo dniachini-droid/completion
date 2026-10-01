@@ -1,6 +1,6 @@
 # The flow review: every finding, as one checklist
 
-> The working list for the build after the flow review (D-143). It holds **every** finding from the four reports: **J** = [JOBS](JOBS.md), **S** = [STORY-KEYS-MAP](STORY-KEYS-MAP.md), **N** = [NAVIGATION](NAVIGATION.md), **L** = [TWO-WEEKS](TWO-WEEKS.md). Duplicates found by more than one reviewer are merged. Each item says how it is handled: **fix**, **D-143 X** (Dan's choice X decides it), or **leave** (with why). Tick each off with its commit; add a flow or rule test for every bug. Spoiler-free.
+> The working list for the build after the flow review (D-143). It holds **every** finding from the four reports: **J** = [JOBS](JOBS.md), **S** = [STORY-KEYS-MAP](STORY-KEYS-MAP.md), **N** = [NAVIGATION](NAVIGATION.md), **L** = [TWO-WEEKS](TWO-WEEKS.md). Duplicates found by more than one reviewer are merged. Each item says how it is handled: **fix**, **D-143 X** (Dan's choice X decides it), or **leave** (with why). Tick each off with its commit; add a flow or rule test for every bug. **All 60 are in scope: nothing merges until every box is ticked, or Dan has agreed to move a named item later.** Spoiler-free.
 
 ## 1. Keys and the Map
 - [ ] 1.1 **Map → Use a Key → Back to the Map loops forever** (S1, N bug 1). Fix: the opened screen is a look-through screen; back from the Map goes where it came from. Flow test: Today → Map → Use a Key → back lands on Today.
