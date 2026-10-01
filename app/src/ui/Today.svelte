@@ -178,8 +178,10 @@
   /* "Press and hold a job for more", said until the first time the job menu is opened (J19) */
   let held = $state(holdSeen());
   function holdSeen() { try { return localStorage.getItem('hint.hold') === '1'; } catch { return true; } }
-  /* the menu found while Today is open: the hint goes at once, not at the next visit (review of D-144) */
-  $effect(() => { if (menu.job) held = true; });
+  /* the menu found while Today is open: the hint goes once the menu closes, not at the next visit, and never while the
+     finger is still down (the rows under it would move, D-131) (review of D-144) */
+  let menuOpened = false;
+  $effect(() => { if (menu.job) menuOpened = true; else if (menuOpened) held = true; });
   const holdHint = $derived(!held && !v.run && others.length > 0);
 </script>
 
