@@ -415,10 +415,12 @@ function weekAt(c: Content, facts: Fact[], week: string, today: string): WeekVie
   for (const e of released) {
     /* a missed session placed again on today and done there is done as planned: it keeps its place on the day (the
        flow review, L A1: it fell off the finish line when done, and the line refilled) */
+    /* only when the plan would have put it on today: one placed on a later day (today was full) never takes today's line
+       room because the job was done off-plan today (review of D-144) */
     const dj = today >= weekDays(week)[0] && today <= weekDays(week)[6] ? at(today)?.jobs.find(x => x.done && x.job === e.job && x.entry === null) : undefined;
-    if (dj) { dj.entry = e.id; continue; }
+    const to = weekDays(week).find(d => d >= today && mins(d) + jobRoom(c, e.job, facts) <= PLAN_MIN && !at(d)!.jobs.some(x => x.job === e.job && x !== dj));
+    if (dj && to === today) { dj.entry = e.id; continue; }
     if (left(e.job) <= 0) continue;
-    const to = weekDays(week).find(d => d >= today && mins(d) + jobRoom(c, e.job, facts) <= PLAN_MIN && !at(d)!.jobs.some(x => x.job === e.job));
     if (to) place(e, to);
   }
   for (const d of days) d.jobs.sort((a, b) => Number(b.done) - Number(a.done) || (a.time ?? '99').localeCompare(b.time ?? '99'));

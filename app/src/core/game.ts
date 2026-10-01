@@ -192,8 +192,10 @@ export function inProgress(c: Content, facts: Fact[]): Set<string> {
     else if (f.type === 'planAdded') entryJob.set(f.entry.id, f.entry.job);
     if (f.type === 'delveEnded' && f.minutes > 0) last.set(f.job, f.seq);
     else if (f.type === 'stepsGained' && f.tick) last.set(f.job, f.seq);
-    else if (f.type === 'errandShare') last.set(f.job, f.seq);
+    /* an errand run's minutes shared over errands not struck off are no "Not yet": they stay where they were (review) */
     else if (f.type === 'setAside' || f.type === 'waitSet') moved.set(f.job, f.seq);
+    /* "Put back" after "Not today" undoes the move: the job is on Today again (review of D-144) */
+    else if (f.type === 'putBack') moved.delete(f.job);
     /* put on another day by Dan (a delve's own clearing of later days is part of its start, before its end) */
     else if (f.type === 'planAdded') moved.set(f.entry.job, f.seq);
     else if (f.type === 'planChanged' && f.day) { const j = entryJob.get(f.entry); if (j) moved.set(j, f.seq); }
@@ -984,7 +986,12 @@ function addJob(w: W, c: Content, v: View, base: Content, day: string, line: str
   if (!name) return null;
   const tie = tieFor(base, w.all, name, from);
   if (tie?.same) {
-    if (on && !(c.rhythms.some(r => r.job === tie.job.id) && v.done.has(tie.job.id) && on === day)) {
+    const recurring = c.rhythms.some(r => r.job === tie.job.id);
+    /* a recurring job typed for a later day is one more session there: today's stays where it is (review of D-144) */
+    if (on && recurring && on > day) {
+      const planned = [calendarWeek(on)].flatMap(x => W.planOf(w.all, x) ?? []).some(e => e.job === tie.job.id && e.day === on);
+      if (!planned) w.put({ type: 'planAdded', entry: { id: `pa-${ofType(w.all, 'planAdded').length + 1}`, job: tie.job.id, day: on, ...(time ? { time } : {}) } });
+    } else if (on && !(recurring && v.done.has(tie.job.id) && on === day)) {
       putOn(w, c, v, day, tie.job.id, on);
       const e = ofType(w.all, 'planAdded').pop();
       if (time && e && e.entry.job === tie.job.id && e.entry.day === on) w.put({ type: 'planChanged', entry: e.entry.id, day: on, time });
@@ -1005,7 +1012,9 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
   settleIn(w, c, nowMs);
   /* an errand run's end not yet counted is counted before anything else Dan does, except striking on it (D-139) */
   /* a thought parked on an errand run's end never counts it: its strikes are still to come (D-138 × D-139) */
-  if (cmd.do !== 'strikeErrand' && cmd.do !== 'away' && cmd.do !== 'park') { const p = pendingErrands(w.all); if (p) errandsEnd(w, c, p, now); }
+  /* a new delve never starts while its "What got done?" waits: counted then, its stories would be lost (review of D-144) */
+  const waits = !!pendingErrands(w.all);
+  if (cmd.do !== 'strikeErrand' && cmd.do !== 'away' && cmd.do !== 'park' && !(waits && (cmd.do === 'startRun' || cmd.do === 'startErrands'))) { const p = pendingErrands(w.all); if (p) errandsEnd(w, c, p, now); }
   const day = gameDay(now), v = see(w.all, c, now);
   switch (cmd.do) {
     case 'open': {
@@ -1064,13 +1073,13 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     case 'putBack': if (asideOn(w.all, day).has(cmd.job)) w.put({ type: 'putBack', job: cmd.job }); break;
     case 'startRun':
       /* only a run the dial can set: whole minutes up to its longest stop, one to eight delves (D-120) */
-      if (v.run || !dialRun(cmd.minutes, cmd.count) || cmd.job === ERRAND_RUN) break;
+      if (v.run || waits || !dialRun(cmd.minutes, cmd.count) || cmd.job === ERRAND_RUN) break;
       beginRun(w, c, cmd.job, cmd.minutes, cmd.count, day);
       break;
     case 'startErrands': {
       /* never while another delve runs; only jobs still to do, each once (D-139) */
       const jobs = Array.isArray(cmd.jobs) ? cmd.jobs : [];
-      if (v.run || !dialRun(cmd.minutes, cmd.count) || jobs.length < ERRANDS_MIN || jobs.length > ERRANDS_MAX || new Set(jobs).size !== jobs.length) break;
+      if (v.run || waits || !dialRun(cmd.minutes, cmd.count) || jobs.length < ERRANDS_MIN || jobs.length > ERRANDS_MAX || new Set(jobs).size !== jobs.length) break;
       if (!jobs.every(id => errandable(c, w.all, day, id))) break;
       w.put({ type: 'delveStarted', job: ERRAND_RUN, minutes: cmd.minutes, count: cmd.count, errands: jobs.slice() });
       break;
@@ -1344,7 +1353,8 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       if (k && !ofType(w.all, 'repeatDeclined').some(f => f.name === k)) w.put({ type: 'repeatDeclined', name: k });
       break;
     }
-    case 'addToWeek': if (cmd.day >= day) addJob(w, c, v, base, day, cmd.line, cmd.day, undefined, cmd.time); break;
+    /* a day gone by while the Week's + was open (past 04:00): the line goes on today, never lost (review of D-144) */
+    case 'addToWeek': if (/^\d{4}-\d{2}-\d{2}$/.test(cmd.day)) addJob(w, c, v, base, day, cmd.line, cmd.day >= day ? cmd.day : day, undefined, cmd.day >= day ? cmd.time : undefined); break;
     /* Today's own "Add a job": on today (Dan, D-143 C); the Satchel's box still keeps a job with no day */
     case 'addToday': addJob(w, c, v, base, day, cmd.line, day, cmd.from); break;
     case 'bedtime': if (/^\d\d:\d\d$/.test(cmd.time)) w.put({ type: 'bedtimeSet', time: cmd.time }); break;
