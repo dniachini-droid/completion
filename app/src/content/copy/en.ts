@@ -5,6 +5,8 @@
 export const copy = {
   /* Today */
   'today.ahead': 'Ahead',
+  'today.road.place': 'The next place in {min}',
+  'today.road.side': 'a side chamber in {min}',
   'today.next': 'Next',
   'today.teaser.avoided': 'This is the task you have been putting off, and something waits for you on the far side of it.',
   'today.teaser.delve': 'The passage runs on from where you last set down your lamp.',

@@ -2,11 +2,12 @@
   /* The road line at a delve's end (D-133), as on the run set-up: this stretch from the last place, the side chamber
      halfway, the next place at its end. A sparkly flame travels from where Dan was to where he is now, lighting the way
      behind it, in step with the ring's count (EndRing, tally.ts); the chamber and the place light as it passes them.
-     Only the minutes this delve moved Dan are travelled (never counted twice). Transforms and opacity only; once. */
+     Only the minutes this delve moved Dan are travelled (never counted twice). Transforms and opacity only; once.
+     Today shows it still, with the minutes still to go after each label (`notes`, Dan, D-140). */
   import { t } from '../content/copy/en';
   import { once, whenAt, reduced, TALLY_MS, TALLY_DELAY, type TallyMode } from './tally';
 
-  let { road, from, to, mode }: { road: { from: number; chamber: number; to: number; place: boolean }; from: number; to: number; mode: TallyMode } = $props();
+  let { road, from, to, mode, notes = {} }: { road: { from: number; chamber: number; to: number; place: boolean }; from: number; to: number; mode: TallyMode; notes?: { side?: string; place?: string } } = $props();
 
   let W = $state(300);
   let lit: HTMLElement, flame: HTMLElement;
@@ -52,13 +53,13 @@
   <div class="mark side" style="left:{px(fSide)}px">
     <svg viewBox="-9 -11 18 21"><path d="{ARCH} Z" fill="#0b0b1c" /><path d={ARCH} fill="none" stroke="#d9d6ff" stroke-width="1.5" stroke-linecap="round" /></svg>
     <svg class="on" style={sideAt === null ? 'opacity:0' : `transition-delay:${sideAt}ms`} class:go={sideAt !== null} viewBox="-9 -11 18 21"><path d={ARCH} fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" /></svg>
-    <span class="lab">{t('set.side')}</span>
+    <span class="lab">{t('set.side')}{#if notes.side}<b>{notes.side}</b>{/if}</span>
   </div>
   <!-- the next place, at the stretch's end -->
   <div class="mark place" class:far={!road.place} style="left:{px(1)}px">
     <svg viewBox="-9 -11 18 21"><path d="{ARCH} Z" fill="#0b0b1c" /><path d={ARCH} fill="none" stroke="#ece9ff" stroke-width="1.3" stroke-linecap="round" /></svg>
     <svg class="on" style={placeAt === null ? 'opacity:0' : `transition-delay:${placeAt}ms`} class:go={placeAt !== null} viewBox="-9 -11 18 21"><path d={ARCH} fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" /></svg>
-    <span class="lab">{road.place ? t('set.nextPlace') : t('set.onward')}</span>
+    <span class="lab">{road.place ? t('set.nextPlace') : t('set.onward')}{#if notes.place}<b>{notes.place}</b>{/if}</span>
   </div>
   <!-- the flame: where Dan is -->
   <div class="flame" bind:this={flame}><i class="glow"></i><i class="s s1"></i><i class="s s2"></i><i class="s s3"></i><i class="core"></i></div>
@@ -84,6 +85,8 @@
   .lab { position: absolute; top: -30px; left: 0; transform: translateX(-50%); white-space: nowrap; font-family: var(--life); font-style: italic; font-size: 13px; color: #c7c9e6; }
   .place .lab { transform: translateX(-100%); left: 9px; top: 12px; }
   .side .lab { top: -28px; }
+  .lab b { font-weight: inherit; color: #ece9ff; }
+  .lab b::before { content: ' · '; color: #c7c9e6; }
   /* the flame: a gold point with a soft glow, flickering and shedding sparks while it travels, still once there */
   .flame { position: absolute; left: 0; top: 30px; width: 0; height: 0; will-change: transform; }
   .flame i { position: absolute; display: block; border-radius: 50%; }

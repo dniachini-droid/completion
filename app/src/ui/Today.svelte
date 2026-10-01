@@ -17,6 +17,7 @@
   import type { Job } from '../core/types';
   import { t, minutesWords, minutesShort, inSentence, dayShort } from '../content/copy/en';
   import Scene from './Scene.svelte';
+  import EndRoad from './EndRoad.svelte';
   import { flushSync } from 'svelte';
   import type { Go } from './nav';
 
@@ -106,6 +107,16 @@
   const BEDTIME_SOON = 60;
   const nearBed = $derived(evening && !v.complete && !v.run && pastBedtime(v.bedtime, game.now) >= -BEDTIME_SOON);
   const nightLine = $derived(v.night?.beat ? beatOf(content.story, v.night.beat)?.line ?? '' : '');
+  /* where Dan is on this stretch (Dan, D-140): the delve's end's road line, still, with the minutes still to go to
+     the side chamber (while it holds a find) and to the next place; nothing moves on it here */
+  const roadNotes = $derived({
+    ...(v.toChamber !== null && v.toChamber > 0 ? { side: minutesShort(v.toChamber) } : {}),
+    ...(v.toNext !== null && v.toNext > 0 ? { place: minutesShort(v.toNext) } : {}),
+  });
+  const roadSay = $derived([
+    ...(roadNotes.place ? [t('today.road.place', { min: roadNotes.place })] : []),
+    ...(roadNotes.side ? [t('today.road.side', { min: roadNotes.side })] : []),
+  ].join(', '));
   /* the story ahead folds to a few lines, so the next job is always in view; a tap reads it all (D-093) */
   let aheadOpen = $state(false);
 
@@ -184,6 +195,9 @@
     <!-- the place's name: a tap reads its entry again, with its painting, at any time of day (Dan, D-135) -->
     {#if placeSeq !== null && v.here.id}<h1 class="carve lg rise"><button class="here" aria-label={t('map.readAgain', { place: v.here.name })} onclick={() => go('arrival', `again:${placeSeq}`)}>{v.here.name}</button></h1>
     {:else}<h1 class="carve lg rise">{v.here.name}</h1>{/if}
+    <section class="where rise d2" aria-label={roadSay || undefined}>
+      <EndRoad road={v.road} from={v.walked} to={v.walked} mode="still" notes={roadNotes} />
+    </section>
     {#if v.ahead}
       <section class="ahead rise d2">
         <div class="label-line">{t('today.ahead')}</div>
@@ -316,6 +330,8 @@
 <style>
   h1 { margin-top: 2px; }
   h1 .here { font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit; text-shadow: inherit; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; }
+  .where { margin-top: 6px; }
+  .where :global(.road) { margin: 0 auto 14px; }
   .ahead { margin-top: 12px; }
   .ahead p { font-size: 17.5px; line-height: 1.38; margin-top: 6px; }
   .ahead-text { display: block; width: 100%; padding: 0; background: none; border: 0; text-align: left; cursor: pointer; color: inherit; }

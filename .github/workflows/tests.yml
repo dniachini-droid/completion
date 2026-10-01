@@ -87,6 +87,9 @@ jobs:
       - name: 'Today with no job put forward; a place read again (D-135)'
         if: matrix.walk
         run: node tests/flows/today-list.mjs http://localhost:4173/ ${{ matrix.size }}
+      - name: 'Where you are on the road, on Today (D-140)'
+        if: matrix.walk
+        run: node tests/flows/today-road.mjs http://localhost:4173/ ${{ matrix.size }}
       - name: 'Jobs you have had before, under the Satchel''s box; the offer to make one repeat (D-136)'
         if: matrix.walk
         run: node tests/flows/remember.mjs http://localhost:4173/ ${{ matrix.size }}
