@@ -137,3 +137,19 @@ describe('THREE-WEEKS F2: Not yet + a note, then Back to today', () => {
     expect(b.some(x => x.type === 'seen')).toBe(true);
   });
 });
+
+/* PERFORMANCE #1: not probed here. Vitest compiles .svelte.ts for the server, where $state is a plain value (checked:
+   util.types.isProxy(game.facts) is false here). The client build is what matters: dist's Game has
+   `set facts(e){C(this.#t,e,!0)}`, i.e. set(source, value, should_proxy=true): every assigned log is deeply proxied. */
+
+describe('PLATFORM #4: a restored file the game cannot run', () => {
+  it('readSave accepts a v2 save with a null fact, and the rules then throw', () => {
+    const r = readSave(JSON.stringify({ version: 2, content: 'x', facts: [null] }));
+    expect(r).not.toBeNull();
+    expect(() => see(r!.save.facts, C, '2026-10-05T09:00:00+01:00')).toThrow();
+    const r2 = readSave(JSON.stringify({ version: 2, content: 'x', facts: [{ seq: 1, type: 'opened', day: '2026-10-05', at: 'not a time' }] }));
+    expect(r2).not.toBeNull();
+    let threw = false; try { const f = r2!.save.facts.concat(settle(r2!.save.facts, C, '2026-10-05T09:00:00+01:00')); see(f, C, '2026-10-05T09:00:00+01:00'); } catch { threw = true; }
+    console.log('[PLAT#4] bad "at" throws in settle/see:', threw);
+  });
+});
