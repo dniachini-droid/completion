@@ -5,7 +5,7 @@
      suggested Low; one small real job picks the route up. */
   import { game, content } from './game.svelte';
   import { t, byWords, dayName } from '../content/copy/en';
-  import { slipped } from '../core/week';
+  import { slipped, type Slip } from '../core/week';
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
 
@@ -18,18 +18,23 @@
   const stop = (x: string) => x.replace(/([.!?…])\s*\.$/, '$1');
 
   $effect(() => { if (!w) go('today'); });
-  /* what slipped (D-114): one line, one question, never a list */
+  /* what slipped (D-114): a date that passed, one question; and every appointment of his own that went by, in one list
+     (Dan, deep review Part 2 #5: one vanished with no question). Never a count */
   const since = (game.facts.find(f => f.seq === w?.seq) as { since?: string } | undefined)?.since ?? v.day;
-  let slip = $state(slipped(v.content, game.facts, since, v.day)), answered = $state(false);
-  const slipName = $derived(slip ? game.job(slip.job)?.name ?? '' : '');
-  function still() {
-    if (!slip) return;
-    const j = game.job(slip.job);
-    if (slip.kind === 'date' && j) { const job = { ...j }; delete job.by; game.do({ do: 'saveJob', job, rhythm: null }); }
-    else game.do({ do: 'planJob', job: slip.job, day: v.day });
-    answered = true;
+  const slips = slipped(v.content, game.facts, since, v.day);
+  const slip = slips.find(x => x.kind === 'date') ?? null;
+  const appts = slips.filter(x => x.kind === 'appt');
+  let answered = $state<string[]>([]);
+  const nameOf = (s: Slip) => game.job(s.job)?.name ?? '';
+  const slipName = $derived(slip ? nameOf(slip) : '');
+  const apptsLeft = $derived(appts.filter(x => nameOf(x) && !answered.includes(x.job)));
+  function still(s: Slip) {
+    const j = game.job(s.job);
+    if (s.kind === 'date' && j) { const job = { ...j }; delete job.by; game.do({ do: 'saveJob', job, rhythm: null }); }
+    else game.do({ do: 'planJob', job: s.job, day: v.day });
+    answered = [...answered, s.job];
   }
-  function letGo() { if (slip?.kind === 'date') game.remove(slip.job); answered = true; }
+  function letGo(s: Slip) { game.remove(s.job); answered = [...answered, s.job]; }
   /* a look at the record isn't leaving: back returns here (S9); only going on to Today marks it seen */
   function leave(to: 'today' | 'records') {
     if (to === 'records' && w?.record) { go('records', w.record); return; }
@@ -57,13 +62,24 @@
   <section class="bottom col rise d2">
     {#if q}<p class="say question">{q}</p>{/if}
     <p class="soft">{t('welcome.say')}</p>
-    {#if slip && slipName && !answered}
-      <p class="say slip">{slip.kind === 'date' ? t('slip.date', { job: slipName, date: byWords(slip.day) }) : t('slip.appt', { job: slipName, day: dayName(slip.day), time: slip.time ?? '' })}</p>
+    {#if slip && slipName && !answered.includes(slip.job)}
+      <p class="say slip">{t('slip.date', { job: slipName, date: byWords(slip.day) })}</p>
       <div class="center links">
-        <button class="text-link" onclick={still}><span>{slip.kind === 'date' ? t('by.still') : t('slip.today')}</span></button>
-        {#if slip.kind === 'date'}<button class="text-link" onclick={() => go('rhythms', slip!.job)}><span>{t('by.new')}</span></button>{/if}
-        <button class="text-link" onclick={letGo}><span>{t('by.letGo')}</span></button>
+        <button class="text-link" onclick={() => still(slip)}><span>{t('by.still')}</span></button>
+        <button class="text-link" onclick={() => go('rhythms', slip.job)}><span>{t('by.new')}</span></button>
+        <button class="text-link" onclick={() => letGo(slip)}><span>{t('by.letGo')}</span></button>
       </div>
+    {/if}
+    {#if apptsLeft.length}
+      <div class="label-line">{t('slip.wentBy')}</div>
+      <ul class="appts">
+        {#each apptsLeft as a (a.job)}
+          <li>
+            <p class="say slip">{t('slip.apptRow', { job: nameOf(a), day: dayName(a.day), time: a.time ?? '' })}</p>
+            <div class="links"><button class="text-link" onclick={() => still(a)}><span>{t('slip.today')}</span></button><button class="text-link" onclick={() => letGo(a)}><span>{t('by.letGo')}</span></button></div>
+          </li>
+        {/each}
+      </ul>
     {/if}
     <Deleted />
     {#if w?.record}<div class="center"><button class="text-link" onclick={() => leave('records')}><span>{t('welcome.record')}</span></button></div>{/if}
@@ -81,5 +97,7 @@
   .center { display: flex; justify-content: center; margin-bottom: 8px; }
   .gap { height: 12px; }
   .slip { font-style: italic; margin-bottom: 4px; line-height: 1.4; }
-  .links { gap: 14px; flex-wrap: wrap; }
+  .links { display: flex; gap: 14px; flex-wrap: wrap; }
+  .appts { list-style: none; margin: 4px 0 10px; padding: 0; }
+  .appts li { margin-bottom: 6px; }
 </style>

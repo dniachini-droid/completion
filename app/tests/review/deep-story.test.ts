@@ -308,7 +308,9 @@ describe('deep story: fourteen story weeks played through, Keys spent (dynamic)'
   it('FINDING: two camp views are never offered (Normal, High, slow)', () => {
     for (const name of ['normal', 'high', 'slow'] as const) {
       const shown = new Set(life(name).flatMap(x => x.type === 'arrived' && x.kind === 'camp' ? [x.id] : []));
-      expect(s.camps.filter(c => !shown.has(c.id)).map(c => c.id), name).toEqual(expect.arrayContaining(['cv-03', 'cv-21']));
+      /* (the slow player, away half the days, no longer has missed sessions piled onto his return, deep review Part 2 #1:
+         he walks less, and camps more, so one more view comes) */
+      expect(s.camps.filter(c => !shown.has(c.id)).map(c => c.id), name).toEqual(expect.arrayContaining(name === 'slow' ? ['cv-03'] : ['cv-03', 'cv-21']));
     }
   }, 600_000);
 
@@ -322,6 +324,7 @@ describe('deep story: fourteen story weeks played through, Keys spent (dynamic)'
     const by = new Map(closes(f).map(c => [c.n, c.soFar.length]));
     expect(by.get(9)).toBe(0);
     expect(by.get(13)).toBe(0);
-    expect(S.storyState(f, s).week).toBe(14);   /* he did reach the story's end */
+    /* (since Part 2 #1 he walks less: missed sessions no longer pile onto a return; still deep into the story) */
+    expect(S.storyState(f, s).week).toBeGreaterThanOrEqual(12);
   }, 600_000);
 });

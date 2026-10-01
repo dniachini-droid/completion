@@ -11,23 +11,23 @@
 > - **Spoiler-free:** the story's wiring fixes are done from the sealed report. No sealed text goes in commits, this file or the PR.
 
 ## Stage 1: urgent
-- [ ] **U1 A closing screen wipes what the same tap saved.**
+- [x] **U1 A closing screen wipes what the same tap saved.**
   - Keep the true log in a plain private field in `ui/game.svelte.ts`. `do()` and `append()` work from that field, so a teardown holding stale state can't shrink the log.
   - Teardowns: `Delve.svelte:139`, `Daybook.svelte:59`.
   - Flows: Look ahead → pin a job → leave (the pin survives a reload); Plan it for me; Not yet + note → Back to today (lands on Today).
   - (V NEW-1, W F2.)
-- [ ] **U2 Head start paid on every restart.**
+- [x] **U2 Head start paid on every restart.**
   - Keep both guards: a later morning find, or a later `stepsGained` with `job: 'sleep'`. The find is given separately, once.
   - (R#1; V: the edge case on old saves.)
-- [ ] **U3 Delve now: no end alert, no panel.**
+- [x] **U3 Delve now: no end alert, no panel.**
   - Lay out alerts and the panel on any change of the run, whatever the command.
   - Add a test that every way of starting a delve lays them out.
   - (C#1.)
-- [ ] **U4 The save watched item by item.**
+- [x] **U4 The save watched item by item.**
   - `facts = $state.raw`, and Settings' `asking` too.
   - CI's battery check also runs on a played save of 3–6 months (make one with the rules, as `tests/flows/saves/` does). Its limits must hold there.
   - (F#1, F#3; V.)
-- [ ] **U5 The word's "Later" forgotten on restart.**
+- [x] **U5 The word's "Later" forgotten on restart.**
   - Keep it per save (`platform.store`). After days away the welcome back comes first; the word waits as Today's line.
   - (W F3.)
 

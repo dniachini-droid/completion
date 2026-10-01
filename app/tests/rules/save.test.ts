@@ -33,6 +33,7 @@ const ONE: { [T in FactBody['type']]: Extract<FactBody, { type: T }> } = {
   delveEnded: { type: 'delveEnded', job: 'a', minutes: 17.5, how: 'finishedHere', run: 4 },
   jobDone: { type: 'jobDone', job: 'a', minutes: 60 },
   doneUndone: { type: 'doneUndone', job: 'a', on: '2026-09-29' },
+  tickTakenBack: { type: 'tickTakenBack', job: 'a', minutes: 30, on: '2026-09-29' },
   firstChosen: { type: 'firstChosen', job: 'a', on: '2026-09-30' },
   repeatDeclined: { type: 'repeatDeclined', name: 'go to the bank' },
   cantStartUsed: { type: 'cantStartUsed', job: 'a' },

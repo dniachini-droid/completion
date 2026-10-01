@@ -21,9 +21,11 @@
      second new arrival is shown with, D-135); a new arrival waiting always comes first */
   let { go, seq = null }: { go: Go; seq?: number | null } = $props();
   const v = $derived(game.view);
-  const again = $derived(!v.arrival && seq !== null ? arrivalAt(game.facts, content, seq) : null);
-  const a = $derived(v.arrival ?? again ?? v.lastArrival);
-  const fresh = !!game.view.arrival;
+  /* a word left for later never stands in for a place read again: the place's name reads the place (deep review B8) */
+  const later = (x: { seq: number } | null) => !!x && x.seq === moment.wordLater;
+  const again = $derived((!v.arrival || later(v.arrival)) && seq !== null ? arrivalAt(game.facts, content, seq) : null);
+  const a = $derived(again ?? (later(v.arrival) && seq !== null ? null : v.arrival) ?? v.lastArrival);
+  const fresh = !!game.view.arrival && !(seq !== null && later(game.view.arrival));
   let root: HTMLDivElement;
 
   $effect(() => { if (!a) go('today'); });

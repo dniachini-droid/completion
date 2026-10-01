@@ -10,6 +10,9 @@
   import EndRing from './EndRing.svelte';
   import { backTo, type Go } from './nav';
   import { back } from './back.svelte';
+  import { walked } from '../core/game';
+  import { moment } from './moment.svelte';
+  import { onMount } from 'svelte';
 
   let { go, seq }: { go: Go; seq: number } = $props();
   const v = $derived(game.view);
@@ -22,10 +25,15 @@
   const jd = $derived(fact && fact.type === 'jobDone' ? fact : null);
   /* only a tick's own minutes move Dan here: a delve's moved him at its own end, so said done afterwards (It's done, No
      more) the line and the count stand still at the job's minutes, never replayed as new (J13) */
-  const moved = $derived(jd ? (jd.ticked ?? 0) : 0);
-  const atW = $derived(game.facts.filter(f => f.type === 'stepsGained' && f.seq < seq).reduce((a, f) => a + (f as { minutes: number }).minutes, 0));
+  /* where Dan stands on the road, as the rules count it (a tick taken back is made up first, deep review B3) */
+  const atW = $derived(walked(game.facts.filter(f => f.seq < seq)));
   /* a side chamber the tick's minutes reached is shown here, on the tick's own screen (D-122, D-134) */
   const tickAt = $derived(jd?.ticked ? game.facts.filter(f => f.type === 'stepsGained' && f.job === jd.job && (f as { tick?: true }).tick && f.seq < seq).pop() : undefined);
+  const moved = $derived(tickAt ? atW - walked(game.facts.filter(f => f.seq < tickAt.seq)) : 0);
+  /* the count plays once: looked at again (back from a record, a Key's niche), it stands as left (deep review B9) */
+  const played = !!moment.ends[seq]?.played;
+  onMount(() => { moment.ends[seq] = { ...(moment.ends[seq] ?? {}), played: true }; });
+  const mode = $derived(moved && !played ? 'play' : 'still');
   const chambers = $derived(tickAt ? game.facts.filter(f => f.type === 'findGiven' && f.why === 'chamber' && !f.job && f.seq > tickAt.seq && f.at === tickAt.at).map(f => (f as { id: string }).id) : []);
   const share = (m: number) => Math.max(0, Math.min(1, (m - v.road.from) / Math.max(1, v.road.to - v.road.from)));
 
@@ -47,13 +55,13 @@
   </header>
   <!-- the painting, left clear: a tap on it looks at it -->
   <div class="mid" onclick={look} role="presentation">
-    {#if jd}<div class="tring"><EndRing from={share(atW - moved)} to={share(atW)} fromN={Math.max(0, jd.minutes - moved)} toN={jd.minutes} unit={t('tally.unit')} mode={moved ? 'play' : 'still'} /></div>{/if}
+    {#if jd}<div class="tring"><EndRing from={share(atW - moved)} to={share(atW)} fromN={Math.max(0, jd.minutes - (jd.ticked ?? 0))} toN={jd.minutes} unit={t('tally.unit')} {mode} /></div>{/if}
   </div>
   <section class="bottom fit col center">
     <div class="scroll">
       <div class="label-line centred gold rise">{t('step.label')}</div>
       <h2 class="say-lg rise d1">{job ? t('step.done', { job: job.name }) : ''}</h2>
-      {#if jd}<div class="rise d2 route"><EndRoad road={v.road} from={atW - moved} to={atW} mode={moved ? 'play' : 'still'} /></div>{/if}
+      {#if jd}<div class="rise d2 route"><EndRoad road={v.road} from={atW - moved} to={atW} {mode} /></div>{/if}
       <div class="rise d3"><Return doneSeq={fact && fact.type === 'jobDone' ? seq : null} extraFinds={chambers} {go} {look} /></div>
     </div>
     <div class="go rise d3">

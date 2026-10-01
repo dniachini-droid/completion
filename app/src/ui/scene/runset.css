@@ -3,7 +3,11 @@
 .rs .hall .hall-far{ animation: none; opacity: .5; }
 .rs .job{ margin-top: 6px; }
 .rs .job h1{ margin-top: 8px; }
-.rs .stage{ position: relative; }
+.rs .stage{ position: relative; container-type: size; min-height: 150px; }
+/* the dial is sized from the room the header leaves it, so a long name or a note never runs into it, and its long stop
+   never into the road's heading (deep review B10): its stops sit 30 px out, the long one 52 px under */
+.rs .stage-in{ --R: max(84px, min(236px, 60vw, 29vh, calc(100cqh - 136px), calc(100cqw - 96px))); }
+@media (max-height: 760px){ .rs .stage-in{ --R: max(84px, min(236px, 60vw, 29vh, calc(100cqh - 72px), calc(100cqw - 190px))); } }
 .rs .stage-in{ position:absolute; inset: 0 var(--gutter); }
 .rs .num{ font-family: var(--life); font-weight: 300; line-height: 1; color: #f6f5ff; font-variant-numeric: tabular-nums lining-nums;
   text-shadow: 0 0 24px rgba(var(--violet-rgb), .85), 0 0 64px rgba(var(--violet-rgb), .45); display:inline-block; }
@@ -11,7 +15,7 @@
 .rs .num.tick{ animation: numtick .42s var(--ease); }
 @keyframes numtick{ 0% { transform: scale(1); } 30% { transform: scale(1.09); text-shadow: 0 0 20px #fff, 0 0 44px rgba(var(--violet-rgb), 1), 0 0 90px rgba(var(--violet-rgb), .7); } 100% { transform: scale(1); } }
 .rs .dialwrap{ position:absolute; left:50%; top: 50%; width:0; height:0; }
-.rs .dial{ --R: min(236px, 60vw, 29vh); position:absolute; left: calc(var(--R) / -2); top: calc(var(--R) / -2); width:var(--R); height:var(--R);
+.rs .dial{ position:absolute; left: calc(var(--R) / -2); top: calc(var(--R) / -2); width:var(--R); height:var(--R);
   touch-action:none; cursor:grab; border-radius:50%; }
 .rs .dial:active{ cursor:grabbing; }
 .rs .dial:focus-visible{ outline:none; }
@@ -52,9 +56,9 @@
 .rs .stop.on{ color: #fff; text-shadow: 0 0 12px rgba(var(--violet-rgb), .95); }
 .rs .stop.past{ color: var(--ink-2); }
 .rs .stop:focus-visible{ outline: 1px solid var(--edge); outline-offset: -4px; }
-.rs .stops{ --R: min(236px, 60vw, 29vh); position:absolute; left:0; top:0; }
+.rs .stops{ position:absolute; left:0; top:0; }
 /* the long delve's stop sits under the dial, past the 30 (D-110) */
-.rs .stop.long{ --R: min(236px, 60vw, 29vh); width:auto; margin:0; padding:0 12px; white-space:nowrap; font-size:15px; letter-spacing:.04em;
+.rs .stop.long{ width:auto; margin:0; padding:0 12px; white-space:nowrap; font-size:15px; letter-spacing:.04em;
   transform: translate(-50%, calc(var(--R) / 2 + 52px)); }
 /* a short phone has no room under the dial: it waits in the free corner by the 45, on two lines */
 @media (max-height: 760px){

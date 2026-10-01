@@ -56,6 +56,10 @@ jobs:
       - name: An untouched screen rests (D-132)
         if: matrix.short && matrix.browser == 'chromium'
         run: mkdir -p "$RUNNER_TEMP/screens" && CHECK=1 SHOTS="$RUNNER_TEMP/screens" node tests/flows/idle.mjs http://localhost:4173/ 5 390 844
+      # the same on four months of play (deep review U4): the log's cost and the Map's walked routes, which a fresh save hides
+      - name: An untouched screen rests on a played save (deep review U4)
+        if: matrix.short && matrix.browser == 'chromium'
+        run: SAVE=months CHECK=1 SHOTS="$RUNNER_TEMP/screens" node tests/flows/idle.mjs http://localhost:4173/ 5 390 844
       # it delves to reach a place, and Linux's WebKit crashes in a delve's end now and then (D-106): Chromium
       - name: Back from a record returns to the place
         if: matrix.short && matrix.browser == 'chromium'
@@ -114,6 +118,9 @@ jobs:
       - name: 'Keys and the Map: the link points where a Key can be used; back never loops; opened read again (D-143 A, B)'
         if: matrix.walk
         run: node tests/flows/keys-map.mjs http://localhost:4173/ ${{ matrix.size }}
+      - name: 'What a tap writes is kept: Look ahead, Plan it for me, Not yet with a note, the word left for later (deep review Stage 1)'
+        if: matrix.walk
+        run: node tests/flows/kept.mjs http://localhost:4173/ ${{ matrix.size }}
       - name: The whole first playable, walked day by day
         if: matrix.walk
         run: mkdir -p "$RUNNER_TEMP/screens" && node tests/flows/heart-walk.mjs http://localhost:4173/ "$RUNNER_TEMP/screens" ${{ matrix.size }}

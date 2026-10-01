@@ -170,7 +170,7 @@
         <!-- the job put off: what waits beyond it (it lived on Today's next job, D-135) -->
         {#if job.avoided}<p class="soft last">{t('set.avoided')}</p>{/if}
         {#if carry > 0}<p class="soft carryon">{t('set.carry', { min: minutesWords(carry) })}</p>{/if}
-        {#if job.note}<p class="soft last">{t('set.stopped', { note: job.note })}</p>{/if}
+        {#if job.note}<p class="soft last note">{t('set.stopped', { note: job.note })}</p>{/if}
         <!-- the job's list (D-126): struck off a line at a time in the delve -->
         {#if job.list}<p class="soft last">{job.list.split('\n').filter(l => l.trim()).join(' · ')}</p>{/if}
         {/if}
@@ -256,9 +256,12 @@
   .rs { display: contents; }
   button.home { color: var(--ink-2); }
   .topbar.solo { grid-template-columns: auto 1fr auto; }
-  /* where Dan stopped last time (D-112): one quiet line, never more */
   .change span { font-family: var(--life); font-style: italic; font-size: 15px; letter-spacing: 0; text-transform: none; color: var(--ink-2); }
   /* the errands, two lines at most: the full list is on the delve */
   .errands { margin-top: 2px; font-style: italic; font-size: 15px; text-align: left; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
   .last, .carryon { margin-top: 2px; font-style: italic; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; }
+  /* where he stopped is the point of the note: shown in full, a few lines (deep review B10) */
+  .last.note { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; line-clamp: 4; line-height: 1.3; }
+  /* a long name keeps to three lines; the dial below gives way to it */
+  .job h1 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; overflow-wrap: anywhere; }
 </style>

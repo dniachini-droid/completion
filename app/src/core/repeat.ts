@@ -9,7 +9,12 @@ import { doneFacts } from './done';
 
 const addDays = (day: string, n: number) => { const d = new Date(`${day}T00:00:00Z`); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
 const between = (a: string, b: string) => Math.round((Date.parse(b) - Date.parse(a)) / 864e5);
-const sameFortnight = (a: string, b: string) => Math.floor(Date.parse(a) / (14 * 864e5)) === Math.floor(Date.parse(b) / (14 * 864e5));
+/** The days of a rhythm counted from its last session: every N days, and every 2 weeks, which counts 14 days from the last
+    time done, not a fixed fortnight on the calendar (Dan, deep review Part 2 #4). */
+export const daysOf = (r: Rhythm): number | undefined => r.everyDays ?? (r.every === 2 ? 14 : undefined);
+/** Every 2 weeks, never done yet: placed once in its first fortnight, on the lightest day, as before; counted from its last
+    time once it has one. */
+export const fortnightFresh = (facts: Fact[], r: Rhythm) => r.every === 2 && !doneFacts(facts).some(f => f.job === r.job);
 
 /** The last day of a day's month. */
 const monthEnd = (day: string) => { const d = new Date(`${day.slice(0, 7)}-01T00:00:00Z`); d.setUTCMonth(d.getUTCMonth() + 1); d.setUTCDate(0); return d.toISOString().slice(0, 10); };
@@ -41,10 +46,10 @@ export const needOf = (r: Rhythm) => r.days ? r.days.length : r.times ?? 1;
 /** Whether a session done on `done` counts toward the rhythm's period containing `day`: the week (N a week, set days),
     the fortnight, the month, the year, or the last N days. */
 export function samePeriod(r: Rhythm, done: string, day: string): boolean {
-  if (r.every === 2) return sameFortnight(calendarWeek(done), calendarWeek(day));
   if (r.monthly) return done.slice(0, 7) === day.slice(0, 7);
   if (r.yearly) return done.slice(0, 4) === day.slice(0, 4);
-  if (r.everyDays) { const k = between(done, day); return k >= 0 && k < r.everyDays; }
+  const n = daysOf(r);
+  if (n) { const k = between(done, day); return k >= 0 && k < n; }
   return calendarWeek(done) === calendarWeek(day);
 }
 
@@ -56,7 +61,7 @@ export const sessionsIn = (facts: Fact[], r: Rhythm, day: string, min = 1) =>
 /** The day an every-N-days rhythm is next due, from `from` on: N days after it was last done (before `from`), or
     `from` if it never was or is already due. */
 export function dueFrom(facts: Fact[], r: Rhythm, from: string): string {
-  const n = r.everyDays ?? 1;
+  const n = daysOf(r) ?? 1;
   let last: string | null = null;
   for (const f of doneFacts(facts)) if (f.job === r.job && f.day < from && (!last || f.day > last)) last = f.day;
   if (!last) return from;

@@ -329,6 +329,8 @@
 
     <Deleted />
     <!-- a word left to cut later (A2), and a Daybook page written after days away (D-143 F): quiet lines back to them -->
+    <!-- a tick taken back (B3): said once, plainly; nothing reached is taken away -->
+    {#if v.owed}<p class="said owed">{t('today.owed', { taken: minutesShort(v.owed.taken), left: minutesShort(v.owed.left) })}</p>{/if}
     {#if v.arrival && v.arrival.seq === moment.wordLater}<p class="said waits"><button class="text-link" onclick={() => { leaveWord(0); go('arrival'); }}><span>{t('today.wordWaits')}</span></button></p>{/if}
     {#if v.close}<p class="said waits"><button class="text-link" onclick={() => go('daybook')}><span>{t('today.pageWaits')}</span></button></p>{/if}
     {#if onlyAvoided}<p class="said only" role="status">{t('today.onlyAvoided', { job: onlyAvoided })}</p>{/if}

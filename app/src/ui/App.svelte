@@ -70,7 +70,9 @@
       announce = h?.textContent?.trim() ?? '';
     });
   });
-  $effect(() => { if (game.woke !== lastWoke) { lastWoke = game.woke; screen = first(); arg = undefined; } });
+  /* (through one way home: the trail, an open menu or sheet and the Undo go too, deep review C#3) */
+  $effect(() => { if (game.woke !== lastWoke) { lastWoke = game.woke; home(); } });
+  function home() { trail = []; closeMenu(); closeTick(); closeRows(); game.deleted = null; game.cantDelete = null; screen = first(); arg = undefined; }
 
   /* Back (review 2, D-088): the screens Dan looks through keep a trail, so the arrow and the phone's own back return to
      where each was opened from. Today and the day's own moments (a delve, a place reached, the stair, the morning)
@@ -109,9 +111,13 @@
     if (to === 'cant' && typeof a === 'string') game.do({ do: 'cantStart', job: a });
     /* "Today" never skips what waits: a place just reached, the morning, the welcome back, a new daybook page (D-080).
        'stay' is the one way past it: the word left to cut later. */
-    if (to === 'today' && a !== 'stay') { const f = first(); if (f !== 'today' && (f !== 'delve' || !game.view.run)) to = f; }
+    /* a screen reached so is a root: its arrow and the phone's back lead to Today, never into what was left (the morning,
+       the word left for later; deep review B7, B8) */
+    let rooted = false;
+    if (to === 'today' && a !== 'stay') { const f = first(); if (f !== 'today' && (f !== 'delve' || !game.view.run)) { to = f; rooted = true; trail = []; } }
     /* a place read again (the Map, Today's place name, D-135) is looked through: back returns where it was opened from */
-    if (LOOK.has(to) || (to === 'arrival' && typeof a === 'string' && a.startsWith('again:'))) {
+    if (rooted) trail = [];
+    else if (LOOK.has(to) || (to === 'arrival' && typeof a === 'string' && a.startsWith('again:'))) {
       const top = trail[trail.length - 1];
       if (top && top.screen === to && top.arg === a) trail.pop();                  /* going where back would go */
       /* the same screen, another page: replaced (the Daybook's Earlier and Later alike, N polish) */
@@ -194,7 +200,9 @@
   let lastMoment = '';
   $effect(() => { if (phaseKey !== lastMoment) { if (lastMoment) { steady(); unslide(); } lastMoment = phaseKey; } });
   /* a new screen, or the delve's moment changing, shows its motion again before it rests (D-132) */
-  $effect(() => { void screen; void arg; void phaseKey; wake(); });
+  /* (the delve's moments only: the next job changing on a minute's tick is no reason to move the world again, deep review U4) */
+  const runKey = $derived.by(() => { const v = game.view; return `${v.run?.phase}.${v.run?.k}.${v.runEnd?.seq}`; });
+  $effect(() => { void screen; void arg; void runKey; wake(); });
 
   /* the day's light: gold once the day has turned (DESIGN_SYSTEM → colour) */
   $effect(() => {
@@ -237,7 +245,7 @@
     {#snippet failed(_error, reset)}
       <div class="ui"><section class="col oops">
         <p class="say">{t('oops.say')}</p>
-        <button class="btn" onclick={() => { screen = 'today'; arg = undefined; reset(); }}>{t('delve.today')}</button>
+        <button class="btn" onclick={() => { home(); reset(); }}>{t('delve.today')}</button>
       </section></div>
     {/snippet}
   </svelte:boundary>

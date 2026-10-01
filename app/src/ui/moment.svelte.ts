@@ -16,6 +16,19 @@ function storedLater(): number { try { return Number(platform.store.get(laterKey
 export const moment = $state({ cutting: false, wordLater: storedLater(), cutDone: 0, keyChoice: {} as Record<number, 'used' | 'kept'>,
   ends: {} as Record<number, { answer?: 'yes' | 'no' | null; storyAt?: number; played?: boolean }> });
 
+/** What Dan chose for a Key a job's return offered (deep review B1): "used" is read from the save (its Key spent from
+    that return); "kept" is kept per save, so a restart never offers the choice again. */
+const keptKey = () => `${game.saveKey}.keysKept`;
+function keptList(): number[] { try { const x = JSON.parse(platform.store.get(keptKey()) ?? '[]'); return Array.isArray(x) ? x : []; } catch { return []; } }
+export function keyChoiceOf(seq: number): 'used' | 'kept' | undefined {
+  if (game.facts.some(f => f.type === 'keyUsed' && f.from === seq)) return 'used';
+  return moment.keyChoice[seq] ?? (keptList().includes(seq) ? 'kept' : undefined);
+}
+export function keepKey(seq: number) {
+  moment.keyChoice[seq] = 'kept';
+  try { platform.store.set(keptKey(), JSON.stringify([...keptList().filter(x => x !== seq), seq].slice(-50))); } catch { /* this run only */ }
+}
+
 /** The word at arrival `seq` left for later (0: none), remembered across restarts of the same save (U5). */
 export function leaveWord(seq: number) {
   moment.wordLater = seq;

@@ -39,7 +39,7 @@ const walked = (facts: Fact[]) => of(facts, 'stepsGained').reduce((a, f) => a + 
 const keys = (facts: Fact[], rhythm?: string) => of(facts, 'keyEarned').filter(k => !rhythm || k.rhythm === rhythm);
 
 describe('Keys: every N days', () => {
-  it('BUG: an every-3-days job kept up every 2 days earns its first Key, then never another', () => {
+  it('FIXED (B4): an every-3-days job kept up every 2 days earns a Key whenever none was earned in the last 3 days', () => {
     /* Sunday: Dan makes the tank every 3 days (counts for Keys from the next week, D-043 F7) */
     const tank: Job = { ...C.jobs.find(j => j.id === 'tank')! };
     const p = player('2026-09-27T09:00:00+01:00').do({ do: 'open' })
@@ -53,9 +53,9 @@ describe('Keys: every N days', () => {
     }
     const sessions = of(p.facts, 'jobDone').filter(f => f.job === 'tank' && f.minutes >= 30);
     expect(sessions.length).toBe(14);
-    /* 14 sessions over 28 days, never more than 2 days apart: only ONE Key, ever */
-    expect(keys(p.facts, 'r-tank').length).toBe(1);
-    /* doing it every 3 days exactly instead earns one each time (see the next probe): keeping up MORE earns less */
+    /* 14 sessions over 28 days, two days apart: a Key on day 0, 4, 8 … (one every window of 3 days with none), never fewer
+       than doing it every 3 days exactly would earn; the week's cap still holds */
+    expect(keys(p.facts, 'r-tank').length).toBe(7);
   });
   it('control: the same job every 3 days exactly earns a Key each time', () => {
     const tank: Job = { ...C.jobs.find(j => j.id === 'tank')! };
@@ -70,7 +70,7 @@ describe('Keys: every N days', () => {
 });
 
 describe('Recurring job: a short first session, then "Delve again"', () => {
-  it('BUG: a 3-minute gym session then a 60-minute "Delve again" the same day: the hour never joins the session', () => {
+  it('FIXED (B2): a 3-minute gym session then a 60-minute "Delve again" the same day: the hour joins the session', () => {
     const p = player().do({ do: 'open' });
     /* 3 minutes, then Finish here (a call came) */
     p.do({ do: 'startRun', job: 'gym', minutes: 60, count: 1 }).wait(3).do({ do: 'finishHere' }).look();
@@ -78,17 +78,28 @@ describe('Recurring job: a short first session, then "Delve again"', () => {
     /* the job menu's "Delve again" on the done recurring row: an hour */
     p.do({ do: 'startRun', job: 'gym', minutes: 60, count: 1 }).wait(61).look();
     const d = of(p.facts, 'jobDone').filter(f => f.job === 'gym');
-    expect(d.map(f => f.minutes)).toEqual([3]);       /* the session stays 3 minutes */
-    expect(walked(p.facts)).toBe(63);                  /* the road did move */
+    expect(d.map(f => f.minutes)).toEqual([3, 63]);   /* the session formed again: 3 + 60 */
+    expect(see(p.facts, C, p.now).done.has('gym')).toBe(true);
+    expect(of(p.facts, 'doneUndone').filter(f => f.job === 'gym').map(f => f.joined)).toEqual([true]);
+    expect(walked(p.facts)).toBe(63);                  /* the road moved once for each minute */
     return p;
   });
-  it('BUG: …so a week of four real gym sessions earns no Key (the first one counted as 3 minutes)', () => {
+  it('FIXED (B2): …so a week of four real gym sessions earns its Key', () => {
     const p = player().do({ do: 'open' });
     p.do({ do: 'startRun', job: 'gym', minutes: 60, count: 1 }).wait(3).do({ do: 'finishHere' }).look();
     p.do({ do: 'startRun', job: 'gym', minutes: 60, count: 1 }).wait(61).look();
     for (const d of ['2026-09-29', '2026-09-30', '2026-10-01']) p.to(`${d}T09:00:00+01:00`).do({ do: 'open' }).delve('gym', 60);
-    expect(of(p.facts, 'jobDone').filter(f => f.job === 'gym').map(f => f.minutes)).toEqual([3, 60, 60, 60]);
-    expect(keys(p.facts, 'r-gym').length).toBe(0);
+    expect(of(p.facts, 'jobDone').filter(f => f.job === 'gym').map(f => f.minutes)).toEqual([3, 63, 60, 60, 60]);
+    expect(keys(p.facts, 'r-gym').length).toBe(1);
+  });
+  it('B2: a joined session never pays its return twice (a full session, then another delve the same day)', () => {
+    const p = player().do({ do: 'open' }).delve('gym', 60);
+    const beats = of(p.facts, 'beatPlayed').length, finds = of(p.facts, 'findGiven').length;
+    p.delve('gym', 30);
+    expect(of(p.facts, 'jobDone').filter(f => f.job === 'gym').map(f => f.minutes)).toEqual([60, 90]);
+    expect(of(p.facts, 'beatPlayed').filter(f => f.job !== undefined).length).toBe(of(p.facts, 'beatPlayed').filter(f => f.job !== undefined && f.seq < p.facts.length).length);
+    expect(of(p.facts, 'beatPlayed').filter(f => typeof f.job === 'number').length).toBeLessThanOrEqual(beats);
+    expect(of(p.facts, 'findGiven').filter(f => f.why !== 'chamber').length).toBeLessThanOrEqual(finds);
   });
 });
 
@@ -127,7 +138,7 @@ describe('Morning head start (HEAD_START) when no morning find is left', () => {
 });
 
 describe('The side chamber halfway (D-122)', () => {
-  it('BUG: a 180-minute tick that passes a place, the next chamber and the next place skips that chamber for good', () => {
+  it('FIXED (B5): a 180-minute tick that passes a place, the next chamber and the next place finds that chamber too', () => {
     const p = player('2026-09-28T09:00:00+01:00').do({ do: 'open' });
     p.do({ do: 'tickOff', job: 'cat', minutes: 180 }).look();          /* walked 180: chambers at 38 and 150 found */
     p.delve('gym', 40);                                                   /* walked 220 */
@@ -136,23 +147,39 @@ describe('The side chamber halfway (D-122)', () => {
     const places = of(p.facts, 'arrived').filter(a => a.kind === 'place' && a.how === 'foot');
     const chambers = of(p.facts, 'findGiven').filter(f => f.why === 'chamber');
     expect(places.length).toBe(3);
-    expect(chambers.length).toBe(2);                                      /* three stretches walked, two chambers */
-    expect(p.view().road).toMatchObject({ from: 375, chamber: 450 });      /* the one at 300 is behind him, never found */
+    expect(chambers.length).toBe(3);                                      /* three stretches walked, three chambers */
+    expect(p.view().road).toMatchObject({ from: 375, chamber: 450 });
   });
 });
 
 describe('"Not done after all" then ticked off again', () => {
-  it('BUG: a one-off ticked at 3 h by mistake, taken back, ticked at 30 min: the road keeps 210 minutes and the record says 210', () => {
+  it('FIXED (B3): a one-off ticked at 3 h by mistake, taken back, ticked at 30 min: the record says 30; the flame stays put, 2 h 30 owed', () => {
     const p = player().do({ do: 'open' });
-    p.do({ do: 'tickOff', job: 'cat', minutes: 180 }).sleep(1).do({ do: 'notDone', job: 'cat' }).sleep(1).do({ do: 'tickOff', job: 'cat', minutes: 30 });
-    expect(walked(p.facts)).toBe(210);
-    expect(of(p.facts, 'jobDone').filter(f => f.job === 'cat').map(f => f.minutes)).toEqual([180, 210]);
+    p.do({ do: 'tickOff', job: 'cat', minutes: 180 }).sleep(1).do({ do: 'notDone', job: 'cat' });
+    expect(p.view().walked).toBe(180);                 /* nothing reached is taken away */
+    expect(p.view().owed).toEqual({ taken: 180, left: 180 });
+    p.sleep(1).do({ do: 'tickOff', job: 'cat', minutes: 30 });
+    expect(of(p.facts, 'jobDone').filter(f => f.job === 'cat').map(f => f.minutes)).toEqual([180, 30]);
+    expect(p.view().walked).toBe(180);                 /* the 30 make up part of what was taken back */
+    expect(p.view().owed).toEqual({ taken: 180, left: 150 });
+    /* the next real minutes fill the rest before the flame moves on */
+    p.delve('gym', 60).delve('post', 90);
+    expect(p.view().walked).toBe(180);
+    expect(p.view().owed).toBeNull();
+    p.delve('post', 30);
+    expect(p.view().walked).toBe(210);
   });
-  it('BUG: the same loop on a recurring job: 120 taken back, 60 given: road +180, session 180', () => {
+  it('FIXED (B3): the same loop on a recurring job: 120 taken back, 60 given: the session is 60, the flame stays at 120', () => {
     const p = player().do({ do: 'open' });
     p.do({ do: 'tickOff', job: 'gym', minutes: 120 }).sleep(1).do({ do: 'notDone', job: 'gym' }).sleep(1).do({ do: 'tickOff', job: 'gym', minutes: 60 });
-    expect(walked(p.facts)).toBe(180);
-    expect(of(p.facts, 'jobDone').filter(f => f.job === 'gym').map(f => f.minutes)).toEqual([120, 180]);
+    expect(p.view().walked).toBe(120);
+    expect(of(p.facts, 'jobDone').filter(f => f.job === 'gym').map(f => f.minutes)).toEqual([120, 60]);
+  });
+  it('B3: delved minutes are never taken back', () => {
+    const p = player().do({ do: 'open' }).delve('cat', 30);
+    p.do({ do: 'done', job: 'cat' }).do({ do: 'notDone', job: 'cat' });
+    expect(of(p.facts, 'tickTakenBack').length).toBe(0);
+    expect(p.view().walked).toBe(30);
   });
 });
 
@@ -164,17 +191,15 @@ describe('Clocks', () => {
     expect(walked(f)).toBe(90);
     expect(see(f, C, '2026-10-25T02:30:00+00:00').run?.doneMs).toBe(85 * 60_000);
   });
-  it('MINOR: flying west after 04:00 sends the game day back: a Tuesday gym session, then a second one written to Monday', () => {
+  it('FIXED (R#6): flying west after 04:00 never sends the game day back behind the latest day opened', () => {
     let f: Fact[] = act([], C, { do: 'open' }, '2026-09-28T09:00:00+01:00');
     f = f.concat(act(f, C, { do: 'startRun', job: 'gym', minutes: 60, count: 1 }, '2026-09-29T04:30:00+01:00'));
     f = f.concat(settle(f, C, '2026-09-29T05:31:00+01:00'));
     /* lands in New York: 02:00 local, which the rules read as Monday's game day */
     f = f.concat(act(f, C, { do: 'open' }, '2026-09-29T02:00:00-04:00'));
-    expect(see(f, C, '2026-09-29T02:01:00-04:00').day).toBe('2026-09-28');
+    expect(see(f, C, '2026-09-29T02:01:00-04:00').day).toBe('2026-09-29');
+    /* gym is already done today: a second delve joins its session (B2), on the same day */
     f = f.concat(act(f, C, { do: 'startRun', job: 'gym', minutes: 60, count: 1 }, '2026-09-29T02:05:00-04:00'));
-    f = f.concat(settle(f, C, '2026-09-29T03:06:00-04:00'));
-    expect(of(f, 'jobDone').map(d => [d.job, d.day])).toEqual([['gym', '2026-09-29'], ['gym', '2026-09-28']]);
-    /* the log's days now run backwards */
-    expect(f.at(-1)!.day < f.find(x => x.type === 'delveEnded')!.day).toBe(true);
+    expect(f.filter(x => x.day < '2026-09-29' && x.seq > f.find(y => y.type === 'delveEnded')!.seq).length).toBe(0);
   });
 });

@@ -340,7 +340,7 @@ class Game {
   /** Dan's marks on a run (Start it now, Pause, Back to the delve), as the run's rules read them. */
   marks(r: RunView): RunMark[] {
     return this.#log.filter(f => f.seq > r.seq && ['breatherSkipped', 'delveHeld', 'delveResumed'].includes(f.type))
-      .map(f => ({ kind: f.type === 'breatherSkipped' ? 'skip' : f.type === 'delveHeld' ? 'hold' : 'resume', at: epochOf(f.at) }));
+      .map(f => ({ kind: f.type === 'breatherSkipped' ? 'skip' : f.type === 'delveHeld' ? 'hold' : 'resume', at: (f.type === 'delveHeld' ? f.from : undefined) ?? epochOf(f.at) }));
   }
 
   /** The delve's panel on the lock screen and in the Dynamic Island (D-095): shown while a run is on, redrawn only when
