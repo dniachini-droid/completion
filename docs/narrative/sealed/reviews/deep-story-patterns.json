@@ -1,0 +1,9 @@
+{
+  "_note": "SEALED (D-015). Patterns read at runtime by app/tests/review/deep-story.test.ts, so the test file itself carries no story words. See DEEP-STORY.md.",
+  "truthTerms": "Custodian|Tenant\\b|Halloran|Hamun|Ashti|Sertor|Alditha|Fenwick|Listeners|KEEP-ALL|VOICE-GIVE-FAR|\\bREMAIN\\b|KEEP-ONE|Seed-place|long-slept|answerers|counting door|the Guest\\b",
+  "benignTerms": "notifyListeners|removeAllListeners|Listeners:|EventListeners|ListenersNet",
+  "clueA": "shut door|door, shut|the door",
+  "clueB": "\\bchips\\b",
+  "countLit": "notch[^.]*(fill|light|glow)",
+  "reservedWord": "\\bfall\\b"
+}
