@@ -28,3 +28,28 @@ await P(3, '2026-10-05T09:00:00+01:00', async R => {
   const val = await R.page.locator('#satchel-box').inputValue().catch(() => '?');
   D.say(R, 'p3 box holds: ' + val);
 });
+/* 4. The same three errands added on Wednesday of week 1 (from the kept save) */
+if (!only || only === '4') {
+  const R = await D.open({ at: '2026-10-07T15:40:00+01:00', from: 'save-w1-tue.json' });
+  await D.through(R, 'p4-waits');
+  for (const e of ['Bank: pay in the cheque', 'Post the parcel', 'Buy stamps']) {
+    await D.home(R); await L.tap(R, R.page.locator('.today-add').first(), 'Add a job', 600);
+    for (const ch of e) { await R.page.keyboard.type(ch); const v = await R.page.locator('#satchel-box').inputValue().catch(() => '?'); if (!v.endsWith(ch)) D.say(R, `p4 typing "${e}": after "${ch}" the box holds "${v}"`); }
+    await D.look(R, 'p4-typed-' + e.slice(0, 4));
+    await R.page.keyboard.press('Enter'); await R.page.clock.runFor(800);
+  }
+  D.say(R, 'p4 rows: ' + D.fmtRows(await D.rows(R)));
+  await D.done(R, 'probe 4');
+}
+/* 5. As 1, with a note typed in "Where did you stop?" */
+await P(5, '2026-10-05T09:00:00+01:00', async R => {
+  await D.addJob(R, 'Big job');
+  const seen = await D.delve(R, 'Big job', { min: 90, n: 3, tag: 'p5-notyet-note', ask: 'Not yet', stopAt: 'page 4' });
+  D.say(R, 'p5 screens: ' + seen.join(' > '));
+});
+/* 6. As 1, with a note, one place only (60 min) */
+await P(6, '2026-10-05T09:00:00+01:00', async R => {
+  await D.addJob(R, 'Big job');
+  const seen = await D.delve(R, 'Big job', { min: 90, n: 1, tag: 'p6-notyet-note', ask: 'Not yet', stopAt: 'page 4' });
+  D.say(R, 'p6 screens: ' + seen.join(' > '));
+});
