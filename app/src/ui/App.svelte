@@ -34,6 +34,7 @@
   import TickSheet from './TickSheet.svelte';
   import { closeRows } from './SwipeRow.svelte';
   import { t } from '../content/copy/en';
+  import { sealOf } from '../core/story';
   import { steady } from './taps';
   import { unslide } from './keyboard';
   import { wake } from './rest';
@@ -133,7 +134,10 @@
     if (top.screen === 'set') return top.arg === 'errands' ? t('errand.title') : game.job(String(top.arg))?.name ?? t('set.label');
     /* a job's return and a delve's end: by the job (never "Back to Done", review of D-144) */
     if (top.screen === 'step') { const f = game.facts.find(x => x.seq === top.arg); if (f?.type === 'jobDone') return game.job(f.job)?.name ?? t('step.label'); }
-    if (top.screen === 'delve') { const e = game.view.runEnd ?? game.view.run; if (e) return e.errands ? t('errand.title') : e.job.name; }
+    /* a delve's end already left goes on to Today, so the arrow says Today */
+    if (top.screen === 'delve') { const e = game.view.runEnd ?? game.view.run; return e ? (e.errands ? t('errand.title') : e.job.name) : t('delve.today'); }
+    /* a niche opened with a Key: by its own name */
+    if (top.screen === 'opened') { const x = sealOf(content.story, String(top.arg).replace(/^again:/, '')); if (x) return x.where; }
     /* a place: its own name */
     if (top.screen === 'arrival') {
       const a = typeof top.arg === 'string' && top.arg.startsWith('again:') ? arrivalAt(game.facts, content, +top.arg.slice(6)) : game.view.arrival ?? game.view.lastArrival;
@@ -144,6 +148,7 @@
   $effect(() => {
     const top = trail[trail.length - 1];
     back.label = !top ? t('delve.today') : nameOf(top);
+    back.today = first() === 'today';
   });
 
   /* back by history, one step at a time (the screen checks use it); on Today with nothing behind, nothing more */

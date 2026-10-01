@@ -80,6 +80,8 @@ export type FactBody =
   | { type: 'picked'; job: string }
   /** A job set aside and then put back on today's list (an undo of "Not today", Dan's own). */
   | { type: 'putBack'; job: string }
+  /** a Siri line matching a job Dan still has, not added (J4): its ref kept, so a second drain never adds it */
+  | { type: 'inboxSkipped'; ref: string }
   | { type: 'jobBegun'; job: string; from: 'app' | 'record' }
   /** Begin taken back ("I haven't started"): the job is no longer under way, as if Begin had never been tapped. */
   | { type: 'beginUndone'; job: string }

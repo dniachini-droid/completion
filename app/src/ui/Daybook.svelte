@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { doneFacts } from '../core/done';
   import Deleted from './Deleted.svelte';
   /* The daybook: the week close (TOOLS §6; BALANCING §7; mock-up daybook.html). One short page a week, written from real
@@ -54,6 +55,8 @@
 
   function read() { if (page && fresh) game.do({ do: 'closeRead', week: page.week }); }
   function leave() { read(); go('back'); }
+  /* left by any way (the phone's back too): the page was shown, so it is read, as the arrow does (review of D-144) */
+  onMount(() => () => read());
   function planIt() {
     if (!page) return;
     game.do({ do: 'offerAnswered', week: page.week }); read();

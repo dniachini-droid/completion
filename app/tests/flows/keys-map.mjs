@@ -54,6 +54,15 @@ const label = (await page.locator('.label-line').first().textContent().catch(() 
 if (!/You used a Key/i.test(label ?? '')) fails.push(`the opened screen says "${label}"`);
 if ((await arrow()) !== 'Map') fails.push(`the opened screen's arrow says "${await arrow()}", not Map`);
 await shot('3-opened');
+/* a record opened from it: its arrow names the place, never "Opened"; and back is the opened screen again */
+const where = (await page.locator('.bottom h2').first().textContent().catch(() => ''))?.trim();
+const recs = page.getByRole('button', { name: 'Read it in your records', exact: true });
+if (await recs.count()) {
+  await tap(recs, 'Read it in your records');
+  if ((await arrow()) !== where) fails.push(`a record from the opened screen says "${await arrow()}", not the place`);
+  await tap(page.locator('button.home'), 'the record\'s arrow');
+  if (!/You used a Key/i.test((await page.locator('.label-line').first().textContent().catch(() => '')) ?? '')) fails.push('back from the record is not the opened screen');
+}
 await tap(page.locator('button.home'), 'the arrow on the opened screen');
 if (!(await page.locator('.field[data-pan="map"]').count())) fails.push('back from the opened screen is not the Map');
 if ((await arrow()) !== 'Today') fails.push(`back on the Map, its arrow says "${await arrow()}", not Today (the loop)`);

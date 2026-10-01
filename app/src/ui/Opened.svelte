@@ -56,7 +56,7 @@
     <div class="go rise d3">
       <!-- one way back, the arrow's (N clumsy 7); Today quietly beside it when back is somewhere else (S polish) -->
       <button class="btn resting" onclick={() => go('back')}>{backTo(back.label)}</button>
-      {#if back.label !== t('delve.today')}<div class="quiet"><button class="text-link" onclick={() => go('today')}><span>{t('delve.today')}</span></button></div>{/if}
+      {#if back.label !== t('delve.today') && back.today}<div class="quiet"><button class="text-link" onclick={() => go('today')}><span>{t('delve.today')}</span></button></div>{/if}
     </div>
   </section>
 </div>

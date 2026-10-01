@@ -68,3 +68,37 @@ describe('the fresh review of D-144', () => {
     expect(p.view().runEnd?.pending).toBe(true);
   });
 });
+
+describe('the fresh review of D-144: the finish line and Siri', () => {
+  it('a recurring job ticked off a day the plan did not give it never pushes the day\'s own jobs off the line', () => {
+    let checked = 0;
+    for (const skip of [1, 2, 3]) {
+      const p = player('2026-10-05T08:00:00+01:00').do({ do: 'open' }).do({ do: 'planWeek', week: '2026-10-05' });
+      /* days away from the plan: their sessions are missed and placed again where there is room */
+      p.sleep(skip * 24 * 60).do({ do: 'open' });
+      /* today full, so a missed session is placed on a later day */
+      p.do({ do: 'saveJob', job: { id: 'big', name: 'A long job', delve: true, length: 90, doneBy: 'dan' }, rhythm: null });
+      for (const job of ['meal', 'tank', 'lesson', 'cat', 'big']) p.do({ do: 'planJob', job, day: p.view().day });
+      const before = p.view().line.filter(id => !p.view().done.has(id));
+      for (const job of p.view().content.rhythms.map(r => r.job)) {
+        if (before.includes(job) || p.view().done.has(job)) continue;
+        checked++;
+        p.do({ do: 'tickOff', job, minutes: 60 });
+        const still = p.view().line;
+        for (const id of before) expect(still, `${skip} days, ${job} ticked: ${id} left the line`).toContain(id);
+        break;
+      }
+    }
+    expect(checked).toBeGreaterThan(0);
+  });
+
+  it('a Siri line matching a job Dan has is remembered as taken: a second drain never adds it, even once the job is done', () => {
+    const p = player('2026-10-05T09:00:00+01:00').do({ do: 'open' });
+    const name = C.jobs.find(j => j.id === 'cat')!.name;
+    p.do({ do: 'takeInbox', lines: [{ id: 'siri-1', text: name }] });
+    expect(p.facts.some(f => f.type === 'itemAdded')).toBe(false);
+    p.do({ do: 'tickOff', job: 'cat', minutes: 30 });
+    p.do({ do: 'takeInbox', lines: [{ id: 'siri-1', text: name }] });
+    expect(p.facts.some(f => f.type === 'itemAdded')).toBe(false);
+  });
+});

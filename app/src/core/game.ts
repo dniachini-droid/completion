@@ -1241,7 +1241,7 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       break;
     }
     case 'takeInbox': {
-      const seen = new Set(ofType(w.all, 'itemAdded').map(f => f.ref).filter(Boolean));
+      const seen = new Set([...ofType(w.all, 'itemAdded').map(f => f.ref), ...ofType(w.all, 'inboxSkipped').map(f => f.ref)].filter(Boolean));
       let k = ofType(w.all, 'itemAdded').length;
       for (const x of cmd.lines) {
         const name = String(x.text ?? '').trim().slice(0, 120);
@@ -1249,7 +1249,8 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
         seen.add(x.id);
         /* a job Dan still has is not added again (J4) */
         const tie = tieFor(base, w.all, name);
-        if (tie?.same) continue;
+        /* remembered as taken, so if the app closes before the phone's inbox is cleared it is never added later (review) */
+        if (tie?.same) { w.put({ type: 'inboxSkipped', ref: x.id }); continue; }
         w.put({ type: 'itemAdded', id: `it-${++k}`, name, via: 'siri', ref: x.id, ...(tie ? { from: tie.job.id } : {}) });
       }
       break;

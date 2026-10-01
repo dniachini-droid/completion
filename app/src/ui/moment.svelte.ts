@@ -4,4 +4,7 @@
 /* `keyChoice`: what Dan chose for a Key a job's return offered (by the return's Done), so the return looked at again (back
    from the opened screen, which remounts it) says what he did rather than offering it again */
 /* `cutDone`: the arrival whose word has been cut to its end, so the phone's back then leaves it as its arrow does */
-export const moment = $state({ cutting: false, wordLater: 0, cutDone: 0, keyChoice: {} as Record<number, 'used' | 'kept'> });
+/* `ends`: a delve's end as Dan left it (by its seq), so a look at a record or a niche and back finds it as it was: his
+   answer, the errand story he was on, the count already played (review of D-144) */
+export const moment = $state({ cutting: false, wordLater: 0, cutDone: 0, keyChoice: {} as Record<number, 'used' | 'kept'>,
+  ends: {} as Record<number, { answer?: 'yes' | 'no' | null; storyAt?: number; played?: boolean }> });

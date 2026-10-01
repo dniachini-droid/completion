@@ -3,7 +3,8 @@
   /* The delve (INTERACTION_NOTES → the delve; D-028, D-036, D-037, D-047). The glowing ring fills with the time left;
      the destination is the headline; the tunnel moves so the world is visibly travelling. Only two ideas, always in
      the same words: Pause (once Step away; review 2, D-088) and Finish here. The scene is the approved mock-up's own (delve.html, revision 3). */
-  import { onMount, flushSync, tick } from 'svelte';
+  import { onMount, flushSync, tick, untrack } from 'svelte';
+  import { moment } from './moment.svelte';
   import { game, content } from './game.svelte';
   import { t, minutesWords, minutesShort, ord } from '../content/copy/en';
   import { mmss, ofLine } from './panel';
@@ -27,7 +28,9 @@
   const run = $derived(v.run);
   const end = $derived(v.runEnd);
   /* keep the end on screen while its story plays (a guess, a choice), even after it's marked seen */
-  let answer = $state<'yes' | 'no' | null>(null);
+  /* as left, if Dan looked at a record or a niche from this end and came back (it is shown again, not replayed) */
+  const was = end ? moment.ends[end.seq] : undefined;
+  let answer = $state<'yes' | 'no' | null>(was?.answer ?? null);
   let root: HTMLDivElement;
   let restful = $state(false);
 
@@ -53,7 +56,12 @@
   const share = (m: number) => Math.max(0, Math.min(1, (m - road.from) / Math.max(1, road.to - road.from)));
   const toW = $derived(end ? end.walked : v.walked);
   const fromW = $derived(end ? Math.max(0, end.walked - end.gained) : v.walked);
-  const mode = $derived<TallyMode>(!end ? 'still' : (end.ask && answer === null) || end.pending ? 'from' : answer === 'no' ? 'still' : 'play');
+  const mode = $derived<TallyMode>(!end ? 'still' : (end.ask && answer === null) || end.pending ? 'from' : answer === 'no' || was?.played ? 'still' : 'play');
+  $effect(() => {
+    if (!end) return;
+    const seq = end.seq, a = answer, at = storyAt, playing = mode === 'play';
+    untrack(() => { moment.ends[seq] = { answer: a, storyAt: at, played: (moment.ends[seq]?.played ?? false) || playing }; });
+  });
 
   /* the ring settles after an end: lit, then resting */
   $effect(() => {
@@ -89,7 +97,7 @@
   /* the end carries the story (a step, a mark to guess, a find) */
   const told = $derived(!!end && (doneSeq !== null || v.runFinds.length > 0 || errandStory.length > 0));
   /* the errand run's stories, one at a time (L B5) */
-  let storyAt = $state(0);
+  let storyAt = $state(was?.storyAt ?? 0);
   /* an errand run is named as one, never by a job (D-139) */
   const title = (r: { errands: unknown; job: { name: string } }) => r.errands ? t('errand.title') : r.job.name;
   /* an errand struck off (or back) with a tap, as a job's list line is (D-126) */

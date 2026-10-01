@@ -20,6 +20,7 @@ const ONE: { [T in FactBody['type']]: Extract<FactBody, { type: T }> } = {
   setAside: { type: 'setAside', job: 'a' },
   picked: { type: 'picked', job: 'a' },
   putBack: { type: 'putBack', job: 'a' },
+  inboxSkipped: { type: 'inboxSkipped', ref: 'siri-1' },
   jobBegun: { type: 'jobBegun', job: 'a', from: 'record' },
   beginUndone: { type: 'beginUndone', job: 'a' },
   delveStarted: { type: 'delveStarted', job: 'a', minutes: 25, count: 3 },
