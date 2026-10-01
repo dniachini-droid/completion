@@ -382,17 +382,6 @@ function storyClock(w: W, c: Content, at: Moment, day: string): boolean {
   return false;
 }
 
-/** The weekly floor: a week that had a day complete brings at least 2 Keys; the new week's first opening lands the rest (§3). */
-function floor(w: W, c: Content, at: Moment, day: string) {
-  const thisWeek = calendarWeek(day);
-  const weeks = [...new Set(ofType(w.all, 'dayCompleted').map(f => calendarWeek(f.day)))].filter(x => x < thisWeek);
-  const last = weeks[weeks.length - 1];
-  if (!last || ofType(w.all, 'keyEarned').some(f => f.rhythm === `floor:${last}`)) return;
-  const had = S.keysIn(w.all, last);   /* the week's own Keys, not floor Keys landed in it for the week before */
-  for (let i = had; i < S.KEY_FLOOR; i++) landKey(w, c, `floor:${last}`, at, day);
-  if (had >= S.KEY_FLOOR) w.put({ type: 'keyEarned', rhythm: `floor:${last}` }, at, day);   /* noted, so it's checked once */
-}
-
 /** A Key lands: the next sealed thing opens, and its line plays (as this job's return, if there is one). */
 function landKey(w: W, c: Content, rhythm: string, at: Moment, day: string, job?: number): Seal | null {
   w.put({ type: 'keyEarned', rhythm }, at, day);
@@ -943,7 +932,8 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       /* a week with no plan yet is laid out at its first opening, from today on, so the Week and Today always agree;
          Dan changes it as he likes (Dan, D-078; review finding, D-080) */
       if (!W.planMade(w.all, calendarWeek(day))) w.put({ type: 'planMade', week: calendarWeek(day), entries: W.planWeek(c, w.all, calendarWeek(day), day) });
-      storyClock(w, c, now, day); floor(w, c, now, day);
+      /* no weekly floor of Keys any more (Dan, D-142): a Key always means a recurring job kept up */
+      storyClock(w, c, now, day);
       weekClose(w, c, now, day, was);
       morningAfter(w, c, now, day);
       break;
@@ -1444,6 +1434,10 @@ export interface View {
   here: Here;
   /** The sealed thing ahead that Dan can see (where it is, in plain words). */
   ahead: string | null;
+  /** The sealed thing ahead opens only with a Key (a niche), not on foot (D-142). */
+  aheadKey: boolean;
+  /** Keys earned and kept, not yet used (D-142). */
+  keys: number;
   walked: number;
   /** Minutes of effort from here to the next named place, if one is reachable (never shown as steps owed). */
   toNext: number | null;
@@ -1840,6 +1834,7 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
     forecast: W.forecast(c, facts, day, toNext, S.PLACE_GAP),
     day, capacity, suggested: sugg.capacity, size, order, slate, line, done, underWay, complete, next, run, runEnd, arrival,
     /* ahead: the sealed thing in view; before any, the way in (the first morning), then a line from just ahead */
+    aheadKey: !!view && !S.onRoad(c.story, view.id), keys: st.held,
     here, ahead: view ? view.where : here.id === null ? here.line || S.teaser(c.story, st) : S.teaser(c.story, st), walked: w, toNext, nextAt, toChamber: chamber,
     road: { from: S.lastPlaceAt(st), chamber: S.chamberAt(st), to: S.nextPlaceAt(st), place: nextAt !== null },
     lastArrival: lastArr, story: S.storyState(facts, c.story), teaser: S.teaser(c.story, st), runFinds,

@@ -17,8 +17,6 @@ export const PLACE_GAP = 150;
 export const FIRST_GAP = 75;
 /** Useful Keys a week (BALANCING §3). */
 export const KEYS_A_WEEK = 5;
-/** The weekly floor: a week with a day complete brings at least this many (§3). */
-export const KEY_FLOOR = 2;
 /** A long stretch on one job in a day, after which switching brings a find (§1). */
 export const LONG_STRETCH = 100;
 /** A job done with less than this behind it (the dial's shortest delve) moves Dan by its minutes and is done, but brings
@@ -287,9 +285,14 @@ export function nextSeal(s: Story, st: StoryState): Seal | null {
   const order = (a: Seal, b: Seal) => a.w - b.w || a.o - b.o;
   const due = shut.filter(x => x.w <= st.week);
   const early = shut.filter(x => x.w === st.week + 1 && x.plain).sort(order);
-  const next = due.filter(storySeal).sort(order)[0] ?? due.filter(x => !storySeal(x)).sort(order)[0] ?? early[0] ?? null;
-  /* in the story's own order, and only once it can be reached and seen; otherwise the Key waits (D-079) */
-  return next && mayOpen(s, st, next) ? next : null;
+  /* the story's own sealed things in their order, each only once it can be reached and seen (D-079); one not yet in
+     reach never holds back a plain one Dan can open now (D-142: Keys sat kept beside a niche they could open) */
+  const story = due.filter(storySeal).sort(order)[0];
+  if (story && mayOpen(s, st, story)) return story;
+  const plain = due.filter(x => !storySeal(x)).sort(order).find(x => mayOpen(s, st, x));
+  if (plain) return plain;
+  /* next week's plain ones only once nothing of this week's is left shut (a surplus, as before) */
+  return !story && !due.length && early[0] && mayOpen(s, st, early[0]) ? early[0] : null;
 }
 
 /** A rhythm's sessions done in the calendar week of `day` (every 2 weeks: in the fortnight). */

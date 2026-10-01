@@ -17,7 +17,7 @@ Why:
 | Thing | Source | Is it spent? | Why it exists | Exploit risk and guard |
 |---|---|---|---|---|
 | **Steps** | real time: 25 minutes = one step, in proportion; jobs without a timer by their usual length (D-037) | No: a step *is* movement | Makes every real action move the world | Time can't be split cheaply; rewards attach to slots; switching kinds after a long stretch brings a find, and staying never costs (D-044) |
-| **Keys** | weekly targets (rhythms) met, up to the week's bounded supply of 5, with a floor of 2 for any week with a day complete (D-047, D-049, `BALANCING.md` §3); big milestones, for their own great door only | Used once, on a sealed thing already seen that shows it needs a Key (D-013), **the moment it's earned**: never held, so never a count (D-043) | Makes the week matter without a meeting | Weekly targets are Dan's own real commitments; milestones are confirmed with one tap |
+| **Keys** | weekly targets (rhythms) met, up to the week's bounded supply of 5, and nothing else (no weekly floor, D-142; `BALANCING.md` §3); big milestones, for their own great door only | Used once, on a niche (a sealed thing only a Key opens, D-129), the moment it's earned when one is in reach; otherwise kept until one is (D-079). Today shows the count, and a sealed thing ahead says "Needs a Key" (Dan, D-142, replacing D-043's "never a count") | Makes the week matter without a meeting | Weekly targets are Dan's own real commitments; milestones are confirmed with one tap |
 | **Signs** | Keys, some arrivals and records; *partial* signs from deep pushes (D-013) | No: permanent knowledge | Reading, re-reading and powers | Paced by authored placement, so they can't be farmed |
 
 ## Invariant: more rhythms never mean more Keys (D-047)

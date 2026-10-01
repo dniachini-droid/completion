@@ -18,7 +18,9 @@
   function pick(i: number) { if (!r?.beat) return; game.do({ do: 'choose', beat: r.beat, pick: i }); if (r.records.length && go) go('records', r.records[i]); }
   const r = $derived(doneSeq !== null ? returnOf(content, game.facts, doneSeq) : null);
   /* what Dan is told about a Key (D-141): earned by this job, kept from earlier, or earned and kept for later */
-  const keyLine = $derived(r?.keyNote === 'held' ? t('step.keyHeld') : r?.keyNote === 'kept' ? t('step.keyKept') : r?.key ? t('step.key') : '');
+  /* named after the job that kept up its rhythm (D-142): "You kept up Gym and earned a Key" */
+  const jobName = $derived.by(() => { const f = doneSeq !== null ? game.facts.find(x => x.seq === doneSeq) : undefined; return f?.type === 'jobDone' ? game.job(f.job)?.name ?? t('step.keyJob') : t('step.keyJob'); });
+  const keyLine = $derived(r?.keyNote === 'held' ? t('step.keyHeld', { job: jobName }) : r?.keyNote === 'kept' ? t('step.keyKept') : r?.key ? t('step.key', { job: jobName }) : '');
   const finds = $derived([...(r?.finds ?? []), ...extraFinds].map(id => content.story.finds.find(f => f.id === id)).filter(f => !!f));
 </script>
 

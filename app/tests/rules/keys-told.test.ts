@@ -14,8 +14,9 @@ const doneOf = (facts: Fact[], seq: number) => [...facts].reverse().find(f => f.
 const arrivedSince = (facts: Fact[], from: number, to: number) => facts.some(f => f.seq > from && f.seq < to && f.type === 'arrived');
 
 describe('Keys are told when earned, and kept Keys are told as kept (D-141)', () => {
-  for (const h of [2, 3, 8]) it(`${h} hours a day for three weeks`, () => {
-    const { facts } = heavy(21, h);
+  /* five weeks at 2 hours runs ahead of the niches in reach, so some Keys are kept for later */
+  for (const [days, h] of [[21, 3], [21, 8], [35, 2]] as const) it(`${h} hours a day for ${days} days`, () => {
+    const { facts } = heavy(days, h);
     let earned = 0, held = 0, keptOnReturn = 0;
     for (const f of facts) {
       if (f.type === 'keyEarned' && !f.rhythm.startsWith('floor:')) {
@@ -33,6 +34,43 @@ describe('Keys are told when earned, and kept Keys are told as kept (D-141)', ()
       }
     }
     expect(earned + held).toBeGreaterThan(0);
-    if (h <= 3) { expect(held, 'some Keys are kept on a light day').toBeGreaterThan(0); expect(keptOnReturn).toBeGreaterThan(0); }
+    if (days === 35) { expect(held, 'some Keys are kept').toBeGreaterThan(0); expect(keptOnReturn).toBeGreaterThan(0); }
   }, 120_000);
+});
+
+describe('Today shows the Keys kept and what needs one (Dan, D-142)', () => {
+  it('the count is the Keys earned and not yet used; "Needs a Key" only on a sealed thing a Key alone opens', async () => {
+    const S = await import('../../src/core/story');
+    const { see } = await import('../../src/core/game');
+    const { facts } = heavy(35, 2);
+    let kept = 0, needs = 0;
+    for (const day of [...new Set(facts.map(f => f.day))]) {
+      const upTo = facts.filter(f => f.day <= day), last = upTo[upTo.length - 1];
+      const v = see(upTo, C, last.at), st = S.storyState(upTo, C.story);
+      expect(v.keys, day).toBe(st.held);
+      const view = S.inView(C.story, st);
+      expect(v.aheadKey, day).toBe(!!view && !S.onRoad(C.story, view.id));
+      if (v.keys) kept++; if (v.aheadKey) needs++;
+    }
+    /* a light worker holds a Key on some days, and meets something only a Key opens */
+    expect(kept).toBeGreaterThan(0);
+    expect(needs).toBeGreaterThan(0);
+  }, 120_000);
+});
+
+describe('a kept Key never sits beside a niche it could open (D-142)', () => {
+  it('at every day\'s end, with a Key kept, no plain niche of the story so far is open to it', async () => {
+    const S = await import('../../src/core/story');
+    for (const h of [2, 3]) {
+      const { facts } = heavy(35, h);
+      for (const day of [...new Set(facts.map(f => f.day))]) {
+        const st = S.storyState(facts.filter(f => f.day <= day), C.story);
+        if (!st.held) continue;
+        /* a plain niche (no story of its own) that is due and can be reached: a Key should have opened it */
+        const open = C.story.seals.filter(x => !x.seenOnly && !st.opened.has(x.id) && !S.onRoad(C.story, x.id) && x.w <= st.week
+          && !(x.beat || x.arrival || x.carries?.records?.length || x.carries?.guess?.length) && S.mayOpen(C.story, st, x));
+        expect(open.map(x => x.id), `${h} h, ${day}: ${st.held} kept`).toEqual([]);
+      }
+    }
+  }, 240_000);
 });

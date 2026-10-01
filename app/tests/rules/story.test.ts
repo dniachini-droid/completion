@@ -52,14 +52,15 @@ describe('six weeks of play', () => {
     for (let w = 1; w < st.week; w++) for (const id of places(w)) expect(st.played.has(id), id).toBe(true);
     expect(st.played.has('b-3.A')).toBe(true);   /* the first word, in week 2–3 */
   }, 60_000);
-  it('Low weeks never stall: the floor keeps Keys coming and the story still moves', () => {
+  it('Low weeks never stall: the story still moves, and a Key only ever comes from a recurring job kept up (D-142)', () => {
     const p = sim().week(['low', 'away', 'low', 'away', 'low', 'away', 'away']);
     for (let i = 0; i < 5; i++) p.week(['low', 'away', 'low', 'away', 'low', 'away', 'away']);
     const st = p.st();
-    /* a Low week stretches the story week; it never stops it: places keep coming, and the floor opens 2 a week */
+    /* a Low week stretches the story week; it never stops it: places keep coming */
     expect(st.week).toBeGreaterThanOrEqual(2);
-    /* the floor keeps Keys coming: opened, or kept for a sealed thing not yet reached (never lost, D-079) */
-    expect(st.opened.size + st.held).toBeGreaterThanOrEqual(10);
+    /* no weekly floor (Dan, D-142): every Key is a rhythm's, none topped up for a week with a day complete */
+    expect(p.facts.some(f => f.type === 'dayCompleted')).toBe(true);
+    expect(p.facts.filter(f => f.type === 'keyEarned' && f.rhythm.startsWith('floor:'))).toEqual([]);
     expect([...st.played].filter(x => /^(b-\d\.[A-C]|pl-)/.test(x)).length).toBeGreaterThanOrEqual(8);
   });
   it('a two-week absence pauses the story; it resumes where it was', () => {

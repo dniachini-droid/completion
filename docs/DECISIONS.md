@@ -1592,3 +1592,16 @@
 - **Alternatives:** showing a count of kept Keys on Today (more on screen for a rare thing, rule 12); spending a Key only when it can open something (it would lose the Key Dan earned, against D-079).
 - **Consequences:** `Return.keyNote` (`earned` · `kept` · `held` · null), two copy lines, one changed; an errand run's end shows an errand whose only news is a Key. Rule test `keys-told.test.ts` (2, 3 and 8 hours a day for three weeks): every recurring job's Key is told on its own return, and every kept Key used on a return says it was kept.
 - **Reversible:** Yes: the note is display only.
+
+## D-142 — Keys made visible, and earned only by recurring jobs (Dan)
+- **Date:** 2026-10-01
+- **Context:** After D-141 Dan said he had never seen himself earn a Key, and asked whether Keys matter. **Found:** the road needs no Key (D-129); Keys alone open the 36 niches (records, objects, side steps), so they reward something nothing else does. But a weekly floor gave 2 Keys to any week with a day complete, recurring jobs or not (its reason, a bad week stalling the story, ended with D-129). And a bug: a kept Key opened niches only in strict story order, so one story niche not yet reachable held back every Key, even beside a plain niche it could open (from day 3 of a simulated 2-hour week). Dan: announce how many Keys he has; a Key count on Today; make it clear when he earns one, when something locked needs one, and when he uses one.
+- **Decision:**
+  1. **No weekly floor** (Dan chose it). A Key always means a recurring job kept up. Nothing is lost: a niche left shut waits, in order, for the next Key. Old floor Keys in a save stay as they were.
+  2. **Today shows the Keys kept** under the road line ("No Keys", "1 Key", "2 Keys"); a tap says what they are for. This replaces D-043's "never held, so never a count".
+  3. **A sealed thing ahead that only a Key opens** says so on Today ("Ahead · Needs a Key"); the Map's words say "needs a Key" and "only a Key opens it".
+  4. **Earning and using** are said on the job's own screen, naming the job: "You kept up Gym and earned a Key, and used it here." / "…earned a Key. Nothing locked is within reach yet, so you keep it…" / "You used a Key you were keeping." (on a job's screen or an arrival).
+  5. **The bug:** the story's own niches still open in their order, but one not yet in reach no longer holds back a plain niche Dan can open now. Next week's plain niches still wait until this week's are open.
+- **Alternatives:** keeping the floor, announced (Dan chose removal); showing Keys earned this week rather than kept (the kept count is what a locked thing needs).
+- **Consequences:** `View.keys`, `View.aheadKey`; `floor()` and `KEY_FLOOR` removed; `nextSeal` changed. Rule tests: the Key count and "Needs a Key" against the story's own state; a kept Key never beside a plain niche it could open (fails on the old code from day 3); no floor Keys in a Low-week run. Dan's own save: any Key he holds beside an openable niche opens on his next finished job.
+- **Reversible:** Yes: the floor is one call; the display is Today's and the copy.
