@@ -7,7 +7,8 @@ const hide = async on => { await page.evaluate(on => { Object.defineProperty(doc
 await H.toToday();
 const road = async () => (await H.text()).split('\n').filter(l => /side chamber|next place/.test(l)).join(' ');
 H.say('road before: ' + await road());
-await H.tap(page.locator('.rows button.row', { hasText: job }).first(), job);
+for (let k = 0; k < 3 && !(await page.locator('.rs').count()); k++) { await H.tap(page.locator('.rows button.row', { hasText: job }).first(), job); await page.waitForTimeout(500); }
+H.say('set-up: ' + await H.screen());
 await H.tap(H.btn(`${mins} minutes`), mins);
 while (!(await H.btn('One delve fewer').isDisabled())) await H.tap(H.btn('One delve fewer'), 'fewer', 300);
 await H.tap('Begin');
