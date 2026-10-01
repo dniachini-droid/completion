@@ -61,3 +61,11 @@ if (!only || only === '7') {
   D.say(R, 'p7 Use a Key buttons from the link: ' + await R.page.locator('button.use:not(.again)').count());
   await D.done(R, 'probe 7');
 }
+/* 8. Not today, by the row's own (VoiceOver) button, on Sunday 18 after the days away */
+if (!only || only === '8') {
+  const R = await D.open({ at: '2026-10-18T11:00:00+01:00', from: 'save-w2-sun-open.json' });
+  await D.through(R, 'p8-waits');
+  D.say(R, 'p8 sr buttons: ' + (await R.page.locator('button.sr').allInnerTexts()).join(' | '));
+  await D.notToday(R, 'Tank clean', 'p8'); await D.today(R, 'p8-after');
+  await D.done(R, 'probe 8');
+}

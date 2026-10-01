@@ -184,10 +184,9 @@ export async function tick(R, job, chip, tag, o = {}) {
 /** Slid left on Today, then "Not today". */
 export async function notToday(R, job, tag) {
   await home(R);
-  await L.slide(R, job);
-  const b = R.page.getByRole('button', { name: `${job}: not today`, exact: true });
+  const b = R.page.locator('button.sr', { hasText: `${job}: not today` });
   if (!(await b.count())) { R.fails.push(`[${tag}] no Not today for ${job}`); return; }
-  await b.first().click(); await R.page.clock.runFor(800);
+  await b.first().evaluate(e => e.click()); await R.page.clock.runFor(800);
 }
 /** A press and hold on a Today row: the job's menu. */
 export async function menu(R, job, item, tag) {
@@ -221,3 +220,17 @@ export async function press(R, name, settle = 900) {
 }
 export async function toSatchel(R) { await home(R); await L.tap(R, foot(R, 'Satchel'), 'Satchel'); }
 export async function toWeek(R) { await home(R); await L.tap(R, foot(R, 'Week'), 'Week'); }
+/** The word cut on the Cut screen: guess if asked, the rod, each mark, the rod again, then onward. */
+export async function cut(R, tag) {
+  const p = R.page;
+  const settle = async () => { for (let k = 0; k < 6; k++) { await p.clock.runFor(800); await p.waitForTimeout(250); } };
+  for (let k = 0; k < 3 && await p.locator('.ask .guess .opts button').count(); k++) await L.tap(R, p.locator('.ask .guess .opts button').first(), 'guess', 800);
+  await look(R, `${tag}-0`);
+  await L.tap(R, p.locator('.rodbtn'), 'rod'); await settle();
+  for (let i = 0; i < 2; i++) { await L.tap(R, p.locator('.slot .key').nth(i), `mark ${i}`); await settle(); }
+  await look(R, `${tag}-1`);
+  await L.tap(R, p.locator('.rodbtn'), 'rod again'); await settle(); await settle();
+  await look(R, `${tag}-2`, { full: true });
+  await L.tap(R, p.locator('.slot .btn.go'), 'go'); await settle();
+  await look(R, `${tag}-3`, { full: true });
+}
