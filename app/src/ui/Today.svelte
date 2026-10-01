@@ -204,12 +204,15 @@
       <svg viewBox="0 0 24 12" aria-hidden="true"><circle cx="5" cy="6" r="3.6" /><path d="M8.6 6H22M18 6v3.4M21.4 6v2.6" /></svg>
       <span>{v.keys === 0 ? t('today.keys.none') : v.keys === 1 ? t('today.keys.one') : t('today.keys.many', { n: v.keys })}</span>
     </button>
-    {#if v.keyUse}<p class="key-use rise d2"><button class="text-link" onclick={() => go('map', v.keyUse!)}><span>{t('today.keys.use')}</span></button></p>{/if}
+    <!-- the Map opens on where a Key can be used: here first (D-143 A); "one" when there are more (S polish) -->
+    {#if v.keyUse}<p class="key-use rise d2"><button class="text-link" onclick={() => go('map', v.keyUse!)}><span>{v.keyHere ? t(v.keys > 1 ? 'today.keys.hereMany' : 'today.keys.here') : t(v.keys > 1 ? 'today.keys.useMany' : 'today.keys.use')}</span></button></p>{/if}
     {#if keysOpen}<p class="soft keys-say">{t('today.keys.say')}{#if v.keys} {t('today.keys.useOnMap')}{/if}</p>{/if}
     {#if v.ahead}
       <section class="ahead rise d2">
-        <div class="label-line">{t('today.ahead')}{#if v.aheadKey}<span class="needs-key"> · {t('today.aheadKey')}</span>{/if}</div>
+        <!-- a locked thing left behind is never called "ahead": it is behind him, and on the Map (S3, D-143) -->
+        <div class="label-line">{v.aheadBehind ? t('today.behind') : t('today.ahead')}{#if v.aheadKey}<span class="needs-key"> · {t('today.aheadKey')}</span>{/if}</div>
         <button class="ahead-text" class:open={aheadOpen} aria-expanded={aheadOpen} onclick={() => (aheadOpen = !aheadOpen)}><p class="say on-scene">{v.ahead}</p></button>
+        {#if v.aheadBehind}<p class="behind-map"><button class="text-link" onclick={() => go('map', v.aheadBehind!)}><span>{t('today.behindMap')}</span></button></p>{/if}
       </section>
     {/if}
   </header>
@@ -347,6 +350,8 @@
   .key-use .text-link { color: #f2c170; }
   .keys-say { margin: 0 0 8px; text-align: center; font-size: 14.5px; }
   .needs-key { color: #f2c170; }
+  .behind-map { margin: 0; }
+  .behind-map .text-link { min-height: 36px; padding: 0; }
   .ahead { margin-top: 12px; }
   .ahead p { font-size: 17.5px; line-height: 1.38; margin-top: 6px; }
   .ahead-text { display: block; width: 100%; padding: 0; background: none; border: 0; text-align: left; cursor: pointer; color: inherit; }

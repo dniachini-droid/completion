@@ -3,18 +3,18 @@
 > The working list for the build after the flow review (D-143). It holds **every** finding from the four reports: **J** = [JOBS](JOBS.md), **S** = [STORY-KEYS-MAP](STORY-KEYS-MAP.md), **N** = [NAVIGATION](NAVIGATION.md), **L** = [TWO-WEEKS](TWO-WEEKS.md). Duplicates found by more than one reviewer are merged. Each item says how it is handled: **fix**, **D-143 X** (Dan's choice X decides it), or **leave** (with why). Tick each off with its commit; add a flow or rule test for every bug. **All 60 are in scope: nothing merges until every box is ticked, or Dan has agreed to move a named item later.** Spoiler-free.
 
 ## 1. Keys and the Map
-- [ ] 1.1 **Map → Use a Key → Back to the Map loops forever** (S1, N bug 1). Fix: the opened screen is a look-through screen; back from the Map goes where it came from. Flow test: Today → Map → Use a Key → back lands on Today.
-- [ ] 1.2 **"Use it on the Map" points nowhere** (S2, L A3, S11, L C1): Today and the Map use different tests; 18 of 36 niches never show on the Map. Fix: one definition, and the Map lists every niche a Key can open (D-143 A).
-- [ ] 1.3 **"Ahead · Needs a Key" describes something behind Dan** (S3, L B2). Fix: when it's not on his stretch, say so ("Behind you · on the Map") and make the line open the Map there; prefer one on his stretch.
-- [ ] 1.4 **Keys spent for him; no choice** (L B1). D-143 A: never auto-spent; "Use it here / Keep it" when something is locked where he is; else the Map.
-- [ ] 1.5 **A Key where he stands still says "Use it on the Map"** (S6). Fixed by D-143 A ("Use it here" offered; recheck after a return's step brings a niche into view).
-- [ ] 1.6 **Opened niches can't be read again** (S5, N clumsy 4; Dan's question). D-143 B: the Map lists opened ones under their place, "Opened · Read again".
-- [ ] 1.7 **Daybook's Key line never fills** (S4): built only from removed floor Keys. Fix: from every Key-opened niche that week; with D-143 B the week page lists that week's finds and opened niches.
-- [ ] 1.8 **"Use it" with 2+ Keys** (S polish). Fix: "Use one on the Map".
+- [x] 1.1 **Map → Use a Key → Back to the Map loops forever** (S1, N bug 1). Fix: the opened screen is a look-through screen; back from the Map goes where it came from. Flow test: Today → Map → Use a Key → back lands on Today.
+- [x] 1.2 **"Use it on the Map" points nowhere** (S2, L A3, S11, L C1): Today and the Map use different tests; 18 of 36 niches never show on the Map. Fix: one definition, and the Map lists every niche a Key can open (D-143 A).
+- [x] 1.3 **"Ahead · Needs a Key" describes something behind Dan** (S3, L B2). Fix: when it's not on his stretch, say so ("Behind you · on the Map") and make the line open the Map there; prefer one on his stretch.
+- [x] 1.4 **Keys spent for him; no choice** (L B1). D-143 A: never auto-spent; "Use it here / Keep it" when something is locked where he is; else the Map.
+- [x] 1.5 **A Key where he stands still says "Use it on the Map"** (S6). Fixed by D-143 A ("Use it here" offered; recheck after a return's step brings a niche into view).
+- [x] 1.6 **Opened niches can't be read again** (S5, N clumsy 4; Dan's question). D-143 B: the Map lists opened ones under their place, "Opened · Read again".
+- [x] 1.7 **Daybook's Key line never fills** (S4): built only from removed floor Keys. Fix: from every Key-opened niche that week; with D-143 B the week page lists that week's finds and opened niches.
+- [x] 1.8 **"Use it" with 2+ Keys** (S polish). Fix: "Use one on the Map".
 - [ ] 1.9 **Unused copy** `map.sealedLabel`, `map.sealedSay`, `welcome.at`, `welcome.ahead` (S polish). Fix: use (see 6.3) or delete.
-- [ ] 1.10 **Opened screen's exits** (S polish): when reached from Today's link, offer Today as the quiet second exit.
-- [ ] 1.11 **A fortnightly job kept up again gives no Key, silently** (L C4). Fix: one quiet line, "Already earned this fortnight's Key."
-- [ ] 1.12 **Map "you are here" light vs box name differ** (L B7: the stretch's name vs the place's). Fix: the box says "In {stretch}" under the place, or the same name on both.
+- [x] 1.10 **Opened screen's exits** (S polish): when reached from Today's link, offer Today as the quiet second exit.
+- [x] 1.11 **A fortnightly job kept up again gives no Key, silently** (L C4). Fix: one quiet line, "Already earned this fortnight's Key."
+- [x] 1.12 **Map "you are here" light vs box name differ** (L B7: the stretch's name vs the place's). Fix: the box says "In {stretch}" under the place, or the same name on both.
 
 ## 2. Today and the finish line
 - [ ] 2.1 **The finish line moves after the shown jobs are done** (L A1). Fix: a job on the day's line stays on it when done, whatever put it there; the line never refills because of a completion. Rule test.

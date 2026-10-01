@@ -20,16 +20,32 @@
   /* what Dan is told about a Key (D-141): earned by this job, kept from earlier, or earned and kept for later */
   /* named after the job that kept up its rhythm (D-142): "You kept up Gym and earned a Key" */
   const jobName = $derived.by(() => { const f = doneSeq !== null ? game.facts.find(x => x.seq === doneSeq) : undefined; return f?.type === 'jobDone' ? game.job(f.job)?.name ?? t('step.keyJob') : t('step.keyJob'); });
-  const keyLine = $derived(r?.keyNote === 'held' ? t('step.keyHeld', { job: jobName }) : r?.keyNote === 'kept' ? t('step.keyKept') : r?.key ? t('step.key', { job: jobName }) : '');
+  /* a Key is never spent for Dan (D-143 A): earned with something locked where he is, he is offered "Use it here" or
+     "Keep it"; with something locked behind him, the Map; else he keeps it for the next locked thing */
+  const v = $derived(game.view);
+  let kept = $state(false);
+  const offerHere = $derived(r?.keyNote === 'held' && !kept && !!v.keyHere && v.keys > 0 && !!go);
+  const keyLine = $derived(r?.keyNote === 'held'
+    ? (offerHere ? t('step.keyHere', { job: jobName }) : kept ? t('step.keyKeep', { job: jobName }) : v.keyUse ? t('step.keyMap', { job: jobName }) : t('step.keyHeld', { job: jobName }))
+    : r?.keyNote === 'kept' ? t('step.keyKept') : r?.key ? t('step.key', { job: jobName })
+    /* kept up again in a period whose Key it already earned: said, so Dan never wonders (L C4) */
+    : r?.keyAlready ? t(`step.keyAlready.${r.keyAlready}` as CopyKey, { job: jobName }) : '');
+  function useHere() { const id = v.keyHere; if (!id || !go) return; game.do({ do: 'useKey', seal: id }); go('opened', id); }
   const finds = $derived([...(r?.finds ?? []), ...extraFinds].map(id => content.story.finds.find(f => f.id === id)).filter(f => !!f));
 </script>
+
+{#snippet offer()}
+  {#if offerHere}
+    <div class="key-offer"><button class="text-link use" onclick={useHere}><span>{t('step.useHere')}</span></button><button class="text-link" onclick={() => (kept = true)}><span>{t('step.keepIt')}</span></button></div>
+  {/if}
+{/snippet}
 
 {#if r && r.line}
   <!-- the story's words and any find keep to the lower half and scroll there; they can be folded away (D-085) -->
   <Words plain {look} length={r.line.length + finds.reduce((n, f) => n + f!.line.length, 0) + keyLine.length}>
     <!-- a Key's note is two sentences of plain text, as wide as the story's words, with room after it: never squeezed into a
          carved label's short line (Dan: "very very bad styling", D-131) -->
-    {#if keyLine}<p class="key-note on-scene">{keyLine}</p>{/if}
+    {#if keyLine}<p class="key-note on-scene">{keyLine}</p>{@render offer()}{/if}
     <p class="say story on-scene">{r.line}</p>
     {#each finds as f (f!.id)}
       <div class="find">
@@ -58,7 +74,7 @@
   {/if}
 {:else if finds.length || keyLine}
   <Words plain {look} length={finds.reduce((n, f) => n + f!.line.length, 0) + keyLine.length}>
-    {#if keyLine}<p class="key-note on-scene">{keyLine}</p>{/if}
+    {#if keyLine}<p class="key-note on-scene">{keyLine}</p>{@render offer()}{/if}
     {#each finds as f (f!.id)}
       <div class="find">
         <div class="label-line centred gold">{t('find.label')}</div>
@@ -69,6 +85,8 @@
 {/if}
 
 <style>
+  .key-offer { display: flex; justify-content: center; gap: 22px; margin: -18px 0 20px; }
+  .key-offer .use span { color: #f2c170; }
   .key-note { margin: 6px 0 28px; font-family: var(--life); font-size: 16.5px; line-height: 1.45; font-style: italic;
     color: var(--violet-hi); text-align: center; text-transform: none; letter-spacing: normal; }
   .story { font-size: 18px; line-height: 1.42; margin: 10px 0 12px; }

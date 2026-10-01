@@ -125,7 +125,8 @@
   const canPark = $derived(!!run);
   /* at the end: the thoughts this delve parked, once its question is answered; a tap opens the Satchel */
   const parkedN = $derived(end && !run && !end.pending && !(end.ask && answer === null) ? end.parked : 0);
-  function toSatchel() { keepNote(); go('satchel'); }
+  /* after "Not yet" the end is answered: marked seen first, so back from the Satchel never asks again */
+  function toSatchel() { keepNote(); if (answer === 'no' && end) game.do({ do: 'seen', what: 'step', ref: end.seq }); go('satchel'); }
 </script>
 
 {#snippet errandList(es: { job: { id: string; name: string }; struck: boolean }[])}
@@ -155,7 +156,8 @@
   <div class="ui">
     <header class="top col">
       <div class="topbar rise">
-        <button class="home" onclick={() => (end ? leave('today') : go('today'))}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{t('delve.today')}</span></button>
+        <!-- an errand run's "What got done?" is left waiting, never counted by the arrow (J1): Today says it waits -->
+        <button class="home" onclick={() => (end && !end.pending ? leave('today') : go('today'))}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{t('delve.today')}</span></button>
         <span></span>
         {#if canPark && !parking}<button class="text-link park-link" bind:this={parkLink} onclick={openPark}><span>{t('park.link')}</span></button>{:else}<span></span>{/if}
       </div>

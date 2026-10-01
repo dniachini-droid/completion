@@ -9,9 +9,9 @@
      quiet offer to plan the week ahead (D-045), never repeated. */
   import { game, content } from './game.svelte';
   import { t, weekDatesShort, timesWords, dayName, byWords } from '../content/copy/en';
-  import { comingUp, sweepOf } from '../core/week';
+  import { comingUp, sweepOf, addDays } from '../core/week';
   import { calendarWeek } from '../core/time';
-  import { hiddenDone } from '../core/game';
+  import { hiddenDone, weekKept } from '../core/game';
   import { beatOf, sealOf } from '../core/story';
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
@@ -25,7 +25,13 @@
   const page = $derived(pages.find(p => p.week === week) ?? pages[pages.length - 1]);
   const at = $derived(page ? pages.indexOf(page) : -1);
   const fresh = $derived(!!page && v.close?.week === page.week);
-  const offer = $derived(fresh && !game.facts.some(f => f.type === 'offerAnswered' && f.week === page!.week));
+  /* the offer stays on the newest page until it is answered, or its week is over: leaving by the arrow is no answer
+     (N clumsy 2) */
+  const offer = $derived(!!page && at === pages.length - 1 && calendarWeek(v.day) === addDays(page.week, 7)
+    && !game.facts.some(f => f.type === 'offerAnswered' && f.week === page!.week));
+  /* what the week left to read again (D-143 B): its finds, and the niches its Keys opened */
+  const kept = $derived(page ? weekKept(game.facts, page.week) : { finds: [], opened: [] });
+  const findLine = (id: string) => s.finds.find(f => f.id === id)?.line ?? '';
 
   const held = $derived.by(() => {
     if (!page) return [];
@@ -117,7 +123,12 @@
         <div class="label-line">{t('daybook.went')}</div>
         <p class="say went">{places.join(' · ')}</p>
       {:else}<p class="say went">{t('daybook.camped')}</p>{/if}
-      {#each page.seals as id (id)}{@const x = sealOf(s, id)}{#if x}<p class="say count">{t('daybook.count', { where: x.where })}</p>{/if}{/each}
+      <!-- every niche a Key opened that week, each to read again (S4, D-143 B) -->
+      {#each kept.opened as id (id)}{@const x = sealOf(s, id)}{#if x}<p class="say count">{t('daybook.count', { where: x.where })} <button class="text-link again" onclick={() => go('opened', `again:${id}`)}><span>{t('daybook.readAgain')}</span></button></p>{/if}{/each}
+      {#if kept.finds.length}
+        <div class="label-line">{t('daybook.finds')}</div>
+        {#each kept.finds as id (id)}{#if findLine(id)}<p class="say learned">{findLine(id)}</p>{/if}{/each}
+      {/if}
       {#if learned.length}
         <div class="label-line">{t('daybook.learned')}</div>
         {#each learned as id (id)}<p class="say learned">{line(s.learned, id)}</p>{/each}
@@ -173,6 +184,8 @@
   .row.still { cursor: default; }
   .went { margin: 8px 0 12px; }
   .count { color: var(--gold-hi); margin-bottom: 10px; }
+  .count .again { min-height: 0; padding: 2px 0; }
+  .count .again span { font-size: 15px; }
   .label-line { margin-top: 14px; }
   .learned { margin-top: 8px; font-size: 16.5px; line-height: 1.45; }
   .glimpse { margin-top: 8px; font-style: italic; color: #fff; line-height: 1.45; }

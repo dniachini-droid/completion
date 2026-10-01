@@ -297,10 +297,28 @@ export function nextSeal(s: Story, st: StoryState, where?: StretchId): Seal | nu
   return !story && !due.length && early[0] && mayOpen(s, st, early[0]) ? early[0] : null;
 }
 
-/** The niches a Key can open now, wherever they are: shut, seen, and reached (D-142: chosen on the Map). None depends on
-    another (a rule test pins it), so Dan may open them in any order. */
+/** The niches a Key can open now, wherever they are: shut, seen, reached, and of a story week begun (a plain one of
+    next week too, as a surplus Key opened it before): one of a later week never opens on a stretch the route only loops
+    back to (rule 5). Chosen on the Map, or where Dan is (D-142, D-143 A). None depends on another (a rule test pins it),
+    so Dan may open them in any order. */
 export function openable(s: Story, st: StoryState): Seal[] {
-  return s.seals.filter(x => !x.seenOnly && !st.opened.has(x.id) && !onRoad(s, x.id) && mayOpen(s, st, x)).sort((a, b) => a.w - b.w || a.o - b.o);
+  return s.seals.filter(x => !x.seenOnly && !st.opened.has(x.id) && !onRoad(s, x.id) && (x.w <= st.week || (x.plain && x.w === st.week + 1))
+    && mayOpen(s, st, x)).sort((a, b) => a.w - b.w || a.o - b.o);
+}
+/** The locked things the Map shows on a stretch (D-143 A, one definition with Today's link): every niche a Key can open
+    there now, and any other the story has brought into view there, still shut (it says "needs a Key"). */
+export function lockedOn(s: Story, st: StoryState, where: StretchId): Seal[] {
+  const open = openable(s, st).filter(x => x.stretch === where), ids = new Set(open.map(x => x.id));
+  const seen = s.seals.filter(x => x.stretch === where && !ids.has(x.id) && !x.seenOnly && !st.opened.has(x.id) && !onRoad(s, x.id)
+    && s.beats.some(b => st.played.has(b.id) && b.carries?.inView?.includes(x.id)));
+  return [...open, ...seen].sort((a, b) => a.w - b.w || a.o - b.o);
+}
+/** The niches a Key has opened (never the road's own rows, which play as steps and places), in the order opened: each
+    can be read again from the Map under its stretch (D-143 B). */
+export function openedNiches(s: Story, facts: Fact[]): Seal[] {
+  const out: Seal[] = [];
+  for (const f of facts) if (f.type === 'sealOpened' && f.how !== 'road') { const x = sealOf(s, f.seal); if (x && !onRoad(s, x.id) && !out.includes(x)) out.push(x); }
+  return out;
 }
 
 /** A rhythm's sessions done in the calendar week of `day` (every 2 weeks: in the fortnight). */
@@ -347,12 +365,13 @@ export const mayAdvance = (s: Story, st: StoryState, _day?: string) =>
 
 /* ---------- what's in view, and "I can't start" ---------- */
 
-/** The sealed thing ahead that Dan can see: the most recent one brought into view and not yet opened. */
-export function inView(s: Story, st: StoryState): Seal | null {
+/** The sealed thing ahead that Dan can see: the most recent one brought into view and not yet opened; with `where`, one
+    in that stretch first (the one Dan is in: a thing behind him is never called "ahead", D-143). */
+export function inView(s: Story, st: StoryState, where?: StretchId): Seal | null {
   const ids: string[] = [];
   for (const b of s.beats) if (st.played.has(b.id)) ids.push(...(b.carries?.inView ?? []));
-  for (let i = ids.length - 1; i >= 0; i--) { const x = sealOf(s, ids[i]); if (x && !x.seenOnly && !st.opened.has(x.id)) return x; }
-  return null;   /* nothing named before it has been seen */
+  const shut = ids.map(id => sealOf(s, id)).filter((x): x is Seal => !!x && !x.seenOnly && !st.opened.has(x.id));
+  return (where ? shut.filter(x => x.stretch === where).pop() : undefined) ?? shut.pop() ?? null;   /* nothing named before it has been seen */
 }
 
 export function teaser(s: Story, st: StoryState): string | null {

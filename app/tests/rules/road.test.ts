@@ -112,13 +112,12 @@ describe('Keys kept for later never pile up while a niche could open (D-129 revi
   it('two and three hours a day with repeating jobs: a kept Key waits only while no niche can be opened', () => {
     for (const h of [2, 3]) {
       const { facts } = heavy(35, h);
-      /* kept Keys drain, one on each job's return, whenever a niche can open: they never pile up (the review saw 25) */
+      /* Dan uses his Keys on the Map at each day's end (D-143 A: never spent for him): a Key is left kept only while
+         nothing can be opened (the review saw 25 pile up) */
       for (const day of new Set(facts.map(f => f.day))) {
         const st = S.storyState(facts.filter(f => f.day <= day), s);
-        expect(st.held <= 2 || S.nextSeal(s, st) === null, `${h} h, ${day}: ${st.held} kept`).toBe(true);
+        expect(st.held === 0 || S.openable(s, st).length === 0, `${h} h, ${day}: ${st.held} kept`).toBe(true);
       }
-      const end = S.storyState(facts, s);
-      expect(end.held <= 1 || S.nextSeal(s, end) === null, `${h} h: ${end.held} kept at the end`).toBe(true);
       /* a Key with nothing to open still brings the week's one surplus find with it */
       for (const k of facts.filter(g => g.type === 'keyHeld')) {
         const earned = facts.filter(g => g.seq < k.seq && g.type === 'keyEarned').pop()!;
@@ -132,7 +131,9 @@ describe('Keys kept for later never pile up while a niche could open (D-129 revi
 describe('Keys open only the niches; the road opens its own rows on the way (D-129)', () => {
   const { facts } = heavy(14, 8);
   it('a story bit that played on the way to a place shows on that place\'s arrival, with its record, and no Key\'s words', () => {
-    /* one job a day besides the repeating ones: the minutes run ahead of the story bits, so they play on the way */
+    /* one long job a day and no repeating ones: the minutes run ahead of the story bits, so they play on the way (each
+       return plays the next step itself now a Key is never spent on it, D-143 A, so a day of short jobs leaves few) */
+    const { facts } = heavy(14, 8, false);
     let shown = 0, roadRows = 0, withRecords = 0;
     for (let i = 0; i < facts.length; i++) {
       const f = facts[i];

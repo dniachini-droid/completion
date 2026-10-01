@@ -36,18 +36,14 @@ describe('The continuity guard: the story never runs ahead of where Dan is (D-07
   }
 });
 
-describe('A Key earned before its sealed thing is reached is kept, never lost (D-079)', () => {
-  it('kept Keys are used on arrival and shown there', () => {
+describe('A Key earned is kept, never lost, and never spent for Dan (D-079, D-143 A)', () => {
+  it('kept Keys stay kept through arrivals and returns until Dan uses one', () => {
     const p = sim();
     for (const w of ['normal', 'normal', 'normal', 'normal', 'normal', 'normal'] as Week[]) p.week(w);
     const held = p.facts.filter(f => f.type === 'keyHeld').length, used = p.facts.filter(f => f.type === 'keyUsed').length;
-    expect(used).toBeLessThanOrEqual(held);
-    expect(S.storyState(p.facts, C.story).held).toBe(held - used);
-    if (used) {
-      const k = p.facts.find(f => f.type === 'keyUsed')!;
-      const arr = [...p.facts].reverse().find(f => f.type === 'arrived' && f.seq < k.seq)!;
-      expect(arr.type).toBe('arrived');
-    }
+    expect(held).toBeGreaterThan(0);
+    expect(used).toBe(0);
+    expect(S.storyState(p.facts, C.story).held).toBe(held);
   }, 60_000);
 });
 

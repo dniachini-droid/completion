@@ -1,0 +1,22 @@
+/**
+ * The saves some flows start from (a save further in than a fresh one, made with the game's own rules). Run only to make
+ * them again, after the story or the rules change: MAKE_SAVES=1 npx vitest run tests/flows/saves/make.test.ts
+ * Ids only (D-015): a save holds the story's ids, never its words.
+ */
+import { it } from 'vitest';
+import { env, writeFileSync } from '../../review/node';
+import { heavy } from '../../review/heavy';
+import { see } from '../../../src/core/game';
+import * as S from '../../../src/core/story';
+import { content as C } from '../../../src/content/world';
+import { SAVE_VERSION } from '../../../src/core/save';
+
+const out = (name: string, facts: unknown[]) =>
+  writeFileSync(new URL(`./${name}.json`, import.meta.url).pathname, JSON.stringify({ version: SAVE_VERSION, content: C.version, facts }) + '\n');
+
+it.skipIf(!env.MAKE_SAVES)('keys: two hours a day for ten days, the Map never used, so Keys are kept and something can take one', () => {
+  const { facts } = heavy(10, 2, true, 1, { noMap: true });
+  const v = see(facts, C, facts[facts.length - 1].at), st = S.storyState(facts, C.story);
+  if (!v.keys || !v.keyUse || !S.openable(C.story, st).length) throw new Error(`no Key to use: ${v.keys} kept, ${v.keyUse}`);
+  out('keys', facts);
+});

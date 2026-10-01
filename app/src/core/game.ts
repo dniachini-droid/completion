@@ -351,16 +351,7 @@ function arrive(w: W, c: Content, b: Beat, how: 'foot' | 'key', at: Moment, day:
   if (x && !S.storyState(w.all, c.story).opened.has(x.id)) { w.put({ type: 'sealOpened', seal: x.id, how: 'road' }, at, day); show(w, c, x.carries?.records, at, day); }
   w.put({ type: 'arrived', kind: 'place', id: b.id, how }, at, day);
   show(w, c, b.carries?.records, at, day);
-  /* a Key kept for later opens what is sealed here, on the arrival itself (D-079): only here, so a niche far back along
-     the road never shows under a place it isn't in (D-129) */
-  let st = S.storyState(w.all, c.story);
-  while (st.held > 0) {
-    const seal = S.nextSeal(c.story, st, b.stretch);
-    if (!seal || seal.arrival) break;
-    w.put({ type: 'keyUsed' }, at, day);
-    openSeal(w, c, seal, at, day);
-    st = S.storyState(w.all, c.story);
-  }
+  /* a Key kept for later is never spent for Dan on arriving (D-143 A, was D-079): it is his to use, here or on the Map */
 }
 function giveFind(w: W, c: Content, why: FactOf<'findGiven'>['why'], at: Moment, day: string, job?: number) {
   /* a find comes from where Dan knows he is: a place reached but not yet shown on its arrival screen doesn't count yet,
@@ -382,13 +373,11 @@ function storyClock(w: W, c: Content, at: Moment, day: string): boolean {
   return false;
 }
 
-/** A Key lands: the next sealed thing opens, and its line plays (as this job's return, if there is one). */
-function landKey(w: W, c: Content, rhythm: string, at: Moment, day: string, job?: number): Seal | null {
+/** A Key lands: it is kept, never spent for Dan (D-143 A). Its job's return offers "Use it here" when something is locked
+    where he is; anything else is his to open on the Map (D-142). */
+function landKey(w: W, rhythm: string, at: Moment, day: string) {
   w.put({ type: 'keyEarned', rhythm }, at, day);
-  const st = S.storyState(w.all, c.story), seal = S.nextSeal(c.story, st, st.stretch);
-  /* nothing sealed where Dan is: the Key is kept, never lost (D-079), for Dan to use here later or on the Map (D-142) */
-  if (!seal) { w.put({ type: 'keyHeld' }, at, day); return null; }
-  return openSeal(w, c, seal, at, day, job);
+  w.put({ type: 'keyHeld' }, at, day);
 }
 function openSeal(w: W, c: Content, seal: Seal, at: Moment, day: string, job?: number, road = false): Seal {
   w.put({ type: 'sealOpened', seal: seal.id, ...(road ? { how: 'road' as const } : {}) }, at, day);
@@ -516,7 +505,6 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string, tick
   /* a rhythm met this week lands a Key, until the week's supply is used; past it, one find a week (§3). A rhythm Dan
      added or changed counts for Keys from its next full period (D-043 F7): the rhythms as they stood when the week began. */
   const r = rhythmOf(W.live(c.base ?? c, w.all, calendarWeek(day)), job);
-  let keyed = false;
   /* any session meets the rhythm (Dan, D-121), but only sessions of the dial's shortest delve or more count towards its
      Key: a few one-minute sessions never open the story (rule 10) */
   /* one Key a rhythm a period, even if a session is taken back and done again (D-131) */
@@ -524,19 +512,15 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string, tick
   if (r && !keyedAlready && S.sessionsIn(w.all, r, day, S.RETURN_MIN) === S.needOf(r)) {
     const surplus = () => { if (!ofType(w.all, 'findGiven').some(f => f.why === 'surplus' && calendarWeek(f.day) === calendarWeek(day))) giveFind(w, c, 'surplus', at, day, done.seq); };
     if (S.keysIn(w.all, day) < S.KEYS_A_WEEK) {
-      keyed = !!landKey(w, c, r.id, at, day, done.seq);
-      /* a Key with no niche in reach is kept, and the job still brings something: the week's one surplus find (D-129) */
-      if (!keyed) surplus();
+      landKey(w, r.id, at, day);
+      /* the Key is kept (D-143 A), and the job still brings something: the week's one surplus find (D-129) */
+      surplus();
     } else surplus();
   }
-  /* a Key kept for later opens the next niche on this job's return, wherever it is, so kept Keys never pile up (D-129) */
-  if (!keyed && S.storyState(w.all, c.story).held > 0) {
-    const st = S.storyState(w.all, c.story), seal = S.nextSeal(c.story, st, st.stretch);
-    if (seal) { w.put({ type: 'keyUsed' }, at, day); openSeal(w, c, seal, at, day, done.seq); keyed = true; }
-  }
+  /* a Key kept for later is never spent for Dan on a job's return (D-143 A, was D-129): it is his to use */
   /* the return: the deep push's next beat (once a day) on a High day past a Normal day's size, or once a Normal day's
      jobs are done if Dan called the push in the morning (D-054); else the story's next step; else a line of the passage */
-  if (!keyed) {
+  {
     const st = S.storyState(w.all, c.story), step = S.nextStep(c.story, st);
     const n = workedOn(w.all, day).size, called = onDay(w.all, day).some(f => f.type === 'deepCalled');
     /* pushing deeper is doing more: past the day's finish line (its first 3 hours, D-131), the deep push's next beat
@@ -761,10 +745,25 @@ function weekClose(w: W, c: Content, at: Moment, day: string, storyWeek: number)
     const glimpse = c.story.beats.find(b => b.kind === 'close' && b.w <= storyWeek && !st.played.has(b.id) && st.visited.has(b.stretch)
       && !(b.until && S.met(st, b.until))) ?? null;
     if (glimpse) w.put({ type: 'beatPlayed', id: glimpse.id }, at, day);
-    const seals = ofType(w.all, 'keyEarned').filter(k => k.rhythm === `floor:${wk}`)
-      .map(k => w.all.find(f => f.seq === k.seq + 1)).filter((f): f is FactOf<'sealOpened'> => f?.type === 'sealOpened').map(f => f.seal);
+    /* every niche a Key opened in the week, however it came to be used (S4: built only from the old floor's Keys, it never
+       filled once D-142 took the floor away) */
+    const seals = keyOpenedIn(w.all, wk).map(f => f.seal);
     w.put({ type: 'weekClosed', week: wk, n, learned, soFar, glimpse: glimpse?.id ?? null, seals }, at, day);
   }
+}
+
+/** The niches a Key opened in a calendar week, in order: a sealOpened just after a Key was used (or, in an old save, just
+    after one was earned and spent at once). */
+function keyOpenedIn(facts: Fact[], week: string): FactOf<'sealOpened'>[] {
+  const bySeq = new Map(facts.map(f => [f.seq, f]));
+  return ofType(facts, 'sealOpened').filter(f => f.how !== 'road' && calendarWeek(f.day) === week
+    && (bySeq.get(f.seq - 1)?.type === 'keyUsed' || bySeq.get(f.seq - 1)?.type === 'keyEarned'));
+}
+/** What a calendar week kept for Dan to read again on its Daybook page (D-143 B): the finds it gave and the niches its
+    Keys opened, in the order they came. */
+export function weekKept(facts: Fact[], week: string): { finds: string[]; opened: string[] } {
+  const finds = [...new Set(ofType(facts, 'findGiven').filter(f => calendarWeek(f.day) === week).map(f => f.id))];
+  return { finds, opened: [...new Set(keyOpenedIn(facts, week).map(f => f.seal))] };
 }
 
 /**
@@ -1418,6 +1417,9 @@ export interface Return {
       plays here; `kept` a Key kept from earlier opened it; `held` this job earned a Key with nothing sealed in reach, so it
       is kept; null: no Key. */
   keyNote: 'earned' | 'kept' | 'held' | null;
+  /** A recurring job kept up again in a period whose Key it already earned (L C4): its period, said in one quiet line
+      ("Already earned this fortnight's Key"); null otherwise. */
+  keyAlready: 'week' | 'fortnight' | 'month' | 'year' | 'days' | null;
   /** A partial sign found on a deep push: its element, and the mark it belongs to (SCRIPT §8). */
   part?: { el: string; mark: string };
 }
@@ -1448,8 +1450,13 @@ export interface View {
   aheadKey: boolean;
   /** Keys earned and kept, not yet used (D-142). */
   keys: number;
-  /** Where a kept Key can open something now, chosen on the Map (its stretch), if anywhere (D-142). */
+  /** Where a kept Key can open something now, chosen on the Map (its stretch), if anywhere (D-142): the stretch Dan is
+      in first. The Map lists it there (one definition, D-143 A). */
   keyUse: StretchId | null;
+  /** A niche a kept Key can open in the stretch Dan is in ("Use it here", D-143 A). */
+  keyHere: string | null;
+  /** The sealed thing "ahead" is behind Dan, on another stretch: Today says so and opens the Map there (D-143). */
+  aheadBehind: StretchId | null;
   walked: number;
   /** Minutes of effort from here to the next named place, if one is reachable (never shown as steps owed). */
   toNext: number | null;
@@ -1603,22 +1610,31 @@ function keyNoteOf(facts: Fact[], doneSeq: number, sealId: string | null): Retur
   }
   return null;
 }
+/** A recurring job's session done after its period's Key was already earned (L C4): the period, for one quiet line. */
+function keyAlreadyOf(c: Content, facts: Fact[], doneSeq: number): Return['keyAlready'] {
+  const done = facts.find(f => f.seq === doneSeq);
+  if (done?.type !== 'jobDone' || done.minutes < S.RETURN_MIN) return null;
+  const r = rhythmOf(c, done.job);
+  if (!r || !ofType(facts, 'keyEarned').some(k => k.rhythm === r.id && k.seq < doneSeq && Rep.samePeriod(r, k.day, done.day))) return null;
+  return r.every === 2 ? 'fortnight' : r.monthly ? 'month' : r.yearly ? 'year' : r.everyDays ? 'days' : 'week';
+}
 function rawReturn(c: Content, facts: Fact[], doneSeq: number): Return {
   const beat = facts.find(f => f.type === 'beatPlayed' && f.job === doneSeq) as FactOf<'beatPlayed'> | undefined;
+  const keyAlready = keyAlreadyOf(c, facts, doneSeq);
   const finds = facts.filter((f): f is FactOf<'findGiven'> => f.type === 'findGiven' && f.job === doneSeq).map(f => f.id);
   const seal0 = beat && beat.id !== 'passage' ? S.sealOf(c.story, beat.id) ?? (S.beatOf(c.story, beat.id)?.kind === 'stepKey' ? S.sealOf(c.story, S.beatOf(c.story, beat.id)!.seal!) : undefined) : undefined;
   const keyNote = keyNoteOf(facts, doneSeq, seal0 && !facts.some(f => f.type === 'sealOpened' && f.seal === seal0.id && f.how === 'road') ? seal0.id : null);
-  if (!beat) return { beat: null, line: '', key: false, guess: [], records: [], finds, keyNote };
-  if (beat.id === 'passage') return { beat: null, line: c.story.passages.find(p => p.id === beat.passage)?.line ?? '', key: false, guess: [], records: [], finds, keyNote };
+  if (!beat) return { beat: null, line: '', key: false, guess: [], records: [], finds, keyNote, keyAlready };
+  if (beat.id === 'passage') return { beat: null, line: c.story.passages.find(p => p.id === beat.passage)?.line ?? '', key: false, guess: [], records: [], finds, keyNote, keyAlready };
   const seal = S.sealOf(c.story, beat.id);
-  if (seal) return { beat: seal.id, line: seal.line ?? '', key: !facts.some(f => f.type === 'sealOpened' && f.seal === seal.id && f.how === 'road'), guess: seal.carries?.guess ?? [], records: seal.carries?.records ?? [], finds, keyNote };
+  if (seal) return { beat: seal.id, line: seal.line ?? '', key: !facts.some(f => f.type === 'sealOpened' && f.seal === seal.id && f.how === 'road'), guess: seal.carries?.guess ?? [], records: seal.carries?.records ?? [], finds, keyNote, keyAlready };
   const b = S.beatOf(c.story, beat.id)!;
   const viaSeal = b.seal ? S.sealOf(c.story, b.seal) : undefined;
   const guess = [...new Set([...(b.carries?.guess ?? []), ...(viaSeal?.carries?.guess ?? [])])];
   const part = b.carries?.partial && b.carries.seen?.[0] ? { el: b.carries.partial, mark: b.carries.seen[0] } : undefined;
   /* a Key's return says so; a row the road opened is a step like any other (D-129) */
   const byRoad = facts.some(f => f.type === 'sealOpened' && f.seal === b.seal && f.how === 'road');
-  return { beat: b.id, line: b.line ?? '', key: b.kind === 'stepKey' && !byRoad, guess, choice: b.choice, records: [...(b.carries?.records ?? []), ...(viaSeal?.carries?.records ?? [])], finds, keyNote, ...(part ? { part } : {}) };
+  return { beat: b.id, line: b.line ?? '', key: b.kind === 'stepKey' && !byRoad, guess, choice: b.choice, records: [...(b.carries?.records ?? []), ...(viaSeal?.carries?.records ?? [])], finds, keyNote, keyAlready, ...(part ? { part } : {}) };
 }
 
 /** Today's list, as Today shows it and as the day's finish line reads it (D-130): on a planned week, every job the plan
@@ -1817,7 +1833,9 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   const w = walked(facts), nextBeat = S.nextPlace(c.story, st, pushOn(facts, day)),
     /* a place the story bits on the way will open is still the next place (D-129) */
     nextAt = nextBeat || S.placeAhead(c.story, st) ? S.nextPlaceAt(st) : null;
-  const view = S.inView(c.story, st);
+  /* one in the stretch Dan is in first: a thing behind him is never "ahead" (D-143) */
+  const view = S.inView(c.story, st, st.stretch);
+  const openNow = S.openable(c.story, st);
 
   /* slice 4: tonight, the morning after, the welcome back, the daybook's new page, the deep push */
   const sugg = suggestedOn(facts, day);
@@ -1847,7 +1865,9 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
     day, capacity, suggested: sugg.capacity, size, order, slate, line, done, underWay, complete, next, run, runEnd, arrival,
     /* ahead: the sealed thing in view; before any, the way in (the first morning), then a line from just ahead */
     aheadKey: !!view && !S.onRoad(c.story, view.id), keys: st.held,
-    keyUse: st.held ? S.openable(c.story, st)[0]?.stretch ?? null : null,
+    aheadBehind: view && !S.onRoad(c.story, view.id) && view.stretch !== st.stretch ? view.stretch : null,
+    keyUse: st.held ? (openNow.find(x => x.stretch === st.stretch) ?? openNow[0])?.stretch ?? null : null,
+    keyHere: st.held ? openNow.find(x => x.stretch === st.stretch)?.id ?? null : null,
     here, ahead: view ? view.where : here.id === null ? here.line || S.teaser(c.story, st) : S.teaser(c.story, st), walked: w, toNext, nextAt, toChamber: chamber,
     road: { from: S.lastPlaceAt(st), chamber: S.chamberAt(st), to: S.nextPlaceAt(st), place: nextAt !== null },
     lastArrival: lastArr, story: S.storyState(facts, c.story), teaser: S.teaser(c.story, st), runFinds,

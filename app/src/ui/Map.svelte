@@ -6,7 +6,7 @@
      named; the way ahead is a faint light, unnamed. Never a count of what's left (UX 6). */
   import { game, content } from './game.svelte';
   import { t, dayName } from '../content/copy/en';
-  import { placeAhead, onRoad, openable } from '../core/story';
+  import { placeAhead, openable, lockedOn, openedNiches } from '../core/story';
   import skyUrl from './scene/map-sky.svg?url';
   import type { Go } from './nav';
   import { back } from './back.svelte';
@@ -57,9 +57,12 @@
   /* the stretch the next place is on: a faint light, unnamed */
   const aheadOn = $derived(placeAhead(s, v.story)?.stretch ?? null);
   const stretchName = (id: StretchId) => s.stretches.find(x => x.id === id)!.name;
-  /* only what a Key opens: the road's own rows open on foot (D-129) */
-  const sealedOn = (id: StretchId) => s.seals.filter(x => !x.seenOnly && !onRoad(s, x.id) && !v.story.opened.has(x.id) && x.stretch === id
-    && s.beats.some(b => v.story.played.has(b.id) && b.carries?.inView?.includes(x.id)));
+  /* only what a Key opens: the road's own rows open on foot (D-129). Every niche a Key can open there, and any other the
+     story has shown there: the same test as Today's "Use it on the Map", so the link never points at nothing (D-143 A) */
+  const sealedOn = (id: StretchId) => lockedOn(s, v.story, id);
+  /* the niches opened with a Key, under their stretch, each to read again (D-143 B) */
+  const opened = $derived(openedNiches(s, game.facts));
+  const openedOn = (id: StretchId) => opened.filter(x => x.stretch === id);
   /* the locked things seen on a stretch, each with "Use a Key" when one can open it now (Dan, D-142): a Key opens by
      itself only what is where Dan is; anything behind him waits here for him to choose */
   const canOpen = $derived(new Set(openable(s, v.story).map(x => x.id)));
@@ -70,7 +73,8 @@
   const firstSentence = (line: string) => (line.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? line);
   /* "Ahead: The Survey Cut, the tin box…" under "The Survey Cut" says the name twice: the ahead line drops it */
   const unsaid = (where: string, name: string) => where.toLowerCase().startsWith(name.toLowerCase() + ', ') ? where.slice(name.length + 2) : where;
-  const hereBox = $derived({ label: t('map.hereLabel'), title: v.here.name, say: v.ahead ? `${t('today.ahead')}: ${firstSentence(unsaid(v.ahead, v.here.name))}` : firstSentence(v.here.line) });
+  /* the light is named for the stretch, the box for the place: both said, so a glance never reads two places (L B7) */
+  const hereBox = $derived({ label: v.here.name.toLowerCase() === stretchName(v.here.stretch).toLowerCase() ? t('map.hereLabel') : t('map.hereIn', { stretch: stretchName(v.here.stretch) }), title: v.here.name, say: v.ahead ? `${t('today.ahead')}: ${firstSentence(unsaid(v.ahead, v.here.name))}` : firstSentence(v.here.line) });
 
   /* the places reached on foot or by Key, by stretch, in the order reached: each one's entry can be read again (D-135) */
   const reached = $derived(game.facts.filter((f): f is FactOf<'arrived'> => f.type === 'arrived' && f.kind === 'place')
@@ -272,6 +276,7 @@
             <!-- the locked things first, so "Use a Key" is never below the box's fold (D-142) -->
             {#if sel.kind === 'here' || sel.kind === 'lit'}
               {@const locks = sealedOn(sel.key as StretchId)}
+              {@const done = openedOn(sel.key as StretchId)}
               {#if locks.length}
                 <div class="locks">
                   {#each locks as x (x.id)}
@@ -280,6 +285,15 @@
                       {:else}<span class="needs">{t('map.sealed')}</span>{/if}</p>
                   {/each}
                   {#if !v.keys}<p class="soft lock-say">{t('map.noKey')}</p>{/if}
+                </div>
+              {/if}
+              {#if done.length}
+                <!-- opened with a Key: read again, as places are (D-143 B) -->
+                <div class="locks">
+                  {#each done as x (x.id)}
+                    <p class="lock"><span class="where">{x.where}</span>
+                      <button class="text-link use again" aria-label={t('map.openedSr', { where: x.where })} onclick={() => go('opened', `again:${x.id}`)}><span>{t('map.opened')}</span></button></p>
+                  {/each}
                 </div>
               {/if}
             {/if}
@@ -348,6 +362,7 @@
   .reads { margin: 2px 0 0; }
   /* the locked things on a stretch (D-142): the box keeps its size and scrolls (D-076) */
   .box .swap:has(.locks) { overflow-y: auto; scrollbar-width: none; }
+  .lock .use.again { color: var(--ink-2); }
   .locks { margin: 0 0 8px; border-bottom: 1px solid var(--edge-2); padding-bottom: 6px; }
   .lock { margin: 4px 0; display: flex; gap: 10px; align-items: baseline; justify-content: space-between; font-size: 15px; line-height: 1.35; color: var(--ink-2); }
   .lock .where { flex: 1; min-width: 0; }

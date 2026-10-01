@@ -39,7 +39,8 @@
 
   function first(): Screen {
     const v = game.view;
-    if (v.runEnd || (v.run && v.run.phase !== 'held')) return 'delve';
+    /* an errand run's "What got done?" left unanswered waits for Dan without holding Today: Today says it waits (J1) */
+    if ((v.runEnd && !v.runEnd.pending) || (v.run && v.run.phase !== 'held')) return 'delve';
     if (v.arrival) return 'arrival';
     /* then, once each: the morning after camp, the welcome back, the daybook's new page */
     if (v.morning) return 'morning';
@@ -66,16 +67,19 @@
   /* Back (review 2, D-088): the screens Dan looks through keep a trail, so the arrow and the phone's own back return to
      where each was opened from. Today and the day's own moments (a delve, a place reached, the stair, the morning)
      start the trail again; their way out stays Today. */
-  const LOOK = new Set<Screen>(['map', 'records', 'marks', 'week', 'rhythms', 'daybook', 'set', 'proto', 'cant', 'settings', 'satchel', 'errands']);
+  /* a niche opened with a Key is looked through too: back from the Map never returns to it in a loop (S1, D-143) */
+  const LOOK = new Set<Screen>(['map', 'records', 'marks', 'week', 'rhythms', 'daybook', 'set', 'proto', 'cant', 'settings', 'satchel', 'errands', 'opened']);
   const TABS = new Set<Screen>(['records', 'marks']);
   let trail = $state<Back[]>([]);
   /* Records ⇄ Marks is a tab: the screen swaps in place, with nothing rising or fading in again (Dan, D-093) */
   let still = $state(false);
   const go: Go = (to, a) => {
     steady(); void tick().then(() => { steady(); unslide(); });
-    /* leaving a delve's end by any way out (the arrow, the phone's back): looked at, so it never comes back later (D-120) */
+    /* leaving a delve's end by any way out (the arrow, the phone's back): looked at, so it never comes back later (D-120).
+       A look at a record, the Satchel or a Key's niche from it isn't leaving: back returns to it (N bug 2). An errand
+       run's end still to count is never marked: its question waits (J1) */
     const e = game.view.runEnd;
-    if (screen === 'delve' && e && !game.view.run && to !== 'delve') game.do({ do: 'seen', what: 'step', ref: e.seq });
+    if (screen === 'delve' && e && !e.pending && !game.view.run && to !== 'delve' && !LOOK.has(to as Screen)) game.do({ do: 'seen', what: 'step', ref: e.seq });
     still = TABS.has(screen) && TABS.has(to);
     closeMenu(); closeTick(); closeRows();
     game.deleted = null; game.cantDelete = null;   /* a delete's Undo stays on the screen it was made on (D-125) */
@@ -92,7 +96,8 @@
     if (LOOK.has(to) || (to === 'arrival' && typeof a === 'string' && a.startsWith('again:'))) {
       const top = trail[trail.length - 1];
       if (top && top.screen === to && top.arg === a) trail.pop();                  /* going where back would go */
-      else if (screen === to && !(arg === undefined && a !== undefined)) { /* the same screen, another page: replaced */ }
+      /* the same screen, another page: replaced (the Daybook's Earlier and Later alike, N polish) */
+      else if (screen === to && (to === 'daybook' || !(arg === undefined && a !== undefined))) { /* replaced */ }
       else if (TABS.has(screen) && TABS.has(to) && arg === undefined && a === undefined) { /* Records ⇄ Marks: a tab */ }
       else trail.push({ screen, arg });
     } else trail = [];
@@ -100,7 +105,7 @@
   };
   /* what the arrow says: the screen it returns to */
   const NAMES: Partial<Record<Screen, string>> = { today: 'delve.today', arrival: 'nav.back', map: 'map.nav', records: 'records.nav', marks: 'marks.nav',
-    rhythms: 'rhythms.label', daybook: 'nav.daybook', settings: 'nav.settings', satchel: 'nav.satchel', errands: 'errand.title' };
+    rhythms: 'rhythms.label', daybook: 'nav.daybook', settings: 'nav.settings', satchel: 'nav.satchel', errands: 'errand.title', opened: 'opened.nav' };
   $effect(() => {
     const top = trail[trail.length - 1];
     back.label = !top ? t('delve.today') : top.screen === 'week' ? t(top.arg ? 'week.next' : 'week.label')
@@ -123,11 +128,12 @@
 
   /* a delve that ends while Dan is on another screen: its end is shown (as it is on opening), unless he is typing; the
      chime has already called him (D-120). A change of the delve's phase or of Today's next job steadies taps too. */
-  let lastEnd = game.view.runEnd?.seq ?? 0;
+  /* an errand run's end counted from elsewhere (any other command counts it, J1) is shown then, with its story */
+  let lastEnd = game.view.runEnd?.seq ?? 0, lastPending = !!game.view.runEnd?.pending;
   $effect(() => {
     const e = game.view.runEnd;
-    if (!e || e.seq === lastEnd) return;
-    lastEnd = e.seq;
+    if (!e || (e.seq === lastEnd && (e.pending || !lastPending))) { lastPending = !!e?.pending; return; }
+    lastEnd = e.seq; lastPending = e.pending;
     const typing = document.activeElement instanceof HTMLInputElement || document.activeElement instanceof HTMLTextAreaElement;
     if (screen !== 'delve' && !typing) go('delve');
   });
