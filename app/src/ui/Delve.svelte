@@ -65,7 +65,10 @@
   /* "Where did you stop?" after Finish here (D-112): optional; kept as the job's note, shown at its next Begin and in
      "I can't start" */
   let stopAt = $state('');
-  function keepNote() { if (end && stopAt.trim()) game.do({ do: 'noteJob', job: end.job.id, note: stopAt }); }
+  /* the end's job, held past the end being marked seen: the phone's back marks it before this screen goes (review of D-144) */
+  let noteJob = '';
+  $effect(() => { if (end) noteJob = end.job.id; });
+  function keepNote() { if (noteJob && stopAt.trim()) { game.do({ do: 'noteJob', job: noteJob, note: stopAt }); stopAt = ''; } }
   function leave(to: 'today' | 'arrival') {
     keepNote();
     if (end) game.do({ do: 'seen', what: 'step', ref: end.seq });
@@ -124,7 +127,8 @@
     sayTimer = setTimeout(() => (parkedSay = null), 4000);
   }
   /* leaving the delve with a thought typed (Today, the phone's back): it is kept, never lost (review) */
-  onMount(() => () => { clearTimeout(sayTimer); if (parking && thought.trim()) game.do({ do: 'park', line: thought }); });
+  /* where he stopped, typed and left by the phone's back, is kept as the arrow would keep it (review of D-144) */
+  onMount(() => () => { clearTimeout(sayTimer); if (parking && thought.trim()) game.do({ do: 'park', line: thought }); keepNote(); });
   const canPark = $derived(!!run);
   /* at the end: the thoughts this delve parked, once its question is answered; a tap opens the Satchel */
   const parkedN = $derived(end && !run && !end.pending && !(end.ask && answer === null) ? end.parked : 0);

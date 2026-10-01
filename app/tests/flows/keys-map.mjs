@@ -43,12 +43,13 @@ await shot('1-today');
 
 /* S2: the link opens the Map on a stretch whose box offers "Use a Key" */
 await tap(link, 'the Key link');
-const uses = await btn('Use a Key').count();
+const useKey = () => page.getByRole('button', { name: /^Use a Key: / }).first();
+const uses = await page.getByRole('button', { name: /^Use a Key: / }).count();
 if (!uses) fails.push('the Map the link opened offers no "Use a Key"');
 await shot('2-map');
 
 /* S1: use it, read it, back to the Map, back to Today */
-await tap(btn('Use a Key'), 'Use a Key');
+await tap(useKey(), 'Use a Key');
 const label = (await page.locator('.label-line').first().textContent().catch(() => ''))?.trim();
 if (!/You used a Key/i.test(label ?? '')) fails.push(`the opened screen says "${label}"`);
 if ((await arrow()) !== 'Map') fails.push(`the opened screen's arrow says "${await arrow()}", not Map`);

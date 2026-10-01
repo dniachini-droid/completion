@@ -197,7 +197,7 @@ export const copy = {
   'map.reached': 'Reached',
   'map.wayIn': 'The way you came in.',
   'map.sealed': 'needs a Key',
-  'map.useKey': 'Use a Key',
+  'map.useKey': 'Use a Key', 'map.useKeySr': 'Use a Key: {where}',
   'map.noKey': 'Keep up a recurring job to earn a Key.',
   'opened.label': 'You used a Key',
   'opened.left.none': 'No Keys left.',

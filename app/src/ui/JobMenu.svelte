@@ -64,8 +64,8 @@
     {:else}
     <button class="item" disabled={!!v.run || !!v.runEnd?.pending || finished} onclick={delve}>{v.done.has(j.id) && recurring ? t('menu.delveAgain') : t('menu.delve')}</button>
     {#if menu.on === v.day && v.done.has(j.id)}<button class="item" onclick={notDone}>{t('row.notDone')}</button>{/if}
-    {#if !v.done.has(j.id) && !finished}<button class="item" disabled={!!v.run} onclick={tick}>{t('tick.off')}</button>{/if}
-    {#if !v.done.has(j.id) && !finished}<button class="item" disabled={!!v.run} onclick={cant}>{t('today.cantStart')}</button>{/if}
+    {#if !v.done.has(j.id) && !finished}<button class="item" disabled={!!v.run || !!v.runEnd?.pending} onclick={tick}>{t('tick.off')}</button>{/if}
+    {#if !v.done.has(j.id) && !finished}<button class="item" disabled={!!v.run || !!v.runEnd?.pending} onclick={cant}>{t('today.cantStart')}</button>{/if}
     <button class="item" onclick={edit}>{t('menu.edit')}</button>
     {#if !finished && !menu.on}<button class="item" aria-expanded={placing} onclick={() => { if (!settling()) { placing = !placing; waiting = false; } }}>{t('satchel.day')}</button>{/if}
     <!-- only a one-off still to do can wait on a reply; a recurring job simply comes again (D-137) -->

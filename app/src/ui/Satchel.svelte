@@ -31,14 +31,15 @@
   const forToday = $derived(to === 'today');
   const v = $derived(game.view);
   /* a job not done today can be ticked off, done without a delve (D-134); not while a delve runs */
-  const canTick = (j: Job) => !v.done.has(j.id) && !v.run;
+  const busy = $derived(!!v.run || !!v.runEnd?.pending);
+  const canTick = (j: Job) => !v.done.has(j.id) && !busy;
   /* a one-off with minutes behind it says so (D-133, J2) */
   const sofar = (j: Job) => { const m = carriedOf(game.facts, v.content, j.id); return m > 0 ? t('row.sofar', { min: minutesShort(m) }) : ''; };
   /* during a delve another job can be edited, moved or deleted, never started (D-143 E): a tap opens its menu */
   const tapJob = (j: Job) => () => { if (v.run || v.runEnd?.pending) menu(j)(); else delve(j); };
   const s = $derived(satchelView(content, game.facts, game.now));
   /* the errand run (D-139): several jobs on one trip out, when there are two to take and no delve is under way */
-  const errandsOpen = $derived(!v.run && errandChoices(content, game.facts, game.now).length >= 2);
+  const errandsOpen = $derived(!busy && errandChoices(content, game.facts, game.now).length >= 2);
   let text = $state('');
   let input = $state<HTMLInputElement | null>(null);
   /* one job at a time has its list open, or its days */
@@ -62,8 +63,10 @@
   /* "Delve now": a one-off on today, its delve begun at once (D-131); "Save for later": no day */
   function now() {
     const line = text.trim();
-    if (!line || v.run || v.runEnd) return;
+    if (!line || busy) return;
     steady(); saveList();
+    /* a delve's end looked through from its parked thoughts: left for a new delve, so marked seen (it was read) */
+    if (v.runEnd) game.do({ do: 'seen', what: 'step', ref: v.runEnd.seq });
     /* a job Dan already has opens its own set-up, as its row does (J8) */
     const tie = tieFor(content, game.facts, line, tied ? picked! : undefined);
     if (tie?.same) { text = ''; picked = null; go('set', tie.job.id); return; }
@@ -176,7 +179,7 @@
         <button class="btn-quiet full" type="submit" disabled={!text.trim()}><span>{t('satchel.toToday')}</span></button>
       {/if}
       <div class="two">
-        <button class="btn-quiet" type="button" disabled={!text.trim() || !!v.run || !!v.runEnd} onclick={now}><span>{t('satchel.now')}</span></button>
+        <button class="btn-quiet" type="button" disabled={!text.trim() || busy} onclick={now}><span>{t('satchel.now')}</span></button>
         <button class="btn-quiet" type={forToday ? 'button' : 'submit'} disabled={!text.trim()} onclick={forToday ? later : undefined}><span>{t('satchel.later')}</span></button>
       </div>
       <p class="return-says">{forToday ? t('satchel.return.today') : t('satchel.return.later')}</p>

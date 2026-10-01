@@ -102,6 +102,13 @@ for (let k = 0; k < 20 && !(await page.locator('nav.foot').count()); k++) {
 if (!(await page.locator('nav.foot').count())) { console.log('FAIL: Today never came'); process.exit(1); }
 await measure('today-morning');
 for (const [name, label] of [['week', 'Week'], ['satchel', 'Satchel'], ['daybook', 'Daybook'], ['map', 'Map']]) {
+  /* the Daybook is at Today's foot only once a page has been read; a page still waiting is reached by its line (D-143 F) */
+  if (name === 'daybook' && !(await has(label))) {
+    const waits = page.getByRole('button', { name: /A page was written for you/ });
+    if (await waits.count()) { await tap(waits); await measure(name); await home(); }
+    else console.log('idle: no Daybook page yet, so no Daybook to measure');
+    continue;
+  }
   if (!(await has(label))) { fails.push(`no ${label} on Today`); continue; }
   await tap(btn(label)); await measure(name); await home();
 }

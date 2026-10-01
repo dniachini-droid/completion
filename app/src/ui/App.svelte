@@ -95,7 +95,7 @@
        word to cut) does what its own arrow does, never nothing (N clumsy 5) */
     if (to === 'back' && !trail.length) {
       const v = game.view;
-      if (screen === 'arrival' && v.arrival && !(typeof arg === 'string' && arg.startsWith('again:'))) { if (beatKind(v.arrival.id) === 'word') moment.wordLater = v.arrival.seq; else game.do({ do: 'seen', what: 'arrival', ref: v.arrival.seq }); }
+      if (screen === 'arrival' && v.arrival && !(typeof arg === 'string' && arg.startsWith('again:'))) { if (beatKind(v.arrival.id) === 'word' && moment.cutDone !== v.arrival.seq) moment.wordLater = v.arrival.seq; else game.do({ do: 'seen', what: 'arrival', ref: v.arrival.seq }); }
       else if (screen === 'morning' && v.morning) game.do({ do: 'seen', what: 'morning', ref: v.morning.seq });
       else if (screen === 'welcome' && v.welcome) game.do({ do: 'seen', what: 'welcome', ref: v.welcome.seq });
       else if (screen === 'daybook' && v.close) game.do({ do: 'closeRead', week: v.close.week });
@@ -112,7 +112,10 @@
       /* the same screen, another page: replaced (the Daybook's Earlier and Later alike, N polish) */
       else if (screen === to && (to === 'daybook' || !(arg === undefined && a !== undefined))) { /* replaced */ }
       /* Records ⇄ Symbols by the tab bar: a tab, whatever was open on either, never a step back (N clumsy 1) */
-      else if (TABS.has(screen) && TABS.has(to) && screen !== to && a === undefined) { /* a tab */ }
+      else if (TABS.has(screen) && TABS.has(to) && screen !== to && a === undefined) {
+        /* a tab: the pages opened inside either go too, so the arrow and back lead out of both (review of D-144) */
+        while (trail.length && TABS.has(trail[trail.length - 1].screen)) trail.pop();
+      }
       else trail.push({ screen, arg });
     } else trail = [];
     screen = to; arg = to === 'today' ? undefined : a;
@@ -127,6 +130,9 @@
     if (top.screen === 'week') return t(top.arg ? 'week.next' : 'week.label');
     /* the set-up: its job's name ("Back to Tax return", never "Back to Back") */
     if (top.screen === 'set') return top.arg === 'errands' ? t('errand.title') : game.job(String(top.arg))?.name ?? t('set.label');
+    /* a job's return and a delve's end: by the job (never "Back to Done", review of D-144) */
+    if (top.screen === 'step') { const f = game.facts.find(x => x.seq === top.arg); if (f?.type === 'jobDone') return game.job(f.job)?.name ?? t('step.label'); }
+    if (top.screen === 'delve') { const e = game.view.runEnd ?? game.view.run; if (e) return e.errands ? t('errand.title') : e.job.name; }
     /* a place: its own name */
     if (top.screen === 'arrival') {
       const a = typeof top.arg === 'string' && top.arg.startsWith('again:') ? arrivalAt(game.facts, content, +top.arg.slice(6)) : game.view.arrival ?? game.view.lastArrival;

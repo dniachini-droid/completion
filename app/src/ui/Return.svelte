@@ -9,6 +9,7 @@
   import Glyph from './Glyph.svelte';
   import Settled from './Settled.svelte';
   import Words from './Words.svelte';
+  import { moment } from './moment.svelte';
   import type { CopyKey } from '../content/copy/en';
 
   import type { Go } from './nav';
@@ -23,20 +24,21 @@
   /* a Key is never spent for Dan (D-143 A): earned with something locked where he is, he is offered "Use it here" or
      "Keep it"; with something locked behind him, the Map; else he keeps it for the next locked thing */
   const v = $derived(game.view);
-  let kept = $state(false);
+  const chosen = $derived(doneSeq !== null ? moment.keyChoice[doneSeq] : undefined);
+  const kept = $derived(chosen === 'kept');
   const offerHere = $derived(r?.keyNote === 'held' && !kept && !!v.keyHere && v.keys > 0 && !!go);
   const keyLine = $derived(r?.keyNote === 'held'
-    ? (offerHere ? t('step.keyHere', { job: jobName }) : kept ? t('step.keyKeep', { job: jobName }) : v.keyUse ? t('step.keyMap', { job: jobName }) : t('step.keyHeld', { job: jobName }))
+    ? (chosen === 'used' ? t('step.key', { job: jobName }) : offerHere ? t('step.keyHere', { job: jobName }) : kept ? t('step.keyKeep', { job: jobName }) : v.keyUse ? t('step.keyMap', { job: jobName }) : t('step.keyHeld', { job: jobName }))
     : r?.keyNote === 'kept' ? t('step.keyKept') : r?.key ? t('step.key', { job: jobName })
     /* kept up again in a period whose Key it already earned: said, so Dan never wonders (L C4) */
     : r?.keyAlready ? t(`step.keyAlready.${r.keyAlready}` as CopyKey, { job: jobName }) : '');
-  function useHere() { const id = v.keyHere; if (!id || !go) return; game.do({ do: 'useKey', seal: id }); go('opened', id); }
+  function useHere() { const id = v.keyHere; if (!id || !go || doneSeq === null) return; moment.keyChoice[doneSeq] = 'used'; game.do({ do: 'useKey', seal: id }); go('opened', id); }
   const finds = $derived([...(r?.finds ?? []), ...extraFinds].map(id => content.story.finds.find(f => f.id === id)).filter(f => !!f));
 </script>
 
 {#snippet offer()}
   {#if offerHere}
-    <div class="key-offer"><button class="text-link use" onclick={useHere}><span>{t('step.useHere')}</span></button><button class="text-link" onclick={() => (kept = true)}><span>{t('step.keepIt')}</span></button></div>
+    <div class="key-offer"><button class="text-link use" onclick={useHere}><span>{t('step.useHere')}</span></button><button class="text-link" onclick={() => { if (doneSeq !== null) moment.keyChoice[doneSeq] = 'kept'; }}><span>{t('step.keepIt')}</span></button></div>
   {/if}
 {/snippet}
 

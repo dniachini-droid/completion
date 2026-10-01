@@ -2,7 +2,7 @@
   import Deleted from './Deleted.svelte';
   import Bedtime from './Bedtime.svelte';
   import SwipeRow from './SwipeRow.svelte';
-  import { openMenu, openTick, waited, sayWaited } from './menu.svelte';
+  import { openMenu, openTick, waited, sayWaited, menu } from './menu.svelte';
   import WaitPick from './WaitPick.svelte';
   import { undoneFacts } from '../core/done';
   import { steady } from './taps';
@@ -71,7 +71,9 @@
   function finish() { game.do({ do: 'finishHere' }); go('delve'); }
   /* a tap on a job starts that job, never another: nothing on the list moves (Dan, D-100) */
   /* a job not yet done can be ticked off, done without a delve (D-134); not while a delve runs */
-  const canTick = (id: string) => !v.done.has(id) && !v.run;
+  /* a delve under way, or an errand run's "What got done?" still waiting: anything that counts a job would count it first */
+  const busy = $derived(!!v.run || !!v.runEnd?.pending);
+  const canTick = (id: string) => !v.done.has(id) && !busy;
   /* during a delve another job can be edited, moved or deleted, never started (D-143 E): a tap opens its menu. A done
      recurring job opens its menu too (Delve again, Not done after all, J11); a done one-off is finished */
   function start(id: string) {
@@ -135,7 +137,7 @@
   let keysOpen = $state(false);
 
   /* the errand run (D-139): quietly at the list's end, when two jobs or more could go on one trip out */
-  const errandsOpen = $derived(!v.run && !v.night && errandChoices(content, game.facts, game.now).length >= 2);
+  const errandsOpen = $derived(!busy && !v.night && errandChoices(content, game.facts, game.now).length >= 2);
 
   /* "Add a job" opens the Satchel's one box, ready to type in (D-131), whose Return puts the job on today (Dan, D-143 C):
      focused inside the tap itself, so the phone's keyboard opens straight away */
@@ -174,6 +176,8 @@
   /* "Press and hold a job for more", said until the first time the job menu is opened (J19) */
   let held = $state(holdSeen());
   function holdSeen() { try { return localStorage.getItem('hint.hold') === '1'; } catch { return true; } }
+  /* the menu found while Today is open: the hint goes at once, not at the next visit (review of D-144) */
+  $effect(() => { if (menu.job) held = true; });
   const holdHint = $derived(!held && !v.run && others.length > 0);
 </script>
 
@@ -334,7 +338,7 @@
         <!-- the same "It's done" on a row further down: a tap on the row itself still starts a delve (D-100, D-120) -->
         <!-- the tick circle over the marker: done without a delve, with the time it took (D-134) -->
         {#snippet lead()}{#if canTick(id)}<button class="tickbtn" aria-label={t('tick.sr', { job: j.name })} onclick={() => openTick(id, go)}><span class="ring"></span></button>{/if}{/snippet}
-        {#snippet over()}{#if sayDone(j) && !v.run}<button class="text-link row-done" onclick={() => done(j)}><span>{t('today.itsDone')}</span></button>{/if}{/snippet}
+        {#snippet over()}{#if sayDone(j) && !busy}<button class="text-link row-done" onclick={() => done(j)}><span>{t('today.itsDone')}</span></button>{/if}{/snippet}
       </SwipeRow>
     {/snippet}
     <div class="rows">
@@ -362,9 +366,9 @@
             </SwipeRow>
             <p class="ask">{t('wait.ask')}</p>
             <div class="reply-acts">
-              <button class="text-link" aria-label={t('wait.srBack', { job: j.name })} disabled={!!v.run} onclick={() => backToIt(r.job)}><span>{t('wait.back')}</span></button>
-              <button class="text-link" aria-label={t('wait.srStill', { job: j.name })} aria-expanded={still === r.job} disabled={!!v.run} onclick={() => (still = still === r.job ? null : r.job)}><span>{t('wait.still')}</span></button>
-              <button class="text-link" aria-label={t('wait.srDone', { job: j.name })} disabled={!!v.run} onclick={() => openTick(r.job, go)}><span>{t('wait.done')}</span></button>
+              <button class="text-link" aria-label={t('wait.srBack', { job: j.name })} disabled={busy} onclick={() => backToIt(r.job)}><span>{t('wait.back')}</span></button>
+              <button class="text-link" aria-label={t('wait.srStill', { job: j.name })} aria-expanded={still === r.job} disabled={busy} onclick={() => (still = still === r.job ? null : r.job)}><span>{t('wait.still')}</span></button>
+              <button class="text-link" aria-label={t('wait.srDone', { job: j.name })} disabled={busy} onclick={() => openTick(r.job, go)}><span>{t('wait.done')}</span></button>
             </div>
             {#if still === r.job}<WaitPick day={v.day} who={r.who ?? ''} name={j.name} pick={(u, w) => stillWaiting(r.job, u, w)} />{/if}
           </div>

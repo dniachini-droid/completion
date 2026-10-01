@@ -14,6 +14,8 @@
   const w = game.view.welcome;
   const q = w?.question ? content.story.openQuestions.find(x => x.id === w.question)?.line ?? '' : '';
   const view = $derived(v.ahead);
+  /* a thing that ends with its own mark keeps it, with no full stop after it (review of D-144) */
+  const stop = (x: string) => x.replace(/([.!?…])\s*\.$/, '$1');
 
   $effect(() => { if (!w) go('today'); });
   /* what slipped (D-114): one line, one question, never a list */
@@ -49,7 +51,7 @@
     <div class="label-line lit rise welcome">{t('welcome.label')}</div>
     <h1 class="carve lg rise">{v.here.name}</h1>
     <!-- the locked thing in view, said as what it is (S9): ahead of him, or left behind him -->
-    {#if view}<p class="say on-scene rise d1">{v.aheadBehind ? `${t('today.behind')}: ${view}.` : t('welcome.ahead', { thing: view })}</p>{/if}
+    {#if view}<p class="say on-scene rise d1">{stop(v.aheadBehind ? `${t('today.behind')}: ${view}.` : t('welcome.ahead', { thing: view }))}</p>{/if}
   </header>
   <div class="mid"></div>
   <section class="bottom col rise d2">

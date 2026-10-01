@@ -125,7 +125,7 @@
     step = 4; phase = 'lock'; void platform.haptics.ring();
     later(() => { phase = 'cine'; }, 1400);                        /* the interface steps aside */
     later(() => { phase = 'answer'; h?.openStone?.(reduce ? 1 : 1900); if (wakes) h?.wake(); }, 1900);
-    later(() => { phase = 'settled'; moment.cutting = false; }, 7400);   /* about 6 s of the place answering */
+    later(() => { phase = 'settled'; moment.cutting = false; moment.cutDone = a.seq; }, 7400);   /* about 6 s of the place answering */
   }
   /* a tap during the answer settles it at once (as every arrival settles on a tap) */
   function hurry(e: PointerEvent) {
@@ -134,7 +134,7 @@
     timers.forEach(clearTimeout);
     if (phase === 'cine') { phase = 'answer'; h?.openStone?.(1); if (wakes) h?.wake(); }
     root.getAnimations({ subtree: true }).forEach(x => { try { x.finish(); } catch { /* endless */ } });
-    phase = 'settled'; moment.cutting = false;
+    phase = 'settled'; moment.cutting = false; moment.cutDone = a.seq;
   }
 </script>
 

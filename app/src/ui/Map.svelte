@@ -289,7 +289,7 @@
                 <div class="locks">
                   {#each locks as x (x.id)}
                     <p class="lock"><span class="where">{x.where}</span>
-                      {#if v.keys && canOpen.has(x.id)}<button class="text-link use" onclick={() => useKey(x.id)}><span>{t('map.useKey')}</span></button>
+                      {#if v.keys && canOpen.has(x.id)}<button class="text-link use" aria-label={t('map.useKeySr', { where: x.where })} onclick={() => useKey(x.id)}><span>{t('map.useKey')}</span></button>
                       {:else}<span class="needs">{t('map.sealed')}</span>{/if}</p>
                   {/each}
                   {#if !v.keys}<p class="soft lock-say">{t('map.noKey')}</p>{/if}
