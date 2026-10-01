@@ -44,7 +44,8 @@ const helpers = page => {
   if ((await arrow()) !== 'Today') fails.push(`the welcome back has no arrow to Today (${await arrow()})`);
   const line = (await page.locator('.top .say').first().textContent().catch(() => ''))?.trim() ?? '';
   if (line && !/^(Ahead of you: |Behind you: )/.test(line)) fails.push(`the welcome's line about the locked thing has no label: "${line.slice(0, 24)}…"`);
-  if (await btn('Read the last record').count()) {
+  if (!(await btn('Read the last record').count())) fails.push('the welcome back offers no "Read the last record"');
+  else {
     await tap(btn('Read the last record'), 'Read the last record');
     if ((await arrow()) !== 'Where you were') fails.push(`the record's arrow says "${await arrow()}", not "Where you were"`);
     await tap(btn('Done reading'), 'Done reading');
@@ -90,13 +91,13 @@ const helpers = page => {
   /* clumsy 3: a tick from the Satchel's job menu; its return goes back to the Satchel; "Not now" too */
   await tap(page.locator('.foot').getByRole('button', { name: 'Satchel', exact: true }), 'the Satchel');
   const tickHere = page.locator('.item').getByRole('button', { name: /: tick off$/ }).first();
-  if (await tickHere.count()) {
+  if (!(await tickHere.count())) fails.push('the Satchel has no job to tick off');
+  else {
     await tap(tickHere, 'a tick circle in the Satchel'); await tap(btn('15 min'), '15 min'); await page.waitForTimeout(600);
     const say = await arrow();
     if (say !== 'Satchel' && say !== 'See where you are') fails.push(`the return of a job ticked in the Satchel says "${say}"`);
     if (say === 'Satchel') { await tap(page.locator('button.home'), 'the return\'s arrow'); if ((await page.locator('.ui h1').first().textContent())?.trim() !== 'The Satchel') fails.push('back from the return did not go to the Satchel'); }
   }
-  /* the trial controls' link says so, short */
   await page.close();
 }
 

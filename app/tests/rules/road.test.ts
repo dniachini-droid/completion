@@ -175,8 +175,8 @@ describe('Keys open only the niches; the road opens its own rows on the way (D-1
     /* a niche's step a Key played as a job's return still says a Key */
     const keyed = byKey.map(f => facts.find(g => g.type === 'beatPlayed' && g.id === S.sealOf(s, f.seal)!.beat) as FactOf<'beatPlayed'> | undefined)
       .filter(p => p?.job);
-    /* at this pace a Key rarely finds a niche where Dan is: most are used on the Map (D-142), none of them a return */
-    for (const p of keyed) expect(returnOf(C, facts, p!.job!).key, p!.id).toBe(true);
+    /* a Key is never spent for Dan (D-143 A): no niche's step plays as a job's return; each is opened by his choice */
+    expect(keyed.map(p => p!.id)).toEqual([]);
     expect(aheadOfDan(facts)).toEqual([]);
     expect(outOfOrder(facts)).toEqual([]);
   }, 60_000);

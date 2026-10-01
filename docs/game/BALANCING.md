@@ -31,8 +31,8 @@ There are **two clocks**. **Time moves the Site:** every real minute moves Dan, 
 |---|---|---|
 | Useful Keys a week (the bounded supply) | **5** | About 250 sealed things are written for the year (≈ 5 a week). Adding rhythms never raises it (D-047 invariant) |
 | How they're earned | each rhythm met = 1 Key, the moment it's met, until the week's 5 are used | Dan's six rhythms meet about 5 in a full week (the tank clean is fortnightly), so an honest full week reaches the supply |
-| Where a Key goes | to the next niche in view (a story one first, then a plain one); never a row of the road, which opens on foot (D-129) | the story's pace comes first (D-035, D-043 F6); since D-129 it no longer waits on Keys |
-| A rhythm met after the supply is used | **one find** (at most one a week) | effort is never turned away (D-039) without adding Keys |
+| Where a Key goes | kept, then used by Dan's choice on any niche a Key can open (`openable()`): where he is ("Use it here") or on the Map; never a row of the road, which opens on foot (D-129, D-143 A) | the story's pace comes first (D-035, D-043 F6); since D-129 it no longer waits on Keys, so nothing is lost by a Key waiting for Dan |
+| A rhythm met after the supply is used, or a Key earned with nothing it could open (every openable niche already has a kept Key) | **one find** (at most one a week) | effort is never turned away (D-039) without adding Keys |
 | ~~The weekly floor~~ | **Removed (Dan, D-142).** A Key comes only from a recurring job kept up. The road no longer waits on Keys (D-129), so the floor's reason (a bad week stalling the story) is gone | was: a week with a day complete brought at least 2 Keys (D-043) |
 | A new rhythm or changed number | counts from its next full week | D-043 F7 |
 | A rhythm far beyond its enough | pays in steps and finds, and no longer opens an extra sealed thing | the old "strongly exceeded target" opening would have broken the Key invariant (D-047) |

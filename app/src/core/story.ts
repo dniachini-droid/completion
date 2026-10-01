@@ -272,8 +272,6 @@ export function nextPassage(s: Story, st: StoryState): string | null {
 
 /* ---------- Keys ---------- */
 
-/** A sealed thing that carries the story: a step or place of its own, a record or a guess (BALANCING §3: story counts first). */
-const storySeal = (x: Seal) => !!(x.beat || x.arrival || x.carries?.records?.length || x.carries?.guess?.length);
 
 /**
  * Whether a Key may open this sealed thing now: if a beat brings it into view, that beat has played (MVP_CONTENT §0.2);
@@ -284,25 +282,6 @@ export function mayOpen(s: Story, st: StoryState, x: Seal): boolean {
   if (by.length && !by.some(b => st.played.has(b.id))) return false;
   if (x.arrival) { const b = beatOf(s, x.arrival); return !b || allMet(st, b.req); }
   return st.visited.has(x.stretch);
-}
-
-/** The sealed thing the next Key opens: the story's own first (any week up to this one, in order), then the plain ones;
-    a surplus opens next week's plain ones. The road's rows are never a Key's: a Key opens only a niche (D-129). */
-export function nextSeal(s: Story, st: StoryState, where?: StretchId): Seal | null {
-  /* `where`: a Key opens by itself only what is in the part of the road Dan is in; anything behind him waits for him to
-     choose it on the Map (Dan, D-142), so a scene never plays as if he had jumped back */
-  const shut = s.seals.filter(x => !x.seenOnly && !st.opened.has(x.id) && !onRoad(s, x.id) && (!where || x.stretch === where));
-  const order = (a: Seal, b: Seal) => a.w - b.w || a.o - b.o;
-  const due = shut.filter(x => x.w <= st.week);
-  const early = shut.filter(x => x.w === st.week + 1 && x.plain).sort(order);
-  /* the story's own sealed things in their order, each only once it can be reached and seen (D-079); one not yet in
-     reach never holds back a plain one Dan can open now (D-142: Keys sat kept beside a niche they could open) */
-  const story = due.filter(storySeal).sort(order)[0];
-  if (story && mayOpen(s, st, story)) return story;
-  const plain = due.filter(x => !storySeal(x)).sort(order).find(x => mayOpen(s, st, x));
-  if (plain) return plain;
-  /* next week's plain ones only once nothing of this week's is left shut (a surplus, as before) */
-  return !story && !due.length && early[0] && mayOpen(s, st, early[0]) ? early[0] : null;
 }
 
 /** The niches a Key can open now, wherever they are: shut, seen, reached, and of a story week begun (a plain one of

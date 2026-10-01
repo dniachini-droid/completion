@@ -20,7 +20,7 @@
 - [x] 2.1 **The finish line moves after the shown jobs are done** (L A1). Fix: a job on the day's line stays on it when done, whatever put it there; the line never refills because of a completion. Rule test.
 - [x] 2.2 **"Add a job" on Today doesn't add to today** (J5). D-143 C.
 - [x] 2.3 **A half-done job vanishes overnight, minutes unseen** (J6). D-143 D ("N min so far" on Today).
-- [x] 2.4 **Rows say "25 min" though the set-up opens at 30; carried minutes never shown on the row** (J2). Fix: rows show the set-up's minutes; with carried minutes, "N min so far".
+- [x] 2.4 **Rows say "25 min" though the set-up opens at 30; carried minutes never shown on the row** (J2). Fix: rows show the set-up's minutes; with carried minutes, "N min so far". **Built differently (D-144 §5):** a one-off's row shows "N min so far" or nothing; a recurring job's row still shows the minutes Dan set for it (e.g. "60 min") while its set-up opens at 30 (D-124): put to Dan at the merge (fresh review, 2026-10-01).
 - [x] 2.5 **During a delve, no "Add a job", no menus, no slides** (J9). D-143 E.
 - [x] 2.6 **Avoided job holds the day with no word** (L B6). D-143 G ("Only [job] left: that's the one.").
 - [x] 2.7 **"Not today" on a recurring job vanishes; undo only in the Week; "Put it back" dies on leaving Today** (J7). Fix: the row stays as "Not today · Put back" (struck, quiet) for the rest of the day.

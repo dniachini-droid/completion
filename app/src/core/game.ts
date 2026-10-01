@@ -544,8 +544,10 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string, tick
     const surplus = () => { if (!ofType(w.all, 'findGiven').some(f => f.why === 'surplus' && calendarWeek(f.day) === calendarWeek(day))) giveFind(w, c, 'surplus', at, day, done.seq); };
     if (S.keysIn(w.all, day) < S.KEYS_A_WEEK) {
       landKey(w, r.id, at, day);
-      /* the Key is kept (D-143 A), and the job still brings something: the week's one surplus find (D-129) */
-      surplus();
+      /* the Key is kept (D-143 A); with nothing locked it could open (every such thing already has a kept Key for it),
+         the job still brings something: the week's one surplus find, as before (D-129, BALANCING §3) */
+      const st = S.storyState(w.all, c.story);
+      if (S.openable(c.story, st).length < st.held) surplus();
     } else surplus();
   }
   /* a Key kept for later is never spent for Dan on a job's return (D-143 A, was D-129): it is his to use */

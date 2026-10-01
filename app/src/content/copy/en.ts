@@ -15,7 +15,7 @@ export const copy = {
   'today.keys.useMany': 'Use one on the Map',
   'today.keys.here': 'Use it here',
   'today.keys.hereMany': 'Use one here',
-  'today.keys.useOnMap': 'A Key is never used for you: on the Map, choose any locked thing you have passed.',
+  'today.keys.useOnMap': 'A Key is never used for you: on the Map, choose a locked thing that says Use a Key.',
   'today.aheadKey': 'Needs a Key',
   'today.behind': 'Behind you',
   'today.behindMap': 'On the Map',

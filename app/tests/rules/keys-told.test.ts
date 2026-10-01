@@ -95,12 +95,14 @@ describe('a Key is never spent for Dan; the Map and Today agree (D-143 A)', () =
     for (const day of [...new Set(facts.map(f => f.day))]) {
       const upTo = facts.filter(f => f.day <= day), last = upTo[upTo.length - 1];
       const v = see(upTo, C, last.at), st = S.storyState(upTo, C.story);
-      const view = S.inView(C.story, st, st.stretch);
-      if (!view || !v.aheadKey) continue;
-      if (view.stretch === st.stretch) expect(v.aheadBehind, day).toBe(null);
-      else { behind++; expect(v.aheadBehind, day).toBe(view.stretch); expect(S.inView(C.story, st)?.stretch === st.stretch && S.inView(C.story, st)?.id !== view.id, day).toBe(false); }
+      /* worked out here, not by inView's own stretch filter: every shut thing the story has shown, in the order shown */
+      const shut = C.story.beats.filter(b => st.played.has(b.id)).flatMap(b => b.carries?.inView ?? [])
+        .map(id => S.sealOf(C.story, id)).filter(x => !!x && !x.seenOnly && !st.opened.has(x.id));
+      if (!shut.length || !v.aheadKey) continue;
+      if (shut.some(x => x!.stretch === st.stretch)) expect(v.aheadBehind, day).toBe(null);
+      else { const x = shut[shut.length - 1]!; if (S.onRoad(C.story, x.id)) continue; behind++; expect(v.aheadBehind, day).toBe(x.stretch); }
     }
-    expect(behind).toBeGreaterThanOrEqual(0);
+    expect(behind, 'a day with a locked thing only behind Dan').toBeGreaterThan(0);
   }, 120_000);
   it('a niche of a later story week is never offered on a stretch the route loops back to (rule 5)', async () => {
     const S = await import('../../src/core/story');

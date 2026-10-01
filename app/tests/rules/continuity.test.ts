@@ -32,7 +32,7 @@ describe('The continuity guard: the story never runs ahead of where Dan is (D-07
       expect(aheadOfDan(p.facts)).toEqual([]);
       expect(outOfOrder(p.facts)).toEqual([]);
       }
-    }, 60_000);
+    }, 150_000);   /* three bedtimes of six simulated weeks: High alone takes about 40 s (the finish line checks each done job, D-144) */
   }
 });
 

@@ -48,7 +48,8 @@
     if (v.morning) return 'morning';
     if (v.welcome) return 'welcome';
     /* after days away, the welcome back only: the new page waits as a quiet line on Today (Dan, D-143 F) */
-    if (v.close && !game.facts.some(f => f.type === 'welcomed' && f.day === v.day)) return 'daybook';
+    /* (still a line after 04:00: a welcome since the page was written keeps it so, review of D-144) */
+    if (v.close && !game.facts.some(f => f.type === 'welcomed' && f.day >= v.close!.day)) return 'daybook';
     return 'today';
   }
   let screen = $state<Screen>(first());

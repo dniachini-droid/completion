@@ -39,10 +39,12 @@
   const lastPlace = $derived(v.lastArrival);
 
   const recurring = (id: string) => v.content.rhythms.some(r => r.job === id);
+  /* minutes into the game day, which turns at 04:00: 01:00 comes after 18:00 (review of D-144) */
+  const fromFour = (hm: string) => ((+hm.slice(0, 2) + 20) % 24) * 60 + +hm.slice(3, 5);
   function rowNote(j: Job): string {
     if (v.done.has(j.id)) return t('row.done');
     /* an appointment gone by is noticed, never scolded (L C5) */
-    if (v.times[j.id]) return game.now.slice(11, 16) > v.times[j.id] ? t('row.wentBy', { time: v.times[j.id] }) : v.times[j.id];
+    if (v.times[j.id]) return fromFour(game.now.slice(11, 16)) > fromFour(v.times[j.id]) ? t('row.wentBy', { time: v.times[j.id] }) : v.times[j.id];
     /* every job is a delve (D-117), so a row never says "a delve". A recurring job says its usual minutes, which Dan set
        for it; a one-off says the minutes it already has ("27 min so far", D-143 D), else nothing: never a number
        nobody chose (J2) */
