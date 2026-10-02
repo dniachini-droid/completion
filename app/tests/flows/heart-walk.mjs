@@ -262,6 +262,9 @@ let closes = 0, mornings = 0;
 const openers = async (name) => {
   /* up to eight screens can wait on an opening (arrivals, a morning, a welcome, a week close): each is seen in turn */
   for (let k = 0; k < 8; k++) {
+    /* (a slow machine draws the next screen late: let it settle before looking) */
+    await page.clock.runFor(600); await page.waitForTimeout(250);
+    if (!(await page.locator('nav.foot, .arr, button.btn').count())) { await page.clock.runFor(1500); await page.waitForTimeout(500); }
     /* a place reached overnight (the head start, D-083) opens the app */
     if (await page.locator('.arr').count() && !(await page.locator('button.rodbtn').count())) { await arrivals(name + '-open'); continue; }
     /* the morning's way on reads "Back to today", as everywhere (the flow review, N polish) */
