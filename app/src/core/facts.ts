@@ -4,6 +4,7 @@
  * day; a log that grew in place (a command adding its facts as it goes) is read on from where it was. Pure, no rule here.
  */
 import type { Fact, FactBody, FactOf } from './types';
+import { gameDay, type Moment } from './time';
 
 interface Index { n: number; byType: Map<string, Fact[]>; byDay: Map<string, Fact[]> }
 const memo = new WeakMap<Fact[], Index>();
@@ -21,3 +22,12 @@ export const ofType = <T extends FactBody['type']>(facts: Fact[], type: T): Fact
   (read(facts).byType.get(type)?.slice() ?? []) as FactOf<T>[];
 /** Every fact written on one day, in log order (a fresh array). */
 export const onDay = (facts: Fact[], day: string): Fact[] => read(facts).byDay.get(day)?.slice() ?? [];
+
+/** The game day at `now`, never behind the latest day already in the log (deep review R#6: flying west after 04:00 sent
+    it back, and a session could be written to a day already behind). Looked for back to the last opening. */
+export function dayOf(facts: Fact[], now: Moment): string {
+  let d = gameDay(now);
+  /* (a plan change's day is the day a job moves to, never a day played: it is passed over) */
+  for (let i = facts.length - 1; i >= 0; i--) { const f = facts[i]; if (f.type !== 'planChanged' && f.day > d) d = f.day; if (f.type === 'opened') break; }
+  return d;
+}

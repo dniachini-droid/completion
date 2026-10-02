@@ -401,7 +401,10 @@ function weekAt(c: Content, facts: Fact[], week: string, today: string): WeekVie
     room.set(e.job, left(e.job) - 1);
   };
   const released: PlanEntry[] = [];
-  const opened = new Set(ofType(facts, 'opened').map(f => f.day));
+  /* the days of an absence (between the last day opened and a welcome back): their sessions fall away; a single day not
+     opened is no absence, and its sessions are placed again like any missed one (fresh review) */
+  const absences = ofType(facts, 'welcomed').map(f => [f.since, f.day] as const);
+  const away = (d: string) => absences.some(([from, to]) => d > from && d < to);
   /* the day of a welcome back holds what was planned for it, and nothing missed before (Dan, deep review Part 2 #1) */
   const welcomeDay = ofType(facts, 'welcomed').some(f => f.day === today);
   for (const e of plan) {
@@ -411,8 +414,8 @@ function weekAt(c: Content, facts: Fact[], week: string, today: string): WeekVie
     if (e.day <= today && dj) { dj.entry = e.id; if (e.time) dj.time = e.time; continue; }   /* done as planned */
     /* a missed appointment falls away (D-080); a one-off whose day passed goes back to the Satchel's "No day yet" (D-131):
        only a recurring job's missed session is placed again */
-    /* (a session missed on a day never opened, Dan away, falls away too: nothing piles up for his return, W F4) */
-    if (e.day < today) { if (!e.time && rhythm(e.job) && opened.has(e.day)) released.push(e); continue; }
+    /* (a session missed while Dan was away falls away too: nothing piles up for his return, W F4) */
+    if (e.day < today) { if (!e.time && rhythm(e.job) && !away(e.day)) released.push(e); continue; }
     if (left(e.job) > 0 && !at(e.day)!.jobs.some(x => x.job === e.job && !x.done)) place(e, e.day);   /* past enough, it quietly leaves */
   }
   /* released: the first day from today still below a Normal day's size and without this job; otherwise it falls away */
@@ -475,7 +478,10 @@ export function slipped(c: Content, facts: Fact[], since: string, today: string)
   const passed = c.jobs.filter(j => j.by && j.by < today && !j.stopped && !ever.has(j.id)).sort((a, b) => a.by!.localeCompare(b.by!));
   if (passed.length) out.push({ job: passed[0].id, kind: 'date', day: passed[0].by! });
   const rhythmJobs = new Set(c.rhythms.map(r => r.job)), own = new Set(ofType(facts, 'planAdded').map(f => f.entry.id));
-  for (const week of [...new Set([calendarWeek(since), calendarWeek(today)])]) {
+  /* every week of the absence, not only its first and last (fresh review) */
+  const weeks: string[] = [];
+  for (let w = calendarWeek(since); w <= calendarWeek(today); w = addDays(w, 7)) weeks.push(w);
+  for (const week of weeks) {
     const missed = (planOf(facts, week) ?? []).filter(e => own.has(e.id) && e.time && e.day >= since && e.day < today && !rhythmJobs.has(e.job)
       && c.jobs.some(j => j.id === e.job && !j.stopped) && !doneFacts(facts).some(f => f.job === e.job && f.day === e.day));
     for (const e of missed) if (!out.some(x => x.job === e.job)) out.push({ job: e.job, kind: 'appt', day: e.day, time: e.time });

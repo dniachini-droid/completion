@@ -6,11 +6,11 @@
  *
  * Times are wall-clock ("HH:MM" on a calendar date), so a clock change between now and the alert moves with Dan.
  */
-import { calendarWeek, gameDay, weekdayOf, type Moment } from './time';
+import { calendarWeek, weekdayOf, type Moment } from './time';
 import { addDays, daysBetween, live, planMade, weekOf } from './week';
 import { fallsOn } from './repeat';
 import { doneFacts } from './done';
-import { ofType } from './facts';
+import { dayOf, ofType } from './facts';
 import type { Content, Fact, FactBody, FactOf } from './types';
 
 /** How long before the time an alert comes: at the time, 15 minutes or an hour before. */
@@ -105,7 +105,7 @@ export function alertsOn(base: Content, facts: Fact[], day: string, today = day)
 
 /** The alerts still to sound from `now`, over the next week, soonest first. */
 export function alertsDue(c: Content, facts: Fact[], now: Moment, days = AHEAD_DAYS): Alert[] {
-  const today = gameDay(now), wall = now.slice(0, 16), out: Alert[] = [];
+  const today = dayOf(facts, now), wall = now.slice(0, 16), out: Alert[] = [];
   for (let i = 0; i < days; i++) out.push(...alertsOn(c, facts, addDays(today, i), today));
   return out.filter(a => `${a.date}T${a.clock}` > wall).sort((a, b) => `${a.date}T${a.clock}`.localeCompare(`${b.date}T${b.clock}`));
 }

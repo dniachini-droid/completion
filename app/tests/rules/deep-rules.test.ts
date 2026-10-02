@@ -36,28 +36,39 @@ const of = <T extends Fact['type']>(facts: Fact[], t: T) => facts.filter((f): f 
 describe('the welcome-back day (Part 2 #1, W F4)', () => {
   it('missed recurring sessions from days away never pile onto the day he comes back', () => {
     const p = player().do({ do: 'open' }).do({ do: 'planWeek', week: '2026-09-28' });
-    const planned = (day: string) => W.weekOf(p.view().content, p.facts, '2026-09-28', day).days.find(d => d.day === day)!.jobs.map(j => j.job);
-    const sunday = planned('2026-10-04');
-    /* away Tuesday to Saturday; back on Sunday */
-    p.to('2026-10-04').do({ do: 'open' });
+    const planned = (day: string, today = day) => W.weekOf(p.view().content, p.facts, '2026-09-28', today).days.find(d => d.day === day)!.jobs.map(j => j.job);
+    /* what the plan held for Friday when it was made */
+    const friday = planned('2026-10-02', '2026-09-28');
+    /* away Tuesday to Thursday (Course and Spanish missed on Tuesday, the tank on Wednesday); back on Friday */
+    p.to('2026-10-02').do({ do: 'open' });
     expect(p.view().welcome).not.toBeNull();
-    expect(planned('2026-10-04').sort()).toEqual(sunday.sort());
+    expect(planned('2026-10-02').sort()).toEqual(friday.sort());
+  });
+  it('one day not opened is no absence: its recurring sessions are placed again later in the week (fresh review)', () => {
+    const p = player('2026-09-29T09:00:00+01:00').do({ do: 'open' }).do({ do: 'planWeek', week: '2026-09-28' });
+    const count = (job: string) => W.weekOf(p.view().content, p.facts, '2026-09-28', '2026-10-01').days.flatMap(d => d.jobs).filter(j => j.job === job).length;
+    const before = count('gym');
+    /* Wednesday not opened; Thursday is no welcome back */
+    p.to('2026-10-01').do({ do: 'open' });
+    expect(p.view().welcome).toBeNull();
+    expect(count('gym')).toBe(before);
   });
 });
 
 describe('the finish line (Part 2 #3, W F9, W F10)', () => {
   it('a job added to today always joins the line, never "If there\'s time"', () => {
     const p = player().do({ do: 'open' }).do({ do: 'planWeek', week: '2026-09-28' });
-    p.do({ do: 'addToWeek', line: 'Call the bank', day: '2026-09-28' });
+    /* Tuesday's line is already full (Course, Spanish, the post, the gym) */
+    p.to('2026-09-29').do({ do: 'open' }).do({ do: 'addToWeek', line: 'Call the bank', day: '2026-09-29' });
     const id = p.view().content.jobs.find(j => j.name === 'Call the bank')!.id;
     expect(p.view().line).toContain(id);
   });
   it('"Not today" shortens the line, never refills it', () => {
     const p = player().do({ do: 'open' }).do({ do: 'planWeek', week: '2026-09-28' });
-    const before = p.view().line, rest = p.view().slate.filter(x => !before.includes(x));
-    p.do({ do: 'setAside', job: before[0] });
-    expect(p.view().line).toEqual(before.slice(1));
-    for (const x of rest) expect(p.view().line).not.toContain(x);
+    p.to('2026-09-29').do({ do: 'open' }).do({ do: 'addToWeek', line: 'Call the bank', day: '2026-09-29' });
+    const before = p.view().line;
+    p.do({ do: 'setAside', job: 'post' });
+    expect(p.view().line).toEqual(before.filter(x => x !== 'post'));
   });
 });
 
@@ -65,9 +76,10 @@ describe('every 2 weeks (Part 2 #4, W F6)', () => {
   it('counts from the last time done: due again 14 days after, its Key once in those 14 days', () => {
     const p = player('2026-10-10T09:00:00+01:00').do({ do: 'open' }).delve('tank', 60);
     expect(of(p.facts, 'keyEarned').filter(k => k.rhythm === 'r-tank')).toHaveLength(1);
-    /* a fixed fortnight would have it due again on Monday 12 Oct; from the last time, on Saturday 24 Oct */
-    p.to('2026-10-13').do({ do: 'open' });
-    expect(p.view().slate).not.toContain('tank');
+    /* a fixed fortnight has it due again from Monday 19 Oct (offered on Wednesday 21); from the last time, on Saturday 24 Oct */
+    /* (opened each day, so it is no welcome back) */
+    for (const d of ['2026-10-19', '2026-10-20', '2026-10-21']) p.to(d).do({ do: 'open' });
+    expect(p.view().order).not.toContain('tank');
     p.to('2026-10-24').do({ do: 'open' });
     expect(p.view().order).toContain('tank');
     p.delve('tank', 60);
@@ -160,6 +172,14 @@ describe('the road while a word waits (B13, W F7)', () => {
 });
 
 describe('the game day never goes back (R#6)', () => {
+  it('flying west after 04:00: the phone\'s clock says yesterday evening, the game stays on today', () => {
+    const facts = act([], C, { do: 'open' }, '2026-09-30T05:00:00+01:00');
+    /* nine hours west, two hours later: the phone reads 21:00 the evening before */
+    const west = '2026-09-29T21:00:00-08:00';
+    expect(see(facts, C, west).day).toBe('2026-09-30');
+    const f = act(facts, C, { do: 'setAside', job: see(facts, C, west).slate[0] }, west);
+    expect(f.every(x => x.day === '2026-09-30')).toBe(true);
+  });
   it('a job moved to a later day never moves today along with it', () => {
     const p = player().do({ do: 'open' }).do({ do: 'planWeek', week: '2026-09-28' });
     const e = W.planOf(p.facts, '2026-09-28')!.find(x => x.day === '2026-09-28')!;

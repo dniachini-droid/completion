@@ -41,11 +41,15 @@ export function whyUnreadable(raw: string, to = SAVE_VERSION): 'newer' | 'broken
   return readSave(raw, to) ? null : 'broken';
 }
 
+/* a plan entry moved writes its own `day` over the fact's (null: off any day), so only its shape is asked there */
+const DAY = /^\d{4}-\d{2}-\d{2}$/;
+const dayReads = (f: Fact) => f.type === 'planChanged' ? f.day === null || (typeof f.day === 'string' && DAY.test(f.day)) : typeof f.day === 'string' && DAY.test(f.day);
+
 /** Every fact shaped as a fact: an object with a whole-number seq, a type, a day and a time that reads (deep review B14).
     A file failing this is never restored. */
 export function factsSound(facts: unknown[]): boolean {
   return facts.every(f => !!f && typeof f === 'object' && Number.isInteger((f as Fact).seq) && typeof (f as Fact).type === 'string'
-    && typeof (f as Fact).day === 'string' && /^\d{4}-\d{2}-\d{2}$/.test((f as Fact).day) && typeof (f as Fact).at === 'string' && !Number.isNaN(Date.parse((f as Fact).at)));
+    && dayReads(f as Fact) && typeof (f as Fact).at === 'string' && !Number.isNaN(Date.parse((f as Fact).at)));
 }
 
 /* ---------- copies of the save (D-107) ---------- */

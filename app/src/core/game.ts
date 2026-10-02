@@ -8,7 +8,7 @@
  */
 import { calendarWeek, epochOf, gameDay, momentOf, offsetOf, wallClock, weekdayOf, type Moment } from './time';
 import { runAt, alertsAfter, type RunMark, type RunNow, type RunPlan } from './run';
-import { ofType, onDay } from './facts';
+import { dayOf, ofType, onDay } from './facts';
 import type { CalEvent, Capacity, Content, Fact, FactBody, FactOf, Job, Rhythm } from './types';
 import * as S from './story';
 import * as W from './week';
@@ -367,14 +367,7 @@ export function roadOf(facts: Fact[]): { walked: number; owed: number; taken: nu
 }
 export const walked = (facts: Fact[]) => roadOf(facts).walked;
 
-/** The game day at `now`, never behind the latest day already in the log (deep review R#6: flying west after 04:00 sent
-    it back, and a session could be written to a day already behind). Looked for back to the last opening. */
-export function dayOf(facts: Fact[], now: Moment): string {
-  let d = gameDay(now);
-  /* (a plan change's day is the day a job moves to, never a day played: it is passed over) */
-  for (let i = facts.length - 1; i >= 0; i--) { const f = facts[i]; if (f.type !== 'planChanged' && f.day > d) d = f.day; if (f.type === 'opened') break; }
-  return d;
-}
+export { dayOf };
 
 /* ---------- writing ---------- */
 
@@ -762,7 +755,9 @@ function chamberFound(facts: Fact[]): boolean {
 }
 /** Minutes of effort from here to the side chamber, if it is still ahead on this stretch of road (D-122). */
 export function toChamber(facts: Fact[], st: S.StoryState): number | null {
-  return chamberFound(facts) ? null : Math.max(0, S.chamberAt(st) - walked(facts));
+  /* minutes taken back are made up first: they are part of the way there (fresh review) */
+  const r = roadOf(facts);
+  return chamberFound(facts) ? null : Math.max(0, S.chamberAt(st) - r.walked + r.owed);
 }
 /** The side chamber is halfway to the next place, the same distance whatever the delves' lengths or jobs (Dan, D-122):
     reached once the minutes walked pass it, found on the delve that passes it (its find is shown at the delve's end). */
@@ -1155,7 +1150,8 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     case 'justThis': {
       const aside = asideOn(w.all, day);
       if (!v.order.includes(cmd.job) || v.done.has(cmd.job)) break;
-      for (const id of v.order) if (id !== cmd.job && !v.done.has(id) && !aside.has(id) && v.run?.job.id !== id && v.underWay !== id) w.put({ type: 'setAside', job: id });
+      /* an appointment keeps its time: it is never set aside by this (fresh review) */
+      for (const id of v.order) if (id !== cmd.job && !v.done.has(id) && !aside.has(id) && !v.times[id] && v.run?.job.id !== id && v.underWay !== id) w.put({ type: 'setAside', job: id });
       break;
     }
     case 'begin':
@@ -2002,9 +1998,10 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
     const doneFact = doneFacts(facts).find(f => f.job === j.id && f.seq > last.run);
     const completedDay = facts.some(f => f.type === 'dayCompleted' && f.seq > last.run);
     const carried = carriedOf(facts, c, j.id, last.seq);
-    const gained = ofType(facts, 'stepsGained').filter(f => f.run === last.run).reduce((a, f) => a + f.minutes, 0);
-    /* where Dan stood when it ended: a night's head start after it never moves the count's start */
-    const at = ofType(facts, 'stepsGained').filter(f => f.seq < last.seq).reduce((a, f) => a + f.minutes, 0);
+    /* where Dan stood when it ended (a night's head start after it never moves the count's start), and how far this run
+       moved him: on the road as Today counts it, minutes taken back made up first (fresh review of B3) */
+    const at = walked(facts.filter(f => f.seq < last.seq));
+    const gained = Math.max(0, at - walked(facts.filter(f => f.seq < last.run)));
     /* an errand run asks nothing: its errands struck off are done at its end (D-139) */
     const pend = pendingErrands(facts);
     const errands = start?.errands ? start.errands.map(id => ({ job: jobOf(c, id), struck: !!pend?.struck.has(id),
@@ -2074,12 +2071,14 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   const welcome = wf ? { seq: wf.seq, question: wf.question, record: st.records.length ? st.records[st.records.length - 1] : null } : null;
   const closes = ofType(facts, 'weekClosed'), lastClose = closes[closes.length - 1];
   const close = lastClose && !ofType(facts, 'closeRead').some(f => f.week === lastClose.week) ? lastClose : null;
-  const toNext = nextAt !== null ? Math.max(0, nextAt - w) : null;
+  /* (minutes taken back and still owed come first: they are part of the way to it, fresh review) */
+  const toNext = nextAt !== null ? Math.max(0, nextAt - w + roadOf(facts).owed) : null;
   /* shown only while it holds a find to give */
   const chamber = S.pickFind(c.story, full, 'chamber') ? toChamber(wordWaits ? facts : shown, full) : null;
 
   return {
-    owed: ((r) => r.owed > 0 && ofType(facts, 'tickTakenBack').some(f => f.on === day) ? { taken: r.taken, left: r.owed } : null)(roadOf(facts)),
+    /* what is still owed in all, and what was taken back today (two take-backs on different days read rightly, fresh review) */
+    owed: ((r, today) => r.owed > 0 && today > 0 ? { taken: today, left: r.owed } : null)(roadOf(facts), ofType(facts, 'tickTakenBack').filter(f => f.on === day).reduce((a, f) => a + f.minutes, 0)),
     suggestedBy: sugg.by, bedtime: bedtimeOf(facts), night: gn ? { kept: gn.kept, beat: campLine?.id ?? null } : null,
     morning, welcome, close, times, content: c,
     replies: waitsOf(c, facts).filter(x => x.until <= day).map(x => ({ job: x.job.id, until: x.until, ...(x.who ? { who: x.who } : {}) })),
