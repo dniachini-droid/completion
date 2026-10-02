@@ -4,7 +4,8 @@
  *
  * Like the other deep reviews, a probe named "FINDING:" asserts the problem as it stands, so a passing FINDING is a
  * reproduced finding (it will fail once fixed, and should then be turned round or removed). Probes without the prefix
- * are controls: they pass when the wiring holds.
+ * are controls: they pass when the wiring holds. Probes named "fixed (S#n)" were findings, turned round once the wiring
+ * was built (FIX-LIST Stage 7): they fail on the code before it. "accepted" ones record a finding kept on purpose.
  */
 import { describe, expect, it } from 'vitest';
 import { act, see, settle, PAINTED, type Command } from '../../src/core/game';
@@ -162,9 +163,10 @@ describe('deep story: the content wiring (static)', () => {
     expect(missing).toEqual([]);
   });
 
-  it('FINDING: one month\'s summary has six lines, and only five are ever shown', () => {
+  it('fixed (S#5): one month\'s summary has six lines, and a week close can show six', () => {
     const long = s.soFar.filter(m => (m.items ?? []).length > 5).map(m => m.id);
     expect(long).toEqual(['sf-m2']);
+    expect(Math.max(...s.soFar.map(m => (m.items ?? []).length))).toBeLessThanOrEqual(6);
   });
 
   it('FINDING: one cut record has no authored full rendering to test against', () => {
@@ -177,20 +179,24 @@ describe('deep story: text hygiene', () => {
     const bad = texts().filter(t => /  |^\s|\s$|<[a-z/]|TODO|TBD|FIXME/.test(t.text) || !t.text.trim()).map(t => `${t.id}.${t.key}`);
     expect(bad).toEqual([]);
   });
-  it('FINDING: literal asterisks (source markdown) reach the screen in 13 texts', () => {
-    const hit = [...new Set(texts().filter(t => t.text.includes('*')).map(t => t.id))].sort();
-    expect(hit).toEqual(['aw-w4', 'fd-c14', 'fd-d04', 'fd-e05', 'fd-e10', 'fd-f02', 'ps-s18', 'rec-l10', 'rec-l2', 'rec-l3', 'rec-l8', 'seal-3-6', 'wc-w4-1']);
+  it('fixed (S#8): the 13 texts with authored emphasis show it in italics, never as a literal asterisk', async () => {
+    const hit = texts().filter(t => t.text.includes('*'));
+    expect([...new Set(hit.map(t => t.id))].sort()).toEqual(['aw-w4', 'fd-c14', 'fd-d04', 'fd-e05', 'fd-e10', 'fd-f02', 'ps-s18', 'rec-l10', 'rec-l2', 'rec-l3', 'rec-l8', 'seal-3-6', 'wc-w4-1']);
+    const { emphasis } = await import('../../src/ui/emphasis');
+    for (const t of hit) {
+      const parts = emphasis(t.text);
+      expect(parts.some(p => p.t.includes('*')), t.id).toBe(false);
+      expect(parts.some(p => p.em), t.id).toBe(true);
+    }
   });
-  it('FINDING: apostrophes are straight in most lines and curly in taps and place labels', () => {
+  it('fixed (S#9): one apostrophe throughout, the curly one (none straight, in a word or closing one)', () => {
     const all = texts();
-    const straight = all.filter(t => /\w'\w/.test(t.text)).length, curly = all.filter(t => /’/.test(t.text)).length;
-    expect(straight).toBeGreaterThan(200);
-    expect(curly).toBeGreaterThan(20);
-    expect(all.filter(t => t.key === 'taps' && /\w'\w/.test(t.text))).toEqual([]);   /* taps: curly only */
+    expect(all.filter(t => /\w'\w|s'(?!\w)/.test(t.text)).map(t => `${t.id}.${t.key}`)).toEqual([]);
+    expect(all.filter(t => /’/.test(t.text)).length).toBeGreaterThan(200);
   });
-  it('FINDING: calendar-week wording survives in four story lines (D-123)', () => {
+  it('fixed (S#10): no calendar-week wording left in the story lines (D-123)', () => {
     const hit = s.beats.filter(b => /\b(your first week|The week ends)\b/.test(b.line ?? '')).map(b => b.id).sort();
-    expect(hit).toEqual(['b-2.2', 'b-2.A', 'b-3.3', 'b-w3.close']);
+    expect(hit).toEqual([]);
   });
   it('FINDING: one place name uses the word the weeks 8-14 editing pass kept for another place', () => {
     expect(S.beatOf(s, 'b-14.A')!.name).toMatch(rx('reservedWord'));
@@ -256,14 +262,16 @@ describe('deep story: fourteen story weeks played through, Keys spent (dynamic)'
     expect(s.finds.filter(x => !st.given.has(x.id)).map(x => x.id)).toEqual([]);
   }, 300_000);
 
-  it('FINDING: one story week\'s camp line never plays, at any pace, bedtime kept every night', () => {
+  it('fixed (S#2b): every camp line plays, at any pace, bedtime kept every night', () => {
     for (const name of ['normal', 'high'] as const) {
       const played = new Set(playedIds(life(name)));
-      expect(s.beats.filter(b => b.kind === 'camp' && !played.has(b.id)).map(b => b.id), name).toEqual(['b-w7.camp']);
+      expect(s.beats.filter(b => b.kind === 'camp' && !played.has(b.id)).map(b => b.id), name).toEqual([]);
     }
   }, 300_000);
 
-  it('FINDING: in four story weeks the morning beat plays before that week\'s own camp line (Normal pace)', () => {
+  /* accepted (S#3): a morning that confirms marks never waits on bedtime (D-073), and nothing in those lines refers to the
+     camp line, so the order stays */
+  it('accepted (S#3, D-073): in four story weeks the morning beat plays before that week\'s own camp line (Normal pace)', () => {
     const f = life('normal'), at = new Map<string, number>();
     f.forEach((x, i) => { if (x.type === 'beatPlayed' && !at.has(x.id)) at.set(x.id, i); });
     const early = s.beats.filter(b => b.kind === 'morning' && b.w > 1).filter(b => {
@@ -273,7 +281,7 @@ describe('deep story: fourteen story weeks played through, Keys spent (dynamic)'
     expect(early).toEqual(['b-w10.morning', 'b-w11.morning', 'b-w12.morning', 'b-w13.morning']);
   }, 300_000);
 
-  it('FINDING: week-close glimpses describe a sealed state after Dan has opened it (Normal: 2; High: 3)', () => {
+  it('fixed (S#1): no week-close glimpse describes a sealed state after Dan has opened it (Normal, High)', () => {
     /* glimpse -> the beat that opens what it describes as still shut */
     const SUPERSEDED: Record<string, string> = { 'b-w1.close': 'b-3.A', 'b-w4.close': 'b-7.C', 'b-w6.close': 'b-7.A', 'b-w9.close': 'b-10.A' };
     const stale = (f: Fact[]) => { const played = new Set<string>(), out: string[] = [];
@@ -284,46 +292,52 @@ describe('deep story: fourteen story weeks played through, Keys spent (dynamic)'
         played.add(id);
       }
       return out; };
-    expect(stale(life('normal'))).toEqual(['b-w6.close', 'b-w9.close']);
-    expect(stale(life('high'))).toEqual(['b-w1.close', 'b-w4.close', 'b-w6.close']);
+    expect(stale(life('normal'))).toEqual([]);
+    expect(stale(life('high'))).toEqual([]);
   }, 300_000);
 
-  it('FINDING: week-close glimpses and learned lines lag the story by up to 9 story weeks at a High pace', () => {
+  it('fixed (S#4): at a High pace the glimpse lags the story by 3 story weeks at most, and the learned lines keep up', () => {
     const f = life('high');
     let wk = 1; const lag: number[] = [];
     for (const x of f) {
       if (x.type === 'storyWeekBegan') wk = x.w;
       if (x.type === 'weekClosed' && x.glimpse) lag.push(wk - S.beatOf(s, x.glimpse)!.w);
     }
-    expect(Math.max(...lag)).toBeGreaterThanOrEqual(9);
+    expect(Math.max(...lag)).toBeLessThanOrEqual(3);
     const shown = new Set(closes(f).flatMap(c => c.learned));
-    expect(s.learned.filter(l => !shown.has(l.id)).length).toBeGreaterThanOrEqual(20);   /* 8 calendar weeks; the story ended in week 3 */
+    /* 8 calendar weeks, the story ended in week 3: at most one page's worth waits for the page not written yet */
+    expect(s.learned.filter(l => !shown.has(l.id)).length).toBeLessThanOrEqual(3);
   }, 300_000);
 
-  it('FINDING: one glimpse never shows at Normal pace (its condition ends before the first close that could show it)', () => {
-    const shown = new Set(closes(life('normal')).map(c => c.glimpse));
-    expect(s.beats.filter(b => b.kind === 'close' && !shown.has(b.id)).map(b => b.id)).toEqual(['b-w2.close']);
+  it('a glimpse not shown at Normal pace is only one the story moved past before a close could show it (S#1, S#12)', () => {
+    const f = life('normal'), shown = new Set(closes(f).map(c => c.glimpse)), st = S.storyState(f, s);
+    const missed = s.beats.filter(b => b.kind === 'close' && !shown.has(b.id));
+    expect(missed.filter(b => !(b.until && S.met(st, b.until))).map(b => b.id)).toEqual([]);
+    expect(missed.length).toBeLessThanOrEqual(2);
   }, 300_000);
 
-  it('FINDING: two camp views are never offered (Normal, High, slow)', () => {
+  it('fixed (S#12): a camp view that stops being offered later comes first, so every one is offered (Normal, High, slow)', () => {
     for (const name of ['normal', 'high', 'slow'] as const) {
       const shown = new Set(life(name).flatMap(x => x.type === 'arrived' && x.kind === 'camp' ? [x.id] : []));
       /* (the slow player, away half the days, no longer has missed sessions piled onto his return, deep review Part 2 #1:
          he walks less, and camps more, so one more view comes) */
-      expect(s.camps.filter(c => !shown.has(c.id)).map(c => c.id), name).toEqual(expect.arrayContaining(name === 'slow' ? ['cv-03'] : ['cv-03', 'cv-21']));
+      expect(s.camps.filter(c => c.until && !shown.has(c.id)).map(c => c.id), name).toEqual([]);
     }
   }, 600_000);
 
-  it('FINDING: the sixth line of one month\'s summary is never shown', () => {
+  it('fixed (S#5): every line of every month\'s summary is shown (Normal)', () => {
     const shown = new Set(closes(life('normal')).flatMap(c => c.soFar));
-    expect(s.soFar.flatMap(m => m.items ?? []).filter(l => !shown.has(l.id)).map(l => l.id)).toEqual(['sf-m2-6']);
+    expect(s.soFar.flatMap(m => m.items ?? []).filter(l => !shown.has(l.id)).map(l => l.id)).toEqual([]);
   }, 300_000);
 
-  it('FINDING: for a player working half the days, the month summaries at play weeks 9 and 13 are empty (calendar-bound)', () => {
-    const f = life('slow');
-    const by = new Map(closes(f).map(c => [c.n, c.soFar.length]));
-    expect(by.get(9)).toBe(0);
-    expect(by.get(13)).toBe(0);
+  it('fixed (S#5): a player working half the days gets every month\'s summary line whose beats he has reached (by story week)', () => {
+    const f = life('slow'), last = closes(f).at(-1)!;
+    /* what his story held at the last page written (a line whose beats played since waits for the next page) */
+    const st = S.storyState(f.filter(x => x.seq <= last.seq), s);
+    const shown = new Set(closes(f).flatMap(c => c.soFar));
+    const due = s.soFar.filter(m => m.w <= st.week).flatMap(m => m.items ?? []).filter(l => l.req.every(r => S.met(st, r)));
+    expect(due.filter(l => !shown.has(l.id)).map(l => l.id)).toEqual([]);
+    expect(due.filter(l => l.id.startsWith('sf-m3') || l.id.startsWith('sf-m4')).length).toBeGreaterThan(0);
     /* (since Part 2 #1 he walks less: missed sessions no longer pile onto a return; still deep into the story) */
     expect(S.storyState(f, s).week).toBeGreaterThanOrEqual(12);
   }, 600_000);

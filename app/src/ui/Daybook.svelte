@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Prose from './Prose.svelte';
   import { onMount } from 'svelte';
   import { doneFacts } from '../core/done';
   import Deleted from './Deleted.svelte';
@@ -136,21 +137,21 @@
       {:else}<p class="say went">{t('daybook.camped')}</p>{/if}
       {#if learned.length}
         <div class="label-line">{t('daybook.learned')}</div>
-        {#each learned as id (id)}<p class="say learned">{line(s.learned, id)}</p>{/each}
+        {#each learned as id (id)}<p class="say learned"><Prose text={line(s.learned, id)} /></p>{/each}
       {/if}
       {#if page.soFar.length}
         <div class="label-line">{t('daybook.soFar')}</div>
-        {#each page.soFar as id (id)}<p class="say learned">{line(soFarItems, id)}</p>{/each}
+        {#each page.soFar as id (id)}<p class="say learned"><Prose text={line(soFarItems, id)} /></p>{/each}
       {/if}
       {#if kept.finds.length}
         <div class="label-line">{t('daybook.finds')}</div>
-        {#each kept.finds as id (id)}{#if findLine(id)}<p class="say learned">{findLine(id)}</p>{/if}{/each}
+        {#each kept.finds as id (id)}{#if findLine(id)}<p class="say learned"><Prose text={findLine(id)} /></p>{/if}{/each}
       {/if}
       <!-- every niche a Key opened that week, each to read again (S4, D-143 B) -->
       {#each kept.opened as id (id)}{@const x = sealOf(s, id)}{#if x}<p class="say count">{t('daybook.count', { where: x.where })} <button class="text-link again" onclick={() => go('opened', `again:${id}`)}><span>{t('daybook.readAgain')}</span></button></p>{/if}{/each}
       {#if page.glimpse}
         <div class="label-line lit">{t('daybook.next')}</div>
-        <p class="say glimpse">{beatOf(s, page.glimpse)?.line ?? ''}</p>
+        <p class="say glimpse"><Prose text={beatOf(s, page.glimpse)?.line} /></p>
       {/if}
       {#if tally}<p class="soft tally">{tally}</p>{/if}
       {#if offer}

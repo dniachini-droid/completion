@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Prose from './Prose.svelte';
   /* Day complete and the arrival (INTERACTION_NOTES → day complete; mock-up complete.html). Violet turns to gold
      from the floor up; "That's the day. Enough." The day's success is locked in; rest is the main offer, and a quiet
      "Keep going" is always there (D-038, D-039). A tap anywhere settles the motion at once. */
@@ -91,10 +92,10 @@
       <!-- the words keep to the lower half and scroll there; they can be folded away (D-085) -->
       <div class="col text">
         <Words {look} length={(a.line?.length ?? 0) + (a.look?.length ?? 0)}>
-          <span class="soft on-scene">{a.line}</span>
-          {#if a.look}<span class="soft on-scene look">{a.look}</span>{/if}
-          {#each a.way as w (w.beat)}<p class="soft on-scene look">{w.line}</p>{/each}
-          {#each a.opened as line}<p class="soft on-scene look">{t('arrive.keyOpens')} {line}</p>{/each}
+          <span class="soft on-scene"><Prose text={a.line} /></span>
+          {#if a.look}<span class="soft on-scene look"><Prose text={a.look} /></span>{/if}
+          {#each a.way as w (w.beat)}<p class="soft on-scene look"><Prose text={w.line} /></p>{/each}
+          {#each a.opened as line}<p class="soft on-scene look">{t('arrive.keyOpens')} <Prose text={line} /></p>{/each}
         </Words>
       </div>
       <div class="mid col">

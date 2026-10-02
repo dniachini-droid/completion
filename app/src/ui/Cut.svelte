@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Prose from './Prose.svelte';
   /* A word, cut (the story job's §7; mock-up cut.html). Four taps, one line each: the rod's edge in the blank, the first
      mark, the second, the lock. Then the place answers on its own (about 6 s, no tap): for the first word the cups
      wake down the hall, near to far, and the stone under the lintel goes; the interface steps aside while it happens.
@@ -160,12 +161,12 @@
       <div class="before">
         <div class="label-line">{t('cut.label')}</div>
         <h1 class="carve lg">{a.name}</h1>
-        {#key step}<p class="soft on-scene said">{said}</p>{/key}
+        {#key step}<p class="soft on-scene said"><Prose text={said} /></p>{/key}
       </div>
       <div class="after">
         <div class="label-line gold">{t('arrive.label')}</div>
         <h1 class="carve lg">{a.name}</h1>
-        <p class="soft on-scene">{a.line}</p>
+        <p class="soft on-scene"><Prose text={a.line} /></p>
       </div>
     </div>
 

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Prose from './Prose.svelte';
   /* "I can't start" (TOOLS.md; CONCEPT §2 → stuck): a line from just ahead, one tiny physical step, then "10 minutes?".
      Never a demand; never new story (P4, D-038). */
   import { game, content } from './game.svelte';
@@ -37,12 +38,12 @@
   </header>
   <div class="mid col center tease">
     <div class="label-line centred rise">{t('cant.label')}</div>
-    <p class="say-lg rise d1">{teaser}</p>
+    <p class="say-lg rise d1"><Prose text={teaser} /></p>
   </div>
   <section class="bottom col center">
     {#if first}
       <p class="soft rise d2">{t('cant.first')}</p>
-      <p class="say step rise d2">{first}</p>
+      <p class="say step rise d2"><Prose text={first} /></p>
     {:else}
       <p class="soft rise d2">{t('cant.ask')}</p>
       <input class="line ask rise d2" bind:value={answer} maxlength="160" aria-label={t('cant.ask')} enterkeyhint="done"

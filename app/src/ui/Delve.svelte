@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Prose from './Prose.svelte';
   import { doneFacts } from '../core/done';
   /* The delve (INTERACTION_NOTES → the delve; D-028, D-036, D-037, D-047). The glowing ring fills with the time left;
      the destination is the headline; the tunnel moves so the world is visibly travelling. Only two ideas, always in
@@ -239,7 +240,7 @@
       {:else if run?.phase === 'breather'}
         <div class="label-line centred">{t('delve.breather')}</div>
         <h2 class="m">{t('delve.breather.done', { ord: ord(run.k) })}</h2>
-        <p class="say">{v.passage + ' ' + t('delve.breather.say')}</p>
+        <p class="say"><Prose text={v.passage} /> {t('delve.breather.say')}</p>
         <div class="breath-line" aria-hidden="true"><i style="width:{(breathP * 100).toFixed(1)}%"></i></div>
         <button class="btn resting" onclick={() => game.do({ do: 'skipBreather' })}>{t('delve.startNow')}</button>
         <div class="cant"><button class="text-link" onclick={() => game.do({ do: 'finishHere' })}><span>{t('delve.finishHere')}</span></button></div>
@@ -288,7 +289,7 @@
                 </div>
               {/if}
             {/each}
-            {#if !errandStory.length}<p class="say">{v.passage}</p><Return doneSeq={null} extraFinds={v.runFinds} />{/if}
+            {#if !errandStory.length}<p class="say"><Prose text={v.passage} /></p><Return doneSeq={null} extraFinds={v.runFinds} />{/if}
           </div>
           {#if storyAt < errandStory.length - 1}
             <button class="btn resting" onclick={() => { steady(); storyAt++; }}>{t('errand.next')}</button>
@@ -321,7 +322,7 @@
                 enterkeyhint="done" onkeydown={e => { if (e.key === 'Enter') (e.currentTarget as HTMLInputElement).blur(); }} />
             {/if}
             {#if doneSeq !== null}<Return {doneSeq} extraFinds={v.runFinds} {go} />
-            {:else}<p class="say">{v.passage}</p><Return doneSeq={null} extraFinds={v.runFinds} />{/if}
+            {:else}<p class="say"><Prose text={v.passage} /></p><Return doneSeq={null} extraFinds={v.runFinds} />{/if}
           </div>
           {#if end.completedDay || game.view.arrival}
             <button class="btn" onclick={() => leave('arrival')}>{t('delve.see')}</button>
