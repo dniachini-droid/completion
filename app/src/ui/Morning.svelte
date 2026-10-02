@@ -5,8 +5,10 @@
   import { game, content } from './game.svelte';
   import { t } from '../content/copy/en';
   import { beatOf, recordOf } from '../core/story';
+  import { firstChosen } from '../core/game';
   import Scene from './Scene.svelte';
   import Settled from './Settled.svelte';
+  import Reread from './Reread.svelte';
   import type { Go } from './nav';
 
   let { go }: { go: Go } = $props();
@@ -21,10 +23,12 @@
 
   $effect(() => { if (!m) go('today'); });
   /* a look at the record isn't leaving: back returns here (N bug 2); only going on to Today marks it seen */
-  function leave(to: 'today' | 'records') {
+  /* last night's own choice of what to start with: the morning's button starts it (MORNING-REPORT Part 3 #5) */
+  const chosen = $derived(((id: string | null) => id && !v.done.has(id) && !v.run ? game.job(id) ?? null : null)(firstChosen(game.facts, v.day)));
+  function leave(to: 'today' | 'records' | 'set') {
     if (to === 'records' && record) { go('records', record); return; }
     if (m) game.do({ do: 'seen', what: 'morning', ref: m.seq });
-    go('today');
+    if (to === 'set' && chosen) go('set', chosen.id); else go('today');
   }
 </script>
 
@@ -42,13 +46,14 @@
   <section class="bottom col center rise d2">
     {#if game.facts.some(f => f.type === 'stepsGained' && f.job === 'sleep' && f.day === v.day)}<p class="say">{t('morning.headStart')}</p>{/if}
     {#if said}<p class="say look">{said}</p>{/if}
-    {#if m?.beat}<Settled beat={m.beat} />{/if}
+    {#if m?.beat}<Settled beat={m.beat} /><Reread beat={m.beat} {go} />{/if}
     {#if find}
       <div class="label-line centred">{t('find.label')}</div>
       <p class="say look">{find}</p>
     {/if}
     {#if record}<button class="text-link" onclick={() => leave('records')}><span>{t('morning.read')}</span></button>{/if}
-    <button class="btn resting go" onclick={() => leave('today')}>{t('morning.go')}</button>
+    {#if chosen}<button class="btn resting go" onclick={() => leave('set')}>{t('morning.startWith', { job: chosen.name })}</button>
+    {:else}<button class="btn resting go" onclick={() => leave('today')}>{t('morning.go')}</button>{/if}
   </section>
 </div>
 

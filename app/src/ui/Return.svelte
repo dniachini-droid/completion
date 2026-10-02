@@ -8,6 +8,7 @@
   import Guess from './Guess.svelte';
   import Glyph from './Glyph.svelte';
   import Settled from './Settled.svelte';
+  import Reread from './Reread.svelte';
   import Words from './Words.svelte';
   import { keepKey, keyChoiceOf, moment } from './moment.svelte';
   import type { CopyKey } from '../content/copy/en';
@@ -36,7 +37,18 @@
     : r?.keyAlready ? t(`step.keyAlready.${r.keyAlready}`, { job: jobName }) : '');
   function useHere() { const id = v.keyHere; if (!id || !go || doneSeq === null) return; moment.keyChoice[doneSeq] = 'used'; game.do({ do: 'useKey', seal: id, from: doneSeq }); go('opened', id); }
   const finds = $derived([...(r?.finds ?? []), ...extraFinds].map(id => content.story.finds.find(f => f.id === id)).filter(f => !!f));
+  /* a job Dan tends to put off brings a find (P5): it is shown first, before the story's words (MORNING-REPORT Part 3 #3) */
+  const putOff = $derived(new Set(doneSeq === null ? [] : game.facts.flatMap(f => f.type === 'findGiven' && f.why === 'avoided' && f.job === doneSeq ? [f.id] : [])));
+  const findsFirst = $derived(finds.filter(f => putOff.has(f!.id)));
+  const findsAfter = $derived(finds.filter(f => !putOff.has(f!.id)));
 </script>
+
+{#snippet findBlock(f: (typeof finds)[number])}
+  <div class="find">
+    <div class="label-line centred gold">{t('find.label')}</div>
+    <p class="say on-scene">{f!.line}</p>
+  </div>
+{/snippet}
 
 {#snippet offer()}
   {#if offerHere}
@@ -50,13 +62,9 @@
     <!-- a Key's note is two sentences of plain text, as wide as the story's words, with room after it: never squeezed into a
          carved label's short line (Dan: "very very bad styling", D-131) -->
     {#if keyLine}<p class="key-note on-scene">{keyLine}</p>{@render offer()}{/if}
+    {#each findsFirst as f (f!.id)}{@render findBlock(f)}{/each}
     <p class="say story on-scene">{r.line}</p>
-    {#each finds as f (f!.id)}
-      <div class="find">
-        <div class="label-line centred gold">{t('find.label')}</div>
-        <p class="say on-scene">{f!.line}</p>
-      </div>
-    {/each}
+    {#each findsAfter as f (f!.id)}{@render findBlock(f)}{/each}
   </Words>
   {#if r.part}
     <div class="part">
@@ -66,6 +74,7 @@
     </div>
   {/if}
   <Settled beat={r.beat} />
+  <Reread beat={r.beat} {go} />
   {#each r.guess as mark (mark)}<Guess {mark} />{/each}
   {#if r.records.length && go}
     <div class="choice">
@@ -79,12 +88,8 @@
 {:else if finds.length || keyLine}
   <Words plain {look} length={finds.reduce((n, f) => n + f!.line.length, 0) + keyLine.length}>
     {#if keyLine}<p class="key-note on-scene">{keyLine}</p>{@render offer()}{/if}
-    {#each finds as f (f!.id)}
-      <div class="find">
-        <div class="label-line centred gold">{t('find.label')}</div>
-        <p class="say on-scene">{f!.line}</p>
-      </div>
-    {/each}
+    {#each findsFirst as f (f!.id)}{@render findBlock(f)}{/each}
+    {#each findsAfter as f (f!.id)}{@render findBlock(f)}{/each}
   </Words>
 {/if}
 

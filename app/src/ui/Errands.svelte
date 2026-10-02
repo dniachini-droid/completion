@@ -12,8 +12,8 @@
 
   let { go }: { go: Go } = $props();
   const v = $derived(game.view);
-  const ids = $derived(errandChoices(content, game.facts, game.now));
-  const s = $derived(satchelView(content, game.facts, game.now));
+  const ids = $derived(errandChoices(content, game.facts, game.minute));
+  const s = $derived(satchelView(content, game.facts, game.minute));
   const onDay = $derived(new Map(s.coming.map(x => [x.job.id, x.day])));
   const today = $derived(ids.filter(id => v.slate.includes(id)));
   const later = $derived(ids.filter(id => !v.slate.includes(id)));

@@ -8,6 +8,7 @@
  */
 import { calendarWeek, epochOf, gameDay, momentOf, offsetOf, wallClock, weekdayOf, type Moment } from './time';
 import { runAt, alertsAfter, type RunMark, type RunNow, type RunPlan } from './run';
+import { ofType, onDay } from './facts';
 import type { CalEvent, Capacity, Content, Fact, FactBody, FactOf, Job, Rhythm } from './types';
 import * as S from './story';
 import * as W from './week';
@@ -30,8 +31,6 @@ export const ERRANDS_MIN = 2, ERRANDS_MAX = 12;
 
 /* ---------- reading the log ---------- */
 
-const ofType = <T extends FactBody['type']>(facts: Fact[], type: T) => facts.filter((f): f is FactOf<T> => f.type === type);
-const onDay = (facts: Fact[], day: string) => facts.filter(f => f.day === day);
 const jobOf = (c: Content, id: string): Job => c.jobs.find(j => j.id === id)
   ?? (id === ERRAND_RUN ? { id, name: 'Errand run', delve: true, length: PRESET.minutes, doneBy: 'dan' } : { id, name: id, delve: false, length: STEP_MIN, doneBy: 'dan' });
 
@@ -915,6 +914,8 @@ export type Command =
   | { do: 'swap' }
   | { do: 'focus'; job: string }
   | { do: 'setAside'; job: string }
+  /** "Just this one today" (MORNING-REPORT Part 3 #7): every other job still to do today is set aside, as "Not today". */
+  | { do: 'justThis'; job: string }
   | { do: 'begin'; job: string }
   | { do: 'unbegin'; job: string }
   | { do: 'putBack'; job: string }
@@ -1139,6 +1140,12 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       /* "Not today": off today's list, with no mark against it; the next job in order takes its place (D-077) */
       if ((v.order.includes(cmd.job) || v.next?.job === cmd.job) && !v.done.has(cmd.job) && v.run?.job.id !== cmd.job && v.underWay !== cmd.job) w.put({ type: 'setAside', job: cmd.job });
       break;
+    case 'justThis': {
+      const aside = asideOn(w.all, day);
+      if (!v.order.includes(cmd.job) || v.done.has(cmd.job)) break;
+      for (const id of v.order) if (id !== cmd.job && !v.done.has(id) && !aside.has(id) && v.run?.job.id !== id && v.underWay !== id) w.put({ type: 'setAside', job: id });
+      break;
+    }
     case 'begin':
       if (!jobOf(c, cmd.job).delve && !v.done.has(cmd.job) && v.underWay !== cmd.job) w.put({ type: 'jobBegun', job: cmd.job, from: 'app' });
       break;
@@ -1516,6 +1523,16 @@ export interface RunView extends RunNow {
   carried: number;
   /** An errand run's errands, in the order chosen, each struck off or not (D-139); null for a delve on one job. */
   errands: { job: Job; struck: boolean }[] | null;
+}
+/** The run's part of the view at a later second, the log unchanged (deep review F#4): a delve's once-a-second tick moves
+    only its countdown, so the rest of the view is kept from the minute. null: the run has ended by now (the whole view
+    is wanted again). Nothing but the clock differs from `see` at the same moment. */
+export function runSecond(facts: Fact[], run: RunView, now: Moment): RunView | null {
+  const r = activeRun(facts);
+  if (!r || r.fact.seq !== run.seq) return null;
+  const s = runAt(r.plan, r.marks, epochOf(now));
+  if (s.phase === 'ended') return null;
+  return { ...run, ...s, away: s.phase === 'held' && run.away };
 }
 export interface RunEnd {
   seq: number; job: Job; minutes: number; how: 'ranOut' | 'finishedHere';

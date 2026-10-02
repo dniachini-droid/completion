@@ -8,6 +8,7 @@
   import { slipped, type Slip } from '../core/week';
   import { beatOf } from '../core/story';
   import Settled from './Settled.svelte';
+  import Reread from './Reread.svelte';
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
 
@@ -69,7 +70,7 @@
   <section class="bottom col rise d2">
     {#if q}<p class="say question">{q}</p>{/if}
     {#if mSaid}<p class="say look">{mSaid}</p>{/if}
-    {#if m?.beat}<Settled beat={m.beat} />{/if}
+    {#if m?.beat}<Settled beat={m.beat} /><Reread beat={m.beat} {go} />{/if}
     {#if mFind}<div class="label-line">{t('find.label')}</div><p class="say look">{mFind}</p>{/if}
     <p class="soft">{t('welcome.say')}</p>
     {#if slip && slipName && !answered.includes(slip.job)}

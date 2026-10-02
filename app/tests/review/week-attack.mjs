@@ -46,7 +46,7 @@ await S(1, 'move around this week', async R => {
   if (await wrow(R, 'Kilo').count()) R.fails.push('#1 Kilo still in the week after Not this week');
   await L.toToday(R); await L.tap(R, foot(R, 'Satchel'), 'Satchel');
   if (!(await L.item(R, 'Kilo').count())) R.fails.push('#1 Kilo, Not this week, is not in the Satchel');
-  else { await L.tap(R, L.item(R, 'Kilo').getByRole('button', { name: /^Put on a day:/ }), 'Put on a day'); await L.tap(R, L.item(R, 'Kilo').locator('.cal button').first(), 'today'); }
+  else { await L.tap(R, L.item(R, 'Kilo').getByRole('button', { name: /: put on a day$/ }), 'Put on a day'); await L.tap(R, L.item(R, 'Kilo').locator('.cal button').first(), 'today'); }
   await L.toToday(R);
   await L.tap(R, L.row(R, 'Kilo').first(), 'Kilo on Today'); await L.tap(R, 'Begin'); await L.ff(R, 6 * 60_000);
   await L.tap(R, 'Finish here'); await L.tap(R, 'Done'); await L.toToday(R);

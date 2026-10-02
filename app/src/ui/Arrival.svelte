@@ -7,6 +7,7 @@
   import Scene from './Scene.svelte';
   import Guess from './Guess.svelte';
   import Settled from './Settled.svelte';
+  import Reread from './Reread.svelte';
   import Cut from './Cut.svelte';
   import Words from './Words.svelte';
   import Look from './Look.svelte';
@@ -100,6 +101,8 @@
         {#if a.id}
           {#each a.way as w (w.beat)}<Settled beat={fresh ? w.beat : null} />{/each}
           <Settled beat={fresh ? a.id : null} />
+          {#each a.way as w (w.beat)}<Reread beat={fresh ? w.beat : null} {go} />{/each}
+          <Reread beat={fresh ? a.id : null} {go} />
           {#each a.guess as mark (mark)}<Guess {mark} at={a.id} />{/each}
           {#if later.length}<p class="soft later">{t('arrive.marksLater')}</p>{/if}
           {#if a.records.length}
@@ -151,9 +154,9 @@
   /* the screen itself never scrolls: the words do, in the lower half (D-085) */
   .ui.fixed { overflow: hidden; }
   .head { flex: none; }
-  /* the painting's gap gives way before the words do: at least three lines of them show on a small phone with large text */
-  .gap { flex: 1 1 auto; min-height: min(12vh, 24px); }
-  .text { flex: 0 1 auto; min-height: min(4.8em, 20vh); display: flex; flex-direction: column; animation: rise 1.4s .6s var(--ease) both; }
+  /* with the phone's text set larger, the painting's gap gives way before the words do, so they keep their lines */
+  .gap { flex: 1 1 auto; min-height: max(24px, calc(12vh - (var(--ts, 1) - 1) * 300px)); }
+  .text { flex: 0 1 auto; min-height: 0; display: flex; flex-direction: column; animation: rise 1.4s .6s var(--ease) both; }
   .text :global(.soft) { display: block; margin-top: 6px; }
   .text :global(.look) { color: var(--gold-hi); margin-top: 12px; }
   .mid { flex: none; display: flex; flex-direction: column; align-items: center; padding-top: 6px; padding-bottom: 14px; }

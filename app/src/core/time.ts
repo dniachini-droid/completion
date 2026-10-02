@@ -52,10 +52,16 @@ export function offsetOf(at: Moment): number {
 }
 
 /** The calendar week a game day belongs to, named by its Monday (YYYY-MM-DD). Weeks run Monday to Sunday. */
+const weeks = new Map<string, string>();   /* asked thousands of times per call, for a few hundred days (deep review F#4) */
 export function calendarWeek(day: string): string {
+  const had = weeks.get(day);
+  if (had !== undefined) return had;
   const d = new Date(`${day}T00:00:00Z`);
   d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7));
-  return d.toISOString().slice(0, 10);
+  const w = d.toISOString().slice(0, 10);
+  if (weeks.size > 20000) weeks.clear();
+  weeks.set(day, w);
+  return w;
 }
 
 /** The weekday of a game day: 0 Sunday … 6 Saturday. */

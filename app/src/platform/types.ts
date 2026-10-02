@@ -44,6 +44,8 @@ export interface PanelState {
   start: number; end: number;
   /** While paused: how much of the delve is done, and its time left ("12:40"), still. */
   heldFraction: number; heldTime: string;
+  /** Where on the ring the 5-minute mark falls (a fraction of the delve), 0 for none (MORNING-REPORT Part 3 #6). */
+  notch: number;
   /** What it shows once `end` passes with the app closed (it can't change its words without the app): the rest of
       the run, counted down to its end, or (afterStart = afterEnd = 0) that the delve is over. */
   afterLabel: string; afterLine: string; afterLeft: string;

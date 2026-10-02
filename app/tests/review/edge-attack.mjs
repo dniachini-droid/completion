@@ -84,10 +84,10 @@ await S(3, 'clock change', async R => {
 await S(4, 'full list', async R => {
   await L.tap(R, foot(R, 'Satchel'), 'Satchel'); await L.putSatchel(R, 'Uniform');
   const it = () => L.item(R, 'Uniform');
-  await L.tap(R, it().getByRole('button', { name: /^List:/ }), 'List');
+  await L.tap(R, it().getByRole('button', { name: /: list$/ }), 'List');
   await R.page.keyboard.insertText(Array.from({ length: 100 }, (_, i) => `item ${String(i).padStart(3, '0')} ${'q'.repeat(10)}`).join('\n'));
-  await L.tap(R, it().getByRole('button', { name: /^Done:/ }), 'Done');
-  await L.tap(R, it().getByRole('button', { name: /^List:/ }), 'List again');
+  await L.tap(R, it().getByRole('button', { name: /: done$/ }), 'Done');
+  await L.tap(R, it().getByRole('button', { name: /: list$/ }), 'List again');
   const before = await R.page.locator('textarea.list').inputValue();
   await R.page.keyboard.type('milk');
   const after = await R.page.locator('textarea.list').inputValue();

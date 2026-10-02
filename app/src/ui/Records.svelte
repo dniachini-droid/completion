@@ -8,6 +8,7 @@
   import Glyph from './Glyph.svelte';
   import type { Go } from './nav';
   import { back } from './back.svelte';
+  import { reread, opened } from './relit.svelte';
 
   let { go, id }: { go: Go; id?: string } = $props();
   const v = $derived(game.view);
@@ -22,6 +23,8 @@
   };
   /* (nothing is written: a record read was never read back by anything, C#21) */
   function read(r: string) { go('records', r); }
+  /* a record that now reads differently is lit until it is opened (MORNING-REPORT Part 3 #8) */
+  $effect(() => { if (id) opened(id); });
   const isMark = (m: string) => s.marks.some(x => x.id === m);
   /* a record in the Cut says once that its marks can be opened */
   const tappable = $derived(open?.kind === 'cut' && (open.cut ?? []).some(l => render(l, held, s).some(tk => tk.t === 'glyph' && isMark(tk.mark))));
@@ -54,8 +57,8 @@
       <div class="col">
         {#if !list.length}<p class="soft">{t('records.none')}</p>{/if}
         {#each list as r (r!.id)}
-          <button class="row" onclick={() => read(r!.id)}>
-            <span class="pip"></span><span class="t">{title(r!)}</span>
+          <button class="row" class:lit={reread.glow.includes(r!.id)} onclick={() => read(r!.id)}>
+            <span class="pip"></span><span class="t">{title(r!)}</span>{#if reread.glow.includes(r!.id)}<span class="sr-only">{t('reread.sr')}</span>{/if}
           </button>
         {/each}
       </div>
@@ -104,6 +107,8 @@
 {/snippet}
 
 <style>
+  .row.lit .t { color: #fff; text-shadow: 0 0 12px rgba(var(--violet-rgb), .9), 0 0 26px rgba(var(--violet-rgb), .5); }
+  .row.lit .pip { box-shadow: 0 0 10px 2px rgba(var(--violet-rgb), .8); }
   .body { flex: 1; min-height: 0; overflow-y: auto; padding-top: 14px; padding-bottom: 28px; }
   h1 { margin-top: 8px; }
   h1 + .soft { margin-top: 6px; }

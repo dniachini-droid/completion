@@ -19,6 +19,9 @@ struct DelveAttributes: ActivityAttributes {
         /// While held: how much of the delve is done, and its time left ("12:40").
         var heldFraction: Double
         var heldTime: String
+        /// Where on the ring the 5-minute mark falls (a fraction of the delve); nil or 0 for none. Optional, so a panel
+        /// saved by an older build still reads.
+        var notch: Double?
         /// What the panel shows once `end` passes with the app closed: the rest of the run, counted down to its end,
         /// or (no span) that the delve is over.
         var afterLabel: String

@@ -1,11 +1,14 @@
 <script lang="ts">
-  /* A job just deleted (D-125): one quiet line and Undo, on the screen where it was deleted. */
+  /* A job just deleted (D-125), or the day's others set aside ("Just this one today"): one quiet line and Undo, on the
+     screen where it was done. */
   import { game } from './game.svelte';
   import { t } from '../content/copy/en';
 </script>
 
 {#if game.cantDelete}
   <p class="said deleted" role="status">{t(game.cantDelete.ended ? 'job.cantDeleteEnd' : 'job.cantDelete', { job: game.cantDelete.job })}</p>
+{:else if game.asideAll}
+  <p class="said deleted" role="status">{game.asideAll.length === 1 ? t('menu.justThis.said1') : t('menu.justThis.said', { n: game.asideAll.length })} <button class="text-link" onclick={() => game.undoAsideAll()}><span>{t('job.undo')}</span></button></p>
 {:else if game.deleted}
   <p class="said deleted" role="status">{t('job.removed', { name: game.deleted.job.name })} <button class="text-link" onclick={() => game.undoRemove()}><span>{t('job.undo')}</span></button></p>
 {/if}

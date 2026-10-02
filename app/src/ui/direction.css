@@ -134,25 +134,26 @@ body.s-day2     { --a1: .45; --aw: 90%;  --ah: 30%; --a2: .25; --h2: 16%; }
 body.s-done     { --a1: .62; --aw: 115%; --ah: 44%; --a2: .48; --h2: 24%; }
 body.s-evening  { --a1: .5;  --aw: 120%; --ah: 44%; --a2: .38; --h2: 22%; }
 
-/* nebula fog: two drifting layers. Markup:
-   <div class="fog"><i class="drift-a"></i><i class="drift-b"></i></div>
+/* nebula fog: one drifting layer per fog, its two banks baked into one small picture (scripts/bake-fog.mjs, deep review
+   F#5: the noise drawn live cost 27 MB and up to a second per bank at the phone's size). The layer is a third of its
+   size, scaled up: the soft noise needs no more, and the phone keeps a ninth of the pixels. Markup:
+   <div class="fog"><i></i></div>
    Add .warm for the gold bank low down (opacity follows --warmth), .fast for a visibly moving cloud. */
 .fog { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden;
   -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.35) 0%, #000 28%, #000 72%, rgba(0,0,0,.45) 100%);
           mask-image: linear-gradient(180deg, rgba(0,0,0,.35) 0%, #000 28%, #000 72%, rgba(0,0,0,.45) 100%); }
-.fog > i, .fog > img { position: absolute; top: 0; left: 0; width: 200%; height: 100%; display: block; will-change: transform;
-  background-size: 100% 100%; background-repeat: no-repeat; }
-.fog .drift-a { animation: drift 40s ease-in-out infinite alternate; opacity: .42;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 780 844' width='780' height='844' preserveAspectRatio='none'><filter id='f' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='0.004 0.008' numOctaves='4' seed='4'/><feColorMatrix values='0 0 0 0 0.60  0 0 0 0 0.58  0 0 0 0 1.000  0 0 0 1.3 -0.6'/></filter><rect width='780' height='844' filter='url(%23f)'/></svg>"); }
-.fog .drift-b { animation: drift 64s ease-in-out infinite alternate-reverse; opacity: .3;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 780 844' width='780' height='844' preserveAspectRatio='none'><filter id='f' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='0.009 0.02' numOctaves='3' seed='9'/><feColorMatrix values='0 0 0 0 0.62  0 0 0 0 0.60  0 0 0 0 1.000  0 0 0 1.17 -0.65'/></filter><rect width='780' height='844' filter='url(%23f)'/></svg>"); }
+.fog > i { position: absolute; top: 0; left: 0; width: calc(200% / 3); height: calc(100% / 3); display: block;
+  transform-origin: 0 0; transform: scale(3); will-change: transform;
+  background: url("./scene/fog/cold.webp") 0 0 / 100% 100% no-repeat;
+  animation: fog-drift 52s ease-in-out infinite alternate; }
 .fog.warm { opacity: var(--warmth);
   -webkit-mask-image: linear-gradient(180deg, transparent 45%, #000 80%);
           mask-image: linear-gradient(180deg, transparent 45%, #000 80%); }
-.fog.warm .drift-a { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 780 844' width='780' height='844' preserveAspectRatio='none'><filter id='f' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='0.004 0.01' numOctaves='4' seed='19'/><feColorMatrix values='0 0 0 0 1.000  0 0 0 0 0.659  0 0 0 0 0.314  0 0 0 1.3 -0.55'/></filter><rect width='780' height='844' filter='url(%23f)'/></svg>"); }
-.fog.warm .drift-b { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 780 844' width='780' height='844' preserveAspectRatio='none'><filter id='f' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='0.009 0.02' numOctaves='3' seed='9'/><feColorMatrix values='0 0 0 0 1.000  0 0 0 0 0.659  0 0 0 0 0.314  0 0 0 1.17 -0.60'/></filter><rect width='780' height='844' filter='url(%23f)'/></svg>"); }
-.fog.fast .drift-a { animation-duration: 26s; }
-.fog.fast .drift-b { animation-duration: 38s; }
+.fog.warm > i { background-image: url("./scene/fog/warm.webp"); }
+/* no gold in the morning: no layer at all (deep review F#5) */
+body:not(.s-day):not(.s-day2):not(.s-done):not(.s-evening) .fog.warm { display: none; }
+.fog.fast > i { animation-duration: 32s; }
+@keyframes fog-drift { from { transform: scale(3) translate3d(0,0,0); } to { transform: scale(3) translate3d(-44%, -1.5%, 0); } }
 @keyframes drift { from { transform: translate3d(0,0,0); } to { transform: translate3d(-44%, -1.5%, 0); } }
 
 .grain { position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: .14; mix-blend-mode: overlay;

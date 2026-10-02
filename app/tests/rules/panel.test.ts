@@ -33,6 +33,13 @@ describe('the delve’s panel', () => {
       afterLabel: 'Further in', afterLine: 'the second of two delves', afterStart: T0 + 30 * M, afterEnd: T0 + 55 * M });
   });
 
+  it('marks where the delve starts to count, 5 minutes in, while it runs or is paused; never on a breather or a 5-minute delve (MORNING-REPORT Part 3 #6)', () => {
+    expect(at({ startedAt: T0, minutes: 25, count: 2 }, T0 + 2 * M).notch).toBeCloseTo(0.2);
+    expect(at({ startedAt: T0, minutes: 20, count: 1 }, T0 + 9 * M, [{ kind: 'hold', at: T0 + 5 * M }]).notch).toBeCloseTo(0.25);
+    expect(at({ startedAt: T0, minutes: 25, count: 2 }, T0 + 27 * M).notch).toBe(0);
+    expect(at({ startedAt: T0, minutes: 5, count: 1 }, T0 + M).notch).toBe(0);
+  });
+
   it('a pause stands still, with nothing to turn to', () => {
     const plan = { startedAt: T0, minutes: 20, count: 1 }, marks: RunMark[] = [{ kind: 'hold', at: T0 + 5 * M }];
     const p = at(plan, T0 + 50 * M, marks);

@@ -2,7 +2,7 @@
   /* The job menu (D-131, step 3): the phone's own long-press menu, in the app's look. The job's name, then Delve · Edit ·
      Put on a day · Delete. Put on a day shows the one calendar here; Delete goes at once, with Undo on the screen
      underneath (D-125), and looks like no other choice. A tap outside closes it. */
-  import { game } from './game.svelte';
+  import { game, content } from './game.svelte';
   import { t } from '../content/copy/en';
   import { menu, closeMenu, settling, openTick, sayWaited } from './menu.svelte';
   import { closeRows } from './SwipeRow.svelte';
@@ -11,6 +11,7 @@
   import DayPick from './DayPick.svelte';
   import WaitPick from './WaitPick.svelte';
   import { waitingOf } from '../core/week';
+  import { errandChoices } from '../core/game';
 
   const j = $derived(menu.job ? game.job(menu.job) : undefined);
   const v = $derived(game.view);
@@ -23,6 +24,13 @@
   function tick() { const id = j!.id, go = menu.go!; to(() => openTick(id, go)); }
   /* "I can't start": the first small step, for any job not done (it lived on Today's next job, D-135) */
   function cant() { const id = j!.id, go = menu.go!; to(() => go('cant', id)); }
+  /* the errand run, off Today's main screen, is here for an errand and in the Satchel (MORNING-REPORT, simplify) */
+  const errandable = $derived(!!j && !v.run && !v.night && (() => { const ids = errandChoices(content, game.facts, game.minute); return ids.length >= 2 && ids.includes(j.id); })());
+  /* "Just this one today" (MORNING-REPORT Part 3 #7): on a low day, every other job today set aside at once, one Undo */
+  const justOne = $derived(!!j && menu.from === 'today' && !v.run && v.order.includes(j.id) && !v.done.has(j.id)
+    && v.order.some(id => id !== j.id && !v.done.has(id)));
+  function justThis() { if (settling()) return; const id = j!.id; steady(); closeMenu(); closeRows(); game.justThis(id); }
+  function errands() { const go = menu.go!; to(() => go('errands')); }
   function edit() { const id = j!.id, go = menu.go!; to(() => go('rhythms', id)); }
   /* a job done today, to do again (D-131): in the menu too, so a tap on a done row finds it (J11) */
   function notDone() { if (settling()) return; const id = j!.id; steady(); closeMenu(); closeRows(); game.do({ do: 'notDone', job: id }); }
@@ -82,6 +90,8 @@
     <button class="item" disabled={!!v.run || !!v.runEnd?.pending || finished} onclick={delve}>{v.done.has(j.id) && recurring ? t('menu.delveAgain') : t('menu.delve')}</button>
     {#if menu.on === v.day && v.done.has(j.id)}<button class="item" onclick={notDone}>{t('row.notDone')}</button>{/if}
     {#if !v.done.has(j.id) && !finished}<button class="item" disabled={!!v.run || !!v.runEnd?.pending} onclick={tick}>{t('tick.off')}</button>{/if}
+    {#if justOne}<button class="item" onclick={justThis}>{t('menu.justThis')}</button>{/if}
+    {#if errandable}<button class="item" onclick={errands}>{t('errand.link')}</button>{/if}
     {#if !v.done.has(j.id) && !finished}<button class="item" disabled={!!v.run || !!v.runEnd?.pending} onclick={cant}>{t('today.cantStart')}</button>{/if}
     <button class="item" onclick={edit}>{t('menu.edit')}</button>
     {#if !finished && !menu.on}<button class="item" aria-expanded={placing} onclick={() => { if (!settling()) { placing = !placing; waiting = false; } }}>{t('satchel.day')}</button>{/if}

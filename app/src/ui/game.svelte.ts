@@ -2,7 +2,7 @@
  * The screens' one handle on the game: the fact log, saved as it grows; the clock; what can be seen now.
  * Rules live in core; this file only reads the clock, keeps the save and schedules the phone's alerts.
  */
-import { act, alertsAfter, runs, see, settle, type Command, type RunView } from '../core/game';
+import { act, alertsAfter, runs, runSecond, see, settle, type Command, type RunView } from '../core/game';
 import type { RunMark } from '../core/run';
 import { panelOf } from './panel';
 import { steady } from './taps';
@@ -46,9 +46,22 @@ class Game {
   #log: Fact[] = [];
   /** The log as it is now, whoever asks (a teardown included). */
   get log(): Fact[] { return this.#log; }
-  #setLog(log: Fact[]) { this.#log = log; this.facts = log; }
-  now = $state<Moment>('2000-01-01T00:00:00Z');
-  view = $derived(see(this.facts, content, this.now));
+  #setLog(log: Fact[]) { this.#log = log; this.facts = log; this.#whole = this.#now; }
+  /* the clock, and the moment the view was last built whole: a delve's tick moves only the countdown, by the second; the
+     rest of the view is rebuilt when the log or the minute changes (deep review F#4) */
+  #now = $state<Moment>('2000-01-01T00:00:00Z');
+  #whole = $state<Moment>('2000-01-01T00:00:00Z');
+  get now(): Moment { return this.#now; }
+  set now(m: Moment) { this.#now = m; this.#whole = m; }
+  /** The clock as the whole view last saw it (by the minute in a delve): for anything heavy that needs no seconds. */
+  get minute(): Moment { return this.#whole; }
+  #day = $derived(see(this.facts, content, this.#whole));
+  view = $derived.by(() => {
+    const d = this.#day;
+    if (!d.run || this.#now === this.#whole) return d;
+    const run = runSecond(this.facts, d.run, this.#now);
+    return run ? { ...d, run } : see(this.facts, content, this.#now);
+  });
   #ticker = 0;
 
   constructor() {
@@ -156,7 +169,7 @@ class Game {
     /* (a delve already over, its end still to answer, is said as that, never "in a delve", deep review C#13) */
     if (running || v.runEnd?.job.id === id || v.runEnd?.errands?.some(e => e.job.id === id)) { this.deleted = null; this.cantDelete = { job: job.name, ended: !running }; return; }
     this.cantDelete = null;
-    this.deleted = { job: { ...job }, rhythm: this.view.content.rhythms.find(r => r.job === id) ?? null };
+    this.asideAll = null; this.deleted = { job: { ...job }, rhythm: this.view.content.rhythms.find(r => r.job === id) ?? null };
     this.do({ do: 'removeJob', id });
   }
   /** Delete a done record (Dan: "just delete the record of the job, not the minutes"): a repeating job keeps repeating
@@ -166,8 +179,21 @@ class Game {
     const job = this.job(id);
     if (!job) return;
     if (!this.view.content.rhythms.some(r => r.job === id)) { this.remove(id); return; }
-    this.deleted = { job: { ...job }, rhythm: null, on };
+    this.asideAll = null; this.deleted = { job: { ...job }, rhythm: null, on };
     this.do({ do: 'hideDone', job: id, on });
+  }
+  /** The jobs just set aside by "Just this one today", for its one Undo (MORNING-REPORT Part 3 #7). */
+  asideAll = $state<string[] | null>(null);
+  justThis(id: string) {
+    const f = this.do({ do: 'justThis', job: id });
+    const jobs = f.flatMap(x => x.type === 'setAside' ? [x.job] : []);
+    this.deleted = null; this.asideAll = jobs.length ? jobs : null;
+  }
+  undoAsideAll() {
+    steady();
+    const jobs = this.asideAll;
+    this.asideAll = null;
+    for (const job of jobs ?? []) this.do({ do: 'putBack', job });
   }
   undoRemove() {
     steady();
@@ -296,8 +322,9 @@ class Game {
     /* during a delve, by the second: the countdown shows whole seconds, so the view is rebuilt once a second (D-100);
        the clock looks just after each whole second, so each new second shows at once (D-132) */
     if (before && s === this.#second) return;
+    const whole = m !== this.#minute || !before;
     this.#minute = m; this.#second = s;
-    this.now = this.clock();
+    if (whole) this.now = this.clock(); else this.#now = this.clock();
     if (!before) {
       if (!this.#log.some(f => f.type === 'opened' && f.day === this.view.day)) this.wake();   /* past 04:00 with the app open */
       return;

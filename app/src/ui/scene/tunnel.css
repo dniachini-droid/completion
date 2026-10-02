@@ -1,9 +1,10 @@
 .dv .flow{ filter: blur(2.6px); opacity:.7; }
 .dv .nebula{ position:absolute; inset:-25%; z-index:1; pointer-events:none; mix-blend-mode:screen; }
-.dv .nebula i{ position:absolute; border-radius:50%; filter: blur(38px); will-change: transform; }
-.dv .nebula .n1{ left:40%; top:14%; width:70%; height:34%; background: radial-gradient(closest-side, rgba(150,110,255,.34), rgba(110,80,230,.12) 60%, transparent); animation: neb1 19s ease-in-out infinite alternate; }
-.dv .nebula .n2{ left:6%; top:40%; width:62%; height:30%; background: radial-gradient(closest-side, rgba(90,120,255,.3), rgba(70,90,220,.1) 60%, transparent); animation: neb2 23s ease-in-out infinite alternate; }
-.dv .nebula .n3{ left:30%; top:62%; width:80%; height:26%; background: radial-gradient(closest-side, rgba(170,120,240,.22), transparent); animation: neb1 29s ease-in-out infinite alternate-reverse; }
+/* the clouds' softness is in their gradients, never a live blur on a moving layer (deep review F#6) */
+.dv .nebula i{ position:absolute; border-radius:50%; will-change: transform; }
+.dv .nebula .n1{ left:40%; top:14%; width:70%; height:34%; background: radial-gradient(closest-side, rgba(150,110,255,.3), rgba(130,95,240,.2) 35%, rgba(110,80,230,.09) 65%, rgba(110,80,230,.03) 85%, transparent); animation: neb1 19s ease-in-out infinite alternate; }
+.dv .nebula .n2{ left:6%; top:40%; width:62%; height:30%; background: radial-gradient(closest-side, rgba(90,120,255,.26), rgba(80,105,240,.17) 35%, rgba(70,90,220,.07) 65%, rgba(70,90,220,.02) 85%, transparent); animation: neb2 23s ease-in-out infinite alternate; }
+.dv .nebula .n3{ left:30%; top:62%; width:80%; height:26%; background: radial-gradient(closest-side, rgba(170,120,240,.19), rgba(170,120,240,.11) 40%, rgba(170,120,240,.04) 75%, transparent); animation: neb1 29s ease-in-out infinite alternate-reverse; }
 @keyframes neb1{ from { transform: translate3d(0,0,0) scale(1); } to { transform: translate3d(-18%, 6%, 0) scale(1.15); } }
 @keyframes neb2{ from { transform: translate3d(0,0,0) scale(1.1); } to { transform: translate3d(22%, -5%, 0) scale(.95); } }
 .dv .rib{ transform-box: view-box; transform-origin: 292px 250px; animation: pass 46s cubic-bezier(.62,.02,.93,.55) infinite; opacity:0; }
@@ -18,14 +19,20 @@
           mask: radial-gradient(circle closest-side, transparent 90.5%, #000 91.5%, #000 96.5%, transparent 97.5%); }
 .dv .ring .track{ background: rgba(190,196,255,.15); }
 .dv .ring .fill{ background: conic-gradient(from 0deg, rgba(143,168,255,.35) 0, rgba(206,214,255,.95) calc(var(--p) * 1turn - 2deg), #fff calc(var(--p) * 1turn), transparent calc(var(--p) * 1turn + .5deg)); }
-.dv .ring .glow{ position:absolute; inset:-14%; filter: blur(10px); mix-blend-mode:screen; }
-.dv .ring .glow .band{ inset:12.3%; -webkit-mask: radial-gradient(circle closest-side, transparent 84%, #000 90%, #000 98%, transparent 104%); mask: radial-gradient(circle closest-side, transparent 84%, #000 90%, #000 98%, transparent 104%); }
-.dv .ring .glow.wide{ filter: blur(24px); opacity:.9; }
+/* the glow's softness is in its mask, drawn once, not a blur redone each time the ring moves (deep review F#6) */
+.dv .ring .glow{ position:absolute; inset:-14%; mix-blend-mode:screen; }
+.dv .ring .glow .band{ inset:12.3%; -webkit-mask: radial-gradient(circle closest-side, transparent 78%, rgba(0,0,0,.45) 85%, #000 91%, #000 97%, rgba(0,0,0,.45) 103%, transparent 110%); mask: radial-gradient(circle closest-side, transparent 78%, rgba(0,0,0,.45) 85%, #000 91%, #000 97%, rgba(0,0,0,.45) 103%, transparent 110%); }
+.dv .ring .glow.wide .band{ -webkit-mask: radial-gradient(circle closest-side, transparent 68%, rgba(0,0,0,.3) 80%, #000 91%, #000 97%, rgba(0,0,0,.3) 108%, transparent 122%); mask: radial-gradient(circle closest-side, transparent 68%, rgba(0,0,0,.3) 80%, #000 91%, #000 97%, rgba(0,0,0,.3) 108%, transparent 122%); }
+.dv .ring .glow.wide{ opacity:.8; }
 .dv .ring .halo{ position:absolute; inset:-22%; border-radius:50%; background: radial-gradient(circle, transparent 42%, rgba(143,168,255,calc(.08 + var(--pc, var(--p)) * .3)) 50%, transparent 66%); }
 .dv .ring .disc{ position:absolute; inset:5%; border-radius:50%; background: radial-gradient(circle, rgba(200,208,255,calc(.04 + var(--pc, var(--p))*.14)), rgba(143,168,255,calc(.03 + var(--pc, var(--p))*.07)) 60%, transparent 72%); }
 .dv .ring .tip{ position:absolute; left:50%; top:50%; width:14px; height:14px; margin:-7px 0 0 -7px; border-radius:50%;
   background: radial-gradient(circle, #fff, rgba(210,220,255,.8) 40%, transparent 70%); box-shadow: 0 0 18px 6px rgba(190,205,255,.55);
   transform: rotate(calc(var(--p) * 1turn)) translateY(calc(var(--R) * -.47)); }
+.dv .ring .five{ position:absolute; left:50%; top:50%; width:2px; height:11px; margin:-5.5px 0 0 -1px; border-radius:1px; pointer-events:none; z-index:2;
+  background: rgba(236,234,255,.55); transform: rotate(var(--a)) translateY(calc(var(--R) * -.47)); transition: background .6s var(--ease), box-shadow .6s var(--ease); }
+.dv .ring .five.past{ background:#fff; box-shadow: 0 0 6px rgba(190,205,255,.9); }
+.dv .ring .left.counts{ color:#fff; font-style:italic; }
 .dv .ring .inner{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
 .dv .ring .time{ font-family:var(--life); font-weight:300; font-size:calc(var(--R) * .27); line-height:1; color:#f6f7ff; font-variant-numeric: tabular-nums lining-nums; text-shadow: 0 0 24px rgba(143,168,255,.8), 0 0 60px rgba(143,168,255,.4); }
 .dv .ring .left{ font-family:var(--life); font-style:italic; font-size:calc(16px * var(--ts, 1)); color:var(--ink-2); margin-top:6px; }

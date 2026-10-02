@@ -8,6 +8,7 @@
 import { calendarWeek, weekdayOf } from './time';
 import * as R from './repeat';
 import { doneFacts } from './done';
+import { ofType } from './facts';
 import type { CalEvent, Content, Fact, FactBody, FactOf, Job, PlanEntry, Rhythm } from './types';
 
 /** A Normal day's size in jobs, before planning by minutes (kept for the forecast's older tests). */
@@ -21,7 +22,6 @@ export const FINISH_MIN = 180;
 /** Satchel lines untouched this long go quietly to "someday" (TOOLS §2). */
 export const SOMEDAY_DAYS = 21;
 
-const ofType = <T extends FactBody['type']>(facts: Fact[], type: T) => facts.filter((f): f is FactOf<T> => f.type === type);
 
 export function addDays(day: string, n: number): string {
   const d = new Date(`${day}T00:00:00Z`);

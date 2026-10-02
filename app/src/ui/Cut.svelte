@@ -144,7 +144,7 @@
     <div class="paint" bind:this={hallEl} aria-hidden="true"></div>
     <div class="lintel-cuts" bind:this={cutsEl} aria-hidden="true"></div>
   </div>
-  <div class="fog" aria-hidden="true"><i class="drift-a"></i><i class="drift-b"></i></div>
+  <div class="fog" aria-hidden="true"><i></i></div>
   <div class="grain" aria-hidden="true"></div>
   <div class="vignette" aria-hidden="true"></div>
   <div class="scrim-top" aria-hidden="true"></div>

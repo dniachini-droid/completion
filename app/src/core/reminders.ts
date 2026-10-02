@@ -10,6 +10,7 @@ import { calendarWeek, gameDay, weekdayOf, type Moment } from './time';
 import { addDays, daysBetween, live, planMade, weekOf } from './week';
 import { fallsOn } from './repeat';
 import { doneFacts } from './done';
+import { ofType } from './facts';
 import type { Content, Fact, FactBody, FactOf } from './types';
 
 /** How long before the time an alert comes: at the time, 15 minutes or an hour before. */
@@ -41,7 +42,6 @@ export interface Alert {
   date: string; clock: string;
 }
 
-const ofType = <T extends FactBody['type']>(facts: Fact[], type: T) => facts.filter((f): f is FactOf<T> => f.type === type);
 
 /** Whether reminders are on at all (the one switch in Settings): on until Dan turns them off. */
 export const remindersOn = (facts: Fact[]) => { const s = ofType(facts, 'remindersSwitched'); return s.length ? s[s.length - 1].on : true; };

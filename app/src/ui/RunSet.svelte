@@ -175,7 +175,7 @@
         {:else}
         <h1 class="say-lg">{job.name}</h1>
         <!-- the job put off: what waits beyond it (it lived on Today's next job, D-135) -->
-        {#if job.avoided}<p class="soft last">{t('set.avoided')}</p>{/if}
+        {#if job.avoided}<p class="soft last"><span class="find-mark" aria-hidden="true">◇ </span>{t('set.avoided')}</p>{/if}
         {#if carry > 0}<p class="soft carryon">{t('set.carry', { min: minutesWords(carry) })}</p>{/if}
         {#if job.note}<p class="soft last note">{t('set.stopped', { note: job.note })}</p>{/if}
         <!-- the job's list (D-126): struck off a line at a time in the delve -->
@@ -255,6 +255,8 @@
       <div class="go rise d4">
         {#if refused}<p class="soft refused" role="status">{t('set.refused')}</p>{/if}
         <button class="btn" onclick={start}>{t('set.begin')}</button>
+        <!-- the first small step, one quiet tap from every set-up (MORNING-REPORT Part 3 #4) -->
+        {#if job}<button class="text-link cant" onclick={() => go('cant', job.id)}><span>{t('today.cantGetStarted')}</span></button>{/if}
       </div>
     </section>
   </div>
@@ -269,6 +271,8 @@
   .errands { margin-top: 2px; font-style: italic; font-size: calc(15px * var(--ts, 1)); text-align: left; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
   .refused { font-style: italic; font-size: calc(15px * var(--ts, 1)); text-align: center; margin-bottom: 8px; }
   .last, .carryon { margin-top: 2px; font-style: italic; font-size: calc(15px * var(--ts, 1)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; }
+  .find-mark { color: var(--gold-hi); font-style: normal; }
+  .go .cant { display: flex; align-items: center; margin: 0 auto; min-height: 44px; font-style: italic; color: var(--ink-2); }
   /* where he stopped is the point of the note: shown in full, a few lines (deep review B10) */
   .last.note { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; line-clamp: 4; line-height: 1.3; }
   /* a long name keeps to three lines; the dial below gives way to it */

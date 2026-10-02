@@ -5,7 +5,7 @@
      rises in the box (a stretch's places reached, a sealed thing in view, the forecast). Only what has been reached is
      named; the way ahead is a faint light, unnamed. Never a count of what's left (UX 6). */
   import { game, content } from './game.svelte';
-  import { t, dayName, relDay } from '../content/copy/en';
+  import { t, dayName, relDay, minutesShort } from '../content/copy/en';
   import { placeAhead, openable, lockedOn, openedNiches } from '../core/story';
   import skyUrl from './scene/map-sky.svg?url';
   import type { Go } from './nav';
@@ -111,7 +111,8 @@
         if (reads.length) out[out.length - 1].reads = reads;
       } else if (k === aheadOn) {
         out.push({ key: k, ...a, kind: 'faint',
-          sub: ahead.length ? t('map.forecast', { day: relDay(ahead[0], v.day) }) : t('map.ahead'), subKind: ahead.length ? 'gold' : 'dim',
+          /* the next place, with its minutes (MORNING-REPORT Part 3 #10); the forecast keeps its own line uncluttered */
+          sub: ahead.length ? t('map.forecast', { day: relDay(ahead[0], v.day) }) : v.toNext ? `${t('map.ahead')} · ${minutesShort(v.toNext)}` : t('map.ahead'), subKind: ahead.length ? 'gold' : 'dim',
           box: { label: t('map.aheadLabel'), title: t('map.aheadName'), say: ahead.length ? fcSay(ahead[0]) : t('map.aheadSay') } });
       }
     }
@@ -181,7 +182,7 @@
 </script>
 
 <div class="sky" aria-hidden="true"><img src={skyUrl} alt="" /></div>
-<div class="fog" aria-hidden="true"><i class="drift-a"></i><i class="drift-b"></i></div>
+<div class="fog" aria-hidden="true"><i></i></div>
 <div class="grain" aria-hidden="true"></div>
 <div class="vignette" aria-hidden="true"></div>
 <div class="scrim-top" aria-hidden="true" style="height:200px"></div>
@@ -222,7 +223,9 @@
             {:else if l.kind === 'lit'}
               <circle r="60" fill="url(#litPool)" opacity=".8" /><circle r="9" fill="#d2ccff" opacity=".55" filter="url(#b4)" /><circle r="3" fill="#fbfaff" filter="url(#b1)" />
             {:else if l.kind === 'faint'}
-              <circle r="24" fill="url(#seenPool)" opacity=".42" /><circle r="4" fill="#aeb6f0" opacity=".3" filter="url(#b1)" /><circle r="1.8" fill="#dfe3ff" opacity=".85" />
+              <!-- the next place as a dim outline, not yet a light (MORNING-REPORT Part 3 #10) -->
+              <circle r="24" fill="url(#seenPool)" opacity=".42" /><circle r="4" fill="#aeb6f0" opacity=".3" filter="url(#b1)" />
+              <path d="M-6 8 V-1 Q-6 -8 0 -8 Q6 -8 6 -1 V8" transform="translate(0 -1) scale(.9)" fill="none" stroke="#dfe3ff" stroke-opacity=".5" stroke-width="1.1" stroke-linecap="round" stroke-dasharray="2.2 1.6" />
             {:else if l.kind === 'sealed'}
               <circle r="26" fill="url(#seenPool)" opacity=".4" />
               <rect x="-5" y="-5" width="10" height="10" transform="rotate(45)" fill="none" stroke="#dcd8ff" stroke-width="1.2" filter="url(#b1)" />
@@ -238,6 +241,8 @@
       <g fill="none">
         {#each links as k, i}
           {#if k.walked}
+            <!-- the way walked, a faint gold path under the route (MORNING-REPORT Part 3 #10) -->
+            <path d={k.d} class="fadein" stroke="#f2c170" stroke-width="2.6" stroke-linecap="round" stroke-opacity=".2" style="animation-delay:{1.4 + i * 0.18}s" />
             <path d={k.d} class="drawn" pathLength="100" stroke="#d6d2ff" stroke-width="1.1" stroke-opacity=".72" filter="url(#lineGlow)" style="animation-delay:{0.35 + i * 0.18}s,{2.2 + i * 0.18}s" />
             <path d={k.d} class="dust" stroke="#dcd8ff" stroke-width="1.7" stroke-linecap="round" stroke-dasharray=".1 6" stroke-opacity=".38" style="animation-delay:{1.8 + i * 0.18}s" />
             {#if !calm}
@@ -339,7 +344,7 @@
   button.home { color: var(--ink-2); }
 
   .field { position: relative; flex: 1; min-height: 0; margin: 4px 0 8px; overflow: auto; scrollbar-width: none; overscroll-behavior: contain;
-    -webkit-overflow-scrolling: touch; touch-action: pan-x pan-y; cursor: grab; }
+    touch-action: pan-x pan-y; cursor: grab; }
   .field::-webkit-scrollbar { display: none; }
   .field svg { display: block; margin: 0 auto; overflow: visible; }
 

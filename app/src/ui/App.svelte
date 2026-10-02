@@ -4,6 +4,7 @@
   import { game, content } from './game.svelte';
   import { arrivalAt } from '../core/game';
   import { leaveWord, moment, resetMoment } from './moment.svelte';
+  import { resetReread } from './relit.svelte';
   import { errandPick } from './errand-pick.svelte';
   import { onMount, tick } from 'svelte';
   import type { Back, Go, Screen } from './nav';
@@ -84,8 +85,8 @@
   /* a log replaced (Restore, a wipe, the rehearsal): what the screens remembered by a fact's number goes, since the same
      numbers now mean other facts (deep review C#19) */
   let lastLog = game.logs;
-  $effect(() => { if (game.logs !== lastLog) { lastLog = game.logs; resetMoment(); errandPick.jobs = []; trail = []; } });
-  function goHome() { trail = []; closeMenu(); closeTick(); closeRows(); game.deleted = null; game.cantDelete = null; screen = first(); arg = undefined; }
+  $effect(() => { if (game.logs !== lastLog) { lastLog = game.logs; resetMoment(); resetReread(); errandPick.jobs = []; trail = []; } });
+  function goHome() { trail = []; closeMenu(); closeTick(); closeRows(); game.deleted = null; game.cantDelete = null; game.asideAll = null; screen = first(); arg = undefined; }
 
   /* Back (review 2, D-088): the screens Dan looks through keep a trail, so the arrow and the phone's own back return to
      where each was opened from. Today and the day's own moments (a delve, a place reached, the stair, the morning)
@@ -106,7 +107,7 @@
     if (screen === 'delve' && e && !e.pending && !game.view.run && to !== 'delve' && !LOOK.has(to as Screen)) game.do({ do: 'seen', what: 'step', ref: e.seq });
     still = TABS.has(screen) && TABS.has(to as Screen);
     closeMenu(); closeTick(); closeRows();
-    game.deleted = null; game.cantDelete = null;   /* a delete's Undo stays on the screen it was made on (D-125) */
+    game.deleted = null; game.cantDelete = null; game.asideAll = null;   /* a delete's Undo stays on the screen it was made on (D-125) */
     /* back to Today goes the way "Today" does, past what waits: a delve that ended while Dan typed elsewhere is shown
        (break-it review 5) */
     /* a delve's set-up for a job since deleted (from its editor) is passed by on the way back (D-131) */

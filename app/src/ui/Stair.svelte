@@ -83,7 +83,7 @@
 </script>
 
 <div class="push" aria-hidden="true"><div class="paint" bind:this={hallEl}></div></div>
-<div class="fog fast" aria-hidden="true"><i class="drift-a"></i><i class="drift-b"></i></div>
+<div class="fog fast" aria-hidden="true"><i></i></div>
 <canvas class="motes" bind:this={motes} aria-hidden="true"></canvas>
 <div class="grain" aria-hidden="true"></div>
 <div class="vignette" aria-hidden="true"></div>

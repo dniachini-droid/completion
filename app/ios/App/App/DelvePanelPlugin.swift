@@ -83,6 +83,7 @@ public class DelvePanelPlugin: CAPPlugin, CAPBridgedPlugin {
             end: date(call, "end") ?? now,
             heldFraction: call.getDouble("heldFraction") ?? 0,
             heldTime: call.getString("heldTime") ?? "",
+            notch: call.getDouble("notch"),
             afterLabel: call.getString("afterLabel") ?? "",
             afterLine: call.getString("afterLine") ?? "",
             afterLeft: call.getString("afterLeft") ?? "",

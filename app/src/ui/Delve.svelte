@@ -10,7 +10,7 @@
   import { mmss, ofLine } from './panel';
   import { tieFor } from '../core/remember';
   import tunnel from './scene/tunnel.html?raw';
-  import fogFront from './scene/fog-front.html?raw';
+  import fogFront from './scene/fog/front.webp?url';   /* baked once (scripts/bake-fog.mjs, deep review F#5) */
   import { tunnelLight } from './scene/light.js';
   import type { Go } from './nav';
   import Return from './Return.svelte';
@@ -41,6 +41,11 @@
   const L = $derived(run ? run.minutes * 60_000 : 1);
   const p = $derived(!run ? 1 : run.phase === 'delve' || run.phase === 'held' ? run.doneMs / L : 1);
   const left = $derived(mmss(run?.leftMs ?? 0));
+  /* the 5-minute mark (MORNING-REPORT Part 3 #6): below it a delve earns nothing; a notch on the ring shows where it
+     counts, and the line under the countdown says so once, in the minute after it is passed. No sound. */
+  const FIVE = RETURN_MIN * 60_000;
+  const five = $derived(!!run && (run.phase === 'delve' || run.phase === 'held') && L > FIVE ? FIVE / L : null);
+  const countsNow = $derived(!!run && run.phase === 'delve' && run.k === 1 && run.doneMs >= FIVE && run.doneMs < FIVE + 60_000);
   const past = $derived(!!run && v.done.has(run.job.id));
   const of = $derived(run ? ofLine(run, run.k, past) : '');
   const breathP = $derived(run?.phase === 'breather' ? 1 - run.breatherLeftMs / 300_000 : 0);
@@ -197,9 +202,10 @@
         style="--p:{tally ? 0 : Math.min(1, p).toFixed(4)};--pc:{(Math.round(Math.min(1, p) * 200) / 200).toFixed(3)}" role={run ? 'timer' : undefined} aria-label={run ? t('delve.leftSay', { n: Math.ceil((run.leftMs ?? 0) / 60_000), len: run.minutes }) : undefined}>
         <div class="halo"></div><div class="disc"></div>
         <canvas class="ringcv" aria-hidden="true"></canvas>
-        <div class="fog-front" aria-hidden="true">{@html fogFront}</div>
+        {#if five !== null}<i class="five" class:past={p >= five} aria-hidden="true" style="--a:{(five * 360).toFixed(2)}deg"></i>{/if}
+        <div class="fog-front" aria-hidden="true"><div class="fog-front"><img alt="" src={fogFront} /></div></div>
         {#if run?.phase === 'delve'}
-          <div class="inner"><div class="time">{left}</div><div class="left">{t('delve.left', { len: run.minutes })}</div>
+          <div class="inner"><div class="time">{left}</div><div class="left" class:counts={countsNow}>{countsNow ? t('delve.countsNow') : t('delve.left', { len: run.minutes })}</div>
             {#if soFar}<div class="left sofar">{t('delve.sofar', { min: minutesShort(soFar) })}</div>{/if}</div>
         {/if}
         {#if tally && end}

@@ -45,8 +45,8 @@ const tickOff = async (name) => {
 /* 1. a first trip to the bank, with a list, ticked off */
 await toSatchel();
 await type('Go to the bank'); await tap(btn('Save for later'), 'Save for later');
-await tap(item('Go to the bank').getByRole('button', { name: /^List:/ }), 'List on Go to the bank');
-await page.keyboard.type('passport'); await tap(item('Go to the bank').getByRole('button', { name: /^Close:/ }), 'Close');
+await tap(item('Go to the bank').getByRole('button', { name: /: list$/ }), 'List on Go to the bank');
+await page.keyboard.type('passport'); await tap(item('Go to the bank').getByRole('button', { name: /: close$/ }), 'Close');
 await tickOff('Go to the bank');
 
 /* 2. the next day: "bank" brings it up under the box; a tap fills the box and the list comes with it */

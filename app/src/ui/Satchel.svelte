@@ -38,9 +38,9 @@
   const sofar = (j: Job) => { const m = carriedOf(game.facts, v.content, j.id); return m > 0 ? t('row.sofar', { min: minutesShort(m) }) : ''; };
   /* during a delve another job can be edited, moved or deleted, never started (D-143 E): a tap opens its menu */
   const tapJob = (j: Job) => () => { if (v.run || v.runEnd?.pending) menu(j)(); else delve(j); };
-  const s = $derived(satchelView(content, game.facts, game.now));
+  const s = $derived(satchelView(content, game.facts, game.minute));
   /* the errand run (D-139): several jobs on one trip out, when there are two to take and no delve is under way */
-  const errandsOpen = $derived(!busy && errandChoices(content, game.facts, game.now).length >= 2);
+  const errandsOpen = $derived(!busy && errandChoices(content, game.facts, game.minute).length >= 2);
   let text = $state('');
   let input = $state<HTMLInputElement | null>(null);
   /* one job at a time has its list open, or its days */

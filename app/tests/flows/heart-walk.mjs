@@ -225,7 +225,7 @@ const lookCheck = async (name) => {
   if (s.look || s.t || s.ui < 0.95) errors.push(`LOOK ${name}: did not come back as it was (${s.t}, ${s.ui})`);
   if (JSON.stringify(s.page) !== JSON.stringify(before.page)) errors.push(`LOOK ${name}: the page moved after looking`);
   /* a tap on the clear painting looks too */
-  const gap = page.locator('.gap'); await gap.click(); await page.clock.runFor(300);
+  const gap = page.locator('.gap'); await gap.click({ position: { x: 40, y: 4 } });   /* its top: the words' fade reaches into it */ await page.clock.runFor(300);
   if (!(await page.locator('.look').count())) errors.push(`LOOK ${name}: a tap on the painting did not look`);
   await page.locator('.look').click(); await page.clock.runFor(800); await page.waitForTimeout(600);
 };
@@ -284,7 +284,7 @@ const openers = async (name) => {
         else { await page.locator('.offer button.row').first().click(); await page.clock.runFor(1500); }
         if (!(await page.locator('h1', { hasText: /this week/i }).count())) errors.push('LOOK AHEAD did not end in the week');
         await home(); await page.clock.runFor(1500);
-      } else { await tap('Not now'); await page.clock.runFor(1500); }
+      } else { await page.locator('button.home').first().click(); await page.clock.runFor(1500); }
       continue;
     }
     return;

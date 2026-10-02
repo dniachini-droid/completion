@@ -32,6 +32,8 @@ private struct Shown {
     var line: String
     var left: String
     var clock: Clock
+    /// The 5-minute mark on the ring, while a delve runs or is paused (a fraction of the delve), or nil.
+    var notch: Double?
     /// The panel's colour: violet while the delve runs, red while it is paused.
     var accent: Color { if case .still = clock { return red } else { return violet } }
     var accentHi: Color { if case .still = clock { return redHi } else { return violetHi } }
@@ -44,6 +46,7 @@ private struct Shown {
             line = s.line
             left = s.left
             clock = s.phase == "held" ? .still(s.heldFraction, s.heldTime) : .running(s.start...max(s.start, s.end))
+            if s.phase != "breather", let n = s.notch, n > 0, n < 1 { notch = n }
         } else {
             label = s.afterLabel
             line = s.afterLine
@@ -71,6 +74,19 @@ private struct Ring: View {
         .progressViewStyle(.circular)
         .tint(s.accent)
         .shadow(color: s.accent.opacity(0.7), radius: 4)
+        /* the 5-minute mark: a small notch where the delve starts to count (MORNING-REPORT Part 3 #6) */
+        .overlay {
+            if let n = s.notch {
+                GeometryReader { g in
+                    Capsule()
+                        .fill(Color.white.opacity(0.85))
+                        .frame(width: 2, height: 6)
+                        .offset(y: -min(g.size.width, g.size.height) / 2 + 3)
+                        .rotationEffect(.degrees(n * 360))
+                        .frame(width: g.size.width, height: g.size.height)
+                }
+            }
+        }
     }
 }
 

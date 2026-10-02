@@ -12,7 +12,7 @@
   import { t, weekDatesShort, timesWords, dayName, byWords } from '../content/copy/en';
   import { comingUp, sweepOf, addDays } from '../core/week';
   import { calendarWeek } from '../core/time';
-  import { hiddenDone, weekKept } from '../core/game';
+  import { hiddenDone, weekKept, paintingOf } from '../core/game';
   import { beatOf, sealOf } from '../core/story';
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
@@ -44,6 +44,14 @@
   });
   const places = $derived(page ? game.facts.filter((f): f is FactOf<'arrived'> => f.type === 'arrived' && f.kind === 'place' && calendarWeek(f.day) === page.week)
     .map(f => beatOf(s, f.id)?.name).filter((x): x is string => !!x) : []);
+  /* the page leads with the furthest place the week reached, in its own painting (MORNING-REPORT Part 3 #9) */
+  const furthest = $derived.by(() => {
+    const f = page ? game.facts.filter((x): x is FactOf<'arrived'> => x.type === 'arrived' && x.kind === 'place' && calendarWeek(x.day) === page.week).pop() : undefined;
+    const b = f ? beatOf(s, f.id) : undefined;
+    return b?.name ? { name: b.name, painting: paintingOf(b.id, b.stretch) } : null;
+  });
+  /* what the week held, on one line */
+  const tally = $derived(held.map(h => `${h.name} ${timesWords(h.k)}`).join(' · '));
   const line = (list: { id: string; line: string }[], id: string) => list.find(x => x.id === id)?.line ?? '';
   /* on a page with the month's "so far", a learned line it already covers (the same beats) isn't said twice */
   const soFarItems = s.soFar.flatMap(m => m.items ?? []);
@@ -69,7 +77,6 @@
   }
   /* the week laid out, its arrow says Today: never back through the Daybook (L B4) */
   function toWeek() { go('back'); go('week'); }
-  function notNow() { if (page) game.do({ do: 'offerAnswered', week: page.week }); if (step > 0) game.do({ do: 'lookAhead', finished: false }); leave(); }
 
   /* the week's look-ahead (D-116): about a minute, every step skippable, offered once; it earns nothing (P16) */
   let step = $state(0);
@@ -101,7 +108,7 @@
   }
 </script>
 
-<Scene painting={v.here.painting} blur />
+<Scene painting={furthest?.painting ?? v.here.painting} blur={!furthest} top="200px" bottom="70%" />
 <div class="ui">
   <header class="top col">
     <div class="topbar rise">
@@ -120,23 +127,13 @@
     {#if !page}
       <p class="soft">{t('daybook.none')}</p>
     {:else}
-      <div class="rows">
-        <!-- keyed by the job, not its name: two jobs may share a name ("Shopping" twice), and a repeated key crashed
-             the page on every opening (break-it review 1) -->
-        {#each held as h (h.id)}
-          <div class="row still"><span class="pip done"></span><span class="t">{h.name}</span><span class="s">{timesWords(h.k)}</span></div>
-        {/each}
-      </div>
-      {#if places.length}
-        <div class="label-line">{t('daybook.went')}</div>
-        <p class="say went">{places.join(' · ')}</p>
+      <!-- a chapter, not a ledger (MORNING-REPORT Part 3 #9): the furthest place first, then what was learned, then further
+           on; what the week held on one line -->
+      {#if furthest}
+        <div class="label-line lit">{t('daybook.reached')}</div>
+        <p class="say-lg reached">{furthest.name}</p>
+        {#if places.length > 1}<p class="soft went">{t('daybook.wentBy', { places: places.slice(0, -1).join(' · ') })}</p>{/if}
       {:else}<p class="say went">{t('daybook.camped')}</p>{/if}
-      <!-- every niche a Key opened that week, each to read again (S4, D-143 B) -->
-      {#each kept.opened as id (id)}{@const x = sealOf(s, id)}{#if x}<p class="say count">{t('daybook.count', { where: x.where })} <button class="text-link again" onclick={() => go('opened', `again:${id}`)}><span>{t('daybook.readAgain')}</span></button></p>{/if}{/each}
-      {#if kept.finds.length}
-        <div class="label-line">{t('daybook.finds')}</div>
-        {#each kept.finds as id (id)}{#if findLine(id)}<p class="say learned">{findLine(id)}</p>{/if}{/each}
-      {/if}
       {#if learned.length}
         <div class="label-line">{t('daybook.learned')}</div>
         {#each learned as id (id)}<p class="say learned">{line(s.learned, id)}</p>{/each}
@@ -145,16 +142,22 @@
         <div class="label-line">{t('daybook.soFar')}</div>
         {#each page.soFar as id (id)}<p class="say learned">{line(soFarItems, id)}</p>{/each}
       {/if}
+      {#if kept.finds.length}
+        <div class="label-line">{t('daybook.finds')}</div>
+        {#each kept.finds as id (id)}{#if findLine(id)}<p class="say learned">{findLine(id)}</p>{/if}{/each}
+      {/if}
+      <!-- every niche a Key opened that week, each to read again (S4, D-143 B) -->
+      {#each kept.opened as id (id)}{@const x = sealOf(s, id)}{#if x}<p class="say count">{t('daybook.count', { where: x.where })} <button class="text-link again" onclick={() => go('opened', `again:${id}`)}><span>{t('daybook.readAgain')}</span></button></p>{/if}{/each}
       {#if page.glimpse}
         <div class="label-line lit">{t('daybook.next')}</div>
         <p class="say glimpse">{beatOf(s, page.glimpse)?.line ?? ''}</p>
       {/if}
+      {#if tally}<p class="soft tally">{tally}</p>{/if}
       {#if offer}
         <div class="offer">
           {#if step === 0}
-            <p class="say">{t('look.offer')}</p>
-            <button class="btn" onclick={lookAhead}>{t('look.go')}</button>
-            <div class="btn-row after"><button class="btn-quiet" onclick={planIt}><span>{t('daybook.planIt')}</span></button><button class="btn-quiet" onclick={notNow}><span>{t('daybook.notNow')}</span></button></div>
+            <!-- one quiet line at the foot (MORNING-REPORT, simplify 3): left alone, it stays until the week is over -->
+            <p class="look-line"><button class="text-link" onclick={lookAhead}><span>{t('look.go')}</span></button> <span aria-hidden="true">·</span> <button class="text-link" onclick={planIt}><span>{t('daybook.planIt')}</span></button></p>
           {:else if step === 1 && sweep[swept]}
             <div class="label-line">{t('look.still')}</div>
             <p class="say line">{sweep[swept].name}</p>
@@ -198,6 +201,10 @@
   .learned { margin-top: 8px; font-size: calc(16.5px * var(--ts, 1)); line-height: 1.45; }
   .glimpse { margin-top: 8px; font-style: italic; color: #fff; line-height: 1.45; }
   .offer { margin-top: 22px; border-top: 1px solid var(--edge-2); padding-top: 14px; }
+  .look-line { display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0; font-style: italic; }
+  .look-line .text-link { min-height: 44px; }
+  .reached { margin-top: 6px; color: #fff; }
+  .tally { margin-top: 18px; font-style: italic; line-height: 1.45; }
   .offer .say { margin-bottom: 12px; }
   .after { margin-top: 12px; }
   .offer .line { margin: 6px 0; }

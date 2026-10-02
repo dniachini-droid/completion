@@ -12,7 +12,7 @@
      rows seemed to change places by themselves); a swipe takes it off today; the last row chooses a delve on anything (D-077). After day complete: the day as done, until Dan taps a job or keeps going.
      Mock-up: design/directions/d-combined/morning.html. */
   import { game, content } from './game.svelte';
-  import { pastBedtime, BEDTIME_WINDOW, tomorrowFirst, satchelView, errandChoices, carriedOf } from '../core/game';
+  import { pastBedtime, BEDTIME_WINDOW, tomorrowFirst, firstChosen, satchelView, carriedOf } from '../core/game';
   import { tieFor } from '../core/remember';
   import { leaveWord, moment } from './moment.svelte';
   import { ofLine } from './panel';
@@ -144,7 +144,11 @@
   function useHere() { const id = v.keyHere; keyAsk = false; if (!id) return; steady(); game.do({ do: 'useKey', seal: id }); go('opened', id); }
 
   /* the errand run (D-139): quietly at the list's end, when two jobs or more could go on one trip out */
-  const errandsOpen = $derived(!busy && !v.night && errandChoices(content, game.facts, game.now).length >= 2);
+  /* the day's first start (a delve begun, or a job ticked off) puts the line away */
+  const started = $derived(game.facts.some(f => (f.type === 'delveStarted' || f.type === 'jobDone') && f.day === v.day));
+  const chosenFirst = $derived.by(() => { const id = firstChosen(game.facts, v.day); return id && !started && !busy && !v.night && !v.done.has(id) && game.job(id) ? id : null; });
+  const cantFor = $derived(started || busy || v.night || v.complete ? null
+    : v.line.find(id => !v.done.has(id) && game.job(id)?.avoided) ?? v.line.find(id => !v.done.has(id)) ?? null);
 
   /* "Add a job" opens the Satchel's one box, ready to type in (D-131), whose Return puts the job on today (Dan, D-143 C):
      focused inside the tap itself, so the phone's keyboard opens straight away */
@@ -154,15 +158,16 @@
     document.querySelector<HTMLInputElement>('.satchel-add input')?.focus({ preventScroll: true });
   }
 
-  /* Tonight, in the last hour before bed (D-131): what tomorrow starts with (prefilled with its first planned job; a tap
+  /* Tonight, in the evening (D-131; all evening since MORNING-REPORT Part 3 #5): what tomorrow starts with (prefilled with its first planned job; a tap
      changes it), and a line for anything on Dan's mind (into the Satchel). Both optional; skipped, nothing changes and
      nothing is said. */
-  const lastHour = $derived(!v.night && pastBedtime(v.bedtime, game.now) >= -BEDTIME_SOON);
-  const first = $derived(lastHour ? tomorrowFirst(content, game.facts, game.now) : null);
+  /* offered all evening, as Tonight is, not only in its last hour (MORNING-REPORT Part 3 #5) */
+  const lastHour = $derived(evening);
+  const first = $derived(lastHour ? tomorrowFirst(content, game.facts, game.minute) : null);
   let choosing = $state(false), mind = $state(''), mindSaid = $state(false);
   const choices = $derived.by(() => {
     if (!choosing || !first) return [] as string[];
-    const s = satchelView(content, game.facts, game.now);
+    const s = satchelView(content, game.facts, game.minute);
     return [...new Set([...first.planned, ...s.noDay.map(j => j.id), ...s.coming.map(x => x.job.id), ...s.recurring.map(j => j.id)])].filter(id => game.job(id));
   });
   function chooseFirst(id: string) { steady(); if (id !== first?.job) game.do({ do: 'firstJob', job: id }); choosing = false; }
@@ -356,13 +361,15 @@
     {#snippet jobRow(id: string)}
       {@const j = job(id)}
       <SwipeRow key={`t:${id}`} actions={acts(j)} tap={() => start(id)} hold={() => openMenu(id, go, v.done.has(id) ? v.day : null, null, 'today')} done={v.done.has(id)} quiet={v.done.has(id) && !recurring(id)}>
-        {#snippet row()}<span class="pip" class:done={v.done.has(id)} class:under={canTick(id)}></span><span class="t">{j.name}{#if soFar(j)}<small>{soFar(j)}</small>{/if}</span><span class="s">{sayDone(j) ? '' : rowNote(j)}</span>{/snippet}
+        {#snippet row()}<span class="pip" class:done={v.done.has(id)} class:under={canTick(id)}></span><span class="t">{j.name}{#if j.avoided && !v.done.has(id)}<span class="find-mark" aria-hidden="true">◇</span><span class="sr-only">{t('row.findWaits')}</span>{/if}{#if soFar(j)}<small>{soFar(j)}</small>{/if}</span><span class="s">{sayDone(j) ? '' : rowNote(j)}</span>{/snippet}
         <!-- the same "It's done" on a row further down: a tap on the row itself still starts a delve (D-100, D-120) -->
         <!-- the tick circle over the marker: done without a delve, with the time it took (D-134) -->
         {#snippet lead()}{#if canTick(id)}<button class="tickbtn" aria-label={t('tick.sr', { job: j.name })} onclick={() => openTick(id, go)}><span class="ring"></span></button>{/if}{/snippet}
         {#snippet over()}{#if sayDone(j) && !busy}<button class="text-link row-done" onclick={() => done(j)}><span>{t('today.itsDone')}</span></button>{/if}{/snippet}
       </SwipeRow>
     {/snippet}
+    <!-- last night's own choice starts the day, until it is started (MORNING-REPORT Part 3 #5) -->
+    {#if chosenFirst}<p class="soft chosen-first">{t('today.chosenFirst', { job: job(chosenFirst).name })} <span aria-hidden="true">·</span> <button class="text-link" aria-label={t('today.chosenBegin', { job: job(chosenFirst).name })} onclick={() => go('set', chosenFirst)}><span>{t('set.begin')}</span></button></p>{/if}
     <div class="rows">
       {#each others as id (id)}{@render jobRow(id)}{/each}
     </div>
@@ -402,7 +409,9 @@
       <div class="label-line if-time">{t('today.ifTime')}</div>
       <div class="rows">{#each extra as id (id)}{@render jobRow(id)}{/each}</div>
     {/if}
-    {#if errandsOpen}<div class="cant errand"><button class="text-link" onclick={() => go('errands')}><span>{t('errand.link')}</span></button></div>{/if}
+    <!-- "Can't get started?" until the day's first start: "I can't start" for the first job on the line, one put off first
+         (MORNING-REPORT Part 3 #4); the errand run lives in the Satchel and the job menu (simplify) -->
+    {#if cantFor}<div class="cant"><button class="text-link" aria-label={t('today.cantSr', { job: job(cantFor).name })} onclick={() => go('cant', cantFor)}><span>{t('today.cantGetStarted')}</span></button></div>{/if}
     <!-- the evening, before the day's work is done: Tonight at the end of the day's list (D-093) -->
     {#if evening && !v.complete && !v.run && !nearBed}<section class="tonight-end">{@render tonight()}</section>{/if}
     </div>
@@ -421,6 +430,10 @@
   /* the heading's own words are its name; "Read it again" is said after it (A#47); a finger's height at least (A#40) */
   h1 .here { font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit; text-shadow: inherit; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; min-height: 44px; }
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+  /* a job Dan tends to put off brings a find: a small hollow gold mark says so (MORNING-REPORT Part 3 #3) */
+  .chosen-first { margin: 6px 0 2px; font-style: italic; }
+  .chosen-first .text-link { min-height: 44px; }
+  .find-mark { margin-left: .4em; font-size: .8em; color: var(--gold-hi); opacity: .85; }
   .where { margin-top: 6px; }
   .where :global(.road) { margin: 0 auto 4px; }
   .key-line { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0 6px; margin: 16px auto 2px; }

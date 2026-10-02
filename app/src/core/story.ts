@@ -8,6 +8,7 @@
  */
 import { calendarWeek } from './time';
 import * as R from './repeat';
+import { ofType } from './facts';
 import type { Fact, FactOf, FactBody, Rhythm } from './types';
 import type { Beat, Carries, Find, Mark, RecordFragment, Seal, StretchId, Story, Token } from './story-types';
 
@@ -23,7 +24,6 @@ export const LONG_STRETCH = 100;
     no return: no story step, find or Key, and it doesn't count towards the day's completion (rule 10, D-121). */
 export const RETURN_MIN = 5;
 
-const ofType = <T extends FactBody['type']>(facts: Fact[], type: T) => facts.filter((f): f is FactOf<T> => f.type === type);
 
 /* ---------- what has happened in the story ---------- */
 
