@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Prose from './Prose.svelte';
   /* What a job's return brings from the story (BALANCING §4: each job done plays its step, 20–40 s): the next step of
      the story, or a sealed thing opening when a Key lands (never called a Key), or a line of the passage; a mark to
      guess where one is offered; and any find. One drawable thing at a time; nothing here is a task. */
@@ -50,11 +51,11 @@
     <!-- a Key's note is two sentences of plain text, as wide as the story's words, with room after it: never squeezed into a
          carved label's short line (Dan: "very very bad styling", D-131) -->
     {#if keyLine}<p class="key-note on-scene">{keyLine}</p>{@render offer()}{/if}
-    <p class="say story on-scene">{r.line}</p>
+    <p class="say story on-scene"><Prose text={r.line} /></p>
     {#each finds as f (f!.id)}
       <div class="find">
         <div class="label-line centred gold">{t('find.label')}</div>
-        <p class="say on-scene">{f!.line}</p>
+        <p class="say on-scene"><Prose text={f!.line} /></p>
       </div>
     {/each}
   </Words>
@@ -82,7 +83,7 @@
     {#each finds as f (f!.id)}
       <div class="find">
         <div class="label-line centred gold">{t('find.label')}</div>
-        <p class="say on-scene">{f!.line}</p>
+        <p class="say on-scene"><Prose text={f!.line} /></p>
       </div>
     {/each}
   </Words>

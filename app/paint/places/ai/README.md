@@ -5,7 +5,7 @@ Sealed folder (D-015): the scripts here quote the briefs. **This README holds no
 ## The job (Dan, 2026-09-26)
 Dan saw four repaints and found them "pretty beautiful … the detail is amazing". So **every place gets one**:
 - **48 places already painted with the kit**: repaint each, using its kit painting as the layout guide.
-- **41 new places for weeks 8–14** (35 places and 6 camp views, D-098). They show stand-ins now and have no kit painting yet; their briefs are in `docs/narrative/sealed/PAINTING_BRIEFS.md`. Paint them from the brief alone, with the style references below and no layout guide.
+- **41 new places for weeks 8–14** (35 places and 6 camp views, D-098). All are painted now (the deep review checked every one); their briefs are in `docs/narrative/sealed/PAINTING_BRIEFS.md`. Paint them from the brief alone, with the style references below and no layout guide.
 
 **The bar (Dan):** *story-critical things must be right*, meaning the one thing to look at, carved marks and counts, and anything a clue depends on. Small errors elsewhere are fine (his example: a mug with a lid). "Try to fix it but don't go obsessive." One or two tries per place, one targeted edit if a story-critical thing is wrong. If it's still wrong, the kit painting (or the stand-in) stays.
 

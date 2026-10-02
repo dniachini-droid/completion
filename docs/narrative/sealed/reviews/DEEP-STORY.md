@@ -130,3 +130,18 @@ The child's pocket compass: `LIVES.md` (X-compass-child) has it in her folder, a
 3. M5 (month summaries by story progress; six-line cap) and M4.
 4. Story calls for Dan's story session (never in chat with Dan): M6, M7, L4's names, L8.
 5. L2, L3, L6, L9 in a tidy pass.
+
+## Built (FIX-LIST Stage 7, 2026-10-02)
+
+- **H1 (S#1):** `until` on `b-w1.close` (`b-3.A`), `b-w4.close` (`b-7.C`), `b-w6.close` (`b-7.A`), `b-w9.close` (`b-10.A`), as in the table. At Normal pace `b-w6.close` now never shows (the story passes `b-7.A` before a close can show it), as `b-w2.close` already didn't.
+- **M2 (S#2b), and M1 with it:** goodnight plays the earliest unplayed camp line with `w <= st.week` whose `req` is met and `until` is not. `b-w7.camp` now plays (the first kept night after `b-7.C`) with its `req` unchanged; whether to move it to `b-7.A` stays a story call.
+- **M3 (S#3):** accepted as D-073's consequence; the probe is kept as an "accepted" control.
+- **M4 (S#4):** a glimpse more than 3 story weeks behind is passed and never shown; learned lines: 3 per story week begun in the calendar week, at most 9.
+- **M5 (S#5):** "so far" by story week: each month's lines (month `w` <= the story week) not shown yet whose beats have played, six at most a page; play weeks no longer decide.
+- **L1 (S#8):** `*…*` rendered as italics (`src/ui/Prose.svelte`, `src/ui/emphasis.ts`) everywhere story text shows; the source keeps the asterisks.
+- **L2 (S#9):** at load (`content/sealed/index.ts`, `curl`), every straight apostrophe inside a word or closing a plural possessive becomes `’`; double quotes untouched.
+- **L3 (S#10):** "in your first week" → "when you first came down" (`b-2.2`, `b-2.A`, `b-3.3`); `b-w3.close` begins "You end at…".
+- **L5 (S#12):** `nextCamp` offers an unused view with an `until` first (here, then back along the route): `cv-03` and `cv-21` now come. `b-w2.close` (slow players only) and the deep beats `b-1.7`, `b-3.4` (pushing days only) are left by design.
+- **L6 (S#13):** `morningRecord` on ten camp beats, from their `morning` notes (S1, S2, S4, S8, V1, V2 by id); the Morning screen's "read" opens it when held, else the old rule. Not set for weeks 2, 4, 7 (the notes name map marks and a highlight, which don't exist) nor week 5 ("L8 next" names a record not yet held then).
+- **L9 (S#16):** `story-types.ts` comments (a `stepKey` plays when its sealed thing opens, a niche by a Key or a road row; `arrivalKey` and `k` on the road); `kGated` removed; the painting README updated.
+- **Left for the sealed story session:** M6 (S#6), M7 (S#7), L4's names (S#11), L8 (S#15), and M1's `req` (S#2).

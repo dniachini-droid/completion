@@ -141,8 +141,8 @@
 - [ ] Re-run `deep-perf-big.mjs` and `deep-perf-frames.mjs` on a 6-month save; the numbers go in `technical/PERFORMANCE.md`.
 
 ## Stage 7: the story's wiring (B20; build from the sealed report only)
-- [ ] S#1 (the glimpses), S#8 (the asterisks), S#2b, S#3, S#4, S#5, S#9, S#10, S#12, S#13, S#16: the wiring, with no story decision needed.
-- [ ] S#6, S#7, S#11, S#15 and the small calls in S#2 go to a **sealed story session**. Dan only needs to know they're pending.
+- [x] S#1 (the glimpses), S#8 (the asterisks), S#2b, S#3, S#4, S#5, S#9, S#10, S#12, S#13, S#16: the wiring, with no story decision needed. Built: glimpses stop once the story moves past them and lag at most 3 story weeks; bedtime lines no longer tied to the story week (so S#2's line now plays too); S#3 kept on purpose (a morning's confirmation never waits on bedtime, D-073); more learned lines when several story weeks were walked; the monthly summary by story progress, six lines a page; emphasis in italics; one apostrophe; no calendar-week wording; camp views that would expire come first (the rest of S#12 is by design: one glimpse only a slow player sees, push-only moments); the morning's "read" points at its own record where one is named; stale comments and dead data gone. Rule tests: `tests/rules/story-wiring.test.ts`; probes turned round in `tests/review/deep-story.test.ts`.
+- [ ] S#6, S#7, S#11, S#15 and the small calls in S#2 go to a **sealed story session**. Dan only needs to know they're pending. (S#2's line now plays through the S#2b wiring; whether its own condition should change is still the story session's call.)
 
 ## Stage 8: improvements (MORNING-REPORT Part 3, and the simplifications)
 - [ ] **3 The avoided job's mark:**

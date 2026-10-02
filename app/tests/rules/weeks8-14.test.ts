@@ -114,19 +114,24 @@ describe('weeks 8–14 play in order', () => {
 });
 
 describe('the week close for weeks 8–14', () => {
-  it('each week closes with its own learned lines, and the third month sums up at play week 9', () => {
+  it('each week closes with its own learned lines, and the third and fourth months sum up once the story reaches them', () => {
     const p = sim(undefined, undefined, 'kept');
     for (let i = 0; i < 15; i++) p.week('normal');
     const closes = p.facts.filter(f => f.type === 'weekClosed');
     const learned = new Set(closes.flatMap(f => f.learned));
     for (let w = 8; w <= 14; w++) expect(s.learned.filter(l => l.w === w).some(l => learned.has(l.id)), `week ${w}`).toBe(true);
-    const nine = closes.find(f => f.n === 9)!;
-    expect(nine.soFar.length).toBeGreaterThan(0);
-    expect(nine.soFar.every(id => id.startsWith('sf-m3-'))).toBe(true);
-    const thirteen = closes.find(f => f.n === 13)!;
-    expect(thirteen.soFar.every(id => id.startsWith('sf-m4-'))).toBe(true);
-    /* every week's glimpse has been shown by the end */
-    const glimpses = new Set(closes.map(f => f.glimpse).filter(Boolean));
-    for (let w = 8; w <= 13; w++) expect(glimpses.has(`b-w${w}.close`), `week ${w}`).toBe(true);
+    /* by story week, not by week of play (deep review S#5): every line, never before the story reaches its month */
+    const shown = closes.flatMap(f => f.soFar);
+    for (const m of s.soFar.slice(2)) {
+      expect((m.items ?? []).filter(l => !shown.includes(l.id)).map(l => l.id), m.id).toEqual([]);
+      const first = closes.find(f => f.soFar.some(id => m.items!.some(l => l.id === id)))!;
+      expect(S.storyState(p.facts.filter(x => x.seq < first.seq), s).week, m.id).toBeGreaterThanOrEqual(m.w);
+    }
+    /* every week's glimpse has been shown by the end, unless the story moved past it first (deep review S#1) */
+    const glimpses = new Set(closes.map(f => f.glimpse).filter(Boolean)), st = p.st();
+    for (let w = 8; w <= 13; w++) {
+      const b = S.beatOf(s, `b-w${w}.close`)!;
+      expect(glimpses.has(b.id) || (!!b.until && S.met(st, b.until)), `week ${w}`).toBe(true);
+    }
   }, 240_000);
 });

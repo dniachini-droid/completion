@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Prose from './Prose.svelte';
   import Deleted from './Deleted.svelte';
   /* Back after days away (CORE_LOOPS → absence; D-043 F9): "where you were": the last place, the sealed thing in view,
      the last record, and the one open question for the story week. No counts, no summary of what was missed. The day is
@@ -67,8 +68,8 @@
   </header>
   <div class="mid"></div>
   <section class="bottom col rise d2">
-    {#if q}<p class="say question">{q}</p>{/if}
-    {#if mSaid}<p class="say look">{mSaid}</p>{/if}
+    {#if q}<p class="say question"><Prose text={q} /></p>{/if}
+    {#if mSaid}<p class="say look"><Prose text={mSaid} /></p>{/if}
     {#if m?.beat}<Settled beat={m.beat} />{/if}
     {#if mFind}<div class="label-line">{t('find.label')}</div><p class="say look">{mFind}</p>{/if}
     <p class="soft">{t('welcome.say')}</p>

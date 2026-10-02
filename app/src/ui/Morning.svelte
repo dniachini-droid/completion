@@ -1,10 +1,11 @@
 <script lang="ts">
+  import Prose from './Prose.svelte';
   /* The morning after a kept bedtime (CORE_LOOPS → evening close): something small waiting at camp. A morning the story
      wrote settles the guesses it confirms (D-070) and points back to a record that now reads further; otherwise, a find.
      Looked at once, then Today. */
   import { game, content } from './game.svelte';
   import { t } from '../content/copy/en';
-  import { beatOf, recordOf } from '../core/story';
+  import { beatOf, morningRecord, recordOf } from '../core/story';
   import Scene from './Scene.svelte';
   import Settled from './Settled.svelte';
   import type { Go } from './nav';
@@ -16,8 +17,9 @@
   const find = m?.find ? s.finds.find(f => f.id === m.find)?.line ?? '' : '';
   /* a later week's morning the story wrote a line for (week 1's morning beat is the opening screen, not this one) */
   const said = m?.beat ? (b => b && b.kind === 'morning' && b.w > 1 ? b.line ?? '' : '')(beatOf(s, m.beat)) : '';
-  /* the newest record that carries a mark Dan has guessed: it reads differently this morning */
-  const record = m?.beat ? [...game.view.story.records].reverse().find(id => recordOf(s, id)?.cut?.some(l => l.some(tk => 's' in tk && typeof tk.s === 'string' && game.view.story.guessed.has(tk.s)))) ?? null : null;
+  /* the record this morning was written to point back to, if Dan has it (deep review S#13); else the newest record that
+     carries a mark Dan has guessed: it reads differently this morning */
+  const record = m?.beat ? morningRecord(s, m.beat, game.view.story.records) ?? [...game.view.story.records].reverse().find(id => recordOf(s, id)?.cut?.some(l => l.some(tk => 's' in tk && typeof tk.s === 'string' && game.view.story.guessed.has(tk.s)))) ?? null : null;
 
   $effect(() => { if (!m) go('today'); });
   /* a look at the record isn't leaving: back returns here (N bug 2); only going on to Today marks it seen */
@@ -41,11 +43,11 @@
   <div class="mid"></div>
   <section class="bottom col center rise d2">
     {#if game.facts.some(f => f.type === 'stepsGained' && f.job === 'sleep' && f.day === v.day)}<p class="say">{t('morning.headStart')}</p>{/if}
-    {#if said}<p class="say look">{said}</p>{/if}
+    {#if said}<p class="say look"><Prose text={said} /></p>{/if}
     {#if m?.beat}<Settled beat={m.beat} />{/if}
     {#if find}
       <div class="label-line centred">{t('find.label')}</div>
-      <p class="say look">{find}</p>
+      <p class="say look"><Prose text={find} /></p>
     {/if}
     {#if record}<button class="text-link" onclick={() => leave('records')}><span>{t('morning.read')}</span></button>{/if}
     <button class="btn resting go" onclick={() => leave('today')}>{t('morning.go')}</button>

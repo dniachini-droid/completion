@@ -111,9 +111,9 @@ export interface Carries {
 export type BeatKind =
   | 'morning'      /* the day-1 screen, before any job */
   | 'step'         /* after a main job, in order */
-  | 'stepKey'      /* plays when its sealed thing's Key lands */
+  | 'stepKey'      /* plays when its sealed thing opens: on the road in its turn, or by a Key (D-129) */
   | 'arrival'      /* a named place, at day complete */
-  | 'arrivalKey'   /* a named place that plays when its Key lands */
+  | 'arrivalKey'   /* a named place that plays when its sealed thing opens on the road (D-129) */
   | 'word'         /* a four-tap arrival: a word is cut */
   | 'deep'         /* a High day's deep push */
   | 'camp'         /* bedtime kept: the camp line, and something waiting in the morning */
@@ -139,8 +139,10 @@ export interface Beat {
   stretch: StretchId;
   painting?: string;
   carries?: Carries;
-  /** The morning after (camp beats): what is waiting. */
+  /** The morning after (camp beats): what is waiting (the author's note). */
   morning?: string;
+  /** The record the morning after points back to (camp beats), when the note names one: the Morning screen's "read". */
+  morningRecord?: string;
   /** Not played once this has (a camp line or a glimpse the story has moved past). */
   until?: string;
 }
@@ -148,10 +150,12 @@ export interface Beat {
 /** A named place with no fragment, added by the story job (a `pl-` id). Plays as an arrival. */
 export interface PlaceBeat extends Beat { kind: 'arrival'; name: string; line: string; }
 
-/** The route: for each story week, its five named places in arrival order. `k` marks a place that plays when its Key lands. */
-export interface RouteWeek { w: number; places: { id: string; k?: boolean; kGated?: boolean }[]; }
+/** The route: for each story week, its five named places in arrival order. `k` marks a place that plays when its sealed
+    row opens (on the road, in its turn, with no Key since D-129). */
+export interface RouteWeek { w: number; places: { id: string; k?: boolean }[]; }
 
-/** A sealed thing: a count that fills when a Key lands (the story job's §5; NICHES). */
+/** A sealed thing: a count that fills when it opens (the story job's §5; NICHES): a niche by a Key, a row on the road
+    (D-129). */
 export interface Seal {
   id: string;
   w: number;
@@ -162,7 +166,7 @@ export interface Seal {
   /** The step that plays when it opens (a `b-` beat id if authored there; otherwise the composed line below). */
   beat?: string;
   line?: string;
-  /** A place that plays when this Key lands (a (K) arrival). */
+  /** A place that plays when this row opens (a (K) arrival; on the road since D-129). */
   arrival?: string;
   /** No Key: seen in the open. */
   seenOnly?: boolean;

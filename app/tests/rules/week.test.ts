@@ -233,9 +233,11 @@ describe('The daybook’s week close', () => {
     const c = closes[0] as Extract<Fact, { type: 'weekClosed' }>;
     expect(c.n).toBe(1);
     expect(c.learned.length).toBeGreaterThan(0);
-    expect(c.learned.length).toBeLessThanOrEqual(3);
+    /* three for each story week begun in the calendar week (deep review S#4) */
+    const to = Math.max(1, ...s2.facts.flatMap(f => f.type === 'storyWeekBegan' && f.day < '2026-10-05' ? [f.w] : []));
+    expect(c.learned.length).toBeLessThanOrEqual(3 * to);
     expect(c.soFar.length).toBeGreaterThanOrEqual(3);
-    expect(c.soFar.length).toBeLessThanOrEqual(5);
+    expect(c.soFar.length).toBeLessThanOrEqual(6);
     expect(c.glimpse).toBe('b-w1.close');
   });
   it('learned lines never repeat, and only lines whose beats have played show', () => {

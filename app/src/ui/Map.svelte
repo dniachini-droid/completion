@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Prose from './Prose.svelte';
   /* The map (FIRST_PLAYABLE → the world; mock-up map.html; INTERACTION_NOTES → The map): lights on the region's own night
      sky, joined by routes that draw themselves in and settle to dust. One map, one level (D-092: the closer view was two
      maps to Dan): the region, opening on where Dan is. Tap a light: the crosshair closes on it and what is known of it
@@ -317,7 +318,7 @@
               <!-- the places reached here, each a tap from its entry and painting (D-135) -->
               <p class="say reads">{#each sel.reads as r, i (r.seq)}{#if i}<span class="sep" aria-hidden="true"> · </span>{/if}<button class="text-link read" aria-label={t('map.readAgain', { place: r.name })} onclick={() => go('arrival', `again:${r.seq}`)}><span>{r.name}</span></button>{/each}</p>
             {:else}
-              <p class="say" class:short={!!sel.reads?.length}>{sel.box.say}</p>
+              <p class="say" class:short={!!sel.reads?.length}><Prose text={sel.box.say} /></p>
               {@const place = sel.reads?.filter(r => !r.camp).pop()}
               {@const camps = sel.reads?.filter(r => r.camp) ?? []}
               {#if place}<p class="reads"><button class="text-link read" onclick={() => go('arrival', `again:${place.seq}`)}><span>{t('map.readHere')}</span></button></p>{/if}

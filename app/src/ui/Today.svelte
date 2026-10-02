@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Prose from './Prose.svelte';
   import Deleted from './Deleted.svelte';
   import Bedtime from './Bedtime.svelte';
   import SwipeRow from './SwipeRow.svelte';
@@ -261,7 +262,7 @@
         <div class="label-line">{v.aheadBehind ? t('today.behind') : v.aheadHere ? t('today.here') : t('today.ahead')}{#if v.aheadKey}<span class="needs-key"> · {t('today.aheadKey')}</span>{/if}</div>
         <!-- read as words, never as a button whose name is the whole passage (A#38): VoiceOver reads it all anyway; a tap
              unfolds it for the eye -->
-        <div class="ahead-text" class:open={aheadOpen} role="presentation" onclick={() => (aheadOpen = !aheadOpen)}><p class="say on-scene">{v.ahead}</p></div>
+        <div class="ahead-text" class:open={aheadOpen} role="presentation" onclick={() => (aheadOpen = !aheadOpen)}><p class="say on-scene"><Prose text={v.ahead} /></p></div>
         {#if v.aheadBehind && !v.keyUse}<p class="behind-map"><button class="text-link" onclick={() => go('map', v.aheadBehind!)}><span>{t('today.behindMap')}</span></button></p>{/if}
       </section>
     {/if}
@@ -279,7 +280,7 @@
       <div class="next">
         <div class="label-line gold">{t('today.tonight')}</div>
         <h2 class="say-lg">{t('camp.night')}</h2>
-        {#if nightLine}<p class="say night-line">{nightLine}</p>{/if}
+        {#if nightLine}<p class="say night-line"><Prose text={nightLine} /></p>{/if}
         <p class="soft">{v.night.kept ? t('camp.sleep.kept') : t('camp.sleep.late', { bedtime: v.bedtime })}</p>
       </div>
     {:else if v.next?.mode === 'carry' && v.run}

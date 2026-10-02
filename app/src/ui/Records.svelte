@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Prose from './Prose.svelte';
   /* Records (FIRST_PLAYABLE → the world; mock-up record.html): what Dan has found, newest first. A record in the Cut
      shows as its marks; every mark he holds reads as his guess or its meaning, the rest stay marks, carved pictures
      read in brackets (LIVES §0). Her sheet, where she made one, shows in her hand. Paper reads at once. */
@@ -60,7 +61,7 @@
         {/each}
       </div>
     {:else if open.kind === 'paper'}
-      <div class="col">{#each open.paper ?? [] as para}<p class="say paper">{para}</p>{/each}</div>
+      <div class="col">{#each open.paper ?? [] as para}<p class="say paper"><Prose text={para} /></p>{/each}</div>
     {:else}
       <!-- the line of marks sits in a channel cut smooth into the face (mock-up record.html); a mark opens what Dan knows of it -->
       <section class="band">
@@ -80,11 +81,11 @@
         </div>
       </section>
       <!-- a cut record with a line in pencil beside it (the rod's shelf): the pencil reads at once, as paper does -->
-      {#if open.paper?.length}<div class="col">{#each open.paper as para}<p class="say paper">{para}</p>{/each}</div>{/if}
+      {#if open.paper?.length}<div class="col">{#each open.paper as para}<p class="say paper"><Prose text={para} /></p>{/each}</div>{/if}
       {#if open.sheet}
         <div class="col sheet">
           <div class="label-line">{t('records.her')}</div>
-          <p class="her">{open.sheet}</p>
+          <p class="her"><Prose text={open.sheet} /></p>
         </div>
       {/if}
     {/if}

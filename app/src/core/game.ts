@@ -819,11 +819,22 @@ function playWeek(facts: Fact[], week: string): number {
   return first ? Math.round(W.daysBetween(calendarWeek(first.day), week) / 7) + 1 : 1;
 }
 
+/** The most story weeks a week close's glimpse may lag behind the story week Dan is in: an older one is passed and is
+    never shown (deep review S#4: at a fast pace the page showed a place left many weeks before). */
+const GLIMPSE_LAG = 3;
+/** Things learned a week close shows for each story week begun in its calendar week, and at most (deep review S#4). */
+const LEARNED_PER_WEEK = 3, LEARNED_MAX = 9;
+/** The most "so far" lines one week close shows (deep review S#5: one month has six). */
+const SO_FAR_MAX = 6;
+
 /**
  * The daybook's page for each calendar week that had anything done, written once at the first opening after the week
- * (TOOLS §6; BALANCING §7): up to three things learned, the month's "so far" on the first close of each month of play
- * (weeks 1, 5, 9 and 13), the story week's glimpse, and the sealed things the weekly floor opened. A week with nothing done
- * gets no page, and no gap is marked (D-043). What the real week held is read from the log when the page is shown.
+ * (TOOLS §6; BALANCING §7): what was learned (three for each story week begun in the week, up to nine), the months'
+ * "so far" lines once the story has reached their month (by story week, not by week of play, so a slow or a fast player
+ * gets every line; one whose beats haven't played yet waits for a later page: deep review S#5), the story week's glimpse
+ * (never one the story has moved past, nor one lagging far behind: S#1, S#4), and the sealed things the Keys opened. A
+ * week with nothing done gets no page, and no gap is marked (D-043). What the real week held is read from the log when
+ * the page is shown.
  */
 function weekClose(w: W, c: Content, at: Moment, day: string, storyWeek: number) {
   const closed = new Set(ofType(w.all, 'weekClosed').map(f => f.week));
@@ -837,14 +848,15 @@ function weekClose(w: W, c: Content, at: Moment, day: string, storyWeek: number)
     const from = weekAt(wk), to = Math.max(from, ...began.filter(f => calendarWeek(f.day) === wk).map(f => f.w));
     const learned = c.story.learned.filter(l => l.w <= storyWeek && !before.has(l.id) && l.req.every(r => S.met(st, r)))
       .map((l, k) => ({ l, k, here: l.w >= from && l.w <= to ? 0 : 1 })).sort((a, b) => a.here - b.here || a.l.w - b.l.w || a.k - b.k)
-      .slice(0, 3).map(({ l }) => l.id);
+      .slice(0, Math.min(LEARNED_MAX, LEARNED_PER_WEEK * (to - from + 1))).map(({ l }) => l.id);
     const n = playWeek(w.all, wk);
-    /* the first close of each month of play: weeks 1, 5, 9, 13… */
-    const month = (n - 1) % 4 === 0 ? c.story.soFar[(n - 1) / 4] : undefined;
-    const soFar = (month?.items ?? []).filter(l => l.req.every(r => S.met(st, r))).slice(0, 5).map(l => l.id);
+    /* every month whose first story week has come: its lines not shown yet whose beats have played, in order */
+    const shownSoFar = new Set(ofType(w.all, 'weekClosed').flatMap(f => f.soFar));
+    const soFar = c.story.soFar.filter(m => m.w <= storyWeek).flatMap(m => m.items ?? [])
+      .filter(l => !shownSoFar.has(l.id) && l.req.every(r => S.met(st, r))).slice(0, SO_FAR_MAX).map(l => l.id);
     /* the glimpse waits until Dan has been where it looks (D-079): a later week's close shows it then */
-    const glimpse = c.story.beats.find(b => b.kind === 'close' && b.w <= storyWeek && !st.played.has(b.id) && st.visited.has(b.stretch)
-      && !(b.until && S.met(st, b.until))) ?? null;
+    const glimpse = c.story.beats.find(b => b.kind === 'close' && b.w <= storyWeek && b.w >= storyWeek - GLIMPSE_LAG
+      && !st.played.has(b.id) && st.visited.has(b.stretch) && !(b.until && S.met(st, b.until))) ?? null;
     if (glimpse) w.put({ type: 'beatPlayed', id: glimpse.id }, at, day);
     /* every niche a Key opened in the week, however it came to be used (S4: built only from the old floor's Keys, it never
        filled once D-142 took the floor away) */
@@ -1445,11 +1457,12 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       if (ofType(onDay(w.all, day), 'goodnight').length) break;
       const past = pastBedtime(bedtimeOf(w.all), now), kept = past <= BEDTIME_GRACE && past >= -BEDTIME_WINDOW;
       w.put({ type: 'goodnight', kept });
-      /* kept: the story week's camp line plays tonight, once a week; its morning waits for tomorrow */
+      /* kept: a camp line plays tonight, the earliest not played yet, one a night; its morning waits for tomorrow. Not
+         tied to the story week Dan is in: a story week walked through between two bedtimes keeps its line (deep review S#2b) */
       if (kept) {
         const st = S.storyState(w.all, c.story);
         /* never before what it describes, nor after it has changed (review, 2026-09-25) */
-        const camp = c.story.beats.find(b => b.kind === 'camp' && b.w === st.week && !st.played.has(b.id)
+        const camp = c.story.beats.find(b => b.kind === 'camp' && b.w <= st.week && !st.played.has(b.id)
           && b.req.every(r => S.met(st, r)) && !(b.until && S.met(st, b.until)));
         if (camp) w.put({ type: 'beatPlayed', id: camp.id });
       }
