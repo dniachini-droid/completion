@@ -74,8 +74,17 @@ export async function sqlSaves(db: Db, failed: (why: unknown) => void, now = () 
   for (const [key, body] of await db.all('SELECT key, body FROM copies')) copies.set(String(key), String(body));
 
   let queue: Promise<void> = Promise.resolve(), broken = false;
+  /* time with the app away (the phone suspends it mid-write) is not time waited: the clock starts again on return
+     (fresh review of P#13) */
+  let shownAt = 0;
+  if (typeof document !== 'undefined') document.addEventListener('visibilitychange', () => { if (!document.hidden) shownAt = Date.now(); });
   const timed = (p: Promise<void>) => new Promise<void>((ok, no) => {
-    const t = setTimeout(() => no(new Error('a write never answered')), timeoutMs);
+    let t: ReturnType<typeof setTimeout>;
+    const arm = (from: number) => { t = setTimeout(() => {
+      if ((typeof document !== 'undefined' && document.hidden) || shownAt > from) arm(Date.now());
+      else no(new Error('a write never answered'));
+    }, timeoutMs); };
+    arm(Date.now());
     p.then(() => { clearTimeout(t); ok(); }, why => { clearTimeout(t); no(why); });
   });
   const send = (steps: { sql: string; args?: Arg[] }[]) => {
@@ -110,6 +119,10 @@ export async function sqlSaves(db: Db, failed: (why: unknown) => void, now = () 
       send(steps);
     },
     keep(key, raw) {
+      /* the same text already kept under this kind (a blocked save met again at each start): no second copy, so the
+         newest few never push out an older, different one (fresh review of P#23) */
+      const kind0 = kindOf(key);
+      if (kind0 && [...copies].some(([k, v]) => kindOf(k) === kind0 && v === raw)) return;
       copies.set(key, raw);
       const steps: { sql: string; args?: Arg[] }[] = [{ sql: 'INSERT OR REPLACE INTO copies (key, body, at) VALUES (?, ?, ?)', args: [key, raw, now()] }];
       const kind = kindOf(key);

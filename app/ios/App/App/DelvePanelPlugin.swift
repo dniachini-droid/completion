@@ -53,10 +53,13 @@ public class DelvePanelPlugin: CAPPlugin, CAPBridgedPlugin {
     /// make two panels, and an end never races a show (deep review P#16).
     private static let lock = NSLock()
     private static var chain: Task<Void, Never>?
-    private static func inOrder(_ work: @escaping () async -> Void) {
+    @discardableResult
+    private static func inOrder(_ work: @escaping () async -> Void) -> Task<Void, Never> {
         lock.lock(); defer { lock.unlock() }
         let prev = chain
-        chain = Task { await prev?.value; await work() }
+        let next = Task { await prev?.value; await work() }
+        chain = next
+        return next
     }
 
     /// What the panel turns to if Dan goes into another app (D-094), as the app last said; the app is asleep by then.
@@ -115,7 +118,11 @@ public class DelvePanelPlugin: CAPPlugin, CAPBridgedPlugin {
     /// Dan went into another app at `at` (AwayPlugin, D-094): the panel stops where the delve will be paused, in the
     /// paused look, rather than counting on while the app sleeps. Left in a breather: the next delve waits, not begun.
     /// Coming back puts the panel right from the game's own rules.
-    @MainActor static func hold(at: Date) async {
+    /// (in the same order as the app's own calls, never between a show and its end: fresh review)
+    static func hold(at: Date) async {
+        await inOrder { await holdNow(at: at) }.value
+    }
+    @MainActor private static func holdNow(at: Date) async {
         guard let a = away else { return }
         for activity in Activity<DelveAttributes>.activities where activity.activityState == .active || activity.activityState == .stale {
             var s = activity.content.state

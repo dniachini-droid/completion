@@ -69,3 +69,14 @@ describe('Just this one today keeps appointments', () => {
     expect(put.some(f => f.type === 'setAside' && f.job === dentist)).toBe(false);
   });
 });
+
+describe('an old time away never pauses a new delve', () => {
+  it('a time away from before the run began is passed over', () => {
+    const p = player().do({ do: 'open' });
+    const before = epochOf('2026-09-28T08:30:00+01:00');
+    p.do({ do: 'startRun', job: 'cat', minutes: 30, count: 1 }).wait(5);
+    p.do({ do: 'away', from: before, to: epochOf('2026-09-28T09:05:00+01:00') });
+    expect(p.facts.some(f => f.type === 'delveHeld')).toBe(false);
+    expect(p.view().run?.phase).toBe('delve');
+  });
+});

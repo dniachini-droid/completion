@@ -73,7 +73,7 @@ public class AwayPlugin: CAPPlugin, CAPBridgedPlugin {
     /// Written into the save: forgotten here, if it is still the same time away.
     @objc func clear(_ call: CAPPluginCall) {
         let d = UserDefaults.standard
-        if let at = call.getDouble("at"), let kept = d.object(forKey: Self.leftKey) as? Double, kept == at { d.removeObject(forKey: Self.leftKey) }
+        if let at = call.getDouble("at"), let kept = d.object(forKey: Self.leftKey) as? Double, abs(kept - at) < 1 { d.removeObject(forKey: Self.leftKey) }   /* (a time back from JavaScript is never compared to the fraction of a millisecond) */
         call.resolve()
     }
 
@@ -124,7 +124,8 @@ public class AwayPlugin: CAPPlugin, CAPBridgedPlugin {
                 /* the lock-screen panel and the Dynamic Island say it has paused too, before the app sleeps */
                 Task { @MainActor in
                     await DelvePanelPlugin.hold(at: r.at)
-                    self.finish()
+                    /* only this trip's own background time: back and away again meanwhile, the new trip keeps its own */
+                    if self.trip == n { self.finish() }
                 }
                 return
             } else {

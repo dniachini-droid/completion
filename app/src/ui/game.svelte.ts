@@ -98,6 +98,8 @@ class Game {
       story week, exactly as a cold start would (review finding, D-080). */
   wake() { return (this.#waking ??= this.#wake().finally(() => { this.#waking = null; })); }
   async #wake() {
+    /* a snooze may have been asked from a notification while the app was away: looked at again on every return */
+    this.#snoozeChecked = '';
     const left = await platform.away.take();
     this.now = this.clock();
     if (left !== null) { this.away(left); void this.forget(left); }
@@ -115,16 +117,23 @@ class Game {
   /** Lines said to Siri, typed in Shortcuts or sent from the Action button become jobs (D-113, D-117): written first,
       then cleared; a line written but not cleared (the app closed in between) is recognised by its id next time. */
   #draining = false;
+  #drainAgain = false;
   async drain() {
-    if (this.#draining) return;
+    /* a save this build can't write: the lines stay in the phone's inbox until it can (fresh review) */
+    if (this.blocked) return;
+    /* a line arriving while one batch is taken is taken right after it, never left for the next return */
+    if (this.#draining) { this.#drainAgain = true; return; }
     this.#draining = true;
     try {
-      const lines = await platform.inbox.take();
-      if (!lines.length) return;
-      this.do({ do: 'takeInbox', lines });
-      /* written to the save before it leaves the inbox: an app killed in between loses nothing (P#8) */
-      await (platform.saves as { flush?: () => Promise<void> }).flush?.().catch(() => {});
-      await platform.inbox.clear(lines.map(x => x.id));
+      do {
+        this.#drainAgain = false;
+        const lines = await platform.inbox.take();
+        if (!lines.length || this.blocked) break;
+        this.do({ do: 'takeInbox', lines });
+        /* written to the save before it leaves the inbox: an app killed in between loses nothing (P#8) */
+        await (platform.saves as { flush?: () => Promise<void> }).flush?.().catch(() => {});
+        await platform.inbox.clear(lines.map(x => x.id));
+      } while (this.#drainAgain);
     } finally { this.#draining = false; }
   }
 
@@ -372,7 +381,8 @@ class Game {
   #reminding: Promise<void> = Promise.resolve();
   reminders() { return (this.#reminding = this.#reminding.then(() => this.#remind()).catch(() => {})); }
   async #remind() {
-    if (!platform.notifier.locked) return;
+    /* a save this build can't read has no log here: Dan's reminders are left as they were (fresh review) */
+    if (!platform.notifier.locked || this.blocked) return;
     const list = alertsDue(content, this.#log, this.clock()).slice(0, REMIND_IDS.length);
     const words = list.map(a => ({ a, ...this.remindWords(a) }));
     /* the re-entry nudge (D-113): a nudge set earlier whose time has passed came while the app was closed */
@@ -461,6 +471,19 @@ class Game {
   /** Restore from a copy: what Dan has now is kept aside first (never overwritten), then the copy becomes the save and
       the game opens on it as on a cold start. */
   /** Whether a save can be restored: every fact shaped as one, and the game runs on it (deep review B14). */
+  /** A broken save's way on (fresh review of B15): the day's backup, when it reads and runs. */
+  backupSave(): Save | null {
+    const raw = platform.saves.get(`${this.saveKey}.backup`), r = raw ? readSave(raw) : null;
+    return r && this.canRestore(r.save) ? r.save : null;
+  }
+  /** A broken save left kept aside (never a newer one): the game starts again on a fresh save. */
+  startFresh() {
+    if (this.blocked !== 'broken') return;
+    this.blocked = null;
+    this.#setLog([]);
+    this.logs++;
+    this.do({ do: 'open' });
+  }
   canRestore(s: Save): boolean { return factsSound(s.facts) && runs(s.facts, content, this.clock()); }
   restore(s: Save): boolean {
     /* tried on the rules before anything is written; refused plainly if it can't run */

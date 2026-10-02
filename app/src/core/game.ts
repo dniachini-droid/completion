@@ -734,7 +734,8 @@ function endRunOn(w: W, c: Content, job: string, nowMs: number, now: Moment, kee
     the next delve would have begun without him. Time away never counts; nothing already done is lost. */
 function pauseAway(w: W, from: number, to: number) {
   const r = activeRun(w.all);
-  if (!r) return;
+  /* a time away from before this run began (an old one met again) never pauses it (fresh review) */
+  if (!r || from < r.plan.startedAt) return;
   const s = runAt(r.plan, r.marks, from);
   let at = s.phase === 'delve' ? from : s.phase === 'breather' ? from + s.breatherLeftMs : null;
   if (at === null || at >= to) return;

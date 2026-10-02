@@ -21,6 +21,24 @@ const { fails } = K;
   await page.close();
 }
 
+/* 1b. a broken save: kept, never a newer one, so it has a way on: a new game, the broken save kept aside (fresh review) */
+{
+  const page = await K.open(null, '2026-09-30T09:00:00+01:00');
+  const broken = '{"version": 2, "facts": [oops';
+  await page.evaluate(s => localStorage.setItem('save.v1', s), broken);
+  const { reload, btn, tap, onToday } = K.helpers(page);
+  await reload();
+  if (!(await page.getByText(/can’t be read by this version/).count())) fails.push('a broken save does not say so');
+  if (!(await btn('Start a new game (this save stays kept)').count())) fails.push('a broken save has no way on');
+  else {
+    await tap('Start a new game (this save stays kept)');
+    if (!(await onToday())) fails.push('a new game from a broken save did not reach Today');
+    const kept = await page.evaluate(b => Object.keys(localStorage).some(k => k.startsWith('save.v1.kept.') && localStorage.getItem(k) === b), broken);
+    if (!kept) fails.push('the broken save was not kept aside');
+  }
+  await page.close();
+}
+
 /* 2. Restore: a broken file is refused, nothing changes; a good copy restores */
 {
   const page = await K.open(null, '2026-09-30T09:00:00+01:00');

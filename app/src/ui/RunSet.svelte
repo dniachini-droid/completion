@@ -153,6 +153,10 @@
     if (errands) errandPick.jobs = [];
     go('delve');
   }
+  /* too little room left for the dial (a long name and a note, with the phone's text set larger): the name and the note
+     give up a line or two; once tight, it stays so for this set-up, so the layout never see-saws (fresh review) */
+  let stageH = $state(0), tight = $state(false);
+  $effect(() => { if (stageH && stageH < 280) tight = true; });
 </script>
 
 <div class="rs">
@@ -166,7 +170,7 @@
         <!-- the job itself, one quiet tap away from every delve (D-131, step 3) -->
         {#if job}<button class="icon-link change" onclick={() => go('rhythms', job.id)}><span>{t('job.change')}</span></button>{:else}<span></span>{/if}
       </div>
-      <section class="job rise d1">
+      <section class="job rise d1" class:tight>
         <div class="label-line lit">{t('set.label')}</div>
         {#if !job}
           <!-- the errand run (D-139): its errands, struck off in the delve -->
@@ -184,7 +188,7 @@
       </section>
     </header>
 
-    <div class="mid stage col rise d2">
+    <div class="mid stage col rise d2" bind:clientHeight={stageH}>
       <div class="stage-in">
         <div class="dialwrap">
           <div class="dial" class:dragging bind:this={dial} role="slider" tabindex="0" aria-label={t('set.length')}
@@ -256,7 +260,8 @@
         {#if refused}<p class="soft refused" role="status">{t('set.refused')}</p>{/if}
         <button class="btn" onclick={start}>{t('set.begin')}</button>
         <!-- the first small step, one quiet tap from every set-up (MORNING-REPORT Part 3 #4) -->
-        {#if job}<button class="text-link cant" onclick={() => go('cant', job.id)}><span>{t('today.cantGetStarted')}</span></button>{/if}
+        <!-- (only for a job not yet begun: one with minutes behind it, or where he stopped, is under way) -->
+        {#if job && carry === 0 && !job.note}<button class="text-link cant" onclick={() => go('cant', job.id)}><span>{t('today.cantGetStarted')}</span></button>{/if}
       </div>
     </section>
   </div>
@@ -276,5 +281,7 @@
   /* where he stopped is the point of the note: shown in full, a few lines (deep review B10) */
   .last.note { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; line-clamp: 4; line-height: 1.3; }
   /* a long name keeps to three lines; the dial below gives way to it */
+  .job.tight h1 { -webkit-line-clamp: 2; line-clamp: 2; }
+  .job.tight .last.note { -webkit-line-clamp: 2; line-clamp: 2; }
   .job h1 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; overflow-wrap: anywhere; }
 </style>

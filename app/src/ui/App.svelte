@@ -223,7 +223,8 @@
   /* the save kept as it was, offered as a file (B15) */
   let copied = $state('');
   async function copyKept() {
-    const raw = game.keptAside ? platform.saves.get(game.keptAside) : null;
+    /* (the save itself is never written over while blocked: it is the same text as the copy kept aside) */
+    const raw = (game.keptAside ? platform.saves.get(game.keptAside) : null) ?? platform.saves.get(game.saveKey);
     try { if (raw) { await platform.copies.share(`Long Answer save kept ${new Date().toISOString().slice(0, 10)}.json`, raw); copied = t('blocked.copied'); } }
     catch { copied = t('settings.copy.failed'); }
   }
@@ -247,6 +248,12 @@
       <p class="say">{t(game.blocked === 'newer' ? 'blocked.newer' : 'blocked.broken')}</p>
       <button class="btn" onclick={copyKept}>{t('blocked.copy')}</button>
       {#if copied}<p class="soft">{copied}</p>{/if}
+      <!-- a broken save (never a newer one) has a way on: the day's backup, or a fresh start with it kept aside -->
+      {#if game.blocked === 'broken'}
+        {@const b = game.backupSave()}
+        {#if b}<button class="btn-quiet" onclick={() => { if (game.restore(b)) goHome(); }}><span>{t('blocked.backup')}</span></button>{/if}
+        <button class="btn-quiet" onclick={() => { game.startFresh(); goHome(); }}><span>{t('blocked.fresh')}</span></button>
+      {/if}
     </section></div>
   {:else}
   <svelte:boundary onerror={(e) => console.error(e)}>

@@ -27,8 +27,8 @@
 .rs .dial .fill{ background: conic-gradient(from 0deg, rgba(var(--violet-rgb),.35) 0, rgba(190,184,255,.95) calc(var(--p) * 1turn - 3deg), #fff calc(var(--p) * 1turn), transparent calc(var(--p) * 1turn + .5deg)); }
 /* the glow's softness is in its mask, drawn once, not a blur redone each time the ring moves (deep review F#6) */
 .rs .dial .glow{ position:absolute; inset:-14%; mix-blend-mode:screen; pointer-events:none; }
-.rs .dial .glow .band{ inset:12.3%; -webkit-mask: radial-gradient(circle closest-side, transparent 78%, rgba(0,0,0,.45) 85%, #000 91%, #000 97%, rgba(0,0,0,.45) 103%, transparent 110%); mask: radial-gradient(circle closest-side, transparent 78%, rgba(0,0,0,.45) 85%, #000 91%, #000 97%, rgba(0,0,0,.45) 103%, transparent 110%); }
-.rs .dial .glow.wide .band{ -webkit-mask: radial-gradient(circle closest-side, transparent 68%, rgba(0,0,0,.3) 80%, #000 91%, #000 97%, rgba(0,0,0,.3) 108%, transparent 122%); mask: radial-gradient(circle closest-side, transparent 68%, rgba(0,0,0,.3) 80%, #000 91%, #000 97%, rgba(0,0,0,.3) 108%, transparent 122%); }
+.rs .dial .glow .band{ inset:4%; -webkit-mask: radial-gradient(circle closest-side, transparent 64.5%, rgba(0,0,0,.45) 70.5%, #000 76.4%, #000 81.5%, rgba(0,0,0,.45) 86.6%, transparent 91.7%); mask: radial-gradient(circle closest-side, transparent 64.5%, rgba(0,0,0,.45) 70.5%, #000 76.4%, #000 81.5%, rgba(0,0,0,.45) 86.6%, transparent 91.7%); }   /* larger than the ring, its fade all inside its own circle (fresh review) */
+.rs .dial .glow.wide .band{ -webkit-mask: radial-gradient(circle closest-side, transparent 56%, rgba(0,0,0,.3) 66%, #000 76.4%, #000 81.5%, rgba(0,0,0,.3) 90%, transparent 99.5%); mask: radial-gradient(circle closest-side, transparent 56%, rgba(0,0,0,.3) 66%, #000 76.4%, #000 81.5%, rgba(0,0,0,.3) 90%, transparent 99.5%); }
 .rs .dial .glow.wide{ opacity:.8; }
 .rs .dial .disc{ position:absolute; inset:5%; border-radius:50%; pointer-events:none;
   background: radial-gradient(circle, rgba(200,196,255,calc(.05 + var(--p)*.16)), rgba(var(--violet-rgb),calc(.03 + var(--p)*.08)) 60%, transparent 72%); }

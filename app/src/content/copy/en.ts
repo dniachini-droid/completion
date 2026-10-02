@@ -491,6 +491,7 @@ export const copy = {
   'blocked.newer': 'This save is from a newer version of the app: update it to carry on. Your save is kept safe, exactly as it was.',
   'blocked.broken': 'This save can’t be read by this version of the app. It is kept safe, exactly as it was: nothing has been written over it.',
   'blocked.copy': 'Save a copy of it', 'blocked.copied': 'A copy was made.',
+  'blocked.backup': 'Carry on from yesterday’s backup', 'blocked.fresh': 'Start a new game (this save stays kept)',
   'settings.restore.bad': 'That file is not a save this app can read. Nothing was changed.',
   'settings.restore.done': 'The copy is restored.',
   'settings.copy.failed': 'The copy could not be made. Nothing was changed.',

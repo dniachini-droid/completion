@@ -74,7 +74,7 @@ const locked = async (name) => {
     const s = document.createElement('style'); s.textContent = '.phone *::before, .phone *::after { content: none !important; }';
     document.head.appendChild(s);
     const real = boxes.map(e => e.scrollHeight - e.clientHeight); s.remove();
-    return boxes.map((e, k) => [e, k]).filter(([, k]) => all[k] > 1 && all[k] > real[k] + 1).map(([e, k]) => `${String(e.className?.baseVal ?? e.className).split(' ')[0]} (${all[k]}px, ${Math.max(0, real[k])}px real)`);
+    return boxes.map((e, k) => [e, k]).filter(([, k]) => all[k] > 1 && real[k] <= 1).map(([e, k]) => `${String(e.className?.baseVal ?? e.className).split(' ')[0]} (${all[k]}px, ${Math.max(0, real[k])}px real)`);
   });
   for (const d of drags) errors.push(`DRAGS ${name}: .${d} scrolls only because a glow overhangs it`);
 };
