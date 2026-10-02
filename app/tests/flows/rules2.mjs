@@ -19,7 +19,8 @@ const { fails } = K;
   await tap(page.locator('.sheet .chip', { hasText: /^3 h$/ }), '3 h', 1500);
   await home();
   const walked = async () => (await facts()).filter(f => f.type === 'stepsGained').reduce((a, f) => a + f.minutes, 0);
-  const road = async () => (await page.locator('.where').getAttribute('aria-label').catch(() => '')) ?? '';
+  /* where the flame stands on Today's road (the minutes to the next place may grow by what is owed; the flame never goes back) */
+  const road = async () => (await page.locator('.where .flame').first().evaluate(e => e.style.transform).catch(() => '')) ?? '';
   const before = await road();
   const undo = page.getByRole('button', { name: 'Sort the receipts: not done after all', exact: true });
   if (!(await undo.count())) fails.push('no "Not done after all" on the ticked job');
@@ -27,7 +28,7 @@ const { fails } = K;
     await undo.first().evaluate(e => e.click()); await page.clock.runFor(900);
     const said = (await page.locator('.said.owed').textContent().catch(() => ''))?.trim() ?? '';
     if (!/^The 3 h were taken back: the next 3 h make them up\.$/.test(said)) fails.push(`the taken-back line reads "${said}"`);
-    if ((await road()) !== before) fails.push('the road line moved back after "Not done after all"');
+    if ((await road()) !== before) fails.push('the flame moved back after "Not done after all"');
     if (!(await facts()).some(f => f.type === 'tickTakenBack' && f.minutes === 180)) fails.push('the 3 h were not taken back');
     /* ticked again at 30 min: 2 h 30 left */
     await tap(page.getByRole('button', { name: 'Sort the receipts: tick off', exact: true }), 'the tick circle again');
