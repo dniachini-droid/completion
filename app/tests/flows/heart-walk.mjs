@@ -426,6 +426,9 @@ if (await has('I can’t start')) { await tap('I can’t start'); await shot('ca
 /* one-tap capture (D-107, D-131): "Add a job" opens the Satchel's one box, already typing; Return puts the job on today
    and comes back to Today (D-143 C) */
 { await page.clock.runFor(1500); await page.waitForTimeout(300);   /* the screen settled: no fading one still on it */
+  /* (a slow machine may still show what the morning opened with: back to Today by its arrow first) */
+  await home(); await openers('last'); await page.locator('.today-add').waitFor({ timeout: 15000 }).catch(() => {});
+  if (!(await page.locator('.today-add').count())) { await page.screenshot({ path: `${out}/stuck-today-add.png` }).catch(() => {}); console.error('STUCK: no Add a job; the screen:', await page.evaluate(() => [...document.querySelectorAll('.ui h1, .ui h2, .label-line')].map(e => e.className).slice(0, 6).join(' | '))); }
   await page.locator('.today-add').click(); await page.clock.runFor(300);
   if (!(await page.evaluate(() => !!document.activeElement?.closest('.satchel-add')))) errors.push('CAPTURE the box was not already typing');
   await page.keyboard.type('Call the bank'); await shot('satchel-capture', 300);
