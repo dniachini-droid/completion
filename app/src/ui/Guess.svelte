@@ -2,7 +2,7 @@
   /* A mark, and four things it might mean (SCRIPT §9): one tap, never "wrong" at guess time. The place confirms it
      later. Once guessed, it shows the guess with a question mark; the marks screen can change it until then. */
   import { game, content } from './game.svelte';
-  import { t, type CopyKey } from '../content/copy/en';
+  import { t, type CopyKey, partWords } from '../content/copy/en';
   import Glyph from './Glyph.svelte';
 
   import { beatOf, seenAt } from '../core/story';
@@ -36,7 +36,7 @@
     <div class="mk"><Glyph {mark} size={46} lit={!!guessed} /></div>
     {#if from && !guessed}<p class="soft ctx">{t('guess.from', { place: inSentence(from) })}</p>{/if}
     {#if m.context}<p class="soft ctx">{m.context}</p>{/if}
-    {#if part && !guessed}<p class="soft ctx">{t('guess.part', { part: t(`part.${part}` as CopyKey) })}</p>{/if}
+    {#if part && !guessed}<p class="soft ctx">{t('guess.part', { part: partWords(part) })}</p>{/if}
     {#if guessed}
       <p class="say kept">{t('guess.kept', { guess: guessed })}</p>
     {:else}

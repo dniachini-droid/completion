@@ -11,5 +11,5 @@
 {/if}
 
 <style>
-  .deleted { font-family: var(--life); font-style: italic; font-size: 15.5px; color: var(--ink-2); display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 2px 6px; margin: 4px 0 8px; }
+  .deleted { font-family: var(--life); font-style: italic; font-size: calc(15.5px * var(--ts, 1)); color: var(--ink-2); display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 2px 6px; margin: 4px 0 8px; }
 </style>

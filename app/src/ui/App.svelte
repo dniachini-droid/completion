@@ -3,7 +3,8 @@
      a delve that ended while away shows its end; a run in progress shows the ring; an unseen arrival shows itself. */
   import { game, content } from './game.svelte';
   import { arrivalAt } from '../core/game';
-  import { leaveWord, moment } from './moment.svelte';
+  import { leaveWord, moment, resetMoment } from './moment.svelte';
+  import { errandPick } from './errand-pick.svelte';
   import { onMount, tick } from 'svelte';
   import type { Back, Go, Screen } from './nav';
   import { back } from './back.svelte';
@@ -33,7 +34,7 @@
   import { closeMenu, closeTick } from './menu.svelte';
   import TickSheet from './TickSheet.svelte';
   import { closeRows } from './SwipeRow.svelte';
-  import { t } from '../content/copy/en';
+  import { t, type CopyKey } from '../content/copy/en';
   import { sealOf } from '../core/story';
   import { calendarWeek } from '../core/time';
   import { addDays } from '../core/week';
@@ -72,10 +73,18 @@
     void tick().then(() => {
       const h = document.querySelector<HTMLElement>('.ui h1, h1') ?? document.querySelector<HTMLElement>('.ui h2, h2');
       announce = h?.textContent?.trim() ?? '';
+      /* the pressed button is gone: VoiceOver's cursor goes to the new screen's arrow, at the top, so nothing slides
+         (deep review A#43); never away from a box being typed in, or a sheet */
+      const at = document.activeElement;
+      if (!at || at === document.body || !at.isConnected) document.querySelector<HTMLElement>('.ui button.home')?.focus({ preventScroll: true });
     });
   });
   /* (through one way home: the trail, an open menu or sheet and the Undo go too, deep review C#3) */
   $effect(() => { if (game.woke !== lastWoke) { lastWoke = game.woke; goHome(); } });
+  /* a log replaced (Restore, a wipe, the rehearsal): what the screens remembered by a fact's number goes, since the same
+     numbers now mean other facts (deep review C#19) */
+  let lastLog = game.logs;
+  $effect(() => { if (game.logs !== lastLog) { lastLog = game.logs; resetMoment(); errandPick.jobs = []; trail = []; } });
   function goHome() { trail = []; closeMenu(); closeTick(); closeRows(); game.deleted = null; game.cantDelete = null; screen = first(); arg = undefined; }
 
   /* Back (review 2, D-088): the screens Dan looks through keep a trail, so the arrow and the phone's own back return to
@@ -95,7 +104,7 @@
        run's end still to count is never marked: its question waits (J1) */
     const e = game.view.runEnd;
     if (screen === 'delve' && e && !e.pending && !game.view.run && to !== 'delve' && !LOOK.has(to as Screen)) game.do({ do: 'seen', what: 'step', ref: e.seq });
-    still = TABS.has(screen) && TABS.has(to);
+    still = TABS.has(screen) && TABS.has(to as Screen);
     closeMenu(); closeTick(); closeRows();
     game.deleted = null; game.cantDelete = null;   /* a delete's Undo stays on the screen it was made on (D-125) */
     /* back to Today goes the way "Today" does, past what waits: a delve that ended while Dan typed elsewhere is shown
@@ -114,11 +123,11 @@
     if (to === 'back') { const p = trail.pop(); if (p && p.screen !== 'today') { screen = p.screen; arg = p.arg; } else go('today'); return; }
     if (to === 'cant' && typeof a === 'string') game.do({ do: 'cantStart', job: a });
     /* "Today" never skips what waits: a place just reached, the morning, the welcome back, a new daybook page (D-080).
-       'stay' is the one way past it: the word left to cut later. */
+       (The word left to cut later waits as Today's line, moment.wordLater.) */
     /* a screen reached so is a root: its arrow and the phone's back lead to Today, never into what was left (the morning,
        the word left for later; deep review B7, B8) */
     let rooted = false;
-    if (to === 'today' && a !== 'stay') { const f = first(); if (f !== 'today' && (f !== 'delve' || !game.view.run)) { to = f; rooted = true; trail = []; } }
+    if (to === 'today') { const f = first(); if (f !== 'today' && (f !== 'delve' || !game.view.run)) { to = f; rooted = true; trail = []; } }
     /* a place read again (the Map, Today's place name, D-135) is looked through: back returns where it was opened from */
     if (rooted) trail = [];
     else if (LOOK.has(to) || (to === 'arrival' && typeof a === 'string' && a.startsWith('again:'))) {
@@ -137,7 +146,7 @@
   };
   /* what the arrow says: the screen it returns to */
   /* every arrow names where it goes, deepest places included (N clumsy 6, bug 3) */
-  const NAMES: Partial<Record<Screen, string>> = { today: 'delve.today', map: 'map.nav', records: 'records.nav', marks: 'marks.nav',
+  const NAMES: Partial<Record<Screen, CopyKey>> = { today: 'delve.today', map: 'map.nav', records: 'records.nav', marks: 'marks.nav',
     rhythms: 'rhythms.label', daybook: 'nav.daybook', settings: 'nav.settings', satchel: 'nav.satchel', errands: 'errand.title', opened: 'opened.nav',
     delve: 'delve.label', step: 'step.label', morning: 'morning.label', welcome: 'welcome.label', stair: 'stair.label', cant: 'cant.label', proto: 'nav.proto' };
   function nameOf(top: Back): string {
@@ -156,7 +165,8 @@
       const a = typeof top.arg === 'string' && top.arg.startsWith('again:') ? arrivalAt(game.facts, content, +top.arg.slice(6)) : game.view.arrival ?? game.view.lastArrival;
       return a?.name || t('arrive.label');
     }
-    return NAMES[top.screen] ? t(NAMES[top.screen] as never) : t('nav.back');
+    const k = NAMES[top.screen];
+    return k ? t(k) : t('nav.back');
   }
   $effect(() => {
     const top = trail[trail.length - 1];
@@ -257,7 +267,7 @@
     {:else if screen === 'welcome'}<Welcome {go} />
     {:else if screen === 'daybook'}<Daybook {go} week={typeof arg === 'string' ? arg : undefined} />
     {:else if screen === 'week'}<Week {go} week={typeof arg === 'string' ? arg : undefined} />
-    {:else if screen === 'rhythms'}{#key arg}<Rhythms {go} job={typeof arg === 'string' ? arg : undefined} />{/key}
+    {:else if screen === 'rhythms'}<Rhythms {go} job={typeof arg === 'string' ? arg : undefined} />
     {:else if screen === 'satchel'}<Satchel {go} to={typeof arg === 'string' ? arg : undefined} />
     {:else if screen === 'errands'}<Errands {go} />
     {:else if screen === 'opened'}<Opened {go} id={String(arg)} />
@@ -278,6 +288,6 @@
 <style>
   .still :global(.rise), .still :global(.scene), .still :global(.fade) { animation: none !important; }
   .rehearsal { position: absolute; z-index: 20; left: 50%; transform: translateX(-50%); top: calc(var(--safe-t, 0px) + 4px); pointer-events: none;
-    font-family: var(--carve); font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); opacity: .85; white-space: nowrap; }
+    font-family: var(--carve); font-size: calc(14px * var(--ts, 1)); letter-spacing: .16em; text-transform: uppercase; color: var(--gold); opacity: .85; white-space: nowrap; }
   .sr-live { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 </style>

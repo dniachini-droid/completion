@@ -7,7 +7,9 @@
    sparks, and every mote of dust, are small layers the graphics chip moves and fades alone, so they rest with the rest
    of the world (rest.ts). Reduced motion: the ring still shows the time, but nothing drifts, breathes or sheds. */
 export function tunnelLight(root) {
-  var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* read live: Reduce Motion turned on while the app runs stops the motion at once (deep review A#49) */
+  var mq = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)'), still = !!(mq && mq.matches);
+  if (mq && mq.addEventListener) mq.addEventListener('change', function () { still = mq.matches; if (still) anims.forEach(function (a) { try { a.cancel(); } catch (e) { /* */ } }); });
   var ring = root.querySelector('.ring'), rc = ring.querySelector('.ringcv'), rx = rc.getContext('2d');
   var dustHost = root.querySelector('.motes'), phone = root;
   var TAU = Math.PI * 2, R = 0, RW = 0, PW = 0, PH = 0, dpr = 1, anims = [], sizeKey = '';

@@ -29,6 +29,12 @@ export function keepKey(seq: number) {
   try { platform.store.set(keptKey(), JSON.stringify([...keptList().filter(x => x !== seq), seq].slice(-50))); } catch { /* this run only */ }
 }
 
+/** A new log (Restore, a wipe, the rehearsal): nothing kept by a fact's number carries over (C#19). */
+export function resetMoment() {
+  moment.cutting = false; moment.cutDone = 0; moment.keyChoice = {}; moment.ends = {};
+  moment.wordLater = storedLater();
+}
+
 /** The word at arrival `seq` left for later (0: none), remembered across restarts of the same save (U5). */
 export function leaveWord(seq: number) {
   moment.wordLater = seq;

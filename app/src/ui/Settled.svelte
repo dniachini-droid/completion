@@ -23,7 +23,7 @@
 
 <style>
   .settled { display: flex; align-items: center; gap: 12px; justify-content: center; margin: 8px auto 4px; max-width: 34ch; text-align: left; animation: rise 1s var(--ease) both; }
-  .settled p { font-size: 16.5px; line-height: 1.4; color: var(--ink-2); }
+  .settled p { font-size: calc(16.5px * var(--ts, 1)); line-height: 1.4; color: var(--ink-2); }
   .settled s { color: var(--ink-3); text-decoration-thickness: 1px; }
   .settled em { color: #fff; }
 </style>

@@ -24,7 +24,7 @@ export async function start({ w = 390, h = 844, at = '2026-09-30T09:00:00+01:00'
 /** Wait until the app has drawn something to press. */
 export async function drawn(R) {
   const { page } = R;
-  for (let k = 0; k < 40 && !(await page.locator('.foot .add, button.btn, button.home').count()); k++) { await page.waitForTimeout(250); await page.clock.runFor(250); }
+  for (let k = 0; k < 40 && !(await page.locator('nav.foot, button.btn, button.home').count()); k++) { await page.waitForTimeout(250); await page.clock.runFor(250); }
 }
 
 export const btn = (R, name) => R.page.getByRole('button', { name, exact: true });
@@ -35,7 +35,7 @@ export async function screen(R) {
     if (document.querySelector('.oops')) return 'OOPS';
     if (document.querySelector('.dv')) return 'delve';
     if (document.querySelector('.rs')) return 'set';
-    if (document.querySelector('.foot .add')) return 'today';
+    if (document.querySelector('nav.foot')) return 'today';
     const h1 = document.querySelector('.ui h1');
     const heads = { 'The Satchel': 'satchel', 'This week': 'week', 'Next week': 'week', 'A later week': 'week', 'Settings': 'settings' };
     if (h1 && heads[h1.textContent.trim()]) return heads[h1.textContent.trim()];
@@ -103,9 +103,9 @@ export async function toToday(R) {
   return (await screen(R)) === 'today';
 }
 
-/** Add a job to today with "+ Add". */
+/** Add a job to today with Today's "Add a job". */
 export async function addToday(R, name) {
-  await R.page.locator('.foot .add').click(); await R.page.clock.runFor(300);
+  await R.page.locator('.today-add').first().click(); await R.page.clock.runFor(300);
   await R.page.keyboard.type(name); await R.page.keyboard.press('Enter'); await R.page.clock.runFor(800);
 }
 /** Put a job in the satchel (on the satchel screen). */

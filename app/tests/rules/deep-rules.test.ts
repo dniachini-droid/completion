@@ -158,3 +158,14 @@ describe('the road while a word waits (B13, W F7)', () => {
     expect(v.walked).toBeGreaterThanOrEqual(v.road.from);
   });
 });
+
+describe('the game day never goes back (R#6)', () => {
+  it('a job moved to a later day never moves today along with it', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'planWeek', week: '2026-09-28' });
+    const e = W.planOf(p.facts, '2026-09-28')!.find(x => x.day === '2026-09-28')!;
+    p.do({ do: 'movePlan', entry: e.id, day: '2026-10-03' });
+    expect(p.view().day).toBe('2026-09-28');
+    p.do({ do: 'setAside', job: p.view().slate[0] });
+    expect(p.facts.at(-1)!.day).toBe('2026-09-28');
+  });
+});

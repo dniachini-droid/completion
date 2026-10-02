@@ -4,7 +4,7 @@
      guess where one is offered; and any find. One drawable thing at a time; nothing here is a task. */
   import { game, content } from './game.svelte';
   import { returnOf } from '../core/game';
-  import { t } from '../content/copy/en';
+  import { t, partWords } from '../content/copy/en';
   import Guess from './Guess.svelte';
   import Glyph from './Glyph.svelte';
   import Settled from './Settled.svelte';
@@ -33,7 +33,7 @@
     ? (chosen === 'used' ? t('step.key', { job: jobName }) : offerHere ? t('step.keyHere', { job: jobName }) : kept ? t('step.keyKeep', { job: jobName }) : v.keyUse ? t('step.keyMap', { job: jobName }) : t('step.keyHeld', { job: jobName }))
     : r?.keyNote === 'kept' ? t('step.keyKept') : r?.key ? t('step.key', { job: jobName })
     /* kept up again in a period whose Key it already earned: said, so Dan never wonders (L C4) */
-    : r?.keyAlready ? t(`step.keyAlready.${r.keyAlready}` as CopyKey, { job: jobName }) : '');
+    : r?.keyAlready ? t(`step.keyAlready.${r.keyAlready}`, { job: jobName }) : '');
   function useHere() { const id = v.keyHere; if (!id || !go || doneSeq === null) return; moment.keyChoice[doneSeq] = 'used'; game.do({ do: 'useKey', seal: id, from: doneSeq }); go('opened', id); }
   const finds = $derived([...(r?.finds ?? []), ...extraFinds].map(id => content.story.finds.find(f => f.id === id)).filter(f => !!f));
 </script>
@@ -62,7 +62,7 @@
     <div class="part">
       <div class="label-line centred">{t('part.label')}</div>
       <Glyph part={r.part.el} size={46} />
-      <p class="soft">{t(`part.${r.part.el}` as CopyKey)}</p>
+      <p class="soft">{partWords(r.part.el)}</p>
     </div>
   {/if}
   <Settled beat={r.beat} />
@@ -91,14 +91,14 @@
 <style>
   .key-offer { display: flex; justify-content: center; gap: 22px; margin: -18px 0 20px; }
   .key-offer .use span { color: #f2c170; }
-  .key-note { margin: 6px 0 28px; font-family: var(--life); font-size: 16.5px; line-height: 1.45; font-style: italic;
+  .key-note { margin: 6px 0 28px; font-family: var(--life); font-size: calc(16.5px * var(--ts, 1)); line-height: 1.45; font-style: italic;
     color: var(--violet-hi); text-align: center; text-transform: none; letter-spacing: normal; }
-  .story { font-size: 18px; line-height: 1.42; margin: 10px 0 12px; }
+  .story { font-size: calc(18px * var(--ts, 1)); line-height: 1.42; margin: 10px 0 12px; }
   .choice { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; margin: -2px 0 8px; }
   .find { margin: 10px 0 6px; }
   .find :global(.label-line), .find p { text-align: center; }
   .part { text-align: center; margin: 4px 0 10px; }
   .part .label-line { margin-bottom: 8px; }
   .part .soft { margin-top: 4px; }
-  .find p { font-size: 17px; line-height: 1.4; margin-top: 8px; color: var(--ink-2); }
+  .find p { font-size: calc(17px * var(--ts, 1)); line-height: 1.4; margin-top: 8px; color: var(--ink-2); }
 </style>

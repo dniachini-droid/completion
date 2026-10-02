@@ -24,9 +24,9 @@
 
 <style>
   .wait { display: flex; flex-direction: column; gap: 8px; margin: 6px 0 8px; }
-  input { width: 100%; min-width: 0; min-height: 44px; padding: 0 12px; font: inherit; font-size: 17px; color: #fff;
+  input { width: 100%; min-width: 0; min-height: 44px; padding: 0 12px; font: inherit; font-size: calc(17px * var(--ts, 1)); color: #fff;
     background: rgba(255, 255, 255, .06); border: 1px solid var(--edge-2); border-radius: 0; }
   .wait-soon { width: 100%; min-height: 44px; padding: 0 8px; }
   .other { align-self: center; min-height: 44px; min-width: 44px; }
-  .other span { font-size: 16px; }
+  .other span { font-size: calc(16px * var(--ts, 1)); }
 </style>

@@ -372,7 +372,8 @@ export const walked = (facts: Fact[]) => roadOf(facts).walked;
     it back, and a session could be written to a day already behind). Looked for back to the last opening. */
 export function dayOf(facts: Fact[], now: Moment): string {
   let d = gameDay(now);
-  for (let i = facts.length - 1; i >= 0; i--) { if (facts[i].day > d) d = facts[i].day; if (facts[i].type === 'opened') break; }
+  /* (a plan change's day is the day a job moves to, never a day played: it is passed over) */
+  for (let i = facts.length - 1; i >= 0; i--) { const f = facts[i]; if (f.type !== 'planChanged' && f.day > d) d = f.day; if (f.type === 'opened') break; }
   return d;
 }
 

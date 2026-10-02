@@ -5,7 +5,7 @@
      rises in the box (a stretch's places reached, a sealed thing in view, the forecast). Only what has been reached is
      named; the way ahead is a faint light, unnamed. Never a count of what's left (UX 6). */
   import { game, content } from './game.svelte';
-  import { t, dayName } from '../content/copy/en';
+  import { t, dayName, relDay } from '../content/copy/en';
   import { placeAhead, openable, lockedOn, openedNiches } from '../core/story';
   import skyUrl from './scene/map-sky.svg?url';
   import type { Go } from './nav';
@@ -74,7 +74,7 @@
   function useKey(id: string) { game.do({ do: 'useKey', seal: id }); go('opened', id); }
   /* the plan's forecast (PLANNER → the forecast): where the next places would be reached; gone the moment the plan changes */
   const ahead = $derived(v.forecast.slice(0, 2));
-  const fcSay = (day: string) => t('map.forecastSay', { day: dayName(day) });
+  const fcSay = (day: string) => t('map.forecastSay', { day: relDay(day, v.day) });
   const firstSentence = (line: string) => (line.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? line);
   /* "Ahead: The Survey Cut, the tin box…" under "The Survey Cut" says the name twice: the ahead line drops it */
   const unsaid = (where: string, name: string) => where.toLowerCase().startsWith(name.toLowerCase() + ', ') ? where.slice(name.length + 2) : where;
@@ -100,7 +100,7 @@
       const a = AT[k], here = k === v.here.stretch;
       if (walkedOn.has(k)) {
         const names = placed.filter(b => b.stretch === k).map(b => b.name!);
-        const fc = here && aheadOn === k && ahead.length ? t('map.forecast', { day: dayName(ahead[0]) }) : undefined;
+        const fc = here && aheadOn === k && ahead.length ? t('map.forecast', { day: relDay(ahead[0], v.day) }) : undefined;
         out.push({ key: k, ...a, kind: here ? 'here' : 'lit', name: stretchName(k),
           sub: here ? t('map.here') : sealedOn(k).length ? t('map.sealed') : undefined, subKind: here ? 'warm' : 'dim',
           box: here ? hereBox
@@ -111,7 +111,7 @@
         if (reads.length) out[out.length - 1].reads = reads;
       } else if (k === aheadOn) {
         out.push({ key: k, ...a, kind: 'faint',
-          sub: ahead.length ? t('map.forecast', { day: dayName(ahead[0]) }) : t('map.ahead'), subKind: ahead.length ? 'gold' : 'dim',
+          sub: ahead.length ? t('map.forecast', { day: relDay(ahead[0], v.day) }) : t('map.ahead'), subKind: ahead.length ? 'gold' : 'dim',
           box: { label: t('map.aheadLabel'), title: t('map.aheadName'), say: ahead.length ? fcSay(ahead[0]) : t('map.aheadSay') } });
       }
     }
@@ -175,7 +175,9 @@
     if (Math.abs(dx) + Math.abs(dy) > 5) dragged = true;
     if (dragged) { field.scrollLeft = drag.l - dx; field.scrollTop = drag.t - dy; }
   };
-  const up = () => { drag = null; setTimeout(() => { dragged = false; }, 0); };
+  let upTimer: ReturnType<typeof setTimeout> | undefined;
+  const up = () => { drag = null; clearTimeout(upTimer); upTimer = setTimeout(() => { dragged = false; }, 0); };
+  onMount(() => () => clearTimeout(upTimer));
 </script>
 
 <div class="sky" aria-hidden="true"><img src={skyUrl} alt="" /></div>
@@ -296,7 +298,7 @@
                   {#each locks as x (x.id)}
                     <p class="lock"><span class="where">{x.where}</span>
                       {#if v.keys && canOpen.has(x.id)}<button class="text-link use" aria-label={t('map.useKeySr', { where: x.where })} onclick={() => useKey(x.id)}><span>{t('map.useKey')}</span></button>
-                      {:else}<span class="needs">{t('map.sealed')}</span>{/if}</p>
+                      {:else}<span class="sr-only">, </span><span class="needs">{t('map.sealed')}</span>{/if}</p>
                   {/each}
                   {#if !v.keys}<p class="soft lock-say">{t('map.noKey')}</p>{/if}
                 </div>
@@ -352,9 +354,9 @@
   @keyframes spark { 0% { opacity: 0; } 15%, 80% { opacity: .9; } 100% { opacity: 0; } }
 
   .labels { animation: fadein 1.2s var(--ease) .9s both; pointer-events: none; }
-  .nn { font-family: var(--carve); font-size: 15px; font-weight: 600; letter-spacing: .08em; fill: #e9e7ff; filter: url(#halo); }
+  .nn { font-family: var(--carve); font-size: calc(15px * var(--ts, 1)); font-weight: 600; letter-spacing: .08em; fill: #e9e7ff; filter: url(#halo); }
   .nn.here { fill: #fff; }
-  .ns { font-family: var(--life); font-style: italic; font-size: 16px; fill: #c3c3e8; filter: url(#halo); }
+  .ns { font-family: var(--life); font-style: italic; font-size: calc(16px * var(--ts, 1)); fill: #c3c3e8; filter: url(#halo); }
   .ns.warm { fill: #f1c98e; }
   .ns.gold { fill: var(--gold); }
   .ns.dim { fill: #9d9dcc; }
@@ -370,7 +372,7 @@
   .box { border: 1px solid var(--edge-2); padding: 14px 18px 16px; background: rgba(10,9,24,.6); height: 180px; display: flex; flex-direction: column; overflow: hidden; }
   .box .swap { flex: 1; min-height: 0; overflow: hidden; }
   .box h2 { margin: 8px 0 6px; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  .box .say { color: var(--ink-2); font-size: 16.5px; line-height: 1.42; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .box .say { color: var(--ink-2); font-size: calc(16.5px * var(--ts, 1)); line-height: 1.42; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
   .swap { animation: rise .45s var(--ease) both; }
   .box .say.short { -webkit-line-clamp: 2; line-clamp: 2; }
   /* the places reached: all of them, scrolling inside the box if there are many (the box keeps its size, D-076) */
@@ -381,13 +383,13 @@
   .box .swap:has(.locks) { overflow-y: auto; scrollbar-width: none; }
   .lock .use.again { color: var(--ink-2); }
   .locks { margin: 0 0 8px; border-bottom: 1px solid var(--edge-2); padding-bottom: 6px; }
-  .lock { margin: 4px 0; display: flex; gap: 10px; align-items: baseline; justify-content: space-between; font-size: 15px; line-height: 1.35; color: var(--ink-2); }
+  .lock { margin: 4px 0; display: flex; gap: 10px; align-items: baseline; justify-content: space-between; font-size: calc(15px * var(--ts, 1)); line-height: 1.35; color: var(--ink-2); }
   .lock .where { flex: 1; min-width: 0; }
-  .lock .use { flex: none; color: #f2c170; font-size: 15px; }
-  .lock .needs { flex: none; font-family: var(--life); font-style: italic; color: #e9d9b4; font-size: 14px; }
-  .lock-say { margin: 4px 0 0; font-size: 14px; }
-  .read { min-height: 40px; padding: 2px 0; }
-  .read span { font-family: var(--life); font-size: 16.5px; color: var(--ink); }
+  .lock .use { flex: none; color: #f2c170; font-size: calc(15px * var(--ts, 1)); }
+  .lock .needs { flex: none; font-family: var(--life); font-style: italic; color: #e9d9b4; font-size: calc(14px * var(--ts, 1)); }
+  .lock-say { margin: 4px 0 0; font-size: calc(14px * var(--ts, 1)); }
+  .read { min-height: 44px; padding: 2px 0; }   /* a finger's height (A#40) */
+  .read span { font-family: var(--life); font-size: calc(16.5px * var(--ts, 1)); color: var(--ink); }
   .sep { color: var(--ink-3); }
   @media (prefers-reduced-motion: reduce) { .drawn, .dust, .pl, .labels, .reticle, .swap { animation: none; opacity: 1; } .drawn { opacity: 0; } .reticle { transition: none; } }
 </style>

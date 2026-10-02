@@ -255,7 +255,7 @@
   .settled .head .after { opacity: 1; transform: none; pointer-events: auto; }
   .head .label-line { margin-bottom: 10px; }
   .head .soft { display: block; margin-top: 8px; max-width: 34ch; }
-  .said { animation: rise .8s var(--ease) both; font-size: 17.5px; line-height: 1.4; color: var(--ink); }
+  .said { animation: rise .8s var(--ease) both; font-size: calc(17.5px * var(--ts, 1)); line-height: 1.4; color: var(--ink); }
 
   /* the word, in its box, floating over the scene; at the reveal its fill and edge fade so the whole phone is the hall */
   .wordbox { text-align: center; padding: 12px 16px 10px; background: linear-gradient(180deg, rgba(20, 18, 52, .5), rgba(8, 7, 24, .62));
@@ -279,10 +279,10 @@
     filter: drop-shadow(0 0 4px rgba(var(--violet-rgb), 1)) drop-shadow(0 0 14px rgba(var(--violet-rgb), .6)); }
   .lock .lockring { opacity: 1; transform: none; }
   .readings { display: grid; grid-template-columns: 1fr 1fr; width: min(280px, 100%); margin: 2px auto 0; padding: 0 17.33%; text-align: center; min-height: 26px; }
-  .readings span { font-family: var(--life); font-size: 18px; color: var(--ink); opacity: 0; transition: opacity .6s var(--ease) .5s; }
+  .readings span { font-family: var(--life); font-size: calc(18px * var(--ts, 1)); color: var(--ink); opacity: 0; transition: opacity .6s var(--ease) .5s; }
   .readings span.q { color: var(--cold-hi); opacity: 1; transition: none; }
   .c1 .readings .r1, .c2 .readings .r2 { opacity: 1; }
-  .hint { margin-top: 4px; min-height: 24px; font-family: var(--life); font-style: italic; font-size: 16.5px; color: var(--ink-2); text-align: center; }
+  .hint { margin-top: 4px; min-height: 24px; font-family: var(--life); font-style: italic; font-size: calc(16.5px * var(--ts, 1)); color: var(--ink-2); text-align: center; }
   .settled .hint { display: none; }
 
   /* the keys and the way on share one slot */
@@ -290,7 +290,7 @@
   .slot > * { grid-area: 1 / 1; }
   .keys { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); }
   .key { position: relative; min-height: var(--btn-h); display: flex; align-items: center; justify-content: center; gap: 12px;
-    font-family: var(--life); font-style: italic; font-size: 19px; color: var(--ink-2);
+    font-family: var(--life); font-style: italic; font-size: calc(19px * var(--ts, 1)); color: var(--ink-2);
     border: 1px solid var(--edge-3); border-radius: 2px; background: linear-gradient(180deg, rgba(26,24,64,.5), rgba(10,9,28,.66));
     transition: color .3s var(--ease), border-color .3s var(--ease), box-shadow .3s var(--ease), opacity .3s var(--ease); }
   .key.ready { color: #fff; border-color: rgba(236,234,255,.9); background: linear-gradient(180deg, rgba(var(--violet-rgb), .34), rgba(var(--violet-rgb), .12));
@@ -314,5 +314,5 @@
   .stage :global(.hall-cup > *) { opacity: 0; transition: opacity 1.2s var(--ease); }
   .stage :global(.hall.cups-waking .hall-cup > *), .stage :global(.hall.cups-lit .hall-cup > *) { opacity: var(--a, 1); }
   .stage :global(.hall.cups-waking .hall-cup > *) { transition-delay: calc(var(--i) * .09s); }
-  @media (max-height: 800px) { .head .soft { font-size: 15.5px; } .wordbox { padding-top: 8px; padding-bottom: 6px; } .slot { margin-top: 10px; } .rodbtn { width: min(240px, 100%); } }
+  @media (max-height: 800px) { .head .soft { font-size: calc(15.5px * var(--ts, 1)); } .wordbox { padding-top: 8px; padding-bottom: 6px; } .slot { margin-top: 10px; } .rodbtn { width: min(240px, 100%); } }
 </style>

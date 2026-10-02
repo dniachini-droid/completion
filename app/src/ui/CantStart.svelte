@@ -57,9 +57,9 @@
 
 <style>
   .tease { display: flex; flex-direction: column; justify-content: center; gap: 18px; }
-  .tease .say-lg { font-size: 25px; line-height: 1.25; }
-  .step { font-size: 20px; margin: 6px 0 24px; }
-  input.ask { width: 100%; margin: 8px 0 20px; padding: 10px 12px; font: inherit; font-size: 17px; color: #fff; background: rgba(255,255,255,.06);
+  .tease .say-lg { font-size: calc(25px * var(--ts, 1)); line-height: 1.25; }
+  .step { font-size: calc(20px * var(--ts, 1)); margin: 6px 0 24px; }
+  input.ask { width: 100%; margin: 8px 0 20px; padding: 10px 12px; font: inherit; font-size: calc(17px * var(--ts, 1)); color: #fff; background: rgba(255,255,255,.06);
     border: 1px solid var(--edge-2); border-radius: 0; }
   .later { display: flex; justify-content: center; margin-top: 8px; }
   button.home { color: var(--ink-2); }

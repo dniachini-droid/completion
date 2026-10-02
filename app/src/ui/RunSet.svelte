@@ -61,6 +61,8 @@
     void platform.haptics.tick();
   }
   let anim = 0;
+  /* never a frame left running into a screen that has gone (C#22) */
+  $effect(() => () => cancelAnimationFrame(anim));
   function settleTo(target: number, fromTap = false) {
     cancelAnimationFrame(anim); onSnap(target);
     if (reduce) { val = Math.min(60, target); return; }
@@ -95,7 +97,7 @@
     mv(e); e.preventDefault();
   }
   function dialKey(e: KeyboardEvent) {
-    let i = DIAL.indexOf(snap as never);
+    let i = (DIAL as readonly number[]).indexOf(snap);
     if (['ArrowRight', 'ArrowUp', '+', '='].includes(e.key)) i++; else if (['ArrowLeft', 'ArrowDown', '-'].includes(e.key)) i--; else return;
     e.preventDefault(); settleTo(DIAL[clamp(i, 0, DIAL.length - 1)], true);
   }
@@ -262,11 +264,11 @@
   .rs { display: contents; }
   button.home { color: var(--ink-2); }
   .topbar.solo { grid-template-columns: auto 1fr auto; }
-  .change span { font-family: var(--life); font-style: italic; font-size: 15px; letter-spacing: 0; text-transform: none; color: var(--ink-2); }
+  .change span { font-family: var(--life); font-style: italic; font-size: calc(15px * var(--ts, 1)); letter-spacing: 0; text-transform: none; color: var(--ink-2); }
   /* the errands, two lines at most: the full list is on the delve */
-  .errands { margin-top: 2px; font-style: italic; font-size: 15px; text-align: left; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
-  .refused { font-style: italic; font-size: 15px; text-align: center; margin-bottom: 8px; }
-  .last, .carryon { margin-top: 2px; font-style: italic; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; }
+  .errands { margin-top: 2px; font-style: italic; font-size: calc(15px * var(--ts, 1)); text-align: left; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
+  .refused { font-style: italic; font-size: calc(15px * var(--ts, 1)); text-align: center; margin-bottom: 8px; }
+  .last, .carryon { margin-top: 2px; font-style: italic; font-size: calc(15px * var(--ts, 1)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; }
   /* where he stopped is the point of the note: shown in full, a few lines (deep review B10) */
   .last.note { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; line-clamp: 4; line-height: 1.3; }
   /* a long name keeps to three lines; the dial below gives way to it */

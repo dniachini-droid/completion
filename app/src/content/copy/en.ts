@@ -11,9 +11,8 @@ export const copy = {
   'today.keys.none': 'No Keys',
   'today.keys.one': '1 Key',
   'today.keys.many': '{n} Keys',
-  'today.keys.say': 'Keys open the locked things you pass. Keep up a recurring job to earn one.',
-  'today.keys.use': 'Use it on the Map',
-  'today.keys.useMany': 'Use one on the Map',
+  'today.keys.say': 'Keys open the locked things you pass. Do a recurring job as often as you set it (Gym 4 times in a week, say) to earn one.',
+  
   'today.keys.here': 'Use it here',
   'today.keys.hereMany': 'Use one here',
   'today.keys.useOnMap': 'A Key is never used for you: on the Map, choose a locked thing that says Use a Key.',
@@ -21,17 +20,14 @@ export const copy = {
   'today.behind': 'Behind you',
   'today.behindMap': 'On the Map',
   'today.next': 'Next',
-  'today.teaser.avoided': 'This is the task you have been putting off, and something waits for you on the far side of it.',
-  'today.teaser.delve': 'The passage runs on from where you last set down your lamp.',
-  'today.delve': 'Delve',
+  
   'today.cantStart': 'I can’t start',
   /* a delve job worked on today and not yet said to be done (after "Not yet", or the question left): it can be (D-120) */
   'today.itsDone': 'It’s done',
   'today.underWay': 'Under way',
-  'today.aside.said': 'Taken off today.',
   'today.putBack': 'Put it back', 'today.srPutBack': '{job}: put it back on today',
   'today.onlyAvoided': 'Only {job} left: that’s the one.',
-  'today.holdHint': 'Press and hold a job for more.',
+  'today.holdHint': 'Tap a job to delve on it. Press and hold for more.',
   'row.wentBy': '{time} · went by',
   'today.stillToCome': 'Still to come: {what}.',
   'today.carry': 'Carry on with {job}',
@@ -50,7 +46,7 @@ export const copy = {
   'today.pageWaits': 'A page was written for you · Daybook',
   'today.deeper': 'Anything more takes you deeper.',
   'row.done': 'done',
-  'nav.proto': 'Trial',
+  'nav.proto': 'Trial controls',
   'nav.settings': 'Settings',
 
   /* the run set-up (the dial) */
@@ -61,7 +57,7 @@ export const copy = {
   'set.to': 'To {place}',
   'set.onward': 'Further in',
   'set.nextPlace': 'the next place',
-  'set.count': '{n} of {len}',
+  'set.count': '{n} of {len} minutes',
   'set.ends': 'finishing around {end}',
   'set.here': 'here',
   'set.side': 'a side chamber',
@@ -71,10 +67,11 @@ export const copy = {
   'set.begin': 'Begin',
 
   /* the delve */
-  'delve.towards': 'Towards',
   'delve.further': 'Further in',
   'delve.moves': 'While you work, the expedition goes on beneath the hill.',
   'delve.left': 'left of {len} minutes',
+  /* spoken: whole minutes, never a clock time read as a number (deep review A#44) */
+  'delve.leftSay': '{n} minutes left of {len}',
   'delve.single': 'one delve',
   'delve.ofRun': 'the {ord} of {card} delves',
   'delve.more': 'This one is extra: the {ord} delve.',
@@ -95,7 +92,7 @@ export const copy = {
   'delve.label': 'The delve',
   'delve.doneOne': 'The delve is ended, and your lamp still burns.',
   'delve.doneRun': 'The long run is ended.',
-  'delve.sessionComplete': 'Your {job} is done for the day: {min}.',
+  'delve.sessionComplete': '{job} is done for the day: {min}.',
   'delve.counted': 'Counted: {min}.',
   'delve.onIt': '{min} on it',
   'tally.unit': 'min',
@@ -131,9 +128,8 @@ export const copy = {
   'step.keyAlready.cap': 'This week’s five Keys are already earned.',
   'step.keyAlready.month': 'You already earned this month’s Key for {job}.',
   'step.keyAlready.year': 'You already earned this year’s Key for {job}.',
-  'step.keyAlready.days': 'You already earned the Key for {job} these last days.',
+  'step.keyAlready.days': 'You already earned the Key for {job} since it last came round.',
   'find.label': 'A find',
-  'guess.label': 'A symbol',
   'guess.from': 'One of the symbols you saw at {place}.',
   'arrive.marksLater': 'Not every symbol here can be read yet. You will be asked about them further on, and the Symbols page keeps them until then.',
   'guess.ask': 'What do you think it means?',
@@ -163,7 +159,6 @@ export const copy = {
   'marks.seen': 'You have seen this symbol, but its meaning is still hidden from you.',
   'marks.ring': 'This is a name, cut inside a ring. You cannot read it yet, but you will know it when you meet it again.',
   'marks.part': 'Only part of it has come to light so far: {part}. The rest lies further in.',
-  'marks.keep': 'Keep {word}',
   'marks.change': 'Change it',
   'marks.else': 'What else might it mean?',
   'marks.struck': 'You guessed {word}.',
@@ -187,8 +182,12 @@ export const copy = {
   'stair.down': 'Go down',
   'map.nav': 'Map',
   'arrive.back': 'Back to {to}',
+  'in.satchel': 'the Satchel', 'in.records': 'your records', 'in.marks': 'the symbols', 'in.rhythms': 'your recurring jobs',
+  'in.daybook': 'the Daybook', 'in.week': 'this week', 'in.weekNext': 'next week', 'in.weekLater': 'that week', 'in.set': 'the delve’s set-up',
+  'in.arrive': 'the place', 'in.errand': 'the errand run', 'in.delve': 'the delve', 'in.morning': 'the morning', 'in.welcome': 'where you were',
+  'in.proto': 'the trial controls',
   'map.readAgain': 'Read again: {place}', 'map.readHere': 'Read it again',
-  'map.label': 'The map',
+  'map.label': 'The Map',
   'map.regionLabel': 'The first region',
   'map.regionName': 'The Quiet',
   'map.here': 'you are here',
@@ -197,11 +196,10 @@ export const copy = {
   'map.opened': 'Opened · Read again', 'map.openedSr': 'Opened with a Key: read again, {where}',
   'map.walked': 'Walked',
   'map.walkedSealed': 'Walked · something here needs a Key',
-  'map.reached': 'Reached',
   'map.wayIn': 'The way you came in.',
   'map.sealed': 'needs a Key',
   'map.useKey': 'Use a Key', 'map.useKeySr': 'Use a Key: {where}',
-  'map.noKey': 'Keep up a recurring job to earn a Key.',
+  'map.noKey': 'Do a recurring job as often as you set it to earn a Key.',
   'opened.label': 'You used a Key',
   'opened.left.none': 'No Keys left.',
   'opened.left.one': '1 Key left.',
@@ -214,8 +212,7 @@ export const copy = {
   'map.aheadLabel': 'Not reached yet',
   'map.aheadName': 'Somewhere ahead',
   'map.aheadSay': 'Its name comes when you get there.',
-  'map.forecast': '{day} · forecast',
-  'map.forecastLabel': 'Forecast',
+  'map.forecast': 'Forecast · {day}',
   'map.forecastSay': 'If the week goes as planned, the next place is reached on {day}. A forecast, not a promise.',
 
   /* day complete and the arrival */
@@ -223,7 +220,7 @@ export const copy = {
   'arrive.again': 'Read again',
   'words.hide': 'Hide the words',
   'words.show': 'Read on',
-  'look.open': 'Look',
+  'look.open': 'Look', 'look.openSr': 'Look at the painting',
   'look.hint': 'Pinch to look closer. Tap to come back.',
   'look.back': 'Back to the words',
   'arrive.camp': 'Camp',
@@ -236,25 +233,23 @@ export const copy = {
   /* I can't start */
   'cant.label': 'Just ahead',
   'cant.first': 'Start with one small thing:',
-  'cant.ten': 'Try ten minutes?',
+  'cant.ten': 'Try 10 minutes?',
   'cant.notNow': 'Not now',
   'cant.fallback': 'The passage runs on, and a cool draught comes up from somewhere further in.',
 
   /* the prototype's own controls (temporary; PROTOTYPE_NOTES.md) */
-  'proto.label': 'Prototype',
-  'proto.title': 'The trial’s own controls',
+  'proto.label': 'Trial controls',
+  'proto.title': 'Trial controls',
   'proto.about': 'This save is a trial run: it starts afresh when the test begins.',
-  'proto.rehearsal': 'Rehearsal: minutes pass 60 times faster',
   'proto.rehearsal.on': 'Rehearsal is on. A 25-minute delve takes 25 seconds. It has its own save, which starts afresh each time.',
   'proto.rehearsal.off': 'Real time. Use it on real jobs.',
   'proto.rehearsal.start': 'Start a rehearsal',
   'proto.rehearsal.stop': 'Back to real time',
   'proto.reset': 'Start this save again',
   'proto.reset.confirm': 'Tap again to wipe it',
-  'proto.close': 'Close',
   'proto.badge': 'Rehearsal ×60',
   'proto.leave.title': 'Locking, or another app?',
-  'proto.leave.about': 'To test the pause (D-094): start a delve, lock the phone for half a minute, and come back. Then go into another app for half a minute, and come back. Each time shows here with how the phone read it.',
+  'proto.leave.about': 'To test the pause: start a delve, lock the phone for half a minute, and come back. Then go into another app for half a minute, and come back. Each time shows here with how the phone read it.',
   'proto.leave.locked': 'Locked: the delve went on',
   'proto.leave.left': 'Another app: paused',
   'proto.leave.unsure': 'Back within 15 seconds, no sign of a lock: the delve went on',
@@ -269,17 +264,21 @@ export const copy = {
   'today.tonight.say': 'Press Go to sleep as you get into bed, then put the phone down. In bed by {bedtime}, and tomorrow begins a little further in, with something waiting for you.',
   'nav.week': 'Week', 'nav.daybook': 'Daybook', 'nav.back': 'Back',
   'row.at': 'at {time}',
+  /* the editor's steppers and groups, each named for what it changes (deep review A#46) */
+  'rhythms.oftenMore': 'Other ways it recurs', 'rhythms.lessTimes': 'Fewer times a week', 'rhythms.moreTimes': 'More times a week',
+  'rhythms.dayEarlier': 'An earlier day of the month', 'rhythms.dayLater': 'A later day of the month',
+  'rhythms.fewerDays': 'Fewer days between', 'rhythms.moreDays': 'More days between',
+  'rhythms.shorterLen': 'Shorter than {len}', 'rhythms.longerLen': 'Longer than {len}',
+  'marks.unknownN': 'A symbol not known yet, {n} of {count}',
 
   /* choosing what to do: any job, any time (D-077) */
   'row.notToday': 'Not today', 'row.srAside': '{job}: not today', 'row.srDelete': '{job}: delete',
   'set.stopped': 'Last time: {note}',
   'delve.whereStopped': 'Where did you stop? (for next time)',
-  'cant.ask': 'What’s the first thing you’d touch?', 'cant.keep': 'Keep it',
-  'today.notToday': 'Not today',
+  'cant.ask': 'What’s the first thing you’d touch?', 
   'oops.say': 'Something went wrong on this screen. Your save is safe.',
   'today.running.say': 'Your delve is still going. The timer keeps time whether you watch it or not.',
   'today.running.go': 'Back to the delve',
-  'today.else': 'Something else…',
   'today.clear': 'Nothing more is on today’s list.',
   'today.clear.say': 'Add a job, or rest. The road will keep.',
   /* the day's finish line is its first 3 hours; the rest waits below (D-131) */
@@ -289,7 +288,7 @@ export const copy = {
   'week.about.why': '{job} usually takes you about {min}.', 'week.about.set': 'From the minutes set for each job.', 'week.about.rest': 'The rest, from the minutes set for them.',
   /* a job ticked off without a delve (D-134) */
   'tick.off': 'Tick off', 'tick.sr': '{job}: tick off', 'tick.title': 'How long did it take?',
-  'tick.onTop': 'On top of the {min} you delved', 'tick.noMore': 'No more', 'tick.hour': '{n} h', 'tick.halfHour': '1½ h',
+  'tick.onTop': 'On top of the {min} already counted', 'tick.noMore': 'No more', 
   'menu.delve': 'Delve', 'menu.delveAgain': 'Delve again', 'menu.edit': 'Edit', 'menu.srEdit': '{job}: edit',
   /* a one-off waiting on someone's reply (D-137): earns nothing, costs nothing, no word of blame */
   'wait.menu': 'Waiting on…', 'wait.who': 'Who or what? (if you like)', 'wait.who.label': '{job}: waiting on who or what',
@@ -298,20 +297,20 @@ export const copy = {
   'wait.onNow': 'Waiting on {who}', 'wait.ask': 'Did they reply?',
   'wait.back': 'Back to it', 'wait.still': 'Still waiting', 'wait.done': 'It’s done',
   'wait.srBack': '{job}: back to it', 'wait.srStill': '{job}: still waiting, choose a day', 'wait.srDone': '{job}: it’s done',
-  'wait.said': '{job}: in the satchel until {day}.',
+  'wait.said': '{job}: in the Satchel until {day}.',
   /* a done job taken back, to work on it more (D-131) */
   'row.notDone': 'Not done after all', 'row.srNotDone': '{job}: not done after all',
   /* Tonight, in the last hour before bed (D-131): both optional, neither ever mentioned if skipped */
   'tonight.first': 'Tomorrow starts with:', 'tonight.first.none': 'Choose a job', 'tonight.first.label': 'Choose what tomorrow starts with',
-  'tonight.first.planned': 'Planned for tomorrow', 'tonight.first.others': 'Other jobs', 'tonight.first.keep': 'Keep it',
-  'tonight.mind': 'Anything on your mind?', 'tonight.mind.hint': 'One line: it goes in the satchel', 'tonight.mind.put': 'Put in', 'tonight.mind.said': 'In the satchel.',
+  'tonight.first.planned': 'Planned for tomorrow', 
+  'tonight.mind': 'Anything on your mind?', 'tonight.mind.put': 'Put in', 'tonight.mind.said': 'In the Satchel.',
 
   'camp.bedtime': 'Bedtime',
   'camp.change': 'Change',
   'camp.earlier': 'Earlier',
   'camp.later': 'Later',
   'camp.sleep.kept': 'You are in bed on time. Tomorrow begins a little further in, with something waiting for you. Put the phone down now.',
-  'camp.sleep.late': 'Sleep well. The head start is for nights you are in bed by {bedtime}. Nothing is lost.',
+  'camp.sleep.late': 'Sleep well. Nothing is lost.',
   'morning.headStart': 'You went to sleep on time, so the day begins a little further in.',
   'camp.goodnight': 'Go to sleep',
   'camp.night': 'Goodnight.',
@@ -325,31 +324,27 @@ export const copy = {
   'welcome.ahead': 'Ahead of you: {thing}.',
   'welcome.record': 'Read the last record',
   'welcome.go': 'Back to today',
-  'welcome.say': 'You have been away, but the road has waited for you. One small task is enough to take it up again.',
+  'welcome.say': 'The road has waited for you. One small job is enough to take it up again.',
 
-  'daybook.label': 'The daybook',
+  'daybook.label': 'The Daybook',
   'daybook.written': 'Written for you as the week drew to its close.',
   'daybook.none': 'The pages are still blank. At the end of each week in which you do something, a page will be written here for you.',
-  'daybook.held': 'The week held',
-  'daybook.times': '{job} {n}',
+  
   'daybook.once': 'once', 'daybook.twice': 'twice', 'daybook.many': '{n} times',
-  'daybook.reached': 'You reached {places}.',
   'daybook.went': 'Where you went',
-  'daybook.camped': 'It was a week of camps and short roads, and every step of it still counts.',
+  'daybook.camped': 'It was a week of camps and short roads, every step of it on the way.',
   'daybook.learned': 'Learned',
   'daybook.soFar': 'So far',
   'daybook.next': 'Further on',
   'daybook.count': 'At {where}, a row of notches filled with light, and what it kept shut opened.',
   'daybook.readAgain': 'Read again',
   'daybook.finds': 'Found',
-  'daybook.offer': 'Shall the week ahead be planned for you?',
   'daybook.planIt': 'Plan it for me',
   'look.offer': 'Look ahead at the week? About a minute.', 'look.go': 'Look ahead',
   'look.still': 'Still wanted?', 'look.keep': 'Keep', 'look.skip': 'Skip',
   'look.coming': 'Coming up', 'look.nothing': 'Nothing fixed this week.', 'look.more': 'and more in the week',
   'look.next': 'Next', 'look.matters': 'What matters most?', 'look.nothingParticular': 'Nothing in particular',
   'daybook.notNow': 'Not now',
-  'daybook.close': 'Close',
   'daybook.earlier': 'Earlier',
   'daybook.later': 'Later',
   'and': 'and',
@@ -358,6 +353,7 @@ export const copy = {
   'week.next': 'Next week',
   'week.this': 'This week',
   'week.forecast': 'The plan points to {what}.',
+  'week.about': 'about {len}',
   'week.forecast.one': 'the next place around {day}',
   'week.forecast.then': 'and the one after around {day}',
   'week.none': 'There is no plan for this week.',
@@ -381,9 +377,8 @@ export const copy = {
   'week.today': 'today',
 
   'rhythms.label': 'Recurring jobs',
-  'rhythms.say': 'These are the things you do again and again. You may change any of them, at any time.',
-  'rhythms.add': 'Add one',
-  'rhythms.editing': 'Change it', 'rhythms.adding': 'A new one',
+  
+  'rhythms.adding': 'A new one',
   'rhythms.name': 'What',
   'rhythms.often': 'How often',
   'rhythms.aWeek': 'A week', 'rhythms.setDays': 'Set days', 'rhythms.fortnight': 'Fortnightly',
@@ -392,11 +387,11 @@ export const copy = {
   'rhythms.onceWeek': 'Once a week',
   'rhythms.every2': 'every 2 weeks',
   'rhythms.every2long': 'Once every 2 weeks',
-  'slip.date': '{job} was wanted {date}. Still needed?', 'slip.appt': '{job}, on {day} at {time}, went by. Still needed?', 'slip.today': 'Put it on today', 'slip.wentBy': 'Went by · still needed?', 'slip.apptRow': '{job} · {day} {time}',
-  'week.aboutMin': 'about {n} min', 'week.aboutH': 'about {n} h', 'week.replan': 'Lay out the rest of the week',
-  'week.later': 'A later week', 'week.after': 'The week after', 'week.otherDay': 'Another day…',
+  'slip.date': '{job} was wanted {date}. Still needed?', 'slip.today': 'Put it on today', 'slip.wentBy': 'Went by · still needed?', 'slip.apptRow': '{job} · {day} {time}',
+  'week.replan': 'Lay out the rest of the week',
+  'week.later': 'A later week', 'week.after': 'A later week', 'week.otherDay': 'Another day…',
   'by.date': 'by {date}', 'by.wanted': 'was wanted by {date}', 'by.label': 'By a date', 'by.none': 'No date', 'by.set': 'By',
-  'by.passed': 'Its date has passed.', 'by.still': 'Still needed', 'by.new': 'New date', 'by.letGo': 'Let it go',
+  'by.still': 'Still needed', 'by.new': 'New date', 'by.letGo': 'Let it go',
   'rhythms.monthly': 'Monthly', 'rhythms.yearlyShort': 'Yearly', 'rhythms.everyShort': 'Every few days',
   'rhythms.onADate': 'On a date', 'rhythms.onAWeekday': 'On a weekday',
   'rhythms.monthDay': 'on the {n} of each month', 'rhythms.lastDay': 'last day',
@@ -408,33 +403,31 @@ export const copy = {
   'rhythms.each': 'About how long', 'rhythms.each.say': 'For planning the week. Its delve starts at this length.', 'rhythms.each.sayOnce': 'For planning the week. Its delve starts at 30 minutes.',
   'rhythms.newNumber': 'A changed number counts from next week, but you can plan with it straight away.',
   'rhythms.save': 'Save', 'rhythms.cancel': 'Cancel',
-  'rhythms.stop': 'Stop it recurring',
-  'job.once': 'Once', 'job.onceSay': 'Once, until it is done.', 'job.onceUntil': 'once',
-  'job.others': 'Other jobs', 'job.change': 'Edit', 'job.back': 'Back to {to}', 'job.gone': 'Gone from your lists.',
+  'job.once': 'Once', 'job.onceSay': 'Once, until it is done.', 
+  'job.change': 'Edit', 'job.gone': 'Gone from your lists.',
   'job.avoided': 'I tend to put this off', 'job.yes': 'Yes', 'job.no': 'No',
   'job.step': 'First small step', 'job.stepHint': 'What would you touch first?',
   'job.note': 'A note', 'job.noteHint': 'Where you stopped, or anything to keep with it',
   'job.remove': 'Delete', 'job.delete': 'Delete', 'job.cantDelete': '{job} is in a delve: finish it first.', 'job.cantDeleteEnd': '{job}’s delve has ended: answer its end first.', 'job.removed': '{name} is gone from your lists.', 'job.undo': 'Undo',
-  'rhythms.less': 'Fewer', 'rhythms.more': 'More', 'rhythms.shorter': 'Shorter', 'rhythms.longer': 'Longer',
   'days.short.0': 'Sun', 'days.short.1': 'Mon', 'days.short.2': 'Tue', 'days.short.3': 'Wed', 'days.short.4': 'Thu', 'days.short.5': 'Fri', 'days.short.6': 'Sat',
   'days.plural.0': 'Sundays', 'days.plural.1': 'Mondays', 'days.plural.2': 'Tuesdays', 'days.plural.3': 'Wednesdays', 'days.plural.4': 'Thursdays', 'days.plural.5': 'Fridays', 'days.plural.6': 'Saturdays',
   /* the satchel (D-126): the jobs with no day yet */
   'nav.satchel': 'Satchel', 'delve.list': 'The list',
   'satchel.label': 'The Satchel',
-  'satchel.say': 'Every job that isn’t on today. Delve on one whenever you like.',
+  'satchel.say': 'Jobs with no day yet, jobs coming up, and the ones that recur. Delve on any of them whenever you like.',
   'satchel.add': 'A new job', 'satchel.add.hint': 'A new job', 'satchel.now': 'Delve now', 'satchel.later': 'Save for later',
   'satchel.add.today': 'A job for today', 'satchel.add.todayHint': 'A job for today', 'satchel.toToday': 'Add to today',
-  'satchel.return.today': 'Return adds it to today.', 'satchel.return.later': 'Return keeps it here, with no day.',
+  'satchel.return.today': 'The keyboard’s return key adds it to today.', 'satchel.return.later': 'The keyboard’s return key keeps it here, with no day.',
   'row.sofar': '{min} so far',
-  'satchel.saved': '{job}: in the satchel.',
+  'satchel.saved': '{job}: in the Satchel.',
   'satchel.noDay': 'No day yet', 'satchel.coming': 'Coming up', 'satchel.recurring': 'Recurring jobs',
-  'satchel.recurring.add': 'Add a recurring job', 'satchel.move': '{job}: on {day}. Tap to move it',
+  'satchel.recurring.add': 'Add a recurring job', 'satchel.move': '{job}: on {day}, move it',
   'satchel.empty': 'Nothing here with no day yet. When something comes to mind, it goes here.',
   'satchel.list': 'List', 'satchel.list.done': 'Close', 'satchel.list.label': 'The list for {job}', 'satchel.list.hint': 'A line at a time', 'satchel.list.full': 'The list is full: take a line out to add another.',
   'satchel.day': 'Put on a day', 'satchel.placed': '{job}: on {day}.',
   /* remembered jobs (D-136): the jobs Dan has had before, under the box as he types; the one offer to make a job repeat */
   'satchel.before': 'Jobs you’ve had before', 'satchel.usually': 'usually {min}', 'satchel.pick.sr': '{job}, usually {min}',
-  'satchel.have.noDay': '{job} is already in your satchel.', 'satchel.have.coming': '{job} is already on {day}.',
+  'satchel.have.noDay': '{job} is already in your Satchel.', 'satchel.have.coming': '{job} is already on {day}.',
   'satchel.have.waiting': '{job} is already waiting: back {day}.', 'satchel.have.today': '{job} is already on today’s list.', 'satchel.have.recurring': '{job} is one of your recurring jobs: it comes round by itself.',
   'set.refused': 'Another delve comes first: finish it, or answer its end, then begin this one.',
   'row.inErrand': 'in the errand run',
@@ -444,7 +437,8 @@ export const copy = {
   'menu.delAsk': 'Delete {job} and its plan?', 'menu.keep': 'Keep',
   'name.max': 'A name keeps to {n} characters.',
   'week.added.session': 'One more {job} session, on {day}.',
-  'satchel.offer': '{job} keeps coming back. Make it repeat?', 'satchel.offer.yes': 'Make it repeat', 'satchel.offer.no': 'No thanks',
+  'satchel.offer': '{job} keeps coming back. Make it a recurring job?', 'satchel.offer.yes': 'Make it recurring', 'satchel.offer.no': 'No thanks',
+  'rel.today': 'today', 'rel.tomorrow': 'tomorrow',
   'pick.today': 'today', 'pick.prev': 'The month before', 'pick.next': 'The next month',
   'today.addJob': 'Add a job',
   /* a stray thought parked mid-delve (D-138) */
@@ -476,20 +470,20 @@ export const copy = {
   'settings.label': 'Settings',
   'settings.reminders': 'Reminders',
   'settings.reminders.say': 'A reminder comes only for something you gave a time and asked to be reminded of: set it where you set the time, in the week or in your recurring jobs. One alert each, and never to call you back to the app.',
-  'settings.reminders.on': 'On', 'settings.reminders.off': 'All off',
+  'settings.reminders.on': 'On', 'settings.reminders.off': 'Off',
   'settings.cal': 'Your calendar',
   'settings.cal.say': 'Shows the events in your phone’s calendar in the week, read-only, and gives a busy day less to do. A Google calendar shows if it is added in the phone’s Settings. Nothing is changed and nothing leaves your phone.',
   'settings.cal.on': 'Show it', 'settings.cal.off': 'Off',
   'settings.cal.refused': 'The phone isn’t letting the app read the calendar. You can allow it in the phone’s Settings, under this app, Calendars: Full Access.',
   'settings.nudge': 'A word after a quiet spell',
-  'settings.nudge.say': 'If the app hasn’t been opened for three days, one quiet word at 6 pm. Never more than once a week, and never a count. Off unless you turn it on.',
+  'settings.nudge.say': 'If the app hasn’t been opened for three days, one quiet word at 18:00. Never more than once a week, and never a count. Off unless you turn it on.',
   'settings.nudge.on': 'On', 'settings.nudge.off': 'Off',
   'nudge.title': 'Long Answer',
   'nudge.body': 'Your place is kept. One small thing is enough, whenever you like.',
   'settings.reminders.refused': 'The phone is not letting the app alert you. You can allow it in the phone’s Settings, under this app’s Notifications.',
   'settings.bedtime': 'A reminder for bed by {time}',
   'settings.bedtime.say': 'Bed by',
-  'settings.trial': 'The trial’s own controls', 'settings.trialLink': 'Trial controls',
+  'settings.trialLink': 'Trial controls',
   'settings.save': 'Your save',
   'settings.save.app': 'Each week a copy is also written to the Files app, under On My iPhone, in Long Answer. The last four are kept.',
   'settings.copy': 'Save a copy',
@@ -509,7 +503,7 @@ export const copy = {
   'remind.job.15': 'In a quarter of an hour, at {time}.',
   'remind.job.60': 'In an hour, at {time}.',
   'remind.bed.title': 'Bed by {time}',
-  'remind.bed.0': 'It is the bedtime you chose. Go to sleep is waiting in the app.',
+  'remind.bed.0': 'It is the bedtime you chose.',
   'remind.bed.15': 'A quarter of an hour to your bedtime. Time to begin winding down.',
   'remind.bed.60': 'An hour to your bedtime.',
   'remind.again': 'Again in 10 min',
@@ -539,6 +533,11 @@ export const copy = {
 } as const;
 
 export type CopyKey = keyof typeof copy;
+/** A day of the week (0 Sunday) and a month (1 January), so a key built from one is checked like any other (C#15). */
+export type Weekday = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+export type Month = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+/** A sign's part, in words: a part with no words of its own is said by its own name, never as "undefined". */
+export const partWords = (el: string): string => { const k = `part.${el}`; return k in copy ? copy[k as CopyKey] : el; };
 export const t = (k: CopyKey, vars?: Record<string, string | number>): string =>
   vars ? copy[k].replace(/\{(\w+)\}/g, (_, v) => String(vars[v] ?? '')) : copy[k];
 
@@ -566,7 +565,7 @@ export const dayName = (day: string) => copy[`day.${new Date(`${day}T00:00:00Z`)
 export function byWords(day: string, today?: string): string {
   const d = new Date(`${day}T00:00:00Z`);
   /* a date gone by is said softly, never word for word as if still ahead (deep review W F15) */
-  return copy[today && day < today ? 'by.wanted' : 'by.date'].replace('{date}', `${copy[`days.short.${d.getUTCDay()}` as CopyKey]} ${d.getUTCDate()} ${copy[`month.${d.getUTCMonth() + 1}` as CopyKey].slice(0, 3)}`);
+  return copy[today && day < today ? 'by.wanted' : 'by.date'].replace('{date}', `${copy[`days.short.${d.getUTCDay()}` as CopyKey]} ${d.getUTCDate()} ${copy[`monthShort.${d.getUTCMonth() + 1}` as CopyKey]}`);
 }
 export function dateWords(day: string): string {
   const d = new Date(`${day}T00:00:00Z`);
@@ -599,10 +598,18 @@ export function oftenWords(r: { days?: number[]; every?: 2; times?: number; ever
   if (r.monthly) return 'day' in r.monthly ? t('rhythms.monthDay', { n: dayOrd(r.monthly.day) }) : t('rhythms.monthNth', { nth: t(`rhythms.nth.${r.monthly.nth}` as CopyKey), day: t(`day.${r.monthly.weekday}` as CopyKey) });
   if (r.yearly) return t('rhythms.yearly', { date: yearWords(r.yearly) });
   if (r.everyDays) return t('rhythms.everyN', { n: r.everyDays });
-  return r.days ? r.days.map(x => t(`days.plural.${x}` as CopyKey)).join(', ') : r.every === 2 ? t('rhythms.every2') : t('rhythms.nWeek', { n: r.times ?? 1 });
+  /* "once a week", never "1 a week" (deep review A#21) */
+  return r.days ? r.days.map(x => t(`days.plural.${x}` as CopyKey)).join(', ') : r.every === 2 ? t('rhythms.every2') : (r.times ?? 1) === 1 ? t('rhythms.onceWeek').toLowerCase() : t('rhythms.nWeek', { n: r.times! });
 }
 /** "Thu 2 Oct": a day, short */
 export function dayShort(day: string): string {
   const d = new Date(`${day}T00:00:00Z`);
-  return `${copy[`days.short.${d.getUTCDay()}` as CopyKey]} ${d.getUTCDate()} ${copy[`month.${d.getUTCMonth() + 1}` as CopyKey].slice(0, 3)}`;
+  /* one short month everywhere ("Sept", as the Daybook's titles, deep review A#22) */
+  return `${copy[`days.short.${d.getUTCDay()}` as CopyKey]} ${d.getUTCDate()} ${copy[`monthShort.${d.getUTCMonth() + 1}` as CopyKey]}`;
+}
+/** A day near today said as today or tomorrow, else by its name (deep review A#16). */
+export function relDay(day: string, today: string): string {
+  if (day === today) return copy['rel.today'];
+  const n = new Date(`${today}T00:00:00Z`); n.setUTCDate(n.getUTCDate() + 1);
+  return day === n.toISOString().slice(0, 10) ? copy['rel.tomorrow'] : dayName(day);
 }

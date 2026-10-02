@@ -228,8 +228,8 @@
           <button class="preview" onclick={() => openList(j)}>{preview(j)}</button>
         {/if}
         <div class="acts">
-          <button class="text-link" aria-expanded={listing === j.id} aria-label={`${listing === j.id ? t('satchel.list.done') : t('satchel.list')}: ${j.name}`} onclick={() => openList(j)}><span>{listing === j.id ? t('satchel.list.done') : t('satchel.list')}</span></button>
-          <button class="text-link" aria-expanded={placing === j.id} aria-label={`${t('satchel.day')}: ${j.name}`} onclick={() => openDays(j)}><span>{t('satchel.day')}</span></button>
+          <button class="text-link" aria-expanded={listing === j.id} aria-label={`${j.name}: ${(listing === j.id ? t('satchel.list.done') : t('satchel.list')).toLowerCase()}`} onclick={() => openList(j)}><span>{listing === j.id ? t('satchel.list.done') : t('satchel.list')}</span></button>
+          <button class="text-link" aria-expanded={placing === j.id} aria-label={`${j.name}: ${t('satchel.day').toLowerCase()}`} onclick={() => openDays(j)}><span>{t('satchel.day')}</span></button>
         </div>
         {#if placing === j.id}<DayPick from={v.day} label={t('satchel.day')} pick={d => place(j, d)} />{/if}
       </div>
@@ -273,7 +273,7 @@
     <div class="rows">
     {#each s.recurring as j (j.id)}
       {@const r = rhythmOf(j)}
-      <SwipeRow key={`s:${j.id}`} actions={acts(j)} tap={tapJob(j)} hold={menu(j)}>
+      <SwipeRow key={`s:${j.id}`} actions={acts(j)} tap={tapJob(j)} hold={menu(j)} label={r ? [j.name, oftenWords(r), minutesWords(j.length), ...(r.time ? [t('row.at', { time: r.time })] : [])].join(', ') : undefined}>
         {#snippet lead()}{#if canTick(j)}<button class="tickbtn" aria-label={t('tick.sr', { job: j.name })} onclick={() => openTick(j.id, go)}><span class="ring"></span></button>{/if}{/snippet}
         {#snippet row()}<span class="pip" class:under={canTick(j)}></span><span class="t">{j.name}{#if r}<small>{oftenWords(r)} · {minutesShort(j.length)}</small>{/if}</span><span class="s">{r?.time ?? ''}</span>{/snippet}
       </SwipeRow>
@@ -294,29 +294,29 @@
     mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 80%, transparent 100%), linear-gradient(to right, transparent 0, #000 10%, #000 90%, transparent 100%);
     mask-composite: intersect; transform-origin: 50% 0; will-change: transform, opacity; }
   .new { display: flex; flex-direction: column; gap: 8px; margin: 10px 0 4px; }
-  .new input { min-width: 0; min-height: 44px; padding: 0 12px; font: inherit; font-size: 17px; color: #fff;
+  .new input { min-width: 0; min-height: 44px; padding: 0 12px; font: inherit; font-size: calc(17px * var(--ts, 1)); color: #fff;
     background: rgba(255, 255, 255, .06); border: 1px solid var(--edge-2); border-radius: 0; }
   .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .new .btn-quiet { padding: 0 8px; min-height: 44px; }
   .new .btn-quiet:disabled { opacity: .5; }
   .new .btn-quiet.full { width: 100%; }
-  .box-label { font-family: var(--carve); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2); }
-  .return-says { margin: -2px 0 0; font-family: var(--life); font-style: italic; font-size: 14px; color: var(--ink-3); }
+  .box-label { font-family: var(--carve); font-size: calc(14px * var(--ts, 1)); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2); }
+  .return-says { margin: -2px 0 0; font-family: var(--life); font-style: italic; font-size: calc(14px * var(--ts, 1)); color: var(--ink-3); }
   .label-line { margin-top: 18px; margin-bottom: 4px; }
   .empty { margin: 6px 0 4px; text-align: left; }
   .item { padding-bottom: 2px; }
-  .rows :global(.row small) { display: block; font-size: 14px; color: var(--ink-2); margin-top: 2px; }
+  .rows :global(.row small) { display: block; font-size: calc(14px * var(--ts, 1)); color: var(--ink-2); margin-top: 2px; }
   .ghost { visibility: hidden; }
   .day { min-height: 44px; padding: 0 0 0 12px; }
-  .day span { font-size: 16px; color: var(--violet-hi); }
+  .day span { font-size: calc(16px * var(--ts, 1)); color: var(--violet-hi); }
   .preview { display: block; width: 100%; text-align: left; padding: 0 0 4px 32px; background: none; border: 0; cursor: pointer;
-    font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink-2); }
-  .list { display: block; width: 100%; margin: 2px 0 6px; padding: 8px 12px; font: inherit; font-size: 17px; line-height: 1.4; color: #fff;
+    font-family: var(--life); font-style: italic; font-size: calc(16px * var(--ts, 1)); color: var(--ink-2); }
+  .list { display: block; width: 100%; margin: 2px 0 6px; padding: 8px 12px; font: inherit; font-size: calc(17px * var(--ts, 1)); line-height: 1.4; color: #fff;
     background: rgba(255, 255, 255, .06); border: 1px solid var(--edge-2); border-radius: 0; resize: vertical; }
-  .full { margin: -2px 0 6px; font-size: 15px; font-style: italic; }
+  .full { margin: -2px 0 6px; font-size: calc(15px * var(--ts, 1)); font-style: italic; }
   .acts { display: flex; flex-wrap: wrap; gap: 0 16px; padding-left: 32px; }
-  .acts .text-link { min-height: 44px; min-width: 44px; font-size: 15px; }
-  .said { font-family: var(--life); font-style: italic; font-size: 15.5px; color: var(--ink-2); text-align: center; margin: 4px 0 8px; }
+  .acts .text-link { min-height: 44px; min-width: 44px; font-size: calc(15px * var(--ts, 1)); }
+  .said { font-family: var(--life); font-style: italic; font-size: calc(15.5px * var(--ts, 1)); color: var(--ink-2); text-align: center; margin: 4px 0 8px; }
   .links { display: flex; justify-content: center; margin-top: 12px; }
   .links.errand { margin-top: 0; }
   button.home { color: var(--ink-2); }
@@ -324,9 +324,9 @@
   .before { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--edge-2); }
   .pick { display: flex; align-items: baseline; gap: 12px; width: 100%; min-height: 44px; padding: 10px 12px; text-align: left;
     background: rgba(255, 255, 255, .03); border: 0; border-bottom: 1px solid var(--edge-2); cursor: pointer; font: inherit; color: #fff; }
-  .pick .t { flex: 1; min-width: 0; font-size: 17px; overflow-wrap: anywhere; }
-  .pick .u { flex: none; font-family: var(--life); font-style: italic; font-size: 15px; color: var(--ink-2); }
+  .pick .t { flex: 1; min-width: 0; font-size: calc(17px * var(--ts, 1)); overflow-wrap: anywhere; }
+  .pick .u { flex: none; font-family: var(--life); font-style: italic; font-size: calc(15px * var(--ts, 1)); color: var(--ink-2); }
   .offer { margin: 8px 0 6px; padding: 10px 12px 2px; border: 1px solid var(--edge-2); background: rgba(255, 255, 255, .04); }
-  .offer p { margin: 0; font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink); text-align: center; }
+  .offer p { margin: 0; font-family: var(--life); font-style: italic; font-size: calc(16px * var(--ts, 1)); color: var(--ink); text-align: center; }
   .acts.center { justify-content: center; padding-left: 0; }
 </style>

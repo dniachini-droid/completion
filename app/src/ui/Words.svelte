@@ -17,7 +17,7 @@
   {#if !plain}<div class="wash" aria-hidden="true"></div>{/if}
   <div class="scroll">{@render children()}</div>
   {#if look}
-    <button class="text-link fold" onclick={look}><span>{t('look.open')}</span></button>
+    <button class="text-link fold" aria-label={t('look.openSr')} onclick={look}><span>{t('look.open')}</span></button>
   {:else if foldable}
     <button class="text-link fold" onclick={() => (open = !open)} aria-expanded={open}><span>{open ? t('words.hide') : t('words.show')}</span></button>
   {/if}

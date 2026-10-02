@@ -7,7 +7,7 @@
      a date for a one-off. A one-off shows only What, About how long and By a date; the rest is under "More…" (D-131).
      One number is enough; no ranges. Stopping a repeat ends future sessions only; no confirmation. */
   import { game } from './game.svelte';
-  import { t, minutesWords, byWords, dayOrd, yearWords, oftenWords } from '../content/copy/en';
+  import { t, minutesWords, minutesShort, byWords, dayOrd, yearWords, oftenWords, type Weekday } from '../content/copy/en';
   import { addDays } from '../core/week';
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
@@ -151,20 +151,20 @@
           <button aria-pressed={d.often === 'fort'} onclick={() => (d!.often = 'fort')}>{t('rhythms.fortnight')}</button>
         </div>
         <!-- the longer ones (D-114): rent on the 1st, a birthday, the haircut every few weeks -->
-        <div class="seg often more" role="group" aria-label={t('rhythms.often')}>
+        <div class="seg often more" role="group" aria-label={t('rhythms.oftenMore')}>
           <button aria-pressed={d.often === 'month'} onclick={() => (d!.often = 'month')}>{t('rhythms.monthly')}</button>
           <button aria-pressed={d.often === 'year'} onclick={() => (d!.often = 'year')}>{t('rhythms.yearlyShort')}</button>
           <button aria-pressed={d.often === 'every'} onclick={() => (d!.often = 'every')}>{t('rhythms.everyShort')}</button>
         </div>
         {#if d.often === 'week'}
           <div class="stepper">
-            <button class="btn-quiet step" disabled={d.times <= 1} onclick={() => (d!.times = Math.max(1, d!.times - 1))} aria-label={t('rhythms.less')}><span>−</span></button>
+            <button class="btn-quiet step" disabled={d.times <= 1} onclick={() => (d!.times = Math.max(1, d!.times - 1))} aria-label={t('rhythms.lessTimes')}><span>−</span></button>
             <span class="val">{d.times === 1 ? t('rhythms.onceWeek') : t('rhythms.timesWeek', { n: d.times })}</span>
-            <button class="btn-quiet step" disabled={d.times >= 7} onclick={() => (d!.times = Math.min(7, d!.times + 1))} aria-label={t('rhythms.more')}><span>+</span></button>
+            <button class="btn-quiet step" disabled={d.times >= 7} onclick={() => (d!.times = Math.min(7, d!.times + 1))} aria-label={t('rhythms.moreTimes')}><span>+</span></button>
           </div>
         {:else if d.often === 'days'}
           <div class="seg days" role="group" aria-label={t('rhythms.setDays')}>
-            {#each DAYS as x (x)}<button aria-pressed={d.days.includes(x)} onclick={() => toggleDay(x)}>{t(`days.short.${x}` as never)}</button>{/each}
+            {#each DAYS as x (x)}<button aria-pressed={d.days.includes(x)} onclick={() => toggleDay(x)}>{t(`days.short.${x as Weekday}`)}</button>{/each}
           </div>
         {:else if d.often === 'fort'}
           <p class="soft val-note">{t('rhythms.every2long')}</p>
@@ -175,16 +175,16 @@
           </div>
           {#if d.mode === 'date'}
             <div class="stepper">
-              <button class="btn-quiet step" disabled={d.mday <= 1} onclick={() => (d!.mday -= 1)} aria-label={t('rhythms.less')}><span>−</span></button>
+              <button class="btn-quiet step" disabled={d.mday <= 1} onclick={() => (d!.mday -= 1)} aria-label={t('rhythms.dayEarlier')}><span>−</span></button>
               <span class="val">{t('rhythms.monthDay', { n: dayOrd(d.mday) })}</span>
-              <button class="btn-quiet step" disabled={d.mday >= 31} onclick={() => (d!.mday += 1)} aria-label={t('rhythms.more')}><span>+</span></button>
+              <button class="btn-quiet step" disabled={d.mday >= 31} onclick={() => (d!.mday += 1)} aria-label={t('rhythms.dayLater')}><span>+</span></button>
             </div>
           {:else}
             <div class="seg days" role="group" aria-label={t('rhythms.onAWeekday')}>
-              {#each [1, 2, 3, 4, -1] as x (x)}<button aria-pressed={d.nth === x} onclick={() => (d!.nth = x as 1)}>{t(`rhythms.nth.${x}` as never)}</button>{/each}
+              {#each ([1, 2, 3, 4, -1] as (1 | 2 | 3 | 4 | -1)[]) as x (x)}<button aria-pressed={d.nth === x} onclick={() => (d!.nth = x)}>{t(`rhythms.nth.${x}`)}</button>{/each}
             </div>
             <div class="seg days" role="group" aria-label={t('rhythms.onAWeekday')}>
-              {#each DAYS as x (x)}<button aria-pressed={d.wday === x} onclick={() => (d!.wday = x)}>{t(`days.short.${x}` as never)}</button>{/each}
+              {#each DAYS as x (x)}<button aria-pressed={d.wday === x} onclick={() => (d!.wday = x)}>{t(`days.short.${x as Weekday}`)}</button>{/each}
             </div>
           {/if}
           <!-- (said once: a date's stepper already says it, W F14) -->
@@ -197,9 +197,9 @@
           <p class="soft val-note">{t('rhythms.yearly', { date: yearWords(d.ydate) })}</p>
         {:else if d.often === 'every'}
           <div class="stepper">
-            <button class="btn-quiet step" disabled={d.every <= 2} onclick={() => (d!.every -= 1)} aria-label={t('rhythms.less')}><span>−</span></button>
+            <button class="btn-quiet step" disabled={d.every <= 2} onclick={() => (d!.every -= 1)} aria-label={t('rhythms.fewerDays')}><span>−</span></button>
             <span class="val">{t('rhythms.everyN', { n: d.every })}</span>
-            <button class="btn-quiet step" disabled={d.every >= 90} onclick={() => (d!.every += 1)} aria-label={t('rhythms.more')}><span>+</span></button>
+            <button class="btn-quiet step" disabled={d.every >= 90} onclick={() => (d!.every += 1)} aria-label={t('rhythms.moreDays')}><span>+</span></button>
           </div>
           <p class="soft val-note">{t('rhythms.everySay')}</p>
         {:else}
@@ -209,9 +209,9 @@
 
         <div class="label-line">{t('rhythms.each')}</div>
         <div class="stepper">
-          <button class="btn-quiet step" disabled={d.len <= LEN[0]} onclick={() => (d!.len = step(LEN, d!.len, -1))} aria-label={t('rhythms.shorter')}><span>−</span></button>
-          <span class="val">{minutesWords(d.len)}</span>
-          <button class="btn-quiet step" disabled={d.len >= LEN[LEN.length - 1]} onclick={() => (d!.len = step(LEN, d!.len, 1))} aria-label={t('rhythms.longer')}><span>+</span></button>
+          <button class="btn-quiet step" disabled={d.len <= LEN[0]} onclick={() => (d!.len = step(LEN, d!.len, -1))} aria-label={t('rhythms.shorterLen', { len: minutesWords(d.len) })}><span>−</span></button>
+          <span class="val">{minutesShort(d.len)}</span>
+          <button class="btn-quiet step" disabled={d.len >= LEN[LEN.length - 1]} onclick={() => (d!.len = step(LEN, d!.len, 1))} aria-label={t('rhythms.longerLen', { len: minutesWords(d.len) })}><span>+</span></button>
         </div>
         <!-- the minutes only tell the Week how full a day is: every delve opens at 30 (D-124, D-130) -->
         <!-- the line follows the job: a recurring job's delve opens at its own minutes, a one-off's at 30 (D-146, deep review B11) -->
@@ -286,7 +286,7 @@
   h1 { margin-top: 4px; }
   .title { overflow-wrap: anywhere; }
   .bydate { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 8px; min-height: 44px; }
-  .bydate .val { font-family: var(--life); font-style: italic; font-size: 17px; color: #fff; }
+  .bydate .val { font-family: var(--life); font-style: italic; font-size: calc(17px * var(--ts, 1)); color: #fff; }
   .links.more { justify-content: flex-start; margin-top: 12px; }
   .links { display: flex; justify-content: center; gap: 18px; margin-top: 16px; }
   .editor .label-line { margin-top: 14px; }
@@ -294,18 +294,18 @@
   /* three choices on one line, even on a small phone (review 2) */
   .editor .seg:not(.days) button { letter-spacing: .08em; padding-left: 4px; padding-right: 4px; white-space: nowrap; }
   /* four choices of how often on one line, even on a small phone (D-112) */
-  .editor .seg.often button { letter-spacing: .03em; font-size: 13px; padding-left: 2px; padding-right: 2px; }
+  .editor .seg.often button { letter-spacing: .03em; font-size: calc(14px * var(--ts, 1)); padding-left: 2px; padding-right: 2px; }
   .editor .seg.often.more { margin-top: 4px; }
   .said { margin: 8px 0 0; color: var(--ink-2); font-style: italic; }
   .links.undo { margin: 4px 0 14px; }
   .stepper input.val { flex: 1; }
-  .days button { padding-left: 0; padding-right: 0; font-size: 14px; letter-spacing: .02em; min-width: 0; }
+  .days button { padding-left: 0; padding-right: 0; font-size: calc(14px * var(--ts, 1)); letter-spacing: .02em; min-width: 0; }
   .seg.days { grid-auto-columns: minmax(0, 1fr); gap: 4px; }
   .stepper { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; border: 1px solid var(--edge-2); background: rgba(10,9,24,.55); }
-  .stepper .val { color: #fff; font-size: 17px; }
+  .stepper .val { color: #fff; font-size: calc(17px * var(--ts, 1)); }
   .step { min-width: 52px; }
-  .step span { font-size: 20px; }
+  .step span { font-size: calc(20px * var(--ts, 1)); }
   .val-note { text-align: left; margin-top: 10px; }
-  input.line { width: 100%; margin-top: 6px; padding: 10px 12px; font: inherit; font-size: 17px; color: #fff; background: rgba(255,255,255,.06); border: 1px solid var(--edge-2); border-radius: 0; }
+  input.line { width: 100%; margin-top: 6px; padding: 10px 12px; font: inherit; font-size: calc(17px * var(--ts, 1)); color: #fff; background: rgba(255,255,255,.06); border: 1px solid var(--edge-2); border-radius: 0; }
   button.home { color: var(--ink-2); white-space: nowrap; }
 </style>

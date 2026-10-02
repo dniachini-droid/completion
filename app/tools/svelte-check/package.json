@@ -1,0 +1,9 @@
+{
+  "name": "svelte-check-tool",
+  "private": true,
+  "description": "The screens' type check (deep review C#15), with the TypeScript it supports; the app's own TypeScript is newer.",
+  "devDependencies": {
+    "svelte-check": "4.7.6",
+    "typescript": "5.9.3"
+  }
+}

@@ -28,7 +28,7 @@
   transform: rotate(calc(var(--p) * 1turn)) translateY(calc(var(--R) * -.47)); }
 .dv .ring .inner{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
 .dv .ring .time{ font-family:var(--life); font-weight:300; font-size:calc(var(--R) * .27); line-height:1; color:#f6f7ff; font-variant-numeric: tabular-nums lining-nums; text-shadow: 0 0 24px rgba(143,168,255,.8), 0 0 60px rgba(143,168,255,.4); }
-.dv .ring .left{ font-family:var(--life); font-style:italic; font-size:16px; color:var(--ink-2); margin-top:6px; }
+.dv .ring .left{ font-family:var(--life); font-style:italic; font-size:calc(16px * var(--ts, 1)); color:var(--ink-2); margin-top:6px; }
 .dv .ring.ended .fill{ background: rgba(230,236,255,.95); }
 .dv .ring.rest .inner, .dv .ring.rest .tip{ opacity:0; transition: opacity 1.2s var(--ease); }
 .dv .ring.rest .disc{ background: radial-gradient(circle, rgba(220,226,255,.35), rgba(143,168,255,.12) 55%, transparent 72%); }
@@ -48,20 +48,20 @@
 .dv .fog-front img{ position:absolute; top:0; left:0; width:200%; height:100%; animation: drift 60s ease-in-out infinite alternate; }
 .dv .head{ text-align:center; margin-top: 10px; }
 .dv .head .label-line{ justify-content:center; }
-.dv .head h1{ margin-top: 10px; font-size: 31px; letter-spacing: .12em; padding-left: .12em; color: #eceaff;
+.dv .head h1{ margin-top: 10px; font-size: calc(31px * var(--ts, 1)); letter-spacing: .12em; padding-left: .12em; color: #eceaff;
   text-shadow: 0 -1px 0 rgba(0,0,0,.9), 0 0 18px rgba(var(--violet-rgb), .75), 0 0 48px rgba(var(--violet-rgb), .45); }
 .dv .head .soft{ margin-top: 6px; }
 .dv .mid{ display:flex; align-items:center; justify-content:center; }
 .dv .bottom{ text-align:center; }
-.dv .bottom h2{ font-family:var(--life); font-weight:500; font-size:24px; color:#fff; }
-.dv .bottom .of{ font-size:17px; margin-top:2px; }
-.dv .bottom .away{ font-size:17px; color:var(--ink-2); margin:12px 0 18px; }
+.dv .bottom h2{ font-family:var(--life); font-weight:500; font-size:calc(24px * var(--ts, 1)); color:#fff; }
+.dv .bottom .of{ font-size:calc(17px * var(--ts, 1)); margin-top:2px; }
+.dv .bottom .away{ font-size:calc(17px * var(--ts, 1)); color:var(--ink-2); margin:12px 0 18px; }
 .dv .breather, .dv .held{ display:none; }
 .dv .breathing .normal, .dv .holding .normal{ display:none; }
 .dv .breathing .breather, .dv .holding .held{ display:block; }
 .dv .holding .breath-hide{ opacity:0; transition: opacity 1s var(--ease); }
 .dv .ring.hold .inner, .dv .ring.hold .tip{ opacity:0; transition: opacity 1.2s var(--ease); }
-.dv .held p{ font-size:17px; color:var(--ink-2); margin:6px 0 20px; }
+.dv .held p{ font-size:calc(17px * var(--ts, 1)); color:var(--ink-2); margin:6px 0 20px; }
 .dv .held .cant{ display:flex; justify-content:center; margin-top: 8px; }
 .dv .two-quiet{ display:grid; grid-template-columns: 1fr 1fr; gap: var(--gap); max-width: 340px; margin: 0 auto; }
 .dv .two-quiet .btn-quiet{ padding: 0 10px 0 calc(10px + .14em); letter-spacing: .14em; }
@@ -72,11 +72,11 @@
 .dv .finishing .fin{ display:block; }
 .dv .finishing .breath-hide{ opacity:0; transition: opacity 1s var(--ease); }
 .dv .fin[data-f="course"] .fin-course, .dv .fin[data-f="ask"] .fin-ask, .dv .fin[data-f="yes"] .fin-yes, .dv .fin[data-f="no"] .fin-no{ display:block; }
-.dv .fin p{ font-size:17px; color:var(--ink-2); margin:6px 0 20px; }
+.dv .fin p{ font-size:calc(17px * var(--ts, 1)); color:var(--ink-2); margin:6px 0 20px; }
 .dv .fin .btn-row{ max-width: 340px; margin: 0 auto; }
 .dv #back{ flex-direction: column; gap: 3px; padding-top: 10px; padding-bottom: 10px; line-height: 1.1; }
-.dv #back .tail{ font-family: var(--life); font-style: italic; font-weight: 500; font-size: 17px; letter-spacing: .01em; text-transform: none; }
-.dv .breather p{ font-size:17px; color:var(--ink-2); margin:6px 0 20px; }
+.dv #back .tail{ font-family: var(--life); font-style: italic; font-weight: 500; font-size: calc(17px * var(--ts, 1)); letter-spacing: .01em; text-transform: none; }
+.dv .breather p{ font-size:calc(17px * var(--ts, 1)); color:var(--ink-2); margin:6px 0 20px; }
 .dv .breather .cant{ display:flex; justify-content:center; margin-top: 8px; }
 .dv .breather .cant.two{ align-items:center; gap: 2px; }
 .dv .breather .cant .dot{ color: var(--ink-3); }

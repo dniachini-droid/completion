@@ -193,9 +193,9 @@
   .went { margin: 8px 0 12px; }
   .count { color: var(--gold-hi); margin-bottom: 10px; }
   .count .again { min-height: 0; padding: 2px 0; }
-  .count .again span { font-size: 15px; }
+  .count .again span { font-size: calc(15px * var(--ts, 1)); }
   .label-line { margin-top: 14px; }
-  .learned { margin-top: 8px; font-size: 16.5px; line-height: 1.45; }
+  .learned { margin-top: 8px; font-size: calc(16.5px * var(--ts, 1)); line-height: 1.45; }
   .glimpse { margin-top: 8px; font-style: italic; color: #fff; line-height: 1.45; }
   .offer { margin-top: 22px; border-top: 1px solid var(--edge-2); padding-top: 14px; }
   .offer .say { margin-bottom: 12px; }

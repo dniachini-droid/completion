@@ -10,6 +10,8 @@ export async function kit(url, w = '390', h = '844') {
   async function open(saveName, time) {
     const page = await b.newPage({ viewport: { width: +w, height: +h }, timezoneId: 'Europe/London', hasTouch: true });
     page.on('pageerror', e => errors.push(e.message));
+    /* TS=1.3: the phone's text size set larger (Dynamic Type, deep review A#33) */
+    if (process.env.TS) await page.addInitScript(ts => { const set = () => document.documentElement?.style.setProperty('--ts', ts); set(); document.addEventListener('readystatechange', set); }, process.env.TS);
     if (saveName) {
       const save = readFileSync(new URL(`./saves/${saveName}.json`, import.meta.url), 'utf8');
       await page.addInitScript(s => { try { if (!sessionStorage.getItem('seeded')) { localStorage.setItem('save.v1', s); sessionStorage.setItem('seeded', '1'); } } catch { /* */ } }, save);

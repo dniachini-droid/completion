@@ -4,7 +4,7 @@
      year ahead), past days not choosable, today marked, each day a 44-point target. It stays open until a day is chosen:
      the phone's date picker closed itself on the iPhone. Used everywhere a day is chosen: the Satchel's "Put on a day",
      the job menu, the Week's "Another day…", the job editor's "By a date". */
-  import { t, dayName } from '../content/copy/en';
+  import { t, dayName, type Weekday, type Month } from '../content/copy/en';
   import { addDays } from '../core/week';
   import { calendarWeek } from '../core/time';
 
@@ -22,7 +22,7 @@
     for (let d = start; d <= last || out.length % 7; d = addDays(d, 1)) out.push(d);
     return out;
   });
-  const monthOf = (d: string) => t(`month.${+d.slice(5, 7)}` as never);
+  const monthOf = (d: string) => t(`month.${+d.slice(5, 7) as Month}`);
   const title = $derived(`${monthOf(month)} ${month.slice(0, 4)}`);
 </script>
 
@@ -33,7 +33,7 @@
     <button class="nav" aria-label={t('pick.next')} disabled={offset >= AHEAD} onclick={() => (offset = Math.min(AHEAD, offset + 1))}><span aria-hidden="true">›</span></button>
   </div>
   <div class="grid">
-    {#each [1, 2, 3, 4, 5, 6, 0] as w (w)}<span class="wd" aria-hidden="true">{t(`days.short.${w}` as never)}</span>{/each}
+    {#each ([1, 2, 3, 4, 5, 6, 0] as Weekday[]) as w (w)}<span class="wd" aria-hidden="true">{t(`days.short.${w}`)}</span>{/each}
     {#each days as x (x)}
       {#if x.slice(0, 7) !== month.slice(0, 7)}<span></span>
       {:else if x < from}<span class="past" aria-hidden="true">{+x.slice(8)}</span>
@@ -49,15 +49,15 @@
 <style>
   .cal { margin-top: 6px; }
   .head { display: flex; align-items: center; justify-content: space-between; }
-  .title { font-family: var(--carve); font-size: 15px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); }
-  .nav { min-width: 44px; min-height: 44px; display: grid; place-items: center; font-size: 26px; line-height: 1; color: var(--violet-hi); background: none; border: 0; cursor: pointer; }
+  .title { font-family: var(--carve); font-size: calc(15px * var(--ts, 1)); letter-spacing: .12em; text-transform: uppercase; color: var(--ink); }
+  .nav { min-width: 44px; min-height: 44px; display: grid; place-items: center; font-size: calc(26px * var(--ts, 1)); line-height: 1; color: var(--violet-hi); background: none; border: 0; cursor: pointer; }
   .nav:disabled { color: var(--ink-3); opacity: .35; cursor: default; }
   /* a thin gap, so each day stays a 44-point target at 360 wide (D-130) */
   .grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px; margin-top: 2px; }
-  .wd { text-align: center; font-size: 14px; letter-spacing: .08em; color: var(--ink-3); }
-  .past { min-height: 44px; display: grid; place-items: center; font-size: 17px; color: var(--ink-3); opacity: .45; }
+  .wd { text-align: center; font-size: calc(14px * var(--ts, 1)); letter-spacing: .08em; color: var(--ink-3); }
+  .past { min-height: 44px; display: grid; place-items: center; font-size: calc(17px * var(--ts, 1)); color: var(--ink-3); opacity: .45; }
   button:not(.nav) { min-height: 44px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0;
-    font: inherit; font-size: 17px; color: var(--ink); background: transparent; border: 1px solid var(--edge-2); cursor: pointer; }
+    font: inherit; font-size: calc(17px * var(--ts, 1)); color: var(--ink); background: transparent; border: 1px solid var(--edge-2); cursor: pointer; }
   button.today { border-color: var(--gold); color: #fff; }
-  small { font-size: 13px; line-height: 1; color: var(--gold); }
+  small { font-size: calc(14px * var(--ts, 1)); line-height: 1; color: var(--gold); }
 </style>

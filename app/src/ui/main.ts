@@ -10,8 +10,11 @@ import { watchTaps } from './taps';
 import { startRest } from './rest';
 
 /* the light blooms where you tap (direction D; motion only) */
-if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+/* (Reduce Motion read at each tap, so turning it on while the app runs is followed at once, deep review A#49) */
+const still = matchMedia('(prefers-reduced-motion: reduce)');
+{
   document.addEventListener('pointerdown', e => {
+    if (still.matches) return;
     const el = (e.target as HTMLElement).closest<HTMLElement>('.btn, .btn-quiet, .seg > button');
     if (!el) return;
     const r = el.getBoundingClientRect(), b = document.createElement('span');

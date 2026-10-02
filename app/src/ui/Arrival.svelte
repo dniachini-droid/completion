@@ -136,7 +136,7 @@
 {/if}
 
 <style>
-  .to-satchel { margin: 2px 0 0; font-size: 14px; font-style: italic; text-align: center; }
+  .to-satchel { margin: 2px 0 0; font-size: calc(14px * var(--ts, 1)); font-style: italic; text-align: center; }
   .arr { display: contents; }
   .later { text-align: center; margin: 2px 0 10px; font-style: italic; }
   .facelight { position: absolute; inset: 0; z-index: 1; pointer-events: none; mix-blend-mode: screen;
@@ -151,8 +151,9 @@
   /* the screen itself never scrolls: the words do, in the lower half (D-085) */
   .ui.fixed { overflow: hidden; }
   .head { flex: none; }
-  .gap { flex: 1 1 auto; min-height: 12vh; }
-  .text { flex: 0 1 auto; min-height: 0; display: flex; flex-direction: column; animation: rise 1.4s .6s var(--ease) both; }
+  /* the painting's gap gives way before the words do: at least three lines of them show on a small phone with large text */
+  .gap { flex: 1 1 auto; min-height: min(12vh, 24px); }
+  .text { flex: 0 1 auto; min-height: min(4.8em, 20vh); display: flex; flex-direction: column; animation: rise 1.4s .6s var(--ease) both; }
   .text :global(.soft) { display: block; margin-top: 6px; }
   .text :global(.look) { color: var(--gold-hi); margin-top: 12px; }
   .mid { flex: none; display: flex; flex-direction: column; align-items: center; padding-top: 6px; padding-bottom: 14px; }

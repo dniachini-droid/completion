@@ -71,6 +71,9 @@ class Game {
     this.native();
   }
 
+  /** Counts each time the log was replaced (Restore, a wipe, the rehearsal), so the screens forget what they kept by a
+      fact's number (C#19). */
+  logs = $state(0);
   /** Counts each return to the app that began a new game day, so the screens can show what waits (App.svelte). */
   woke = $state(0);
   #waking: Promise<void> | null = null;
@@ -85,7 +88,6 @@ class Game {
     this.append(settle(this.#log, content, this.now));
     const today = this.view.day;
     if (!this.#log.some(f => f.type === 'opened' && f.day === today)) { this.do({ do: 'open' }); this.woke++; }
-    else this.tick();
     this.native();
     void this.reminders();
     void this.weekly();
@@ -435,6 +437,7 @@ class Game {
     if (!this.canRestore(s)) return false;
     s = $state.snapshot(s) as Save;
     this.blocked = null;
+    this.logs++;
     const saves = platform.saves, now = saves.get(this.saveKey);
     if (now) saves.keep(`${this.saveKey}.before-restore.${platform.now().getTime()}`, now);
     saves.write(this.saveKey, s);
@@ -455,6 +458,7 @@ class Game {
     d.setHours(8, 0, 0, 0);    /* a rehearsal starts at 08:00 today, so the whole day is ahead of it */
     this.proto = { rehearsal: on, anchorReal: real, anchorFake: d.getTime() };
     platform.store.set(PROTO_KEY, JSON.stringify(this.proto));
+    this.logs++;
     this.#setLog(on ? [] : this.load());
     if (on) platform.saves.remove('save.rehearsal');
     this.now = this.clock();
@@ -471,8 +475,10 @@ class Game {
     platform.saves.remove(this.saveKey);
     if (this.proto.rehearsal) { this.setRehearsal(true); return; }
     this.#setLog([]);
+    this.logs++;
     this.do({ do: 'open' });
     this.panel();
+    void this.alerts();   /* a wiped delve's alerts go too (C#19) */
   }
 }
 

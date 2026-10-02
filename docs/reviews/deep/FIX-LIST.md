@@ -32,60 +32,60 @@
   - (W F3.)
 
 ## Stage 2: the rules
-- [ ] **B2 Later delves join the day's session (Dan's choice).** Every delve on a recurring job that day adds to its session (3 + 60 = 63), counted for the Key; `paidBefore` still stops double pay. (R#3.)
-- [ ] **B3 Take back the tick (Dan's choice).** "Not done after all" on a ticked job takes its ticked minutes off the road; a re-tick pays only the new amount; delved minutes are never taken back. Nothing already reached is taken away (rule 9): if the taken-back minutes had already carried him past a place or chamber, it stays reached and the flame stays put. Those minutes are owed instead: the next real minutes fill them before the flame moves on, and the screen says so once, plainly ("The 3 h were taken back: the next 2 h 30 min make them up."). (R#4, A#28.)
-- [ ] **B4 Every N days:** a Key whenever `!keyedAlready && sessionsIn(min 5) >= 1`. (R#2.)
-- [ ] **B5 The side chamber passed in a big move:** check each stretch's chamber before each arrival. (R#5.)
-- [ ] **R#6 Flying west:** the game day never goes back behind the latest opened day.
-- [ ] **R suspicions (4):** look at each; fix the ones that are real (a one-off made recurring keeps its Not yet minutes in its count; a stopped rhythm's Key; `paidBefore` for a former recurring job; `pauseAway`'s stamp).
-- [ ] **Part 2 #1 Welcome-back day:** missed recurring sessions don't pile onto it; its line is just what was planned for that day (W F4, Q#2).
-- [ ] **Part 2 #2 Ticks:** add 5 and 10 minutes to the tick sheet; no cap (D-134 stands).
-- [ ] **Part 2 #3 The finish line:** a job added today always joins the line, never "If there's time" (W F10); "Not today" shortens the line, never refills it (W F9).
-- [ ] **Part 2 #4 Every 2 weeks:** counted from the last time done (planned like every 14 days; its Key per 14 days as B4) (W F6). Existing fortnightly jobs carry over from their last session.
-- [ ] **Part 2 #5 Passed appointments:** every appointment that went by while away is asked about, in one list, on the welcome back ("went by · still needed?"), alongside the dated job (W F5).
-- [ ] **W F12** A recurring job kept up past the week's 5 Keys says so: "This week's five Keys are already earned."
-- [ ] **W F11** The avoided job still holds the day's gold after 6.5 hours: **kept as designed** (D-143 G names it). No change, and no work needed.
+- [x] **B2 Later delves join the day's session (Dan's choice).** Every delve on a recurring job that day adds to its session (3 + 60 = 63), counted for the Key; `paidBefore` still stops double pay. (R#3.)
+- [x] **B3 Take back the tick (Dan's choice).** "Not done after all" on a ticked job takes its ticked minutes off the road; a re-tick pays only the new amount; delved minutes are never taken back. Nothing already reached is taken away (rule 9): if the taken-back minutes had already carried him past a place or chamber, it stays reached and the flame stays put. Those minutes are owed instead: the next real minutes fill them before the flame moves on, and the screen says so once, plainly ("The 3 h were taken back: the next 2 h 30 min make them up."). (R#4, A#28.)
+- [x] **B4 Every N days:** a Key whenever `!keyedAlready && sessionsIn(min 5) >= 1`. (R#2.)
+- [x] **B5 The side chamber passed in a big move:** check each stretch's chamber before each arrival. (R#5.)
+- [x] **R#6 Flying west:** the game day never goes back behind the latest opened day.
+- [x] **R suspicions (4):** look at each; fix the ones that are real (a one-off made recurring keeps its Not yet minutes in its count; a stopped rhythm's Key; `paidBefore` for a former recurring job; `pauseAway`'s stamp).
+- [x] **Part 2 #1 Welcome-back day:** missed recurring sessions don't pile onto it; its line is just what was planned for that day (W F4, Q#2).
+- [x] **Part 2 #2 Ticks:** add 5 and 10 minutes to the tick sheet; no cap (D-134 stands).
+- [x] **Part 2 #3 The finish line:** a job added today always joins the line, never "If there's time" (W F10); "Not today" shortens the line, never refills it (W F9).
+- [x] **Part 2 #4 Every 2 weeks:** counted from the last time done (planned like every 14 days; its Key per 14 days as B4) (W F6). Existing fortnightly jobs carry over from their last session.
+- [x] **Part 2 #5 Passed appointments:** every appointment that went by while away is asked about, in one list, on the welcome back ("went by · still needed?"), alongside the dated job (W F5).
+- [x] **W F12** A recurring job kept up past the week's 5 Keys says so: "This week's five Keys are already earned."
+- [x] **W F11** The avoided job still holds the day's gold after 6.5 hours: **kept as designed** (D-143 G names it). No change, and no work needed.
 
 ## Stage 3: screens and getting around
-- [ ] **B1** "Use it here / Keep it" hidden once chosen (`Return.svelte:29` `chosen !== 'used'`); the choice kept across restarts. (W F1, H#1.)
-- [ ] **B6** The Map says "Behind you" / "Ahead" as Today does (`Map.svelte:77`). (A#4.)
-- [ ] **B7** The morning screen never goes on the back trail. (C#2.)
-- [ ] **B8** Leaving the word clears it from the trail; the place's name on Today reads the place, never the word. (H#3, C#8.)
-- [ ] **B9** A tick's count plays once (`moment.ends[seq]` as Delve does). (C#9, H#2.)
-- [ ] **B10** The set-up: no overlap at any size (with a note, a carry line, a 3-line or 120-character name); the note shown in full (a few lines). (H#4, H#5.)
-- [ ] **B13** The road line while a word waits counts from the last place reached. (W F7.)
-- [ ] **B17** The Week's + on a name already had says what happened, in the Satchel's words. (H#7.)
-- [ ] **B19** A later week: "no plan for that week yet"; its arrow names it rightly; Next ⇄ This leaves no dead back step. (A#2, A#3, C#4.)
-- [ ] **C#3** A new day reached on waking clears the trail, an open menu and the Undo (and the error screen's reset too).
-- [ ] **C#5** No command while the return from another app is being taken (the `#waking` guard in `do()`).
-- [ ] **C#10** The set-up and "I can't start" go to the delve only if the run started.
-- [ ] **C#13** The "is in a delve" refusal only for a delve still under way.
-- [ ] **C#14** Tonight's message timer cleared.
-- [ ] **H#6** With the keyboard up, the "Where did you stop?" box scrolls above it; the end's ring and road labels never collide.
-- [ ] **H#8** "Use one here" on Today uses a Key here (Use it here / Keep it) when something is locked where Dan is. Otherwise the link reads "On the Map". Merge Today's two Key links into the one-line Key block (D simplify 2).
-- [ ] **H#9** Delete on a recurring job from Today's menu asks once ("Delete Gym and its plan?" · Delete · Keep); Undo stays.
-- [ ] **H#10** During an errand run, its errands are marked on Today ("in the errand run"), their greyed menus say why, and no menu covers "Strike them off".
-- [ ] **H#11** One name limit (120) in every box, never a silent cut.
-- [ ] **H#12** Today's fixed header has a backdrop; rows never show through the passage.
-- [ ] **H#13 / A#50** A place read again says "Read again", not "Arrived".
-- [ ] **H#14** The tap guard never swallows a second "Add a job".
-- [ ] **H#15** The errand run's set-up: "… and N more", never an ellipsis.
-- [ ] **W F8** After days away: the welcome back, then Today (the morning folded into the welcome; the word as Today's line, U5). On Mondays: one screen before Today, not two.
-- [ ] **W F13** The welcome never says "Ahead of you: X" while Dan stands at X.
-- [ ] **W F14** The job editor: no doubled "on the 20th"; no "counts from next week" on a new job; any 5-minute length can be set again (Course's 50).
-- [ ] **W F15** A passed "by" date drops from the line once its question is answered.
-- [ ] **W F16** Check on a WebKit flow that every painting loads; no CSP change unless something fails.
+- [x] **B1** "Use it here / Keep it" hidden once chosen (`Return.svelte:29` `chosen !== 'used'`); the choice kept across restarts. (W F1, H#1.)
+- [x] **B6** The Map says "Behind you" / "Ahead" as Today does (`Map.svelte:77`). (A#4.)
+- [x] **B7** The morning screen never goes on the back trail. (C#2.)
+- [x] **B8** Leaving the word clears it from the trail; the place's name on Today reads the place, never the word. (H#3, C#8.)
+- [x] **B9** A tick's count plays once (`moment.ends[seq]` as Delve does). (C#9, H#2.)
+- [x] **B10** The set-up: no overlap at any size (with a note, a carry line, a 3-line or 120-character name); the note shown in full (a few lines). (H#4, H#5.)
+- [x] **B13** The road line while a word waits counts from the last place reached. (W F7.)
+- [x] **B17** The Week's + on a name already had says what happened, in the Satchel's words. (H#7.)
+- [x] **B19** A later week: "no plan for that week yet"; its arrow names it rightly; Next ⇄ This leaves no dead back step. (A#2, A#3, C#4.)
+- [x] **C#3** A new day reached on waking clears the trail, an open menu and the Undo (and the error screen's reset too).
+- [x] **C#5** No command while the return from another app is being taken (the `#waking` guard in `do()`).
+- [x] **C#10** The set-up and "I can't start" go to the delve only if the run started.
+- [x] **C#13** The "is in a delve" refusal only for a delve still under way.
+- [x] **C#14** Tonight's message timer cleared.
+- [x] **H#6** With the keyboard up, the "Where did you stop?" box scrolls above it; the end's ring and road labels never collide.
+- [x] **H#8** "Use one here" on Today uses a Key here (Use it here / Keep it) when something is locked where Dan is. Otherwise the link reads "On the Map". Merge Today's two Key links into the one-line Key block (D simplify 2).
+- [x] **H#9** Delete on a recurring job from Today's menu asks once ("Delete Gym and its plan?" · Delete · Keep); Undo stays.
+- [x] **H#10** During an errand run, its errands are marked on Today ("in the errand run"), their greyed menus say why, and no menu covers "Strike them off".
+- [x] **H#11** One name limit (120) in every box, never a silent cut.
+- [x] **H#12** Today's fixed header has a backdrop; rows never show through the passage.
+- [x] **H#13 / A#50** A place read again says "Read again", not "Arrived".
+- [x] **H#14** The tap guard never swallows a second "Add a job".
+- [x] **H#15** The errand run's set-up: "… and N more", never an ellipsis.
+- [x] **W F8** After days away: the welcome back, then Today (the morning folded into the welcome; the word as Today's line, U5). On Mondays: one screen before Today, not two.
+- [x] **W F13** The welcome never says "Ahead of you: X" while Dan stands at X.
+- [x] **W F14** The job editor: no doubled "on the 20th"; no "counts from next week" on a new job; any 5-minute length can be set again (Course's 50).
+- [x] **W F15** A passed "by" date drops from the line once its question is answered.
+- [x] **W F16** Check on a WebKit flow that every painting loads; no CSP change unless something fails.
 
 ## Stage 4: the save and the phone
-- [ ] **B12** "Again in 10 min" handled in Swift (it works with the app closed); a snooze is cancelled when its job is done or deleted (`AGAIN_IDS`). (P#1, P#7.)
-- [ ] **B14** Restore tries the copy on the rules before writing it, and refuses it plainly if it can't run. The start-up error screen gets "Save a copy" and "Undo the restore"; `readKept()` is guarded. (P#4, P#17.)
-- [ ] **B15** A save this build can't read (newer, or broken) is never written over. Say "This save is from a newer version of the app: update it" and keep it safe. (P#5.)
-- [ ] **B16** The delve's alerts are laid out one batch at a time, in order, like the reminders. (C#7, P#7.)
-- [ ] **P#2** Reminders laid out again on a time-zone change (the zone goes into the cache key).
-- [ ] **P#3** The leftover 15-second timer is cancelled on the next trip.
-- [ ] **P#6** The calendar is compared as a set, sorted by start, before writing. A failed or revoked read is reported as failed (Swift too), never as "empty". (C#6.)
-- [ ] **P#8** A Siri job is written to the save before it leaves the inbox; the Away leave-time likewise.
-- [ ] **P#9–P#24, every minor item**, with each one's suggested fix:
+- [x] **B12** "Again in 10 min" handled in Swift (it works with the app closed); a snooze is cancelled when its job is done or deleted (`AGAIN_IDS`). (P#1, P#7.)
+- [x] **B14** Restore tries the copy on the rules before writing it, and refuses it plainly if it can't run. The start-up error screen gets "Save a copy" and "Undo the restore"; `readKept()` is guarded. (P#4, P#17.)
+- [x] **B15** A save this build can't read (newer, or broken) is never written over. Say "This save is from a newer version of the app: update it" and keep it safe. (P#5.)
+- [x] **B16** The delve's alerts are laid out one batch at a time, in order, like the reminders. (C#7, P#7.)
+- [x] **P#2** Reminders laid out again on a time-zone change (the zone goes into the cache key).
+- [x] **P#3** The leftover 15-second timer is cancelled on the next trip.
+- [x] **P#6** The calendar is compared as a set, sorted by start, before writing. A failed or revoked read is reported as failed (Swift too), never as "empty". (C#6.)
+- [x] **P#8** A Siri job is written to the save before it leaves the inbox; the Away leave-time likewise.
+- [x] **P#9–P#24, every minor item**, with each one's suggested fix:
   - the reminder cache is set only after success;
   - a write that never answers times out;
   - the save check compares the whole log;
@@ -102,9 +102,9 @@
   - P#10 (a force-quit within 15 s) is left as designed.
 
 ## Stage 5: words and accessibility
-- [ ] **B11** The editor's line follows the job: recurring jobs start at their own minutes; one-offs at 30. (A#1.)
-- [ ] **B18** "On top of the {min} already counted". (A#5.)
-- [ ] **Every other item in WORDS-A11Y (A#6–A#50)**, with its suggested replacement. Among them:
+- [x] **B11** The editor's line follows the job: recurring jobs start at their own minutes; one-offs at 30. (A#1.)
+- [x] **B18** "On top of the {min} already counted". (A#5.)
+- [x] **Every other item in WORDS-A11Y (A#6–A#50)**, with its suggested replacement. Among them:
   - one way to write a length;
   - "Once a week", never "1 a week" (C#16);
   - 24-hour times everywhere;
@@ -112,7 +112,7 @@
   - no reminder that calls Dan back to the app;
   - the late-night line without what he missed (rule 9);
   - one name for the trial screen, with no decision numbers on screen.
-- [ ] **Accessibility (A#33–A#49):**
+- [x] **Accessibility (A#33–A#49):**
   - honour the phone's text size (Dynamic Type), with layouts checked at the larger sizes and at 360 wide;
   - menus and sheets take VoiceOver focus and return it;
   - the ring reads its minutes once;
@@ -123,9 +123,9 @@
   - targets at least 44 pt;
   - no text under 14 px;
   - Reduce Motion followed live.
-- [ ] **C#11** "about 60 min" only from 60; **C#12** "Back to …" labels.
-- [ ] **C#15** Type-check the `.svelte` files (`svelte-check` in `npm run typecheck`); remove the `as never` / `as CopyKey` casts that hide copy-key mistakes.
-- [ ] **Cleanup:**
+- [x] **C#11** "about 60 min" only from 60; **C#12** "Back to …" labels.
+- [x] **C#15** Type-check the `.svelte` files (`svelte-check` in `npm run typecheck`); remove the `as never` / `as CopyKey` casts that hide copy-key mistakes.
+- [x] **Cleanup:**
   - C#17–C#22 (dead branches, unused or one-way facts, small timers);
   - the ~34 unused copy keys (A#19, C#20);
   - the stale review tools that look for removed labels (`tests/review/tour.mjs`, `lib.mjs`).

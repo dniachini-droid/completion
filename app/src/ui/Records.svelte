@@ -20,7 +20,8 @@
     const n = recordNumber(content.story, r.id), w = r.where.charAt(0).toUpperCase() + r.where.slice(1);
     return n === null ? w : `${w}, ${t(r.kind === 'paper' ? 'records.page' : 'records.part', { n })}`;
   };
-  function read(r: string) { game.do({ do: 'read', record: r }); go('records', r); }
+  /* (nothing is written: a record read was never read back by anything, C#21) */
+  function read(r: string) { go('records', r); }
   const isMark = (m: string) => s.marks.some(x => x.id === m);
   /* a record in the Cut says once that its marks can be opened */
   const tappable = $derived(open?.kind === 'cut' && (open.cut ?? []).some(l => render(l, held, s).some(tk => tk.t === 'glyph' && isMark(tk.mark))));
@@ -107,7 +108,7 @@
   h1 { margin-top: 8px; }
   h1 + .soft { margin-top: 6px; }
   button.row { width: 100%; text-align: left; }
-  .paper { font-size: 18px; line-height: 1.5; margin-bottom: 14px; }
+  .paper { font-size: calc(18px * var(--ts, 1)); line-height: 1.5; margin-bottom: 14px; }
   .band { position: relative; margin-top: 10px; padding: 20px 0 6px; }
   .band::before { content: ""; position: absolute; inset: 0; pointer-events: none;
     background: radial-gradient(60% 90% at 50% 45%, rgba(206, 202, 255, .16), rgba(206, 202, 255, 0) 70%),
@@ -117,7 +118,7 @@
     box-shadow: inset 0 9px 12px -6px rgba(3, 2, 10, .8), inset 0 -1px 0 rgba(222, 218, 255, .32), 0 -1px 0 rgba(222, 218, 255, .14),
       0 1px 0 rgba(222, 218, 255, .22), 0 12px 22px -10px rgba(3, 2, 10, .7); }
   .band .col { position: relative; }
-  .cutline { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px 6px; margin: 0 0 14px; font-family: var(--life); font-size: 19px; line-height: 1.5; color: #fff; }
+  .cutline { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px 6px; margin: 0 0 14px; font-family: var(--life); font-size: calc(19px * var(--ts, 1)); line-height: 1.5; color: #fff; }
   .g { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; height: 44px; }
   button.g { color: inherit; transition: filter .3s var(--ease); }
   button.g:active, button.g:focus-visible { filter: drop-shadow(0 0 8px rgba(var(--violet-rgb), 1)); }
@@ -125,9 +126,9 @@
   .pic { color: var(--ink-2); font-style: italic; }
   .p { margin-left: -6px; color: var(--ink-2); }
   .lv { margin: 0; width: auto; grid-template-columns: 1fr 1fr; }
-  .lv button { padding: 6px 12px; font-size: 14px; min-width: 104px; }
+  .lv button { padding: 6px 12px; font-size: calc(14px * var(--ts, 1)); min-width: 104px; }
   .sheet { margin-top: 22px; }
-  .her { font-family: var(--life); font-style: italic; font-size: 17.5px; line-height: 1.5; color: var(--ink-2); margin-top: 8px; }
+  .her { font-family: var(--life); font-style: italic; font-size: calc(17.5px * var(--ts, 1)); line-height: 1.5; color: var(--ink-2); margin-top: 8px; }
   .bottom { display: flex; justify-content: center; }
   button.home { color: var(--ink-2); }
 </style>

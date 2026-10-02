@@ -1,6 +1,8 @@
 import ActivityKit
 import Capacitor
 import Foundation
+import UIKit
+import WebKit
 
 /// The app's window, with its own small plugin registered (Capacitor finds the npm plugins by itself).
 class MainViewController: CAPBridgeViewController {
@@ -13,7 +15,23 @@ class MainViewController: CAPBridgeViewController {
         bridge?.registerPluginInstance(CalendarPlugin())   // the phone's calendar, read-only (CalendarPlugin.swift, D-115)
         // the bridge made its router the notifications' delegate: "Again in 10 min" stays the app's own (AgainNotifications.swift)
         if let router = bridge?.notificationRouter { AgainNotifications.shared.install(router: router) }
+        /* the phone's text size (Dynamic Type), honoured: every size in the app is multiplied by --ts (deep review A#33);
+           set before the page draws, and again whenever Dan changes it in Settings */
+        let script = WKUserScript(source: Self.textScaleJS(), injectionTime: .atDocumentStart, forMainFrameOnly: true)
+        webView?.configuration.userContentController.addUserScript(script)
+        NotificationCenter.default.addObserver(self, selector: #selector(textSizeChanged), name: UIContentSizeCategory.didChangeNotification, object: nil)
     }
+
+    /// The text size chosen in iOS Settings, as a scale of the body text's own 17 points: kept between a little smaller
+    /// and half again larger, where every screen still fits.
+    static func textScale() -> Double {
+        let s = Double(UIFontMetrics(forTextStyle: .body).scaledValue(for: 17) / 17)
+        return min(1.5, max(0.9, s))
+    }
+    static func textScaleJS() -> String {
+        "document.documentElement.style.setProperty('--ts', '\(String(format: "%.3f", textScale()))');"
+    }
+    @objc private func textSizeChanged() { webView?.evaluateJavaScript(Self.textScaleJS(), completionHandler: nil) }
 }
 
 /// Shows, updates and ends the delve's panel (D-095); the web side is platform/index.ts → DelvePanel.

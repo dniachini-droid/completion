@@ -98,7 +98,7 @@ body.s-evening { --warmth: 1;   --glow: var(--gold); --glow-hi: var(--gold-hi); 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; background: var(--night); }
 body {
-  color: var(--ink); font-family: var(--life); font-size: 17px; line-height: 1.45;
+  color: var(--ink); font-family: var(--life); font-size: calc(17px * var(--ts, 1)); line-height: 1.45;
   -webkit-font-smoothing: antialiased; display: flex; justify-content: center; overflow-x: hidden;
 }
 a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; }
@@ -191,17 +191,17 @@ body.s-evening  { --a1: .5;  --aw: 120%; --ah: 44%; --a2: .38; --h2: 22%; }
 .topbar > :first-child { justify-self: start; margin-left: -10px; }
 .topbar > :last-child { justify-self: end; margin-right: -10px; }
 .topbar .title { visibility: hidden; } /* the rule: no titles in the top bar (the h1 below names the place) */
-.topbar .day { font-family: var(--carve); font-size: 15px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-2);
+.topbar .day { font-family: var(--carve); font-size: calc(15px * var(--ts, 1)); font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-2);
   padding: 0 10px; min-height: 44px; display: inline-flex; align-items: center; }
 .home { height: 44px; min-width: 44px; padding: 0 10px; display: inline-flex; align-items: center; gap: 8px;
-  font-family: var(--carve); font-size: 15px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); }
+  font-family: var(--carve); font-size: calc(15px * var(--ts, 1)); font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); }
 .home svg { width: 16px; height: 16px; fill: none; stroke: var(--edge); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; flex: none; }
 .home:hover, .home:focus-visible { color: var(--ink); }
 
 /* icon-link: a small line icon and a carved word. Icon box is fixed so a row of them aligns.
    Markup: <a class="icon-link" href="map.html"><svg viewBox="0 0 24 24">…</svg><span>Map</span></a> */
 .icon-link { height: 44px; min-width: 44px; padding: 0 10px; display: inline-flex; align-items: center; justify-content: center; gap: 9px;
-  font-family: var(--carve); font-size: 15px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2);
+  font-family: var(--carve); font-size: calc(15px * var(--ts, 1)); font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2);
   white-space: nowrap; transition: color .3s var(--ease); }
 .icon-link > span { padding-left: .16em; } /* optical: letter-spacing trails; balance it */
 .icon-link svg { width: 20px; height: 20px; flex: none; fill: none; stroke: var(--edge); stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round;
@@ -211,7 +211,7 @@ body.s-evening  { --a1: .5;  --aw: 120%; --ah: 44%; --a2: .38; --h2: 22%; }
 /* a row of icon-links: the first sits on the column's left edge, the last on its right edge,
    equal gaps between. Symmetric on the grid at any width. */
 .nav-row { display: flex; justify-content: space-between; align-items: center; }
-.nav-row .icon-link { padding: 0; gap: 7px; font-size: 15px; letter-spacing: .1em; }
+.nav-row .icon-link { padding: 0; gap: 7px; font-size: calc(15px * var(--ts, 1)); letter-spacing: .1em; }
 .nav-row .icon-link > span { padding-left: 0; margin-right: -.1em; } /* trailing letter-space hangs outside so the last glyph meets the edge */
 .nav-row .icon-link svg { width: 19px; height: 19px; }
 
@@ -222,21 +222,21 @@ body.s-evening  { --a1: .5;  --aw: 120%; --ah: 44%; --a2: .38; --h2: 22%; }
   letter-spacing: .14em; line-height: 1.15; color: var(--stone-lit);
   text-shadow: 0 -1px 0 rgba(0, 0, 0, .9), 0 1px 0 rgba(225, 232, 255, .28), 0 0 22px rgba(var(--cold-rgb), .3);
 }
-.carve.xl { font-size: 30px; letter-spacing: .12em; }
-.carve.lg { font-size: 25px; letter-spacing: .12em; }
-.carve.md { font-size: 18px; }
-.carve.sm { font-size: 14px; letter-spacing: .2em; color: #b8badf; }
+.carve.xl { font-size: calc(30px * var(--ts, 1)); letter-spacing: .12em; }
+.carve.lg { font-size: calc(25px * var(--ts, 1)); letter-spacing: .12em; }
+.carve.md { font-size: calc(18px * var(--ts, 1)); }
+.carve.sm { font-size: calc(14px * var(--ts, 1)); letter-spacing: .2em; color: #b8badf; }
 /* your own life: plain print, sentence case */
-.say { font-family: var(--life); font-weight: 400; font-size: 17px; color: var(--ink); }
-.say-lg { font-family: var(--life); font-weight: 500; font-size: 27px; line-height: 1.15; letter-spacing: -.005em; color: #fff;
+.say { font-family: var(--life); font-weight: 400; font-size: calc(17px * var(--ts, 1)); color: var(--ink); }
+.say-lg { font-family: var(--life); font-weight: 500; font-size: calc(27px * var(--ts, 1)); line-height: 1.15; letter-spacing: -.005em; color: #fff;
   text-shadow: 0 1px 18px rgba(4, 4, 12, .9); }
-.soft { font-family: var(--life); font-style: italic; font-size: 16.5px; color: var(--ink-2); }
+.soft { font-family: var(--life); font-style: italic; font-size: calc(16.5px * var(--ts, 1)); color: var(--ink-2); }
 .say, .say-lg, .soft, p { text-wrap: pretty; }
 .on-scene { text-shadow: 0 1px 14px rgba(4, 4, 12, .95), 0 0 2px rgba(4, 4, 12, .8); } /* words sitting straight on the painting */
 
 /* label-with-line (B): "NEXT ——". Markup: <div class="label-line">Next</div>. Add .short for a fixed short rule. */
 .label-line { display: flex; align-items: center; gap: 14px;
-  font-family: var(--carve); font-size: 14px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-3); }
+  font-family: var(--carve); font-size: calc(14px * var(--ts, 1)); font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-3); }
 .label-line::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--edge-2), rgba(var(--violet-rgb), 0)); }
 .label-line.short::after { flex: none; width: 48px; }
 .label-line.lit { color: var(--violet-hi); }
@@ -245,7 +245,7 @@ body.s-evening  { --a1: .5;  --aw: 120%; --ah: 44%; --a2: .38; --h2: 22%; }
 .label-line.centred { justify-content: center; }
 .label-line.centred::before { content: ""; flex: none; width: 48px; height: 1px; background: linear-gradient(270deg, var(--edge-2), rgba(var(--violet-rgb), 0)); }
 .label-line.centred::after { flex: none; width: 48px; }
-.label { font-family: var(--carve); font-size: 14px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-3); }
+.label { font-family: var(--carve); font-size: calc(14px * var(--ts, 1)); font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-3); }
 
 /* corner ticks (B), for any box: add .ticks. Colour via --tc. */
 .ticks { position: relative; }
@@ -279,7 +279,7 @@ body.s-evening  { --a1: .5;  --aw: 120%; --ah: 44%; --a2: .38; --h2: 22%; }
 .btn {
   position: relative; display: flex; align-items: center; justify-content: center; gap: 10px;
   width: 100%; min-height: var(--btn-h); padding: 0 18px 0 calc(18px + .22em); border-radius: 2px;
-  font-family: var(--carve); font-weight: 700; font-size: 16px; letter-spacing: .22em; text-transform: uppercase; white-space: nowrap;
+  font-family: var(--carve); font-weight: 700; font-size: calc(16px * var(--ts, 1)); letter-spacing: .22em; text-transform: uppercase; white-space: nowrap;
   color: var(--btn-ink);
   border: 1px solid rgba(236, 234, 255, .92);
   background:
@@ -334,7 +334,7 @@ body.s-evening  { --a1: .5;  --aw: 120%; --ah: 44%; --a2: .38; --h2: 22%; }
 .btn-quiet {
   position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
   min-height: var(--ctl-h); padding: 0 16px 0 calc(16px + .2em); border-radius: 2px;
-  font-family: var(--carve); font-weight: 600; font-size: 14px; letter-spacing: .2em; text-transform: uppercase; white-space: nowrap;
+  font-family: var(--carve); font-weight: 600; font-size: calc(14px * var(--ts, 1)); letter-spacing: .2em; text-transform: uppercase; white-space: nowrap;
   color: var(--ink); border: 1px solid var(--edge-2);
   background: linear-gradient(180deg, rgba(26, 24, 64, .55), rgba(10, 9, 28, .7));
   box-shadow: inset 0 0 18px rgba(var(--violet-rgb), .07), inset 0 1px 0 rgba(217, 214, 255, .08);
@@ -351,7 +351,7 @@ body.s-evening  { --a1: .5;  --aw: 120%; --ah: 44%; --a2: .38; --h2: 22%; }
 
 /* .text-link: the quietest action (e.g. "I can't start"). Plain print, a fine underline. */
 .text-link { min-height: 44px; padding: 0 8px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  font-family: var(--life); font-style: italic; font-size: 17px; color: var(--ink-2); }
+  font-family: var(--life); font-style: italic; font-size: calc(17px * var(--ts, 1)); color: var(--ink-2); }
 .text-link > span { border-bottom: 1px solid var(--edge-3); padding-bottom: 1px; }
 .text-link:hover, .text-link:focus-visible { color: var(--ink); }
 /* Delete never looks like every other link (D-131): its own quiet rose, no underline */
@@ -364,7 +364,7 @@ body.s-evening  { --a1: .5;  --aw: 120%; --ah: 44%; --a2: .38; --h2: 22%; }
 .seg { display: grid; grid-auto-columns: 1fr; grid-auto-flow: column; gap: 8px; }
 .seg > button, .seg > a {
   position: relative; min-height: 44px; display: flex; align-items: center; justify-content: center; padding: 0 6px 0 calc(6px + .16em);
-  font-family: var(--carve); font-weight: 600; font-size: 14px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3);
+  font-family: var(--carve); font-weight: 600; font-size: calc(14px * var(--ts, 1)); letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3);
   border: 1px solid var(--edge-4); border-radius: 2px; background: rgba(8, 7, 24, .28);
   transition: color .3s var(--ease), border-color .3s var(--ease), background .3s var(--ease), box-shadow .3s var(--ease);
 }
@@ -375,15 +375,15 @@ body.s-evening  { --a1: .5;  --aw: 120%; --ah: 44%; --a2: .38; --h2: 22%; }
   box-shadow: inset 0 0 16px rgba(var(--violet-rgb), .2), 0 0 18px rgba(var(--violet-rgb), .22);
   text-shadow: 0 0 10px rgba(var(--violet-rgb), .8);
 }
-.seg-note { margin-top: 6px; font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink-3); text-align: center; }
+.seg-note { margin-top: 6px; font-family: var(--life); font-style: italic; font-size: calc(16px * var(--ts, 1)); color: var(--ink-3); text-align: center; }
 
 /* rows: the day's other jobs, on hairlines, in the open (no panel) */
 .rows { border-bottom: 1px solid var(--edge-4); }
 .row { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; align-items: center; column-gap: 12px;
   min-height: 48px; border-top: 1px solid var(--edge-4); }
 .row .mk { width: 12px; height: 12px; justify-self: center; }
-.row .t { font-family: var(--life); font-size: 17px; color: var(--ink); line-height: 1.25; }
-.row .s { font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink-2); text-align: right; }
+.row .t { font-family: var(--life); font-size: calc(17px * var(--ts, 1)); color: var(--ink); line-height: 1.25; }
+.row .s { font-family: var(--life); font-style: italic; font-size: calc(16px * var(--ts, 1)); color: var(--ink-2); text-align: right; }
 .row.done .t { color: var(--ink-2); }
 .row.done .s { color: #ecc890; }
 /* the row marker: a small diamond. Hollow = waiting; lit gold = done (earned warmth). */

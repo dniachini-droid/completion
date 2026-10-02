@@ -17,8 +17,8 @@
   import { leaveWord, moment } from './moment.svelte';
   import { ofLine } from './panel';
   import { beatOf } from '../core/story';
-  import type { Job } from '../core/types';
-  import { t, minutesWords, minutesShort, inSentence, dayShort } from '../content/copy/en';
+  import type { FactOf, Job } from '../core/types';
+  import { t, minutesWords, minutesShort, inSentence, dayShort, type Weekday } from '../content/copy/en';
   import Scene from './Scene.svelte';
   import EndRoad from './EndRoad.svelte';
   import { flushSync } from 'svelte';
@@ -27,7 +27,7 @@
   let { go }: { go: Go } = $props();
   const v = $derived(game.view);
   const job = (id: string) => game.job(id)!;
-  const weekday = $derived(t(`day.${new Date(Date.UTC(+v.day.slice(0, 4), +v.day.slice(5, 7) - 1, +v.day.slice(8, 10))).getUTCDay()}` as never));
+  const weekday = $derived(t(`day.${new Date(Date.UTC(+v.day.slice(0, 4), +v.day.slice(5, 7) - 1, +v.day.slice(8, 10))).getUTCDay() as Weekday}`));
   /* the finish line's jobs (its first 3 hours, D-131), then the rest, "If there's time" */
   /* the jobs still to do first, then those done (on a list with no job put forward, the next one is its top row, D-135);
      a delve running or paused is on its own card, not the list */
@@ -69,7 +69,7 @@
   }
   /* a delve job worked on today, not yet said to be done: "Is it done?" answered "Not yet", or left unanswered. Its Done
      is here, so it never needs another delve to be marked (Dan, 2026-09-27, D-120) */
-  const delvedToday = $derived(new Set(game.facts.filter(f => f.type === 'delveStarted' && f.day === v.day).map(f => f.job)));
+  const delvedToday = $derived(new Set(game.facts.filter((f): f is FactOf<'delveStarted'> => f.type === 'delveStarted' && f.day === v.day).map(f => f.job)));
   const sayDone = (j: Job) => j.delve && j.doneBy === 'dan' && !v.done.has(j.id) && delvedToday.has(j.id);
   function carry() { game.do({ do: 'resume' }); go('delve'); }
   function finish() { game.do({ do: 'finishHere' }); go('delve'); }
@@ -237,10 +237,10 @@
       </span>
     </div>
     <!-- the place's name: a tap reads its entry again, with its painting, at any time of day (Dan, D-135) -->
-    {#if placeSeq !== null && v.here.id}<h1 class="carve lg rise"><button class="here" aria-label={t('map.readAgain', { place: v.here.name })} onclick={() => go('arrival', `again:${placeSeq}`)}>{v.here.name}</button></h1>
+    {#if placeSeq !== null && v.here.id}<h1 class="carve lg rise"><button class="here" aria-describedby="here-again" onclick={() => go('arrival', `again:${placeSeq}`)}>{v.here.name}</button></h1><span id="here-again" class="sr-only">{t('map.readHere')}</span>
     {:else}<h1 class="carve lg rise">{v.here.name}</h1>{/if}
     <section class="where rise d2" aria-label={roadSay || undefined}>
-      <EndRoad road={v.road} from={v.walked} to={v.walked} mode="still" notes={roadNotes} />
+      <EndRoad road={v.road} from={v.walked} to={v.walked} mode="still" notes={roadNotes} spoken={false} />
     </section>
     <!-- the Keys kept (Dan, D-142): always in view; a tap says what they are for. One line, with one Key link at most
          (deep review H#8, D simplify 2): with something locked where Dan is, "Use one here" asks once (Use it here · Keep
@@ -259,7 +259,9 @@
       <section class="ahead rise d2">
         <!-- a locked thing left behind is never called "ahead": it is behind him, and on the Map (S3, D-143) -->
         <div class="label-line">{v.aheadBehind ? t('today.behind') : v.aheadHere ? t('today.here') : t('today.ahead')}{#if v.aheadKey}<span class="needs-key"> · {t('today.aheadKey')}</span>{/if}</div>
-        <button class="ahead-text" class:open={aheadOpen} aria-expanded={aheadOpen} onclick={() => (aheadOpen = !aheadOpen)}><p class="say on-scene">{v.ahead}</p></button>
+        <!-- read as words, never as a button whose name is the whole passage (A#38): VoiceOver reads it all anyway; a tap
+             unfolds it for the eye -->
+        <div class="ahead-text" class:open={aheadOpen} role="presentation" onclick={() => (aheadOpen = !aheadOpen)}><p class="say on-scene">{v.ahead}</p></div>
         {#if v.aheadBehind && !v.keyUse}<p class="behind-map"><button class="text-link" onclick={() => go('map', v.aheadBehind!)}><span>{t('today.behindMap')}</span></button></p>{/if}
       </section>
     {/if}
@@ -416,24 +418,26 @@
 
 <style>
   h1 { margin-top: 2px; }
-  h1 .here { font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit; text-shadow: inherit; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; }
+  /* the heading's own words are its name; "Read it again" is said after it (A#47); a finger's height at least (A#40) */
+  h1 .here { font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit; text-shadow: inherit; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; min-height: 44px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
   .where { margin-top: 6px; }
   .where :global(.road) { margin: 0 auto 4px; }
-  .key-line { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0 6px; margin: 8px auto 4px; }
+  .key-line { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0 6px; margin: 16px auto 2px; }
   .keys { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 6px; background: none; border: 0; cursor: pointer;
-    font-family: var(--life); font-style: italic; font-size: 15px; color: #e9d9b4; }
+    font-family: var(--life); font-style: italic; font-size: calc(15px * var(--ts, 1)); color: #e9d9b4; }
   .keys svg { width: 22px; height: 11px; fill: none; stroke: #f2c170; stroke-width: 1.4; stroke-linecap: round; }
   .key-line .dot { color: #b9a77e; }
-  .key-line .key-use { min-height: 44px; font-size: 15px; color: #f2c170; }
+  .key-line .key-use { min-height: 44px; font-size: calc(15px * var(--ts, 1)); color: #f2c170; }
   .key-line .key-use span { color: #f2c170; }
   .key-ask { display: flex; justify-content: center; gap: 18px; margin: -2px 0 8px; }
   .key-ask .use span { color: #f2c170; }
-  .keys-say { margin: 0 0 8px; text-align: center; font-size: 14.5px; }
+  .keys-say { margin: 0 0 8px; text-align: center; font-size: calc(14.5px * var(--ts, 1)); }
   .needs-key { color: #f2c170; }
   .behind-map { margin: 0; }
-  .behind-map .text-link { min-height: 36px; padding: 0; }
+  .behind-map .text-link { min-height: 44px; padding: 0; }
   .ahead { margin-top: 12px; }
-  .ahead p { font-size: 17.5px; line-height: 1.38; margin-top: 6px; }
+  .ahead p { font-size: calc(17.5px * var(--ts, 1)); line-height: 1.38; margin-top: 6px; }
   .ahead-text { display: block; width: 100%; padding: 0; background: none; border: 0; text-align: left; cursor: pointer; color: inherit; }
   .ahead-text:not(.open) p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; line-clamp: 4; overflow: hidden; }
   .tonight-end { margin-top: 18px; }
@@ -457,21 +461,21 @@
   .addcard .lead { margin: 18px 0 12px; }
   .addcard .soft + .lead { margin-top: 0; }
   .rows :global(.row-done) { min-height: 40px; padding: 0 0 0 12px; }
-  .rows :global(.row-done span) { font-size: 16px; color: var(--violet-hi); }
+  .rows :global(.row-done span) { font-size: calc(16px * var(--ts, 1)); color: var(--violet-hi); }
   .if-time { margin: 18px 0 4px; }
   .replies { margin-top: 10px; }
   .reply { padding-bottom: 4px; }
-  .rows :global(.row small) { display: block; font-size: 14px; color: var(--ink-2); margin-top: 2px; }
-  .ask { margin: 0; padding-left: 32px; font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink-2); }
+  .rows :global(.row small) { display: block; font-size: calc(14px * var(--ts, 1)); color: var(--ink-2); margin-top: 2px; }
+  .ask { margin: 0; padding-left: 32px; font-family: var(--life); font-style: italic; font-size: calc(16px * var(--ts, 1)); color: var(--ink-2); }
   .reply-acts { display: flex; flex-wrap: wrap; gap: 0 16px; padding-left: 32px; }
   .reply-acts .text-link { min-height: 44px; min-width: 44px; }
-  .reply-acts .text-link span { font-size: 15px; }
+  .reply-acts .text-link span { font-size: calc(15px * var(--ts, 1)); }
   .reply-acts .text-link:disabled { opacity: .5; }
   .errand { margin-top: 6px; }
   .waits { margin: 0 0 6px; }
   .waits .text-link span { color: var(--gold-hi); }
-  .next .soft.to-satchel { margin: -8px 0 4px; font-size: 14px; font-style: italic; text-align: center; }
-  .hold-hint { margin: 6px 0 0; text-align: center; font-size: 14px; font-style: italic; }
+  .next .soft.to-satchel { margin: -8px 0 4px; font-size: calc(14px * var(--ts, 1)); font-style: italic; text-align: center; }
+  .hold-hint { margin: 6px 0 0; text-align: center; font-size: calc(14px * var(--ts, 1)); font-style: italic; }
   .of { margin: -2px 0 4px !important; font-style: italic; }
   .only { margin: 2px 0 6px; }
   .aside { margin-top: 8px; }
@@ -479,32 +483,32 @@
   .aside-row .t { text-decoration: line-through; }
   .put-back { display: flex; justify-content: flex-end; margin: -8px 0 4px; }
   .put-back .text-link { min-height: 36px; padding: 0; }
-  .put-back .text-link span { font-size: 15px; }
+  .put-back .text-link span { font-size: calc(15px * var(--ts, 1)); }
   .first { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin-top: 8px; }
-  .first-say { font-family: var(--life); font-size: 18px; color: var(--ink-2); }
-  .first-job span { font-size: 18px; color: #fff; }
+  .first-say { font-family: var(--life); font-size: calc(18px * var(--ts, 1)); color: var(--ink-2); }
+  .first-job span { font-size: calc(18px * var(--ts, 1)); color: #fff; }
   .choices { display: flex; flex-direction: column; margin: 4px 0 6px; border-top: 1px solid var(--edge-4); }
-  .choice { text-align: left; min-height: 44px; padding: 8px 4px; border-bottom: 1px solid var(--edge-4); font-family: var(--life); font-size: 17px; color: var(--ink); }
+  .choice { text-align: left; min-height: 44px; padding: 8px 4px; border-bottom: 1px solid var(--edge-4); font-family: var(--life); font-size: calc(17px * var(--ts, 1)); color: var(--ink); }
   .choice[aria-pressed='true'] { color: var(--gold); }
-  .choice small { display: block; font-style: italic; font-size: 14px; color: var(--ink-3); }
+  .choice small { display: block; font-style: italic; font-size: calc(14px * var(--ts, 1)); color: var(--ink-3); }
   .mind { display: flex; gap: 10px; margin: 10px 0 2px; }
-  .mind input { flex: 1; min-width: 0; min-height: 44px; padding: 0 12px; font: inherit; font-size: 17px; color: #fff;
+  .mind input { flex: 1; min-width: 0; min-height: 44px; padding: 0 12px; font: inherit; font-size: calc(17px * var(--ts, 1)); color: #fff;
     background: rgba(255, 255, 255, .06); border: 1px solid var(--edge-2); border-radius: 0; }
   .mind .btn-quiet { padding: 0 14px; }
   .mind .btn-quiet:disabled { opacity: .5; }
   .said-mind { font-style: italic; margin: 4px 0 0; text-align: left; }
   .still { margin: -12px 0 16px; }
-  .said { font-family: var(--life); font-style: italic; font-size: 15.5px; color: var(--ink-2); display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 2px 6px; margin: -6px 0 6px; }
+  .said { font-family: var(--life); font-style: italic; font-size: calc(15.5px * var(--ts, 1)); color: var(--ink-2); display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 2px 6px; margin: -6px 0 6px; }
   .said .text-link { min-height: 0; padding: 4px; }
   .foot { display: flex; justify-content: space-around; margin: 6px -10px 0; }
-  .foot span { font-size: 14px; letter-spacing: .1em; color: var(--ink-2); }
-  .proto span { font-size: 14px; letter-spacing: .16em; color: var(--ink-3); }
+  .foot span { font-size: calc(14px * var(--ts, 1)); letter-spacing: .1em; color: var(--ink-2); }
+  .proto span { font-size: calc(14px * var(--ts, 1)); letter-spacing: .16em; color: var(--ink-3); }
   /* the day on the left; the map, records and the prototype's own link together on the right */
   .bar { display: flex; justify-content: space-between; }
   /* on a narrow bar the rehearsal badge takes a line of its own, never pushing the screen wider (Dan, review 2) */
   .bar { gap: 8px; align-items: flex-start; }
   .navs { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0 4px; align-items: center; margin-right: -10px; min-width: 0; }
-  .navs span { font-size: 14px; letter-spacing: .12em; color: var(--ink-2); }
+  .navs span { font-size: calc(14px * var(--ts, 1)); letter-spacing: .12em; color: var(--ink-2); }
   .proto .badge { color: var(--gold); }
   .gear { min-width: 44px; justify-content: center; }
   .gear svg { width: 20px; height: 20px; fill: none; stroke: var(--ink-2); stroke-width: 1.6; stroke-linecap: round; }

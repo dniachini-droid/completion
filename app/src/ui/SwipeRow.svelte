@@ -16,9 +16,10 @@
   interface Action { label: string; sr: string; run: () => void; del?: boolean }
   /* `quiet`: a tap on the row does nothing (a finished job); `done` alone only marks it done (a done recurring job still
      opens its menu with a tap, J11) */
-  let { key, actions, tap, hold, disabled = false, done = false, quiet = undefined, row, over, lead }: {
+  /* `label`: the row's name for VoiceOver, when what it shows runs together (a recurring row's time, A#26) */
+  let { key, actions, tap, hold, disabled = false, done = false, quiet = undefined, row, over, lead, label }: {
     key: string; actions: Action[]; tap: () => void; hold?: () => void; disabled?: boolean; done?: boolean; quiet?: boolean;
-    row: Snippet; over?: Snippet; lead?: Snippet;
+    row: Snippet; over?: Snippet; lead?: Snippet; label?: string;
   } = $props();
   const dead = $derived(quiet ?? done);
 
@@ -77,9 +78,9 @@
 </script>
 
 <div class="swipe" onpointerdown={down} role="presentation">
-  {#if offset >= 0}
-    {#each actions as a (a.sr)}<button class="sr" onclick={() => { openKey = null; a.run(); }}>{a.sr}</button>{/each}
-  {/if}
+  <!-- read in this order by VoiceOver: the tick circle, the job, then what a slide offers (deep review A#37) -->
+  <!-- a control over the row's marker, at its left (the tick circle on Today, D-134) -->
+  {#if lead && offset === 0}<div class="swipe-lead">{@render lead()}</div>{/if}
   {#if offset < 0}
     <div class="acts">
       {#each actions as a (a.sr)}<button class="act" class:del={a.del} tabindex={open ? 0 : -1} onclick={() => { openKey = null; a.run(); }}>{a.label}</button>{/each}
@@ -89,12 +90,13 @@
        must (a small phone hid it, N polish); only the finger's slide itself moves it -->
   <button class="row" class:done class:moving={sliding} class:narrowed={open && !sliding} style:transform={sliding && offset ? `translate3d(${offset}px,0,0)` : null}
     style:width={open && !sliding ? `calc(100% - ${width}px)` : null}
-    onclick={click} oncontextmenu={(e) => e.preventDefault()} aria-disabled={disabled || dead}>
+    onclick={click} oncontextmenu={(e) => e.preventDefault()} aria-disabled={disabled || dead} aria-label={label}>
     {@render row()}
   </button>
   {#if over && offset === 0}<div class="over">{@render over()}</div>{/if}
-  <!-- a control over the row's marker, at its left (the tick circle on Today, D-134) -->
-  {#if lead && offset === 0}<div class="swipe-lead">{@render lead()}</div>{/if}
+  {#if offset >= 0}
+    {#each actions as a (a.sr)}<button class="sr" onclick={() => { openKey = null; a.run(); }}>{a.sr}</button>{/each}
+  {/if}
 </div>
 
 <style>
@@ -109,8 +111,8 @@
   .swipe .row.moving { transition: none; }
   .swipe .row.narrowed { transition: width .22s ease; }
   .acts { position: absolute; right: 18px; z-index: 0; top: 1px; bottom: 0; display: flex; }
-  .act { width: 96px; font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink); background: rgba(var(--violet-rgb), .28); }
-  @media (max-width: 379px) { .act { width: 78px; font-size: 15px; line-height: 1.15; padding: 0 4px; } }
+  .act { width: 96px; font-family: var(--life); font-style: italic; font-size: calc(16px * var(--ts, 1)); color: var(--ink); background: rgba(var(--violet-rgb), .28); }
+  @media (max-width: 379px) { .act { width: 78px; font-size: calc(15px * var(--ts, 1)); line-height: 1.15; padding: 0 4px; } }
   /* Delete never looks like every other link (D-131): its own colour, on the slide only */
   .act.del { background: rgba(160, 64, 88, .55); color: #fff; }
   .swipe-lead { position: absolute; z-index: 2; left: 18px; top: 50%; transform: translateY(-50%); }

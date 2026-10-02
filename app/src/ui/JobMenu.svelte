@@ -7,6 +7,7 @@
   import { menu, closeMenu, settling, openTick, sayWaited } from './menu.svelte';
   import { closeRows } from './SwipeRow.svelte';
   import { steady } from './taps';
+  import { modal } from './modal';
   import DayPick from './DayPick.svelte';
   import WaitPick from './WaitPick.svelte';
   import { waitingOf } from '../core/week';
@@ -64,7 +65,7 @@
 <svelte:window onkeydown={key} />
 {#if j}
   <div class="scrim" role="presentation" onclick={() => { if (!settling()) closeMenu(); }}></div>
-  <div class="menu" role="dialog" aria-modal="true" aria-label={j.name}>
+  <div class="menu" role="dialog" aria-modal="true" aria-label={j.name} use:modal>
     <p class="name">{j.name}</p>
     {#if why}<p class="why">{why}</p>{/if}
     <!-- a calendar open takes the menu's place, Cancel always in view under it (360 × 780, N polish) -->
@@ -100,8 +101,8 @@
   .menu { position: absolute; z-index: 31; left: 16px; right: 16px; bottom: calc(var(--safe-b, 0px) + 16px); max-height: calc(100% - 80px); overflow-y: auto;
     background: rgba(18, 16, 38, .96); border: 1px solid var(--edge-2); padding: 6px 0; animation: up .18s ease-out; }
   @keyframes up { from { transform: translateY(12px); opacity: 0; } }
-  .name { margin: 8px 18px 6px; font-family: var(--life); font-size: 15px; font-style: italic; color: var(--ink-2); text-align: center; overflow-wrap: anywhere; }
-  .item { display: block; width: 100%; min-height: 48px; padding: 0 18px; text-align: center; font-family: var(--life); font-size: 18px; color: var(--ink);
+  .name { margin: 8px 18px 6px; font-family: var(--life); font-size: calc(15px * var(--ts, 1)); font-style: italic; color: var(--ink-2); text-align: center; overflow-wrap: anywhere; }
+  .item { display: block; width: 100%; min-height: 48px; padding: 0 18px; text-align: center; font-family: var(--life); font-size: calc(18px * var(--ts, 1)); color: var(--ink);
     border-top: 1px solid var(--edge-4); }
   .item:disabled { color: var(--ink-3); }
   /* Delete never looks like every other choice (D-131) */
@@ -109,6 +110,6 @@
   .item.del:disabled { color: var(--ink-3); }
   .item.cancel { color: var(--ink-2); font-style: italic; }
   .cal { padding: 0 12px 8px; }
-  .why, .ask { margin: 0 18px 8px; font-family: var(--life); font-size: 15px; font-style: italic; color: var(--ink-2); text-align: center; }
-  .ask { color: var(--ink); font-size: 16.5px; }
+  .why, .ask { margin: 0 18px 8px; font-family: var(--life); font-size: calc(15px * var(--ts, 1)); font-style: italic; color: var(--ink-2); text-align: center; }
+  .ask { color: var(--ink); font-size: calc(16.5px * var(--ts, 1)); }
 </style>

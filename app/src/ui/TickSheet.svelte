@@ -4,10 +4,11 @@
      Cancel or a tap outside leaves the job as it was. A job with delved minutes behind it says so, and "No more" counts
      those alone. Shown over the screen, in the job menu's look. */
   import { game } from './game.svelte';
-  import { t, minutesWords } from '../content/copy/en';
+  import { t, minutesWords, minutesShort } from '../content/copy/en';
   import { ticking, closeTick } from './menu.svelte';
   import { closeRows } from './SwipeRow.svelte';
   import { steady } from './taps';
+  import { modal } from './modal';
   import { TICK_CHOICES, behindOf } from '../core/game';
 
   const j = $derived(ticking.job ? game.job(ticking.job) : undefined);
@@ -15,7 +16,8 @@
   const behind = $derived(j ? behindOf(game.facts, v.content, j.id, v.day) : 0);
   /* the finger's lift from the tap that opened it is never a choice in it */
   const settling = () => performance.now() - ticking.at < 450;
-  const label = (m: number) => m === 90 ? t('tick.halfHour') : m >= 60 ? t('tick.hour', { n: m / 60 }) : t('min.short', { n: m });
+  /* one way to write a length everywhere (deep review A#20) */
+  const label = (m: number) => minutesShort(m);
 
   function pick(minutes: number) {
     if (settling() || !j) return;
@@ -32,7 +34,7 @@
 <svelte:window onkeydown={key} />
 {#if j}
   <div class="scrim" role="presentation" onclick={() => { if (!settling()) closeTick(); }}></div>
-  <div class="sheet" role="dialog" aria-modal="true" aria-label={t('tick.title')}>
+  <div class="sheet" role="dialog" aria-modal="true" aria-label={t('tick.title')} use:modal>
     <p class="name">{j.name}</p>
     <h2>{t('tick.title')}</h2>
     {#if behind > 0}<p class="soft">{t('tick.onTop', { min: minutesWords(behind) })}</p>{/if}
@@ -50,14 +52,14 @@
   .sheet { position: absolute; z-index: 31; left: 16px; right: 16px; bottom: calc(var(--safe-b, 0px) + 16px); max-height: calc(100% - 80px); overflow-y: auto;
     background: rgba(18, 16, 38, .96); border: 1px solid var(--edge-2); padding: 10px 16px 6px; text-align: center; animation: up .18s ease-out; }
   @keyframes up { from { transform: translateY(12px); opacity: 0; } }
-  .name { margin: 4px 0 2px; font-family: var(--life); font-size: 15px; font-style: italic; color: var(--ink-2); overflow-wrap: anywhere; }
-  h2 { margin: 4px 0 6px; font-family: var(--life); font-weight: 500; font-size: 22px; color: #fff; }
-  .soft { margin: 0 0 8px; font-size: 16px; }
+  .name { margin: 4px 0 2px; font-family: var(--life); font-size: calc(15px * var(--ts, 1)); font-style: italic; color: var(--ink-2); overflow-wrap: anywhere; }
+  h2 { margin: 4px 0 6px; font-family: var(--life); font-weight: 500; font-size: calc(22px * var(--ts, 1)); color: #fff; }
+  .soft { margin: 0 0 8px; font-size: calc(16px * var(--ts, 1)); }
   .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 10px 0 8px; }
-  .chip { min-height: 48px; font-family: var(--life); font-size: 17px; color: #fff; background: rgba(var(--violet-rgb), .16);
+  .chip { min-height: 48px; font-family: var(--life); font-size: calc(17px * var(--ts, 1)); color: #fff; background: rgba(var(--violet-rgb), .16);
     border: 1px solid var(--edge-2); }
   .chip:active { background: rgba(var(--violet-rgb), .34); }
   .chip.nomore { display: block; width: 100%; margin: 6px 0 0; font-style: italic; background: rgba(255, 255, 255, .06); }
-  .cancel { display: block; width: 100%; min-height: 48px; margin-top: 4px; font-family: var(--life); font-size: 18px; color: var(--ink-2); border-top: 1px solid var(--edge-4); }
+  .cancel { display: block; width: 100%; min-height: 48px; margin-top: 4px; font-family: var(--life); font-size: calc(18px * var(--ts, 1)); color: var(--ink-2); border-top: 1px solid var(--edge-4); }
   @media (prefers-reduced-motion: reduce) { .sheet { animation: none; } }
 </style>

@@ -73,7 +73,7 @@ await ff(12 * 60_000 + 20_000);
 await tap(btn('Finish here'), 'Finish here');
 await tap(btn('Not yet'), 'Not yet'); await tap(btn('Back to today'), 'Back to today');
 await tickOn('Letters');
-if (!(await page.getByText(/On top of the 12 minutes you delved/).count())) fails.push('no "On top of the 12 minutes you delved"');
+if (!(await page.getByText(/On top of the 12 minutes already counted/).count())) fails.push('no "On top of the 12 minutes already counted"');
 await tap(btn('No more'), 'No more');
 await toToday();
 if (await tickable('Letters')) fails.push('Letters, ticked off with No more, can still be ticked off');

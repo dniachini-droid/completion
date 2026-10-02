@@ -5,7 +5,7 @@
  */
 import { describe, expect, test } from 'vitest';
 import { act, see, settle } from '../../src/core/game';
-import { copyDue, copyName, copySummary, readSave, SAVE_VERSION, type Migration, type Save } from '../../src/core/save';
+import { copyDue, copyName, copySummary, weeklyName, readSave, SAVE_VERSION, type Migration, type Save } from '../../src/core/save';
 import type { Fact, FactBody } from '../../src/core/types';
 import { adopt, sqlSaves, textSaves } from '../../src/platform/saves';
 import { content as C } from '../../src/content/world';
@@ -271,7 +271,7 @@ describe('copies of the save (D-107)', () => {
   test('the weekly copy: due with none yet, and again a week after the newest', () => {
     expect(copyName('2026-09-27')).toBe('Long Answer save 2026-09-27.json');
     expect(copyDue([], '2026-09-27')).toBe(true);
-    const names = ['2026-09-06', '2026-09-20', '2026-09-13'].map(copyName);
+    const names = ['2026-09-06', '2026-09-20', '2026-09-13'].map(weeklyName);   /* the weekly copies have their own name (deep review P#14) */
     expect(copyDue(names, '2026-09-26')).toBe(false);
     expect(copyDue(names, '2026-09-27')).toBe(true);
     expect(copyDue(['something else.json'], '2026-09-27')).toBe(true);

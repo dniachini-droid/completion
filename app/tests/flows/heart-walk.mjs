@@ -16,6 +16,8 @@ page.on('console', m => { if (m.type() === 'error') { errors.push(m.text()); if 
 page.on('request', r => { if (!r.url().startsWith(url) && !r.url().startsWith('data:') && !r.url().startsWith('blob:')) errors.push('NETWORK ' + r.url()); });
 /* FREEZE=1: every animation stopped at the same instant for each picture, and chance made repeatable, so two builds'
    pictures can be compared pixel for pixel (a change meant to leave the look alone, D-103) */
+/* TS=1.3: the phone's text size set larger (Dynamic Type, deep review A#33): every screen still fits */
+if (process.env.TS) await page.addInitScript(ts => { const set = () => document.documentElement?.style.setProperty('--ts', ts); set(); document.addEventListener('readystatechange', set); }, process.env.TS);
 if (process.env.FREEZE) await page.addInitScript(() => { let s = 7; Math.random = () => (s = (s * 16807) % 2147483647) / 2147483647; });
 await page.clock.install({ time: new Date('2026-09-24T09:00:00+01:00') });
 await page.goto(url);
@@ -196,7 +198,7 @@ const lookCheck = async (name) => {
       page: [scrollX, scrollY, document.scrollingElement.scrollTop, visualViewport.scale, b.x, b.y, b.width, b.height] };
   });
   const before = await state();
-  await tap('Look'); await page.clock.runFor(600); await page.waitForTimeout(600);
+  await tap('Look at the painting'); await page.clock.runFor(600); await page.waitForTimeout(600);
   await page.screenshot({ path: `${out}/${String(++i).padStart(2, '0')}-${name}-look.png` });
   let s = await state();
   if (!s.look || s.ui > 0.05) errors.push(`LOOK ${name}: the words did not fade (${s.ui})`);
