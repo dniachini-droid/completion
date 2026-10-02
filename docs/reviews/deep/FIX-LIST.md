@@ -131,11 +131,11 @@
   - the stale review tools that look for removed labels (`tests/review/tour.mjs`, `lib.mjs`).
 
 ## Stage 6: performance
-- [ ] **F#2** The Map's sparks rest (CSS `offset-path` motion, or SMIL paused and unpaused in `rest()` / `wake()`).
-- [ ] **F#4** The rules index the log once per log (by type, day and week, with `calendarWeek` cached). The delve's once-a-second tick recomputes only the run's part of the view.
-- [ ] **F#5** Fog drawn at low resolution and scaled up; each fog's two banks merged; no `will-change` on warm banks at warmth 0.
-- [ ] **F#6** Pre-blurred pictures for the tunnel's nebula and glows; `screen` blending only where needed.
-- [ ] **F#8**
+- [x] **F#2** The Map's sparks rest (CSS `offset-path` motion, or SMIL paused and unpaused in `rest()` / `wake()`).
+- [x] **F#4** The rules index the log once per log (by type, day and week, with `calendarWeek` cached). The delve's once-a-second tick recomputes only the run's part of the view.
+- [x] **F#5** Fog drawn at low resolution and scaled up; each fog's two banks merged; no `will-change` on warm banks at warmth 0.
+- [x] **F#6** Pre-blurred pictures for the tunnel's nebula and glows; `screen` blending only where needed.
+- [x] **F#8**
   - remove `-webkit-overflow-scrolling` (`Map.svelte:334`);
   - shrink `.wash` (`Words.svelte:29`).
 - [ ] Re-run `deep-perf-big.mjs` and `deep-perf-frames.mjs` on a 6-month save; the numbers go in `technical/PERFORMANCE.md`.
@@ -145,24 +145,24 @@
 - [ ] S#6, S#7, S#11, S#15 and the small calls in S#2 go to a **sealed story session**. Dan only needs to know they're pending. (S#2's line now plays through the S#2b wiring; whether its own condition should change is still the story session's call.)
 
 ## Stage 8: improvements (MORNING-REPORT Part 3, and the simplifications)
-- [ ] **3 The avoided job's mark:**
+- [x] **3 The avoided job's mark:**
   - a hollow gold ◇ on an "I tend to put this off" job's row (and in its VoiceOver name);
   - "a find waits" on its set-up;
   - on its return, the find shown first.
-- [ ] **4 "Can't get started?":**
+- [x] **4 "Can't get started?":**
   - one quiet line at the foot of Today until the day's first start, opening "I can't start" for the first undone job on the line (the avoided one first);
   - the same line on every delve set-up;
   - it stays in the job menu too.
-- [ ] **5 Last night's choice starts the morning:** when Tonight's first job was chosen, the morning screen's button reads "Start with X", and Today shows "You chose to start with X · Begin" until it is started or the day ends. Tonight's choice is offered all evening, not only the last hour. (D-135 stands otherwise.)
-- [ ] **6 The 5-minute mark:** a notch on the ring at 5 minutes (the lock-screen panel too), and the line under the countdown says "It counts now." once. No sound.
-- [ ] **7 "Just this one today":** one item in the job menu sets the day's other jobs aside, with one Undo.
-- [ ] **8 Re-reading made felt:** when a symbol becomes known, "N records you found now read differently · Read them". A soft glow on those records until opened. Check in a sealed session that no change tells more than the symbol does.
-- [ ] **9 The week's close as a chapter:**
+- [x] **5 Last night's choice starts the morning:** when Tonight's first job was chosen, the morning screen's button reads "Start with X", and Today shows "You chose to start with X · Begin" until it is started or the day ends. Tonight's choice is offered all evening, not only the last hour. (D-135 stands otherwise.)
+- [x] **6 The 5-minute mark:** a notch on the ring at 5 minutes (the lock-screen panel too), and the line under the countdown says "It counts now." once. No sound.
+- [x] **7 "Just this one today":** one item in the job menu sets the day's other jobs aside, with one Undo.
+- [x] **8 Re-reading made felt:** when a symbol becomes known, "N records you found now read differently · Read them". A soft glow on those records until opened. Check in a sealed session that no change tells more than the symbol does.
+- [x] **9 The week's close as a chapter:**
   - order: the furthest place reached, with its painting, then Learned, then Further on;
   - the tallies on one line;
   - the "Look ahead" offer as one quiet link at the foot (D simplify 3).
-- [ ] **10 A Map that connects:** a faint gold path between the places walked; the next place as a dim outline with its minutes. Keep the forecast waypoints uncluttered.
-- [ ] **Simplify:**
+- [x] **10 A Map that connects:** a faint gold path between the places walked; the next place as a dim outline with its minutes. Keep the forecast waypoints uncluttered.
+- [x] **Simplify:**
   - "Errand run" off Today's main screen (kept in the Satchel and the job menu);
   - Today's Key block as one line ("5 Keys · Use one here" / "· On the Map").
 

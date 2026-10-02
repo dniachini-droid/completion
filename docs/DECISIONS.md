@@ -1670,3 +1670,24 @@
 - **Alternatives:** fixing only the urgent items first (Dan chose everything in one build); a cap on ticks (D-134 stands: no cap); freezing features now and leaving the improvements (Dan chose them).
 - **Consequences:** a large build: each fix is tested, with the probes in `tests/review/deep-*.test.ts` flipped; a fresh adversarial review of the branch before Dan's OK, the merge and one TestFlight send. Story-wiring fixes that need a story decision go to a sealed story session.
 - **Reversible:** Yes, each separately.
+
+## D-148 — Building D-147: routine choices, and the fresh review's fixes (routine choices, D-006; two confirmed by Dan)
+- **Date:** 2026-10-02
+- **Context:** The whole of `reviews/deep/FIX-LIST.md` was built on `claude/review-round-5` (stages 1–8). Choices the list left open were made as routine ones; a fresh adversarial review of the branch (the rules; the screens and getting around; the phone, the save, performance and CI) then found 5 rule bugs, 5 screen bugs and 4 phone/save bugs, all fixed with tests.
+- **Routine choices while building:**
+  1. **The log:** a plain private field is the true log (the screens watch a mirror of it, never written from a teardown); the rules index it once per log (`core/facts.ts`: by type and by day, a log grown in place read on) and cache calendar weeks. A delve's tick moves only its countdown (`runSecond`); every screen but the delve reads the view by the minute (`game.whole`).
+  2. **"Later" on a word, and Keys chosen,** are kept per save in the phone's small store, not in the log; so are records lit by "now read differently" (once per beat).
+  3. **Joined sessions (B2):** a later delve on a recurring job writes `doneUndone {joined}` and forms the session again. **A taken-back tick (B3):** `tickTakenBack`; the road keeps what was reached and counts minutes owed; the next place, the side chamber and a delve's end all count them.
+  4. **The game day (R#6)** never goes behind the latest day in the log since the last opening (`dayOf`, reminders included); a moved plan entry's day is passed over.
+  5. **Missed sessions:** only an absence (between the last day opened and a welcome back) drops them; a single day not opened places them again later in the week (the fresh review: the first build dropped them for any unopened day). Every appointment missed in a long absence is asked about, every week of it.
+  6. **Every 2 weeks:** every 14 days from the last time; a never-done one keeps its first fortnight's placement.
+  7. **Text size:** every size is `calc(N px × --ts)`, `--ts` set natively from Dynamic Type (0.9–1.5); flows run at 1.3 too. Where a screen runs out of room (the set-up with a long name and a note at large text) the name and note give up a line or two rather than overlap.
+  8. **The fog** is baked into one small picture per fog (`scripts/bake-fog.mjs`), drawn at a third of its size and scaled up; no gold fog in the morning. **The tunnel's glows and nebula** are soft gradients and masks, no live blur.
+  9. **Stage 8:** the ◇ shows only while a find still waits; "Can't get started?" only before the day's first start on Today, and on a set-up only for a job not yet begun; "It counts now." in the minute after 5 minutes, on the first delve of a run; the 5-minute notch also on the lock-screen panel; "Just this one today" never sets an appointment aside; the morning's "Start with X" goes through Today (the morning is never on the way back); the Map shows the next place's minutes under "you are here" when it is on the same stretch.
+  10. **A save this build can't read:** a newer one stays shut until the app is updated; a broken one can carry on from yesterday's backup (when it runs) or start a new game with it kept aside. Nothing is written over it, Siri's lines wait in the phone's inbox and the reminders are left as they were.
+  11. **svelte-check** runs in `npm run typecheck` from its own folder (`tools/svelte-check`), because it doesn't yet support the project's TypeScript 7.
+- **Confirmed by Dan (2026-10-02):** the week's close keeps **Look ahead · Plan it for me** together as one quiet line (not Look ahead alone); **Errand run** lives in the Satchel and an errand's job menu, off Today's main screen.
+- **Left for a sealed story session:** S#6, S#7, S#11, S#15 and S#2's own condition; a sealed check that "now read differently" never tells more than the symbol does.
+- **Alternatives:** keeping the log deeply reactive (20× slower in the browser); dropping missed sessions on any unopened day (lost real sessions); a hard stop for every unreadable save (no way on from a broken one).
+- **Consequences:** `core/facts.ts`, `core/reread.ts`, `runSecond`, `game.whole`, the `justThis` command, `View.findWaits`, `View.owed`, `PanelState.notch`; flows kept, rules2, screens3, paintings, save4, a11y5, improve8; rule tests deep-rules, speed, improve, fresh-review, story-wiring.
+- **Reversible:** Yes, each separately.
