@@ -8,6 +8,7 @@
  */
 import { calendarWeek } from './time';
 import * as R from './repeat';
+import { ofType } from './facts';
 import type { Fact, FactOf, FactBody, Rhythm } from './types';
 import type { Beat, Carries, Find, Mark, RecordFragment, Seal, StretchId, Story, Token } from './story-types';
 
@@ -23,7 +24,6 @@ export const LONG_STRETCH = 100;
     no return: no story step, find or Key, and it doesn't count towards the day's completion (rule 10, D-121). */
 export const RETURN_MIN = 5;
 
-const ofType = <T extends FactBody['type']>(facts: Fact[], type: T) => facts.filter((f): f is FactOf<T> => f.type === type);
 
 /* ---------- what has happened in the story ---------- */
 
@@ -86,6 +86,12 @@ export const beatOf = (s: Story, id: string): Beat | undefined => s.beats.find(b
 export const sealOf = (s: Story, id: string): Seal | undefined => s.seals.find(x => x.id === id);
 export const markOf = (s: Story, id: string): Mark | undefined => s.marks.find(m => m.id === id);
 export const recordOf = (s: Story, id: string): RecordFragment | undefined => s.records.find(r => r.id === id);
+/** The record a story week's morning points back to (its camp line's `morningRecord`), if Dan holds it; else null
+    (deep review S#13). `morning` is the morning's id, `b-wN.morning`. */
+export function morningRecord(s: Story, morning: string, held: readonly string[]): string | null {
+  const id = beatOf(s, morning.replace(/\.morning$/, '.camp'))?.morningRecord;
+  return id && held.includes(id) ? id : null;
+}
 /** Which of the records kept in one place this is (the notebook's pages, the log's entries), 1 on, in the story's order;
     null when it is the only one there. Their titles differ by it (the flow review, L C3). */
 export function recordNumber(s: Story, id: string): number | null {
@@ -199,7 +205,10 @@ export function nextPlace(s: Story, st: StoryState, push = false): Beat | null {
 export function nextCamp(s: Story, st: StoryState): { id: string; find?: string; line?: string } {
   const open = s.camps.filter(c => st.visited.has(c.stretch) && c.w <= st.week && allMet(st, c.req) && !(c.until && met(st, c.until)));
   const ok = open.filter(c => c.stretch === st.stretch);
-  const fresh = ok.find(c => !st.campsShown.includes(c.id)) ?? open.find(c => !st.campsShown.includes(c.id));
+  /* an unused view that stops being offered once the story moves on comes first, here or back along the route, so it is
+     not lost (deep review S#12) */
+  const unused = (c: { id: string }) => !st.campsShown.includes(c.id);
+  const fresh = ok.find(c => c.until && unused(c)) ?? open.find(c => c.until && unused(c)) ?? ok.find(unused) ?? open.find(unused);
   if (fresh) return { id: fresh.id, ...('find' in fresh.look ? { find: fresh.look.find } : { line: fresh.look.line }) };
   const last = (id: string) => st.campsShown.lastIndexOf(id);
   const first = [...ok, ...open.filter(c => c.stretch !== st.stretch)].sort((a, b) => last(a.id) - last(b.id))[0]

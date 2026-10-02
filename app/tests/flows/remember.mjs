@@ -1,7 +1,7 @@
 // Remembered jobs (Dan, D-136): "Go to the bank" saved with a list, ticked off; the next day "bank" typed in the
 // Satchel's box brings it up underneath (with "usually …" once learned); a tap fills the box and the new job carries the
 // list; a recurring job picked is the job itself, never added twice; "Delve now" from a pick delves with the list; a
-// name added a third time in 28 days brings "… keeps coming back. Make it repeat?": "No thanks" never asks again, "Make
+// name added a third time in 28 days brings "… keeps coming back. Make it a recurring job?": "No thanks" never asks again, "Make
 // it repeat" opens the editor with How often ready. Nothing slides sideways; each suggestion is a finger high.
 // SHOTS=<dir> saves pictures. Usage: node tests/flows/remember.mjs http://localhost:4173/ [width height]
 const { launch } = await import('./browser.mjs');
@@ -45,8 +45,8 @@ const tickOff = async (name) => {
 /* 1. a first trip to the bank, with a list, ticked off */
 await toSatchel();
 await type('Go to the bank'); await tap(btn('Save for later'), 'Save for later');
-await tap(item('Go to the bank').getByRole('button', { name: /^List:/ }), 'List on Go to the bank');
-await page.keyboard.type('passport'); await tap(item('Go to the bank').getByRole('button', { name: /^Close:/ }), 'Close');
+await tap(item('Go to the bank').getByRole('button', { name: /: list$/ }), 'List on Go to the bank');
+await page.keyboard.type('passport'); await tap(item('Go to the bank').getByRole('button', { name: /: close$/ }), 'Close');
 await tickOff('Go to the bank');
 
 /* 2. the next day: "bank" brings it up under the box; a tap fills the box and the list comes with it */
@@ -86,7 +86,7 @@ else {
 /* a job still in the satchel, typed again: already there */
 await type('go to the BANK'); await tap(btn('Save for later'), 'Save for later');
 if ((await item('Go to the bank').count()) !== 1) fails.push(`"Go to the bank" is in the satchel ${await item('Go to the bank').count()} times`);
-if (!/already in your satchel/.test(await page.locator('.said').innerText().catch(() => ''))) fails.push('no "already in your satchel"');
+if (!/already in your Satchel/.test(await page.locator('.said').innerText().catch(() => ''))) fails.push('no "already in your Satchel"');
 
 /* 4. "Delve now" from a pick: the delve shows the list */
 await tickOff('Go to the bank');
@@ -105,8 +105,8 @@ const offer = page.locator('.offer');
 if (!(await offer.count())) fails.push('no offer after "Go to the bank" was added a third time');
 else {
   const o = await offer.locator('p').innerText();
-  if (o !== 'Go to the bank keeps coming back. Make it repeat?') fails.push(`the offer reads "${o}"`);
-  for (const n of ['Make it repeat', 'No thanks']) { const r = await btn(n).boundingBox(); if (!r || r.height < 43.5) fails.push(`"${n}" is not a finger high`); }
+  if (o !== 'Go to the bank keeps coming back. Make it a recurring job?') fails.push(`the offer reads "${o}"`);
+  for (const n of ['Make it recurring', 'No thanks']) { const r = await btn(n).boundingBox(); if (!r || r.height < 43.5) fails.push(`"${n}" is not a finger high`); }
   await wide('the offer');
   await shot('2-offer');
   await tap(btn('No thanks'), 'No thanks');
@@ -115,17 +115,17 @@ else {
   if (await offer.count()) fails.push('the offer came back after No thanks');
 }
 
-/* 6. "Make it repeat": the editor with How often ready; saved, it is a recurring job and the offer is gone */
+/* 6. "Make it recurring": the editor with How often ready; saved, it is a recurring job and the offer is gone */
 for (let k = 0; k < 3; k++) { await type('Water the plants'); await tap(btn('Save for later'), 'Save for later'); if (k < 2) { await tickOff('Water the plants'); await toSatchel(); } }
-if (!(await btn('Make it repeat').count())) fails.push('no offer for Water the plants');
+if (!(await btn('Make it recurring').count())) fails.push('no offer for Water the plants');
 else {
-  await tap(btn('Make it repeat'), 'Make it repeat');
+  await tap(btn('Make it recurring'), 'Make it recurring');
   const pressed = await page.locator('.seg.often button[aria-pressed="true"]').allInnerTexts();
   if (!pressed.length || /once/i.test(pressed[0])) fails.push(`the editor opens with How often "${pressed.join(', ')}"`);
   await shot('3-editor');
   await tap(btn('Save'), 'Save');
   if (!(await page.locator('form.satchel-add').count())) fails.push('Save did not come back to the Satchel');
-  if (await btn('Make it repeat').count()) fails.push('the offer stays once the job repeats');
+  if (await btn('Make it recurring').count()) fails.push('the offer stays once the job repeats');
   const rec = await page.locator('.rows button.row', { hasText: 'Water the plants' }).count();
   if (!rec) fails.push('Water the plants is not under Recurring jobs');
 }

@@ -20,6 +20,9 @@ let armed = -Infinity;
 const listeners = new Set<(resting: boolean) => void>();
 const MARKS = ['data-rest', 'data-rest-before', 'data-rest-after'];
 
+/** The drawings that move by SMIL (an <animate…> inside): only their own clocks can pause them. A drawing mounted while at
+    rest is paused by its screen through onRest. */
+const smil = () => [...document.querySelectorAll('svg')].filter(s => s.querySelector('animateMotion, animate, animateTransform'));
 const endless = (a: Animation) => a.effect?.getComputedTiming().iterations === Infinity;
 const styled = (a: Animation) => typeof (a as CSSAnimation).animationName === 'string';
 function mark(target: Element | null | undefined, pseudo: string | null | undefined) {
@@ -37,6 +40,8 @@ function rest() {
     if (styled(a)) mark(fx?.target, fx?.pseudoElement);
     else a.pause();
   }
+  /* SMIL (the Map's sparks) is in no getAnimations(): each drawing's own clock is paused (deep review F#2) */
+  for (const svg of smil()) svg.pauseAnimations();
   for (const f of listeners) f(true);
 }
 
@@ -54,6 +59,7 @@ export function wake() {
   for (const m of MARKS) for (const e of document.querySelectorAll(`[${m}]`)) e.removeAttribute(m);
   /* only script animations still on the page (getAnimations lists no others) and still paused */
   for (const a of document.getAnimations()) if (!styled(a) && a.playState === 'paused' && endless(a)) { try { a.play(); } catch { /* */ } }
+  for (const svg of smil()) svg.unpauseAnimations();
   for (const f of listeners) f(false);
 }
 

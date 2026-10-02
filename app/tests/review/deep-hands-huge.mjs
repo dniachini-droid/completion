@@ -1,0 +1,24 @@
+// Hands-on review: a 400-character job name pasted into Add a job (the box has no length limit): Today, the set-up, the delve, the editor. Review only.
+import { open } from './deep-hands-lib.mjs';
+const H = await open({ w: 360, h: 780, tag: 'huge' });
+const { page } = H;
+const NAME = 'Sort out the ' + 'paperwork and '.repeat(28) + 'end';
+await H.toToday();
+await H.tap(H.btn('Add a job'), 'Add'); await page.locator('input').first().fill(NAME); await page.keyboard.press('Enter'); await page.clock.runFor(1500);
+H.say('name length ' + NAME.length + '; saved: ' + await page.evaluate(() => JSON.parse(localStorage.getItem('save.v1')).facts.filter(f => f.type === 'itemAdded').map(f => f.name.length).join(',')));
+await H.toToday(); await page.evaluate(() => { for (const e of document.querySelectorAll('.scroll, .ui, .body, .list, .rows')) e.scrollTop = 1e5; }); await page.clock.runFor(300); await H.shot('today');
+const row = page.locator('.rows button.row', { hasText: 'Sort out the' }).first();
+const rb = await row.boundingBox(); H.say('row box ' + JSON.stringify(rb));
+await H.tap(row, 'row'); await H.shot('set');
+H.say('set-up begin: ' + JSON.stringify(await H.btn('Begin').boundingBox()) + ' ' + await H.screen());
+await H.tap('Begin'); await H.shot('delve');
+await H.tap(page.locator('button.home'), 'arrow'); await H.shot('today-under-way');
+H.say('today: ' + (await H.buttons()).filter(b => /BACK TO THE DELVE|Add a job|row/.test(b)).join(' / '));
+H.say('scrollers: ' + await page.evaluate(() => [...document.querySelectorAll('.phone *')].filter(e => { const o = getComputedStyle(e).overflowY; return (o === 'auto' || o === 'scroll') && e.scrollHeight > e.clientHeight + 1; }).map(e => `${e.className.split(' ')[0]} ${e.clientHeight}/${e.scrollHeight} top=${Math.round(e.getBoundingClientRect().top)}`).join(' ; ')));
+const add = page.getByRole('button', { name: 'Add a job', exact: true });
+await add.scrollIntoViewIfNeeded().catch(() => {}); await page.waitForTimeout(300);
+H.say('add a job after scroll: ' + JSON.stringify(await add.boundingBox()) + ' hit=' + await page.evaluate(() => { const b = [...document.querySelectorAll('button')].find(x => x.innerText.trim() === 'Add a job'); const r = b.getBoundingClientRect(); const e = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2); return e?.closest('button')?.innerText.trim() ?? e?.className; }));
+await H.shot('today-under-way-scrolled');
+await H.tap(H.btn('Back to the delve'), 'back'); await page.clock.runFor(60000); await H.tap('Finish here'); await H.shot('finish');
+H.say('finish buttons: ' + (await H.buttons()).join(' / '));
+await H.close();

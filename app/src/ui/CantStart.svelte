@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Prose from './Prose.svelte';
   /* "I can't start" (TOOLS.md; CONCEPT §2 → stuck): a line from just ahead, one tiny physical step, then "10 minutes?".
      Never a demand; never new story (P4, D-038). */
   import { game, content } from './game.svelte';
@@ -9,9 +10,9 @@
   import { back } from './back.svelte';
 
   let { go, jobId }: { go: Go; jobId: string } = $props();
-  const v = $derived(game.view);
+  const v = $derived(game.whole);
   const job = $derived(game.job(jobId)!);
-  const teaser = game.view.teaser ?? t('cant.fallback');
+  const teaser = game.whole.teaser ?? t('cant.fallback');
 
   /* the first step: where Dan stopped last time, else the job's own first step; with neither, it asks once and keeps
      the answer as the job's first step (D-112) */
@@ -22,7 +23,8 @@
     keep();
     platform.sound.unlock();
     game.do({ do: 'startRun', job: jobId, minutes: 10, count: 1 });
-    go('delve');
+    /* only if it started (C#10): an end still to answer, or another delve, comes first */
+    go(game.whole.run ? 'delve' : 'today');
   }
 </script>
 
@@ -36,12 +38,12 @@
   </header>
   <div class="mid col center tease">
     <div class="label-line centred rise">{t('cant.label')}</div>
-    <p class="say-lg rise d1">{teaser}</p>
+    <p class="say-lg rise d1"><Prose text={teaser} /></p>
   </div>
   <section class="bottom col center">
     {#if first}
       <p class="soft rise d2">{t('cant.first')}</p>
-      <p class="say step rise d2">{first}</p>
+      <p class="say step rise d2"><Prose text={first} /></p>
     {:else}
       <p class="soft rise d2">{t('cant.ask')}</p>
       <input class="line ask rise d2" bind:value={answer} maxlength="160" aria-label={t('cant.ask')} enterkeyhint="done"
@@ -56,9 +58,9 @@
 
 <style>
   .tease { display: flex; flex-direction: column; justify-content: center; gap: 18px; }
-  .tease .say-lg { font-size: 25px; line-height: 1.25; }
-  .step { font-size: 20px; margin: 6px 0 24px; }
-  input.ask { width: 100%; margin: 8px 0 20px; padding: 10px 12px; font: inherit; font-size: 17px; color: #fff; background: rgba(255,255,255,.06);
+  .tease .say-lg { font-size: calc(25px * var(--ts, 1)); line-height: 1.25; }
+  .step { font-size: calc(20px * var(--ts, 1)); margin: 6px 0 24px; }
+  input.ask { width: 100%; margin: 8px 0 20px; padding: 10px 12px; font: inherit; font-size: calc(17px * var(--ts, 1)); color: #fff; background: rgba(255,255,255,.06);
     border: 1px solid var(--edge-2); border-radius: 0; }
   .later { display: flex; justify-content: center; margin-top: 8px; }
   button.home { color: var(--ink-2); }

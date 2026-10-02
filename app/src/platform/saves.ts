@@ -45,7 +45,8 @@ const SCHEMA = [
   'CREATE TABLE IF NOT EXISTS copies (key TEXT PRIMARY KEY, body TEXT NOT NULL, at INTEGER NOT NULL)',
 ];
 
-interface Live { version: number; content: string; bodies: string[]; }
+/* `held`: the facts last written, as objects, to tell an added-to log by sameness rather than by turning each to text */
+interface Live { version: number; content: string; bodies: string[]; held?: readonly unknown[]; }
 
 export type SqlSaves = Saves & {
   /** Every live save and copy as held in memory (always up to date, written or not), to keep them another way. */
@@ -56,7 +57,15 @@ export type SqlSaves = Saves & {
 
 /** The save in SQLite. Writes go one after another, each one transaction. If one fails, `failed` is told once and no
     more are sent: what the game did is still in memory (`all`), for the caller to keep another way. */
-export async function sqlSaves(db: Db, failed: (why: unknown) => void, now = () => Date.now()): Promise<SqlSaves> {
+/** A write that never answers counts as failed after this long, so the save falls back rather than waiting for ever
+    (deep review P#13). */
+export const WRITE_TIMEOUT = 10_000;
+/** Copies kept aside of each kind (a save this build couldn't read, the one before a restore, before an upgrade): the
+    newest few; older ones go (deep review P#23). */
+export const KEPT_OF_A_KIND = 3;
+const kindOf = (key: string) => /^(.*\.(?:kept|before-restore|undone|wiped))\.\d+$/.exec(key)?.[1] ?? null;
+
+export async function sqlSaves(db: Db, failed: (why: unknown) => void, now = () => Date.now(), timeoutMs = WRITE_TIMEOUT): Promise<SqlSaves> {
   await db.run(SCHEMA.map(sql => ({ sql })));
   const live = new Map<string, Live>(), copies = new Map<string, string>();
   for (const [key, version, content] of await db.all('SELECT key, version, content FROM saves'))
@@ -65,8 +74,21 @@ export async function sqlSaves(db: Db, failed: (why: unknown) => void, now = () 
   for (const [key, body] of await db.all('SELECT key, body FROM copies')) copies.set(String(key), String(body));
 
   let queue: Promise<void> = Promise.resolve(), broken = false;
+  /* time with the app away (the phone suspends it mid-write) is not time waited: the clock starts again on return
+     (fresh review of P#13) */
+  let shownAt = 0;
+  if (typeof document !== 'undefined') document.addEventListener('visibilitychange', () => { if (!document.hidden) shownAt = Date.now(); });
+  const timed = (p: Promise<void>) => new Promise<void>((ok, no) => {
+    let t: ReturnType<typeof setTimeout>;
+    const arm = (from: number) => { t = setTimeout(() => {
+      if ((typeof document !== 'undefined' && document.hidden) || shownAt > from) arm(Date.now());
+      else no(new Error('a write never answered'));
+    }, timeoutMs); };
+    arm(Date.now());
+    p.then(() => { clearTimeout(t); ok(); }, why => { clearTimeout(t); no(why); });
+  });
   const send = (steps: { sql: string; args?: Arg[] }[]) => {
-    queue = queue.then(() => broken ? undefined : db.run(steps)).catch(why => { if (!broken) { broken = true; failed(why); } });
+    queue = queue.then(() => broken ? undefined : timed(db.run(steps))).catch(why => { if (!broken) { broken = true; failed(why); } });
   };
 
   const me: SqlSaves = {
@@ -82,8 +104,9 @@ export async function sqlSaves(db: Db, failed: (why: unknown) => void, now = () 
       const l = live.get(key), bodies = l?.bodies ?? [];
       /* only facts are ever added to a live save; anything else (a fresh start after a save was kept aside, an upgrade)
          is written anew, in the same one step */
-      const adds = !!l && l.version === save.version && save.facts.length >= bodies.length
-        && (bodies.length === 0 || bodies[bodies.length - 1] === JSON.stringify(save.facts[bodies.length - 1]));
+      /* the whole log held is checked, not only its last fact: a different log is never mixed into it (P#12) */
+      const same = (b: string, i: number) => l!.held?.[i] === save.facts[i] || b === JSON.stringify(save.facts[i]);
+      const adds = !!l && l.version === save.version && save.facts.length >= bodies.length && bodies.every(same);
       const from = adds ? bodies.length : 0;
       const fresh = save.facts.slice(from).map(f => JSON.stringify(f));
       if (adds && !fresh.length && l!.content === save.content) return;
@@ -91,13 +114,23 @@ export async function sqlSaves(db: Db, failed: (why: unknown) => void, now = () 
       if (!adds) steps.push({ sql: 'DELETE FROM facts WHERE key = ?', args: [key] });
       steps.push({ sql: 'INSERT OR REPLACE INTO saves (key, version, content) VALUES (?, ?, ?)', args: [key, save.version, save.content] });
       fresh.forEach((body, i) => steps.push({ sql: 'INSERT INTO facts (key, n, body) VALUES (?, ?, ?)', args: [key, from + i, body] }));
-      if (adds) { l!.content = save.content; bodies.push(...fresh); }
-      else live.set(key, { version: save.version, content: save.content, bodies: fresh });
+      if (adds) { l!.content = save.content; bodies.push(...fresh); l!.held = save.facts; }
+      else live.set(key, { version: save.version, content: save.content, bodies: fresh, held: save.facts });
       send(steps);
     },
     keep(key, raw) {
+      /* the same text already kept under this kind (a blocked save met again at each start): no second copy, so the
+         newest few never push out an older, different one (fresh review of P#23) */
+      const kind0 = kindOf(key);
+      if (kind0 && [...copies].some(([k, v]) => kindOf(k) === kind0 && v === raw)) return;
       copies.set(key, raw);
-      send([{ sql: 'INSERT OR REPLACE INTO copies (key, body, at) VALUES (?, ?, ?)', args: [key, raw, now()] }]);
+      const steps: { sql: string; args?: Arg[] }[] = [{ sql: 'INSERT OR REPLACE INTO copies (key, body, at) VALUES (?, ?, ?)', args: [key, raw, now()] }];
+      const kind = kindOf(key);
+      if (kind) {
+        const old = [...copies.keys()].filter(k => kindOf(k) === kind).sort((a, b) => +a.split('.').pop()! - +b.split('.').pop()!).slice(0, -KEPT_OF_A_KIND);
+        for (const k of old) { copies.delete(k); steps.push({ sql: 'DELETE FROM copies WHERE key = ?', args: [k] }); }
+      }
+      send(steps);
     },
     remove(key) {
       live.delete(key); copies.delete(key);

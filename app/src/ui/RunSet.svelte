@@ -16,11 +16,15 @@
   let { go, jobId }: { go: Go; jobId: string } = $props();
   const errands = jobId === 'errands' ? errandPick.jobs.slice() : null;
   const job = $derived(errands ? null : game.job(jobId)!);
-  const v = $derived(game.view);
-  const preset = presetRun(errands ? undefined : game.job(jobId)!, game.view.content);
+  const v = $derived(game.whole);
+  const preset = presetRun(errands ? undefined : game.job(jobId)!, game.whole.content);
   /* a one-off left "Not yet" carries on from its minutes (D-133): one quiet line says so */
   const carry = $derived(errands ? 0 : carriedOf(game.facts, v.content, jobId));
-  const names = $derived((errands ?? []).map(id => game.job(id)?.name).filter(Boolean).join(' · '));
+  /* the first three named, then "and N more": never cut with an ellipsis (deep review H#15) */
+  const names = $derived.by(() => {
+    const all = (errands ?? []).map(id => game.job(id)?.name).filter((x): x is string => !!x);
+    return all.length > 3 ? `${all.slice(0, 3).join(' · ')} ${t('errand.andMore', { n: all.length - 3 })}` : all.join(' · ');
+  });
   const reduce = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   /* the face holds an hour: a stop's angle is its minutes; 90 fills the ring and has its own button under it */
   const FACE = DIAL.filter(m => m <= 60), LONG = 90;
@@ -57,6 +61,8 @@
     void platform.haptics.tick();
   }
   let anim = 0;
+  /* never a frame left running into a screen that has gone (C#22) */
+  $effect(() => () => cancelAnimationFrame(anim));
   function settleTo(target: number, fromTap = false) {
     cancelAnimationFrame(anim); onSnap(target);
     if (reduce) { val = Math.min(60, target); return; }
@@ -91,7 +97,7 @@
     mv(e); e.preventDefault();
   }
   function dialKey(e: KeyboardEvent) {
-    let i = DIAL.indexOf(snap as never);
+    let i = (DIAL as readonly number[]).indexOf(snap);
     if (['ArrowRight', 'ArrowUp', '+', '='].includes(e.key)) i++; else if (['ArrowLeft', 'ArrowDown', '-'].includes(e.key)) i--; else return;
     e.preventDefault(); settleTo(DIAL[clamp(i, 0, DIAL.length - 1)], true);
   }
@@ -137,15 +143,20 @@
     return { xb, dir, left, cx: xb + dir * 20, cy: y - 19, lit: n * snap >= m };
   });
 
+  /* refused by the rules (a delve under way, an end still to answer): said, never a flash of an empty delve (C#10) */
+  let refused = $state(false);
   function start() {
     platform.sound.unlock();
-    if (errands) {
-      game.do({ do: 'startErrands', jobs: errands, minutes: snap, count: n });
-      if (!game.view.run) return;
-      errandPick.jobs = [];
-    } else game.do({ do: 'startRun', job: jobId, minutes: snap, count: n });
+    if (errands) game.do({ do: 'startErrands', jobs: errands, minutes: snap, count: n });
+    else game.do({ do: 'startRun', job: jobId, minutes: snap, count: n });
+    if (!game.whole.run) { refused = true; return; }
+    if (errands) errandPick.jobs = [];
     go('delve');
   }
+  /* too little room left for the dial (a long name and a note, with the phone's text set larger): the name and the note
+     give up a line or two; once tight, it stays so for this set-up, so the layout never see-saws (fresh review) */
+  let stageH = $state(0), tight = $state(false);
+  $effect(() => { if (stageH && stageH < 280) tight = true; });
 </script>
 
 <div class="rs">
@@ -159,7 +170,7 @@
         <!-- the job itself, one quiet tap away from every delve (D-131, step 3) -->
         {#if job}<button class="icon-link change" onclick={() => go('rhythms', job.id)}><span>{t('job.change')}</span></button>{:else}<span></span>{/if}
       </div>
-      <section class="job rise d1">
+      <section class="job rise d1" class:tight>
         <div class="label-line lit">{t('set.label')}</div>
         {#if !job}
           <!-- the errand run (D-139): its errands, struck off in the delve -->
@@ -168,16 +179,16 @@
         {:else}
         <h1 class="say-lg">{job.name}</h1>
         <!-- the job put off: what waits beyond it (it lived on Today's next job, D-135) -->
-        {#if job.avoided}<p class="soft last">{t('set.avoided')}</p>{/if}
+        {#if job.avoided && game.whole.findWaits}<p class="soft last"><span class="find-mark" aria-hidden="true">◇ </span>{t('set.avoided')}</p>{/if}
         {#if carry > 0}<p class="soft carryon">{t('set.carry', { min: minutesWords(carry) })}</p>{/if}
-        {#if job.note}<p class="soft last">{t('set.stopped', { note: job.note })}</p>{/if}
+        {#if job.note}<p class="soft last note">{t('set.stopped', { note: job.note })}</p>{/if}
         <!-- the job's list (D-126): struck off a line at a time in the delve -->
         {#if job.list}<p class="soft last">{job.list.split('\n').filter(l => l.trim()).join(' · ')}</p>{/if}
         {/if}
       </section>
     </header>
 
-    <div class="mid stage col rise d2">
+    <div class="mid stage col rise d2" bind:clientHeight={stageH}>
       <div class="stage-in">
         <div class="dialwrap">
           <div class="dial" class:dragging bind:this={dial} role="slider" tabindex="0" aria-label={t('set.length')}
@@ -246,7 +257,11 @@
         </div>
       </div>
       <div class="go rise d4">
+        {#if refused}<p class="soft refused" role="status">{t('set.refused')}</p>{/if}
         <button class="btn" onclick={start}>{t('set.begin')}</button>
+        <!-- the first small step, one quiet tap from every set-up (MORNING-REPORT Part 3 #4) -->
+        <!-- (only for a job not yet begun: one with minutes behind it, or where he stopped, is under way) -->
+        {#if job && carry === 0 && !job.note}<button class="text-link cant" onclick={() => go('cant', job.id)}><span>{t('today.cantGetStarted')}</span></button>{/if}
       </div>
     </section>
   </div>
@@ -256,9 +271,17 @@
   .rs { display: contents; }
   button.home { color: var(--ink-2); }
   .topbar.solo { grid-template-columns: auto 1fr auto; }
-  /* where Dan stopped last time (D-112): one quiet line, never more */
-  .change span { font-family: var(--life); font-style: italic; font-size: 15px; letter-spacing: 0; text-transform: none; color: var(--ink-2); }
+  .change span { font-family: var(--life); font-style: italic; font-size: calc(15px * var(--ts, 1)); letter-spacing: 0; text-transform: none; color: var(--ink-2); }
   /* the errands, two lines at most: the full list is on the delve */
-  .errands { margin-top: 2px; font-style: italic; font-size: 15px; text-align: left; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
-  .last, .carryon { margin-top: 2px; font-style: italic; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; }
+  .errands { margin-top: 2px; font-style: italic; font-size: calc(15px * var(--ts, 1)); text-align: left; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
+  .refused { font-style: italic; font-size: calc(15px * var(--ts, 1)); text-align: center; margin-bottom: 8px; }
+  .last, .carryon { margin-top: 2px; font-style: italic; font-size: calc(15px * var(--ts, 1)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; }
+  .find-mark { color: var(--gold-hi); font-style: normal; }
+  .go .cant { display: flex; align-items: center; margin: 0 auto; min-height: 44px; font-style: italic; color: var(--ink-2); }
+  /* where he stopped is the point of the note: shown in full, a few lines (deep review B10) */
+  .last.note { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; line-clamp: 4; line-height: 1.3; }
+  /* a long name keeps to three lines; the dial below gives way to it */
+  .job.tight h1 { -webkit-line-clamp: 2; line-clamp: 2; }
+  .job.tight .last.note { -webkit-line-clamp: 2; line-clamp: 2; }
+  .job h1 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; overflow-wrap: anywhere; }
 </style>

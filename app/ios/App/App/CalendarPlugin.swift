@@ -48,7 +48,8 @@ public class CalendarPlugin: CAPPlugin, CAPBridgedPlugin {
     }
 
     @objc func events(_ call: CAPPluginCall) {
-        guard allowed else { call.resolve(["events": []]); return }
+        /* refused or revoked: said as failed, never as an empty calendar (deep review P#6) */
+        guard allowed else { call.reject("denied"); return }
         watch()
         let days = max(1, min(31, call.getInt("days") ?? 14))
         let cal = Calendar.current
@@ -62,7 +63,9 @@ public class CalendarPlugin: CAPPlugin, CAPBridgedPlugin {
         date.locale = Locale(identifier: "en_US_POSIX")
         date.timeZone = TimeZone.current
         date.dateFormat = "yyyy-MM-dd"
+        /* sorted by start before the cut, so the nearest are kept (EventKit promises no order, P#6) */
         let found = store.events(matching: store.predicateForEvents(withStart: start, end: end, calendars: nil))
+            .sorted { ($0.startDate ?? Date.distantPast) < ($1.startDate ?? Date.distantPast) }
         let list: [[String: Any]] = found.prefix(400).map { e in
             let allDay = e.isAllDay
             /* an all-day event's end is the next midnight: its last day is the day before */

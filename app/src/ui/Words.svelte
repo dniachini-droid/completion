@@ -17,7 +17,7 @@
   {#if !plain}<div class="wash" aria-hidden="true"></div>{/if}
   <div class="scroll">{@render children()}</div>
   {#if look}
-    <button class="text-link fold" onclick={look}><span>{t('look.open')}</span></button>
+    <button class="text-link fold" aria-label={t('look.openSr')} onclick={look}><span>{t('look.open')}</span></button>
   {:else if foldable}
     <button class="text-link fold" onclick={() => (open = !open)} aria-expanded={open}><span>{open ? t('words.hide') : t('words.show')}</span></button>
   {/if}
@@ -25,8 +25,9 @@
 
 <style>
   .words { position: relative; display: flex; flex-direction: column; align-items: stretch; min-height: 0; }
-  /* the wash rises well above the words and fades out: never a panel */
-  .wash { position: absolute; left: -100vw; right: -100vw; top: -90px; bottom: -70vh; z-index: -1; pointer-events: none;
+  /* the wash rises well above the words and fades out: never a panel; just past the column's sides,
+     not screens beyond them (deep review F#8) */
+  .wash { position: absolute; left: calc(var(--gutter, 24px) * -1 - 40px); right: calc(var(--gutter, 24px) * -1 - 40px); top: -90px; bottom: -70vh; z-index: -1; pointer-events: none;
     background: linear-gradient(180deg, rgba(6,5,16,0) 0, rgba(6,5,16,.62) 90px, rgba(6,5,16,.72) 100%);
     transition: opacity .5s var(--ease); }
   .scroll { max-height: 42vh; max-height: 42dvh; overflow-x: hidden; overflow-y: auto; overscroll-behavior: none; scrollbar-width: none;

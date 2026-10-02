@@ -38,7 +38,7 @@ const tickOff = async (name, label) => { await tap(page.getByRole('button', { na
 await toToday();
 
 /* J19: the hint, until the menu is found */
-if (!(await page.getByText('Press and hold a job for more.').count())) fails.push('no "Press and hold a job for more." on a fresh Today');
+if (!(await page.getByText('Tap a job to delve on it. Press and hold for more.').count())) fails.push('no hold hint on a fresh Today');
 /* J2: a one-off nobody gave minutes says none */
 const catNote = (await row('Order the cat').locator('.s').textContent().catch(() => ''))?.trim();
 if (catNote) fails.push(`the cat's medication row says "${catNote}"`);
@@ -84,7 +84,7 @@ else {
 }
 /* the menu found: the hint is said no more */
 await tap(page.locator('.foot').getByRole('button', { name: 'Week', exact: true }), 'Week'); await toToday();
-if (await page.getByText('Press and hold a job for more.').count()) fails.push('the hold hint is still said after the menu was used');
+if (await page.getByText('Tap a job to delve on it. Press and hold for more.').count()) fails.push('the hold hint is still said after the menu was used');
 
 /* J7: Not today stays, struck, with Put it back, after a visit to the Satchel */
 /* (the slide's own action, as VoiceOver reaches it: the slide itself is checked in delete-day) */

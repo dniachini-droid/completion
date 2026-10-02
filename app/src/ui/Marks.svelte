@@ -4,13 +4,13 @@
      known, a name, or only part of it. A struck guess is one line. Guessing is never "wrong" here; the place confirms. */
   import { game, content } from './game.svelte';
   import { marksSeen, mayGuess, markOf } from '../core/story';
-  import { t, type CopyKey } from '../content/copy/en';
+  import { t, type CopyKey, partWords } from '../content/copy/en';
   import Glyph from './Glyph.svelte';
   import type { Go } from './nav';
   import { back } from './back.svelte';
 
   let { go, id }: { go: Go; id?: string } = $props();
-  const v = $derived(game.view);
+  const v = $derived(game.whole);
   const s = content.story;
   const list = $derived(marksSeen(s, v.story));
   /* what Dan can read or guess first; the marks only seen so far (their shapes) smaller, below */
@@ -23,7 +23,6 @@
   let changing = $state(false);
   const m = $derived(current ? markOf(s, current.id) : undefined);
   const canGuess = $derived(!!current && mayGuess(s, v.story, current.id));
-  const partWords = (p: string) => t(`part.${p}` as CopyKey);
   const cap = (x: string) => x.charAt(0).toUpperCase() + x.slice(1);
 
   function caption(x: (typeof list)[number]): { text: string; q: boolean; cls: string } {
@@ -78,8 +77,9 @@
       {#if unknown.length}
         <div class="label-line sub">{t('marks.unknown')}</div>
         <div class="grid small">
-          {#each unknown as x (x.id)}
-            <button class="cell" class:sel={current?.id === x.id} aria-pressed={current?.id === x.id} aria-label={t('marks.seen')} onclick={() => pick(x.id)}>
+          {#each unknown as x, i (x.id)}
+            <!-- each its own name, so VoiceOver can tell one from another (deep review A#36) -->
+            <button class="cell" class:sel={current?.id === x.id} aria-pressed={current?.id === x.id} aria-label={t('marks.unknownN', { n: i + 1, count: unknown.length })} onclick={() => pick(x.id)}>
               <span class="gw"><Glyph mark={x.id} size={30} dim /></span>
             </button>
           {/each}
@@ -141,18 +141,18 @@
   .grid.small .cell::before { width: 46px; margin-left: -23px; height: 46px; }
   h1 { margin-top: 8px; }
   .lv { margin: 0; width: auto; grid-template-columns: 1fr 1fr; }
-  .lv button { padding: 6px 12px; font-size: 14px; min-width: 104px; }
+  .lv button { padding: 6px 12px; font-size: calc(14px * var(--ts, 1)); min-width: 104px; }
   button.home { color: var(--ink-2); }
   /* every glyph in the same square, every label on one line beneath (as the record's strip) */
   .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); row-gap: 6px; margin: 0 calc(var(--gutter) * -.4); }
   .cell { position: relative; display: grid; grid-template-rows: 52px 24px; justify-items: center; align-items: center; row-gap: 6px; padding: 6px 0 2px; color: #eceaff; }
   .gw { position: relative; display: flex; align-items: center; justify-content: center; width: 52px; height: 52px; }
-  .cap { font-family: var(--life); font-style: italic; font-size: 15.5px; line-height: 24px; height: 24px; max-width: 100%; overflow: hidden; text-overflow: ellipsis;
+  .cap { font-family: var(--life); font-style: italic; font-size: calc(15.5px * var(--ts, 1)); line-height: 24px; height: 24px; max-width: 100%; overflow: hidden; text-overflow: ellipsis;
     color: var(--ink-2); white-space: nowrap; text-shadow: 0 1px 8px rgba(6,5,16,.9); }
   .cap .q { color: var(--cold-hi); }
   .cap.unk { color: var(--ink-3); }
   /* "new" is a state, not a meaning: set as a small carved label, never in the italic that meanings read in */
-  .cap.new { font-family: var(--carve); font-style: normal; font-weight: 600; font-size: 14px; letter-spacing: .14em; padding-left: .14em;
+  .cap.new { font-family: var(--carve); font-style: normal; font-weight: 600; font-size: calc(14px * var(--ts, 1)); letter-spacing: .14em; padding-left: .14em;
     text-transform: uppercase; color: var(--violet-hi); }
   .cap.known { color: #fff; }
   .cell.sel .cap { color: #fff; }
@@ -169,7 +169,7 @@
     background: radial-gradient(closest-side, rgba(var(--violet-rgb), .4), transparent); }
   .readout { margin-top: 4px; animation: rise .8s var(--ease) both; }
   .readout .label-line { margin-bottom: 10px; }
-  .know { font-family: var(--life); font-size: 18px; line-height: 1.45; color: var(--ink); margin: 0 0 8px; }
+  .know { font-family: var(--life); font-size: calc(18px * var(--ts, 1)); line-height: 1.45; color: var(--ink); margin: 0 0 8px; }
   .know :global(em) { color: #fff; }
   .know :global(s) { color: var(--ink-3); }
   .ctx { margin: 0 0 6px; }

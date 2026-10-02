@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Prose from './Prose.svelte';
   import { doneFacts } from '../core/done';
   /* The delve (INTERACTION_NOTES → the delve; D-028, D-036, D-037, D-047). The glowing ring fills with the time left;
      the destination is the headline; the tunnel moves so the world is visibly travelling. Only two ideas, always in
@@ -10,7 +11,7 @@
   import { mmss, ofLine } from './panel';
   import { tieFor } from '../core/remember';
   import tunnel from './scene/tunnel.html?raw';
-  import fogFront from './scene/fog-front.html?raw';
+  import fogFront from './scene/fog/front.webp?url';   /* baked once (scripts/bake-fog.mjs, deep review F#5) */
   import { tunnelLight } from './scene/light.js';
   import type { Go } from './nav';
   import Return from './Return.svelte';
@@ -41,6 +42,11 @@
   const L = $derived(run ? run.minutes * 60_000 : 1);
   const p = $derived(!run ? 1 : run.phase === 'delve' || run.phase === 'held' ? run.doneMs / L : 1);
   const left = $derived(mmss(run?.leftMs ?? 0));
+  /* the 5-minute mark (MORNING-REPORT Part 3 #6): below it a delve earns nothing; a notch on the ring shows where it
+     counts, and the line under the countdown says so once, in the minute after it is passed. No sound. */
+  const FIVE = RETURN_MIN * 60_000;
+  const five = $derived(!!run && (run.phase === 'delve' || run.phase === 'held') && L > FIVE ? FIVE / L : null);
+  const countsNow = $derived(!!run && run.phase === 'delve' && run.k === 1 && run.doneMs >= FIVE && run.doneMs < FIVE + 60_000);
   const past = $derived(!!run && v.done.has(run.job.id));
   const of = $derived(run ? ofLine(run, run.k, past) : '');
   const breathP = $derived(run?.phase === 'breather' ? 1 - run.breatherLeftMs / 300_000 : 0);
@@ -76,7 +82,13 @@
   /* the end's job, held past the end being marked seen: the phone's back marks it before this screen goes (review of D-144) */
   let noteJob = '';
   $effect(() => { if (end) noteJob = end.job.id; });
-  function keepNote() { if (noteJob && stopAt.trim()) { game.do({ do: 'noteJob', job: noteJob, note: stopAt }); stopAt = ''; } }
+  /* plain, not watched: a teardown reads the box's text from before the tap that closed the screen, so the note kept
+     by that tap is known here and never written twice (deep review NEW-1) */
+  let keptNote = '';
+  /* typing where he stopped, with the keyboard up: the ring and the road step aside, so the box stands fully above the
+     keyboard and no label runs into another (deep review H#6) */
+  let typing = $state(false);
+  function keepNote() { if (noteJob && stopAt.trim() && stopAt !== keptNote) { keptNote = stopAt; game.do({ do: 'noteJob', job: noteJob, note: stopAt }); stopAt = ''; } }
   function leave(to: 'today' | 'arrival') {
     keepNote();
     if (end) game.do({ do: 'seen', what: 'step', ref: end.seq });
@@ -166,7 +178,7 @@
   {/if}
 {/snippet}
 
-<div class="dv" class:told class:tallying={tally} bind:this={root}>
+<div class="dv" class:told class:tallying={tally} class:typing bind:this={root}>
   {@html tunnel}
   <div class="ui">
     <header class="top col">
@@ -179,7 +191,8 @@
       <div class="head rise d1">
         <div class="label-line centred lit">{t('delve.further')}</div>
         <h1 class="carve">{v.here.name}</h1>
-        <p class="soft on-scene breath-hide" class:gone={!run || run.phase !== 'delve'}>{t('delve.moves')}</p>
+        <!-- faded out, it is hidden from VoiceOver too (deep review A#39) -->
+        <p class="soft on-scene breath-hide" class:gone={!run || run.phase !== 'delve'} aria-hidden={!run || run.phase !== 'delve'}>{t('delve.moves')}</p>
       </div>
       <!-- always there, so VoiceOver reads the line when it is written (review) -->
       <p class="parked-say" class:shown={!!parkedSay} role="status">{parkedSay ?? ''}</p>
@@ -187,12 +200,13 @@
 
     <div class="mid">
       <div class="ring rise d2" class:ended={!run || run.phase === 'breather'} class:rest={restful} class:hold={run?.phase === 'held'} class:tallying={tally}
-        style="--p:{tally ? 0 : Math.min(1, p).toFixed(4)};--pc:{(Math.round(Math.min(1, p) * 200) / 200).toFixed(3)}" role="timer" aria-label={run ? `${left} ${t('delve.left', { len: run.minutes })}` : ''}>
+        style="--p:{tally ? 0 : Math.min(1, p).toFixed(4)};--pc:{(Math.round(Math.min(1, p) * 200) / 200).toFixed(3)}" role={run ? 'timer' : undefined} aria-label={run ? t('delve.leftSay', { n: Math.ceil((run.leftMs ?? 0) / 60_000), len: run.minutes }) : undefined}>
         <div class="halo"></div><div class="disc"></div>
         <canvas class="ringcv" aria-hidden="true"></canvas>
-        <div class="fog-front" aria-hidden="true">{@html fogFront}</div>
+        {#if five !== null}<i class="five" class:past={p >= five} aria-hidden="true" style="--a:{(five * 360).toFixed(2)}deg"></i>{/if}
+        <div class="fog-front" aria-hidden="true"><div class="fog-front"><img alt="" src={fogFront} /></div></div>
         {#if run?.phase === 'delve'}
-          <div class="inner"><div class="time">{left}</div><div class="left">{t('delve.left', { len: run.minutes })}</div>
+          <div class="inner"><div class="time">{left}</div><div class="left" class:counts={countsNow}>{countsNow ? t('delve.countsNow') : t('delve.left', { len: run.minutes })}</div>
             {#if soFar}<div class="left sofar">{t('delve.sofar', { min: minutesShort(soFar) })}</div>{/if}</div>
         {/if}
         {#if tally && end}
@@ -219,13 +233,14 @@
         <p class="say">{run.away ? t('delve.away.say') : t('delve.held.say')}</p>
         {@render theList(run.job.id)}
         <button class="btn resting back" onclick={() => game.do({ do: 'resume' })}>
-          <span>{run.away ? t('delve.carryOn') : t('delve.back')}</span><span class="tail">{t('delve.back.left', { min: minutesWords(Math.max(1, Math.ceil(run.leftMs / 60000))) })}</span>
+          <!-- a pause between the two, for VoiceOver (A#45) -->
+          <span>{run.away ? t('delve.carryOn') : t('delve.back')}</span><span class="sr-only">, </span><span class="tail">{t('delve.back.left', { min: minutesWords(Math.max(1, Math.ceil(run.leftMs / 60000))) })}</span>
         </button>
         <div class="cant"><button class="text-link" onclick={() => game.do({ do: 'finishHere' })}><span>{t('delve.finishHere')}</span></button></div>
       {:else if run?.phase === 'breather'}
         <div class="label-line centred">{t('delve.breather')}</div>
         <h2 class="m">{t('delve.breather.done', { ord: ord(run.k) })}</h2>
-        <p class="say">{v.passage + ' ' + t('delve.breather.say')}</p>
+        <p class="say"><Prose text={v.passage} /> {t('delve.breather.say')}</p>
         <div class="breath-line" aria-hidden="true"><i style="width:{(breathP * 100).toFixed(1)}%"></i></div>
         <button class="btn resting" onclick={() => game.do({ do: 'skipBreather' })}>{t('delve.startNow')}</button>
         <div class="cant"><button class="text-link" onclick={() => game.do({ do: 'finishHere' })}><span>{t('delve.finishHere')}</span></button></div>
@@ -274,7 +289,7 @@
                 </div>
               {/if}
             {/each}
-            {#if !errandStory.length}<p class="say">{v.passage}</p><Return doneSeq={null} extraFinds={v.runFinds} />{/if}
+            {#if !errandStory.length}<p class="say"><Prose text={v.passage} /></p><Return doneSeq={null} extraFinds={v.runFinds} />{/if}
           </div>
           {#if storyAt < errandStory.length - 1}
             <button class="btn resting" onclick={() => { steady(); storyAt++; }}>{t('errand.next')}</button>
@@ -288,7 +303,7 @@
           <h2 class="m">{end.total > 0 ? t('delve.kept', { min: minutesWords(end.total) }) : t('delve.keptNone')}</h2>
           <p class="say">{t('delve.keptSay')}</p>
           <!-- where Dan stopped, for next time: here, where it is useful (D-112, J3) -->
-          <input class="line stop" bind:value={stopAt} maxlength="160" placeholder={t('delve.whereStopped')} aria-label={t('delve.whereStopped')}
+          <input class="line stop" bind:value={stopAt} onfocus={() => (typing = true)} onblur={() => (typing = false)} maxlength="160" placeholder={t('delve.whereStopped')} aria-label={t('delve.whereStopped')}
             enterkeyhint="done" onkeydown={e => { if (e.key === 'Enter') (e.currentTarget as HTMLInputElement).blur(); }} />
           <button class="btn resting" onclick={() => leave('today')}>{t('delve.toToday')}</button>
         {:else}
@@ -303,11 +318,11 @@
               {:else}{end.count > 1 ? t('delve.doneRun') : t('delve.doneOne')}{/if}
             </h2>
             {#if end.how === 'finishedHere' && !end.enough && doneSeq === null}
-              <input class="line stop" bind:value={stopAt} maxlength="160" placeholder={t('delve.whereStopped')} aria-label={t('delve.whereStopped')}
+              <input class="line stop" bind:value={stopAt} onfocus={() => (typing = true)} onblur={() => (typing = false)} maxlength="160" placeholder={t('delve.whereStopped')} aria-label={t('delve.whereStopped')}
                 enterkeyhint="done" onkeydown={e => { if (e.key === 'Enter') (e.currentTarget as HTMLInputElement).blur(); }} />
             {/if}
             {#if doneSeq !== null}<Return {doneSeq} extraFinds={v.runFinds} {go} />
-            {:else}<p class="say">{v.passage}</p><Return doneSeq={null} extraFinds={v.runFinds} />{/if}
+            {:else}<p class="say"><Prose text={v.passage} /></p><Return doneSeq={null} extraFinds={v.runFinds} />{/if}
           </div>
           {#if end.completedDay || game.view.arrival}
             <button class="btn" onclick={() => leave('arrival')}>{t('delve.see')}</button>
@@ -341,7 +356,7 @@
   .list { list-style: none; margin: 4px auto 10px; padding: 0; width: 100%; max-width: 320px; max-height: 26vh; overflow-y: auto; overflow-x: hidden; text-align: left; }
   .list button { overflow-wrap: anywhere; }
   .list button { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 44px; padding: 4px 10px; text-align: left; background: none; border: 0;
-    border-bottom: 1px solid rgba(255, 255, 255, .08); font-family: var(--life); font-size: 17px; color: #fff; cursor: pointer; }
+    border-bottom: 1px solid rgba(255, 255, 255, .08); font-family: var(--life); font-size: calc(17px * var(--ts, 1)); color: #fff; cursor: pointer; }
   .list .l { flex: 1; min-width: 0; }
   .list button.struck .l { text-decoration: line-through; color: var(--ink-3); }
   .tick { flex: none; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--ink-3); }
@@ -353,11 +368,11 @@
   .errs { list-style: none; margin: 8px auto 10px; padding: 0; max-width: 340px; text-align: left; }
   .errs li { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; align-items: center; column-gap: 12px; min-height: 40px; border-top: 1px solid var(--edge-4); }
   .errs li:last-child { border-bottom: 1px solid var(--edge-4); }
-  .errs .t { font-family: var(--life); font-size: 17px; color: var(--ink); overflow-wrap: anywhere; min-width: 0; }
-  .errs .s { font-family: var(--life); font-style: italic; font-size: 15px; color: var(--ink-2); text-align: right; }
+  .errs .t { font-family: var(--life); font-size: calc(17px * var(--ts, 1)); color: var(--ink); overflow-wrap: anywhere; min-width: 0; }
+  .errs .s { font-family: var(--life); font-style: italic; font-size: calc(15px * var(--ts, 1)); color: var(--ink-2); text-align: right; }
   .errs li.done .s { color: #ecc890; }
   .errand-story { margin-top: 14px; }
-  .errand-name { margin: 0 0 2px; font-family: var(--life); font-style: italic; font-size: 16.5px; color: #ecc890; text-align: center; overflow-wrap: anywhere; }
+  .errand-name { margin: 0 0 2px; font-family: var(--life); font-style: italic; font-size: calc(16.5px * var(--ts, 1)); color: #ecc890; text-align: center; overflow-wrap: anywhere; }
   /* the ring takes the room left between the place's name and the words below, never more; when the end carries the
      story it steps back, and on a phone too short for it, it gives way altogether */
   .dv :global(.mid) { container-type: size; }
@@ -368,37 +383,39 @@
   .dv.told.tallying :global(.mid) { min-height: clamp(112px, 17vh, 160px); }
   .gone { opacity: 0; transition: opacity 1s var(--ease); }
   h2.m { margin-top: 10px; }
-  .sofar { margin-top: 2px; font-size: 14px; opacity: .85; }
+  .sofar { margin-top: 2px; font-size: calc(14px * var(--ts, 1)); opacity: .85; }
   .dv :global(.bottom p.on-it) { margin: -12px 0 14px; font-style: italic; }
-  .dv :global(.bottom p.say) { margin: 6px 0 20px; font-size: 17px; color: var(--ink-2); }
+  .dv :global(.bottom p.say) { margin: 6px 0 20px; font-size: calc(17px * var(--ts, 1)); color: var(--ink-2); }
   .back { flex-direction: column; gap: 3px; padding-top: 10px; padding-bottom: 10px; line-height: 1.1; }
-  .back .tail { font-family: var(--life); font-style: italic; font-weight: 500; font-size: 17px; letter-spacing: .01em; text-transform: none; }
+  .back .tail { font-family: var(--life); font-style: italic; font-weight: 500; font-size: calc(17px * var(--ts, 1)); letter-spacing: .01em; text-transform: none; }
   .cant { display: flex; justify-content: center; margin-top: 8px; }
-  input.stop { width: 100%; margin: 10px 0 4px; padding: 10px 12px; font: inherit; font-size: 16px; color: #fff; background: rgba(255,255,255,.06);
+  input.stop { width: 100%; margin: 10px 0 4px; padding: 10px 12px; font: inherit; font-size: calc(16px * var(--ts, 1)); color: #fff; background: rgba(255,255,255,.06);
     border: 1px solid var(--edge-2); border-radius: 0; }
   .pair { max-width: 340px; margin: 0 auto; }
   .breath-line i { transition: width .25s linear; }
   button.home { color: var(--ink-2); }
   /* Park a thought (D-138): a quiet link in the top bar; the box over the lower part of the screen, above the keyboard
      (the phone frame is the part above it, keyboard.ts); the "Parked" line under the top bar for a few seconds */
-  .park-link { font-size: 16px; }
+  .park-link { font-size: calc(16px * var(--ts, 1)); }
   .park { position: absolute; z-index: 20; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; gap: 8px;
     padding: 12px 16px calc(var(--safe-b, 0px) + 4px); background: rgb(18, 16, 38); border-top: 1px solid var(--edge-2);
     animation: park-up .18s ease-out; }
   :global(html.kb) .park { padding-bottom: 12px; }
   @keyframes park-up { from { opacity: 0; } }
-  .park input { min-width: 0; min-height: 44px; padding: 0 12px; font: inherit; font-size: 17px; color: #fff;
+  .park input { min-width: 0; min-height: 44px; padding: 0 12px; font: inherit; font-size: calc(17px * var(--ts, 1)); color: #fff;
     background: rgba(255, 255, 255, .06); border: 1px solid var(--edge-2); border-radius: 0; }
   .park .two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .park .btn-quiet { padding: 0 8px; min-height: 44px; }
   .park .btn-quiet:disabled { opacity: .5; }
   .parked-say { position: absolute; z-index: 6; left: 50%; transform: translateX(-50%); top: calc(var(--safe-t, 0px) + 50px); width: max-content;
     max-width: calc(100% - 32px); margin: 0; padding: 6px 14px; pointer-events: none; background: rgb(18, 16, 38); border: 1px solid var(--edge-2);
-    font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink-2); text-align: center;
+    font-family: var(--life); font-style: italic; font-size: calc(16px * var(--ts, 1)); color: var(--ink-2); text-align: center;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .parked-say:not(.shown) { position: absolute; width: 1px; height: 1px; padding: 0; border: 0; clip-path: inset(50%); }
   .parked-say.shown { animation: park-say .3s ease-out; }
-  .dv :global(.bottom p.parked-n) { margin: 10px 0 0; font-size: 16px; font-style: italic; text-align: center; }
+  .dv :global(.bottom p.parked-n) { margin: 10px 0 0; font-size: calc(16px * var(--ts, 1)); font-style: italic; text-align: center; }
   @keyframes park-say { from { opacity: 0; } }
   @media (prefers-reduced-motion: reduce) { .park, .parked-say.shown { animation: none; } }
+  :global(html.kb) .dv.typing .mid, :global(html.kb) .dv.typing .bottom :global(.road) { display: none; }
+  :global(html.kb) .dv.typing .bottom { margin-top: auto; }
 </style>

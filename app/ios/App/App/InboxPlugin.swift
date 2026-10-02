@@ -8,6 +8,8 @@ import Foundation
 /// twice, and it is cleared only after the game has written it.
 enum SatchelInbox {
     static let lock = NSLock()
+    /// Posted when a line arrives while the app runs: the game takes it in at once, never waiting for the next return.
+    static let added = Notification.Name("satchel.inbox.added")
 
     private static func url() throws -> URL {
         let dir = try FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
@@ -47,6 +49,8 @@ struct AddToSatchel: AppIntent {
         let text = line.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !text.isEmpty else { return .result(dialog: "Nothing was added.") }
         try SatchelInbox.add(String(text.prefix(120)))
+        /* the app open on screen takes it in at once (deep review P#22) */
+        await MainActor.run { NotificationCenter.default.post(name: SatchelInbox.added, object: nil) }
         return .result(dialog: "It’s in your satchel.")
     }
 }
@@ -72,6 +76,11 @@ public class InboxPlugin: CAPPlugin, CAPBridgedPlugin {
         CAPPluginMethod(name: "take", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "clear", returnType: CAPPluginReturnPromise),
     ]
+
+    override public func load() {
+        NotificationCenter.default.addObserver(self, selector: #selector(arrived), name: SatchelInbox.added, object: nil)
+    }
+    @objc private func arrived() { notifyListeners("added", data: [:]) }
 
     @objc func take(_ call: CAPPluginCall) {
         SatchelInbox.lock.lock()

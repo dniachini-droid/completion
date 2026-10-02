@@ -3,7 +3,7 @@
 // errands are a list struck off with a tap (Bank); 20 minutes in, Finish here: "What got done?" (Post office struck there),
 // "Count them": the end names the run's 20
 // minutes, Bank and Post office done with 10 each, Chemist still to do, and the ring counts 20 (the road moved once).
-// Bank and Post office are done on Today; Chemist waits in the Satchel. Today's own "Errand run" link opens the pick list.
+// Bank and Post office are done on Today; Chemist waits in the Satchel. An errand's job menu has "Errand run" too (it is off Today's main screen).
 // Nothing slides sideways. SHOTS=<dir> saves pictures. Usage: node tests/flows/errand.mjs http://localhost:4173/ [width height]
 const { launch } = await import('./browser.mjs');
 const [,, url, w = '390', h = '844'] = process.argv;
@@ -107,13 +107,22 @@ if (!(await page.locator('button.row', { hasText: 'Chemist' }).count())) fails.p
 if (await page.locator('button.row', { hasText: 'Bank' }).count()) fails.push('Bank, done, is still in the Satchel');
 await toToday();
 
-/* 7. Today's own link, quietly at the list's end, opens the pick list (Chemist and today's jobs) */
-if (await tap(btn('Errand run'), 'Today\'s Errand run')) {
-  if (!(await page.getByRole('checkbox', { name: 'Chemist: take it on the run', exact: true }).count())) fails.push('Chemist is not on the pick list from Today');
-  if (await page.getByRole('checkbox', { name: 'Bank: take it on the run', exact: true }).count()) fails.push('Bank, done, is on the pick list');
-  await flat('the pick list from Today');
-  await tap(page.locator('.home'), 'back from the pick list');
-  if (!(await page.locator('nav.foot').count())) fails.push('back from the pick list did not return to Today');
+/* 7. Errand run is off Today's main screen (deep review, simplify); it is in an errand's job menu, which opens the pick
+   list (Chemist and today's jobs) */
+if (await btn('Errand run').count()) fails.push('Today still shows an Errand run link');
+await tap(page.locator('.foot').getByRole('button', { name: 'Satchel', exact: true }), 'Satchel');
+{
+  const r = page.locator('button.row', { hasText: 'Chemist' }).first(), box = await r.boundingBox().catch(() => null);
+  if (!box) fails.push('no Chemist row to hold');
+  else {
+    await page.mouse.move(box.x + 60, box.y + box.height / 2); await page.mouse.down();
+    await page.waitForTimeout(700); await page.clock.runFor(700); await page.mouse.up(); await page.clock.runFor(400);
+    if (await tap(page.locator('.menu').getByRole('button', { name: 'Errand run', exact: true }), 'the job menu\'s Errand run')) {
+      if (!(await page.getByRole('checkbox', { name: 'Chemist: take it on the run', exact: true }).count())) fails.push('Chemist is not on the pick list from the job menu');
+      if (await page.getByRole('checkbox', { name: 'Bank: take it on the run', exact: true }).count()) fails.push('Bank, done, is on the pick list');
+      await flat('the pick list from the job menu');
+    }
+  }
 }
 
 if (errors.length) fails.push(...errors.map(e => 'page error: ' + e));

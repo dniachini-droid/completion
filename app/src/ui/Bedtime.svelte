@@ -5,7 +5,7 @@
   import { t } from '../content/copy/en';
 
   let { say = t('today.bedtime') }: { say?: string } = $props();
-  const bedtime = $derived(game.view.bedtime);
+  const bedtime = $derived(game.whole.bedtime);
   function set(time: string) { if (time && time !== bedtime) game.do({ do: 'bedtime', time }); }
   function pick(e: MouseEvent) { try { (e.currentTarget as HTMLInputElement).showPicker?.(); } catch { /* not every browser */ } }
 </script>
@@ -18,7 +18,7 @@
 <style>
   .bed { position: relative; display: flex; align-items: baseline; gap: 12px; margin-top: 8px; cursor: pointer; width: fit-content; min-height: 44px; }
   .bed input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; border: 0; padding: 0; margin: 0; cursor: pointer; -webkit-appearance: none; appearance: none; }
-  .bed-say { font-family: var(--life); font-size: 18px; color: var(--ink-2); }
-  .bed-time { font-size: 28px; letter-spacing: .06em; color: #fff; }
-  .change { font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink-2); border-bottom: 1px solid var(--edge-3); }
+  .bed-say { font-family: var(--life); font-size: calc(18px * var(--ts, 1)); color: var(--ink-2); }
+  .bed-time { font-size: calc(28px * var(--ts, 1)); letter-spacing: .06em; color: #fff; }
+  .change { font-family: var(--life); font-style: italic; font-size: calc(16px * var(--ts, 1)); color: var(--ink-2); border-bottom: 1px solid var(--edge-3); }
 </style>

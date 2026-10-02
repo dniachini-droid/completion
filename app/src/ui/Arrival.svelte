@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Prose from './Prose.svelte';
   /* Day complete and the arrival (INTERACTION_NOTES → day complete; mock-up complete.html). Violet turns to gold
      from the floor up; "That's the day. Enough." The day's success is locked in; rest is the main offer, and a quiet
      "Keep going" is always there (D-038, D-039). A tap anywhere settles the motion at once. */
@@ -7,23 +8,26 @@
   import Scene from './Scene.svelte';
   import Guess from './Guess.svelte';
   import Settled from './Settled.svelte';
+  import Reread from './Reread.svelte';
   import Cut from './Cut.svelte';
   import Words from './Words.svelte';
   import Look from './Look.svelte';
   import { beatOf, marksIn, mayGuess, markHeld, markOf } from '../core/story';
   import { arrivalAt } from '../core/game';
   import { back } from './back.svelte';
-  import { moment } from './moment.svelte';
+  import { leaveWord, moment } from './moment.svelte';
   import { backTo } from './nav';
   import type { Go } from './nav';
 
   /* `seq`: a place reached before, opened from the Map to read again (its arg is "again:<seq>", never the plain seq a
      second new arrival is shown with, D-135); a new arrival waiting always comes first */
   let { go, seq = null }: { go: Go; seq?: number | null } = $props();
-  const v = $derived(game.view);
-  const again = $derived(!v.arrival && seq !== null ? arrivalAt(game.facts, content, seq) : null);
-  const a = $derived(v.arrival ?? again ?? v.lastArrival);
-  const fresh = !!game.view.arrival;
+  const v = $derived(game.whole);
+  /* a word left for later never stands in for a place read again: the place's name reads the place (deep review B8) */
+  const leftLater = (x: { seq: number } | null) => !!x && x.seq === moment.wordLater;
+  const again = $derived((!v.arrival || leftLater(v.arrival)) && seq !== null ? arrivalAt(game.facts, content, seq) : null);
+  const a = $derived(again ?? (leftLater(v.arrival) && seq !== null ? null : v.arrival) ?? v.lastArrival);
+  const fresh = !!game.whole.arrival && !(seq !== null && leftLater(game.whole.arrival));
   let root: HTMLDivElement;
 
   $effect(() => { if (!a) go('today'); });
@@ -33,7 +37,7 @@
     root.getAnimations({ subtree: true }).forEach(x => { try { x.finish(); } catch { /* endless */ } });
   }
   /* a word is cut on its own screen, the first time it plays (Cut.svelte) */
-  const word = fresh && !!game.view.arrival && beatOf(content.story, game.view.arrival.id)?.kind === 'word';
+  const word = fresh && !!game.whole.arrival && beatOf(content.story, game.whole.arrival.id)?.kind === 'word';
   const cap = (x: string) => x.charAt(0).toUpperCase() + x.slice(1);
   /* marks seen here that can't be guessed yet: said gently, once, so a later guess doesn't come from nowhere (D-077) */
   const later = $derived(a ? marksIn(content.story, [...a.records, ...a.way.flatMap(w => w.records)]).filter(m => !a.guess.includes(m) && !mayGuess(content.story, v.story, m)
@@ -44,7 +48,7 @@
   /* after the cut: through the lintel to the stair (D-039), back to today, or later (the cut waits, unseen) */
   function cutLeave(to: 'through' | 'today' | 'later') {
     /* left for later: Today, with a quiet line back to the word (the flow review, A2: it could not be left) */
-    if (to === 'later') { if (v.arrival) moment.wordLater = v.arrival.seq; go('today'); return; }
+    if (to === 'later') { if (v.arrival) leaveWord(v.arrival.seq); go('today'); return; }
     if (to === 'through' && v.arrival) { game.do({ do: 'seen', what: 'arrival', ref: v.arrival.seq }); go('stair'); return; }
     leave('today');
   }
@@ -57,7 +61,7 @@
     if (v.arrival) {
       game.do({ do: 'seen', what: 'arrival', ref: v.arrival.seq });
       /* a big day reached more than one place: each plays in turn */
-      const more = game.view.arrival;
+      const more = game.whole.arrival;
       if (more && to === 'today') { go('arrival', more.seq); return; }
     }
     /* read again from the Map: back to the Map */
@@ -80,7 +84,7 @@
         <span></span><span></span>
       </header>
       <section class="col head">
-        <div class="label-line gold">{a.kind === 'place' ? t('arrive.label') : t('arrive.camp')}</div>
+        <div class="label-line gold">{again ? t('arrive.again') : a.kind === 'place' ? t('arrive.label') : t('arrive.camp')}</div>
         <h1 class="carve lg">{a.name}</h1>
       </section>
       <!-- the painting, left clear: a tap on it looks at it (D-105) -->
@@ -88,16 +92,18 @@
       <!-- the words keep to the lower half and scroll there; they can be folded away (D-085) -->
       <div class="col text">
         <Words {look} length={(a.line?.length ?? 0) + (a.look?.length ?? 0)}>
-          <span class="soft on-scene">{a.line}</span>
-          {#if a.look}<span class="soft on-scene look">{a.look}</span>{/if}
-          {#each a.way as w (w.beat)}<p class="soft on-scene look">{w.line}</p>{/each}
-          {#each a.opened as line}<p class="soft on-scene look">{t('arrive.keyOpens')} {line}</p>{/each}
+          <span class="soft on-scene"><Prose text={a.line} /></span>
+          {#if a.look}<span class="soft on-scene look"><Prose text={a.look} /></span>{/if}
+          {#each a.way as w (w.beat)}<p class="soft on-scene look"><Prose text={w.line} /></p>{/each}
+          {#each a.opened as line}<p class="soft on-scene look">{t('arrive.keyOpens')} <Prose text={line} /></p>{/each}
         </Words>
       </div>
       <div class="mid col">
         {#if a.id}
           {#each a.way as w (w.beat)}<Settled beat={fresh ? w.beat : null} />{/each}
           <Settled beat={fresh ? a.id : null} />
+          {#each a.way as w (w.beat)}<Reread beat={fresh ? w.beat : null} {go} />{/each}
+          <Reread beat={fresh ? a.id : null} {go} />
           {#each a.guess as mark (mark)}<Guess {mark} at={a.id} />{/each}
           {#if later.length}<p class="soft later">{t('arrive.marksLater')}</p>{/if}
           {#if a.records.length}
@@ -134,7 +140,7 @@
 {/if}
 
 <style>
-  .to-satchel { margin: 2px 0 0; font-size: 14px; font-style: italic; text-align: center; }
+  .to-satchel { margin: 2px 0 0; font-size: calc(14px * var(--ts, 1)); font-style: italic; text-align: center; }
   .arr { display: contents; }
   .later { text-align: center; margin: 2px 0 10px; font-style: italic; }
   .facelight { position: absolute; inset: 0; z-index: 1; pointer-events: none; mix-blend-mode: screen;
@@ -149,7 +155,8 @@
   /* the screen itself never scrolls: the words do, in the lower half (D-085) */
   .ui.fixed { overflow: hidden; }
   .head { flex: none; }
-  .gap { flex: 1 1 auto; min-height: 12vh; }
+  /* with the phone's text set larger, the painting's gap gives way before the words do, so they keep their lines */
+  .gap { flex: 1 1 auto; min-height: max(24px, calc(12vh - (var(--ts, 1) - 1) * 300px)); }
   .text { flex: 0 1 auto; min-height: 0; display: flex; flex-direction: column; animation: rise 1.4s .6s var(--ease) both; }
   .text :global(.soft) { display: block; margin-top: 6px; }
   .text :global(.look) { color: var(--gold-hi); margin-top: 12px; }

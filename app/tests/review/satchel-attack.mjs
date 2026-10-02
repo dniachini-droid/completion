@@ -128,9 +128,9 @@ await S(4, 'double Delete in Choose and Today', async R => {
 await S(5, 'lists in a delve', async R => {
   await toSatchel(R); await L.putSatchel(R, 'Shopping');
   const it = () => L.item(R, 'Shopping');
-  await L.tap(R, it().getByRole('button', { name: /^List:/ }), 'List');
+  await L.tap(R, it().getByRole('button', { name: /: list$/ }), 'List');
   await R.page.keyboard.type('one\ntwo\nthree\nfour');
-  await L.tap(R, it().getByRole('button', { name: /^Done:/ }), 'Done (list)');
+  await L.tap(R, it().getByRole('button', { name: /: done$/ }), 'Done (list)');
   if ((await L.preview(R, 'Shopping')) !== 'one · two · three · four') R.fails.push(`#5 preview reads "${await L.preview(R, 'Shopping')}"`);
   await L.tap(R, it().locator('button.row'), 'Shopping'); await L.tap(R, 'Begin');
   const line = t => R.page.locator('.dv ul.list button', { hasText: new RegExp(`^${t}$`) });
@@ -143,9 +143,9 @@ await S(5, 'lists in a delve', async R => {
   /* while the delve runs: the Satchel, the list edited (a line added at the end) */
   await L.tap(R, R.page.locator('button.home'), 'Today');
   await toSatchel(R);
-  await L.tap(R, it().getByRole('button', { name: /^List:/ }), 'List during delve');
+  await L.tap(R, it().getByRole('button', { name: /: list$/ }), 'List during delve');
   await R.page.keyboard.type('five');
-  await L.tap(R, it().getByRole('button', { name: /^Done:/ }), 'Done (list) during delve');
+  await L.tap(R, it().getByRole('button', { name: /: done$/ }), 'Done (list) during delve');
   await L.toToday(R); await L.tap(R, 'Back to the delve');
   const struckNow = await R.page.locator('.dv ul.list button[aria-pressed=true]').allTextContents();
   R.notes.push(`#5 after adding "five" to the list during the delve, struck lines: ${JSON.stringify(struckNow)}`);
@@ -169,9 +169,9 @@ await S(5, 'lists in a delve', async R => {
 await S(6, 'long lists', async R => {
   await toSatchel(R); await L.putSatchel(R, 'Notes');
   const it = () => L.item(R, 'Notes');
-  await L.tap(R, it().getByRole('button', { name: /^List:/ }), 'List');
+  await L.tap(R, it().getByRole('button', { name: /: list$/ }), 'List');
   await R.page.keyboard.insertText('Pneumonoultramicroscopicsilicovolcanoconiosis'.repeat(5) + '\n' + 'short\n' + 'word '.repeat(80));
-  await L.tap(R, it().getByRole('button', { name: /^Done:/ }), 'Done');
+  await L.tap(R, it().getByRole('button', { name: /: done$/ }), 'Done');
   await L.audit(R, '#6 satchel with a long list');
   await L.tap(R, it().locator('button.row'), 'Notes'); await L.audit(R, '#6 set-up with a long list');
   await L.tap(R, 'Begin'); await L.audit(R, '#6 delve with a long list');
@@ -179,18 +179,18 @@ await S(6, 'long lists', async R => {
   await L.tap(R, R.page.locator('.dv button.back'), 'resume'); await L.tap(R, 'Finish here'); await L.tap(R, 'Not yet'); await L.toToday(R);
   /* a paste of 2,500 characters in 50 lines */
   await toSatchel(R);
-  await L.tap(R, it().getByRole('button', { name: /^List:/ }), 'List');
+  await L.tap(R, it().getByRole('button', { name: /: list$/ }), 'List');
   await R.page.keyboard.press('ControlOrMeta+a'); await R.page.keyboard.press('Delete');
   const lines = Array.from({ length: 50 }, (_, i) => `line ${String(i).padStart(2, '0')} ` + 'abcdefghij'.repeat(4));
   await R.page.keyboard.insertText(lines.join('\n'));
   const typed = await R.page.locator('textarea.list').inputValue();
-  await L.tap(R, it().getByRole('button', { name: /^Done:/ }), 'Done');
+  await L.tap(R, it().getByRole('button', { name: /: done$/ }), 'Done');
   const saved = (await L.savedJob(R, await L.idOf(R, 'Notes')))?.list ?? '';
   R.notes.push(`#6 50 lines × 48 characters pasted: the box took ${typed.length} characters, ${typed.split('\n').length} lines; kept ${saved.split('\n').filter(Boolean).length} lines (${saved.length} chars)`);
   if (typed.split('\n').length > saved.split('\n').length && typed.length <= 2000) R.fails.push('#6 whole lines the box accepted were dropped from the list');
   if (typed.length >= 2000 && !typed.endsWith(lines[lines.length - 1])) R.notes.push('#6 the box cut the paste mid-line at 2,000 characters; the cut last line was ' + (saved.endsWith(typed.split('\n').pop()) ? 'kept (a half line)' : 'dropped'));
   /* typed, then the page reloaded before Done or leaving (the phone closed the app) */
-  await L.tap(R, it().getByRole('button', { name: /^List:/ }), 'List');
+  await L.tap(R, it().getByRole('button', { name: /: list$/ }), 'List');
   await R.page.keyboard.type('typed before reload');
   await L.reload(R); await toSatchel(R);
   if (!/typed before reload/.test(await L.preview(R, 'Notes'))) R.notes.push('#6 a line typed and then the page reloaded (no blur) was not kept');
@@ -201,7 +201,7 @@ await S(6, 'long lists', async R => {
 await S(7, 'put on a day', async R => {
   await toSatchel(R);
   for (const n of ['Alpha', 'Bravo', 'Charlie']) await L.putSatchel(R, n);
-  const day = n => L.item(R, n).getByRole('button', { name: /^Put on a day:/ });
+  const day = n => L.item(R, n).getByRole('button', { name: /: put on a day$/ });
   await L.tap(R, day('Alpha'), 'Put on a day');
   const cells = L.item(R, 'Alpha').locator('.cal button');
   const nCells = await cells.count();

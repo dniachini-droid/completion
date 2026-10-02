@@ -7,9 +7,11 @@ import * as L from './lib.mjs';
 const [,, w = '390', h = '844', hm = '09:00'] = process.argv;
 const at = `2026-09-30T${hm}:00+01:00`;
 const SHOTS = process.env.SHOTS;
-const CHROME = new Set(['Map', 'Records', 'Satchel', 'Week', 'Daybook', '+ Add', 'Delve', 'I can’t start', 'Not today', 'Something else…', 'Settings',
-  'Plan my week', 'What repeats', 'Next week', 'This week', 'The week after', 'Today', 'Back', 'Put in', 'Marks', 'Keep going', 'Go to sleep', 'Begin',
-  'Lay out the rest of the week', 'Earlier', 'Later', 'Add a job', 'Trial', 'Close', 'Delve on it', 'List', 'Put on a day', 'Delete', 'Undo', 'Cancel', 'Put it in']);
+/* the app's own controls as they are now (the deep review's cleanup: "+ Add", "Something else…", "What repeats" and
+   "Marks" are long gone) */
+const CHROME = new Set(['Map', 'Records', 'Satchel', 'Week', 'Daybook', 'Add a job', 'Delve', 'I can’t start', 'Not today', 'Settings',
+  'Plan my week', 'Recurring jobs', 'Next week', 'This week', 'A later week', 'Today', 'Back', 'Put in', 'Symbols', 'Keep going', 'Go to sleep', 'Begin',
+  'Lay out the rest of the week', 'Earlier', 'Later', 'Trial controls', 'Close', 'Delve on it', 'List', 'Put on a day', 'Delete', 'Undo', 'Cancel', 'Put it in']);
 const name = (label, cls, i) => CHROME.has(label.trim()) ? `"${label.trim()}"` : `button#${i}.${cls}`;
 const all = { fails: 0, errors: 0 };
 const { launch } = await import('../flows/browser.mjs');
@@ -39,15 +41,15 @@ async function pressNth(R, i) {
 const froms = [
   ['today', []],
   ['satchel', ['Satchel']], ['week', ['Week']], ['daybook', ['Daybook']], ['map', ['Map']],
-  ['choose', ['Something else…']], ['set', [null]], ['cant', ['I can’t start']], ['settings', ['Daybook', 'Settings']],
-  ['week-next', ['Week', 'Next week']], ['week-after', ['Week', 'Next week', 'The week after']], ['rhythms', ['Week', 'What repeats']],
+  ['set', [null]], ['settings', ['Settings']],
+  ['week-next', ['Week', 'Next week']], ['week-after', ['Week', 'Next week', 'A later week']], ['rhythms', ['Week', 'Recurring jobs']],
 ];
 for (const [label, path] of froms) {
   /* a fresh game for each screen: the buttons pressed on one never change what the next finds */
   let R = await L.start({ w: +w, h: +h, at, tag: hm, browser });
   const goPath = async (R) => {
     for (const p of path) {
-      if (p === null) { await L.tap(R, R.page.locator('.next button.btn'), 'Delve'); continue; }
+      if (p === null) { await L.tap(R, R.page.locator('.rows button.row:not(.done)').first(), 'a job');  continue; }
       if (!(await L.has(R, p))) { R.fails.push(`[${label}] no "${p}" on the way`); return false; }
       await L.btn(R, p).first().click(); await R.page.clock.runFor(1400);
     }

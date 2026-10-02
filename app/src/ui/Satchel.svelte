@@ -10,7 +10,7 @@
   import { game, content } from './game.svelte';
   import { t, byWords, dayShort, oftenWords, minutesShort, minutesWords } from '../content/copy/en';
   import { satchelView, errandChoices, carriedOf, LIST_MAX } from '../core/game';
-  import { cleanLine, repeatOffer, suggest, tieFor, type Suggestion } from '../core/remember';
+  import { NAME_MAX, cleanLine, repeatOffer, suggest, tieFor, type Suggestion } from '../core/remember';
   import { nameKey } from '../core/week';
   import type { Job } from '../core/types';
   import Scene from './Scene.svelte';
@@ -21,6 +21,7 @@
   import { back } from './back.svelte';
   import { flushSync, onMount } from 'svelte';
   import { steady } from './taps';
+  import { haveWords } from './have';
   import { openMenu, openTick, waited, sayWaited } from './menu.svelte';
   import art from './scene/satchel.jpg';
 
@@ -29,7 +30,7 @@
      here focuses it again on the way back (review of D-131) */
   let { go, to }: { go: Go; to?: string } = $props();
   const forToday = $derived(to === 'today');
-  const v = $derived(game.view);
+  const v = $derived(game.whole);
   /* a job not done today can be ticked off, done without a delve (D-134); not while a delve runs */
   const busy = $derived(!!v.run || !!v.runEnd?.pending);
   const canTick = (j: Job) => !v.done.has(j.id) && !busy;
@@ -37,9 +38,9 @@
   const sofar = (j: Job) => { const m = carriedOf(game.facts, v.content, j.id); return m > 0 ? t('row.sofar', { min: minutesShort(m) }) : ''; };
   /* during a delve another job can be edited, moved or deleted, never started (D-143 E): a tap opens its menu */
   const tapJob = (j: Job) => () => { if (v.run || v.runEnd?.pending) menu(j)(); else delve(j); };
-  const s = $derived(satchelView(content, game.facts, game.now));
+  const s = $derived(satchelView(content, game.facts, game.minute));
   /* the errand run (D-139): several jobs on one trip out, when there are two to take and no delve is under way */
-  const errandsOpen = $derived(!busy && errandChoices(content, game.facts, game.now).length >= 2);
+  const errandsOpen = $derived(!busy && errandChoices(content, game.facts, game.minute).length >= 2);
   let text = $state('');
   let input = $state<HTMLInputElement | null>(null);
   /* one job at a time has its list open, or its days */
@@ -72,7 +73,7 @@
     if (tie?.same) { text = ''; picked = null; go('set', tie.job.id); return; }
     game.do({ do: 'delveNow', line, ...(tied ? { from: picked! } : {}) });
     text = ''; picked = null;
-    if (game.view.run) go('delve');
+    if (game.whole.run) go('delve');
   }
   function later() {
     const line = cleanLine(text);
@@ -93,14 +94,7 @@
     text = ''; picked = null;
     input?.blur(); go('back');
   }
-  function where(j: Job): string {
-    if (s.recurring.some(x => x.id === j.id)) return t('satchel.have.recurring', { job: j.name });
-    const waits = s.waiting.find(x => x.job.id === j.id);
-    if (waits) return t('satchel.have.waiting', { job: j.name, day: dayShort(waits.until) });
-    const coming = s.coming.find(x => x.job.id === j.id);
-    if (coming) return t('satchel.have.coming', { job: j.name, day: dayShort(coming.day) });
-    return t(s.noDay.some(x => x.id === j.id) ? 'satchel.have.noDay' : 'satchel.have.today', { job: j.name });
-  }
+  const where = (j: Job) => haveWords(j, s);
   /* a job from before fills the box; the box keeps the keyboard (no press takes its focus) */
   function choose(x: Suggestion) { text = x.job.name; picked = x.job.id; said = null; }
   /* the suggestions fold away with a tap anywhere else, and come back as Dan types (J16) */
@@ -131,7 +125,8 @@
     steady(); game.do({ do: 'putOnDay', job: j.id, day });
     placing = null; said = t('satchel.placed', { job: j.name, day: day === v.day ? t('pick.today') : dayShort(day) });
   }
-  function remove(j: Job) { saveList(); placing = null; said = null; game.remove(j.id); }
+  /* a recurring job deleted with its plan asks first, as the job menu does (H#9) */
+  function remove(j: Job) { saveList(); placing = null; said = null; if (v.content.rhythms.some(r => r.job === j.id)) openMenu(j.id, go, null, null, 'satchel', true); else game.remove(j.id); }
   function delve(j: Job) { saveList(); go('set', j.id); }
   function edit(j: Job) { saveList(); go('rhythms', j.id); }
   const acts = (j: Job) => [
@@ -174,7 +169,8 @@
          (D-143 C). Its name is said, and what Return does (J15) -->
     <form class="new satchel-add rise" bind:this={form} onsubmit={(e) => { e.preventDefault(); if (forToday) toToday(); else later(); }}>
       <label class="box-label" for="satchel-box">{forToday ? t('satchel.add.today') : t('satchel.add')}</label>
-      <input id="satchel-box" bind:this={input} bind:value={text} oninput={() => { said = null; folded = false; }} placeholder={forToday ? t('satchel.add.todayHint') : t('satchel.add.hint')} maxlength="120" enterkeyhint="done" autocomplete="off" />
+      <input id="satchel-box" bind:this={input} bind:value={text} oninput={() => { said = null; folded = false; }} placeholder={forToday ? t('satchel.add.todayHint') : t('satchel.add.hint')} maxlength={NAME_MAX} enterkeyhint="done" autocomplete="off" />
+      {#if text.length >= NAME_MAX}<p class="soft name-max">{t('name.max', { n: NAME_MAX })}</p>{/if}
       {#if forToday}
         <button class="btn-quiet full" type="submit" disabled={!text.trim()}><span>{t('satchel.toToday')}</span></button>
       {/if}
@@ -223,7 +219,7 @@
         <!-- while a delve runs, a tap here can't start another: as on Today (break-it review 6) -->
         <SwipeRow key={`s:${j.id}`} actions={acts(j)} tap={tapJob(j)} hold={menu(j)}>
           {#snippet lead()}{#if canTick(j)}<button class="tickbtn" aria-label={t('tick.sr', { job: j.name })} onclick={() => openTick(j.id, go)}><span class="ring"></span></button>{/if}{/snippet}
-          {#snippet row()}<span class="pip" class:under={canTick(j)}></span><span class="t">{j.name}{#if sofar(j)}<small>{sofar(j)}</small>{/if}</span><span class="s">{j.by ? byWords(j.by) : ''}</span>{/snippet}
+          {#snippet row()}<span class="pip" class:under={canTick(j)}></span><span class="t">{j.name}{#if sofar(j)}<small>{sofar(j)}</small>{/if}</span><span class="s">{j.by ? byWords(j.by, v.day) : ''}</span>{/snippet}
         </SwipeRow>
         {#if listing === j.id}
           <textarea class="list" bind:this={box} bind:value={draft} rows="4" maxlength={LIST_MAX} onblur={keep} aria-label={t('satchel.list.label', { job: j.name })}
@@ -233,8 +229,8 @@
           <button class="preview" onclick={() => openList(j)}>{preview(j)}</button>
         {/if}
         <div class="acts">
-          <button class="text-link" aria-expanded={listing === j.id} aria-label={`${listing === j.id ? t('satchel.list.done') : t('satchel.list')}: ${j.name}`} onclick={() => openList(j)}><span>{listing === j.id ? t('satchel.list.done') : t('satchel.list')}</span></button>
-          <button class="text-link" aria-expanded={placing === j.id} aria-label={`${t('satchel.day')}: ${j.name}`} onclick={() => openDays(j)}><span>{t('satchel.day')}</span></button>
+          <button class="text-link" aria-expanded={listing === j.id} aria-label={`${j.name}: ${(listing === j.id ? t('satchel.list.done') : t('satchel.list')).toLowerCase()}`} onclick={() => openList(j)}><span>{listing === j.id ? t('satchel.list.done') : t('satchel.list')}</span></button>
+          <button class="text-link" aria-expanded={placing === j.id} aria-label={`${j.name}: ${t('satchel.day').toLowerCase()}`} onclick={() => openDays(j)}><span>{t('satchel.day')}</span></button>
         </div>
         {#if placing === j.id}<DayPick from={v.day} label={t('satchel.day')} pick={d => place(j, d)} />{/if}
       </div>
@@ -278,7 +274,7 @@
     <div class="rows">
     {#each s.recurring as j (j.id)}
       {@const r = rhythmOf(j)}
-      <SwipeRow key={`s:${j.id}`} actions={acts(j)} tap={tapJob(j)} hold={menu(j)}>
+      <SwipeRow key={`s:${j.id}`} actions={acts(j)} tap={tapJob(j)} hold={menu(j)} label={r ? [j.name, oftenWords(r), minutesWords(j.length), ...(r.time ? [t('row.at', { time: r.time })] : [])].join(', ') : undefined}>
         {#snippet lead()}{#if canTick(j)}<button class="tickbtn" aria-label={t('tick.sr', { job: j.name })} onclick={() => openTick(j.id, go)}><span class="ring"></span></button>{/if}{/snippet}
         {#snippet row()}<span class="pip" class:under={canTick(j)}></span><span class="t">{j.name}{#if r}<small>{oftenWords(r)} · {minutesShort(j.length)}</small>{/if}</span><span class="s">{r?.time ?? ''}</span>{/snippet}
       </SwipeRow>
@@ -299,29 +295,29 @@
     mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 80%, transparent 100%), linear-gradient(to right, transparent 0, #000 10%, #000 90%, transparent 100%);
     mask-composite: intersect; transform-origin: 50% 0; will-change: transform, opacity; }
   .new { display: flex; flex-direction: column; gap: 8px; margin: 10px 0 4px; }
-  .new input { min-width: 0; min-height: 44px; padding: 0 12px; font: inherit; font-size: 17px; color: #fff;
+  .new input { min-width: 0; min-height: 44px; padding: 0 12px; font: inherit; font-size: calc(17px * var(--ts, 1)); color: #fff;
     background: rgba(255, 255, 255, .06); border: 1px solid var(--edge-2); border-radius: 0; }
   .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .new .btn-quiet { padding: 0 8px; min-height: 44px; }
   .new .btn-quiet:disabled { opacity: .5; }
   .new .btn-quiet.full { width: 100%; }
-  .box-label { font-family: var(--carve); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2); }
-  .return-says { margin: -2px 0 0; font-family: var(--life); font-style: italic; font-size: 14px; color: var(--ink-3); }
+  .box-label { font-family: var(--carve); font-size: calc(14px * var(--ts, 1)); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2); }
+  .return-says { margin: -2px 0 0; font-family: var(--life); font-style: italic; font-size: calc(14px * var(--ts, 1)); color: var(--ink-3); }
   .label-line { margin-top: 18px; margin-bottom: 4px; }
   .empty { margin: 6px 0 4px; text-align: left; }
   .item { padding-bottom: 2px; }
-  .rows :global(.row small) { display: block; font-size: 14px; color: var(--ink-2); margin-top: 2px; }
+  .rows :global(.row small) { display: block; font-size: calc(14px * var(--ts, 1)); color: var(--ink-2); margin-top: 2px; }
   .ghost { visibility: hidden; }
   .day { min-height: 44px; padding: 0 0 0 12px; }
-  .day span { font-size: 16px; color: var(--violet-hi); }
+  .day span { font-size: calc(16px * var(--ts, 1)); color: var(--violet-hi); }
   .preview { display: block; width: 100%; text-align: left; padding: 0 0 4px 32px; background: none; border: 0; cursor: pointer;
-    font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink-2); }
-  .list { display: block; width: 100%; margin: 2px 0 6px; padding: 8px 12px; font: inherit; font-size: 17px; line-height: 1.4; color: #fff;
+    font-family: var(--life); font-style: italic; font-size: calc(16px * var(--ts, 1)); color: var(--ink-2); }
+  .list { display: block; width: 100%; margin: 2px 0 6px; padding: 8px 12px; font: inherit; font-size: calc(17px * var(--ts, 1)); line-height: 1.4; color: #fff;
     background: rgba(255, 255, 255, .06); border: 1px solid var(--edge-2); border-radius: 0; resize: vertical; }
-  .full { margin: -2px 0 6px; font-size: 15px; font-style: italic; }
+  .full { margin: -2px 0 6px; font-size: calc(15px * var(--ts, 1)); font-style: italic; }
   .acts { display: flex; flex-wrap: wrap; gap: 0 16px; padding-left: 32px; }
-  .acts .text-link { min-height: 44px; min-width: 44px; font-size: 15px; }
-  .said { font-family: var(--life); font-style: italic; font-size: 15.5px; color: var(--ink-2); text-align: center; margin: 4px 0 8px; }
+  .acts .text-link { min-height: 44px; min-width: 44px; font-size: calc(15px * var(--ts, 1)); }
+  .said { font-family: var(--life); font-style: italic; font-size: calc(15.5px * var(--ts, 1)); color: var(--ink-2); text-align: center; margin: 4px 0 8px; }
   .links { display: flex; justify-content: center; margin-top: 12px; }
   .links.errand { margin-top: 0; }
   button.home { color: var(--ink-2); }
@@ -329,9 +325,9 @@
   .before { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--edge-2); }
   .pick { display: flex; align-items: baseline; gap: 12px; width: 100%; min-height: 44px; padding: 10px 12px; text-align: left;
     background: rgba(255, 255, 255, .03); border: 0; border-bottom: 1px solid var(--edge-2); cursor: pointer; font: inherit; color: #fff; }
-  .pick .t { flex: 1; min-width: 0; font-size: 17px; overflow-wrap: anywhere; }
-  .pick .u { flex: none; font-family: var(--life); font-style: italic; font-size: 15px; color: var(--ink-2); }
+  .pick .t { flex: 1; min-width: 0; font-size: calc(17px * var(--ts, 1)); overflow-wrap: anywhere; }
+  .pick .u { flex: none; font-family: var(--life); font-style: italic; font-size: calc(15px * var(--ts, 1)); color: var(--ink-2); }
   .offer { margin: 8px 0 6px; padding: 10px 12px 2px; border: 1px solid var(--edge-2); background: rgba(255, 255, 255, .04); }
-  .offer p { margin: 0; font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink); text-align: center; }
+  .offer p { margin: 0; font-family: var(--life); font-style: italic; font-size: calc(16px * var(--ts, 1)); color: var(--ink); text-align: center; }
   .acts.center { justify-content: center; padding-left: 0; }
 </style>

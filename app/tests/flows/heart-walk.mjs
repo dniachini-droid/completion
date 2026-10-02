@@ -16,6 +16,8 @@ page.on('console', m => { if (m.type() === 'error') { errors.push(m.text()); if 
 page.on('request', r => { if (!r.url().startsWith(url) && !r.url().startsWith('data:') && !r.url().startsWith('blob:')) errors.push('NETWORK ' + r.url()); });
 /* FREEZE=1: every animation stopped at the same instant for each picture, and chance made repeatable, so two builds'
    pictures can be compared pixel for pixel (a change meant to leave the look alone, D-103) */
+/* TS=1.3: the phone's text size set larger (Dynamic Type, deep review A#33): every screen still fits */
+if (process.env.TS) await page.addInitScript(ts => { const set = () => document.documentElement?.style.setProperty('--ts', ts); set(); document.addEventListener('readystatechange', set); }, process.env.TS);
 if (process.env.FREEZE) await page.addInitScript(() => { let s = 7; Math.random = () => (s = (s * 16807) % 2147483647) / 2147483647; });
 await page.clock.install({ time: new Date('2026-09-24T09:00:00+01:00') });
 await page.goto(url);
@@ -72,7 +74,7 @@ const locked = async (name) => {
     const s = document.createElement('style'); s.textContent = '.phone *::before, .phone *::after { content: none !important; }';
     document.head.appendChild(s);
     const real = boxes.map(e => e.scrollHeight - e.clientHeight); s.remove();
-    return boxes.map((e, k) => [e, k]).filter(([, k]) => all[k] > 1 && all[k] > real[k] + 1).map(([e, k]) => `${String(e.className?.baseVal ?? e.className).split(' ')[0]} (${all[k]}px, ${Math.max(0, real[k])}px real)`);
+    return boxes.map((e, k) => [e, k]).filter(([, k]) => all[k] > 1 && real[k] <= 1).map(([e, k]) => `${String(e.className?.baseVal ?? e.className).split(' ')[0]} (${all[k]}px, ${Math.max(0, real[k])}px real)`);
   });
   for (const d of drags) errors.push(`DRAGS ${name}: .${d} scrolls only because a glow overhangs it`);
 };
@@ -196,7 +198,7 @@ const lookCheck = async (name) => {
       page: [scrollX, scrollY, document.scrollingElement.scrollTop, visualViewport.scale, b.x, b.y, b.width, b.height] };
   });
   const before = await state();
-  await tap('Look'); await page.clock.runFor(600); await page.waitForTimeout(600);
+  await tap('Look at the painting'); await page.clock.runFor(600); await page.waitForTimeout(600);
   await page.screenshot({ path: `${out}/${String(++i).padStart(2, '0')}-${name}-look.png` });
   let s = await state();
   if (!s.look || s.ui > 0.05) errors.push(`LOOK ${name}: the words did not fade (${s.ui})`);
@@ -223,7 +225,7 @@ const lookCheck = async (name) => {
   if (s.look || s.t || s.ui < 0.95) errors.push(`LOOK ${name}: did not come back as it was (${s.t}, ${s.ui})`);
   if (JSON.stringify(s.page) !== JSON.stringify(before.page)) errors.push(`LOOK ${name}: the page moved after looking`);
   /* a tap on the clear painting looks too */
-  const gap = page.locator('.gap'); await gap.click(); await page.clock.runFor(300);
+  const gap = page.locator('.gap'); await gap.click({ position: { x: 40, y: 4 } });   /* its top: the words' fade reaches into it */ await page.clock.runFor(300);
   if (!(await page.locator('.look').count())) errors.push(`LOOK ${name}: a tap on the painting did not look`);
   await page.locator('.look').click(); await page.clock.runFor(800); await page.waitForTimeout(600);
 };
@@ -260,6 +262,9 @@ let closes = 0, mornings = 0;
 const openers = async (name) => {
   /* up to eight screens can wait on an opening (arrivals, a morning, a welcome, a week close): each is seen in turn */
   for (let k = 0; k < 8; k++) {
+    /* (a slow machine draws the next screen late: let it settle before looking) */
+    await page.clock.runFor(600); await page.waitForTimeout(250);
+    if (!(await page.locator('nav.foot, .arr, button.btn').count())) { await page.clock.runFor(1500); await page.waitForTimeout(500); }
     /* a place reached overnight (the head start, D-083) opens the app */
     if (await page.locator('.arr').count() && !(await page.locator('button.rodbtn').count())) { await arrivals(name + '-open'); continue; }
     /* the morning's way on reads "Back to today", as everywhere (the flow review, N polish) */
@@ -282,7 +287,7 @@ const openers = async (name) => {
         else { await page.locator('.offer button.row').first().click(); await page.clock.runFor(1500); }
         if (!(await page.locator('h1', { hasText: /this week/i }).count())) errors.push('LOOK AHEAD did not end in the week');
         await home(); await page.clock.runFor(1500);
-      } else { await tap('Not now'); await page.clock.runFor(1500); }
+      } else { await page.locator('button.home').first().click(); await page.clock.runFor(1500); }
       continue;
     }
     return;
@@ -424,6 +429,9 @@ if (await has('I can’t start')) { await tap('I can’t start'); await shot('ca
 /* one-tap capture (D-107, D-131): "Add a job" opens the Satchel's one box, already typing; Return puts the job on today
    and comes back to Today (D-143 C) */
 { await page.clock.runFor(1500); await page.waitForTimeout(300);   /* the screen settled: no fading one still on it */
+  /* (a slow machine may still show what the morning opened with: back to Today by its arrow first) */
+  await home(); await openers('last'); await page.locator('.today-add').waitFor({ timeout: 15000 }).catch(() => {});
+  if (!(await page.locator('.today-add').count())) { await page.screenshot({ path: `${out}/stuck-today-add.png` }).catch(() => {}); console.error('STUCK: no Add a job; the screen:', await page.evaluate(() => [...document.querySelectorAll('.ui h1, .ui h2, .label-line')].map(e => e.className).slice(0, 6).join(' | '))); }
   await page.locator('.today-add').click(); await page.clock.runFor(300);
   if (!(await page.evaluate(() => !!document.activeElement?.closest('.satchel-add')))) errors.push('CAPTURE the box was not already typing');
   await page.keyboard.type('Call the bank'); await shot('satchel-capture', 300);

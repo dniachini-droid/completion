@@ -56,7 +56,7 @@ else {
   await page.locator('.cal').getByRole('button', { name: /^Wednesday 14 October/ }).click(); await page.clock.runFor(1200);
   if (await page.locator('.day button.row', { hasText: 'Sweep the yard' }).count()) fails.push('Sweep the yard is still in this week after Another day');
   /* the week after next: it is there, on its Wednesday */
-  await btn('Next week').click(); await page.clock.runFor(1200); await btn('The week after').click(); await page.clock.runFor(1200);
+  await btn('Next week').click(); await page.clock.runFor(1200); await btn('A later week').click(); await page.clock.runFor(1200);
   if (!(await page.locator('.day button.row', { hasText: 'Sweep the yard' }).count())) fails.push('Sweep the yard is not in the week it was moved to');
 }
 /* 4. a done job in the Week: Delete; it leaves the week and the minutes stay */

@@ -83,7 +83,8 @@ const helpers = page => {
   for (let k = 0; k < 3 && !(await onToday()); k++) await tap(page.locator('button.home'), 'the arrow');
   if (!(await onToday())) fails.push('three arrows from Records did not reach Today');
   /* bug 3: the editor from the set-up: "Back to <the job>", never "Back to Back" */
-  await tap(page.locator('.rows button.row').filter({ has: page.locator('.t', { hasText: /^Course$/ }) }), 'the Course row');
+  /* (any job on Today: after days away the day holds only what was planned for it, deep review Part 2 #1) */
+  await tap(page.locator('.rows button.row:not(.done)').first(), 'a job\'s row');
   await tap(btn('Edit'), 'Edit on the set-up');
   const named = await arrow();
   if (!named || named === 'Back' || named === 'Today') fails.push(`the editor from the set-up says "${named}", not the job`);

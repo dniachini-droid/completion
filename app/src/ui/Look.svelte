@@ -90,7 +90,7 @@
   /* above the screen's words and buttons; it takes every touch, so nothing beneath can be pressed while looking */
   .look { position: absolute; inset: 0; z-index: 8; touch-action: none; -webkit-user-select: none; user-select: none;
     display: flex; align-items: flex-end; justify-content: center; padding-bottom: calc(var(--safe-b) + 28px); outline: none; }
-  .hint { font-style: italic; font-size: 15px; color: var(--ink-2); text-shadow: 0 1px 10px rgba(6,5,16,.9);
+  .hint { font-style: italic; font-size: calc(15px * var(--ts, 1)); color: var(--ink-2); text-shadow: 0 1px 10px rgba(6,5,16,.9);
     opacity: 0; animation: hint 3.4s .5s var(--ease) both; pointer-events: none; }
   @keyframes hint { 0% { opacity: 0; } 15%, 70% { opacity: 1; } 100% { opacity: 0; } }
 </style>

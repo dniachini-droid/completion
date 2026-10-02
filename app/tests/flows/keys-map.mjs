@@ -36,13 +36,29 @@ const btn = name => page.getByRole('button', { name, exact: true });
 if (!(await onToday())) fails.push('never reached Today');
 const keys = await page.locator('button.keys span').textContent().catch(() => '');
 if (!/\d Keys?/.test(keys ?? '')) fails.push(`Today does not show the Keys kept: "${keys}"`);
-const link = page.locator('.key-use button');
+/* one Key link on Today, on the Keys' own line (deep review H#8): "Use one here" asks once and opens what is locked here;
+   "On the Map" opens the Map where a Key can be used */
+if (await page.locator('.key-use').count() !== 1) fails.push(`Today has ${await page.locator('.key-use').count()} Key links, not one`);
+const link = page.locator('.key-line .key-use');
 const linkSays = (await link.textContent().catch(() => ''))?.trim();
-if (!/^Use (it|one) (here|on the Map)$/.test(linkSays ?? '')) fails.push(`no "Use it on the Map" link: "${linkSays}"`);
+if (!/^(Use (it|one) here|On the Map)$/.test(linkSays ?? '')) fails.push(`no Key link on Today's Key line: "${linkSays}"`);
 await shot('1-today');
+if (/here$/.test(linkSays ?? '')) {
+  const before = await page.locator('button.keys span').textContent().catch(() => '');
+  await tap(link, 'Use one here');
+  if (!(await btn('Use it here').count()) || !(await btn('Keep it').count())) fails.push('"Use one here" did not ask Use it here · Keep it');
+  await tap(btn('Keep it'), 'Keep it');
+  if ((await page.locator('button.keys span').textContent().catch(() => '')) !== before) fails.push('Keep it spent a Key');
+  await tap(link, 'Use one here again');
+  await tap(btn('Use it here'), 'Use it here');
+  if (!/You used a Key/i.test((await page.locator('.label-line').first().textContent().catch(() => '')) ?? '')) fails.push('Use it here did not open what is locked here');
+  if ((await arrow()) !== 'Today') fails.push(`opened from Today, its arrow says "${await arrow()}"`);
+  await tap(page.locator('button.home'), 'back to Today');
+}
 
-/* S2: the link opens the Map on a stretch whose box offers "Use a Key" */
-await tap(link, 'the Key link');
+/* S2: the Map, opened from Today, offers "Use a Key" where one can be used */
+if (/here$/.test(linkSays ?? '') || !(await page.locator('.key-line .key-use').count())) await tap(page.locator('.top .icon-link', { hasText: 'Map' }), 'the Map');
+else await tap(page.locator('.key-line .key-use'), 'On the Map');
 const useKey = () => page.getByRole('button', { name: /^Use a Key: / }).first();
 const uses = await page.getByRole('button', { name: /^Use a Key: / }).count();
 if (!uses) fails.push('the Map the link opened offers no "Use a Key"');

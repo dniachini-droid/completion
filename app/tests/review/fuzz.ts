@@ -54,7 +54,11 @@ export function check(facts: Fact[], view: View, now: string): Problem[] {
   /* a job is never paid twice: one Done per job per day; one end per run; a run's steps never more than it ran or
      than it was set for; the end says what the steps paid */
   const doneKey = new Set<string>();
-  for (const f of facts) if (f.type === 'jobDone') { const k = `${f.job}|${f.day}`; if (doneKey.has(k)) bad('doneTwice', k); doneKey.add(k); }
+  /* (one standing at a time: a session formed again by a later delve sets the first aside, deep review B2) */
+  for (const f of facts) {
+    if (f.type === 'jobDone') { const k = `${f.job}|${f.day}`; if (doneKey.has(k)) bad('doneTwice', k); doneKey.add(k); }
+    else if (f.type === 'doneUndone') doneKey.delete(`${f.job}|${f.on}`);
+  }
   const runs = facts.filter((f): f is Extract<Fact, { type: 'delveStarted' }> => f.type === 'delveStarted');
   const lastAt = facts.length ? epochOf(facts[facts.length - 1].at) : 0;
   for (const r of runs) {
@@ -83,7 +87,12 @@ export function check(facts: Fact[], view: View, now: string): Problem[] {
   }
   /* a fact's day is its moment's game day, except a run's own facts (kept on the run's day across 04:00, D-120) */
   const runDay = new Set(['stepsGained', 'delveEnded', 'jobDone', 'findGiven', 'beatPlayed', 'arrived', 'recordShown', 'keyEarned', 'keyHeld', 'keyUsed', 'sealOpened', 'dayCompleted', 'storyWeekBegan', 'jobSaved', 'jobBegun']);
-  for (const f of facts) if (f.type !== 'planChanged' && !runDay.has(f.type) && f.day !== gameDay(f.at)) bad('dayMismatch', `${f.type} day ${f.day} at ${f.at}`);
+  /* (or a later day already in the log: the game day never goes back, deep review R#6) */
+  let latest = '';
+  for (const f of facts) {
+    if (f.type !== 'planChanged' && !runDay.has(f.type) && f.day !== gameDay(f.at) && !(f.day > gameDay(f.at) && f.day <= latest)) bad('dayMismatch', `${f.type} day ${f.day} at ${f.at}`);
+    if (f.day > latest) latest = f.day;
+  }
   /* the view: the slate names only jobs that exist; the run's job exists */
   const ids = new Set(view.content.jobs.map(j => j.id));
   for (const id of view.slate) if (!ids.has(id)) bad('slateMissingJob', id);

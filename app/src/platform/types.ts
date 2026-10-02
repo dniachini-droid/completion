@@ -9,7 +9,10 @@ export interface Notifier {
   at(id: number, when: Date, title: string, body: string): Promise<void>;
   cancel(ids: number[]): Promise<void>;
   /** A reminder (D-107): like `at`, with one action on it, "Again in 10 min", which sounds it once more (ids `again`). */
-  remind(id: number, when: Date, title: string, body: string, again: { label: string; ids: number[] }): Promise<void>;
+  /** `job`: the job it is for, carried by its snooze, so a snooze is cancelled once that job is done or gone (B12). */
+  remind(id: number, when: Date, title: string, body: string, again: { label: string; ids: number[] }, job?: string): Promise<void>;
+  /** The alerts still to come among `ids`, with the job each is for (a snooze, laid out by the phone itself, B12). */
+  pending(ids: number[]): Promise<{ id: number; job?: string }[]>;
 }
 /** tick: a small tap (the rod settling, a mark cut); ring: one long buzz (a word locking, the story job's §7). */
 export interface Haptics { tick(): Promise<void>; ring(): Promise<void>; }
@@ -22,6 +25,8 @@ export interface Away {
   watch(on: boolean, alerts: number[]): void;
   /** When Dan last went into another app during a delve (the phone's ms), once: null if he didn't (a lock is not leaving). */
   take(): Promise<number | null>;
+  /** That time away is in the save: the phone may forget it (deep review P#8). */
+  clear?(at: number): Promise<void>;
   /** The same, read once before the game starts (a cold start after the phone closed the app while he was away). */
   readonly first: number | null;
   /** The last few times the app went to the background during a delve, and how each was read (the trial screen). */
@@ -39,6 +44,8 @@ export interface PanelState {
   start: number; end: number;
   /** While paused: how much of the delve is done, and its time left ("12:40"), still. */
   heldFraction: number; heldTime: string;
+  /** Where on the ring the 5-minute mark falls (a fraction of the delve), 0 for none (MORNING-REPORT Part 3 #6). */
+  notch: number;
   /** What it shows once `end` passes with the app closed (it can't change its words without the app): the rest of
       the run, counted down to its end, or (afterStart = afterEnd = 0) that the delve is over. */
   afterLabel: string; afterLine: string; afterLeft: string;
@@ -67,7 +74,8 @@ export interface Calendar {
   permit(): Promise<boolean>;
   calendars(): Promise<{ id: string; title: string }[]>;
   /** The next `days` days' events, as local wall-clock times. */
-  events(days: number): Promise<import('../core/types').CalEvent[]>;
+  /** null: the read failed or was refused (never "empty", deep review P#6). */
+  events(days: number): Promise<import('../core/types').CalEvent[] | null>;
   /** Told when the calendar changes (the app reads it again). */
   onChange(f: () => void): void;
 }
@@ -76,6 +84,8 @@ export interface Inbox {
   take(): Promise<{ id: string; text: string }[]>;
   /** Forget the lines the game has written. */
   clear(ids: string[]): Promise<void>;
+  /** A line arrived while the app runs (P#22). */
+  onAdd?(f: () => void): void;
 }
 export interface Platform {
   notifier: Notifier; haptics: Haptics; store: Store; sound: Sound; now(): Date; away: Away;

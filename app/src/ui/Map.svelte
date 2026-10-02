@@ -1,21 +1,27 @@
 <script lang="ts">
+  import Prose from './Prose.svelte';
   /* The map (FIRST_PLAYABLE → the world; mock-up map.html; INTERACTION_NOTES → The map): lights on the region's own night
      sky, joined by routes that draw themselves in and settle to dust. One map, one level (D-092: the closer view was two
      maps to Dan): the region, opening on where Dan is. Tap a light: the crosshair closes on it and what is known of it
      rises in the box (a stretch's places reached, a sealed thing in view, the forecast). Only what has been reached is
      named; the way ahead is a faint light, unnamed. Never a count of what's left (UX 6). */
   import { game, content } from './game.svelte';
-  import { t, dayName } from '../content/copy/en';
+  import { t, dayName, relDay, minutesShort } from '../content/copy/en';
   import { placeAhead, openable, lockedOn, openedNiches } from '../core/story';
   import skyUrl from './scene/map-sky.svg?url';
   import type { Go } from './nav';
   import { back } from './back.svelte';
   import type { StretchId } from '../core/story-types';
   import type { FactOf } from '../core/types';
+  import { onMount } from 'svelte';
+  import { onRest } from './rest';
+  /* the sparks move by SMIL, which only the drawing's own clock pauses: opened while at rest, they rest too (F#2) */
+  let chart = $state<SVGSVGElement | null>(null);
+  onMount(() => onRest(r => { if (r) chart?.pauseAnimations(); else chart?.unpauseAnimations(); }));
 
   /* focus: a stretch to open on (Today's "Use it on the Map", D-142) */
   let { go, focus }: { go: Go; focus?: string } = $props();
-  const v = $derived(game.view);
+  const v = $derived(game.whole);
   const s = content.story;
   const calm = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -69,12 +75,13 @@
   function useKey(id: string) { game.do({ do: 'useKey', seal: id }); go('opened', id); }
   /* the plan's forecast (PLANNER → the forecast): where the next places would be reached; gone the moment the plan changes */
   const ahead = $derived(v.forecast.slice(0, 2));
-  const fcSay = (day: string) => t('map.forecastSay', { day: dayName(day) });
+  const fcSay = (day: string) => t('map.forecastSay', { day: relDay(day, v.day) });
   const firstSentence = (line: string) => (line.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? line);
   /* "Ahead: The Survey Cut, the tin box…" under "The Survey Cut" says the name twice: the ahead line drops it */
   const unsaid = (where: string, name: string) => where.toLowerCase().startsWith(name.toLowerCase() + ', ') ? where.slice(name.length + 2) : where;
-  /* the light is named for the stretch, the box for the place: both said, so a glance never reads two places (L B7) */
-  const hereBox = $derived({ label: v.here.name.toLowerCase() === stretchName(v.here.stretch).toLowerCase() ? t('map.hereLabel') : t('map.hereIn', { stretch: stretchName(v.here.stretch) }), title: v.here.name, say: v.ahead ? `${t('today.ahead')}: ${firstSentence(unsaid(v.ahead, v.here.name))}` : firstSentence(v.here.line) });
+  /* the light is named for the stretch, the box for the place: both said, so a glance never reads two places (L B7); a
+     locked thing behind him is "Behind you", as Today says (deep review B6) */
+  const hereBox = $derived({ label: v.here.name.toLowerCase() === stretchName(v.here.stretch).toLowerCase() ? t('map.hereLabel') : t('map.hereIn', { stretch: stretchName(v.here.stretch) }), title: v.here.name, say: v.ahead ? `${v.aheadBehind ? t('today.behind') : v.aheadHere ? t('today.here') : t('today.ahead')}: ${firstSentence(unsaid(v.ahead, v.here.name))}` : firstSentence(v.here.line) });
 
   /* the places reached on foot or by Key, by stretch, in the order reached: each one's entry can be read again (D-135);
      and the camps made there, each once (its latest night), so an earlier camp's words are never lost (the flow review) */
@@ -94,18 +101,21 @@
       const a = AT[k], here = k === v.here.stretch;
       if (walkedOn.has(k)) {
         const names = placed.filter(b => b.stretch === k).map(b => b.name!);
-        const fc = here && aheadOn === k && ahead.length ? t('map.forecast', { day: dayName(ahead[0]) }) : undefined;
+        const fc = here && aheadOn === k && ahead.length ? t('map.forecast', { day: relDay(ahead[0], v.day) }) : undefined;
         out.push({ key: k, ...a, kind: here ? 'here' : 'lit', name: stretchName(k),
           sub: here ? t('map.here') : sealedOn(k).length ? t('map.sealed') : undefined, subKind: here ? 'warm' : 'dim',
           box: here ? hereBox
             : { label: sealedOn(k).length ? t('map.walkedSealed') : t('map.walked'), title: stretchName(k), say: names.length ? names.join(' · ') : t('map.wayIn') } });
         /* on its own line: joined to "you are here" it ran off the screen's left edge (UI review, D-130) */
         if (fc) out[out.length - 1].sub2 = fc;
+        /* the next place on this same stretch: its minutes under "you are here" (MORNING-REPORT Part 3 #10, fresh review) */
+        else if (here && aheadOn === k && v.toNext) out[out.length - 1].sub2 = t('map.nextOn', { min: minutesShort(v.toNext) });
         const reads = reached.filter(r => r.stretch === k);
         if (reads.length) out[out.length - 1].reads = reads;
       } else if (k === aheadOn) {
         out.push({ key: k, ...a, kind: 'faint',
-          sub: ahead.length ? t('map.forecast', { day: dayName(ahead[0]) }) : t('map.ahead'), subKind: ahead.length ? 'gold' : 'dim',
+          /* the next place, with its minutes (MORNING-REPORT Part 3 #10); the forecast keeps its own line uncluttered */
+          sub: ahead.length ? t('map.forecast', { day: relDay(ahead[0], v.day) }) : v.toNext ? `${t('map.ahead')} · ${minutesShort(v.toNext)}` : t('map.ahead'), subKind: ahead.length ? 'gold' : 'dim',
           box: { label: t('map.aheadLabel'), title: t('map.aheadName'), say: ahead.length ? fcSay(ahead[0]) : t('map.aheadSay') } });
       }
     }
@@ -169,11 +179,13 @@
     if (Math.abs(dx) + Math.abs(dy) > 5) dragged = true;
     if (dragged) { field.scrollLeft = drag.l - dx; field.scrollTop = drag.t - dy; }
   };
-  const up = () => { drag = null; setTimeout(() => { dragged = false; }, 0); };
+  let upTimer: ReturnType<typeof setTimeout> | undefined;
+  const up = () => { drag = null; clearTimeout(upTimer); upTimer = setTimeout(() => { dragged = false; }, 0); };
+  onMount(() => () => clearTimeout(upTimer));
 </script>
 
 <div class="sky" aria-hidden="true"><img src={skyUrl} alt="" /></div>
-<div class="fog" aria-hidden="true"><i class="drift-a"></i><i class="drift-b"></i></div>
+<div class="fog" aria-hidden="true"><i></i></div>
 <div class="grain" aria-hidden="true"></div>
 <div class="vignette" aria-hidden="true"></div>
 <div class="scrim-top" aria-hidden="true" style="height:200px"></div>
@@ -191,7 +203,7 @@
   </header>
 
   <div class="field" data-pan="map" bind:this={field} onpointerdown={down} onpointermove={move} onpointerup={up} onpointerleave={up} role="presentation">
-    <svg viewBox="0 0 {RW} {RH}" width={RW * k} height={RH * k} role="group" aria-label={t('map.label')}>
+    <svg bind:this={chart} viewBox="0 0 {RW} {RH}" width={RW * k} height={RH * k} role="group" aria-label={t('map.label')}>
       <defs>
         <radialGradient id="litPool"><stop offset="0" stop-color="#f4f2ff" stop-opacity="1"/><stop offset=".1" stop-color="#cdc6ff" stop-opacity=".75"/><stop offset=".32" stop-color="#8a7cf0" stop-opacity=".38"/><stop offset=".65" stop-color="#4a3fb0" stop-opacity=".14"/><stop offset="1" stop-color="#1c1846" stop-opacity="0"/></radialGradient>
         <radialGradient id="seenPool"><stop offset="0" stop-color="#dfe2ff" stop-opacity=".85"/><stop offset=".12" stop-color="#9aa3f4" stop-opacity=".45"/><stop offset=".45" stop-color="#4a50b0" stop-opacity=".16"/><stop offset="1" stop-color="#141638" stop-opacity="0"/></radialGradient>
@@ -214,7 +226,9 @@
             {:else if l.kind === 'lit'}
               <circle r="60" fill="url(#litPool)" opacity=".8" /><circle r="9" fill="#d2ccff" opacity=".55" filter="url(#b4)" /><circle r="3" fill="#fbfaff" filter="url(#b1)" />
             {:else if l.kind === 'faint'}
-              <circle r="24" fill="url(#seenPool)" opacity=".42" /><circle r="4" fill="#aeb6f0" opacity=".3" filter="url(#b1)" /><circle r="1.8" fill="#dfe3ff" opacity=".85" />
+              <!-- the next place as a dim outline, not yet a light (MORNING-REPORT Part 3 #10) -->
+              <circle r="24" fill="url(#seenPool)" opacity=".42" /><circle r="4" fill="#aeb6f0" opacity=".3" filter="url(#b1)" />
+              <path d="M-6 8 V-1 Q-6 -8 0 -8 Q6 -8 6 -1 V8" transform="translate(0 -1) scale(.9)" fill="none" stroke="#dfe3ff" stroke-opacity=".5" stroke-width="1.1" stroke-linecap="round" stroke-dasharray="2.2 1.6" />
             {:else if l.kind === 'sealed'}
               <circle r="26" fill="url(#seenPool)" opacity=".4" />
               <rect x="-5" y="-5" width="10" height="10" transform="rotate(45)" fill="none" stroke="#dcd8ff" stroke-width="1.2" filter="url(#b1)" />
@@ -230,6 +244,8 @@
       <g fill="none">
         {#each links as k, i}
           {#if k.walked}
+            <!-- the way walked, a faint gold path under the route (MORNING-REPORT Part 3 #10) -->
+            <path d={k.d} class="fadein" stroke="#f2c170" stroke-width="2.6" stroke-linecap="round" stroke-opacity=".2" style="animation-delay:{1.4 + i * 0.18}s" />
             <path d={k.d} class="drawn" pathLength="100" stroke="#d6d2ff" stroke-width="1.1" stroke-opacity=".72" filter="url(#lineGlow)" style="animation-delay:{0.35 + i * 0.18}s,{2.2 + i * 0.18}s" />
             <path d={k.d} class="dust" stroke="#dcd8ff" stroke-width="1.7" stroke-linecap="round" stroke-dasharray=".1 6" stroke-opacity=".38" style="animation-delay:{1.8 + i * 0.18}s" />
             {#if !calm}
@@ -290,7 +306,7 @@
                   {#each locks as x (x.id)}
                     <p class="lock"><span class="where">{x.where}</span>
                       {#if v.keys && canOpen.has(x.id)}<button class="text-link use" aria-label={t('map.useKeySr', { where: x.where })} onclick={() => useKey(x.id)}><span>{t('map.useKey')}</span></button>
-                      {:else}<span class="needs">{t('map.sealed')}</span>{/if}</p>
+                      {:else}<span class="sr-only">, </span><span class="needs">{t('map.sealed')}</span>{/if}</p>
                   {/each}
                   {#if !v.keys}<p class="soft lock-say">{t('map.noKey')}</p>{/if}
                 </div>
@@ -309,7 +325,7 @@
               <!-- the places reached here, each a tap from its entry and painting (D-135) -->
               <p class="say reads">{#each sel.reads as r, i (r.seq)}{#if i}<span class="sep" aria-hidden="true"> · </span>{/if}<button class="text-link read" aria-label={t('map.readAgain', { place: r.name })} onclick={() => go('arrival', `again:${r.seq}`)}><span>{r.name}</span></button>{/each}</p>
             {:else}
-              <p class="say" class:short={!!sel.reads?.length}>{sel.box.say}</p>
+              <p class="say" class:short={!!sel.reads?.length}><Prose text={sel.box.say} /></p>
               {@const place = sel.reads?.filter(r => !r.camp).pop()}
               {@const camps = sel.reads?.filter(r => r.camp) ?? []}
               {#if place}<p class="reads"><button class="text-link read" onclick={() => go('arrival', `again:${place.seq}`)}><span>{t('map.readHere')}</span></button></p>{/if}
@@ -331,7 +347,7 @@
   button.home { color: var(--ink-2); }
 
   .field { position: relative; flex: 1; min-height: 0; margin: 4px 0 8px; overflow: auto; scrollbar-width: none; overscroll-behavior: contain;
-    -webkit-overflow-scrolling: touch; touch-action: pan-x pan-y; cursor: grab; }
+    touch-action: pan-x pan-y; cursor: grab; }
   .field::-webkit-scrollbar { display: none; }
   .field svg { display: block; margin: 0 auto; overflow: visible; }
 
@@ -346,9 +362,9 @@
   @keyframes spark { 0% { opacity: 0; } 15%, 80% { opacity: .9; } 100% { opacity: 0; } }
 
   .labels { animation: fadein 1.2s var(--ease) .9s both; pointer-events: none; }
-  .nn { font-family: var(--carve); font-size: 15px; font-weight: 600; letter-spacing: .08em; fill: #e9e7ff; filter: url(#halo); }
+  .nn { font-family: var(--carve); font-size: calc(15px * var(--ts, 1)); font-weight: 600; letter-spacing: .08em; fill: #e9e7ff; filter: url(#halo); }
   .nn.here { fill: #fff; }
-  .ns { font-family: var(--life); font-style: italic; font-size: 16px; fill: #c3c3e8; filter: url(#halo); }
+  .ns { font-family: var(--life); font-style: italic; font-size: calc(16px * var(--ts, 1)); fill: #c3c3e8; filter: url(#halo); }
   .ns.warm { fill: #f1c98e; }
   .ns.gold { fill: var(--gold); }
   .ns.dim { fill: #9d9dcc; }
@@ -364,7 +380,7 @@
   .box { border: 1px solid var(--edge-2); padding: 14px 18px 16px; background: rgba(10,9,24,.6); height: 180px; display: flex; flex-direction: column; overflow: hidden; }
   .box .swap { flex: 1; min-height: 0; overflow: hidden; }
   .box h2 { margin: 8px 0 6px; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  .box .say { color: var(--ink-2); font-size: 16.5px; line-height: 1.42; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .box .say { color: var(--ink-2); font-size: calc(16.5px * var(--ts, 1)); line-height: 1.42; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
   .swap { animation: rise .45s var(--ease) both; }
   .box .say.short { -webkit-line-clamp: 2; line-clamp: 2; }
   /* the places reached: all of them, scrolling inside the box if there are many (the box keeps its size, D-076) */
@@ -375,13 +391,13 @@
   .box .swap:has(.locks) { overflow-y: auto; scrollbar-width: none; }
   .lock .use.again { color: var(--ink-2); }
   .locks { margin: 0 0 8px; border-bottom: 1px solid var(--edge-2); padding-bottom: 6px; }
-  .lock { margin: 4px 0; display: flex; gap: 10px; align-items: baseline; justify-content: space-between; font-size: 15px; line-height: 1.35; color: var(--ink-2); }
+  .lock { margin: 4px 0; display: flex; gap: 10px; align-items: baseline; justify-content: space-between; font-size: calc(15px * var(--ts, 1)); line-height: 1.35; color: var(--ink-2); }
   .lock .where { flex: 1; min-width: 0; }
-  .lock .use { flex: none; color: #f2c170; font-size: 15px; }
-  .lock .needs { flex: none; font-family: var(--life); font-style: italic; color: #e9d9b4; font-size: 14px; }
-  .lock-say { margin: 4px 0 0; font-size: 14px; }
-  .read { min-height: 40px; padding: 2px 0; }
-  .read span { font-family: var(--life); font-size: 16.5px; color: var(--ink); }
+  .lock .use { flex: none; color: #f2c170; font-size: calc(15px * var(--ts, 1)); }
+  .lock .needs { flex: none; font-family: var(--life); font-style: italic; color: #e9d9b4; font-size: calc(14px * var(--ts, 1)); }
+  .lock-say { margin: 4px 0 0; font-size: calc(14px * var(--ts, 1)); }
+  .read { min-height: 44px; padding: 2px 0; }   /* a finger's height (A#40) */
+  .read span { font-family: var(--life); font-size: calc(16.5px * var(--ts, 1)); color: var(--ink); }
   .sep { color: var(--ink-3); }
   @media (prefers-reduced-motion: reduce) { .drawn, .dust, .pl, .labels, .reticle, .swap { animation: none; opacity: 1; } .drawn { opacity: 0; } .reticle { transition: none; } }
 </style>

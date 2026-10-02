@@ -24,6 +24,7 @@
 		D5A0E6000000000000000002 /* CopyPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A0E6000000000000000001 /* CopyPlugin.swift */; };
 		D5A0E7000000000000000002 /* InboxPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A0E7000000000000000001 /* InboxPlugin.swift */; };
 		D5A0E8000000000000000002 /* CalendarPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A0E8000000000000000001 /* CalendarPlugin.swift */; };
+		AA0000000000000000000A02 /* AgainNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000A01 /* AgainNotifications.swift */; };
 		D0A1E5000000000000000007 /* DelveLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A1E5000000000000000006 /* DelveLiveActivity.swift */; };
 		D0A1E500000000000000000A /* LiveActivity.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D0A1E5000000000000000009 /* LiveActivity.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -71,6 +72,7 @@
 		D5A0E6000000000000000001 /* CopyPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyPlugin.swift; sourceTree = "<group>"; };
 		D5A0E7000000000000000001 /* InboxPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxPlugin.swift; sourceTree = "<group>"; };
 		D5A0E8000000000000000001 /* CalendarPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPlugin.swift; sourceTree = "<group>"; };
+		AA0000000000000000000A01 /* AgainNotifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgainNotifications.swift; sourceTree = "<group>"; };
 		D0A1E5000000000000000006 /* DelveLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DelveLiveActivity.swift; sourceTree = "<group>"; };
 		D0A1E5000000000000000008 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D0A1E5000000000000000009 /* LiveActivity.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = LiveActivity.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -125,6 +127,7 @@
 				D5A0E6000000000000000001 /* CopyPlugin.swift */,
 				D5A0E7000000000000000001 /* InboxPlugin.swift */,
 				D5A0E8000000000000000001 /* CalendarPlugin.swift */,
+				AA0000000000000000000A01 /* AgainNotifications.swift */,
 				50379B222058CBB4000EE86E /* capacitor.config.json */,
 				504EC3071FED79650016851F /* AppDelegate.swift */,
 				504EC30B1FED79650016851F /* Main.storyboard */,
@@ -267,6 +270,7 @@
 				D5A0E6000000000000000002 /* CopyPlugin.swift in Sources */,
 				D5A0E7000000000000000002 /* InboxPlugin.swift in Sources */,
 				D5A0E8000000000000000002 /* CalendarPlugin.swift in Sources */,
+				AA0000000000000000000A02 /* AgainNotifications.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

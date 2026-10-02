@@ -42,7 +42,8 @@ describe('Ticked off with the time it took (D-134)', () => {
     for (const minutes of [7, -30, 181, 0, 30.5]) p.do({ do: 'tickOff', job: 'cat', minutes });
     p.do({ do: 'tickOff', job: 'no-such-job', minutes: 30 });
     expect(p.facts).toHaveLength(n);
-    expect([...TICK_CHOICES]).toEqual([15, 30, 45, 60, 90, 120, 180]);
+    /* 5 and 10 too, no cap (Dan, deep review Part 2 #2; D-134 stands) */
+    expect([...TICK_CHOICES]).toEqual([5, 10, 15, 30, 45, 60, 90, 120, 180]);
   });
 
   it('after "Not yet": the delved minutes count with the time given, never twice; "No more" counts them alone', () => {
@@ -103,19 +104,22 @@ describe('The fresh review of D-134', () => {
     p.do({ do: 'tickOff', job: 'gym', minutes: 30 });
     expect(dones(p.facts, 'gym').map(x => x.minutes)).toEqual([60, 30]);
   });
-  it('a tick taken back by "Not done after all" carries: ticked again with "No more", nothing counts twice', () => {
+  it('a tick taken back by "Not done after all" is taken back (deep review B3): "No more" then has nothing behind it', () => {
     const p = player().do({ do: 'open' }).do({ do: 'tickOff', job: 'cat', minutes: 180 }).do({ do: 'notDone', job: 'cat' });
+    const n = p.facts.length;
     p.do({ do: 'tickOff', job: 'cat', minutes: 0 });
-    expect(steps(p.facts, 'cat')).toBe(180);
-    expect(dones(p.facts, 'cat').map(x => x.minutes)).toEqual([180, 180]);
+    expect(p.facts).toHaveLength(n);
+    expect(p.view().walked).toBe(180);   /* nothing reached is taken away */
+    expect(p.view().owed).toEqual({ taken: 180, left: 180 });
   });
-  it('a tick taken back carries into the next delve on the job (D-133)', () => {
+  it('a tick taken back never carries into the next delve on the job; that delve makes it up first (deep review B3)', () => {
     const p = player().do({ do: 'open' }).do({ do: 'tickOff', job: 'cat', minutes: 60 }).do({ do: 'notDone', job: 'cat' })
       .do({ do: 'startRun', job: 'cat', minutes: 30, count: 1 }).wait(25).do({ do: 'finishHere' });
-    expect(p.view().runEnd).toMatchObject({ carried: 60, total: 85 });
+    expect(p.view().runEnd).toMatchObject({ carried: 0, total: 25 });
     p.do({ do: 'done', job: 'cat', keepEnd: true });
-    expect(dones(p.facts, 'cat').pop()!.minutes).toBe(85);
-    expect(steps(p.facts, 'cat')).toBe(85);
+    expect(dones(p.facts, 'cat').pop()!.minutes).toBe(25);
+    expect(p.view().walked).toBe(60);
+    expect(p.view().owed).toEqual({ taken: 60, left: 35 });
   });
   it('never while any delve runs', () => {
     const p = player().do({ do: 'open' }).do({ do: 'startRun', job: 'gym', minutes: 30, count: 1 }).wait(5);

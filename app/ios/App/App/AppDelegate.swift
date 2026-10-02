@@ -7,7 +7,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        // "Again in 10 min" works with the app closed: its handler must be the phone's before launch ends (deep review B12)
+        AgainNotifications.shared.install()
         return true
     }
 

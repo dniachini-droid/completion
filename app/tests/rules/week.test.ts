@@ -2,6 +2,7 @@
  * Slice 4, the week and the gaps (PLANNER.md; TOOLS.md §2, §6; BALANCING.md §6–7; CORE_LOOPS → evening close, absence).
  * Ids only: no story text is asserted here.
  */
+import { doneFacts } from '../../src/core/done';
 import { describe, expect, it } from 'vitest';
 import { act, LIST_MAX, presetRun, returnOf, see, settle, type Command } from '../../src/core/game';
 import * as W from '../../src/core/week';
@@ -232,9 +233,11 @@ describe('The daybook’s week close', () => {
     const c = closes[0] as Extract<Fact, { type: 'weekClosed' }>;
     expect(c.n).toBe(1);
     expect(c.learned.length).toBeGreaterThan(0);
-    expect(c.learned.length).toBeLessThanOrEqual(3);
+    /* three for each story week begun in the calendar week (deep review S#4) */
+    const to = Math.max(1, ...s2.facts.flatMap(f => f.type === 'storyWeekBegan' && f.day < '2026-10-05' ? [f.w] : []));
+    expect(c.learned.length).toBeLessThanOrEqual(3 * to);
     expect(c.soFar.length).toBeGreaterThanOrEqual(3);
-    expect(c.soFar.length).toBeLessThanOrEqual(5);
+    expect(c.soFar.length).toBeLessThanOrEqual(6);
     expect(c.glimpse).toBe('b-w1.close');
   });
   it('learned lines never repeat, and only lines whose beats have played show', () => {
@@ -892,10 +895,10 @@ describe('any job counts for the minutes it was run for (Dan, D-121)', () => {
     expect(p.facts.filter(f => f.type === 'jobDone')).toEqual([expect.objectContaining({ job: 'spanish', minutes: 20 })]);
     expect(p.view().runEnd).toMatchObject({ enough: true, how: 'ranOut' });
   });
-  it('a second run the same day moves Dan but is not a second session', () => {
+  it('a second run the same day moves Dan and joins the day\'s one session (deep review B2)', () => {
     const p = player().do({ do: 'open' }).do({ do: 'startRun', job: 'gym', minutes: 10, count: 1 }).wait(11);
     p.do({ do: 'startRun', job: 'gym', minutes: 25, count: 1 }).wait(26);
-    expect(p.facts.filter(f => f.type === 'jobDone')).toHaveLength(1);
+    expect(doneFacts(p.facts).filter(f => f.job === 'gym').map(f => f.minutes)).toEqual([35]);
     expect(p.view().walked).toBe(35);
   });
   it('a zero-minute Finish here earns nothing and completes nothing (rule 10)', () => {
@@ -1138,16 +1141,16 @@ describe('Delete, everywhere (Dan, D-125)', () => {
 });
 
 describe('The break-it fixes (D-128)', () => {
-  it('the phone clock set back across 04:00: facts stay on the day the phone says, in time order, and Not today still works', () => {
+  it('the phone clock set back across 04:00: the game day never goes back (deep review R#6), facts in time order, and Not today still works', () => {
     const p = player('2026-09-28T10:00:00+01:00').do({ do: 'open' });
-    /* on to Tuesday 09:00, where something happens; then the clock is set back to 03:00, still Monday's game day */
+    /* on to Tuesday 09:00, where something happens; then the clock is set back to 03:00, Monday's game day by the clock */
     p.next().do({ do: 'open' }).wait(-6 * 60);
     const v = p.view();
-    expect(v.day).toBe(MON);
+    expect(v.day).toBe(W.addDays(MON, 1));
     const id = v.slate.find(x => !v.done.has(x) && x !== v.next?.job)!;
     p.do({ do: 'setAside', job: id });
     const k = p.facts.findIndex(x => x.type === 'setAside'), f = p.facts[k];
-    expect(f.day).toBe(MON);
+    expect(f.day).toBe(W.addDays(MON, 1));
     expect(Date.parse(f.at)).toBeGreaterThanOrEqual(Date.parse(p.facts[k - 1].at));
     expect(p.view().slate).not.toContain(id);
   });

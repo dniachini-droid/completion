@@ -25,12 +25,15 @@ const kept = new Map<string, string>();
 const nativeStore = {
   keys: () => [...kept.keys()],
   get: (k: string) => kept.get(k) ?? null,
-  set: (k: string, v: string) => { kept.set(k, v); void Preferences.set({ key: k, value: v }); },
-  remove: (k: string) => { kept.delete(k); void Preferences.remove({ key: k }); },
+  set: (k: string, v: string) => { kept.set(k, v); void Preferences.set({ key: k, value: v }).catch(() => {}); },
+  remove: (k: string) => { kept.delete(k); void Preferences.remove({ key: k }).catch(() => {}); },
 };
 async function readKept() {
-  const { keys } = await Preferences.keys();
-  for (const key of keys) { const { value } = await Preferences.get({ key }); if (value !== null) kept.set(key, value); }
+  /* guarded: settings that can't be read never stop the start (deep review P#17) */
+  try {
+    const { keys } = await Preferences.keys();
+    for (const key of keys) { try { const { value } = await Preferences.get({ key }); if (value !== null) kept.set(key, value); } catch { /* that one only */ } }
+  } catch { /* none read */ }
 }
 
 /* The app's own native part (app/ios/App/App/AwayPlugin.swift): telling locking the phone from going into another
@@ -38,6 +41,7 @@ async function readKept() {
 interface AwayPlugin {
   watch(o: { on: boolean; alerts: string[] }): Promise<void>;
   take(): Promise<{ at?: number }>;
+  clear(o: { at: number }): Promise<void>;
   log(): Promise<{ entries: { at: number; how: 'locked' | 'left' | 'unsure'; signs: string[] }[] }>;
 }
 const Native = registerPlugin<AwayPlugin>('Away');
@@ -47,6 +51,7 @@ const nativeAway: Away & { first: number | null } = {
   /* never waited on for long: a reply lost while the phone locks or wakes must not stop the game's clock for good */
   async take() { try { return (await Promise.race([Native.take(), new Promise<never>((_, no) => setTimeout(no, 2000))])).at ?? null; } catch { return null; } },
   async log() { try { return (await Native.log()).entries; } catch { return []; } },
+  async clear(at) { try { await Native.clear({ at }); } catch { /* asked again next time; the rules never pause twice */ } },
 };
 
 /* The delve's panel (D-095): the app's own small plugin, ios/App/App/DelvePanelPlugin.swift. A phone that has Live
@@ -90,19 +95,12 @@ async function openSaves() {
 }
 
 /* A reminder's one action (D-107): "Again in 10 min" sounds it once more, ten minutes on, from the phone's own
-   notification without opening the app. Registered once, when the first reminder is laid out. */
-let againReady: Promise<void> | null = null, againNext = 0;
+   notification without opening the app. The phone itself lays the repeat out (ios/App/App/AgainNotifications.swift), so
+   it works with the app closed (deep review B12); here the action is only registered, once. */
+let againReady: Promise<void> | null = null;
 function readyAgain(again: { label: string; ids: number[] }) {
-  return (againReady ??= (async () => {
-    await LocalNotifications.registerActionTypes({ types: [{ id: 'remind', actions: [{ id: 'again', title: again.label }] }] });
-    await LocalNotifications.addListener('localNotificationActionPerformed', async e => {
-      if (e.actionId !== 'again') return;
-      const x = (e.notification.extra ?? {}) as { title?: string; body?: string };
-      const id = again.ids[againNext++ % again.ids.length];
-      await LocalNotifications.schedule({ notifications: [{ id, title: x.title ?? e.notification.title, body: x.body ?? e.notification.body,
-        schedule: { at: new Date(Date.now() + 10 * 60_000), allowWhileIdle: true }, actionTypeId: 'remind', extra: x }] });
-    });
-  })().catch(() => { againReady = null; }));
+  return (againReady ??= LocalNotifications.registerActionTypes({ types: [{ id: 'remind', actions: [{ id: 'again', title: again.label }] }] })
+    .then(() => {}).catch(() => { againReady = null; }));
 }
 
 /* Copies of the save (D-107): the app's own small plugin, ios/App/App/CopyPlugin.swift. */
@@ -119,8 +117,11 @@ const nativeCopies: Copies = {
   async list(prefix) { return (await CopyNative.list({ prefix })).names; },
 };
 /* Capture from Siri, Shortcuts and the Action button (D-113): the app's own small plugin, ios/App/App/InboxPlugin.swift. */
-const InboxNative = registerPlugin<{ take(): Promise<{ lines: { id: string; text: string }[] }>; clear(o: { ids: string[] }): Promise<void> }>('Inbox');
+const InboxNative = registerPlugin<{ take(): Promise<{ lines: { id: string; text: string }[] }>; clear(o: { ids: string[] }): Promise<void>;
+  addListener(e: 'added', f: () => void): Promise<unknown> }>('Inbox');
 const nativeInbox: Inbox = {
+  /* a line said to Siri while the app is on screen: taken in at once (deep review P#22) */
+  onAdd(f) { void InboxNative.addListener('added', f).catch(() => {}); },
   async take() { try { return (await InboxNative.take()).lines ?? []; } catch { return []; } },
   async clear(ids) { try { await InboxNative.clear({ ids }); } catch { /* kept for next time; never added twice */ } },
 };
@@ -134,7 +135,8 @@ const CalNative = registerPlugin<{
 const nativeCalendar: Calendar = {
   async permit() { try { return (await CalNative.permit()).granted; } catch { return false; } },
   async calendars() { try { return (await CalNative.calendars()).calendars ?? []; } catch { return []; } },
-  async events(days) { try { return (await CalNative.events({ days })).events ?? []; } catch { return []; } },
+  /* null when it failed or access was refused: never "the calendar is empty" (deep review P#6) */
+  async events(days) { try { return (await CalNative.events({ days })).events ?? null; } catch { return null; } },
   onChange(f) { void CalNative.addListener('changed', f).catch(() => {}); },
 };
 /* In the screen checks: a calendar the check puts under 'bench.calendar' ({ calendars, events }). */
@@ -185,12 +187,19 @@ const native: Platform = {
       await LocalNotifications.schedule({ notifications: [{ id, title, body, schedule: { at: when, allowWhileIdle: true }, sound: undefined }] });
     },
     async cancel(ids) { await LocalNotifications.cancel({ notifications: ids.map(id => ({ id })) }); },
-    async remind(id, when, title, body, again) {
+    async remind(id, when, title, body, again, job) {
       await readyAgain(again);
-      await LocalNotifications.schedule({ notifications: [{ id, title, body, schedule: { at: when, allowWhileIdle: true }, actionTypeId: 'remind', extra: { title, body } }] });
+      await LocalNotifications.schedule({ notifications: [{ id, title, body, schedule: { at: when, allowWhileIdle: true }, actionTypeId: 'remind', extra: { title, body, ...(job ? { job } : {}) } }] });
+    },
+    async pending(ids) {
+      try {
+        const { notifications } = await LocalNotifications.getPending();
+        return notifications.filter(n => ids.includes(n.id)).map(n => ({ id: n.id, job: (n.extra as { job?: string } | undefined)?.job }));
+      } catch { return []; }
     },
   },
-  haptics: { tick: () => CapHaptics.impact({ style: ImpactStyle.Light }), ring: () => CapHaptics.vibrate({ duration: 450 }) },
+  /* never a rejection left unhandled (deep review P#24) */
+  haptics: { tick: () => CapHaptics.impact({ style: ImpactStyle.Light }).catch(() => {}), ring: () => CapHaptics.vibrate({ duration: 450 }).catch(() => {}) },
   panel: nativePanel,
 };
 
@@ -208,7 +217,7 @@ const benchAway: Away = {
 const benchSaves = textSaves(store, 'browser');
 const bench: Platform = {
   store, sound, now: () => new Date(), ready: async () => {}, app: false, copies: benchCopies, inbox: benchInbox, calendar: benchCalendar, away: benchAway, saves: benchSaves, saveTrouble: null,
-  notifier: { locked: false, permit: async () => false, at: async () => {}, cancel: async () => {}, remind: async () => {} },
+  notifier: { locked: false, permit: async () => false, at: async () => {}, cancel: async () => {}, remind: async () => {}, pending: async () => [] },
   panel: { show: async () => {}, end: async () => {} },
   haptics: {
     tick: async () => { try { navigator.vibrate?.(8); } catch { /* */ } },

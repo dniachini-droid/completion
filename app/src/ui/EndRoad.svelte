@@ -4,10 +4,15 @@
      behind it, in step with the ring's count (EndRing, tally.ts); the chamber and the place light as it passes them.
      Only the minutes this delve moved Dan are travelled (never counted twice). Transforms and opacity only; once.
      Today shows it still, with the minutes still to go after each label (`notes`, Dan, D-140). */
-  import { t } from '../content/copy/en';
+  import { t, minutesShort } from '../content/copy/en';
   import { once, whenAt, reduced, TALLY_MS, TALLY_DELAY, type TallyMode } from './tally';
 
-  let { road, from, to, mode, notes = {} }: { road: { from: number; chamber: number; to: number; place: boolean }; from: number; to: number; mode: TallyMode; notes?: { side?: string; place?: string } } = $props();
+  /* `spoken`: the line said in words for VoiceOver (deep review A#42), where nothing around it already says it (Today does) */
+  let { road, from, to, mode, notes = {}, spoken = true }: { road: { from: number; chamber: number; to: number; place: boolean }; from: number; to: number; mode: TallyMode; notes?: { side?: string; place?: string }; spoken?: boolean } = $props();
+  const say = $derived([
+    ...(road.place && road.to - to > 0 ? [t('today.road.place', { min: minutesShort(road.to - to) })] : []),
+    ...(road.chamber - to > 0 ? [t('today.road.side', { min: minutesShort(road.chamber - to) })] : []),
+  ].join(', '));
 
   let W = $state(300);
   let lit: HTMLElement, flame: HTMLElement;
@@ -43,6 +48,7 @@
   const ARCH = 'M-6 8 V-1 Q-6 -8 0 -8 Q6 -8 6 -1 V8';
 </script>
 
+{#if spoken && say}<p class="sr-only">{say}</p>{/if}
 <div class="road" class:moving={mode === 'play'} bind:clientWidth={W} aria-hidden="true" style="--life:{TALLY_MS + TALLY_DELAY}ms">
   <i class="track"></i>
   <i class="was" style="transform:scaleX({fFrom})"></i>
@@ -66,6 +72,7 @@
 </div>
 
 <style>
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
   .road { position: relative; width: 100%; max-width: 340px; height: 50px; margin: 0 auto 14px; }
   .road > i { position: absolute; display: block; }
   .track { left: 10px; right: 10px; top: 30px; height: 1px; background: linear-gradient(90deg, rgba(186, 186, 255, .34), rgba(186, 186, 255, .2)); }
@@ -82,7 +89,7 @@
   .side svg.on, .place svg.on { opacity: 0; filter: drop-shadow(0 0 4px rgba(143, 134, 255, 1)); transition: opacity .5s var(--ease); }
   .side svg.on.go, .place svg.on.go { opacity: 1; }
   .place.far svg { opacity: .35; }
-  .lab { position: absolute; top: -30px; left: 0; transform: translateX(-50%); white-space: nowrap; font-family: var(--life); font-style: italic; font-size: 13px; color: #c7c9e6; }
+  .lab { position: absolute; top: -30px; left: 0; transform: translateX(-50%); white-space: nowrap; font-family: var(--life); font-style: italic; font-size: calc(14px * var(--ts, 1)); color: #c7c9e6; }
   .place .lab { transform: translateX(-100%); left: 9px; top: 12px; }
   .side .lab { top: -28px; }
   .lab b { font-weight: inherit; color: #ece9ff; }

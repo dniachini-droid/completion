@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Prose from './Prose.svelte';
   /* A locked thing opened with a Key Dan chose to use (D-142, D-143 A): its own place's painting and name, so it never
      plays as if he had jumped back from where he is; its words; what it added to the records; the Keys left. A screen
      looked through: back returns where it was opened from (the Map, a job's return), never round in a loop (S1). Read
@@ -16,7 +17,7 @@
   let { go, id: arg }: { go: Go; id: string } = $props();
   const again = $derived(arg.startsWith('again:'));
   const id = $derived(arg.replace(/^again:/, ''));
-  const v = $derived(game.view);
+  const v = $derived(game.whole);
   const s = content.story;
   const x = $derived(sealOf(s, id));
   const opened = $derived(!!x && v.story.opened.has(x.id));
@@ -48,7 +49,7 @@
       {#if x && opened}
         <div class="label-line centred gold rise">{again ? t('opened.again') : t('opened.label')}</div>
         <h2 class="carve md rise d1">{x.where}</h2>
-        {#if line}<div class="rise d2"><Words plain length={line.length}><p class="say story on-scene">{line}</p></Words></div>{/if}
+        {#if line}<div class="rise d2"><Words plain length={line.length}><p class="say story on-scene"><Prose text={line} /></p></Words></div>{/if}
         {#if records.length}<p class="rise d3 recs"><button class="text-link" onclick={() => go('records', records[0])}><span>{t('opened.records')}</span></button></p>{/if}
         {#if !again}<p class="soft rise d3 left">{left}</p>{/if}
       {/if}

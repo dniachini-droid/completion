@@ -23,8 +23,8 @@
   <div class="paint scene" class:blur bind:this={host} aria-hidden="true" style="--ls:{f.s.toFixed(2)};--lt:{(f.t * 100).toFixed(1)}%"><img class="paint-img paint" src={p.url} alt="" /></div>
 {/key}
 <div class="pool" aria-hidden="true"></div>
-<div class="fog" aria-hidden="true"><i class="drift-a"></i><i class="drift-b"></i></div>
-<div class="fog warm" aria-hidden="true"><i class="drift-a"></i><i class="drift-b"></i></div>
+<div class="fog" aria-hidden="true"><i></i></div>
+<div class="fog warm" aria-hidden="true"><i></i></div>
 <div class="grain" aria-hidden="true"></div>
 <div class="vignette" aria-hidden="true"></div>
 <div class="scrim-top" aria-hidden="true" style="height:{top}"></div>

@@ -95,14 +95,21 @@ export type FactBody =
   | { type: 'errandsCounted'; run: number }
   | { type: 'breatherSkipped' }
   /** Paused: by hand (Pause), or by going into another app (why 'away', D-094), stamped when Dan left. */
-  | { type: 'delveHeld'; why?: 'away' }
+  /** `from`: the phone's instant Dan left (ms), when the fact itself had to be stamped later to keep the log in time order
+      (deep review: pauseAway's stamp); the hold counts from it */
+  | { type: 'delveHeld'; why?: 'away'; from?: number }
   | { type: 'delveResumed' }
   | { type: 'delveEnded'; job: string; minutes: number; how: 'ranOut' | 'finishedHere'; run: number }
   /** `today`: of `minutes`, those delved on the record's own day, when fewer (a one-off's carried minutes, D-133) */
   /** `errand`: struck off in that errand run (D-139) */
   | { type: 'jobDone'; job: string; minutes: number; today?: number; ticked?: number; errand?: number }
   /** "Not done after all" (D-131): the latest done record of the job on `on` no longer counts; what it earned stays */
-  | { type: 'doneUndone'; job: string; on: string }
+  /** `joined`: not Dan's "Not done after all" but a later delve on a recurring job that day, whose session is formed again
+      from all the day's minutes (deep review B2) */
+  | { type: 'doneUndone'; job: string; on: string; joined?: true }
+  /** "Not done after all" on a job ticked off (deep review B3): the minutes it was ticked with are taken back. Nothing
+      reached is taken away: the flame stays put, and the next minutes fill them before it moves on */
+  | { type: 'tickTakenBack'; job: string; minutes: number; on: string }
   /** Tonight's "Tomorrow starts with" (D-131): the job Today opens with on `on` (the next game day); null: as planned */
   | { type: 'firstChosen'; job: string | null; on: string }
   /** "Waiting on…" (D-137): a one-off Dan can't finish until someone replies, set aside until `until` (a game day), with
@@ -123,7 +130,8 @@ export type FactBody =
   /** A Key earned while nothing Dan has reached is sealed: kept, and used on the next arrival that has one (D-079). */
   | { type: 'keyHeld' }
   /** `chosen`: used on a locked thing Dan picked on the Map, never part of an arrival or a job's return (D-142). */
-  | { type: 'keyUsed'; chosen?: true }
+  /** `from`: the job's return (its done record's seq) whose "Use it here" spent it (deep review B1) */
+  | { type: 'keyUsed'; chosen?: true; from?: number }
   /** `road`: opened by the road on foot, with no Key (D-129). */
   | { type: 'sealOpened'; seal: string; how?: 'road' }
   | { type: 'findGiven'; id: string; why: 'avoided' | 'switching' | 'chamber' | 'camp' | 'surplus' | 'morning' | 'dated'; job?: number }

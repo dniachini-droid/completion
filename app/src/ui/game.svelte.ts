@@ -2,7 +2,7 @@
  * The screens' one handle on the game: the fact log, saved as it grows; the clock; what can be seen now.
  * Rules live in core; this file only reads the clock, keeps the save and schedules the phone's alerts.
  */
-import { act, alertsAfter, see, settle, type Command, type RunView } from '../core/game';
+import { act, alertsAfter, runs, runSecond, see, settle, type Command, type RunView, type View } from '../core/game';
 import type { RunMark } from '../core/run';
 import { panelOf } from './panel';
 import { steady } from './taps';
@@ -11,7 +11,7 @@ import type { Fact, Job, Rhythm } from '../core/types';
 import { content } from '../content/world';
 import { platform } from '../platform';
 import { t } from '../content/copy/en';
-import { COPIES_KEPT, COPY_PREFIX, copyDue, copyName, readSave, SAVE_VERSION, type Save } from '../core/save';
+import { COPIES_KEPT, copyDue, copyName, factsSound, readSave, SAVE_VERSION, WEEKLY_PREFIX, weeklyName, whyUnreadable, type Save } from '../core/save';
 import { alertsDue, nudgeDay, NUDGE_HOUR, type Alert } from '../core/reminders';
 import { calendarOf } from '../core/week';
 
@@ -39,17 +39,40 @@ const CAL_DAYS = 14;
 
 class Game {
   proto = $state<Proto>(loadProto());
-  facts = $state<Fact[]>([]);
-  now = $state<Moment>('2000-01-01T00:00:00Z');
-  view = $derived(see(this.facts, content, this.now));
+  /* raw: the log is only ever replaced, never changed in place, so it is not watched fact by fact (deep review F#1) */
+  facts = $state.raw<Fact[]>([]);
+  /* the true log, plain: a screen's teardown reads a signal's value from before the tap that closed it, so every write
+     works from this field, never from the signal; a teardown can then never shrink the log (deep review NEW-1) */
+  #log: Fact[] = [];
+  /** The log as it is now, whoever asks (a teardown included). */
+  get log(): Fact[] { return this.#log; }
+  #setLog(log: Fact[]) { this.#log = log; this.facts = log; this.#whole = this.#now; }
+  /* the clock, and the moment the view was last built whole: a delve's tick moves only the countdown, by the second; the
+     rest of the view is rebuilt when the log or the minute changes (deep review F#4) */
+  #now = $state<Moment>('2000-01-01T00:00:00Z');
+  #whole = $state<Moment>('2000-01-01T00:00:00Z');
+  get now(): Moment { return this.#now; }
+  set now(m: Moment) { this.#now = m; this.#whole = m; }
+  /** The view as built whole, by the minute in a delve (fresh review of F#4): every screen but the delve's own reads it, so
+      nothing on them is rebuilt each second of the countdown. Its run is as of that minute. */
+  get whole(): View { return this.#day; }
+  /** The clock as the whole view last saw it (by the minute in a delve): for anything heavy that needs no seconds. */
+  get minute(): Moment { return this.#whole; }
+  #day = $derived(see(this.facts, content, this.#whole));
+  view = $derived.by(() => {
+    const d = this.#day;
+    if (!d.run || this.#now === this.#whole) return d;
+    const run = runSecond(this.facts, d.run, this.#now);
+    return run ? { ...d, run } : see(this.facts, content, this.#now);
+  });
   #ticker = 0;
 
   constructor() {
     this.now = this.clock();
-    this.facts = this.load();
+    this.#setLog(this.load());
     /* the phone closed the app while Dan was in another one: that time is taken off first (D-094) */
-    if (platform.away.first !== null) this.away(platform.away.first);
-    this.append(settle(this.facts, content, this.now));
+    if (platform.away.first !== null) { this.away(platform.away.first); void this.forget(platform.away.first); }
+    this.append(settle(this.#log, content, this.now));
     this.do({ do: 'open' });
     this.panel();
     void this.reminders();
@@ -57,12 +80,16 @@ class Game {
     void this.drain();
     void this.readCalendar();
     platform.calendar.onChange(() => void this.readCalendar());
+    platform.inbox.onAdd?.(() => void this.drain());
     this.#beat();
     document.addEventListener('visibilitychange', () => { if (!document.hidden) void this.wake(); });
     window.addEventListener('focus', () => void this.wake());
     this.native();
   }
 
+  /** Counts each time the log was replaced (Restore, a wipe, the rehearsal), so the screens forget what they kept by a
+      fact's number (C#19). */
+  logs = $state(0);
   /** Counts each return to the app that began a new game day, so the screens can show what waits (App.svelte). */
   woke = $state(0);
   #waking: Promise<void> | null = null;
@@ -71,13 +98,14 @@ class Game {
       story week, exactly as a cold start would (review finding, D-080). */
   wake() { return (this.#waking ??= this.#wake().finally(() => { this.#waking = null; })); }
   async #wake() {
+    /* a snooze may have been asked from a notification while the app was away: looked at again on every return */
+    this.#snoozeChecked = '';
     const left = await platform.away.take();
     this.now = this.clock();
-    if (left !== null) this.away(left);
-    this.append(settle(this.facts, content, this.now));
+    if (left !== null) { this.away(left); void this.forget(left); }
+    this.append(settle(this.#log, content, this.now));
     const today = this.view.day;
-    if (!this.facts.some(f => f.type === 'opened' && f.day === today)) { this.do({ do: 'open' }); this.woke++; }
-    else this.tick();
+    if (!this.#log.some(f => f.type === 'opened' && f.day === today)) { this.do({ do: 'open' }); this.woke++; }
     this.native();
     void this.reminders();
     void this.weekly();
@@ -89,22 +117,33 @@ class Game {
   /** Lines said to Siri, typed in Shortcuts or sent from the Action button become jobs (D-113, D-117): written first,
       then cleared; a line written but not cleared (the app closed in between) is recognised by its id next time. */
   #draining = false;
+  #drainAgain = false;
   async drain() {
-    if (this.#draining) return;
+    /* a save this build can't write: the lines stay in the phone's inbox until it can (fresh review) */
+    if (this.blocked) return;
+    /* a line arriving while one batch is taken is taken right after it, never left for the next return */
+    if (this.#draining) { this.#drainAgain = true; return; }
     this.#draining = true;
     try {
-      const lines = await platform.inbox.take();
-      if (!lines.length) return;
-      this.do({ do: 'takeInbox', lines });
-      await platform.inbox.clear(lines.map(x => x.id));
+      do {
+        this.#drainAgain = false;
+        const lines = await platform.inbox.take();
+        if (!lines.length || this.blocked) break;
+        this.do({ do: 'takeInbox', lines });
+        /* written to the save before it leaves the inbox: an app killed in between loses nothing (P#8) */
+        await (platform.saves as { flush?: () => Promise<void> }).flush?.().catch(() => {});
+        await platform.inbox.clear(lines.map(x => x.id));
+      } while (this.#drainAgain);
     } finally { this.#draining = false; }
   }
 
   /** The phone's calendar, read-only (D-115): the next two weeks, read on opening, on return and when it changes;
       written down only when it changed. Nothing is read while it's off. */
   async readCalendar() {
-    if (!calendarOf(this.facts).on) return;
+    if (!calendarOf(this.#log).on) return;
+    /* a read that failed (or was refused) is no read: never written as an empty calendar (deep review P#6, C#6) */
     const events = await platform.calendar.events(CAL_DAYS);
+    if (events === null) return;
     this.do({ do: 'calendarRead', events, days: CAL_DAYS });
   }
 
@@ -115,13 +154,19 @@ class Game {
     this.do({ do: 'away', from: this.gameMs(leftAt), to: this.clockMs() });
   }
 
+  /** The time away written to the save: then the phone may forget it (P#8). */
+  async forget(at: number) {
+    await (platform.saves as { flush?: () => Promise<void> }).flush?.().catch(() => {});
+    await platform.away.clear?.(at);
+  }
+
   /** A job as Dan has it now (his edits and the jobs he added included). */
   job(id: string) { return this.view.content.jobs.find(j => j.id === id); }
 
   /** What was just deleted, for its Undo (D-125): shown until Dan goes to another screen. */
   deleted = $state<{ job: Job; rhythm: Rhythm | null; on?: string } | null>(null);
   /** A job that couldn't be deleted because its delve is under way: said once, where Dan tried (D-126 review). */
-  cantDelete = $state<string | null>(null);
+  cantDelete = $state<{ job: string; ended: boolean } | null>(null);
   /** Delete a job from everywhere (Dan, D-125): the minutes it already counted for stay. Never the job of a delve that
       is running or paused: its end still has to be answered. */
   remove(id: string) {
@@ -132,9 +177,11 @@ class Game {
     /* nor the job whose delve's end is still to be answered (break-it review, R5) */
     /* nor an errand of a run under way, or of one whose end is still to be looked at (D-139) */
     const v = this.view;
-    if (v.run?.job.id === id || v.runEnd?.job.id === id || v.run?.errands?.some(e => e.job.id === id) || v.runEnd?.errands?.some(e => e.job.id === id)) { this.deleted = null; this.cantDelete = job.name; return; }
+    const running = v.run?.job.id === id || !!v.run?.errands?.some(e => e.job.id === id);
+    /* (a delve already over, its end still to answer, is said as that, never "in a delve", deep review C#13) */
+    if (running || v.runEnd?.job.id === id || v.runEnd?.errands?.some(e => e.job.id === id)) { this.deleted = null; this.cantDelete = { job: job.name, ended: !running }; return; }
     this.cantDelete = null;
-    this.deleted = { job: { ...job }, rhythm: this.view.content.rhythms.find(r => r.job === id) ?? null };
+    this.asideAll = null; this.deleted = { job: { ...job }, rhythm: this.view.content.rhythms.find(r => r.job === id) ?? null };
     this.do({ do: 'removeJob', id });
   }
   /** Delete a done record (Dan: "just delete the record of the job, not the minutes"): a repeating job keeps repeating
@@ -144,8 +191,21 @@ class Game {
     const job = this.job(id);
     if (!job) return;
     if (!this.view.content.rhythms.some(r => r.job === id)) { this.remove(id); return; }
-    this.deleted = { job: { ...job }, rhythm: null, on };
+    this.asideAll = null; this.deleted = { job: { ...job }, rhythm: null, on };
     this.do({ do: 'hideDone', job: id, on });
+  }
+  /** The jobs just set aside by "Just this one today", for its one Undo (MORNING-REPORT Part 3 #7). */
+  asideAll = $state<string[] | null>(null);
+  justThis(id: string) {
+    const f = this.do({ do: 'justThis', job: id });
+    const jobs = f.flatMap(x => x.type === 'setAside' ? [x.job] : []);
+    this.deleted = null; this.asideAll = jobs.length ? jobs : null;
+  }
+  undoAsideAll() {
+    steady();
+    const jobs = this.asideAll;
+    this.asideAll = null;
+    for (const job of jobs ?? []) this.do({ do: 'putBack', job });
   }
   undoRemove() {
     steady();
@@ -171,6 +231,9 @@ class Game {
   alertsOff = $state(false);
   /** A save this build couldn't read was kept aside, never overwritten (D-080): the key it was kept under. */
   keptAside = $state<string | null>(null);
+  /** The save can't be used by this build (deep review B15): from a newer version, or broken. Nothing is written over it
+      and the game does not start on it: the screen says so, and offers a copy of it. */
+  blocked = $state<'newer' | 'broken' | null>(null);
 
   /** The save, read and brought up to this build's version (DATA_MODEL.md → migrations). A save this build can't use
       (unreadable, or from a newer version) is copied aside first, so nothing Dan did is ever lost by an update; a newer
@@ -187,35 +250,52 @@ class Game {
     const key = `${this.saveKey}.kept.${platform.now().getTime()}`;
     saves.keep(key, raw);
     this.keptAside = key;
+    /* never a fresh game written over it (B15): the game stays shut on this save until a build can read it */
+    this.blocked = whyUnreadable(raw) ?? 'broken';
     return [];
   }
   #backedUp = '';
   /** The facts written as they happen: on the phone only the new ones, each time in one step (D-106). */
   save() {
+    /* a save this build can't read is never written over (B15) */
+    if (this.blocked) return;
     const saves = platform.saves;
-    /* once a day, yesterday's save is copied to a backup before today's writes (D-080) */
+    /* once a day, yesterday's save is copied to a backup before today's writes (D-080); the day it was made is kept, so
+       a restart never makes it again (deep review P#15) */
     const day = this.view?.day ?? '';
     if (day && day !== this.#backedUp) {
-      const prev = saves.get(this.saveKey);
-      if (prev) saves.keep(`${this.saveKey}.backup`, prev);
       this.#backedUp = day;
+      const dayKey = `${this.saveKey}.backupDay`;
+      if (platform.store.get(dayKey) !== day) {
+        const prev = saves.get(this.saveKey);
+        /* (only a save that reads: a broken one never takes the backup's place) */
+        if (prev && readSave(prev)) saves.keep(`${this.saveKey}.backup`, prev);
+        platform.store.set(dayKey, day);
+      }
     }
-    const s: Save = { version: SAVE_VERSION, content: content.version, facts: this.facts };
+    const s: Save = { version: SAVE_VERSION, content: content.version, facts: this.#log };
     saves.write(this.saveKey, s);
   }
   append(f: Fact[]) {
     if (!f.length) return;
-    this.facts = this.facts.concat(f);
+    this.#setLog(this.#log.concat(f));
     this.save();
   }
 
   /** Dan does something: the facts are written at once, in one step. */
   do(cmd: Command): Fact[] {
+    if (this.blocked) return [];
+    /* a tap on the delve in the moment the return from another app is being taken waits for it, so the time away is never
+       counted as delving (deep review C#5); only these, whose callers never read what they wrote */
+    if (this.#waking && ['finishHere', 'stepAway', 'resume', 'skipBreather'].includes(cmd.do)) { void this.#waking.then(() => this.do(cmd)); return []; }
     this.now = this.clock();
     const before = this.view.run;
-    const f = act(this.facts, content, cmd, this.now);
+    const f = act(this.#log, content, cmd, this.now);
     this.append(f);
-    if (['startRun', 'startErrands', 'skipBreather', 'stepAway', 'resume', 'finishHere', 'away'].includes(cmd.do) || (before && !this.view.run)) { void this.alerts(); this.panel(); }
+    /* any change of the run, whatever the command (Delve now, the Satchel's, the errand run…), lays out its alerts and
+       panel again: a list of commands missed some (deep review C#1) */
+    const after = this.view.run;
+    if (before?.seq !== after?.seq || before?.phase !== after?.phase || before?.k !== after?.k || cmd.do === 'away') { void this.alerts(); this.panel(); }
     this.native();
     if (f.length) void this.reminders();
     return f;
@@ -255,13 +335,17 @@ class Game {
     /* during a delve, by the second: the countdown shows whole seconds, so the view is rebuilt once a second (D-100);
        the clock looks just after each whole second, so each new second shows at once (D-132) */
     if (before && s === this.#second) return;
+    const whole = m !== this.#minute || !before;
     this.#minute = m; this.#second = s;
-    this.now = this.clock();
+    if (whole) this.now = this.clock(); else this.#now = this.clock();
+    /* a breather running into the next delve writes nothing: the whole view is rebuilt there too, so what follows the run's
+       phase (the screen woken, a tap steadied) never waits for the minute (re-review) */
+    if (!whole && before) { const r = this.view.run; if (!r || r.phase !== before.phase || r.k !== before.k) this.#whole = this.#now; }
     if (!before) {
-      if (!this.facts.some(f => f.type === 'opened' && f.day === this.view.day)) this.wake();   /* past 04:00 with the app open */
+      if (!this.#log.some(f => f.type === 'opened' && f.day === this.view.day)) this.wake();   /* past 04:00 with the app open */
       return;
     }
-    const f = settle(this.facts, content, this.now);
+    const f = settle(this.#log, content, this.now);
     this.append(f);
     const after = this.view.run;
     this.native();
@@ -273,41 +357,60 @@ class Game {
 
   /** One alert per delve and breather end from now on; none while held, none after the run (ARCHITECTURE → the delve's end).
       In a rehearsal they come 60 times sooner, so trial (b) takes seconds, not a whole delve. */
-  async alerts() {
+  /* one batch at a time, in order, as the reminders are: a Pause in the middle of the first Begin's batch never leaves
+     its alerts behind (deep review B16, C#7) */
+  #alerting: Promise<void> = Promise.resolve();
+  alerts() { return (this.#alerting = this.#alerting.then(() => this.#alerts()).catch(() => {})); }
+  async #alerts() {
     const ids = ALERT_IDS;
     await platform.notifier.cancel(ids);
-    const r = this.view.run;
-    if (!r || !platform.notifier.locked) return;
+    if (!this.view.run || !platform.notifier.locked) return;
     if (!(await platform.notifier.permit())) { this.alertsOff = true; return; }   /* asked once, at the first Begin */
+    /* the run as it is now, after the waits above */
+    const r = this.view.run;
+    if (!r) return;
     this.alertsOff = false;
     const list = alertsAfter({ startedAt: r.startedAt, minutes: r.minutes, count: r.count }, this.marks(r), epochOf(this.now));
     for (const [i, a] of list.slice(0, ids.length).entries()) {
+      /* one that fails never stops the rest (deep review P#24) */
       await platform.notifier.at(ids[i], this.realDate(a.at), t(a.what === 'delveEnd' ? 'notify.delveEnd.title' : 'notify.breatherEnd.title'),
-        t(a.what === 'delveEnd' ? 'notify.delveEnd.body' : 'notify.breatherEnd.body'));
+        t(a.what === 'delveEnd' ? 'notify.delveEnd.body' : 'notify.breatherEnd.body')).catch(() => {});
     }
   }
 
   /** The reminders Dan asked for (D-107), laid out for the week ahead: worked out by the rules (core/reminders.ts),
       and put on the phone again only when the list changes. Nothing is asked of the phone until one is wanted. */
   #reminded = '';
+  #snoozeChecked = '';
   #reminding: Promise<void> = Promise.resolve();
   reminders() { return (this.#reminding = this.#reminding.then(() => this.#remind()).catch(() => {})); }
   async #remind() {
-    if (!platform.notifier.locked) return;
-    const list = alertsDue(content, this.facts, this.clock()).slice(0, REMIND_IDS.length);
+    /* a save this build can't read has no log here: Dan's reminders are left as they were (fresh review) */
+    if (!platform.notifier.locked || this.blocked) return;
+    const list = alertsDue(content, this.#log, this.clock()).slice(0, REMIND_IDS.length);
     const words = list.map(a => ({ a, ...this.remindWords(a) }));
     /* the re-entry nudge (D-113): a nudge set earlier whose time has passed came while the app was closed */
     const st = platform.store, set = Number(st.get('nudge.at') ?? 0);
     if (set && set <= platform.now().getTime()) { st.set('nudge.last', st.get('nudge.day') ?? ''); st.remove('nudge.at'); }
-    const nday = nudgeDay(this.facts, st.get('nudge.last') || null);
+    const nday = nudgeDay(this.#log, st.get('nudge.last') || null);
     const nwhen = nday ? this.realDate(new Date(+nday.slice(0, 4), +nday.slice(5, 7) - 1, +nday.slice(8, 10), NUDGE_HOUR, 0).getTime()) : null;
     const nudge = nwhen && nwhen.getTime() > platform.now().getTime() ? nwhen : null;
-    const key = JSON.stringify([words.map(w => [w.a.date, w.a.clock, w.title, w.body]), nudge?.getTime() ?? 0]);
+    /* the instants too, not only the wall-clock times: after a time-zone change they are laid out again (P#2) */
+    const instant = (w: { a: Alert }) => { const [y, m, d] = w.a.date.split('-').map(Number), [h, min] = w.a.clock.split(':').map(Number); return this.realDate(new Date(y, m - 1, d, h, min).getTime()).getTime(); };
+    const key = JSON.stringify([words.map(w => [w.a.date, w.a.clock, w.title, w.body, instant(w)]), nudge?.getTime() ?? 0]);
+    /* a snooze ("Again in 10 min", laid out by the phone) for a job since done or deleted is cancelled (B12, P#7a) */
+    /* (looked at only when what is done, or the jobs, changed: not a call to the phone on every tap) */
+    const doneKey = `${[...this.view.done].join()}|${this.view.content.jobs.map(j => j.id).join()}`;
+    if (doneKey !== this.#snoozeChecked) {
+      this.#snoozeChecked = doneKey;
+      const snoozed = await platform.notifier.pending(AGAIN_IDS);
+      const stale = snoozed.filter(x => x.job && (!this.job(x.job) || this.view.done.has(x.job))).map(x => x.id);
+      if (stale.length) await platform.notifier.cancel(stale).catch(() => {});
+    }
     if (key === this.#reminded) return;
-    this.#reminded = key;
     await platform.notifier.cancel([...REMIND_IDS, NUDGE_ID]);
     if (!nudge) st.remove('nudge.at');
-    if (!list.length && !nudge) return;
+    if (!list.length && !nudge) { this.#reminded = key; return; }
     if (!(await platform.notifier.permit())) { this.alertsOff = true; return; }
     if (nudge) {
       await platform.notifier.at(NUDGE_ID, nudge, t('nudge.title'), t('nudge.body'));
@@ -316,8 +419,10 @@ class Game {
     for (const [i, w] of words.entries()) {
       const [y, m, d] = w.a.date.split('-').map(Number), [h, min] = w.a.clock.split(':').map(Number);
       const when = this.realDate(new Date(y, m - 1, d, h, min).getTime());
-      await platform.notifier.remind(REMIND_IDS[i], when, w.title, w.body, { label: t('remind.again'), ids: AGAIN_IDS });
+      await platform.notifier.remind(REMIND_IDS[i], when, w.title, w.body, { label: t('remind.again'), ids: AGAIN_IDS }, w.a.job ?? undefined);
     }
+    /* only once they are all laid out: a refusal or a failure part-way is tried again next time (P#9) */
+    this.#reminded = key;
   }
   /** A reminder's words, in the app's voice. */
   remindWords(a: Alert): { title: string; body: string } {
@@ -329,8 +434,8 @@ class Game {
 
   /** Dan's marks on a run (Start it now, Pause, Back to the delve), as the run's rules read them. */
   marks(r: RunView): RunMark[] {
-    return this.facts.filter(f => f.seq > r.seq && ['breatherSkipped', 'delveHeld', 'delveResumed'].includes(f.type))
-      .map(f => ({ kind: f.type === 'breatherSkipped' ? 'skip' : f.type === 'delveHeld' ? 'hold' : 'resume', at: epochOf(f.at) }));
+    return this.#log.filter(f => f.seq > r.seq && ['breatherSkipped', 'delveHeld', 'delveResumed'].includes(f.type))
+      .map(f => ({ kind: f.type === 'breatherSkipped' ? 'skip' : f.type === 'delveHeld' ? 'hold' : 'resume', at: (f.type === 'delveHeld' ? f.from : undefined) ?? epochOf(f.at) }));
   }
 
   /** The delve's panel on the lock screen and in the Dynamic Island (D-095): shown while a run is on, redrawn only when
@@ -356,31 +461,59 @@ class Game {
 
   /* ---- copies of the save (D-107) ---- */
   /** The save as a file: the same text the phone keeps, readable by `readSave` on any later build. */
-  copyText(): string { return JSON.stringify({ version: SAVE_VERSION, content: content.version, facts: this.facts } satisfies Save); }
+  copyText(): string { return JSON.stringify({ version: SAVE_VERSION, content: content.version, facts: this.#log } satisfies Save); }
   /** Save a copy: the phone's share sheet (Files, iCloud Drive…). */
   saveCopy() { return platform.copies.share(copyName(this.view.day), this.copyText()); }
   /** Once a week, a copy into the app's Documents folder, which the Files app shows; the last four kept. The real save only. */
   async weekly() {
-    if (!platform.app || this.proto.rehearsal) return;
+    if (!platform.app || this.proto.rehearsal || this.blocked) return;
     try {
       const day = this.view.day;
-      if (copyDue(await platform.copies.list(COPY_PREFIX), day)) await platform.copies.keep(copyName(day), this.copyText(), COPY_PREFIX, COPIES_KEPT);
+      if (copyDue(await platform.copies.list(WEEKLY_PREFIX), day)) await platform.copies.keep(weeklyName(day), this.copyText(), WEEKLY_PREFIX, COPIES_KEPT);
     } catch { /* no copy this time; the next opening tries again */ }
   }
   /** Restore from a copy: what Dan has now is kept aside first (never overwritten), then the copy becomes the save and
       the game opens on it as on a cold start. */
-  restore(s: Save) {
+  /** Whether a save can be restored: every fact shaped as one, and the game runs on it (deep review B14). */
+  /** A broken save's way on (fresh review of B15): the day's backup, when it reads and runs. */
+  backupSave(): Save | null {
+    const raw = platform.saves.get(`${this.saveKey}.backup`), r = raw ? readSave(raw) : null;
+    return r && this.canRestore(r.save) ? r.save : null;
+  }
+  /** A broken save left kept aside (never a newer one): the game starts again on a fresh save. */
+  startFresh() {
+    if (this.blocked !== 'broken') return;
+    /* the day's backup is the last good save: today's first write never puts the broken one over it (re-review) */
+    const day = this.view?.day ?? '';
+    if (day) { this.#backedUp = day; try { platform.store.set(`${this.saveKey}.backupDay`, day); } catch { /* */ } }
+    this.blocked = null;
+    this.keptAside = null;
+    this.#setLog([]);
+    this.logs++;
+    this.do({ do: 'open' });
+    void this.drain();   /* Siri's lines that waited meanwhile */
+  }
+  canRestore(s: Save): boolean { return factsSound(s.facts) && runs(s.facts, content, this.clock()); }
+  restore(s: Save): boolean {
+    /* tried on the rules before anything is written; refused plainly if it can't run */
+    if (!this.canRestore(s)) return false;
+    try { platform.store.remove(`${this.saveKey}.reread`); } catch { /* */ }
+    s = $state.snapshot(s) as Save;
+    this.blocked = null;
+    this.logs++;
     const saves = platform.saves, now = saves.get(this.saveKey);
     if (now) saves.keep(`${this.saveKey}.before-restore.${platform.now().getTime()}`, now);
     saves.write(this.saveKey, s);
-    this.facts = s.facts;
+    this.#setLog(s.facts);
     this.now = this.clock();
-    this.append(settle(this.facts, content, this.now));
+    this.append(settle(this.#log, content, this.now));
     this.do({ do: 'open' });
     this.#watched = '-'; this.native();
     this.panel();
     void this.alerts();
+    void this.drain();   /* Siri's lines that waited while the save was blocked */
     void this.reminders();
+    return true;
   }
 
   /* ---- prototype controls ---- */
@@ -389,24 +522,29 @@ class Game {
     d.setHours(8, 0, 0, 0);    /* a rehearsal starts at 08:00 today, so the whole day is ahead of it */
     this.proto = { rehearsal: on, anchorReal: real, anchorFake: d.getTime() };
     platform.store.set(PROTO_KEY, JSON.stringify(this.proto));
-    this.facts = on ? [] : this.load();
+    this.logs++;
+    this.#setLog(on ? [] : this.load());
     if (on) platform.saves.remove('save.rehearsal');
     this.now = this.clock();
-    this.append(settle(this.facts, content, this.now));
+    this.append(settle(this.#log, content, this.now));
     this.do({ do: 'open' });
     void this.alerts();   /* the other save's alerts go; this one's come back */
     this.#watched = '-'; this.native();
     this.panel();
   }
   reset() {
+    /* records lit by "now read differently" belong to the old game (re-review) */
+    try { platform.store.remove(`${this.saveKey}.reread`); } catch { /* */ }
     /* even a wipe keeps one copy aside, so a slip can be undone (D-080) */
     const prev = platform.saves.get(this.saveKey);
     if (prev) platform.saves.keep(`${this.saveKey}.wiped`, prev);
     platform.saves.remove(this.saveKey);
     if (this.proto.rehearsal) { this.setRehearsal(true); return; }
-    this.facts = [];
+    this.#setLog([]);
+    this.logs++;
     this.do({ do: 'open' });
     this.panel();
+    void this.alerts();   /* a wiped delve's alerts go too (C#19) */
   }
 }
 

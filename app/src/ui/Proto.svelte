@@ -19,7 +19,7 @@
   function rehearse(on: boolean) { game.setRehearsal(on); go('today'); }
 </script>
 
-<Scene painting={game.view.here.painting} blur />
+<Scene painting={game.whole.here.painting} blur />
 <div class="ui">
   <header class="top col">
     <div class="topbar">
@@ -57,8 +57,8 @@
   .label-line { margin-top: 18px; }
   .say { color: var(--ink-2); }
   button.home { color: var(--ink-2); }
-  .leaves { list-style: none; margin: 0; padding: 0; font-size: 14px; color: var(--ink-2); }
+  .leaves { list-style: none; margin: 0; padding: 0; font-size: calc(14px * var(--ts, 1)); color: var(--ink-2); }
   .leaves li { padding: 3px 0; }
-  .trouble { font-size: 12px; color: var(--ink-3); overflow-wrap: anywhere; }
+  .trouble { font-size: calc(14px * var(--ts, 1)); color: var(--ink-3); overflow-wrap: anywhere; }
   .leaves .at { color: var(--ink-3); font-variant-numeric: tabular-nums; }
 </style>

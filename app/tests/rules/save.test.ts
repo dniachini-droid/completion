@@ -5,7 +5,7 @@
  */
 import { describe, expect, test } from 'vitest';
 import { act, see, settle } from '../../src/core/game';
-import { copyDue, copyName, copySummary, readSave, SAVE_VERSION, type Migration, type Save } from '../../src/core/save';
+import { copyDue, copyName, copySummary, weeklyName, readSave, SAVE_VERSION, type Migration, type Save } from '../../src/core/save';
 import type { Fact, FactBody } from '../../src/core/types';
 import { adopt, sqlSaves, textSaves } from '../../src/platform/saves';
 import { content as C } from '../../src/content/world';
@@ -33,6 +33,7 @@ const ONE: { [T in FactBody['type']]: Extract<FactBody, { type: T }> } = {
   delveEnded: { type: 'delveEnded', job: 'a', minutes: 17.5, how: 'finishedHere', run: 4 },
   jobDone: { type: 'jobDone', job: 'a', minutes: 60 },
   doneUndone: { type: 'doneUndone', job: 'a', on: '2026-09-29' },
+  tickTakenBack: { type: 'tickTakenBack', job: 'a', minutes: 30, on: '2026-09-29' },
   firstChosen: { type: 'firstChosen', job: 'a', on: '2026-09-30' },
   repeatDeclined: { type: 'repeatDeclined', name: 'go to the bank' },
   cantStartUsed: { type: 'cantStartUsed', job: 'a' },
@@ -89,6 +90,15 @@ const noFail = () => { throw new Error('no write should fail here'); };
 const file = tempFile;
 
 describe('the save in SQLite', () => {
+  test('the same save kept aside again (met at each start) is one copy: older, different copies are never pushed out (fresh review)', async () => {
+    const s = await sqlSaves(nodeDb(file()), noFail);
+    s.keep('save.v1.kept.1', 'older one');
+    for (let i = 2; i < 8; i++) s.keep(`save.v1.kept.${i}`, 'the same broken save');
+    await s.flush();
+    expect(s.get('save.v1.kept.1')).toBe('older one');
+    expect(s.get('save.v1.kept.2')).toBe('the same broken save');
+    expect(s.get('save.v1.kept.3')).toBeNull();
+  });
   test('every fact type is written and read back as it was, after the app is closed and opened again', async () => {
     const path = file(), db = nodeDb(path), s = await sqlSaves(db, noFail);
     s.write('save.v1', save(every));
@@ -270,7 +280,7 @@ describe('copies of the save (D-107)', () => {
   test('the weekly copy: due with none yet, and again a week after the newest', () => {
     expect(copyName('2026-09-27')).toBe('Long Answer save 2026-09-27.json');
     expect(copyDue([], '2026-09-27')).toBe(true);
-    const names = ['2026-09-06', '2026-09-20', '2026-09-13'].map(copyName);
+    const names = ['2026-09-06', '2026-09-20', '2026-09-13'].map(weeklyName);   /* the weekly copies have their own name (deep review P#14) */
     expect(copyDue(names, '2026-09-26')).toBe(false);
     expect(copyDue(names, '2026-09-27')).toBe(true);
     expect(copyDue(['something else.json'], '2026-09-27')).toBe(true);

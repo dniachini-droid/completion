@@ -18,12 +18,14 @@ jobs:
         with: { node-version: 22, cache: npm, cache-dependency-path: app/package-lock.json }
       - run: npm ci
       - run: npm test
+      # the screens' type check runs with its own TypeScript (deep review C#15)
+      - run: npm ci --prefix tools/svelte-check
       - run: npm run typecheck
       - run: npx vite build
 
   flows:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix:
@@ -56,10 +58,18 @@ jobs:
       - name: An untouched screen rests (D-132)
         if: matrix.short && matrix.browser == 'chromium'
         run: mkdir -p "$RUNNER_TEMP/screens" && CHECK=1 SHOTS="$RUNNER_TEMP/screens" node tests/flows/idle.mjs http://localhost:4173/ 5 390 844
+      # the same on four months of play (deep review U4): the log's cost and the Map's walked routes, which a fresh save hides
+      - name: An untouched screen rests on a played save (deep review U4)
+        if: matrix.short && matrix.browser == 'chromium'
+        run: SAVE=months CHECK=1 SHOTS="$RUNNER_TEMP/screens" node tests/flows/idle.mjs http://localhost:4173/ 5 390 844
       # it delves to reach a place, and Linux's WebKit crashes in a delve's end now and then (D-106): Chromium
       - name: Back from a record returns to the place
         if: matrix.short && matrix.browser == 'chromium'
         run: node tests/flows/back-from-record.mjs http://localhost:4173/
+      # Safari's engine too: a painting refused by the page's rules was seen once (deep review W F16)
+      - name: Every painting loads, nothing refused
+        if: matrix.short
+        run: node tests/flows/paintings.mjs http://localhost:4173/
       - name: '"+ Add" above the keyboard, and Done takes the tap (D-120)'
         if: matrix.short
         run: node tests/flows/capture-done.mjs http://localhost:4173/
@@ -114,9 +124,31 @@ jobs:
       - name: 'Keys and the Map: the link points where a Key can be used; back never loops; opened read again (D-143 A, B)'
         if: matrix.walk
         run: node tests/flows/keys-map.mjs http://localhost:4173/ ${{ matrix.size }}
+      - name: 'What a tap writes is kept: Look ahead, Plan it for me, Not yet with a note, the word left for later (deep review Stage 1)'
+        if: matrix.walk
+        run: node tests/flows/kept.mjs http://localhost:4173/ ${{ matrix.size }}
+      - name: 'The rules as Dan meets them: ticks of 5 and 10, a tick taken back, passed appointments asked (deep review Stage 2)'
+        if: matrix.walk
+        run: node tests/flows/rules2.mjs http://localhost:4173/ ${{ matrix.size }}
+      - name: 'Screens and getting around: the set-up never overlaps, the word left for later, the Week''s +, Delete asks, a Key offered once (deep review Stage 3)'
+        if: matrix.walk
+        run: node tests/flows/screens3.mjs http://localhost:4173/ ${{ matrix.size }}
+      - name: 'The save: a newer save never written over; Restore refuses a file the game can''t run (deep review Stage 4)'
+        if: matrix.walk
+        run: node tests/flows/save4.mjs http://localhost:4173/ ${{ matrix.size }}
+      - name: 'Words and accessibility: targets a finger high, no text under 14 px, the menu takes focus, symbols named (deep review Stage 5)'
+        if: matrix.walk
+        run: node tests/flows/a11y5.mjs http://localhost:4173/ ${{ matrix.size }}
+      - name: "The improvements: the put-off mark, Can't get started, Just this one today, the 5-minute mark, last night's choice, the week's close, the Map's path (deep review Stage 8)"
+        if: matrix.walk
+        run: node tests/flows/improve8.mjs http://localhost:4173/ ${{ matrix.size }}
       - name: The whole first playable, walked day by day
         if: matrix.walk
         run: mkdir -p "$RUNNER_TEMP/screens" && node tests/flows/heart-walk.mjs http://localhost:4173/ "$RUNNER_TEMP/screens" ${{ matrix.size }}
+      # the phone's text size set 30% larger (Dynamic Type, deep review A#33): every screen of the walk still fits, at 360 wide
+      - name: The whole first playable at a larger text size
+        if: matrix.walk && !matrix.short
+        run: TS=1.3 node tests/flows/heart-walk.mjs http://localhost:4173/ "$RUNNER_TEMP/screens" ${{ matrix.size }}
       - if: failure()
         uses: actions/upload-artifact@v4
         with:

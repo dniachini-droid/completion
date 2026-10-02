@@ -12,7 +12,8 @@ const config: CapacitorConfig = {
     limitsNavigationsToAppBoundDomains: true,
   },
   plugins: {
-    LocalNotifications: { iconColor: '#8f86ff' },
+    /* nothing of the phone's own over the open app: the delve's end chimes in the app itself (deep review P#18) */
+    LocalNotifications: { iconColor: '#8f86ff', presentationOptions: [] },
   },
 };
 

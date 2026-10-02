@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Prose from './Prose.svelte';
   import Deleted from './Deleted.svelte';
   import Bedtime from './Bedtime.svelte';
   import SwipeRow from './SwipeRow.svelte';
@@ -12,22 +13,22 @@
      rows seemed to change places by themselves); a swipe takes it off today; the last row chooses a delve on anything (D-077). After day complete: the day as done, until Dan taps a job or keeps going.
      Mock-up: design/directions/d-combined/morning.html. */
   import { game, content } from './game.svelte';
-  import { pastBedtime, BEDTIME_WINDOW, tomorrowFirst, satchelView, errandChoices, carriedOf } from '../core/game';
+  import { pastBedtime, BEDTIME_WINDOW, tomorrowFirst, firstChosen, satchelView, carriedOf } from '../core/game';
   import { tieFor } from '../core/remember';
-  import { moment } from './moment.svelte';
+  import { leaveWord, moment } from './moment.svelte';
   import { ofLine } from './panel';
   import { beatOf } from '../core/story';
-  import type { Job } from '../core/types';
-  import { t, minutesWords, minutesShort, inSentence, dayShort } from '../content/copy/en';
+  import type { FactOf, Job } from '../core/types';
+  import { t, minutesWords, minutesShort, inSentence, dayShort, type Weekday } from '../content/copy/en';
   import Scene from './Scene.svelte';
   import EndRoad from './EndRoad.svelte';
   import { flushSync } from 'svelte';
   import type { Go } from './nav';
 
   let { go }: { go: Go } = $props();
-  const v = $derived(game.view);
+  const v = $derived(game.whole);
   const job = (id: string) => game.job(id)!;
-  const weekday = $derived(t(`day.${new Date(Date.UTC(+v.day.slice(0, 4), +v.day.slice(5, 7) - 1, +v.day.slice(8, 10))).getUTCDay()}` as never));
+  const weekday = $derived(t(`day.${new Date(Date.UTC(+v.day.slice(0, 4), +v.day.slice(5, 7) - 1, +v.day.slice(8, 10))).getUTCDay() as Weekday}`));
   /* the finish line's jobs (its first 3 hours, D-131), then the rest, "If there's time" */
   /* the jobs still to do first, then those done (on a list with no job put forward, the next one is its top row, D-135);
      a delve running or paused is on its own card, not the list */
@@ -43,6 +44,8 @@
   const fromFour = (hm: string) => ((+hm.slice(0, 2) + 20) % 24) * 60 + +hm.slice(3, 5);
   function rowNote(j: Job): string {
     if (v.done.has(j.id)) return t('row.done');
+    /* an errand of the run under way, or of one whose "What got done?" waits: said so (deep review H#10) */
+    if (v.run?.errands?.some(e => e.job.id === j.id) || v.runEnd?.errands?.some(e => e.job.id === j.id)) return t('row.inErrand');
     /* an appointment gone by is noticed, never scolded (L C5) */
     if (v.times[j.id]) return fromFour(game.now.slice(11, 16)) > fromFour(v.times[j.id]) ? t('row.wentBy', { time: v.times[j.id] }) : v.times[j.id];
     /* every job is a delve (D-117), so a row never says "a delve". A recurring job says its usual minutes, which Dan set
@@ -67,7 +70,7 @@
   }
   /* a delve job worked on today, not yet said to be done: "Is it done?" answered "Not yet", or left unanswered. Its Done
      is here, so it never needs another delve to be marked (Dan, 2026-09-27, D-120) */
-  const delvedToday = $derived(new Set(game.facts.filter(f => f.type === 'delveStarted' && f.day === v.day).map(f => f.job)));
+  const delvedToday = $derived(new Set(game.facts.filter((f): f is FactOf<'delveStarted'> => f.type === 'delveStarted' && f.day === v.day).map(f => f.job)));
   const sayDone = (j: Job) => j.delve && j.doneBy === 'dan' && !v.done.has(j.id) && delvedToday.has(j.id);
   function carry() { game.do({ do: 'resume' }); go('delve'); }
   function finish() { game.do({ do: 'finishHere' }); go('delve'); }
@@ -103,7 +106,8 @@
   const takenBack = (job: string, day: string) => undoneFacts(game.facts).filter(f => f.job === job && f.day === day).reduce((a, f) => Math.max(a, f.minutes), 0);
   function notDone(id: string) { steady(); game.do({ do: 'notDone', job: id }); }
   /* a done row: only that day's record goes (its minutes stay); otherwise the job (D-125) */
-  function remove(id: string) { if (v.done.has(id)) game.removeDone(id, v.day); else game.remove(id); }
+  /* a recurring job deleted with its plan asks first, as the job menu does (H#9) */
+  function remove(id: string) { if (v.done.has(id)) game.removeDone(id, v.day); else if (recurring(id)) openMenu(id, go, null, null, 'today', true); else game.remove(id); }
 
   /* a one-off waiting on a reply, back on its day (D-137): "Did they reply?" Back to it · Still waiting (a new date) ·
      It's done (ticked off, with the time it took). Unanswered, it simply stays here; it never holds the day back */
@@ -137,9 +141,16 @@
   /* the story ahead folds to a few lines, so the next job is always in view; a tap reads it all (D-093) */
   let aheadOpen = $state(false);
   let keysOpen = $state(false);
+  /* "Use one here": asked once, then the Key is used on what is locked where Dan is, as a job's return offers (H#8) */
+  let keyAsk = $state(false);
+  function useHere() { const id = v.keyHere; keyAsk = false; if (!id) return; steady(); game.do({ do: 'useKey', seal: id }); go('opened', id); }
 
   /* the errand run (D-139): quietly at the list's end, when two jobs or more could go on one trip out */
-  const errandsOpen = $derived(!busy && !v.night && errandChoices(content, game.facts, game.now).length >= 2);
+  /* the day's first start (a delve begun, or a job ticked off) puts the line away */
+  const started = $derived(game.facts.some(f => (f.type === 'delveStarted' || f.type === 'jobDone') && f.day === v.day));
+  const chosenFirst = $derived.by(() => { const id = firstChosen(game.facts, v.day); return id && !started && !busy && !v.night && !v.done.has(id) && game.job(id) ? id : null; });
+  const cantFor = $derived(started || busy || v.night || v.complete ? null
+    : v.line.find(id => !v.done.has(id) && game.job(id)?.avoided) ?? v.line.find(id => !v.done.has(id)) ?? null);
 
   /* "Add a job" opens the Satchel's one box, ready to type in (D-131), whose Return puts the job on today (Dan, D-143 C):
      focused inside the tap itself, so the phone's keyboard opens straight away */
@@ -149,15 +160,16 @@
     document.querySelector<HTMLInputElement>('.satchel-add input')?.focus({ preventScroll: true });
   }
 
-  /* Tonight, in the last hour before bed (D-131): what tomorrow starts with (prefilled with its first planned job; a tap
+  /* Tonight, in the evening (D-131; all evening since MORNING-REPORT Part 3 #5): what tomorrow starts with (prefilled with its first planned job; a tap
      changes it), and a line for anything on Dan's mind (into the Satchel). Both optional; skipped, nothing changes and
      nothing is said. */
-  const lastHour = $derived(!v.night && pastBedtime(v.bedtime, game.now) >= -BEDTIME_SOON);
-  const first = $derived(lastHour ? tomorrowFirst(content, game.facts, game.now) : null);
+  /* offered all evening, as Tonight is, not only in its last hour (MORNING-REPORT Part 3 #5) */
+  const lastHour = $derived(evening);
+  const first = $derived(lastHour ? tomorrowFirst(content, game.facts, game.minute) : null);
   let choosing = $state(false), mind = $state(''), mindSaid = $state(false);
   const choices = $derived.by(() => {
     if (!choosing || !first) return [] as string[];
-    const s = satchelView(content, game.facts, game.now);
+    const s = satchelView(content, game.facts, game.minute);
     return [...new Set([...first.planned, ...s.noDay.map(j => j.id), ...s.coming.map(x => x.job.id), ...s.recurring.map(j => j.id)])].filter(id => game.job(id));
   });
   function chooseFirst(id: string) { steady(); if (id !== first?.job) game.do({ do: 'firstJob', job: id }); choosing = false; }
@@ -168,8 +180,12 @@
     /* a job Dan already has is not added twice (J4): it says so */
     const tie = tieFor(content, game.facts, line);
     mindHave = tie?.same ? tie.job.name : null;
-    game.do({ do: 'addItems', lines: [line] }); mind = ''; mindSaid = true; setTimeout(() => (mindSaid = false), 4000);
+    game.do({ do: 'addItems', lines: [line] }); mind = ''; mindSaid = true;
+    /* one timer, cleared before a new one and when Today goes (deep review C#14) */
+    clearTimeout(mindTimer); mindTimer = setTimeout(() => (mindSaid = false), 4000);
   }
+  let mindTimer: ReturnType<typeof setTimeout> | undefined;
+  $effect(() => () => clearTimeout(mindTimer));
   /* the avoided job, the only one left on the line: said, once it is all that holds the day (Dan, D-143 G) */
   const onlyAvoided = $derived.by(() => {
     const left = v.line.filter(id => !v.done.has(id));
@@ -228,25 +244,32 @@
       </span>
     </div>
     <!-- the place's name: a tap reads its entry again, with its painting, at any time of day (Dan, D-135) -->
-    {#if placeSeq !== null && v.here.id}<h1 class="carve lg rise"><button class="here" aria-label={t('map.readAgain', { place: v.here.name })} onclick={() => go('arrival', `again:${placeSeq}`)}>{v.here.name}</button></h1>
+    {#if placeSeq !== null && v.here.id}<h1 class="carve lg rise"><button class="here" aria-describedby="here-again" onclick={() => go('arrival', `again:${placeSeq}`)}>{v.here.name}</button></h1><span id="here-again" class="sr-only">{t('map.readHere')}</span>
     {:else}<h1 class="carve lg rise">{v.here.name}</h1>{/if}
     <section class="where rise d2" aria-label={roadSay || undefined}>
-      <EndRoad road={v.road} from={v.walked} to={v.walked} mode="still" notes={roadNotes} />
+      <EndRoad road={v.road} from={v.walked} to={v.walked} mode="still" notes={roadNotes} spoken={false} />
     </section>
-    <!-- the Keys kept (Dan, D-142): always in view; a tap says what they are for -->
-    <button class="keys rise d2" aria-expanded={keysOpen} onclick={() => (keysOpen = !keysOpen)}>
-      <svg viewBox="0 0 24 12" aria-hidden="true"><circle cx="5" cy="6" r="3.6" /><path d="M8.6 6H22M18 6v3.4M21.4 6v2.6" /></svg>
-      <span>{v.keys === 0 ? t('today.keys.none') : v.keys === 1 ? t('today.keys.one') : t('today.keys.many', { n: v.keys })}</span>
-    </button>
-    <!-- the Map opens on where a Key can be used: here first (D-143 A); "one" when there are more (S polish) -->
-    {#if v.keyUse}<p class="key-use rise d2"><button class="text-link" onclick={() => go('map', v.keyUse!)}><span>{v.keyHere ? t(v.keys > 1 ? 'today.keys.hereMany' : 'today.keys.here') : t(v.keys > 1 ? 'today.keys.useMany' : 'today.keys.use')}</span></button></p>{/if}
+    <!-- the Keys kept (Dan, D-142): always in view; a tap says what they are for. One line, with one Key link at most
+         (deep review H#8, D simplify 2): with something locked where Dan is, "Use one here" asks once (Use it here · Keep
+         it) and opens it here; else the Map, where it is behind him -->
+    <div class="key-line rise d2">
+      <button class="keys" aria-expanded={keysOpen} onclick={() => (keysOpen = !keysOpen)}>
+        <svg viewBox="0 0 24 12" aria-hidden="true"><circle cx="5" cy="6" r="3.6" /><path d="M8.6 6H22M18 6v3.4M21.4 6v2.6" /></svg>
+        <span>{v.keys === 0 ? t('today.keys.none') : v.keys === 1 ? t('today.keys.one') : t('today.keys.many', { n: v.keys })}</span>
+      </button>
+      {#if v.keyHere}<span class="dot" aria-hidden="true">·</span><button class="text-link key-use" aria-expanded={keyAsk} onclick={() => (keyAsk = !keyAsk)}><span>{t(v.keys > 1 ? 'today.keys.hereMany' : 'today.keys.here')}</span></button>
+      {:else if v.keyUse}<span class="dot" aria-hidden="true">·</span><button class="text-link key-use" onclick={() => go('map', v.keyUse!)}><span>{t('today.behindMap')}</span></button>{/if}
+    </div>
+    {#if keyAsk && v.keyHere}<div class="key-ask rise"><button class="text-link use" onclick={useHere}><span>{t('step.useHere')}</span></button><button class="text-link" onclick={() => (keyAsk = false)}><span>{t('step.keepIt')}</span></button></div>{/if}
     {#if keysOpen}<p class="soft keys-say">{t('today.keys.say')}{#if v.keys} {t('today.keys.useOnMap')}{/if}</p>{/if}
     {#if v.ahead}
       <section class="ahead rise d2">
         <!-- a locked thing left behind is never called "ahead": it is behind him, and on the Map (S3, D-143) -->
-        <div class="label-line">{v.aheadBehind ? t('today.behind') : t('today.ahead')}{#if v.aheadKey}<span class="needs-key"> · {t('today.aheadKey')}</span>{/if}</div>
-        <button class="ahead-text" class:open={aheadOpen} aria-expanded={aheadOpen} onclick={() => (aheadOpen = !aheadOpen)}><p class="say on-scene">{v.ahead}</p></button>
-        {#if v.aheadBehind}<p class="behind-map"><button class="text-link" onclick={() => go('map', v.aheadBehind!)}><span>{t('today.behindMap')}</span></button></p>{/if}
+        <div class="label-line">{v.aheadBehind ? t('today.behind') : v.aheadHere ? t('today.here') : t('today.ahead')}{#if v.aheadKey}<span class="needs-key"> · {t('today.aheadKey')}</span>{/if}</div>
+        <!-- read as words, never as a button whose name is the whole passage (A#38): VoiceOver reads it all anyway; a tap
+             unfolds it for the eye -->
+        <div class="ahead-text" class:open={aheadOpen} role="presentation" onclick={() => (aheadOpen = !aheadOpen)}><p class="say on-scene"><Prose text={v.ahead} /></p></div>
+        {#if v.aheadBehind && !v.keyUse}<p class="behind-map"><button class="text-link" onclick={() => go('map', v.aheadBehind!)}><span>{t('today.behindMap')}</span></button></p>{/if}
       </section>
     {/if}
   </header>
@@ -263,7 +286,7 @@
       <div class="next">
         <div class="label-line gold">{t('today.tonight')}</div>
         <h2 class="say-lg">{t('camp.night')}</h2>
-        {#if nightLine}<p class="say night-line">{nightLine}</p>{/if}
+        {#if nightLine}<p class="say night-line"><Prose text={nightLine} /></p>{/if}
         <p class="soft">{v.night.kept ? t('camp.sleep.kept') : t('camp.sleep.late', { bedtime: v.bedtime })}</p>
       </div>
     {:else if v.next?.mode === 'carry' && v.run}
@@ -329,7 +352,9 @@
 
     <Deleted />
     <!-- a word left to cut later (A2), and a Daybook page written after days away (D-143 F): quiet lines back to them -->
-    {#if v.arrival && v.arrival.seq === moment.wordLater}<p class="said waits"><button class="text-link" onclick={() => { moment.wordLater = 0; go('arrival'); }}><span>{t('today.wordWaits')}</span></button></p>{/if}
+    <!-- a tick taken back (B3): said once, plainly; nothing reached is taken away -->
+    {#if v.owed}<p class="said owed">{t('today.owed', { taken: minutesShort(v.owed.taken), left: minutesShort(v.owed.left) })}</p>{/if}
+    {#if v.arrival && v.arrival.seq === moment.wordLater}<p class="said waits"><button class="text-link" onclick={() => { leaveWord(0); go('arrival'); }}><span>{t('today.wordWaits')}</span></button></p>{/if}
     {#if v.close}<p class="said waits"><button class="text-link" onclick={() => go('daybook')}><span>{t('today.pageWaits')}</span></button></p>{/if}
     {#if onlyAvoided}<p class="said only" role="status">{t('today.onlyAvoided', { job: onlyAvoided })}</p>{/if}
     {#if waitedJob}
@@ -338,13 +363,15 @@
     {#snippet jobRow(id: string)}
       {@const j = job(id)}
       <SwipeRow key={`t:${id}`} actions={acts(j)} tap={() => start(id)} hold={() => openMenu(id, go, v.done.has(id) ? v.day : null, null, 'today')} done={v.done.has(id)} quiet={v.done.has(id) && !recurring(id)}>
-        {#snippet row()}<span class="pip" class:done={v.done.has(id)} class:under={canTick(id)}></span><span class="t">{j.name}{#if soFar(j)}<small>{soFar(j)}</small>{/if}</span><span class="s">{sayDone(j) ? '' : rowNote(j)}</span>{/snippet}
+        {#snippet row()}<span class="pip" class:done={v.done.has(id)} class:under={canTick(id)}></span><span class="t" class:putoff={j.avoided && v.findWaits && !v.done.has(id)}>{j.name}{#if soFar(j)}<small>{soFar(j)}</small>{/if}</span>{#if j.avoided && v.findWaits && !v.done.has(id)}<span class="sr-only">{t('row.findWaits')}</span>{/if}<span class="s">{sayDone(j) ? '' : rowNote(j)}</span>{/snippet}
         <!-- the same "It's done" on a row further down: a tap on the row itself still starts a delve (D-100, D-120) -->
         <!-- the tick circle over the marker: done without a delve, with the time it took (D-134) -->
         {#snippet lead()}{#if canTick(id)}<button class="tickbtn" aria-label={t('tick.sr', { job: j.name })} onclick={() => openTick(id, go)}><span class="ring"></span></button>{/if}{/snippet}
         {#snippet over()}{#if sayDone(j) && !busy}<button class="text-link row-done" onclick={() => done(j)}><span>{t('today.itsDone')}</span></button>{/if}{/snippet}
       </SwipeRow>
     {/snippet}
+    <!-- last night's own choice starts the day, until it is started (MORNING-REPORT Part 3 #5) -->
+    {#if chosenFirst}<p class="soft chosen-first">{t('today.chosenFirst', { job: job(chosenFirst).name })} <span aria-hidden="true">·</span> <button class="text-link" aria-label={t('today.chosenBegin', { job: job(chosenFirst).name })} onclick={() => go('set', chosenFirst)}><span>{t('set.begin')}</span></button></p>{/if}
     <div class="rows">
       {#each others as id (id)}{@render jobRow(id)}{/each}
     </div>
@@ -384,7 +411,9 @@
       <div class="label-line if-time">{t('today.ifTime')}</div>
       <div class="rows">{#each extra as id (id)}{@render jobRow(id)}{/each}</div>
     {/if}
-    {#if errandsOpen}<div class="cant errand"><button class="text-link" onclick={() => go('errands')}><span>{t('errand.link')}</span></button></div>{/if}
+    <!-- "Can't get started?" until the day's first start: "I can't start" for the first job on the line, one put off first
+         (MORNING-REPORT Part 3 #4); the errand run lives in the Satchel and the job menu (simplify) -->
+    {#if cantFor}<div class="cant"><button class="text-link" aria-label={t('today.cantSr', { job: job(cantFor).name })} onclick={() => go('cant', cantFor)}><span>{t('today.cantGetStarted')}</span></button></div>{/if}
     <!-- the evening, before the day's work is done: Tonight at the end of the day's list (D-093) -->
     {#if evening && !v.complete && !v.run && !nearBed}<section class="tonight-end">{@render tonight()}</section>{/if}
     </div>
@@ -400,20 +429,31 @@
 
 <style>
   h1 { margin-top: 2px; }
-  h1 .here { font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit; text-shadow: inherit; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; }
+  /* the heading's own words are its name; "Read it again" is said after it (A#47); a finger's height at least (A#40) */
+  h1 .here { font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit; text-shadow: inherit; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; min-height: 44px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+  /* a job Dan tends to put off brings a find: a small hollow gold mark says so (MORNING-REPORT Part 3 #3) */
+  .chosen-first { margin: 6px 0 2px; font-style: italic; }
+  .chosen-first .text-link { min-height: 44px; }
+  /* drawn, not written: the job's name stays its name (flows and VoiceOver read it) */
+  .t.putoff::after { content: '◇'; content: '◇' / ''; margin-left: .4em; font-size: .8em; color: var(--gold-hi); opacity: .85; }
   .where { margin-top: 6px; }
   .where :global(.road) { margin: 0 auto 4px; }
-  .keys { display: flex; align-items: center; gap: 8px; margin: 10px auto 6px; padding: 4px 8px; background: none; border: 0; cursor: pointer;
-    font-family: var(--life); font-style: italic; font-size: 14px; color: #e9d9b4; }
+  .key-line { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0 6px; margin: 16px auto 2px; }
+  .keys { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 6px; background: none; border: 0; cursor: pointer;
+    font-family: var(--life); font-style: italic; font-size: calc(15px * var(--ts, 1)); color: #e9d9b4; }
   .keys svg { width: 22px; height: 11px; fill: none; stroke: #f2c170; stroke-width: 1.4; stroke-linecap: round; }
-  .key-use { margin: -4px 0 8px; text-align: center; font-size: 15px; }
-  .key-use .text-link { color: #f2c170; }
-  .keys-say { margin: 0 0 8px; text-align: center; font-size: 14.5px; }
+  .key-line .dot { color: #b9a77e; }
+  .key-line .key-use { min-height: 44px; font-size: calc(15px * var(--ts, 1)); color: #f2c170; }
+  .key-line .key-use span { color: #f2c170; }
+  .key-ask { display: flex; justify-content: center; gap: 18px; margin: -2px 0 8px; }
+  .key-ask .use span { color: #f2c170; }
+  .keys-say { margin: 0 0 8px; text-align: center; font-size: calc(14.5px * var(--ts, 1)); }
   .needs-key { color: #f2c170; }
   .behind-map { margin: 0; }
-  .behind-map .text-link { min-height: 36px; padding: 0; }
+  .behind-map .text-link { min-height: 44px; padding: 0; }
   .ahead { margin-top: 12px; }
-  .ahead p { font-size: 17.5px; line-height: 1.38; margin-top: 6px; }
+  .ahead p { font-size: calc(17.5px * var(--ts, 1)); line-height: 1.38; margin-top: 6px; }
   .ahead-text { display: block; width: 100%; padding: 0; background: none; border: 0; text-align: left; cursor: pointer; color: inherit; }
   .ahead-text:not(.open) p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; line-clamp: 4; overflow: hidden; }
   .tonight-end { margin-top: 18px; }
@@ -423,6 +463,8 @@
   .tonight .promise { text-align: left; margin: 6px 0 14px; }
   .night-line { font-style: italic; color: #fff; margin: 8px 0 10px; line-height: 1.45; }
   .bottom { padding-top: 8px; }
+  /* the list's fade starts below the header, never under the Ahead passage: rows never show through it (deep review H#12) */
+  .bottom > .scroll { margin-top: 0; }
   .next h2 { margin: 8px 0 4px; }
   .next .soft { margin-bottom: 18px; }
   .cant { display: flex; justify-content: center; align-items: center; gap: 2px; margin-top: 4px; }
@@ -435,54 +477,53 @@
   .addcard .lead { margin: 18px 0 12px; }
   .addcard .soft + .lead { margin-top: 0; }
   .rows :global(.row-done) { min-height: 40px; padding: 0 0 0 12px; }
-  .rows :global(.row-done span) { font-size: 16px; color: var(--violet-hi); }
+  .rows :global(.row-done span) { font-size: calc(16px * var(--ts, 1)); color: var(--violet-hi); }
   .if-time { margin: 18px 0 4px; }
   .replies { margin-top: 10px; }
   .reply { padding-bottom: 4px; }
-  .rows :global(.row small) { display: block; font-size: 14px; color: var(--ink-2); margin-top: 2px; }
-  .ask { margin: 0; padding-left: 32px; font-family: var(--life); font-style: italic; font-size: 16px; color: var(--ink-2); }
+  .rows :global(.row small) { display: block; font-size: calc(14px * var(--ts, 1)); color: var(--ink-2); margin-top: 2px; }
+  .ask { margin: 0; padding-left: 32px; font-family: var(--life); font-style: italic; font-size: calc(16px * var(--ts, 1)); color: var(--ink-2); }
   .reply-acts { display: flex; flex-wrap: wrap; gap: 0 16px; padding-left: 32px; }
   .reply-acts .text-link { min-height: 44px; min-width: 44px; }
-  .reply-acts .text-link span { font-size: 15px; }
+  .reply-acts .text-link span { font-size: calc(15px * var(--ts, 1)); }
   .reply-acts .text-link:disabled { opacity: .5; }
-  .errand { margin-top: 6px; }
   .waits { margin: 0 0 6px; }
   .waits .text-link span { color: var(--gold-hi); }
-  .next .soft.to-satchel { margin: -8px 0 4px; font-size: 14px; font-style: italic; text-align: center; }
-  .hold-hint { margin: 6px 0 0; text-align: center; font-size: 14px; font-style: italic; }
+  .next .soft.to-satchel { margin: -8px 0 4px; font-size: calc(14px * var(--ts, 1)); font-style: italic; text-align: center; }
+  .hold-hint { margin: 6px 0 0; text-align: center; font-size: calc(14px * var(--ts, 1)); font-style: italic; }
   .of { margin: -2px 0 4px !important; font-style: italic; }
   .only { margin: 2px 0 6px; }
   .aside { margin-top: 8px; }
   .aside-row { cursor: default; opacity: .62; }
   .aside-row .t { text-decoration: line-through; }
   .put-back { display: flex; justify-content: flex-end; margin: -8px 0 4px; }
-  .put-back .text-link { min-height: 36px; padding: 0; }
-  .put-back .text-link span { font-size: 15px; }
+  .put-back .text-link { min-height: 44px; padding: 0; }
+  .put-back .text-link span { font-size: calc(15px * var(--ts, 1)); }
   .first { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin-top: 8px; }
-  .first-say { font-family: var(--life); font-size: 18px; color: var(--ink-2); }
-  .first-job span { font-size: 18px; color: #fff; }
+  .first-say { font-family: var(--life); font-size: calc(18px * var(--ts, 1)); color: var(--ink-2); }
+  .first-job span { font-size: calc(18px * var(--ts, 1)); color: #fff; }
   .choices { display: flex; flex-direction: column; margin: 4px 0 6px; border-top: 1px solid var(--edge-4); }
-  .choice { text-align: left; min-height: 44px; padding: 8px 4px; border-bottom: 1px solid var(--edge-4); font-family: var(--life); font-size: 17px; color: var(--ink); }
+  .choice { text-align: left; min-height: 44px; padding: 8px 4px; border-bottom: 1px solid var(--edge-4); font-family: var(--life); font-size: calc(17px * var(--ts, 1)); color: var(--ink); }
   .choice[aria-pressed='true'] { color: var(--gold); }
-  .choice small { display: block; font-style: italic; font-size: 14px; color: var(--ink-3); }
+  .choice small { display: block; font-style: italic; font-size: calc(14px * var(--ts, 1)); color: var(--ink-3); }
   .mind { display: flex; gap: 10px; margin: 10px 0 2px; }
-  .mind input { flex: 1; min-width: 0; min-height: 44px; padding: 0 12px; font: inherit; font-size: 17px; color: #fff;
+  .mind input { flex: 1; min-width: 0; min-height: 44px; padding: 0 12px; font: inherit; font-size: calc(17px * var(--ts, 1)); color: #fff;
     background: rgba(255, 255, 255, .06); border: 1px solid var(--edge-2); border-radius: 0; }
   .mind .btn-quiet { padding: 0 14px; }
   .mind .btn-quiet:disabled { opacity: .5; }
   .said-mind { font-style: italic; margin: 4px 0 0; text-align: left; }
   .still { margin: -12px 0 16px; }
-  .said { font-family: var(--life); font-style: italic; font-size: 15.5px; color: var(--ink-2); display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 2px 6px; margin: -6px 0 6px; }
-  .said .text-link { min-height: 0; padding: 4px; }
+  .said { font-family: var(--life); font-style: italic; font-size: calc(15.5px * var(--ts, 1)); color: var(--ink-2); display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 2px 6px; margin: -6px 0 6px; }
+  .said .text-link { display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px; vertical-align: middle; }   /* a finger high (A#40) */
   .foot { display: flex; justify-content: space-around; margin: 6px -10px 0; }
-  .foot span { font-size: 14px; letter-spacing: .1em; color: var(--ink-2); }
-  .proto span { font-size: 14px; letter-spacing: .16em; color: var(--ink-3); }
+  .foot span { font-size: calc(14px * var(--ts, 1)); letter-spacing: .1em; color: var(--ink-2); }
+  .proto span { font-size: calc(14px * var(--ts, 1)); letter-spacing: .16em; color: var(--ink-3); }
   /* the day on the left; the map, records and the prototype's own link together on the right */
   .bar { display: flex; justify-content: space-between; }
   /* on a narrow bar the rehearsal badge takes a line of its own, never pushing the screen wider (Dan, review 2) */
   .bar { gap: 8px; align-items: flex-start; }
   .navs { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0 4px; align-items: center; margin-right: -10px; min-width: 0; }
-  .navs span { font-size: 14px; letter-spacing: .12em; color: var(--ink-2); }
+  .navs span { font-size: calc(14px * var(--ts, 1)); letter-spacing: .12em; color: var(--ink-2); }
   .proto .badge { color: var(--gold); }
   .gear { min-width: 44px; justify-content: center; }
   .gear svg { width: 20px; height: 20px; fill: none; stroke: var(--ink-2); stroke-width: 1.6; stroke-linecap: round; }

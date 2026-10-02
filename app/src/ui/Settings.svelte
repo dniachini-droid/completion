@@ -15,14 +15,14 @@
   import { calendarOf } from '../core/week';
 
   let { go }: { go: Go } = $props();
-  const v = $derived(game.view);
+  const v = $derived(game.whole);
   const on = $derived(remindersOn(game.facts));
   const bed = $derived(reminderOf(game.facts, BEDTIME));
   const nudge = $derived(nudgeOn(game.facts));
   /* the phone's calendar, read-only (D-115): off until turned on; asked once, in the tap that turns it on */
   const cal = $derived(calendarOf(game.facts));
   let cals = $state<{ id: string; title: string }[]>([]), calRefused = $state(false);
-  if (calendarOf(game.facts).on) void platform.calendar.calendars().then(x => (cals = x));
+  if (calendarOf(game.facts).on) void platform.calendar.calendars().then(x => (cals = x)).catch(() => {});
   async function calOn() {
     calRefused = false;
     if (!(await platform.calendar.permit())) { calRefused = true; return; }
@@ -37,7 +37,8 @@
   }
 
   /* the save's copies (D-107): Save a copy; Restore asks once, in plain words, and keeps what is there now aside */
-  let asking = $state<Save | null>(null), said = $state('');
+  /* raw: a picked save is a whole log, never watched fact by fact (deep review F#3) */
+  let asking = $state.raw<Save | null>(null), said = $state('');
   async function copy() {
     said = '';
     try { await game.saveCopy(); } catch { said = t('settings.copy.failed'); }
@@ -48,7 +49,8 @@
     try { text = await platform.copies.pick(); } catch { /* chose none */ }
     if (text === null) return;
     const read = readSave(text);
-    if (!read) { said = t('settings.restore.bad'); return; }
+    /* tried on the rules first: a file the game can't run is refused here, plainly, and nothing is written (B14) */
+    if (!read || !game.canRestore(read.save)) { said = t('settings.restore.bad'); return; }
     asking = read.save;
     flushSync(); askEl?.scrollIntoView({ block: 'nearest' });
   }
@@ -58,7 +60,7 @@
     const n = t(done === 1 ? 'jobs.one' : 'jobs.many', { n: done });
     return day && done ? t('settings.restore.ask', { date: dateWords(day), n }) : t('settings.restore.empty');
   }
-  function restore() { if (!asking) return; game.restore(asking); asking = null; said = t('settings.restore.done'); }
+  function restore() { if (!asking) return; const ok = game.restore(asking); asking = null; said = t(ok ? 'settings.restore.done' : 'settings.restore.bad'); }
 </script>
 
 <Scene painting={v.here.painting} blur />
@@ -141,12 +143,12 @@
   h1 { margin-top: 4px; }
   section { margin-top: 10px; }
   .label-line { margin-top: 14px; }
-  .note { text-align: left; margin: 6px 0 10px; font-size: 15px; }
+  .note { text-align: left; margin: 6px 0 10px; font-size: calc(15px * var(--ts, 1)); }
   .seg { margin-top: 6px; }
   .nudge { margin-top: 16px; }
   .cals { margin-top: 8px; }
   .cal { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px; background: none; border: 0; border-bottom: 1px solid var(--edge-2);
-    color: var(--ink); font: inherit; font-size: 16px; text-align: left; padding: 0; cursor: pointer; }
+    color: var(--ink); font: inherit; font-size: calc(16px * var(--ts, 1)); text-align: left; padding: 0; cursor: pointer; }
   .cal[aria-pressed='false'] span:last-child { color: var(--ink-3); }
   .bed { margin-top: 16px; color: var(--ink-2); }
   .full { width: 100%; }

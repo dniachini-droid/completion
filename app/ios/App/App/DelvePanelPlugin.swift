@@ -1,6 +1,8 @@
 import ActivityKit
 import Capacitor
 import Foundation
+import UIKit
+import WebKit
 
 /// The app's window, with its own small plugin registered (Capacitor finds the npm plugins by itself).
 class MainViewController: CAPBridgeViewController {
@@ -11,7 +13,25 @@ class MainViewController: CAPBridgeViewController {
         bridge?.registerPluginInstance(CopyPlugin())   // copies of the save: share, restore, the weekly copy (D-107)
         bridge?.registerPluginInstance(InboxPlugin())   // lines said to Siri or the Action button (InboxPlugin.swift, D-113)
         bridge?.registerPluginInstance(CalendarPlugin())   // the phone's calendar, read-only (CalendarPlugin.swift, D-115)
+        // the bridge made its router the notifications' delegate: "Again in 10 min" stays the app's own (AgainNotifications.swift)
+        if let router = bridge?.notificationRouter { AgainNotifications.shared.install(router: router) }
+        /* the phone's text size (Dynamic Type), honoured: every size in the app is multiplied by --ts (deep review A#33);
+           set before the page draws, and again whenever Dan changes it in Settings */
+        let script = WKUserScript(source: Self.textScaleJS(), injectionTime: .atDocumentStart, forMainFrameOnly: true)
+        webView?.configuration.userContentController.addUserScript(script)
+        NotificationCenter.default.addObserver(self, selector: #selector(textSizeChanged), name: UIContentSizeCategory.didChangeNotification, object: nil)
     }
+
+    /// The text size chosen in iOS Settings, as a scale of the body text's own 17 points: kept between a little smaller
+    /// and half again larger, where every screen still fits.
+    static func textScale() -> Double {
+        let s = Double(UIFontMetrics(forTextStyle: .body).scaledValue(for: 17) / 17)
+        return min(1.5, max(0.9, s))
+    }
+    static func textScaleJS() -> String {
+        "document.documentElement.style.setProperty('--ts', '\(String(format: "%.3f", textScale()))');"
+    }
+    @objc private func textSizeChanged() { webView?.evaluateJavaScript(Self.textScaleJS(), completionHandler: nil) }
 }
 
 /// Shows, updates and ends the delve's panel (D-095); the web side is platform/index.ts → DelvePanel.
@@ -27,6 +47,19 @@ public class DelvePanelPlugin: CAPPlugin, CAPBridgedPlugin {
     private func date(_ call: CAPPluginCall, _ key: String) -> Date? {
         guard let ms = call.getDouble(key), ms > 0 else { return nil }
         return Date(timeIntervalSince1970: ms / 1000)
+    }
+
+    /// The panel's calls run one after another, in the order the app made them: two close together for a new run never
+    /// make two panels, and an end never races a show (deep review P#16).
+    private static let lock = NSLock()
+    private static var chain: Task<Void, Never>?
+    @discardableResult
+    private static func inOrder(_ work: @escaping () async -> Void) -> Task<Void, Never> {
+        lock.lock(); defer { lock.unlock() }
+        let prev = chain
+        let next = Task { await prev?.value; await work() }
+        chain = next
+        return next
     }
 
     /// What the panel turns to if Dan goes into another app (D-094), as the app last said; the app is asleep by then.
@@ -53,6 +86,7 @@ public class DelvePanelPlugin: CAPPlugin, CAPBridgedPlugin {
             end: date(call, "end") ?? now,
             heldFraction: call.getDouble("heldFraction") ?? 0,
             heldTime: call.getString("heldTime") ?? "",
+            notch: call.getDouble("notch"),
             afterLabel: call.getString("afterLabel") ?? "",
             afterLine: call.getString("afterLine") ?? "",
             afterLeft: call.getString("afterLeft") ?? "",
@@ -60,7 +94,7 @@ public class DelvePanelPlugin: CAPPlugin, CAPBridgedPlugin {
             afterEnd: date(call, "afterEnd")
         )
         let content = ActivityContent(state: state, staleDate: date(call, "staleAt"))
-        Task {
+        Self.inOrder {
             let all = Activity<DelveAttributes>.activities
             /* another run's panel, left by a closed app, goes */
             for other in all where other.attributes.run != run {
@@ -84,7 +118,11 @@ public class DelvePanelPlugin: CAPPlugin, CAPBridgedPlugin {
     /// Dan went into another app at `at` (AwayPlugin, D-094): the panel stops where the delve will be paused, in the
     /// paused look, rather than counting on while the app sleeps. Left in a breather: the next delve waits, not begun.
     /// Coming back puts the panel right from the game's own rules.
-    @MainActor static func hold(at: Date) async {
+    /// (in the same order as the app's own calls, never between a show and its end: fresh review)
+    static func hold(at: Date) async {
+        await inOrder { await holdNow(at: at) }.value
+    }
+    @MainActor private static func holdNow(at: Date) async {
         guard let a = away else { return }
         for activity in Activity<DelveAttributes>.activities where activity.activityState == .active || activity.activityState == .stale {
             var s = activity.content.state
@@ -103,7 +141,7 @@ public class DelvePanelPlugin: CAPPlugin, CAPBridgedPlugin {
     }
 
     @objc func end(_ call: CAPPluginCall) {
-        Task {
+        Self.inOrder {
             for activity in Activity<DelveAttributes>.activities {
                 await activity.end(nil, dismissalPolicy: .immediate)
             }

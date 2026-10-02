@@ -4,13 +4,15 @@
      each day's jobs in plain words with a time where one is set; no hour grid, no tray of unplaced jobs. "Plan my week"
      lays it out; a tap moves a job, gives it a time, or takes it off this week. The past shows only what was done. The
      forecast is one line in the world's terms: predictive, never contractual. Nothing here earns anything. */
-  import { game } from './game.svelte';
-  import { t, dayName, minutesWords, weekDates, byWords } from '../content/copy/en';
+  import { game, content } from './game.svelte';
+  import { NAME_MAX, tieFor } from '../core/remember';
+  import { haveWords } from './have';
+  import { t, dayName, dayShort, minutesWords, minutesShort, relDay, weekDates, byWords, type Weekday } from '../content/copy/en';
   import { calendarWeek } from '../core/time';
   import { addDays, dayMinutes, eventsOn, planMade, realMinutes, weekOf, type DayJob } from '../core/week';
   import { hold } from './hold';
   import { openMenu } from './menu.svelte';
-  import { asideToday } from '../core/game';
+  import { asideToday, carriedOf, satchelView } from '../core/game';
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
   import { back } from './back.svelte';
@@ -20,7 +22,7 @@
   import { entryTarget, reminderSettings, rhythmTarget, type Lead } from '../core/reminders';
 
   let { go, week }: { go: Go; week?: string } = $props();
-  const v = $derived(game.view);
+  const v = $derived(game.whole);
   const thisWeek = $derived(calendarWeek(v.day));
   const wk = $derived(week && week > thisWeek ? week : thisWeek);
   const isNext = $derived(wk !== thisWeek);
@@ -39,13 +41,16 @@
     if (j.time) return j.time;
     const job = game.job(j.job);
     if (!job) return '';
-    if (job.by) return byWords(job.by);
-    return minutesWords(job.length);
+    if (job.by) return byWords(job.by, v.day);
+    /* one way to write a length (A#20); a one-off has no number nobody chose, only its minutes so far (A#6, J2) */
+    if (v.content.rhythms.some(r => r.job === job.id)) return minutesShort(job.length);
+    const so = carriedOf(game.facts, v.content, job.id);
+    return so > 0 ? t('row.sofar', { min: minutesShort(so) }) : '';
   }
   const forecast = $derived.by(() => {
     if (isNext || !v.forecast.length) return '';
-    const parts = [t('week.forecast.one', { day: dayName(v.forecast[0]) })];
-    if (v.forecast[1] && v.forecast[1] !== v.forecast[0]) parts.push(t('week.forecast.then', { day: dayName(v.forecast[1]) }));
+    const parts = [t('week.forecast.one', { day: relDay(v.forecast[0], v.day) })];
+    if (v.forecast[1] && v.forecast[1] !== v.forecast[0]) parts.push(t('week.forecast.then', { day: relDay(v.forecast[1], v.day) }));
     return t('week.forecast', { what: parts.join(', ') });
   });
   const days = $derived(view.days.map(d => d.day).filter(d => d >= v.day));
@@ -69,7 +74,8 @@
   $effect(() => { void open; otherOpen = false; });
   const keyOf = (j: DayJob, day: string) => j.done ? `done:${day}:${j.job}` : j.entry!;
   /* a done row: only that day's record goes (its minutes stay); otherwise the job (D-125) */
-  function remove(j: DayJob, day: string) { open = null; if (j.done) game.removeDone(j.job, day); else game.remove(j.job); }
+  /* a recurring job deleted with its plan asks first, as the job menu does (H#9, re-review) */
+  function remove(j: DayJob, day: string) { open = null; if (j.done) game.removeDone(j.job, day); else if (v.content.rhythms.some(r => r.job === j.job)) openMenu(j.job, go, null, null, null, true); else game.remove(j.job); }
   function moveTo(j: DayJob, from: string, day: string) {
     if (day !== from) game.do({ do: 'movePlan', entry: j.entry!, day });
     open = null;
@@ -101,25 +107,41 @@
     return out.length === ids.length ? out : [...out, t(out.length ? 'week.about.rest' : 'week.about.set')];
   }
   /* a faint "about 2 h": the day's shape, not a score (D-114) */
+  /* rounded first (C#11: 58 minutes read "about 60 min"), and written as every length is (A#20): "about 2 h 30 min" */
   function about(m: number) {
-    if (m < 60) return t('week.aboutMin', { n: Math.max(5, Math.round(m / 5) * 5) });
-    const h = Math.round(m / 30) / 2;
-    return t('week.aboutH', { n: Number.isInteger(h) ? String(h) : `${Math.floor(h)}½` });
+    const r = m < 60 ? Math.max(5, Math.round(m / 5) * 5) : Math.round(m / 30) * 30;
+    return t('week.about', { len: minutesShort(r) });
   }
   function startAdd(day: string) {
+    said = null;
     if (addingTo === day) { addingTo = null; return; }
     open = null; line = ''; addingTo = day; toggled[day] = false;
     /* focused inside the tap itself, so the phone's keyboard opens straight away */
     flushSync(); lineEl?.focus(); lineEl?.scrollIntoView({ block: 'nearest' });
   }
+  /* a name Dan already has: said where it is, in the Satchel's words, the box kept open; never moved quietly off another
+     day. A recurring job typed for a later day is one more session there (D-144), and says so (deep review B17) */
+  let said = $state<{ day: string; text: string } | null>(null);
   function add() {
     if (!line.trim() || !addingTo) { addingTo = null; return; }
-    game.do({ do: 'addToWeek', line, day: addingTo });
-    line = ''; addingTo = null;
+    const tie = tieFor(content, game.facts, line), day = addingTo;
+    if (tie?.same) {
+      const recurring = v.content.rhythms.some(r => r.job === tie.job.id);
+      const there = weekOf(v.content, game.facts, calendarWeek(day), v.day).days.find(d => d.day === day)?.jobs.some(j => j.job === tie.job.id);
+      if (recurring && day > v.day && !there) {
+        game.do({ do: 'addToWeek', line, day });
+        said = { day, text: t('week.added.session', { job: tie.job.name, day: dayName(day) }) };
+        line = ''; addingTo = null; return;
+      }
+      said = { day, text: there && day !== v.day ? t('satchel.have.coming', { job: tie.job.name, day: dayShort(day) }) : haveWords(tie.job, satchelView(content, game.facts, game.now)) };
+      return;
+    }
+    game.do({ do: 'addToWeek', line, day });
+    said = null; line = ''; addingTo = null;
   }
   /* on a computer the time box opens its picker on any click too, as a phone's does */
   function pick(e: MouseEvent) { try { (e.currentTarget as HTMLInputElement).showPicker?.(); } catch { /* not every browser */ } }
-  const short = (d: string) => t(`days.short.${new Date(`${d}T00:00:00Z`).getUTCDay()}` as never);
+  const short = (d: string) => t(`days.short.${new Date(`${d}T00:00:00Z`).getUTCDay() as Weekday}`);
   /* "Another day…": the app's one calendar (DayPick), from today on (D-125, D-130) */
   let otherOpen = $state(false);
 </script>
@@ -141,7 +163,7 @@
     <Deleted />
     {#if !planMade(game.facts, wk)}
       <div class="none">
-        {#if !view.planned}<h2 class="say-lg">{isNext ? t('week.none.next') : t('week.none')}</h2>{/if}
+        {#if !view.planned}<h2 class="say-lg">{!isNext ? t('week.none') : wk === addDays(thisWeek, 7) ? t('week.none.next') : t('week.none.later')}</h2>{/if}
         <p class="soft">{t('week.none.say')}</p>
         <button class="btn full" onclick={plan}>{t('week.plan')}</button>
       </div>
@@ -152,7 +174,7 @@
           <div class="dhead">
             <!-- a tap on a day's name folds its jobs away; days already gone start folded (Dan, review 2) -->
             <button class="dname" aria-expanded={!isFolded(d.day)} onclick={() => fold(d.day)}>
-              <span class="chev" class:shut={isFolded(d.day)} aria-hidden="true">›</span>{dayName(d.day)}{#if d.day === v.day}<em>{t('week.today')}</em>{/if}
+              <span class="chev" class:shut={isFolded(d.day)} aria-hidden="true">›</span>{dayName(d.day)}{#if d.day === v.day}<span class="sr-only">, </span><em>{t('week.today')}</em>{/if}
               {#if isFolded(d.day) && d.jobs.length}<small>{summary(d.jobs)}</small>
               {/if}
             </button>
@@ -166,10 +188,12 @@
           {#if why === d.day && !isFolded(d.day)}<div class="why" role="status">{#each whyOf(d) as line, k (k)}<p>{line}</p>{/each}</div>{/if}
           {#if addingTo === d.day}
             <form class="new" onsubmit={(e) => { e.preventDefault(); add(); }}>
-              <input bind:this={lineEl} bind:value={line} placeholder={t('week.addPlaceholder')} maxlength="120" enterkeyhint="done" aria-label={t('week.addTo', { day: dayName(d.day) })} />
+              <input bind:this={lineEl} bind:value={line} placeholder={t('week.addPlaceholder')} maxlength={NAME_MAX} enterkeyhint="done" aria-label={t('week.addTo', { day: dayName(d.day) })} />
               <button class="btn-quiet" type="submit" disabled={!line.trim()}><span>{t('week.add')}</span></button>
             </form>
           {/if}
+          {#if addingTo === d.day && line.length >= NAME_MAX}<p class="said">{t('name.max', { n: NAME_MAX })}</p>{/if}
+          {#if said?.day === d.day}<p class="said" role="status">{said.text}</p>{/if}
           {#if !isFolded(d.day)}
           <!-- the phone's calendar (D-115): fixed points, not jobs; nothing to tap, nothing earned -->
           {#each eventsOn(game.facts, d.day) as e (e.id)}
@@ -224,7 +248,8 @@
     <div class="links">
       <!-- the recurring jobs live in the Satchel (D-131): this opens it there -->
       <button class="text-link" onclick={() => go('satchel', 'recurring')}><span>{t('week.rhythms')}</span></button>
-      <button class="text-link" onclick={() => go('week', isNext ? thisWeek : addDays(thisWeek, 7))}><span>{isNext ? t('week.this') : t('week.next')}</span></button>
+      <!-- this week is the Week with no page named, so going back to it is a step back, never a new page (deep review B19) -->
+      <button class="text-link" onclick={() => go('week', isNext ? undefined : addDays(thisWeek, 7))}><span>{isNext ? t('week.this') : t('week.next')}</span></button>
       <!-- any week ahead, a week at a time (D-114) -->
       {#if isNext}<button class="text-link" onclick={() => go('week', addDays(wk, 7))}><span>{t('week.after')}</span></button>{/if}
       <!-- a disrupted week: lay out the rest again from today, keeping what you placed yourself (D-114) -->
@@ -237,21 +262,21 @@
   .body { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 28px; }
   h1 { margin-top: 4px; }
   .dates { margin-top: 2px; }
-  .forecast { margin-top: 8px; font-size: 16.5px; line-height: 1.4; }
+  .forecast { margin-top: 8px; font-size: calc(16.5px * var(--ts, 1)); line-height: 1.4; }
   .none { margin: 8px 0 12px; }
   .none .soft { margin: 6px 0 16px; text-align: left; }
   .day { margin-top: 12px; }
-  .dname { font-family: var(--carve, inherit); font-size: 14px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); display: flex; gap: 10px; align-items: baseline;
+  .dname { font-family: var(--carve, inherit); font-size: calc(14px * var(--ts, 1)); letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); display: flex; gap: 10px; align-items: baseline;
     width: 100%; min-height: 44px; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; }
   .about { flex: none; min-height: 44px; padding: 0 10px; background: none; border: 0; cursor: pointer;
-    font-family: var(--life); font-style: italic; font-size: 15px; color: var(--ink-3); text-decoration: underline dotted; text-underline-offset: 3px; }
+    font-family: var(--life); font-style: italic; font-size: calc(15px * var(--ts, 1)); color: var(--ink-3); text-decoration: underline dotted; text-underline-offset: 3px; }
   .why { margin: 0 0 6px 22px; }
-  .why p { font-family: var(--life); font-style: italic; font-size: 15px; color: var(--ink-2); margin: 2px 0; }
+  .why p { font-family: var(--life); font-style: italic; font-size: calc(15px * var(--ts, 1)); color: var(--ink-2); margin: 2px 0; }
   .row { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
-  .dname small { margin-left: auto; font-family: var(--life); font-style: italic; text-transform: none; letter-spacing: 0; font-size: 15px; color: var(--ink-3); }
-  .chev { display: inline-block; width: 10px; font-size: 16px; line-height: 1; color: var(--ink-3); transform: rotate(90deg); transition: transform .2s ease; }
+  .dname small { margin-left: auto; font-family: var(--life); font-style: italic; text-transform: none; letter-spacing: 0; font-size: calc(15px * var(--ts, 1)); color: var(--ink-3); }
+  .chev { display: inline-block; width: 10px; font-size: calc(16px * var(--ts, 1)); line-height: 1; color: var(--ink-3); transform: rotate(90deg); transition: transform .2s ease; }
   .chev.shut { transform: none; }
-  .dname em { font-family: var(--life); text-transform: none; letter-spacing: 0; font-size: 15px; color: var(--gold); }
+  .dname em { font-family: var(--life); text-transform: none; letter-spacing: 0; font-size: calc(15px * var(--ts, 1)); color: var(--gold); }
   .day.past .dname { color: var(--ink-3); }
   button.row { width: 100%; text-align: left; }
   /* a note stays on one line; a long job name wraps instead */
@@ -260,21 +285,21 @@
   .dhead { display: flex; align-items: flex-start; }
   .dhead .dname { flex: 1; min-width: 0; }
   /* the + sits at the end of each day's line: a big enough target, quiet until wanted */
-  .plus { width: 44px; height: 44px; margin: 0 -12px 0 0; align-self: flex-start; display: grid; place-items: center; background: none; border: 0; color: var(--violet-hi); font-size: 22px; line-height: 1; cursor: pointer; }
+  .plus { width: 44px; height: 44px; margin: 0 -12px 0 0; align-self: flex-start; display: grid; place-items: center; background: none; border: 0; color: var(--violet-hi); font-size: calc(22px * var(--ts, 1)); line-height: 1; cursor: pointer; }
   .plus.on span { display: inline-block; transform: rotate(45deg); }
   .sheet { border: 1px solid var(--edge-2); background: rgba(10,9,24,.7); padding: 4px 14px 10px; margin: 6px 0 10px; }
   .sheet .label-line { margin-top: 8px; }
   .sheet .seg { margin-top: 6px; }
   /* seven days on one line at 14 px, even on a small phone (D-111): the carved spacing is tightened, not the size */
-  .days button { padding-left: 0; padding-right: 0; font-size: 14px; letter-spacing: .02em; min-width: 0; }
+  .days button { padding-left: 0; padding-right: 0; font-size: calc(14px * var(--ts, 1)); letter-spacing: .02em; min-width: 0; }
   .seg.days { grid-auto-columns: minmax(0, 1fr); gap: 4px; }
   .when { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 12px; }
   .clock-btn { position: relative; flex: 1; min-height: 44px; display: grid; place-items: center; border: 1px solid var(--edge-2); cursor: pointer; }
-  .clock-btn span { font-size: 14px; letter-spacing: .14em; color: var(--ink-2); }
-  .clock-btn span.set { font-size: 18px; color: #fff; }
+  .clock-btn span { font-size: calc(14px * var(--ts, 1)); letter-spacing: .14em; color: var(--ink-2); }
+  .clock-btn span.set { font-size: calc(18px * var(--ts, 1)); color: #fff; }
   /* the phone's own time box, laid over the button so any tap on it opens the wheel */
   .clock-btn input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; border: 0; padding: 0; margin: 0; cursor: pointer; -webkit-appearance: none; appearance: none; }
-  .event { display: flex; gap: 10px; padding: 3px 0 3px 22px; font-style: italic; font-size: 15px; color: var(--ink-2); }
+  .event { display: flex; gap: 10px; padding: 3px 0 3px 22px; font-style: italic; font-size: calc(15px * var(--ts, 1)); color: var(--ink-2); }
   .event .at { font-variant-numeric: tabular-nums; color: var(--ink-3); min-width: 3.2em; }
   .event.allday { color: var(--ink-3); }
   .event .what { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
@@ -284,11 +309,12 @@
   .off { display: flex; justify-content: center; flex-wrap: wrap; gap: 0 14px; margin-top: 6px; }
   .btn.full { width: 100%; }
   .new { display: flex; gap: 10px; margin: 4px 0 8px; }
-  .new input { flex: 1; min-width: 0; min-height: 44px; padding: 0 12px; font: inherit; font-size: 17px; color: #fff;
+  .new input { flex: 1; min-width: 0; min-height: 44px; padding: 0 12px; font: inherit; font-size: calc(17px * var(--ts, 1)); color: #fff;
     background: rgba(255, 255, 255, .06); border: 1px solid var(--edge-2); border-radius: 0; }
   .new .btn-quiet { padding: 0 14px; }
   .new .btn-quiet:disabled { opacity: .5; }
   button.row.open { background: rgba(var(--violet-rgb), .12); }
   .links { display: flex; justify-content: center; flex-wrap: wrap; gap: 4px 18px; margin-top: 18px; }
   button.home { color: var(--ink-2); }
+  .said { font-family: var(--life); font-style: italic; font-size: calc(15.5px * var(--ts, 1)); color: var(--ink-2); margin: 4px 0 8px; }
 </style>

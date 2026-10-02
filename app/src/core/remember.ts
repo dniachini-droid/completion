@@ -31,7 +31,9 @@ function current(c: Content, facts: Fact[], j: Job): boolean {
 
 /** A line as the Satchel's box adds it: a list's bullet dropped, trimmed, at most 120 characters (the same for Delve now
     and Save for later, and for what the screen says, review of D-136). */
-export const cleanLine = (line: string) => line.replace(/^[-*•\s]+/, '').trim().slice(0, 120);
+/** The longest name a job may have, in every box (deep review H#11). */
+export const NAME_MAX = 120;
+export const cleanLine = (line: string) => line.replace(/^[-*•\s]+/, '').trim().slice(0, NAME_MAX);
 
 /** Where a typed line matches a name: 0 the whole name, 1 its start, 2 the start of a later word; null: no match. */
 function match(q: string, name: string): 0 | 1 | 2 | null {

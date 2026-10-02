@@ -66,7 +66,7 @@
 </div>
 <div class="count" class:shown={mode !== 'from'}>
   <div class="num" aria-hidden="true">{#each Array(cols) as _, k (k)}<span class="digit"><span class="strip" bind:this={strips[k]}>{#each [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] as d}<span>{d}</span>{/each}<span>&nbsp;</span></span></span>{/each}</div>
-  <div class="unit">{unit}</div>
+  <div class="unit" aria-hidden="true">{unit}</div>
   <!-- said in full words: the unit drawn under the count is short, so it never reads "1 minutes" mid-count (L C6) -->
   <span class="sr">{minutesWords(toN)}</span>
 </div>
@@ -120,7 +120,7 @@
   .digit { display: block; height: 1em; overflow: hidden; }
   .strip { display: flex; flex-direction: column; will-change: transform; }
   .strip span { display: block; height: 1em; line-height: 1; text-align: center; }
-  .unit { font-family: var(--life); font-style: italic; font-size: 16px; color: #d6d4f2; margin-top: 6px; text-shadow: 0 1px 10px rgba(10, 6, 34, .9); }
+  .unit { font-family: var(--life); font-style: italic; font-size: calc(16px * var(--ts, 1)); color: #d6d4f2; margin-top: 6px; text-shadow: 0 1px 10px rgba(10, 6, 34, .9); }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   @media (prefers-reduced-motion: reduce) { .counting .tail, .counting .glint, .counting .haze { animation: none; } .count { transition: none; } }
 </style>

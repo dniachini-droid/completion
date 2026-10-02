@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && node tools/svelte-check/node_modules/svelte-check/bin/svelte-check --workspace . --threshold error --output machine",
     "paint": "node paint/bake.mjs --out paint/view/img paint/samples/*.js",
     "paint:check": "node paint/check.mjs paint/view/img/*.json"
   },

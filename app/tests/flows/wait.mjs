@@ -115,7 +115,7 @@ else if (await hold(first, name)) {
   await tap(page.locator('.menu').getByRole('button', { name: 'Waiting on…', exact: true }), `Waiting on… for ${name}`);
   await tap(page.locator('.menu .wait-soon'), 'the default day');
   if (await page.locator('.rows button.row', { hasText: name }).count()) fails.push(`${name}, waiting, is still on Today's list`);
-  if (!(await page.getByText(`${name}: in the satchel until Sat 3 Oct.`).count())) fails.push(`no "${name}: in the satchel until Sat 3 Oct."`);
+  if (!(await page.getByText(`${name}: in the Satchel until Sat 3 Oct.`).count())) fails.push(`no "${name}: in the Satchel until Sat 3 Oct."`);
   await noSlide('Today');
   await shot('3-today');
   /* its "Back to it" takes the wait back: on today's list again */
@@ -145,7 +145,7 @@ else if (await hold(later, 'Sort the post in the Week')) {
   await tap(page.locator('.menu .wait-soon'), 'the default day');
 }
 await toToday();
-if (await page.getByText(/in the satchel until/).count()) fails.push('a wait set in the Week (or earlier) is still said on Today');
+if (await page.getByText(/in the Satchel until/).count()) fails.push('a wait set in the Week (or earlier) is still said on Today');
 
 /* 3. Friday: Vet results is back under Today's list, "Did they reply?"; Still waiting → Monday */
 await days(2);
