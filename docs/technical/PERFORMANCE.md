@@ -122,3 +122,45 @@ The browser here has no graphics chip, so heat and battery can only be judged on
 `CURRENT_STATE.md` (Settings → Battery before and after a day; Today left untouched for 10 minutes; a delve left open).
 If the phone still warms while the motion runs, the next candidates are the full-screen grain (blended over the moving
 scene) and the four fog layers, which could be baked into fewer layers.
+
+## The deep review's performance work (D-147, D-148; measured 2026-10-02)
+
+What changed: the fact log is no longer watched fact by fact (`$state.raw`); the rules read it once per log, indexed by
+type and day, with calendar weeks cached (`core/facts.ts`); a delve's tick moves only its countdown, and every other
+screen reads the view by the minute; the Map's sparks rest with the rest of the screen; each fog is one small baked
+picture drawn at a third of its size, with no gold fog in the morning; the tunnel's glows and nebula use soft gradients
+and masks instead of live blurs. Saves made by the rules' simulator (`tests/review/deep-perf-rules.test.ts`), the same
+machine for before and after (shared, so compare within a table).
+
+**The rules alone (Node, median ms; `deep-perf-saves.test.ts`), before → after:**
+
+| Played | Facts | see() | Tap: done | Cold open | Delve second |
+|---|---:|---:|---:|---:|---:|
+| 1 week | 259 | 1.5 → 1.1 | 5.0 → 3.0 | 3.8 → 2.3 | 1.3 → 0.6 |
+| 3 months | 2 605 | 9.5 → 4.2 | 20.4 → 14.6 | 14.6 → 10.5 | 5.8 → 4.6 |
+| 6 months | 4 885 | 11.5 → 4.6 | 31.8 → 20.6 | 23.7 → 14.3 | 7.8 → 4.9 |
+| 1 year | 9 249 | 13.8 → 6.8 | 59.2 → 33.1 | 38.5 → 22.3 | 16.7 → 7.8 |
+| 2 years | 17 977 | 22.2 → 14.1 | 100 → 63.5 | 65.7 → 42.4 | 26.4 → 15.7 |
+
+In the app a delve's second is now only the run's own part (the "delve second" column is the whole view, still used once
+a minute).
+
+**The app in the browser (Chromium, 3×; `deep-perf-big.mjs`).** The review's figures (before any fix) → now:
+
+| Played | First screen drawn | Longest task | A Satchel line added | Delve, rested: task ms/s | JS heap |
+|---|---:|---:|---:|---:|---:|
+| 4 weeks | 472 → 225 ms | 370 → 135 ms | 192 → 48 ms | 40.7 → 9.2 | 7.0 → 5.6 MB |
+| 6 months | 1 037 → 301 ms | 2 450 → 232 ms | 955 → 71 ms | 197.9 → 10.1 | 14 → 6.7 MB |
+| 1 year | 1 485 → 270 ms | 2 844 → 193 ms | 1 990 → 94 ms | 483.1 → 10.5 | 21.8 → 7.9 MB |
+| 2 years | 3 461 → 414 ms | 9 289 → 293 ms | 5 788 → 142 ms | 575.3 → 11.9 | 37.3 → 10.2 MB |
+
+A rested delve now costs about the same whatever the save's age (a fresh save: 9.5 ms/s).
+
+**Screens untouched, on a 6-month save (`deep-perf-frames.mjs`):** Today, Week, Satchel, Map and Daybook all rest at
+0 frames a second, 0 repaints, 0.3–0.4 ms of processor a second (the Map was at 111 frames and 144 ms/s before: its
+sparks never rested). Moving (the 15 s after a touch) is 60 frames a second everywhere; the Map's moving sparks still
+repaint on the main thread while they move (112 ms/s for those 15 s), then rest.
+
+**What only the phone can tell:** the fog and glows' look and cost on the GPU (Instruments → Core Animation), and the
+battery over a day (Settings → Battery). CI keeps the rest of it: the battery check runs on a fresh save and on a
+4-month one.
