@@ -268,7 +268,8 @@ class Game {
       const dayKey = `${this.saveKey}.backupDay`;
       if (platform.store.get(dayKey) !== day) {
         const prev = saves.get(this.saveKey);
-        if (prev) saves.keep(`${this.saveKey}.backup`, prev);
+        /* (only a save that reads: a broken one never takes the backup's place) */
+        if (prev && readSave(prev)) saves.keep(`${this.saveKey}.backup`, prev);
         platform.store.set(dayKey, day);
       }
     }
@@ -337,6 +338,9 @@ class Game {
     const whole = m !== this.#minute || !before;
     this.#minute = m; this.#second = s;
     if (whole) this.now = this.clock(); else this.#now = this.clock();
+    /* a breather running into the next delve writes nothing: the whole view is rebuilt there too, so what follows the run's
+       phase (the screen woken, a tap steadied) never waits for the minute (re-review) */
+    if (!whole && before) { const r = this.view.run; if (!r || r.phase !== before.phase || r.k !== before.k) this.#whole = this.#now; }
     if (!before) {
       if (!this.#log.some(f => f.type === 'opened' && f.day === this.view.day)) this.wake();   /* past 04:00 with the app open */
       return;
@@ -479,15 +483,21 @@ class Game {
   /** A broken save left kept aside (never a newer one): the game starts again on a fresh save. */
   startFresh() {
     if (this.blocked !== 'broken') return;
+    /* the day's backup is the last good save: today's first write never puts the broken one over it (re-review) */
+    const day = this.view?.day ?? '';
+    if (day) { this.#backedUp = day; try { platform.store.set(`${this.saveKey}.backupDay`, day); } catch { /* */ } }
     this.blocked = null;
+    this.keptAside = null;
     this.#setLog([]);
     this.logs++;
     this.do({ do: 'open' });
+    void this.drain();   /* Siri's lines that waited meanwhile */
   }
   canRestore(s: Save): boolean { return factsSound(s.facts) && runs(s.facts, content, this.clock()); }
   restore(s: Save): boolean {
     /* tried on the rules before anything is written; refused plainly if it can't run */
     if (!this.canRestore(s)) return false;
+    try { platform.store.remove(`${this.saveKey}.reread`); } catch { /* */ }
     s = $state.snapshot(s) as Save;
     this.blocked = null;
     this.logs++;
@@ -501,6 +511,7 @@ class Game {
     this.#watched = '-'; this.native();
     this.panel();
     void this.alerts();
+    void this.drain();   /* Siri's lines that waited while the save was blocked */
     void this.reminders();
     return true;
   }
@@ -522,6 +533,8 @@ class Game {
     this.panel();
   }
   reset() {
+    /* records lit by "now read differently" belong to the old game (re-review) */
+    try { platform.store.remove(`${this.saveKey}.reread`); } catch { /* */ }
     /* even a wipe keeps one copy aside, so a slip can be undone (D-080) */
     const prev = platform.saves.get(this.saveKey);
     if (prev) platform.saves.keep(`${this.saveKey}.wiped`, prev);

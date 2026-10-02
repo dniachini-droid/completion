@@ -25,16 +25,21 @@ const { fails } = K;
 {
   const page = await K.open(null, '2026-09-30T09:00:00+01:00');
   const broken = '{"version": 2, "facts": [oops';
-  await page.evaluate(s => localStorage.setItem('save.v1', s), broken);
+  /* yesterday's good backup beside it: offered, and never put over by the broken save (re-review) */
+  const good = JSON.stringify({ version: 2, content: 'x', facts: [{ seq: 1, at: '2026-09-29T09:00:00+01:00', day: '2026-09-29', type: 'opened' }] });
+  await page.evaluate(([s, g]) => { localStorage.setItem('save.v1', s); localStorage.setItem('save.v1.backup', g); localStorage.setItem('save.v1.backupDay', '2026-09-29'); }, [broken, good]);
   const { reload, btn, tap, onToday } = K.helpers(page);
   await reload();
   if (!(await page.getByText(/can’t be read by this version/).count())) fails.push('a broken save does not say so');
+  if (!(await btn('Carry on from yesterday’s backup').count())) fails.push('a broken save does not offer yesterday\'s backup');
   if (!(await btn('Start a new game (this save stays kept)').count())) fails.push('a broken save has no way on');
   else {
     await tap('Start a new game (this save stays kept)');
     if (!(await onToday())) fails.push('a new game from a broken save did not reach Today');
     const kept = await page.evaluate(b => Object.keys(localStorage).some(k => k.startsWith('save.v1.kept.') && localStorage.getItem(k) === b), broken);
     if (!kept) fails.push('the broken save was not kept aside');
+    await page.clock.runFor(70_000);
+    if ((await page.evaluate(() => localStorage.getItem('save.v1.backup'))) !== good) fails.push('the good backup was written over after a new game');
   }
   await page.close();
 }

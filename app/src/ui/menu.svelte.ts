@@ -12,7 +12,7 @@ export const menu = $state<{ job: string | null; go: Go | null; on: string | nul
 export function openMenu(job: string, go: Go, on: string | null = null, entry: string | null = null, from: 'today' | 'satchel' | null = null, ask = false) {
   menu.ask = ask; menu.job = job; menu.go = go; menu.on = on; menu.entry = entry; menu.from = from; menu.at = performance.now(); sayWaited(null);
   /* the job menu has been found: Today's one hint about it is said no more (J19) */
-  try { localStorage.setItem('hint.hold', '1'); } catch { /* private mode */ }
+  if (!ask) try { localStorage.setItem('hint.hold', '1'); } catch { /* private mode */ }   /* (a swipe's Delete question is no hold found) */
 }
 export function closeMenu() { menu.ask = false; menu.job = null; menu.go = null; menu.on = null; menu.entry = null; menu.from = null; }
 /** Just opened: a tap now is the finger lifting from the hold. */

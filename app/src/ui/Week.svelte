@@ -74,7 +74,8 @@
   $effect(() => { void open; otherOpen = false; });
   const keyOf = (j: DayJob, day: string) => j.done ? `done:${day}:${j.job}` : j.entry!;
   /* a done row: only that day's record goes (its minutes stay); otherwise the job (D-125) */
-  function remove(j: DayJob, day: string) { open = null; if (j.done) game.removeDone(j.job, day); else game.remove(j.job); }
+  /* a recurring job deleted with its plan asks first, as the job menu does (H#9, re-review) */
+  function remove(j: DayJob, day: string) { open = null; if (j.done) game.removeDone(j.job, day); else if (v.content.rhythms.some(r => r.job === j.job)) openMenu(j.job, go, null, null, null, true); else game.remove(j.job); }
   function moveTo(j: DayJob, from: string, day: string) {
     if (day !== from) game.do({ do: 'movePlan', entry: j.entry!, day });
     open = null;

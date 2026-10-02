@@ -122,6 +122,8 @@ public class AwayPlugin: CAPPlugin, CAPBridgedPlugin {
                 watching = false
                 note(r.at, "left", [])
                 /* the lock-screen panel and the Dynamic Island say it has paused too, before the app sleeps */
+                /* never longer than a few seconds, whatever the panel's queue holds: iOS ends an app that keeps its time */
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in if let self, self.trip == n { self.finish() } }
                 Task { @MainActor in
                     await DelvePanelPlugin.hold(at: r.at)
                     /* only this trip's own background time: back and away again meanwhile, the new trip keeps its own */

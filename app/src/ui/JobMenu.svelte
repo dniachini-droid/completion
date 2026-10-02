@@ -82,7 +82,7 @@
     {:else if confirming}
     <p class="ask">{t('menu.delAsk', { job: j.name })}</p>
     <button class="item del" onclick={del}>{t('job.delete')}</button>
-    <button class="item" onclick={() => (confirming = false)}>{t('menu.keep')}</button>
+    <button class="item" onclick={() => { if (menu.ask) { closeMenu(); closeRows(); } else confirming = false; }}>{t('menu.keep')}</button>
     {:else if v.runEnd?.pending}
     <!-- the errand question waiting: the way to it is here, so no menu ever stands over "Strike them off" (H#10) -->
     <button class="item" onclick={count}>{t('errand.waitsGo')}</button>
