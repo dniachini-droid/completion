@@ -5,6 +5,7 @@
 export const copy = {
   /* Today */
   'today.ahead': 'Ahead',
+  'today.here': 'Here',
   'today.road.place': 'The next place in {min}',
   'today.road.side': 'a side chamber in {min}',
   'today.keys.none': 'No Keys',
@@ -219,6 +220,7 @@ export const copy = {
 
   /* day complete and the arrival */
   'arrive.label': 'Arrived',
+  'arrive.again': 'Read again',
   'words.hide': 'Hide the words',
   'words.show': 'Read on',
   'look.open': 'Look',
@@ -360,6 +362,7 @@ export const copy = {
   'week.forecast.then': 'and the one after around {day}',
   'week.none': 'There is no plan for this week.',
   'week.none.next': 'There is no plan for next week yet.',
+  'week.none.later': 'There is no plan for that week yet.',
   'week.none.say': 'Today works well enough without one. If you like, the week can be laid out for you, and you may change whatever looks wrong.',
   'week.plan': 'Plan my week',
   'week.rhythms': 'Recurring jobs',
@@ -392,7 +395,7 @@ export const copy = {
   'slip.date': '{job} was wanted {date}. Still needed?', 'slip.appt': '{job}, on {day} at {time}, went by. Still needed?', 'slip.today': 'Put it on today', 'slip.wentBy': 'Went by · still needed?', 'slip.apptRow': '{job} · {day} {time}',
   'week.aboutMin': 'about {n} min', 'week.aboutH': 'about {n} h', 'week.replan': 'Lay out the rest of the week',
   'week.later': 'A later week', 'week.after': 'The week after', 'week.otherDay': 'Another day…',
-  'by.date': 'by {date}', 'by.label': 'By a date', 'by.none': 'No date', 'by.set': 'By',
+  'by.date': 'by {date}', 'by.wanted': 'was wanted by {date}', 'by.label': 'By a date', 'by.none': 'No date', 'by.set': 'By',
   'by.passed': 'Its date has passed.', 'by.still': 'Still needed', 'by.new': 'New date', 'by.letGo': 'Let it go',
   'rhythms.monthly': 'Monthly', 'rhythms.yearlyShort': 'Yearly', 'rhythms.everyShort': 'Every few days',
   'rhythms.onADate': 'On a date', 'rhythms.onAWeekday': 'On a weekday',
@@ -402,7 +405,7 @@ export const copy = {
   'rhythms.yearly': 'every year on {date}',
   'rhythms.everyN': 'every {n} days',
   'rhythms.everySay': 'Counted from the day you last did it, not from a date.',
-  'rhythms.each': 'About how long', 'rhythms.each.say': 'For planning the week. Each delve still starts at 30 minutes.',
+  'rhythms.each': 'About how long', 'rhythms.each.say': 'For planning the week. Its delve starts at this length.', 'rhythms.each.sayOnce': 'For planning the week. Its delve starts at 30 minutes.',
   'rhythms.newNumber': 'A changed number counts from next week, but you can plan with it straight away.',
   'rhythms.save': 'Save', 'rhythms.cancel': 'Cancel',
   'rhythms.stop': 'Stop it recurring',
@@ -411,7 +414,7 @@ export const copy = {
   'job.avoided': 'I tend to put this off', 'job.yes': 'Yes', 'job.no': 'No',
   'job.step': 'First small step', 'job.stepHint': 'What would you touch first?',
   'job.note': 'A note', 'job.noteHint': 'Where you stopped, or anything to keep with it',
-  'job.remove': 'Delete', 'job.delete': 'Delete', 'job.cantDelete': '{job} is in a delve: finish it first.', 'job.removed': '{name} is gone from your lists.', 'job.undo': 'Undo',
+  'job.remove': 'Delete', 'job.delete': 'Delete', 'job.cantDelete': '{job} is in a delve: finish it first.', 'job.cantDeleteEnd': '{job}’s delve has ended: answer its end first.', 'job.removed': '{name} is gone from your lists.', 'job.undo': 'Undo',
   'rhythms.less': 'Fewer', 'rhythms.more': 'More', 'rhythms.shorter': 'Shorter', 'rhythms.longer': 'Longer',
   'days.short.0': 'Sun', 'days.short.1': 'Mon', 'days.short.2': 'Tue', 'days.short.3': 'Wed', 'days.short.4': 'Thu', 'days.short.5': 'Fri', 'days.short.6': 'Sat',
   'days.plural.0': 'Sundays', 'days.plural.1': 'Mondays', 'days.plural.2': 'Tuesdays', 'days.plural.3': 'Wednesdays', 'days.plural.4': 'Thursdays', 'days.plural.5': 'Fridays', 'days.plural.6': 'Saturdays',
@@ -433,6 +436,14 @@ export const copy = {
   'satchel.before': 'Jobs you’ve had before', 'satchel.usually': 'usually {min}', 'satchel.pick.sr': '{job}, usually {min}',
   'satchel.have.noDay': '{job} is already in your satchel.', 'satchel.have.coming': '{job} is already on {day}.',
   'satchel.have.waiting': '{job} is already waiting: back {day}.', 'satchel.have.today': '{job} is already on today’s list.', 'satchel.have.recurring': '{job} is one of your recurring jobs: it comes round by itself.',
+  'set.refused': 'Another delve comes first: finish it, or answer its end, then begin this one.',
+  'row.inErrand': 'in the errand run',
+  'menu.why.errand': 'In the errand run: struck off there, or after it.',
+  'menu.why.count': 'First, what got done on the errand run.',
+  'menu.why.delve': 'A delve is under way: these wait for its end.',
+  'menu.delAsk': 'Delete {job} and its plan?', 'menu.keep': 'Keep',
+  'name.max': 'A name keeps to {n} characters.',
+  'week.added.session': 'One more {job} session, on {day}.',
   'satchel.offer': '{job} keeps coming back. Make it repeat?', 'satchel.offer.yes': 'Make it repeat', 'satchel.offer.no': 'No thanks',
   'pick.today': 'today', 'pick.prev': 'The month before', 'pick.next': 'The next month',
   'today.addJob': 'Add a job',
@@ -446,7 +457,7 @@ export const copy = {
   'errand.start': 'Start the run', 'errand.more': 'Tick two or more.',
   'errand.none': 'An errand run takes two jobs or more. Nothing else is waiting just now.',
   'errand.today': 'On today', 'errand.list': 'The errands', 'errand.sr': '{job}: take it on the run',
-  'errand.set': '{n} errands: {names}',
+  'errand.set': '{n} errands: {names}', 'errand.andMore': 'and {n} more',
   'errand.end': 'An errand run of {min}.', 'errand.endNone': 'The errand run is ended.',
   'errand.ask': 'What got done?', 'errand.askSay': 'Strike off each one you did. The rest stay as they are.', 'errand.count': 'Count them',
   'errand.doneRow': 'done · {min}', 'errand.leftRow': 'still to do',
@@ -486,6 +497,9 @@ export const copy = {
   'settings.restore.ask': 'Restore the copy from {date}? It holds {n} done. What you have now is kept aside first, so nothing is lost.',
   'settings.restore.empty': 'Restore this copy? It holds nothing done yet. What you have now is kept aside first, so nothing is lost.',
   'settings.restore.yes': 'Restore it', 'settings.restore.no': 'Cancel',
+  'blocked.newer': 'This save is from a newer version of the app: update it to carry on. Your save is kept safe, exactly as it was.',
+  'blocked.broken': 'This save can’t be read by this version of the app. It is kept safe, exactly as it was: nothing has been written over it.',
+  'blocked.copy': 'Save a copy of it', 'blocked.copied': 'A copy was made.',
   'settings.restore.bad': 'That file is not a save this app can read. Nothing was changed.',
   'settings.restore.done': 'The copy is restored.',
   'settings.copy.failed': 'The copy could not be made. Nothing was changed.',
@@ -549,9 +563,10 @@ export const inSentence = (name: string) => name.replace(/^The /, 'the ');
 export const dayName = (day: string) => copy[`day.${new Date(`${day}T00:00:00Z`).getUTCDay()}` as CopyKey];
 /** "27 September 2026" */
 /** "by Fri 10 Oct": a line's date, in the quiet italic (D-114). */
-export function byWords(day: string): string {
+export function byWords(day: string, today?: string): string {
   const d = new Date(`${day}T00:00:00Z`);
-  return copy['by.date' as CopyKey].replace('{date}', `${copy[`days.short.${d.getUTCDay()}` as CopyKey]} ${d.getUTCDate()} ${copy[`month.${d.getUTCMonth() + 1}` as CopyKey].slice(0, 3)}`);
+  /* a date gone by is said softly, never word for word as if still ahead (deep review W F15) */
+  return copy[today && day < today ? 'by.wanted' : 'by.date'].replace('{date}', `${copy[`days.short.${d.getUTCDay()}` as CopyKey]} ${d.getUTCDate()} ${copy[`month.${d.getUTCMonth() + 1}` as CopyKey].slice(0, 3)}`);
 }
 export function dateWords(day: string): string {
   const d = new Date(`${day}T00:00:00Z`);

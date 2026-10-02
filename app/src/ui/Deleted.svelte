@@ -5,7 +5,7 @@
 </script>
 
 {#if game.cantDelete}
-  <p class="said deleted" role="status">{t('job.cantDelete', { job: game.cantDelete })}</p>
+  <p class="said deleted" role="status">{t(game.cantDelete.ended ? 'job.cantDeleteEnd' : 'job.cantDelete', { job: game.cantDelete.job })}</p>
 {:else if game.deleted}
   <p class="said deleted" role="status">{t('job.removed', { name: game.deleted.job.name })} <button class="text-link" onclick={() => game.undoRemove()}><span>{t('job.undo')}</span></button></p>
 {/if}

@@ -80,7 +80,7 @@
   const unsaid = (where: string, name: string) => where.toLowerCase().startsWith(name.toLowerCase() + ', ') ? where.slice(name.length + 2) : where;
   /* the light is named for the stretch, the box for the place: both said, so a glance never reads two places (L B7); a
      locked thing behind him is "Behind you", as Today says (deep review B6) */
-  const hereBox = $derived({ label: v.here.name.toLowerCase() === stretchName(v.here.stretch).toLowerCase() ? t('map.hereLabel') : t('map.hereIn', { stretch: stretchName(v.here.stretch) }), title: v.here.name, say: v.ahead ? `${v.aheadBehind ? t('today.behind') : t('today.ahead')}: ${firstSentence(unsaid(v.ahead, v.here.name))}` : firstSentence(v.here.line) });
+  const hereBox = $derived({ label: v.here.name.toLowerCase() === stretchName(v.here.stretch).toLowerCase() ? t('map.hereLabel') : t('map.hereIn', { stretch: stretchName(v.here.stretch) }), title: v.here.name, say: v.ahead ? `${v.aheadBehind ? t('today.behind') : v.aheadHere ? t('today.here') : t('today.ahead')}: ${firstSentence(unsaid(v.ahead, v.here.name))}` : firstSentence(v.here.line) });
 
   /* the places reached on foot or by Key, by stretch, in the order reached: each one's entry can be read again (D-135);
      and the camps made there, each once (its latest night), so an earlier camp's words are never lost (the flow review) */

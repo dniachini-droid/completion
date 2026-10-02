@@ -1071,6 +1071,12 @@ function addJob(w: W, c: Content, v: View, base: Content, day: string, line: str
   return id;
 }
 
+/** Whether a log runs on this build's rules: the clock settled, an opening, the view (deep review B14: a file is tried
+    this way before it is ever restored). */
+export function runs(facts: Fact[], base: Content, now: Moment): boolean {
+  try { const all = facts.concat(settle(facts, base, now)); see(all.concat(act(all, base, { do: 'open' }, now)), base, now); return true; } catch { return false; }
+}
+
 /** The facts a command adds to the log (including anything the clock made due first). */
 export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fact[] {
   const w = writer(facts, now), nowMs = epochOf(now), c = W.live(base, facts);
@@ -1468,8 +1474,10 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     case 'calendarRead': {
       /* written only when what the calendar holds changed: the same facts, the same week (ARCHITECTURE) */
       if (!W.calendarOf(w.all).on) break;
-      const events = cmd.events.filter(e => e && typeof e.start === 'string' && typeof e.end === 'string').slice(0, 400)
-        .map(e => ({ id: String(e.id), cal: String(e.cal), title: String(e.title ?? '').slice(0, 80), start: e.start.slice(0, 16), end: e.end.slice(0, 16), allDay: !!e.allDay }));
+      /* as a set, sorted by start (then id): the same events read in another order change nothing (deep review P#6) */
+      const events = cmd.events.filter(e => e && typeof e.start === 'string' && typeof e.end === 'string')
+        .map(e => ({ id: String(e.id), cal: String(e.cal), title: String(e.title ?? '').slice(0, 80), start: e.start.slice(0, 16), end: e.end.slice(0, 16), allDay: !!e.allDay }))
+        .sort((a, b) => a.start.localeCompare(b.start) || a.id.localeCompare(b.id)).slice(0, 400);
       const reads = ofType(w.all, 'calendarRead'), last = reads[reads.length - 1];
       if (last && JSON.stringify(last.events) === JSON.stringify(events)) break;
       w.put({ type: 'calendarRead', from: day, to: W.addDays(day, cmd.days), events });
@@ -1600,6 +1608,8 @@ export interface View {
   keyHere: string | null;
   /** The sealed thing "ahead" is behind Dan, on another stretch: Today says so and opens the Map there (D-143). */
   aheadBehind: StretchId | null;
+  /** The locked thing in view is where Dan stands (it carries the place's name): "Here", never "Ahead" (deep review W F13). */
+  aheadHere: boolean;
   walked: number;
   /** Minutes of effort from here to the next named place, if one is reachable (never shown as steps owed). */
   toNext: number | null;
@@ -2006,9 +2016,13 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   const here: Here = lastPlace
     ? { id: lastPlace.id, name: lastPlace.name ?? stretch.name, line: lastPlace.line ?? '', stretch: st.stretch, painting: paintingOf(lastPlace.id, st.stretch) }
     : { id: null, name: stretch.name, line: opening?.line ?? '', stretch: st.stretch, painting: STAND_IN[st.stretch] };
-  const w = walked(facts), nextBeat = S.nextPlace(c.story, st, pushOn(facts, day)),
+  /* the road counts on from the last place reached, even one not yet looked at (a word left for later): the minutes
+     still visibly go somewhere (deep review B13, W F7); it names nothing, so it reveals nothing */
+  const wordWaits = !!arrival && S.beatOf(c.story, arrival.id)?.kind === 'word';
+  const full = wordWaits ? S.storyState(facts, c.story) : st;
+  const w = walked(facts), nextBeat = S.nextPlace(c.story, full, pushOn(facts, day)),
     /* a place the story bits on the way will open is still the next place (D-129) */
-    nextAt = nextBeat || S.placeAhead(c.story, st) ? S.nextPlaceAt(st) : null;
+    nextAt = nextBeat || S.placeAhead(c.story, full) ? S.nextPlaceAt(full) : null;
   /* one in the stretch Dan is in first: a thing behind him is never "ahead" (D-143) */
   const view = S.inView(c.story, st, st.stretch);
   const openNow = S.openable(c.story, st);
@@ -2031,7 +2045,7 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   const close = lastClose && !ofType(facts, 'closeRead').some(f => f.week === lastClose.week) ? lastClose : null;
   const toNext = nextAt !== null ? Math.max(0, nextAt - w) : null;
   /* shown only while it holds a find to give */
-  const chamber = S.pickFind(c.story, st, 'chamber') ? toChamber(shown, st) : null;
+  const chamber = S.pickFind(c.story, full, 'chamber') ? toChamber(wordWaits ? facts : shown, full) : null;
 
   return {
     owed: ((r) => r.owed > 0 && ofType(facts, 'tickTakenBack').some(f => f.on === day) ? { taken: r.taken, left: r.owed } : null)(roadOf(facts)),
@@ -2045,11 +2059,12 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
     /* ahead: the sealed thing in view; before any, the way in (the first morning), then a line from just ahead */
     aheadKey: !!view && !S.onRoad(c.story, view.id), keys: st.held,
     aheadBehind: view && !S.onRoad(c.story, view.id) && view.stretch !== st.stretch ? view.stretch : null,
+    aheadHere: !!view && view.stretch === st.stretch && !!here.name && view.where.toLowerCase().startsWith(here.name.toLowerCase()),
     keyUse: st.held ? (openNow.find(x => x.stretch === st.stretch) ?? openNow[0])?.stretch ?? null : null,
     keyHere: st.held ? openNow.find(x => x.stretch === st.stretch)?.id ?? null : null,
     here, ahead: view ? view.where : here.id === null ? here.line || S.teaser(c.story, st) : S.teaser(c.story, st), walked: w, toNext, nextAt, toChamber: chamber,
-    road: { from: S.lastPlaceAt(st), chamber: S.chamberAt(st), to: S.nextPlaceAt(st), place: nextAt !== null },
-    lastArrival: lastArr, story: S.storyState(facts, c.story), teaser: S.teaser(c.story, st), runFinds,
+    road: { from: S.lastPlaceAt(full), chamber: S.chamberAt(full), to: S.nextPlaceAt(full), place: nextAt !== null },
+    lastArrival: lastArr, story: wordWaits ? full : S.storyState(facts, c.story), teaser: S.teaser(c.story, st), runFinds,
     passage: c.story.passages.find(p => p.id === S.nextPassage(c.story, st))?.line ?? '',
   };
 }

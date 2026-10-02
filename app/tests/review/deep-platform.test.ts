@@ -5,7 +5,8 @@
  */
 import { describe, expect, it } from 'vitest';
 import { act, see, settle } from '../../src/core/game';
-import { copyDue, copyName, COPY_PREFIX, readSave, SAVE_VERSION } from '../../src/core/save';
+import { copyDue, copyName, COPY_PREFIX, factsSound, readSave, SAVE_VERSION, WEEKLY_PREFIX, weeklyName, whyUnreadable } from '../../src/core/save';
+import { runs } from '../../src/core/game';
 import type { Fact } from '../../src/core/types';
 import { sqlSaves, type Arg, type Db } from '../../src/platform/saves';
 import { content as C } from '../../src/content/world';
@@ -41,6 +42,18 @@ describe('F1: Restore accepts files the rules cannot run (and the save is writte
   it('a number or an empty object for a fact: accepted and carried in the save as it is (no throw on this path)', () => {
     for (const facts of [[1], [{}]]) expect(restoreLike(JSON.stringify({ version: SAVE_VERSION, content: 'x', facts }))).toEqual({ accepted: true, threw: null });
   });
+  it('FIXED (B14): such a file is refused before anything is written: its facts are not sound, or the game does not run on it', () => {
+    for (const [, facts] of cases) expect(factsSound(facts) && runs(facts as Fact[], C, NOW)).toBe(false);
+    for (const facts of [[1], [{}]]) expect(factsSound(facts)).toBe(false);
+    /* a real save passes */
+    const good = act([], C, { do: 'open' }, NOW);
+    expect(factsSound(good) && runs(good, C, NOW)).toBe(true);
+  });
+  it('FIXED (B15): a save from a newer version is told from a broken one, and neither is read', () => {
+    expect(whyUnreadable(JSON.stringify({ version: SAVE_VERSION + 1, content: 'x', facts: [] }))).toBe('newer');
+    expect(whyUnreadable('{not json')).toBe('broken');
+    expect(whyUnreadable(JSON.stringify({ version: SAVE_VERSION, content: 'x', facts: [] }))).toBeNull();
+  });
   it('what the throwing cases say', () => {
     expect(restoreLike(JSON.stringify({ version: SAVE_VERSION, content: 'x', facts: [null] })).threw).toMatch(/null|undefined/);
     expect(restoreLike(JSON.stringify({ version: SAVE_VERSION, content: 'x', facts: [{ seq: 1, at: 'yesterday', day: '2026-09-30', type: 'opened' }] })).threw).toMatch(/not a moment/);
@@ -54,7 +67,7 @@ describe('F1: Restore accepts files the rules cannot run (and the save is writte
 });
 
 describe('F2: the calendar read is written again when only the order of the same events changed', () => {
-  it('two reads of the same events in another order make two calendarRead facts', () => {
+  it('FIXED (P#6): two reads of the same events in another order make one calendarRead fact', () => {
     let facts: Fact[] = [];
     const run = (cmd: Parameters<typeof act>[2]) => { facts = facts.concat(act(facts, C, cmd, NOW)); };
     run({ do: 'open' });
@@ -66,12 +79,12 @@ describe('F2: the calendar read is written again when only the order of the same
     const once = facts.filter(f => f.type === 'calendarRead').length;
     run({ do: 'calendarRead', events: [b, a], days: 14 });
     expect(once).toBe(1);
-    expect(facts.filter(f => f.type === 'calendarRead').length).toBe(2);
+    expect(facts.filter(f => f.type === 'calendarRead').length).toBe(1);
   });
 });
 
 describe('F3: sqlSaves trusts one fact to stand for the whole log', () => {
-  it('a different, longer log that happens to share the fact at the old last index is written as an append: the old prefix stays', async () => {
+  it('FIXED (P#12): a different, longer log that shares only the fact at the old last index is written anew, never mixed', async () => {
     const db = nodeDb();
     const s = await sqlSaves(db, () => { throw new Error('no failure expected'); });
     const f = (seq: number, type = 'opened'): Fact => ({ seq, at: `2026-09-2${seq}T09:00:00+01:00`, day: `2026-09-2${seq}`, type } as Fact);
@@ -81,30 +94,33 @@ describe('F3: sqlSaves trusts one fact to stand for the whole log', () => {
     await s.flush();
     const back = await sqlSaves(db, () => {});
     const facts = JSON.parse(back.get('save.v1')!).facts as Fact[];
-    expect(facts[0].type).toBe('opened');   /* not the new log's first fact */
+    expect(facts[0].type).toBe('dayCompleted');   /* the new log, whole */
+    expect(facts).toHaveLength(3);
   });
 });
 
 describe('F4: a write that never answers stalls every later write, and the start that waits on it', () => {
-  it('flush() never settles if one run() never settles; nothing falls back', async () => {
+  it('FIXED (P#13): a write that never answers times out, and the save falls back', async () => {
     let calls = 0;
     const hung: Db = {
       run: async () => { if (++calls > 1) return new Promise<void>(() => {}); },   /* the schema runs; then nothing answers */
       all: async (): Promise<Arg[][]> => [],
     };
     let failed = false;
-    const s = await sqlSaves(hung, () => { failed = true; });
+    const s = await sqlSaves(hung, () => { failed = true; }, () => Date.now(), 50);
     s.write('save.v1', { version: SAVE_VERSION, content: 'c', facts: [] });
-    const r = await Promise.race([s.flush().then(() => 'flushed'), new Promise(ok => setTimeout(() => ok('still waiting'), 200))]);
-    expect(r).toBe('still waiting');
-    expect(failed).toBe(false);
+    const r = await Promise.race([s.flush().then(() => 'flushed', () => 'failed'), new Promise(ok => setTimeout(() => ok('still waiting'), 400))]);
+    expect(r).toBe('failed');
+    expect(failed).toBe(true);
   });
 });
 
 describe('F5: a copy Dan saves by hand into the app\'s own folder counts as the weekly copy', () => {
-  it('a manual "Save a copy" named like the weekly ones postpones the weekly copy and is pruned with them', () => {
+  it('FIXED (P#14): a copy saved by hand never counts as the weekly one, nor is pruned with them', () => {
     expect(copyName('2026-10-01').startsWith(COPY_PREFIX)).toBe(true);
+    expect(weeklyName('2026-10-01').startsWith(WEEKLY_PREFIX)).toBe(true);
+    expect(copyName('2026-10-01').startsWith(WEEKLY_PREFIX)).toBe(false);
     /* the last weekly copy was 2026-09-24; Dan saved one by hand on 2026-09-30 into On My iPhone → Long Answer */
-    expect(copyDue(['Long Answer save 2026-09-24.json', 'Long Answer save 2026-09-30.json'], '2026-10-01')).toBe(false);
+    expect(copyDue([weeklyName('2026-09-24'), copyName('2026-09-30')], '2026-10-01')).toBe(true);
   });
 });

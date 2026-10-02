@@ -22,7 +22,8 @@
     keep();
     platform.sound.unlock();
     game.do({ do: 'startRun', job: jobId, minutes: 10, count: 1 });
-    go('delve');
+    /* only if it started (C#10): an end still to answer, or another delve, comes first */
+    go(game.view.run ? 'delve' : 'today');
   }
 </script>
 

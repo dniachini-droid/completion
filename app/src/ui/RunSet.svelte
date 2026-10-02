@@ -20,7 +20,11 @@
   const preset = presetRun(errands ? undefined : game.job(jobId)!, game.view.content);
   /* a one-off left "Not yet" carries on from its minutes (D-133): one quiet line says so */
   const carry = $derived(errands ? 0 : carriedOf(game.facts, v.content, jobId));
-  const names = $derived((errands ?? []).map(id => game.job(id)?.name).filter(Boolean).join(' · '));
+  /* the first three named, then "and N more": never cut with an ellipsis (deep review H#15) */
+  const names = $derived.by(() => {
+    const all = (errands ?? []).map(id => game.job(id)?.name).filter((x): x is string => !!x);
+    return all.length > 3 ? `${all.slice(0, 3).join(' · ')} ${t('errand.andMore', { n: all.length - 3 })}` : all.join(' · ');
+  });
   const reduce = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   /* the face holds an hour: a stop's angle is its minutes; 90 fills the ring and has its own button under it */
   const FACE = DIAL.filter(m => m <= 60), LONG = 90;
@@ -137,13 +141,14 @@
     return { xb, dir, left, cx: xb + dir * 20, cy: y - 19, lit: n * snap >= m };
   });
 
+  /* refused by the rules (a delve under way, an end still to answer): said, never a flash of an empty delve (C#10) */
+  let refused = $state(false);
   function start() {
     platform.sound.unlock();
-    if (errands) {
-      game.do({ do: 'startErrands', jobs: errands, minutes: snap, count: n });
-      if (!game.view.run) return;
-      errandPick.jobs = [];
-    } else game.do({ do: 'startRun', job: jobId, minutes: snap, count: n });
+    if (errands) game.do({ do: 'startErrands', jobs: errands, minutes: snap, count: n });
+    else game.do({ do: 'startRun', job: jobId, minutes: snap, count: n });
+    if (!game.view.run) { refused = true; return; }
+    if (errands) errandPick.jobs = [];
     go('delve');
   }
 </script>
@@ -246,6 +251,7 @@
         </div>
       </div>
       <div class="go rise d4">
+        {#if refused}<p class="soft refused" role="status">{t('set.refused')}</p>{/if}
         <button class="btn" onclick={start}>{t('set.begin')}</button>
       </div>
     </section>
@@ -259,6 +265,7 @@
   .change span { font-family: var(--life); font-style: italic; font-size: 15px; letter-spacing: 0; text-transform: none; color: var(--ink-2); }
   /* the errands, two lines at most: the full list is on the delve */
   .errands { margin-top: 2px; font-style: italic; font-size: 15px; text-align: left; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
+  .refused { font-style: italic; font-size: 15px; text-align: center; margin-bottom: 8px; }
   .last, .carryon { margin-top: 2px; font-style: italic; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; }
   /* where he stopped is the point of the note: shown in full, a few lines (deep review B10) */
   .last.note { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; line-clamp: 4; line-height: 1.3; }

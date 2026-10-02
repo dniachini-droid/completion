@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { NAME_MAX } from '../core/remember';
   import Deleted from './Deleted.svelte';
   /* The job editor (D-112): any job, titled with its name (D-131). Recurring jobs are listed in the Satchel (D-131); this
      screen opens on one job (`job`), or on a new recurring job ('new'), and goes back where it came from. How often
@@ -20,7 +21,9 @@
   /* `job`: opened straight on that job's editor (from the Week, D-112); leaving it goes back there */
   let { go, job: jobArg }: { go: Go; job?: string } = $props();
   const v = $derived(game.view);
-  const LEN = [5, 10, 15, 25, 30, 45, 60, 90, 120, 180, 240];   /* down to 5 min (D-110) */
+  /* down to 5 min (D-110); every 5 minutes to two hours, so any length set before can be set again (Course's 50, deep
+     review W F14), then by the quarter hour to four */
+  const LEN = [...Array.from({ length: 24 }, (_, i) => 5 * (i + 1)), 135, 150, 165, 180, 195, 210, 225, 240];
   const DAYS = [1, 2, 3, 4, 5, 6, 0];
 
   interface Draft { id: string | null; job: Job; often: 'once' | 'week' | 'days' | 'fort' | 'month' | 'year' | 'every'; times: number;
@@ -45,12 +48,16 @@
       nth: (m && 'nth' in m ? m.nth : 1) as 1 | 2 | 3 | 4 | -1, wday: m && 'weekday' in m ? m.weekday : 5,
       ydate: r?.yearly ?? today.slice(5, 10), every: r?.everyDays ?? 3 };
   }
+  /* what the rhythm was when the editor opened, to say "counts from next week" only when it changed */
+  const rhythmKey = (x: NonNullable<typeof d>) => JSON.stringify([x.often, x.times, [...x.days].sort(), x.mode, x.mday, x.nth, x.wday, x.ydate, x.every]);
+  let wasRhythm = $state('');
   /** Any job's editor: its rhythm if it has one, else "Once" (D-112). */
   function edit(j: Job, r = v.content.rhythms.find(x => x.job === j.id) ?? null) {
     removed = null;
     d = { ...kinds(r), id: r?.id ?? null, job: { ...j }, often: !r ? 'once' : r.days ? 'days' : r.every === 2 ? 'fort' : r.monthly ? 'month' : r.yearly ? 'year' : r.everyDays ? 'every' : 'week', times: r?.times ?? 2, days: r?.days ?? [], len: j.length,
       time: r?.time ?? null, delve: j.delve, remind: r ? reminderOf(game.facts, rhythmTarget(r.id)) : null,
       avoided: !!j.avoided, step: j.firstStep ?? '', note: j.note ?? '', isNew: false, by: j.by ?? null, dremind: reminderOf(game.facts, dateTarget(j.id)) as 0 | 1440 | null };
+    wasRhythm = rhythmKey(d);
   }
   if (jobArg === 'new') open(null);
   /* "Make it repeat" in the Satchel (D-136): the job's editor with How often ready, twice a week to start */
@@ -131,7 +138,9 @@
     {:else}
       <div class="editor">
         <div class="label-line">{t('rhythms.name')}</div>
-        <input class="line" bind:value={d.job.name} maxlength="60" aria-label={t('rhythms.name')} />
+        <!-- one name limit in every box, said when reached, never a silent cut (deep review H#11) -->
+        <input class="line" bind:value={d.job.name} maxlength={NAME_MAX} aria-label={t('rhythms.name')} />
+        {#if d.job.name.length >= NAME_MAX}<p class="soft name-max">{t('name.max', { n: NAME_MAX })}</p>{/if}
 
         {#if full}
         <div class="label-line">{t('rhythms.often')}</div>
@@ -178,7 +187,8 @@
               {#each DAYS as x (x)}<button aria-pressed={d.wday === x} onclick={() => (d!.wday = x)}>{t(`days.short.${x}` as never)}</button>{/each}
             </div>
           {/if}
-          <p class="soft val-note">{often({ monthly: d.mode === 'date' ? { day: d.mday } : { nth: d.nth, weekday: d.wday } })}</p>
+          <!-- (said once: a date's stepper already says it, W F14) -->
+          {#if d.mode === 'nth'}<p class="soft val-note">{often({ monthly: { nth: d.nth, weekday: d.wday } })}</p>{/if}
         {:else if d.often === 'year'}
           <div class="stepper">
             <input class="clock val carve" type="date" value={`2026-${d.ydate}`} aria-label={t('rhythms.yearlyShort')}
@@ -204,7 +214,8 @@
           <button class="btn-quiet step" disabled={d.len >= LEN[LEN.length - 1]} onclick={() => (d!.len = step(LEN, d!.len, 1))} aria-label={t('rhythms.longer')}><span>+</span></button>
         </div>
         <!-- the minutes only tell the Week how full a day is: every delve opens at 30 (D-124, D-130) -->
-        <p class="soft val-note">{t('rhythms.each.say')}</p>
+        <!-- the line follows the job: a recurring job's delve opens at its own minutes, a one-off's at 30 (D-146, deep review B11) -->
+        <p class="soft val-note">{t(d.often === 'once' ? 'rhythms.each.sayOnce' : 'rhythms.each.say')}</p>
 
         <!-- a one-off's time is set where it sits in the Week -->
         {#if d.often !== 'once'}
@@ -261,7 +272,8 @@
         <input class="line" bind:value={d.note} maxlength="160" placeholder={t('job.noteHint')} aria-label={t('job.note')} />
         {/if}
 
-        {#if d.often !== 'once'}<p class="soft val-note">{t('rhythms.newNumber')}</p>{/if}
+        <!-- only for a rhythm that was there and changed: never on a new one (W F14) -->
+        {#if d.often !== 'once' && d.id !== null && rhythmKey(d) !== wasRhythm}<p class="soft val-note">{t('rhythms.newNumber')}</p>{/if}
         <div class="btn-row lead"><button class="btn" disabled={!d.job.name.trim() || (d.often === 'days' && !d.days.length)} onclick={save}>{t('rhythms.save')}</button><button class="btn-quiet" onclick={close}><span>{t('rhythms.cancel')}</span></button></div>
         {#if !d.isNew}<div class="links"><button class="text-link del" onclick={remove}><span>{t('job.remove')}</span></button></div>{/if}
       </div>

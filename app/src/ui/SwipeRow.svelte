@@ -11,6 +11,7 @@
      (text selection, the callout, the tap highlight) is off. VoiceOver hears the actions as buttons (accessibility A). */
   import type { Snippet } from 'svelte';
   import { steady } from './taps';
+  import { platform } from '../platform';
 
   interface Action { label: string; sr: string; run: () => void; del?: boolean }
   /* `quiet`: a tap on the row does nothing (a finished job); `done` alone only marks it done (a done recurring job still
@@ -35,7 +36,7 @@
     if ((e.target as Element).closest?.('.acts, .over, .swipe-lead')) return;
     held = false; moved = false;
     start = { x: e.clientX, y: e.clientY, base: open ? -width : 0, id: e.pointerId };
-    if (hold) timer = window.setTimeout(() => { if (start && !sliding) { held = true; start = null; if (navigator.vibrate) navigator.vibrate(8); hold!(); } }, HOLD_MS);
+    if (hold) timer = window.setTimeout(() => { if (start && !sliding) { held = true; start = null; void platform.haptics.tick().catch(() => {}); hold!(); } }, HOLD_MS);
     addEventListener('pointermove', move); addEventListener('pointerup', up); addEventListener('pointercancel', cancel);
   }
   function move(e: PointerEvent) {

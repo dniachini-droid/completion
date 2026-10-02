@@ -3,11 +3,11 @@
 .rs .hall .hall-far{ animation: none; opacity: .5; }
 .rs .job{ margin-top: 6px; }
 .rs .job h1{ margin-top: 8px; }
-.rs .stage{ position: relative; container-type: size; min-height: 150px; }
+.rs .stage{ position: relative; container-type: size; }
 /* the dial is sized from the room the header leaves it, so a long name or a note never runs into it, and its long stop
    never into the road's heading (deep review B10): its stops sit 30 px out, the long one 52 px under */
-.rs .stage-in{ --R: max(84px, min(236px, 60vw, 29vh, calc(100cqh - 136px), calc(100cqw - 96px))); }
-@media (max-height: 760px){ .rs .stage-in{ --R: max(84px, min(236px, 60vw, 29vh, calc(100cqh - 72px), calc(100cqw - 190px))); } }
+.rs .stage-in{ --R: max(84px, min(236px, 60vw, 29vh, calc(100cqh - 200px), calc(100cqw - 96px))); }
+@media (max-height: 760px){ .rs .stage-in{ --R: max(84px, min(236px, 60vw, 29vh, calc(100cqh - 100px), calc(100cqw - 190px))); } }
 .rs .stage-in{ position:absolute; inset: 0 var(--gutter); }
 .rs .num{ font-family: var(--life); font-weight: 300; line-height: 1; color: #f6f5ff; font-variant-numeric: tabular-nums lining-nums;
   text-shadow: 0 0 24px rgba(var(--violet-rgb), .85), 0 0 64px rgba(var(--violet-rgb), .45); display:inline-block; }

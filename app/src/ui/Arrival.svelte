@@ -22,10 +22,10 @@
   let { go, seq = null }: { go: Go; seq?: number | null } = $props();
   const v = $derived(game.view);
   /* a word left for later never stands in for a place read again: the place's name reads the place (deep review B8) */
-  const later = (x: { seq: number } | null) => !!x && x.seq === moment.wordLater;
-  const again = $derived((!v.arrival || later(v.arrival)) && seq !== null ? arrivalAt(game.facts, content, seq) : null);
-  const a = $derived(again ?? (later(v.arrival) && seq !== null ? null : v.arrival) ?? v.lastArrival);
-  const fresh = !!game.view.arrival && !(seq !== null && later(game.view.arrival));
+  const leftLater = (x: { seq: number } | null) => !!x && x.seq === moment.wordLater;
+  const again = $derived((!v.arrival || leftLater(v.arrival)) && seq !== null ? arrivalAt(game.facts, content, seq) : null);
+  const a = $derived(again ?? (leftLater(v.arrival) && seq !== null ? null : v.arrival) ?? v.lastArrival);
+  const fresh = !!game.view.arrival && !(seq !== null && leftLater(game.view.arrival));
   let root: HTMLDivElement;
 
   $effect(() => { if (!a) go('today'); });
@@ -82,7 +82,7 @@
         <span></span><span></span>
       </header>
       <section class="col head">
-        <div class="label-line gold">{a.kind === 'place' ? t('arrive.label') : t('arrive.camp')}</div>
+        <div class="label-line gold">{again ? t('arrive.again') : a.kind === 'place' ? t('arrive.label') : t('arrive.camp')}</div>
         <h1 class="carve lg">{a.name}</h1>
       </section>
       <!-- the painting, left clear: a tap on it looks at it (D-105) -->

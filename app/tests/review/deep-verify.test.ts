@@ -43,6 +43,7 @@ vi.mock('../../src/platform', () => {
         at: async (id: number, when: Date) => { await tick(); rec.alertsAt.push({ id, when: when.getTime() }); rec.log.push(`at:${id}`); },
         cancel: async (ids: number[]) => { await tick(); rec.log.push(`cancel:${ids[0]}..${ids.length}`); if (ids[0] === 100) rec.alertsAt.length = 0; else rec.remindAt = rec.remindAt.filter(a => !ids.includes(a.id)); },
         remind: async (id: number, when: Date) => { await tick(); rec.remindAt.push({ id, when: when.getTime() }); rec.log.push(`remind:${id}`); },
+        pending: async () => [],
       },
       panel: { show: async (p: { phase: string }) => void rec.log.push(`panel:show:${p.phase}`), end: async () => void rec.log.push('panel:end') },
       copies: { share: async () => {}, pick: async () => null, keep: async () => {}, list: async () => [] },
@@ -90,7 +91,7 @@ describe('ui glue (game.svelte.ts) on a recording phone', () => {
     });
   }
 
-  it('CODE #7 / PLATFORM #7b: two alerts() calls close together leave alerts scheduled for a held run', async () => {
+  it('FIXED (B16): two alerts() calls close together never leave alerts scheduled for a held run', async () => {
     /* start a fresh run */
     const end = game.view.runEnd;
     if (end) game.do({ do: 'seen', what: 'step', ref: end.seq });
@@ -105,16 +106,16 @@ describe('ui glue (game.svelte.ts) on a recording phone', () => {
     console.log('[CODE#7] log:', JSON.stringify(rec.log));
     console.log('[CODE#7] run phase:', game.view.run?.phase, 'alerts left:', rec.alertsAt.length);
     expect(game.view.run?.phase).toBe('held');
-    /* what happens now: */
-    expect(rec.alertsAt.length).toBeGreaterThan(0);
+    /* one batch at a time, in order: the held run's batch cancels the first one's alerts after they were laid out */
+    expect(rec.alertsAt.length).toBe(0);
     game.do({ do: 'resume' }); await settleAsync();
     game.do({ do: 'finishHere' }); await settleAsync();
   });
 
-  it('PLATFORM #2: after a time-zone change the reminders are not laid out again (same wall-clock key)', async () => {
+  it('FIXED (P#2): after a time-zone change the reminders are laid out again (the instants are in the key)', async () => {
     /* covered by reasoning; key is wall-clock only: check the source line */
     const src: string = ((globalThis as any).process.getBuiltinModule('node:fs') as { readFileSync(u: URL, e: string): string }).readFileSync(new URL('../../src/ui/game.svelte.ts', import.meta.url), 'utf8');
-    expect(src).toMatch(/const key = JSON\.stringify\(\[words\.map\(w => \[w\.a\.date, w\.a\.clock, w\.title, w\.body\]\), nudge\?\.getTime\(\) \?\? 0\]\)/);
+    expect(src).toMatch(/const key = JSON\.stringify\(\[words\.map\(w => \[w\.a\.date, w\.a\.clock, w\.title, w\.body, instant\(w\)\]\), nudge\?\.getTime\(\) \?\? 0\]\)/);
   });
 });
 

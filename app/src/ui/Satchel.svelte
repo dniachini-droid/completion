@@ -10,7 +10,7 @@
   import { game, content } from './game.svelte';
   import { t, byWords, dayShort, oftenWords, minutesShort, minutesWords } from '../content/copy/en';
   import { satchelView, errandChoices, carriedOf, LIST_MAX } from '../core/game';
-  import { cleanLine, repeatOffer, suggest, tieFor, type Suggestion } from '../core/remember';
+  import { NAME_MAX, cleanLine, repeatOffer, suggest, tieFor, type Suggestion } from '../core/remember';
   import { nameKey } from '../core/week';
   import type { Job } from '../core/types';
   import Scene from './Scene.svelte';
@@ -21,6 +21,7 @@
   import { back } from './back.svelte';
   import { flushSync, onMount } from 'svelte';
   import { steady } from './taps';
+  import { haveWords } from './have';
   import { openMenu, openTick, waited, sayWaited } from './menu.svelte';
   import art from './scene/satchel.jpg';
 
@@ -93,14 +94,7 @@
     text = ''; picked = null;
     input?.blur(); go('back');
   }
-  function where(j: Job): string {
-    if (s.recurring.some(x => x.id === j.id)) return t('satchel.have.recurring', { job: j.name });
-    const waits = s.waiting.find(x => x.job.id === j.id);
-    if (waits) return t('satchel.have.waiting', { job: j.name, day: dayShort(waits.until) });
-    const coming = s.coming.find(x => x.job.id === j.id);
-    if (coming) return t('satchel.have.coming', { job: j.name, day: dayShort(coming.day) });
-    return t(s.noDay.some(x => x.id === j.id) ? 'satchel.have.noDay' : 'satchel.have.today', { job: j.name });
-  }
+  const where = (j: Job) => haveWords(j, s);
   /* a job from before fills the box; the box keeps the keyboard (no press takes its focus) */
   function choose(x: Suggestion) { text = x.job.name; picked = x.job.id; said = null; }
   /* the suggestions fold away with a tap anywhere else, and come back as Dan types (J16) */
@@ -174,7 +168,8 @@
          (D-143 C). Its name is said, and what Return does (J15) -->
     <form class="new satchel-add rise" bind:this={form} onsubmit={(e) => { e.preventDefault(); if (forToday) toToday(); else later(); }}>
       <label class="box-label" for="satchel-box">{forToday ? t('satchel.add.today') : t('satchel.add')}</label>
-      <input id="satchel-box" bind:this={input} bind:value={text} oninput={() => { said = null; folded = false; }} placeholder={forToday ? t('satchel.add.todayHint') : t('satchel.add.hint')} maxlength="120" enterkeyhint="done" autocomplete="off" />
+      <input id="satchel-box" bind:this={input} bind:value={text} oninput={() => { said = null; folded = false; }} placeholder={forToday ? t('satchel.add.todayHint') : t('satchel.add.hint')} maxlength={NAME_MAX} enterkeyhint="done" autocomplete="off" />
+      {#if text.length >= NAME_MAX}<p class="soft name-max">{t('name.max', { n: NAME_MAX })}</p>{/if}
       {#if forToday}
         <button class="btn-quiet full" type="submit" disabled={!text.trim()}><span>{t('satchel.toToday')}</span></button>
       {/if}
@@ -223,7 +218,7 @@
         <!-- while a delve runs, a tap here can't start another: as on Today (break-it review 6) -->
         <SwipeRow key={`s:${j.id}`} actions={acts(j)} tap={tapJob(j)} hold={menu(j)}>
           {#snippet lead()}{#if canTick(j)}<button class="tickbtn" aria-label={t('tick.sr', { job: j.name })} onclick={() => openTick(j.id, go)}><span class="ring"></span></button>{/if}{/snippet}
-          {#snippet row()}<span class="pip" class:under={canTick(j)}></span><span class="t">{j.name}{#if sofar(j)}<small>{sofar(j)}</small>{/if}</span><span class="s">{j.by ? byWords(j.by) : ''}</span>{/snippet}
+          {#snippet row()}<span class="pip" class:under={canTick(j)}></span><span class="t">{j.name}{#if sofar(j)}<small>{sofar(j)}</small>{/if}</span><span class="s">{j.by ? byWords(j.by, v.day) : ''}</span>{/snippet}
         </SwipeRow>
         {#if listing === j.id}
           <textarea class="list" bind:this={box} bind:value={draft} rows="4" maxlength={LIST_MAX} onblur={keep} aria-label={t('satchel.list.label', { job: j.name })}

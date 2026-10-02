@@ -34,16 +34,34 @@ export function readSave(raw: string, to = SAVE_VERSION, steps = MIGRATIONS): { 
   return { save: { version: s.version, content: String(s.content ?? ''), facts: s.facts as Fact[] }, from };
 }
 
+/** Why a save's text can't be used by this build (deep review B15): from a newer version of the app, or broken. Null:
+    it reads. */
+export function whyUnreadable(raw: string, to = SAVE_VERSION): 'newer' | 'broken' | null {
+  try { const s = JSON.parse(raw); if (s && typeof s.version === 'number' && s.version > to) return 'newer'; } catch { /* broken */ }
+  return readSave(raw, to) ? null : 'broken';
+}
+
+/** Every fact shaped as a fact: an object with a whole-number seq, a type, a day and a time that reads (deep review B14).
+    A file failing this is never restored. */
+export function factsSound(facts: unknown[]): boolean {
+  return facts.every(f => !!f && typeof f === 'object' && Number.isInteger((f as Fact).seq) && typeof (f as Fact).type === 'string'
+    && typeof (f as Fact).day === 'string' && /^\d{4}-\d{2}-\d{2}$/.test((f as Fact).day) && typeof (f as Fact).at === 'string' && !Number.isNaN(Date.parse((f as Fact).at)));
+}
+
 /* ---------- copies of the save (D-107) ---------- */
 
 /** A copy's file name: "Long Answer save 2026-09-27.json". Names sort by date. */
 export const COPY_PREFIX = 'Long Answer save ';
 export const copyName = (day: string) => `${COPY_PREFIX}${day}.json`;
+/** The weekly copies have a name of their own, so a copy Dan saves by hand into the same folder is never taken for one,
+    nor pruned with them (deep review P#14). */
+export const WEEKLY_PREFIX = 'Long Answer weekly ';
+export const weeklyName = (day: string) => `${WEEKLY_PREFIX}${day}.json`;
 /** Weekly copies kept in the app's Documents folder. */
 export const COPIES_KEPT = 4;
 /** Whether the weekly copy is due today: none yet, or the newest is a week old. */
 export function copyDue(names: string[], today: string): boolean {
-  const days = names.map(n => n.slice(COPY_PREFIX.length, COPY_PREFIX.length + 10)).filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d)).sort();
+  const days = names.map(n => n.slice(WEEKLY_PREFIX.length, WEEKLY_PREFIX.length + 10)).filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d)).sort();
   if (!days.length) return true;
   return (Date.parse(today) - Date.parse(days[days.length - 1])) / 864e5 >= 7;
 }

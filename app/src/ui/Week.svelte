@@ -4,13 +4,15 @@
      each day's jobs in plain words with a time where one is set; no hour grid, no tray of unplaced jobs. "Plan my week"
      lays it out; a tap moves a job, gives it a time, or takes it off this week. The past shows only what was done. The
      forecast is one line in the world's terms: predictive, never contractual. Nothing here earns anything. */
-  import { game } from './game.svelte';
-  import { t, dayName, minutesWords, weekDates, byWords } from '../content/copy/en';
+  import { game, content } from './game.svelte';
+  import { NAME_MAX, tieFor } from '../core/remember';
+  import { haveWords } from './have';
+  import { t, dayName, dayShort, minutesWords, weekDates, byWords } from '../content/copy/en';
   import { calendarWeek } from '../core/time';
   import { addDays, dayMinutes, eventsOn, planMade, realMinutes, weekOf, type DayJob } from '../core/week';
   import { hold } from './hold';
   import { openMenu } from './menu.svelte';
-  import { asideToday } from '../core/game';
+  import { asideToday, satchelView } from '../core/game';
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
   import { back } from './back.svelte';
@@ -39,7 +41,7 @@
     if (j.time) return j.time;
     const job = game.job(j.job);
     if (!job) return '';
-    if (job.by) return byWords(job.by);
+    if (job.by) return byWords(job.by, v.day);
     return minutesWords(job.length);
   }
   const forecast = $derived.by(() => {
@@ -107,15 +109,31 @@
     return t('week.aboutH', { n: Number.isInteger(h) ? String(h) : `${Math.floor(h)}½` });
   }
   function startAdd(day: string) {
+    said = null;
     if (addingTo === day) { addingTo = null; return; }
     open = null; line = ''; addingTo = day; toggled[day] = false;
     /* focused inside the tap itself, so the phone's keyboard opens straight away */
     flushSync(); lineEl?.focus(); lineEl?.scrollIntoView({ block: 'nearest' });
   }
+  /* a name Dan already has: said where it is, in the Satchel's words, the box kept open; never moved quietly off another
+     day. A recurring job typed for a later day is one more session there (D-144), and says so (deep review B17) */
+  let said = $state<{ day: string; text: string } | null>(null);
   function add() {
     if (!line.trim() || !addingTo) { addingTo = null; return; }
-    game.do({ do: 'addToWeek', line, day: addingTo });
-    line = ''; addingTo = null;
+    const tie = tieFor(content, game.facts, line), day = addingTo;
+    if (tie?.same) {
+      const recurring = v.content.rhythms.some(r => r.job === tie.job.id);
+      const there = weekOf(v.content, game.facts, calendarWeek(day), v.day).days.find(d => d.day === day)?.jobs.some(j => j.job === tie.job.id);
+      if (recurring && day > v.day && !there) {
+        game.do({ do: 'addToWeek', line, day });
+        said = { day, text: t('week.added.session', { job: tie.job.name, day: dayName(day) }) };
+        line = ''; addingTo = null; return;
+      }
+      said = { day, text: there && day !== v.day ? t('satchel.have.coming', { job: tie.job.name, day: dayShort(day) }) : haveWords(tie.job, satchelView(content, game.facts, game.now)) };
+      return;
+    }
+    game.do({ do: 'addToWeek', line, day });
+    said = null; line = ''; addingTo = null;
   }
   /* on a computer the time box opens its picker on any click too, as a phone's does */
   function pick(e: MouseEvent) { try { (e.currentTarget as HTMLInputElement).showPicker?.(); } catch { /* not every browser */ } }
@@ -141,7 +159,7 @@
     <Deleted />
     {#if !planMade(game.facts, wk)}
       <div class="none">
-        {#if !view.planned}<h2 class="say-lg">{isNext ? t('week.none.next') : t('week.none')}</h2>{/if}
+        {#if !view.planned}<h2 class="say-lg">{!isNext ? t('week.none') : wk === addDays(thisWeek, 7) ? t('week.none.next') : t('week.none.later')}</h2>{/if}
         <p class="soft">{t('week.none.say')}</p>
         <button class="btn full" onclick={plan}>{t('week.plan')}</button>
       </div>
@@ -166,10 +184,12 @@
           {#if why === d.day && !isFolded(d.day)}<div class="why" role="status">{#each whyOf(d) as line, k (k)}<p>{line}</p>{/each}</div>{/if}
           {#if addingTo === d.day}
             <form class="new" onsubmit={(e) => { e.preventDefault(); add(); }}>
-              <input bind:this={lineEl} bind:value={line} placeholder={t('week.addPlaceholder')} maxlength="120" enterkeyhint="done" aria-label={t('week.addTo', { day: dayName(d.day) })} />
+              <input bind:this={lineEl} bind:value={line} placeholder={t('week.addPlaceholder')} maxlength={NAME_MAX} enterkeyhint="done" aria-label={t('week.addTo', { day: dayName(d.day) })} />
               <button class="btn-quiet" type="submit" disabled={!line.trim()}><span>{t('week.add')}</span></button>
             </form>
           {/if}
+          {#if addingTo === d.day && line.length >= NAME_MAX}<p class="said">{t('name.max', { n: NAME_MAX })}</p>{/if}
+          {#if said?.day === d.day}<p class="said" role="status">{said.text}</p>{/if}
           {#if !isFolded(d.day)}
           <!-- the phone's calendar (D-115): fixed points, not jobs; nothing to tap, nothing earned -->
           {#each eventsOn(game.facts, d.day) as e (e.id)}
@@ -224,7 +244,8 @@
     <div class="links">
       <!-- the recurring jobs live in the Satchel (D-131): this opens it there -->
       <button class="text-link" onclick={() => go('satchel', 'recurring')}><span>{t('week.rhythms')}</span></button>
-      <button class="text-link" onclick={() => go('week', isNext ? thisWeek : addDays(thisWeek, 7))}><span>{isNext ? t('week.this') : t('week.next')}</span></button>
+      <!-- this week is the Week with no page named, so going back to it is a step back, never a new page (deep review B19) -->
+      <button class="text-link" onclick={() => go('week', isNext ? undefined : addDays(thisWeek, 7))}><span>{isNext ? t('week.this') : t('week.next')}</span></button>
       <!-- any week ahead, a week at a time (D-114) -->
       {#if isNext}<button class="text-link" onclick={() => go('week', addDays(wk, 7))}><span>{t('week.after')}</span></button>{/if}
       <!-- a disrupted week: lay out the rest again from today, keeping what you placed yourself (D-114) -->
@@ -291,4 +312,5 @@
   button.row.open { background: rgba(var(--violet-rgb), .12); }
   .links { display: flex; justify-content: center; flex-wrap: wrap; gap: 4px 18px; margin-top: 18px; }
   button.home { color: var(--ink-2); }
+  .said { font-family: var(--life); font-style: italic; font-size: 15.5px; color: var(--ink-2); margin: 4px 0 8px; }
 </style>

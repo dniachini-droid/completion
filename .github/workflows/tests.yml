@@ -64,6 +64,10 @@ jobs:
       - name: Back from a record returns to the place
         if: matrix.short && matrix.browser == 'chromium'
         run: node tests/flows/back-from-record.mjs http://localhost:4173/
+      # Safari's engine too: a painting refused by the page's rules was seen once (deep review W F16)
+      - name: Every painting loads, nothing refused
+        if: matrix.short
+        run: node tests/flows/paintings.mjs http://localhost:4173/
       - name: '"+ Add" above the keyboard, and Done takes the tap (D-120)'
         if: matrix.short
         run: node tests/flows/capture-done.mjs http://localhost:4173/
@@ -121,6 +125,15 @@ jobs:
       - name: 'What a tap writes is kept: Look ahead, Plan it for me, Not yet with a note, the word left for later (deep review Stage 1)'
         if: matrix.walk
         run: node tests/flows/kept.mjs http://localhost:4173/ ${{ matrix.size }}
+      - name: 'The rules as Dan meets them: ticks of 5 and 10, a tick taken back, passed appointments asked (deep review Stage 2)'
+        if: matrix.walk
+        run: node tests/flows/rules2.mjs http://localhost:4173/ ${{ matrix.size }}
+      - name: 'Screens and getting around: the set-up never overlaps, the word left for later, the Week''s +, Delete asks, a Key offered once (deep review Stage 3)'
+        if: matrix.walk
+        run: node tests/flows/screens3.mjs http://localhost:4173/ ${{ matrix.size }}
+      - name: 'The save: a newer save never written over; Restore refuses a file the game can''t run (deep review Stage 4)'
+        if: matrix.walk
+        run: node tests/flows/save4.mjs http://localhost:4173/ ${{ matrix.size }}
       - name: The whole first playable, walked day by day
         if: matrix.walk
         run: mkdir -p "$RUNNER_TEMP/screens" && node tests/flows/heart-walk.mjs http://localhost:4173/ "$RUNNER_TEMP/screens" ${{ matrix.size }}

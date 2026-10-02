@@ -18,6 +18,9 @@ let touch = false;
 export function watchTaps() {
   /* only a finger on the glass: a mouse or a keyboard (the screen checks, a laptop) is never held back */
   document.addEventListener('pointerdown', e => { touch = e.pointerType === 'touch' || e.pointerType === 'pen'; }, true);
+  /* a change made by the keyboard (Return in a box) was no tap: the next tap where the last one landed is a new choice
+     (deep review H#14: a quick second "Add a job" was let go by) */
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') last = null; }, true);
   document.addEventListener('click', e => {
     /* typing isn't a tap: Return in a box still puts its line in */
     if (e.detail === 0 || !touch) return;

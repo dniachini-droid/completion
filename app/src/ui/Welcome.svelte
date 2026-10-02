@@ -6,6 +6,8 @@
   import { game, content } from './game.svelte';
   import { t, byWords, dayName } from '../content/copy/en';
   import { slipped, type Slip } from '../core/week';
+  import { beatOf } from '../core/story';
+  import Settled from './Settled.svelte';
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
 
@@ -36,8 +38,13 @@
   }
   function letGo(s: Slip) { game.remove(s.job); answered = [...answered, s.job]; }
   /* a look at the record isn't leaving: back returns here (S9); only going on to Today marks it seen */
+  /* the morning after the last night kept, folded in here: never a screen of its own after days away (deep review W F8) */
+  const m = game.view.morning;
+  const mFind = m?.find ? content.story.finds.find(f => f.id === m.find)?.line ?? '' : '';
+  const mSaid = m?.beat ? (b => b && b.kind === 'morning' && b.w > 1 ? b.line ?? '' : '')(beatOf(content.story, m.beat)) : '';
   function leave(to: 'today' | 'records') {
     if (to === 'records' && w?.record) { go('records', w.record); return; }
+    if (m && game.view.morning?.seq === m.seq) game.do({ do: 'seen', what: 'morning', ref: m.seq });
     if (w) game.do({ do: 'seen', what: 'welcome', ref: w.seq });
     go('today');
   }
@@ -56,11 +63,14 @@
     <div class="label-line lit rise welcome">{t('welcome.label')}</div>
     <h1 class="carve lg rise">{v.here.name}</h1>
     <!-- the locked thing in view, said as what it is (S9): ahead of him, or left behind him -->
-    {#if view}<p class="say on-scene rise d1">{stop(v.aheadBehind ? `${t('today.behind')}: ${view}.` : t('welcome.ahead', { thing: view }))}</p>{/if}
+    {#if view}<p class="say on-scene rise d1">{stop(v.aheadBehind ? `${t('today.behind')}: ${view}.` : v.aheadHere ? `${t('today.here')}: ${view}.` : t('welcome.ahead', { thing: view }))}</p>{/if}
   </header>
   <div class="mid"></div>
   <section class="bottom col rise d2">
     {#if q}<p class="say question">{q}</p>{/if}
+    {#if mSaid}<p class="say look">{mSaid}</p>{/if}
+    {#if m?.beat}<Settled beat={m.beat} />{/if}
+    {#if mFind}<div class="label-line">{t('find.label')}</div><p class="say look">{mFind}</p>{/if}
     <p class="soft">{t('welcome.say')}</p>
     {#if slip && slipName && !answered.includes(slip.job)}
       <p class="say slip">{t('slip.date', { job: slipName, date: byWords(slip.day) })}</p>
@@ -96,6 +106,7 @@
   .bottom .soft { margin-bottom: 10px; text-align: left; }
   .center { display: flex; justify-content: center; margin-bottom: 8px; }
   .gap { height: 12px; }
+  .look { color: var(--gold-hi); margin: 4px 0 10px; }
   .slip { font-style: italic; margin-bottom: 4px; line-height: 1.4; }
   .links { display: flex; gap: 14px; flex-wrap: wrap; }
   .appts { list-style: none; margin: 4px 0 10px; padding: 0; }

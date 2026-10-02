@@ -49,7 +49,8 @@
     try { text = await platform.copies.pick(); } catch { /* chose none */ }
     if (text === null) return;
     const read = readSave(text);
-    if (!read) { said = t('settings.restore.bad'); return; }
+    /* tried on the rules first: a file the game can't run is refused here, plainly, and nothing is written (B14) */
+    if (!read || !game.canRestore(read.save)) { said = t('settings.restore.bad'); return; }
     asking = read.save;
     flushSync(); askEl?.scrollIntoView({ block: 'nearest' });
   }
@@ -59,7 +60,7 @@
     const n = t(done === 1 ? 'jobs.one' : 'jobs.many', { n: done });
     return day && done ? t('settings.restore.ask', { date: dateWords(day), n }) : t('settings.restore.empty');
   }
-  function restore() { if (!asking) return; game.restore(asking); asking = null; said = t('settings.restore.done'); }
+  function restore() { if (!asking) return; const ok = game.restore(asking); asking = null; said = t(ok ? 'settings.restore.done' : 'settings.restore.bad'); }
 </script>
 
 <Scene painting={v.here.painting} blur />

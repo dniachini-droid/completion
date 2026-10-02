@@ -144,3 +144,17 @@ describe('the suspicions (deep review RULES)', () => {
     expect(p.view().run?.doneMs).toBe(5 * 60_000);
   });
 });
+
+describe('the road while a word waits (B13, W F7)', () => {
+  it('counts on from the last place reached: the minutes still go somewhere', () => {
+    const fs = (globalThis as unknown as { process: { getBuiltinModule(n: string): { readFileSync(u: URL, e: string): string } } }).process.getBuiltinModule('node:fs');
+    const save = JSON.parse(fs.readFileSync(new URL('../flows/saves/word.json', import.meta.url), 'utf8')) as { facts: Fact[] };
+    const at = '2026-10-06T11:05:00+01:00';
+    const f = save.facts.concat(settle(save.facts, C, at));
+    const v = see(f, C, at);
+    expect(v.arrival).not.toBeNull();
+    expect(C.story.beats.find(b => b.id === v.arrival!.id)?.kind).toBe('word');
+    expect(v.toNext).toBeGreaterThan(0);
+    expect(v.walked).toBeGreaterThanOrEqual(v.road.from);
+  });
+});

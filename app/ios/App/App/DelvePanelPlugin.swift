@@ -11,6 +11,8 @@ class MainViewController: CAPBridgeViewController {
         bridge?.registerPluginInstance(CopyPlugin())   // copies of the save: share, restore, the weekly copy (D-107)
         bridge?.registerPluginInstance(InboxPlugin())   // lines said to Siri or the Action button (InboxPlugin.swift, D-113)
         bridge?.registerPluginInstance(CalendarPlugin())   // the phone's calendar, read-only (CalendarPlugin.swift, D-115)
+        // the bridge made its router the notifications' delegate: "Again in 10 min" stays the app's own (AgainNotifications.swift)
+        if let router = bridge?.notificationRouter { AgainNotifications.shared.install(router: router) }
     }
 }
 
@@ -27,6 +29,16 @@ public class DelvePanelPlugin: CAPPlugin, CAPBridgedPlugin {
     private func date(_ call: CAPPluginCall, _ key: String) -> Date? {
         guard let ms = call.getDouble(key), ms > 0 else { return nil }
         return Date(timeIntervalSince1970: ms / 1000)
+    }
+
+    /// The panel's calls run one after another, in the order the app made them: two close together for a new run never
+    /// make two panels, and an end never races a show (deep review P#16).
+    private static let lock = NSLock()
+    private static var chain: Task<Void, Never>?
+    private static func inOrder(_ work: @escaping () async -> Void) {
+        lock.lock(); defer { lock.unlock() }
+        let prev = chain
+        chain = Task { await prev?.value; await work() }
     }
 
     /// What the panel turns to if Dan goes into another app (D-094), as the app last said; the app is asleep by then.
@@ -60,7 +72,7 @@ public class DelvePanelPlugin: CAPPlugin, CAPBridgedPlugin {
             afterEnd: date(call, "afterEnd")
         )
         let content = ActivityContent(state: state, staleDate: date(call, "staleAt"))
-        Task {
+        Self.inOrder {
             let all = Activity<DelveAttributes>.activities
             /* another run's panel, left by a closed app, goes */
             for other in all where other.attributes.run != run {
@@ -103,7 +115,7 @@ public class DelvePanelPlugin: CAPPlugin, CAPBridgedPlugin {
     }
 
     @objc func end(_ call: CAPPluginCall) {
-        Task {
+        Self.inOrder {
             for activity in Activity<DelveAttributes>.activities {
                 await activity.end(nil, dismissalPolicy: .immediate)
             }

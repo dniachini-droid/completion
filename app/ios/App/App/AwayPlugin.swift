@@ -19,6 +19,7 @@ public class AwayPlugin: CAPPlugin, CAPBridgedPlugin {
     public let pluginMethods: [CAPPluginMethod] = [
         CAPPluginMethod(name: "watch", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "take", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "clear", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "log", returnType: CAPPluginReturnPromise),
     ]
 
@@ -32,6 +33,9 @@ public class AwayPlugin: CAPPlugin, CAPBridgedPlugin {
     /// A trip to the background being read: when it began, and the signs of a lock seen so far.
     private var reading: (at: Date, signs: [String])?
     private var task: UIBackgroundTaskIdentifier = .invalid
+    /// Each trip to the background has its own number: a judgement left over from an earlier trip never reads this one
+    /// (deep review P#3: a quick look at another app, then a lock, read as leaving).
+    private var trip = 0
 
     override public func load() {
         let nc = NotificationCenter.default
@@ -60,14 +64,17 @@ public class AwayPlugin: CAPPlugin, CAPBridgedPlugin {
         }
     }
 
+    /// When Dan left, kept until the app has written it into the save (`clear`): an app closed in between loses nothing
+    /// (deep review P#8).
     @objc func take(_ call: CAPPluginCall) {
+        if let at = UserDefaults.standard.object(forKey: Self.leftKey) as? Double { call.resolve(["at": at]) } else { call.resolve([:]) }
+    }
+
+    /// Written into the save: forgotten here, if it is still the same time away.
+    @objc func clear(_ call: CAPPluginCall) {
         let d = UserDefaults.standard
-        if let at = d.object(forKey: Self.leftKey) as? Double {
-            d.removeObject(forKey: Self.leftKey)
-            call.resolve(["at": at])
-        } else {
-            call.resolve([:])
-        }
+        if let at = call.getDouble("at"), let kept = d.object(forKey: Self.leftKey) as? Double, kept == at { d.removeObject(forKey: Self.leftKey) }
+        call.resolve()
     }
 
     @objc func log(_ call: CAPPluginCall) {
@@ -80,11 +87,13 @@ public class AwayPlugin: CAPPlugin, CAPBridgedPlugin {
         guard watching, reading == nil else { return }
         /* from the moment the app stopped being in front (a swipe to another app begins there) */
         reading = (min(resignedAt ?? Date(), Date()), [])
+        trip += 1
+        let n = trip
         if !UIApplication.shared.isProtectedDataAvailable { sign("protected") }
         dim()
-        task = UIApplication.shared.beginBackgroundTask(withName: "away.reading") { [weak self] in self?.decide() }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in self?.dim() }
-        DispatchQueue.main.asyncAfter(deadline: .now() + Self.window) { [weak self] in self?.decide() }
+        task = UIApplication.shared.beginBackgroundTask(withName: "away.reading") { [weak self] in self?.decide(n) }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in if self?.trip == n { self?.dim() } }
+        DispatchQueue.main.asyncAfter(deadline: .now() + Self.window) { [weak self] in self?.decide(n) }
     }
 
     /// The screen reads zero brightness once it is off (not on every phone: an always-on screen may not).
@@ -102,7 +111,9 @@ public class AwayPlugin: CAPPlugin, CAPBridgedPlugin {
     }
 
     /// 15 seconds on (or iOS asking for its time back): a lock, or another app.
-    private func decide() {
+    private func decide(_ n: Int) {
+        /* a judgement from an earlier trip: this trip has its own */
+        guard n == trip else { return }
         if let r = reading {
             reading = nil
             if r.signs.isEmpty {

@@ -43,6 +43,8 @@
   const fromFour = (hm: string) => ((+hm.slice(0, 2) + 20) % 24) * 60 + +hm.slice(3, 5);
   function rowNote(j: Job): string {
     if (v.done.has(j.id)) return t('row.done');
+    /* an errand of the run under way, or of one whose "What got done?" waits: said so (deep review H#10) */
+    if (v.run?.errands?.some(e => e.job.id === j.id) || v.runEnd?.errands?.some(e => e.job.id === j.id)) return t('row.inErrand');
     /* an appointment gone by is noticed, never scolded (L C5) */
     if (v.times[j.id]) return fromFour(game.now.slice(11, 16)) > fromFour(v.times[j.id]) ? t('row.wentBy', { time: v.times[j.id] }) : v.times[j.id];
     /* every job is a delve (D-117), so a row never says "a delve". A recurring job says its usual minutes, which Dan set
@@ -137,6 +139,9 @@
   /* the story ahead folds to a few lines, so the next job is always in view; a tap reads it all (D-093) */
   let aheadOpen = $state(false);
   let keysOpen = $state(false);
+  /* "Use one here": asked once, then the Key is used on what is locked where Dan is, as a job's return offers (H#8) */
+  let keyAsk = $state(false);
+  function useHere() { const id = v.keyHere; keyAsk = false; if (!id) return; steady(); game.do({ do: 'useKey', seal: id }); go('opened', id); }
 
   /* the errand run (D-139): quietly at the list's end, when two jobs or more could go on one trip out */
   const errandsOpen = $derived(!busy && !v.night && errandChoices(content, game.facts, game.now).length >= 2);
@@ -168,8 +173,12 @@
     /* a job Dan already has is not added twice (J4): it says so */
     const tie = tieFor(content, game.facts, line);
     mindHave = tie?.same ? tie.job.name : null;
-    game.do({ do: 'addItems', lines: [line] }); mind = ''; mindSaid = true; setTimeout(() => (mindSaid = false), 4000);
+    game.do({ do: 'addItems', lines: [line] }); mind = ''; mindSaid = true;
+    /* one timer, cleared before a new one and when Today goes (deep review C#14) */
+    clearTimeout(mindTimer); mindTimer = setTimeout(() => (mindSaid = false), 4000);
   }
+  let mindTimer: ReturnType<typeof setTimeout> | undefined;
+  $effect(() => () => clearTimeout(mindTimer));
   /* the avoided job, the only one left on the line: said, once it is all that holds the day (Dan, D-143 G) */
   const onlyAvoided = $derived.by(() => {
     const left = v.line.filter(id => !v.done.has(id));
@@ -233,20 +242,25 @@
     <section class="where rise d2" aria-label={roadSay || undefined}>
       <EndRoad road={v.road} from={v.walked} to={v.walked} mode="still" notes={roadNotes} />
     </section>
-    <!-- the Keys kept (Dan, D-142): always in view; a tap says what they are for -->
-    <button class="keys rise d2" aria-expanded={keysOpen} onclick={() => (keysOpen = !keysOpen)}>
-      <svg viewBox="0 0 24 12" aria-hidden="true"><circle cx="5" cy="6" r="3.6" /><path d="M8.6 6H22M18 6v3.4M21.4 6v2.6" /></svg>
-      <span>{v.keys === 0 ? t('today.keys.none') : v.keys === 1 ? t('today.keys.one') : t('today.keys.many', { n: v.keys })}</span>
-    </button>
-    <!-- the Map opens on where a Key can be used: here first (D-143 A); "one" when there are more (S polish) -->
-    {#if v.keyUse}<p class="key-use rise d2"><button class="text-link" onclick={() => go('map', v.keyUse!)}><span>{v.keyHere ? t(v.keys > 1 ? 'today.keys.hereMany' : 'today.keys.here') : t(v.keys > 1 ? 'today.keys.useMany' : 'today.keys.use')}</span></button></p>{/if}
+    <!-- the Keys kept (Dan, D-142): always in view; a tap says what they are for. One line, with one Key link at most
+         (deep review H#8, D simplify 2): with something locked where Dan is, "Use one here" asks once (Use it here · Keep
+         it) and opens it here; else the Map, where it is behind him -->
+    <div class="key-line rise d2">
+      <button class="keys" aria-expanded={keysOpen} onclick={() => (keysOpen = !keysOpen)}>
+        <svg viewBox="0 0 24 12" aria-hidden="true"><circle cx="5" cy="6" r="3.6" /><path d="M8.6 6H22M18 6v3.4M21.4 6v2.6" /></svg>
+        <span>{v.keys === 0 ? t('today.keys.none') : v.keys === 1 ? t('today.keys.one') : t('today.keys.many', { n: v.keys })}</span>
+      </button>
+      {#if v.keyHere}<span class="dot" aria-hidden="true">·</span><button class="text-link key-use" aria-expanded={keyAsk} onclick={() => (keyAsk = !keyAsk)}><span>{t(v.keys > 1 ? 'today.keys.hereMany' : 'today.keys.here')}</span></button>
+      {:else if v.keyUse}<span class="dot" aria-hidden="true">·</span><button class="text-link key-use" onclick={() => go('map', v.keyUse!)}><span>{t('today.behindMap')}</span></button>{/if}
+    </div>
+    {#if keyAsk && v.keyHere}<div class="key-ask rise"><button class="text-link use" onclick={useHere}><span>{t('step.useHere')}</span></button><button class="text-link" onclick={() => (keyAsk = false)}><span>{t('step.keepIt')}</span></button></div>{/if}
     {#if keysOpen}<p class="soft keys-say">{t('today.keys.say')}{#if v.keys} {t('today.keys.useOnMap')}{/if}</p>{/if}
     {#if v.ahead}
       <section class="ahead rise d2">
         <!-- a locked thing left behind is never called "ahead": it is behind him, and on the Map (S3, D-143) -->
-        <div class="label-line">{v.aheadBehind ? t('today.behind') : t('today.ahead')}{#if v.aheadKey}<span class="needs-key"> · {t('today.aheadKey')}</span>{/if}</div>
+        <div class="label-line">{v.aheadBehind ? t('today.behind') : v.aheadHere ? t('today.here') : t('today.ahead')}{#if v.aheadKey}<span class="needs-key"> · {t('today.aheadKey')}</span>{/if}</div>
         <button class="ahead-text" class:open={aheadOpen} aria-expanded={aheadOpen} onclick={() => (aheadOpen = !aheadOpen)}><p class="say on-scene">{v.ahead}</p></button>
-        {#if v.aheadBehind}<p class="behind-map"><button class="text-link" onclick={() => go('map', v.aheadBehind!)}><span>{t('today.behindMap')}</span></button></p>{/if}
+        {#if v.aheadBehind && !v.keyUse}<p class="behind-map"><button class="text-link" onclick={() => go('map', v.aheadBehind!)}><span>{t('today.behindMap')}</span></button></p>{/if}
       </section>
     {/if}
   </header>
@@ -405,11 +419,15 @@
   h1 .here { font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit; text-shadow: inherit; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; }
   .where { margin-top: 6px; }
   .where :global(.road) { margin: 0 auto 4px; }
-  .keys { display: flex; align-items: center; gap: 8px; margin: 10px auto 6px; padding: 4px 8px; background: none; border: 0; cursor: pointer;
-    font-family: var(--life); font-style: italic; font-size: 14px; color: #e9d9b4; }
+  .key-line { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0 6px; margin: 8px auto 4px; }
+  .keys { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 6px; background: none; border: 0; cursor: pointer;
+    font-family: var(--life); font-style: italic; font-size: 15px; color: #e9d9b4; }
   .keys svg { width: 22px; height: 11px; fill: none; stroke: #f2c170; stroke-width: 1.4; stroke-linecap: round; }
-  .key-use { margin: -4px 0 8px; text-align: center; font-size: 15px; }
-  .key-use .text-link { color: #f2c170; }
+  .key-line .dot { color: #b9a77e; }
+  .key-line .key-use { min-height: 44px; font-size: 15px; color: #f2c170; }
+  .key-line .key-use span { color: #f2c170; }
+  .key-ask { display: flex; justify-content: center; gap: 18px; margin: -2px 0 8px; }
+  .key-ask .use span { color: #f2c170; }
   .keys-say { margin: 0 0 8px; text-align: center; font-size: 14.5px; }
   .needs-key { color: #f2c170; }
   .behind-map { margin: 0; }
@@ -425,6 +443,8 @@
   .tonight .promise { text-align: left; margin: 6px 0 14px; }
   .night-line { font-style: italic; color: #fff; margin: 8px 0 10px; line-height: 1.45; }
   .bottom { padding-top: 8px; }
+  /* the list's fade starts below the header, never under the Ahead passage: rows never show through it (deep review H#12) */
+  .bottom > .scroll { margin-top: 0; }
   .next h2 { margin: 8px 0 4px; }
   .next .soft { margin-bottom: 18px; }
   .cant { display: flex; justify-content: center; align-items: center; gap: 2px; margin-top: 4px; }

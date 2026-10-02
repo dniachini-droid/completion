@@ -35,6 +35,8 @@
   import { closeRows } from './SwipeRow.svelte';
   import { t } from '../content/copy/en';
   import { sealOf } from '../core/story';
+  import { calendarWeek } from '../core/time';
+  import { addDays } from '../core/week';
   import { steady } from './taps';
   import { unslide } from './keyboard';
   import { wake } from './rest';
@@ -49,11 +51,13 @@
     if (v.arrival && v.arrival.seq !== moment.wordLater && v.welcome && beatKind(v.arrival.id) === 'word') leaveWord(v.arrival.seq);
     if (v.arrival && v.arrival.seq !== moment.wordLater) return 'arrival';
     /* then, once each: the morning after camp, the welcome back, the daybook's new page */
-    if (v.morning) return 'morning';
+    /* after days away the morning is folded into the welcome back: one screen before Today (deep review W F8) */
+    if (v.morning && !v.welcome) return 'morning';
     if (v.welcome) return 'welcome';
     /* after days away, the welcome back only: the new page waits as a quiet line on Today (Dan, D-143 F) */
     /* (still a line after 04:00: a welcome since the page was written keeps it so, review of D-144) */
-    if (v.close && !game.facts.some(f => f.type === 'welcomed' && f.day >= v.close!.day)) return 'daybook';
+    /* (and on a Monday whose morning was already shown: one screen before Today, not two, W F8) */
+    if (v.close && !game.facts.some(f => (f.type === 'welcomed' && f.day >= v.close!.day) || (f.type === 'seen' && f.what === 'morning' && f.day === v.day))) return 'daybook';
     return 'today';
   }
   let screen = $state<Screen>(first());
@@ -71,8 +75,8 @@
     });
   });
   /* (through one way home: the trail, an open menu or sheet and the Undo go too, deep review C#3) */
-  $effect(() => { if (game.woke !== lastWoke) { lastWoke = game.woke; home(); } });
-  function home() { trail = []; closeMenu(); closeTick(); closeRows(); game.deleted = null; game.cantDelete = null; screen = first(); arg = undefined; }
+  $effect(() => { if (game.woke !== lastWoke) { lastWoke = game.woke; goHome(); } });
+  function goHome() { trail = []; closeMenu(); closeTick(); closeRows(); game.deleted = null; game.cantDelete = null; screen = first(); arg = undefined; }
 
   /* Back (review 2, D-088): the screens Dan looks through keep a trail, so the arrow and the phone's own back return to
      where each was opened from. Today and the day's own moments (a delve, a place reached, the stair, the morning)
@@ -104,7 +108,7 @@
       const v = game.view;
       if (screen === 'arrival' && v.arrival && !(typeof arg === 'string' && arg.startsWith('again:'))) { if (beatKind(v.arrival.id) === 'word' && moment.cutDone !== v.arrival.seq) leaveWord(v.arrival.seq); else game.do({ do: 'seen', what: 'arrival', ref: v.arrival.seq }); }
       else if (screen === 'morning' && v.morning) game.do({ do: 'seen', what: 'morning', ref: v.morning.seq });
-      else if (screen === 'welcome' && v.welcome) game.do({ do: 'seen', what: 'welcome', ref: v.welcome.seq });
+      else if (screen === 'welcome' && v.welcome) { if (v.morning) game.do({ do: 'seen', what: 'morning', ref: v.morning.seq }); game.do({ do: 'seen', what: 'welcome', ref: v.welcome.seq }); }
       else if (screen === 'daybook' && v.close) game.do({ do: 'closeRead', week: v.close.week });
     }
     if (to === 'back') { const p = trail.pop(); if (p && p.screen !== 'today') { screen = p.screen; arg = p.arg; } else go('today'); return; }
@@ -137,7 +141,8 @@
     rhythms: 'rhythms.label', daybook: 'nav.daybook', settings: 'nav.settings', satchel: 'nav.satchel', errands: 'errand.title', opened: 'opened.nav',
     delve: 'delve.label', step: 'step.label', morning: 'morning.label', welcome: 'welcome.label', stair: 'stair.label', cant: 'cant.label', proto: 'nav.proto' };
   function nameOf(top: Back): string {
-    if (top.screen === 'week') return t(top.arg ? 'week.next' : 'week.label');
+    /* this week, next week, or a later one: named by which it is (deep review B19, C#4) */
+    if (top.screen === 'week') { const wk = calendarWeek(game.view.day), a = String(top.arg ?? ''); return t(!top.arg || a <= wk ? 'week.label' : a === addDays(wk, 7) ? 'week.next' : 'week.later'); }
     /* the set-up: its job's name ("Back to Tax return", never "Back to Back") */
     if (top.screen === 'set') return top.arg === 'errands' ? t('errand.title') : game.job(String(top.arg))?.name ?? t('set.label');
     /* a job's return and a delve's end: by the job (never "Back to Done", review of D-144) */
@@ -204,6 +209,14 @@
   const runKey = $derived.by(() => { const v = game.view; return `${v.run?.phase}.${v.run?.k}.${v.runEnd?.seq}`; });
   $effect(() => { void screen; void arg; void runKey; wake(); });
 
+  /* the save kept as it was, offered as a file (B15) */
+  let copied = $state('');
+  async function copyKept() {
+    const raw = game.keptAside ? platform.saves.get(game.keptAside) : null;
+    try { if (raw) { await platform.copies.share(`Long Answer save kept ${new Date().toISOString().slice(0, 10)}.json`, raw); copied = t('blocked.copied'); } }
+    catch { copied = t('settings.copy.failed'); }
+  }
+
   /* the day's light: gold once the day has turned (DESIGN_SYSTEM → colour) */
   $effect(() => {
     const gold = (screen === 'arrival' && !moment.cutting) || (screen === 'today' && game.view.complete) || (screen === 'today' && !!game.view.night);
@@ -217,6 +230,14 @@
   <div class="sr-live" aria-live="polite" aria-atomic="true">{announce}</div>
   {#if game.proto.rehearsal && !['today', 'proto'].includes(screen)}<div class="rehearsal" aria-live="polite">{t('proto.badge')}</div>{/if}
   <!-- a screen that fails shows a way back, never a blank phone; the save is untouched (review finding, D-080) -->
+  <!-- a save this build can't read: kept as it is, never written over; nothing else opens on it (deep review B15) -->
+  {#if game.blocked}
+    <div class="ui"><section class="col oops">
+      <p class="say">{t(game.blocked === 'newer' ? 'blocked.newer' : 'blocked.broken')}</p>
+      <button class="btn" onclick={copyKept}>{t('blocked.copy')}</button>
+      {#if copied}<p class="soft">{copied}</p>{/if}
+    </section></div>
+  {:else}
   <svelte:boundary onerror={(e) => console.error(e)}>
   <!-- Records ⇄ Marks share one painting, drawn once: switching tabs swaps only what is under the tab bar (Dan, D-093) -->
   {#if TABS.has(screen)}<Scene painting={game.view.here.painting} blur bottom="40%" />{/if}
@@ -245,12 +266,13 @@
     {#snippet failed(_error, reset)}
       <div class="ui"><section class="col oops">
         <p class="say">{t('oops.say')}</p>
-        <button class="btn" onclick={() => { home(); reset(); }}>{t('delve.today')}</button>
+        <button class="btn" onclick={() => { goHome(); reset(); }}>{t('delve.today')}</button>
       </section></div>
     {/snippet}
   </svelte:boundary>
   <JobMenu />
   <TickSheet />
+  {/if}
 </main>
 
 <style>

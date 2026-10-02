@@ -79,6 +79,9 @@
   /* plain, not watched: a teardown reads the box's text from before the tap that closed the screen, so the note kept
      by that tap is known here and never written twice (deep review NEW-1) */
   let keptNote = '';
+  /* typing where he stopped, with the keyboard up: the ring and the road step aside, so the box stands fully above the
+     keyboard and no label runs into another (deep review H#6) */
+  let typing = $state(false);
   function keepNote() { if (noteJob && stopAt.trim() && stopAt !== keptNote) { keptNote = stopAt; game.do({ do: 'noteJob', job: noteJob, note: stopAt }); stopAt = ''; } }
   function leave(to: 'today' | 'arrival') {
     keepNote();
@@ -169,7 +172,7 @@
   {/if}
 {/snippet}
 
-<div class="dv" class:told class:tallying={tally} bind:this={root}>
+<div class="dv" class:told class:tallying={tally} class:typing bind:this={root}>
   {@html tunnel}
   <div class="ui">
     <header class="top col">
@@ -291,7 +294,7 @@
           <h2 class="m">{end.total > 0 ? t('delve.kept', { min: minutesWords(end.total) }) : t('delve.keptNone')}</h2>
           <p class="say">{t('delve.keptSay')}</p>
           <!-- where Dan stopped, for next time: here, where it is useful (D-112, J3) -->
-          <input class="line stop" bind:value={stopAt} maxlength="160" placeholder={t('delve.whereStopped')} aria-label={t('delve.whereStopped')}
+          <input class="line stop" bind:value={stopAt} onfocus={() => (typing = true)} onblur={() => (typing = false)} maxlength="160" placeholder={t('delve.whereStopped')} aria-label={t('delve.whereStopped')}
             enterkeyhint="done" onkeydown={e => { if (e.key === 'Enter') (e.currentTarget as HTMLInputElement).blur(); }} />
           <button class="btn resting" onclick={() => leave('today')}>{t('delve.toToday')}</button>
         {:else}
@@ -306,7 +309,7 @@
               {:else}{end.count > 1 ? t('delve.doneRun') : t('delve.doneOne')}{/if}
             </h2>
             {#if end.how === 'finishedHere' && !end.enough && doneSeq === null}
-              <input class="line stop" bind:value={stopAt} maxlength="160" placeholder={t('delve.whereStopped')} aria-label={t('delve.whereStopped')}
+              <input class="line stop" bind:value={stopAt} onfocus={() => (typing = true)} onblur={() => (typing = false)} maxlength="160" placeholder={t('delve.whereStopped')} aria-label={t('delve.whereStopped')}
                 enterkeyhint="done" onkeydown={e => { if (e.key === 'Enter') (e.currentTarget as HTMLInputElement).blur(); }} />
             {/if}
             {#if doneSeq !== null}<Return {doneSeq} extraFinds={v.runFinds} {go} />
@@ -404,4 +407,6 @@
   .dv :global(.bottom p.parked-n) { margin: 10px 0 0; font-size: 16px; font-style: italic; text-align: center; }
   @keyframes park-say { from { opacity: 0; } }
   @media (prefers-reduced-motion: reduce) { .park, .parked-say.shown { animation: none; } }
+  :global(html.kb) .dv.typing .mid, :global(html.kb) .dv.typing .bottom :global(.road) { display: none; }
+  :global(html.kb) .dv.typing .bottom { margin-top: auto; }
 </style>

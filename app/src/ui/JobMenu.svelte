@@ -48,6 +48,14 @@
     if (on) game.removeDone(id, on); else game.remove(id);
   }
   const recurring = $derived(!!j && v.content.rhythms.some(r => r.job === j.id));
+  /* Delete on a recurring job asks once: it takes all its days, not this one (deep review H#9); Undo stays */
+  let confirming = $state(false);
+  $effect(() => { void menu.job; confirming = false; });
+  function del() { if (settling()) return; if (recurring && !menu.on && !confirming) { confirming = true; return; } remove(); }
+  /* why some choices are greyed (deep review H#10): an errand of the run under way, a question still to answer, a delve on */
+  const why = $derived(!j ? '' : v.run?.errands?.some(e => e.job.id === j.id) ? t('menu.why.errand')
+    : v.runEnd?.pending ? t('menu.why.count') : v.run ? t('menu.why.delve') : '');
+  function count() { const go = menu.go; to(() => go?.('delve')); }
   /* a one-off done is finished: no more delving on it, and no day to put it on; a recurring job can always be delved again */
   const finished = $derived(!!j && !recurring && (v.done.has(j.id) || !!menu.on));
   function key(e: KeyboardEvent) { if (e.key === 'Escape') closeMenu(); }
@@ -58,9 +66,17 @@
   <div class="scrim" role="presentation" onclick={() => { if (!settling()) closeMenu(); }}></div>
   <div class="menu" role="dialog" aria-modal="true" aria-label={j.name}>
     <p class="name">{j.name}</p>
+    {#if why}<p class="why">{why}</p>{/if}
     <!-- a calendar open takes the menu's place, Cancel always in view under it (360 × 780, N polish) -->
     {#if placing}<div class="cal"><DayPick from={v.day} label={t('satchel.day')} pick={place} /></div>
     {:else if waiting}<div class="cal"><WaitPick day={v.day} who={wait?.who ?? ''} name={j.name} pick={waitOn} /></div>
+    {:else if confirming}
+    <p class="ask">{t('menu.delAsk', { job: j.name })}</p>
+    <button class="item del" onclick={del}>{t('job.delete')}</button>
+    <button class="item" onclick={() => (confirming = false)}>{t('menu.keep')}</button>
+    {:else if v.runEnd?.pending}
+    <!-- the errand question waiting: the way to it is here, so no menu ever stands over "Strike them off" (H#10) -->
+    <button class="item" onclick={count}>{t('errand.waitsGo')}</button>
     {:else}
     <button class="item" disabled={!!v.run || !!v.runEnd?.pending || finished} onclick={delve}>{v.done.has(j.id) && recurring ? t('menu.delveAgain') : t('menu.delve')}</button>
     {#if menu.on === v.day && v.done.has(j.id)}<button class="item" onclick={notDone}>{t('row.notDone')}</button>{/if}
@@ -73,7 +89,7 @@
       {#if wait}<button class="item" onclick={backToIt}>{t('wait.back')}</button>{/if}
       <button class="item" aria-expanded={waiting} disabled={v.run?.job.id === j.id || v.runEnd?.job.id === j.id || !!v.run?.errands?.some(e => e.job.id === j.id) || !!v.runEnd?.errands?.some(e => e.job.id === j.id)} onclick={() => { if (!settling()) { waiting = !waiting; placing = false; } }}>{wait ? t('wait.still') : t('wait.menu')}</button>
     {/if}
-    <button class="item del" disabled={v.run?.job.id === j.id || v.runEnd?.job.id === j.id || !!v.run?.errands?.some(e => e.job.id === j.id) || !!v.runEnd?.errands?.some(e => e.job.id === j.id)} onclick={remove}>{t('job.delete')}</button>
+    <button class="item del" disabled={v.run?.job.id === j.id || v.runEnd?.job.id === j.id || !!v.run?.errands?.some(e => e.job.id === j.id) || !!v.runEnd?.errands?.some(e => e.job.id === j.id)} onclick={del}>{t('job.delete')}</button>
     {/if}
     <button class="item cancel" onclick={() => { if (!settling()) closeMenu(); }}>{t('rhythms.cancel')}</button>
   </div>
@@ -93,4 +109,6 @@
   .item.del:disabled { color: var(--ink-3); }
   .item.cancel { color: var(--ink-2); font-style: italic; }
   .cal { padding: 0 12px 8px; }
+  .why, .ask { margin: 0 18px 8px; font-family: var(--life); font-size: 15px; font-style: italic; color: var(--ink-2); text-align: center; }
+  .ask { color: var(--ink); font-size: 16.5px; }
 </style>
