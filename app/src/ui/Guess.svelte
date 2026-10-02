@@ -16,10 +16,10 @@
     return id && id !== at ? beatOf(content.story, id)?.name ?? null : null;
   });
   const m = $derived(content.story.marks.find(x => x.id === mark));
-  const guessed = $derived(game.view.story.guessed.get(mark));
+  const guessed = $derived(game.whole.story.guessed.get(mark));
   /* a partial sign of it found on a deep push (SCRIPT §8): said once here, never a hint about which candidate */
   const part = $derived.by(() => {
-    for (const b of content.story.beats) if (game.view.story.played.has(b.id) && b.carries?.partial && b.carries.seen?.includes(mark)) return b.carries.partial;
+    for (const b of content.story.beats) if (game.whole.story.played.has(b.id) && b.carries?.partial && b.carries.seen?.includes(mark)) return b.carries.partial;
     return null;
   });
   /* shuffled once per mark, the same every time it's shown */

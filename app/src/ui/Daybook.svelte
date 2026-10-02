@@ -22,7 +22,7 @@
 
   let { go, week }: { go: Go; week?: string } = $props();
   const s = content.story;
-  const v = $derived(game.view);
+  const v = $derived(game.whole);
   const pages = $derived(game.facts.filter((f): f is FactOf<'weekClosed'> => f.type === 'weekClosed'));
   const page = $derived(pages.find(p => p.week === week) ?? pages[pages.length - 1]);
   const at = $derived(page ? pages.indexOf(page) : -1);
@@ -81,7 +81,7 @@
 
   /* the week's look-ahead (D-116): about a minute, every step skippable, offered once; it earns nothing (P16) */
   let step = $state(0);
-  const sweep = $state(sweepOf(game.facts, game.view.day));
+  const sweep = $state(sweepOf(game.facts, game.whole.day));
   let swept = $state(0);
   const coming = $derived(step === 2 ? comingUp(v.content, game.facts, v.day) : []);
   const pickable = $derived(step === 3 ? v.content.jobs.filter(j => !j.stopped && !(doneFacts(game.facts).some(f => f.job === j.id) && !v.content.rhythms.some(r => r.job === j.id))) : []);
@@ -193,10 +193,9 @@
   .body { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 28px; }
   .written { font-style: italic; margin-top: 2px; }
   h1 { margin-top: 6px; }
-  .row.still { cursor: default; }
   .went { margin: 8px 0 12px; }
   .count { color: var(--gold-hi); margin-bottom: 10px; }
-  .count .again { min-height: 0; padding: 2px 0; }
+  .count .again { display: inline-flex; align-items: center; min-height: 44px; padding: 0; vertical-align: middle; }
   .count .again span { font-size: calc(15px * var(--ts, 1)); }
   .label-line { margin-top: 14px; }
   .learned { margin-top: 8px; font-size: calc(16.5px * var(--ts, 1)); line-height: 1.45; }

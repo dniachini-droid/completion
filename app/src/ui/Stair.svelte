@@ -11,7 +11,7 @@
   import { onRest } from './rest';
 
   let { go }: { go: Go } = $props();
-  const v = $derived(game.view);
+  const v = $derived(game.whole);
   const s = content.story;
   /* the stretch beyond the first word: the one whose walking waits on it */
   const stretch = s.stretches.find(x => x.req.includes(s.words[0]?.beats[0] ?? '')) ?? s.stretches[0];

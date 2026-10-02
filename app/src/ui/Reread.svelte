@@ -8,8 +8,8 @@
   import type { Go } from './nav';
 
   let { beat, go }: { beat: string | null; go?: Go } = $props();
-  const ids = $derived(beat ? rereadBy(content.story, game.view.story, beat) : []);
-  $effect(() => { if (ids.length) light(ids); });
+  const ids = $derived(beat ? rereadBy(content.story, game.whole.story, beat) : []);
+  $effect(() => { if (beat && ids.length) light(beat, ids); });
 </script>
 
 {#if ids.length}

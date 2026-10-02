@@ -16,8 +16,8 @@
   let { go, jobId }: { go: Go; jobId: string } = $props();
   const errands = jobId === 'errands' ? errandPick.jobs.slice() : null;
   const job = $derived(errands ? null : game.job(jobId)!);
-  const v = $derived(game.view);
-  const preset = presetRun(errands ? undefined : game.job(jobId)!, game.view.content);
+  const v = $derived(game.whole);
+  const preset = presetRun(errands ? undefined : game.job(jobId)!, game.whole.content);
   /* a one-off left "Not yet" carries on from its minutes (D-133): one quiet line says so */
   const carry = $derived(errands ? 0 : carriedOf(game.facts, v.content, jobId));
   /* the first three named, then "and N more": never cut with an ellipsis (deep review H#15) */
@@ -149,7 +149,7 @@
     platform.sound.unlock();
     if (errands) game.do({ do: 'startErrands', jobs: errands, minutes: snap, count: n });
     else game.do({ do: 'startRun', job: jobId, minutes: snap, count: n });
-    if (!game.view.run) { refused = true; return; }
+    if (!game.whole.run) { refused = true; return; }
     if (errands) errandPick.jobs = [];
     go('delve');
   }
@@ -175,7 +175,7 @@
         {:else}
         <h1 class="say-lg">{job.name}</h1>
         <!-- the job put off: what waits beyond it (it lived on Today's next job, D-135) -->
-        {#if job.avoided}<p class="soft last"><span class="find-mark" aria-hidden="true">◇ </span>{t('set.avoided')}</p>{/if}
+        {#if job.avoided && game.whole.findWaits}<p class="soft last"><span class="find-mark" aria-hidden="true">◇ </span>{t('set.avoided')}</p>{/if}
         {#if carry > 0}<p class="soft carryon">{t('set.carry', { min: minutesWords(carry) })}</p>{/if}
         {#if job.note}<p class="soft last note">{t('set.stopped', { note: job.note })}</p>{/if}
         <!-- the job's list (D-126): struck off a line at a time in the delve -->

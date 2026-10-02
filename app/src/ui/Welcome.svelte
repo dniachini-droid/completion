@@ -14,8 +14,8 @@
   import type { Go } from './nav';
 
   let { go }: { go: Go } = $props();
-  const v = $derived(game.view);
-  const w = game.view.welcome;
+  const v = $derived(game.whole);
+  const w = game.whole.welcome;
   const q = w?.question ? content.story.openQuestions.find(x => x.id === w.question)?.line ?? '' : '';
   const view = $derived(v.ahead);
   /* a thing that ends with its own mark keeps it, with no full stop after it (review of D-144) */
@@ -41,12 +41,12 @@
   function letGo(s: Slip) { game.remove(s.job); answered = [...answered, s.job]; }
   /* a look at the record isn't leaving: back returns here (S9); only going on to Today marks it seen */
   /* the morning after the last night kept, folded in here: never a screen of its own after days away (deep review W F8) */
-  const m = game.view.morning;
+  const m = game.whole.morning;
   const mFind = m?.find ? content.story.finds.find(f => f.id === m.find)?.line ?? '' : '';
   const mSaid = m?.beat ? (b => b && b.kind === 'morning' && b.w > 1 ? b.line ?? '' : '')(beatOf(content.story, m.beat)) : '';
   function leave(to: 'today' | 'records') {
     if (to === 'records' && w?.record) { go('records', w.record); return; }
-    if (m && game.view.morning?.seq === m.seq) game.do({ do: 'seen', what: 'morning', ref: m.seq });
+    if (m && game.whole.morning?.seq === m.seq) game.do({ do: 'seen', what: 'morning', ref: m.seq });
     if (w) game.do({ do: 'seen', what: 'welcome', ref: w.seq });
     go('today');
   }
@@ -72,7 +72,7 @@
     {#if q}<p class="say question"><Prose text={q} /></p>{/if}
     {#if mSaid}<p class="say look"><Prose text={mSaid} /></p>{/if}
     {#if m?.beat}<Settled beat={m.beat} /><Reread beat={m.beat} {go} />{/if}
-    {#if mFind}<div class="label-line">{t('find.label')}</div><p class="say look">{mFind}</p>{/if}
+    {#if mFind}<div class="label-line">{t('find.label')}</div><p class="say look"><Prose text={mFind} /></p>{/if}
     <p class="soft">{t('welcome.say')}</p>
     {#if slip && slipName && !answered.includes(slip.job)}
       <p class="say slip">{t('slip.date', { job: slipName, date: byWords(slip.day) })}</p>

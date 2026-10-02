@@ -14,14 +14,14 @@
 
   let { go }: { go: Go } = $props();
   const s = content.story;
-  const m = game.view.morning;
-  const v = $derived(game.view);
+  const m = game.whole.morning;
+  const v = $derived(game.whole);
   const find = m?.find ? s.finds.find(f => f.id === m.find)?.line ?? '' : '';
   /* a later week's morning the story wrote a line for (week 1's morning beat is the opening screen, not this one) */
   const said = m?.beat ? (b => b && b.kind === 'morning' && b.w > 1 ? b.line ?? '' : '')(beatOf(s, m.beat)) : '';
   /* the record this morning was written to point back to, if Dan has it (deep review S#13); else the newest record that
      carries a mark Dan has guessed: it reads differently this morning */
-  const record = m?.beat ? morningRecord(s, m.beat, game.view.story.records) ?? [...game.view.story.records].reverse().find(id => recordOf(s, id)?.cut?.some(l => l.some(tk => 's' in tk && typeof tk.s === 'string' && game.view.story.guessed.has(tk.s)))) ?? null : null;
+  const record = m?.beat ? morningRecord(s, m.beat, game.whole.story.records) ?? [...game.whole.story.records].reverse().find(id => recordOf(s, id)?.cut?.some(l => l.some(tk => 's' in tk && typeof tk.s === 'string' && game.whole.story.guessed.has(tk.s)))) ?? null : null;
 
   $effect(() => { if (!m) go('today'); });
   /* a look at the record isn't leaving: back returns here (N bug 2); only going on to Today marks it seen */
@@ -30,7 +30,8 @@
   function leave(to: 'today' | 'records' | 'set') {
     if (to === 'records' && record) { go('records', record); return; }
     if (m) game.do({ do: 'seen', what: 'morning', ref: m.seq });
-    if (to === 'set' && chosen) go('set', chosen.id); else go('today');
+    /* through Today, so the set-up's arrow says Today: the morning, once seen, is never on the way back (B7) */
+    go('today'); if (to === 'set' && chosen) go('set', chosen.id);
   }
 </script>
 

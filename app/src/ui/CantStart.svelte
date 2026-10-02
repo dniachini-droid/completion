@@ -10,9 +10,9 @@
   import { back } from './back.svelte';
 
   let { go, jobId }: { go: Go; jobId: string } = $props();
-  const v = $derived(game.view);
+  const v = $derived(game.whole);
   const job = $derived(game.job(jobId)!);
-  const teaser = game.view.teaser ?? t('cant.fallback');
+  const teaser = game.whole.teaser ?? t('cant.fallback');
 
   /* the first step: where Dan stopped last time, else the job's own first step; with neither, it asks once and keeps
      the answer as the job's first step (D-112) */
@@ -24,7 +24,7 @@
     platform.sound.unlock();
     game.do({ do: 'startRun', job: jobId, minutes: 10, count: 1 });
     /* only if it started (C#10): an end still to answer, or another delve, comes first */
-    go(game.view.run ? 'delve' : 'today');
+    go(game.whole.run ? 'delve' : 'today');
   }
 </script>
 

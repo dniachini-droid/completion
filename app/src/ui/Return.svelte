@@ -25,7 +25,7 @@
   const jobName = $derived.by(() => { const f = doneSeq !== null ? game.facts.find(x => x.seq === doneSeq) : undefined; return f?.type === 'jobDone' ? game.job(f.job)?.name ?? t('step.keyJob') : t('step.keyJob'); });
   /* a Key is never spent for Dan (D-143 A): earned with something locked where he is, he is offered "Use it here" or
      "Keep it"; with something locked behind him, the Map; else he keeps it for the next locked thing */
-  const v = $derived(game.view);
+  const v = $derived(game.whole);
   /* (read from the save and the per-save store: a reload never offers the choice again, B1) */
   const chosen = $derived(doneSeq !== null ? (void game.facts, void moment.keyChoice[doneSeq], keyChoiceOf(doneSeq)) : undefined);
   const kept = $derived(chosen === 'kept');

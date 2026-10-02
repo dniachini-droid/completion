@@ -20,7 +20,7 @@
 
   /* `job`: opened straight on that job's editor (from the Week, D-112); leaving it goes back there */
   let { go, job: jobArg }: { go: Go; job?: string } = $props();
-  const v = $derived(game.view);
+  const v = $derived(game.whole);
   /* down to 5 min (D-110); every 5 minutes to two hours, so any length set before can be set again (Course's 50, deep
      review W F14), then by the quarter hour to four */
   const LEN = [...Array.from({ length: 24 }, (_, i) => 5 * (i + 1)), 135, 150, 165, 180, 195, 210, 225, 240];

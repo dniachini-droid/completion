@@ -208,7 +208,7 @@ export const copy = {
   'opened.toMap': 'Back to the Map',
   'opened.again': 'Opened with a Key',
   'opened.nav': 'Opened',
-  'map.ahead': 'ahead',
+  'map.ahead': 'ahead', 'map.nextOn': 'the next place · {min}',
   'map.aheadLabel': 'Not reached yet',
   'map.aheadName': 'Somewhere ahead',
   'map.aheadSay': 'Its name comes when you get there.',

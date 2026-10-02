@@ -1670,6 +1670,8 @@ export interface View {
   times: Record<string, string>;
   /** Where the plan points: the day each next place would be reached (a forecast, never a promise). */
   forecast: string[];
+  /** A find still waits for a job Dan tends to put off (its mark and its set-up's line promise nothing that won't come). */
+  findWaits: boolean;
   /** Dan's own data as it stands (his edits applied). */
   content: Content;
   /** One-offs waiting on a reply whose day has come (D-137): under today's list, "Did they reply?"; never on the list or
@@ -2085,6 +2087,7 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
     /* (a job moved to a later day was moved, not set aside: it is on its day) */
     aside: ((later) => [...asideOn(facts, day)].filter(id => c.jobs.some(j => j.id === id && !j.stopped) && !done.has(id) && !W.waitingOf(facts).has(id) && !slate.includes(id) && !later.has(id)))(laterDays(facts, day)),
     forecast: W.forecast(c, facts, day, toNext, S.PLACE_GAP),
+    findWaits: !!S.pickFind(c.story, st, 'avoided'),
     day, capacity, suggested: sugg.capacity, size, order, slate, line, done, underWay, complete, next, run, runEnd, arrival,
     /* ahead: the sealed thing in view; before any, the way in (the first morning), then a line from just ahead */
     aheadKey: !!view && !S.onRoad(c.story, view.id), keys: st.held,

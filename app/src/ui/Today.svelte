@@ -26,7 +26,7 @@
   import type { Go } from './nav';
 
   let { go }: { go: Go } = $props();
-  const v = $derived(game.view);
+  const v = $derived(game.whole);
   const job = (id: string) => game.job(id)!;
   const weekday = $derived(t(`day.${new Date(Date.UTC(+v.day.slice(0, 4), +v.day.slice(5, 7) - 1, +v.day.slice(8, 10))).getUTCDay() as Weekday}`));
   /* the finish line's jobs (its first 3 hours, D-131), then the rest, "If there's time" */
@@ -106,7 +106,8 @@
   const takenBack = (job: string, day: string) => undoneFacts(game.facts).filter(f => f.job === job && f.day === day).reduce((a, f) => Math.max(a, f.minutes), 0);
   function notDone(id: string) { steady(); game.do({ do: 'notDone', job: id }); }
   /* a done row: only that day's record goes (its minutes stay); otherwise the job (D-125) */
-  function remove(id: string) { if (v.done.has(id)) game.removeDone(id, v.day); else game.remove(id); }
+  /* a recurring job deleted with its plan asks first, as the job menu does (H#9) */
+  function remove(id: string) { if (v.done.has(id)) game.removeDone(id, v.day); else if (recurring(id)) openMenu(id, go, null, null, 'today', true); else game.remove(id); }
 
   /* a one-off waiting on a reply, back on its day (D-137): "Did they reply?" Back to it · Still waiting (a new date) ·
      It's done (ticked off, with the time it took). Unanswered, it simply stays here; it never holds the day back */
@@ -362,7 +363,7 @@
     {#snippet jobRow(id: string)}
       {@const j = job(id)}
       <SwipeRow key={`t:${id}`} actions={acts(j)} tap={() => start(id)} hold={() => openMenu(id, go, v.done.has(id) ? v.day : null, null, 'today')} done={v.done.has(id)} quiet={v.done.has(id) && !recurring(id)}>
-        {#snippet row()}<span class="pip" class:done={v.done.has(id)} class:under={canTick(id)}></span><span class="t" class:putoff={j.avoided && !v.done.has(id)}>{j.name}{#if soFar(j)}<small>{soFar(j)}</small>{/if}</span>{#if j.avoided && !v.done.has(id)}<span class="sr-only">{t('row.findWaits')}</span>{/if}<span class="s">{sayDone(j) ? '' : rowNote(j)}</span>{/snippet}
+        {#snippet row()}<span class="pip" class:done={v.done.has(id)} class:under={canTick(id)}></span><span class="t" class:putoff={j.avoided && v.findWaits && !v.done.has(id)}>{j.name}{#if soFar(j)}<small>{soFar(j)}</small>{/if}</span>{#if j.avoided && v.findWaits && !v.done.has(id)}<span class="sr-only">{t('row.findWaits')}</span>{/if}<span class="s">{sayDone(j) ? '' : rowNote(j)}</span>{/snippet}
         <!-- the same "It's done" on a row further down: a tap on the row itself still starts a delve (D-100, D-120) -->
         <!-- the tick circle over the marker: done without a delve, with the time it took (D-134) -->
         {#snippet lead()}{#if canTick(id)}<button class="tickbtn" aria-label={t('tick.sr', { job: j.name })} onclick={() => openTick(id, go)}><span class="ring"></span></button>{/if}{/snippet}
@@ -486,7 +487,6 @@
   .reply-acts .text-link { min-height: 44px; min-width: 44px; }
   .reply-acts .text-link span { font-size: calc(15px * var(--ts, 1)); }
   .reply-acts .text-link:disabled { opacity: .5; }
-  .errand { margin-top: 6px; }
   .waits { margin: 0 0 6px; }
   .waits .text-link span { color: var(--gold-hi); }
   .next .soft.to-satchel { margin: -8px 0 4px; font-size: calc(14px * var(--ts, 1)); font-style: italic; text-align: center; }
@@ -497,7 +497,7 @@
   .aside-row { cursor: default; opacity: .62; }
   .aside-row .t { text-decoration: line-through; }
   .put-back { display: flex; justify-content: flex-end; margin: -8px 0 4px; }
-  .put-back .text-link { min-height: 36px; padding: 0; }
+  .put-back .text-link { min-height: 44px; padding: 0; }
   .put-back .text-link span { font-size: calc(15px * var(--ts, 1)); }
   .first { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin-top: 8px; }
   .first-say { font-family: var(--life); font-size: calc(18px * var(--ts, 1)); color: var(--ink-2); }
@@ -514,7 +514,7 @@
   .said-mind { font-style: italic; margin: 4px 0 0; text-align: left; }
   .still { margin: -12px 0 16px; }
   .said { font-family: var(--life); font-style: italic; font-size: calc(15.5px * var(--ts, 1)); color: var(--ink-2); display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 2px 6px; margin: -6px 0 6px; }
-  .said .text-link { min-height: 0; padding: 4px; }
+  .said .text-link { display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px; vertical-align: middle; }   /* a finger high (A#40) */
   .foot { display: flex; justify-content: space-around; margin: 6px -10px 0; }
   .foot span { font-size: calc(14px * var(--ts, 1)); letter-spacing: .1em; color: var(--ink-2); }
   .proto span { font-size: calc(14px * var(--ts, 1)); letter-spacing: .16em; color: var(--ink-3); }

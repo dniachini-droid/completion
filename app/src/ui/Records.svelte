@@ -12,7 +12,7 @@
   import { reread, opened } from './relit.svelte';
 
   let { go, id }: { go: Go; id?: string } = $props();
-  const v = $derived(game.view);
+  const v = $derived(game.whole);
   const s = content.story;
   const list = $derived([...v.story.records].reverse().map(r => recordOf(s, r)).filter(r => !!r));
   const open = $derived(id ? recordOf(s, id) : undefined);

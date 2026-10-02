@@ -10,7 +10,7 @@
   import { back } from './back.svelte';
 
   let { go, id }: { go: Go; id?: string } = $props();
-  const v = $derived(game.view);
+  const v = $derived(game.whole);
   const s = content.story;
   const list = $derived(marksSeen(s, v.story));
   /* what Dan can read or guess first; the marks only seen so far (their shapes) smaller, below */

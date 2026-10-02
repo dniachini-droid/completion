@@ -14,7 +14,7 @@
   import { errandChoices } from '../core/game';
 
   const j = $derived(menu.job ? game.job(menu.job) : undefined);
-  const v = $derived(game.view);
+  const v = $derived(game.whole);
   let placing = $state(false), waiting = $state(false);
   $effect(() => { void menu.job; placing = false; waiting = false; });
 
@@ -59,7 +59,7 @@
   const recurring = $derived(!!j && v.content.rhythms.some(r => r.job === j.id));
   /* Delete on a recurring job asks once: it takes all its days, not this one (deep review H#9); Undo stays */
   let confirming = $state(false);
-  $effect(() => { void menu.job; confirming = false; });
+  $effect(() => { void menu.job; confirming = menu.ask; });
   function del() { if (settling()) return; if (recurring && !menu.on && !confirming) { confirming = true; return; } remove(); }
   /* why some choices are greyed (deep review H#10): an errand of the run under way, a question still to answer, a delve on */
   const why = $derived(!j ? '' : v.run?.errands?.some(e => e.job.id === j.id) ? t('menu.why.errand')

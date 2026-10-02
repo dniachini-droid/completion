@@ -37,11 +37,11 @@
   const taps = a.taps ?? [];
   /* a mark the word's req names that Dan left unguessed: asked here, before the first tap, one tap, any candidate
      (a guess never holds the story up; the word is where it counts) */
-  const ask = $derived((beat?.req ?? []).filter(r => r.startsWith('mk-') && !game.view.story.guessed.has(r)));
+  const ask = $derived((beat?.req ?? []).filter(r => r.startsWith('mk-') && !game.whole.story.guessed.has(r)));
   /* what Dan read the marks as before the place answered, and after */
-  const before = $derived(marks.map(m => game.view.story.guessed.get(m) ?? ''));
+  const before = $derived(marks.map(m => game.whole.story.guessed.get(m) ?? ''));
   const after = $derived(marks.map(m => {
-    const h = game.view.story.guessed.get(m);
+    const h = game.whole.story.guessed.get(m);
     const mk = s.marks.find(x => x.id === m);
     return h && mk?.right?.includes(h) ? h : mk?.candidates?.[0] ?? h ?? '';
   }));

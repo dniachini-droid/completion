@@ -15,7 +15,7 @@
   import { onMount } from 'svelte';
 
   let { go, seq }: { go: Go; seq: number } = $props();
-  const v = $derived(game.view);
+  const v = $derived(game.whole);
   const fact = $derived(game.facts.find(f => f.seq === seq));
   const job = $derived(fact && fact.type === 'jobDone' ? game.job(fact.job) : undefined);
   const completedDay = $derived(game.facts.some(f => f.seq > seq && f.type === 'dayCompleted'));

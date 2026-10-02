@@ -22,7 +22,7 @@
   import { entryTarget, reminderSettings, rhythmTarget, type Lead } from '../core/reminders';
 
   let { go, week }: { go: Go; week?: string } = $props();
-  const v = $derived(game.view);
+  const v = $derived(game.whole);
   const thisWeek = $derived(calendarWeek(v.day));
   const wk = $derived(week && week > thisWeek ? week : thisWeek);
   const isNext = $derived(wk !== thisWeek);

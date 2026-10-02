@@ -30,7 +30,7 @@
      here focuses it again on the way back (review of D-131) */
   let { go, to }: { go: Go; to?: string } = $props();
   const forToday = $derived(to === 'today');
-  const v = $derived(game.view);
+  const v = $derived(game.whole);
   /* a job not done today can be ticked off, done without a delve (D-134); not while a delve runs */
   const busy = $derived(!!v.run || !!v.runEnd?.pending);
   const canTick = (j: Job) => !v.done.has(j.id) && !busy;
@@ -73,7 +73,7 @@
     if (tie?.same) { text = ''; picked = null; go('set', tie.job.id); return; }
     game.do({ do: 'delveNow', line, ...(tied ? { from: picked! } : {}) });
     text = ''; picked = null;
-    if (game.view.run) go('delve');
+    if (game.whole.run) go('delve');
   }
   function later() {
     const line = cleanLine(text);
@@ -125,7 +125,8 @@
     steady(); game.do({ do: 'putOnDay', job: j.id, day });
     placing = null; said = t('satchel.placed', { job: j.name, day: day === v.day ? t('pick.today') : dayShort(day) });
   }
-  function remove(j: Job) { saveList(); placing = null; said = null; game.remove(j.id); }
+  /* a recurring job deleted with its plan asks first, as the job menu does (H#9) */
+  function remove(j: Job) { saveList(); placing = null; said = null; if (v.content.rhythms.some(r => r.job === j.id)) openMenu(j.id, go, null, null, 'satchel', true); else game.remove(j.id); }
   function delve(j: Job) { saveList(); go('set', j.id); }
   function edit(j: Job) { saveList(); go('rhythms', j.id); }
   const acts = (j: Job) => [

@@ -22,12 +22,12 @@
   /* `seq`: a place reached before, opened from the Map to read again (its arg is "again:<seq>", never the plain seq a
      second new arrival is shown with, D-135); a new arrival waiting always comes first */
   let { go, seq = null }: { go: Go; seq?: number | null } = $props();
-  const v = $derived(game.view);
+  const v = $derived(game.whole);
   /* a word left for later never stands in for a place read again: the place's name reads the place (deep review B8) */
   const leftLater = (x: { seq: number } | null) => !!x && x.seq === moment.wordLater;
   const again = $derived((!v.arrival || leftLater(v.arrival)) && seq !== null ? arrivalAt(game.facts, content, seq) : null);
   const a = $derived(again ?? (leftLater(v.arrival) && seq !== null ? null : v.arrival) ?? v.lastArrival);
-  const fresh = !!game.view.arrival && !(seq !== null && leftLater(game.view.arrival));
+  const fresh = !!game.whole.arrival && !(seq !== null && leftLater(game.whole.arrival));
   let root: HTMLDivElement;
 
   $effect(() => { if (!a) go('today'); });
@@ -37,7 +37,7 @@
     root.getAnimations({ subtree: true }).forEach(x => { try { x.finish(); } catch { /* endless */ } });
   }
   /* a word is cut on its own screen, the first time it plays (Cut.svelte) */
-  const word = fresh && !!game.view.arrival && beatOf(content.story, game.view.arrival.id)?.kind === 'word';
+  const word = fresh && !!game.whole.arrival && beatOf(content.story, game.whole.arrival.id)?.kind === 'word';
   const cap = (x: string) => x.charAt(0).toUpperCase() + x.slice(1);
   /* marks seen here that can't be guessed yet: said gently, once, so a later guess doesn't come from nowhere (D-077) */
   const later = $derived(a ? marksIn(content.story, [...a.records, ...a.way.flatMap(w => w.records)]).filter(m => !a.guess.includes(m) && !mayGuess(content.story, v.story, m)
@@ -61,7 +61,7 @@
     if (v.arrival) {
       game.do({ do: 'seen', what: 'arrival', ref: v.arrival.seq });
       /* a big day reached more than one place: each plays in turn */
-      const more = game.view.arrival;
+      const more = game.whole.arrival;
       if (more && to === 'today') { go('arrival', more.seq); return; }
     }
     /* read again from the Map: back to the Map */

@@ -2,7 +2,7 @@
  * The screens' one handle on the game: the fact log, saved as it grows; the clock; what can be seen now.
  * Rules live in core; this file only reads the clock, keeps the save and schedules the phone's alerts.
  */
-import { act, alertsAfter, runs, runSecond, see, settle, type Command, type RunView } from '../core/game';
+import { act, alertsAfter, runs, runSecond, see, settle, type Command, type RunView, type View } from '../core/game';
 import type { RunMark } from '../core/run';
 import { panelOf } from './panel';
 import { steady } from './taps';
@@ -53,6 +53,9 @@ class Game {
   #whole = $state<Moment>('2000-01-01T00:00:00Z');
   get now(): Moment { return this.#now; }
   set now(m: Moment) { this.#now = m; this.#whole = m; }
+  /** The view as built whole, by the minute in a delve (fresh review of F#4): every screen but the delve's own reads it, so
+      nothing on them is rebuilt each second of the countdown. Its run is as of that minute. */
+  get whole(): View { return this.#day; }
   /** The clock as the whole view last saw it (by the minute in a delve): for anything heavy that needs no seconds. */
   get minute(): Moment { return this.#whole; }
   #day = $derived(see(this.facts, content, this.#whole));

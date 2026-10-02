@@ -21,7 +21,7 @@
 
   /* focus: a stretch to open on (Today's "Use it on the Map", D-142) */
   let { go, focus }: { go: Go; focus?: string } = $props();
-  const v = $derived(game.view);
+  const v = $derived(game.whole);
   const s = content.story;
   const calm = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -108,6 +108,8 @@
             : { label: sealedOn(k).length ? t('map.walkedSealed') : t('map.walked'), title: stretchName(k), say: names.length ? names.join(' · ') : t('map.wayIn') } });
         /* on its own line: joined to "you are here" it ran off the screen's left edge (UI review, D-130) */
         if (fc) out[out.length - 1].sub2 = fc;
+        /* the next place on this same stretch: its minutes under "you are here" (MORNING-REPORT Part 3 #10, fresh review) */
+        else if (here && aheadOn === k && v.toNext) out[out.length - 1].sub2 = t('map.nextOn', { min: minutesShort(v.toNext) });
         const reads = reached.filter(r => r.stretch === k);
         if (reads.length) out[out.length - 1].reads = reads;
       } else if (k === aheadOn) {

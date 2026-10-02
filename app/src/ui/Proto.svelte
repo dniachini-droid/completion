@@ -19,7 +19,7 @@
   function rehearse(on: boolean) { game.setRehearsal(on); go('today'); }
 </script>
 
-<Scene painting={game.view.here.painting} blur />
+<Scene painting={game.whole.here.painting} blur />
 <div class="ui">
   <header class="top col">
     <div class="topbar">

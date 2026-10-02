@@ -11,7 +11,7 @@
   import { errandPick } from './errand-pick.svelte';
 
   let { go }: { go: Go } = $props();
-  const v = $derived(game.view);
+  const v = $derived(game.whole);
   const ids = $derived(errandChoices(content, game.facts, game.minute));
   const s = $derived(satchelView(content, game.facts, game.minute));
   const onDay = $derived(new Map(s.coming.map(x => [x.job.id, x.day])));

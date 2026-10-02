@@ -5,7 +5,7 @@
   import { t } from '../content/copy/en';
 
   let { say = t('today.bedtime') }: { say?: string } = $props();
-  const bedtime = $derived(game.view.bedtime);
+  const bedtime = $derived(game.whole.bedtime);
   function set(time: string) { if (time && time !== bedtime) game.do({ do: 'bedtime', time }); }
   function pick(e: MouseEvent) { try { (e.currentTarget as HTMLInputElement).showPicker?.(); } catch { /* not every browser */ } }
 </script>

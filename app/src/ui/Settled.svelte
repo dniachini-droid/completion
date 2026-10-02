@@ -7,7 +7,7 @@
   import Glyph from './Glyph.svelte';
 
   let { beat }: { beat: string | null } = $props();
-  const list = $derived(beat ? settledBy(content.story, game.view.story, beat) : []);
+  const list = $derived(beat ? settledBy(content.story, game.whole.story, beat) : []);
 </script>
 
 {#each list as x (x.mark)}

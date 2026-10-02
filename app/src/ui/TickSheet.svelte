@@ -12,7 +12,7 @@
   import { TICK_CHOICES, behindOf } from '../core/game';
 
   const j = $derived(ticking.job ? game.job(ticking.job) : undefined);
-  const v = $derived(game.view);
+  const v = $derived(game.whole);
   const behind = $derived(j ? behindOf(game.facts, v.content, j.id, v.day) : 0);
   /* the finger's lift from the tap that opened it is never a choice in it */
   const settling = () => performance.now() - ticking.at < 450;

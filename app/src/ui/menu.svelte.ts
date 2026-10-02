@@ -7,13 +7,14 @@ import type { Go } from './nav';
 /** `entry`: the Week's session held, so "Put on a day" moves that one (second review of D-131). `at`: when it opened: the
     finger's lift after the hold is never a choice in it (on the iPhone the lift's click can land on what is now under it). */
 /** `from`: Today or the Satchel, where a wait just set is said (D-137); elsewhere (the Week) nothing is said. */
-export const menu = $state<{ job: string | null; go: Go | null; on: string | null; entry: string | null; from: 'today' | 'satchel' | null; at: number }>({ job: null, go: null, on: null, entry: null, from: null, at: 0 });
-export function openMenu(job: string, go: Go, on: string | null = null, entry: string | null = null, from: 'today' | 'satchel' | null = null) {
-  menu.job = job; menu.go = go; menu.on = on; menu.entry = entry; menu.from = from; menu.at = performance.now(); sayWaited(null);
+export const menu = $state<{ job: string | null; go: Go | null; on: string | null; entry: string | null; from: 'today' | 'satchel' | null; at: number; ask: boolean }>({ job: null, go: null, on: null, entry: null, from: null, at: 0, ask: false });
+/** `ask`: opened on its Delete question (a recurring job deleted by a swipe asks as the menu does, fresh review of H#9). */
+export function openMenu(job: string, go: Go, on: string | null = null, entry: string | null = null, from: 'today' | 'satchel' | null = null, ask = false) {
+  menu.ask = ask; menu.job = job; menu.go = go; menu.on = on; menu.entry = entry; menu.from = from; menu.at = performance.now(); sayWaited(null);
   /* the job menu has been found: Today's one hint about it is said no more (J19) */
   try { localStorage.setItem('hint.hold', '1'); } catch { /* private mode */ }
 }
-export function closeMenu() { menu.job = null; menu.go = null; menu.on = null; menu.entry = null; menu.from = null; }
+export function closeMenu() { menu.ask = false; menu.job = null; menu.go = null; menu.on = null; menu.entry = null; menu.from = null; }
 /** Just opened: a tap now is the finger lifting from the hold. */
 export const settling = () => performance.now() - menu.at < 450;
 

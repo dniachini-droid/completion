@@ -17,7 +17,7 @@
   let { go, id: arg }: { go: Go; id: string } = $props();
   const again = $derived(arg.startsWith('again:'));
   const id = $derived(arg.replace(/^again:/, ''));
-  const v = $derived(game.view);
+  const v = $derived(game.whole);
   const s = content.story;
   const x = $derived(sealOf(s, id));
   const opened = $derived(!!x && v.story.opened.has(x.id));

@@ -15,7 +15,7 @@
   import { calendarOf } from '../core/week';
 
   let { go }: { go: Go } = $props();
-  const v = $derived(game.view);
+  const v = $derived(game.whole);
   const on = $derived(remindersOn(game.facts));
   const bed = $derived(reminderOf(game.facts, BEDTIME));
   const nudge = $derived(nudgeOn(game.facts));
