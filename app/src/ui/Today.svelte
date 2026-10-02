@@ -362,7 +362,7 @@
     {#snippet jobRow(id: string)}
       {@const j = job(id)}
       <SwipeRow key={`t:${id}`} actions={acts(j)} tap={() => start(id)} hold={() => openMenu(id, go, v.done.has(id) ? v.day : null, null, 'today')} done={v.done.has(id)} quiet={v.done.has(id) && !recurring(id)}>
-        {#snippet row()}<span class="pip" class:done={v.done.has(id)} class:under={canTick(id)}></span><span class="t">{j.name}{#if j.avoided && !v.done.has(id)}<span class="find-mark" aria-hidden="true">◇</span><span class="sr-only">{t('row.findWaits')}</span>{/if}{#if soFar(j)}<small>{soFar(j)}</small>{/if}</span><span class="s">{sayDone(j) ? '' : rowNote(j)}</span>{/snippet}
+        {#snippet row()}<span class="pip" class:done={v.done.has(id)} class:under={canTick(id)}></span><span class="t" class:putoff={j.avoided && !v.done.has(id)}>{j.name}{#if soFar(j)}<small>{soFar(j)}</small>{/if}</span>{#if j.avoided && !v.done.has(id)}<span class="sr-only">{t('row.findWaits')}</span>{/if}<span class="s">{sayDone(j) ? '' : rowNote(j)}</span>{/snippet}
         <!-- the same "It's done" on a row further down: a tap on the row itself still starts a delve (D-100, D-120) -->
         <!-- the tick circle over the marker: done without a delve, with the time it took (D-134) -->
         {#snippet lead()}{#if canTick(id)}<button class="tickbtn" aria-label={t('tick.sr', { job: j.name })} onclick={() => openTick(id, go)}><span class="ring"></span></button>{/if}{/snippet}
@@ -434,7 +434,8 @@
   /* a job Dan tends to put off brings a find: a small hollow gold mark says so (MORNING-REPORT Part 3 #3) */
   .chosen-first { margin: 6px 0 2px; font-style: italic; }
   .chosen-first .text-link { min-height: 44px; }
-  .find-mark { margin-left: .4em; font-size: .8em; color: var(--gold-hi); opacity: .85; }
+  /* drawn, not written: the job's name stays its name (flows and VoiceOver read it) */
+  .t.putoff::after { content: '◇'; content: '◇' / ''; margin-left: .4em; font-size: .8em; color: var(--gold-hi); opacity: .85; }
   .where { margin-top: 6px; }
   .where :global(.road) { margin: 0 auto 4px; }
   .key-line { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0 6px; margin: 16px auto 2px; }
