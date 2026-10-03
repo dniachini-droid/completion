@@ -312,10 +312,11 @@
   .sheet :global(.cal) { margin-left: -9px; margin-right: -9px; }
   .off { display: flex; justify-content: center; flex-wrap: wrap; gap: 0 14px; margin-top: 6px; }
   .btn.full { width: 100%; }
-  .new { display: flex; gap: 10px; margin: 4px 0 8px; }
-  .new input { flex: 1; min-width: 0; min-height: 44px; padding: 0 12px; font: inherit; font-size: calc(17px * var(--ts, 1)); color: #fff;
+  /* at a larger text size the box takes a row of its own, so its words are never cut (spacing review S16) */
+  .new { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 8px; }
+  .new input { flex: 1 1 calc(200px * var(--ts, 1)); min-width: 0; min-height: 44px; padding: 0 12px; font: inherit; font-size: calc(17px * var(--ts, 1)); color: #fff;
     background: rgba(255, 255, 255, .06); border: 1px solid var(--edge-2); border-radius: 0; }
-  .new .btn-quiet { padding: 0 14px; }
+  .new .btn-quiet { padding: 0 14px; margin-left: auto; }
   .new .btn-quiet:disabled { opacity: .5; }
   button.row.open { background: rgba(var(--violet-rgb), .12); }
   .links { display: flex; justify-content: center; flex-wrap: wrap; gap: 4px 18px; margin-top: 18px; }

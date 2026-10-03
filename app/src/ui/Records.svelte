@@ -110,7 +110,10 @@
 <style>
   .row.lit .t { color: #fff; text-shadow: 0 0 12px rgba(var(--violet-rgb), .9), 0 0 26px rgba(var(--violet-rgb), .5); }
   .row.lit .pip { box-shadow: 0 0 10px 2px rgba(var(--violet-rgb), .8); }
-  .body { flex: 1; min-height: 0; overflow-y: auto; padding-top: 14px; padding-bottom: 28px; }
+  /* the list fades at both edges as it scrolls, never cut hard (spacing review) */
+  .body { flex: 1; min-height: 0; overflow-y: auto; padding-top: 14px; padding-bottom: 28px;
+    -webkit-mask-image: linear-gradient(180deg, transparent, #000 12px, #000 calc(100% - 20px), transparent);
+            mask-image: linear-gradient(180deg, transparent, #000 12px, #000 calc(100% - 20px), transparent); }
   h1 { margin-top: 8px; }
   h1 + .soft { margin-top: 6px; }
   button.row { width: 100%; text-align: left; }
