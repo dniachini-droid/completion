@@ -213,7 +213,8 @@
         </div>
         <button class="btn go" onclick={() => leave(wakes ? 'through' : 'today')}>{wakes ? t('cut.through') : t('arrive.onward')}</button>
       </div>
-      {#if step === 0}<div class="after-row"><button class="text-link" onclick={() => leave('later')}><span>{t('cut.later')}</span></button></div>{/if}
+      <!-- kept (hidden) after the first tap, so the box never drops when "Later" goes (spacing review) -->
+      {#if phase !== 'settled'}<div class="after-row" style:visibility={step === 0 ? 'visible' : 'hidden'}><button class="text-link" onclick={() => leave('later')} disabled={step !== 0}><span>{t('cut.later')}</span></button></div>{/if}
     </section>
   </div>
 </div>
@@ -252,9 +253,11 @@
   .head { position: relative; margin-top: 8px; display: grid; }
   .head > div { grid-area: 1 / 1; transition: opacity .8s var(--ease), transform .8s var(--ease); }
   .head .after { opacity: 0; transform: translateY(8px); pointer-events: none; }
+  /* the place's line waits out of the flow, so its height never pushes the word's box off the phone (spacing review) */
+  .cut:not(.settled) .head .after { position: absolute; left: 0; right: 0; top: 0; }
   .settled .head .before { opacity: 0; }
   .settled .head .after { opacity: 1; transform: none; pointer-events: auto; }
-  .head .label-line { margin-bottom: 10px; }
+  .head .label-line { margin-bottom: 8px; }
   .head .soft { display: block; margin-top: 8px; max-width: 34ch; }
   .said { animation: rise .8s var(--ease) both; font-size: calc(17.5px * var(--ts, 1)); line-height: 1.4; color: var(--ink); }
 
@@ -285,6 +288,10 @@
   .c1 .readings .r1, .c2 .readings .r2 { opacity: 1; }
   .hint { margin-top: 4px; min-height: 24px; font-family: var(--life); font-style: italic; font-size: calc(16.5px * var(--ts, 1)); color: var(--ink-2); text-align: center; }
   .settled .hint { display: none; }
+  /* once locked the hint has gone: the readings sit in the middle of its room, not over an empty band (spacing review) */
+  .lock .hint, .answer .hint { display: none; }
+  .lock .readings, .answer .readings { min-height: 56px; align-items: center; }
+  .settled .readings { min-height: 26px; }
 
   /* the keys and the way on share one slot */
   .slot { display: grid; margin-top: 12px; }

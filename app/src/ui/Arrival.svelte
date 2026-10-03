@@ -140,7 +140,7 @@
 {/if}
 
 <style>
-  .to-satchel { margin: 2px 0 0; font-size: calc(14px * var(--ts, 1)); font-style: italic; text-align: center; }
+  .to-satchel { margin: 8px 0 0; font-size: calc(14px * var(--ts, 1)); font-style: italic; text-align: center; }
   .arr { display: contents; }
   .later { text-align: center; margin: 2px 0 10px; font-style: italic; }
   .facelight { position: absolute; inset: 0; z-index: 1; pointer-events: none; mix-blend-mode: screen;
@@ -149,8 +149,9 @@
   .fresh :global(.fog.warm) { opacity: 0; animation: gold 4.2s 1s ease-in-out forwards; }
   @keyframes gold { to { opacity: 1; } }
   .head { margin-top: 14px; animation: rise 1.4s .4s var(--ease) both; }
-  .head .label-line { margin-bottom: 12px; }
-  .choice { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; margin-bottom: 14px; }
+  .head .label-line { margin-bottom: 8px; }   /* as on the delve and the set-up (spacing review D16) */
+  /* wrapped onto two lines, the links' own 44 px keep them apart: no gap between the lines (spacing review D9) */
+  .choice { display: flex; justify-content: center; gap: 0 18px; flex-wrap: wrap; margin-bottom: 14px; }
   .topbar { animation: rise 1.2s .2s var(--ease) both; }
   /* the screen itself never scrolls: the words do, in the lower half (D-085) */
   .ui.fixed { overflow: hidden; }

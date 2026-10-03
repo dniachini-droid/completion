@@ -34,16 +34,22 @@
     /** the forecast, on a line of its own under "you are here" */
     sub2?: string;
     lx: number; ly: number; anchor: Anchor;
+    /** letters before its name breaks onto another line (default 16) */
+    wrap?: number;
+    /** a name that wraps grows upward from its first line's place, not down */
+    up?: boolean;
     box: { label: string; title: string; say: string };
     /** the places reached on this stretch, each to read again (D-135) */
     reads?: { name: string; seq: number; camp?: boolean }[];
   }
 
   /* ---------- the region: one light per stretch, laid out as the mock-up lays out the first region ---------- */
-  const AT: Record<StretchId, { x: number; y: number; lx: number; ly: number; anchor: Anchor }> = {
+  const AT: Record<StretchId, { x: number; y: number; lx: number; ly: number; anchor: Anchor; wrap?: number; up?: boolean }> = {
     'st-mouth':   { x: 150, y: 44,  lx: 186, ly: 40,  anchor: 'start' },
-    'st-camp':    { x: 322, y: 134, lx: 372, ly: 98,  anchor: 'end' },
-    'st-hall':    { x: 196, y: 204, lx: 160, ly: 200, anchor: 'end' },
+    /* under its light, on two short lines: above, it met the first light's words and sat in its own crosshair; on one
+     line under it, it ran into the crosshair on the light where Dan stands (spacing review) */
+    'st-camp':    { x: 322, y: 134, lx: 372, ly: 192, anchor: 'end', wrap: 10 },
+    'st-hall':    { x: 196, y: 204, lx: 164, ly: 200, anchor: 'end', up: true },   /* a name wrapped at large text grows upward, clear of the light below */
     'st-salt':    { x: 62,  y: 268, lx: 24,  ly: 312, anchor: 'start' },
     'st-stair':   { x: 318, y: 326, lx: 344, ly: 372, anchor: 'end' },
     'st-flight2': { x: 262, y: 434, lx: 226, ly: 430, anchor: 'end' },
@@ -130,8 +136,12 @@
     const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2, dx = b.x - a.x, dy = b.y - a.y;
     return `M${a.x} ${a.y}Q${(mx - dy * 0.18).toFixed(1)} ${(my + dx * 0.18).toFixed(1)} ${b.x} ${b.y}`;
   }
+  /* the phone's text size (Dynamic Type, --ts): the names wrap sooner and their lines open up with it, so a bigger name
+     never runs off the screen's edge or onto the line under it (spacing review) */
+  const ts = typeof document === 'undefined' ? 1 : parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--ts')) || 1;
+  const pitch = 20 * ts;
   /** Carved names break onto a second line past about 16 letters (SVG text does not wrap). */
-  function lines(name: string, max = 16): string[] {
+  function lines(name: string, max = Math.floor(16 / ts)): string[] {
     const out: string[] = [];
     for (const w of name.toUpperCase().split(' ')) {
       const last = out[out.length - 1];
@@ -260,15 +270,16 @@
       <!-- the words, carved on the sky -->
       <g class="labels">
         {#each lights as l (l.key)}
-          {@const ls = l.name ? lines(l.name) : []}
+          {@const ls = l.name ? lines(l.name, Math.floor((l.wrap ?? 16) / ts)) : []}
+          {@const ly = l.up ? l.ly - (ls.length - 1) * pitch : l.ly}
           {#each ls as line, j}
-            <text x={l.lx} y={l.ly + j * 20} text-anchor={l.anchor} class="nn" class:here={l.kind === 'here'}>{line}</text>
+            <text x={l.lx} y={ly + j * pitch} text-anchor={l.anchor} class="nn" class:here={l.kind === 'here'}>{line}</text>
           {/each}
           {#if l.sub}
-            <text x={l.lx} y={l.ly + ls.length * 20 + (ls.length ? 0 : 4)} text-anchor={l.anchor} class="ns {l.subKind ?? ''}">{l.sub}</text>
+            <text x={l.lx} y={ly + ls.length * pitch + (ls.length ? 0 : 4)} text-anchor={l.anchor} class="ns {l.subKind ?? ''}">{l.sub}</text>
           {/if}
           {#if l.sub2}
-            <text x={l.lx} y={l.ly + ls.length * 20 + (ls.length ? 0 : 4) + 20} text-anchor={l.anchor} class="ns gold">{l.sub2}</text>
+            <text x={l.lx} y={ly + ls.length * pitch + (ls.length ? 0 : 4) + pitch} text-anchor={l.anchor} class="ns gold">{l.sub2}</text>
           {/if}
         {/each}
       </g>
@@ -342,7 +353,7 @@
   .sky { position: absolute; inset: 0; z-index: 0; overflow: hidden; background: #07071a; }
   .sky img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; animation: fadein 1.2s var(--ease) both; }
   .top { position: relative; z-index: 3; flex: none; }
-  .head { margin-top: 6px; }
+  .head { margin-top: 8px; }
   .head h1 { margin-top: 8px; }
   button.home { color: var(--ink-2); }
 
@@ -377,7 +388,7 @@
 
   /* one fixed size: two lines of name, three of words. 180px holds them all: border 2 + padding 30 + label 20 + name
      margins 14 + two names 41 + three lines 70 = 177 (at 162 the third line was cut in half when the name took two) */
-  .box { border: 1px solid var(--edge-2); padding: 14px 18px 16px; background: rgba(10,9,24,.6); height: 180px; display: flex; flex-direction: column; overflow: hidden; }
+  .box { border: 1px solid var(--edge-2); padding: 14px 18px 16px; background: rgba(10,9,24,.6); height: calc(180px * var(--ts, 1)); display: flex; flex-direction: column; overflow: hidden; }
   .box .swap { flex: 1; min-height: 0; overflow: hidden; }
   .box h2 { margin: 8px 0 6px; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .box .say { color: var(--ink-2); font-size: calc(16.5px * var(--ts, 1)); line-height: 1.42; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
@@ -389,11 +400,14 @@
   .reads { margin: 2px 0 0; }
   /* the locked things on a stretch (D-142): the box keeps its size and scrolls (D-076) */
   .box .swap:has(.locks) { overflow-y: auto; scrollbar-width: none; }
+  /* what scrolls in the box fades at its foot, never sliced mid-line against the edge (spacing review) */
+  .box .swap:has(.locks), .box .swap:has(.reads) { padding-bottom: 16px;
+    -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 24px), transparent); mask-image: linear-gradient(180deg, #000 calc(100% - 24px), transparent); }
   .lock .use.again { color: var(--ink-2); }
   .locks { margin: 0 0 8px; border-bottom: 1px solid var(--edge-2); padding-bottom: 6px; }
   .lock { margin: 4px 0; display: flex; gap: 10px; align-items: baseline; justify-content: space-between; font-size: calc(15px * var(--ts, 1)); line-height: 1.35; color: var(--ink-2); }
   .lock .where { flex: 1; min-width: 0; }
-  .lock .use { flex: none; color: #f2c170; font-size: calc(15px * var(--ts, 1)); }
+  .lock .use { flex: none; padding: 0; color: #f2c170; font-size: calc(15px * var(--ts, 1)); }
   .lock .needs { flex: none; font-family: var(--life); font-style: italic; color: #e9d9b4; font-size: calc(14px * var(--ts, 1)); }
   .lock-say { margin: 4px 0 0; font-size: calc(14px * var(--ts, 1)); }
   .read { min-height: 44px; padding: 2px 0; }   /* a finger's height (A#40) */

@@ -61,9 +61,11 @@
 </div>
 
 <style>
-  .head { margin-top: 14px; }
-  .head h1 { margin-top: 10px; }
-  .look { color: var(--gold-hi); margin: 8px auto 12px; max-width: 34ch; }
-  .go { margin-top: 18px; }
+  .head { margin-top: 16px; }
+  .head h1 { margin-top: 8px; }
+  /* a label sits with the words it introduces, not the line above (spacing review T12) */
+  .bottom .label-line { margin-top: 16px; }
+  .look { color: var(--gold-hi); margin: 8px auto 16px; max-width: 34ch; }
+  .go { margin-top: 16px; }
   button.home { color: var(--ink-2); }
 </style>

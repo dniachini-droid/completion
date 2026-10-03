@@ -39,7 +39,10 @@
   .scroll::-webkit-scrollbar { display: none; }
   .folded .scroll { max-height: 5.4em; overflow: hidden; }
   .folded .wash { opacity: .55; }
-  .plain .scroll { max-height: none; overflow: visible; -webkit-mask-image: none; mask-image: none; padding-top: 0; padding-bottom: 0; }
+  .plain .scroll { max-height: none; overflow: visible; -webkit-mask-image: none; mask-image: none; padding-top: 0; padding-bottom: 0;
+    /* no fade at its top, so not pulled up into it either: the shared .scroll's -12px ran the words into the heading above
+       them (spacing review D1) */
+    margin-top: 0; }
   .plain.folded .scroll { max-height: 5.4em; overflow: hidden;
     -webkit-mask-image: linear-gradient(180deg, #000 60%, transparent 100%); mask-image: linear-gradient(180deg, #000 60%, transparent 100%); }
   .fold { align-self: flex-end; min-height: 44px; font-style: italic; color: var(--ink-2); }

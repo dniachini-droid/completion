@@ -55,7 +55,8 @@
   .name { margin: 4px 0 2px; font-family: var(--life); font-size: calc(15px * var(--ts, 1)); font-style: italic; color: var(--ink-2); overflow-wrap: anywhere; }
   h2 { margin: 4px 0 6px; font-family: var(--life); font-weight: 500; font-size: calc(22px * var(--ts, 1)); color: #fff; }
   .soft { margin: 0 0 8px; font-size: calc(16px * var(--ts, 1)); }
-  .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 10px 0 8px; }
+  /* nine lengths, three by three: each fits on one line, none left alone on a row (spacing review D8, Dan: C6) */
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 10px 0 8px; }
   .chip { min-height: 48px; font-family: var(--life); font-size: calc(17px * var(--ts, 1)); color: #fff; background: rgba(var(--violet-rgb), .16);
     border: 1px solid var(--edge-2); }
   .chip:active { background: rgba(var(--violet-rgb), .34); }

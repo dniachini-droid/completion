@@ -53,3 +53,9 @@ body.looking .fog:not(.warm) { opacity: .4; }
 h1[tabindex="-1"]:focus, h2[tabindex="-1"]:focus { outline: none; }
 /* words for VoiceOver only (a pause, a name the eye doesn't need) */
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* a screen's list that scrolls under its header (spacing review S1): it starts 8 px lower and fades in over 12 px, so a
+   line scrolled half away fades under the header instead of being cut through its letters just beneath it. As strong as
+   a screen's own `.body` rule (and before it), so a screen that sets its own top or fade (Marks) keeps it. */
+:where(.ui) > .body.col { margin-top: -4px; padding-top: 12px;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 12px); mask-image: linear-gradient(180deg, transparent 0, #000 12px); }

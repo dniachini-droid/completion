@@ -11,9 +11,9 @@
 @keyframes pass{ 0% { transform: scale(.05); opacity: 0; } 18% { opacity: .35; } 70% { opacity: .9; } 100% { transform: scale(1.6); opacity: 0; } }
 .dv .top{ text-align:center; }
 .dv .top .soft{ display:block; }
-.dv .top .carve{ margin-top:4px; }
+.dv .top .carve{ margin-top:8px; }   /* label to name: 8 px, as on the set-up and an arrival (spacing review D16) */
 .dv .mid{ display:flex; align-items:center; justify-content:center; }
-.dv .ring{ --R: min(250px, 66vw, 36vh); position:relative; width:var(--R); height:var(--R); border-radius:50%; cursor:pointer; flex:none; }
+.dv .ring{ --R: min(290px, 66vw, 36vh); position:relative; width:var(--R); height:var(--R); border-radius:50%; cursor:pointer; flex:none; }
 .dv .ring .band{ position:absolute; inset:0; border-radius:50%;
   -webkit-mask: radial-gradient(circle closest-side, transparent 90.5%, #000 91.5%, #000 96.5%, transparent 97.5%);
           mask: radial-gradient(circle closest-side, transparent 90.5%, #000 91.5%, #000 96.5%, transparent 97.5%); }
@@ -60,7 +60,7 @@
 .dv .head .soft{ margin-top: 6px; }
 .dv .mid{ display:flex; align-items:center; justify-content:center; }
 .dv .bottom{ text-align:center; }
-.dv .bottom h2{ font-family:var(--life); font-weight:500; font-size:calc(24px * var(--ts, 1)); color:#fff; }
+.dv .bottom h2{ font-family:var(--life); font-weight:500; font-size:calc(24px * var(--ts, 1)); color:#fff; line-height:1.2; text-wrap:balance; }   /* its lines closer than the words under it, never one word alone (spacing review D6) */
 .dv .bottom .of{ font-size:calc(17px * var(--ts, 1)); margin-top:2px; }
 .dv .bottom .away{ font-size:calc(17px * var(--ts, 1)); color:var(--ink-2); margin:12px 0 18px; }
 .dv .breather, .dv .held{ display:none; }
@@ -70,7 +70,7 @@
 .dv .ring.hold .inner, .dv .ring.hold .tip{ opacity:0; transition: opacity 1.2s var(--ease); }
 .dv .held p{ font-size:calc(17px * var(--ts, 1)); color:var(--ink-2); margin:6px 0 20px; }
 .dv .held .cant{ display:flex; justify-content:center; margin-top: 8px; }
-.dv .two-quiet{ display:grid; grid-template-columns: 1fr 1fr; gap: var(--gap); max-width: 340px; margin: 0 auto; }
+.dv .two-quiet{ display:grid; grid-template-columns: 1fr 1fr; gap: var(--gap); max-width: 340px; margin: 16px auto 0; }   /* clear of the line above (spacing review D5) */
 .dv .two-quiet .btn-quiet{ padding: 0 10px 0 calc(10px + .14em); letter-spacing: .14em; }
 .dv .held .cant.two{ align-items:center; gap: 2px; }
 .dv .held .cant .dot{ color: var(--ink-3); }

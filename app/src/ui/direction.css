@@ -194,7 +194,7 @@ body:not(.s-day):not(.s-day2):not(.s-done):not(.s-evening) .fog.warm { display: 
 .topbar .title { visibility: hidden; } /* the rule: no titles in the top bar (the h1 below names the place) */
 .topbar .day { font-family: var(--carve); font-size: calc(15px * var(--ts, 1)); font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-2);
   padding: 0 10px; min-height: 44px; display: inline-flex; align-items: center; }
-.home { height: 44px; min-width: 44px; padding: 0 10px; display: inline-flex; align-items: center; gap: 8px;
+.home { height: 44px; min-width: 44px; padding: 0 10px; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
   font-family: var(--carve); font-size: calc(15px * var(--ts, 1)); font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); }
 .home svg { width: 16px; height: 16px; fill: none; stroke: var(--edge); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; flex: none; }
 .home:hover, .home:focus-visible { color: var(--ink); }
@@ -381,7 +381,12 @@ body:not(.s-day):not(.s-day2):not(.s-done):not(.s-evening) .fog.warm { display: 
 /* rows: the day's other jobs, on hairlines, in the open (no panel) */
 .rows { border-bottom: 1px solid var(--edge-4); }
 .row { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; align-items: center; column-gap: 12px;
-  min-height: 48px; border-top: 1px solid var(--edge-4); }
+  min-height: 48px; padding-block: 8px; border-top: 1px solid var(--edge-4); }
+/* a row with its week's marks under the name: the marker, the note and the tick circle sit on the name's line, not
+   halfway down the marks (spacing review X3) */
+.row:has(.marks) > .pip { align-self: start; margin-top: calc(10.625px * var(--ts, 1) - 5px); }
+.row:has(.marks) > .s { align-self: start; line-height: calc(21.25px * var(--ts, 1)); }
+.swipe:has(.marks) > .swipe-lead { top: calc(8px + 10.625px * var(--ts, 1)); }
 .row .mk { width: 12px; height: 12px; justify-self: center; }
 .row .t { font-family: var(--life); font-size: calc(17px * var(--ts, 1)); color: var(--ink); line-height: 1.25; }
 .row .s { font-family: var(--life); font-style: italic; font-size: calc(16px * var(--ts, 1)); color: var(--ink-2); text-align: right; }

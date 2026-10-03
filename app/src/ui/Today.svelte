@@ -202,7 +202,10 @@
   const holdHint = $derived(!held && !v.run && others.length > 0);
 </script>
 
-{#snippet tonight()}
+{#snippet sleepBtn()}<button class="btn gold resting" onclick={() => game.do({ do: 'goodnight' })}>{t('camp.goodnight')}</button>{/snippet}
+<!-- near bedtime the Tonight block heads the list and its button stands still above the foot, never under the list's
+     fade (spacing review T4); everywhere else the button closes the block -->
+{#snippet tonight(withBtn = true)}
   <div class="tonight">
     <div class="label-line gold">{t('today.tonight')}</div>
     <Bedtime />
@@ -226,7 +229,7 @@
       {#if mindSaid}<p class="soft said-mind" role="status">{mindHave ? t('park.have', { job: mindHave }) : t('tonight.mind.said')}</p>{/if}
     {/if}
     <p class="soft promise">{t('today.tonight.say', { bedtime: v.bedtime })}</p>
-    <button class="btn gold resting" onclick={() => game.do({ do: 'goodnight' })}>{t('camp.goodnight')}</button>
+    {#if withBtn}{@render sleepBtn()}{/if}
   </div>
 {/snippet}
 
@@ -282,7 +285,7 @@
     <div class="scroll">
     <!-- while Dan types, the box stands alone above the keyboard: the next job and the list come back when he is done
          (Dan, 2026-09-27: the under-way job's words were drawn over the box) (D-120) -->
-    {#if nearBed}<section class="tonight-top">{@render tonight()}</section>{/if}
+    {#if nearBed}<section class="tonight-top">{@render tonight(false)}</section>{/if}
     {#if v.night && !v.run}
       <div class="next">
         <div class="label-line gold">{t('today.tonight')}</div>
@@ -419,6 +422,7 @@
     <!-- the evening, before the day's work is done: Tonight at the end of the day's list (D-093) -->
     {#if evening && !v.complete && !v.run && !nearBed}<section class="tonight-end">{@render tonight()}</section>{/if}
     </div>
+    {#if nearBed}<div class="sleep-fixed">{@render sleepBtn()}</div>{/if}
     <nav class="foot" aria-label={t('today.label')}>
       <!-- the jobs with no day, by day and at night (D-126) -->
       <button class="text-link" onclick={() => go('satchel')}><span>{t('nav.satchel')}</span></button>
@@ -439,9 +443,10 @@
   .chosen-first .text-link { min-height: 44px; }
   /* drawn, not written: the job's name stays its name (flows and VoiceOver read it) */
   .t.putoff::after { content: '◇'; content: '◇' / ''; margin-left: .4em; font-size: .8em; color: var(--gold-hi); opacity: .85; }
-  .where { margin-top: 6px; }
-  .where :global(.road) { margin: 0 auto 4px; }
-  .key-line { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0 6px; margin: 16px auto 2px; }
+  /* the road's box holds its labels now (EndRoad, spacing review D2/T10): a small step down to the Keys */
+  .where { margin-top: 4px; }
+  .where :global(.road) { margin: 0 auto; }
+  .key-line { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0 6px; margin: 0 auto; }
   .keys { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 6px; background: none; border: 0; cursor: pointer;
     font-family: var(--life); font-style: italic; font-size: calc(15px * var(--ts, 1)); color: #e9d9b4; }
   .keys svg { width: 22px; height: 11px; fill: none; stroke: #f2c170; stroke-width: 1.4; stroke-linecap: round; }
@@ -459,42 +464,54 @@
   .ahead-text { display: block; width: 100%; padding: 0; background: none; border: 0; text-align: left; cursor: pointer; color: inherit; }
   .ahead-text:not(.open) p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; line-clamp: 4; overflow: hidden; }
   .tonight-end { margin-top: 18px; }
-  .tonight-top { margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--edge-2); }
-  .tonight { margin: 4px 0 6px; }
-  .next .tonight .promise { text-align: left; margin: 6px 0 14px; }
-  .tonight .promise { text-align: left; margin: 6px 0 14px; }
+  .tonight-top { margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--edge-2); }
+  .tonight-top .tonight { margin-bottom: 0; }
+  .tonight-top .tonight .promise { margin-bottom: 0; }
+  .sleep-fixed { padding: 8px 0 16px; }   /* its corner marks clear of the list's fade and of the foot */
+  .tonight { margin: 0 0 8px; }
+  .tonight .promise { text-align: left; margin: 0 0 16px; }
   .night-line { font-style: italic; color: #fff; margin: 8px 0 10px; line-height: 1.45; }
-  .bottom { padding-top: 8px; }
+  .bottom { padding-top: 0; }   /* the list's own 12px top fade is the gap under the Ahead passage (spacing review T2) */
   /* the list's fade starts below the header, never under the Ahead passage: rows never show through it (deep review H#12) */
   .bottom > .scroll { margin-top: 0; }
   .next h2 { margin: 8px 0 4px; }
   .next .soft { margin-bottom: 18px; }
-  .cant { display: flex; justify-content: center; align-items: center; gap: 2px; margin-top: 4px; }
+  .cant { display: flex; justify-content: center; align-items: center; gap: 2px; margin-top: 0; }
   .gap { height: 12px; }
   .after { margin-top: 12px; }
-  .next .soft.deeper { font-style: italic; margin: 8px 0 4px; }
-  .rows { margin-top: 2px; }
+  .next .soft.deeper { font-style: italic; margin: 16px 0 0; text-align: center; }
+  .rows { margin-top: 0; }
   .lead .btn.full { width: 100%; }
+  /* Carry on · Finish here: side by side while both fit, one above the other when they don't, never past the column
+     (spacing review T11) */
+  .next .btn-row.lead { display: flex; flex-wrap: wrap; gap: var(--gap); }
+  .next .btn-row.lead > .btn { flex: 1.7 1 0; min-width: max-content; }
+  .next .btn-row.lead > .btn-quiet { flex: 1 1 0; min-width: max-content; }
   /* the day's label and the one button: room between them (Dan, D-135) */
-  .addcard .lead { margin: 18px 0 12px; }
+  .addcard .lead { margin: 16px 0 8px; }
+  /* a heading's button: clear of its corner marks (spacing review D15) */
+  .next h2 + .lead { margin: 16px 0 8px; }
   .addcard .soft + .lead { margin-top: 0; }
   .rows :global(.row-done) { min-height: 40px; padding: 0 0 0 12px; }
   .rows :global(.row-done span) { font-size: calc(16px * var(--ts, 1)); color: var(--violet-hi); }
   .if-time { margin: 18px 0 4px; }
-  .replies { margin-top: 10px; }
+  /* one hairline between the day's list and a reply, never two (spacing review T7) */
+  .replies { margin-top: 0; border-top: 0; }
+  .rows + .replies .reply:first-child :global(.row) { border-top: 0; }
+  .hold-hint + .replies { margin-top: 8px; }
   .reply { padding-bottom: 4px; }
   .rows :global(.row small) { display: block; font-size: calc(14px * var(--ts, 1)); color: var(--ink-2); margin-top: 2px; }
   .ask { margin: 0; padding-left: 32px; font-family: var(--life); font-style: italic; font-size: calc(16px * var(--ts, 1)); color: var(--ink-2); }
-  .reply-acts { display: flex; flex-wrap: wrap; gap: 0 16px; padding-left: 32px; }
+  .reply-acts { display: flex; flex-wrap: wrap; gap: 0 16px; padding-left: 24px; }
   .reply-acts .text-link { min-height: 44px; min-width: 44px; }
   .reply-acts .text-link span { font-size: calc(15px * var(--ts, 1)); }
   .reply-acts .text-link:disabled { opacity: .5; }
   .waits { margin: 0 0 6px; }
   .waits .text-link span { color: var(--gold-hi); }
-  .next .soft.to-satchel { margin: -8px 0 4px; font-size: calc(14px * var(--ts, 1)); font-style: italic; text-align: center; }
-  .hold-hint { margin: 6px 0 0; text-align: center; font-size: calc(14px * var(--ts, 1)); font-style: italic; }
+  .next .soft.to-satchel { margin: 8px 0 0; font-size: calc(14px * var(--ts, 1)); font-style: italic; text-align: center; }
+  .hold-hint { margin: 4px 0 0; text-align: center; font-size: calc(14px * var(--ts, 1)); font-style: italic; }
   .of { margin: -2px 0 4px !important; font-style: italic; }
-  .only { margin: 2px 0 6px; }
+  .only { margin: 8px 0; }
   .aside { margin-top: 8px; }
   .aside-row { cursor: default; opacity: .62; }
   .aside-row .t { text-decoration: line-through; }
@@ -504,33 +521,40 @@
   .first { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin-top: 8px; }
   .first-say { font-family: var(--life); font-size: calc(18px * var(--ts, 1)); color: var(--ink-2); }
   .first-job span { font-size: calc(18px * var(--ts, 1)); color: #fff; }
+  .first .first-job { padding: 0; }   /* on the column's edge when it wraps under its words (large text) */
   .choices { display: flex; flex-direction: column; margin: 4px 0 6px; border-top: 1px solid var(--edge-4); }
   .choice { text-align: left; min-height: 44px; padding: 8px 4px; border-bottom: 1px solid var(--edge-4); font-family: var(--life); font-size: calc(17px * var(--ts, 1)); color: var(--ink); }
   .choice[aria-pressed='true'] { color: var(--gold); }
   .choice small { display: block; font-style: italic; font-size: calc(14px * var(--ts, 1)); color: var(--ink-3); }
-  .mind { display: flex; gap: 10px; margin: 10px 0 2px; }
+  .mind { display: flex; gap: 10px; margin: 8px 0 16px; }
   .mind input { flex: 1; min-width: 0; min-height: 44px; padding: 0 12px; font: inherit; font-size: calc(17px * var(--ts, 1)); color: #fff;
     background: rgba(255, 255, 255, .06); border: 1px solid var(--edge-2); border-radius: 0; }
   .mind .btn-quiet { padding: 0 14px; }
   .mind .btn-quiet:disabled { opacity: .5; }
   .said-mind { font-style: italic; margin: 4px 0 0; text-align: left; }
   .still { margin: -12px 0 16px; }
-  .said { font-family: var(--life); font-style: italic; font-size: calc(15.5px * var(--ts, 1)); color: var(--ink-2); display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 2px 6px; margin: -6px 0 6px; }
+  .said { font-family: var(--life); font-style: italic; font-size: calc(15.5px * var(--ts, 1)); color: var(--ink-2); display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 2px 6px; margin: 8px 0; text-align: center; }
   .said .text-link { display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px; vertical-align: middle; }   /* a finger high (A#40) */
-  .foot { display: flex; justify-content: space-around; margin: 6px -10px 0; }
+  .foot { display: flex; justify-content: space-around; margin: 0 -10px; }
   .foot span { font-size: calc(14px * var(--ts, 1)); letter-spacing: .1em; color: var(--ink-2); }
   .proto span { font-size: calc(14px * var(--ts, 1)); letter-spacing: .16em; color: var(--ink-3); }
   /* the day on the left; the map, records and the prototype's own link together on the right */
   .bar { display: flex; justify-content: space-between; }
   /* on a narrow bar the rehearsal badge takes a line of its own, never pushing the screen wider (Dan, review 2) */
-  .bar { gap: 8px; align-items: flex-start; }
-  .navs { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0 4px; align-items: center; margin-right: -10px; min-width: 0; }
+  .bar { gap: 0 8px; align-items: flex-start; flex-wrap: wrap; }
+  /* Map, Records and the gear stay one line on a 360 phone (spacing review T3); at a large text size the whole group
+     moves under the day, never split */
+  .navs { display: flex; flex-wrap: nowrap; justify-content: flex-end; gap: 0; align-items: center; margin-right: -12px; margin-left: auto; min-width: 0; }
+  .navs .icon-link { padding: 0 6px; }
   .navs span { font-size: calc(14px * var(--ts, 1)); letter-spacing: .12em; color: var(--ink-2); }
   .proto .badge { color: var(--gold); }
   .gear { min-width: 44px; justify-content: center; }
   .gear svg { width: 20px; height: 20px; fill: none; stroke: var(--ink-2); stroke-width: 1.6; stroke-linecap: round; }
   @media (max-height: 800px) {
     .ahead { margin-top: 8px; } .ahead p { margin-top: 4px; } .next .soft { margin-bottom: 14px; }
-    :global(.row) { min-height: 44px; }
+  }
+  /* on phones up to standard height the Ahead passage shows three lines; a tap opens it in full (Dan, spacing review C1) */
+  @media (max-height: 860px) {
+    .ahead-text:not(.open) p { -webkit-line-clamp: 3; line-clamp: 3; }
   }
 </style>

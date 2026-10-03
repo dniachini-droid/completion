@@ -147,8 +147,9 @@
   .seg { margin-top: 6px; }
   .nudge { margin-top: 16px; }
   .cals { margin-top: 8px; }
-  .cal { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px; background: none; border: 0; border-bottom: 1px solid var(--edge-2);
-    color: var(--ink); font: inherit; font-size: calc(16px * var(--ts, 1)); text-align: left; padding: 0; cursor: pointer; }
+  /* its diamond and name where a job row has them: the marker centred in 20 px, the name 32 px in (spacing review S16) */
+  .cal { display: flex; align-items: center; gap: 17px; width: 100%; min-height: 44px; background: none; border: 0; border-bottom: 1px solid var(--edge-2);
+    color: var(--ink); font: inherit; font-size: calc(16px * var(--ts, 1)); text-align: left; padding: 0 0 0 5px; cursor: pointer; }
   .cal[aria-pressed='false'] span:last-child { color: var(--ink-3); }
   .bed { margin-top: 16px; color: var(--ink-2); }
   .full { width: 100%; }

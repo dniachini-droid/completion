@@ -73,17 +73,19 @@
 
 <style>
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
-  .road { position: relative; width: 100%; max-width: 340px; height: 50px; margin: 0 auto 14px; }
+  /* the line sits low enough for the label over it, and the box is tall enough for the label under it, whatever the
+     phone's text size (spacing review D2): nothing hangs out of it into the words that follow */
+  .road { --ty: calc(12px + 20px * var(--ts, 1)); position: relative; width: 100%; max-width: 340px; height: calc(24px + 41px * var(--ts, 1)); margin: 0 auto 8px; }
   .road > i { position: absolute; display: block; }
-  .track { left: 10px; right: 10px; top: 30px; height: 1px; background: linear-gradient(90deg, rgba(186, 186, 255, .34), rgba(186, 186, 255, .2)); }
+  .track { left: 10px; right: 10px; top: var(--ty); height: 1px; background: linear-gradient(90deg, rgba(186, 186, 255, .34), rgba(186, 186, 255, .2)); }
   /* the way already walked on this stretch, gold as on the step's line; this delve's, lit violet-white */
   .was { left: 10px; right: 10px; }
-  .litbox { position: absolute; top: 29px; height: 3px; }
-  .was { top: 29.5px; height: 2px; transform-origin: 0 50%; border-radius: 1px; }
+  .litbox { position: absolute; top: calc(var(--ty) - 1px); height: 3px; }
+  .was { top: calc(var(--ty) - .5px); height: 2px; transform-origin: 0 50%; border-radius: 1px; }
   .was { background: rgba(242, 193, 112, .55); }
   .lit { position: absolute; display: block; left: 0; top: 0; width: 100%; height: 3px; border-radius: 1px; transform-origin: 0 50%; background: linear-gradient(90deg, rgba(143, 134, 255, .5), #f1efff); box-shadow: 0 0 6px rgba(143, 134, 255, .95); transform: scaleX(0); will-change: transform; }
-  .start { left: 7px; top: 27.5px; width: 6px; height: 6px; border-radius: 50%; background: rgba(242, 193, 112, .7); }
-  .mark { position: absolute; top: 30px; width: 0; height: 0; }
+  .start { left: 7px; top: calc(var(--ty) - 2.5px); width: 6px; height: 6px; border-radius: 50%; background: rgba(242, 193, 112, .7); }
+  .mark { position: absolute; top: var(--ty); width: 0; height: 0; }
   .mark svg { position: absolute; left: -9px; top: -13px; width: 18px; height: 21px; overflow: visible; }
   .side svg { transform: scale(.7); transform-origin: 50% 70%; opacity: .6; }
   .side svg.on, .place svg.on { opacity: 0; filter: drop-shadow(0 0 4px rgba(143, 134, 255, 1)); transition: opacity .5s var(--ease); }
@@ -91,11 +93,12 @@
   .place.far svg { opacity: .35; }
   .lab { position: absolute; top: -30px; left: 0; transform: translateX(-50%); white-space: nowrap; font-family: var(--life); font-style: italic; font-size: calc(14px * var(--ts, 1)); color: #c7c9e6; }
   .place .lab { transform: translateX(-100%); left: 9px; top: 12px; }
-  .side .lab { top: -28px; }
+  /* anchored by its foot, so a larger text size grows it upward, never down onto its arch (T10) */
+  .side .lab { top: auto; bottom: 12px; }
   .lab b { font-weight: inherit; color: #ece9ff; }
   .lab b::before { content: ' · '; color: #c7c9e6; }
   /* the flame: a gold point with a soft glow, flickering and shedding sparks while it travels, still once there */
-  .flame { position: absolute; left: 0; top: 30px; width: 0; height: 0; will-change: transform; }
+  .flame { position: absolute; left: 0; top: var(--ty); width: 0; height: 0; will-change: transform; }
   .flame i { position: absolute; display: block; border-radius: 50%; }
   .glow { left: -14px; top: -14px; width: 28px; height: 28px; background: radial-gradient(circle, rgba(255, 210, 122, .75), rgba(242, 193, 112, .25) 45%, rgba(242, 193, 112, 0) 70%); }
   .core { left: -3.6px; top: -5.2px; width: 7.2px; height: 9px; border-radius: 50% 50% 50% 50% / 62% 62% 38% 38% !important;

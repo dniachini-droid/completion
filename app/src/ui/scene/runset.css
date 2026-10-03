@@ -14,7 +14,10 @@
 .rs .unit{ font-family: var(--life); font-style: italic; font-size: calc(16px * var(--ts, 1)); color: var(--ink-2); }
 .rs .num.tick{ animation: numtick .42s var(--ease); }
 @keyframes numtick{ 0% { transform: scale(1); } 30% { transform: scale(1.09); text-shadow: 0 0 20px #fff, 0 0 44px rgba(var(--violet-rgb), 1), 0 0 90px rgba(var(--violet-rgb), .7); } 100% { transform: scale(1); } }
-.rs .dialwrap{ position:absolute; left:50%; top: 50%; width:0; height:0; }
+/* a little above the middle: the long stop hangs further under the dial than the stops over it, so the whole face sits
+   centred in its room (spacing review D14); a short phone puts the long stop in a corner, so it stays in the middle */
+.rs .dialwrap{ position:absolute; left:50%; top: calc(50% - 16px); width:0; height:0; }
+@media (max-height: 760px){ .rs .dialwrap{ top: 50%; } }
 .rs .dial{ position:absolute; left: calc(var(--R) / -2); top: calc(var(--R) / -2); width:var(--R); height:var(--R);
   touch-action:none; cursor:grab; border-radius:50%; }
 .rs .dial:active{ cursor:grabbing; }
@@ -68,7 +71,7 @@
     transform: translate(calc(var(--R) / -2 - 76px), calc(var(--R) / -2 - 34px)); }
 }
 .rs .run{ text-align:center; margin-top: 6px; }
-.rs .run h2{ font-size: calc(19px * var(--ts, 1)); letter-spacing: .12em; padding-left: .12em; color: #eceaff; white-space: nowrap;
+.rs .run h2{ font-size: calc(19px * var(--ts, 1)); letter-spacing: .12em; padding-left: .12em; color: #eceaff; white-space: normal; text-wrap: balance; line-height: 1.15;   /* wraps at a larger text size, never cut off (spacing review D3) */
   text-shadow: 0 -1px 0 rgba(0,0,0,.9), 0 0 16px rgba(var(--violet-rgb), .7), 0 0 44px rgba(var(--violet-rgb), .35);
   transition: color .4s var(--ease), text-shadow .4s var(--ease); }
 .rs .run.there h2{ color: #f4f2ff; text-shadow: 0 -1px 0 rgba(0,0,0,.9), 0 0 22px rgba(var(--violet-rgb), .95), 0 0 60px rgba(var(--violet-rgb), .5); }
@@ -76,7 +79,7 @@
 .rs .route:focus-visible{ outline: 1px solid var(--edge-2); outline-offset: 2px; }
 .rs .route svg{ position:absolute; inset:0; width:100%; height:100%; overflow:visible; display:block; }
 .rs .route text{ font-family: var(--life); font-style: italic; font-size: calc(14px * var(--ts, 1)); }
-.rs .count{ display:grid; grid-template-columns: 44px 1fr 44px; align-items:center; margin-top: 2px; }
+.rs .count{ display:grid; grid-template-columns: 44px 1fr 44px; align-items:center; margin-top: 8px; }   /* the road's labels read with the road (spacing review D13) */
 .rs .count button{ width:44px; height:44px; display:flex; align-items:center; justify-content:center; border-radius: 50%; color: var(--ink-2);
   transition: color .25s var(--ease), opacity .25s var(--ease); }
 .rs .count button svg{ width: 18px; height: 18px; fill:none; stroke: var(--edge); stroke-width: 1.3; stroke-linecap: round; }

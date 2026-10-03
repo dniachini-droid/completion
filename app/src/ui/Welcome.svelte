@@ -102,13 +102,15 @@
 
 <style>
   button.home { color: var(--ink-2); }
-  h1 { margin-top: 10px; }
-  .top .say { margin-top: 10px; }
+  /* the same room under the top bar as the morning's (spacing review T13) */
+  .welcome { margin-top: 16px; }
+  h1 { margin-top: 8px; }
+  .top .say { margin-top: 8px; }
   .question { font-style: italic; color: #fff; line-height: 1.45; margin-bottom: 12px; }
   .bottom .soft { margin-bottom: 10px; text-align: left; }
-  .center { display: flex; justify-content: center; margin-bottom: 8px; }
+  .center { display: flex; justify-content: center; margin-bottom: 16px; }
   .gap { height: 12px; }
-  .look { color: var(--gold-hi); margin: 4px 0 10px; }
+  .look { color: var(--gold-hi); margin: 8px 0; }
   .slip { font-style: italic; margin-bottom: 4px; line-height: 1.4; }
   .links { display: flex; gap: 14px; flex-wrap: wrap; }
   .appts { list-style: none; margin: 4px 0 10px; padding: 0; }

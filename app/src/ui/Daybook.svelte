@@ -192,18 +192,23 @@
 <style>
   .body { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 28px; }
   .written { font-style: italic; margin-top: 2px; }
-  h1 { margin-top: 6px; }
+  .top .label-line { margin-top: 8px; }
+  h1 { margin-top: 8px; }
   .went { margin: 8px 0 12px; }
   .count { color: var(--gold-hi); margin-bottom: 10px; }
   .count .again { display: inline-flex; align-items: center; min-height: 44px; padding: 0; vertical-align: middle; }
   .count .again span { font-size: calc(15px * var(--ts, 1)); }
-  .label-line { margin-top: 14px; }
+  /* a section's label sits well clear of the last section and close to its own words, so it reads as theirs (spacing
+     review): 32 above, 8 below; the first one 16 under the header (the body's own 8 px start and fade, base.css) */
+  .body > .label-line { margin-top: 32px; }
+  .body > .label-line:first-of-type { margin-top: 4px; }
+  .offer .label-line { margin-top: 14px; }
   .learned { margin-top: 8px; font-size: calc(16.5px * var(--ts, 1)); line-height: 1.45; }
   .glimpse { margin-top: 8px; font-style: italic; color: #fff; line-height: 1.45; }
   .offer { margin-top: 22px; border-top: 1px solid var(--edge-2); padding-top: 14px; }
   .look-line { display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0; font-style: italic; }
   .look-line .text-link { min-height: 44px; }
-  .reached { margin-top: 6px; color: #fff; }
+  .reached { margin-top: 8px; color: #fff; }
   .tally { margin-top: 18px; font-style: italic; line-height: 1.45; }
   .offer .say { margin-bottom: 12px; }
   .after { margin-top: 12px; }
@@ -213,5 +218,6 @@
 
   .offer button.row { width: 100%; text-align: left; }
   .pager { display: flex; justify-content: space-between; margin-top: 18px; }
+  .pager .text-link { padding: 0; }   /* on the column's edges, as every other line (spacing review) */
   button.home { color: var(--ink-2); }
 </style>

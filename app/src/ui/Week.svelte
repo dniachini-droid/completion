@@ -263,10 +263,12 @@
   h1 { margin-top: 4px; }
   .dates { margin-top: 2px; }
   .forecast { margin-top: 8px; font-size: calc(16.5px * var(--ts, 1)); line-height: 1.4; }
-  .none { margin: 8px 0 12px; }
+  .none { margin: 8px 0 24px; }
   .none .soft { margin: 6px 0 16px; text-align: left; }
   .day { margin-top: 12px; }
-  .dname { font-family: var(--carve, inherit); font-size: calc(14px * var(--ts, 1)); letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); display: flex; gap: 10px; align-items: baseline;
+  .dname { font-family: var(--carve, inherit); font-size: calc(14px * var(--ts, 1)); letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); display: flex; gap: 0 10px; align-items: baseline;
+    /* its words wrap rather than run under the day's total, and sit centred on the line beside it (spacing review S6) */
+    flex-wrap: wrap; align-content: center;
     width: 100%; min-height: 44px; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; }
   .about { flex: none; min-height: 44px; padding: 0 10px; background: none; border: 0; cursor: pointer;
     font-family: var(--life); font-style: italic; font-size: calc(15px * var(--ts, 1)); color: var(--ink-3); text-decoration: underline dotted; text-underline-offset: 3px; }
@@ -282,30 +284,32 @@
   /* a note stays on one line; a long job name wraps instead */
   button.row .s { white-space: nowrap; }
   button.row:disabled { cursor: default; }
-  .dhead { display: flex; align-items: flex-start; }
+  .dhead { display: flex; align-items: center; }
   .dhead .dname { flex: 1; min-width: 0; }
   /* the + sits at the end of each day's line: a big enough target, quiet until wanted */
-  .plus { width: 44px; height: 44px; margin: 0 -12px 0 0; align-self: flex-start; display: grid; place-items: center; background: none; border: 0; color: var(--violet-hi); font-size: calc(22px * var(--ts, 1)); line-height: 1; cursor: pointer; }
+  .plus { width: 44px; height: 44px; margin: 0 -12px 0 0; display: grid; place-items: center; background: none; border: 0; color: var(--violet-hi); font-size: calc(22px * var(--ts, 1)); line-height: 1; cursor: pointer; }
   .plus.on span { display: inline-block; transform: rotate(45deg); }
-  .sheet { border: 1px solid var(--edge-2); background: rgba(10,9,24,.7); padding: 4px 14px 10px; margin: 6px 0 10px; }
+  /* even room above its first label and under its last link (spacing review S12) */
+  .sheet { border: 1px solid var(--edge-2); background: rgba(10,9,24,.7); padding: 8px 10px 6px; margin: 6px 0 10px; }
   .sheet .label-line { margin-top: 8px; }
   .sheet .seg { margin-top: 6px; }
   /* seven days on one line at 14 px, even on a small phone (D-111): the carved spacing is tightened, not the size */
-  .days button { padding-left: 0; padding-right: 0; font-size: calc(14px * var(--ts, 1)); letter-spacing: .02em; min-width: 0; }
-  .seg.days { grid-auto-columns: minmax(0, 1fr); gap: 4px; }
+  .days button { padding-left: 0; padding-right: 0; font-size: calc(14px * var(--ts, 1)); letter-spacing: 0; min-width: 0; }
+  /* with the phone's text set larger, four to a row instead of seven run together (spacing review S12) */
+  .seg.days { grid-auto-flow: row; grid-template-columns: repeat(auto-fit, minmax(min(calc(36px + (var(--ts, 1) - 1) * 1000px), calc((100% - 12px) / 4)), 1fr)); gap: 4px; }
   .when { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 12px; }
   .clock-btn { position: relative; flex: 1; min-height: 44px; display: grid; place-items: center; border: 1px solid var(--edge-2); cursor: pointer; }
   .clock-btn span { font-size: calc(14px * var(--ts, 1)); letter-spacing: .14em; color: var(--ink-2); }
   .clock-btn span.set { font-size: calc(18px * var(--ts, 1)); color: #fff; }
   /* the phone's own time box, laid over the button so any tap on it opens the wheel */
   .clock-btn input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; border: 0; padding: 0; margin: 0; cursor: pointer; -webkit-appearance: none; appearance: none; }
-  .event { display: flex; gap: 10px; padding: 3px 0 3px 22px; font-style: italic; font-size: calc(15px * var(--ts, 1)); color: var(--ink-2); }
+  .event { display: flex; gap: 10px; padding: 3px 0 3px 32px; font-style: italic; font-size: calc(15px * var(--ts, 1)); color: var(--ink-2); }
   .event .at { font-variant-numeric: tabular-nums; color: var(--ink-3); min-width: 3.2em; }
   .event.allday { color: var(--ink-3); }
   .event .what { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
   .other { display: flex; justify-content: center; margin-top: 8px; }
   /* the calendar reaches into the sheet's padding, so each day is a whole 44-point target on a small phone */
-  .sheet :global(.cal) { margin-left: -13px; margin-right: -13px; }
+  .sheet :global(.cal) { margin-left: -9px; margin-right: -9px; }
   .off { display: flex; justify-content: center; flex-wrap: wrap; gap: 0 14px; margin-top: 6px; }
   .btn.full { width: 100%; }
   .new { display: flex; gap: 10px; margin: 4px 0 8px; }

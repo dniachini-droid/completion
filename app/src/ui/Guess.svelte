@@ -56,6 +56,6 @@
   .ctx { margin: 0 0 8px; }
   .ask { color: var(--ink-2); margin: 4px 0 10px; }
   .kept { color: var(--ink-2); font-style: italic; }
-  .opts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 340px; margin: 0 auto; }
-  .opts .btn-quiet { justify-content: center; min-height: 46px; }
+  .opts { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); max-width: 340px; margin: 0 auto; }
+  .opts .btn-quiet { justify-content: center; min-height: var(--ctl-h); }
 </style>

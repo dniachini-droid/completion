@@ -299,15 +299,18 @@
   .new { display: flex; flex-direction: column; gap: 8px; margin: 10px 0 4px; }
   .new input { min-width: 0; min-height: 44px; padding: 0 12px; font: inherit; font-size: calc(17px * var(--ts, 1)); color: #fff;
     background: rgba(255, 255, 255, .06); border: 1px solid var(--edge-2); border-radius: 0; }
-  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  /* side by side while both fit; each on a row of its own when the words are larger (spacing review S3) */
+  .two { display: flex; flex-wrap: wrap; gap: 8px; }
+  .two > button { flex: 1 1 auto; letter-spacing: .16em; }
   .new .btn-quiet { padding: 0 8px; min-height: 44px; }
   .new .btn-quiet:disabled { opacity: .5; }
   .new .btn-quiet.full { width: 100%; }
   .box-label { font-family: var(--carve); font-size: calc(14px * var(--ts, 1)); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2); }
   .return-says { margin: -2px 0 0; font-family: var(--life); font-style: italic; font-size: calc(14px * var(--ts, 1)); color: var(--ink-3); }
-  .label-line { margin-top: 18px; margin-bottom: 4px; }
+  /* (scroll-margin: the jump to "Recurring jobs" lands below the list's faded top, spacing review S1) */
+  .label-line { margin-top: 18px; margin-bottom: 4px; scroll-margin-top: 12px; }
   .empty { margin: 6px 0 4px; text-align: left; }
-  .item { padding-bottom: 2px; }
+  .item { padding-bottom: 8px; }
   .rows :global(.row small) { display: block; font-size: calc(14px * var(--ts, 1)); color: var(--ink-2); margin-top: 2px; }
   .ghost { visibility: hidden; }
   .day { min-height: 44px; padding: 0 0 0 12px; }
@@ -316,8 +319,10 @@
     font-family: var(--life); font-style: italic; font-size: calc(16px * var(--ts, 1)); color: var(--ink-2); }
   .list { display: block; width: 100%; margin: 2px 0 6px; padding: 8px 12px; font: inherit; font-size: calc(17px * var(--ts, 1)); line-height: 1.4; color: #fff;
     background: rgba(255, 255, 255, .06); border: 1px solid var(--edge-2); border-radius: 0; resize: vertical; }
-  .full { margin: -2px 0 6px; font-size: calc(15px * var(--ts, 1)); font-style: italic; }
+  p.full { margin: -2px 0 6px; font-size: calc(15px * var(--ts, 1)); font-style: italic; }
   .acts { display: flex; flex-wrap: wrap; gap: 0 16px; padding-left: 32px; }
+  /* a job's List / Put on a day sit nearer their own job than the next one (spacing review S5) */
+  .item > .acts { margin-top: -8px; }
   .acts .text-link { min-height: 44px; min-width: 44px; font-size: calc(15px * var(--ts, 1)); }
   .said { font-family: var(--life); font-style: italic; font-size: calc(15.5px * var(--ts, 1)); color: var(--ink-2); text-align: center; margin: 4px 0 8px; }
   .links { display: flex; justify-content: center; margin-top: 12px; }
