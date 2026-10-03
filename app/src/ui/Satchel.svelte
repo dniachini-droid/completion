@@ -278,7 +278,7 @@
       {@const wk = weekCount(v.content, game.facts, day, j.id)}
       <SwipeRow key={`s:${j.id}`} actions={acts(j)} tap={tapJob(j)} hold={menu(j)} label={r ? [j.name, oftenWords(r), ...(wk ? [t('rhythms.weekCount', { n: wk.done, need: wk.need })] : []), minutesWords(j.length), ...(r.time ? [t('row.at', { time: r.time })] : [])].join(', ') : undefined}>
         {#snippet lead()}{#if canTick(j)}<button class="tickbtn" aria-label={t('tick.sr', { job: j.name })} onclick={() => openTick(j.id, go)}><span class="ring"></span></button>{/if}{/snippet}
-        {#snippet row()}<span class="pip" class:under={canTick(j)}></span><span class="t">{j.name}{#if r}<small>{oftenWords(r)} · {minutesShort(j.length)}</small>{/if}{#if wk}<WeekMarks done={wk.done} need={wk.need} gold={v.done.has(j.id)} />{/if}</span><span class="s">{r?.time ?? ''}</span>{/snippet}
+        {#snippet row()}<span class="pip" class:done={v.done.has(j.id)} class:under={canTick(j)}></span><span class="t">{j.name}{#if r}<small>{oftenWords(r)} · {minutesShort(j.length)}</small>{/if}{#if wk}<WeekMarks done={wk.done} need={wk.need} gold={v.done.has(j.id)} />{/if}</span><span class="s">{r?.time ?? ''}</span>{/snippet}
       </SwipeRow>
     {/each}
     </div>
