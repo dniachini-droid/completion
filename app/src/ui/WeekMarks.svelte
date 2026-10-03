@@ -10,7 +10,7 @@
 <span class="marks" class:gold aria-hidden="true">{#each marks as on, i (i)}<i class:on></i>{/each}</span>
 
 <style>
-  .marks { display: flex; gap: 5px; height: 10px; margin-top: 6px; align-items: flex-end; }
+  .marks { display: flex; gap: 5px; height: 10px; margin: 6px 0 9px; align-items: flex-end; }
   .marks i { display: block; width: 2px; height: 9px; border-radius: 1px; background: rgba(var(--violet-rgb), .5); }
   .marks i.on { background: #f1efff; box-shadow: 0 0 5px rgba(var(--violet-rgb), .95); }
   .gold i.on { background: var(--gold); box-shadow: 0 0 5px rgba(var(--gold-rgb), .9); }
