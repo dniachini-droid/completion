@@ -294,7 +294,7 @@
   .foot { padding-top: 8px; }
   /* the corner ticks stand 6 px out of the main button: room for them at the footer's top */
   .foot .btn-row { margin-top: 8px; }
-  .links.del-line { margin-top: 4px; }
+  .links.del-line { margin-top: 8px; }
   h1 { margin-top: 4px; }
   .title { overflow-wrap: anywhere; }
   .bydate { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 8px; min-height: 44px; }
