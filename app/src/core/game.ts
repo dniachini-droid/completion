@@ -136,7 +136,7 @@ const planLeads = (facts: Fact[], day: string) => W.planMade(facts, calendarWeek
 /** How many jobs the week puts on a day (done as planned, or still to do; a job set aside no longer counts, D-080). */
 function plannedCount(c: Content, facts: Fact[], day: string): number {
   const aside = asideOn(facts, day);
-  return W.weekOf(c, facts, calendarWeek(day), day).days.find(d => d.day === day)!.jobs.filter(j => j.entry && (j.done || !aside.has(j.job))).length;
+  return W.weekOf(c, facts, calendarWeek(day), day).days.find(d => d.day === day)!.jobs.filter(j => j.entry && (j.done || (!aside.has(j.job) && !weekMet(c, facts, day, j.job)))).length;
 }
 /** The day's size: from capacity; on a planned week, never more than the plan puts on the day (at least one) (D-078).
     On a week not laid out, the entries Dan added to the day come on top of it (D-107). */
@@ -219,6 +219,18 @@ const metThisWeek = (c: Content, facts: Fact[], day: string, job: string) => {
   return !!r && S.sessionsIn(facts.filter(f => f.day !== day), r, day) >= S.needOf(r);
 };
 
+/** A "times a week" job whose week's number is already met on other days (Rep.metBefore). */
+export const weekMet = (c: Content, facts: Fact[], day: string, job: string) => {
+  const r = rhythmOf(c, job);
+  return !!r && Rep.metBefore(facts, r, day);
+};
+/** A recurring job's sessions this week against its number, for the marks under its row (Dan, 2026-10-03): only for a
+    rhythm counted by the week (N a week, set days); null for the rest. A session done today counts at once. */
+export function weekCount(c: Content, facts: Fact[], day: string, job: string): { done: number; need: number } | null {
+  const r = rhythmOf(c, job);
+  return r && Rep.weekly(r) ? { done: Rep.sessionsIn(facts, r, day), need: Rep.needOf(r) } : null;
+}
+
 /** The job Dan chose at night to start `day` with (Tonight's "Tomorrow starts with", D-131), the last choice standing;
     null: as planned. */
 export function firstChosen(facts: Fact[], day: string): string | null {
@@ -236,7 +248,8 @@ export function tomorrowFirst(base: Content, facts: Fact[], now: Moment): { job:
   const own = firstChosen(facts, on);
   const wk = calendarWeek(on);
   const planned = [...new Set(W.planMade(facts, wk) ? W.plannedToday(c, facts, on, '00:00').map(p => p.job)
-    : W.planWeek(c, facts, wk, on).filter(e => e.day === on).sort((a, b) => (a.time ?? '99').localeCompare(b.time ?? '99')).map(e => e.job))];
+    : W.planWeek(c, facts, wk, on).filter(e => e.day === on).sort((a, b) => (a.time ?? '99').localeCompare(b.time ?? '99')).map(e => e.job))]
+    .filter(id => !weekMet(c, facts, on, id));
   if (own && c.jobs.some(j => j.id === own && !j.stopped) && !finishedBy(c, facts, own, on) && !W.waitingOf(facts).has(own)) return { job: own, chosen: true, planned };
   return { job: planned[0] ?? null, chosen: false, planned };
 }
@@ -266,8 +279,13 @@ function orderOn(c: Content, facts: Fact[], day: string, clock: string): string[
   const planned = new Set(plan);
   /* a week laid out with Plan my week: Today is the plan, nothing else slipped in (Dan, D-078); "Something else…" is there */
   /* on a planned week, a job Dan chose himself today (begun, delved on or tapped) joins the list after the plan's (D-080) */
-  const chosen = [...new Set(onDay(facts, day).flatMap(f => f.type === 'jobBegun' || f.type === 'delveStarted' || f.type === 'picked' ? [f.job] : []))]
+  const chosenIds = new Set(onDay(facts, day).flatMap(f => f.type === 'jobBegun' || f.type === 'delveStarted' || f.type === 'picked' ? [f.job] : []));
+  const chosen = [...chosenIds]
     .filter(id => !planned.has(id) && !aside.has(id) && c.jobs.some(j => j.id === id)).map(id => c.jobs.find(j => j.id === id)!);
+  /* a "times a week" job whose number is met leaves Today until Monday (Dan, 2026-10-02), unless Dan chose it himself
+     today or last night; it stays in the Satchel */
+  const gone = (id: string) => !chosenIds.has(id) && id !== first && weekMet(c, facts, day, id);
+  for (let i = plan.length - 1; i >= 0; i--) if (gone(plan[i])) plan.splice(i, 1);
   /* a High day adds one job beyond the plan (the next one due), and only one; more is Dan's own choice (Dan, D-082) */
   const off = new Set([...doneOn(facts, day)].filter(id => !planned.has(id)));
   const extra = planLeads(facts, day) && capacityOn(facts, day) === 'high' && off.size === 0
@@ -281,7 +299,8 @@ function orderOn(c: Content, facts: Fact[], day: string, clock: string): string[
   const going = c.jobs.filter(j => prog.has(j.id) && !planned.has(j.id) && !aside.has(j.id) && !chosen.includes(j) && !soon.includes(j) && !later.has(j.id));
   const offered = planLeads(facts, day) ? [...chosen, ...going, ...soon, ...extra.filter(j => !soon.includes(j) && !going.includes(j))]
     : [...going, ...c.jobs.filter(j => !going.includes(j) && offeredOn(c, facts, day, j, planned) && !planned.has(j.id) && !aside.has(j.id))];
-  const order = [...plan, ...offered.filter(j => !metThisWeek(c, facts, day, j.id)), ...offered.filter(j => metThisWeek(c, facts, day, j.id))].map(j => typeof j === 'string' ? j : j.id);
+  const left = offered.filter(j => !gone(j.id));
+  const order = [...plan, ...left.filter(j => !metThisWeek(c, facts, day, j.id)), ...left.filter(j => metThisWeek(c, facts, day, j.id))].map(j => typeof j === 'string' ? j : j.id);
   for (const s of ofType(onDay(facts, day), 'swapped')) {
     const a = order.indexOf(s.from), b = order.indexOf(s.to);
     if (a >= 0 && b >= 0) [order[a], order[b]] = [order[b], order[a]];

@@ -379,9 +379,10 @@ export const copy = {
   'rhythms.name': 'What',
   'rhythms.often': 'How often',
   'rhythms.aWeek': 'A week', 'rhythms.setDays': 'Set days', 'rhythms.fortnight': 'Fortnightly',
-  'rhythms.nWeek': '{n} a week',
   'rhythms.timesWeek': '{n} times a week',
   'rhythms.onceWeek': 'Once a week',
+  'rhythms.twiceWeek': 'Twice a week',
+  'rhythms.weekCount': '{n} of {need} this week',
   'rhythms.every2': 'every 2 weeks',
   'rhythms.every2long': 'Once every 2 weeks',
   'slip.date': '{job} was wanted {date}. Still needed?', 'slip.today': 'Put it on today', 'slip.wentBy': 'Went by · still needed?', 'slip.apptRow': '{job} · {day} {time}',
@@ -591,14 +592,15 @@ export function weekDates(monday: string): string {
 export const dayOrd = (n: number) => n >= 31 ? t('rhythms.lastDay') : `${n}${n % 10 === 1 && n !== 11 ? 'st' : n % 10 === 2 && n !== 12 ? 'nd' : n % 10 === 3 && n !== 13 ? 'rd' : 'th'}`;
 /** "3 March", from "03-03" */
 export const yearWords = (md: string) => new Date(`2000-${md}T00:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', timeZone: 'UTC' });
-/** How often a recurring job comes round: "4 a week", "Thursdays", "every 3 days"… */
+/** How often a recurring job comes round: "4 times a week", "Thursdays", "every 3 days"… */
 export function oftenWords(r: { days?: number[]; every?: 2; times?: number; everyDays?: number; yearly?: string; monthly?: { day: number } | { nth: number; weekday: number } }): string {
   if (r.monthly) return 'day' in r.monthly ? t('rhythms.monthDay', { n: dayOrd(r.monthly.day) }) : t('rhythms.monthNth', { nth: t(`rhythms.nth.${r.monthly.nth}` as CopyKey), day: t(`day.${r.monthly.weekday}` as CopyKey) });
   if (r.yearly) return t('rhythms.yearly', { date: yearWords(r.yearly) });
   if (r.everyDays) return t('rhythms.everyN', { n: r.everyDays });
-  /* "once a week", never "1 a week" (deep review A#21) */
-  return r.days ? r.days.map(x => t(`days.plural.${x}` as CopyKey)).join(', ') : r.every === 2 ? t('rhythms.every2') : (r.times ?? 1) === 1 ? t('rhythms.onceWeek').toLowerCase() : t('rhythms.nWeek', { n: r.times! });
+  return r.days ? r.days.map(x => t(`days.plural.${x}` as CopyKey)).join(', ') : r.every === 2 ? t('rhythms.every2') : weeklyWords(r.times ?? 1).toLowerCase();
 }
+/** "Once a week", "Twice a week", "4 times a week": never "1 a week" or "4 a week" (deep review A#21; Dan, 2026-10-03). */
+export const weeklyWords = (n: number) => n === 1 ? t('rhythms.onceWeek') : n === 2 ? t('rhythms.twiceWeek') : t('rhythms.timesWeek', { n });
 /** "Thu 2 Oct": a day, short */
 export function dayShort(day: string): string {
   const d = new Date(`${day}T00:00:00Z`);

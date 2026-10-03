@@ -8,7 +8,7 @@
  */
 import { calendarWeek, weekdayOf, type Moment } from './time';
 import { addDays, daysBetween, live, planMade, weekOf } from './week';
-import { fallsOn } from './repeat';
+import { fallsOn, metBefore } from './repeat';
 import { doneFacts } from './done';
 import { dayOf, ofType } from './facts';
 import type { Content, Fact, FactBody, FactOf } from './types';
@@ -79,6 +79,8 @@ export function alertsOn(base: Content, facts: Fact[], day: string, today = day)
     if (!j.time || j.done || !j.entry || doneOn.has(j.job)) continue;
     listed.add(j.job);
     const e = entryTarget(j.entry), r = rhythmOf(j.job);
+    /* a "times a week" job whose number is met before this day is off it: no alert (Dan, 2026-10-02) */
+    if (r && metBefore(facts, r, day)) continue;
     const lead = set.has(e) ? set.get(e)! : r ? set.get(rhythmTarget(r.id)) ?? null : null;
     if (lead !== null) push(e, 'job', j.job, j.time, lead);
   }
