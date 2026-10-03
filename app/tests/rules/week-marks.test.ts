@@ -3,7 +3,8 @@
  * back on Monday; its row shows this week's sessions; a rhythm reads in words. Ids only (D-015).
  */
 import { describe, expect, it } from 'vitest';
-import { act, see, settle, weekCount, type Command } from '../../src/core/game';
+import { act, see, settle, weekCount, weekMet, type Command } from '../../src/core/game';
+import { live } from '../../src/core/week';
 import { epochOf, momentOf } from '../../src/core/time';
 import type { Fact } from '../../src/core/types';
 import { content as C } from '../../src/content/world';
@@ -82,6 +83,47 @@ describe("a recurring job's week, counted", () => {
     const job = C.rhythms.find(r => r.everyDays || r.monthly || r.yearly || r.every);
     if (job) expect(weekCount(C, [], DAYS[0], job.job)).toBeNull();
     expect(weekCount(C, [], DAYS[0], 'no-such-job')).toBeNull();
+  });
+});
+
+describe('a job of the same name counts for the recurring job (Dan, D-151)', () => {
+  /* Dan's week: "Swim" typed and done as a one-off on Monday and Tuesday, then the Tuesday one made to repeat 4 times a
+     week: Monday's session had stayed on a job of its own, and the marks showed 1 of 4 */
+  function week() {
+    const p = player();
+    const swim = (d: string) => {
+      p.to(d).do({ do: 'open' }).do({ do: 'addToday', line: 'Swim' });
+      const id = live(C, p.facts).jobs.filter(j => j.name === 'Swim').pop()!.id;
+      p.delve(id, 40).do({ do: 'done', job: id, keepEnd: true });
+      return id;
+    };
+    const mon = swim(DAYS[0]), tue = swim(DAYS[1]);
+    const job = live(C, p.facts).jobs.find(j => j.id === tue)!;
+    p.do({ do: 'saveRhythm', rhythm: { id: 'r-swim', job: tue, times: 4 }, job: { ...job, doneBy: 'enough' } });
+    return { p, mon, tue };
+  }
+  it('its sessions this week count, so the marks say 2 of 4 at once', () => {
+    const { p, mon, tue } = week();
+    expect(mon).not.toBe(tue);
+    const c = live(C, p.facts);
+    expect(weekCount(c, p.facts, DAYS[1], tue)).toEqual({ done: 2, need: 4 });
+    p.to(DAYS[2]).do({ do: 'open' }).delve(tue);
+    expect(weekCount(live(C, p.facts), p.facts, DAYS[2], tue)).toEqual({ done: 3, need: 4 });
+    /* the 4th session meets the week: off Today until Monday */
+    p.to(DAYS[3]).do({ do: 'open' }).delve(tue);
+    expect(weekMet(live(C, p.facts), p.facts, '2026-10-02', tue)).toBe(true);
+  });
+  it('one a day: the same name done twice on one day is one session', () => {
+    const { p, tue } = week();
+    p.to(DAYS[1], '18:00').delve(tue);
+    expect(weekCount(live(C, p.facts), p.facts, DAYS[1], tue)).toEqual({ done: 2, need: 4 });
+  });
+  it('what `live` works out is never saved with the rhythm', () => {
+    const { p, tue } = week();
+    const r = live(C, p.facts).rhythms.find(x => x.job === tue)!;
+    p.do({ do: 'saveRhythm', rhythm: { ...r, times: 3 }, job: live(C, p.facts).jobs.find(j => j.id === tue)! });
+    const saved = p.facts.filter(f => f.type === 'rhythmSaved').pop()!;
+    expect(saved.type === 'rhythmSaved' && 'also' in saved.rhythm).toBe(false);
   });
 });
 

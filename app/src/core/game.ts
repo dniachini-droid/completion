@@ -166,6 +166,8 @@ export const delveMinutesOn = (facts: Fact[], day: string, job: string) =>
   ofType(onDay(facts, day), 'stepsGained').filter(f => f.job === job && f.run !== undefined).reduce((a, f) => a + f.minutes, 0);
 
 export const rhythmOf = (c: Content, job: string): Rhythm | undefined => c.rhythms.find(r => r.job === job);
+/** A rhythm as saved: without what `live` works out (D-151). */
+const unsaved = ({ also: _, ...r }: Rhythm): Rhythm => r;
 /** Whether a job belongs in today's suggestion at all: a set-day rhythm on its day; a one-off until it's done. */
 function offeredOn(c: Content, facts: Fact[], day: string, j: Job, planned: Set<string>): boolean {
   if (j.stopped) return false;   /* a stopped rhythm leaves no one-off behind (D-110) */
@@ -602,7 +604,8 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string, tick
   /* (at least: an every-N-days rhythm kept up more often than every N days has two sessions in its window, deep review B4;
      keyedAlready keeps it to one Key a period) */
   /* a rhythm stopped since the week began lands no Key (deep review: a stopped rhythm's Key) */
-  if (r && rhythmOf(c, job) && !keyedAlready && S.sessionsIn(w.all, r, day, S.RETURN_MIN) >= S.needOf(r)) {
+  /* its sessions under another job of its name count as they stand now (D-151) */
+  if (r && rhythmOf(c, job) && !keyedAlready && S.sessionsIn(w.all, { ...r, also: rhythmOf(c, job)!.also }, day, S.RETURN_MIN) >= S.needOf(r)) {
     const surplus = () => { if (!ofType(w.all, 'findGiven').some(f => f.why === 'surplus' && calendarWeek(f.day) === calendarWeek(day))) giveFind(w, c, 'surplus', at, day, done.seq); };
     if (S.keysIn(w.all, day) < S.KEYS_A_WEEK) {
       landKey(w, r.id, at, day);
@@ -1298,7 +1301,7 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     }
     case 'cantStart': w.put({ type: 'cantStartUsed', job: cmd.job }); break;
     /* Dan's own rhythms and lines: editing earns nothing and loses nothing (P16, D-038) */
-    case 'saveRhythm': if (cmd.job.name.trim()) w.put({ type: 'rhythmSaved', rhythm: { ...cmd.rhythm, job: cmd.job.id }, job: { ...cmd.job, name: cmd.job.name.trim() } }); break;
+    case 'saveRhythm': if (cmd.job.name.trim()) w.put({ type: 'rhythmSaved', rhythm: { ...unsaved(cmd.rhythm), job: cmd.job.id }, job: { ...cmd.job, name: cmd.job.name.trim() } }); break;
     case 'stopRhythm': if (c.rhythms.some(r => r.id === cmd.id)) w.put({ type: 'rhythmStopped', id: cmd.id }); break;
     case 'saveJob': {
       const name = cmd.job.name.trim().slice(0, 120);
@@ -1306,7 +1309,7 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       const job: Job = { ...cmd.job, name, length: Math.min(240, Math.max(5, Math.round(cmd.job.length))) };
       delete job.stopped;
       for (const k of ['firstStep', 'note'] as const) { const x = job[k]?.trim(); if (x) job[k] = x.slice(0, 160); else delete job[k]; }
-      if (cmd.rhythm) { w.put({ type: 'rhythmSaved', rhythm: { ...cmd.rhythm, job: job.id }, job }); break; }
+      if (cmd.rhythm) { w.put({ type: 'rhythmSaved', rhythm: { ...unsaved(cmd.rhythm), job: job.id }, job }); break; }
       /* "doesn't repeat": its rhythm ends (a one-off from now, until done), then the job as edited */
       for (const r of c.rhythms.filter(x => x.job === job.id)) w.put({ type: 'rhythmStopped', id: r.id });
       w.put({ type: 'jobSaved', job });
