@@ -53,17 +53,27 @@ export function samePeriod(r: Rhythm, done: string, day: string): boolean {
   return calendarWeek(done) === calendarWeek(day);
 }
 
+/** A rhythm's sessions, at least `min` minutes each: its own job's done records, and those of a job of the same name
+    (`also`, D-151) on a day it has none, one a day. */
+export function sessionsOf(facts: Fact[], r: Rhythm, min = 0) {
+  const done = doneFacts(facts).filter(f => f.minutes >= min), out = done.filter(f => f.job === r.job);
+  if (!r.also?.length) return out;
+  const also = new Set(r.also), days = new Set(out.map(f => f.day));
+  for (const f of done) if (also.has(f.job) && !days.has(f.day)) { days.add(f.day); out.push(f); }
+  return out;
+}
+
 /** Sessions of a rhythm done in its period containing `day`: any with a whole minute behind it (Dan, D-121), or, with
     `min`, only those at least that long (the Key's count, rule 10). */
 export const sessionsIn = (facts: Fact[], r: Rhythm, day: string, min = 1) =>
-  doneFacts(facts).filter(f => f.job === r.job && f.minutes >= min && samePeriod(r, f.day, day)).length;
+  sessionsOf(facts, r, min).filter(f => samePeriod(r, f.day, day)).length;
 
 /** The day an every-N-days rhythm is next due, from `from` on: N days after it was last done (before `from`), or
     `from` if it never was or is already due. */
 export function dueFrom(facts: Fact[], r: Rhythm, from: string): string {
   const n = daysOf(r) ?? 1;
   let last: string | null = null;
-  for (const f of doneFacts(facts)) if (f.job === r.job && f.day < from && (!last || f.day > last)) last = f.day;
+  for (const f of sessionsOf(facts, r)) if (f.day < from && (!last || f.day > last)) last = f.day;
   if (!last) return from;
   const due = addDays(last, n);
   return due > from ? due : from;
@@ -76,4 +86,4 @@ export const weekly = (r: Rhythm) => !r.every && !r.monthly && !r.yearly && !r.e
     it leaves Today, the morning's prefill and its reminders for the rest of the week, and comes back on Monday (Dan,
     2026-10-02: Gym, 4 times a week). */
 export const metBefore = (facts: Fact[], r: Rhythm, day: string) =>
-  weekly(r) && !r.days && doneFacts(facts).filter(f => f.job === r.job && f.day !== day && f.minutes >= 1 && samePeriod(r, f.day, day)).length >= needOf(r);
+  weekly(r) && !r.days && sessionsOf(facts, r, 1).filter(f => f.day !== day && samePeriod(r, f.day, day)).length >= needOf(r);

@@ -100,6 +100,14 @@ export function live(c: Content, facts: Fact[], before?: string): Content {
     if (rhythms.some(r => r.job === j.id)) k.doneBy = 'enough';
     return k;
   });
+  /* a recurring job's sessions are also those of any other job of its name (Dan, D-151: "Gym" typed before Gym
+     repeated, then made to repeat, left its earlier sessions on a job of its own, and the week's marks missed them) */
+  const key = new Map(jobs.map(j => [j.id, nameKey(j.name)])), ruled = new Set(rhythms.map(r => r.job));
+  rhythms = rhythms.map(r => {
+    const { also: _, ...x } = r, k = key.get(r.job);
+    const also = k ? jobs.filter(j => j.id !== r.job && !ruled.has(j.id) && key.get(j.id) === k).map(j => j.id) : [];
+    return also.length ? { ...x, also } : x;
+  });
   return { ...c, jobs, rhythms, base: c.base ?? c };
 }
 

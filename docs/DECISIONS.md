@@ -1709,3 +1709,11 @@
 - **Alternatives:** fixing only the must-fix items; keeping the old layouts for C1–C8.
 - **Consequences:** CSS and small markup changes across most screens; the flows re-run at every size; one TestFlight send with D-149.
 - **Reversible:** Yes, each separately.
+
+## D-151 — A job of the same name counts for the recurring job (Claude, Dan's report)
+- **Date:** 2026-10-03
+- **Context:** Dan (phone, after D-149/D-150): he went to the gym Thursday and Friday and is going Saturday, but Gym's marks showed 1 of 4. The Week listed both Thursday's and Friday's "Gym" as done. Cause: making a job repeat turns that one job into the recurring one (the Satchel's "Make it repeat", or the editor); any "Gym" done earlier, or added while Gym didn't repeat yet, stays a job of its own, and a rhythm counted only its own job's sessions. Once Gym repeats, typing "Gym" anywhere already lands on it (D-136), so the gap is only history from before; there was no way to put it right by hand. Dan asked for an elegant, non-clumsy fix.
+- **Decision:** a recurring job's sessions are its own and those of any other job of the same name (`nameKey`, as the planner already shares one history by name, D-136), at most one a day. Nothing to tap: the marks, "off Today once met" (D-149), Plan my week, reminders, every-N-days due dates and the Key's count all follow. Worked out by `live` as the rhythm's `also` list, never saved.
+- **Alternatives:** a "Count it as Gym" item in a done job's hold menu (works for a different name too, but it is one more thing to know and do; kept in reserve if a differently named entry ever needs it); merging the jobs when one is made to repeat (rewrites Dan's records).
+- **Consequences:** `sessionsOf` in `core/repeat.ts` (used by `sessionsIn`, `metBefore`, `dueFrom`); `live` in `core/week.ts`; the Key's count in `core/game.ts`; rule tests in `week-marks.test.ts`. A Key still lands only on a session of the recurring job itself (any new "Gym" is that job already). A different name ("Gym session") doesn't count.
+- **Reversible:** Yes.

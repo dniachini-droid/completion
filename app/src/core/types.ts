@@ -55,6 +55,9 @@ export interface Rhythm {
   everyDays?: number;
   /** An appointment's time, "18:00". */
   time?: string;
+  /** Worked out by `live` (core/week.ts), never saved: the other jobs of the same name (a "Gym" added before Gym
+      repeated), whose sessions count as this rhythm's, one a day (Dan, D-151). */
+  also?: string[];
 }
 
 export interface Content {
