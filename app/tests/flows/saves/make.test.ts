@@ -34,3 +34,25 @@ it.skipIf(!env.MAKE_SAVES)('months: four months of play, three hours a day, Keys
   const { facts } = heavy(120, 3, true, 2);
   out('months', facts);
 }, 300_000);
+
+it.skipIf(!env.MAKE_SAVES)('gym3 and gym4: the week of 28 September laid out, Gym delved Monday to Wednesday (and Thursday), for the week marks (Dan, 2026-10-03)', async () => {
+  const { act, settle } = await import('../../../src/core/game');
+  const { epochOf, momentOf } = await import('../../../src/core/time');
+  let facts: any[] = [];
+  let ms = 0;
+  const at = () => momentOf(ms, 60);
+  const run = (cmd: any) => { facts = facts.concat(act(facts, C, cmd, at())); };
+  const look = () => {
+    for (let k = 0; k < 20; k++) { const a = see(facts, C, at()).arrival; if (!a) break; run({ do: 'seen', what: 'arrival', ref: a.seq }); }
+    const e = see(facts, C, at()).runEnd; if (e) run({ do: 'seen', what: 'step', ref: e.seq });
+  };
+  for (const [i, d] of ['2026-09-28', '2026-09-29', '2026-09-30', '2026-10-01'].entries()) {
+    ms = epochOf(`${d}T09:00:00+01:00`);
+    run({ do: 'open' });
+    if (i === 0) run({ do: 'planWeek', week: d });
+    run({ do: 'startRun', job: 'gym', minutes: 45, count: 1 });
+    ms += 46 * 60_000; facts = facts.concat(settle(facts, C, at())); look();
+    if (i === 2) out('gym3', facts);
+  }
+  out('gym4', facts);
+});

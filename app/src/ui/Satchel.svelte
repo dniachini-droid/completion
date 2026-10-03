@@ -9,7 +9,7 @@
      a third time in 28 days is offered, once, as a recurring job. */
   import { game, content } from './game.svelte';
   import { t, byWords, dayShort, oftenWords, minutesShort, minutesWords } from '../content/copy/en';
-  import { satchelView, errandChoices, carriedOf, LIST_MAX } from '../core/game';
+  import { satchelView, errandChoices, carriedOf, weekCount, LIST_MAX } from '../core/game';
   import { NAME_MAX, cleanLine, repeatOffer, suggest, tieFor, type Suggestion } from '../core/remember';
   import { nameKey } from '../core/week';
   import type { Job } from '../core/types';
@@ -17,6 +17,7 @@
   import Deleted from './Deleted.svelte';
   import DayPick from './DayPick.svelte';
   import SwipeRow from './SwipeRow.svelte';
+  import WeekMarks from './WeekMarks.svelte';
   import type { Go } from './nav';
   import { back } from './back.svelte';
   import { flushSync, onMount } from 'svelte';
@@ -274,9 +275,10 @@
     <div class="rows">
     {#each s.recurring as j (j.id)}
       {@const r = rhythmOf(j)}
-      <SwipeRow key={`s:${j.id}`} actions={acts(j)} tap={tapJob(j)} hold={menu(j)} label={r ? [j.name, oftenWords(r), minutesWords(j.length), ...(r.time ? [t('row.at', { time: r.time })] : [])].join(', ') : undefined}>
+      {@const wk = weekCount(v.content, game.facts, day, j.id)}
+      <SwipeRow key={`s:${j.id}`} actions={acts(j)} tap={tapJob(j)} hold={menu(j)} label={r ? [j.name, oftenWords(r), ...(wk ? [t('rhythms.weekCount', { n: wk.done, need: wk.need })] : []), minutesWords(j.length), ...(r.time ? [t('row.at', { time: r.time })] : [])].join(', ') : undefined}>
         {#snippet lead()}{#if canTick(j)}<button class="tickbtn" aria-label={t('tick.sr', { job: j.name })} onclick={() => openTick(j.id, go)}><span class="ring"></span></button>{/if}{/snippet}
-        {#snippet row()}<span class="pip" class:under={canTick(j)}></span><span class="t">{j.name}{#if r}<small>{oftenWords(r)} · {minutesShort(j.length)}</small>{/if}</span><span class="s">{r?.time ?? ''}</span>{/snippet}
+        {#snippet row()}<span class="pip" class:done={v.done.has(j.id)} class:under={canTick(j)}></span><span class="t">{j.name}{#if r}<small>{oftenWords(r)} · {minutesShort(j.length)}</small>{/if}{#if wk}<WeekMarks done={wk.done} need={wk.need} gold={v.done.has(j.id)} />{/if}</span><span class="s">{r?.time ?? ''}</span>{/snippet}
       </SwipeRow>
     {/each}
     </div>

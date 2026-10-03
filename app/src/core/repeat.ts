@@ -71,3 +71,9 @@ export function dueFrom(facts: Fact[], r: Rhythm, from: string): string {
 
 /** Whether the rhythm counts by week (N a week, set days): the rest have a period of their own. */
 export const weekly = (r: Rhythm) => !r.every && !r.monthly && !r.yearly && !r.everyDays;
+
+/** A "times a week" rhythm (not set days) whose number is already met this week by sessions on other days than `day`:
+    it leaves Today, the morning's prefill and its reminders for the rest of the week, and comes back on Monday (Dan,
+    2026-10-02: Gym, 4 times a week). */
+export const metBefore = (facts: Fact[], r: Rhythm, day: string) =>
+  weekly(r) && !r.days && doneFacts(facts).filter(f => f.job === r.job && f.day !== day && f.minutes >= 1 && samePeriod(r, f.day, day)).length >= needOf(r);

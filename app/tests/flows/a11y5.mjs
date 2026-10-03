@@ -31,7 +31,7 @@ const small = page => page.evaluate(() => {
     for (const x of await small(page)) fails.push(`${where}: text under 14 px: ${x}`);
   }
   /* a recurring job: once a week, never "1 a week" */
-  if (await page.getByText(/\b1 a week\b/).count()) fails.push('"1 a week" is said somewhere');
+  if (await page.getByText(/\b\d a week\b/).count()) fails.push('"N a week" is said somewhere: it reads "N times a week"');
   await home();
   /* the job menu takes focus, the screen under it is inert, and focus returns */
   const r = row('Course').or(page.locator('.rows button.row:not(.done)')).first();

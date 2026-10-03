@@ -66,7 +66,8 @@ Everything past enough is **more**: it moves Dan in full, uncapped (D-044), and 
 - **Capacity overrides the plan** (P3). On a Low day, Today is a Low day: appointments stay (P10), and the other planned jobs are released. Today says only "A lighter day." It never narrates where released jobs go (D-047); that shows only if Dan opens the week.
 - **No catch-up avalanche.** A released job is re-placed only on a later day still below its Normal size; otherwise it falls away. A disrupted week becomes a lighter week (D-038).
 - **Off-plan counts in full.** A job done on another day, at another time, or unplanned earns exactly what it would have on plan. There is no bonus for keeping to the plan.
-- **The plan never holds more of a rhythm than its enough.** Once the week's enough is met, remaining planned sessions quietly leave the plan; Dan can still do more. That rhythm also stops leading Today's suggestion for the week (P5).
+- **The plan never holds more of a rhythm than its enough.** Once the week's enough is met, remaining planned sessions quietly leave the plan; Dan can still do more. That rhythm also stops leading Today's suggestion for the week (P5). A **"times a week"** job (not set days) whose number is met leaves Today, the evening's "Tomorrow starts with" and its reminders for the rest of the week, and comes back on Monday; it stays in the Satchel, and starting it again by hand puts it back on Today (D-149).
+- **A recurring job's week is shown** under its row on Today and in the Satchel: one thin notch per session its week asks for, each session done lighting one (gold on a day it is done), all dark again on Monday; VoiceOver hears "3 of 4 this week". Only for rhythms counted by the week (N a week, set days) (D-149).
 - Swap, "I can't start", the one next job, and "only today's jobs on the opening screen" are unchanged.
 
 ## What the planner tells apart (from what Dan types, never a category)

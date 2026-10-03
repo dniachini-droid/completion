@@ -13,7 +13,7 @@
      rows seemed to change places by themselves); a swipe takes it off today; the last row chooses a delve on anything (D-077). After day complete: the day as done, until Dan taps a job or keeps going.
      Mock-up: design/directions/d-combined/morning.html. */
   import { game, content } from './game.svelte';
-  import { pastBedtime, BEDTIME_WINDOW, tomorrowFirst, firstChosen, satchelView, carriedOf } from '../core/game';
+  import { pastBedtime, BEDTIME_WINDOW, tomorrowFirst, firstChosen, satchelView, carriedOf, weekCount } from '../core/game';
   import { tieFor } from '../core/remember';
   import { leaveWord, moment } from './moment.svelte';
   import { ofLine } from './panel';
@@ -22,6 +22,7 @@
   import { t, minutesWords, minutesShort, inSentence, dayShort, type Weekday } from '../content/copy/en';
   import Scene from './Scene.svelte';
   import EndRoad from './EndRoad.svelte';
+  import WeekMarks from './WeekMarks.svelte';
   import { flushSync } from 'svelte';
   import type { Go } from './nav';
 
@@ -362,8 +363,9 @@
     {/if}
     {#snippet jobRow(id: string)}
       {@const j = job(id)}
+      {@const wk = weekCount(v.content, game.facts, v.day, id)}
       <SwipeRow key={`t:${id}`} actions={acts(j)} tap={() => start(id)} hold={() => openMenu(id, go, v.done.has(id) ? v.day : null, null, 'today')} done={v.done.has(id)} quiet={v.done.has(id) && !recurring(id)}>
-        {#snippet row()}<span class="pip" class:done={v.done.has(id)} class:under={canTick(id)}></span><span class="t" class:putoff={j.avoided && v.findWaits && !v.done.has(id)}>{j.name}{#if soFar(j)}<small>{soFar(j)}</small>{/if}</span>{#if j.avoided && v.findWaits && !v.done.has(id)}<span class="sr-only">{t('row.findWaits')}</span>{/if}<span class="s">{sayDone(j) ? '' : rowNote(j)}</span>{/snippet}
+        {#snippet row()}<span class="pip" class:done={v.done.has(id)} class:under={canTick(id)}></span><span class="t" class:putoff={j.avoided && v.findWaits && !v.done.has(id)}>{j.name}{#if soFar(j)}<small>{soFar(j)}</small>{/if}{#if wk}<WeekMarks done={wk.done} need={wk.need} gold={v.done.has(id)} />{/if}</span>{#if wk}<span class="sr-only">{t('rhythms.weekCount', { n: wk.done, need: wk.need })}</span>{/if}{#if j.avoided && v.findWaits && !v.done.has(id)}<span class="sr-only">{t('row.findWaits')}</span>{/if}<span class="s">{sayDone(j) ? '' : rowNote(j)}</span>{/snippet}
         <!-- the same "It's done" on a row further down: a tap on the row itself still starts a delve (D-100, D-120) -->
         <!-- the tick circle over the marker: done without a delve, with the time it took (D-134) -->
         {#snippet lead()}{#if canTick(id)}<button class="tickbtn" aria-label={t('tick.sr', { job: j.name })} onclick={() => openTick(id, go)}><span class="ring"></span></button>{/if}{/snippet}

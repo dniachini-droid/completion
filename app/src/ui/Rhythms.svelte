@@ -7,7 +7,7 @@
      a date for a one-off. A one-off shows only What, About how long and By a date; the rest is under "More…" (D-131).
      One number is enough; no ranges. Stopping a repeat ends future sessions only; no confirmation. */
   import { game } from './game.svelte';
-  import { t, minutesWords, minutesShort, byWords, dayOrd, yearWords, oftenWords, type Weekday } from '../content/copy/en';
+  import { t, minutesWords, minutesShort, byWords, dayOrd, yearWords, oftenWords, weeklyWords, type Weekday } from '../content/copy/en';
   import { addDays } from '../core/week';
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
@@ -159,7 +159,7 @@
         {#if d.often === 'week'}
           <div class="stepper">
             <button class="btn-quiet step" disabled={d.times <= 1} onclick={() => (d!.times = Math.max(1, d!.times - 1))} aria-label={t('rhythms.lessTimes')}><span>−</span></button>
-            <span class="val">{d.times === 1 ? t('rhythms.onceWeek') : t('rhythms.timesWeek', { n: d.times })}</span>
+            <span class="val">{weeklyWords(d.times)}</span>
             <button class="btn-quiet step" disabled={d.times >= 7} onclick={() => (d!.times = Math.min(7, d!.times + 1))} aria-label={t('rhythms.moreTimes')}><span>+</span></button>
           </div>
         {:else if d.often === 'days'}
