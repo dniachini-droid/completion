@@ -109,7 +109,7 @@
   .swipe, .swipe .row { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }
   .swipe .row { position: relative; z-index: 1; width: 100%; text-align: left; touch-action: pan-y; transition: transform .22s ease; }
   .swipe .row.moving { transition: none; }
-  .swipe .row.narrowed { transition: width .22s ease; }
+  .swipe .row.narrowed { transition: width .22s ease; padding-right: 8px; }   /* the note never butts against an action (spacing review T14) */
   .acts { position: absolute; right: 18px; z-index: 0; top: 1px; bottom: 0; display: flex; }
   .act { width: 96px; font-family: var(--life); font-style: italic; font-size: calc(16px * var(--ts, 1)); color: var(--ink); background: rgba(var(--violet-rgb), .28); }
   @media (max-width: 379px) { .act { width: 78px; font-size: calc(15px * var(--ts, 1)); line-height: 1.15; padding: 0 4px; } }

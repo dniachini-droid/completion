@@ -36,15 +36,15 @@
   <header class="top col">
     <div class="topbar rise">
       <button class="home" onclick={() => go('back')}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{back.label}</span></button>
-      <span></span>
-      {#if !open}
-        <div class="seg lv" role="group" aria-label={t('records.label')}>
-          <button aria-pressed="true">{t('records.nav')}</button>
-          <button aria-pressed="false" onclick={() => go('marks')}>{t('marks.nav')}</button>
-        </div>
-      {:else}<span></span>{/if}
+      <span></span><span></span>
     </div>
     {#if !open}
+      <!-- the two tabs on a row of their own, two equal halves: in the top bar they ran into the arrow at large text
+           (spacing review, Dan's decision C4) -->
+      <div class="seg lv tabs rise" role="group" aria-label={t('records.label')}>
+        <button aria-pressed="true">{t('records.nav')}</button>
+        <button aria-pressed="false" onclick={() => go('marks')}>{t('marks.nav')}</button>
+      </div>
       <div class="label-line rise">{t('records.label')}</div>
       <h1 class="carve lg rise">{t('records.title')}</h1>
     {:else}
@@ -110,10 +110,15 @@
 <style>
   .row.lit .t { color: #fff; text-shadow: 0 0 12px rgba(var(--violet-rgb), .9), 0 0 26px rgba(var(--violet-rgb), .5); }
   .row.lit .pip { box-shadow: 0 0 10px 2px rgba(var(--violet-rgb), .8); }
-  .body { flex: 1; min-height: 0; overflow-y: auto; padding-top: 14px; padding-bottom: 28px; }
+  /* the list fades at both edges as it scrolls, never cut hard (spacing review) */
+  .body { flex: 1; min-height: 0; overflow-y: auto; padding-top: 14px; padding-bottom: 28px;
+    -webkit-mask-image: linear-gradient(180deg, transparent, #000 12px, #000 calc(100% - 20px), transparent);
+            mask-image: linear-gradient(180deg, transparent, #000 12px, #000 calc(100% - 20px), transparent); }
   h1 { margin-top: 8px; }
   h1 + .soft { margin-top: 6px; }
   button.row { width: 100%; text-align: left; }
+  /* the list closes on a hairline, as Today's rows do (spacing review) */
+  .body .col > button.row:last-of-type { border-bottom: 1px solid var(--edge-4); }
   .paper { font-size: calc(18px * var(--ts, 1)); line-height: 1.5; margin-bottom: 14px; }
   .band { position: relative; margin-top: 10px; padding: 20px 0 6px; }
   .band::before { content: ""; position: absolute; inset: 0; pointer-events: none;
@@ -131,8 +136,8 @@
   .w.guess { color: var(--ink-2); font-style: italic; }
   .pic { color: var(--ink-2); font-style: italic; }
   .p { margin-left: -6px; color: var(--ink-2); }
-  .lv { margin: 0; width: auto; grid-template-columns: 1fr 1fr; }
-  .lv button { padding: 6px 12px; font-size: calc(14px * var(--ts, 1)); min-width: 104px; }
+  .tabs { margin: 4px 0 16px; grid-template-columns: 1fr 1fr; }
+  .tabs button { padding: 6px 12px; font-size: calc(14px * var(--ts, 1)); }
   .sheet { margin-top: 22px; }
   .her { font-family: var(--life); font-style: italic; font-size: calc(17.5px * var(--ts, 1)); line-height: 1.5; color: var(--ink-2); margin-top: 8px; }
   .bottom { display: flex; justify-content: center; }

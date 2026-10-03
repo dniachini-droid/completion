@@ -186,7 +186,7 @@
         <!-- an errand run's "What got done?" is left waiting, never counted by the arrow (J1): Today says it waits -->
         <button class="home" onclick={() => (end && !end.pending ? leave('today') : go('today'))}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{t('delve.today')}</span></button>
         <span></span>
-        {#if canPark && !parking}<button class="text-link park-link" bind:this={parkLink} onclick={openPark}><span>{t('park.link')}</span></button>{:else}<span></span>{/if}
+        {#if canPark && !parking}<button class="text-link park-link" class:hush={!!parkedSay} bind:this={parkLink} onclick={openPark}><span>{t('park.link')}</span></button>{:else}<span></span>{/if}
       </div>
       <div class="head rise d1">
         <div class="label-line centred lit">{t('delve.further')}</div>
@@ -353,9 +353,10 @@
 
 <style>
   /* the job's list, struck off a line at a time (D-126) */
-  .list { list-style: none; margin: 4px auto 10px; padding: 0; width: 100%; max-width: 320px; max-height: 26vh; overflow-y: auto; overflow-x: hidden; text-align: left; }
+  /* on the column's edges, as the buttons under it (spacing review D11) */
+  .list { list-style: none; margin: 4px 0 0; padding: 0; width: 100%; max-height: 26vh; overflow-y: auto; overflow-x: hidden; text-align: left; }
   .list button { overflow-wrap: anywhere; }
-  .list button { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 44px; padding: 4px 10px; text-align: left; background: none; border: 0;
+  .list button { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 44px; padding: 4px 0; text-align: left; background: none; border: 0;
     border-bottom: 1px solid rgba(255, 255, 255, .08); font-family: var(--life); font-size: calc(17px * var(--ts, 1)); color: #fff; cursor: pointer; }
   .list .l { flex: 1; min-width: 0; }
   .list button.struck .l { text-decoration: line-through; color: var(--ink-3); }
@@ -365,7 +366,7 @@
   .list button.struck .tick svg { opacity: 1; }
   .dv { display: contents; }
   /* the errand run's end (D-139): each errand, done with its minutes or still to do */
-  .errs { list-style: none; margin: 8px auto 10px; padding: 0; max-width: 340px; text-align: left; }
+  .errs { list-style: none; margin: 8px 0 10px; padding: 0; text-align: left; }
   .errs li { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; align-items: center; column-gap: 12px; min-height: 40px; border-top: 1px solid var(--edge-4); }
   .errs li:last-child { border-bottom: 1px solid var(--edge-4); }
   .errs .t { font-family: var(--life); font-size: calc(17px * var(--ts, 1)); color: var(--ink); overflow-wrap: anywhere; min-width: 0; }
@@ -376,7 +377,8 @@
   /* the ring takes the room left between the place's name and the words below, never more; when the end carries the
      story it steps back, and on a phone too short for it, it gives way altogether */
   .dv :global(.mid) { container-type: size; }
-  .dv :global(.ring) { --R: max(64px, min(250px, 66vw, 36vh, 86cqh)); }
+  /* up to 290 px on a bigger phone, so the ring fills the room rather than floating in it (spacing review D19) */
+  .dv :global(.ring) { --R: max(64px, min(290px, 66vw, 36vh, 86cqh)); }
   .dv.told :global(.ring) { --R: max(64px, min(170px, 44vw, 22vh, 76cqh)); }
   @container (max-height: 120px) { .dv.told:not(.tallying) :global(.ring) { visibility: hidden; } }
   /* at a delve's end the ring keeps room for its count, even with the story's words below it (D-133): they scroll */
@@ -384,13 +386,20 @@
   .gone { opacity: 0; transition: opacity 1s var(--ease); }
   h2.m { margin-top: 10px; }
   .sofar { margin-top: 2px; font-size: calc(14px * var(--ts, 1)); opacity: .85; }
-  .dv :global(.bottom p.on-it) { margin: -12px 0 14px; font-style: italic; }
-  .dv :global(.bottom p.say) { margin: 6px 0 20px; font-size: calc(17px * var(--ts, 1)); color: var(--ink-2); }
+  .dv :global(.bottom p.on-it) { margin: -8px 0 16px; font-style: italic; }
+  /* the delve's own sentences only: a job's return (Return.svelte) keeps its own margins and size, as on Step (spacing
+     review D1, D17) */
+  .dv :global(.bottom > p.say), .dv :global(.bottom > .scroll > p.say) { margin: 8px 0 16px; font-size: calc(17px * var(--ts, 1)); color: var(--ink-2); }
   .back { flex-direction: column; gap: 3px; padding-top: 10px; padding-bottom: 10px; line-height: 1.1; }
   .back .tail { font-family: var(--life); font-style: italic; font-weight: 500; font-size: calc(17px * var(--ts, 1)); letter-spacing: .01em; text-transform: none; }
   .cant { display: flex; justify-content: center; margin-top: 8px; }
-  input.stop { width: 100%; margin: 10px 0 4px; padding: 10px 12px; font: inherit; font-size: calc(16px * var(--ts, 1)); color: #fff; background: rgba(255,255,255,.06);
+  /* clear of the button's corner marks below it (spacing review D4) */
+  input.stop { width: 100%; margin: 4px 0 16px; padding: 10px 12px; font: inherit; font-size: calc(16px * var(--ts, 1)); color: #fff; background: rgba(255,255,255,.06);
     border: 1px solid var(--edge-2); border-radius: 0; }
+  h2.m + input.stop { margin-top: 12px; }
+  .list + .back { margin-top: 16px; }
+  /* the story's last line fades out above the button's corner marks, not under them (spacing review D18) */
+  .bottom.fit > .scroll + .btn { margin-top: 8px; }
   .pair { max-width: 340px; margin: 0 auto; }
   .breath-line i { transition: width .25s linear; }
   button.home { color: var(--ink-2); }
@@ -398,7 +407,8 @@
      (the phone frame is the part above it, keyboard.ts); the "Parked" line under the top bar for a few seconds */
   .park-link { font-size: calc(16px * var(--ts, 1)); }
   .park { position: absolute; z-index: 20; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; gap: 8px;
-    padding: 12px 16px calc(var(--safe-b, 0px) + 4px); background: rgb(18, 16, 38); border-top: 1px solid var(--edge-2);
+    /* its box and buttons on the column's edges at every width (spacing review D12) */
+    padding: 12px max(var(--gutter), calc((100% - var(--col)) / 2 + var(--gutter))) calc(var(--safe-b, 0px) + 4px); background: rgb(18, 16, 38); border-top: 1px solid var(--edge-2);
     animation: park-up .18s ease-out; }
   :global(html.kb) .park { padding-bottom: 12px; }
   @keyframes park-up { from { opacity: 0; } }
@@ -407,12 +417,16 @@
   .park .two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .park .btn-quiet { padding: 0 8px; min-height: 44px; }
   .park .btn-quiet:disabled { opacity: .5; }
-  .parked-say { position: absolute; z-index: 6; left: 50%; transform: translateX(-50%); top: calc(var(--safe-t, 0px) + 50px); width: max-content;
-    max-width: calc(100% - 32px); margin: 0; padding: 6px 14px; pointer-events: none; background: rgb(18, 16, 38); border: 1px solid var(--edge-2);
+  /* in the top bar, where "Park a thought" was tapped, on the column's right edge: never over the place's name (spacing
+     review D7, Dan: C5). The link fades meanwhile (it keeps the focus). */
+  .parked-say { position: absolute; z-index: 6; right: calc((100% - min(100%, var(--col))) / 2 + var(--gutter)); top: calc(var(--safe-t, 0px) + 24px);
+    transform: translateY(-50%); width: max-content;
+    max-width: calc(min(100%, var(--col)) - 2 * var(--gutter) - 128px); margin: 0; padding: 6px 14px; pointer-events: none; background: rgb(18, 16, 38); border: 1px solid var(--edge-2);
     font-family: var(--life); font-style: italic; font-size: calc(16px * var(--ts, 1)); color: var(--ink-2); text-align: center;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .parked-say:not(.shown) { position: absolute; width: 1px; height: 1px; padding: 0; border: 0; clip-path: inset(50%); }
   .parked-say.shown { animation: park-say .3s ease-out; }
+  .park-link.hush { opacity: 0; pointer-events: none; }
   .dv :global(.bottom p.parked-n) { margin: 10px 0 0; font-size: calc(16px * var(--ts, 1)); font-style: italic; text-align: center; }
   @keyframes park-say { from { opacity: 0; } }
   @media (prefers-reduced-motion: reduce) { .park, .parked-say.shown { animation: none; } }

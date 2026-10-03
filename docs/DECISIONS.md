@@ -1700,3 +1700,12 @@
 - **Alternatives:** arches (B) or diamonds by the minutes (C); marks per set day rather than per session; unlit notches fainter (1) or stronger and taller (3); keeping a met rhythm at the end of Today (as before).
 - **Consequences:** `Rep.metBefore`, `weekMet` and `weekCount` in the rules; `WeekMarks.svelte`; rule tests `week-marks.test.ts`; flow `week-marks.mjs` with saves `gym3` and `gym4`.
 - **Reversible:** Yes, each separately.
+
+## D-150 — The spacing review: every finding fixed (Dan)
+- **Date:** 2026-10-03
+- **Context:** Dan asked for a separate review of button and text placement on every screen ("gaps too big or too small"), then one TestFlight build with D-149 and the fixes. Four reviewers compared every screen at 390 × 844, 360 × 780, 440 × 956 and at 1.3× text, measured the borderline ones and found each cause: `reviews/spacing/FINDINGS.md` (about 22 must-fix, 21 should-fix, 25 polish, 8 look choices).
+- **Decision:** Dan: "Fix everything you found. Even the 25 polish items." The look choices as recommended: C1 the Ahead passage shows 3 lines on phones up to the standard height; C2 the painting band on the biggest phone kept; C3 the editors' Save and Delete at the foot of the screen; C4 Records / Symbols tabs on their own row; C5 "Parked: …" in the top bar; C6 the tick sheet 3 × 3; C7 a larger ring on bigger phones; C8 Step's road above its heading.
+- **Rules kept from it:** every list row has 8 px above and below its text (`.row { padding-block: 8px }`); a scrolling body under a header fades in rather than cutting; label → title 8 px on every screen; nothing wider than the column; a heading never overlaps the text under it at any text size.
+- **Alternatives:** fixing only the must-fix items; keeping the old layouts for C1–C8.
+- **Consequences:** CSS and small markup changes across most screens; the flows re-run at every size; one TestFlight send with D-149.
+- **Reversible:** Yes, each separately.

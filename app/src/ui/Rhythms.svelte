@@ -274,33 +274,51 @@
 
         <!-- only for a rhythm that was there and changed: never on a new one (W F14) -->
         {#if d.often !== 'once' && d.id !== null && rhythmKey(d) !== wasRhythm}<p class="soft val-note">{t('rhythms.newNumber')}</p>{/if}
-        <div class="btn-row lead"><button class="btn" disabled={!d.job.name.trim() || (d.often === 'days' && !d.days.length)} onclick={save}>{t('rhythms.save')}</button><button class="btn-quiet" onclick={close}><span>{t('rhythms.cancel')}</span></button></div>
-        {#if !d.isNew}<div class="links"><button class="text-link del" onclick={remove}><span>{t('job.remove')}</span></button></div>{/if}
       </div>
     {/if}
   </div>
+  <!-- Save and Delete at the foot of the screen, always in view, the main action in the lower third (spacing review C3) -->
+  {#if d}
+    <div class="bottom col foot rise d1">
+      <div class="btn-row lead"><button class="btn" disabled={!d.job.name.trim() || (d.often === 'days' && !d.days.length)} onclick={save}>{t('rhythms.save')}</button><button class="btn-quiet" onclick={close}><span>{t('rhythms.cancel')}</span></button></div>
+      {#if !d.isNew}<div class="links del-line"><button class="text-link del" onclick={remove}><span>{t('job.remove')}</span></button></div>{/if}
+    </div>
+  {/if}
 </div>
 
 <style>
-  .body { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 28px; }
+  /* the form fades out above the footer as well as under the header (spacing review S1, C3) */
+  .body { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 28px;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 12px, #000 calc(100% - 20px), transparent);
+    mask-image: linear-gradient(180deg, transparent 0, #000 12px, #000 calc(100% - 20px), transparent); }
+  .foot { padding-top: 8px; }
+  /* the corner ticks stand 6 px out of the main button: room for them at the footer's top */
+  .foot .btn-row { margin-top: 8px; }
+  .links.del-line { margin-top: 8px; }
   h1 { margin-top: 4px; }
   .title { overflow-wrap: anywhere; }
   .bydate { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 8px; min-height: 44px; }
   .bydate .val { font-family: var(--life); font-style: italic; font-size: calc(17px * var(--ts, 1)); color: #fff; }
+  /* its words on the column's edge, like every label above it (spacing review S10) */
   .links.more { justify-content: flex-start; margin-top: 12px; }
+  .links.more .text-link { margin-left: -8px; }
   .links { display: flex; justify-content: center; gap: 18px; margin-top: 16px; }
   .editor .label-line { margin-top: 14px; }
   .editor .seg { margin-top: 6px; }
   /* three choices on one line, even on a small phone (review 2) */
   .editor .seg:not(.days) button { letter-spacing: .08em; padding-left: 4px; padding-right: 4px; white-space: nowrap; }
   /* four choices of how often on one line, even on a small phone (D-112) */
-  .editor .seg.often button { letter-spacing: .03em; font-size: calc(14px * var(--ts, 1)); padding-left: 2px; padding-right: 2px; }
-  .editor .seg.often.more { margin-top: 4px; }
+  /* the choices flow onto as many rows as they need, always ending on the column's edge (spacing review S7) */
+  .editor .seg.often { display: flex; flex-wrap: wrap; gap: 8px 6px; }
+  .editor .seg.often button { flex: 1 1 auto; letter-spacing: 0; font-size: calc(14px * var(--ts, 1)); padding-left: 2px; padding-right: 2px; }
+  .editor .seg.often.more { margin-top: 8px; }
   .said { margin: 8px 0 0; color: var(--ink-2); font-style: italic; }
-  .links.undo { margin: 4px 0 14px; }
+  /* on the sentence's left edge, not centred under a left-set line (spacing review S14) */
+  .links.undo { justify-content: flex-start; margin: 8px 0 16px -8px; }
   .stepper input.val { flex: 1; }
   .days button { padding-left: 0; padding-right: 0; font-size: calc(14px * var(--ts, 1)); letter-spacing: .02em; min-width: 0; }
-  .seg.days { grid-auto-columns: minmax(0, 1fr); gap: 4px; }
+  /* with the phone's text set larger, four to a row instead of seven run together (as in the Week, spacing review S12) */
+  .seg.days { grid-auto-flow: row; grid-template-columns: repeat(auto-fit, minmax(min(calc(36px + (var(--ts, 1) - 1) * 1000px), calc((100% - 12px) / 4)), 1fr)); gap: 4px; }
   .stepper { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; border: 1px solid var(--edge-2); background: rgba(10,9,24,.55); }
   .stepper .val { color: #fff; font-size: calc(17px * var(--ts, 1)); }
   .step { min-width: 52px; }

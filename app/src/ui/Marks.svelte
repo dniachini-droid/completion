@@ -48,11 +48,12 @@
   <header class="top col">
     <div class="topbar rise">
       <button class="home" onclick={() => go('back')}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><span>{back.label}</span></button>
-      <span></span>
-      <div class="seg lv" role="group" aria-label={t('marks.label')}>
-        <button aria-pressed="false" onclick={() => go('records')}>{t('records.nav')}</button>
-        <button aria-pressed="true">{t('marks.nav')}</button>
-      </div>
+      <span></span><span></span>
+    </div>
+    <!-- the two tabs on a row of their own, two equal halves (spacing review, Dan's decision C4) -->
+    <div class="seg lv tabs rise" role="group" aria-label={t('marks.label')}>
+      <button aria-pressed="false" onclick={() => go('records')}>{t('records.nav')}</button>
+      <button aria-pressed="true">{t('marks.nav')}</button>
     </div>
     <div class="label-line rise">{t('marks.label')}</div>
     <h1 class="carve lg rise">{t('marks.title')}</h1>
@@ -130,18 +131,23 @@
 </div>
 
 <style>
-  .body { flex: 1; min-height: 0; overflow-y: auto; padding-top: 12px; padding-bottom: 16px;
-    -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(180deg, #000 calc(100% - 28px), transparent); }
-  /* the read-out stays put under the marks, whatever is scrolled */
-  .foot { flex: none; padding-top: 6px; padding-bottom: max(18px, env(safe-area-inset-bottom)); min-height: 150px; }
+  /* the marks take only their own height, so on a tall phone the read-out follows them rather than floating at the foot;
+     never squeezed below a row and a half, whatever the read-out holds. Both edges fade (the top as base.css's list) */
+  .body { flex: 0 1 auto; min-height: 120px; overflow-y: auto; padding-top: 12px; padding-bottom: 16px;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 12px, #000 calc(100% - 28px), transparent);
+            mask-image: linear-gradient(180deg, transparent 0, #000 12px, #000 calc(100% - 28px), transparent); }
+  /* the read-out stays put under the marks, whatever is scrolled; clear of the faded last row, and it scrolls itself
+     rather than hiding the marks at large text (spacing review) */
+  .foot { flex: none; padding-top: 16px; padding-bottom: max(18px, env(safe-area-inset-bottom)); min-height: 150px; max-height: 55%; overflow-y: auto; scrollbar-width: none; }
+  .foot::-webkit-scrollbar { display: none; }
   .sub { margin: 18px 0 6px; }
   .grid.small { grid-template-columns: repeat(6, minmax(0, 1fr)); }
   .grid.small .cell { grid-template-rows: 40px; }
   .grid.small .gw { width: 40px; height: 40px; }
   .grid.small .cell::before { width: 46px; margin-left: -23px; height: 46px; }
   h1 { margin-top: 8px; }
-  .lv { margin: 0; width: auto; grid-template-columns: 1fr 1fr; }
-  .lv button { padding: 6px 12px; font-size: calc(14px * var(--ts, 1)); min-width: 104px; }
+  .tabs { margin: 4px 0 16px; grid-template-columns: 1fr 1fr; }
+  .tabs button { padding: 6px 12px; font-size: calc(14px * var(--ts, 1)); }
   button.home { color: var(--ink-2); }
   /* every glyph in the same square, every label on one line beneath (as the record's strip) */
   .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); row-gap: 6px; margin: 0 calc(var(--gutter) * -.4); }
@@ -173,8 +179,8 @@
   .know :global(em) { color: #fff; }
   .know :global(s) { color: var(--ink-3); }
   .ctx { margin: 0 0 6px; }
-  .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-  .choices .btn-quiet { justify-content: center; min-height: 46px; }
+  .choices { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); margin-top: 10px; }
+  .choices .btn-quiet { justify-content: center; min-height: var(--ctl-h); }
   .choices .btn-quiet[aria-pressed="true"] { border-color: var(--edge-2); color: #fff; }
   .hint { text-align: center; margin: 8px 0 16px; }
 </style>

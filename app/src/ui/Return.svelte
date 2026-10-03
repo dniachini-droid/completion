@@ -100,7 +100,7 @@
   .key-note { margin: 6px 0 28px; font-family: var(--life); font-size: calc(16.5px * var(--ts, 1)); line-height: 1.45; font-style: italic;
     color: var(--violet-hi); text-align: center; text-transform: none; letter-spacing: normal; }
   .story { font-size: calc(18px * var(--ts, 1)); line-height: 1.42; margin: 10px 0 12px; }
-  .choice { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; margin: -2px 0 8px; }
+  .choice { display: flex; justify-content: center; gap: 0 18px; flex-wrap: wrap; margin: -2px 0 8px; }   /* as on an arrival (spacing review D9) */
   .find { margin: 10px 0 6px; }
   .find :global(.label-line), .find p { text-align: center; }
   .part { text-align: center; margin: 4px 0 10px; }

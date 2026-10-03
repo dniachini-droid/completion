@@ -59,9 +59,10 @@
   </div>
   <section class="bottom fit col center">
     <div class="scroll">
-      <div class="label-line centred gold rise">{t('step.label')}</div>
-      <h2 class="say-lg rise d1">{job ? t('step.done', { job: job.name }) : ''}</h2>
-      {#if jd}<div class="rise d2 route"><EndRoad road={v.road} from={atW - moved} to={atW} {mode} /></div>{/if}
+      <!-- the road line first, then what was done: in the same order as a delve's end (spacing review D20, Dan: C8) -->
+      {#if jd}<div class="rise route"><EndRoad road={v.road} from={atW - moved} to={atW} {mode} /></div>{/if}
+      <div class="label-line centred gold rise d1">{t('step.label')}</div>
+      <h2 class="say-lg rise d2">{job ? t('step.done', { job: job.name }) : ''}</h2>
       <div class="rise d3"><Return doneSeq={fact && fact.type === 'jobDone' ? seq : null} extraFinds={chambers} {go} {look} /></div>
     </div>
     <div class="go rise d3">
@@ -83,7 +84,7 @@
   .tring { --R: min(170px, 46vw, 72cqh); position: relative; width: var(--R); height: var(--R); pointer-events: none; }
   .tring::before { content: ""; position: absolute; inset: 3%; border-radius: 50%; border: 1.2px solid rgba(217, 214, 255, .3);
     background: radial-gradient(circle, rgba(12, 8, 40, .5), rgba(12, 8, 40, .25) 60%, transparent 72%); }
-  .bottom :global(.road) { margin-top: 12px; }
-  .go { margin-top: 4px; }
+  /* the story's last line fades out above the button's corner marks, not under them (spacing review D18) */
+  .go { margin-top: 8px; }
   button.home { color: var(--ink-2); }
 </style>

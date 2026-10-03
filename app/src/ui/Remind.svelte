@@ -17,5 +17,7 @@
   .label-line { margin-top: 12px; }
   .seg { margin-top: 6px; }
   /* four choices on one line, even on a small phone */
-  .remind button { letter-spacing: .04em; padding-left: 2px; padding-right: 2px; font-size: calc(14px * var(--ts, 1)); white-space: normal; line-height: 1.15; }
+  .remind button { letter-spacing: 0; padding: 4px; font-size: calc(14px * var(--ts, 1)); white-space: normal; line-height: 1.15; }
+  /* with the phone's text set larger, two by two, so no word meets its box's edge (spacing review S13) */
+  .seg.remind { grid-auto-flow: row; grid-template-columns: repeat(auto-fit, minmax(min(calc(40px + (var(--ts, 1) - 1) * 1000px), calc((100% - 8px) / 2)), 1fr)); }
 </style>

@@ -114,8 +114,8 @@
   .push { position: absolute; inset: 0; transform-origin: 50% 40%; animation: push 3.2s cubic-bezier(.2,.7,.1,1) both; }
   .push .paint { position: absolute; inset: 0; }
   @keyframes push { from { transform: scale(1.1); opacity: 0; } 30% { opacity: 1; } to { transform: none; opacity: 1; } }
-  .head { margin-top: 12px; }
-  .head .carve { margin-top: 12px; }
+  .head { margin-top: 8px; }
+  .head .carve { margin-top: 8px; }
   .bottom .soft { text-align: center; margin-bottom: 18px; }
   button.home { color: var(--ink-2); }
   /* the stair moves (D-041): the view drifts slowly down towards the well; light wakes down the treads, then a slow pulse

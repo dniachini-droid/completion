@@ -108,10 +108,11 @@
 
 <style>
   .scrim { position: absolute; inset: 0; z-index: 30; background: rgba(4, 4, 12, .55); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
-  .menu { position: absolute; z-index: 31; left: 16px; right: 16px; bottom: calc(var(--safe-b, 0px) + 16px); max-height: calc(100% - 80px); overflow-y: auto;
+  /* on the column's edges, like everything else on the screen (spacing review S15) */
+  .menu { position: absolute; z-index: 31; left: max(var(--gutter), calc((100% - var(--col)) / 2 + var(--gutter))); right: max(var(--gutter), calc((100% - var(--col)) / 2 + var(--gutter))); bottom: calc(var(--safe-b, 0px) + 16px); max-height: calc(100% - 80px); overflow-y: auto;
     background: rgba(18, 16, 38, .96); border: 1px solid var(--edge-2); padding: 6px 0; animation: up .18s ease-out; }
   @keyframes up { from { transform: translateY(12px); opacity: 0; } }
-  .name { margin: 8px 18px 6px; font-family: var(--life); font-size: calc(15px * var(--ts, 1)); font-style: italic; color: var(--ink-2); text-align: center; overflow-wrap: anywhere; }
+  .name { margin: 6px 18px 12px; font-family: var(--life); font-size: calc(15px * var(--ts, 1)); font-style: italic; color: var(--ink-2); text-align: center; overflow-wrap: anywhere; }
   .item { display: block; width: 100%; min-height: 48px; padding: 0 18px; text-align: center; font-family: var(--life); font-size: calc(18px * var(--ts, 1)); color: var(--ink);
     border-top: 1px solid var(--edge-4); }
   .item:disabled { color: var(--ink-3); }
