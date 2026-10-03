@@ -142,6 +142,9 @@ jobs:
       - name: "The improvements: the put-off mark, Can't get started, Just this one today, the 5-minute mark, last night's choice, the week's close, the Map's path (deep review Stage 8)"
         if: matrix.walk
         run: node tests/flows/improve8.mjs http://localhost:4173/ ${{ matrix.size }}
+      - name: A recurring job's week, its notches, off Today once met (D-149)
+        if: matrix.walk
+        run: node tests/flows/week-marks.mjs http://localhost:4173/ ${{ matrix.size }}
       - name: The whole first playable, walked day by day
         if: matrix.walk
         run: mkdir -p "$RUNNER_TEMP/screens" && node tests/flows/heart-walk.mjs http://localhost:4173/ "$RUNNER_TEMP/screens" ${{ matrix.size }}
