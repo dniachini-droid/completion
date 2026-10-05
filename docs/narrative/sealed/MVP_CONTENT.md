@@ -95,8 +95,8 @@ The stretch ids stay; what the app shows is the **area**. How they join and how 
 | 10 | `b-10.A` (K) · `pl-w10-blast-floor` · `b-10.C` (K) · `pl-w10-deep-end` · `b-10.B` (K) · E `pl-w4-hollow` (from w4) |
 | 11 | `pl-w11-cupboard` · `b-11.A` (K) · `b-11.C` (K) · `pl-w11-far-end` · `b-11.B` · `b-13.C` (K) (from w13) |
 | 12 | `b-12.A` · `pl-w12-shelf` · E `b-12.B` (K) · `pl-w12-square-way` · `b-12.C` (K) · E `pl-w4-recess-above-the-cot` (from w4) |
-| 13 | `pl-w13-side-gallery` · `b-13.A` (K) · `b-13.B` · `pl-w13-lower-gallery` · E `pl-w5-ledge-lip` (from w5) |
-| 14 | `pl-w14-mule-stone` · `pl-w14-meeting` · `b-14.A` · `b-14.B` · E `pl-w14-deep-niche` |
+| 13 | `pl-w13-side-gallery` · `b-13.A` (K) · `b-13.B` · `pl-w14-mule-stone` (from w14) · `pl-w13-lower-gallery` · E `pl-w5-ledge-lip` (from w5) |
+| 14 | `pl-w14-meeting` · `b-14.A` · `b-14.B` · E `pl-w14-deep-niche` |
 
 The table below is the first job's, kept for its record (superseded): `req` for the pinned story arrivals: `b-2.B` req `b-2.1` (the box opened); `b-2.2` req `seal-2-1` (GIVE can only be guessed once the sheet is out); `b-3.A` belongs to weeks 2–3 (D-013) and **plays as soon as its req is met, even in story week 2**, ahead of any week 2 place still to come (the rest of week 3 waits for the calendar); `b-3.A` req `b-2.B` and `mk-give` guessed (`b-2.2`), and plays on the first arrival after the next main job (ARR1 2.B); `b-4.A` req `b-3.1`; `b-5.A` req `seal-5-1` (ONCE); `b-6.A` req `b-5.B`; `b-7.A` req `seal-7-1`; `b-7.C` req `b-7.A`. The `pl-` places need only physical access, so a deep push can reach them a week early: `pl-w2-above-the-ring` req `seal-1-1`; `pl-w2-smooth-place` req `b-1.B`; `pl-w2-box-by-the-cot`, `pl-w4-recess-above-the-cot`, `pl-w6-folder` req `b-1.C`; `pl-w3-salt-lit`, `pl-w3-far-end` req `b-3.A`; `pl-w5-worn-steps` req `b-3.C`; `pl-w5-second-landing` req `b-4.1`; `pl-w6-square-gallery` req `b-6.A`; `pl-w6-wall-shelf` req `pl-w6-square-gallery`; the rest none.
 
