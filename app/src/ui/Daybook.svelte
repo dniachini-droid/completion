@@ -50,7 +50,10 @@
      him, D-154), "Area · place", in its own painting (MORNING-REPORT Part 3 #9) */
   const furthest = $derived.by(() => {
     if (!page) return null;
-    const upTo = game.facts.filter(x => calendarWeek(x.day) <= page.week), st = storyState(upTo, s);
+    /* the log up to the week's last fact (a plan change's day is the plan's, maybe none, so it doesn't date the fact) */
+    let last = -1;
+    game.facts.forEach((x, i) => { if (x.type !== 'planChanged' && x.day && calendarWeek(x.day) <= page.week) last = i; });
+    const upTo = game.facts.slice(0, last + 1), st = storyState(upTo, s);
     const f = upTo.filter((x): x is FactOf<'arrived'> => x.type === 'arrived' && x.kind === 'place' && x.id === st.here).pop();
     const b = f && calendarWeek(f.day) === page.week ? beatOf(s, f.id) : undefined;
     return b?.name ? { seq: f!.seq, name: `${areaName(s, b.stretch)} · ${b.name.replace(/^The /, 'the ')}`, painting: paintingOf(b.id, b.stretch) } : null;
