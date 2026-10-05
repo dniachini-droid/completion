@@ -494,8 +494,8 @@ const workedDay = (facts: Fact[], day: string) => ofType(onDay(facts, day), 'ste
 function lastNight(w: W, c: Content, at: Moment, day: string) {
   const last = [...new Set(ofType(w.all, 'stepsGained').filter(f => f.day < day && f.job !== 'sleep').map(f => f.day))].pop();
   if (!last || !workedDay(w.all, last) || ofType(w.all, 'goodnight').some(g => g.day === last)) return;
-  /* only last night's: after days away it waits for the next evening Dan works for, never "last night" for a week ago */
-  if (W.daysBetween(last, day) > 1) return;
+  /* an older night's plays too (a player who opens every other day still has his evenings), said as "one evening",
+     never "last night" for a week ago (the second branch review) */
   evening(w, c, at, day, last, true);
 }
 
@@ -1683,6 +1683,8 @@ export interface Arrival {
   wayIn: string | null;
   /** A turn-off on the way back up (a return whose own words say why, D-154): "On the way back". */
   turnOff?: boolean;
+  /** An evening from before last night, played at this opening: "One evening, at camp". */
+  earlier?: boolean;
   /** A day's end at a stop made before: its words are not said again, only that he stops there again (D-154). */
   stopAgain?: boolean;
   /** An evening's moments at home after its place (her notebook, the tally): each one's line, beat and records. */
@@ -1859,7 +1861,7 @@ function faceOf(c: Content, all: Fact[], f: FactOf<'arrived'>, b: Beat): Arrival
   if (f.how === 'evening' || S.isEvening(c.story, before, b)) return 'evening';
   const area = S.areaOf(c.story, b.stretch);
   if (![...before.visited].some(x => S.areaOf(c.story, x) === area)) return 'enter';
-  return area === S.areaOf(c.story, before.stretch) && before.here !== null ? 'on' : 'back';
+  return area === S.areaOf(c.story, before.stretch) && before.here !== null && !b.backWithin ? 'on' : 'back';
 }
 function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
   if (f.kind === 'evening') {
@@ -1868,7 +1870,7 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
     const guess = [...new Set(then.flatMap(x => guessesOf(c, x.beat)))]
       .filter(m => !then.some(x => x.beat === S.markOf(c.story, m)?.confirmedBy));
     /* named for where its first moment is (her notebook: the Box Room), never only "the Lamp Hall" (the journey review) */
-    return { seq: f.seq, kind: 'evening', face: 'evening', late: !!f.late, area: then[0]?.area || S.areaName(c.story, 'st-hall'), wayIn: null, then,
+    return { seq: f.seq, kind: 'evening', face: 'evening', late: !!f.late, earlier: !!f.late && !!f.night && W.daysBetween(f.night, f.day) > 1, area: then[0]?.area || S.areaName(c.story, 'st-hall'), wayIn: null, then,
       opened: [], way: [], id: f.id, name: '', line: '', records: [], guess, look: null, stretch: 'st-hall',
       painting: paintingOf('b-1.A', 'st-hall'), completedDay: false, byKey: false };
   }
@@ -1919,7 +1921,7 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
     const guess = [...new Set([...(b.carries?.guess ?? []), ...carried, ...keyed])].filter(m => !answers.has(S.markOf(c.story, m)?.confirmedBy ?? ''));
     const area = S.areaName(c.story, b.stretch), wayIn = c.story.stretches.find(x => x.id === S.areaOf(c.story, b.stretch))?.wayIn ?? null;
     /* a place whose own line says how Dan came (a turn-off on the way up) needs no way-in line over it */
-    return { seq: f.seq, kind: 'place', face, late: !!f.late, area, wayIn: face === 'back' && !b.said ? wayIn : null, turnOff: face === 'back' && !!b.turnOff, then,
+    return { seq: f.seq, kind: 'place', face, late: !!f.late, earlier: !!f.late && !!f.night && W.daysBetween(f.night, f.day) > 1, area, wayIn: face === 'back' && !b.said ? wayIn : null, turnOff: face === 'back' && !!b.turnOff, then,
       opened, way, id: b.id, name: b.name ?? '', line: b.line ?? '', taps: b.taps, choice: b.choice,
       records: b.carries?.records ?? [], guess, look: null, stretch: b.stretch, painting: paintingOf(b.id, b.stretch), completedDay, byKey: f.how === 'key' };
   }

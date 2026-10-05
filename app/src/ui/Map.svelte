@@ -109,7 +109,8 @@
       else if (f.kind === 'camp' && f.seq !== v.arrival?.seq && !camps.has(f.id)) camps.set(f.id, f.seq);
     }
     for (const [id, seq] of camps) { const k = s.camps.find(x => x.id === id); if (k) out.push({ seq, name: k.name, stretch: area(k.stretch), camp: true }); }
-    return out.sort((a, b) => a.seq - b.seq);
+    /* a stop with a place's own name is that place: one row (the round-8 review) */
+    return out.filter(r => !r.camp || !out.some(x => !x.camp && x.stretch === r.stretch && x.name === r.name)).sort((a, b) => a.seq - b.seq);
   });
   const region = $derived.by((): Light[] => {
     const out: Light[] = [];
@@ -141,7 +142,9 @@
   });
   /* the region's size comes from the lights shown, never less than the first region: a bigger region is dragged around */
   const RW = $derived(Math.max(390, ...region.map(a => a.x + 60))), RH = $derived(Math.max(548, ...region.map(a => a.y + 60)));
-  const regionLinks = $derived(LINKS.filter(([a, b]) => walkedOn.has(a) && (walkedOn.has(b) || b === aheadOn))
+  /* a join that a word opens is drawn once it is cut (ids only, D-015) */
+  const OPENS: Partial<Record<string, string>> = { 'st-blast|st-lower': 'b-14.A' };
+  const regionLinks = $derived(LINKS.filter(([a, b]) => walkedOn.has(a) && (walkedOn.has(b) || b === aheadOn) && (!OPENS[`${a}|${b}`] || v.story.played.has(OPENS[`${a}|${b}`]!)))
     .map(([a, b]) => ({ d: curve(AT[a]!, AT[b]!), walked: walkedOn.has(b) })));
 
   function curve(a: { x: number; y: number }, b: { x: number; y: number }) {
@@ -187,7 +190,7 @@
   });
   let centred = false;
   $effect(() => {
-    const h = (focus ? region.find(l => l.key === focus) : undefined) ?? region.find(l => l.kind === 'here'), f = field, scale = k;
+    const h = (focus ? region.find(l => l.key === areaOf(content.story, focus as StretchId)) : undefined) ?? region.find(l => l.kind === 'here'), f = field, scale = k;
     if (!f || !h || centred) return;
     requestAnimationFrame(() => { f.scrollLeft = h.x * scale - f.clientWidth / 2; f.scrollTop = h.y * scale - f.clientHeight / 2; centred = true; });
   });

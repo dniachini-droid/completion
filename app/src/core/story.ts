@@ -301,7 +301,10 @@ export function eveningsBehind(s: Story, st: StoryState): boolean {
 export function nextCamp(s: Story, st: StoryState): { id: string; find?: string; line?: string } {
   const open = s.camps.filter(c => st.visited.has(c.stretch) && c.w <= st.week && allMet(st, c.req) && !(c.until && met(st, c.until)));
   /* where Dan turned back today is in the area he is walking (D-154): one elsewhere only if his has none at all */
-  const ok = open.filter(c => areaOf(s, c.stretch) === areaOf(s, st.stretch));
+  /* (on his own stretch first, then the deepest of his area: never the head of the Stair when he is two flights down) */
+  const deep = (c: { stretch: StretchId }) => s.stretches.findIndex(x => x.id === c.stretch);
+  const ok = open.filter(c => areaOf(s, c.stretch) === areaOf(s, st.stretch))
+    .sort((a, b) => Number(b.stretch === st.stretch) - Number(a.stretch === st.stretch) || deep(b) - deep(a));
   /* none there: the deepest area walked (never home once the way down is open) */
   if (ok.length) open.splice(0, open.length, ...ok);
   else {

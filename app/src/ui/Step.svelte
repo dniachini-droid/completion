@@ -50,7 +50,7 @@
   <header class="top col">
     <div class="topbar rise">
       <button class="home" onclick={leave}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg><!-- never the next place's name before it is reached (D-154) -->
-      <span>{v.arrival ? t('arrive.toward') : back.label}</span></button>
+      <span>{v.arrival ? (v.arrival.kind === 'place' && v.arrival.face !== 'evening' ? t('arrive.toward') : t('today.look')) : back.label}</span></button>
       <span></span><span></span>
     </div>
   </header>

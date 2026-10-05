@@ -69,7 +69,8 @@ describe('the route is a journey: a descent with a home at the top (D-154)', () 
           expect(['enter', 'back'], `${name} ${x.id}`).toContain(x.face);
           /* how he got there: the area's way-in line, or the place's own words (a turn-off on the way up says so itself) */
           if (x.face === 'back') expect(!!x.wayIn || !!S.beatOf(s, x.id)?.said, `${name} ${x.id}`).toBe(true);
-        } else expect(x.face, `${name} ${x.id}`).toBe('on');
+        /* within the area: on, or back along it where its words say so (backWithin) */
+        } else expect(x.face, `${name} ${x.id}`).toBe(S.beatOf(s, x.id)?.backWithin ? 'back' : 'on');
         last = x.area;
       }
     }

@@ -47,7 +47,7 @@
   /* how Dan came here (D-154): a new area, the next place in the area he is in, back to an area walked before, or an
      evening at camp; said in the label, and the area named above every place */
   const label = $derived(!a ? '' : again ? t('arrive.again') : a.kind === 'camp' ? t('arrive.camp')
-    : a.face === 'evening' ? t(a.late ? 'arrive.lastNight' : 'arrive.evening') : a.face === 'enter' ? t('arrive.newArea') : a.face === 'back' ? t(a.turnOff ? 'arrive.turnOff' : 'arrive.backIn') : t('arrive.label'));
+    : a.face === 'evening' ? t(a.earlier ? 'arrive.oneEvening' : a.late ? 'arrive.lastNight' : 'arrive.evening') : a.face === 'enter' ? t('arrive.newArea') : a.face === 'back' ? t(a.turnOff ? 'arrive.turnOff' : 'arrive.backIn') : t('arrive.label'));
   /* a new area: its name is the title, the place under it; anywhere else the area sits small above the place */
   /* an evening with no one place is named for where it begins (its sections name any other area they move to), D-154 */
   const title = $derived(!a ? '' : a.kind === 'evening' ? a.area || t('arrive.byTheLamp') : a.face === 'enter' && !again ? a.area : a.name);

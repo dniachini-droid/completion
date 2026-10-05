@@ -662,6 +662,8 @@ export const beats: Beat[] = [
     line: "Back in the square gallery, you return to the crew's wall. Below its second record are twelve rings in a row, small carved circles, and a thirteenth, smaller: …person [ ], [ ] [ ] [a tablet]… The twelve and the small one look as if they belong together. Beneath them is another niche, and its row of notches fills with light. Inside lies a wax tablet gone hard, a board coated in wax like the pay tablet from the niche under the record. On it are twenty symbols, some of them backwards, and one fork with nothing under it. Beside three of them whoever cut the tally has cut the same three again, not over them but beside them. It looks like a beginner's attempt at the symbols.",
     seal: "seal-7-2",
     req: [],
+    said: true,
+    backWithin: true,   // its words say Dan goes back to it (the round-8 review)
     stretch: "st-square",
     painting: "pt-b-7.B",
   },
@@ -1771,6 +1773,8 @@ export const beats: Beat[] = [
     name: "The mule-shoe's stone",
     line: "On your way down through the square gallery towards its deep end, where the fall stood, you stop at the mule-shoe on the floor and the stone beside it with the halter's rub worn into it. Under the short line of symbols on the wall above the stone, you notice a row of notches cut into the wall, all dark.",
     req: ["b-13.B"],   // the day after the word at the deep end, on the way back down to it (D-154)
+    said: true,
+    backWithin: true,   // its words say Dan goes back to it (the round-8 review)
     stretch: "st-square",
     painting: "pt-pl-w14-mule-stone",
     carries: {"inView": ["seal-14-4"]},

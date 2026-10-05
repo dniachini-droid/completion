@@ -232,7 +232,7 @@ export const copy = {
   /* (its name is the title above: a stop's name may start with "By…", so it is never put inside a sentence) */
   'step.atCamp': 'At camp · {area}',
   'arrive.stopAgain': 'You have stopped here once before.',
-  'arrive.newArea': 'A new area', 'arrive.backIn': 'Back again', 'arrive.evening': 'Tonight, at camp', 'arrive.lastNight': 'Last night, at camp',
+  'arrive.newArea': 'A new area', 'arrive.backIn': 'Back again', 'arrive.evening': 'Tonight, at camp', 'arrive.lastNight': 'Last night, at camp', 'arrive.oneEvening': 'One evening, at camp',
   'arrive.byTheLamp': 'By the lamp', 'arrive.toward': 'Arrive',
   'arrive.enough': 'The day’s work is done.',
   'arrive.keyOpens': 'You used a Key you were keeping.',
