@@ -91,7 +91,7 @@ export const seals: Seal[] = [
     line: 'On the second flight, light fills the notches on the sill of the gap, the rough window in the wall. On the sill lie crumbs of wax and a broken stylus, a thin pointed tool for scratching writing into wax. Beside them, a short line of symbols is cut into the wall by whoever cut the tally. They look like the leftovers of someone writing on wax.',
     carries: { records: ['rec-x-wax'] } },
   { id: 'seal-5-4', w: 5, o: 4, where: 'The Box Room, the notebook’s back pocket', stretch: 'st-camp',
-    line: 'In the Box Room, a pocket at the back of her notebook has its own row of notches, and they fill with light. Inside is a folded map of the hill. You unfold it. The shaft is marked in pen, and in another pen someone has written SALT? and TUNNEL? The question marks make them look like guesses at what lies inside the hill.',
+    line: 'Back in the Box Room, you take out her notebook. A pocket at the back of it has its own row of notches, and they fill with light. Inside is a folded map of the hill. You unfold it. The shaft is marked in pen, and in another pen someone has written SALT? and TUNNEL? The question marks make them look like guesses at what lies inside the hill.',
     plain: true },
   // NOTE: seal-5-4's map is paper but not a record in MVP_CONTENT §4, so it counts as plain.
   { id: 'seal-5-5', w: 5, o: 5, where: 'The Lamp Hall, the ledge’s underside', stretch: 'st-hall',

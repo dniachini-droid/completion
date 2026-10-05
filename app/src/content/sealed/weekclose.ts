@@ -18,7 +18,7 @@ export const learned: WeekCloseLine[] = [
   { id: "wc-w3-3", w: 3, req: ["b-3.B"], line: "At the head of the Stair, in a niche, there is a second clay lamp, unlit." },
   { id: "wc-w4-1", w: 4, req: ["b-4.A"], line: "Her sheet for the stretch of tally past the lone ring reads: *go home… lamp… gave… went up.*" },
   { id: "wc-w4-2", w: 4, req: ["b-4.4"], line: "Nearly every record here ends with a hook closed on a dot in its corner. The wall by the lamp has a different hook." },
-  { id: "wc-w4-3", w: 4, req: ["b-4.3"], line: "On her ninth day down here, the woman who camped in the Box Room made herself a rule: go up every night." },
+  { id: "wc-w4-3", w: 4, req: ["b-4.3"], line: "On her ninth day down here, the woman who lived in the Box Room made herself a rule: go up every night." },
   { id: "wc-w5-1", w: 5, req: ["b-5.A"], line: "Every record in the tally begins with the same three symbols: the bar with a tick, a ring and a single drop." },
   { id: "wc-w5-2", w: 5, req: ["b-5.3"], line: "Behind the salt crust, the lamp's symbol, the flame's and the hook-and-drop stand in a row, with no doorway-shape anywhere near them." },
   { id: "wc-w5-3", w: 5, req: ["b-5.2"], line: "In her notebook, the woman who lived here called the one she met the Tenant, and he let her." },
@@ -60,7 +60,7 @@ export const learned: WeekCloseLine[] = [
 export const soFar: SoFar[] = [
   { id: 'sf-m1', w: 1, lines: [
     "The lamp on the ledge in the Lamp Hall was lit before you came, and there is no oil in it.", // sf-m1-1
-    "Someone camped in the Box Room, the side chamber off the Lamp Hall, and left a stone rod behind.", // sf-m1-2
+    "Someone lived in the Box Room, the side chamber off the Lamp Hall, and left a stone rod behind.", // sf-m1-2
     "The long line of symbols in the salt, which seems to be some kind of tally, was cut by one carver.", // sf-m1-3
     "At the far end of the Lamp Hall is a great door that takes up most of the wall.", // sf-m1-4
   ] },
@@ -90,7 +90,7 @@ export const soFar: SoFar[] = [
 /** NOTE: the so-far lines with their own ids (sf-mN-k) and conditions; `w` is the week of the month's first close, as in `soFar`. */
 export const soFarLines: WeekCloseLine[] = [
   { id: "sf-m1-1", w: 1, req: ["b-1.A"], line: "The lamp on the ledge in the Lamp Hall was lit before you came, and there is no oil in it." },
-  { id: "sf-m1-2", w: 1, req: ["b-1.C"], line: "Someone camped in the Box Room, the side chamber off the Lamp Hall, and left a stone rod behind." },
+  { id: "sf-m1-2", w: 1, req: ["b-1.C"], line: "Someone lived in the Box Room, the side chamber off the Lamp Hall, and left a stone rod behind." },
   { id: "sf-m1-3", w: 1, req: ["b-1.5"], line: "The long line of symbols in the salt, which seems to be some kind of tally, was cut by one carver." },
   { id: "sf-m1-4", w: 1, req: ["b-1.A"], line: "At the far end of the Lamp Hall is a great door that takes up most of the wall." },
   { id: "sf-m2-1", w: 5, req: ["b-2.3"], line: "Her notebook's first page, Day 1, says the lamp on the ledge was already lit when she came down, just as it was for you." },

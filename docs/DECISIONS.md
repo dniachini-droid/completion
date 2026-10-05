@@ -1746,7 +1746,7 @@
 - **Context:** RESULT §6 (D-154): in the Stair weeks the evenings at camp carried much of the reading, and reviewers said they "pull you home". Many evening sections were her notebook's pages, read in the Box Room.
 - **Decision:** from the Day 6 page Dan takes her notebook with him; every later page is read where he is, on a job's return on the way, not on an evening (a `portable` story moment). Sealed retcon by MASTER_BRIEF §55, recorded in SITE: no fact of hers changes, only where the reader reads. Separately, two names in the later weeks are now introduced on the screen where they are first met (sealed lines; the fact check passed).
 - **Alternatives:** one place per evening (splits the evenings into more nights, so more evenings, not fewer); moving tally readings (they belong to the salt wall).
-- **Consequences:** the Stair weeks' evenings lose their Box Room sections; the Stair's days carry the notebook. A rule test's minimum count of evening nights is lowered with its reason.
+- **Consequences:** the Stair weeks' evenings lose their Box Room sections; the Stair's days carry the notebook. Every line that put the notebook on the cot after Day 6 was changed or ended there (fact check); its pages' record title is "her notebook, from the cot in the Box Room". For week 15 on (not yet written): her last page and its sealed thing at camp are reached by Dan taking the notebook out back in the Box Room, never as "on the cot". A carried page doesn't say where Dan is; the screen's area label does (writing rule 3 is met by the label). A rule test's minimum count of evening nights is lowered with its reason.
 - **Reversible:** Yes (data and one engine flag).
 
 ## D-156 — How and why you came is never folded away

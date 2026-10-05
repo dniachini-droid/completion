@@ -77,6 +77,7 @@ export const camps: CampView[] = [
     stretch: "st-camp",
     w: 1,
     req: [],
+    until: "b-3.2",   // it shows the notebook on the cot (D-155)
     name: "Her cot",
     line: "Today you stop at the doorway of the Box Room, the small room off the hall where the woman lived. From there you look in at her things: the cot with the boots beneath it, the notebook with its pencil, and the shelf where the rod lay.",
     look: {"find": "fd-d08"},
