@@ -80,7 +80,9 @@ describe('the route is a journey: a descent with a home at the top (D-154)', () 
       const b = S.beatOf(s, id)!;
       if (S.isHome(s, b.stretch)) expect(first(id), id).toMatch(/\b(night|Tonight|tonight|camp|evening|This morning)\b/);
     }
-    for (const id of ['pl-w10-deep-end', 'pl-w11-far-end', 'b-13.B']) expect(first(id), id).toMatch(/way (back )?up|on the way/i);
+    /* a turn-off: its reason, and that it is on the way back up, in its first two sentences */
+    const two = (id: string) => (S.beatOf(s, id)!.line ?? '').split(/(?<=[.!?])\s/).slice(0, 2).join(' ');
+    for (const id of ['pl-w10-deep-end', 'pl-w11-far-end', 'b-13.B']) expect(two(id), id).toMatch(/way (back )?up|on the way/i);
   });
   it('fails on the old route: the old order changed area 48 times (D-153)', () => {
     /* the old order's areas, as played (ROUTE_REDESIGN §2.1): the measure this test holds the route to */
