@@ -184,6 +184,12 @@
       {#if phase === 'settled'}
         <div class="scroll">
           <div class="settle-list"><Settled beat={a.id} /></div>
+          <!-- a word cut on an evening at camp: the rest of that evening follows it, each part under its area (D-154) -->
+          {#each a.then as w, i (w.beat)}
+            {#if w.area && w.area !== (i ? a.then[i - 1].area : a.area)}<span class="then-area">{w.area}</span>{/if}
+            <p class="soft on-scene then-line"><Prose text={w.line} /></p>
+            <div class="settle-list"><Settled beat={w.beat} /></div>
+          {/each}
           {#if a.completedDay}<p class="enough">{t('arrive.enough')} <em>{t('arrive.enough2')}</em></p>{/if}
         </div>
       {/if}
@@ -229,6 +235,8 @@
 
 <style>
   .cut { display: contents; }
+  .then-area { display: block; margin: 14px 0 2px; font-family: var(--life); font-size: calc(13px * var(--ts, 1)); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+  .then-line { margin: 0 0 6px; }
   /* the stage: the painting and the marks on the lintel move together (the camera) */
   .stage { position: absolute; inset: 0; z-index: 0; transform-origin: var(--ox, 30%) var(--oy, 45%); transition: transform 3.2s cubic-bezier(.45, 0, .2, 1); will-change: transform; }
   .answer .stage { transform: translate(var(--tx, 0px), var(--ty, 0px)) scale(1.42); }

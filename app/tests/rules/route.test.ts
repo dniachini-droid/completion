@@ -104,13 +104,13 @@ describe('the route is a journey: a descent with a home at the top (D-154)', () 
     }
     expect(checked).toBeGreaterThan(5);
   }, 300_000);
-  it('nothing names what Dan has not yet seen: the door before its evening, the lower gallery before the fall is passed', () => {
+  it('nothing names what Dan has not yet seen: b-4.C before b-6.2, pl-w14-mule-stone before pl-w13-lower-gallery', () => {
     for (const [name, facts] of Object.entries(lives)) {
       const at = (id: string) => facts.findIndex(f => (f.type === 'beatPlayed' || f.type === 'arrived') && f.id === id);
-      /* b-6.2 names the great door's symbol "you saw" (the independent review of the branch, B1) */
+      /* b-6.2 assumes b-4.C (the independent review of the branch, B1; ids only, D-015) */
       expect(at('b-4.C'), name).toBeGreaterThanOrEqual(0);
       expect(at('b-4.C'), `${name}: b-6.2`).toBeLessThan(at('b-6.2') < 0 ? facts.findIndex(f => f.type === 'sealOpened' && f.seal === 'seal-6-1') : at('b-6.2'));
-      /* the mule-shoe's stone is a stop on the way down to the fall, before the gallery beyond it */
+      /* pl-w14-mule-stone is a stop on the way to pl-w13-lower-gallery (ROUTE_REDESIGN §12) */
       expect(at('pl-w14-mule-stone'), name).toBeLessThan(at('pl-w13-lower-gallery'));
     }
   }, 300_000);

@@ -38,7 +38,8 @@ export const copy = {
   'today.label': 'Today',
   'today.enough': 'The day’s work is done, and it was enough.',
   'today.reached': 'Today brought you to {area}, {place}.',
-  'today.camped': 'On the way back up you stopped at {place}, then slept by the lamp.',
+  /* (a stop's name is never put inside a sentence; nothing of sleep before goodnight, D-154 review) */
+  'today.camped': 'Today you turned back short of the next place: {area}.',
   'today.at': '{place}',
   'today.look': 'See where you are',
   'today.keepGoing': 'Keep going',
@@ -58,7 +59,7 @@ export const copy = {
   'set.towards': 'Towards {place}',
   'set.to': 'To {place}',
   'set.onward': 'Further in',
-  'set.further': 'Further into {area}', 'set.onDown': 'On down',
+  'set.further': 'Further into {area}', 'set.onDown': 'On down', 'set.back': 'On the way back',
   'set.nextPlace': 'the next place',
   'set.count': '{n} of {len} minutes',
   'set.ends': 'finishing around {end}',

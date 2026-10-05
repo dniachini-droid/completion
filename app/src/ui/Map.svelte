@@ -63,8 +63,7 @@
     'st-lower':   { x: 238, y: 826, lx: 202, ly: 822, anchor: 'end' },
   };
   /* how the areas join: home at the top (the Box Room and the Salt Gallery off the Lamp Hall), the way down through the
-     Stair to the Water and below it, the branches off it; and the lower way, which the square gallery's lower gallery
-     meets too (D-154) */
+     Stair, and the branches off it (D-154; the deeper joins are in the sealed SITE, ids only here) */
   const LINKS: [StretchId, StretchId][] = [['st-mouth', 'st-hall'], ['st-hall', 'st-camp'], ['st-hall', 'st-salt'], ['st-hall', 'st-stair'], ['st-stair', 'st-square'],
     ['st-stair', 'st-water'], ['st-water', 'st-reading'], ['st-water', 'st-blast'], ['st-blast', 'st-side'], ['st-blast', 'st-lower'], ['st-square', 'st-lower']];
 

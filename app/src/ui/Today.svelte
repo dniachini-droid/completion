@@ -13,11 +13,11 @@
      rows seemed to change places by themselves); a swipe takes it off today; the last row chooses a delve on anything (D-077). After day complete: the day as done, until Dan taps a job or keeps going.
      Mock-up: design/directions/d-combined/morning.html. */
   import { game, content } from './game.svelte';
-  import { pastBedtime, BEDTIME_WINDOW, tomorrowFirst, firstChosen, satchelView, carriedOf, weekCount, arrivalAt } from '../core/game';
+  import { pastBedtime, BEDTIME_WINDOW, tomorrowFirst, firstChosen, satchelView, carriedOf, weekCount } from '../core/game';
   import { tieFor } from '../core/remember';
   import { leaveWord, moment } from './moment.svelte';
   import { ofLine } from './panel';
-  import { beatOf } from '../core/story';
+  import { beatOf, areaName } from '../core/story';
   import type { FactOf, Job } from '../core/types';
   import { t, minutesWords, minutesShort, inSentence, placeIn, dayShort, type Weekday } from '../content/copy/en';
   import Scene from './Scene.svelte';
@@ -39,9 +39,13 @@
   /* the last place reached (never a camp): its entry, read again from its name (D-135) */
   /* what today's walking came to: its last place or the place it turned back at, never an evening at camp (that is
      the night's, not the walk's) nor a place reached on another day (D-154 review) */
+  /* (one not yet shown is not yet his: it comes on its own screen first) */
   const lastPlace = $derived.by(() => {
-    const f = game.facts.filter((x): x is FactOf<'arrived'> => x.type === 'arrived' && x.day === v.day && x.kind !== 'evening' && x.how !== 'evening').pop();
-    return !f ? null : f.kind === 'camp' ? (v.lastArrival?.seq === f.seq ? v.lastArrival : arrivalAt(game.facts, content, f.seq)) : { kind: 'place' as const, name: '' };
+    const f = game.facts.filter((x): x is FactOf<'arrived'> => x.type === 'arrived' && x.day === v.day && x.kind !== 'evening' && x.how !== 'evening'
+      && (v.arrival === null || x.seq < v.arrival.seq)).pop();
+    if (!f) return null;
+    const st = f.kind === 'camp' ? content.story.camps.find(k => k.id === f.id)?.stretch : beatOf(content.story, f.id)?.stretch;
+    return { kind: f.kind, area: st ? areaName(content.story, st) : v.here.area, name: f.kind === 'camp' ? '' : beatOf(content.story, f.id)?.name ?? '' };
   });
 
   const recurring = (id: string) => v.content.rhythms.some(r => r.job === id);
@@ -349,7 +353,7 @@
         <div class="label-line gold">{t('today.label')}</div>
         <h2 class="say-lg">{t('today.enough')}</h2>
         {#if lastPlace}
-          <p class="soft">{lastPlace.kind === 'camp' ? t('today.camped', { place: inSentence(lastPlace.name) }) : t('today.reached', { area: inSentence(v.here.area), place: placeIn(v.here.name) })}</p>
+          <p class="soft">{lastPlace.kind === 'camp' ? t('today.camped', { area: lastPlace.area }) : t('today.reached', { area: inSentence(lastPlace.area), place: placeIn(lastPlace.name) })}</p>
         {/if}
         {#if stillToCome.length}<p class="soft still">{t('today.stillToCome', { what: stillToCome.join(', ') })}</p>{/if}
         {#if evening}{@render tonight()}{/if}

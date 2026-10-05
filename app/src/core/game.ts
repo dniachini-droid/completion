@@ -1771,6 +1771,7 @@ export interface View {
   road: { from: number; chamber: number; to: number; place: boolean };
   /** The next place on foot is in the area Dan is in (true), a new one (false), or there is none in reach (null). */
   nextHere: boolean | null;
+  nextBack: boolean;
   lastArrival: Arrival | null;
   story: S.StoryState;
   teaser: string | null;
@@ -2281,6 +2282,9 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
     /* the next place on foot is in the area Dan is in (the road says "Further into …"), or a new one ("On down"); never
        its name before he reaches it (D-154) */
     nextHere: ((b: Beat | null) => b ? S.areaOf(c.story, b.stretch) === S.areaOf(c.story, full.stretch) : null)(nextBeat ?? S.placeAhead(c.story, full)),
+    /* the next place is back in an area walked before (a turn-off, a return): never "On down" (the second branch review) */
+    nextBack: ((b: Beat | null) => !!b && S.areaOf(c.story, b.stretch) !== S.areaOf(c.story, full.stretch)
+      && [...full.visited].some(x => S.areaOf(c.story, x) === S.areaOf(c.story, b.stretch)))(nextBeat ?? S.placeAhead(c.story, full)),
     lastArrival: lastArr, story: wordWaits ? full : S.storyState(facts, c.story), teaser: S.teaser(c.story, st), runFinds,
     passage: c.story.passages.find(p => p.id === S.nextPassage(c.story, st))?.line ?? '',
   };

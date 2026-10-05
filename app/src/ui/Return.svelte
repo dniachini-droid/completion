@@ -43,7 +43,7 @@
   const putOff = $derived(new Set(doneSeq === null ? [] : game.facts.flatMap(f => f.type === 'findGiven' && f.why === 'avoided' && f.job === doneSeq ? [f.id] : [])));
   const findsFirst = $derived(finds.filter(f => putOff.has(f!.id)));
   const findsAfter = $derived(finds.filter(f => !putOff.has(f!.id)));
-  /* a story moment somewhere other than where Dan is (the tally at camp, the Water passed on the way down) says where, so
+  /* a story moment somewhere other than where Dan is says where, so
      the words never seem to move him (the journey review, D-154) */
   const elsewhere = $derived.by(() => {
     if (!r?.beat) return '';
