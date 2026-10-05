@@ -129,7 +129,8 @@ export type FactBody =
   | { type: 'arrived'; kind: 'place' | 'camp'; id: string; how?: 'foot' | 'key' }
   /* the story (slice 2): each written once, when it happens */
   | { type: 'beatPlayed'; id: string; job?: number; passage?: string }
-  | { type: 'keyEarned'; rhythm: string }
+  /** `for`: a day in the period the Key was earned for, when it landed later, at an opening (D-152); else its own day. */
+  | { type: 'keyEarned'; rhythm: string; for?: string }
   /** A Key earned while nothing Dan has reached is sealed: kept, and used on the next arrival that has one (D-079). */
   | { type: 'keyHeld' }
   /** `chosen`: used on a locked thing Dan picked on the Map, never part of an arrival or a job's return (D-142). */
