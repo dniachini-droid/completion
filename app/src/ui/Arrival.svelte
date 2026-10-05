@@ -51,6 +51,11 @@
   /* a new area: its name is the title, the place under it; anywhere else the area sits small above the place */
   /* an evening with no one place is named for where it begins (its sections name any other area they move to), D-154 */
   const title = $derived(!a ? '' : a.kind === 'evening' ? a.area || t('arrive.byTheLamp') : a.face === 'enter' && !again ? a.area : a.name);
+  /* the lead: the way in (when it is said) and the first sentence of the words, which says where and why (D-156) */
+  const sentences = $derived(!a?.line ? [] : a.line.split(/(?<=[.!?])\s+/));
+  const leadWay = $derived(a?.wayIn && !again ? a.wayIn : '');
+  const leadFirst = $derived(a && !a.stopAgain ? sentences[0] ?? '' : '');
+  const restLine = $derived(!a ? '' : a.stopAgain ? a.line : sentences.slice(1).join(' '));
   const over = $derived(!a ? '' : a.kind === 'evening' ? '' : a.face === 'enter' && !again ? '' : a.area);
   const under = $derived(!a || again || a.face !== 'enter' ? '' : a.name);
   function pick(i: number) { if (!a) return; game.do({ do: 'choose', beat: a.id, pick: i }); go('records', a.records[i]); }
@@ -97,14 +102,15 @@
         {#if over}<div class="area">{over}</div>{/if}
         <h1 class="carve lg">{title}</h1>
         {#if under}<div class="area under">{under}</div>{/if}
+        <!-- how and why Dan came here is never folded away: the way in and the first sentence stay above the fold (D-156) -->
+        {#if leadWay || leadFirst}<p class="soft on-scene lead">{#if leadWay}<span class="way-in">{leadWay}</span> {/if}{#if leadFirst}<Prose text={leadFirst} />{/if}</p>{/if}
       </section>
       <!-- the painting, left clear: a tap on it looks at it (D-105) -->
       <div class="gap" onclick={look} role="presentation"></div>
       <!-- the words keep to the lower half and scroll there; they can be folded away (D-085) -->
       <div class="col text">
-        <Words {look} length={(a.line?.length ?? 0) + (a.look?.length ?? 0) + a.then.reduce((n, w) => n + w.line.length, 0)}>
-          {#if a.wayIn && !again}<span class="soft on-scene way-in">{a.wayIn}</span>{/if}
-          {#if a.line}<span class="soft on-scene"><Prose text={a.line} /></span>{/if}
+        <Words {look} length={restLine.length + (a.look?.length ?? 0) + a.then.reduce((n, w) => n + w.line.length, 0)}>
+          {#if restLine}<span class="soft on-scene"><Prose text={restLine} /></span>{/if}
           {#if a.stopAgain}<span class="soft on-scene">{t('arrive.stopAgain')}</span>{/if}
           {#if a.look}<span class="soft on-scene look"><Prose text={a.look} /></span>{/if}
           {#each a.way as w (w.beat)}<p class="soft on-scene look"><Prose text={w.line} /></p>{/each}
@@ -171,6 +177,8 @@
   .head .area.under { margin: 6px 0 0; }
   .text :global(.way-in) { font-style: italic; }
   /* each moment of an evening says where it is, when it is somewhere else at camp (the journey review) */
+  .head .lead { margin: 10px 0 0; text-align: left; line-height: 1.45; }
+  .head .lead .way-in { font-style: italic; }
   .then-area { display: block; margin-top: 14px; font-family: var(--life); font-size: calc(13px * var(--ts, 1)); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }   /* as on the delve and the set-up (spacing review D16) */
   /* wrapped onto two lines, the links' own 44 px keep them apart: no gap between the lines (spacing review D9) */
   .choice { display: flex; justify-content: center; gap: 0 18px; flex-wrap: wrap; margin-bottom: 14px; }

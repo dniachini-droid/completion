@@ -119,7 +119,7 @@
       if (walkedOn.has(k)) {
         const fc = here && aheadOn === k && ahead.length ? t('map.forecast', { day: relDay(ahead[0], v.day) }) : undefined;
         out.push({ key: k, ...a, kind: here ? 'here' : 'lit', name: stretchName(k),
-          sub: here ? t('map.here') : sealedOn(k).length ? t('map.sealed') : undefined, subKind: here ? 'warm' : 'dim',
+          sub: here ? t('map.here') : sealedOn(k).length === 1 ? t('map.sealed') : sealedOn(k).length ? t('map.sealedN', { n: sealedOn(k).length }) : undefined, subKind: here ? 'warm' : 'dim',
           box: here ? hereBox
             : { label: sealedOn(k).length ? t('map.walkedSealed') : t('map.walked'), title: stretchName(k), say: t('map.wayIn') } });
         /* on its own line: joined to "you are here" it ran off the screen's left edge (UI review, D-130) */
@@ -340,9 +340,10 @@
                  and painting (D-135), the one Dan stands at marked; then what is said ahead; then the locked things here,
                  with "Use a Key" (D-142) or "Read again" once opened (D-143 B) -->
             {#if sel.reads?.length}
+              <!-- walking order, numbered so it reads as one (D-158: numbers beat a caption in a look at both) -->
               <ul class="rows">
-                {#each sel.reads as r (r.seq)}
-                  <li class="row"><span class="name">{r.name}</span>
+                {#each sel.reads as r, ri (r.seq)}
+                  <li class="row"><span class="name"><span class="n">{ri + 1}</span>{r.name}</span>
                     <button class="text-link state read" class:here={r.here} aria-label={t('map.readAgain', { place: r.name })} onclick={() => go('arrival', `again:${r.seq}`)}><span>{r.here ? t('map.here') : r.camp ? t('map.turnedBack') : t('daybook.readAgain')}</span></button></li>
                 {/each}
               </ul>
@@ -358,7 +359,7 @@
                   {#each locks as x (x.id)}
                     <li class="row"><span class="name">{thing(x.where, sel.key as StretchId)}</span>
                       {#if v.keys && canOpen.has(x.id)}<button class="text-link state use" aria-label={t('map.useKeySr', { where: x.where })} onclick={() => useKey(x.id)}><span>{t('map.useKey')}</span></button>
-                      {:else}<span class="sr-only">, </span><span class="state needs">{t('map.sealed')}</span>{/if}</li>
+                      {:else}<span class="sr-only">, </span><span class="state needs">{t('map.needsKey')}</span>{/if}</li>
                   {/each}
                   {#each done as x (x.id)}
                     <li class="row"><span class="name">{thing(x.where, sel.key as StretchId)}</span>
@@ -427,6 +428,7 @@
     -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 24px), transparent); mask-image: linear-gradient(180deg, #000 calc(100% - 24px), transparent); }
   .rows { list-style: none; margin: 0 0 6px; padding: 0; }
   .rows.locks { border-top: 1px solid var(--edge-2); padding-top: 4px; }
+  .rows .n { display: inline-block; min-width: 1.4em; color: var(--ink-2); font-variant-numeric: tabular-nums; }
   .row { display: flex; gap: 10px; align-items: center; justify-content: space-between; min-height: 44px; font-family: var(--life); font-size: calc(16px * var(--ts, 1)); line-height: 1.3; color: var(--ink); }
   .row .name { flex: 1; min-width: 0; }
   .row .state { flex: none; padding: 0; min-height: 44px; font-size: calc(14.5px * var(--ts, 1)); color: var(--ink-2); }

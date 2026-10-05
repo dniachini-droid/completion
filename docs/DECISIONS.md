@@ -1740,3 +1740,29 @@
 - **Consequences:** supersedes D-153's "chapters" brief (D-153's rename and save-safety stand). Stage 2 builds it on `claude/route-chapters`, with a real 14-week playthrough judged move by move (result: `reviews/route/RESULT.md`). Pace: Dan chose (a), the walk between places stays as it is, so the story runs about a fifth faster for the same effort; nothing waits on that.
 - **Routine calls made in the build (Claude):** an evening plays at goodnight, or at the first open after a day with at least 5 minutes of work if goodnight was skipped; at most one a night, two when one is a week behind; evenings never hold the week or the road, and on a very long day one plays at once if the next place on foot waits on it. A place's kind (on, new area, turn-off, evening) is worked out when it plays, never stored. Where-you-are on an old save is the last place actually walked to. A place that already says how Dan got there skips the area's way-in line.
 - **Reversible:** Yes, until built; the build is one branch and one pull request.
+
+## D-155 — Her notebook goes with Dan; two later names introduced where first met (Dan: "keep going with improvements as suggested")
+- **Date:** 2026-10-05
+- **Context:** RESULT §6 (D-154): in the Stair weeks the evenings at camp carried much of the reading, and reviewers said they "pull you home". Many evening sections were her notebook's pages, read in the Box Room.
+- **Decision:** from the Day 6 page Dan takes her notebook with him; every later page is read where he is, on a job's return on the way, not on an evening (a `portable` story moment). Sealed retcon by MASTER_BRIEF §55, recorded in SITE: no fact of hers changes, only where the reader reads. Separately, two names in the later weeks are now introduced on the screen where they are first met (sealed lines; the fact check passed).
+- **Alternatives:** one place per evening (splits the evenings into more nights, so more evenings, not fewer); moving tally readings (they belong to the salt wall).
+- **Consequences:** the Stair weeks' evenings lose their Box Room sections; the Stair's days carry the notebook. A rule test's minimum count of evening nights is lowered with its reason.
+- **Reversible:** Yes (data and one engine flag).
+
+## D-156 — How and why you came is never folded away
+- **Date:** 2026-10-05
+- **Context:** RESULT §6: on arrival screens the line saying how you got there was often the one folded under "Look" (D-085).
+- **Decision:** the area's way-in line (when said) and the first sentence of the place's words always show under the title; the rest folds as before (D-085 stands for it). A kept guess quotes its word ("You guessed “here”").
+- **Reversible:** Yes.
+
+## D-157 — On the Map, a locked thing is inside an area, never the area
+- **Date:** 2026-10-05
+- **Context:** RESULT §6: "needs a Key" under every area with something locked read as the area itself being locked, even ones walked daily.
+- **Decision:** an area's light says "1 locked thing inside" or "N locked things inside"; only a locked thing's own row in the box says "needs a Key" (or "Use a Key"). D-142 stands.
+- **Reversible:** Yes (copy).
+
+## D-158 — The Map's box numbers the places in walking order
+- **Date:** 2026-10-05
+- **Context:** RESULT §6: the box lists places in walking order (PROPOSAL §4, approved) but nothing said so.
+- **Decision:** each place is numbered (1, 2, 3…). Chosen over an "In the order you walked" caption after a look at both at 390 × 844: the numbers take no extra line in a small box and read as steps.
+- **Reversible:** Yes.
