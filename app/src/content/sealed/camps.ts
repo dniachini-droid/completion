@@ -78,7 +78,7 @@ export const camps: CampView[] = [
     w: 1,
     req: [],
     name: "Her cot",
-    line: "Today you stop at the doorway of the Box Room, the small side chamber where the woman lived. From there you look in at her things: the cot with the boots beneath it, the notebook with its pencil, and the shelf where the rod lay.",
+    line: "Today you stop at the doorway of the Box Room, the small room off the hall where the woman lived. From there you look in at her things: the cot with the boots beneath it, the notebook with its pencil, and the shelf where the rod lay.",
     look: {"find": "fd-d08"},
   },
   {

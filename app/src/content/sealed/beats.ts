@@ -1284,7 +1284,7 @@ export const beats: Beat[] = [
     w: 10,
     o: 3,
     name: "The blast room",
-    line: "You step through into the room beyond the lintel: a chamber of smooth, rounded stone. One of its walls has been torn open, and through the hole is rough, dark rock, like the end of a tunnel cut by miners. From it two narrow iron rails, the kind laid for small wagons of rubble, run across the floor and stop in the middle of the room. It looks as if a blast went off here, and you begin to think of it as the blast room. At its far end the roof has come down in a heap of rubble that blocks the way on, a second fall, not the one in the square gallery. By the door is a ledge with the book of paper on it, and near the back is a shelf with a row of dark notches along its edge.",
+    line: "You step through into the room beyond the lintel: a chamber of smooth, rounded stone. One of its walls has been torn open, and through the hole is rough, dark rock, like the end of a tunnel cut by miners. From it two narrow iron rails, the kind laid for small wagons of rubble, run across the floor and stop in the middle of the room. It looks as if a blast went off here, and you begin to think of it as the blast room. At its far end the roof has come down in a heap of rubble that blocks the way on, a second fall, not the one in the square gallery. By the door is a ledge with the book of paper on it, and near the back is a shelf with a row of dark notches along its edge. In the side wall a low doorway, square at its corners, opens on a dark passage.",
     req: ["b-10.A"],
     stretch: "st-blast",
     painting: "pt-pl-w10-blast-floor",

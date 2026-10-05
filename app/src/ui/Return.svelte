@@ -5,7 +5,7 @@
      guess where one is offered; and any find. One drawable thing at a time; nothing here is a task. */
   import { game, content } from './game.svelte';
   import { returnOf } from '../core/game';
-  import { beatOf, sealOf, areaName, areaOf } from '../core/story';
+  import { beatOf, sealOf, areaName, areaOf, isHome } from '../core/story';
   import { t, partWords } from '../content/copy/en';
   import Guess from './Guess.svelte';
   import Glyph from './Glyph.svelte';
@@ -48,7 +48,9 @@
   const elsewhere = $derived.by(() => {
     if (!r?.beat) return '';
     const st = beatOf(content.story, r.beat)?.stretch ?? sealOf(content.story, r.beat)?.stretch;
-    return st && areaOf(content.story, st) !== areaOf(content.story, v.here.stretch) ? areaName(content.story, st) : '';
+    if (!st || areaOf(content.story, st) === areaOf(content.story, v.here.stretch)) return '';
+    /* a moment at home once the way down is open is at camp, as the evenings are (round 5 of the journey review) */
+    return isHome(content.story, st) && v.story.departed ? t('step.atCamp', { area: areaName(content.story, st) }) : areaName(content.story, st);
   });
 </script>
 

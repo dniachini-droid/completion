@@ -229,6 +229,7 @@ export const copy = {
   /* a day that ended short of a place (as the Map says, "Turned back here"); a turn-off on the way up is "On the way back" (D-154) */
   'arrive.camp': 'Where you turned back', 'arrive.turnOff': 'On the way back',
   /* (its name is the title above: a stop's name may start with "By…", so it is never put inside a sentence) */
+  'step.atCamp': 'At camp · {area}',
   'arrive.stopAgain': 'Today you turn back at the same spot as before.',
   'arrive.newArea': 'A new area', 'arrive.backIn': 'Back again', 'arrive.evening': 'Tonight, at camp', 'arrive.lastNight': 'Last night, at camp',
   'arrive.byTheLamp': 'By the lamp', 'arrive.toward': 'Arrive',

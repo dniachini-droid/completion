@@ -26,6 +26,8 @@ function between(facts: Fact[], from: number, to: number): string[] {
     /* (a find at a day's end is shown on its own screen, the move itself) */
     if (f.type === 'findGiven' && f.why !== 'camp') { const x = s.finds.find(y => y.id === f.id); if (x) out.push(`(a find) ${x.line}`); }
     if (f.type === 'beatPlayed' && f.job === undefined && s.beats.find(b => b.id === f.id)?.kind === 'close') out.push(`(the week's page) ${s.beats.find(b => b.id === f.id)!.line}`);
+    /* (a night's bedtime line that ends that night's evening at camp is on the evening's screen, the move itself) */
+    if (f.type === 'beatPlayed' && f.id.endsWith('.camp') && facts.some(g => g.type === 'arrived' && (g.kind === 'evening' || g.how === 'evening') && g.day === f.day && g.seq < f.seq)) continue;
     if (f.type === 'beatPlayed' && f.job === undefined && /\.(camp|morning)$/.test(f.id)) { const b = s.beats.find(x => x.id === f.id); if (b?.line) out.push(`(${f.id.endsWith('camp') ? 'bedtime, by the lamp' : 'the morning'}) ${b.line}`); }
   }
   return out;

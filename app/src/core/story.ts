@@ -317,7 +317,7 @@ export function nextCamp(s: Story, st: StoryState): { id: string; find?: string;
   const last = (id: string) => st.campsShown.lastIndexOf(id);
   const first = [...ok, ...open.filter(c => c.stretch !== st.stretch)].sort((a, b) => last(a.id) - last(b.id))[0]
     ?? s.camps.find(c => c.stretch === st.stretch) ?? s.camps[0];
-  return { id: first.id, find: pickFind(s, st, 'camp')?.id };
+  return { id: first.id, find: pickFind(s, st, 'camp', first.stretch)?.id };
 }
 
 /* ---------- steps: what a job's return shows ---------- */
@@ -438,9 +438,11 @@ export const keysIn = (facts: Fact[], day: string) => ofType(facts, 'keyEarned')
 const stretchOrder = (s: Story) => s.stretches.map(x => x.id);
 
 /** The next find for a reason: the stretch's pool in order, each once, then the stretches back up the route. Side chambers take told lines first. */
-export function pickFind(s: Story, st: StoryState, why: string): Find | null {
+export function pickFind(s: Story, st: StoryState, why: string, area?: StretchId): Find | null {
   const order = stretchOrder(s), at = order.indexOf(st.stretch);
-  const ok = (f: Find) => !st.given.has(f.id) && f.w <= st.week && allMet(st, f.req) && !(f.until && met(st, f.until));
+  /* `area`: only a find in that area (a stop at a day's end shows what is there, never a thing in another area, D-154) */
+  const ok = (f: Find) => !st.given.has(f.id) && f.w <= st.week && allMet(st, f.req) && !(f.until && met(st, f.until))
+    && (!area || areaOf(s, f.stretch) === areaOf(s, area));
   for (let i = at; i >= 0; i--) {
     const pool = s.finds.filter(f => f.stretch === order[i] && ok(f));
     if (!pool.length) continue;

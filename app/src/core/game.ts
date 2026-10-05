@@ -567,7 +567,8 @@ function gifts(w: W, c: Content, at: Moment, day: string) {
       w.put({ type: 'arrived', kind: 'camp', id: camp.id }, at, day);
       /* its one thing to look at: the view's own find, or the stretch's next if that one was already found */
       const st = S.storyState(w.all, c.story);
-      const find = camp.find && !st.given.has(camp.find) ? camp.find : camp.line ? null : S.pickFind(c.story, st, 'camp')?.id;
+      const stop = c.story.camps.find(x => x.id === camp.id);
+      const find = camp.find && !st.given.has(camp.find) ? camp.find : camp.line ? null : S.pickFind(c.story, st, 'camp', stop?.stretch)?.id;
       if (find) w.put({ type: 'findGiven', id: find, why: 'camp' }, at, day);
     }
   } else reach();   /* after day complete, Keep going still arrives somewhere (no dead ends for effort, D-039) */
