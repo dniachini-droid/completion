@@ -4,7 +4,7 @@
      from the floor up; "That's the day. Enough." The day's success is locked in; rest is the main offer, and a quiet
      "Keep going" is always there (D-038, D-039). A tap anywhere settles the motion at once. */
   import { game, content } from './game.svelte';
-  import { t, placeIn } from '../content/copy/en';
+  import { t } from '../content/copy/en';
   import Scene from './Scene.svelte';
   import Guess from './Guess.svelte';
   import Settled from './Settled.svelte';
@@ -105,7 +105,7 @@
         <Words {look} length={(a.line?.length ?? 0) + (a.look?.length ?? 0) + a.then.reduce((n, w) => n + w.line.length, 0)}>
           {#if a.wayIn && !again}<span class="soft on-scene way-in">{a.wayIn}</span>{/if}
           {#if a.line}<span class="soft on-scene"><Prose text={a.line} /></span>{/if}
-          {#if a.stopAgain}<span class="soft on-scene">{t('arrive.stopAgain', { place: placeIn(a.name) })}</span>{/if}
+          {#if a.stopAgain}<span class="soft on-scene">{t('arrive.stopAgain')}</span>{/if}
           {#if a.look}<span class="soft on-scene look"><Prose text={a.look} /></span>{/if}
           {#each a.way as w (w.beat)}<p class="soft on-scene look"><Prose text={w.line} /></p>{/each}
           {#each a.opened as line}<p class="soft on-scene look">{t('arrive.keyOpens')} <Prose text={line} /></p>{/each}

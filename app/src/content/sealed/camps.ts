@@ -95,7 +95,7 @@ export const camps: CampView[] = [
     stretch: "st-stair",
     w: 3,
     req: [],
-    name: "The landing",
+    name: "The head of the Stair",
     line: "Before heading back to the lamp, you rest on the landing at the head of the Stair, just beyond the lintel. The landing is wide enough for a cart. Below you, the top flight goes down into the light of the flames in its cups, which were already burning the first day you came this way.",
     look: {"find": "fd-e07"},
   },
