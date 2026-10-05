@@ -121,3 +121,7 @@ C-36–C-52a above are planted where their rows say (C-36 was week 7). Weeks 8�
 2. Every row's surface meaning must feel sufficient at planting; if it doesn't, the clue is a spoiler and is rewritten.
 3. When a clue pays off, the app surfaces the earlier fragment (RESEARCH lesson 9); the payoff column names it.
 4. "Met?" is updated from the app's own log once play begins (Phase 9+), never by memory.
+
+---
+
+**D-154 (the route as a journey):** the bench apart (`b-13.C`, the told line *the one stroke*, AGAIN week 20) opens in story week 11, beside the inner door's visit, two weeks sooner; it is first mentioned at `pl-w9-benches` (one bench stands apart). Earlier, never after its truth (rule 6). The moved places of weeks 1–5 (`ROUTE_REDESIGN.md` §4.6) carry no clue whose week changes.

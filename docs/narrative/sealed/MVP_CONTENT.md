@@ -51,16 +51,25 @@ Every item carries `w` (story week), `o` (order in that week, where order matter
   - **A guess asked on an arrival** is only one whose mark that place's own records carry, never on the beat that confirms it; a tablet a kept Key opens on an arrival asks its marks there.
   - **Next week's places** come only on a deep push (a High day, a called push, or Keep going); otherwise one place a day on foot, the rest of the distance kept for tomorrow (Key places are extra). Camp views rotate (unused ones along the walked route first, then the one seen longest ago).
 
-### 0.3 Stretches (where Dan is on the map)
-| Stretch | Id | From | Places on it |
+### 0.3 Areas (where Dan is on the map), D-154
+
+The stretch ids stay; what the app shows is the **area**. How they join and how Dan moves between them is `ROUTE_REDESIGN.md` §4 (the authoritative design); in short:
+
+| Area (as shown) | Ids | Joins | Home |
 |---|---|---|---|
-| The Mouth and the pipe | `st-mouth` | w1 | the shaft foot; the curved passage |
-| The Lamp Hall | `st-hall` | w1 (dark until `b-3.A`, lit after) | the ledge, the wall by the lamp, the lintel, the far end, the corner |
-| The Salt Gallery | `st-salt` | w1 | the split, the tally, the niches in the salt |
-| The Box Room | `st-camp` | w1 | her camp |
-| The top of the Stair | `st-stair` | w3 (after `b-3.A`) | the landing, the top flight, the first turn |
-| The second flight | `st-flight2` | w4 (seen), w5 (walked) | the little door, the recess under the second turn, the gap, the second landing |
-| The square gallery | `st-square` | w6 | the side passage, the crew's wall, the square floor |
+| The Mouth | `st-mouth` | the shaft; its pipe opens into the Lamp Hall's near end | — |
+| The Lamp Hall | `st-hall` | the Mouth; the Box Room; the Salt Gallery; the Stair (the lintel); the steep stair (the great door) | yes (camp, by the lamp) |
+| The Box Room (was "the Survey Cut") | `st-camp` | the Lamp Hall's side wall | yes |
+| The Salt Gallery | `st-salt` | the Lamp Hall's far corner | yes |
+| The Stair | `st-stair`, `st-flight2` (one area) | the lintel; the square gallery (second landing); the Water (foot) | — |
+| The square gallery | `st-square` | the second landing; behind its fall, the lower gallery to the lower way | — |
+| The Water | `st-water` | the Stair's foot; the steep stair (far shore); the Reading Room; below the Water | — |
+| The Reading Room | `st-reading` | across the Water | — |
+| Below the Water | `st-blast` | the far shore; the side gallery; the lower way (once the rubble is cleared) | — |
+| The side gallery | `st-side` | the blast room | — |
+| The lower way | `st-lower` | the lower gallery (partway down); the back of the rubble (its head) | — |
+
+**The movement rules (D-154; they replace the "skipped for now" rule of §0.2 and the per-week route of §1).** Every day Dan sets out from camp and comes back to the lamp at night. A place is one of four kinds, worked out when it plays: **on** (the next place in the area he is in), **a new area** (its first place; the place's own line says how he came), **back** (an area walked before; the area's way-in line says how), or **an evening at camp** (a place at home once the way down is open, from `b-3.B`). Evenings and the story's moments at home (her notebook, the tally) play at goodnight, or at the next opening after a day with work in it; off the walking meter; one a night, two when one is waiting from a week behind; they never hold the story week or the road. A place never lets the route skip into another area while it waits: what it waits for plays on the way; a moment at home the way down needs plays on a job's return (or, on a very long day, as that night's evening at once). Next week's plain places come early only along the way, in the area Dan is in. A day that ends short of a place ends where Dan turned back (the camp view), and he sleeps by the lamp.
 
 ### 0.4 Two canon clarifications this file relies on (recorded in `STORY_JOB.md` §4)
 - **The counts on her things** (the tin box, the stove's box, the recess above the cot, her folder) are cut in thin slates of the hall's stone laid over them: a count works only in laced stone (WORLD_TRUTH rule 2). He sealed her camp after she went down, as he seals every reader's things for the next one. The app never says who cut them; ARR1's "a row of cut strokes on its lid" is the slate on the lid.
@@ -70,19 +79,20 @@ Every item carries `w` (story week), `o` (order in that week, where order matter
 
 ## 1. The route, week by week (arrival order)
 
-Five named places a story week (BALANCING §2); fragments ride on about half of them. `(K)` = plays when its Key lands.
+**Rebuilt as one journey (D-154): the authoritative order, kinds and reasons are `ROUTE_REDESIGN.md` §4.4; `app/src/content/sealed/route.ts` follows it.** E = an evening at camp.
 
-| Wk | o1 | o2 | o3 | o4 | o5 |
-|---|---|---|---|---|---|
-| 1 | `b-1.A` The Lamp Hall | `b-1.B` The corner | `pl-w1-pick-niche` | `b-1.C` The Box Room | `pl-w1-below-the-lamp` |
-| 2 | `b-2.A` The Salt Gallery, further in | `pl-w2-above-the-ring` | `b-2.B` The rod (K-gated) | `pl-w2-smooth-place` | `pl-w2-box-by-the-cot` |
-| 3 | `b-3.A` The lintel (the word) | `b-3.B` The head of the Stair (K) | `pl-w3-salt-lit` | `b-3.C` The top flight | `pl-w3-far-end` |
-| 4 | `b-4.A` The sheet dated Day 9 | `pl-w4-hollow` | `b-4.B` The salt block (K) | `pl-w4-recess-above-the-cot` | `b-4.C` The Lower Door, close |
-| 5 | `pl-w5-ledge-lip` | `pl-w5-worn-steps` | `b-5.A` The tally, from the head (K-gated) | `b-5.B` Through a gap | `pl-w5-second-landing` |
-| 6 | `b-6.A` The side passage | `pl-w6-square-gallery` | `b-6.B` The crew's wall (K) | `pl-w6-wall-shelf` | `pl-w6-folder` |
-| 7 (run-ahead) | `b-7.A` The lintel at the foot of the second flight (the word; K-gated) | `b-7.B` The crew's wall, again (K) | `b-7.C` The great door (K; the word again) | — | — |
+| Wk | Places |
+|---|---|
+| 1 | `b-1.A` · `pl-w1-below-the-lamp` · `b-1.B` · `pl-w2-smooth-place` (from w2) · `pl-w1-pick-niche` · `b-1.C` |
+| 2 | `b-2.A` · `pl-w2-above-the-ring` · `pl-w2-box-by-the-cot` · `b-2.B` |
+| 3 | `b-3.A` · `b-3.B` (K) · `b-3.C` · `pl-w5-worn-steps` (from w5) · E `pl-w3-salt-lit` · E `pl-w3-far-end` · E `b-4.C` (from w4) |
+| 4 | `pl-w5-second-landing` (from w5) · E `b-4.A` · E `pl-w4-hollow` · E `b-4.B` (K) · E `pl-w4-recess-above-the-cot` |
+| 5 | `b-5.B` · E `b-5.A` · E `pl-w5-ledge-lip` |
+| 6 | `b-6.A` · `pl-w6-square-gallery` · `b-6.B` (K) · `pl-w6-wall-shelf` · E `pl-w6-folder` |
+| 7 | `b-7.B` (K) · `b-7.A` · E `b-7.C` (K) |
+| 8–14 | `STORY_JOB.md` §8.3, re-ordered as `ROUTE_REDESIGN.md` §4.4 |
 
-`req` for the pinned story arrivals: `b-2.B` req `b-2.1` (the box opened); `b-2.2` req `seal-2-1` (GIVE can only be guessed once the sheet is out); `b-3.A` belongs to weeks 2–3 (D-013) and **plays as soon as its req is met, even in story week 2**, ahead of any week 2 place still to come (the rest of week 3 waits for the calendar); `b-3.A` req `b-2.B` and `mk-give` guessed (`b-2.2`), and plays on the first arrival after the next main job (ARR1 2.B); `b-4.A` req `b-3.1`; `b-5.A` req `seal-5-1` (ONCE); `b-6.A` req `b-5.B`; `b-7.A` req `seal-7-1`; `b-7.C` req `b-7.A`. The `pl-` places need only physical access, so a deep push can reach them a week early: `pl-w2-above-the-ring` req `seal-1-1`; `pl-w2-smooth-place` req `b-1.B`; `pl-w2-box-by-the-cot`, `pl-w4-recess-above-the-cot`, `pl-w6-folder` req `b-1.C`; `pl-w3-salt-lit`, `pl-w3-far-end` req `b-3.A`; `pl-w5-worn-steps` req `b-3.C`; `pl-w5-second-landing` req `b-4.1`; `pl-w6-square-gallery` req `b-6.A`; `pl-w6-wall-shelf` req `pl-w6-square-gallery`; the rest none.
+The table below is the first job's, kept for its record (superseded): `req` for the pinned story arrivals: `b-2.B` req `b-2.1` (the box opened); `b-2.2` req `seal-2-1` (GIVE can only be guessed once the sheet is out); `b-3.A` belongs to weeks 2–3 (D-013) and **plays as soon as its req is met, even in story week 2**, ahead of any week 2 place still to come (the rest of week 3 waits for the calendar); `b-3.A` req `b-2.B` and `mk-give` guessed (`b-2.2`), and plays on the first arrival after the next main job (ARR1 2.B); `b-4.A` req `b-3.1`; `b-5.A` req `seal-5-1` (ONCE); `b-6.A` req `b-5.B`; `b-7.A` req `seal-7-1`; `b-7.C` req `b-7.A`. The `pl-` places need only physical access, so a deep push can reach them a week early: `pl-w2-above-the-ring` req `seal-1-1`; `pl-w2-smooth-place` req `b-1.B`; `pl-w2-box-by-the-cot`, `pl-w4-recess-above-the-cot`, `pl-w6-folder` req `b-1.C`; `pl-w3-salt-lit`, `pl-w3-far-end` req `b-3.A`; `pl-w5-worn-steps` req `b-3.C`; `pl-w5-second-landing` req `b-4.1`; `pl-w6-square-gallery` req `b-6.A`; `pl-w6-wall-shelf` req `pl-w6-square-gallery`; the rest none.
 
 ---
 

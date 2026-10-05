@@ -59,9 +59,9 @@ _Written 2026-09-23._
 | 9 | 5 | Below the Water, the approach (the Loud Room's) | A powder-tin, the company's name on it, empty | (wordless) | E |
 | 10 | 1 | Below the Water, the approach's niche | A lesson-tablet: a drop with a rising bar beside a lifted block; three short bars beside water | — | **MOVE, WATER** |
 | 10 | 2 | The door below the Water (the Loud Room's door) | With OPEN-WAY and a Key | — | E1–E3 |
-| 10 | 3 | The Surveyor's gallery, deep end | V5 | — | V5 |
-| 10 | 4 | The blast room (the Loud Room), the ledge | The Engineer's watch, stopped at 4.10 | (wordless; the app gives the time) | C-39b |
-| 10 | 5 | The blast room, a shelf | A tin plate with a knife | (wordless; the app: "a tin plate with a knife on it") | E3 |
+| 10 | 5 | The Surveyor's gallery, deep end (row order 5 since D-154: the road opens it after the turn-off back up) | V5 | — | V5 |
+| 10 | 3 | The blast room (the Loud Room), the ledge | The Engineer's watch, stopped at 4.10 | (wordless; the app gives the time) | C-39b |
+| 10 | 4 | The blast room, a shelf | A tin plate with a knife | (wordless; the app: "a tin plate with a knife on it") | E3 |
 | 11 | 1 | The blast room's cupboard | A lesson-tablet: a fork open sideways beside a mouth; a bar over a bar beside a sleeper | — | **VOICE, SLEEP** |
 | 11 | 2 | The blast room, the ledge | The Copyist's book, open (C1) | — | C1 |
 | 11 | 3 | The blast room, the book's other margins | Two more margins, gilded, their counts not yet fillable (seen) | — | C2 (wk 16), C3 (wk 17) |
@@ -77,7 +77,7 @@ _Written 2026-09-23._
 | 13 | 2 | The side gallery | V6 on the door | — | V6 |
 | 13 | 3 | The side gallery, a recess | The Surveyor's wax-tablet ledger of days: nine strokes, then four more in a different hand (the boy's) | *Told: the child counted the days; he [ ] not.* (VOICE: CHILD COUNT DAY, ONE AGAIN NOT; AGAIN wk 20) | V5, V7 (thirteen days) |
 | 13 | 4 | The Surveyor's gallery, the roof-fall | With MOVE-STONE: the way to the lower gallery | — | region 2 |
-| 13 | 5 | The Reading Room, a second bench | A Builder's tally of readers-of-the-tablet: eight and eight and eight, then a gap, then a single stroke in his hand | *count [ ] not; one.* at wk 13 (AGAIN wk 20); *Count again not; one.* when held | the fifth; his loneliness |
+| 13 | 5 | The Reading Room, a second bench (opens in story week 11 since D-154, `seal-13-5` w11 o6: beside the inner door's visit) | A Builder's tally of readers-of-the-tablet: eight and eight and eight, then a gap, then a single stroke in his hand | *count [ ] not; one.* at wk 13 (AGAIN wk 20); *Count again not; one.* when held | the fifth; his loneliness |
 
 ### As built for the app (weeks 8–14, `STORY_JOB.md` §8.3)
 
