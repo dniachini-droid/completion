@@ -75,11 +75,12 @@ describe('the route is a journey: a descent with a home at the top (D-154)', () 
     }
   }, 300_000);
   it('an evening at camp says so first, and a turn-off on the way up says why', () => {
-    const first = (id: string) => (S.beatOf(s, id)!.line ?? S.beatOf(s, id)!.taps?.[0] ?? '').split(/(?<=[.!?])\s/)[0];
+    const firstTwo = (id: string) => (S.beatOf(s, id)!.line ?? S.beatOf(s, id)!.taps?.[0] ?? '').split(/(?<=[.!?])\s/).slice(0, 2).join(' ');
     const departed = route.indexOf('b-3.B');
     for (const id of route.slice(departed)) {
       const b = S.beatOf(s, id)!;
-      if (S.isHome(s, b.stretch)) expect(first(id), id).toMatch(/\b(night|Tonight|tonight|camp|evening|This morning)\b/);
+      /* (its reason may come first: "The tablet … That night you …"; the label says "Tonight, at camp" above it) */
+      if (S.isHome(s, b.stretch)) expect(firstTwo(id), id).toMatch(/\b(night|Tonight|tonight|camp|evening|This morning)\b/);
     }
     /* a turn-off: its reason, and that it is on the way back up, in its first two sentences */
     const two = (id: string) => (S.beatOf(s, id)!.line ?? '').split(/(?<=[.!?])\s/).slice(0, 2).join(' ');

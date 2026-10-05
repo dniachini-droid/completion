@@ -47,7 +47,7 @@ export const learned: WeekCloseLine[] = [
   { id: "wc-w13-1", w: 13, req: ["b-13.A"], line: "The record on the shut door says: He long-slept not, when I [ ] it." },
   { id: "wc-w13-2", w: 13, req: ["b-13.B"], line: "At the standing stone you cut the wedge on a bar and the drop with a rising bar, and the fall of stone lifted aside." },
   { id: "wc-w13-3", w: 11, req: ["b-13.C"], line: "On a bench apart in the Reading Room, a tally of eights ends in a single sharp stroke." },
-  { id: "wc-w14-1", w: 14, req: ["b-14.A"], line: "At the head of the lower way, the same two symbols moved the rubble aside and opened a short way through to the blast room. Low on the rounded stone beside it is a blank, with a diamond and the bar with a tick." },
+  { id: "wc-w14-1", w: 14, req: ["b-14.A"], line: "At the head of the lower way, the same two symbols as on the standing stone moved the rubble aside and opened a short way through to the blast room. Low on the rounded stone beside it is a blank, with a diamond and the bar with a tick." },
   { id: "wc-w14-2", w: 14, req: ["b-14.B"], line: "The lower way goes further down than anywhere yet, and its cups were already lit." },
   { id: "wc-w14-3", w: 14, req: ["b-14.2"], line: "The log says a mark cut on a roof held it up, and that the mark is not \"hold\"." },
 ];
@@ -118,7 +118,7 @@ export const openQuestions: OpenQuestion[] = [
   { id: "aw-w3", w: 3, line: "The Stair goes down from the landing already lit, and you did not light it. So what did?" },
   { id: "aw-w4", w: 4, line: "Past the lone ring, her sheet says: *…go home… he held me… lamp… gave… went up…* Who is the \"he\" in it?" },
   { id: "aw-w5", w: 5, line: "Every record in the tally begins the same way. The line on the wall by the lamp does not. Why is it different?" },
-  { id: "aw-w6", w: 6, line: "Through the side passage is square-cut stone, quite unlike the rounded halls, and on it is a record cut by whoever cut the tally. So how did that same carver come to cut a record here?" },
+  { id: "aw-w6", w: 6, line: "Through the low doorway is square-cut stone, quite unlike the rounded halls, and on it is a record cut by whoever cut the tally. So how did that same carver come to cut a record here?" },
   { id: "aw-w7", w: 7, line: "Both ways down, the Stair past the second lintel and the steep stair behind the great door, lead deeper. Where do they go?" },
   { id: "aw-w8", w: 8, line: "Something tall stood at the far end of the Water and did not move while you watched. What was it?" },
   { id: "aw-w9", w: 9, line: "Her sheet says he held me, but on the salt there is a cross after held. What does the line really say?" },

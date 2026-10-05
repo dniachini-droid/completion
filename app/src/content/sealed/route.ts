@@ -13,7 +13,7 @@ import type { RouteWeek, Stretch } from '../../core/story-types';
 // NOTE: st-lower is first reached from the lower gallery (after b-13.B), not from the blast room (D-154, ROUTE_REDESIGN §4.7).
 export const stretches: Stretch[] = [
   { id: "st-mouth", name: "The Mouth", w: 1, req: [],
-    wayIn: "Down the ladder in the shaft, and along the passage shaped like the inside of a pipe." },
+    wayIn: "Back along the passage shaped like the inside of a pipe, to the foot of the ladder." },
   { id: "st-hall", name: "The Lamp Hall", w: 1, req: [], home: true,
     wayIn: "Out into the Lamp Hall, where you sleep by the lamp on its ledge." },
   { id: "st-salt", name: "The Salt Gallery", w: 1, req: [], home: true, parent: "st-hall",

@@ -52,7 +52,7 @@ export const seals: Seal[] = [
     carries: { guess: ['mk-here', 'mk-door'] } },
   { id: 'seal-3-2', w: 3, o: 0, where: 'The Salt Gallery, the next stretch', stretch: 'st-salt', seenOnly: true },
   // NOTE: seal-3-2 is seen in the open at b-3.1.
-  { id: 'seal-3-3', w: 3, o: 2, where: 'The Stair, a recess at the first turn', stretch: 'st-stair',
+  { id: 'seal-3-3', w: 3, o: 2, where: 'The Stair, a recess in the wall at the first turn', stretch: 'st-stair',
     line: 'At the first turn of the Stair is another alcove, separate from the niche beside the rail: the recess at the first turn. Its row of notches fills with light, and it opens. Inside is a coil of measuring cord, knotted every ten paces, its knots gone stiff. It looks like a cord for pacing out distances. Beside it on the wall is a short line of symbols, cut by whoever cut the tally, as if noting what the cord is.',
     carries: { records: ['rec-x-cord'] } },
   { id: 'seal-3-4', w: 3, o: 3, where: 'The Lamp Hall, the foot of the wall by the lamp', stretch: 'st-hall',
@@ -136,7 +136,7 @@ export const seals: Seal[] = [
   { id: 'seal-8-2', w: 8, o: 0, where: 'The Water, the channel’s near lip', stretch: 'st-water', seenOnly: true },
   // NOTE: seal-8-2 is V4, seen in the open at b-8.2.
   { id: 'seal-8-3', w: 8, o: 2, where: 'The Water, a step under the water', stretch: 'st-water', beat: 'b-8.4', plain: true },
-  { id: 'seal-8-4', w: 8, o: 3, where: 'Below the Water, a niche at the far shore', stretch: 'st-blast', arrival: 'b-8.C' },
+  { id: 'seal-8-4', w: 8, o: 3, where: 'Below the Water, a niche on the narrow way down', stretch: 'st-blast', arrival: 'b-8.C' },
   { id: 'seal-8-5', w: 8, o: 4, where: 'The Water, a niche in the channel', stretch: 'st-water',
     line: 'In the channel\'s side, the row of notches on the niche fills with light, and the niche opens. Inside lies a cork float, the kind that bobs on a fishing line, tied to a long cord knotted at even spaces. The cord is dry and neatly coiled. It looks as if someone once timed the channel\'s flow by letting the float drift along it.',
     plain: true },

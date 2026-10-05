@@ -223,7 +223,7 @@ export const records: RecordFragment[] = [
     full: 'Told: found in the face past the split; not for sale.',
   },
   {
-    id: 'rec-x-colleague', life: 'X', kind: 'paper', where: 'her room, a recess above the cot, a printed email pinned inside', w: 4, firstShown: ['seal-4-3'],
+    id: 'rec-x-colleague', life: 'X', kind: 'paper', where: 'the Box Room, a recess above the cot, a printed email pinned inside', w: 4, firstShown: ['seal-4-3'],
     paper: [
       'To: I. Halloran',
       "Come home. Nobody's going to fund this. The department's asked where you are.",

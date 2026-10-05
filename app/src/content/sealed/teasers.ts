@@ -12,7 +12,7 @@ export const teasers: Teaser[] = [
   { id: "tz-w1-a", w: 1, req: ["pl-w1-pick-niche"], until: "seal-1-2", line: "In the Salt Gallery, low in the salt wall, is a closed niche as long as your arm, with a row of small, empty notches along its lip." },
   { id: "tz-w1-b", w: 1, req: ["b-1.C"], until: "seal-2-1", line: "In the Box Room, the side chamber where someone camped, a tin box lies on the cot with a row of small notches across its lid." },
   { id: "tz-w1-c", w: 1, req: ["pl-w1-below-the-lamp"], until: "seal-1-3", line: "In the Lamp Hall, under the ledge where the lamp stands, is a small closed niche, and the stone round its mouth is darker than the rest." },
-  { id: "b-w2.tz1", w: 2, req: [], until: "b-2.B", line: "In the Box Room, on the shelf in the Box Room, lies a rod of stone as long as your forearm, with one edge finer than a knife's." },
+  { id: "b-w2.tz1", w: 2, req: [], until: "b-2.B", line: "In the Box Room, on the shelf, lies a rod of stone as long as your forearm, with one edge finer than a knife's." },
   { id: "b-w2.tz2", w: 2, req: ["b-2.B"], until: "b-3.A", line: "The stone rod is in your hand, and on the lintel in the Lamp Hall is a blank, an empty gap beside two symbols, the width of its edge." },
   { id: "tz-w2-a", w: 2, req: ["pl-w2-above-the-ring"], until: "seal-2-3", line: "In the Salt Gallery, above the lone ring, something pale lies far back in a crack in the salt." },
   { id: "tz-w2-b", w: 2, req: ["pl-w2-box-by-the-cot"], until: "seal-2-5", line: "In the Box Room, a tin mug stands upside down on a shoebox-sized box by the cot, on a slate with a row of notches." },

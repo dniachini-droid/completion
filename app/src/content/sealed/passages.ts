@@ -107,7 +107,7 @@ export const passages: Passage[] = [
   { id: "ps-f14", stretch: "st-flight2", req: ["pl-w5-second-landing"], line: "On the second landing lies a small square stone. It looks like a different kind of stone from the stair's. Someone brought it in." }, // NOTE: from w5 in the source; req pl-w5-second-landing stands in
   { id: "ps-f15", stretch: "st-flight2", req: ["pl-w5-second-landing"], line: "On the second landing, the flames in the cups throw your shadow back up the stair behind you." }, // NOTE: from w5 in the source; req pl-w5-second-landing stands in
   { id: "ps-f16", stretch: "st-flight2", req: [], line: "On the second flight, the steps are as high as those on the top flight, but narrower from front to back, so there is less room for your feet." },
-  { id: "ps-g01", stretch: "st-square", req: [], line: "You walk down the square gallery, the side passage off the Stair's second landing. It runs straight, as if someone drew it with a ruler." },
+  { id: "ps-g01", stretch: "st-square", req: [], line: "You walk down the square gallery off the Stair's second landing. It runs straight, as if someone drew it with a ruler." },
   { id: "ps-g02", stretch: "st-square", req: [], line: "In the square gallery you look at the walls as you pass. The chisel marks on them are small and close together, row on row, like stitches." },
   { id: "ps-g03", stretch: "st-square", req: [], line: "In the square gallery you look up. The ceiling is flat, meeting the walls in sharp corners. It is the only flat ceiling you have seen down here." },
   { id: "ps-g04", stretch: "st-square", req: [], line: "The square gallery's walls are bare as you walk. None of the crowded symbols of the Lamp Hall are here; the only carving, here and there, is by whoever cut the tally." },
