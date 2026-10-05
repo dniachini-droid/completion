@@ -1861,7 +1861,7 @@ function faceOf(c: Content, all: Fact[], f: FactOf<'arrived'>, b: Beat): Arrival
   if (f.how === 'evening' || S.isEvening(c.story, before, b)) return 'evening';
   const area = S.areaOf(c.story, b.stretch);
   if (![...before.visited].some(x => S.areaOf(c.story, x) === area)) return 'enter';
-  return area === S.areaOf(c.story, before.stretch) && before.here !== null && !b.backWithin ? 'on' : 'back';
+  return area === S.areaOf(c.story, before.stretch) && before.here !== null ? 'on' : 'back';
 }
 function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
   if (f.kind === 'evening') {

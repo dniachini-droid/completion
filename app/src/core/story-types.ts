@@ -157,8 +157,6 @@ export interface Beat {
   said?: boolean;
   /** A turn-off on the way back up: a return its own words give the reason for, labelled "On the way back" (D-154). */
   turnOff?: boolean;
-  /** A place back along the area Dan is in (its words say he goes back to it): "Back again", not "Arrived" (D-154). */
-  backWithin?: boolean;
 }
 
 /** A named place with no fragment, added by the story job (a `pl-` id). Plays as an arrival. */
