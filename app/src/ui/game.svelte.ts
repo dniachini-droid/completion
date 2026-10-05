@@ -449,7 +449,7 @@ class Game {
       return;
     }
     const p = panelOf(r, this.marks(r), epochOf(this.now), {
-      place: this.view.here.name, past: this.view.done.has(r.job.id),
+      place: this.view.here.id ? `${this.view.here.area} · ${this.view.here.name.replace(/^The /, 'the ')}` : this.view.here.area, past: this.view.done.has(r.job.id),
       real: ms => this.realDate(ms).getTime(),
       clock: ms => { const d = new Date(ms); return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; },
     });

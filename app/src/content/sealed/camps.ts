@@ -14,7 +14,7 @@ export const camps: CampView[] = [
     w: 1,
     req: [],
     name: "The ladder's foot",
-    line: "You stop for the night at the bottom of the shaft, by the foot of the ladder. Eleven metres above you is a small square of white sky, and the ladder climbs straight up to it. The air moves past you, up the shaft and out.",
+    line: "You turn back today at the bottom of the shaft, by the foot of the ladder. Eleven metres above you is a small square of white sky, and the ladder climbs straight up to it. The air moves past you, up the shaft and out.",
     look: {"find": "fd-a02"},
   },
   {
@@ -23,7 +23,7 @@ export const camps: CampView[] = [
     w: 1,
     req: [],
     name: "The pipe",
-    line: "You stop for the night in the passage at the foot of the shaft, the smooth tunnel shaped like the inside of a pipe. It leads away from the ladder into the hill, its floor and walls one curve, and it bends so gently that you can only see the bend where the light gives out.",
+    line: "The day's walk ends in the passage at the foot of the shaft, the smooth tunnel shaped like the inside of a pipe. It leads away from the ladder into the hill, its floor and walls one curve, and it bends so gently that you can only see the bend where the light gives out.",
     look: {"find": "fd-a05"},
   },
   {
@@ -33,7 +33,7 @@ export const camps: CampView[] = [
     req: [],
     until: "b-3.A",
     name: "The hall, from the passage",
-    line: "You stop for the night where the passage opens into the Lamp Hall. Just inside, the lamp stands lit on its ledge. Past it, the hall stretches away into the dark.",
+    line: "Today you stop where the passage opens into the Lamp Hall. Just inside, the lamp stands lit on its ledge. Past it, the hall stretches away into the dark.",
     look: {"find": "fd-b12"},
   },
   {
@@ -42,7 +42,7 @@ export const camps: CampView[] = [
     w: 3,
     req: ["b-3.A"],
     name: "The hall, from the far end",
-    line: "You stop for the night at the far end of the Lamp Hall, beside the great door. From here the two lines of flames in the cups run back up the hall to the ledge, where the lamp burns, small in the distance. Round the corner beside you, a glow lies on the salt.",
+    line: "You sit for a while at the far end of the Lamp Hall, beside the great door. From here the two lines of flames in the cups run back up the hall to the ledge, where the lamp burns, small in the distance. Round the corner beside you, a glow lies on the salt.",
     look: {"find": "fd-b11"},
   },
   {
@@ -51,7 +51,7 @@ export const camps: CampView[] = [
     w: 1,
     req: [],
     name: "In the trough",
-    line: "You stop for the night at the corner at the far end of the Lamp Hall, beside the great door. Before settling, you step down into one of the two long troughs worn into the floor there and stand in it for a moment. The other is a stride away, just as deep and just as smooth.",
+    line: "Before heading back to the lamp, you rest at the corner at the far end of the Lamp Hall, beside the great door. Before going on, you step down into one of the two long troughs worn into the floor there and stand in it for a moment. The other is a stride away, just as deep and just as smooth.",
     look: {"find": "fd-c01"},
   },
   {
@@ -60,7 +60,7 @@ export const camps: CampView[] = [
     w: 1,
     req: [],
     name: "The salt, close",
-    line: "You stop for the night in the Salt Gallery, close enough to the salt wall to touch it. At arm's length you can see bands of grey and white running through the salt, like layers in a cliff. Where a faint draught comes through the packed split, the salt has grown a skin of fine crystals.",
+    line: "You turn back today in the Salt Gallery, close enough to the salt wall to touch it. At arm's length you can see bands of grey and white running through the salt, like layers in a cliff. Where a faint draught comes through the packed split, the salt has grown a skin of fine crystals.",
     look: {"find": "fd-c09"},
   },
   {
@@ -69,7 +69,7 @@ export const camps: CampView[] = [
     w: 2,
     req: [],
     name: "The tally, end on",
-    line: "You stop for the night in the Salt Gallery. Looking along the salt wall, you see the tally, the carved line of symbols, as a single line of shadow, running from its first stretch on into the dark.",
+    line: "The day's walk ends in the Salt Gallery. Looking along the salt wall, you see the tally, the carved line of symbols, as a single line of shadow, running from its first stretch on into the dark.",
     look: {"find": "fd-c12"},
   },
   {
@@ -78,7 +78,7 @@ export const camps: CampView[] = [
     w: 1,
     req: [],
     name: "Her cot",
-    line: "You stop for the night at the doorway of the Survey Cut, the small side chamber where the woman camped. From there you look in at her things: the cot with the boots beneath it, the notebook with its pencil, and the shelf where the rod lay.",
+    line: "Today you stop at the doorway of the Box Room, the small room off the hall where the woman lived. From there you look in at her things: the cot with the boots beneath it, the notebook with its pencil, and the shelf where the rod lay.",
     look: {"find": "fd-d08"},
   },
   {
@@ -87,7 +87,7 @@ export const camps: CampView[] = [
     w: 2,
     req: ["b-2.B"],
     name: "Her shelf",
-    line: "You stop for the night in the Survey Cut, her camp. On the shelf where the rod lay before you took it, a clean stripe the length of a forearm is left in the dust.",
+    line: "You sit for a while in the Box Room. On the shelf where the rod lay before you took it, a clean stripe the length of a forearm is left in the dust.",
     look: {"line": "For the next one. Cut the two marks on the lintel. Don’t be precious about it."},
   },
   {
@@ -95,8 +95,8 @@ export const camps: CampView[] = [
     stretch: "st-stair",
     w: 3,
     req: [],
-    name: "The landing",
-    line: "You stop for the night on the landing at the head of the Stair, just beyond the lintel. The landing is wide enough for a cart. Below you, the top flight goes down into the light of the flames in its cups, which were already burning the first day you came this way.",
+    name: "The head of the Stair",
+    line: "Before heading back to the lamp, you rest on the landing at the head of the Stair, just beyond the lintel. The landing is wide enough for a cart. Below you, the top flight goes down into the light of the flames in its cups, which were already burning the first day you came this way.",
     look: {"find": "fd-e07"},
   },
   {
@@ -105,7 +105,7 @@ export const camps: CampView[] = [
     w: 3,
     req: [],
     name: "Halfway down",
-    line: "You stop for the night halfway down the top flight of the Stair. From here you can see that every step is as high as your knee, and the rail cut into the wall stands at the height of your chest. It all seems made for someone much taller than you.",
+    line: "You turn back today halfway down the top flight of the Stair. From here you can see that every step is as high as your knee, and the rail cut into the wall stands at the height of your chest. It all seems made for someone much taller than you.",
     look: {"find": "fd-e09"},
   },
   {
@@ -114,7 +114,7 @@ export const camps: CampView[] = [
     w: 4,
     req: [],
     name: "The first turn",
-    line: "You stop for the night at the first turn of the Stair, where the rail cut from the wall curls round the bend. Below, the second flight goes on down, and on it you can see the little door, small and shut, with its row of notches.",
+    line: "The day's walk ends at the first turn of the Stair, where the rail cut from the wall curls round the bend. Below, the second flight goes on down, and on it you can see the little door, small and shut, with its row of notches.",
     look: {"find": "fd-e05"},
   },
   {
@@ -123,7 +123,7 @@ export const camps: CampView[] = [
     w: 5,
     req: ["b-5.0"],
     name: "The second flight",
-    line: "You stop for the night on the second flight of the Stair, beside the little door, the small door in the stair wall that her notebook says she found open. It is shut, though every notch in its row is full of light. Beside it is the one ring with sharp edges among all the worn, smooth ones.",
+    line: "Today you stop on the second flight of the Stair, beside the little door, the small door in the stair wall that her notebook says she found open. It is shut, though every notch in its row is full of light. Beside it is the one ring with sharp edges among all the worn, smooth ones.",
     look: {"find": "fd-f02"},
   },
   {
@@ -132,7 +132,7 @@ export const camps: CampView[] = [
     w: 5,
     req: ["b-5.B"],
     name: "The gap",
-    line: "You stop for the night on the second flight, by the gap, the rough hole in the stair wall at shoulder height. Through it you can see the square-cut stone of the square gallery, and a draught comes through that smells of old smoke, as if fires once burned somewhere beyond.",
+    line: "You sit for a while on the second flight, by the gap, the rough hole in the stair wall at shoulder height. Through it you can see the square-cut stone of the square gallery, and a draught comes through that smells of old smoke, as if fires once burned somewhere beyond.",
     look: {"find": "fd-f06"},
   },
   {
@@ -141,7 +141,7 @@ export const camps: CampView[] = [
     w: 6,
     req: [],
     name: "The join",
-    line: "You stop for the night in the square gallery, at the join, where the square-cut stone meets the smooth, rounded stone. Up close, the seam between them is so tight that you could not slip a blade into it.",
+    line: "Before heading back to the lamp, you rest in the square gallery, at the join, where the square-cut stone meets the smooth, rounded stone. Up close, the seam between them is so tight that you could not slip a blade into it.",
     look: {"find": "fd-g09"},
   },
   /* ---- story weeks 8–14 (STORY_JOB §8) ---- */
@@ -151,7 +151,7 @@ export const camps: CampView[] = [
     w: 8,
     req: ["b-8.A"],
     name: "The Water's edge",
-    line: "You stop for the night on the Water's near shore, at the foot of the Stair. The flames in the cups on the last flight lie reflected on the black surface, perfectly still, like flames painted on glass.",
+    line: "You turn back today on the Water's near shore, at the foot of the Stair. The flames in the cups on the last flight lie reflected on the black surface, perfectly still, like flames painted on glass.",
     look: {"find": "fd-h01"},
   },
   {
@@ -160,7 +160,7 @@ export const camps: CampView[] = [
     w: 9,
     req: ["b-9.A"],
     name: "Among the benches",
-    line: "You stop for the night in the Reading Room, your back against a bench. Above you the tablets rise in rows up the walls, further than you can see, and the hall is so quiet you can hear your own breathing.",
+    line: "The day's walk ends in the Reading Room, your back against a bench. Above you the tablets rise in rows up the walls, further than you can see, and the hall is so quiet you can hear your own breathing.",
     look: {"find": "fd-j01"},
   },
   {
@@ -169,7 +169,7 @@ export const camps: CampView[] = [
     w: 10,
     req: ["b-10.C"],
     name: "By the torn wall",
-    line: "You stop for the night in the blast room, beside the torn wall. The powder smell has soaked into the stone, and it is strongest here, where the rock beyond the hole is dark with old smoke.",
+    line: "Today you stop in the blast room, beside the torn wall. The powder smell has soaked into the stone, and it is strongest here, where the rock beyond the hole is dark with old smoke.",
     look: {"find": "fd-i04"},
   },
   {
@@ -177,17 +177,17 @@ export const camps: CampView[] = [
     stretch: "st-side",
     w: 12,
     req: ["pl-w12-square-way"],
-    name: "The side gallery",
-    line: "You stop for the night in the side gallery, where it leaves the blast room. The square walls are close on either side, and no light reaches far along it.",
+    name: "Where it leaves the blast room",
+    line: "You sit for a while in the side gallery, where it leaves the blast room. The square walls are close on either side, and no light reaches far along it.",
     look: {"find": "fd-k01"},
   },
   {
     id: "cv-20",
     stretch: "st-lower",
     w: 14,
-    req: ["b-14.B"],
-    name: "The lower way",
-    line: "You stop for the night partway down the lower way. The cups in its walls burn steadily, and cold air goes past you, up towards the blast room.",
+    req: ["pl-w14-meeting"],
+    name: "Partway down",
+    line: "Before heading back to the lamp, you rest partway down the lower way. The cups in its walls burn steadily, and cold air goes past you, up towards the rubble.",
     look: {"find": "fd-l01"},
   },
   {
@@ -197,7 +197,7 @@ export const camps: CampView[] = [
     req: ["pl-w10-deep-end"],
     until: "b-13.B",
     name: "The fall",
-    line: "You stop for the night at the square gallery's deep end, beside the standing stone. The slope of fallen stone rises in front of you to the ceiling, and no draught comes through it. The air here is quite still.",
+    line: "You turn back today at the square gallery's deep end, beside the standing stone. The slope of fallen stone rises in front of you to the ceiling, and no draught comes through it. The air here is quite still.",
     look: {"find": "fd-g11"},
   },
 ];

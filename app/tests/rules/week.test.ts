@@ -134,15 +134,15 @@ describe('How the week drives Today', () => {
 });
 
 describe('Dan’s rhythms and the satchel', () => {
-  it('a new rhythm can be planned at once, and counts for Keys from its next full week (D-043 F7)', () => {
+  it('a new rhythm can be planned at once, and counts for Keys at once (D-152; was its next full week, D-043 F7)', () => {
     const p = player().do({ do: 'open' });
     p.do({ do: 'saveRhythm', rhythm: { id: 'r-walk', job: 'walk', times: 1 }, job: { id: 'walk', name: 'A long walk', delve: false, length: 60, doneBy: 'dan' } });
     expect(p.view().content.rhythms.some(r => r.id === 'r-walk')).toBe(true);
     const keys = () => p.facts.filter(f => f.type === 'keyEarned' && f.rhythm === 'r-walk').length;
     p.did('walk');
-    expect(keys()).toBe(0);
-    p.next(7).do({ do: 'open' }).did('walk');
     expect(keys()).toBe(1);
+    p.next(7).do({ do: 'open' }).did('walk');
+    expect(keys()).toBe(2);
   });
   it('Stop repeating ends future sessions only', () => {
     const p = player().do({ do: 'open' }).do({ do: 'done', job: 'gym' }).do({ do: 'stopRhythm', id: 'r-gym' });

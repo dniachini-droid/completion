@@ -219,7 +219,8 @@
 
     <section class="bottom col">
       <div class="run rise d3" class:there>
-        <h2 class="carve">{place ? t(there ? 'set.to' : 'set.towards', { place: place.name }) : t('set.onward')}</h2>
+        <!-- further into the area Dan is in, or on down to a new one; never the place's name before he gets there (D-154) -->
+        <h2 class="carve">{place && there ? t('set.to', { place: place.name }) : v.nextHere === true ? t('set.further', { area: v.here.area }) : v.nextHere === false ? t(v.nextBack ? 'set.back' : 'set.onDown') : place ? t('set.towards', { place: place.name }) : t('set.onward')}</h2>
         <div class="route" bind:this={routebox} bind:clientWidth={W} role="slider" tabindex="0" aria-label={t('set.count', { n: delves(n), len: snap })}
           aria-valuemin={1} aria-valuemax={MAXN} aria-valuenow={n} onpointerdown={routeDown}
           onkeydown={e => { if (e.key === 'ArrowRight' || e.key === 'ArrowUp') setCount(n + 1); else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') setCount(n - 1); }}>

@@ -34,7 +34,7 @@ _The language pass (2026-09-24, D-074; Dan: "written like a story", "full senten
 | 1.B | **arrival** | **The corner.** Where the hall turns, the floor is worn into two long troughs a stride apart. The wall beside them is polished smooth up to the height of a man's shoulder, if the man were twice your size, and the marks there are rubbed faint. Beyond the turn a gallery opens, and there is a smell of salt. | — | C-04a |
 | 1.5 | step | This is the Salt Gallery, where the hill's rock salt meets the cut stone. The salt face is split from the top down to knee height, and the split is packed with stones and salt from the other side. Along the wall runs a line of marks as long as the gallery, all cut by one hand. Beside it, someone has tucked loose sheets of paper into a crack and dated them in pencil: Day 1, Day 4, Day 9. | Look at the wall / Look at her sheets | **S1** (her Day 1 sheet: "hill… [stone moved]… opened… way… cut… lamp… went in… light …?… someone"; LAMP and FIRE in Dan's layer); her glossary sheets; `seal-1-1` comes into view here (its Key waits for this step; review 2026-09-25) |
 | 1.6 | step (Key) | In the Salt Gallery, where the first stretch of the line ends, a row of strokes is cut into the salt. Now the first stroke is full of light. Beyond it, the line of marks runs on into the dark. | — | The first Key: the inner count (NICHES 1.1) opens the stretch beyond S1 (S2 next week). The app does not use the noun "count" before 2.1; here it says "strokes" |
-| 1.C | **arrival** | **The Survey Cut.** Someone lived in this side chamber. There is a camp cot, and under it a pair of boots stands side by side, laced and dry, as if set out for the morning. On the cot lie a notebook with a pencil in it and a tin box with a row of cut strokes on its lid. On a shelf rests a rod of stone the length of a forearm, with one edge finer than a knife's. | Open the notebook / look at the shelf | **L2** (Day 1); the box seen (opened at 2.1); the rod seen (lifted at 2.B). The stove, the cassettes and the printed page are first seen at NICHES 2.5, 3.5 and 4.3; the pencil line under the shelf is first shown at 2.B |
+| 1.C | **arrival** | **The Box Room.** Someone lived in this side chamber. There is a camp cot, and under it a pair of boots stands side by side, laced and dry, as if set out for the morning. On the cot lie a notebook with a pencil in it and a tin box with a row of cut strokes on its lid. On a shelf rests a rod of stone the length of a forearm, with one edge finer than a knife's. | Open the notebook / look at the shelf | **L2** (Day 1); the box seen (opened at 2.1); the rod seen (lifted at 2.B). The stove, the cassettes and the printed page are first seen at NICHES 2.5, 3.5 and 4.3; the pencil line under the shelf is first shown at 2.B |
 | 1.7 (High) | deep push | You look closely at the lamp on the ledge. On its side, away from the three marks on its base, a hook, open, is cut on its own. There is nothing else in the cell. | — | Partial sign: the hook element of GIVE (*a hook, open*) |
 | camp | bedtime | You sit beside the lamp on the ledge, and as its flame moves, the rings on the wall behind it catch the light one after another. | — | (in the morning) a line of the salt tally re-rendered with your two guesses |
 | I can't start | teaser | Before 1.A: *Under the cap, eleven metres of ladder go down, and the air that comes up is dry.* After 1.A: *The clay lamp on the ledge has three marks on its base, and it is warm.* | | |
@@ -73,7 +73,7 @@ _The language pass (2026-09-24, D-074; Dan: "written like a story", "full senten
 | I can't start | teaser | Before 3.A: *The rod is in your hand, and on the lintel is a blank the width of its edge.* After 3.A: *At the head of the stair is a lid with a doorway carved on it.* | | |
 | week close | glimpse | Down the second flight is a small door with a count on it. | | |
 
-**Key-sealed things:** the Stair niche (3.B: HERE, DOOR; the second lamp); the ledge in the Survey Cut (NICHES 3.5: the cassettes' first sight).
+**Key-sealed things:** the Stair niche (3.B: HERE, DOOR; the second lamp); the ledge in the Box Room (NICHES 3.5: the cassettes' first sight).
 
 ## Week 4
 
@@ -90,7 +90,7 @@ _The language pass (2026-09-24, D-074; Dan: "written like a story", "full senten
 | I can't start | teaser | Every record here was cut by the same hand, except two. | | |
 | week close | glimpse | On the Lower Door are two marks, and a count with every stroke empty. | | |
 
-**Key-sealed things:** the Stair's second niche (4.2: DEEP); the salt block's niche (4.B); the recess in the Survey Cut (NICHES 4.3: the printed page, first seen there); the recess under the second turn (seen at 4.1; opens next week).
+**Key-sealed things:** the Stair's second niche (4.2: DEEP); the salt block's niche (4.B); the recess in the Box Room (NICHES 4.3: the printed page, first seen there); the recess under the second turn (seen at 4.1; opens next week).
 
 ## Week 5 (margin)
 

@@ -15,9 +15,10 @@ export const copy = {
   
   'today.keys.here': 'Use it here',
   'today.keys.hereMany': 'Use one here',
+  'today.keys.late': 'You kept up {job} last week and earned a Key. It hadn’t landed, so it lands now.',
   'today.keys.useOnMap': 'A Key is never used for you: on the Map, choose a locked thing that says Use a Key.',
   'today.aheadKey': 'Needs a Key',
-  'today.behind': 'Behind you',
+  'today.behind': 'Still locked, further back',
   'today.behindMap': 'On the Map',
   'today.next': 'Next',
   
@@ -36,8 +37,10 @@ export const copy = {
   'today.finishHere': 'Finish here',
   'today.label': 'Today',
   'today.enough': 'The day’s work is done, and it was enough.',
-  'today.reached': 'You came at last to {place}.',
-  'today.camped': 'You made your camp at {place}.',
+  'today.reached': 'Today brought you to {area}, {place}.',
+  /* (a stop's name is never put inside a sentence; nothing of sleep before goodnight, D-154 review) */
+  'today.camped': 'Today you turned back short of the next place: {area}.',
+  'today.at': '{place}',
   'today.look': 'See where you are',
   'today.keepGoing': 'Keep going',
   'today.keepGoingSay': 'In the Satchel, choose what comes next.',
@@ -56,6 +59,7 @@ export const copy = {
   'set.towards': 'Towards {place}',
   'set.to': 'To {place}',
   'set.onward': 'Further in',
+  'set.further': 'Further into {area}', 'set.onDown': 'On down', 'set.back': 'On the way back',
   'set.nextPlace': 'the next place',
   'set.count': '{n} of {len} minutes',
   'set.ends': 'finishing around {end}',
@@ -192,11 +196,11 @@ export const copy = {
   'map.regionName': 'The Quiet',
   'map.here': 'you are here',
   'map.hereLabel': 'You are here',
-  'map.hereIn': 'Here · {stretch}',
-  'map.opened': 'Opened · Read again', 'map.openedSr': 'Opened with a Key: read again, {where}',
+  'map.openedSr': 'Opened with a Key: read again, {where}',
   'map.walked': 'Walked',
   'map.walkedSealed': 'Walked · something here needs a Key',
   'map.wayIn': 'The way you came in.',
+  'map.camp': 'camp, by the lamp', 'map.turnedBack': 'Turned back here',
   'map.sealed': 'needs a Key',
   'map.useKey': 'Use a Key', 'map.useKeySr': 'Use a Key: {where}',
   'map.noKey': 'Do a recurring job as often as you set it to earn a Key.',
@@ -223,7 +227,13 @@ export const copy = {
   'look.open': 'Look', 'look.openSr': 'Look at the painting',
   'look.hint': 'Pinch to look closer. Tap to come back.',
   'look.back': 'Back to the words',
-  'arrive.camp': 'Camp',
+  /* a day that ended short of a place (as the Map says, "Turned back here"); a turn-off on the way up is "On the way back" (D-154) */
+  'arrive.camp': 'Where you turned back', 'arrive.turnOff': 'On the way back',
+  /* (its name is the title above: a stop's name may start with "By…", so it is never put inside a sentence) */
+  'step.atCamp': 'At camp · {area}',
+  'arrive.stopAgain': 'You have stopped here once before.',
+  'arrive.newArea': 'A new area', 'arrive.backIn': 'Back again', 'arrive.evening': 'Tonight, at camp', 'arrive.lastNight': 'Last night, at camp', 'arrive.oneEvening': 'One evening, at camp',
+  'arrive.byTheLamp': 'By the lamp', 'arrive.toward': 'Arrive',
   'arrive.enough': 'The day’s work is done.',
   'arrive.keyOpens': 'You used a Key you were keeping.',
   'arrive.enough2': 'Rest now.',
@@ -330,7 +340,7 @@ export const copy = {
   'daybook.written': 'Written for you as the week drew to its close.',
   'daybook.none': 'The pages are still blank. At the end of each week in which you do something, a page will be written here for you.',
   'daybook.once': 'once', 'daybook.twice': 'twice', 'daybook.many': '{n} times',
-  'daybook.reached': 'The furthest you reached', 'daybook.wentBy': 'On the way: {places}',
+  'daybook.reached': 'The furthest you reached', 'daybook.wentByLabel': 'On the way:',
   'daybook.camped': 'It was a week of camps and short roads, every step of it on the way.',
   'daybook.learned': 'Learned',
   'daybook.soFar': 'So far',
@@ -557,6 +567,8 @@ export const card = (k: number) => copy[`card.${Math.min(8, Math.max(1, k))}` as
 export const delves = (n: number) => t(n === 1 ? 'delves.one' : 'delves.many', { n });
 /** A place's name inside a sentence: "You reached the Rib Gallery." */
 export const inSentence = (name: string) => name.replace(/^The /, 'the ');
+/** A place's name inside a sentence, after its area ("the Lamp Hall, below the lamp"): its first letter small (D-154). */
+export const placeIn = (name: string) => name.charAt(0).toLowerCase() + name.slice(1);
 /** "Monday", from a game day. */
 export const dayName = (day: string) => copy[`day.${new Date(`${day}T00:00:00Z`).getUTCDay()}` as CopyKey];
 /** "27 September 2026" */

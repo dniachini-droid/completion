@@ -63,7 +63,9 @@
       <button class="icon-link" onclick={() => go('map')}><span>{t('map.nav')}</span></button>
     </div>
     <div class="label-line lit rise welcome">{t('welcome.label')}</div>
-    <h1 class="carve lg rise">{v.here.name}</h1>
+    <!-- where he was: the area, and the place in it (D-154) -->
+    <h1 class="carve lg rise">{v.here.area}</h1>
+    {#if v.here.id}<p class="soft on-scene rise at-place">{t('today.at', { place: v.here.name })}</p>{/if}
     <!-- the locked thing in view, said as what it is (S9): ahead of him, or left behind him -->
     {#if view}<p class="say on-scene rise d1">{stop(v.aheadBehind ? `${t('today.behind')}: ${view}.` : v.aheadHere ? `${t('today.here')}: ${view}.` : t('welcome.ahead', { thing: view }))}</p>{/if}
   </header>
@@ -115,4 +117,5 @@
   .links { display: flex; gap: 14px; flex-wrap: wrap; }
   .appts { list-style: none; margin: 4px 0 10px; padding: 0; }
   .appts li { margin-bottom: 6px; }
+  .at-place { margin: -4px 0 8px; font-family: var(--life); letter-spacing: .04em; }
 </style>

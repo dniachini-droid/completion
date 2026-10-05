@@ -17,9 +17,9 @@
   import { tieFor } from '../core/remember';
   import { leaveWord, moment } from './moment.svelte';
   import { ofLine } from './panel';
-  import { beatOf } from '../core/story';
+  import { beatOf, areaName } from '../core/story';
   import type { FactOf, Job } from '../core/types';
-  import { t, minutesWords, minutesShort, inSentence, dayShort, type Weekday } from '../content/copy/en';
+  import { t, minutesWords, minutesShort, inSentence, placeIn, dayShort, type Weekday } from '../content/copy/en';
   import Scene from './Scene.svelte';
   import EndRoad from './EndRoad.svelte';
   import WeekMarks from './WeekMarks.svelte';
@@ -37,8 +37,16 @@
   const others = $derived(todoFirst(v.line));
   const extra = $derived(todoFirst(v.slate.filter(id => !v.line.includes(id))));
   /* the last place reached (never a camp): its entry, read again from its name (D-135) */
-  const placeSeq = $derived(game.facts.filter(f => f.type === 'arrived' && f.kind === 'place').pop()?.seq ?? null);
-  const lastPlace = $derived(v.lastArrival);
+  /* what today's walking came to: its last place or the place it turned back at, never an evening at camp (that is
+     the night's, not the walk's) nor a place reached on another day (D-154 review) */
+  /* (one not yet shown is not yet his: it comes on its own screen first) */
+  const lastPlace = $derived.by(() => {
+    const f = game.facts.filter((x): x is FactOf<'arrived'> => x.type === 'arrived' && x.day === v.day && x.kind !== 'evening' && x.how !== 'evening'
+      && (v.arrival === null || x.seq < v.arrival.seq)).pop();
+    if (!f) return null;
+    const st = f.kind === 'camp' ? content.story.camps.find(k => k.id === f.id)?.stretch : beatOf(content.story, f.id)?.stretch;
+    return { kind: f.kind, area: st ? areaName(content.story, st) : v.here.area, name: f.kind === 'camp' ? '' : beatOf(content.story, f.id)?.name ?? '' };
+  });
 
   const recurring = (id: string) => v.content.rhythms.some(r => r.job === id);
   /* minutes into the game day, which turns at 04:00: 01:00 comes after 18:00 (review of D-144) */
@@ -248,8 +256,11 @@
       </span>
     </div>
     <!-- the place's name: a tap reads its entry again, with its painting, at any time of day (Dan, D-135) -->
-    {#if placeSeq !== null && v.here.id}<h1 class="carve lg rise"><button class="here" aria-describedby="here-again" onclick={() => go('arrival', `again:${placeSeq}`)}>{v.here.name}</button></h1><span id="here-again" class="sr-only">{t('map.readHere')}</span>
-    {:else}<h1 class="carve lg rise">{v.here.name}</h1>{/if}
+    <!-- where Dan is: the area as the title, the place under it (D-154); a tap reads the place's entry again, with its
+         painting, at any time of day (D-135) -->
+    {#if v.here.seq !== null && v.here.id}<h1 class="carve lg rise"><button class="here" aria-describedby="here-again" onclick={() => go('arrival', `again:${v.here.seq}`)}>{v.here.area}</button></h1>
+      <button class="text-link at-place rise" onclick={() => go('arrival', `again:${v.here.seq}`)}><span>{t('today.at', { place: v.here.name })}</span></button><span id="here-again" class="sr-only">{t('map.readHere')}</span>
+    {:else}<h1 class="carve lg rise">{v.here.area}</h1>{/if}
     <section class="where rise d2" aria-label={roadSay || undefined}>
       <EndRoad road={v.road} from={v.walked} to={v.walked} mode="still" notes={roadNotes} spoken={false} />
     </section>
@@ -265,6 +276,7 @@
       {:else if v.keyUse}<span class="dot" aria-hidden="true">·</span><button class="text-link key-use" onclick={() => go('map', v.keyUse!)}><span>{t('today.behindMap')}</span></button>{/if}
     </div>
     {#if keyAsk && v.keyHere}<div class="key-ask rise"><button class="text-link use" onclick={useHere}><span>{t('step.useHere')}</span></button><button class="text-link" onclick={() => (keyAsk = false)}><span>{t('step.keepIt')}</span></button></div>{/if}
+    {#each v.lateKeys as job}<p class="soft keys-say">{t('today.keys.late', { job })}</p>{/each}
     {#if keysOpen}<p class="soft keys-say">{t('today.keys.say')}{#if v.keys} {t('today.keys.useOnMap')}{/if}</p>{/if}
     {#if v.ahead}
       <section class="ahead rise d2">
@@ -341,7 +353,7 @@
         <div class="label-line gold">{t('today.label')}</div>
         <h2 class="say-lg">{t('today.enough')}</h2>
         {#if lastPlace}
-          <p class="soft">{t(lastPlace.kind === 'place' ? 'today.reached' : 'today.camped', { place: inSentence(lastPlace.name) })}</p>
+          <p class="soft">{lastPlace.kind === 'camp' ? t('today.camped', { area: lastPlace.area }) : t('today.reached', { area: inSentence(lastPlace.area), place: placeIn(lastPlace.name) })}</p>
         {/if}
         {#if stillToCome.length}<p class="soft still">{t('today.stillToCome', { what: stillToCome.join(', ') })}</p>{/if}
         {#if evening}{@render tonight()}{/if}
@@ -436,6 +448,8 @@
 <style>
   h1 { margin-top: 2px; }
   /* the heading's own words are its name; "Read it again" is said after it (A#47); a finger's height at least (A#40) */
+  /* the place, under the area's name: a link like every "read again" (D-154) */
+  .at-place { display: block; margin: -6px 0 6px; min-height: 32px; font-family: var(--life); font-size: calc(15px * var(--ts, 1)); letter-spacing: .04em; color: var(--ink-2); text-align: left; }
   h1 .here { font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit; text-shadow: inherit; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; min-height: 44px; }
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
   /* a job Dan tends to put off brings a find: a small hollow gold mark says so (MORNING-REPORT Part 3 #3) */

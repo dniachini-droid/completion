@@ -65,13 +65,16 @@ describe('with no Keys at all, the story goes on by work alone (D-129)', () => {
     const st = S.storyState(facts, s);
     for (const id of ['b-3.B', 'b-4.B', 'b-6.B']) {
       expect(st.played.has(id), id).toBe(true);
-      expect(facts.find(f => f.type === 'arrived' && f.id === id)).toMatchObject({ how: 'foot' });
+      /* a place at home once the way down is open comes as an evening at camp, off the walking meter (D-154) */
+      expect(facts.find(f => f.type === 'arrived' && f.id === id)).toMatchObject({ how: S.isHome(s, S.beatOf(s, id)!.stretch) ? 'evening' : 'foot' });
       const x = S.beatOf(s, id)!.seal!;
       expect(opened(facts).find(f => f.seal === x), x).toMatchObject({ how: 'road' });
     }
     /* the rows the road opened came in the order Keys opened them */
-    const order = opened(facts).filter(f => f.how === 'road').map(f => S.sealOf(s, f.seal)!);
-    for (let i = 1; i < order.length; i++) expect(order[i].w * 100 + order[i].o, order[i].id).toBeGreaterThan(order[i - 1].w * 100 + order[i - 1].o);
+    /* (the rows at home come with the evenings once the way down is open, in their own order, D-154) */
+    const road = opened(facts).filter(f => f.how === 'road').map(f => S.sealOf(s, f.seal)!);
+    for (const order of [road.filter(x => !S.isHome(s, x.stretch)), road.filter(x => S.isHome(s, x.stretch))])
+      for (let i = 1; i < order.length; i++) expect(order[i].w * 100 + order[i].o, order[i].id).toBeGreaterThan(order[i - 1].w * 100 + order[i - 1].o);
     expect(aheadOfDan(facts)).toEqual([]);
     expect(outOfOrder(facts)).toEqual([]);
   }, 60_000);
@@ -147,14 +150,18 @@ describe('Keys open only the niches; the road opens its own rows on the way (D-1
       const b = S.beatOf(s, f.id), x = S.sealOf(s, f.id) ?? (b?.kind === 'stepKey' ? S.sealOf(s, b.seal!) : undefined);
       if (b?.kind !== 'step' && !(x && S.onRoad(s, x.id))) continue;   /* a Key's niche on the floor or a kept Key: not this */
       if (x && !facts.some(g => g.type === 'sealOpened' && g.seal === x.id && g.how === 'road')) continue;
+      /* a moment at home once the way down is open is part of an evening at camp, shown after it (D-154) */
+      const before = facts.slice(0, i).filter((g): g is FactOf<'arrived'> => g.type === 'arrived').pop();
+      const evening = !!before && (before.kind === 'evening' || before.how === 'evening') && S.eveningMoment(s, f.id)
+        && facts.slice(facts.indexOf(before) + 1, i).every(g => ['beatPlayed', 'recordShown', 'sealOpened', 'storyWeekBegan'].includes(g.type));
       /* played on the way: the next arrival is a place, and shows the bit's line, its records and its guesses */
-      const arr = facts.slice(i).find((g): g is FactOf<'arrived'> => g.type === 'arrived')!;
-      expect(arr.kind, f.id).toBe('place');
+      const arr = evening ? before! : facts.slice(i).find((g): g is FactOf<'arrived'> => g.type === 'arrived')!;
+      if (!evening) expect(arr.kind, f.id).toBe('place');
       const upTo = facts.findIndex(g => g.type === 'seen' && g.what === 'arrival' && g.ref === arr.seq);
       const a = see(facts.slice(0, upTo), C, arr.at).arrival!;
       expect(a.seq, f.id).toBe(arr.seq);
       const line = b?.line ?? x?.line;
-      const w = a.way.find(v => v.beat === f.id);
+      const w = (evening ? a.then : a.way).find(v => v.beat === f.id);
       expect(!!w && w.line === line, f.id).toBe(true);
       expect(a.opened.includes(line!), f.id).toBe(false);
       const recs = [...(x?.carries?.records ?? []), ...(b?.carries?.records ?? [])];

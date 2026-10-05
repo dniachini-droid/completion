@@ -202,7 +202,8 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     const first = p.view().arrival!; p.do({ do: 'seen', what: 'arrival', ref: first.seq });
     p.do({ do: 'startRun', job: 'spanish', minutes: 60, count: 3 }).wait(200);
     expect(p.view().walked).toBe(300);
-    expect(p.view().arrival).toMatchObject({ kind: 'place', id: 'b-1.B', completedDay: false });
+    /* the second place along the hall (the route walked as a journey, D-154) */
+    expect(p.view().arrival).toMatchObject({ kind: 'place', id: 'pl-w1-below-the-lamp', completedDay: false });
   });
   it('splitting work earns nothing extra: steps are time', () => {
     const a = player().do({ do: 'open' }).do({ do: 'startRun', job: 'course', minutes: 25, count: 2 }).wait(60);

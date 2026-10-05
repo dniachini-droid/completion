@@ -51,16 +51,25 @@ Every item carries `w` (story week), `o` (order in that week, where order matter
   - **A guess asked on an arrival** is only one whose mark that place's own records carry, never on the beat that confirms it; a tablet a kept Key opens on an arrival asks its marks there.
   - **Next week's places** come only on a deep push (a High day, a called push, or Keep going); otherwise one place a day on foot, the rest of the distance kept for tomorrow (Key places are extra). Camp views rotate (unused ones along the walked route first, then the one seen longest ago).
 
-### 0.3 Stretches (where Dan is on the map)
-| Stretch | Id | From | Places on it |
+### 0.3 Areas (where Dan is on the map), D-154
+
+The stretch ids stay; what the app shows is the **area**. How they join and how Dan moves between them is `ROUTE_REDESIGN.md` §4 (the authoritative design); in short:
+
+| Area (as shown) | Ids | Joins | Home |
 |---|---|---|---|
-| The Mouth and the pipe | `st-mouth` | w1 | the shaft foot; the curved passage |
-| The Lamp Hall | `st-hall` | w1 (dark until `b-3.A`, lit after) | the ledge, the wall by the lamp, the lintel, the far end, the corner |
-| The Salt Gallery | `st-salt` | w1 | the split, the tally, the niches in the salt |
-| The Survey Cut | `st-camp` | w1 | her camp |
-| The top of the Stair | `st-stair` | w3 (after `b-3.A`) | the landing, the top flight, the first turn |
-| The second flight | `st-flight2` | w4 (seen), w5 (walked) | the little door, the recess under the second turn, the gap, the second landing |
-| The square gallery | `st-square` | w6 | the side passage, the crew's wall, the square floor |
+| The Mouth | `st-mouth` | the shaft; its pipe opens into the Lamp Hall's near end | — |
+| The Lamp Hall | `st-hall` | the Mouth; the Box Room; the Salt Gallery; the Stair (the lintel); the steep stair (the great door) | yes (camp, by the lamp) |
+| The Box Room (was "the Survey Cut") | `st-camp` | the Lamp Hall's side wall | yes |
+| The Salt Gallery | `st-salt` | the Lamp Hall's far corner | yes |
+| The Stair | `st-stair`, `st-flight2` (one area) | the lintel; the square gallery (second landing); the Water (foot) | — |
+| The square gallery | `st-square` | the second landing; behind its fall, the lower gallery to the lower way | — |
+| The Water | `st-water` | the Stair's foot; the steep stair (far shore); the Reading Room; below the Water | — |
+| The Reading Room | `st-reading` | across the Water | — |
+| Below the Water | `st-blast` | the far shore; the side gallery; the lower way (once the rubble is cleared) | — |
+| The side gallery | `st-side` | the blast room | — |
+| The lower way | `st-lower` | the lower gallery (partway down); the back of the rubble (its head) | — |
+
+**The movement rules (D-154; they replace the "skipped for now" rule of §0.2 and the per-week route of §1).** Every day Dan sets out from camp and comes back to the lamp at night. A place is one of four kinds, worked out when it plays: **on** (the next place in the area he is in), **a new area** (its first place; the place's own line says how he came), **back** (an area walked before; the area's way-in line says how), or **an evening at camp** (a place at home once the way down is open, from `b-3.B`). Evenings and the story's moments at home (her notebook, the tally) play at goodnight, or at the next opening after a day with work in it; off the walking meter; one a night, two when one is waiting from a week behind; they never hold the story week or the road. A place never lets the route skip into another area while it waits: what it waits for plays on the way; a moment at home the way down needs plays on a job's return (or, on a very long day, as that night's evening at once). Next week's plain places come early only along the way, in the area Dan is in. A day that ends short of a place ends where Dan turned back (the camp view), and he sleeps by the lamp.
 
 ### 0.4 Two canon clarifications this file relies on (recorded in `STORY_JOB.md` §4)
 - **The counts on her things** (the tin box, the stove's box, the recess above the cot, her folder) are cut in thin slates of the hall's stone laid over them: a count works only in laced stone (WORLD_TRUTH rule 2). He sealed her camp after she went down, as he seals every reader's things for the next one. The app never says who cut them; ARR1's "a row of cut strokes on its lid" is the slate on the lid.
@@ -70,19 +79,26 @@ Every item carries `w` (story week), `o` (order in that week, where order matter
 
 ## 1. The route, week by week (arrival order)
 
-Five named places a story week (BALANCING §2); fragments ride on about half of them. `(K)` = plays when its Key lands.
+**Rebuilt as one journey (D-154): the design and its reasons are `ROUTE_REDESIGN.md` §4.4; the order as built (after the playthrough reviews, §12) is below, generated from `app/src/content/sealed/route.ts`.** E = an evening at camp (worked out as it plays: a place at home once the way down is open).
 
-| Wk | o1 | o2 | o3 | o4 | o5 |
-|---|---|---|---|---|---|
-| 1 | `b-1.A` The Lamp Hall | `b-1.B` The corner | `pl-w1-pick-niche` | `b-1.C` The Survey Cut | `pl-w1-below-the-lamp` |
-| 2 | `b-2.A` The Salt Gallery, further in | `pl-w2-above-the-ring` | `b-2.B` The rod (K-gated) | `pl-w2-smooth-place` | `pl-w2-box-by-the-cot` |
-| 3 | `b-3.A` The lintel (the word) | `b-3.B` The head of the Stair (K) | `pl-w3-salt-lit` | `b-3.C` The top flight | `pl-w3-far-end` |
-| 4 | `b-4.A` The sheet dated Day 9 | `pl-w4-hollow` | `b-4.B` The salt block (K) | `pl-w4-recess-above-the-cot` | `b-4.C` The Lower Door, close |
-| 5 | `pl-w5-ledge-lip` | `pl-w5-worn-steps` | `b-5.A` The tally, from the head (K-gated) | `b-5.B` Through a gap | `pl-w5-second-landing` |
-| 6 | `b-6.A` The side passage | `pl-w6-square-gallery` | `b-6.B` The crew's wall (K) | `pl-w6-wall-shelf` | `pl-w6-folder` |
-| 7 (run-ahead) | `b-7.A` The lintel at the foot of the second flight (the word; K-gated) | `b-7.B` The crew's wall, again (K) | `b-7.C` The great door (K; the word again) | — | — |
+| Wk | Places |
+|---|---|
+| 1 | `b-1.A` · `pl-w1-below-the-lamp` · `b-1.B` · `pl-w2-smooth-place` (from w2) · `pl-w1-pick-niche` · `b-1.C` |
+| 2 | `b-2.A` · `pl-w2-above-the-ring` · `pl-w2-box-by-the-cot` · `b-2.B` |
+| 3 | `b-3.A` · `b-3.B` (K) · `b-3.C` · `pl-w5-worn-steps` (from w5) · E `pl-w3-salt-lit` · E `pl-w3-far-end` |
+| 4 | `pl-w5-second-landing` (from w5) · E `b-4.A` · E `b-4.B` (K) |
+| 5 | `b-5.B` · E `b-5.A` |
+| 6 | `b-6.A` · `pl-w6-square-gallery` · E `b-4.C` (from w4) · `b-6.B` (K) · `pl-w6-wall-shelf` · E `pl-w6-folder` |
+| 7 | `b-7.B` (K) · `b-7.A` · E `b-7.C` (K) |
+| 8 | `b-8.A` · `pl-w8-channel` · `pl-w8-steep-foot` · `b-8.C` (K) · E `b-8.B` |
+| 9 | `b-9.A` · `pl-w9-benches` · E `b-9.B` · `b-9.C` (K) · `pl-w9-approach` |
+| 10 | `b-10.A` (K) · `pl-w10-blast-floor` · `b-10.C` (K) · `pl-w10-deep-end` · `b-10.B` (K) · E `pl-w4-hollow` (from w4) |
+| 11 | `pl-w11-cupboard` · `b-11.A` (K) · `b-11.C` (K) · `pl-w11-far-end` · `b-11.B` · `b-13.C` (K) (from w13) |
+| 12 | `b-12.A` · `pl-w12-shelf` · E `b-12.B` (K) · `pl-w12-square-way` · `b-12.C` (K) · E `pl-w4-recess-above-the-cot` (from w4) |
+| 13 | `pl-w13-side-gallery` · `b-13.A` (K) · `b-13.B` · `pl-w14-mule-stone` (from w14) · `pl-w13-lower-gallery` · E `pl-w5-ledge-lip` (from w5) |
+| 14 | `pl-w14-meeting` · `b-14.A` · `b-14.B` · E `pl-w14-deep-niche` |
 
-`req` for the pinned story arrivals: `b-2.B` req `b-2.1` (the box opened); `b-2.2` req `seal-2-1` (GIVE can only be guessed once the sheet is out); `b-3.A` belongs to weeks 2–3 (D-013) and **plays as soon as its req is met, even in story week 2**, ahead of any week 2 place still to come (the rest of week 3 waits for the calendar); `b-3.A` req `b-2.B` and `mk-give` guessed (`b-2.2`), and plays on the first arrival after the next main job (ARR1 2.B); `b-4.A` req `b-3.1`; `b-5.A` req `seal-5-1` (ONCE); `b-6.A` req `b-5.B`; `b-7.A` req `seal-7-1`; `b-7.C` req `b-7.A`. The `pl-` places need only physical access, so a deep push can reach them a week early: `pl-w2-above-the-ring` req `seal-1-1`; `pl-w2-smooth-place` req `b-1.B`; `pl-w2-box-by-the-cot`, `pl-w4-recess-above-the-cot`, `pl-w6-folder` req `b-1.C`; `pl-w3-salt-lit`, `pl-w3-far-end` req `b-3.A`; `pl-w5-worn-steps` req `b-3.C`; `pl-w5-second-landing` req `b-4.1`; `pl-w6-square-gallery` req `b-6.A`; `pl-w6-wall-shelf` req `pl-w6-square-gallery`; the rest none.
+The table below is the first job's, kept for its record (superseded): `req` for the pinned story arrivals: `b-2.B` req `b-2.1` (the box opened); `b-2.2` req `seal-2-1` (GIVE can only be guessed once the sheet is out); `b-3.A` belongs to weeks 2–3 (D-013) and **plays as soon as its req is met, even in story week 2**, ahead of any week 2 place still to come (the rest of week 3 waits for the calendar); `b-3.A` req `b-2.B` and `mk-give` guessed (`b-2.2`), and plays on the first arrival after the next main job (ARR1 2.B); `b-4.A` req `b-3.1`; `b-5.A` req `seal-5-1` (ONCE); `b-6.A` req `b-5.B`; `b-7.A` req `seal-7-1`; `b-7.C` req `b-7.A`. The `pl-` places need only physical access, so a deep push can reach them a week early: `pl-w2-above-the-ring` req `seal-1-1`; `pl-w2-smooth-place` req `b-1.B`; `pl-w2-box-by-the-cot`, `pl-w4-recess-above-the-cot`, `pl-w6-folder` req `b-1.C`; `pl-w3-salt-lit`, `pl-w3-far-end` req `b-3.A`; `pl-w5-worn-steps` req `b-3.C`; `pl-w5-second-landing` req `b-4.1`; `pl-w6-square-gallery` req `b-6.A`; `pl-w6-wall-shelf` req `pl-w6-square-gallery`; the rest none.
 
 ---
 
@@ -99,9 +115,9 @@ Five named places a story week (BALANCING §2); fragments ride on about half of 
 | `pl-w2-box-by-the-cot` | 2 / 5 | **The box by the cot.** | In her camp, pushed against the wall, is a box the size of a shoebox. A thin slate is laid across its lid with a count cut in it, and on the slate stands a tin mug, upside down. | `seal-2-5` | the stove's box (NICHES 2.5) |
 | `pl-w3-salt-lit` | 3 / 3 | **The salt, lit.** | In the glow that comes round the corner from the lit hall, the salt is banded grey and pink, and it glitters. The stones packed in the split are river stones, round and brown, carried up from somewhere with water in it. | the split | C-09 |
 | `pl-w3-far-end` | 3 / 5 | **The far end.** | The last lamp before the far end is a stride from the great door, and in its light the door goes up past where the flames reach, into the curve of the ceiling. Cold comes off its face, the way it comes off a window in winter. | the great door (`b-4.C`) | C-05 (a descent behind it; the cold air of 7.C) |
-| `pl-w4-hollow` | 4 / 2 | **The hollow.** | Low in the salt is a hollow the size of two cupped hands, worn smooth inside, with a count on its rim. The salt at the bottom is pressed flat in four small places. | `seal-4-5` | the clay sheep's four feet (NICHES 4.5) |
-| `pl-w4-recess-above-the-cot` | 4 / 4 | **The recess above the cot.** | Above her cot, at the height of a raised arm, is a recess in the wall, closed by a slate with a count on it. Beside it a drawing pin is pushed into a crack, on its own. | `seal-4-3` | the printed page (NICHES 4.3) |
-| `pl-w5-ledge-lip` | 5 / 2 | **The ledge's lip.** | Under the lamp's ledge the stone is cut too. There is a small count there, low enough that nobody standing would see it. | `seal-5-5` | *Hers again* (NICHES 5.5) |
+| `pl-w4-hollow` | 4 / 2 → 10 (D-154) | **The hollow.** | Low in the salt is a hollow the size of two cupped hands, worn smooth inside, with a count on its rim. The salt at the bottom is pressed flat in four small places. | `seal-4-5` | the clay sheep's four feet (NICHES 4.5) |
+| `pl-w4-recess-above-the-cot` | 4 / 4 → 12 (D-154) | **The recess above the cot.** | Above her cot, at the height of a raised arm, is a recess in the wall, closed by a slate with a count on it. Beside it a drawing pin is pushed into a crack, on its own. | `seal-4-3` | the printed page (NICHES 4.3) |
+| `pl-w5-ledge-lip` | 5 / 2 → 13 (D-154) | **The ledge's lip.** | Under the lamp's ledge the stone is cut too. There is a small count there, low enough that nobody standing would see it. | `seal-5-5` | *Hers again* (NICHES 5.5) |
 | `pl-w5-worn-steps` | 5 / 3 | **The worn steps.** | Halfway down the top flight, every step is worn in two places a stride apart, and the stride is longer than yours. The rail beside them shines along its top. | the rail | C-04a (the same stride as the corner's troughs); C-36 later |
 | `pl-w5-second-landing` | 5 / 5 | **The second landing.** | Where the second flight turns there is a landing as wide as the hall above, and the lamps along its wall are lit. In the wall across from the stair is a doorway, square at the corners, too low for whoever made the stair. | the side passage (`b-6.A`) | C-58 |
 | `pl-w6-square-gallery` | 6 / 2 | **The square gallery.** | The gallery runs straight, as tall as a tall man and no taller, its ceiling flat and its walls covered in small, even chisel marks. There are no cups in these walls. The light comes in from the round stone and gives out. Far down, the floor goes under a slope of broken stone. | the roof-fall (week 10) | C-58; the fall (ARR2 10.B) |
@@ -206,17 +222,17 @@ The NICHES rule stands, made exact: if Dan earns more Keys than a week's rows, t
 | `seal-1-3` | The Lamp Hall, a low niche under the ledge | Below the ledge, the strokes on the niche fill. Inside is a clay saucer, the twin of the lamp's foot, and it is empty. |
 | `seal-1-5` | The Mouth, a recess in the shaft wall | In the shaft wall the strokes on the recess fill. Inside, a brass tag stamped with a shaft number hangs on a nail. |
 | `seal-2-3` | The Salt Gallery, a crack above the lone ring | Beside the crack above the ring, the count fills. Inside is a bone comb with two teeth gone, and on the wall beside it is a short line in the tally's hand. |
-| `seal-2-5` | The Survey Cut, the box by the cot | The count on the box by the cot fills. Inside are a tin of tea, a spoon, a candle stub, and a shopping list in her hand: batteries, batteries, tape. |
+| `seal-2-5` | The Box Room, the box by the cot | The count on the box by the cot fills. Inside are a tin of tea, a spoon, a candle stub, and a shopping list in her hand: batteries, batteries, tape. |
 | `seal-3-3` | The Stair's first turn, a recess | The count on the recess at the first turn fills. Inside is a coil of measuring cord, knotted every ten paces, the knots gone stiff. Beside it on the wall is a short line in the tally's hand. |
 | `seal-3-4` | The Lamp Hall, the foot of the wall by the lamp | At the foot of the wall by the lamp, the count fills. Inside lies a stub of stone, the broken edge of a rod, among a scatter of chips. |
-| `seal-3-5` | The Survey Cut, a ledge | In her camp the count on the ledge fills. On it is a box of tape cassettes, and three are labelled in her hand: DAY 3 (HIM), DAY 6 (IT WORKS), DAY 14. |
-| `seal-4-3` | The Survey Cut, the recess above the cot | The count on the recess above the cot fills. Inside, pinned to the back of the recess, is a printed email. |
+| `seal-3-5` | The Box Room, a ledge | In her camp the count on the ledge fills. On it is a box of tape cassettes, and three are labelled in her hand: DAY 3 (HIM), DAY 6 (IT WORKS), DAY 14. |
+| `seal-4-3` | The Box Room, the recess above the cot | The count on the recess above the cot fills. Inside, pinned to the back of the recess, is a printed email. |
 | `seal-4-5` | The Salt Gallery, a hollow in the salt | At the hollow in the salt the count fills. In it lies a child's clay animal, a sheep, one leg mended with salt. Beside it on the wall is a short line in the tally's hand. |
 | `seal-5-3` | The Stair, the gap's sill | The count on the sill of the gap fills. On the sill lie wax crumbs and a broken stylus, and beside them on the wall is a short line in the tally's hand. |
-| `seal-5-4` | The Survey Cut, the notebook's back pocket | At the back of the notebook the count on its pocket fills. Inside is a folded map of the hill, the shaft marked in pen and, in another pen, SALT? and TUNNEL? |
+| `seal-5-4` | The Box Room, the notebook's back pocket | At the back of the notebook the count on its pocket fills. Inside is a folded map of the hill, the shaft marked in pen and, in another pen, SALT? and TUNNEL? |
 | `seal-5-5` | The Lamp Hall, the ledge's underside | The count on the ledge's lip fills. Under the ledge is a ring cut small, where no one would look, and beside it is a short line in the tally's hand. |
 | `seal-6-3` | The square gallery, a wall-shelf | The count on the wall-shelf fills. On the shelf lies a bronze level, its bubble long dry. |
-| `seal-6-5` | The Survey Cut, her folder | The count on her folder fills. In its first pocket are a letter from the council about the shaft and a note from a car's windscreen: "Your car's been here nine days. Ring me." |
+| `seal-6-5` | The Box Room, her folder | The count on her folder fills. In its first pocket are a letter from the council about the shaft and a note from a car's windscreen: "Your car's been here nine days. Ring me." |
 
 ---
 

@@ -10,10 +10,10 @@ _Written 2026-09-23; revised the same day after the weeks 14–26 story-editor r
 
 | Visit | Kind | The line / scene | Choice | Carries |
 |---|---|---|---|---|
-| 14.A | **arrival** | **Behind the fall.** The wedge on a bar; the drop with a rising bar: the rod rings, and the blast room's far fall settles aside. The blast scar goes through into rounded stone, and on the scar, low, a rod-shaped blank beside a diamond and a bar-with-a-tick. | — | ECHO's blank (W4; earliest honest week 14, authored week 17: see note) |
+| 14.A | **arrival** | **The back of the rubble** (D-154: reached from the lower way, which the lower gallery joins partway down). At the lower way's head, the back of the blast room's far fall, its blank on this face; low on the rounded stone beside it, a rod-shaped blank beside a diamond and a bar-with-a-tick (seen as Dan climbs to it). The wedge on a bar; the drop with a rising bar: the rod rings, the rubble settles aside, and Dan steps through into the blast room and looks back at the scar going on into rounded stone. | — | ECHO's blank (W4; earliest honest week 14, authored week 17: see note) |
 | 14.1 | step | The cupboard's lower shelf: a tablet (an inverted wedge on a bar beside the sun over ground; a reversed hook beside an ear). | Guess | Key → **WORLD, HEAR** |
 | 14.2 | step | The log, next page: *Cut the hold-mark on the roof above the props; it held… The Inspector says the mark is not "hold". Would not say what it is. Said: you will read it. A distinction for a man with no roof to lose.* | — | **E4** |
-| 14.B | **arrival** | **The lower way.** From the blast room, a passage going down and in, rounded again, lamps lit already, and a line of cold air. | — | (the way to the Hold) |
+| 14.B | **arrival** | **The lit way down.** From the lower way's head, the blast room a step behind: the passage going down and in, rounded again, lamps lit already, and a line of cold air. (The lower way's first sight, the cups no one lit, is at `pl-w14-meeting`.) | — | (the way to the Hold) |
 | 14.3 | step | The square gallery, the mule-shoe's stone, its count filled: *Told: the mules went not in. I [ ] them not.* | — | **X-mule-driver** |
 | 14.4 | step | Salt Gallery, a deep niche: the tally, a stretch about lambs and salt and a donkey. | — | **S9** |
 | camp | bedtime | The lamp. On the log's page, the mark on the roof held, and the log says it is not "hold". | — | (morning) S4's "he held me [not]" surfaced with her sheet's *held* beside the Engineer's *hold* |

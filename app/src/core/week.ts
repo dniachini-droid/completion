@@ -45,7 +45,8 @@ export function live(c: Content, facts: Fact[], before?: string): Content {
        the fact's day; it never edits the jobs, so it is passed over before any day is read. Read as a date, "none"
        threw, and every Done after a "Not this week" failed (Dan, D-125). */
     if (f.type === 'planChanged') continue;
-    if (before && calendarWeek(f.day) >= before) continue;
+    /* (a fact with no day, in a file the rules can't run, is passed over: deep review F1) */
+    if (before && (typeof f.day !== 'string' || calendarWeek(f.day) >= before)) continue;
     if (f.type === 'rhythmSaved') {
       if (!changed) { jobs = jobs.slice(); rhythms = rhythms.slice(); changed = true; }
       const j = jobs.findIndex(x => x.id === f.job.id), r = rhythms.findIndex(x => x.id === f.rhythm.id);

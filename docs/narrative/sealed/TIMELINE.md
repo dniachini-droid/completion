@@ -36,7 +36,7 @@ The Custodian counts a reader as anyone who read a mark of the Cut and whom he h
 
 | When | Site region reached | What Dan learns (headline) |
 |---|---|---|
-| Weeks 1–4 | Region 1: the Mouth, the Lamp Hall, the Salt Gallery, the Survey Cut, the Lamp Door, the head of the Counting Stair | The place obeys words. Two lives, one lamp. A figure who does not eat |
+| Weeks 1–4 | Region 1: the Mouth, the Lamp Hall, the Salt Gallery, the Box Room, the Lamp Door, the head of the Counting Stair | The place obeys words. Two lives, one lamp. A figure who does not eat |
 | Months 2–3 | Region 2: the Counting Stair, the Surveyor's galleries, the Loud Room, the Water, the Reading Room | The same figure in every age, never stopping anyone. The records are told after the life. One hand cut nearly all of them |
 | Months 4–6 | Region 3: the Builders' halls: the Hold, the Council Gallery, the Warning Hall, the counting doors, the Landing | The Builders. A school and a warning. **KEEP.** His name. First meeting |
 | Months 7–9 | Region 4, below the three doors: the reading-tables, the lift and the deep works, the quiet chambers, the seed's texts; back up to the Surveyor's shut door (region 2) and his workshop (region 3); down again to the Linguist's last camp | The memoir is his. What was done to the Surveyor. The anomalies were real. He wants you to finish. The way down is by going out |

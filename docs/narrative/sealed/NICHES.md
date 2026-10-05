@@ -10,31 +10,31 @@ _Written 2026-09-23._
 | 1 | 1 | Salt Gallery, inner count | The stretch of tally beyond S1 (S2 next week); the first count to fill (the app, ARR1 1.6: "On the salt, a row of cut strokes. The first stroke is full of light.") | — | S2 |
 | 1 | 2 | Salt Gallery, the pick niche | A salt-pick, bronze, the edge worn to a curve; the handle wrapped in cord gone black | *Told: my pick. The handle my father wound.* (at wk 1: *[ ] [ ] [ ]: [a pick] [ ] [ ]; [ ] [a cord] [ ], [a father].*) | S (the tool that cut with his hand over it) |
 | 1 | 3 | The Lamp Hall, a low niche under the ledge | A clay saucer, the twin of the lamp's foot, empty | (wordless) | The lamp: it once sat in this |
-| 1 | 4 | The Survey Cut, under the cot | (seen, not sealed: in the open at ARR1 1.C) Her boots, laced, dry, side by side | (wordless; the app: "side by side, as if for the morning") | L15 (she went down in other shoes) |
+| 1 | 4 | The Box Room, under the cot | (seen, not sealed: in the open at ARR1 1.C) Her boots, laced, dry, side by side | (wordless; the app: "side by side, as if for the morning") | L15 (she went down in other shoes) |
 | 1 | 5 | The Mouth, a recess in the shaft wall | A railway company's brass tag, stamped with a shaft number, hung on a nail | (wordless) | X-padlock; the trial shaft |
 | 1 | 6 | Salt Gallery, a niche by the split, low (added by the story job, `MVP_CONTENT.md` §5) | A small clay flask, stoppered with a twist of wool, empty and light as an eggshell | (wordless) | S1 (he went in as far as the oil); C-01 |
-| 2 | 1 | The Survey Cut, the tin box on the cot (seen at ARR1 1.C) | The glossary sheet for GIVE, PERSON, ONE, ME: four marks drawn large, a word under three and only a question mark under the fourth (GIVE); notebook pages for weeks 3–4 | — | **GIVE, PERSON, ONE, ME** |
+| 2 | 1 | The Box Room, the tin box on the cot (seen at ARR1 1.C) | The glossary sheet for GIVE, PERSON, ONE, ME: four marks drawn large, a word under three and only a question mark under the fourth (GIVE); notebook pages for weeks 3–4 | — | **GIVE, PERSON, ONE, ME** |
 | 2 | 2 | Salt Gallery, the tally-stick niche | The daughter's tally-stick, notched in fives | *The child's voice: father counts at night; four and four; the owl's feet.* (at wk 2, ONE held: *[ ] [ ]: [a father] [ ], [ ] [ ]; four four; [an owl] [ ].*) | X-daughter |
 | 2 | 3 | Salt Gallery, a crack above the wife's ring | A bone comb, two teeth gone | *Hers. I asked not for it. He left it under the ring.* (at wk 2, GIVE still a guess: *[a comb] [ ] [ring]. I [ ] [ ]. He [give?] [ ] [ ]; [ ] [ring].*) | S2, the wife's ring |
 | 2 | 4 | The Lamp Hall, the corner | (seen, not sealed: a named place from the story job, `pl-w2-smooth-place`) A smooth place on the polished wall where the marks are rubbed to nothing, at the height of a long hand | (wordless; the app's line is `pl-w2-smooth-place`'s) | C-04a |
-| 2 | 5 | The Survey Cut, the stove's box (the stove's first sight; it is not in ARR1 1.C) | A tin of tea, a spoon, a candle stub; a shopping list in her hand: batteries, batteries, tape | (wordless) | L5 |
-| 2 | 6 | The Survey Cut, a slate on the floor by the cot's head (added by the story job) | A head torch, the strap gone stiff, a crust of white powder in its battery case | (wordless) | L5 (batteries); she saw by it until the lamps woke |
+| 2 | 5 | The Box Room, the stove's box (the stove's first sight; it is not in ARR1 1.C) | A tin of tea, a spoon, a candle stub; a shopping list in her hand: batteries, batteries, tape | (wordless) | L5 |
+| 2 | 6 | The Box Room, a slate on the floor by the cot's head (added by the story job) | A head torch, the strap gone stiff, a crust of white powder in its battery case | (wordless) | L5 (batteries); she saw by it until the lamps woke |
 | 3 | 1 | The head of the Stair, the niche | The Salt-Cutter's second lamp (clay, unlit, its glaze unchipped) and, on the lid, a lesson-tablet: a doorway beside a mark, a bar beside a mark | — | **HERE, DOOR**; S7 |
 | 3 | 2 | Salt Gallery, next stretch | (seen, not sealed: in the open at ARR1 3.1) The tally continues (S3) | — | S3 |
 | 3 | 3 | The Stair's first turn, a recess | A coil of measuring cord, knotted every ten paces, the knots stiff | *The second's cord. Dropped here; he came not back for it.* | V (the cord) |
 | 3 | 4 | The Lamp Hall, behind the lesson-wall's foot | A stub of her stone pencil (a broken rod-edge) and a scatter of chips | (wordless; the app: "the wall was cut with this") | L1 |
-| 3 | 5 | The Survey Cut, a ledge | A box of tape cassettes (their first sight; not in ARR1 1.C), three labelled in her hand: DAY 3 (HIM), DAY 6 (IT WORKS), DAY 14 | (wordless; dead) | L3, L5, L7 |
+| 3 | 5 | The Box Room, a ledge | A box of tape cassettes (their first sight; not in ARR1 1.C), three labelled in her hand: DAY 3 (HIM), DAY 6 (IT WORKS), DAY 14 | (wordless; dead) | L3, L5, L7 |
 | 3 | 6 | The head of the Stair, a crack in the landing's floor (added by the story job) | A foil blanket still in its packet; on the packet, in pencil: *in case I'm an idiot* | (paper) | L6, L8 (texture) |
 | 4 | 1 | The Stair's second niche | A lesson-tablet: a wedge beside a picture of a well | — | **DEEP** |
 | 4 | 2 | Salt Gallery, past the split | The salt block, with a hook closed on a dot cut into its face (his hand-mark) | *Told: found in the face past the split; not for sale.* (at wk 4: *[ ]: [ ] [a salt face] [a crack] [ ]; give [ ].*) | X-neighbour |
-| 4 | 3 | The Survey Cut, a recess above the cot, with a count | The printed email (X-colleague), pinned inside the recess; its first sight is here, not at ARR1 1.C. Its header shows *To: I. Halloran*: "Come home. Nobody's going to fund this. The department's asked where you are." | (paper) | the institute; the one name on the list Dan can verify (R10) |
+| 4 | 3 | The Box Room, a recess above the cot, with a count | The printed email (X-colleague), pinned inside the recess; its first sight is here, not at ARR1 1.C. Its header shows *To: I. Halloran*: "Come home. Nobody's going to fund this. The department's asked where you are." | (paper) | the institute; the one name on the list Dan can verify (R10) |
 | 4 | 4 | The Lamp Hall, the far end | The Lower Door's count, close: the strokes, the RETURN mark | (the app describes; nothing opens yet) | C-05, C-23 |
 | 4 | 5 | Salt Gallery, a hollow in the salt | A child's clay animal, a sheep, one leg mended with salt | *Told: my child's. She left it for the [owl].* (at wk 4: *[ ] [ ] one: [a sheep] [ ] [ ] [ ] me; [ ] gave [ ] here [ ] [an owl].*) | S6, X-daughter |
-| 4 | 6 | The Survey Cut, a slate low on the back wall (added by the story job) | A paperback dictionary of a dead language, its spine broken open at the grammar, the margins full of pencil | (paper) | the Linguist's trade (texture) |
+| 4 | 6 | The Box Room, a slate low on the back wall (added by the story job) | A paperback dictionary of a dead language, its spine broken open at the grammar, the margins full of pencil | (paper) | the Linguist's trade (texture) |
 | 5 | 1 | The Stair, the recess under the second turn (the second-flight chamber; seen at ARR1 4.1) | A lesson-tablet: a bar-with-a-tick beside a setting sun; a bar-with-a-drop beside a road; a path with the drop at the far end | — | **ONCE, PATH, GO** |
 | 5 | 2 | Salt Gallery, the sealed record | S5 behind a salt crust | — | S5 |
 | 5 | 3 | The Stair, the gap's sill | Wax crumbs and a broken stylus | *Told: the child's. He cut the marks again here, through [the gap].* (at wk 5: *[ ] [ ] [ ]: [a stylus] [ ] [ ] · [ ] [ ] [ ] [ ] here, [a gap].*) | X-boy |
-| 5 | 4 | The Survey Cut, the notebook's back pocket | A folded map of the hill with the shaft marked in pen and, in another pen, the words SALT? and TUNNEL? | (paper) | the three intrusions |
+| 5 | 4 | The Box Room, the notebook's back pocket | A folded map of the hill with the shaft marked in pen and, in another pen, the words SALT? and TUNNEL? | (paper) | the three intrusions |
 | 5 | 5 | The Lamp Hall, the ledge's underside | A ring cut small where no one would look, with the wife's name, a second time | *Hers again. I cut it here; he saw me not.* | S11 (he cuts every name in every hall) |
 | 6 | 1 | Salt Gallery, the last hidden stretch | A lesson-tablet: two drops parted beside a doorway; a hook-over-bar beside a picture of bread; the S6 stretch | — | **OPEN, EAT**; S6 (read wk 7) |
 | 6 | 2 | The Surveyor's upper gallery, a niche | The foreman's pay tablet | *Told: he opened not the hill; we were not paid; the second came not up.* (at wk 6: *[ ]: one door here open [ ]; give person [ ] [ ]; [ ] [ ] [ ].*) | X-foreman |
@@ -59,9 +59,9 @@ _Written 2026-09-23._
 | 9 | 5 | Below the Water, the approach (the Loud Room's) | A powder-tin, the company's name on it, empty | (wordless) | E |
 | 10 | 1 | Below the Water, the approach's niche | A lesson-tablet: a drop with a rising bar beside a lifted block; three short bars beside water | — | **MOVE, WATER** |
 | 10 | 2 | The door below the Water (the Loud Room's door) | With OPEN-WAY and a Key | — | E1–E3 |
-| 10 | 3 | The Surveyor's gallery, deep end | V5 | — | V5 |
-| 10 | 4 | The blast room (the Loud Room), the ledge | The Engineer's watch, stopped at 4.10 | (wordless; the app gives the time) | C-39b |
-| 10 | 5 | The blast room, a shelf | A tin plate with a knife | (wordless; the app: "a tin plate with a knife on it") | E3 |
+| 10 | 5 | The Surveyor's gallery, deep end (row order 5 since D-154: the road opens it after the turn-off back up) | V5 | — | V5 |
+| 10 | 3 | The blast room (the Loud Room), the ledge | The Engineer's watch, stopped at 4.10 | (wordless; the app gives the time) | C-39b |
+| 10 | 4 | The blast room, a shelf | A tin plate with a knife | (wordless; the app: "a tin plate with a knife on it") | E3 |
 | 11 | 1 | The blast room's cupboard | A lesson-tablet: a fork open sideways beside a mouth; a bar over a bar beside a sleeper | — | **VOICE, SLEEP** |
 | 11 | 2 | The blast room, the ledge | The Copyist's book, open (C1) | — | C1 |
 | 11 | 3 | The blast room, the book's other margins | Two more margins, gilded, their counts not yet fillable (seen) | — | C2 (wk 16), C3 (wk 17) |
@@ -77,7 +77,7 @@ _Written 2026-09-23._
 | 13 | 2 | The side gallery | V6 on the door | — | V6 |
 | 13 | 3 | The side gallery, a recess | The Surveyor's wax-tablet ledger of days: nine strokes, then four more in a different hand (the boy's) | *Told: the child counted the days; he [ ] not.* (VOICE: CHILD COUNT DAY, ONE AGAIN NOT; AGAIN wk 20) | V5, V7 (thirteen days) |
 | 13 | 4 | The Surveyor's gallery, the roof-fall | With MOVE-STONE: the way to the lower gallery | — | region 2 |
-| 13 | 5 | The Reading Room, a second bench | A Builder's tally of readers-of-the-tablet: eight and eight and eight, then a gap, then a single stroke in his hand | *count [ ] not; one.* at wk 13 (AGAIN wk 20); *Count again not; one.* when held | the fifth; his loneliness |
+| 13 | 5 | The Reading Room, a second bench (opens in story week 11 since D-154, `seal-13-5` w11 o6: beside the inner door's visit) | A Builder's tally of readers-of-the-tablet: eight and eight and eight, then a gap, then a single stroke in his hand | *count [ ] not; one.* at wk 13 (AGAIN wk 20); *Count again not; one.* when held | the fifth; his loneliness |
 
 ### As built for the app (weeks 8–14, `STORY_JOB.md` §8.3)
 

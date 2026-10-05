@@ -17,6 +17,14 @@ export interface Stretch {
   w: number;
   /** Beats that must have played before it can be walked (e.g. the stair after the first word). */
   req: string[];
+  /** The top, where Dan sleeps (D-154): once the way down is open, a place here plays as an evening at camp. */
+  home?: boolean;
+  /** The area it is shown as, when not its own (the Stair's two stretches are one area). */
+  area?: StretchId;
+  /** The area it opens off, on the Map (the Box Room and the Salt Gallery off the Lamp Hall). */
+  parent?: StretchId;
+  /** How Dan gets there from camp: one plain sentence, shown when he comes back to it from somewhere else. */
+  wayIn?: string;
 }
 
 /** One piece of a record cut in the script: a sign, a carved picture, a name-ring, a hand-mark, or plain punctuation. */
@@ -145,6 +153,10 @@ export interface Beat {
   morningRecord?: string;
   /** Not played once this has (a camp line or a glimpse the story has moved past). */
   until?: string;
+  /** Its own line says how Dan came here (a turn-off, or a return that says its way): no way-in line over it (D-154). */
+  said?: boolean;
+  /** A turn-off on the way back up: a return its own words give the reason for, labelled "On the way back" (D-154). */
+  turnOff?: boolean;
 }
 
 /** A named place with no fragment, added by the story job (a `pl-` id). Plays as an arrival. */

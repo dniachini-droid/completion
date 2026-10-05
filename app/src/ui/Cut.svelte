@@ -51,6 +51,10 @@
   let phase = $state<'' | 'lock' | 'cine' | 'answer' | 'settled'>('');
   const hint = $derived(step === 0 ? t('cut.hint.rod') : step === 1 ? t('cut.hint.first') : step === 2 ? t('cut.hint.second') : step === 3 ? t('cut.hint.lock') : '');
   const said = $derived(step === 0 ? t('cut.ask') : taps[Math.min(step, taps.length) - 1] ?? '');
+  /* why Dan is here, before the first tap, when he came back to it or it is tonight's (D-154): its reason, or the way in */
+  const first = (x: string) => x.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? x;
+  const own = $derived(beatOf(content.story, a.id)?.said);
+  const why = $derived(a.face === 'evening' || own ? (a.line ? first(a.line) : '') : a.face === 'back' ? a.wayIn ?? '' : '');
   const has = (p: typeof phase) => ['lock', 'cine', 'answer', 'settled'].indexOf(phase) >= ['lock', 'cine', 'answer', 'settled'].indexOf(p) && phase !== '';
 
   let root: HTMLDivElement, hallEl: HTMLDivElement, cutsEl: HTMLDivElement, stage: HTMLDivElement;
@@ -160,11 +164,15 @@
     <div class="top col head rise d1 fade-out" aria-live="polite">
       <div class="before">
         <div class="label-line">{t('cut.label')}</div>
+        <!-- where it is cut: the area, small, above the place (D-154) -->
+        <div class="area">{a.area}</div>
         <h1 class="carve lg">{a.name}</h1>
+        {#if why && step === 0}<p class="soft on-scene why"><Prose text={why} /></p>{/if}
         {#key step}<p class="soft on-scene said"><Prose text={said} /></p>{/key}
       </div>
       <div class="after">
-        <div class="label-line gold">{t('arrive.label')}</div>
+        <div class="label-line gold">{a.face === 'evening' ? t(a.earlier ? 'arrive.oneEvening' : a.late ? 'arrive.lastNight' : 'arrive.evening') : a.face === 'enter' ? t('arrive.newArea') : a.face === 'back' ? t(a.turnOff ? 'arrive.turnOff' : 'arrive.backIn') : t('arrive.label')}</div>
+        <div class="area">{a.area}</div>
         <h1 class="carve lg">{a.name}</h1>
         <p class="soft on-scene"><Prose text={a.line} /></p>
       </div>
@@ -176,6 +184,12 @@
       {#if phase === 'settled'}
         <div class="scroll">
           <div class="settle-list"><Settled beat={a.id} /></div>
+          <!-- a word cut on an evening at camp: the rest of that evening follows it, each part under its area (D-154) -->
+          {#each a.then as w, i (w.beat)}
+            {#if w.area && w.area !== (i ? a.then[i - 1].area : a.area)}<span class="then-area">{w.area}</span>{/if}
+            <p class="soft on-scene then-line"><Prose text={w.line} /></p>
+            <div class="settle-list"><Settled beat={w.beat} /></div>
+          {/each}
           {#if a.completedDay}<p class="enough">{t('arrive.enough')} <em>{t('arrive.enough2')}</em></p>{/if}
         </div>
       {/if}
@@ -221,6 +235,8 @@
 
 <style>
   .cut { display: contents; }
+  .then-area { display: block; margin: 14px 0 2px; font-family: var(--life); font-size: calc(13px * var(--ts, 1)); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+  .then-line { margin: 0 0 6px; }
   /* the stage: the painting and the marks on the lintel move together (the camera) */
   .stage { position: absolute; inset: 0; z-index: 0; transform-origin: var(--ox, 30%) var(--oy, 45%); transition: transform 3.2s cubic-bezier(.45, 0, .2, 1); will-change: transform; }
   .answer .stage { transform: translate(var(--tx, 0px), var(--ty, 0px)) scale(1.42); }
@@ -258,6 +274,8 @@
   .settled .head .before { opacity: 0; }
   .settled .head .after { opacity: 1; transform: none; pointer-events: auto; }
   .head .label-line { margin-bottom: 8px; }
+  .why { margin: 0 0 6px; font-style: italic; }
+  .head .area { font-family: var(--life); font-size: calc(15px * var(--ts, 1)); letter-spacing: .06em; color: var(--ink-2); margin-bottom: 4px; }
   .head .soft { display: block; margin-top: 8px; max-width: 34ch; }
   .said { animation: rise .8s var(--ease) both; font-size: calc(17.5px * var(--ts, 1)); line-height: 1.4; color: var(--ink); }
 

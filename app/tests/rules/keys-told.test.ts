@@ -81,8 +81,10 @@ describe('a Key is never spent for Dan; the Map and Today agree (D-143 A)', () =
         pointed++;
         const listed = S.lockedOn(C.story, st, v.keyUse), open = new Set(S.openable(C.story, st).map(x => x.id));
         expect(listed.some(x => open.has(x.id)), `${h} h, ${day}: the Map's box on ${v.keyUse} offers a Key`).toBe(true);
-        if (v.keyHere) { expect(v.keyUse, day).toBe(st.stretch); expect(open.has(v.keyHere), day).toBe(true); }
-        else expect(S.openable(C.story, st).some(x => x.stretch === st.stretch), day).toBe(false);
+        /* "here" is the area Dan is in, any stretch of it (D-154: the Stair's two flights are one area) */
+        const area = (x: string) => S.areaOf(C.story, x as Parameters<typeof S.areaOf>[1]);
+        if (v.keyHere) { expect(area(v.keyUse), day).toBe(area(st.stretch)); expect(open.has(v.keyHere), day).toBe(true); }
+        else expect(S.openable(C.story, st).some(x => area(x.stretch) === area(st.stretch)), day).toBe(false);
       }
     }
     expect(pointed).toBeGreaterThan(0);
@@ -99,7 +101,8 @@ describe('a Key is never spent for Dan; the Map and Today agree (D-143 A)', () =
       const shut = C.story.beats.filter(b => st.played.has(b.id)).flatMap(b => b.carries?.inView ?? [])
         .map(id => S.sealOf(C.story, id)).filter(x => !!x && !x.seenOnly && !st.opened.has(x.id));
       if (!shut.length || !v.aheadKey) continue;
-      if (shut.some(x => x!.stretch === st.stretch)) expect(v.aheadBehind, day).toBe(null);
+      /* behind: in another area (D-154) */
+      if (shut.some(x => S.areaOf(C.story, x!.stretch) === S.areaOf(C.story, st.stretch))) expect(v.aheadBehind, day).toBe(null);
       else { const x = shut[shut.length - 1]!; if (S.onRoad(C.story, x.id)) continue; behind++; expect(v.aheadBehind, day).toBe(x.stretch); }
     }
     expect(behind, 'a day with a locked thing only behind Dan').toBeGreaterThan(0);

@@ -5,6 +5,7 @@
      guess where one is offered; and any find. One drawable thing at a time; nothing here is a task. */
   import { game, content } from './game.svelte';
   import { returnOf } from '../core/game';
+  import { beatOf, sealOf, areaName, areaOf, isHome } from '../core/story';
   import { t, partWords } from '../content/copy/en';
   import Guess from './Guess.svelte';
   import Glyph from './Glyph.svelte';
@@ -42,6 +43,15 @@
   const putOff = $derived(new Set(doneSeq === null ? [] : game.facts.flatMap(f => f.type === 'findGiven' && f.why === 'avoided' && f.job === doneSeq ? [f.id] : [])));
   const findsFirst = $derived(finds.filter(f => putOff.has(f!.id)));
   const findsAfter = $derived(finds.filter(f => !putOff.has(f!.id)));
+  /* a story moment somewhere other than where Dan is says where, so
+     the words never seem to move him (the journey review, D-154) */
+  const elsewhere = $derived.by(() => {
+    if (!r?.beat) return '';
+    const st = beatOf(content.story, r.beat)?.stretch ?? sealOf(content.story, r.beat)?.stretch;
+    if (!st || areaOf(content.story, st) === areaOf(content.story, v.here.stretch)) return '';
+    /* a moment at home once the way down is open is at camp, as the evenings are (round 5 of the journey review) */
+    return isHome(content.story, st) && v.story.departed ? t('step.atCamp', { area: areaName(content.story, st) }) : areaName(content.story, st);
+  });
 </script>
 
 {#snippet findBlock(f: (typeof finds)[number])}
@@ -64,6 +74,7 @@
          carved label's short line (Dan: "very very bad styling", D-131) -->
     {#if keyLine}<p class="key-note on-scene">{keyLine}</p>{@render offer()}{/if}
     {#each findsFirst as f (f!.id)}{@render findBlock(f)}{/each}
+    {#if elsewhere}<p class="elsewhere">{elsewhere}</p>{/if}
     <p class="say story on-scene"><Prose text={r.line} /></p>
     {#each findsAfter as f (f!.id)}{@render findBlock(f)}{/each}
   </Words>
@@ -107,4 +118,5 @@
   .part .label-line { margin-bottom: 8px; }
   .part .soft { margin-top: 4px; }
   .find p { font-size: calc(17px * var(--ts, 1)); line-height: 1.4; margin-top: 8px; color: var(--ink-2); }
+  .elsewhere { margin: 0 0 4px; font-family: var(--life); font-size: calc(13px * var(--ts, 1)); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); text-align: center; }
 </style>

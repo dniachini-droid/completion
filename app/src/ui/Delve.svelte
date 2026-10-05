@@ -190,7 +190,9 @@
       </div>
       <div class="head rise d1">
         <div class="label-line centred lit">{t('delve.further')}</div>
-        <h1 class="carve">{v.here.name}</h1>
+        <!-- the area Dan is in; the place, small, under it (D-154) -->
+        <h1 class="carve">{v.here.area}</h1>
+        {#if v.here.id}<p class="soft on-scene at-place">{t('today.at', { place: v.here.name })}</p>{/if}
         <!-- faded out, it is hidden from VoiceOver too (deep review A#39) -->
         <p class="soft on-scene breath-hide" class:gone={!run || run.phase !== 'delve'} aria-hidden={!run || run.phase !== 'delve'}>{t('delve.moves')}</p>
       </div>
@@ -432,4 +434,5 @@
   @media (prefers-reduced-motion: reduce) { .park, .parked-say.shown { animation: none; } }
   :global(html.kb) .dv.typing .mid, :global(html.kb) .dv.typing .bottom :global(.road) { display: none; }
   :global(html.kb) .dv.typing .bottom { margin-top: auto; }
+  .at-place { margin: 2px 0 0; text-align: center; font-family: var(--life); letter-spacing: .04em; }
 </style>

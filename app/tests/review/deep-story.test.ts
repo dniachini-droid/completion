@@ -198,8 +198,8 @@ describe('deep story: text hygiene', () => {
     const hit = s.beats.filter(b => /\b(your first week|The week ends)\b/.test(b.line ?? '')).map(b => b.id).sort();
     expect(hit).toEqual([]);
   });
-  it('FINDING: one place name uses the word the weeks 8-14 editing pass kept for another place', () => {
-    expect(S.beatOf(s, 'b-14.A')!.name).toMatch(rx('reservedWord'));
+  it('fixed (D-154): no place name uses the word the weeks 8-14 editing pass kept for another place', () => {
+    expect(S.beatOf(s, 'b-14.A')!.name).not.toMatch(rx('reservedWord'));
     expect(S.beatOf(s, 'b-10.B')!.name).toMatch(rx('reservedWord'));   /* the other place's */
   });
   it('FINDING: one physical clue the ledger hands over once appears in six texts', () => {
@@ -278,7 +278,8 @@ describe('deep story: fourteen story weeks played through, Keys spent (dynamic)'
       const m = at.get(b.id), c = at.get(b.id.replace('.morning', '.camp'));
       return m !== undefined && c !== undefined && m < c;
     }).map(b => b.id);
-    expect(early).toEqual(['b-w10.morning', 'b-w11.morning', 'b-w12.morning', 'b-w13.morning']);
+    /* (three since D-154: the night's line waits for what Dan has been shown, and week 10's now comes first) */
+    expect(early).toEqual(['b-w11.morning', 'b-w12.morning', 'b-w13.morning']);
   }, 300_000);
 
   it('fixed (S#1): no week-close glimpse describes a sealed state after Dan has opened it (Normal, High)', () => {
@@ -313,15 +314,26 @@ describe('deep story: fourteen story weeks played through, Keys spent (dynamic)'
     const f = life('normal'), shown = new Set(closes(f).map(c => c.glimpse)), st = S.storyState(f, s);
     const missed = s.beats.filter(b => b.kind === 'close' && !shown.has(b.id));
     expect(missed.filter(b => !(b.until && S.met(st, b.until))).map(b => b.id)).toEqual([]);
-    expect(missed.length).toBeLessThanOrEqual(2);
+    /* (the story runs a little faster for the same effort since evenings cost no walking, D-154: one more is passed; and a
+       page now waits for what it says Dan has seen, so one more is passed before a close could show it: four, each
+       superseded, as the line above holds) */
+    expect(missed.length).toBeLessThanOrEqual(4);
   }, 300_000);
 
-  it('fixed (S#12): a camp view that stops being offered later comes first, so every one is offered (Normal, High, slow)', () => {
+  it('fixed (S#12): a camp view that stops being offered later comes first in its area (Normal, High, slow; D-154)', () => {
+    /* where Dan turns back is always in the area he is walking (D-154), so a view with an end is offered whenever he turns
+       back in its area while it lasts, before that area's others; one in an area he never turns back in may pass */
     for (const name of ['normal', 'high', 'slow'] as const) {
-      const shown = new Set(life(name).flatMap(x => x.type === 'arrived' && x.kind === 'camp' ? [x.id] : []));
-      /* (the slow player, away half the days, no longer has missed sessions piled onto his return, deep review Part 2 #1:
-         he walks less, and camps more, so one more view comes) */
-      expect(s.camps.filter(c => c.until && !shown.has(c.id)).map(c => c.id), name).toEqual([]);
+      const f = life(name), bad: string[] = [];
+      for (let i = 0; i < f.length; i++) {
+        const x = f[i];
+        if (x.type !== 'arrived' || x.kind !== 'camp') continue;
+        const st = S.storyState(f.slice(0, i), s), area = S.areaOf(s, st.stretch);
+        const due = s.camps.filter(c => c.until && S.areaOf(s, c.stretch) === area && st.visited.has(c.stretch) && c.w <= st.week
+          && c.req.every(r => S.met(st, r)) && !S.met(st, c.until) && !st.campsShown.includes(c.id));
+        if (due.length && !due.some(c => c.id === x.id)) bad.push(`${x.day} ${x.id} (${due.map(c => c.id).join(',')} due)`);
+      }
+      expect(bad, name).toEqual([]);
     }
   }, 600_000);
 
