@@ -104,8 +104,8 @@
       <div class="col text">
         <Words {look} length={(a.line?.length ?? 0) + (a.look?.length ?? 0) + a.then.reduce((n, w) => n + w.line.length, 0)}>
           {#if a.wayIn && !again}<span class="soft on-scene way-in">{a.wayIn}</span>{/if}
-          {#if a.stopAgain}<span class="soft on-scene">{t('arrive.stopAgain')}</span>{/if}
           {#if a.line}<span class="soft on-scene"><Prose text={a.line} /></span>{/if}
+          {#if a.stopAgain}<span class="soft on-scene">{t('arrive.stopAgain')}</span>{/if}
           {#if a.look}<span class="soft on-scene look"><Prose text={a.look} /></span>{/if}
           {#each a.way as w (w.beat)}<p class="soft on-scene look"><Prose text={w.line} /></p>{/each}
           {#each a.opened as line}<p class="soft on-scene look">{t('arrive.keyOpens')} <Prose text={line} /></p>{/each}

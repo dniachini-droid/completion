@@ -438,11 +438,11 @@ export const keysIn = (facts: Fact[], day: string) => ofType(facts, 'keyEarned')
 const stretchOrder = (s: Story) => s.stretches.map(x => x.id);
 
 /** The next find for a reason: the stretch's pool in order, each once, then the stretches back up the route. Side chambers take told lines first. */
-export function pickFind(s: Story, st: StoryState, why: string, area?: StretchId): Find | null {
+export function pickFind(s: Story, st: StoryState, why: string, at0?: StretchId): Find | null {
   const order = stretchOrder(s), at = order.indexOf(st.stretch);
-  /* `area`: only a find in that area (a stop at a day's end shows what is there, never a thing in another area, D-154) */
+  /* `at`: only a find on that stretch (a stop at a day's end shows what is there, never a thing out of sight, D-154) */
   const ok = (f: Find) => !st.given.has(f.id) && f.w <= st.week && allMet(st, f.req) && !(f.until && met(st, f.until))
-    && (!area || areaOf(s, f.stretch) === areaOf(s, area));
+    && (!at0 || f.stretch === at0);
   for (let i = at; i >= 0; i--) {
     const pool = s.finds.filter(f => f.stretch === order[i] && ok(f));
     if (!pool.length) continue;
