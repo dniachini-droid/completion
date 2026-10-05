@@ -49,8 +49,9 @@
   const label = $derived(!a ? '' : again ? t('arrive.again') : a.kind === 'camp' ? t('arrive.camp')
     : a.face === 'evening' ? t(a.late ? 'arrive.lastNight' : 'arrive.evening') : a.face === 'enter' ? t('arrive.newArea') : a.face === 'back' ? t('arrive.backIn') : t('arrive.label'));
   /* a new area: its name is the title, the place under it; anywhere else the area sits small above the place */
-  const title = $derived(!a ? '' : a.kind === 'evening' ? t('arrive.byTheLamp') : a.face === 'enter' && !again ? a.area : a.name);
-  const over = $derived(!a ? '' : a.kind === 'evening' ? a.area : a.face === 'enter' && !again ? '' : a.area);
+  /* an evening with no one place is named for where it begins (its sections name any other area they move to), D-154 */
+  const title = $derived(!a ? '' : a.kind === 'evening' ? a.area || t('arrive.byTheLamp') : a.face === 'enter' && !again ? a.area : a.name);
+  const over = $derived(!a ? '' : a.kind === 'evening' ? '' : a.face === 'enter' && !again ? '' : a.area);
   const under = $derived(!a || again || a.face !== 'enter' ? '' : a.name);
   function pick(i: number) { if (!a) return; game.do({ do: 'choose', beat: a.id, pick: i }); go('records', a.records[i]); }
   /* after the cut: through the lintel to the stair (D-039), back to today, or later (the cut waits, unseen) */
@@ -107,7 +108,7 @@
           {#if a.look}<span class="soft on-scene look"><Prose text={a.look} /></span>{/if}
           {#each a.way as w (w.beat)}<p class="soft on-scene look"><Prose text={w.line} /></p>{/each}
           {#each a.opened as line}<p class="soft on-scene look">{t('arrive.keyOpens')} <Prose text={line} /></p>{/each}
-          {#each a.then as w, i (w.beat)}{#if w.area && w.area !== (i ? a.then[i - 1].area : a.kind === 'evening' ? '' : a.area)}<span class="then-area">{w.area}</span>{/if}<p class="soft on-scene"><Prose text={w.line} /></p>{/each}
+          {#each a.then as w, i (w.beat)}{#if w.area && w.area !== (i ? a.then[i - 1].area : a.area)}<span class="then-area">{w.area}</span>{/if}<p class="soft on-scene"><Prose text={w.line} /></p>{/each}
         </Words>
       </div>
       <div class="mid col">

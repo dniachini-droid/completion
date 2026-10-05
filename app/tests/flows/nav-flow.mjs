@@ -43,7 +43,7 @@ const helpers = page => {
   if (!(await page.getByText('Where you were').count())) fails.push('after days away the app does not open on the welcome back');
   if ((await arrow()) !== 'Today') fails.push(`the welcome back has no arrow to Today (${await arrow()})`);
   const line = (await page.locator('.top .say').first().textContent().catch(() => ''))?.trim() ?? '';
-  if (line && !/^(Ahead of you: |Behind you: )/.test(line)) fails.push(`the welcome's line about the locked thing has no label: "${line.slice(0, 24)}…"`);
+  if (line && !/^(Ahead of you: |Behind you: |Still locked, further back: |Here: )/.test(line)) fails.push(`the welcome's line about the locked thing has no label: "${line.slice(0, 24)}…"`);
   if (!(await btn('Read the last record').count())) fails.push('the welcome back offers no "Read the last record"');
   else {
     await tap(btn('Read the last record'), 'Read the last record');

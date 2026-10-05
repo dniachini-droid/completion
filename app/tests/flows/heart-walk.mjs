@@ -99,7 +99,7 @@ const fits = async (name) => {
       /* a quiet text link's tap area is taller than what it shows: measure its visible words, not its hit box */
       const vis = b.classList.contains('text-link') || b.classList.contains('home') ? (b.querySelector('span') ?? b) : b;
       const r = vis.getBoundingClientRect(), sc = scroller(b), c = sc ? sc.getBoundingClientRect() : { top: 0, bottom: H };
-      return { left: r.left, right: r.right, top: Math.max(r.top, c.top), bottom: Math.min(r.bottom, c.bottom) };
+      return { el: b, left: r.left, right: r.right, top: Math.max(r.top, c.top), bottom: Math.min(r.bottom, c.bottom) };
     }).filter(r => r.right > r.left && r.bottom > r.top);
     for (const el of texts) {
       const r = el.getBoundingClientRect(); if (!r.width || !r.height) continue;
@@ -107,7 +107,9 @@ const fits = async (name) => {
       const box = sc ? sc.getBoundingClientRect() : { top: 0, bottom: H, left: 0, right: W };
       if (!sc && (r.bottom > H + 1 || r.top < -1)) out.push(`off screen: ${el.tagName.toLowerCase()}.${el.className}`);
       const vt = Math.max(r.top, box.top), vb = Math.min(r.bottom, box.bottom);
+      /* (a line's own links, inline in it, are part of it, not over it: the Daybook's places, D-154) */
       if (vb - vt > 4) for (const b of buttons) {
+        if (el.contains(b.el)) continue;
         const ix = Math.min(r.right, b.right) - Math.max(r.left, b.left), iy = Math.min(vb, b.bottom) - Math.max(vt, b.top);
         if (ix > 4 && iy > 4) { out.push(`under a button: ${el.tagName.toLowerCase()}.${el.className}`); break; }
       }

@@ -92,7 +92,7 @@
   const ahead = $derived(v.forecast.slice(0, 2));
   const fcSay = (day: string) => t('map.forecastSay', { day: relDay(day, v.day) });
   const firstSentence = (line: string) => (line.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? line);
-  /* "Ahead: The Survey Cut, the tin box…" under "The Survey Cut" says the name twice: the ahead line drops it */
+  /* "Ahead: The Box Room, the tin box…" under "The Box Room" says the name twice: the ahead line drops it */
   const unsaid = (where: string, name: string) => where.toLowerCase().startsWith(name.toLowerCase() + ', ') ? where.slice(name.length + 2) : where;
   /* the light is named for the stretch, the box for the place: both said, so a glance never reads two places (L B7); a
      locked thing behind him is "Behind you", as Today says (deep review B6) */
@@ -165,7 +165,8 @@
   const lights = $derived(region);
   const links = $derived(regionLinks);
   /* what the crosshair is on; it opens on where Dan is */
-  let picked = $state<string | null>(focus ?? null);
+  /* a stretch asked for opens its area's light (D-154: one light an area) */
+  let picked = $state<string | null>(focus ? areaOf(content.story, focus as StretchId) : null);
   const sel = $derived(lights.find(l => l.key === picked) ?? lights.find(l => l.kind === 'here') ?? lights[0]);
   let turn = $state(0);   /* restarts the box's rise on each pick */
   /* Picking moves only the crosshair and the box's words: the box never changes size, so the sky and its lights never

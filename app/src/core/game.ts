@@ -494,6 +494,8 @@ const workedDay = (facts: Fact[], day: string) => ofType(onDay(facts, day), 'ste
 function lastNight(w: W, c: Content, at: Moment, day: string) {
   const last = [...new Set(ofType(w.all, 'stepsGained').filter(f => f.day < day && f.job !== 'sleep').map(f => f.day))].pop();
   if (!last || !workedDay(w.all, last) || ofType(w.all, 'goodnight').some(g => g.day === last)) return;
+  /* only last night's: after days away it waits for the next evening Dan works for, never "last night" for a week ago */
+  if (W.daysBetween(last, day) > 1) return;
   evening(w, c, at, day, last, true);
 }
 
@@ -1564,7 +1566,8 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       /* kept: a camp line plays tonight, the earliest not played yet, one a night; its morning waits for tomorrow. Not
          tied to the story week Dan is in: a story week walked through between two bedtimes keeps its line (deep review S#2b) */
       if (kept) {
-        const st = S.storyState(w.all, c.story);
+        /* from what Dan has been shown: a word reached but not yet cut, a place not yet on its screen, isn't known (D-154) */
+        const st = knownState(w, c);
         /* never before what it describes, nor after it has changed (review, 2026-09-25) */
         const camp = c.story.beats.find(b => b.kind === 'camp' && b.w <= st.week && !st.played.has(b.id)
           && b.req.every(r => S.met(st, r)) && !(b.until && S.met(st, b.until)));
@@ -2256,10 +2259,13 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
     aheadKey: !!view && !S.onRoad(c.story, view.id), keys: st.held,
     lateKeys: ofType(facts, 'keyEarned').filter(k => k.for && k.day === day)
       .map(k => c.jobs.find(j => j.id === c.rhythms.find(r => r.id === k.rhythm)?.job)?.name).filter((n): n is string => !!n),
-    aheadBehind: view && !S.onRoad(c.story, view.id) && view.stretch !== st.stretch ? view.stretch : null,
-    aheadHere: !!view && view.stretch === st.stretch && !!here.name && view.where.toLowerCase().startsWith(here.name.toLowerCase()),
-    keyUse: st.held ? (openNow.find(x => x.stretch === st.stretch) ?? openNow[0])?.stretch ?? null : null,
-    keyHere: st.held ? openNow.find(x => x.stretch === st.stretch)?.id ?? null : null,
+    aheadBehind: view && !S.onRoad(c.story, view.id) && S.areaOf(c.story, view.stretch) !== S.areaOf(c.story, st.stretch) ? view.stretch : null,
+    /* "Area, place…": the place after its area's name (D-154) */
+    aheadHere: !!view && S.areaOf(c.story, view.stretch) === S.areaOf(c.story, st.stretch) && !!here.name
+      && view.where.toLowerCase().replace(`${here.area.toLowerCase()}, `, '').startsWith(here.name.toLowerCase()),
+    /* in the area Dan is in first (a lock on another stretch of it is still "here", D-154) */
+    keyUse: st.held ? (openNow.find(x => S.areaOf(c.story, x.stretch) === S.areaOf(c.story, st.stretch)) ?? openNow[0])?.stretch ?? null : null,
+    keyHere: st.held ? openNow.find(x => S.areaOf(c.story, x.stretch) === S.areaOf(c.story, st.stretch))?.id ?? null : null,
     here, ahead: view ? view.where : here.id === null ? here.line || S.teaser(c.story, st) : S.teaser(c.story, st), walked: w, toNext, nextAt, toChamber: chamber,
     road: { from: S.lastPlaceAt(full), chamber: S.chamberAt(full), to: S.nextPlaceAt(full), place: nextAt !== null },
     /* the next place on foot is in the area Dan is in (the road says "Further into …"), or a new one ("On down"); never

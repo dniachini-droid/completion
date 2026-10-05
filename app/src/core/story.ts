@@ -479,7 +479,8 @@ export function inView(s: Story, st: StoryState, where?: StretchId): Seal | null
   const ids: string[] = [];
   for (const b of s.beats) if (st.played.has(b.id)) ids.push(...(b.carries?.inView ?? []));
   const shut = ids.map(id => sealOf(s, id)).filter((x): x is Seal => !!x && !x.seenOnly && !st.opened.has(x.id));
-  return (where ? shut.filter(x => x.stretch === where).pop() : undefined) ?? shut.pop() ?? null;   /* nothing named before it has been seen */
+  /* (in the area Dan is in: a lock on another stretch of it is not "behind", D-154) */
+  return (where ? shut.filter(x => areaOf(s, x.stretch) === areaOf(s, where)).pop() : undefined) ?? shut.pop() ?? null;   /* nothing named before it has been seen */
 }
 
 export function teaser(s: Story, st: StoryState): string | null {

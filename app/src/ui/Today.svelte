@@ -13,7 +13,7 @@
      rows seemed to change places by themselves); a swipe takes it off today; the last row chooses a delve on anything (D-077). After day complete: the day as done, until Dan taps a job or keeps going.
      Mock-up: design/directions/d-combined/morning.html. */
   import { game, content } from './game.svelte';
-  import { pastBedtime, BEDTIME_WINDOW, tomorrowFirst, firstChosen, satchelView, carriedOf, weekCount } from '../core/game';
+  import { pastBedtime, BEDTIME_WINDOW, tomorrowFirst, firstChosen, satchelView, carriedOf, weekCount, arrivalAt } from '../core/game';
   import { tieFor } from '../core/remember';
   import { leaveWord, moment } from './moment.svelte';
   import { ofLine } from './panel';
@@ -37,7 +37,12 @@
   const others = $derived(todoFirst(v.line));
   const extra = $derived(todoFirst(v.slate.filter(id => !v.line.includes(id))));
   /* the last place reached (never a camp): its entry, read again from its name (D-135) */
-  const lastPlace = $derived(v.lastArrival);
+  /* what today's walking came to: its last place or the place it turned back at, never an evening at camp (that is
+     the night's, not the walk's) nor a place reached on another day (D-154 review) */
+  const lastPlace = $derived.by(() => {
+    const f = game.facts.filter((x): x is FactOf<'arrived'> => x.type === 'arrived' && x.day === v.day && x.kind !== 'evening' && x.how !== 'evening').pop();
+    return !f ? null : f.kind === 'camp' ? (v.lastArrival?.seq === f.seq ? v.lastArrival : arrivalAt(game.facts, content, f.seq)) : { kind: 'place' as const, name: '' };
+  });
 
   const recurring = (id: string) => v.content.rhythms.some(r => r.job === id);
   /* minutes into the game day, which turns at 04:00: 01:00 comes after 18:00 (review of D-144) */

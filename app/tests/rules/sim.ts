@@ -7,6 +7,7 @@ import * as S from '../../src/core/story';
 import type { Mark } from '../../src/core/story-types';
 import type { Fact } from '../../src/core/types';
 import { content as C } from '../../src/content/world';
+import { live } from '../../src/core/week';
 
 export type Week = 'normal' | 'low' | 'high' | 'away';
 
@@ -44,13 +45,15 @@ export function sim(start = '2026-09-28T08:00:00+01:00', pick: (m: Mark) => stri
       /* past the day's plan, a High day's player chooses more work himself ("Something else…", D-080) */
       const job = v.next?.job ?? v.order.find(j => !v.done.has(j)) ?? (kind === 'high' ? C.jobs.find(j => !v.done.has(j.id) && !j.item)?.id : undefined);
       if (!job) break;
-      const j = C.jobs.find(x => x.id === job)!;
+      /* the save's own jobs too (a carried-on save may have added its own, D-154) */
+      const j = C.jobs.find(x => x.id === job) ?? live(C, facts).jobs.find(x => x.id === job)!;
       if (j.delve) { run({ do: 'startRun', job, minutes: 25, count: Math.ceil((j.enoughAt ?? j.length) / 25) }); wait((j.enoughAt ?? j.length) * 1.3 + 10); if (!see(facts, C, at()).done.has(job)) run({ do: 'done', job }); }
       else { run({ do: 'begin', job }); wait(j.length); run({ do: 'done', job }); }
       const e = see(facts, C, at()).runEnd; if (e) run({ do: 'seen', what: 'step', ref: e.seq });
     }
     answer();
-    if (bed) { now = Math.max(now, d0 + (bed === 'kept' ? 13.75 : 15.5) * 3_600_000); run({ do: 'goodnight' }); }
+    /* goodnight shows that night's evening at camp, as the app does (D-154) */
+    if (bed) { now = Math.max(now, d0 + (bed === 'kept' ? 13.75 : 15.5) * 3_600_000); run({ do: 'goodnight' }); answer(); }
     now = d0 + 864e5;
   };
   return {

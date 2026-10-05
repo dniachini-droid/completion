@@ -410,8 +410,8 @@ export const beats: Beat[] = [
   {
     id: "b-4.C",
     kind: "arrival",
-    w: 7,
-    o: 6,
+    w: 4,
+    o: 7,
     name: "The Lower Door, close",
     line: "Tonight, by the lit cups, you walk from the ledge to the far end of the hall, past the last cup, to the great door that fills most of the far wall. It has a name of its own, the Lower Door, and this time you go close enough to see what is cut into it. First there is a row of notches, like those on the niches, and every one is dark. Beside them is a blank, an empty gap in a line of writing, like the one the lintel had before you cut it. Two symbols stand next to the blank: the bar-with-a-drop, a straight bar with a drop at one end, and two drops parted, two small drops set apart as if moving away from each other. Under the notches is one more symbol, shaped like a path doubling back on itself, like a hairpin bend. The door looks shut in two ways at once, as if it needs both.",
     req: [],
@@ -445,7 +445,7 @@ export const beats: Beat[] = [
     w: 4,
     o: 10,
     until: "b-7.C",
-    line: "Crossing the Lamp Hall one last time, you stop before the great door at its far end. Its two symbols still stand beside the blank, and its row of notches is empty, every one of them dark.",
+    line: "Crossing the Lamp Hall on your way to the Stair, you stop before the great door at its far end. Its row of notches is empty, every one of them dark.",
     req: [],
     stretch: "st-hall",
   },
@@ -566,7 +566,7 @@ export const beats: Beat[] = [
     o: 3,
     line: "Further in along the Salt Gallery, past the lone ring, the single large ring above the tally, you reach the last of the salt crusts grown over the carving. The row of notches on it fills with light, and the crust opens. Behind it is a tablet, a flat carved stone that sets small pictures beside symbols. Beside a doorway are two drops parted, the symbol you saw beside the blank on the great door, at the far end of the Lamp Hall. Beside a loaf is a hook closed on a drop over a bar: a drop inside the curve this time, not the dot of the tally's closing mark. Past the tablet, the tally carries on along the wall.",
     seal: "seal-6-1",
-    req: ["seal-5-2"],   // D-129: follows the crust opened in week 5
+    req: ["seal-5-2", "b-4.C"],   // D-129: follows the crust opened in week 5; the door's symbol it names was seen (D-154)
     stretch: "st-salt",
     carries: {"guess": ["mk-open", "mk-eat"]},
   },
@@ -1456,7 +1456,7 @@ export const beats: Beat[] = [
     name: "The end of the tally",
     line: "Back at camp that night, with the new tablet's hooks and its full cell in mind, you go round the corner and follow the tally to its last stretch, which lies behind a crust of salt with a row of notches. The notches fill with light and the crust falls away. After the last line the salt is bare to the floor: this is where the tally ends. As far as you can read it, the last stretch says: …Sleep not, day not. Count hand [ ] one: four, four, [long]. Count lamp [ ]: hand, hand, [ ]. Count child [ ] child: three. Count not days [ ] deep: day one… good. Each line begins with the strokes that mean count, and beside the two hands the small strokes say eight and two, as they do all along the tally.",
     seal: "seal-12-2",
-    req: [],
+    req: ["seal-12-1"],   // its line knows the far niche's tablet (D-154 review)
     stretch: "st-salt",
     painting: "pt-b-12.B",
     carries: {"records": ["rec-s8"]},
@@ -1761,11 +1761,11 @@ export const beats: Beat[] = [
   {
     id: "pl-w14-mule-stone",
     kind: "arrival",
-    w: 14,
-    o: 2,
+    w: 13,
+    o: 5,
     name: "The mule-shoe's stone",
-    line: "On your way down through the square gallery towards the lower gallery, you stop at the mule-shoe on the floor and the stone beside it with the halter's rub worn into it. Under the short line of symbols on the wall above the stone, you notice a row of notches cut into the wall, all dark.",
-    req: ["pl-w6-square-gallery"],
+    line: "On your way down through the square gallery towards the fall at its deep end, you stop at the mule-shoe on the floor and the stone beside it with the halter's rub worn into it. Under the short line of symbols on the wall above the stone, you notice a row of notches cut into the wall, all dark.",
+    req: ["b-13.B"],   // the day after the word at the deep end, on the way back down to it (D-154)
     stretch: "st-square",
     painting: "pt-pl-w14-mule-stone",
     carries: {"inView": ["seal-14-4"]},
@@ -1788,7 +1788,7 @@ export const beats: Beat[] = [
     o: 5,
     name: "The deep niche",
     line: "Tonight you take her sheet dated Day 9 round the corner once more and walk the salt slowly, past the lone ring, comparing. Further in than her sheet goes, you find a niche set deeper into the salt than any other, its mouth as wide as your shoulders. A row of dark notches runs along its lip. Inside, in the shadow, its back wall is cut with symbols.",
-    req: [],
+    req: [],   // not the morning §4.6 names: a morning plays only after a goodnight, and the line stands alone (D-154 review)
     stretch: "st-salt",
     painting: "pt-pl-w14-deep-niche",
     carries: {"inView": ["seal-14-5"]},

@@ -79,18 +79,24 @@ The stretch ids stay; what the app shows is the **area**. How they join and how 
 
 ## 1. The route, week by week (arrival order)
 
-**Rebuilt as one journey (D-154): the authoritative order, kinds and reasons are `ROUTE_REDESIGN.md` §4.4; `app/src/content/sealed/route.ts` follows it.** E = an evening at camp.
+**Rebuilt as one journey (D-154): the design and its reasons are `ROUTE_REDESIGN.md` §4.4; the order as built (after the playthrough reviews, §12) is below, generated from `app/src/content/sealed/route.ts`.** E = an evening at camp (worked out as it plays: a place at home once the way down is open).
 
 | Wk | Places |
 |---|---|
 | 1 | `b-1.A` · `pl-w1-below-the-lamp` · `b-1.B` · `pl-w2-smooth-place` (from w2) · `pl-w1-pick-niche` · `b-1.C` |
 | 2 | `b-2.A` · `pl-w2-above-the-ring` · `pl-w2-box-by-the-cot` · `b-2.B` |
-| 3 | `b-3.A` · `b-3.B` (K) · `b-3.C` · `pl-w5-worn-steps` (from w5) · E `pl-w3-salt-lit` · E `pl-w3-far-end` · E `b-4.C` (from w4) |
-| 4 | `pl-w5-second-landing` (from w5) · E `b-4.A` · E `pl-w4-hollow` · E `b-4.B` (K) · E `pl-w4-recess-above-the-cot` |
-| 5 | `b-5.B` · E `b-5.A` · E `pl-w5-ledge-lip` |
+| 3 | `b-3.A` · `b-3.B` (K) · `b-3.C` · `pl-w5-worn-steps` (from w5) · E `pl-w3-salt-lit` · E `pl-w3-far-end` |
+| 4 | `pl-w5-second-landing` (from w5) · E `b-4.A` · E `b-4.B` (K) · E `b-4.C` |
+| 5 | `b-5.B` · E `b-5.A` |
 | 6 | `b-6.A` · `pl-w6-square-gallery` · `b-6.B` (K) · `pl-w6-wall-shelf` · E `pl-w6-folder` |
 | 7 | `b-7.B` (K) · `b-7.A` · E `b-7.C` (K) |
-| 8–14 | `STORY_JOB.md` §8.3, re-ordered as `ROUTE_REDESIGN.md` §4.4 |
+| 8 | `b-8.A` · `pl-w8-channel` · `pl-w8-steep-foot` · `b-8.C` (K) · E `b-8.B` |
+| 9 | `b-9.A` · `pl-w9-benches` · E `b-9.B` · `b-9.C` (K) · `pl-w9-approach` |
+| 10 | `b-10.A` (K) · `pl-w10-blast-floor` · `b-10.C` (K) · `pl-w10-deep-end` · `b-10.B` (K) · E `pl-w4-hollow` (from w4) |
+| 11 | `pl-w11-cupboard` · `b-11.A` (K) · `b-11.C` (K) · `pl-w11-far-end` · `b-11.B` · `b-13.C` (K) (from w13) |
+| 12 | `b-12.A` · `pl-w12-shelf` · E `b-12.B` (K) · `pl-w12-square-way` · `b-12.C` (K) · E `pl-w4-recess-above-the-cot` (from w4) |
+| 13 | `pl-w13-side-gallery` · `b-13.A` (K) · `b-13.B` · `pl-w13-lower-gallery` · E `pl-w5-ledge-lip` (from w5) |
+| 14 | `pl-w14-mule-stone` · `pl-w14-meeting` · `b-14.A` · `b-14.B` · E `pl-w14-deep-niche` |
 
 The table below is the first job's, kept for its record (superseded): `req` for the pinned story arrivals: `b-2.B` req `b-2.1` (the box opened); `b-2.2` req `seal-2-1` (GIVE can only be guessed once the sheet is out); `b-3.A` belongs to weeks 2–3 (D-013) and **plays as soon as its req is met, even in story week 2**, ahead of any week 2 place still to come (the rest of week 3 waits for the calendar); `b-3.A` req `b-2.B` and `mk-give` guessed (`b-2.2`), and plays on the first arrival after the next main job (ARR1 2.B); `b-4.A` req `b-3.1`; `b-5.A` req `seal-5-1` (ONCE); `b-6.A` req `b-5.B`; `b-7.A` req `seal-7-1`; `b-7.C` req `b-7.A`. The `pl-` places need only physical access, so a deep push can reach them a week early: `pl-w2-above-the-ring` req `seal-1-1`; `pl-w2-smooth-place` req `b-1.B`; `pl-w2-box-by-the-cot`, `pl-w4-recess-above-the-cot`, `pl-w6-folder` req `b-1.C`; `pl-w3-salt-lit`, `pl-w3-far-end` req `b-3.A`; `pl-w5-worn-steps` req `b-3.C`; `pl-w5-second-landing` req `b-4.1`; `pl-w6-square-gallery` req `b-6.A`; `pl-w6-wall-shelf` req `pl-w6-square-gallery`; the rest none.
 
@@ -109,9 +115,9 @@ The table below is the first job's, kept for its record (superseded): `req` for 
 | `pl-w2-box-by-the-cot` | 2 / 5 | **The box by the cot.** | In her camp, pushed against the wall, is a box the size of a shoebox. A thin slate is laid across its lid with a count cut in it, and on the slate stands a tin mug, upside down. | `seal-2-5` | the stove's box (NICHES 2.5) |
 | `pl-w3-salt-lit` | 3 / 3 | **The salt, lit.** | In the glow that comes round the corner from the lit hall, the salt is banded grey and pink, and it glitters. The stones packed in the split are river stones, round and brown, carried up from somewhere with water in it. | the split | C-09 |
 | `pl-w3-far-end` | 3 / 5 | **The far end.** | The last lamp before the far end is a stride from the great door, and in its light the door goes up past where the flames reach, into the curve of the ceiling. Cold comes off its face, the way it comes off a window in winter. | the great door (`b-4.C`) | C-05 (a descent behind it; the cold air of 7.C) |
-| `pl-w4-hollow` | 4 / 2 | **The hollow.** | Low in the salt is a hollow the size of two cupped hands, worn smooth inside, with a count on its rim. The salt at the bottom is pressed flat in four small places. | `seal-4-5` | the clay sheep's four feet (NICHES 4.5) |
-| `pl-w4-recess-above-the-cot` | 4 / 4 | **The recess above the cot.** | Above her cot, at the height of a raised arm, is a recess in the wall, closed by a slate with a count on it. Beside it a drawing pin is pushed into a crack, on its own. | `seal-4-3` | the printed page (NICHES 4.3) |
-| `pl-w5-ledge-lip` | 5 / 2 | **The ledge's lip.** | Under the lamp's ledge the stone is cut too. There is a small count there, low enough that nobody standing would see it. | `seal-5-5` | *Hers again* (NICHES 5.5) |
+| `pl-w4-hollow` | 4 / 2 → 10 (D-154) | **The hollow.** | Low in the salt is a hollow the size of two cupped hands, worn smooth inside, with a count on its rim. The salt at the bottom is pressed flat in four small places. | `seal-4-5` | the clay sheep's four feet (NICHES 4.5) |
+| `pl-w4-recess-above-the-cot` | 4 / 4 → 12 (D-154) | **The recess above the cot.** | Above her cot, at the height of a raised arm, is a recess in the wall, closed by a slate with a count on it. Beside it a drawing pin is pushed into a crack, on its own. | `seal-4-3` | the printed page (NICHES 4.3) |
+| `pl-w5-ledge-lip` | 5 / 2 → 13 (D-154) | **The ledge's lip.** | Under the lamp's ledge the stone is cut too. There is a small count there, low enough that nobody standing would see it. | `seal-5-5` | *Hers again* (NICHES 5.5) |
 | `pl-w5-worn-steps` | 5 / 3 | **The worn steps.** | Halfway down the top flight, every step is worn in two places a stride apart, and the stride is longer than yours. The rail beside them shines along its top. | the rail | C-04a (the same stride as the corner's troughs); C-36 later |
 | `pl-w5-second-landing` | 5 / 5 | **The second landing.** | Where the second flight turns there is a landing as wide as the hall above, and the lamps along its wall are lit. In the wall across from the stair is a doorway, square at the corners, too low for whoever made the stair. | the side passage (`b-6.A`) | C-58 |
 | `pl-w6-square-gallery` | 6 / 2 | **The square gallery.** | The gallery runs straight, as tall as a tall man and no taller, its ceiling flat and its walls covered in small, even chisel marks. There are no cups in these walls. The light comes in from the round stone and gives out. Far down, the floor goes under a slope of broken stone. | the roof-fall (week 10) | C-58; the fall (ARR2 10.B) |

@@ -101,6 +101,16 @@ describe('the route is a journey: a descent with a home at the top (D-154)', () 
     }
     expect(checked).toBeGreaterThan(5);
   }, 300_000);
+  it('nothing names what Dan has not yet seen: the door before its evening, the lower gallery before the fall is passed', () => {
+    for (const [name, facts] of Object.entries(lives)) {
+      const at = (id: string) => facts.findIndex(f => (f.type === 'beatPlayed' || f.type === 'arrived') && f.id === id);
+      /* b-6.2 names the great door's symbol "you saw" (the independent review of the branch, B1) */
+      expect(at('b-4.C'), name).toBeGreaterThanOrEqual(0);
+      expect(at('b-4.C'), `${name}: b-6.2`).toBeLessThan(at('b-6.2') < 0 ? facts.findIndex(f => f.type === 'sealOpened' && f.seal === 'seal-6-1') : at('b-6.2'));
+      /* the mule-shoe's stone is a stop on the way down to the fall, before the gallery beyond it */
+      expect(at('pl-w14-mule-stone'), name).toBeLessThan(at('pl-w13-lower-gallery'));
+    }
+  }, 300_000);
   it('fails on the old route: the old order changed area 48 times (D-153)', () => {
     /* the old order's areas, as played (ROUTE_REDESIGN §2.1): the measure this test holds the route to */
     const OLD = 'hall hall salt box hall salt salt box hall box hall stair salt stair hall salt salt salt box hall hall stair stair salt stair sq sq sq sq box stair sq hall water water salt water blast reading reading salt reading blast sq blast blast sq blast blast blast reading water blast blast blast salt side side side side sq reading sq blast sq lower lower salt'.split(' ');
@@ -110,7 +120,8 @@ describe('the route is a journey: a descent with a home at the top (D-154)', () 
 });
 
 describe('Dan\'s save carries on from wherever the old route left it (D-154)', () => {
-  const lives = ['normal-kept', 'normal-nobed', 'high-kept'].map(n => ({ n, facts: JSON.parse(readFileSync(new URL(`../saves/route-old/${n}.json`, import.meta.url), 'utf8')).facts as Fact[] }));
+  /* keys-light: a light worker who used Keys on the Map (D-142), carried on after a week away */
+  const lives = ['normal-kept', 'normal-nobed', 'high-kept', 'keys-light'].map(n => ({ n, facts: JSON.parse(readFileSync(new URL(`../saves/route-old/${n}.json`, import.meta.url), 'utf8')).facts as Fact[] }));
   /* every stop point in story weeks 1–6 (after each place), and in the middle of weeks 7, 13 and 14 */
   function stops(facts: Fact[], every: boolean) {
     const out: number[] = [];
@@ -138,6 +149,7 @@ describe('Dan\'s save carries on from wherever the old route left it (D-154)', (
         const before = facts.slice(0, j + 1), lastSeq = before[before.length - 1].seq;
         const playedBefore = new Set(arrivals(before).filter(f => f.kind === 'place').map(f => f.id));
         const d = sim(undefined, undefined, n.endsWith('nobed') ? undefined : 'kept', before);
+        if (n === 'keys-light') d.week('away');
         /* on until the whole route is walked (and a week more, for the evenings left) */
         for (let k = 0, extra = 0; k < 30 && extra < 2; k++) { d.week(n.startsWith('high') ? 'high' : 'normal'); if (route.every(id => d.st().played.has(id))) extra++; }
         const after = d.facts, st = S.storyState(after, s);
@@ -155,7 +167,11 @@ describe('Dan\'s save carries on from wherever the old route left it (D-154)', (
         for (const x of journey(after, lastSeq)) {
           expect(playedBefore.has(x.id), `${at}: ${x.id} again`).toBe(false);
           if (x.face === 'evening') { expect(x.here, `${at}: ${x.id}`).toBe(last); continue; }
-          if (x.area !== last) expect(['enter', 'back'], `${at}: ${x.id}`).toContain(x.face);
+          if (x.area !== last) {
+            expect(['enter', 'back'], `${at}: ${x.id}`).toContain(x.face);
+            /* how he got there, as on a fresh save */
+            if (x.face === 'back') expect(!!x.wayIn || !!S.beatOf(s, x.id)?.said, `${at}: ${x.id}`).toBe(true);
+          }
           last = x.area;
         }
       }
