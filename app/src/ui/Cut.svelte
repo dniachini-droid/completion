@@ -52,7 +52,9 @@
   const hint = $derived(step === 0 ? t('cut.hint.rod') : step === 1 ? t('cut.hint.first') : step === 2 ? t('cut.hint.second') : step === 3 ? t('cut.hint.lock') : '');
   const said = $derived(step === 0 ? t('cut.ask') : taps[Math.min(step, taps.length) - 1] ?? '');
   /* why Dan is here, before the first tap, when he came back to it or it is tonight's (D-154): its reason, or the way in */
-  const why = $derived(a.face === 'back' || a.face === 'evening' ? (a.line ? (a.line.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? a.line) : a.wayIn ?? '') : '');
+  const first = (x: string) => x.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? x;
+  const own = $derived(beatOf(content.story, a.id)?.said);
+  const why = $derived(a.face === 'evening' || own ? (a.line ? first(a.line) : '') : a.face === 'back' ? a.wayIn ?? '' : '');
   const has = (p: typeof phase) => ['lock', 'cine', 'answer', 'settled'].indexOf(phase) >= ['lock', 'cine', 'answer', 'settled'].indexOf(p) && phase !== '';
 
   let root: HTMLDivElement, hallEl: HTMLDivElement, cutsEl: HTMLDivElement, stage: HTMLDivElement;

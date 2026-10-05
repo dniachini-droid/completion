@@ -67,7 +67,8 @@ describe('the route is a journey: a descent with a home at the top (D-154)', () 
         if (x.face === 'evening') { expect(x.here, `${name} ${x.id}: an evening never moves him`).toBe(last); continue; }
         if (x.area !== last) {
           expect(['enter', 'back'], `${name} ${x.id}`).toContain(x.face);
-          if (x.face === 'back') expect(x.wayIn, `${name} ${x.id}`).toBeTruthy();
+          /* how he got there: the area's way-in line, or the place's own words (a turn-off on the way up says so itself) */
+          if (x.face === 'back') expect(!!x.wayIn || !!S.beatOf(s, x.id)?.said, `${name} ${x.id}`).toBe(true);
         } else expect(x.face, `${name} ${x.id}`).toBe('on');
         last = x.area;
       }

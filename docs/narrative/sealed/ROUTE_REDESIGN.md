@@ -378,3 +378,20 @@ A fresh adversarial reviewer (no part in the design) checked the first draft aga
 - **Screens:** the road ignores evenings; Today's title re-reads where Dan is; the evening face holds the night's home steps; a Key at an evening; "her camp" swept.
 - **Saves and acceptance** widened (weeks 7, 13, 14; no goodnight; High days across an evening).
 - **The audit made fairer:** moves 2, 10, 24, 32 are clear (their lines say how); 33, 35, 40, 43 have a reason, never told: 14 clear, 16 never told, 18 arbitrary. Two causes added: minutes are distance, and the "ahead" rule. Worn steps moved before the first turn's step. `b-1.5` folds into the salt's way-in. The name reconsidered against its collisions (§6).
+
+---
+
+## 12. As built (Stage 2), and the calls made on the way
+
+Dan approved Stage 1 ("Go", pace (a): the walk between places as it is). What the build changed from §4–§5, each a routine call recorded here:
+
+- **Evenings trail; they never hold the week or the road** (§4.2 said a week waits up to two nights on them). D-129 (long days never hold a place back) wins: a story week ends on its frontier; its evenings play one a night after, two when one is waiting from a week behind. An evening needs only a day with real work in it (five minutes or more walked), not a completed day (a day of one long delve never said done still has its evening).
+- **A moment at home the way down needs is never held:** it plays on a job's return as before (e.g. `b-5.3`, `b-6.2`: OPEN for `b-7.A`). On a very long day, if the way down waits on an evening's place (a sign it brings into view), that evening plays at once, as that night's ("Dan goes up to camp for it"). Computed from the content (`frontierNeeds` in `core/story.ts`), not listed by hand.
+- **`b-9.C` no longer waits on `b-9.B`** (its `req` is the NOT tablet, `b-9.2`): an evening never holds a frontier place. NOT reads as Dan's guess on the child's tablet until the turn confirms it at `b-9.B`; the turn is still the first record NOT turns.
+- **The road's own row order ignores rows at home once the way down is open** (they come with the evenings, in their own order).
+- **Faces:** four on screen, derived when a place plays: "A new area", "Arrived", "Back again" (a return, with the area's way-in line; a designed turn-off is a "Back again" whose own first sentences say why, on the way up), "Tonight, at camp" / "Last night, at camp". An evening with no place ("By the lamp") holds only the night's moments at home. The word-cutting screen says the area, and for a return or an evening its reason before the first tap.
+- **The Stair screen** (after the first word) keeps "Beyond the lintel": the Stair's first place is the new area's arrival, and one "A new area" for it is enough.
+- **Where Dan turned back** is always in the area he is walking; one elsewhere only when his has none (then the deepest walked, never home once the way down is open). Two views with an end can now pass unseen (`cv-03`, `cv-21`); the deep review's S#12 test now checks the rule in the area.
+- **The week close** may show up to a week's worth of lines left behind as well as the week's (evenings can trail their week).
+- **Copy:** "Today brought you to {area}, {place}."; Today's title is the area, the place under it; the delve says the area, the place under it; the set-up says "Further into {area}" or "On down"; the lock screen says "Area · place".
+- **Tests changed where the order legitimately changed** (each in its own comment): heart (the second place is below the lamp), road (home places come as evenings; the home rows' order is their own; a bit at home shows on its evening), weeks 8–14 (four to six places a week), deep review (the reserved word fixed; one more glimpse passed at the faster pace; S#12 in the area), cut (a provisional mark's struck guess stays a guess), keys-told (a Key need not be kept overnight). New: `tests/rules/route.test.ts` (the journey's shape, every move announced, evenings never move him; old-route saves from every stop point carried on to week 14).

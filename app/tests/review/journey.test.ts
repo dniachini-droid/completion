@@ -11,6 +11,24 @@ import { content as C } from '../../src/content/world';
 import { SAVE_VERSION } from '../../src/core/save';
 import { sim } from '../rules/sim';
 
+/** What a player saw between two arrivals (their jobs' returns: the story's steps, tablets, passage lines, finds; the week's
+    page): its words, in order, for the reviewer. Written outside the repository (story text, D-015). */
+function between(facts: Fact[], from: number, to: number): string[] {
+  const s = C.story, out: string[] = [];
+  for (const f of facts.slice(from, to)) {
+    if (f.type === 'beatPlayed' && f.job !== undefined) {
+      if (f.id === 'passage') { const p = s.passages.find(x => x.id === f.passage); if (p) out.push(`(a job's return) ${p.line}`); continue; }
+      const b = s.beats.find(x => x.id === f.id), x = b?.seal ? s.seals.find(y => y.id === b.seal) : s.seals.find(y => y.id === f.id);
+      const line = b?.line ?? x?.line; if (line) out.push(`(a job's return) ${line}`);
+      for (const m of [...(b?.carries?.guess ?? []), ...(x?.carries?.guess ?? [])]) out.push(`(you are asked to guess a symbol: you guess "${s.marks.find(k => k.id === m)?.candidates?.[0] ?? '?'}")`);
+    }
+    if (f.type === 'sealOpened' && f.how !== 'road') { const x = s.seals.find(y => y.id === f.seal); const line = x?.beat ? s.beats.find(b => b.id === x.beat)?.line : x?.line; if (line) out.push(`(you used a Key) ${line}`); }
+    if (f.type === 'findGiven') { const x = s.finds.find(y => y.id === f.id); if (x) out.push(`(a find) ${x.line}`); }
+    if (f.type === 'beatPlayed' && f.job === undefined && s.beats.find(b => b.id === f.id)?.kind === 'close') out.push(`(the week's page) ${s.beats.find(b => b.id === f.id)!.line}`);
+    if (f.type === 'beatPlayed' && f.job === undefined && /\.(camp|morning)$/.test(f.id)) { const b = s.beats.find(x => x.id === f.id); if (b?.line) out.push(`(${f.id.endsWith('camp') ? 'bedtime, by the lamp' : 'the morning'}) ${b.line}`); }
+  }
+  return out;
+}
 /** Every arrival's moment: the facts up to it (its command's batch), not yet looked at. */
 function cuts(facts: Fact[], from = 0) {
   const out: number[] = [];
@@ -48,5 +66,7 @@ it.skipIf(!env.JOURNEY)('the journey: a fresh save, and old-route saves carried 
     /* the moves after the stop: the next ten arrivals */
     lives.push({ name: `old-${before[before.length - 1].seq}`, facts: d.facts, cuts: cuts(d.facts, before[before.length - 1].seq).slice(0, 10) });
   }
-  writeFileSync(`${dir}/journey.json`, JSON.stringify({ version: SAVE_VERSION, content: C.version, lives }));
+  /* the words seen between each arrival and the one before it */
+  const out = lives.map(l => ({ ...l, between: l.cuts.map((c, i) => between(l.facts, i ? l.cuts[i - 1] : 0, c)) }));
+  writeFileSync(`${dir}/journey.json`, JSON.stringify({ version: SAVE_VERSION, content: C.version, lives: out }));
 }, 900_000);

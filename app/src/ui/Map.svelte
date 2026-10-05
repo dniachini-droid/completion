@@ -279,6 +279,18 @@
         {/each}
       </g>
 
+      <!-- the places inside each area: a small light for each one walked to, round its area's light; the one Dan stands at
+           gold (D-154: an area reads as a place with places in it) -->
+      <g class="labels places-dots" aria-hidden="true">
+        {#each lights as l (l.key)}
+          {@const ps = (l.reads ?? []).filter(r => !r.camp)}
+          {#each ps as r, j (r.seq)}
+            {@const ang = (-150 + (ps.length > 1 ? j * (120 / (ps.length - 1)) : 60)) * Math.PI / 180}
+            <circle cx={l.x + 19 * Math.cos(ang)} cy={l.y + 19 * Math.sin(ang)} r={r.here ? 2.6 : 1.7} fill={r.here ? '#ffd27a' : '#dcd8ff'} opacity={r.here ? 1 : .75} />
+          {/each}
+        {/each}
+      </g>
+
       <!-- the words, carved on the sky -->
       <g class="labels">
         {#each lights as l (l.key)}
@@ -327,7 +339,7 @@
               <ul class="rows">
                 {#each sel.reads as r (r.seq)}
                   <li class="row"><span class="name">{r.name}</span>
-                    <button class="text-link state" class:here={r.here} aria-label={t('map.readAgain', { place: r.name })} onclick={() => go('arrival', `again:${r.seq}`)}><span>{r.here ? t('map.here') : r.camp ? t('map.turnedBack') : t('daybook.readAgain')}</span></button></li>
+                    <button class="text-link state read" class:here={r.here} aria-label={t('map.readAgain', { place: r.name })} onclick={() => go('arrival', `again:${r.seq}`)}><span>{r.here ? t('map.here') : r.camp ? t('map.turnedBack') : t('daybook.readAgain')}</span></button></li>
                 {/each}
               </ul>
             {:else}

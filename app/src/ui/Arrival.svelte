@@ -107,7 +107,7 @@
           {#if a.look}<span class="soft on-scene look"><Prose text={a.look} /></span>{/if}
           {#each a.way as w (w.beat)}<p class="soft on-scene look"><Prose text={w.line} /></p>{/each}
           {#each a.opened as line}<p class="soft on-scene look">{t('arrive.keyOpens')} <Prose text={line} /></p>{/each}
-          {#each a.then as w (w.beat)}<p class="soft on-scene"><Prose text={w.line} /></p>{/each}
+          {#each a.then as w, i (w.beat)}{#if w.area && w.area !== (i ? a.then[i - 1].area : a.kind === 'evening' ? '' : a.area)}<span class="then-area">{w.area}</span>{/if}<p class="soft on-scene"><Prose text={w.line} /></p>{/each}
         </Words>
       </div>
       <div class="mid col">
@@ -167,7 +167,9 @@
   /* the area, small, above the place (or under a new area's name, the place): where Dan is, always said (D-154) */
   .head .area { font-family: var(--life); font-size: calc(15px * var(--ts, 1)); letter-spacing: .06em; color: var(--ink-2); margin-bottom: 4px; }
   .head .area.under { margin: 6px 0 0; }
-  .text :global(.way-in) { font-style: italic; }   /* as on the delve and the set-up (spacing review D16) */
+  .text :global(.way-in) { font-style: italic; }
+  /* each moment of an evening says where it is, when it is somewhere else at camp (the journey review) */
+  .then-area { display: block; margin-top: 14px; font-family: var(--life); font-size: calc(13px * var(--ts, 1)); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }   /* as on the delve and the set-up (spacing review D16) */
   /* wrapped onto two lines, the links' own 44 px keep them apart: no gap between the lines (spacing review D9) */
   .choice { display: flex; justify-content: center; gap: 0 18px; flex-wrap: wrap; margin-bottom: 14px; }
   .topbar { animation: rise 1.2s .2s var(--ease) both; }

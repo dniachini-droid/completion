@@ -19,7 +19,8 @@ async function open(save, at) {
   await page.clock.install({ time: new Date(Date.parse(at) + 60_000) });
   await page.goto(url);
   for (let k = 0; k < 40 && !(await page.locator('nav.foot, button.btn, button.home, .cut').count()); k++) { await page.waitForTimeout(150); await page.clock.runFor(250); }
-  await page.clock.runFor(6000); await page.waitForTimeout(300);
+  /* the screens' words fade in on the page's own (real) clock: give them time before the picture */
+  await page.clock.runFor(6000); await page.waitForTimeout(3500);
   return page;
 }
 const tap = async (page, loc) => { const r = await loc.first().boundingBox().catch(() => null); if (!r) return false; await page.touchscreen.tap(r.x + r.width / 2, r.y + r.height / 2); await page.clock.runFor(2500); await page.waitForTimeout(300); return true; };
@@ -33,9 +34,10 @@ for (const life of J.lives) {
     if (!arr) continue;
     const at = facts[facts.length - 1].at, name = `${life.name}-${String(++k).padStart(3, '0')}`;
     const save = JSON.stringify({ version: J.version, content: J.content, facts });
-    const unseen = facts.filter(f => f.type === 'arrived' && !looked.has(f.seq)), last = facts[facts.length - 1];
-    const seen = JSON.stringify({ version: J.version, content: J.content, facts: [...facts, ...unseen.map((f, i) => ({ seq: last.seq + 1 + i, at, day: last.day, type: 'seen', what: 'arrival', ref: f.seq }))] });
-    const entry = { life: life.name, n: k, id: arr.id, kind: arr.kind, how: arr.how ?? null, day: arr.day };
+    /* Today as the player sees it once this arrival is looked at (a later one in the same batch still waits its turn) */
+    const last = facts[facts.length - 1], upTo = facts.filter(f => !(f.type === 'arrived' && f.seq > arr.seq && !looked.has(f.seq)));
+    const seen = JSON.stringify({ version: J.version, content: J.content, facts: [...upTo, { seq: last.seq + 1, at, day: last.day, type: 'seen', what: 'arrival', ref: arr.seq }] });
+    const entry = { life: life.name, n: k, id: arr.id, kind: arr.kind, how: arr.how ?? null, day: arr.day, between: life.between?.[life.cuts.indexOf(cut)] ?? [] };
     /* the arrival as it plays */
     let page = await open(save, at);
     await page.screenshot({ path: `${out}/shots/${name}-a.png` });

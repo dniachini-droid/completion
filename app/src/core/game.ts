@@ -1673,7 +1673,7 @@ export interface Arrival {
   area: string;
   wayIn: string | null;
   /** An evening's moments at home after its place (her notebook, the tally): each one's line, beat and records. */
-  then: { beat: string; line: string; records: string[]; choice?: [string, string] }[];
+  then: { beat: string; line: string; records: string[]; choice?: [string, string]; area: string }[];
   /** A word cut in four taps: one line per tap. */
   taps?: string[];
   choice?: [string, string];
@@ -1829,7 +1829,8 @@ function thenOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival['then'] 
     if (g.type !== 'beatPlayed' || g.job !== undefined || g.id === 'passage' || !S.eveningMoment(c.story, g.id)) break;
     const bx = S.beatOf(c.story, g.id), x = bx?.kind === 'stepKey' && bx.seal ? S.sealOf(c.story, bx.seal) : bx ? undefined : S.sealOf(c.story, g.id);
     const line = bx?.line ?? x?.line;
-    if (line) out.push({ beat: g.id, line, records: [...(x?.carries?.records ?? []), ...(bx?.carries?.records ?? [])], ...(bx?.choice ? { choice: bx.choice } : {}) });
+    const where = bx?.stretch ?? x?.stretch;
+    if (line) out.push({ beat: g.id, line, records: [...(x?.carries?.records ?? []), ...(bx?.carries?.records ?? [])], ...(bx?.choice ? { choice: bx.choice } : {}), area: where ? S.areaName(c.story, where) : '' });
   }
   return out;
 }
@@ -1852,7 +1853,8 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
     const then = thenOf(c, all, f);
     const guess = [...new Set(then.flatMap(x => guessesOf(c, x.beat)))]
       .filter(m => !then.some(x => x.beat === S.markOf(c.story, m)?.confirmedBy));
-    return { seq: f.seq, kind: 'evening', face: 'evening', late: !!f.late, area: S.areaName(c.story, 'st-hall'), wayIn: null, then,
+    /* named for where its first moment is (her notebook: the Box Room), never only "the Lamp Hall" (the journey review) */
+    return { seq: f.seq, kind: 'evening', face: 'evening', late: !!f.late, area: then[0]?.area || S.areaName(c.story, 'st-hall'), wayIn: null, then,
       opened: [], way: [], id: f.id, name: '', line: '', records: [], guess, look: null, stretch: 'st-hall',
       painting: paintingOf('b-1.A', 'st-hall'), completedDay: false, byKey: false };
   }
@@ -1902,7 +1904,8 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
     const answers = new Set([b.id, ...way.map(x => x.beat), ...then.map(x => x.beat)]);
     const guess = [...new Set([...(b.carries?.guess ?? []), ...carried, ...keyed])].filter(m => !answers.has(S.markOf(c.story, m)?.confirmedBy ?? ''));
     const area = S.areaName(c.story, b.stretch), wayIn = c.story.stretches.find(x => x.id === S.areaOf(c.story, b.stretch))?.wayIn ?? null;
-    return { seq: f.seq, kind: 'place', face, late: !!f.late, area, wayIn: face === 'back' ? wayIn : null, then,
+    /* a place whose own line says how Dan came (a turn-off on the way up) needs no way-in line over it */
+    return { seq: f.seq, kind: 'place', face, late: !!f.late, area, wayIn: face === 'back' && !b.said ? wayIn : null, then,
       opened, way, id: b.id, name: b.name ?? '', line: b.line ?? '', taps: b.taps, choice: b.choice,
       records: b.carries?.records ?? [], guess, look: null, stretch: b.stretch, painting: paintingOf(b.id, b.stretch), completedDay, byKey: f.how === 'key' };
   }
