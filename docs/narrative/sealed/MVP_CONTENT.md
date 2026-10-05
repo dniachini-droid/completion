@@ -86,9 +86,9 @@ The stretch ids stay; what the app shows is the **area**. How they join and how 
 | 1 | `b-1.A` · `pl-w1-below-the-lamp` · `b-1.B` · `pl-w2-smooth-place` (from w2) · `pl-w1-pick-niche` · `b-1.C` |
 | 2 | `b-2.A` · `pl-w2-above-the-ring` · `pl-w2-box-by-the-cot` · `b-2.B` |
 | 3 | `b-3.A` · `b-3.B` (K) · `b-3.C` · `pl-w5-worn-steps` (from w5) · E `pl-w3-salt-lit` · E `pl-w3-far-end` |
-| 4 | `pl-w5-second-landing` (from w5) · E `b-4.A` · E `b-4.B` (K) · E `b-4.C` |
+| 4 | `pl-w5-second-landing` (from w5) · E `b-4.A` · E `b-4.B` (K) |
 | 5 | `b-5.B` · E `b-5.A` |
-| 6 | `b-6.A` · `pl-w6-square-gallery` · `b-6.B` (K) · `pl-w6-wall-shelf` · E `pl-w6-folder` |
+| 6 | `b-6.A` · `pl-w6-square-gallery` · E `b-4.C` (from w4) · `b-6.B` (K) · `pl-w6-wall-shelf` · E `pl-w6-folder` |
 | 7 | `b-7.B` (K) · `b-7.A` · E `b-7.C` (K) |
 | 8 | `b-8.A` · `pl-w8-channel` · `pl-w8-steep-foot` · `b-8.C` (K) · E `b-8.B` |
 | 9 | `b-9.A` · `pl-w9-benches` · E `b-9.B` · `b-9.C` (K) · `pl-w9-approach` |
