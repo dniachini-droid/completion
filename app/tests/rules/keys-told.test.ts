@@ -53,8 +53,9 @@ describe('Today shows the Keys kept and what needs one (Dan, D-142)', () => {
       expect(v.aheadKey, day).toBe(!!view && !S.onRoad(C.story, view.id));
       if (v.keys) kept++; if (v.aheadKey) needs++;
     }
-    /* a light worker holds a Key on some days, and meets something only a Key opens */
-    expect(kept).toBeGreaterThan(0);
+    /* a light worker meets something only a Key opens (with the evenings at camp bringing the home niches into reach,
+       D-154, the Keys he earns find something to open the same day, so none need be kept overnight: `kept` may be 0) */
+    void kept;
     expect(needs).toBeGreaterThan(0);
   }, 120_000);
 });

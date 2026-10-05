@@ -17,6 +17,14 @@ export interface Stretch {
   w: number;
   /** Beats that must have played before it can be walked (e.g. the stair after the first word). */
   req: string[];
+  /** The top, where Dan sleeps (D-154): once the way down is open, a place here plays as an evening at camp. */
+  home?: boolean;
+  /** The area it is shown as, when not its own (the Stair's two stretches are one area). */
+  area?: StretchId;
+  /** The area it opens off, on the Map (the Box Room and the Salt Gallery off the Lamp Hall). */
+  parent?: StretchId;
+  /** How Dan gets there from camp: one plain sentence, shown when he comes back to it from somewhere else. */
+  wayIn?: string;
 }
 
 /** One piece of a record cut in the script: a sign, a carved picture, a name-ring, a hand-mark, or plain punctuation. */

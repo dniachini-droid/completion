@@ -126,7 +126,9 @@ export type FactBody =
   /** `tick`: minutes Dan gave a job he ticked off without a delve (D-134) */
   | { type: 'stepsGained'; minutes: number; job: string; run?: number; tick?: true }
   | { type: 'dayCompleted' }
-  | { type: 'arrived'; kind: 'place' | 'camp'; id: string; how?: 'foot' | 'key' }
+  /** A place reached (on foot, by a Key, or as an evening at camp, D-154: `night` the day it closes, `late` played at the
+      next opening); a camp view; or an evening at camp with no place, only the night's home moments (`kind: 'evening'`). */
+  | { type: 'arrived'; kind: 'place' | 'camp' | 'evening'; id: string; how?: 'foot' | 'key' | 'evening'; night?: string; late?: boolean }
   /* the story (slice 2): each written once, when it happens */
   | { type: 'beatPlayed'; id: string; job?: number; passage?: string }
   /** `for`: a day in the period the Key was earned for, when it landed later, at an opening (D-152); else its own day. */

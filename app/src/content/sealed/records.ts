@@ -65,7 +65,7 @@ export const records: RecordFragment[] = [
     full: 'He lit it for me. I have lit it for you, the one who returns. Read all of it. Then cut.',
   },
   {
-    id: 'rec-l2', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 1, firstShown: ['b-1.C'],
+    id: 'rec-l2', life: 'L', kind: 'paper', where: 'the notebook on the cot in the Box Room', w: 1, firstShown: ['b-1.C'],
     paper: [
       "Day 1. Down the ventilation shaft at 07:40, the padlock cut with the bolt-cutters I told the hardware man were for a gate. Eleven metres of ladder, then a dry passage cut dead straight. Not a railway tunnel. A lamp on a ledge, clay, lit. *Lit.* I stood there for a stupid amount of time. There's a tally cut in the salt wall by the old crack. I know a few marks from the log. It starts with a name.",
     ],
@@ -120,7 +120,7 @@ export const records: RecordFragment[] = [
     full: 'Once, the first. One stood where the way turns: two of me and [a lamb]. Four on the hand, [a wading bird]. I gave [bread] and [salt]. Ate not. Said: lamp, good. He cut her name.',
   },
   {
-    id: 'rec-l3', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 2, firstShown: ['b-2.3'],
+    id: 'rec-l3', life: 'L', kind: 'paper', where: 'the notebook on the cot in the Box Room', w: 2, firstShown: ['b-2.3'],
     paper: [
       'Day 3. He was standing where the corridor turns. I took him for a pillar. Then the pillar said good morning in an accent I couldn’t place and I sat down on the floor. He waited. He did not shift his weight once, and I was down there a while. I asked what he was. He said a word in *their* language and then, in English: you will read it. Then he asked if he could write me down.',
     ],
@@ -146,7 +146,7 @@ export const records: RecordFragment[] = [
     full: 'Hers. I asked not for it. He left it under the ring.',
   },
   {
-    id: 'rec-l4', life: 'L', kind: 'cut', where: "the rod’s handle, and the shelf beneath it in her camp", w: 2, firstShown: ['b-2.B'],
+    id: 'rec-l4', life: 'L', kind: 'cut', where: "the rod’s handle, and the shelf beneath it in the Box Room", w: 2, firstShown: ['b-2.B'],
     cut: [
       [s('toward', 'For'), s('one-who', 'the one who'), s('again', 'returns'), p(':')],
       [s('make', 'cut'), s('mark', 'the marks'), s('two', 'two'), s('door', 'by the door'), s('here', 'here'), p('.'), HERS],
@@ -174,7 +174,7 @@ export const records: RecordFragment[] = [
     full: 'Once, the first. His hand over my hand. We cut two marks by the door. The lamps took fire: one, one, one, a hand; then past counting. I sat. Water from my eyes. He stood and counted.',
   },
   {
-    id: 'rec-l5', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 3, firstShown: ['b-3.2'],
+    id: 'rec-l5', life: 'L', kind: 'paper', where: 'the notebook on the cot in the Box Room', w: 3, firstShown: ['b-3.2'],
     paper: [
       'Day 6. It works. IT WORKS. The lamps in the wall-cups went down the hall like a fuse. I cut two marks in a lintel with the rod he gave me (my pillar from Day 3), which is a stone pencil, basically, and a door opened where there was stone. Note to self: when I record today, don\'t cry on the tape. Note to self: the tape recorder is dying; batteries. I am going to have to write on the walls like everybody else.',
     ],
@@ -209,7 +209,7 @@ export const records: RecordFragment[] = [
     full: 'Once, the first. I go home; my child is alone. He kept me not. He said: go. He asked for the lamp: for the one who comes again. I gave it. Up the salt way, no fire, hand on stone. Stones in the crack, salt over. Told no one but her.',
   },
   {
-    id: 'rec-l6', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 4, firstShown: ['b-4.3'],
+    id: 'rec-l6', life: 'L', kind: 'paper', where: 'the notebook on the cot in the Box Room', w: 4, firstShown: ['b-4.3'],
     paper: [
       "Day 9. Went down to the second flight of the stair. The little door there is open. Beyond it, more stair. I'm not going down yet. Rule: go up every night. I am a rational adult. The lamp's base has three marks: two I know, and a third I don't have. Also: he has never once asked me for anything.",
     ],
@@ -223,7 +223,7 @@ export const records: RecordFragment[] = [
     full: 'Told: found in the face past the split; not for sale.',
   },
   {
-    id: 'rec-x-colleague', life: 'X', kind: 'paper', where: 'her camp, a recess above the cot, a printed email pinned inside', w: 4, firstShown: ['seal-4-3'],
+    id: 'rec-x-colleague', life: 'X', kind: 'paper', where: 'her room, a recess above the cot, a printed email pinned inside', w: 4, firstShown: ['seal-4-3'],
     paper: [
       'To: I. Halloran',
       "Come home. Nobody's going to fund this. The department's asked where you are.",
@@ -262,7 +262,7 @@ export const records: RecordFragment[] = [
     full: 'Once, the first. He showed the lamp-mark, the fire-mark, the giving-mark: three as one is a saying; a saying is a doing, here. Sayings past counting, more than [sheep] on the hill. The first is always light. He asked why. I said: it is dark.',
   },
   {
-    id: 'rec-l7', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 5, firstShown: ['b-5.2'],
+    id: 'rec-l7', life: 'L', kind: 'paper', where: 'the notebook on the cot in the Box Room', w: 5, firstShown: ['b-5.2'],
     paper: [
       'Day 14. He was reading the salt wall when I came in, with his hands flat on it, at a height where I would want a ladder. He answers what you ask and not one word past it. I asked who cut the records on the walls. Same as on Day 3: a word in their language, then "you will read it". I asked what his ring says, the carved one. Same. He let me call the salt tally a "poem" for a week without a flicker, and he has the manner of someone who has been here longer than the lease, so I\'m calling him the Tenant until I know better. He let me.',
     ],
@@ -305,7 +305,7 @@ export const records: RecordFragment[] = [
 
   // ——— Week 6 ———
   {
-    id: 'rec-l8', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 6, firstShown: ['b-6.1'],
+    id: 'rec-l8', life: 'L', kind: 'paper', where: 'the notebook on the cot in the Box Room', w: 6, firstShown: ['b-6.1'],
     paper: [
       "Day 20. I've stopped going up to the surface every day. It's forty minutes each way and there's nothing up there but a field and my car, which has a note on it from the farmer. The rule (go up every night) was a good rule. I have decided it was a rule for a version of me who didn't know thirty-one signs yet. Made a wall for the next one today, by the lamp (carved one, I mean, not built one): drew a lamp like a five-year-old. Worked out more lines of the salt tally too. Whoever is telling it is a person. A *funny* person.",
     ],
@@ -390,7 +390,7 @@ export const records: RecordFragment[] = [
     full: 'The water in the channel: moved not. Still, as a floor. The [mules] went not in. Day three. This one counted [paces] down: two hundred and ten. His voice: after a loud cut, expected; the next loud cut, worse. He asked: cut not.',
   },
   {
-    id: 'rec-l9', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 8, firstShown: ['b-8.3'],
+    id: 'rec-l9', life: 'L', kind: 'paper', where: 'the notebook on the cot in the Box Room', w: 8, firstShown: ['b-8.3'],
     paper: [
       "Day 26. Counting. The salt tally gives its teller's count, and beside it, cut smaller, another count. Where he says \"two hands\", the small strokes beside it say \"eight and two\". So either whoever told the salt tally learned to count in eights like the Tenant, or whoever cut his words into the salt isn't him. I know which I'd bet on, and I don't know why I mind.",
     ],
@@ -422,7 +422,7 @@ export const records: RecordFragment[] = [
     full: 'Keep voice-not.',
   },
   {
-    id: 'rec-l10', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 9, firstShown: ['b-9.1'],
+    id: 'rec-l10', life: 'L', kind: 'paper', where: 'the notebook on the cot in the Box Room', w: 9, firstShown: ['b-9.1'],
     paper: [
       'Day 28. The report on the crew\'s wall (the surveyor\'s, I think) has a little cross after "held us", and so does the salt tally after "held me". I think it\'s emphasis. He *really* held them. That\'s the kind of thing you\'d want to underline.',
     ],
@@ -474,7 +474,7 @@ export const records: RecordFragment[] = [
     full: 'Once, the second. Marks for [ring]. His warning: seen. The lower way: thirty paces past a fall. One loud cut opens it. He asked: keep. This one kept nine days. The road keeps not.',
   },
   {
-    id: 'rec-l11', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 10, firstShown: ['b-10.3'],
+    id: 'rec-l11', life: 'L', kind: 'paper', where: 'the notebook on the cot in the Box Room', w: 10, firstShown: ['b-10.3'],
     paper: [
       'Day 31. He speaks English like a railway timetable that nobody has updated since the railway. I asked where he learned it. He said: from the fourth. I have started to think of the Engineer as a colleague. He\'d have hated my handwriting.',
     ],
@@ -501,7 +501,7 @@ export const records: RecordFragment[] = [
     ],
   },
   {
-    id: 'rec-l12', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 11, firstShown: ['b-11.3'],
+    id: 'rec-l12', life: 'L', kind: 'paper', where: 'the notebook on the cot in the Box Room', w: 11, firstShown: ['b-11.3'],
     paper: [
       'Day 33. The book was here, on the ledge in the blast room, open. She never came. She read a copy of a copy of a report, in a copying house, and put gold on the marks, and thought the cross was an angel\'s grammar, and he counts her anyway. Third reader, who never came. She got a number for two leaves of gold and a wrong guess about angels. I want to know what I get.',
     ],
@@ -523,7 +523,7 @@ export const records: RecordFragment[] = [
     paper: ['Three days still. Not low. Still. Then it came back and was cold.'],
   },
   {
-    id: 'rec-l13', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 12, firstShown: ['b-12.2'],
+    id: 'rec-l13', life: 'L', kind: 'paper', where: 'the notebook on the cot in the Box Room', w: 12, firstShown: ['b-12.2'],
     paper: [
       'Day 35. Note. Loud use → something. Every single time. The surveyor: water stood still. The engineer: the well, the compasses, the sound. The makers\' own record, I think, though I\'ve only got a fifth of it: "the rock went still." I\'ve made a table. I hate the table.',
     ],
@@ -561,7 +561,7 @@ export const records: RecordFragment[] = [
     full: 'Once, the second, in this side way, cut the moving-word loud again. The water moved not, again; it moves not. I shut the door. He long-slept not when I shut it. I have not opened it.',
   },
   {
-    id: 'rec-l14', life: 'L', kind: 'paper', where: 'the notebook on the cot in her camp', w: 13, firstShown: ['b-13.2'],
+    id: 'rec-l14', life: 'L', kind: 'paper', where: 'the notebook on the cot in the Box Room', w: 13, firstShown: ['b-13.2'],
     paper: [
       'Day 38. Asked him about the second reader. He answered the way he gives a measurement: eleven paces by seven, and the rest. It\'s cut on the door in the side gallery, so I don\'t need to write it. I\'ve moved the cot to the wall furthest from the stair.',
     ],

@@ -38,7 +38,9 @@ describe('weeks 8–14: the content is whole', () => {
 
   it('every route place of weeks 8–14 is a place, on a stretch with a stand-in painting', () => {
     for (const rw of s.route.filter(r => NEW(r.w))) {
-      expect(rw.places.length, `week ${rw.w}`).toBe(5);
+      /* about five a week: the route walked as a journey moved a few between weeks (D-154) */
+      expect(rw.places.length, `week ${rw.w}`).toBeGreaterThanOrEqual(4);
+      expect(rw.places.length, `week ${rw.w}`).toBeLessThanOrEqual(6);
       for (const p of rw.places) {
         const b = S.beatOf(s, p.id)!;
         expect(b, p.id).toBeDefined();

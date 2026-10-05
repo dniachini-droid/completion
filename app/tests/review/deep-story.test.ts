@@ -198,8 +198,8 @@ describe('deep story: text hygiene', () => {
     const hit = s.beats.filter(b => /\b(your first week|The week ends)\b/.test(b.line ?? '')).map(b => b.id).sort();
     expect(hit).toEqual([]);
   });
-  it('FINDING: one place name uses the word the weeks 8-14 editing pass kept for another place', () => {
-    expect(S.beatOf(s, 'b-14.A')!.name).toMatch(rx('reservedWord'));
+  it('fixed (D-154): no place name uses the word the weeks 8-14 editing pass kept for another place', () => {
+    expect(S.beatOf(s, 'b-14.A')!.name).not.toMatch(rx('reservedWord'));
     expect(S.beatOf(s, 'b-10.B')!.name).toMatch(rx('reservedWord'));   /* the other place's */
   });
   it('FINDING: one physical clue the ledger hands over once appears in six texts', () => {
@@ -313,7 +313,8 @@ describe('deep story: fourteen story weeks played through, Keys spent (dynamic)'
     const f = life('normal'), shown = new Set(closes(f).map(c => c.glimpse)), st = S.storyState(f, s);
     const missed = s.beats.filter(b => b.kind === 'close' && !shown.has(b.id));
     expect(missed.filter(b => !(b.until && S.met(st, b.until))).map(b => b.id)).toEqual([]);
-    expect(missed.length).toBeLessThanOrEqual(2);
+    /* (the story runs a little faster for the same effort since evenings cost no walking, D-154: one more is passed) */
+    expect(missed.length).toBeLessThanOrEqual(3);
   }, 300_000);
 
   it('fixed (S#12): a camp view that stops being offered later comes first, so every one is offered (Normal, High, slow)', () => {

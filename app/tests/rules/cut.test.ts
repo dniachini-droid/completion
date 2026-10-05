@@ -101,7 +101,8 @@ describe('weeks of play: the first word and the marks screen', () => {
     expect(st.played.has('b-3.A')).toBe(true);
     const struck = S.marksSeen(C.story, st).filter(x => x.struck);
     expect(struck.length).toBeGreaterThan(0);
-    for (const x of struck) expect(x.state).toBe('held');
+    /* a provisional mark's right readings stay guesses after its tempting one is struck (SCRIPT §7.6) */
+    for (const x of struck) expect(x.state).toBe(S.markOf(C.story, x.id)!.provisional ? 'guess' : 'held');
   });
   it('every mark on the marks screen has a drawing in the Cut\'s lettering', async () => {
     const { lettering } = await import('../../src/content/sealed/lettering');
