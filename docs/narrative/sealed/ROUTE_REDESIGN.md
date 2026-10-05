@@ -434,3 +434,9 @@ Dan approved Stage 1 ("Go", pace (a): the walk between places as it is). What th
   - **`b-9.A`** starts back at the Water and names the doorway as the one seen across it. **`pl-w14-meeting`** starts at the end of the lower gallery (no retelling). **`b-14.A`'s answer** leaves Dan on the lower way's side of the opened gap (it stepped him into another area with no arrival).
   - **Names:** `b-7.B` is "The twelve rings" (not a second "crew's wall"); `cv-10` is "The head of the Stair" (one name for the spot). A stop made again says "Today you turn back at the same spot as before" (its name is the title; the old template made "at by the torn wall").
   - **Not changed, for the record:** two evenings in a row on an old save that had one waiting; the evening screens that take in several places at home (the label says "Tonight, at camp"; each section names its area); the delve screen that an old save opens on mid-delve (the delve's own words, not the route's); the Map's "needs a Key" on every area with a lock (D-142's choice).
+- **After the fifth playthrough review** (Opus 77 of 79 fresh moves, 88 of 90 old; Sonnet 77 of 79, one old move failed; the same three failures from both):
+  - **A day's-end stop's find comes from its own area** (`pickFind`'s `area`): a stop at the join had a find from the Box Room pasted under it.
+  - **`pl-w10-blast-floor` shows the low doorway in its side wall** (it was first met only as the way into the side gallery, three weeks on).
+  - **A moment at home on a job's end, once the way down is open, is captioned "At camp · area"** (an old save can hold one that plays while Dan is deep down).
+  - **`cv-08`** calls the Box Room "the small room off the hall", so "a side chamber" on the road means only the side chambers on the way.
+  - **The walk's transcript** no longer lists a night's bedtime line separately when the evening's screen ends on it (the app shows it once).
