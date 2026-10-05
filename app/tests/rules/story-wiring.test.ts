@@ -129,11 +129,13 @@ describe('S#12: a camp view that will stop being offered comes first', () => {
   const story = (camps: CampView[]): Story => ({
     version: 't', stretches: [{ id: 'st-hall', name: 'h', w: 1, req: [] }, { id: 'st-salt', name: 's', w: 1, req: [] }], route: [], beats: [],
     seals: [], records: [], marks: [], words: [], finds: [], camps, passages: [], teasers: [], learned: [], soFar: [], openQuestions: [] });
-  it('an unused view with an end comes before the stretch\'s other unused views, here or back along the route', () => {
-    const t = story([view('a', 'st-hall'), view('b', 'st-salt', 'x-later')]);
+  it('an unused view with an end comes before the area\'s other unused views; a view elsewhere only when the area has none (D-154)', () => {
+    const t = story([view('a', 'st-hall'), view('b', 'st-hall', 'x-later'), view('c', 'st-salt', 'x-later')]);
     const st = { ...S.storyState([], t), visited: new Set(['st-hall', 'st-salt'] as const), stretch: 'st-hall' as const };
     expect(S.nextCamp(t, st).id).toBe('b');
     expect(S.nextCamp(t, { ...st, campsShown: ['b'] }).id).toBe('a');
+    /* where Dan turned back is in the area he is walking: never the salt's view while he is in the hall */
+    expect(S.nextCamp(t, { ...st, campsShown: ['b', 'a'] }).id).not.toBe('c');
   });
   it('one whose end has come is never offered', () => {
     const t = story([view('a', 'st-hall'), view('b', 'st-hall', 'x-done')]);

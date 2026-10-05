@@ -302,7 +302,13 @@ export function nextCamp(s: Story, st: StoryState): { id: string; find?: string;
   const open = s.camps.filter(c => st.visited.has(c.stretch) && c.w <= st.week && allMet(st, c.req) && !(c.until && met(st, c.until)));
   /* where Dan turned back today is in the area he is walking (D-154): one elsewhere only if his has none at all */
   const ok = open.filter(c => areaOf(s, c.stretch) === areaOf(s, st.stretch));
+  /* none there: the deepest area walked (never home once the way down is open) */
   if (ok.length) open.splice(0, open.length, ...ok);
+  else {
+    const depth = (c: { stretch: StretchId }) => s.stretches.findIndex(x => x.id === c.stretch);
+    const away = open.filter(c => !(st.departed && isHome(s, c.stretch))).sort((a, b) => depth(b) - depth(a));
+    if (away.length) open.splice(0, open.length, ...away.filter(c => depth(c) === depth(away[0])));
+  }
   /* an unused view that stops being offered once the story moves on comes first, here or back along the route, so it is
      not lost (deep review S#12) */
   const unused = (c: { id: string }) => !st.campsShown.includes(c.id);

@@ -185,7 +185,7 @@ export const camps: CampView[] = [
     id: "cv-20",
     stretch: "st-lower",
     w: 14,
-    req: ["b-14.B"],
+    req: ["pl-w14-meeting"],
     name: "Partway down",
     line: "Today you turn back partway down the lower way. The cups in its walls burn steadily, and cold air goes past you, up towards the blast room.",
     look: {"find": "fd-l01"},

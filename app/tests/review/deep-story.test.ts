@@ -317,12 +317,20 @@ describe('deep story: fourteen story weeks played through, Keys spent (dynamic)'
     expect(missed.length).toBeLessThanOrEqual(3);
   }, 300_000);
 
-  it('fixed (S#12): a camp view that stops being offered later comes first, so every one is offered (Normal, High, slow)', () => {
+  it('fixed (S#12): a camp view that stops being offered later comes first in its area (Normal, High, slow; D-154)', () => {
+    /* where Dan turns back is always in the area he is walking (D-154), so a view with an end is offered whenever he turns
+       back in its area while it lasts, before that area's others; one in an area he never turns back in may pass */
     for (const name of ['normal', 'high', 'slow'] as const) {
-      const shown = new Set(life(name).flatMap(x => x.type === 'arrived' && x.kind === 'camp' ? [x.id] : []));
-      /* (the slow player, away half the days, no longer has missed sessions piled onto his return, deep review Part 2 #1:
-         he walks less, and camps more, so one more view comes) */
-      expect(s.camps.filter(c => c.until && !shown.has(c.id)).map(c => c.id), name).toEqual([]);
+      const f = life(name), bad: string[] = [];
+      for (let i = 0; i < f.length; i++) {
+        const x = f[i];
+        if (x.type !== 'arrived' || x.kind !== 'camp') continue;
+        const st = S.storyState(f.slice(0, i), s), area = S.areaOf(s, st.stretch);
+        const due = s.camps.filter(c => c.until && S.areaOf(s, c.stretch) === area && st.visited.has(c.stretch) && c.w <= st.week
+          && c.req.every(r => S.met(st, r)) && !S.met(st, c.until) && !st.campsShown.includes(c.id));
+        if (due.length && !due.some(c => c.id === x.id)) bad.push(`${x.day} ${x.id} (${due.map(c => c.id).join(',')} due)`);
+      }
+      expect(bad, name).toEqual([]);
     }
   }, 600_000);
 
