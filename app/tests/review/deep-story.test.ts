@@ -278,7 +278,8 @@ describe('deep story: fourteen story weeks played through, Keys spent (dynamic)'
       const m = at.get(b.id), c = at.get(b.id.replace('.morning', '.camp'));
       return m !== undefined && c !== undefined && m < c;
     }).map(b => b.id);
-    expect(early).toEqual(['b-w10.morning', 'b-w11.morning', 'b-w12.morning', 'b-w13.morning']);
+    /* (three since D-154: the night's line waits for what Dan has been shown, and week 10's now comes first) */
+    expect(early).toEqual(['b-w11.morning', 'b-w12.morning', 'b-w13.morning']);
   }, 300_000);
 
   it('fixed (S#1): no week-close glimpse describes a sealed state after Dan has opened it (Normal, High)', () => {
@@ -313,8 +314,10 @@ describe('deep story: fourteen story weeks played through, Keys spent (dynamic)'
     const f = life('normal'), shown = new Set(closes(f).map(c => c.glimpse)), st = S.storyState(f, s);
     const missed = s.beats.filter(b => b.kind === 'close' && !shown.has(b.id));
     expect(missed.filter(b => !(b.until && S.met(st, b.until))).map(b => b.id)).toEqual([]);
-    /* (the story runs a little faster for the same effort since evenings cost no walking, D-154: one more is passed) */
-    expect(missed.length).toBeLessThanOrEqual(3);
+    /* (the story runs a little faster for the same effort since evenings cost no walking, D-154: one more is passed; and a
+       page now waits for what it says Dan has seen, so one more is passed before a close could show it: four, each
+       superseded, as the line above holds) */
+    expect(missed.length).toBeLessThanOrEqual(4);
   }, 300_000);
 
   it('fixed (S#12): a camp view that stops being offered later comes first in its area (Normal, High, slow; D-154)', () => {

@@ -336,6 +336,7 @@ export const beats: Beat[] = [
     w: 3,
     o: 10,
     line: "You end halfway down the Stair's top flight. Below the first turn the second flight goes on down, and partway down it is a small door, shut, with a row of notches on it. You cannot yet tell what lies behind it.",
+    until: "b-4.1",   // once Dan has gone down to the first turn it is no longer where he ended (D-154 review)
     req: ["pl-w5-worn-steps"],   // "you end halfway down the top flight": after the worn steps (D-154 review)
     stretch: "st-stair",
   },
@@ -345,7 +346,7 @@ export const beats: Beat[] = [
     kind: "step",
     w: 4,
     o: 1,
-    line: "From the landing at the head of the Stair, you go down the top flight as far as its first turn. Each step comes up to your knee. At the turn you stop and look down. Below you a second flight carries on down, and on it is the little door you saw before: a small, shut door with a row of dark notches. Further down, where the second flight turns again, a recess is cut in under the bend, a closed alcove, with a row of notches of its own. Like the niches, it looks shut until those notches fill with light.",
+    line: "From the landing at the head of the Stair, you go down the top flight as far as its first turn. Each step comes up to your knee. At the turn you stop and look down. Below you a second flight carries on down, and on it is the little door: a small, shut door with a row of dark notches. Further down, where the second flight turns again, a recess is cut in under the bend, a closed alcove, with a row of notches of its own. Like the niches, it looks shut until those notches fill with light.",
     req: [],
     stretch: "st-stair",
     carries: {"inView": ["seal-5-1"]},
