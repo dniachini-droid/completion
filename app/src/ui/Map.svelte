@@ -40,7 +40,7 @@
     up?: boolean;
     box: { label: string; title: string; say: string };
     /** the places reached in this area, in the order walked, each to read again (D-135, D-154) */
-    reads?: { name: string; seq: number; camp?: boolean; here?: boolean }[];
+    reads?: { name: string; seq: number; camp?: boolean; here?: boolean; turned?: boolean }[];
   }
 
   /* ---------- the region: one light per stretch, laid out as the mock-up lays out the first region ---------- */
@@ -101,7 +101,7 @@
   /* the places reached on foot or by Key, by stretch, in the order reached: each one's entry can be read again (D-135);
      and the camps made there, each once (its latest night), so an earlier camp's words are never lost (the flow review) */
   const reached = $derived.by(() => {
-    const out: { seq: number; name: string; stretch: StretchId; camp?: boolean }[] = [], camps = new Map<string, number>();
+    const out: { seq: number; name: string; stretch: StretchId; camp?: boolean; turned?: boolean }[] = [], camps = new Map<string, number>();
     for (const f of game.facts) {
       if (f.type !== 'arrived') continue;
       if (f.kind === 'place') { const b = s.beats.find(x => x.id === f.id); if (b?.name && f.seq !== v.arrival?.seq) out.push({ seq: f.seq, name: b.name, stretch: area(b.stretch) }); }
@@ -110,7 +110,9 @@
     }
     for (const [id, seq] of camps) { const k = s.camps.find(x => x.id === id); if (k) out.push({ seq, name: k.name, stretch: area(k.stretch), camp: true }); }
     /* a stop with a place's own name is that place: one row (the round-8 review) */
-    return out.filter(r => !r.camp || !out.some(x => !x.camp && x.stretch === r.stretch && x.name === r.name)).sort((a, b) => a.seq - b.seq);
+    const merged = out.filter(r => !r.camp || !out.some(x => !x.camp && x.stretch === r.stretch && x.name === r.name))
+      .map(r => r.camp ? r : { ...r, turned: out.some(x => x.camp && x.stretch === r.stretch && x.name === r.name) });
+    return merged.sort((a, b) => a.seq - b.seq);
   });
   const region = $derived.by((): Light[] => {
     const out: Light[] = [];
@@ -303,11 +305,13 @@
           {#each ls as line, j}
             <text x={l.lx} y={ly + j * pitch} text-anchor={l.anchor} class="nn" class:here={l.kind === 'here'}>{line}</text>
           {/each}
+          {@const subs = l.sub ? lines(l.sub, Math.floor((l.wrap ?? 16) / ts)) : []}
           {#if l.sub}
-            <text x={l.lx} y={ly + ls.length * pitch + (ls.length ? 0 : 4)} text-anchor={l.anchor} class="ns {l.subKind ?? ''}">{l.sub}</text>
+            <!-- wrapped as the names are, so it never runs off the screen's edge (D-157) -->
+            {#each subs as sl, k}<text x={l.lx} y={ly + (ls.length + k) * pitch + (ls.length ? 0 : 4)} text-anchor={l.anchor} class="ns {l.subKind ?? ''}">{sl}</text>{/each}
           {/if}
           {#if l.sub2}
-            <text x={l.lx} y={ly + ls.length * pitch + (ls.length ? 0 : 4) + pitch} text-anchor={l.anchor} class="ns gold">{l.sub2}</text>
+            <text x={l.lx} y={ly + (ls.length + Math.max(1, subs.length)) * pitch + (ls.length ? 0 : 4)} text-anchor={l.anchor} class="ns gold">{l.sub2}</text>
           {/if}
         {/each}
       </g>
@@ -344,7 +348,7 @@
               <ul class="rows">
                 {#each sel.reads as r, ri (r.seq)}
                   <li class="row"><span class="name"><span class="n">{ri + 1}</span>{r.name}</span>
-                    <button class="text-link state read" class:here={r.here} aria-label={t('map.readAgain', { place: r.name })} onclick={() => go('arrival', `again:${r.seq}`)}><span>{r.here ? t('map.here') : r.camp ? t('map.turnedBack') : t('daybook.readAgain')}</span></button></li>
+                    <button class="text-link state read" class:here={r.here} aria-label={t('map.readAgain', { place: r.name })} onclick={() => go('arrival', `again:${r.seq}`)}><span>{r.here ? t('map.here') : r.camp || r.turned ? t('map.turnedBack') : t('daybook.readAgain')}</span></button></li>
                 {/each}
               </ul>
             {:else}

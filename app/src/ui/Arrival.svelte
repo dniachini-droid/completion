@@ -102,13 +102,13 @@
         {#if over}<div class="area">{over}</div>{/if}
         <h1 class="carve lg">{title}</h1>
         {#if under}<div class="area under">{under}</div>{/if}
-        <!-- how and why Dan came here is never folded away: the way in and the first sentence stay above the fold (D-156) -->
-        {#if leadWay || leadFirst}<p class="soft on-scene lead">{#if leadWay}<span class="way-in">{leadWay}</span> {/if}{#if leadFirst}<Prose text={leadFirst} />{/if}</p>{/if}
       </section>
       <!-- the painting, left clear: a tap on it looks at it (D-105) -->
       <div class="gap" onclick={look} role="presentation"></div>
       <!-- the words keep to the lower half and scroll there; they can be folded away (D-085) -->
       <div class="col text">
+        <!-- how and why Dan came here is never folded away: the way in and the first sentence stay above the fold (D-156) -->
+        {#if leadWay || leadFirst}<p class="soft on-scene lead">{#if leadWay}<span class="way-in">{leadWay}</span>{' '}{/if}{#if leadFirst}<Prose text={leadFirst} />{/if}</p>{/if}
         <Words {look} length={restLine.length + (a.look?.length ?? 0) + a.then.reduce((n, w) => n + w.line.length, 0)}>
           {#if restLine}<span class="soft on-scene"><Prose text={restLine} /></span>{/if}
           {#if a.stopAgain}<span class="soft on-scene">{t('arrive.stopAgain')}</span>{/if}
@@ -177,8 +177,10 @@
   .head .area.under { margin: 6px 0 0; }
   .text :global(.way-in) { font-style: italic; }
   /* each moment of an evening says where it is, when it is somewhere else at camp (the journey review) */
-  .head .lead { margin: 10px 0 0; text-align: left; line-height: 1.45; }
-  .head .lead .way-in { font-style: italic; }
+  .text .lead { flex: none; margin: 0 0 4px; }
+  .text .lead .way-in { font-style: italic; }
+  /* the rest of the words keep room for a line and their Look link, however large the text (D-156) */
+  .text :global(.words) { min-height: calc(2.6em * var(--ts, 1)); }
   .then-area { display: block; margin-top: 14px; font-family: var(--life); font-size: calc(13px * var(--ts, 1)); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }   /* as on the delve and the set-up (spacing review D16) */
   /* wrapped onto two lines, the links' own 44 px keep them apart: no gap between the lines (spacing review D9) */
   .choice { display: flex; justify-content: center; gap: 0 18px; flex-wrap: wrap; margin-bottom: 14px; }
@@ -188,10 +190,11 @@
   .head { flex: none; }
   /* with the phone's text set larger, the painting's gap gives way before the words do, so they keep their lines */
   .gap { flex: 1 1 auto; min-height: max(24px, calc(12vh - (var(--ts, 1) - 1) * 300px)); }
-  .text { flex: 0 1 auto; min-height: 0; display: flex; flex-direction: column; animation: rise 1.4s .6s var(--ease) both; }
+  /* never squeezed away: the lead and a line of the rest, with Look, always fit; the guesses below scroll first (D-156) */
+  .text { flex: 0 1 auto; min-height: calc(5.2em * var(--ts, 1)); display: flex; flex-direction: column; animation: rise 1.4s .6s var(--ease) both; }
   .text :global(.soft) { display: block; margin-top: 6px; }
   .text :global(.look) { color: var(--gold-hi); margin-top: 12px; }
-  .mid { flex: none; display: flex; flex-direction: column; align-items: center; padding-top: 6px; padding-bottom: 14px; }
+  .mid { flex: 0 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; align-items: center; padding-top: 6px; padding-bottom: 14px; }
   .enough { font-family: var(--life); font-size: min(31px, 8vw); line-height: 1.15; color: #fff; text-align: center;
     text-shadow: 0 0 26px rgba(242,193,112,.45), 0 2px 18px rgba(8,6,20,.9); animation: rise 1.6s 2.2s var(--ease) both; }
   .enough em { display: inline-block; animation: rise 1.6s 3s var(--ease) both; }
