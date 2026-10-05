@@ -450,3 +450,13 @@ Dan approved Stage 1 ("Go", pace (a): the walk between places as it is). What th
   - **A stop made again** keeps its first two sentences (where it is, and one line of what is there), then "You have stopped here once before": the second sentence alone left "them" with nothing to refer to.
   - **`b-9.A`** gives its reason: the Water has two ways on, and this time Dan tries the doorway on its far shore.
   - **Known, not fixable here:** two old-order saves (`old-754`, `old-903` in the walk) already hold `b-6.2`, which names the great door's blank, from before they saw `b-4.C` (the old order skipped past places that weren't ready, D-154 §2). The new order plays `b-4.C` next; what such a save already read stays as it was.
+- **The second independent review of the whole branch** (after round 7; no stall, replay or crash on any old save, every old arrival marked seen): fixed
+  - **An evening that is a word** (`b-7.C`): the cut screen now shows the rest of that evening (each part under its area, with its notes) once the word has settled; before, those moments and that night's bedtime line were shown nowhere.
+  - **The set-up says "On the way back"** before a place in an area walked before (a turn-off, a return), not "On down".
+  - **Today's end-of-day line** is built from today's own arrival (not one still waiting to be shown); a day ending short says "Today you turned back short of the next place: {area}" (a stop's name is never put inside a sentence, and nothing of sleep before goodnight).
+  - **An older night's evening** still plays at the next opening, as "One evening, at camp" (one night back only would leave a player who opens every other day without evenings). The step screen's way on says "See where you are" when what waits is a stop or an evening. The Map centres by area.
+  - **Ids only outside the sealed files:** a test, two code comments and four commit subjects on this branch named story things; the comments and test are ids now, and the commit subjects were reworded (this branch only, before any merge).
+- **After the eighth playthrough review** (Opus 78 of 79, 88 of 90; Sonnet 76 of 79, 84 of 90):
+  - **A day's-end stop is on Dan's own stretch first, then the deepest of his area** (it could be the head of the Stair when he was two flights down).
+  - **`b-7.B` and `pl-w14-mule-stone` are "Back again"** (`backWithin`, with their own words for the way): both are back along the area Dan is in.
+  - **The Map:** a stop with a place's own name is one row with it; the join between the blast room and the lower way is drawn once `b-14.A` has opened it.
