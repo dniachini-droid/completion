@@ -7,7 +7,7 @@
      named; the way ahead is a faint light, unnamed. Never a count of what's left (UX 6). */
   import { game, content } from './game.svelte';
   import { t, dayName, relDay, minutesShort } from '../content/copy/en';
-  import { placeAhead, openable, lockedOn, openedNiches } from '../core/story';
+  import { placeAhead, openable, lockedOn, openedNiches, areaOf, areaName } from '../core/story';
   import skyUrl from './scene/map-sky.svg?url';
   import type { Go } from './nav';
   import { back } from './back.svelte';
@@ -39,20 +39,21 @@
     /** a name that wraps grows upward from its first line's place, not down */
     up?: boolean;
     box: { label: string; title: string; say: string };
-    /** the places reached on this stretch, each to read again (D-135) */
-    reads?: { name: string; seq: number; camp?: boolean }[];
+    /** the places reached in this area, in the order walked, each to read again (D-135, D-154) */
+    reads?: { name: string; seq: number; camp?: boolean; here?: boolean }[];
   }
 
   /* ---------- the region: one light per stretch, laid out as the mock-up lays out the first region ---------- */
-  const AT: Record<StretchId, { x: number; y: number; lx: number; ly: number; anchor: Anchor; wrap?: number; up?: boolean }> = {
+  type At = { x: number; y: number; lx: number; ly: number; anchor: Anchor; wrap?: number; up?: boolean };
+  const AT: Partial<Record<StretchId, At>> = {
     'st-mouth':   { x: 150, y: 44,  lx: 186, ly: 40,  anchor: 'start' },
     /* under its light, on two short lines: above, it met the first light's words and sat in its own crosshair; on one
      line under it, it ran into the crosshair on the light where Dan stands (spacing review) */
     'st-camp':    { x: 322, y: 134, lx: 372, ly: 192, anchor: 'end', wrap: 10 },
     'st-hall':    { x: 196, y: 204, lx: 164, ly: 200, anchor: 'end', up: true },   /* a name wrapped at large text grows upward, clear of the light below */
     'st-salt':    { x: 62,  y: 268, lx: 24,  ly: 312, anchor: 'start' },
-    'st-stair':   { x: 318, y: 326, lx: 344, ly: 372, anchor: 'end' },
-    'st-flight2': { x: 262, y: 434, lx: 226, ly: 430, anchor: 'end' },
+    /* the Stair is one area, its two flights one light (D-154) */
+    'st-stair':   { x: 290, y: 380, lx: 254, ly: 376, anchor: 'end' },
     'st-square':  { x: 132, y: 488, lx: 168, ly: 484, anchor: 'start' },
     /* story weeks 8–14: below the first region; the map grows (and is dragged) only once they are walked or ahead */
     'st-water':   { x: 238, y: 586, lx: 274, ly: 582, anchor: 'start' },
@@ -61,20 +62,28 @@
     'st-blast':   { x: 164, y: 716, lx: 200, ly: 712, anchor: 'start' },
     'st-lower':   { x: 238, y: 826, lx: 202, ly: 822, anchor: 'end' },
   };
-  const LINKS: [StretchId, StretchId][] = [['st-mouth', 'st-hall'], ['st-hall', 'st-camp'], ['st-hall', 'st-salt'], ['st-hall', 'st-stair'], ['st-stair', 'st-flight2'], ['st-flight2', 'st-square'],
-    ['st-flight2', 'st-water'], ['st-water', 'st-reading'], ['st-water', 'st-blast'], ['st-blast', 'st-side'], ['st-blast', 'st-lower']];
+  /* how the areas join: home at the top (the Box Room and the Salt Gallery off the Lamp Hall), the way down through the
+     Stair to the Water and below it, the branches off it; and the lower way, which the square gallery's lower gallery
+     meets too (D-154) */
+  const LINKS: [StretchId, StretchId][] = [['st-mouth', 'st-hall'], ['st-hall', 'st-camp'], ['st-hall', 'st-salt'], ['st-hall', 'st-stair'], ['st-stair', 'st-square'],
+    ['st-stair', 'st-water'], ['st-water', 'st-reading'], ['st-water', 'st-blast'], ['st-blast', 'st-side'], ['st-blast', 'st-lower'], ['st-square', 'st-lower']];
 
   const placed = $derived(s.beats.filter(b => (b.kind === 'arrival' || b.kind === 'arrivalKey' || b.kind === 'word') && v.story.played.has(b.id)));
-  const walkedOn = $derived(new Set<StretchId>([s.stretches[0].id, v.here.stretch, ...placed.map(b => b.stretch)]));   /* the way in is always walked */
-  /* the stretch the next place is on: a faint light, unnamed */
-  const aheadOn = $derived(placeAhead(s, v.story)?.stretch ?? null);
-  const stretchName = (id: StretchId) => s.stretches.find(x => x.id === id)!.name;
+  /* one light per area (the Stair's two stretches are one, D-154) */
+  const area = (id: StretchId) => areaOf(s, id);
+  const walkedOn = $derived(new Set<StretchId>([s.stretches[0].id, area(v.here.stretch), ...placed.map(b => area(b.stretch))]));   /* the way in is always walked */
+  /* the area the next place is in: a faint light, unnamed, until walked */
+  const aheadOn = $derived(((b) => b ? area(b.stretch) : null)(placeAhead(s, v.story)));
+  const stretchName = (id: StretchId) => areaName(s, id);
+  const hereArea = $derived(area(v.here.stretch));
   /* only what a Key opens: the road's own rows open on foot (D-129). Every niche a Key can open there, and any other the
      story has shown there: the same test as Today's "Use it on the Map", so the link never points at nothing (D-143 A) */
-  const sealedOn = (id: StretchId) => lockedOn(s, v.story, id);
+  const sealedOn = (id: StretchId) => s.stretches.filter(x => area(x.id) === id).flatMap(x => lockedOn(s, v.story, x.id));
   /* the niches opened with a Key, under their stretch, each to read again (D-143 B) */
   const opened = $derived(openedNiches(s, game.facts));
-  const openedOn = (id: StretchId) => opened.filter(x => x.stretch === id);
+  const openedOn = (id: StretchId) => opened.filter(x => area(x.stretch) === id);
+  /* a locked thing's words without its area's name, which the box's title already says (D-154) */
+  const thing = (where: string, id: StretchId) => { const n = stretchName(id); return where.toLowerCase().startsWith(n.toLowerCase() + ', ') ? where.slice(n.length + 2).replace(/^./, c => c.toUpperCase()) : where; };
   /* the locked things seen on a stretch, each with "Use a Key" when one can open it now (Dan, D-142): a Key opens by
      itself only what is where Dan is; anything behind him waits here for him to choose */
   const canOpen = $derived(new Set(openable(s, v.story).map(x => x.id)));
@@ -87,7 +96,8 @@
   const unsaid = (where: string, name: string) => where.toLowerCase().startsWith(name.toLowerCase() + ', ') ? where.slice(name.length + 2) : where;
   /* the light is named for the stretch, the box for the place: both said, so a glance never reads two places (L B7); a
      locked thing behind him is "Behind you", as Today says (deep review B6) */
-  const hereBox = $derived({ label: v.here.name.toLowerCase() === stretchName(v.here.stretch).toLowerCase() ? t('map.hereLabel') : t('map.hereIn', { stretch: stretchName(v.here.stretch) }), title: v.here.name, say: v.ahead ? `${v.aheadBehind ? t('today.behind') : v.aheadHere ? t('today.here') : t('today.ahead')}: ${firstSentence(unsaid(v.ahead, v.here.name))}` : firstSentence(v.here.line) });
+  /* the box is always named for the area (as the light is), the place where Dan stands marked in its list (D-154) */
+  const hereBox = $derived({ label: t('map.hereLabel'), title: v.here.area, say: v.ahead ? `${v.aheadBehind ? t('today.behind') : v.aheadHere ? t('today.here') : t('today.ahead')}: ${firstSentence(unsaid(v.ahead, v.here.area))}` : firstSentence(v.here.line) });
 
   /* the places reached on foot or by Key, by stretch, in the order reached: each one's entry can be read again (D-135);
      and the camps made there, each once (its latest night), so an earlier camp's words are never lost (the flow review) */
@@ -95,28 +105,30 @@
     const out: { seq: number; name: string; stretch: StretchId; camp?: boolean }[] = [], camps = new Map<string, number>();
     for (const f of game.facts) {
       if (f.type !== 'arrived') continue;
-      if (f.kind === 'place') { const b = s.beats.find(x => x.id === f.id); if (b?.name) out.push({ seq: f.seq, name: b.name, stretch: b.stretch }); }
-      else if (f.seq !== v.arrival?.seq) camps.set(f.id, f.seq);
+      if (f.kind === 'place') { const b = s.beats.find(x => x.id === f.id); if (b?.name && f.seq !== v.arrival?.seq) out.push({ seq: f.seq, name: b.name, stretch: area(b.stretch) }); }
+      else if (f.kind === 'camp' && f.seq !== v.arrival?.seq) camps.set(f.id, f.seq);
     }
-    for (const [id, seq] of camps) { const k = s.camps.find(x => x.id === id); if (k) out.push({ seq, name: k.name, stretch: k.stretch, camp: true }); }
+    for (const [id, seq] of camps) { const k = s.camps.find(x => x.id === id); if (k) out.push({ seq, name: k.name, stretch: area(k.stretch), camp: true }); }
     return out.sort((a, b) => a.seq - b.seq);
   });
   const region = $derived.by((): Light[] => {
     const out: Light[] = [];
     for (const k of Object.keys(AT) as StretchId[]) {
-      const a = AT[k], here = k === v.here.stretch;
+      const a = AT[k]!, here = k === hereArea;
       if (walkedOn.has(k)) {
-        const names = placed.filter(b => b.stretch === k).map(b => b.name!);
         const fc = here && aheadOn === k && ahead.length ? t('map.forecast', { day: relDay(ahead[0], v.day) }) : undefined;
         out.push({ key: k, ...a, kind: here ? 'here' : 'lit', name: stretchName(k),
           sub: here ? t('map.here') : sealedOn(k).length ? t('map.sealed') : undefined, subKind: here ? 'warm' : 'dim',
           box: here ? hereBox
-            : { label: sealedOn(k).length ? t('map.walkedSealed') : t('map.walked'), title: stretchName(k), say: names.length ? names.join(' · ') : t('map.wayIn') } });
+            : { label: sealedOn(k).length ? t('map.walkedSealed') : t('map.walked'), title: stretchName(k), say: t('map.wayIn') } });
         /* on its own line: joined to "you are here" it ran off the screen's left edge (UI review, D-130) */
         if (fc) out[out.length - 1].sub2 = fc;
-        /* the next place on this same stretch: its minutes under "you are here" (MORNING-REPORT Part 3 #10, fresh review) */
-        else if (here && aheadOn === k && v.toNext) out[out.length - 1].sub2 = t('map.nextOn', { min: minutesShort(v.toNext) });
-        const reads = reached.filter(r => r.stretch === k);
+        /* the next place in this area, walked before or where Dan is: its minutes (MORNING-REPORT Part 3 #10; D-154) */
+        else if (aheadOn === k && v.toNext) out[out.length - 1].sub2 = t('map.nextOn', { min: minutesShort(v.toNext) });
+        /* camp, by the lamp, where Dan sleeps every night (D-154) */
+        else if (k === 'st-hall' && !here && v.story.departed) out[out.length - 1].sub2 = t('map.camp');
+        /* every place walked to here, in the order walked, the one where Dan stands marked (D-154) */
+        const reads = reached.filter(r => r.stretch === k).map(r => ({ ...r, here: !r.camp && r.seq === v.here.seq }));
         if (reads.length) out[out.length - 1].reads = reads;
       } else if (k === aheadOn) {
         out.push({ key: k, ...a, kind: 'faint',
@@ -130,7 +142,7 @@
   /* the region's size comes from the lights shown, never less than the first region: a bigger region is dragged around */
   const RW = $derived(Math.max(390, ...region.map(a => a.x + 60))), RH = $derived(Math.max(548, ...region.map(a => a.y + 60)));
   const regionLinks = $derived(LINKS.filter(([a, b]) => walkedOn.has(a) && (walkedOn.has(b) || b === aheadOn))
-    .map(([a, b]) => ({ d: curve(AT[a], AT[b]), walked: walkedOn.has(b) })));
+    .map(([a, b]) => ({ d: curve(AT[a]!, AT[b]!), walked: walkedOn.has(b) })));
 
   function curve(a: { x: number; y: number }, b: { x: number; y: number }) {
     const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2, dx = b.x - a.x, dy = b.y - a.y;
@@ -308,39 +320,37 @@
           <div class="swap">
             <div class="label-line">{sel.box.label}</div>
             <h2 class="carve md">{sel.box.title}</h2>
-            <!-- the locked things first, so "Use a Key" is never below the box's fold (D-142) -->
+            <!-- one list, one look (D-154): the places walked to here first, in the order walked, each a tap from its entry
+                 and painting (D-135), the one Dan stands at marked; then what is said ahead; then the locked things here,
+                 with "Use a Key" (D-142) or "Read again" once opened (D-143 B) -->
+            {#if sel.reads?.length}
+              <ul class="rows">
+                {#each sel.reads as r (r.seq)}
+                  <li class="row"><span class="name">{r.name}</span>
+                    <button class="text-link state" class:here={r.here} aria-label={t('map.readAgain', { place: r.name })} onclick={() => go('arrival', `again:${r.seq}`)}><span>{r.here ? t('map.here') : r.camp ? t('map.turnedBack') : t('daybook.readAgain')}</span></button></li>
+                {/each}
+              </ul>
+            {:else}
+              <p class="say"><Prose text={sel.box.say} /></p>
+            {/if}
+            {#if sel.kind === 'here' && sel.box.say && sel.reads?.length}<p class="say ahead-say"><Prose text={sel.box.say} /></p>{/if}
             {#if sel.kind === 'here' || sel.kind === 'lit'}
               {@const locks = sealedOn(sel.key as StretchId)}
               {@const done = openedOn(sel.key as StretchId)}
-              {#if locks.length}
-                <div class="locks">
+              {#if locks.length || done.length}
+                <ul class="rows locks">
                   {#each locks as x (x.id)}
-                    <p class="lock"><span class="where">{x.where}</span>
-                      {#if v.keys && canOpen.has(x.id)}<button class="text-link use" aria-label={t('map.useKeySr', { where: x.where })} onclick={() => useKey(x.id)}><span>{t('map.useKey')}</span></button>
-                      {:else}<span class="sr-only">, </span><span class="needs">{t('map.sealed')}</span>{/if}</p>
+                    <li class="row"><span class="name">{thing(x.where, sel.key as StretchId)}</span>
+                      {#if v.keys && canOpen.has(x.id)}<button class="text-link state use" aria-label={t('map.useKeySr', { where: x.where })} onclick={() => useKey(x.id)}><span>{t('map.useKey')}</span></button>
+                      {:else}<span class="sr-only">, </span><span class="state needs">{t('map.sealed')}</span>{/if}</li>
                   {/each}
-                  {#if !v.keys}<p class="soft lock-say">{t('map.noKey')}</p>{/if}
-                </div>
-              {/if}
-              {#if done.length}
-                <!-- opened with a Key: read again, as places are (D-143 B) -->
-                <div class="locks">
                   {#each done as x (x.id)}
-                    <p class="lock"><span class="where">{x.where}</span>
-                      <button class="text-link use again" aria-label={t('map.openedSr', { where: x.where })} onclick={() => go('opened', `again:${x.id}`)}><span>{t('map.opened')}</span></button></p>
+                    <li class="row"><span class="name">{thing(x.where, sel.key as StretchId)}</span>
+                      <button class="text-link state" aria-label={t('map.openedSr', { where: x.where })} onclick={() => go('opened', `again:${x.id}`)}><span>{t('daybook.readAgain')}</span></button></li>
                   {/each}
-                </div>
+                </ul>
+                {#if locks.length && !v.keys}<p class="soft lock-say">{t('map.noKey')}</p>{/if}
               {/if}
-            {/if}
-            {#if sel.reads?.length && sel.kind !== 'here'}
-              <!-- the places reached here, each a tap from its entry and painting (D-135) -->
-              <p class="say reads">{#each sel.reads as r, i (r.seq)}{#if i}<span class="sep" aria-hidden="true"> · </span>{/if}<button class="text-link read" aria-label={t('map.readAgain', { place: r.name })} onclick={() => go('arrival', `again:${r.seq}`)}><span>{r.name}</span></button>{/each}</p>
-            {:else}
-              <p class="say" class:short={!!sel.reads?.length}><Prose text={sel.box.say} /></p>
-              {@const place = sel.reads?.filter(r => !r.camp).pop()}
-              {@const camps = sel.reads?.filter(r => r.camp) ?? []}
-              {#if place}<p class="reads"><button class="text-link read" onclick={() => go('arrival', `again:${place.seq}`)}><span>{t('map.readHere')}</span></button></p>{/if}
-              {#if camps.length}<p class="say reads">{#each camps as r, i (r.seq)}{#if i}<span class="sep" aria-hidden="true"> · </span>{/if}<button class="text-link read" aria-label={t('map.readAgain', { place: r.name })} onclick={() => go('arrival', `again:${r.seq}`)}><span>{r.name}</span></button>{/each}</p>{/if}
             {/if}
           </div>
         {/key}
@@ -393,25 +403,21 @@
   .box h2 { margin: 8px 0 6px; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .box .say { color: var(--ink-2); font-size: calc(16.5px * var(--ts, 1)); line-height: 1.42; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
   .swap { animation: rise .45s var(--ease) both; }
-  .box .say.short { -webkit-line-clamp: 2; line-clamp: 2; }
   /* the places reached: all of them, scrolling inside the box if there are many (the box keeps its size, D-076) */
-  .box .swap:has(.reads) { overflow-y: auto; scrollbar-width: none; }
-  .box .say.reads { display: block; -webkit-line-clamp: unset; line-clamp: unset; overflow: visible; }
-  .reads { margin: 2px 0 0; }
   /* the locked things on a stretch (D-142): the box keeps its size and scrolls (D-076) */
-  .box .swap:has(.locks) { overflow-y: auto; scrollbar-width: none; }
   /* what scrolls in the box fades at its foot, never sliced mid-line against the edge (spacing review) */
-  .box .swap:has(.locks), .box .swap:has(.reads) { padding-bottom: 16px;
+  /* one row style for every place and locked thing (D-154): its name, and what a tap does */
+  .box .swap { overflow-y: auto; scrollbar-width: none; padding-bottom: 16px;
     -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 24px), transparent); mask-image: linear-gradient(180deg, #000 calc(100% - 24px), transparent); }
-  .lock .use.again { color: var(--ink-2); }
-  .locks { margin: 0 0 8px; border-bottom: 1px solid var(--edge-2); padding-bottom: 6px; }
-  .lock { margin: 4px 0; display: flex; gap: 10px; align-items: baseline; justify-content: space-between; font-size: calc(15px * var(--ts, 1)); line-height: 1.35; color: var(--ink-2); }
-  .lock .where { flex: 1; min-width: 0; }
-  .lock .use { flex: none; padding: 0; color: #f2c170; font-size: calc(15px * var(--ts, 1)); }
-  .lock .needs { flex: none; font-family: var(--life); font-style: italic; color: #e9d9b4; font-size: calc(14px * var(--ts, 1)); }
+  .rows { list-style: none; margin: 0 0 6px; padding: 0; }
+  .rows.locks { border-top: 1px solid var(--edge-2); padding-top: 4px; }
+  .row { display: flex; gap: 10px; align-items: center; justify-content: space-between; min-height: 44px; font-family: var(--life); font-size: calc(16px * var(--ts, 1)); line-height: 1.3; color: var(--ink); }
+  .row .name { flex: 1; min-width: 0; }
+  .row .state { flex: none; padding: 0; min-height: 44px; font-size: calc(14.5px * var(--ts, 1)); color: var(--ink-2); }
+  .row .state.here { color: var(--gold); }
+  .row .state.use { color: #f2c170; }
+  .row .needs { font-style: italic; color: #e9d9b4; display: flex; align-items: center; }
+  .ahead-say { margin: 2px 0 8px; font-size: calc(15px * var(--ts, 1)) !important; }
   .lock-say { margin: 4px 0 0; font-size: calc(14px * var(--ts, 1)); }
-  .read { min-height: 44px; padding: 2px 0; }   /* a finger's height (A#40) */
-  .read span { font-family: var(--life); font-size: calc(16.5px * var(--ts, 1)); color: var(--ink); }
-  .sep { color: var(--ink-3); }
   @media (prefers-reduced-motion: reduce) { .drawn, .dust, .pl, .labels, .reticle, .swap { animation: none; opacity: 1; } .drawn { opacity: 0; } .reticle { transition: none; } }
 </style>

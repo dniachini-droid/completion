@@ -1705,7 +1705,8 @@ export interface Return {
   part?: { el: string; mark: string };
 }
 /** Where Dan stands. */
-export interface Here { id: string | null; name: string; line: string; stretch: StretchId; painting: string; }
+/** Where Dan stands: the last place he walked to (D-154), its area's name, and its arrival (to read again). */
+export interface Here { id: string | null; name: string; line: string; stretch: StretchId; painting: string; area: string; seq: number | null; }
 
 export interface View {
   day: string;
@@ -1755,6 +1756,8 @@ export interface View {
   /** This stretch of road, in minutes from the start: the last place reached on foot, the side chamber halfway, the next
       place; `place`: a next place is in reach (D-133: the line at a delve's end). */
   road: { from: number; chamber: number; to: number; place: boolean };
+  /** The next place on foot is in the area Dan is in (true), a new one (false), or there is none in reach (null). */
+  nextHere: boolean | null;
   lastArrival: Arrival | null;
   story: S.StoryState;
   teaser: string | null;
@@ -2192,9 +2195,11 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   const lastPlace = st.here ? S.beatOf(c.story, st.here) : undefined;
   const opening = c.story.beats.find(b => b.kind === 'morning' && b.w === 1);
   const stretch = c.story.stretches.find(x => x.id === st.stretch)!;
+  const area = S.areaName(c.story, st.stretch);
+  const hereSeq = lastPlace ? ofType(shown, 'arrived').filter(a => a.kind === 'place' && a.id === lastPlace.id).pop()?.seq ?? null : null;
   const here: Here = lastPlace
-    ? { id: lastPlace.id, name: lastPlace.name ?? stretch.name, line: lastPlace.line ?? '', stretch: st.stretch, painting: paintingOf(lastPlace.id, st.stretch) }
-    : { id: null, name: stretch.name, line: opening?.line ?? '', stretch: st.stretch, painting: STAND_IN[st.stretch] };
+    ? { id: lastPlace.id, name: lastPlace.name ?? stretch.name, line: lastPlace.line ?? '', stretch: st.stretch, painting: paintingOf(lastPlace.id, st.stretch), area, seq: hereSeq }
+    : { id: null, name: stretch.name, line: opening?.line ?? '', stretch: st.stretch, painting: STAND_IN[st.stretch], area, seq: null };
   /* the road counts on from the last place reached, even one not yet looked at (a word left for later): the minutes
      still visibly go somewhere (deep review B13, W F7); it names nothing, so it reveals nothing */
   const wordWaits = !!arrival && S.beatOf(c.story, arrival.id)?.kind === 'word';
@@ -2248,6 +2253,9 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
     keyHere: st.held ? openNow.find(x => x.stretch === st.stretch)?.id ?? null : null,
     here, ahead: view ? view.where : here.id === null ? here.line || S.teaser(c.story, st) : S.teaser(c.story, st), walked: w, toNext, nextAt, toChamber: chamber,
     road: { from: S.lastPlaceAt(full), chamber: S.chamberAt(full), to: S.nextPlaceAt(full), place: nextAt !== null },
+    /* the next place on foot is in the area Dan is in (the road says "Further into …"), or a new one ("On down"); never
+       its name before he reaches it (D-154) */
+    nextHere: ((b: Beat | null) => b ? S.areaOf(c.story, b.stretch) === S.areaOf(c.story, full.stretch) : null)(nextBeat ?? S.placeAhead(c.story, full)),
     lastArrival: lastArr, story: wordWaits ? full : S.storyState(facts, c.story), teaser: S.teaser(c.story, st), runFinds,
     passage: c.story.passages.find(p => p.id === S.nextPassage(c.story, st))?.line ?? '',
   };

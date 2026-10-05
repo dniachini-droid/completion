@@ -19,7 +19,7 @@
   import { ofLine } from './panel';
   import { beatOf } from '../core/story';
   import type { FactOf, Job } from '../core/types';
-  import { t, minutesWords, minutesShort, inSentence, dayShort, type Weekday } from '../content/copy/en';
+  import { t, minutesWords, minutesShort, inSentence, placeIn, dayShort, type Weekday } from '../content/copy/en';
   import Scene from './Scene.svelte';
   import EndRoad from './EndRoad.svelte';
   import WeekMarks from './WeekMarks.svelte';
@@ -37,7 +37,6 @@
   const others = $derived(todoFirst(v.line));
   const extra = $derived(todoFirst(v.slate.filter(id => !v.line.includes(id))));
   /* the last place reached (never a camp): its entry, read again from its name (D-135) */
-  const placeSeq = $derived(game.facts.filter(f => f.type === 'arrived' && f.kind === 'place').pop()?.seq ?? null);
   const lastPlace = $derived(v.lastArrival);
 
   const recurring = (id: string) => v.content.rhythms.some(r => r.job === id);
@@ -248,8 +247,11 @@
       </span>
     </div>
     <!-- the place's name: a tap reads its entry again, with its painting, at any time of day (Dan, D-135) -->
-    {#if placeSeq !== null && v.here.id}<h1 class="carve lg rise"><button class="here" aria-describedby="here-again" onclick={() => go('arrival', `again:${placeSeq}`)}>{v.here.name}</button></h1><span id="here-again" class="sr-only">{t('map.readHere')}</span>
-    {:else}<h1 class="carve lg rise">{v.here.name}</h1>{/if}
+    <!-- where Dan is: the area as the title, the place under it (D-154); a tap reads the place's entry again, with its
+         painting, at any time of day (D-135) -->
+    {#if v.here.seq !== null && v.here.id}<h1 class="carve lg rise"><button class="here" aria-describedby="here-again" onclick={() => go('arrival', `again:${v.here.seq}`)}>{v.here.area}</button></h1>
+      <button class="text-link at-place rise" onclick={() => go('arrival', `again:${v.here.seq}`)}><span>{t('today.at', { place: v.here.name })}</span></button><span id="here-again" class="sr-only">{t('map.readHere')}</span>
+    {:else}<h1 class="carve lg rise">{v.here.area}</h1>{/if}
     <section class="where rise d2" aria-label={roadSay || undefined}>
       <EndRoad road={v.road} from={v.walked} to={v.walked} mode="still" notes={roadNotes} spoken={false} />
     </section>
@@ -342,7 +344,7 @@
         <div class="label-line gold">{t('today.label')}</div>
         <h2 class="say-lg">{t('today.enough')}</h2>
         {#if lastPlace}
-          <p class="soft">{t(lastPlace.kind === 'place' ? 'today.reached' : 'today.camped', { place: inSentence(lastPlace.name) })}</p>
+          <p class="soft">{lastPlace.kind === 'camp' ? t('today.camped', { place: inSentence(lastPlace.name) }) : t('today.reached', { area: inSentence(v.here.area), place: placeIn(v.here.name) })}</p>
         {/if}
         {#if stillToCome.length}<p class="soft still">{t('today.stillToCome', { what: stillToCome.join(', ') })}</p>{/if}
         {#if evening}{@render tonight()}{/if}
@@ -437,6 +439,8 @@
 <style>
   h1 { margin-top: 2px; }
   /* the heading's own words are its name; "Read it again" is said after it (A#47); a finger's height at least (A#40) */
+  /* the place, under the area's name: a link like every "read again" (D-154) */
+  .at-place { display: block; margin: -6px 0 6px; min-height: 32px; font-family: var(--life); font-size: calc(15px * var(--ts, 1)); letter-spacing: .04em; color: var(--ink-2); text-align: left; }
   h1 .here { font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit; text-shadow: inherit; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; min-height: 44px; }
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
   /* a job Dan tends to put off brings a find: a small hollow gold mark says so (MORNING-REPORT Part 3 #3) */

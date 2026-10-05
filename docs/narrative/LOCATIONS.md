@@ -16,7 +16,7 @@ A descent. Long high halls rounded at the edges like the inside of a shell, and 
 
 **The Salt Gallery.** A gallery where the hill's rock salt meets the cut stone. The salt face is split from the top to about knee height, and the split has been sealed from the *other* side with stones and salt. Along the wall, a long tally in one hand, and above it a single ring on its own. A salt-pick in a niche.
 
-**The Survey Cut.** Someone's camp: a cot with a pair of boots under it, laced and dry; on the cot, a notebook with a pencil in it and a tin box with a row of cut strokes on its lid; on a shelf, a rod of stone the length of a forearm, one edge finer than a knife. More of the camp comes to light as you come back.
+**The Box Room** (first called the Survey Cut; renamed, D-154). Someone's room: a cot with a pair of boots under it, laced and dry; on the cot, a notebook with a pencil in it and a tin box with a row of cut strokes on its lid; on a shelf, a rod of stone the length of a forearm, one edge finer than a knife. More of the camp comes to light as you come back.
 
 **The lintel on the side wall.** When the right word is cut, the lamps wake down the hall and the stone under the lintel opens.
 

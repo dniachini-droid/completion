@@ -40,10 +40,18 @@
   const word = fresh && !!game.whole.arrival && beatOf(content.story, game.whole.arrival.id)?.kind === 'word';
   const cap = (x: string) => x.charAt(0).toUpperCase() + x.slice(1);
   /* marks seen here that can't be guessed yet: said gently, once, so a later guess doesn't come from nowhere (D-077) */
-  const later = $derived(a ? marksIn(content.story, [...a.records, ...a.way.flatMap(w => w.records)]).filter(m => !a.guess.includes(m) && !mayGuess(content.story, v.story, m)
+  const later = $derived(a ? marksIn(content.story, [...a.records, ...a.way.flatMap(w => w.records), ...a.then.flatMap(w => w.records)]).filter(m => !a.guess.includes(m) && !mayGuess(content.story, v.story, m)
     && !markHeld(markOf(content.story, m)!, v.story)) : []);
   /* a story bit that played on the way here (D-129) offers its record, or its small choice, here */
-  function pickWay(beat: string, record: string) { game.do({ do: 'choose', beat, pick: a!.way.find(w => w.beat === beat)!.records.indexOf(record) }); go('records', record); }
+  function pickWay(beat: string, record: string) { game.do({ do: 'choose', beat, pick: [...a!.way, ...a!.then].find(w => w.beat === beat)!.records.indexOf(record) }); go('records', record); }
+  /* how Dan came here (D-154): a new area, the next place in the area he is in, back to an area walked before, or an
+     evening at camp; said in the label, and the area named above every place */
+  const label = $derived(!a ? '' : again ? t('arrive.again') : a.kind === 'camp' ? t('arrive.camp')
+    : a.face === 'evening' ? t(a.late ? 'arrive.lastNight' : 'arrive.evening') : a.face === 'enter' ? t('arrive.newArea') : a.face === 'back' ? t('arrive.backIn') : t('arrive.label'));
+  /* a new area: its name is the title, the place under it; anywhere else the area sits small above the place */
+  const title = $derived(!a ? '' : a.kind === 'evening' ? t('arrive.byTheLamp') : a.face === 'enter' && !again ? a.area : a.name);
+  const over = $derived(!a ? '' : a.kind === 'evening' ? a.area : a.face === 'enter' && !again ? '' : a.area);
+  const under = $derived(!a || again || a.face !== 'enter' ? '' : a.name);
   function pick(i: number) { if (!a) return; game.do({ do: 'choose', beat: a.id, pick: i }); go('records', a.records[i]); }
   /* after the cut: through the lintel to the stair (D-039), back to today, or later (the cut waits, unseen) */
   function cutLeave(to: 'through' | 'today' | 'later') {
@@ -84,26 +92,32 @@
         <span></span><span></span>
       </header>
       <section class="col head">
-        <div class="label-line gold">{again ? t('arrive.again') : a.kind === 'place' ? t('arrive.label') : t('arrive.camp')}</div>
-        <h1 class="carve lg">{a.name}</h1>
+        <div class="label-line gold">{label}</div>
+        {#if over}<div class="area">{over}</div>{/if}
+        <h1 class="carve lg">{title}</h1>
+        {#if under}<div class="area under">{under}</div>{/if}
       </section>
       <!-- the painting, left clear: a tap on it looks at it (D-105) -->
       <div class="gap" onclick={look} role="presentation"></div>
       <!-- the words keep to the lower half and scroll there; they can be folded away (D-085) -->
       <div class="col text">
-        <Words {look} length={(a.line?.length ?? 0) + (a.look?.length ?? 0)}>
-          <span class="soft on-scene"><Prose text={a.line} /></span>
+        <Words {look} length={(a.line?.length ?? 0) + (a.look?.length ?? 0) + a.then.reduce((n, w) => n + w.line.length, 0)}>
+          {#if a.wayIn && !again}<span class="soft on-scene way-in">{a.wayIn}</span>{/if}
+          {#if a.line}<span class="soft on-scene"><Prose text={a.line} /></span>{/if}
           {#if a.look}<span class="soft on-scene look"><Prose text={a.look} /></span>{/if}
           {#each a.way as w (w.beat)}<p class="soft on-scene look"><Prose text={w.line} /></p>{/each}
           {#each a.opened as line}<p class="soft on-scene look">{t('arrive.keyOpens')} <Prose text={line} /></p>{/each}
+          {#each a.then as w (w.beat)}<p class="soft on-scene"><Prose text={w.line} /></p>{/each}
         </Words>
       </div>
       <div class="mid col">
         {#if a.id}
           {#each a.way as w (w.beat)}<Settled beat={fresh ? w.beat : null} />{/each}
-          <Settled beat={fresh ? a.id : null} />
+          {#if a.kind !== 'evening'}<Settled beat={fresh ? a.id : null} />{/if}
+          {#each a.then as w (w.beat)}<Settled beat={fresh ? w.beat : null} />{/each}
           {#each a.way as w (w.beat)}<Reread beat={fresh ? w.beat : null} {go} />{/each}
-          <Reread beat={fresh ? a.id : null} {go} />
+          {#if a.kind !== 'evening'}<Reread beat={fresh ? a.id : null} {go} />{/if}
+          {#each a.then as w (w.beat)}<Reread beat={fresh ? w.beat : null} {go} />{/each}
           {#each a.guess as mark (mark)}<Guess {mark} at={a.id} />{/each}
           {#if later.length}<p class="soft later">{t('arrive.marksLater')}</p>{/if}
           {#if a.records.length}
@@ -112,7 +126,7 @@
               {:else}<button class="text-link" onclick={() => go('records', a.records[0])}><span>{t('records.read')}</span></button>{/if}
             </div>
           {/if}
-          {#each a.way.filter(w => w.records.some(r => !a.records.includes(r))) as w (w.beat)}
+          {#each [...a.way, ...a.then].filter(w => w.records.some(r => !a.records.includes(r))) as w (w.beat)}
             <div class="choice">
               {#if w.choice}{#each w.choice.slice(0, w.records.length) as c, i}<button class="text-link" onclick={() => pickWay(w.beat, w.records[i])}><span>{cap(c)}</span></button>{/each}
               {:else}<button class="text-link" onclick={() => go('records', w.records[0])}><span>{t('records.read')}</span></button>{/if}
@@ -149,7 +163,11 @@
   .fresh :global(.fog.warm) { opacity: 0; animation: gold 4.2s 1s ease-in-out forwards; }
   @keyframes gold { to { opacity: 1; } }
   .head { margin-top: 14px; animation: rise 1.4s .4s var(--ease) both; }
-  .head .label-line { margin-bottom: 8px; }   /* as on the delve and the set-up (spacing review D16) */
+  .head .label-line { margin-bottom: 8px; }
+  /* the area, small, above the place (or under a new area's name, the place): where Dan is, always said (D-154) */
+  .head .area { font-family: var(--life); font-size: calc(15px * var(--ts, 1)); letter-spacing: .06em; color: var(--ink-2); margin-bottom: 4px; }
+  .head .area.under { margin: 6px 0 0; }
+  .text :global(.way-in) { font-style: italic; }   /* as on the delve and the set-up (spacing review D16) */
   /* wrapped onto two lines, the links' own 44 px keep them apart: no gap between the lines (spacing review D9) */
   .choice { display: flex; justify-content: center; gap: 0 18px; flex-wrap: wrap; margin-bottom: 14px; }
   .topbar { animation: rise 1.2s .2s var(--ease) both; }

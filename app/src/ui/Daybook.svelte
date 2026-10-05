@@ -14,7 +14,7 @@
   import { comingUp, sweepOf, addDays } from '../core/week';
   import { calendarWeek } from '../core/time';
   import { hiddenDone, weekKept, paintingOf } from '../core/game';
-  import { beatOf, sealOf } from '../core/story';
+  import { beatOf, sealOf, storyState, areaName } from '../core/story';
   import Scene from './Scene.svelte';
   import type { Go } from './nav';
   import { back } from './back.svelte';
@@ -43,13 +43,17 @@
     for (const f of doneFacts(game.facts)) if (calendarWeek(f.day) === page.week && game.job(f.job) && !hidden.has(`${f.job}|${f.day}`)) n.set(f.job, (n.get(f.job) ?? 0) + 1);
     return [...n].map(([job, k]) => ({ id: job, name: game.job(job)!.name, k }));
   });
+  /* the places the week reached, each a tap from its entry, as everywhere else (D-154) */
   const places = $derived(page ? game.facts.filter((f): f is FactOf<'arrived'> => f.type === 'arrived' && f.kind === 'place' && calendarWeek(f.day) === page.week)
-    .map(f => beatOf(s, f.id)?.name).filter((x): x is string => !!x) : []);
-  /* the page leads with the furthest place the week reached, in its own painting (MORNING-REPORT Part 3 #9) */
+    .map(f => ({ seq: f.seq, name: beatOf(s, f.id)?.name ?? '' })).filter(x => !!x.name) : []);
+  /* the page leads with the furthest place the week reached (where Dan stood at its end: an evening at camp never moves
+     him, D-154), "Area · place", in its own painting (MORNING-REPORT Part 3 #9) */
   const furthest = $derived.by(() => {
-    const f = page ? game.facts.filter((x): x is FactOf<'arrived'> => x.type === 'arrived' && x.kind === 'place' && calendarWeek(x.day) === page.week).pop() : undefined;
-    const b = f ? beatOf(s, f.id) : undefined;
-    return b?.name ? { name: b.name, painting: paintingOf(b.id, b.stretch) } : null;
+    if (!page) return null;
+    const upTo = game.facts.filter(x => calendarWeek(x.day) <= page.week), st = storyState(upTo, s);
+    const f = upTo.filter((x): x is FactOf<'arrived'> => x.type === 'arrived' && x.kind === 'place' && x.id === st.here).pop();
+    const b = f && calendarWeek(f.day) === page.week ? beatOf(s, f.id) : undefined;
+    return b?.name ? { seq: f!.seq, name: `${areaName(s, b.stretch)} · ${b.name.replace(/^The /, 'the ')}`, painting: paintingOf(b.id, b.stretch) } : null;
   });
   /* what the week held, on one line */
   const tally = $derived(held.map(h => `${h.name} ${timesWords(h.k)}`).join(' · '));
@@ -132,8 +136,10 @@
            on; what the week held on one line -->
       {#if furthest}
         <div class="label-line lit">{t('daybook.reached')}</div>
-        <p class="say-lg reached">{furthest.name}</p>
-        {#if places.length > 1}<p class="soft went">{t('daybook.wentBy', { places: places.slice(0, -1).join(' · ') })}</p>{/if}
+        <p class="say-lg reached"><button class="text-link read" onclick={() => go('arrival', `again:${furthest.seq}`)}><span>{furthest.name}</span></button></p>
+        {#if places.filter(p => p.seq !== furthest.seq).length}
+          <p class="soft went">{t('daybook.wentByLabel')} {#each places.filter(p => p.seq !== furthest.seq) as p, i (p.seq)}{#if i}<span aria-hidden="true"> · </span>{/if}<button class="text-link read" onclick={() => go('arrival', `again:${p.seq}`)}><span>{p.name}</span></button>{/each}</p>
+        {/if}
       {:else}<p class="say went">{t('daybook.camped')}</p>{/if}
       {#if learned.length}
         <div class="label-line">{t('daybook.learned')}</div>
@@ -209,6 +215,8 @@
   .look-line { display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0; font-style: italic; }
   .look-line .text-link { min-height: 44px; }
   .reached { margin-top: 8px; color: #fff; }
+  .reached .read { font: inherit; color: inherit; padding: 0; text-align: left; }
+  .went .read { padding: 0; min-height: 44px; font: inherit; color: var(--ink-2); }
   .tally { margin-top: 18px; font-style: italic; line-height: 1.45; }
   .offer .say { margin-bottom: 12px; }
   .after { margin-top: 12px; }

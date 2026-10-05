@@ -12,9 +12,10 @@ export type Week = 'normal' | 'low' | 'high' | 'away';
 
 /** `bed`: say goodnight each evening, on time (22:45, before the 23:00 bedtime) or late (00:30). */
 /** `pick`: the guess Dan makes for a mark on offer; null: he leaves it unanswered (a guess is always optional). */
-export function sim(start = '2026-09-28T08:00:00+01:00', pick: (m: Mark) => string | null = m => m.candidates![0], bed?: 'kept' | 'late') {   /* a Monday */
-  let facts: Fact[] = [];
-  let now = Date.parse(start);
+/** `from`: a save to carry on from (its own facts, D-154's old-route saves): the next day at 08:00 after its last fact. */
+export function sim(start = '2026-09-28T08:00:00+01:00', pick: (m: Mark) => string | null = m => m.candidates![0], bed?: 'kept' | 'late', from?: Fact[]) {   /* a Monday */
+  let facts: Fact[] = from ? from.slice() : [];
+  let now = from?.length ? Date.parse(`${from[from.length - 1].day}T08:00:00+01:00`) + 864e5 : Date.parse(start);
   const at = () => new Date(now + 3_600_000).toISOString().slice(0, 19) + '+01:00';
   const run = (cmd: Command) => { facts = facts.concat(act(facts, C, cmd, at())); };
   const wait = (min: number) => { now += min * 60_000; facts = facts.concat(settle(facts, C, at())); };
