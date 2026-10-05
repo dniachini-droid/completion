@@ -446,8 +446,8 @@ function storyClock(w: W, c: Content, at: Moment, day: string): boolean {
 
 /** A Key lands: it is kept, never spent for Dan (D-143 A). Its job's return offers "Use it here" when something is locked
     where he is; anything else is his to open on the Map (D-142). */
-function landKey(w: W, rhythm: string, at: Moment, day: string) {
-  w.put({ type: 'keyEarned', rhythm }, at, day);
+function landKey(w: W, rhythm: string, at: Moment, day: string, late?: string) {
+  w.put({ type: 'keyEarned', rhythm, ...(late ? { for: late } : {}) }, at, day);
   w.put({ type: 'keyHeld' }, at, day);
 }
 function openSeal(w: W, c: Content, seal: Seal, at: Moment, day: string, job?: number, road = false): Seal {
@@ -596,11 +596,12 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string, tick
   if (paidBefore(w.all, c, job, day, done.seq)) { gifts(w, c, at, day); return; }
   /* a rhythm met this week lands a Key, until the week's supply is used; past it, one find a week (§3). A rhythm Dan
      added or changed counts for Keys from its next full period (D-043 F7): the rhythms as they stood when the week began. */
-  const r = rhythmOf(W.live(c.base ?? c, w.all, calendarWeek(day)), job);
+  /* a recurring job made this week counts at once: its Key follows the marks under its row (Dan, D-152) */
+  const r = rhythmOf(W.live(c.base ?? c, w.all, calendarWeek(day)), job) ?? rhythmOf(c, job);
   /* any session meets the rhythm (Dan, D-121), but only sessions of the dial's shortest delve or more count towards its
      Key: a few one-minute sessions never open the story (rule 10) */
   /* one Key a rhythm a period, even if a session is taken back and done again (D-131) */
-  const keyedAlready = !!r && ofType(w.all, 'keyEarned').some(k => k.rhythm === r.id && Rep.samePeriod(r, k.day, day));
+  const keyedAlready = !!r && ofType(w.all, 'keyEarned').some(k => k.rhythm === r.id && Rep.samePeriod(r, k.for ?? k.day, day));
   /* (at least: an every-N-days rhythm kept up more often than every N days has two sessions in its window, deep review B4;
      keyedAlready keeps it to one Key a period) */
   /* a rhythm stopped since the week began lands no Key (deep review: a stopped rhythm's Key) */
@@ -927,6 +928,20 @@ function morningAfter(w: W, c: Content, at: Moment, day: string) {
   giveFind(w, c, 'morning', at, day);
 }
 
+/** Last week's Keys that should have landed and didn't (Dan, D-152): a "times a week" job whose marks met its number,
+    with no Key for that week (made to repeat mid-week, or its last session under another job of its name), lands its
+    Key now, counted to last week (its five Keys a week included), and Today says so. Once: the Key is then that week's. */
+function lateKeys(w: W, c: Content, at: Moment, day: string) {
+  const last = W.addDays(calendarWeek(day), -1);
+  /* only a rhythm that stood by last week's end: a job made to repeat since is not paid for the weeks before */
+  const stood = W.live(c.base ?? c, w.all, calendarWeek(day)).rhythms;
+  for (const r of c.rhythms.filter(x => Rep.weekly(x) && stood.some(y => y.id === x.id))) {
+    if (ofType(w.all, 'keyEarned').some(k => k.rhythm === r.id && Rep.samePeriod(r, k.for ?? k.day, last))) continue;
+    if (S.keysIn(w.all, last) >= S.KEYS_A_WEEK || S.sessionsIn(w.all, r, last, S.RETURN_MIN) < S.needOf(r)) continue;
+    landKey(w, r.id, at, day, last);
+  }
+}
+
 /** The first opening after an absence: "where you were", with the one open question for the story week (BALANCING §7). */
 function welcomeBack(w: W, c: Content, at: Moment, day: string) {
   const since = backFrom(w.all, day);
@@ -1131,6 +1146,7 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       if (!W.planMade(w.all, calendarWeek(day))) w.put({ type: 'planMade', week: calendarWeek(day), entries: W.planWeek(c, w.all, calendarWeek(day), day) });
       /* no weekly floor of Keys any more (Dan, D-142): a Key always means a recurring job kept up */
       storyClock(w, c, now, day);
+      lateKeys(w, c, now, day);
       weekClose(w, c, now, day, was);
       morningAfter(w, c, now, day);
       break;
@@ -1649,6 +1665,8 @@ export interface View {
   ahead: string | null;
   /** The sealed thing ahead opens only with a Key (a niche), not on foot (D-142). */
   aheadKey: boolean;
+  /** The jobs whose Key from last week landed late today, at the opening (D-152): Today says so, that day. */
+  lateKeys: string[];
   /** Keys earned and kept, not yet used (D-142). */
   keys: number;
   /** Where a kept Key can open something now, chosen on the Map (its stretch), if anywhere (D-142): the stretch Dan is
@@ -1813,7 +1831,7 @@ function keyNoteOf(facts: Fact[], doneSeq: number, sealId: string | null): Retur
   for (const f of facts) {
     if (f.seq <= doneSeq) continue;
     if (f.type === 'jobDone' || f.day !== done.day) break;
-    if (f.type === 'keyEarned' && !f.rhythm.startsWith('floor:')) return facts.find(g => g.seq === f.seq + 1)?.type === 'keyHeld' ? 'held' : null;
+    if (f.type === 'keyEarned' && !f.for && !f.rhythm.startsWith('floor:')) return facts.find(g => g.seq === f.seq + 1)?.type === 'keyHeld' ? 'held' : null;
   }
   return null;
 }
@@ -1823,7 +1841,7 @@ function keyAlreadyOf(c: Content, facts: Fact[], doneSeq: number): Return['keyAl
   if (done?.type !== 'jobDone' || done.minutes < S.RETURN_MIN) return null;
   const r = rhythmOf(c, done.job);
   if (!r) return null;
-  if (!ofType(facts, 'keyEarned').some(k => k.rhythm === r.id && k.seq < doneSeq && Rep.samePeriod(r, k.day, done.day))) {
+  if (!ofType(facts, 'keyEarned').some(k => k.rhythm === r.id && k.seq < doneSeq && Rep.samePeriod(r, k.for ?? k.day, done.day))) {
     /* kept up past the week's five Keys: said once, plainly (deep review W F12) */
     const upTo = facts.filter(f => f.seq <= doneSeq);
     return S.keysIn(facts.filter(f => f.seq < doneSeq), done.day) >= S.KEYS_A_WEEK && S.sessionsIn(upTo, r, done.day, S.RETURN_MIN) >= S.needOf(r)
@@ -2114,6 +2132,8 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
     day, capacity, suggested: sugg.capacity, size, order, slate, line, done, underWay, complete, next, run, runEnd, arrival,
     /* ahead: the sealed thing in view; before any, the way in (the first morning), then a line from just ahead */
     aheadKey: !!view && !S.onRoad(c.story, view.id), keys: st.held,
+    lateKeys: ofType(facts, 'keyEarned').filter(k => k.for && k.day === day)
+      .map(k => c.jobs.find(j => j.id === c.rhythms.find(r => r.id === k.rhythm)?.job)?.name).filter((n): n is string => !!n),
     aheadBehind: view && !S.onRoad(c.story, view.id) && view.stretch !== st.stretch ? view.stretch : null,
     aheadHere: !!view && view.stretch === st.stretch && !!here.name && view.where.toLowerCase().startsWith(here.name.toLowerCase()),
     keyUse: st.held ? (openNow.find(x => x.stretch === st.stretch) ?? openNow[0])?.stretch ?? null : null,

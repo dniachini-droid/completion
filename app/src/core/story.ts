@@ -322,7 +322,7 @@ export function openedNiches(s: Story, facts: Fact[]): Seal[] {
 export const sessionsIn = R.sessionsIn;
 /** How many sessions make the rhythm met in its period. */
 export const needOf = R.needOf;
-export const keysIn = (facts: Fact[], day: string) => ofType(facts, 'keyEarned').filter(f => !f.rhythm.startsWith('floor:') && calendarWeek(f.day) === calendarWeek(day)).length;
+export const keysIn = (facts: Fact[], day: string) => ofType(facts, 'keyEarned').filter(f => !f.rhythm.startsWith('floor:') && calendarWeek(f.for ?? f.day) === calendarWeek(day)).length;
 
 /* ---------- finds ---------- */
 

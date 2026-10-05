@@ -265,6 +265,7 @@
       {:else if v.keyUse}<span class="dot" aria-hidden="true">·</span><button class="text-link key-use" onclick={() => go('map', v.keyUse!)}><span>{t('today.behindMap')}</span></button>{/if}
     </div>
     {#if keyAsk && v.keyHere}<div class="key-ask rise"><button class="text-link use" onclick={useHere}><span>{t('step.useHere')}</span></button><button class="text-link" onclick={() => (keyAsk = false)}><span>{t('step.keepIt')}</span></button></div>{/if}
+    {#each v.lateKeys as job}<p class="soft keys-say">{t('today.keys.late', { job })}</p>{/each}
     {#if keysOpen}<p class="soft keys-say">{t('today.keys.say')}{#if v.keys} {t('today.keys.useOnMap')}{/if}</p>{/if}
     {#if v.ahead}
       <section class="ahead rise d2">

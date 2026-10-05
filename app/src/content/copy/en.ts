@@ -15,6 +15,7 @@ export const copy = {
   
   'today.keys.here': 'Use it here',
   'today.keys.hereMany': 'Use one here',
+  'today.keys.late': 'You kept up {job} last week and earned a Key. It hadn’t landed, so it lands now.',
   'today.keys.useOnMap': 'A Key is never used for you: on the Map, choose a locked thing that says Use a Key.',
   'today.aheadKey': 'Needs a Key',
   'today.behind': 'Behind you',
