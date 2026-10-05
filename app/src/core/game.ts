@@ -1929,7 +1929,8 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
   const again = all.some(g => g.type === 'arrived' && g.kind === 'camp' && g.id === f.id && g.seq < f.seq);
   const look = find ? c.story.finds.find(x => x.id === find.id)?.line ?? null : 'line' in k.look && !again ? k.look.line : null;
   return { seq: f.seq, kind: 'camp', face: 'on', late: false, area: S.areaName(c.story, k.stretch), wayIn: null, then: [], stopAgain: again,
-    opened: [], way: [], id: k.id, name: k.name, line: again ? '' : k.line, records: [], guess: [], look, stretch: k.stretch, painting: paintingOf(k.id, k.stretch), completedDay, byKey: false };
+    /* made again: one line of what is there (its words' second sentence), never the whole again */
+    opened: [], way: [], id: k.id, name: k.name, line: again ? (k.line.split(/(?<=[.!?])\s/)[1] ?? '') : k.line, records: [], guess: [], look, stretch: k.stretch, painting: paintingOf(k.id, k.stretch), completedDay, byKey: false };
 }
 
 /** What a job's return (a jobDone fact) shows. A guess it brings moves to the place the same job reached (D-077). */
