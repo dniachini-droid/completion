@@ -226,7 +226,9 @@ export const copy = {
   'look.open': 'Look', 'look.openSr': 'Look at the painting',
   'look.hint': 'Pinch to look closer. Tap to come back.',
   'look.back': 'Back to the words',
-  'arrive.camp': 'On the way back',
+  /* a day that ended short of a place (as the Map says, "Turned back here"); a turn-off on the way up is "On the way back" (D-154) */
+  'arrive.camp': 'Where you turned back', 'arrive.turnOff': 'On the way back',
+  'arrive.stopAgain': 'On your way back to the lamp today, you stop again at {place}.',
   'arrive.newArea': 'A new area', 'arrive.backIn': 'Back again', 'arrive.evening': 'Tonight, at camp', 'arrive.lastNight': 'Last night, at camp',
   'arrive.byTheLamp': 'By the lamp', 'arrive.toward': 'Arrive',
   'arrive.enough': 'The day’s work is done.',

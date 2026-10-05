@@ -336,7 +336,7 @@ export const beats: Beat[] = [
     w: 3,
     o: 10,
     line: "You end at the first turn of the Stair, looking down the second flight. Partway down is a small door, shut, with a row of notches on it. You cannot yet tell what lies behind it.",
-    req: [],
+    req: ["b-3.2"],   // "you end at the first turn": after the walk down to it (D-154 review)
     stretch: "st-stair",
   },
   // ---- Week 4 ----
@@ -410,8 +410,8 @@ export const beats: Beat[] = [
   {
     id: "b-4.C",
     kind: "arrival",
-    w: 4,
-    o: 7,
+    w: 6,
+    o: 2,
     name: "The Lower Door, close",
     line: "Tonight, by the lit cups, you walk from the ledge to the far end of the hall, past the last cup, to the great door that fills most of the far wall. It has a name of its own, the Lower Door, and this time you go close enough to see what is cut into it. First there is a row of notches, like those on the niches, and every one is dark. Beside them is a blank, an empty gap in a line of writing, like the one the lintel had before you cut it. Two symbols stand next to the blank: the bar-with-a-drop, a straight bar with a drop at one end, and two drops parted, two small drops set apart as if moving away from each other. Under the notches is one more symbol, shaped like a path doubling back on itself, like a hairpin bend. The door looks shut in two ways at once, as if it needs both.",
     req: [],
@@ -499,11 +499,11 @@ export const beats: Beat[] = [
     w: 5,
     o: 5,
     name: "Through a gap",
-    line: "A few steps above the second landing, on the second flight of the Stair, there is a gap in the wall at shoulder height, a rough hole like a small window. You put your eye to it. On the other side is another gallery, and you can see where its square-cut stone meets the smooth, rounded stone of the Stair, as if two different kinds of building join there. On that gallery's wall is a record cut by whoever cut the tally. It begins with the same three symbols as every record in the tally, but the last of them is two drops where the tally has a single one. The change looks deliberate, like one word altered in a set phrase.",
+    line: "Climbing back up from the second landing, a few steps up the second flight, you notice what you passed on the way down: a gap in the wall at shoulder height, a rough hole like a small window. You put your eye to it. On the other side is another gallery, and you can see where its square-cut stone meets the smooth, rounded stone of the Stair, as if two different kinds of building join there. On that gallery's wall is a record cut by whoever cut the tally. It begins with the same three symbols as every record in the tally, but the last of them is two drops where the tally has a single one. The change looks deliberate, like one word altered in a set phrase.",
     req: [],
     stretch: "st-flight2",
     painting: "pt-b-5.B",
-    carries: {"records": ["rec-v1"]},
+    carries: {"records": ["rec-v1"], "inView": ["seal-5-3"]},   // the gap's sill is seen with the gap (D-154 review)
   },
   {
     id: "b-5.3",
@@ -633,7 +633,8 @@ export const beats: Beat[] = [
     w: 7,
     o: 2,
     name: "The lintel at the foot of the second flight",
-    line: "At the foot of the second flight, the Stair goes on down under a second lintel, with solid stone beneath it. Beside its blank are the bar with a drop and the two drops parted, and you hold both now.",
+    line: "With both symbols from the square gallery in mind, you go back out through its low doorway onto the Stair and on down past the second landing. At the foot of the second flight, the Stair goes on down under a second lintel, with solid stone beneath it. Beside its blank are the bar with a drop and the two drops parted, and you hold both now.",
+    said: true,   // its own words say how Dan came back to the Stair, and why (D-154 review)
     taps: ["You set the rod’s edge in the blank.", "You cut the first mark, the bar with a drop.", "You cut the second, the two drops parted.", "Light fills the cuts and the rod gives one low ring. The stone beneath the lintel is gone. Beyond it, the Stair continues down through light."],
     req: ["seal-7-1", "mk-path", "mk-open"],
     stretch: "st-flight2",
@@ -1170,6 +1171,7 @@ export const beats: Beat[] = [
     name: "The deep end",
     line: "On the way back up to camp, the new tablet's block lifted into the air puts you in mind of the slope of broken stone at the end of the square gallery. At the second landing you turn off and walk the whole length of the gallery, past the crew's wall, to its deep end. Here the roof has come down: a slope of broken square-cut stone fills the gallery from floor to ceiling, the slope you saw from far off on your first walk in. In front of it stands a single upright stone, like a gatepost, taller than you, with a row of dark notches across its face. Lower down, beside a blank the width of the rod's edge, are two symbols: a wedge on a bar, and a drop with a rising bar.",
     said: true,
+    turnOff: true,
     req: ["pl-w6-square-gallery"],
     stretch: "st-square",
     painting: "pt-pl-w10-deep-end",
@@ -1285,7 +1287,7 @@ export const beats: Beat[] = [
     req: ["b-10.A"],
     stretch: "st-blast",
     painting: "pt-pl-w10-blast-floor",
-    carries: {"inView": ["seal-10-5"]},
+    carries: {"inView": ["seal-11-6", "seal-10-5"]},   // the split by the rails is seen here first (D-154 review); 10-5 stays the one ahead
   },
   // ---- Week 11 ----
   {
@@ -1409,6 +1411,7 @@ export const beats: Beat[] = [
     name: "The far end",
     line: "On the way back up, the log's tall man with a lamp is in your mind, and at the Water you walk round to its far end, past the Reading Room's doorway, to the spot where, on your first day at the lake, something tall was standing beside a small light. Nothing is there now. The shore stone is worn into two shallow dips a stride apart, smooth as the inside of a bowl, like the troughs at the corner of the Lamp Hall. In the wall beside them is a niche with a row of dark notches.",
     said: true,
+    turnOff: true,
     req: ["b-8.C", "b-10.2"],
     stretch: "st-water",
     painting: "pt-pl-w11-far-end",
@@ -1592,6 +1595,7 @@ export const beats: Beat[] = [
     line: "The shut door's record speaks of moving stone. On the way back up you turn off at the second landing and go to the square gallery's deep end, to the standing stone in front of the fall. Beside its blank are the wedge on a bar and the drop with a rising bar, and the blank is exactly the width of the rod's edge.",
     taps: ["You set the rod’s edge in the blank.", "You cut the first mark, the wedge on a bar.", "You cut the second, the drop with a rising bar.", "The cuts fill with light and the rod rings. The fall lifts, hangs in the air, and settles to the sides like a curtain drawn back. Beyond it a gallery runs on, and at its end the stone is rounded again."],
     said: true,
+    turnOff: true,
     req: ["b-10.B", "mk-stone", "mk-move"],
     stretch: "st-square",
     painting: "pt-b-13.B",

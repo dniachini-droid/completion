@@ -187,7 +187,7 @@ export const camps: CampView[] = [
     w: 14,
     req: ["pl-w14-meeting"],
     name: "Partway down",
-    line: "On your way back to the lamp today, you stop for a while partway down the lower way. The cups in its walls burn steadily, and cold air goes past you, up towards the blast room.",
+    line: "On your way back to the lamp today, you stop for a while partway down the lower way. The cups in its walls burn steadily, and cold air goes past you, up towards the rubble.",
     look: {"find": "fd-l01"},
   },
   {

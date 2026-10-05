@@ -106,7 +106,8 @@
     for (const f of game.facts) {
       if (f.type !== 'arrived') continue;
       if (f.kind === 'place') { const b = s.beats.find(x => x.id === f.id); if (b?.name && f.seq !== v.arrival?.seq) out.push({ seq: f.seq, name: b.name, stretch: area(b.stretch) }); }
-      else if (f.kind === 'camp' && f.seq !== v.arrival?.seq) camps.set(f.id, f.seq);
+      /* its first night, which said it in full (a stop made again says only that, D-154) */
+      else if (f.kind === 'camp' && f.seq !== v.arrival?.seq && !camps.has(f.id)) camps.set(f.id, f.seq);
     }
     for (const [id, seq] of camps) { const k = s.camps.find(x => x.id === id); if (k) out.push({ seq, name: k.name, stretch: area(k.stretch), camp: true }); }
     return out.sort((a, b) => a.seq - b.seq);

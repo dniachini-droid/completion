@@ -933,9 +933,10 @@ function weekClose(w: W, c: Content, at: Moment, day: string, storyWeek: number)
     const shownSoFar = new Set(ofType(w.all, 'weekClosed').flatMap(f => f.soFar));
     const soFar = c.story.soFar.filter(m => m.w <= storyWeek).flatMap(m => m.items ?? [])
       .filter(l => !shownSoFar.has(l.id) && l.req.every(r => S.met(st, r))).slice(0, SO_FAR_MAX).map(l => l.id);
-    /* the glimpse waits until Dan has been where it looks (D-079): a later week's close shows it then */
+    /* the glimpse waits until Dan has been where it looks (D-079), and has seen what it says he has (D-154): a later
+       week's close shows it then */
     const glimpse = c.story.beats.find(b => b.kind === 'close' && b.w <= storyWeek && b.w >= storyWeek - GLIMPSE_LAG
-      && !st.played.has(b.id) && st.visited.has(b.stretch) && !(b.until && S.met(st, b.until))) ?? null;
+      && !st.played.has(b.id) && st.visited.has(b.stretch) && b.req.every(r => S.met(st, r)) && !(b.until && S.met(st, b.until))) ?? null;
     if (glimpse) w.put({ type: 'beatPlayed', id: glimpse.id }, at, day);
     /* every niche a Key opened in the week, however it came to be used (S4: built only from the old floor's Keys, it never
        filled once D-142 took the floor away) */
@@ -1679,6 +1680,10 @@ export interface Arrival {
   /** The area's name, as every screen shows it, and how Dan gets there (shown when he comes back to it). */
   area: string;
   wayIn: string | null;
+  /** A turn-off on the way back up (a return whose own words say why, D-154): "On the way back". */
+  turnOff?: boolean;
+  /** A day's end at a stop made before: its words are not said again, only that he stops there again (D-154). */
+  stopAgain?: boolean;
   /** An evening's moments at home after its place (her notebook, the tally): each one's line, beat and records. */
   then: { beat: string; line: string; records: string[]; choice?: [string, string]; area: string }[];
   /** A word cut in four taps: one line per tap. */
@@ -1912,15 +1917,18 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
     const guess = [...new Set([...(b.carries?.guess ?? []), ...carried, ...keyed])].filter(m => !answers.has(S.markOf(c.story, m)?.confirmedBy ?? ''));
     const area = S.areaName(c.story, b.stretch), wayIn = c.story.stretches.find(x => x.id === S.areaOf(c.story, b.stretch))?.wayIn ?? null;
     /* a place whose own line says how Dan came (a turn-off on the way up) needs no way-in line over it */
-    return { seq: f.seq, kind: 'place', face, late: !!f.late, area, wayIn: face === 'back' && !b.said ? wayIn : null, then,
+    return { seq: f.seq, kind: 'place', face, late: !!f.late, area, wayIn: face === 'back' && !b.said ? wayIn : null, turnOff: face === 'back' && !!b.turnOff, then,
       opened, way, id: b.id, name: b.name ?? '', line: b.line ?? '', taps: b.taps, choice: b.choice,
       records: b.carries?.records ?? [], guess, look: null, stretch: b.stretch, painting: paintingOf(b.id, b.stretch), completedDay, byKey: f.how === 'key' };
   }
   const k = c.story.camps.find(x => x.id === f.id)!;
   const find = all.find(g => g.type === 'findGiven' && g.why === 'camp' && g.seq > f.seq && g.seq <= f.seq + 1) as FactOf<'findGiven'> | undefined;
-  const look = find ? c.story.finds.find(x => x.id === find.id)?.line ?? null : 'line' in k.look ? k.look.line : null;
-  return { seq: f.seq, kind: 'camp', face: 'on', late: false, area: S.areaName(c.story, k.stretch), wayIn: null, then: [],
-    opened: [], way: [], id: k.id, name: k.name, line: k.line, records: [], guess: [], look, stretch: k.stretch, painting: paintingOf(k.id, k.stretch), completedDay, byKey: false };
+  /* a stop made before: never its words again (the journey review, D-154): the screen says he stops there again, and
+     only what is new (a find) follows */
+  const again = all.some(g => g.type === 'arrived' && g.kind === 'camp' && g.id === f.id && g.seq < f.seq);
+  const look = find ? c.story.finds.find(x => x.id === find.id)?.line ?? null : 'line' in k.look && !again ? k.look.line : null;
+  return { seq: f.seq, kind: 'camp', face: 'on', late: false, area: S.areaName(c.story, k.stretch), wayIn: null, then: [], stopAgain: again,
+    opened: [], way: [], id: k.id, name: k.name, line: again ? '' : k.line, records: [], guess: [], look, stretch: k.stretch, painting: paintingOf(k.id, k.stretch), completedDay, byKey: false };
 }
 
 /** What a job's return (a jobDone fact) shows. A guess it brings moves to the place the same job reached (D-077). */

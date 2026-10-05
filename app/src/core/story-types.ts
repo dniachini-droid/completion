@@ -153,8 +153,10 @@ export interface Beat {
   morningRecord?: string;
   /** Not played once this has (a camp line or a glimpse the story has moved past). */
   until?: string;
-  /** Its own line says how Dan came here (a turn-off on the way back up, D-154): no way-in line over it. */
+  /** Its own line says how Dan came here (a turn-off, or a return that says its way): no way-in line over it (D-154). */
   said?: boolean;
+  /** A turn-off on the way back up: a return its own words give the reason for, labelled "On the way back" (D-154). */
+  turnOff?: boolean;
 }
 
 /** A named place with no fragment, added by the story job (a `pl-` id). Plays as an arrival. */

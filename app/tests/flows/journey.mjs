@@ -42,6 +42,22 @@ for (const life of J.lives) {
     let page = await open(save, at);
     await page.screenshot({ path: `${out}/shots/${name}-a.png` });
     entry.arrival = await words(page);
+    /* a word: cut it as a player does (a guess it asks first, the rod, each mark, the lock), and read the place's answer */
+    if (await page.locator('.cut').count()) {
+      const lines = [];
+      for (let g = 0; g < 12; g++) {
+        const ask = page.locator('.ask button:not([disabled])');
+        const next = (await ask.count()) ? ask : page.locator('.rodbtn:not([disabled]), .key:not([disabled])');
+        if (!(await next.count())) break;
+        await tap(page, next);
+        /* each tap's line, as it shows (the last is the place's answer) */
+        const said = (await page.locator('.cut .said').first().textContent().catch(() => ''))?.trim();
+        if (said && lines[lines.length - 1] !== said) lines.push(said);
+      }
+      await page.clock.runFor(8000); await page.waitForTimeout(3500);
+      await page.screenshot({ path: `${out}/shots/${name}-c.png` });
+      entry.cut = lines.join('\n');
+    }
     await page.close();
     /* Today, and the Map opened on where Dan is */
     page = await open(seen, at);
@@ -49,7 +65,8 @@ for (const life of J.lives) {
     await page.screenshot({ path: `${out}/shots/${name}-t.png` });
     entry.today = await words(page);
     if (await tap(page, page.locator('button.icon-link', { hasText: 'Map' }))) {
-      await page.clock.runFor(3000); await page.waitForTimeout(400);
+      /* its lights and names fade in on the page's real clock, and it centres on where Dan is once drawn */
+      await page.clock.runFor(3000); await page.waitForTimeout(2500);
       await page.screenshot({ path: `${out}/shots/${name}-m.png` });
       entry.map = await words(page);
     }

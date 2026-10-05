@@ -83,7 +83,9 @@ describe('the route is a journey: a descent with a home at the top (D-154)', () 
     }
     /* a turn-off: its reason, and that it is on the way back up, in its first two sentences */
     const two = (id: string) => (S.beatOf(s, id)!.line ?? '').split(/(?<=[.!?])\s/).slice(0, 2).join(' ');
-    for (const id of ['pl-w10-deep-end', 'pl-w11-far-end', 'b-13.B']) expect(two(id), id).toMatch(/way (back )?up|on the way/i);
+    const turnOffs = s.beats.filter(b => b.turnOff).map(b => b.id);
+    expect(turnOffs.sort()).toEqual(['b-13.B', 'pl-w10-deep-end', 'pl-w11-far-end']);
+    for (const id of turnOffs) expect(two(id), id).toMatch(/way (back )?up|on the way/i);
   });
   it('a night with an evening at camp says its bedtime line once: on the evening, not again on Today', () => {
     const facts = lives.normal;

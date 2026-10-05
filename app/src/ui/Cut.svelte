@@ -171,7 +171,7 @@
         {#key step}<p class="soft on-scene said"><Prose text={said} /></p>{/key}
       </div>
       <div class="after">
-        <div class="label-line gold">{a.face === 'evening' ? t(a.late ? 'arrive.lastNight' : 'arrive.evening') : a.face === 'enter' ? t('arrive.newArea') : a.face === 'back' ? t('arrive.backIn') : t('arrive.label')}</div>
+        <div class="label-line gold">{a.face === 'evening' ? t(a.late ? 'arrive.lastNight' : 'arrive.evening') : a.face === 'enter' ? t('arrive.newArea') : a.face === 'back' ? t(a.turnOff ? 'arrive.turnOff' : 'arrive.backIn') : t('arrive.label')}</div>
         <div class="area">{a.area}</div>
         <h1 class="carve lg">{a.name}</h1>
         <p class="soft on-scene"><Prose text={a.line} /></p>

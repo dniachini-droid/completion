@@ -23,7 +23,8 @@ function between(facts: Fact[], from: number, to: number): string[] {
       for (const m of [...(b?.carries?.guess ?? []), ...(x?.carries?.guess ?? [])]) out.push(`(you are asked to guess a symbol: you guess "${s.marks.find(k => k.id === m)?.candidates?.[0] ?? '?'}")`);
     }
     if (f.type === 'sealOpened' && f.how !== 'road') { const x = s.seals.find(y => y.id === f.seal); const line = x?.beat ? s.beats.find(b => b.id === x.beat)?.line : x?.line; if (line) out.push(`(you used a Key) ${line}`); }
-    if (f.type === 'findGiven') { const x = s.finds.find(y => y.id === f.id); if (x) out.push(`(a find) ${x.line}`); }
+    /* (a find at a day's end is shown on its own screen, the move itself) */
+    if (f.type === 'findGiven' && f.why !== 'camp') { const x = s.finds.find(y => y.id === f.id); if (x) out.push(`(a find) ${x.line}`); }
     if (f.type === 'beatPlayed' && f.job === undefined && s.beats.find(b => b.id === f.id)?.kind === 'close') out.push(`(the week's page) ${s.beats.find(b => b.id === f.id)!.line}`);
     if (f.type === 'beatPlayed' && f.job === undefined && /\.(camp|morning)$/.test(f.id)) { const b = s.beats.find(x => x.id === f.id); if (b?.line) out.push(`(${f.id.endsWith('camp') ? 'bedtime, by the lamp' : 'the morning'}) ${b.line}`); }
   }
