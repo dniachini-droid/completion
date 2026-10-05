@@ -57,7 +57,7 @@ Every item carries `w` (story week), `o` (order in that week, where order matter
 | The Mouth and the pipe | `st-mouth` | w1 | the shaft foot; the curved passage |
 | The Lamp Hall | `st-hall` | w1 (dark until `b-3.A`, lit after) | the ledge, the wall by the lamp, the lintel, the far end, the corner |
 | The Salt Gallery | `st-salt` | w1 | the split, the tally, the niches in the salt |
-| The Survey Cut | `st-camp` | w1 | her camp |
+| The Box Room | `st-camp` | w1 | her camp |
 | The top of the Stair | `st-stair` | w3 (after `b-3.A`) | the landing, the top flight, the first turn |
 | The second flight | `st-flight2` | w4 (seen), w5 (walked) | the little door, the recess under the second turn, the gap, the second landing |
 | The square gallery | `st-square` | w6 | the side passage, the crew's wall, the square floor |
@@ -74,7 +74,7 @@ Five named places a story week (BALANCING §2); fragments ride on about half of 
 
 | Wk | o1 | o2 | o3 | o4 | o5 |
 |---|---|---|---|---|---|
-| 1 | `b-1.A` The Lamp Hall | `b-1.B` The corner | `pl-w1-pick-niche` | `b-1.C` The Survey Cut | `pl-w1-below-the-lamp` |
+| 1 | `b-1.A` The Lamp Hall | `b-1.B` The corner | `pl-w1-pick-niche` | `b-1.C` The Box Room | `pl-w1-below-the-lamp` |
 | 2 | `b-2.A` The Salt Gallery, further in | `pl-w2-above-the-ring` | `b-2.B` The rod (K-gated) | `pl-w2-smooth-place` | `pl-w2-box-by-the-cot` |
 | 3 | `b-3.A` The lintel (the word) | `b-3.B` The head of the Stair (K) | `pl-w3-salt-lit` | `b-3.C` The top flight | `pl-w3-far-end` |
 | 4 | `b-4.A` The sheet dated Day 9 | `pl-w4-hollow` | `b-4.B` The salt block (K) | `pl-w4-recess-above-the-cot` | `b-4.C` The Lower Door, close |
@@ -206,17 +206,17 @@ The NICHES rule stands, made exact: if Dan earns more Keys than a week's rows, t
 | `seal-1-3` | The Lamp Hall, a low niche under the ledge | Below the ledge, the strokes on the niche fill. Inside is a clay saucer, the twin of the lamp's foot, and it is empty. |
 | `seal-1-5` | The Mouth, a recess in the shaft wall | In the shaft wall the strokes on the recess fill. Inside, a brass tag stamped with a shaft number hangs on a nail. |
 | `seal-2-3` | The Salt Gallery, a crack above the lone ring | Beside the crack above the ring, the count fills. Inside is a bone comb with two teeth gone, and on the wall beside it is a short line in the tally's hand. |
-| `seal-2-5` | The Survey Cut, the box by the cot | The count on the box by the cot fills. Inside are a tin of tea, a spoon, a candle stub, and a shopping list in her hand: batteries, batteries, tape. |
+| `seal-2-5` | The Box Room, the box by the cot | The count on the box by the cot fills. Inside are a tin of tea, a spoon, a candle stub, and a shopping list in her hand: batteries, batteries, tape. |
 | `seal-3-3` | The Stair's first turn, a recess | The count on the recess at the first turn fills. Inside is a coil of measuring cord, knotted every ten paces, the knots gone stiff. Beside it on the wall is a short line in the tally's hand. |
 | `seal-3-4` | The Lamp Hall, the foot of the wall by the lamp | At the foot of the wall by the lamp, the count fills. Inside lies a stub of stone, the broken edge of a rod, among a scatter of chips. |
-| `seal-3-5` | The Survey Cut, a ledge | In her camp the count on the ledge fills. On it is a box of tape cassettes, and three are labelled in her hand: DAY 3 (HIM), DAY 6 (IT WORKS), DAY 14. |
-| `seal-4-3` | The Survey Cut, the recess above the cot | The count on the recess above the cot fills. Inside, pinned to the back of the recess, is a printed email. |
+| `seal-3-5` | The Box Room, a ledge | In her camp the count on the ledge fills. On it is a box of tape cassettes, and three are labelled in her hand: DAY 3 (HIM), DAY 6 (IT WORKS), DAY 14. |
+| `seal-4-3` | The Box Room, the recess above the cot | The count on the recess above the cot fills. Inside, pinned to the back of the recess, is a printed email. |
 | `seal-4-5` | The Salt Gallery, a hollow in the salt | At the hollow in the salt the count fills. In it lies a child's clay animal, a sheep, one leg mended with salt. Beside it on the wall is a short line in the tally's hand. |
 | `seal-5-3` | The Stair, the gap's sill | The count on the sill of the gap fills. On the sill lie wax crumbs and a broken stylus, and beside them on the wall is a short line in the tally's hand. |
-| `seal-5-4` | The Survey Cut, the notebook's back pocket | At the back of the notebook the count on its pocket fills. Inside is a folded map of the hill, the shaft marked in pen and, in another pen, SALT? and TUNNEL? |
+| `seal-5-4` | The Box Room, the notebook's back pocket | At the back of the notebook the count on its pocket fills. Inside is a folded map of the hill, the shaft marked in pen and, in another pen, SALT? and TUNNEL? |
 | `seal-5-5` | The Lamp Hall, the ledge's underside | The count on the ledge's lip fills. Under the ledge is a ring cut small, where no one would look, and beside it is a short line in the tally's hand. |
 | `seal-6-3` | The square gallery, a wall-shelf | The count on the wall-shelf fills. On the shelf lies a bronze level, its bubble long dry. |
-| `seal-6-5` | The Survey Cut, her folder | The count on her folder fills. In its first pocket are a letter from the council about the shaft and a note from a car's windscreen: "Your car's been here nine days. Ring me." |
+| `seal-6-5` | The Box Room, her folder | The count on her folder fills. In its first pocket are a letter from the council about the shaft and a note from a car's windscreen: "Your car's been here nine days. Ring me." |
 
 ---
 
