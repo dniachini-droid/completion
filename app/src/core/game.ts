@@ -424,12 +424,15 @@ function arrive(w: W, c: Content, b: Beat, how: 'foot' | 'key' | 'evening', at: 
   show(w, c, b.carries?.records, at, day);
   /* a Key kept for later is never spent for Dan on arriving (D-143 A, was D-079): it is his to use, here or on the Map */
 }
-function giveFind(w: W, c: Content, why: FactOf<'findGiven'>['why'], at: Moment, day: string, job?: number) {
-  /* a find comes from where Dan knows he is: a place reached but not yet shown on its arrival screen doesn't count yet,
-     or a find could describe a room on the screen before the one that brings him into it */
+/** The story as Dan knows it: a place reached but not yet shown on its arrival screen doesn't count yet, so nothing a job
+    brings (a find, the story's next step, a line of the passage) describes a room before the screen that brings him into
+    it (the journey review, D-154; finds did so first). */
+function knownState(w: W, c: Content) {
   const seen = new Set(w.all.filter(f => f.type === 'seen' && f.what === 'arrival').map(f => (f as FactOf<'seen'>).ref));
-  const known = w.all.filter(f => !(f.type === 'arrived' && !seen.has(f.seq)));
-  const f = S.pickFind(c.story, S.storyState(known, c.story), why);
+  return S.storyState(w.all.filter(f => !(f.type === 'arrived' && !seen.has(f.seq))), c.story);
+}
+function giveFind(w: W, c: Content, why: FactOf<'findGiven'>['why'], at: Moment, day: string, job?: number) {
+  const f = S.pickFind(c.story, knownState(w, c), why);
   if (!f) return;
   w.put({ type: 'findGiven', id: f.id, why, ...(job ? { job } : {}) }, at, day);
   if (f.told) show(w, c, [f.told], at, day);
@@ -674,7 +677,8 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string, tick
   /* the return: the deep push's next beat (once a day) on a High day past a Normal day's size, or once a Normal day's
      jobs are done if Dan called the push in the morning (D-054); else the story's next step; else a line of the passage */
   {
-    const st = S.storyState(w.all, c.story), step = S.nextStep(c.story, st);
+    /* from where Dan knows he is: a place the job reached comes after its words, on its own screen (D-154) */
+    const st = knownState(w, c), step = S.nextStep(c.story, st);
     const n = workedOn(w.all, day).size, called = onDay(w.all, day).some(f => f.type === 'deepCalled');
     /* pushing deeper is doing more: past the day's finish line (its first 3 hours, D-131), the deep push's next beat
        plays, once a day, with no setting to choose first (Dan, D-127; a High day or a morning call did it before, D-054) */
@@ -2217,7 +2221,9 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   /* slice 4: tonight, the morning after, the welcome back, the daybook's new page, the deep push */
   const sugg = suggestedOn(facts, day);
   const gn = ofType(onDay(facts, day), 'goodnight')[0];
-  const campLine = gn ? facts.find(f => f.seq > gn.seq && f.type === 'beatPlayed' && f.id.endsWith('.camp') && f.day === day) as FactOf<'beatPlayed'> | undefined : undefined;
+  const campLine0 = gn ? facts.find(f => f.seq > gn.seq && f.type === 'beatPlayed' && f.id.endsWith('.camp') && f.day === day) as FactOf<'beatPlayed'> | undefined : undefined;
+  /* an evening that night already ends on the bedtime line: Today doesn't say it twice (D-154) */
+  const campLine = campLine0 && !facts.some(f => f.type === 'arrived' && (f.kind === 'evening' || f.how === 'evening') && f.seq > gn!.seq && f.seq < campLine0.seq) ? campLine0 : undefined;
   const mf = facts.filter(f => (f.type === 'beatPlayed' && f.id.endsWith('.morning')) || (f.type === 'findGiven' && f.why === 'morning'));
   const mLast = mf[mf.length - 1];
   let morning: View['morning'] = null;

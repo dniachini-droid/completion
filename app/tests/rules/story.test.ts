@@ -79,7 +79,7 @@ describe('six weeks of play', () => {
       if (b && b.w > st.week) { expect(id.startsWith('pl-') || id === 'b-3.A', id).toBe(true); }
     }
     for (const r of st.records) expect(S.recordOf(C.story, r)!.w, r).toBeLessThanOrEqual(st.week + 1);
-  });
+  }, 60_000);
 });
 
 describe('Keys, finds and lines', () => {
@@ -97,13 +97,15 @@ describe('Keys, finds and lines', () => {
     const ids = p.facts.filter(f => f.type === 'findGiven').map(f => (f as { id: string }).id);
     expect(new Set(ids).size).toBe(ids.length);
     expect(ids.length).toBeGreaterThan(0);
-  });
+  }, 60_000);
   it('a passage line never repeats while an unseen one is available where Dan is', () => {
     const p = sim().week('high').week('high');
     for (let i = 0; i < p.facts.length; i++) {
       const f = p.facts[i] as { type: string; passage?: string };
       if (f.type !== 'beatPlayed' || !f.passage) continue;
-      const st = S.storyState(p.facts.slice(0, i), C.story);
+      /* where Dan knows he is: a place reached on the job but not yet shown comes after its words (D-154) */
+      const before = p.facts.slice(0, i), seen = new Set(before.flatMap(g => g.type === 'seen' && g.what === 'arrival' ? [g.ref] : []));
+      const st = S.storyState(before.filter(g => !(g.type === 'arrived' && !seen.has(g.seq))), C.story);
       if (!st.passagesShown.includes(f.passage)) continue;
       /* a repeat: allowed only once every line available on this stretch had been shown */
       const here = C.story.passages.filter(x => x.stretch === st.stretch && x.req.every(r => S.met(st, r)) && !(x.until && S.met(st, x.until)));

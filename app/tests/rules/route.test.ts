@@ -6,7 +6,7 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from '../review/node';
 import * as S from '../../src/core/story';
-import { arrivalAt } from '../../src/core/game';
+import { arrivalAt, see } from '../../src/core/game';
 import type { Fact, FactOf } from '../../src/core/types';
 import { content as C } from '../../src/content/world';
 import { sim, type Week } from './sim';
@@ -85,6 +85,22 @@ describe('the route is a journey: a descent with a home at the top (D-154)', () 
     const two = (id: string) => (S.beatOf(s, id)!.line ?? '').split(/(?<=[.!?])\s/).slice(0, 2).join(' ');
     for (const id of ['pl-w10-deep-end', 'pl-w11-far-end', 'b-13.B']) expect(two(id), id).toMatch(/way (back )?up|on the way/i);
   });
+  it('a night with an evening at camp says its bedtime line once: on the evening, not again on Today', () => {
+    const facts = lives.normal;
+    let checked = 0;
+    for (const gn of facts.filter((f): f is FactOf<'goodnight'> => f.type === 'goodnight')) {
+      const after = facts.filter(f => f.seq > gn.seq && f.day === gn.day);
+      const ev = arrivals(after).find(f => f.kind === 'evening' || f.how === 'evening');
+      const camp = after.find((f): f is FactOf<'beatPlayed'> => f.type === 'beatPlayed' && f.id.endsWith('.camp'));
+      if (!camp) continue;
+      /* the night as Today shows it: the log to the day's last fact */
+      const upTo = facts.filter(f => f.seq <= after[after.length - 1].seq);
+      const v = see(upTo, C, upTo[upTo.length - 1].at);
+      if (ev && ev.seq < camp.seq) { expect(v.night?.beat, `${gn.day}`).toBeNull(); checked++; }
+      else expect(v.night?.beat, `${gn.day}`).toBe(camp.id);
+    }
+    expect(checked).toBeGreaterThan(5);
+  }, 300_000);
   it('fails on the old route: the old order changed area 48 times (D-153)', () => {
     /* the old order's areas, as played (ROUTE_REDESIGN §2.1): the measure this test holds the route to */
     const OLD = 'hall hall salt box hall salt salt box hall box hall stair salt stair hall salt salt salt box hall hall stair stair salt stair sq sq sq sq box stair sq hall water water salt water blast reading reading salt reading blast sq blast blast sq blast blast blast reading water blast blast blast salt side side side side sq reading sq blast sq lower lower salt'.split(' ');
