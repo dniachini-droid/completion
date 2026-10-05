@@ -102,7 +102,8 @@ describe('the route is a journey: a descent with a home at the top (D-154)', () 
       if (ev && ev.seq < camp.seq) { expect(v.night?.beat, `${gn.day}`).toBeNull(); checked++; }
       else expect(v.night?.beat, `${gn.day}`).toBe(camp.id);
     }
-    expect(checked).toBeGreaterThan(5);
+    /* (fewer since her notebook's pages are read on the way, D-155: still several such nights) */
+    expect(checked).toBeGreaterThanOrEqual(3);
   }, 300_000);
   it('nothing names what Dan has not yet seen: b-4.C before b-6.2, pl-w14-mule-stone before pl-w13-lower-gallery', () => {
     for (const [name, facts] of Object.entries(lives)) {

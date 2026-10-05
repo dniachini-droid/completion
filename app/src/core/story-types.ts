@@ -157,6 +157,9 @@ export interface Beat {
   said?: boolean;
   /** A turn-off on the way back up: a return its own words give the reason for, labelled "On the way back" (D-154). */
   turnOff?: boolean;
+  /** Read wherever Dan is (her notebook, carried with him from the Day 6 page): never held for an evening at camp, never
+      captioned with an area (D-155). */
+  portable?: boolean;
 }
 
 /** A named place with no fragment, added by the story job (a `pl-` id). Plays as an arrival. */
