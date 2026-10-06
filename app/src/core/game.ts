@@ -1838,12 +1838,18 @@ export function arrivalAt(facts: Fact[], base: Content, seq: number): Arrival | 
   return f && f.type === 'arrived' ? arrivalOf(W.live(base, facts), facts, f) : null;
 }
 /** The story moments played just after an evening at camp, before anything else happened: its home moments (D-154). */
+/** A carried page (D-155) that played in an evening's own command, as a D-154 save's did: that evening's, unless the
+    same command walked on to a place, when it was on the way there (a long day) and is that place's. */
+function pageOfEvening(c: Content, all: Fact[], g: Fact, f: FactOf<'arrived'>): boolean {
+  return g.type === 'beatPlayed' && !!S.beatOf(c.story, g.id)?.portable && g.at === f.at
+    && !all.some(h => h.seq > g.seq && h.type === 'arrived' && h.kind === 'place' && h.how !== 'evening' && h.at === g.at);
+}
 function thenOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival['then'] {
   const out: Arrival['then'] = [];
   for (const g of all) {
     if (g.seq <= f.seq || g.type === 'recordShown' || g.type === 'storyWeekBegan' || (g.type === 'sealOpened' && g.how === 'road')) continue;
     /* (a carried page that played in the same evening, as an old save's did, D-155: still part of it) */
-    if (g.type !== 'beatPlayed' || g.job !== undefined || g.id === 'passage' || !(S.eveningMoment(c.story, g.id) || (S.beatOf(c.story, g.id)?.portable && g.at === f.at))) break;
+    if (g.type !== 'beatPlayed' || g.job !== undefined || g.id === 'passage' || !(S.eveningMoment(c.story, g.id) || pageOfEvening(c, all, g, f))) break;
     const bx = S.beatOf(c.story, g.id), x = bx?.kind === 'stepKey' && bx.seal ? S.sealOf(c.story, bx.seal) : bx ? undefined : S.sealOf(c.story, g.id);
     const line = bx?.line ?? x?.line;
     const where = bx?.stretch ?? x?.stretch;
@@ -1904,7 +1910,7 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
       if (g.type === 'recordShown' || g.type === 'storyWeekBegan' || (g.type === 'findGiven' && g.why === 'chamber') || (g.type === 'sealOpened' && g.how === 'road' && S.sealOf(c.story, g.seal)?.arrival === b.id)) continue;
       if (g.type !== 'beatPlayed' || g.job !== undefined || g.id === 'passage') break;
       /* a page an evening just before it holds is that evening's, not the walk's (D-155) */
-      if (S.beatOf(c.story, g.id)?.portable && all.some(e => e.type === 'arrived' && (e.kind === 'evening' || e.how === 'evening') && e.at === g.at && e.seq < g.seq)) break;
+      if (all.some(e => e.type === 'arrived' && (e.kind === 'evening' || e.how === 'evening') && e.seq < g.seq && pageOfEvening(c, all, g, e as FactOf<'arrived'>))) break;
       let j = i - 1;
       while (all[j]?.type === 'recordShown') j--;
       const o = all[j];
