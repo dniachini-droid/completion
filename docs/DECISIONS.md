@@ -1771,7 +1771,7 @@
 ## D-159 — An evening plays one home moment, not all of them
 - **Date:** 2026-10-06
 - **Context:** Dan: "keep going with improvements as suggested"; RESULT §6 item 1, "lighten them". After D-155 the panel walk's three reviewers still felt a pull up to the top in the Stair weeks: an evening carried its place and then every home moment ready (up to three screens of reading).
-- **Decision:** an evening plays its place (two when the week is behind, as before) and then at most one home moment; the others wait for the next night. Home moments whose week is already behind all play, so nothing falls behind for good.
+- **Decision:** an evening plays its place (two when the week is behind, as before) and then one home moment; the others wait for the next night (two that night while one of an earlier week is waiting, so they catch up). The week's own camp line and a seal that is only a line take no slot.
 - **Alternatives:** one thing an evening in all (more evening nights, which the reviewers counted against it); no evening on a day that reached a new place (a deeper change to the engine, late in the round).
-- **Consequences:** evenings in the Stair weeks are a place and a line by the lamp at most; a few home moments come a night or two later. Rule suite unchanged and passing.
+- **Consequences:** an evening in the Stair weeks is at most a place, one moment and the camp's line. Simulated lives (daily, every other day, weekends only, high effort; 14 story weeks) reach week 14 with every place walked and nothing lost or replayed; their evenings were already mostly one or two moments, so the effect is small: the pull the reviewers describe comes more from how often the evenings fall between the Stair days than from their length. A rule test holds the cap.
 - **Reversible:** Yes (one cap in the engine).

@@ -42,6 +42,18 @@ function life(kind: Week, bed?: 'kept', weeks = 22) {
 
 describe('the route is a journey: a descent with a home at the top (D-154)', () => {
   const lives = { normal: life('normal', 'kept'), low: life('low', undefined, 30), high: life('high', 'kept', 8) };
+  it('an evening plays at most one home moment of its own week (the camp\'s line and line-only seals aside, D-159)', () => {
+    for (const [name, facts] of Object.entries(lives)) {
+      for (const f of arrivals(facts)) {
+        if (!(f.kind === 'evening' || f.how === 'evening')) continue;
+        const upTo = facts.filter(g => g.seq <= f.seq), a = arrivalAt(facts, C, f.seq)!, wk = S.storyState(upTo, s).week;
+        /* the home moments of its own week it played (a line-only seal and the camp's own line take no slot) */
+        const mine = a.then.filter(t => { const b = S.beatOf(s, t.beat), z = b ? undefined : S.sealOf(s, t.beat);
+          return b ? S.eveningMoment(s, b.id) && b.kind !== 'camp' && b.w >= wk : !!z && (!!z.beat || !!z.arrival) && z.w >= wk; });
+        expect(mine.length, `${name} ${f.id} @${f.seq}`).toBeLessThanOrEqual(1);
+      }
+    }
+  }, 300_000);
   it('every place on the route is reached once, and nothing plays twice', () => {
     for (const [name, facts] of Object.entries(lives)) {
       const ids = arrivals(facts).filter(f => f.kind === 'place').map(f => f.id);

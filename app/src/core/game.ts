@@ -467,14 +467,18 @@ function evening(w: W, c: Content, at: Moment, day: string, night: string, late:
   }
   if (ofType(w.all, 'arrived').some(a => a.night === night)) return;
   let wrote = false;
-  /* one home moment a night, so an evening stays light (D-159): more wait for the next night, unless their week is
-     already behind (then all of them, as the places catch up) */
-  let room = 1;
+  /* one home moment a night, so an evening stays light (D-159): more wait for the next night; two while one of an
+     earlier week is still waiting, so they catch up */
+  let room = 1, behind = true;
   const steps = () => {
     for (let k = 0; k < c.story.beats.length; k++) {
       const st = S.storyState(w.all, c.story), b = S.homeSteps(c.story, st)[0];
-      if (!b || (room <= 0 && b.w >= st.week)) return;
-      room--;
+      /* (a seal that is only a line, opening no moment or place, takes no slot) */
+      const line = b?.kind === 'stepKey' && ((z) => !!z && !z.beat && !z.arrival)(S.sealOf(c.story, b.seal!));
+      if (!b) return;
+      if (behind && b.w < st.week) { room++; behind = false; }
+      if (room <= 0 && !line) return;
+      if (!line) room--;
       if (!wrote) { w.put({ type: 'arrived', kind: 'evening', id: 'evening', night, ...(late ? { late: true } : {}) }, at, day); wrote = true; }
       if (b.kind === 'stepKey') openSeal(w, c, S.sealOf(c.story, b.seal!)!, at, day, undefined, true);
       else { w.put({ type: 'beatPlayed', id: b.id }, at, day); show(w, c, b.carries?.records, at, day); }
@@ -1841,13 +1845,13 @@ export function arrivalAt(facts: Fact[], base: Content, seq: number): Arrival | 
   const f = facts.find(x => x.seq === seq);
   return f && f.type === 'arrived' ? arrivalOf(W.live(base, facts), facts, f) : null;
 }
-/** The story moments played just after an evening at camp, before anything else happened: its home moments (D-154). */
 /** A carried page (D-155) that played in an evening's own command, as a D-154 save's did: that evening's, unless the
     same command walked on to a place, when it was on the way there (a long day) and is that place's. */
 function pageOfEvening(c: Content, all: Fact[], g: Fact, f: FactOf<'arrived'>): boolean {
   return g.type === 'beatPlayed' && !!S.beatOf(c.story, g.id)?.portable && g.at === f.at
     && !all.some(h => h.seq > g.seq && h.type === 'arrived' && h.kind === 'place' && h.how !== 'evening' && h.at === g.at);
 }
+/** The story moments played just after an evening at camp, before anything else happened: its home moments (D-154). */
 function thenOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival['then'] {
   const out: Arrival['then'] = [];
   for (const g of all) {

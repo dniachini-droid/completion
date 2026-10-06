@@ -175,15 +175,15 @@
   /* the area, small, above the place (or under a new area's name, the place): where Dan is, always said (D-154) */
   .head .area { font-family: var(--life); font-size: calc(15px * var(--ts, 1)); letter-spacing: .06em; color: var(--ink-2); margin-bottom: 4px; }
   .head .area.under { margin: 6px 0 0; }
-  .text :global(.way-in) { font-style: italic; }
-  /* each moment of an evening says where it is, when it is somewhere else at camp (the journey review) */
-  .lead { flex: none; margin: 0 auto 4px; animation: rise 1.4s .6s var(--ease) both; }
+  /* the lead gives way last: on a short screen with large text, two of its lines stay and it scrolls (D-156) */
+  .lead { flex: 0 1 auto; min-height: calc(2 * 1.45em); overflow-y: auto; margin: 0 auto 4px; animation: rise 1.4s .6s var(--ease) both; }
   .lead .way-in { font-style: italic; }
   /* the rest of the words keep room for a line and their Look link, however large the text (D-156) */
-  .text :global(.words) { flex: 1 1 auto; min-height: calc(2.6em * var(--ts, 1)); }
+  .text :global(.words) { flex: 1 1 auto; min-height: calc(70px + 1.45em); }
   .text :global(.words .scroll) { min-height: 0; }
   /* a one-sentence line has nothing left to fold: no empty band */
   .text.lone, .text.lone :global(.words) { min-height: 0; }
+  /* each moment of an evening says where it is, when it is somewhere else at camp (the journey review) */
   .then-area { display: block; margin-top: 14px; font-family: var(--life); font-size: calc(13px * var(--ts, 1)); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }   /* as on the delve and the set-up (spacing review D16) */
   /* wrapped onto two lines, the links' own 44 px keep them apart: no gap between the lines (spacing review D9) */
   .choice { display: flex; justify-content: center; gap: 0 18px; flex-wrap: wrap; margin-bottom: 14px; }
@@ -194,11 +194,11 @@
   /* with the phone's text set larger, the painting's gap gives way before the words do, so they keep their lines */
   .gap { flex: 1 1 auto; min-height: max(24px, calc(12vh - (var(--ts, 1) - 1) * 300px)); }
   /* never squeezed away: a line of the rest, with Look, always fits under the lead; the guesses below scroll first (D-156) */
-  .text { flex: 0 6 auto; min-height: calc(2.6em * var(--ts, 1)); overflow: hidden; display: flex; flex-direction: column; animation: rise 1.4s .6s var(--ease) both; }
+  .text { flex: 0 3 auto; min-height: calc(70px + 1.45em); overflow: hidden; display: flex; flex-direction: column; animation: rise 1.4s .6s var(--ease) both; }
   .text :global(.soft) { display: block; margin-top: 6px; }
   .text :global(.look) { color: var(--gold-hi); margin-top: 12px; }
   /* when the screen is short (large text), the guesses scroll under the words, which never spill onto them (D-156) */
-  .mid { flex: 0 1 auto; min-height: calc(3.2em * var(--ts, 1)); overflow-y: auto; display: flex; flex-direction: column; align-items: center; padding-top: 6px; padding-bottom: 14px; }
+  .mid { flex: 0 6 auto; min-height: 3.2em; overflow-y: auto; display: flex; flex-direction: column; align-items: center; padding-top: 6px; padding-bottom: 14px; }
   .enough { font-family: var(--life); font-size: min(31px, 8vw); line-height: 1.15; color: #fff; text-align: center;
     text-shadow: 0 0 26px rgba(242,193,112,.45), 0 2px 18px rgba(8,6,20,.9); animation: rise 1.6s 2.2s var(--ease) both; }
   .enough em { display: inline-block; animation: rise 1.6s 3s var(--ease) both; }
