@@ -274,8 +274,7 @@ function frontierNeeds(s: Story): Set<string> {
   if (hit) return hit;
   const out = new Set<string>(), todo: string[] = [];
   const places = new Set(s.route.flatMap(r => r.places.map(p => p.id)));
-  /* (a portable moment plays on the way, so what it needs is needed by the way down too, D-155) */
-  for (const b of s.beats) if ((!isHome(s, b.stretch) || b.portable) && (places.has(b.id) || b.kind === 'step' || b.kind === 'stepKey' || b.kind === 'word')) todo.push(...b.req);
+  for (const b of s.beats) if (!isHome(s, b.stretch) && (places.has(b.id) || b.kind === 'step' || b.kind === 'stepKey' || b.kind === 'word')) todo.push(...b.req);
   for (const x of s.stretches) if (!x.home) todo.push(...x.req);
   const offers = (b: Beat) => [...(b.carries?.guess ?? []), ...(b.seal ? sealOf(s, b.seal)?.carries?.guess ?? [] : [])];
   const seen = new Set<string>();
@@ -466,7 +465,8 @@ export function weekDone(s: Story, st: StoryState): boolean {
   const rw = s.route.find(r => r.w === st.week);
   if (!rw) return false;
   /* the evenings at camp and the moments at home they hold trail behind: they never hold the week, or a long day (D-154) */
-  const trails = (b: Beat | undefined) => !!b && st.departed && isHome(s, b.stretch) && !b.portable;
+  /* (a carried page trails too while it waits on an evening's moment, D-155) */
+  const trails = (b: Beat | undefined) => !!b && st.departed && isHome(s, b.stretch) && (!b.portable || !allMet(st, b.req));
   if (!rw.places.every(p => st.played.has(p.id) || isEvening(s, st, beatOf(s, p.id) ?? { stretch: 'st-mouth' }))) return false;
   return s.beats.filter(b => b.w === st.week && b.kind === 'step').every(b => st.played.has(b.id) || trails(b))
     && s.seals.every(x => x.w !== st.week || !onRoad(s, x.id) || st.opened.has(x.id) || trails(x.beat ? beatOf(s, x.beat) : undefined)

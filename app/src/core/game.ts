@@ -1842,7 +1842,8 @@ function thenOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival['then'] 
   const out: Arrival['then'] = [];
   for (const g of all) {
     if (g.seq <= f.seq || g.type === 'recordShown' || g.type === 'storyWeekBegan' || (g.type === 'sealOpened' && g.how === 'road')) continue;
-    if (g.type !== 'beatPlayed' || g.job !== undefined || g.id === 'passage' || !S.eveningMoment(c.story, g.id)) break;
+    /* (a carried page that played in the same evening, as an old save's did, D-155: still part of it) */
+    if (g.type !== 'beatPlayed' || g.job !== undefined || g.id === 'passage' || !(S.eveningMoment(c.story, g.id) || (S.beatOf(c.story, g.id)?.portable && g.at === f.at))) break;
     const bx = S.beatOf(c.story, g.id), x = bx?.kind === 'stepKey' && bx.seal ? S.sealOf(c.story, bx.seal) : bx ? undefined : S.sealOf(c.story, g.id);
     const line = bx?.line ?? x?.line;
     const where = bx?.stretch ?? x?.stretch;
@@ -1902,6 +1903,8 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
       /* (the side chamber passed on the way is part of the walk too) */
       if (g.type === 'recordShown' || g.type === 'storyWeekBegan' || (g.type === 'findGiven' && g.why === 'chamber') || (g.type === 'sealOpened' && g.how === 'road' && S.sealOf(c.story, g.seal)?.arrival === b.id)) continue;
       if (g.type !== 'beatPlayed' || g.job !== undefined || g.id === 'passage') break;
+      /* a page an evening just before it holds is that evening's, not the walk's (D-155) */
+      if (S.beatOf(c.story, g.id)?.portable && all.some(e => e.type === 'arrived' && (e.kind === 'evening' || e.how === 'evening') && e.at === g.at && e.seq < g.seq)) break;
       let j = i - 1;
       while (all[j]?.type === 'recordShown') j--;
       const o = all[j];

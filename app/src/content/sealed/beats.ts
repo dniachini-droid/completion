@@ -269,7 +269,7 @@ export const beats: Beat[] = [
     line: "In the Box Room, you pick up her notebook from the cot and open it at the pencilled page headed Day 6. When you leave, you take it with you, so that you can read on wherever you are.",
     req: ["b-3.1"],
     stretch: "st-camp",
-    carries: {"records": ["rec-l5"]},
+    carries: {"records": ["rec-l5"], "inView": ["seal-5-4"]},   // the pocket in the notebook Dan now carries (D-155 review)
   },
   // NOTE: req b-3.A is physical access (the Stair lies beyond the lintel), added so the skip rule cannot play it first.
   {

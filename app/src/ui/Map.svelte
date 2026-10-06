@@ -158,9 +158,9 @@
   const ts = typeof document === 'undefined' ? 1 : parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--ts')) || 1;
   const pitch = 20 * ts;
   /** Carved names break onto a second line past about 16 letters (SVG text does not wrap). */
-  function lines(name: string, max = Math.floor(16 / ts)): string[] {
+  function lines(name: string, max = Math.floor(16 / ts), keepCase = false): string[] {
     const out: string[] = [];
-    for (const w of name.toUpperCase().split(' ')) {
+    for (const w of (keepCase ? name : name.toUpperCase()).split(' ')) {
       const last = out[out.length - 1];
       if (last !== undefined && (last + ' ' + w).length <= max) out[out.length - 1] = last + ' ' + w; else out.push(w);
     }
@@ -305,7 +305,8 @@
           {#each ls as line, j}
             <text x={l.lx} y={ly + j * pitch} text-anchor={l.anchor} class="nn" class:here={l.kind === 'here'}>{line}</text>
           {/each}
-          {@const subs = l.sub ? lines(l.sub, Math.floor((l.wrap ?? 16) / ts)) : []}
+          <!-- the sub-label in its own case, wrapped to the room between its anchor and the edge (D-157) -->
+          {@const subs = l.sub ? lines(l.sub, Math.max(8, Math.floor((l.anchor === 'end' ? l.lx : RW - l.lx) / (6.6 * ts)) - 1), true) : []}
           {#if l.sub}
             <!-- wrapped as the names are, so it never runs off the screen's edge (D-157) -->
             {#each subs as sl, k}<text x={l.lx} y={ly + (ls.length + k) * pitch + (ls.length ? 0 : 4)} text-anchor={l.anchor} class="ns {l.subKind ?? ''}">{sl}</text>{/each}
