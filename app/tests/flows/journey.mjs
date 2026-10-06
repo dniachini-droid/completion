@@ -71,8 +71,9 @@ for (const life of J.lives) {
     await page.screenshot({ path: `${out}/shots/${name}-t.png` });
     entry.today = await words(page);
     if (await tap(page, page.locator('button.icon-link', { hasText: 'Map' }))) {
-      /* its lights and names fade in on the page's real clock, and it centres on where Dan is once drawn */
-      await page.clock.runFor(3000); await page.waitForTimeout(2500);
+      /* its lights and names fade in on the page's real clock, and it centres on where Dan is once drawn; the routes draw
+         one after another (CSS, real time), the eleventh done by about 4 s */
+      await page.clock.runFor(3000); await page.waitForTimeout(5500);
       await page.screenshot({ path: `${out}/shots/${name}-m.png` });
       entry.map = await words(page);
     }

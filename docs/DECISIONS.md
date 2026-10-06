@@ -1758,7 +1758,8 @@
 ## D-157 — On the Map, a locked thing is inside an area, never the area
 - **Date:** 2026-10-05
 - **Context:** RESULT §6: "needs a Key" under every area with something locked read as the area itself being locked, even ones walked daily.
-- **Decision:** an area's light says "1 locked thing inside" or "N locked things inside"; only a locked thing's own row in the box says "needs a Key" (or "Use a Key"). D-142 stands.
+- **Decision:** an area's light says "1 lock inside" or "N locks inside"; only a locked thing's own row in the box says "needs a Key" (or "Use a Key"). D-142 stands.
+- **Alternatives:** "1 locked thing inside" (built first): panel walk 3 found it wrapping onto the next area's name on the deep Map at 390 px, so the shorter words were chosen; "inside" still says the lock is in the area, not on it.
 - **Reversible:** Yes (copy).
 
 ## D-158 — The Map's box numbers the places in walking order

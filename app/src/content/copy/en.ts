@@ -202,7 +202,7 @@ export const copy = {
   'map.wayIn': 'The way you came in.',
   'map.camp': 'camp, by the lamp', 'map.turnedBack': 'Turned back here',
   /* a thing inside is locked, never the area itself (D-157) */
-  'map.sealed': '1 locked thing inside', 'map.sealedN': '{n} locked things inside', 'map.needsKey': 'needs a Key',
+  'map.sealed': '1 lock inside', 'map.sealedN': '{n} locks inside', 'map.needsKey': 'needs a Key',
   'map.useKey': 'Use a Key', 'map.useKeySr': 'Use a Key: {where}',
   'map.noKey': 'Do a recurring job as often as you set it to earn a Key.',
   'opened.label': 'You used a Key',
