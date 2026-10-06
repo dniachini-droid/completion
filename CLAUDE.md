@@ -21,6 +21,7 @@ Dan has no coding background and has asked Claude to **direct the build and keep
 - **Commits and pushes** after every meaningful step (each interview round, each doc change, each working feature). Work is never left only in the container.
 - At the end of each phase or build slice, once Dan has approved it, **opens a pull request into `main` and merges it**, so `main` always holds the latest agreed state. Nothing is merged before Dan's approval. Force-pushes and history rewrites are never used on `main`.
 - **Tells Dan when to start a new session**: at phase or slice boundaries, or when a conversation grows long. Gives him the exact sentence to paste to resume.
+- **Gives every time in Sydney time** (AEST, or AEDT in summer; Dan lives in Sydney), never UTC.
 - Explains technical matters in plain language and makes routine technical choices itself (recorded in `DECISIONS.md`). It asks Dan only about taste, priorities and things only he knows.
 
 ## Session start
