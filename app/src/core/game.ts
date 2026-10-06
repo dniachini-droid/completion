@@ -450,7 +450,7 @@ function storyClock(w: W, c: Content, at: Moment, day: string): boolean {
 /**
  * The evening at camp (D-154): Dan sleeps by the lamp every night, so once the way down is open the places at home, and
  * the story's moments there (her notebook, the tally), come as that night's scene: the next evening place (two when the
- * story week is otherwise done), then every home moment ready. Off the walking meter. Only after a day whose work is
+ * story week is otherwise done), then one home moment ready (all of a week behind, D-159). Off the walking meter. Only after a day whose work is
  * done (rule 10), once a night: at goodnight, or at the next opening (`late`).
  */
 function evening(w: W, c: Content, at: Moment, day: string, night: string, late: boolean, only?: Beat) {
@@ -467,10 +467,14 @@ function evening(w: W, c: Content, at: Moment, day: string, night: string, late:
   }
   if (ofType(w.all, 'arrived').some(a => a.night === night)) return;
   let wrote = false;
+  /* one home moment a night, so an evening stays light (D-159): more wait for the next night, unless their week is
+     already behind (then all of them, as the places catch up) */
+  let room = 1;
   const steps = () => {
     for (let k = 0; k < c.story.beats.length; k++) {
-      const b = S.homeSteps(c.story, S.storyState(w.all, c.story))[0];
-      if (!b) return;
+      const st = S.storyState(w.all, c.story), b = S.homeSteps(c.story, st)[0];
+      if (!b || (room <= 0 && b.w >= st.week)) return;
+      room--;
       if (!wrote) { w.put({ type: 'arrived', kind: 'evening', id: 'evening', night, ...(late ? { late: true } : {}) }, at, day); wrote = true; }
       if (b.kind === 'stepKey') openSeal(w, c, S.sealOf(c.story, b.seal!)!, at, day, undefined, true);
       else { w.put({ type: 'beatPlayed', id: b.id }, at, day); show(w, c, b.carries?.records, at, day); }

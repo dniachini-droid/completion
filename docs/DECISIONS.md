@@ -1767,3 +1767,11 @@
 - **Context:** RESULT §6: the box lists places in walking order (PROPOSAL §4, approved) but nothing said so.
 - **Decision:** each place is numbered (1, 2, 3…). Chosen over an "In the order you walked" caption after a look at both at 390 × 844: the numbers take no extra line in a small box and read as steps.
 - **Reversible:** Yes.
+
+## D-159 — An evening plays one home moment, not all of them
+- **Date:** 2026-10-06
+- **Context:** Dan: "keep going with improvements as suggested"; RESULT §6 item 1, "lighten them". After D-155 the panel walk's three reviewers still felt a pull up to the top in the Stair weeks: an evening carried its place and then every home moment ready (up to three screens of reading).
+- **Decision:** an evening plays its place (two when the week is behind, as before) and then at most one home moment; the others wait for the next night. Home moments whose week is already behind all play, so nothing falls behind for good.
+- **Alternatives:** one thing an evening in all (more evening nights, which the reviewers counted against it); no evening on a day that reached a new place (a deeper change to the engine, late in the round).
+- **Consequences:** evenings in the Stair weeks are a place and a line by the lamp at most; a few home moments come a night or two later. Rule suite unchanged and passing.
+- **Reversible:** Yes (one cap in the engine).
