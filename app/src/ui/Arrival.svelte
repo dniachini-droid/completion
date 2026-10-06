@@ -194,7 +194,7 @@
   /* with the phone's text set larger, the painting's gap gives way before the words do, so they keep their lines */
   .gap { flex: 1 1 auto; min-height: max(24px, calc(12vh - (var(--ts, 1) - 1) * 300px)); }
   /* never squeezed away: the lead and a line of the rest, with Look, always fit; the guesses below scroll first (D-156) */
-  .text { flex: 0 1 auto; min-height: calc(5.2em * var(--ts, 1)); overflow: hidden; display: flex; flex-direction: column; animation: rise 1.4s .6s var(--ease) both; }
+  .text { flex: 0 6 auto; min-height: calc(5.2em * var(--ts, 1)); overflow: hidden; display: flex; flex-direction: column; animation: rise 1.4s .6s var(--ease) both; }
   .text :global(.soft) { display: block; margin-top: 6px; }
   .text :global(.look) { color: var(--gold-hi); margin-top: 12px; }
   /* when the screen is short (large text), the guesses scroll under the words, which never spill onto them (D-156) */
