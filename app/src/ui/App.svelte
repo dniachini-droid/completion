@@ -231,7 +231,7 @@
 
   /* the day's light: gold once the day has turned (DESIGN_SYSTEM → colour) */
   $effect(() => {
-    const gold = (screen === 'arrival' && !moment.cutting) || (screen === 'today' && game.whole.complete) || (screen === 'today' && !!game.whole.night);
+    const gold = (screen === 'arrival' && !moment.cutting) || (screen === 'today' && !!game.whole.night);
     document.body.className = gold ? 's-done' : game.whole.done.size ? 's-day2' : 's-day';
   });
 </script>

@@ -2117,8 +2117,9 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   const day = dayOf(facts, now), nowMs = epochOf(now), clock = now.slice(11, 16);
   const capacity = capacityOn(facts, day);
   const { size, done, order, times, slate, line } = slateOf(c, facts, day, clock);
-  /* nothing completes a day (D-160): it ends only on Go to sleep */
-  const complete = false;
+  /* the list's jobs are all done, with real work on it: a fact about the list, said nowhere and ending nothing (D-160: the
+     day ends only on Go to sleep) */
+  const complete = listDone(c, facts, day, now);
   /* "under way" was a job without a timer begun away from the phone; every job is a delve now (D-117), so an old Begin
      in a save leaves nothing under way */
   const underWay = ((u: string | null) => u && c.jobs.some(j => j.id === u && !j.delve) ? u : null)(underWayOn(facts, day));
