@@ -247,10 +247,15 @@ const lineRow = (s: Story, id: string) => { const x = sealOf(s, id); return x &&
     the top once he has gone down, and never one of another place: the camp is always where Today says he is. */
 export function campHere(s: Story, st: StoryState, _sinceLast = 0): { at: 'place'; id: string } | { at: 'view'; id: string; find?: string; line?: string } {
   if (!st.here) return { at: 'view', id: s.camps[0].id, ...viewLook(s.camps[0]) };
-  const open = s.camps.filter(c => c.near === st.here && c.w <= st.week && allMet(st, c.req) && !(c.until && met(st, c.until))
-    && !(st.departed && isTop(s, c.stretch)) && !st.campsShown.includes(c.id));
-  const pick = open.find(c => c.until) ?? open[0];
-  return pick ? { at: 'view', id: pick.id, ...viewLook(pick) } : { at: 'place', id: st.here };
+  const near = s.camps.filter(c => c.near === st.here && c.w <= st.week && allMet(st, c.req) && !(c.until && met(st, c.until))
+    && !(st.departed && isTop(s, c.stretch)));
+  const fresh = near.filter(c => !st.campsShown.includes(c.id));
+  const pick = fresh.find(c => c.until) ?? fresh[0];
+  if (pick) return { at: 'view', id: pick.id, ...viewLook(pick) };
+  /* all used: the one camped at longest ago, said again briefly (never a bare night, the review's round 2) */
+  const last = (id: string) => st.campsShown.lastIndexOf(id);
+  const again = [...near].sort((a, b) => last(a.id) - last(b.id))[0];
+  return again ? { at: 'view', id: again.id } : { at: 'place', id: st.here };
 }
 const viewLook = (c: { look: { find: string } | { line: string } }) => 'find' in c.look ? { find: c.look.find } : { line: c.look.line };
 

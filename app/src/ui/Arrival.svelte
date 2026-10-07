@@ -54,7 +54,7 @@
   const title = $derived(!a ? '' : a.kind === 'evening' ? a.area || t('arrive.byTheLamp') : a.face === 'enter' && !again ? a.area : a.name);
   /* the lead: the way in (when it is said) and the first sentence of the words, which says where and why (D-156) */
   /* tonight's camp at the place he reached (D-160): one line, that he camps here */
-  const said = $derived(a?.campAt ? t('arrive.campHere') : a?.line ?? '');
+  const said = $derived(a?.campAt ? `${t('arrive.campHere')}${a.line ? ` ${a.line}` : ''}` : a?.line ?? '');
   const sentences = $derived(!said ? [] : said.split(/(?<=[.!?])\s+/));
   /* a trip back up to the top, in a save from before D-160: why, said first */
   const leadWay = $derived(!a || again ? '' : a.errand ? t('arrive.errand', { area: a.area }) : a.wayIn ?? '');

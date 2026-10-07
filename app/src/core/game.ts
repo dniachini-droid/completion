@@ -1896,8 +1896,9 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
   /* tonight's camp at the place he reached (D-160): its name and painting; the screen says he camps there */
   const p = f.where === 'place' ? S.beatOf(c.story, f.id) : undefined;
   const found = all.find(g => g.type === 'findGiven' && g.why === 'camp' && g.seq === f.seq + 1) as FactOf<'findGiven'> | undefined;
+  /* (the place's own first sentence under it, so the night is never bare, the review's round 2) */
   if (p) return { seq: f.seq, kind: 'camp', face: 'on', late: false, area: S.areaName(c.story, p.stretch), wayIn: null, then: [], campAt: true,
-    opened: [], way: [], id: p.id, name: p.name ?? '', line: '', records: [], guess: [], look: found ? c.story.finds.find(x => x.id === found.id)?.line ?? null : null, stretch: p.stretch, painting: paintingOf(p.id, p.stretch), completedDay: false, byKey: false };
+    opened: [], way: [], id: p.id, name: p.name ?? '', line: (p.line ?? p.taps?.[0] ?? '').split(/(?<=[.!?])\s/)[0] ?? '', records: [], guess: [], look: found ? c.story.finds.find(x => x.id === found.id)?.line ?? null : null, stretch: p.stretch, painting: paintingOf(p.id, p.stretch), completedDay: false, byKey: false };
   const k = c.story.camps.find(x => x.id === f.id)!;
   const find = all.find(g => g.type === 'findGiven' && g.why === 'camp' && g.seq > f.seq && g.seq <= f.seq + 1) as FactOf<'findGiven'> | undefined;
   /* a stop made before: never its words again (the journey review, D-154): the screen says he stops there again, and
