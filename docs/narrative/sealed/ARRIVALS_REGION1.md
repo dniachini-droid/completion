@@ -119,6 +119,8 @@ Sealed design: `CAMP_REHOME.md` (§7 overrides). Dan camps wherever he is; the t
 - **Week 4 (departure):** route `b-3.B` (HERE, DOOR; he steps through with the copy, her sheets, notebook and folder) · `b-3.C` (onto the top flight) · `pl-w5-worn-steps` · `pl-w5-second-landing` (her dictionary's slate). Steps `b-4.1` (from halfway down to the first turn), `b-4.2`, `b-4.3`, **`b-4.A`** (her Day 9 sheet against his copy; a portable step), **`b-4.4`** (portable). `b-w4.morning` reads his copy of the wall by the lamp.
 - **Week 5:** route `b-5.B` only; `b-5.A` and `b-5.3` are portable steps read in his copy (ONCE; GIVE). Camp lines read his copy of the base.
 
+**After round 1 of the player's-eye review (`CAMP_REHOME.md` §8, which overrides the lines above):** week 1 `b-1.A` · `pl-w1-below-the-lamp` · `b-1.B` (the smooth place folded in) · `pl-w1-pick-niche` · `b-1.C` (the chalk arrow is its reason; her boots are women's). `b-1.A` shows the three symbols on the lamp's base. Week 2: `b-2.2` shows the lintel itself; `b-2.B` needs it. Week 3 `b-3.A` · `b-4.C` (the lit base first, absorbing `b-3.3`) · **`b-3.5`** (a place: the salt by the new light, the crust; absorbs `pl-w3-salt-lit`) · **`b-3.6`** (a place: the copy); steps `b-3.1`, `b-3.2`, `b-3.7`, `b-4.B`. Week 4 `b-3.B` (nothing packed presupposed; a shut door on the tablet) · `b-3.C` · `pl-w5-worn-steps` · **`b-4.2`** (a place: the first turn, the rail's niche, the look down the second flight; absorbs `b-4.1`) · `pl-w5-second-landing`. Week 5 **`b-5.1`** (a place: the recess under the second turn, on the second landing) · `b-5.B` (no longer leans on `b-5.A`).
+
 ## Notes for Phase 8
 
 - Every arrival above is a *place*; every step is *movement plus one thing seen*. Nothing is ever a task.

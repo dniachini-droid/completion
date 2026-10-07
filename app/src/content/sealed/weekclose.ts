@@ -21,7 +21,7 @@ export const learned: WeekCloseLine[] = [
   { id: "wc-w4-2", w: 4, req: ["b-4.4"], line: "Nearly every record here ends with a hook closed on a dot in its corner. The wall by the lamp has a different hook." },
   { id: "wc-w4-3", w: 4, req: ["b-4.3"], line: "On her ninth day down here, the woman who lived in the Box Room made herself a rule: go up every night." },
   { id: "wc-w5-1", w: 5, req: ["b-5.A"], line: "Every record in the tally begins with the same three symbols: the bar with a tick, a ring and a single drop." },
-  { id: "wc-w5-2", w: 5, req: ["b-5.3"], line: "On the stretch of tally that lay under the salt crust, the lamp's symbol, the flame's and the hook-and-drop stand in a row, with no doorway-shape anywhere near them." },
+  { id: "wc-w5-2", w: 5, req: ["b-5.3"], line: "On the stretch of tally that lay under the salt crust, the lamp's symbol, the flame's and the hook-and-drop stand in a row, with no door-shape anywhere near them." },
   { id: "wc-w5-3", w: 5, req: ["b-5.2"], line: "In her notebook, the woman who lived here called the one she met the Tenant, and he let her." },
   { id: "wc-w6-1", w: 6, req: ["b-6.1"], line: "According to her notebook, the carving on the wall by the lamp was cut on her twentieth day down here, for the next one." },
   { id: "wc-w6-2", w: 6, req: ["b-6.A"], line: "In the square gallery, square-cut stone meets the rounded stone, and the record on the square wall opens almost the way the tally's records do." },

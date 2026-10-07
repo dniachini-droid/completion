@@ -44,15 +44,15 @@ export const stretches: Stretch[] = [
     camps wherever he is when he goes to sleep (CAMP_REHOME.md). Retired places (merged, cut, or made steps) stay in
     beats.ts for old saves, off the route. */
 export const route: RouteWeek[] = [
-  { w: 1, places: [{ id: "b-1.A" }, { id: "pl-w1-below-the-lamp" }, { id: "b-1.B" }, { id: "pl-w2-smooth-place" }, { id: "pl-w1-pick-niche" }, { id: "b-1.C" }] },
+  { w: 1, places: [{ id: "b-1.A" }, { id: "pl-w1-below-the-lamp" }, { id: "b-1.B" }, { id: "pl-w1-pick-niche" }, { id: "b-1.C" }] },
   { w: 2, places: [{ id: "b-2.A" }, { id: "pl-w2-above-the-ring" }, { id: "pl-w2-box-by-the-cot" }, { id: "b-2.B" }] },
-  { w: 3, places: [{ id: "b-3.A" }, { id: "b-4.C" }, { id: "pl-w3-salt-lit" }] },
-  { w: 4, places: [{ id: "b-3.B", k: true }, { id: "b-3.C" }, { id: "pl-w5-worn-steps" }, { id: "pl-w5-second-landing" }] },
-  { w: 5, places: [{ id: "b-5.B" }] },
-  { w: 6, places: [{ id: "b-6.A" }, { id: "pl-w6-square-gallery" }, { id: "b-6.B", k: true }, { id: "pl-w6-wall-shelf" }] },
+  { w: 3, places: [{ id: "b-3.A" }, { id: "b-4.C" }, { id: "b-3.5", k: true }, { id: "b-3.6" }] },
+  { w: 4, places: [{ id: "b-3.B", k: true }, { id: "b-3.C" }, { id: "pl-w5-worn-steps" }, { id: "b-4.2", k: true }, { id: "pl-w5-second-landing" }] },
+  { w: 5, places: [{ id: "b-5.1", k: true }, { id: "b-5.B" }] },
+  { w: 6, places: [{ id: "b-6.A" }, { id: "pl-w6-square-gallery" }, { id: "b-6.B", k: true }] },
   { w: 7, places: [{ id: "b-7.B", k: true }, { id: "b-7.A" }] },
-  { w: 8, places: [{ id: "b-8.A" }, { id: "pl-w8-channel" }, { id: "pl-w8-steep-foot" }, { id: "b-8.C", k: true }] },
-  { w: 9, places: [{ id: "b-9.A" }, { id: "pl-w9-benches" }, { id: "b-9.C", k: true }, { id: "pl-w9-approach" }] },
+  { w: 8, places: [{ id: "b-8.A" }, { id: "pl-w8-channel" }, { id: "pl-w8-steep-foot" }] },
+  { w: 9, places: [{ id: "b-9.A" }, { id: "pl-w9-benches" }, { id: "b-9.C", k: true }, { id: "b-8.C", k: true }, { id: "pl-w9-approach" }] },
   { w: 10, places: [{ id: "b-10.A", k: true }, { id: "pl-w10-blast-floor" }, { id: "b-10.C", k: true }] },
   { w: 11, places: [{ id: "pl-w11-cupboard" }, { id: "b-11.A", k: true }, { id: "b-11.C", k: true }, { id: "pl-w11-far-end" }, { id: "b-11.B" }, { id: "b-13.C", k: true }] },
   { w: 12, places: [{ id: "b-12.A" }, { id: "pl-w12-shelf" }, { id: "pl-w12-square-way" }, { id: "b-12.C", k: true }] },

@@ -96,6 +96,10 @@ Recorded under MASTER_BRIEF §55; no told line changed, no sign moved. The top (
 - **10.5 → 13** (the standing stone, V5): week 13 o4, opened on the road right after the cut at `b-13.B`, its step `b-10.B`.
 - 14.4 (the mule-shoe's line) is brought into view at `b-13.B`.
 
+### After round 1 of the player's-eye review (2026-10-07; `CAMP_REHOME.md` §8)
+
+Recorded under MASTER_BRIEF §55; no told line changed, no sign moved. **5.2** opens with the place `b-3.5` (week 3 o1; 4.2 is o2). **4.1** opens with the place `b-4.2` (the first turn). **5.1** opens with the place `b-5.1` (on the second landing). **2.4** (the smooth place) is seen at `b-1.B`. **6.3** (the wall-shelf) is seen at `pl-w6-square-gallery`. **8.4** (the niche with no back) is week 9 o5 (the narrow way is walked after the Reading Room). **9.5** (the powder tin) is week 10 o2; **10.2** (the lintel's word) is o1, **10.1** (MOVE, WATER) o3, **10.4** o4, **10.5** o5: the tablet opens after the word, as its own return.
+
 ## The road and the niches (D-129, 2026-09-28)
 
 Dan chose option C for the story's pace: the main line never waits on a Key. What that means for these rows, recorded under MASTER_BRIEF §55. **No line was rewritten, no fact changed, no sign moved.**

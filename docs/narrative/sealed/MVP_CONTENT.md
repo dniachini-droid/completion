@@ -249,12 +249,12 @@ Every new mark arrives with a context and **four candidates**, one tempting but 
 | `mk-one` | ONE | 2 | `seal-2-1` (*one*) | one · the first · a drop · small | a drop | week 8 (the numbers: it is the numeral 1) | *A drop, yes, but it's counting. One.* |
 | `mk-me` | ME | 2 | `seal-2-1` (*me*) | me · you · mine · here | you | `b-3.1` (S3: *I sat*) | *It's whoever is doing the talking.* |
 | `mk-here` | HERE | 3 | `seal-3-1` a carved bar beside it | here · floor · ground · place | floor | the morning after `b-3.B` (S1 re-rendered) | *It means where you are. Here.* |
-| `mk-door` | DOOR | 3 | `b-3.B` a carved doorway beside it | door · lintel · gate · arch | lintel | S3 re-rendered at the morning after `b-3.B` (*two marks by the door*), with the opened lintel as the evidence | *Not the lintel. All of it: a door.* |
+| `mk-door` | DOOR | 3 | `b-3.B` a carved door, shut in its frame, beside it (round 1, `CAMP_REHOME.md` §8) | door · lintel · gate · arch | lintel | S3 re-rendered at the morning after `b-3.B` (*two marks by the door*), with the opened lintel as the evidence | *Not the lintel. All of it: a door.* |
 | `mk-deep` | DEEP | 4 | `b-4.2` a carved well beside it | deep · down · well · water | well | the week's morning: S1 re-rendered with DEEP beside her sheet's *in* | *The well was only the picture. It's how far down.* |
 | `mk-once` | ONCE | 5 | `b-5.1` a setting sun beside it | once · evening · over · end | evening | `b-5.A` (every record opens with it) and K1 (*Lit.*) | *Something that's over, not the evening.* |
 | `mk-path` | PATH | 5 | `b-5.1` a road beside it | way · road · line · floor | road | week 7 (`wd-open-way` opens the lintel) | *Not only a road. Any way at all.* |
 | `mk-go` | GO | 5 | `b-5.1` the same bar, its drop at the far end | go · leave · arrive · walk | arrive | the week's morning: S4 re-rendered, *…: go.* | *The drop's at the far end: leaving, not arriving.* |
-| `mk-open` | OPEN | 6 | `b-6.2` a doorway beside it | open · gap · two · apart | two | week 7 (`wd-open-way`) | *Not two. A door with its lintel gone: open.* |
+| `mk-open` | OPEN | 6 | `b-6.2` a doorway, its door swung wide open, beside it (round 1) | open · gap · two · apart | two | week 7 (`wd-open-way`) | *Not two. A door with its lintel gone: open.* |
 | `mk-eat` | EAT | 6 | `b-6.2` a loaf beside it | eat · bread · take · food | bread | the week's morning (S2 re-rendered, *ate [ ]*), then S6 at `b-7.2` (*ate [ ]*) | *The loaf's the picture. The mark is what you do with it.* |
 | `mk-up` | UP | 7 (run-ahead) | `b-7.1` the sky beside it | up · out · sky · roof | sky | week 7 (S6 at `b-7.2`: *up [a barn]*) | *Not the sky. Which way: up, and out.* |
 | `mk-stone` | STONE | 7 | `b-7.1` a block beside it | stone · wall · block · hill | wall | week 13 (`wd-move-stone`) | *Not the wall. What the wall is made of.* |
@@ -297,7 +297,7 @@ A find is **a thing already true, delivered as a find, never a bare reward** (se
 | Id | Stretch | w / req | Line | Truth (and ties) |
 |---|---|---|---|---|
 | `fd-a01` | mouth | 1 | At the ladder's foot, an old rung lies in the dust, bent in the middle, and the rung above it on the ladder is newer than the rest. | The council replaced it when it put up its notice: two ages of the one shaft (X-padlock). Texture |
-| `fd-a02` | mouth | 1 | On the shaft's brick at the ladder's foot an arrow is drawn in old chalk, pointing down, and beside it: 36 FT. | The company's shaft-sinkers' mark, in the railway age's feet (SCRIPT §11). The trial shaft (X-padlock). Texture |
+| `fd-a02` | mouth | 1 | On the shaft's brick at the ladder's foot an arrow is drawn in old chalk, pointing up the shaft (round 1), and beside it: 36 FT. | The company's shaft-sinkers' mark, in the railway age's feet (SCRIPT §11). The trial shaft (X-padlock). Texture |
 | `fd-a03` | mouth | 1 | A cereal-bar wrapper has been folded small and pushed behind a bracket, foil side out. | Hers. Texture |
 | `fd-a04` | mouth | 1 | Where the shaft's brick stops, its last course is laid right against the stone below, with no mortar between them. The stone was here first. | The trial shaft broke into the makers' passage from above. Texture |
 | `fd-a05` | mouth | 1 | In the dust of the passage are bootprints, all of one size, going in and out, so many that they have worn a path. | Her daily rule, go up every night (L6). Texture |

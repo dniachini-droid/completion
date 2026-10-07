@@ -41,7 +41,7 @@ export const beats: Beat[] = [
     w: 1,
     o: 4,
     name: "The near end",
-    line: "The passage opens into a long, high hall, rounded where the walls meet the floor and ceiling, like the inside of a shell. This is the Lamp Hall. At the near end, a ledge is cut into the wall, and on it stands a small clay lamp, the old kind that burns oil. It is lit. It was already lit when you came down, yet when you look into it, there is no oil in it at all. Every surface within reach is covered in carved symbols, small shapes crowded together like writing on a page, though not any writing you know. Among them are rings: small carved circles. Along both walls at head height are cups, round hollows cut into the stone one every few paces, like the candle recesses in an old church. All of them are empty. At the far end, past the lamplight, a great door fills most of the wall.",
+    line: "The passage opens into a long, high hall, rounded where the walls meet the floor and ceiling, like the inside of a shell. This is the Lamp Hall. At the near end, a ledge is cut into the wall, and on it stands a small clay lamp, the old kind that burns oil. It is lit. It was already lit when you came down, yet when you look into it, there is no oil in it at all. On its base are three small carved symbols, close together. Every surface within reach is covered in carved symbols, small shapes crowded together like writing on a page, though not any writing you know. Among them are rings: small carved circles. Along both walls at head height are cups, round hollows cut into the stone one every few paces, like the candle recesses in an old church. All of them are empty. At the far end, past the lamplight, a great door fills most of the wall.",
     choice: ["Look at the wall by the lamp", "Look closely at the lamp"],
     req: [],
     stretch: "st-hall",
@@ -74,10 +74,11 @@ export const beats: Beat[] = [
     w: 1,
     o: 7,
     name: "The corner",
-    line: "You walk the length of the Lamp Hall, away from the ledge, to its far end, where the hall turns a corner beside the great door. Here two long troughs are worn into the floor a stride apart, smooth inside like a basin. They look worn rather than cut, like the hollows in old stone steps. The wall beside them is polished and shining while the rest of the hall is matt, and the polish reaches far above your head, to about where the shoulder of a man twice your size would be. On the polished part, the symbols are rubbed faint. Beyond the turn a gallery opens, and the air smells of salt.",
+    line: "You walk the length of the Lamp Hall, away from the ledge, to its far end, where the hall turns a corner beside the great door. Here two long troughs are worn into the floor a stride apart, smooth inside like a basin. They look worn rather than cut, like the hollows in old stone steps. The wall beside them is polished and shining while the rest of the hall is matt, and the polish reaches far above your head, to about where the shoulder of a man twice your size would be. On the polished part, the symbols are rubbed faint, and high above your head, at the height where a long hand might rest, one patch is rubbed away altogether, glossy as a banister after years of hands. Beyond the turn a gallery opens, and the air smells of salt.",
     req: [],
     stretch: "st-hall",
     painting: "pt-b-1.B",
+    carries: {"inView": ["seal-2-4"]},   // the smooth place, folded in from pl-w2-smooth-place (round 1, item 4)
   },
   {
     id: "b-1.5",
@@ -107,7 +108,7 @@ export const beats: Beat[] = [
     w: 1,
     o: 10,
     name: "The cot and the shelf",
-    line: "On your way back towards the lamp, you notice a round-topped doorway in the side wall of the Lamp Hall. You go through it into a small side chamber, no bigger than a box room, with a ceiling low enough to touch. Someone has lived here, and from now on you think of it as the Box Room. There is a camp cot, and under it a pair of boots stands side by side, laced and dry, as if set out for the morning. On the cot lie a notebook with a pencil tucked into it, and a tin box with a row of small notches across its lid, the same kind as on the niches in the rock. On a shelf lies a rod of stone as long as your forearm, with one edge finer than a knife's, like a smooth stone bar with one side ground thin. You take it all in from the doorway before touching anything.",
+    line: "Back in the Lamp Hall from the salt, you see an arrow drawn in chalk on the floor, pointing at a round-topped doorway in the side wall, and beside it, also in chalk, the word CAMP. You go through the doorway into a small side chamber, no bigger than a box room, with a ceiling low enough to touch. Someone has lived here, and from now on you think of it as the Box Room. There is a camp cot, and under it a pair of women's walking boots stands side by side, laced and dry, as if set out for the morning. On the cot lie a notebook with a pencil tucked into it, and a tin box with a row of small notches across its lid, the same kind as on the niches in the rock. On a shelf lies a rod of stone as long as your forearm, with one edge finer than a knife's, like a smooth stone bar with one side ground thin. You take it all in from the doorway before touching anything.",
     choice: ["Open the notebook", "Look at the shelf"],
     req: [],
     stretch: "st-camp",
@@ -141,7 +142,7 @@ export const beats: Beat[] = [
     kind: "close",
     w: 1,
     o: 14,
-    until: "b-3.A",
+    until: "b-2.2",   // b-2.2 shows the lintel itself; the page never lags behind it (round 1, item 1)
     line: "Crossing the Lamp Hall, you stop at the side wall. A stone beam is set into the rock there like the top of a door frame: a lintel. Beneath it there is no door, only solid stone, as if the door is missing and the wall simply carries on. Near it the symbols are cut deeper than anywhere else. Beside the lintel are two symbols with an empty space between them, like a gap left in a line of writing. One of the two is the flame's symbol, the one beside the carved flame on the wall by the lamp. The gap looks deliberate, as if something is meant to go there.",
     req: [],
     stretch: "st-hall",
@@ -164,7 +165,7 @@ export const beats: Beat[] = [
     kind: "step",
     w: 2,
     o: 2,
-    line: "Back in the Lamp Hall, you go to the lintel on the side wall, the stone beam like the top of a door frame, and look closely at what is cut there. There is the blank, an empty space like a gap left in a line of writing, and beside it two symbols. One is the flame's symbol, two cuts spreading from a single point. The other is a hook, and a drop leaving it. You have met the start of it before: when you first came down, on the side of the lamp on the ledge, alone in its own small box, you saw a single symbol: a hook, open. This is that same hook, with a small drop, like a teardrop, leaving its open end. Beneath the lintel there is still no doorway, only solid stone.",
+    line: "In the side wall of the Lamp Hall is a lintel: a stone beam set into the rock like the top of a door frame, with solid stone beneath it where a door should be. Near it the symbols are cut deeper than anywhere else. You look closely at what is cut beside it. There is a blank, an empty space like a gap left in a line of writing, and beside it two symbols. One is the flame's symbol, two cuts spreading from a single point. The other is a hook, and a small drop, like a teardrop, leaving its open end. It is the symbol she drew fourth on her sheet from the tin box, the one with only a question mark under it.",
     req: ["seal-2-1"],
     stretch: "st-hall",
     carries: {"guess": ["mk-give"]},
@@ -210,7 +211,7 @@ export const beats: Beat[] = [
     o: 6,
     name: "The rod",
     line: "In the Box Room you lift the rod from the shelf: the stone rod as long as your forearm, with one edge finer than a knife's. It is heavier than it looks, and warm. It looks like a tool for cutting symbols into stone, something between a chisel and a pencil. On its handle is a line of symbols, each group set in its own small box, like cells in a grid. They are carved in a different style from the tally, the way two people's handwriting differs. In the corner of the last box is a hook with a tail, a different shape from the hook and the drop on the lintel. Under the shelf where the rod lay, someone has written in pencil: For the next one. Cut the two marks on the lintel. Don’t be precious about it. Whoever wrote it seems to have known what the rod was for.",
-    req: ["b-2.1"],
+    req: ["b-2.1", "b-2.2"],   // the lintel is shown before the rod's note names it, and b-2.2 is never left to play on the way to the word (round 1, items 1, 12)
     stretch: "st-camp",
     painting: "pt-b-2.B",
     carries: {"records": ["rec-l4"]},
@@ -233,7 +234,7 @@ export const beats: Beat[] = [
     o: 9,
     until: "b-3.A",
     line: "Back at the lintel on the side wall of the Lamp Hall, you hold the rod up to the blank, the empty gap beside the two symbols. Its fine edge is exactly as wide as the blank. The gap seems shaped to be cut into with the rod, as if a word is meant to go there.",
-    req: [],
+    req: ["b-2.B", "b-2.2"],   // the rod in hand and the lintel seen (round 1, item 15)
     stretch: "st-hall",
   },
   // ---- Week 3 ----
@@ -265,7 +266,7 @@ export const beats: Beat[] = [
     id: "b-3.2",
     kind: "step",
     w: 3,
-    o: 6,
+    o: 4,
     line: "In the Box Room, you pick up her notebook from the cot and open it at the pencilled page headed Day 6. When you leave, you take it with you, so that you can read on wherever you are.",
     req: ["b-3.1"],
     stretch: "st-camp",
@@ -273,32 +274,35 @@ export const beats: Beat[] = [
   },
   {
     id: "b-3.5",
-    kind: "stepKey",
+    kind: "arrivalKey",
     w: 3,
     o: 7,
-    line: "In the Salt Gallery, by the light from the hall, you follow the tally on past the lone ring. A little further on, the carving disappears under a crust of salt: a hard skin grown over the stone, like the scale inside an old kettle, with a row of notches on it. As you watch, the notches fill with light, and the crust cracks and falls away along the wall in pieces. Under it the tally runs on, entry after entry, and you follow it. Low in the salt wall you pass a hollow the size of two cupped hands, with a row of dark notches round its rim, and in its floor four small flat places, close together, as if something small with four feet once stood there. Then the tally ends, and below its last line the salt is bare to the floor. Just past the end is a niche set deeper into the salt than any other, its mouth as wide as your shoulders, with a row of dark notches along its lip. In the shadow inside, its back wall is cut with symbols.",
+    name: "The salt, lit",
+    said: true,   // its own words take him round the corner (absorbs pl-w3-salt-lit, round 1, item 5)
+    line: "With the hall lit now, you go round the corner at its far end into the Salt Gallery, to see how far the light has reached. It falls on the bare salt wall, and in it the salt shows bands of grey and pink and glitters like frost on a window. At the split you can see the packed stones properly now: river stones, round and brown, smoothed the way pebbles are in a stream, as if they were carried up here from somewhere with water in it. You follow the tally on past the lone ring. A little further on, the carving disappears under a crust of salt: a hard skin grown over the stone, like the scale inside an old kettle, with a row of notches on it. As you watch, the notches fill with light, and the crust cracks and falls away along the wall in pieces. Under it the tally runs on, entry after entry, and you follow it. Low in the salt wall you pass a hollow the size of two cupped hands, with a row of dark notches round its rim, and in its floor four small flat places, close together, as if something small with four feet once stood there. Then the tally ends, and below its last line the salt is bare to the floor. Just past the end is a niche set deeper into the salt than any other, its mouth as wide as your shoulders, with a row of dark notches along its lip. In the shadow inside, its back wall is cut with symbols.",
     seal: "seal-5-2",
-    req: ["pl-w3-salt-lit"],
+    req: ["b-3.A"],
     stretch: "st-salt",
     carries: {"inView": ["seal-4-5", "seal-14-5"]},
-    // the one crust (seal-12-2 folded in): the tally is bared to its end before he leaves the top; no record shown here (D-160)
+    // a place since round 1 (item 5): the salt by the new light and the one crust (seal-12-2 folded in), its own screen before the copy; no record shown here (D-160)
   },
   {
     id: "b-3.6",
-    kind: "step",
+    kind: "arrival",
     w: 3,
     o: 8,
-    line: "The tally runs far past anything her sheets cover, and most of it you cannot read yet. You do not want to leave it behind. So you sit down at its head with the blank sheets from under her dated ones in the crack and the pencil from her notebook, and you copy it: cell by cell, every symbol and every carved picture, from its head to its end, past a hollow low in the salt and on to where a niche is set deeper than any other. You copy each one as exactly as you can, and check it against the salt before you go on to the next. It takes hours. Then you go back along the hall to the ledge and copy the base of the lamp, and the wall beside it, in the same way. On your knees at the wall, close to the small carved lamp, you can see that its cuts are sharp-edged, crisper than the worn rings round it. And under the ledge's front edge, set so low that nobody standing would ever see it, runs a row of notches. Last, you take her dated sheets from the crack beside the tally and put them with your copy, to carry with you.",
-    req: ["seal-5-2", "b-3.2", "b-3.3"],
+    name: "The tally's head",
+    line: "Back at the head of the tally, you look along it to where the crust fell. It runs far past anything her sheets cover, and most of it you cannot read yet. You do not want to leave it behind. So you sit down at its head with the blank sheets from under her dated ones in the crack and the stub of pencil lying with them, and you copy it: cell by cell, every symbol and every carved picture, from its head to its end, past a hollow low in the salt and on to where a niche is set deeper than any other. You copy each one as exactly as you can, and check it against the salt before you go on to the next. It takes hours. Then you go back along the hall to the ledge and copy the base of the lamp, and the wall beside it, in the same way. On your knees at the wall, close to the small carved lamp, you can see that its cuts are sharp-edged, crisper than the worn rings round it. And under the ledge's front edge, set so low that nobody standing would ever see it, runs a row of notches. Last, you take her dated sheets from the crack beside the tally and pack them with your copy, to carry with you.",
+    req: ["seal-5-2", "b-3.1", "b-3.2", "b-3.7", "seal-4-2"],   // every other week-3 moment first, so none is left to play on the way to the Stair (round 1, item 5); any still to play shows after the copy, and reads true there
     stretch: "st-salt",
     carries: {"inView": ["seal-4-5", "seal-14-5", "seal-5-5"]},
-    // his copy (the tally, the lamp's base, the wall by the lamp) and her dated sheets travel with him from here: every later tally reading is read in it (D-160). req seal-5-2, not b-3.5, so a save that opened the crust under the old b-5.3 still plays it (CAMP_REHOME §7 B3).
+    // a place since round 1 (item 5): the copy has its own screen. His copy (the tally, the lamp's base, the wall by the lamp) and her dated sheets travel with him from here: every later tally reading is read in it (D-160). req seal-5-2, not b-3.5, so a save that opened the crust under the old b-5.3 still plays it (CAMP_REHOME §7 B3).
   },
   {
     id: "b-3.7",
     kind: "step",
     w: 3,
-    o: 10,
+    o: 5,
     line: "In the Box Room you kneel and look under her cot. Pushed to the back, against the wall, lies a document folder with an elastic band round it, and on its spine, in marker, the word HILL. A thin slate is laid across its cover, cut with a row of notches, like the slates over her other things. It looks like her research file about the hill, and you take it with you, slate and all, as you took her notebook. Getting up, you see above the cot, at the height of a raised arm, a recess closed by a slate of its own with a row of notches, and beside it a drawing pin pushed into a crack on its own, holding nothing, as if something was once pinned there.",
     req: ["b-3.2"],
     stretch: "st-camp",
@@ -312,16 +316,20 @@ export const beats: Beat[] = [
     w: 4,
     o: 1,
     name: "The head of the Stair",
-    line: "With your copy, her sheets, her notebook and her folder packed, you step through the opening under the lintel onto the landing at the head of the Stair, a broad, flat landing of stone. Below you, the top flight goes down into light that was already burning before you came. In the landing's wall is a niche, a small alcove cut into the rock, closed by a stone lid, with a row of notches along its lip. Lying on top of the lid is a small tablet, a flat piece of carved stone like a tile. It has two small carved pictures, a doorway and a bar, each with a symbol beside it, like the labelled lamp and flame on the wall by the lamp. The notches fill with light, and the niche opens. Inside stands a second clay lamp, unlit, its glaze unchipped, as if it was stored there on purpose.",
+    line: "You step through the opening under the lintel onto the landing at the head of the Stair, a broad, flat landing of stone. Below you, the top flight goes down into light that was already burning before you came. In the landing's wall is a niche, a small alcove cut into the rock, closed by a stone lid, with a row of notches along its lip. Lying on top of the lid is a small tablet, a flat piece of carved stone like a tile. It has two small carved pictures, a door, shut in its frame, and a bar, each with a symbol beside it, like the labelled lamp and flame on the wall by the lamp. The notches fill with light, and the niche opens. Inside stands a second clay lamp, unlit, its glaze unchipped, as if it was stored there on purpose.",
     seal: "seal-3-1",
     req: ["b-3.A"],   // route week 4: departure, after the top is finished in week 3 (D-160)
     stretch: "st-stair",
     painting: "pt-b-3.B",
     carries: {"guess": ["mk-here", "mk-door"]},
   },
+  // NOTE: retired (round 1 of the player's-eye review, CAMP_REHOME §8): folded into b-4.C, so the lit base is always seen before the
+  //       copy; made an off-route place so it never plays again; kept for old saves.
   {
     id: "b-3.3",
-    kind: "step",
+    retired: true,
+    kind: "arrival",
+    name: "The lamp's base",
     w: 3,
     o: 3,
     line: "Back in the Lamp Hall, lit now from end to end, you bend close to the lamp on the ledge without touching it. In this light you can make out the three small symbols on its base that you saw when you first came down. Two are the pair you cut at the lintel: the flame's symbol and the hook-and-drop. The third is new to you: a bar with a tick, like a tick mark on a line. Close together like that, they could be a maker's mark. In a corner of the base, on its own, is one more: a hook closed on a dot, its curve curled round the dot like a seed in a husk.",
@@ -336,7 +344,7 @@ export const beats: Beat[] = [
     w: 4,
     o: 2,
     name: "The top flight",
-    line: "You lower yourself off the landing onto the top flight of the Stair and start down it. It is broad, wide enough for three people side by side, and each step is far higher than a step should be, almost as high as your knee. The whole stair seems built for someone much bigger than you. Below, at the first turn, a rail is cut out of the stone of the wall itself, its top worn smooth by long use. In the wall beside the rail is a second niche, a small alcove with a row of notches along its lip, all of them dark.",
+    line: "You lower yourself off the landing onto the top flight of the Stair and start down it. It is broad, wide enough for three people side by side, and each step is far higher than a step should be, almost as high as your knee. Below, at the first turn, a rail is cut out of the stone of the wall itself, its top worn smooth by long use. In the wall beside the rail is a second niche, a small alcove with a row of notches along its lip, all of them dark.",
     choice: ["Go on down", "Look at the steps"],
     req: ["b-3.A"],
     stretch: "st-stair",
@@ -375,9 +383,13 @@ export const beats: Beat[] = [
     stretch: "st-hall",
   },
   // ---- Week 4 ----
+  // NOTE: retired (round 1 of the player's-eye review, CAMP_REHOME §8): folded into b-4.2, now the place at the first turn; made an off-route
+  //       place so it never plays again; kept for old saves.
   {
     id: "b-4.1",
-    kind: "step",
+    retired: true,
+    kind: "arrival",
+    name: "The first turn",
     w: 4,
     o: 1,
     line: "From halfway down the top flight you go on down as far as its first turn. Each step comes up to your knee. At the turn you stop and look down. Below you a second flight carries on down, and on it is the little door: a small, shut door with a row of dark notches. Further down, where the second flight turns again, a recess is cut in under the bend, a closed alcove, with a row of notches of its own. Like the niches, it looks shut until those notches fill with light.",
@@ -387,14 +399,16 @@ export const beats: Beat[] = [
   },
   {
     id: "b-4.2",
-    kind: "stepKey",
+    kind: "arrivalKey",
     w: 4,
     o: 2,
-    line: "Here at the first turn of the Stair, in the wall beside the rail, is a small alcove with its mouth closed. It is the Stair's second niche; the first is up on the landing, where you found the second clay lamp. Light runs along this one's notches until the whole row is lit. Lying on its lid is a tablet, a flat carved stone like the one you found on the lid of the landing's niche. It shows a picture of a well, and beside it a single symbol: the wedge, one cut shaped like a small arrowhead. As with the carved lamp and flame on the wall by the lamp, the symbol seems to go with its picture.",
+    name: "The first turn",
+    line: "You go on down the top flight as far as its first turn, where the rail cut from the wall curls round the bend. In the wall beside the rail is the Stair's second niche, its mouth closed; the first is up on the landing, where you found the second clay lamp. Light runs along this one's notches until the whole row is lit. Lying on its lid is a tablet, a flat carved stone like the one on the lid of the landing's niche. It shows a picture of a well, and beside it a single symbol: the wedge, one cut shaped like a small arrowhead. As with the carved lamp and flame on the wall by the lamp, the symbol seems to go with its picture. From the turn you can see the second flight going on down, and partway down it a little door, small and shut, with a row of dark notches. Further down, where the second flight turns again, a recess is cut in under the bend, with a row of notches of its own.",
     seal: "seal-4-1",
-    req: [],
+    req: ["pl-w5-worn-steps"],
     stretch: "st-stair",
-    carries: {"guess": ["mk-deep"]},
+    carries: {"guess": ["mk-deep"], "inView": ["seal-5-1"]},
+    // a place since round 1 (item 6): its niche opens when he reaches the turn, never before; absorbs b-4.1's look down the second flight
   },
   {
     id: "b-4.3",
@@ -425,7 +439,7 @@ export const beats: Beat[] = [
     kind: "step",
     w: 4,
     o: 5,
-    line: "Going on through her sheets, you find one where she has drawn a small hook curled round a dot, like a seed, and written beside it: signature? You look for it in your copy of the tally. Each entry, or record, ends the same way: in its corner is that hook closed on a dot. It looks like a mark that closes each record, the way a painter's sign sits in the corner of a picture, and it seems to be cut by the same carver every time. The same mark is in the corner of your copy of the lamp's base. Then you turn to your copy of the wall by the lamp. The hook in the corner there is not this hook.",
+    line: "Going on through her sheets, you find one where she has drawn a small hook curled round a dot, like a seed, and written beside it: signature? You look for it in your copy of the tally. Each entry, or record, ends the same way: in its corner is that hook closed on a dot. It looks like a mark that closes each record, the way a painter's sign sits in the corner of a picture, and it seems to be cut by the same carver every time. The same mark is in the corner of your copy of the lamp's base.",
     req: ["b-4.A"],
     portable: true,
     stretch: "st-salt",
@@ -435,10 +449,10 @@ export const beats: Beat[] = [
     id: "b-4.B",
     kind: "stepKey",
     w: 3,
-    o: 5,
+    o: 6,
     line: "In the Salt Gallery, past the split, the blocked-up crack in the salt wall, is a niche: a small alcove with its mouth closed and a row of notches on its lip. Light fills the notches, the whole row at once, and the niche opens. Inside is a block of salt. Cut into its face, about the size of your thumbnail, is a hook closed on a dot, the same small mark as in the corner of the lamp's base. On the wall beside the niche is a short line of symbols, cut by whoever cut the tally, like the label beside a thing in a museum case.",
     seal: "seal-4-2",
-    req: ["pl-w3-salt-lit"],   // on the road in week 3, before he leaves the top (D-160)
+    req: ["b-3.5"],   // on the road in week 3, before he leaves the top (D-160); after the salt by the new light (round 1)
     stretch: "st-salt",
     carries: {"records": ["rec-x-neighbour"]},
   },
@@ -449,11 +463,11 @@ export const beats: Beat[] = [
     w: 3,
     o: 4,
     name: "The great door, close",
-    line: "With the cups lit all the way down, you walk from the ledge to the far end of the hall to see the great door in the new light. The last cup stands a stride from it, and its flame shows you the door properly. It is huge: it rises past where the light reaches, into the curve of the ceiling, and you cannot see its top. Cold comes off its face, the way cold comes off a window in winter. You go close enough to see what is cut into it. First there is a row of notches, like those on the niches, and every one is dark. Beside them is a blank, an empty gap in a line of writing, like the one the lintel had before you cut it. Two symbols stand next to the blank: the bar-with-a-drop, a straight bar with a drop at one end, and two drops parted, two small drops set apart as if moving away from each other. Under the notches is one more symbol, shaped like a path doubling back on itself, like a hairpin bend. The door looks shut in two ways at once, as if it needs both.",
-    req: ["b-3.A"],   // week 3, the lit hall; absorbs pl-w3-far-end (D-160)
+    line: "With the cups lit all the way down, you bend close to the lamp on the ledge without touching it. In this light you can make out the three small symbols on its base. Two are the pair you cut at the lintel: the flame's symbol and the hook-and-drop. The third is new to you: a bar with a tick, like a tick mark on a line. Close together like that, they could be a maker's mark. In a corner of the base, on its own, is one more: a hook closed on a dot, its curve curled round the dot like a seed in a husk. Then you walk from the ledge to the far end of the hall to see the great door in the new light. The last cup stands a stride from it, and its flame shows you the door properly. It is huge: it rises past where the light reaches, into the curve of the ceiling, and you cannot see its top. Cold comes off its face, the way cold comes off a window in winter. You go close enough to see what is cut into it. First there is a row of notches, like those on the niches, and every one is dark. Beside them is a blank, an empty gap in a line of writing, like the one the lintel had before you cut it. Two symbols stand next to the blank: the bar-with-a-drop, a straight bar with a drop at one end, and two drops parted, two small drops set apart as if moving away from each other. Under the notches is one more symbol, shaped like a path doubling back on itself, like a hairpin bend. The door looks shut in two ways at once, as if it needs both.",
+    req: ["b-3.A"],   // week 3, the lit hall; absorbs pl-w3-far-end (D-160) and, since round 1 (CAMP_REHOME §8), b-3.3 (the lit base, K1)
     stretch: "st-hall",
     painting: "pt-b-4.C",
-    carries: {"inView": ["seal-4-4"]},
+    carries: {"records": ["rec-k1"], "inView": ["seal-4-4"]},
   },
   {
     id: "b-w4.camp",
@@ -482,7 +496,7 @@ export const beats: Beat[] = [
     o: 10,
     until: "b-5.0",   // the old week-3 glimpse, a week later: the top flight is now walked in week 4 (D-160)
     line: "Below the Stair's first turn, the second flight goes on down, and partway down it is a small door, shut, with a row of notches on it. You cannot yet tell what lies behind it.",
-    req: ["pl-w5-worn-steps"],
+    req: ["b-4.2"],
     stretch: "st-stair",
   },
   // ---- Week 5 ----
@@ -491,21 +505,23 @@ export const beats: Beat[] = [
     kind: "step",
     w: 5,
     o: 1,
-    line: "You go down the Stair to the second flight and stop at the little door, the small shut door with a row of notches. Every notch in the row is full of light, every one of them. Elsewhere a full row means the thing opens, yet this door stays shut. Beside it, among the thousands of rings worn smooth by touch, is one ring cut sharp-edged, its edges crisp. It looks newer than the rest, or at least far less touched.",
+    line: "From the second landing you climb a few steps back up the second flight and stop at the little door, the small shut door with a row of notches. Every notch in the row is full of light, every one of them. Elsewhere a full row means the thing opens, yet this door stays shut. Beside it, among the thousands of rings worn smooth by touch, is one ring cut sharp-edged, its edges crisp. It looks newer than the rest, or at least far less touched.",
     req: [],
     stretch: "st-flight2",
     carries: {"records": ["rec-k2"]},
   },
   {
     id: "b-5.1",
-    kind: "stepKey",
+    kind: "arrivalKey",
     w: 5,
     o: 2,
-    line: "Further down the Stair, at the recess under the second turn, the alcove cut in beneath the bend, the row of notches fills with light and the recess opens. Inside is a tablet, a flat piece of stone with small pictures and symbols carved side by side. On it are a bar-and-tick, the same shape as the bar with a tick on the lamp's base, beside a picture of a setting sun, and a bar-with-a-drop beside a picture of a road. Last comes the same bar again, but with its drop at the far end, the opposite end of the bar. The first two seem to go with their pictures, like labels, and moving the drop seems to make a different symbol.",
+    name: "Under the second turn",
+    line: "On the second landing you crouch at the recess cut in under the bend of the stair, where the second flight turns. Its row of notches fills with light and the recess opens. Inside is a tablet, a flat piece of stone with small pictures and symbols carved side by side. On it are a bar-and-tick, the same shape as the bar with a tick on the lamp's base, beside a picture of a setting sun, and a bar-with-a-drop beside a picture of a road. Last comes the same bar again, but with its drop at the far end, the opposite end of the bar. The first two seem to go with their pictures, like labels, and moving the drop seems to make a different symbol.",
     seal: "seal-5-1",
     req: [],
     stretch: "st-flight2",
     carries: {"guess": ["mk-once", "mk-path", "mk-go"]},
+    // a place since round 1 (item 7): its guesses are offered on their own screen, before b-5.A settles ONCE and before the gap
   },
   {
     id: "b-5.A",
@@ -537,8 +553,8 @@ export const beats: Beat[] = [
     w: 5,
     o: 5,
     name: "Through a gap",
-    line: "Going down to the second landing again, you notice, a few steps above it on the second flight, what you missed before: a gap in the wall at shoulder height, a rough hole like a small window. You put your eye to it. On the other side is another gallery, and you can see where its square-cut stone meets the smooth, rounded stone of the Stair, as if two different kinds of building join there. On that gallery's wall is a record cut by whoever cut the tally. It begins with the same three symbols as every record in the tally, but the last of them is two drops where the tally has a single one. The change looks deliberate, like one word altered in a set phrase.",
-    req: ["b-5.A"],   // its "same three symbols as every record in the tally" is what b-5.A finds (D-160 check)
+    line: "Climbing back onto the second flight from the landing, you notice, a few steps up, what you missed before: a gap in the wall at shoulder height, a rough hole like a small window. You put your eye to it. On the other side is another gallery, and you can see where its square-cut stone meets the smooth, rounded stone of the Stair, as if two different kinds of building join there. On that gallery's wall is a record cut by whoever cut the tally. It begins with three symbols you know from the tally: the bar with a tick, a ring, and a drop, but here the drop is doubled.",
+    req: [],   // round 1 (item 7): its line no longer leans on b-5.A's finding, so nothing need play on the way to it
     stretch: "st-flight2",
     painting: "pt-b-5.B",
     carries: {"records": ["rec-v1"], "inView": ["seal-5-3"]},   // the gap's sill is seen with the gap (D-154 review)
@@ -548,7 +564,7 @@ export const beats: Beat[] = [
     kind: "step",
     w: 5,
     o: 6,
-    line: "Reading on in your copy past the lone ring, you come to the stretch that lay under the crust of salt. There three symbols stand in a row: the lamp's symbol, the flame's, and the hook-and-drop. The last two are the pair you cut into the lintel's blank. There is no doorway-shape near them: nothing like the little carved doorway on the tablet from the landing's niche, at the head of the Stair.",
+    line: "Reading on in your copy past the lone ring, you come to the stretch that lay under the crust of salt. There three symbols stand in a row: the lamp's symbol, the flame's, and the hook-and-drop. The last two are the pair you cut into the lintel's blank. There is no door-shape near them: nothing like the little carved door on the tablet from the landing's niche, at the head of the Stair.",
     req: ["b-5.A", "b-3.6", "b-5.2"],   // the crust opened at b-3.5; read in his copy, after her Day 14 page (D-160)
     portable: true,
     stretch: "st-salt",
@@ -569,8 +585,9 @@ export const beats: Beat[] = [
     kind: "close",
     w: 5,
     o: 9,
+    until: "b-6.A",   // never once he is in the gallery (round 1, item 15)
     line: "Far down the Stair, past the gap in the wall of the second flight, a gallery of square-cut stone meets the Stair's smooth, rounded stone.",
-    req: [],
+    req: ["b-5.B"],
     stretch: "st-flight2",
   },
   // ---- Week 6 ----
@@ -603,7 +620,7 @@ export const beats: Beat[] = [
     kind: "stepKey",
     w: 6,
     o: 3,
-    line: "In the square gallery, low in the rounded stone just before the join, is a small niche. Its row of notches fills with light, and it opens. Inside is a tablet, a flat carved stone that sets small pictures beside symbols. Beside a doorway are two drops parted, the symbol you saw beside the blank on the great door, at the far end of the Lamp Hall. Beside a loaf is a hook closed on a drop over a bar: a drop inside the curve this time, not the dot of the tally's closing mark.",
+    line: "In the square gallery, low in the rounded stone just before the join, is a small niche. Its row of notches fills with light, and it opens. Inside is a tablet, a flat carved stone that sets small pictures beside symbols. Beside a doorway with its door swung wide open are two drops parted, the symbol you saw beside the blank on the great door, at the far end of the Lamp Hall. Beside a loaf is a hook closed on a drop over a bar: a drop inside the curve this time, not the dot of the tally's closing mark.",
     seal: "seal-6-1",
     req: ["b-6.A", "b-4.C"],   // the niche seen at b-6.A; the door's symbol it names was seen at b-4.C (D-160)
     stretch: "st-square",
@@ -698,7 +715,7 @@ export const beats: Beat[] = [
     w: 7,
     o: 4,
     name: "The twelve rings",
-    line: "Back in the square gallery, you return to the crew's wall. Below its second record are twelve rings in a row, small carved circles, and a thirteenth, smaller: …person [ ], [ ] [ ] [a tablet]… The twelve and the small one look as if they belong together. Beneath them is another niche, and its row of notches fills with light. Inside lies a wax tablet gone hard, a board coated in wax like the pay tablet from the niche under the record. On it are twenty symbols, some of them backwards, and one fork with nothing under it. Beside three of them whoever cut the tally has cut the same three again, not over them but beside them. It looks like a beginner's attempt at the symbols.",
+    line: "You walk on along the crew's wall, past the niche under its record, to where the record ends. Below its last line are twelve rings in a row, small carved circles, and a thirteenth, smaller: …person [ ], [ ] [ ] [a tablet]… The twelve and the small one look as if they belong together. Beneath them is another niche, and its row of notches fills with light. Inside lies a wax tablet gone hard, a board coated in wax like the pay tablet from the niche under the record. On it are twenty symbols, some of them backwards, and one fork with nothing under it. Beside three of them whoever cut the tally has cut the same three again, not over them but beside them. It looks like a beginner's attempt at the symbols.",
     seal: "seal-7-2",
     req: [],
     stretch: "st-square",
@@ -800,8 +817,10 @@ export const beats: Beat[] = [
     carries: {"inView": ["seal-2-3"]},
   },
   // NOTE: §2 names "the corner's troughs" here; inView is seal-2-4, the seen-not-sealed smooth place NICHES 2.4 says this place is.
+  // NOTE: retired (round 1 of the player's-eye review, CAMP_REHOME §8): a sub-detail of the corner, folded into b-1.B; off the route, kept for old saves.
   {
     id: "pl-w2-smooth-place",
+    retired: true,
     kind: "arrival",
     w: 1,
     o: 8,
@@ -824,8 +843,10 @@ export const beats: Beat[] = [
     painting: "pt-pl-w2-box-by-the-cot",
     carries: {"inView": ["seal-2-5"]},
   },
+  // NOTE: retired (round 1 of the player's-eye review, CAMP_REHOME §8): folded into b-3.5, now the place; off the route, kept for old saves.
   {
     id: "pl-w3-salt-lit",
+    retired: true,
     kind: "arrival",
     w: 3,
     o: 9,
@@ -909,7 +930,7 @@ export const beats: Beat[] = [
     o: 1,
     name: "The second landing",
     line: "You go on down the second flight to where it turns. There the Stair opens onto a landing as wide as the Lamp Hall above, and the cups along its wall are lit. In the wall across from the stair is a doorway, square at its corners, and too low for whoever made the stair with its knee-high steps. It looks as if it was cut in a different way from the stair's rounded stone. Below the landing the Stair goes on down under a second lintel, like the one in the Lamp Hall's side wall, but here there is solid stone beneath it: the way down is shut. Beside it is a blank, a gap left in a line of carving, next to two symbols. Low on the wall at the foot of the flight, a thin slate with a row of dark notches is set against the stone like a lid, like the slates over her things in the Box Room.",
-    req: ["b-4.1"],
+    req: ["b-4.2"],
     carries: {"inView": ["seal-4-6"]},   // her dictionary, left on her way down (D-160)
     stretch: "st-flight2",
     painting: "pt-pl-w5-second-landing",
@@ -920,13 +941,17 @@ export const beats: Beat[] = [
     w: 6,
     o: 2,
     name: "The long straight",
-    line: "You walk on into the square gallery off the second landing. It runs straight, as tall as a tall man and no taller. Its ceiling is flat, and its walls are covered in small, even chisel marks, close together. No cups are cut in these walls. The only light comes in behind you from the rounded stone, and it fades as you go. Far down, the floor goes under a slope of broken stone, and you cannot see past it.",
+    line: "You walk on into the square gallery off the second landing. It runs straight, as tall as a tall man and no taller. Its ceiling is flat, and its walls are covered in small, even chisel marks, close together. No cups are cut in these walls. The only light comes in behind you from the rounded stone, and it fades as you go. Partway along, a shelf is cut into the wall at the height of your chest, like a narrow mantelpiece, with a row of dark notches on its lip. Far down, the floor goes under a slope of broken stone, and you cannot see past it.",
     req: ["b-6.A"],
     stretch: "st-square",
     painting: "pt-pl-w6-square-gallery",
+    carries: {"inView": ["seal-6-3"]},   // the wall-shelf, folded in from pl-w6-wall-shelf (round 1, item 8)
   },
+  // NOTE: retired (round 1 of the player's-eye review, CAMP_REHOME §8): a place that added only a locked shelf; the shelf is seen at
+  //       pl-w6-square-gallery. Off the route, kept for old saves.
   {
     id: "pl-w6-wall-shelf",
+    retired: true,
     kind: "arrival",
     w: 6,
     o: 4,
@@ -982,7 +1007,7 @@ export const beats: Beat[] = [
     w: 8,
     o: 3,
     line: "You follow the Water's edge to where the channel runs into it, and kneel on its near lip. Cut low in the stone there is a record, and it is not like the others. Its symbols are cramped and exact, as if cut by someone careful of space, and it does not begin with the bar with a tick. In its corner is a hook crossed by a short cut: not the hook closed on a dot that ends the tally's records, and not her hook with a tail either. As far as you can read it, it says: …[mules] went deep [ ]. Day three. This one here counted [paces] deep: two hundred and ten… Counting paces and marking days, it reads like someone's field notes, and the one it speaks for calls himself only this one.",
-    req: ["b-8.A", "seal-8-1"],
+    req: ["b-8.A", "seal-8-1", "pl-w8-channel"],   // read at the channel, after he has walked to it (round 1, item 9)
     stretch: "st-water",
     carries: {"records": ["rec-v4"]},
   },
@@ -1005,7 +1030,7 @@ export const beats: Beat[] = [
     kind: "step",
     w: 8,
     o: 5,
-    line: "You take out her notebook and open it at the page headed Day 26. Down the margin she has drawn tallies in fives, the way people keep score. Beside the tally's \"two hands\" she has copied the small count cut next to it, a bar and two strokes, and under it written 8 + 2. She seems to have been checking one count against the other.",
+    line: "You take out her notebook and open it at the page headed Day 26. Down the margin she has drawn tallies in fives, the way people keep score. She has copied two plain hooks from the tally, side by side, and beside them the small count cut next to them, a bar and two strokes, and under it written 8 + 2. She seems to have been checking one count against the other.",
     req: ["b-8.B", "b-6.1"],
     portable: true,   // her notebook goes with Dan from b-3.2 on (D-155)
     stretch: "st-camp",
@@ -1024,12 +1049,13 @@ export const beats: Beat[] = [
   {
     id: "b-8.C",
     kind: "arrivalKey",
-    w: 8,
-    o: 7,
+    w: 9,
+    o: 6,
     name: "The niche with no back",
-    line: "At the far shore, where the steep stair comes down, a narrower way leads down again, below the level of the Water, and as you follow it the air changes: the stone smells of powder, sharp and old, like a spent firework. In the wall is a niche with a row of notches. The notches fill with light and the niche opens, but it has no back. You look through it into a chamber below. On a ledge down there lies a book of paper, open, with a pencil in its fold. It is too far away to read.",
+    said: true,   // its own words bring him out of the Reading Room to the narrow way (round 1, item 10)
+    line: "Past its inner door the Reading Room goes on only into the dark, so you come back out and round the shore to where the steep stair comes down. Beside it a narrower way leads down again, below the level of the Water, and a smell comes up it: powder, sharp and old, like a spent firework. You follow it down. In the wall is a niche with a row of notches. The notches fill with light and the niche opens, but it has no back. You look through it into a chamber below. On a ledge down there lies a book of paper, open, with a pencil in its fold. It is too far away to read.",
     seal: "seal-8-4",
-    req: ["b-8.A"],
+    req: ["b-8.A"],   // week 9 since round 1 (item 10): after the Reading Room, so the narrow way is walked on down without a turn back
     stretch: "st-blast",
     painting: "pt-b-8.C",
   },
@@ -1058,7 +1084,8 @@ export const beats: Beat[] = [
     kind: "close",
     w: 8,
     o: 11,
-    line: "Across the Water, through the wide doorway, is a hall full of stone benches. Deeper in, over its inner door, three symbols are cut in a row.",
+    until: "b-9.A",   // a glimpse of the doorway only, never the room itself before he enters it (round 1, items 9, 15)
+    line: "Straight across the Water the wide doorway stands open, and no sound at all comes out of it.",
     req: [],
     stretch: "st-water",
   },
@@ -1092,7 +1119,7 @@ export const beats: Beat[] = [
     w: 9,
     o: 1,
     name: "The first tablet",
-    line: "The Water has two ways on: the narrow way down, and the wide doorway on its far shore that you saw from the foot of the Stair. This time you try the doorway: you follow the shore round to it and go through into the hall beyond. It is long and quiet, and full of benches cut from the floor, too high to sit on: their tops come to your chest. Every wall is set with tablets, from the height of your head up past where you could reach, like books on a library's high shelves. This is the Reading Room. At its far end, over an inner door, is a lintel with three symbols: a hook closed right round a drop; a fork open sideways; and a cross. The nearest tablet shows a flame beside a symbol, a lamp beside a symbol, and two symbols cut together: the same lesson as the wall by the lamp, but these cuts are worn round with age. In its corner is a hook with a short bar under its foot: the mark of whoever made this tablet, a maker's hook. It is not the tally's.",
+    line: "From the steep stair's foot you walk on round the shore to the wide doorway you saw from the foot of the Stair, and go through into the hall beyond. It is long and quiet, and full of benches cut from the floor, too high to sit on: their tops come to your chest. Every wall is set with tablets, from the height of your head up past where you could reach, like books on a library's high shelves. This is the Reading Room. At its far end, over an inner door, is a lintel with three symbols: a hook closed right round a drop; a fork open sideways; and a cross. The nearest tablet shows a flame beside a symbol, a lamp beside a symbol, and two symbols cut together: the same lesson as the wall by the lamp, but these cuts are worn round with age. In its corner is a hook with a short bar under its foot: the mark of whoever made this tablet, a maker's hook. It is not the tally's.",
     req: ["b-8.A"],
     stretch: "st-reading",
     painting: "pt-b-9.A",
@@ -1184,7 +1211,7 @@ export const beats: Beat[] = [
     kind: "morning",
     w: 9,
     o: 9,
-    line: "When you wake, you think back to the stretch of tally past the lone ring, where someone as tall as two of its teller stood where the way turns and was given [bread] and [salt]. In her pencil the sheet says: he ate. With the cross, that short line now reads plainly: Ate not.",
+    line: "When you wake, you take out your copy of the stretch of tally past the lone ring. Just after a carved loaf and a carved heap of salt, her sheet for the same lines says, in her pencil: he ate. In your copy, after the symbol she read as ate, there is a cross. With the cross, that short line now reads plainly: Ate not.",
     req: [],
     stretch: "st-hall",
   },
@@ -1193,9 +1220,9 @@ export const beats: Beat[] = [
     kind: "close",
     w: 9,
     o: 11,
-    until: "b-10.A",
+    until: "pl-w9-approach",   // a glimpse ahead only: never after he has stood at the lintel (round 1, item 15)
     line: "Below the Water, at the foot of the narrow way, is a lintel over solid stone, and the air there smells of powder. Beside its blank, already cut in the stone, are the bar with a drop and the two drops parted.",
-    req: [],
+    req: ["b-8.C"],
     stretch: "st-blast",
   },
   {
@@ -1217,7 +1244,7 @@ export const beats: Beat[] = [
     o: 5,
     name: "The way down",
     said: true,   // its own words say how Dan comes back down from the Reading Room side (no way-in line over it, D-160 check)
-    line: "The powder smell on the narrow way has stayed with you, so from the Water's far shore you follow the narrow way down again, past the niche with no back, to find where it comes from. The smell grows stronger at every step, and the rounded stone is streaked grey with old smoke. The way ends at a lintel with solid stone beneath it, like the lintels on the Stair. Under it is a blank, and beside the blank, already cut in the stone, are the bar with a drop and the two drops parted. Beside the lintel, two niches are cut into the rock, each with a row of dark notches.",
+    line: "You follow the narrow way on down past the niche with no back, to find where the powder smell comes from. The smell grows stronger at every step, and the rounded stone is streaked grey with old smoke. The way ends at a lintel with solid stone beneath it, like the lintels on the Stair. Under it is a blank, and beside the blank, already cut in the stone, are the bar with a drop and the two drops parted. Beside the lintel, two niches are cut into the rock, each with a row of dark notches.",
     req: ["b-8.C"],
     stretch: "st-blast",
     painting: "pt-pl-w9-approach",
@@ -1244,10 +1271,10 @@ export const beats: Beat[] = [
     id: "b-10.1",
     kind: "stepKey",
     w: 10,
-    o: 2,
-    line: "Below the Water, beside the lintel that smells of powder, the row of notches on the second niche, the one that did not hold the powder tin, fills with light, and it opens. Inside is a tablet, another flat carved stone that pairs small pictures with symbols. Beside a carved block, lifted into the air, is a drop with a rising bar: the short upright cut of a drop, with a slanting bar climbing past it. Beside carved water are three short bars, one above another. As on the other tablets, each symbol seems to go with its picture, like a label.",
+    o: 3,
+    line: "At the lintel at the foot of the narrow way, the row of notches on the second niche beside it, the one that did not hold the powder tin, fills with light, and it opens. Inside is a tablet, another flat carved stone that pairs small pictures with symbols. Beside a carved block, lifted into the air, is a drop with a rising bar: the short upright cut of a drop, with a slanting bar climbing past it. Beside carved water are three short bars, one above another. As on the other tablets, each symbol seems to go with its picture, like a label.",
     seal: "seal-10-1",
-    req: ["seal-9-5"],   // D-129: names the niche beside it by what that one held
+    req: ["seal-9-5"],   // D-129: names the niche beside it by what that one held. Since round 1 (item 12) both rows come after the word (seal-10-2 is o1), so they play as their own steps, never on the way to the word's screen
     stretch: "st-blast",
     carries: {"guess": ["mk-move", "mk-water"]},
   },
@@ -1258,7 +1285,7 @@ export const beats: Beat[] = [
     w: 10,
     o: 3,
     name: "The door at the foot",
-    line: "At the foot of the way below the Water you stand before the lintel, with solid stone beneath it where a doorway should be. Beside its blank are the same two symbols as at the lintel on the Stair and at the great door: the bar with a drop and the two drops parted. Under them is a row of notches, and as you watch, it fills with light. The powder smell seems to come from behind the stone.",
+    line: "You go back to the lintel at the foot of the narrow way. Under its two symbols, a row of notches you had taken for part of the carving is filling with light as you watch, and the powder smell seems to come from behind the stone. The pair beside the blank is the one you cut at the second lintel on the Stair, the bar with a drop and the two drops parted, and you hold them both.",
     taps: ["You set the rod’s edge in the blank.", "You cut the first mark, the bar with a drop.", "You cut the second, the two drops parted.", "The cuts fill with light and the rod gives one low ring. The stone beneath the lintel is gone. Beyond it the powder smell is thick, and on a ledge lies the book of paper, open."],
     seal: "seal-10-2",
     req: ["pl-w9-approach"],
@@ -1326,7 +1353,7 @@ export const beats: Beat[] = [
     kind: "morning",
     w: 10,
     o: 9,
-    line: "Before you set off, you go over the opening lines of the tally in your head: the ones beside the split in the salt, before the line about the lamp. With the tablet's two new symbols, more of it reads: The stone of the hill moved once. [the salt face] opened. A way, deep, [ ] once; by water not.",
+    line: "Before you set off, you take out your copy and read the tally's opening lines again, the ones cut beside the split in the salt, before the line about the lamp. With the tablet's two new symbols, more of it reads: The stone of the hill moved once. [the salt face] opened. A way, deep, [ ] once; by water not.",
     req: [],
     stretch: "st-hall",
   },
@@ -1335,8 +1362,9 @@ export const beats: Beat[] = [
     kind: "close",
     w: 10,
     o: 11,
+    until: "b-11.A",   // round 1, item 15
     line: "On the ledge in the blast room, beside the log, lies a second book, bound and open, and there is gold on its page.",
-    req: [],
+    req: ["pl-w10-blast-floor"],
     stretch: "st-blast",
   },
   {
@@ -1381,7 +1409,7 @@ export const beats: Beat[] = [
     w: 11,
     o: 3,
     name: "The book",
-    line: "In the blast room, a row of notches along the edge of the ledge fills with light. The second book lying there beside the log is bound in leather, and its pages are vellum, fine calf-skin, written in a small, careful script. Down its margins some of the carved symbols have been copied and covered with gold leaf, with notes in ink beside them. On the lip of the ledge, cut by whoever cut the tally, are three symbols over a row of notches: a hook closed round a drop, the bar with a tick, and in the corner the hook closed on a dot. The note beside the gold begins: In the margin: these are holy words… Whoever wrote it writes of a surveyor, and of his boy, and you think of the child's wax tablet of copied symbols on the crew's wall.",
+    line: "In the blast room, a row of notches along the edge of the ledge fills with light. The second book lying there beside the log is bound in leather, and its pages are vellum, fine calf-skin, written in a small, careful script. Down its margins some of the carved symbols have been copied and covered with gold leaf, with notes in ink beside them. On the lip of the ledge, cut by whoever cut the tally, are three symbols over a row of notches: a hook closed round a drop, the bar with a tick, and in the corner the hook closed on a dot. The note beside the gold begins: In the margin: these are holy words… Whoever wrote it writes of a surveyor, and of his boy, and you think of the beginner's wax tablet of copied symbols under the twelve rings in the square gallery.",
     choice: ["Read the margin", "Look at the symbols on the ledge"],
     seal: "seal-11-2",
     req: ["b-10.C"],
@@ -1462,8 +1490,9 @@ export const beats: Beat[] = [
     kind: "close",
     w: 11,
     o: 11,
+    until: "b-12.A",   // round 1, item 15: never after he has read that page
     line: "The log's next page has a date at its head, and it speaks of a village well.",
-    req: [],
+    req: ["b-11.2"],
     stretch: "st-blast",
   },
   {
@@ -1568,7 +1597,7 @@ export const beats: Beat[] = [
     kind: "morning",
     w: 12,
     o: 8,
-    line: "Setting off in the morning, you think again of the stretch of tally past the lone ring, where someone tall stood where the way turns, and where a small wading bird is carved after the count of a hand. With the tablet's hooks and the full cell, more of it reads: …hand four, [a wading bird]… voice gave: lamp, good.",
+    line: "Setting off in the morning, you take out your copy of the stretch of tally past the lone ring again. Beside the count on a hand, a small wading bird is carved, and a little further on is a line about a voice. With the tablet's hooks and the full cell, more of it reads: …hand four, [a wading bird]… voice gave: lamp, good.",
     req: [],
     stretch: "st-hall",
   },
@@ -1577,8 +1606,9 @@ export const beats: Beat[] = [
     kind: "close",
     w: 12,
     o: 10,
+    until: "b-12.C",   // round 1, item 15: the sill shows the door itself
     line: "At the end of the side gallery is a door, shut, with three long bars and a cross cut on it, and a hook in its corner.",
-    req: [],
+    req: ["pl-w12-square-way"],
     stretch: "st-side",
   },
   {
@@ -1611,7 +1641,7 @@ export const beats: Beat[] = [
     w: 13,
     o: 1,
     name: "The end of the gallery",
-    line: "You walk the side gallery to its end, where the shut door is. Here the square-cut walls close in, and the chisel marks are rougher than the square gallery's, as if the work went faster. Near the door, a niche in the wall has a row of dark notches. Across from it is a recess with notches of its own, and low by the floor there is a third, smaller niche.",
+    line: "Past the sunken sill you walk the rest of the side gallery, as far as the shut door, and stop a stride short of it. Here the square-cut walls close in, and the chisel marks are rougher than the square gallery's, as if the work went faster. In the wall to one side of the door is a niche with a row of dark notches. Across from it is a recess with notches of its own, and low by the floor there is a third, smaller niche.",
     req: ["b-12.C"],
     stretch: "st-side",
     painting: "pt-pl-w13-side-gallery",
@@ -1634,7 +1664,7 @@ export const beats: Beat[] = [
     w: 13,
     o: 3,
     name: "The shut door",
-    line: "At the end of the side gallery you stand close to the shut door. A row of notches runs across its face, and they fill with light, but the door does not open. The light shows a record above the three long bars and the cross, cut by whoever cut the tally, with the hook closed on a dot in its corner. It opens with two drops, like the records in the square gallery. Leaving gaps for what you cannot read, it says: Once, the second, in this side way here: [ ] moving stone [ ] [ ]. The water moved not [ ]; moves not. I [ ] the door. He long-slept not, when I [ ] it. I opened not [ ]. Under the record is a blank the width of the rod's edge, and beside it a hook closed round a drop and a wedge on a bar.",
+    line: "You step up to the shut door itself and lay your hand flat on it. A row of notches runs across its face, and they fill with light, but the door does not open. The light shows a record above the three long bars and the cross, cut by whoever cut the tally, with the hook closed on a dot in its corner. It opens with two drops, like the records in the square gallery. Leaving gaps for what you cannot read, it says: Once, the second, in this side way here: [ ] moving stone [ ] [ ]. The water moved not [ ]; moves not. I [ ] the door. He long-slept not, when I [ ] it. I opened not [ ]. Under the record is a blank the width of the rod's edge, and beside it a hook closed round a drop and a wedge on a bar.",
     seal: "seal-13-2",
     req: ["pl-w13-side-gallery"],
     stretch: "st-side",
@@ -1672,7 +1702,7 @@ export const beats: Beat[] = [
     kind: "stepKey",
     w: 13,
     o: 6,
-    line: "In the side gallery, the row of notches on the recess fills with light, and it opens. Inside lies a wax tablet gone hard, the same dull wax as the child's tablet of copied symbols on the crew's wall, marked with strokes: nine in a neat row, and after them four more, shallower and out of line, as if someone less practised added them. Beside it is a line cut by whoever cut the tally, like the lines beside the things in the Salt Gallery: Told: the child counted the days; he [ ] not.",
+    line: "In the side gallery, the row of notches on the recess fills with light, and it opens. Inside lies a wax tablet gone hard, the same dull wax as the beginner's tablet of copied symbols under the twelve rings in the square gallery, marked with strokes: nine in a neat row, and after them four more, shallower and out of line, as if someone less practised added them. Beside it is a line cut by whoever cut the tally, like the lines beside the things in the Salt Gallery: Told: the child counted the days; he [ ] not.",
     seal: "seal-13-3",
     req: [],
     stretch: "st-side",
@@ -1717,6 +1747,7 @@ export const beats: Beat[] = [
     w: 13,
     o: 11,
     line: "Past the lifted fall, the lower gallery runs on towards the blast room's far side. Beyond them both, the stone is rounded again, and higher.",
+    until: "pl-w14-meeting",   // round 1, item 15: a glimpse ahead, never after he has walked it
     req: ["b-13.B"],   // the lifted fall it speaks of (D-160 fact check)
     stretch: "st-square",
   },
@@ -1726,7 +1757,7 @@ export const beats: Beat[] = [
     w: 13,
     o: 5,
     name: "The lower gallery",
-    line: "You walk through where the fall stood, into the gallery beyond it. It is square-cut like the rest, its walls clean and pale, as if no smoke or dust ever reached them. You pace it out as you go: thirty paces, as the standing stone said, and the square stone stops. Smooth, rounded stone begins again, higher and wider, and cold air comes up from somewhere ahead.",
+    line: "You walk through where the fall stood, into the gallery beyond it. It is square-cut like the rest, its walls clean and pale, as if no smoke or dust ever reached them. You pace it out as you go: thirty paces, and the square stone stops. Smooth, rounded stone begins again, higher and wider, and cold air comes up from somewhere ahead.",
     req: ["b-13.B", "b-10.B"],   // after the standing stone's record: thirty paces (D-160)
     stretch: "st-square",
     painting: "pt-pl-w13-lower-gallery",
@@ -1738,7 +1769,7 @@ export const beats: Beat[] = [
     w: 14,
     o: 1,
     name: "The back of the rubble",
-    line: "You climb the lower way to its head, where it ends against the heap of rubble. It seems to be the back of the fall at the far end of the blast room. Low in this face is a blank the width of the rod's edge, and beside it the wedge on a bar and the drop with a rising bar, the same two symbols as on the standing stone. Beside the rubble's foot, low on the rounded stone of the wall, is another blank, with a diamond and the bar with a tick beside it.",
+    line: "Before you go on down, you climb the lower way a little uphill, to see what blocks its head. It ends against the heap of rubble, and close to, the rubble seems to be the back of the fall at the far end of the blast room, as if the blast room were only a step away beyond it. Low in this face is a blank the width of the rod's edge, and beside it the wedge on a bar and the drop with a rising bar, the same two symbols as on the standing stone. Beside the rubble's foot, low on the rounded stone of the wall, is another blank, with a diamond and the bar with a tick beside it.",
     taps: ["You set the rod’s edge in the blank.", "You cut the first mark, the wedge on a bar.", "You cut the second, the drop with a rising bar.", "The rod rings, and the rubble settles aside like a curtain drawn back. Through the gap, a step away, is the blast room, its iron rails and its ledge. The way between the two lies open now, and the second blank waits low on the rounded stone beside it."],
     req: ["pl-w14-meeting"],
     stretch: "st-lower",
@@ -1750,7 +1781,7 @@ export const beats: Beat[] = [
     kind: "stepKey",
     w: 14,
     o: 2,
-    line: "In the blast room, the cupboard's lower shelf has its own row of notches, and they fill with light. On the shelf lies another tablet, a flat carved stone that pairs small pictures with symbols. Beside a carved sun over the ground is an inverted wedge on a bar, with no fork above it. Beside a carved ear is a plain hook turned to face the other way, like a cup open to one side.",
+    line: "Through the gap into the blast room, you go to the cupboard: its lower shelf has its own row of notches, and they fill with light. On the shelf lies another tablet, a flat carved stone that pairs small pictures with symbols. Beside a carved sun over the ground is an inverted wedge on a bar, with no fork above it. Beside a carved ear is a plain hook turned to face the other way, like a cup open to one side.",
     seal: "seal-14-1",
     req: ["b-14.A"],
     stretch: "st-blast",
@@ -1761,7 +1792,7 @@ export const beats: Beat[] = [
     kind: "step",
     w: 14,
     o: 3,
-    line: "In the blast room, you turn the log to a later page. The writing is quicker here and the pencil blunter: Log. Cut the hold-mark on the roof above the props; it held. The Inspector says the mark is not \"hold\". Would not say what it is.",
+    line: "In the blast room, a step through the gap, you turn the log to a later page. The writing is quicker here and the pencil blunter: Log. Cut the hold-mark on the roof above the props; it held. The Inspector says the mark is not \"hold\". Would not say what it is.",
     req: ["b-14.A"],
     stretch: "st-blast",
     carries: {"records": ["rec-e4"]},

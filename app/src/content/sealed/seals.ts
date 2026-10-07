@@ -49,9 +49,10 @@ export const seals: Seal[] = [
 
   /* ---- week 3: the lit top, finished before he leaves it (D-160, CAMP_REHOME): the road rows 4-2 and 5-2 open here, before
      departure; the top's Key niches are all week 3 (a Key used on one after departure is a trip back up he chooses) ---- */
-  { id: 'seal-4-2', w: 3, o: 1, road: true, where: 'The Salt Gallery, past the split', stretch: 'st-salt', beat: 'b-4.B',
+  { id: 'seal-4-2', w: 3, o: 2, road: true, where: 'The Salt Gallery, past the split', stretch: 'st-salt', beat: 'b-4.B',
     carries: { records: ['rec-x-neighbour'] } },
-  { id: 'seal-5-2', w: 3, o: 2, where: 'The Salt Gallery, the crust', stretch: 'st-salt', beat: 'b-3.5' },
+  { id: 'seal-5-2', w: 3, o: 1, where: 'The Salt Gallery, the crust', stretch: 'st-salt', arrival: 'b-3.5' },
+  // NOTE: b-3.5 is a place since round 1 (CAMP_REHOME §8), so this row opens with it, before seal-4-2 (b-4.B needs it).
   // NOTE: one crust (seal-12-2 folded in): it bares the tally to its end; no record is shown when it opens (rec-s5 is read at b-5.3, in his copy).
   { id: 'seal-3-2', w: 3, o: 0, where: 'The Salt Gallery, the next stretch', stretch: 'st-salt', seenOnly: true },
   // NOTE: seal-3-2 is seen in the open at b-3.1.
@@ -72,7 +73,7 @@ export const seals: Seal[] = [
   { id: 'seal-3-1', w: 4, o: 1, where: 'The Stair, the niche on the landing', stretch: 'st-stair', arrival: 'b-3.B',
     carries: { guess: ['mk-here', 'mk-door'] } },
   // NOTE: seal-3-1 keeps its id; it opens with the step through the lintel, now the head of week 4 (D-160).
-  { id: 'seal-4-1', w: 4, o: 2, where: 'The Stair, the niche by the rail at the first turn', stretch: 'st-stair', beat: 'b-4.2',
+  { id: 'seal-4-1', w: 4, o: 2, where: 'The Stair, the niche by the rail at the first turn', stretch: 'st-stair', arrival: 'b-4.2',
     carries: { guess: ['mk-deep'] } },
   { id: 'seal-4-3', w: 3, o: 7, where: 'The Box Room, the recess above the cot', stretch: 'st-camp',
     line: 'In the Box Room, the slate over the recess above the cot begins to change. Light fills its notches from end to end, and the recess opens. Pinned to the back of it is a printed email, a single sheet of ordinary paper. You unpin it, read it, and put it in her folder to take with you.',
@@ -88,7 +89,7 @@ export const seals: Seal[] = [
   // NOTE: her dictionary is where she lightened her load on the way down (as her foil blanket at the Stair's head), not in the Box Room (D-160, CAMP_REHOME §5.6).
 
   /* ---- week 5 ---- */
-  { id: 'seal-5-1', w: 5, o: 1, where: 'The Stair, the recess under the second turn', stretch: 'st-flight2', beat: 'b-5.1',
+  { id: 'seal-5-1', w: 5, o: 1, where: 'The Stair, the recess under the second turn', stretch: 'st-flight2', arrival: 'b-5.1',
     carries: { guess: ['mk-once', 'mk-path', 'mk-go'] } },
   { id: 'seal-5-3', w: 5, o: 2, where: 'The Stair, the gap’s sill', stretch: 'st-flight2',
     line: 'On the second flight, light fills the notches on the sill of the gap, the rough window in the wall. On the sill lie crumbs of wax and a broken stylus, a thin pointed tool for scratching writing into wax. Beside them, a short line of symbols is cut into the wall by whoever cut the tally. They look like the leftovers of someone writing on wax.',
@@ -144,7 +145,7 @@ export const seals: Seal[] = [
   { id: 'seal-8-2', w: 8, o: 0, where: 'The Water, the channel’s near lip', stretch: 'st-water', seenOnly: true },
   // NOTE: seal-8-2 is V4, seen in the open at b-8.2.
   { id: 'seal-8-3', w: 8, o: 2, where: 'The Water, a step under the water', stretch: 'st-water', beat: 'b-8.4', plain: true },
-  { id: 'seal-8-4', w: 8, o: 3, where: 'Below the Water, a niche on the narrow way down', stretch: 'st-blast', arrival: 'b-8.C' },
+  { id: 'seal-8-4', w: 9, o: 5, where: 'Below the Water, a niche on the narrow way down', stretch: 'st-blast', arrival: 'b-8.C' },
   { id: 'seal-8-5', w: 8, o: 4, where: 'The Water, a niche in the channel', stretch: 'st-water',
     line: 'In the channel\'s side, the row of notches on the niche fills with light, and the niche opens. Inside lies a cork float, the kind that bobs on a fishing line, tied to a long cord knotted at even spaces. The cord is dry and neatly coiled. It looks as if someone once timed the channel\'s flow by letting the float drift along it.',
     plain: true },
@@ -158,17 +159,17 @@ export const seals: Seal[] = [
   { id: 'seal-9-4', w: 9, o: 4, where: 'The Reading Room, a flat stone on the floor', stretch: 'st-reading',
     line: 'Near the Reading Room\'s benches, the row of notches on the flat stone in the floor fills with light. The three small symbols on its face are the same three as on the lintel over the inner door, cut small: a hook closed round a drop, a fork open sideways, and a cross. It looks like a copy of the lintel set down at floor level, where someone could read it up close.',
     carries: { records: ['rec-lintel'] } },
-  { id: 'seal-9-5', w: 9, o: 5, where: 'Below the Water, a niche beside the lintel', stretch: 'st-blast',
+  { id: 'seal-9-5', w: 10, o: 2, where: 'Below the Water, a niche beside the lintel', stretch: 'st-blast',
     line: 'Below the Water, beside the lintel that smells of powder, the row of notches on one of the two niches fills with light, and the niche opens. Inside stands a round tin with a tight lid, the kind blasting powder was kept in, with a company\'s name stamped on its side. It is empty.',
     plain: true },
 
   /* ---- week 10 ---- */
-  { id: 'seal-10-1', w: 10, o: 1, where: 'Below the Water, the other niche beside the lintel', stretch: 'st-blast', beat: 'b-10.1',
+  { id: 'seal-10-1', w: 10, o: 3, where: 'Below the Water, the other niche beside the lintel', stretch: 'st-blast', beat: 'b-10.1',
     carries: { guess: ['mk-move', 'mk-water'] } },
-  { id: 'seal-10-2', w: 10, o: 2, where: 'Below the Water, the lintel over solid stone', stretch: 'st-blast', arrival: 'b-10.A',
+  { id: 'seal-10-2', w: 10, o: 1, where: 'Below the Water, the lintel over solid stone', stretch: 'st-blast', arrival: 'b-10.A',
     carries: { word: 'wd-open-way' } },
-  { id: 'seal-10-4', w: 10, o: 3, where: 'Below the Water, a recess by the ledge in the blast room', stretch: 'st-blast', arrival: 'b-10.C' },
-  { id: 'seal-10-5', w: 10, o: 4, where: 'Below the Water, a shelf in the blast room', stretch: 'st-blast',
+  { id: 'seal-10-4', w: 10, o: 4, where: 'Below the Water, a recess by the ledge in the blast room', stretch: 'st-blast', arrival: 'b-10.C' },
+  { id: 'seal-10-5', w: 10, o: 5, where: 'Below the Water, a shelf in the blast room', stretch: 'st-blast',
     line: 'In the blast room, the row of notches along the shelf fills with light. On the shelf is a tin plate with a knife laid across it, as if someone ate here and meant to come back to it.',
     plain: true },
 

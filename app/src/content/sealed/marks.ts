@@ -55,7 +55,7 @@ export const marks: Mark[] = [
   },
   {
     id: 'mk-door', sign: 'DOOR', w: 3, elements: ['bar', 'drop', 'drop'], shape: 'two drops under a bar',
-    guessAt: 'b-3.B', context: 'a carved doorway', candidates: ['door', 'lintel', 'gate', 'arch'], right: ['door'],
+    guessAt: 'b-3.B', context: 'a carved door, shut in its frame', candidates: ['door', 'lintel', 'gate', 'arch'], right: ['door'],
     tempting: 'lintel', confirmedBy: 'b-w3.morning', struck: 'Not the lintel. All of it: a door.',
   },
   {
@@ -82,7 +82,7 @@ export const marks: Mark[] = [
   },
   {
     id: 'mk-open', sign: 'OPEN', w: 6, elements: ['drop-parted', 'drop-parted'], shape: 'two drops parted',
-    guessAt: 'b-6.2', context: 'a doorway', candidates: ['open', 'gap', 'two', 'apart'], right: ['open'],
+    guessAt: 'b-6.2', context: 'a doorway, its door swung wide open', candidates: ['open', 'gap', 'two', 'apart'], right: ['open'],
     tempting: 'two', confirmedBy: 'b-7.A', struck: 'Not two. A door with its lintel gone: open.',
   },
   {
