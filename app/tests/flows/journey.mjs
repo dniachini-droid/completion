@@ -79,6 +79,8 @@ for (const life of J.lives) {
     for (let g = 0; g < 6 && !(await page.locator('nav.foot').count()); g++) { const way = (await page.locator('button.home').count()) ? page.locator('button.home') : page.locator('button.btn'); if (!(await tap(page, way))) break; }
     await page.screenshot({ path: `${out}/shots/${name}-t.png` });
     entry.today = await words(page);
+    /* (another screen of the same moment waits: the app shows it straight on, never Today in between) */
+    if (facts.some(f => f.type === 'arrived' && f.seq > arr.seq && !looked.has(f.seq) && f.at === arr.at)) entry.today = 'RECORDS\n(the next screen follows straight on: Today is not shown in between)';
     if (await tap(page, page.locator('button.icon-link', { hasText: 'Map' }))) {
       /* its lights and names fade in on the page's real clock, and it centres on where Dan is once drawn; the routes draw
          one after another (CSS, real time), the eleventh done by about 4 s */

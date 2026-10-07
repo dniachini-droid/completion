@@ -116,11 +116,12 @@
         <Words {look} length={restLine.length + (a.look?.length ?? 0) + a.then.reduce((n, w) => n + w.line.length, 0)}>
           {#if restLine}<span class="soft on-scene"><Prose text={restLine} /></span>{/if}
           {#if a.stopAgain}<span class="soft on-scene">{t('arrive.stopAgain')}</span>{/if}
-          {#if a.errand && !again}<span class="soft on-scene">{a.errandStays ? t('arrive.errandStays') : t('arrive.errandBack')}</span>{/if}
           {#if a.look}<span class="soft on-scene look"><Prose text={a.look} /></span>{/if}
           {#each a.way as w (w.beat)}<p class="soft on-scene look"><Prose text={w.line} /></p>{/each}
           {#each a.opened as line}<p class="soft on-scene look">{t('arrive.keyOpens')} <Prose text={line} /></p>{/each}
           {#each a.then as w, i (w.beat)}{#if w.area && w.area !== (i ? a.then[i - 1].area : a.area)}<span class="then-area">{w.area}</span>{/if}<p class="soft on-scene"><Prose text={w.line} /></p>{/each}
+          <!-- (a trip up: the way back down is said last, after all it saw, round 5) -->
+          {#if a.errand && !again}<p class="soft on-scene">{a.errandStays ? t('arrive.errandStays') : t('arrive.errandBack')}</p>{/if}
         </Words>
       </div>
       <div class="mid col">

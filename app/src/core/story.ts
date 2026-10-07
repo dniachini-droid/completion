@@ -143,7 +143,8 @@ export function storyState(facts: Fact[], s: Story): StoryState {
     }
   }
   /* what an earlier build's beats already gave an old save: held, as played (D-160) */
-  for (const b of s.beats) if (b.absorbs?.length && !played.has(b.id) && b.absorbs.every(id => id.startsWith('seal-') ? opened.has(id) : played.has(id))) played.add(b.id);
+  const had = (id: string) => id.startsWith('seal-') ? opened.has(id) : played.has(id);
+  for (const b of s.beats) if (!played.has(b.id) && ((b.absorbs?.length && b.absorbs.every(had)) || b.heldBy?.some(had))) played.add(b.id);
   const offered = new Set<string>();
   for (const b of s.beats) if (played.has(b.id)) b.carries?.guess?.forEach(m => offered.add(m));
   for (const x of s.seals) if (opened.has(x.id)) x.carries?.guess?.forEach(m => offered.add(m));

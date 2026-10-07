@@ -165,6 +165,9 @@ export interface Beat {
   /** What this beat took over from earlier builds' beats and rows (D-160): a save that played (or opened) every one of
       them already has it, so it counts as played and is never played again. */
   absorbs?: string[];
+  /** Ids of which any ONE, played or opened by a save from an earlier build, means it has been past this already (a place
+      beyond it reached another way): held, as played, never played again (D-160). */
+  heldBy?: string[];
   /** A place at the top that an old save, already gone down, still has to see (D-160): why Dan climbs back up for it,
       said on screen before it (a full sentence). */
   back?: string;
