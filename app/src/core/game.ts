@@ -466,7 +466,9 @@ function camp(w: W, c: Content, at: Moment, day: string) {
   /* its one thing to look at: the view's own (a find, or a line), else something noticed where he is (D-160) */
   const view = where.at === 'view' ? c.story.camps.find(x => x.id === where.id) : undefined;
   const own = where.at === 'view' ? where : undefined;
-  const find = own?.find && !st.given.has(own.find) ? own.find : own?.line ? null : S.pickFind(c.story, st, 'camp', view?.stretch ?? st.stretch)?.id;
+  /* (a night again at a view he camped at before: something new from where he is, never the same words alone, round 5) */
+  const repeat = where.at === 'view' && st.campsShown.includes(where.id);
+  const find = own?.find && !st.given.has(own.find) ? own.find : own?.line && !repeat ? null : S.pickFind(c.story, st, 'camp', view?.stretch ?? st.stretch)?.id;
   if (find) {
     w.put({ type: 'findGiven', id: find, why: 'camp' }, at, day);
     /* (its record, as any find's: handed over with it) */
@@ -1972,7 +1974,7 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
   const look = find ? c.story.finds.find(x => x.id === find.id)?.line ?? null : 'line' in k.look && !again ? k.look.line : null;
   return { seq: f.seq, kind: 'camp', face: 'on', late: false, area: S.areaName(c.story, k.stretch), wayIn: null, then: [], stopAgain: again,
     /* made again: where it is and one line of what is there (its first two sentences), never the whole again */
-    opened: [], way: [], id: k.id, name: k.name, line: again ? k.line.split(/(?<=[.!?])\s/).slice(0, 2).join(' ') : k.line, records: [], guess: [], look, stretch: k.stretch, painting: paintingOf(k.id, k.stretch), completedDay, byKey: false };
+    opened: [], way: [], id: k.id, name: k.name, line: again ? k.line.split(/(?<=[.!?])\s/)[0] : k.line, records: [], guess: [], look, stretch: k.stretch, painting: paintingOf(k.id, k.stretch), completedDay, byKey: false };
 }
 
 /** What a job's return (a jobDone fact) shows. A guess it brings moves to the place the same job reached (D-077). */
