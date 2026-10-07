@@ -129,18 +129,25 @@ describe('S#12: a camp view that will stop being offered comes first', () => {
   const story = (camps: CampView[]): Story => ({
     version: 't', stretches: [{ id: 'st-hall', name: 'h', w: 1, req: [] }, { id: 'st-salt', name: 's', w: 1, req: [] }], route: [], beats: [],
     seals: [], records: [], marks: [], words: [], finds: [], camps, passages: [], teasers: [], learned: [], soFar: [], openQuestions: [] });
-  it('an unused view with an end comes before the area\'s other unused views; a view elsewhere only when the area has none (D-154)', () => {
+  /* a camp at a view (D-160): far enough past the last place (here, 120 minutes) */
+  const far = 120;
+  it('an unused view with an end comes before the stretch\'s other unused views; never another area\'s (D-154, D-160)', () => {
     const t = story([view('a', 'st-hall'), view('b', 'st-hall', 'x-later'), view('c', 'st-salt', 'x-later')]);
-    const st = { ...S.storyState([], t), visited: new Set(['st-hall', 'st-salt'] as const), stretch: 'st-hall' as const };
-    expect(S.nextCamp(t, st).id).toBe('b');
-    expect(S.nextCamp(t, { ...st, campsShown: ['b'] }).id).toBe('a');
-    /* where Dan turned back is in the area he is walking: never the salt's view while he is in the hall */
-    expect(S.nextCamp(t, { ...st, campsShown: ['b', 'a'] }).id).not.toBe('c');
+    const st = { ...S.storyState([], t), visited: new Set(['st-hall', 'st-salt'] as const), stretch: 'st-hall' as const, here: 'p' };
+    expect(S.campHere(t, st, far).id).toBe('b');
+    expect(S.campHere(t, { ...st, campsShown: ['b'] }, far).id).toBe('a');
+    /* where Dan camps is where he is: never the salt's view while he is in the hall */
+    expect(S.campHere(t, { ...st, campsShown: ['b', 'a'] }, far).id).not.toBe('c');
   });
   it('one whose end has come is never offered', () => {
     const t = story([view('a', 'st-hall'), view('b', 'st-hall', 'x-done')]);
-    const st = { ...S.storyState([], t), played: new Set(['x-done']) };
-    expect(S.nextCamp(t, st).id).toBe('a');
+    const st = { ...S.storyState([], t), played: new Set(['x-done']), here: 'p' };
+    expect(S.campHere(t, st, far).id).toBe('a');
+  });
+  it('soon after a place, he camps at it (D-160)', () => {
+    const t = story([view('a', 'st-hall')]);
+    const st = { ...S.storyState([], t), here: 'p' };
+    expect(S.campHere(t, st, 30)).toEqual({ at: 'place', id: 'p' });
   });
 });
 
