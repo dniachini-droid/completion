@@ -161,7 +161,7 @@ describe('deep story: the content wiring (static)', () => {
   it('FINDING: every route place and camp view has its own painting, but the views D-160 added (their stretch\'s painting stands in)', () => {
     const missing = [...s.route.flatMap(r => r.places.map(p => p.id)), ...s.camps.map(c => c.id)].filter(id => !PAINTED.has(id) && paintingOf(id, 'st-mouth') === STAND_IN['st-mouth']);
     /* the places D-160 made (the copy, the first turn, the gap's record) and its views: their stretch's painting stands in */
-    expect(missing).toEqual(['b-3.6', 'b-4.2', 'b-5.1', ...Array.from({ length: 36 }, (_, i) => `cv-${22 + i}`)]);
+    expect(missing).toEqual(['b-3.2', 'b-3.6', 'b-4.2', 'b-5.1', 'b-13.1', ...Array.from({ length: 36 }, (_, i) => `cv-${22 + i}`)]);
   });
 
   it('fixed (S#5): one month\'s summary has six lines, and a week close can show six', () => {
@@ -203,10 +203,10 @@ describe('deep story: text hygiene', () => {
     expect(S.beatOf(s, 'b-14.A')!.name).not.toMatch(rx('reservedWord'));
     /* (the other place it was kept for is a moment at the standing stone since D-160, with no name of its own) */
   });
-  it('FINDING: one physical clue the ledger hands over once appears in six texts', () => {
+  it('FINDING: one physical clue the ledger hands over once appears in seven texts', () => {
     const ids = [...s.beats, ...s.passages, ...s.teasers, ...s.learned, ...s.openQuestions]
       .filter(x => rx('clueA').test(x.line ?? '') && rx('clueB').test(x.line ?? '')).map(x => x.id).sort();
-    expect(ids).toEqual(['aw-w12', 'b-12.C', 'b-w12.tz2', 'b-w13.tz1', 'ps-d05', 'wc-w12-3']);
+    expect(ids).toEqual(['aw-w12', 'b-12.C', 'b-w12.close', 'b-w12.tz2', 'b-w13.tz1', 'ps-d05', 'wc-w12-3']);
   });
   it('FINDING: most rows the road opens without a Key still describe their count filling with light (D-129)', () => {
     const road = [...S.roadSeals(s)];
@@ -214,8 +214,8 @@ describe('deep story: text hygiene', () => {
       const x = S.sealOf(s, id)!, b = S.beatOf(s, x.beat ?? x.arrival ?? '');
       return rx('countLit', 'i').test(b?.line ?? x.line ?? '');
     });
-    expect(road.length).toBe(31);
-    expect(lit.length).toBe(29);
+    expect(road.length).toBe(30);
+    expect(lit.length).toBe(28);
   });
 });
 
@@ -281,7 +281,7 @@ describe('deep story: fourteen story weeks played through, Keys spent (dynamic)'
       return m !== undefined && c !== undefined && m < c;
     }).map(b => b.id);
     /* (three since D-154: the night's line waits for what Dan has been shown, and week 10's now comes first) */
-    expect(early).toEqual(['b-w12.morning']);
+    expect(early).toEqual(['b-w12.morning', 'b-w13.morning']);
   }, 300_000);
 
   it('fixed (S#1): no week-close glimpse describes a sealed state after Dan has opened it (Normal, High)', () => {
@@ -334,7 +334,8 @@ describe('deep story: fourteen story weeks played through, Keys spent (dynamic)'
         /* (a camp at the place he reached is no view, D-160) */
         if (x.type !== 'arrived' || x.kind !== 'camp' || x.where === 'place') continue;
         const st = S.storyState(f.slice(0, i), s), area = S.areaOf(s, st.stretch);
-        const due = s.camps.filter(c => c.until && S.areaOf(s, c.stretch) === area && st.visited.has(c.stretch) && c.w <= st.week
+        /* (a view of the place he camps at, D-160: the views are tied to places) */
+        const due = s.camps.filter(c => c.until && (c.near ? c.near === st.here : S.areaOf(s, c.stretch) === area) && st.visited.has(c.stretch) && c.w <= st.week
           && c.req.every(r => S.met(st, r)) && !S.met(st, c.until) && !st.campsShown.includes(c.id));
         if (due.length && !due.some(c => c.id === x.id)) bad.push(`${x.day} ${x.id} (${due.map(c => c.id).join(',')} due)`);
       }

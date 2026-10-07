@@ -463,7 +463,12 @@ function camp(w: W, c: Content, at: Moment, day: string) {
   const view = where.at === 'view' ? c.story.camps.find(x => x.id === where.id) : undefined;
   const own = where.at === 'view' ? where : undefined;
   const find = own?.find && !st.given.has(own.find) ? own.find : own?.line ? null : S.pickFind(c.story, st, 'camp', view?.stretch ?? st.stretch)?.id;
-  if (find) w.put({ type: 'findGiven', id: find, why: 'camp' }, at, day);
+  if (find) {
+    w.put({ type: 'findGiven', id: find, why: 'camp' }, at, day);
+    /* (its record, as any find's: handed over with it) */
+    const told = c.story.finds.find(x => x.id === find)?.told;
+    if (told) show(w, c, [told], at, day);
+  }
 }
 
 /** A Key lands: it is kept, never spent for Dan (D-143 A). Its job's return offers "Use it here" when something is locked

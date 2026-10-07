@@ -419,7 +419,10 @@ export function pickFind(s: Story, st: StoryState, why: string, at0?: StretchId)
   /* at the top, before he goes down: any of its rooms he has been in, the earliest first, so its finds come before he
      leaves them for good (D-160) */
   if (!st.departed && !at0) {
-    const top = s.finds.filter(f => ok(f) && st.visited.has(f.stretch) && isTop(s, f.stretch)).sort((a, b) => a.w - b.w);
+    /* (one that hands over a record first, so no record is left behind at the top; then one in the room he is in) */
+    const inRoom = (f: Find) => areaOf(s, f.stretch) === areaOf(s, st.stretch);
+    const top = s.finds.filter(f => ok(f) && st.visited.has(f.stretch) && isTop(s, f.stretch))
+      .sort((a, b) => (+!a.told - +!b.told) || (+!inRoom(a) - +!inRoom(b)) || a.w - b.w);
     if (why === 'chamber') { const told = top.find(f => f.told); if (told) return told; }
     if (top.length) return top[0];
   }

@@ -17,8 +17,9 @@ const opened = (facts: Fact[]) => facts.filter((f): f is FactOf<'sealOpened'> =>
 
 describe('the road and the niches (D-129)', () => {
   it('the road takes the rows that play a place, carry a sign, or that anything on the road needs; the rest are niches', () => {
+    /* (seal-10-5 a niche since round 2 of the D-160 review: the place that needed it was folded) */
     /* pinned, so a content change that moves a row between the two is seen and decided */
-    expect([...road].sort()).toEqual(['seal-1-1', 'seal-10-1', 'seal-10-2', 'seal-10-3', 'seal-10-4', 'seal-10-5', 'seal-11-1', 'seal-11-2', 'seal-11-4',
+    expect([...road].sort()).toEqual(['seal-1-1', 'seal-10-1', 'seal-10-2', 'seal-10-3', 'seal-10-4', 'seal-11-1', 'seal-11-2', 'seal-11-4',
       'seal-12-1', 'seal-12-5', 'seal-13-1', 'seal-13-2', 'seal-13-5', 'seal-14-1', 'seal-2-1', 'seal-3-1', 'seal-4-1', 'seal-4-2',
       'seal-5-1', 'seal-5-2', 'seal-6-1', 'seal-6-2', 'seal-7-1', 'seal-7-2', 'seal-7-4', 'seal-8-1', 'seal-8-4', 'seal-9-1', 'seal-9-2', 'seal-9-5']);
     /* each plays: a place, a step, or its own line as a step */
