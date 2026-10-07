@@ -22,10 +22,10 @@ export const seals: Seal[] = [
     plain: true },
   { id: 'seal-1-4', w: 1, o: 0, where: 'The Box Room, under the cot', stretch: 'st-camp', seenOnly: true },
   // NOTE: seen-only rows have no Key order; o is 0. seal-1-4 is seen in the open at b-1.C.
-  { id: 'seal-1-5', w: 1, o: 4, where: 'The Mouth, a recess in the shaft wall', stretch: 'st-mouth',
+  { id: 'seal-1-5', w: 1, o: 4, where: 'The Mouth, beside the foot of the ladder', stretch: 'st-mouth',
     line: 'At the bottom of the shaft, beside the foot of the ladder, is a recess in the brick wall: a small alcove like a little cupboard, with a nail above it and a row of notches along its lip. Soft light fills the notches, the whole row at once, and the recess opens. Inside, a brass tag hangs on a nail, stamped with a shaft number. It looks like an official label for the shaft, the kind a company or council would use. You leave it hanging.',
     plain: true },
-  { id: 'seal-1-6', w: 1, o: 5, where: 'The Salt Gallery, a niche by the split, low', stretch: 'st-salt',
+  { id: 'seal-1-6', w: 1, o: 5, where: 'The Salt Gallery, a niche low in the salt wall', stretch: 'st-salt',
     line: 'In the Salt Gallery, low down beside the split in the salt wall, is a niche with its mouth closed and a row of dark notches on its lip. Light fills them, the whole row at once, and the niche opens. Inside is a small clay flask, stoppered with a twist of wool. You lift it out: it is empty, and as light as an eggshell, like something put away with care. You set it back where you found it.',
     plain: true },
 
@@ -206,7 +206,7 @@ export const seals: Seal[] = [
     plain: true },
 
   /* ---- week 13 (row 6 is new) ---- */
-  { id: 'seal-13-1', w: 13, o: 1, where: 'The side gallery, a niche by the shut door', stretch: 'st-side', beat: 'b-13.1',
+  { id: 'seal-13-1', w: 13, o: 1, where: 'The side gallery, a niche by the shut door', stretch: 'st-side', arrival: 'b-13.1',
     carries: { guess: ['mk-long-sleep', 'mk-mark'] } },
   { id: 'seal-13-2', w: 13, o: 2, where: 'The side gallery, the shut door', stretch: 'st-side', arrival: 'b-13.A',
     carries: { records: ['rec-v6'] } },

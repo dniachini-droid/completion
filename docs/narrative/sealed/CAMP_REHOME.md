@@ -376,3 +376,70 @@ The old-save panel judged saves made under older orders of places (`app/tests/sa
 | Paintings (item 14) | Noted in PAINTING_BRIEFS for the art pass. |
 
 Checked by carrying every fixture on from a place every few places (normal pace, kept bedtime, four weeks): no place on foot below the top is reached behind where the save already is; the first moves are the top's owed moments as trips (`b-3.7`, `b-3.6`, and `b-4.C`/`b-3.5` where owed), then the route on from the stop. With the engine change that counts a K place as reached when an old save opened its row, `b-3.5`, `b-4.2` and `b-5.1` never replay what a save already saw. Rule kept: nothing a word place requires may play on the way to it (§8.1 item 12).
+
+## 10. Round 2 of the player's-eye review (2026-10-07; built)
+
+Normal pace, judged again (22 of 110 moves failed by a majority, was 31; the story reader's blockers 2, was 4). Every content item is fixed in `app/src/content/sealed/`. Move numbers refer to the round-2 transcript in the session's scratchpad.
+
+| Item | Fix |
+|---|---|
+| **1 (blocker)** a copy reading of the second turn's tablet before the tablet's screen | `b-5.A` req `b-5.1` (the place), not `seal-5-1`: a row a K place opens is open the moment the minutes reach it, before its screen is seen; a place is known only once seen. No other step needs a K place's row (checked). |
+| **2 (blocker)** the camp named the gap before it was found | `fd-f06` (the chips under the gap) req `b-5.B`. |
+| **3** the flame "moves a little" / "does not bend" | `b-w1.camp`: it stands upright and never flickers. |
+| **4** the corner re-introduced | `cv-05` is the trough itself; its look a line, not `fd-c01`. |
+| **5** locks listed before their feature | Every Key niche now either names only what its stretch's first place shows or is brought into view by the beat that shows it: `seal-1-5` "beside the foot of the ladder", `seal-1-6` "a niche low in the salt wall"; in view: `seal-2-2` (`b-2.A`), `seal-2-6` (`pl-w2-box-by-the-cot`), `seal-3-6` (`b-3.B`), `seal-3-4` (`b-3.6`), `seal-3-5` (`b-3.7`), `seal-3-3`, `seal-7-3` (`b-4.2`), `seal-6-6` (`pl-w6-square-gallery`), `seal-8-3` (`b-8.A`), `seal-11-7` (`pl-w9-benches`), `seal-12-3` (`b-11.A`), `seal-12-4`, `seal-12-6` (`pl-w10-blast-floor`), `seal-14-2` (`b-14.2`). `pl-w1-pick-niche` shows the pick marks round its niche (its name explained) and no longer copies the hall's niche. |
+| **6** "where the rod lay" | `cv-08` "lies". |
+| **7** one spot, two names | `cv-34` is named "Above the ring", like the place. |
+| **8** the lintel open, Dan stays at the top | `b-3.A`'s wake gives the reason on screen: he does not go down yet; what is below is written in these symbols, and he wants the top's tally, copied, first. `b-4.C` is named "The hall, lit" (the base and the door). |
+| **9** the copy ended in the hall | `b-3.6` starts at the lamp (the base, the wall, the ledge's underside notches "above the niche you crouched at before", the niche at the wall's foot) and ends at the tally's head, packing her sheets. `fd-c15` walks to the tally's end itself. |
+| **10** the top flight told twice; two wear patterns | `ps-t01` no longer lowers him; `ps-t03` is a new thing; `b-3.C` carries the one wear pattern (the stride) and the rail running down to the turn. **`pl-w5-worn-steps` retired** (folded into `b-3.C`); `b-4.2` req `b-3.C`; `cv-39` near `b-3.C`. |
+| **11** a word's set-up said twice | `b-7.A` and `b-13.B` open with a short sentence of their own (the engine shows a word's first sentence twice). |
+| **12** pages previewing the unseen | Every week's page is now a recap of what that week showed: `b-w1.close` (req `b-1.5`), `b-w7.close`, `b-w9.close`, `b-w10.close` (req `b-10.2`), `b-w11.close`, `b-w12.close` (req `b-12.C`), `b-w13.close`, `b-w14.close` (req `b-14.A`). |
+| **13** "feeds" vs "nothing flows" | `pl-w8-channel`, `cv-31`: "runs into". |
+| **14, 15** the steep stair's camp; why leave the Reading Room; the narrow way unseen | `pl-w8-steep-foot` plants the narrow way beside the stair's foot and its faint smell; `cv-23` camps between them (look: no ripple round the last step). `b-8.C`: most of what is cut in the Reading Room is still beyond him, so he goes to the narrow way by the smell. |
+| **16** "go back to the lintel" | `b-10.A` "At the lintel at the foot of the narrow way…". |
+| **17** "the log" before it is read | `cv-26`, `b-10.C` say "the book of paper"; `ps-b08` req `b-10.2`. |
+| **18** objects appearing in a searched room | `pl-w10-blast-floor` now shows, from the start, the second book (closed, above the ledge's notches), the iron-bound bucket under the ledge, and the shelf's box and niche. `b-11.A`: the book falls open when the notches fill; `b-12.A`: the bucket is now seen to be a well bucket. |
+| **19** micro-places | **`pl-w12-shelf` retired** (its box and niche are seen at `pl-w10-blast-floor`; `tz-w12-a`, `cv-52` follow). **`pl-w13-side-gallery` retired**: **`b-13.1` is a place**, "The niches by the door" (arrivalKey, `seal-13-1` `arrival: b-13.1`): the walk to the door's end, the LONG-SLEEP/MARK tablet on its own screen, the recess and the small niche in view; `b-13.A` req `b-13.1`; `tz-w13-a`, `fd-k03`, `cv-53` follow. |
+| **20** the standing stone never glimpsed | `pl-w6-square-gallery` sees it from far off, before the fall: an upright stone with a blank and two symbols he cannot read. `b-13.B` goes back to "the standing stone you saw from far off". |
+| **21** "You walk down the lower way" at its top | `ps-l01` reworded. |
+| **22** her notebook pages without her voice | Each page now quotes a line of hers: `b-2.3`, `b-3.2`, `b-4.3`, `b-5.2` (where she names the Tenant, as its own moment), `b-6.1`, `b-9.1`, `b-10.3` (the Engineer named in her words), `b-11.3`, `b-12.2`, `b-13.2`. |
+| **23** a trigger to read on in the log | `b-12.A`: the 22nd ended at the stopped watch, and he wants what came after. |
+| **24** nits | `b-w1.tz2` drops "it is warm"; `b-2.1` her pencilled guesses; `b-2.2` a symbol on either side of the blank; "her camp in the Box Room" (`fd-d03`, `fd-d07`, `fd-d11`); `fd-f04` not the unlit lamp from the head of the Stair; repeated glosses trimmed (`b-1.6`, `b-3.1`, `fd-b08`, `fd-c09`, several salt passages, the later tablets "another tablet of pictures and symbols"); `b-11.A` links the surveyor to the channel record's "this one". |
+
+**Route after round 2:** week 4 `b-3.B` · `b-3.C` · `b-4.2` · `pl-w5-second-landing` (4); week 12 `b-12.A` · `pl-w12-square-way` · `b-12.C` (3); week 13 `b-13.1` (K) · `b-13.A` · `b-13.B` · `pl-w13-lower-gallery` (4). 51 places on foot. Retired this round (kept, off the route): `pl-w5-worn-steps`, `pl-w12-shelf`, `pl-w13-side-gallery` (painted: `pt-pl-w5-worn-steps` could serve `b-3.C`'s view `cv-39`; `pt-pl-w13-side-gallery` suits `b-13.1`).
+
+**Retcons (§55).** R11: the blast room's second book, bucket, box and the shelf's niche are visible from the first look (no fact changes; seen earlier). R12: the standing stone is seen from far off in week 6 (seen earlier; read and cut in week 13 as before). R13: the narrow way is visible beside the steep stair's foot from week 8. R14: the stride wear is on the top flight's steps seen at `b-3.C` (no separate place). No sign, record week, ending or canon changed.
+
+### 10.1 Round 2, old saves carried on
+
+- **`absorbs`** (a merged beat counts as played for a save that played or opened all it took over): `b-4.C` ← `b-3.3`, `pl-w3-far-end`; `b-3.5` ← `pl-w3-salt-lit`, `seal-5-2`; `b-3.7` ← `pl-w6-folder`, `pl-w4-recess-above-the-cot`. Not `b-3.6` (the copy is new to every old save). The other merges (`b-1.B`, `b-3.C`, `b-4.2`, `b-5.1`, `b-13.1`, `pl-w6-square-gallery`, `pl-w10-blast-floor`) come before what they absorbed in every old order, or keep the old beat's id.
+- **`back`** (the on-screen reason for a trip back up, the climb included) on every top beat an old save already gone down may still meet: `b-4.C`, `b-3.5`, `b-3.6`, `b-3.7`, `b-4.B`, `b-3.1`, `b-3.2`. The portable steps (`b-4.3`, `b-4.A`, `b-5.A`, `b-5.2`) play wherever he is and need none.
+- **Way-in lines** are origin-neutral ("Back onto the Stair.", "Back down the narrow way below the Water…"); places that named where he came from no longer do: `b-9.A`, `pl-w9-approach`, `pl-w11-cupboard` (now: the log read, he looks round the rest of the room).
+- **Features before their place:** the little door only after `b-4.2` introduces it (`b-3.4` req `b-4.2` and says "the little door"; `b-5.0`, `ps-f02`, `fd-f01` req `b-4.2`); the first turn's finds and passages req `b-4.2` (`fd-e04`, `fd-e08`, `ps-t16`, `ps-t17`), `ps-t12` req `b-3.C`; `b-w6.close` (the tablet under the second turn) req `b-5.1`; the gap (`fd-f06`, item 2 above).
+- **The lone ring** (`fd-c12`) is looked at "above the tally", not "further in"; "Above the ring" is one name (item 7 above).
+- **The lamp's base** (`b-1.7`): no box on the lamp's side any more; the open hook is the start of one of the base's three symbols, so every line agrees (three on the base, the hook closed on a dot in its corner).
+
+### 10.2 Round 2, short and long days
+
+| Item | Fix |
+|---|---|
+| 1 a camp view walked him to the dark door after the cups lit | `fd-b07` (the dust line under the great door, beyond the light) until `b-3.A`. |
+| 2 the copy spanned the Box Room | **`b-3.2` is a place**, "Her notebook and folder" (week 3, after `b-4.C`): Day 6 taken, the folder, the recess, the ledge's box, with its reason ("Before you take anything down the Stair…"). **`b-3.7` retired** into it (an off-route place). `b-3.6` req `seal-5-2`, `b-3.1`, `b-3.2`, `seal-4-2`; week 3 now holds two steps only (`b-3.1`, `b-4.B`), so on a long day they come as their own returns. `tz-w4-b`, `tz-w6-b` req `b-3.2`. Old saves: `b-3.2` was played by every old save; a save that never saw the folder keeps it unseen (nothing before week 15 needs it). |
+| 3 the gap previewed the square gallery's record | `b-5.B` sees only "something carved in a long line, too far off to read"; `rec-v1` is first shown at `b-6.A`; `tz-w5-b` follows. |
+| 4 tape and hook | `fd-h04` drops "like the tape on her cot"; `b-8.2`: "the hook with a tail on the rod's handle". |
+| 5 the cross read before it was guessed | `b-9.C`'s line shows the cross as a cross. |
+| 6 the shoebox | `pl-w2-box-by-the-cot` also shows her bag of spent batteries. |
+| 7 the side gallery's thin way in | **`pl-w12-square-way` retired**: `b-12.C` opens with the low doorway and the side gallery, then the sill. `fd-k01`, `fd-k02`, `cv-19` follow. |
+| 8 the flat ceiling; stitches | `ps-g03` no longer "the only flat ceiling"; `cv-29` no "stitches". |
+| 9 a first look down the hall after walking it | `ps-h01` until `b-1.B`. |
+| 10 the split before it was shown | `fd-c10`, `fd-c11`, `ps-c09`, `ps-c16`, `ps-c29` req `b-1.5`. |
+| 11 the tally's end before the crust fell | `fd-c15` req `b-3.5` (the place, seen), not `seal-5-2`. |
+| 12 the first turn from the top flight | covered in §10.1 (`fd-e04`, `fd-e08`, `cv-12`). |
+| 13 a night thought ahead of the gallery | `b-w4.camp`: the bar with a tick "you have copied again and again from the tally" (no claim about every record). |
+| 14 filler returns | New lines: `ps-t05`, `ps-g01`, `ps-r01`, `ps-r02`, `ps-b04`, `ps-l02`. |
+| 15 the near shore | `ps-w01` "the Water's shore". |
+| 16 the lower way | `ps-l01` (above). |
+| 17 paintings | Noted in PAINTING_BRIEFS. |
+
+Every area's way-in line is origin-neutral (§10.1), since a step told in another reached room now moves him there. **Route after round 2:** 50 places on foot (week 3 five: `b-3.A` · `b-4.C` · `b-3.2` · `b-3.5` · `b-3.6`; week 12 two: `b-12.A` · `b-12.C`).

@@ -287,7 +287,7 @@ export const records: RecordFragment[] = [
   },
   {
     // NOTE: MVP §4 gives w as 5–6 (seen through the gap at b-5.B, read in part at b-6.A); `w` is the earliest.
-    id: 'rec-v1', life: 'V', kind: 'cut', where: 'the square gallery, on the square wall', w: 5, firstShown: ['b-5.B', 'b-6.A'],
+    id: 'rec-v1', life: 'V', kind: 'cut', where: 'the square gallery, on the square wall', w: 5, firstShown: ['b-6.A'],
     cut: [
       head('two'),
       [s('mark', 'Marks'), s('toward', 'for'), OVERSEER, p('.')],
