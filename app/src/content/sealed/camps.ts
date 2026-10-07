@@ -16,7 +16,7 @@ export const camps: CampView[] = [
     req: [],
     until: "b-3.B",   // the top: never once he has gone down (D-160)
     name: "The ladder's foot",
-    line: "You camp at the bottom of the shaft, by the foot of the ladder. Eleven metres above you is a small square of white sky, and the ladder climbs straight up to it. The air moves past you, up the shaft and out.",
+    line: "You camp at the bottom of the shaft, by the foot of the ladder. Eleven metres above you is a small square of sky, and the ladder climbs straight up to it. The air moves past you, up the shaft and out.",
     look: {"find": "fd-a02"},
   },
   {
@@ -53,7 +53,7 @@ export const camps: CampView[] = [
     id: "cv-05",
     stretch: "st-hall",
     w: 1,
-    req: [],
+    req: ["b-1.B"],   // the corner, its troughs and the great door are first seen at b-1.B (D-160 check)
     until: "b-3.B",   // the top: never once he has gone down (D-160)
     name: "In the trough",
     line: "You camp at the corner at the far end of the Lamp Hall, beside the great door. Before you settle, you step down into one of the two long troughs worn into the floor there and stand in it for a moment. The other is a stride away, just as deep and just as smooth.",
@@ -105,14 +105,14 @@ export const camps: CampView[] = [
     w: 3,
     req: [],
     name: "The head of the Stair",
-    line: "You camp on the landing at the head of the Stair, just beyond the lintel. The landing is wide enough for a cart. Below you, the top flight goes down into the light of the flames in its cups, which were already burning the first time you came this way.",
+    line: "You camp on the landing at the head of the Stair, just beyond the lintel. The landing is wide enough for a cart. Below you, the top flight goes down into the light of the flames in its cups, which were already burning before you came.",
     look: {"find": "fd-e07"},
   },
   {
     id: "cv-11",
     stretch: "st-stair",
     w: 3,
-    req: [],
+    req: ["b-3.C"],   // he starts down the top flight at b-3.C (D-160 check)
     name: "Halfway down",
     line: "You camp halfway down the top flight of the Stair, on a step deep enough to lie on. From here you can see that every step is as high as your knee, and the rail cut into the wall stands at the height of your chest. It all seems made for someone much taller than you.",
     look: {"find": "fd-e09"},
@@ -121,7 +121,7 @@ export const camps: CampView[] = [
     id: "cv-12",
     stretch: "st-stair",
     w: 4,
-    req: [],
+    req: ["b-4.1"],   // he reaches the first turn and sees the little door at b-4.1 (D-160 check)
     name: "The first turn",
     line: "You camp at the first turn of the Stair, where the rail cut from the wall curls round the bend. Below, the second flight goes on down, and on it you can see the little door, small and shut, with its row of notches.",
     look: {"find": "fd-e05"},
@@ -141,7 +141,7 @@ export const camps: CampView[] = [
     w: 5,
     req: ["b-5.B"],
     name: "The gap",
-    line: "You camp on the second flight, by the gap, the rough hole in the stair wall at shoulder height. Through it you can see the square-cut stone of the square gallery, and a draught comes through that smells of old smoke, as if fires once burned somewhere beyond.",
+    line: "You camp on the second flight, by the gap, the rough hole in the stair wall at shoulder height. Through it you can see the square-cut stone of the gallery beyond, and a draught comes through that smells of old smoke, as if fires once burned somewhere beyond.",
     look: {"find": "fd-f06"},
   },
   {
@@ -252,7 +252,7 @@ export const camps: CampView[] = [
     w: 10,
     req: ["b-10.2"],
     name: "By the log",
-    line: "You camp in the blast room, with your back against the ledge where the log lies open. The pencil in its fold has not moved since you first saw it.",
+    line: "You camp in the blast room, with your back against the ledge where the log lies open, a pencil in its fold.",
     look: {"find": "fd-i05"},
   },
   {
