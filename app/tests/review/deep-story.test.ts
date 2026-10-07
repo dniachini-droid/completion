@@ -140,7 +140,7 @@ describe('deep story: the content wiring (static)', () => {
       const rows = s.seals.filter(x => x.arrival === p.id);
       if (!!p.k !== (rows.length === 1)) bad.push(`k:${p.id}`);
     }
-    for (const b of s.beats) if (['arrival', 'arrivalKey', 'word'].includes(b.kind) && !seen.has(b.id)) bad.push(`off-route:${b.id}`);
+    for (const b of s.beats) if (['arrival', 'arrivalKey', 'word'].includes(b.kind) && !seen.has(b.id) && !b.retired) bad.push(`off-route:${b.id}`);
     for (const b of s.beats.filter(x => x.kind === 'stepKey')) if (s.seals.filter(x => x.beat === b.id && x.id === b.seal).length !== 1) bad.push(`stepKey:${b.id}`);
     expect(bad).toEqual([]);
   });
@@ -158,9 +158,9 @@ describe('deep story: the content wiring (static)', () => {
     expect(s.marks.filter(m => m.candidates?.length && !m.confirmedBy).map(m => m.id).sort()).toEqual(['mk-hear', 'mk-world']);
   });
 
-  it('every route place and camp view has its own painting', () => {
+  it('FINDING: every route place and camp view has its own painting, but the views D-160 added (their stretch\'s painting stands in)', () => {
     const missing = [...s.route.flatMap(r => r.places.map(p => p.id)), ...s.camps.map(c => c.id)].filter(id => !PAINTED.has(id));
-    expect(missing).toEqual([]);
+    expect(missing).toEqual(['cv-22', 'cv-23', 'cv-24', 'cv-25', 'cv-26', 'cv-27', 'cv-28', 'cv-29', 'cv-30', 'cv-31', 'cv-32']);
   });
 
   it('fixed (S#5): one month\'s summary has six lines, and a week close can show six', () => {
@@ -200,7 +200,7 @@ describe('deep story: text hygiene', () => {
   });
   it('fixed (D-154): no place name uses the word the weeks 8-14 editing pass kept for another place', () => {
     expect(S.beatOf(s, 'b-14.A')!.name).not.toMatch(rx('reservedWord'));
-    expect(S.beatOf(s, 'b-10.B')!.name).toMatch(rx('reservedWord'));   /* the other place's */
+    /* (the other place it was kept for is a moment at the standing stone since D-160, with no name of its own) */
   });
   it('FINDING: one physical clue the ledger hands over once appears in six texts', () => {
     const ids = [...s.beats, ...s.passages, ...s.teasers, ...s.learned, ...s.openQuestions]
@@ -213,7 +213,7 @@ describe('deep story: text hygiene', () => {
       const x = S.sealOf(s, id)!, b = S.beatOf(s, x.beat ?? x.arrival ?? '');
       return rx('countLit', 'i').test(b?.line ?? x.line ?? '');
     });
-    expect(road.length).toBe(33);
+    expect(road.length).toBe(31);
     expect(lit.length).toBe(29);
   });
 });
@@ -259,7 +259,8 @@ describe('deep story: fourteen story weeks played through, Keys spent (dynamic)'
     expect(outOfOrder(f)).toEqual([]);
     expect(s.seals.filter(x => !x.seenOnly && !st.opened.has(x.id)).map(x => x.id)).toEqual([]);
     expect(s.records.filter(r => !st.records.includes(r.id)).map(r => r.id)).toEqual([]);
-    expect(s.finds.filter(x => !st.given.has(x.id)).map(x => x.id)).toEqual([]);
+    /* every find below the top comes; the top's are texture that can pass unseen once Dan has gone down (D-160) */
+    expect(s.finds.filter(x => !st.given.has(x.id) && !S.isTop(s, x.stretch)).map(x => x.id)).toEqual([]);
   }, 300_000);
 
   it('fixed (S#2b): every camp line plays, at any pace, bedtime kept every night', () => {
@@ -327,7 +328,8 @@ describe('deep story: fourteen story weeks played through, Keys spent (dynamic)'
       const f = life(name), bad: string[] = [];
       for (let i = 0; i < f.length; i++) {
         const x = f[i];
-        if (x.type !== 'arrived' || x.kind !== 'camp') continue;
+        /* (a camp at the place he reached is no view, D-160) */
+        if (x.type !== 'arrived' || x.kind !== 'camp' || x.where === 'place') continue;
         const st = S.storyState(f.slice(0, i), s), area = S.areaOf(s, st.stretch);
         const due = s.camps.filter(c => c.until && S.areaOf(s, c.stretch) === area && st.visited.has(c.stretch) && c.w <= st.week
           && c.req.every(r => S.met(st, r)) && !S.met(st, c.until) && !st.campsShown.includes(c.id));

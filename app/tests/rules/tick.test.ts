@@ -78,12 +78,14 @@ describe('Ticked off with the time it took (D-134)', () => {
     expect(p.facts.length).toBe(m);
   });
 
-  it('no limit: a day of ticked jobs counts every minute, reaches places, and completes the day', () => {
+  it('no limit: a day of ticked jobs counts every minute, reaches places, and finishes the list', () => {
     const p = player().do({ do: 'open' });
     const slate = p.view().slate;
     for (const id of slate) p.do({ do: 'tickOff', job: id, minutes: 180 });
     expect(p.view().walked).toBe(180 * slate.length);
-    expect(p.facts.some(f => f.type === 'dayCompleted')).toBe(true);
+    /* the list is done; nothing ends the day but Go to sleep (D-160) */
+    expect(p.view().complete).toBe(true);
+    expect(p.facts.some(f => f.type === 'dayCompleted')).toBe(false);
     expect(p.facts.some(f => f.type === 'arrived' && f.kind === 'place')).toBe(true);
   });
 

@@ -59,7 +59,8 @@ describe('six weeks of play', () => {
     /* a Low week stretches the story week; it never stops it: places keep coming */
     expect(st.week).toBeGreaterThanOrEqual(2);
     /* no weekly floor (Dan, D-142): every Key is a rhythm's, none topped up for a week with a day complete */
-    expect(p.facts.some(f => f.type === 'dayCompleted')).toBe(true);
+    /* nothing ends the day but Go to sleep (D-160) */
+    expect(p.facts.some(f => f.type === 'dayCompleted')).toBe(false);
     expect(p.facts.filter(f => f.type === 'keyEarned' && f.rhythm.startsWith('floor:'))).toEqual([]);
     expect([...st.played].filter(x => /^(b-\d\.[A-C]|pl-)/.test(x)).length).toBeGreaterThanOrEqual(8);
   });

@@ -19,8 +19,8 @@ describe('the road and the niches (D-129)', () => {
   it('the road takes the rows that play a place, carry a sign, or that anything on the road needs; the rest are niches', () => {
     /* pinned, so a content change that moves a row between the two is seen and decided */
     expect([...road].sort()).toEqual(['seal-1-1', 'seal-10-1', 'seal-10-2', 'seal-10-3', 'seal-10-4', 'seal-10-5', 'seal-11-1', 'seal-11-2', 'seal-11-4',
-      'seal-12-1', 'seal-12-2', 'seal-12-5', 'seal-13-1', 'seal-13-2', 'seal-13-5', 'seal-14-1', 'seal-2-1', 'seal-3-1', 'seal-4-1', 'seal-4-2',
-      'seal-5-1', 'seal-5-2', 'seal-6-1', 'seal-6-2', 'seal-7-1', 'seal-7-2', 'seal-7-4', 'seal-7-5', 'seal-8-1', 'seal-8-4', 'seal-9-1', 'seal-9-2', 'seal-9-5']);
+      'seal-12-1', 'seal-12-5', 'seal-13-1', 'seal-13-2', 'seal-13-5', 'seal-14-1', 'seal-2-1', 'seal-3-1', 'seal-4-1', 'seal-4-2',
+      'seal-5-1', 'seal-5-2', 'seal-6-1', 'seal-6-2', 'seal-7-1', 'seal-7-2', 'seal-7-4', 'seal-8-1', 'seal-8-4', 'seal-9-1', 'seal-9-2', 'seal-9-5']);
     /* each plays: a place, a step, or its own line as a step */
     for (const id of road) { const x = S.sealOf(s, id)!; expect(!!(x.beat || x.arrival || x.line), id).toBe(true); expect(x.seenOnly, id).toBeFalsy(); }
     /* each can open on the road: its step is a Key's step, its place is on the route, and whatever brings it into view is
@@ -63,18 +63,17 @@ describe('with no Keys at all, the story goes on by work alone (D-129)', () => {
     expect(facts.filter(f => f.type === 'keyEarned' && !f.rhythm.startsWith('floor:'))).toEqual([]);
     expect(rows.at(-1)!.storyWeek).toBeGreaterThanOrEqual(6);
     const st = S.storyState(facts, s);
-    for (const id of ['b-3.B', 'b-4.B', 'b-6.B']) {
+    /* (b-4.B is a moment at the top in week 3 since D-160, its row opened by the road: a step, not a place) */
+    expect(st.played.has('b-4.B')).toBe(true);
+    for (const id of ['b-3.B', 'b-6.B']) {
       expect(st.played.has(id), id).toBe(true);
-      /* a place at home once the way down is open comes as an evening at camp, off the walking meter (D-154) */
-      expect(facts.find(f => f.type === 'arrived' && f.id === id)).toMatchObject({ how: S.isHome(s, S.beatOf(s, id)!.stretch) ? 'evening' : 'foot' });
+      expect(facts.find(f => f.type === 'arrived' && f.id === id)).toMatchObject({ how: 'foot' });
       const x = S.beatOf(s, id)!.seal!;
       expect(opened(facts).find(f => f.seal === x), x).toMatchObject({ how: 'road' });
     }
     /* the rows the road opened came in the order Keys opened them */
-    /* (the rows at home come with the evenings once the way down is open, in their own order, D-154) */
-    const road = opened(facts).filter(f => f.how === 'road').map(f => S.sealOf(s, f.seal)!);
-    for (const order of [road.filter(x => !S.isHome(s, x.stretch)), road.filter(x => S.isHome(s, x.stretch))])
-      for (let i = 1; i < order.length; i++) expect(order[i].w * 100 + order[i].o, order[i].id).toBeGreaterThan(order[i - 1].w * 100 + order[i - 1].o);
+    const order = opened(facts).filter(f => f.how === 'road').map(f => S.sealOf(s, f.seal)!);
+    for (let i = 1; i < order.length; i++) expect(order[i].w * 100 + order[i].o, order[i].id).toBeGreaterThan(order[i - 1].w * 100 + order[i - 1].o);
     expect(aheadOfDan(facts)).toEqual([]);
     expect(outOfOrder(facts)).toEqual([]);
   }, 60_000);
@@ -167,7 +166,8 @@ describe('Keys open only the niches; the road opens its own rows on the way (D-1
       const recs = [...(x?.carries?.records ?? []), ...(b?.carries?.records ?? [])];
       for (const r of recs) expect(w!.records.includes(r), `${f.id} ${r}`).toBe(true);
       for (const m of [...(x?.carries?.guess ?? []), ...(b?.carries?.guess ?? [])])
-        if (S.markOf(s, m)?.confirmedBy !== arr.id) expect(a.guess.includes(m), `${f.id} ${m}`).toBe(true);
+        /* (one settled on the same way, by a carried reading since D-160, isn't asked) */
+        if (S.markOf(s, m)?.confirmedBy !== arr.id && !a.way.some(v => v.beat === S.markOf(s, m)?.confirmedBy)) expect(a.guess.includes(m), `${f.id} ${m}`).toBe(true);
       /* a bit with a small choice offers it here */
       if (b?.choice) expect(w!.choice, f.id).toEqual(b.choice);
       shown++; if (x) roadRows++; if (recs.length) withRecords++;

@@ -386,6 +386,13 @@ export function pickFind(s: Story, st: StoryState, why: string, at0?: StretchId)
     && (!at0 || f.stretch === at0);
   /* never from the top once Dan has gone down (D-160): what he notices is where he is */
   const away = (id: StretchId) => st.departed && isTop(s, id);
+  /* at the top, before he goes down: any of its rooms he has been in, the earliest first, so its finds come before he
+     leaves them for good (D-160) */
+  if (!st.departed && !at0) {
+    const top = s.finds.filter(f => ok(f) && st.visited.has(f.stretch) && isTop(s, f.stretch)).sort((a, b) => a.w - b.w);
+    if (why === 'chamber') { const told = top.find(f => f.told); if (told) return told; }
+    if (top.length) return top[0];
+  }
   for (let i = at; i >= 0; i--) {
     if (away(order[i])) continue;
     const pool = s.finds.filter(f => f.stretch === order[i] && ok(f));
@@ -581,7 +588,8 @@ export function settledBy(s: Story, st: StoryState, beat: string): { mark: strin
 
 /** The next deep beat that may play: this story week's, in order, its req met. */
 export function nextDeep(s: Story, st: StoryState): Beat | null {
-  const deep = s.beats.filter(b => b.kind === 'deep' && !st.played.has(b.id) && b.w <= st.week && allMet(st, b.req));
+  /* never one at the top once Dan has gone down (D-160): a deep push is where he is */
+  const deep = s.beats.filter(b => b.kind === 'deep' && !st.played.has(b.id) && b.w <= st.week && allMet(st, b.req) && !(st.departed && isTop(s, b.stretch)));
   deep.sort((a, b) => a.w - b.w || a.o - b.o);
   return deep[0] ?? null;
 }

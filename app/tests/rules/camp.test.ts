@@ -8,6 +8,7 @@ import { arrivalAt } from '../../src/core/game';
 import type { Fact, FactOf } from '../../src/core/types';
 import { content as C } from '../../src/content/world';
 import { sim, type Week } from './sim';
+import { readFileSync } from '../review/node';
 
 const s = C.story;
 const route = s.route.flatMap(r => r.places.map(p => p.id));
@@ -92,4 +93,36 @@ describe('camp where you are (D-160)', () => {
       }
     }
   });
+});
+
+describe('saves from the last two builds carry on (D-154, D-159 → D-160)', () => {
+  const load = (set: string, n: string) => JSON.parse(readFileSync(new URL(`../saves/${set}/${n}.json`, import.meta.url), 'utf8')).facts as Fact[];
+  const saves = [...['normal-kept', 'normal-nobed', 'high-kept', 'low-nobed'].map(n => ({ n: `d159 ${n}`, facts: load('route-d159', n) })),
+    ...['normal-kept', 'normal-nobed'].map(n => ({ n: `d154 ${n}`, facts: load('route-d154', n) }))];
+  it('each carries on to the end of week 14: nothing lost, nothing replayed, no stall; a trip back up says so and leaves Dan where he was', () => {
+    for (const { n, facts } of saves) {
+      const d = sim(undefined, undefined, n.endsWith('nobed') ? undefined : 'kept', facts);
+      for (let k = 0, extra = 0; k < 30 && extra < 1; k++) { d.week('normal'); if (route.every(id => d.st().played.has(id)) && d.st().week === 14) extra++; }
+      const after = d.facts, st = S.storyState(after, s);
+      expect(route.filter(id => !st.played.has(id)), n).toEqual([]);
+      expect(st.week, n).toBe(14);
+      const ids = arrivals(after).filter(f => f.kind === 'place').map(f => f.id);
+      expect(ids.filter((id, i) => ids.indexOf(id) !== i), n).toEqual([]);
+      const beats = after.filter((f): f is FactOf<'beatPlayed'> => f.type === 'beatPlayed' && f.id !== 'passage').map(f => f.id);
+      expect(beats.filter((id, i) => beats.indexOf(id) !== i), n).toEqual([]);
+      /* everything the save had stays: every fact it held is still there, first */
+      expect(after.slice(0, facts.length), n).toEqual(facts);
+      /* after the save: no evenings, no day complete; a place at the top is a told trip that leaves him where he was */
+      const gone = after.slice(facts.length);
+      expect(gone.some(f => f.type === 'dayCompleted' || (f.type === 'arrived' && (f.kind === 'evening' || f.how === 'evening'))), n).toBe(false);
+      for (const f of arrivals(gone).filter(a => a.kind === 'place')) {
+        const a = arrivalAt(after, C, f.seq)!, b = S.beatOf(s, f.id)!;
+        const before = S.storyState(after.filter(g => g.seq < f.seq), s);
+        if (before.departed && S.isTop(s, b.stretch)) {
+          expect(a.errand, `${n} ${f.id}`).toBe(true);
+          expect(S.storyState(after.filter(g => g.seq <= f.seq), s).stretch, `${n} ${f.id}`).toBe(before.stretch);
+        }
+      }
+    }
+  }, 900_000);
 });

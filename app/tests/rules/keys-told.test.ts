@@ -43,13 +43,15 @@ describe('Today shows the Keys kept and what needs one (Dan, D-142)', () => {
   it('the count is the Keys earned and not yet used; "Needs a Key" only on a sealed thing a Key alone opens', async () => {
     const S = await import('../../src/core/story');
     const { see } = await import('../../src/core/game');
-    const { facts } = heavy(35, 2);
+    /* (Keys kept, not spent on the Map: since D-160 the top's locks are all in view by week 3, so a player who spends every
+       Key at the day's end never holds one overnight) */
+    const { facts } = heavy(35, 2, true, 1, { noMap: true });
     let kept = 0, needs = 0;
     for (const day of [...new Set(facts.map(f => f.day))]) {
       const upTo = facts.filter(f => f.day <= day), last = upTo[upTo.length - 1];
       const v = see(upTo, C, last.at), st = S.storyState(upTo, C.story);
       expect(v.keys, day).toBe(st.held);
-      const view = S.inView(C.story, st);
+      const view = S.inView(C.story, st, st.stretch);
       expect(v.aheadKey, day).toBe(!!view && !S.onRoad(C.story, view.id));
       if (v.keys) kept++; if (v.aheadKey) needs++;
     }

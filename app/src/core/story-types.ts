@@ -160,6 +160,8 @@ export interface Beat {
   /** Read wherever Dan is (her notebook, carried with him from the Day 6 page): never held for an evening at camp, never
       captioned with an area (D-155). */
   portable?: boolean;
+  /** Off the route since D-160 (merged, cut, or made a step): kept only so an old save's facts still read (CAMP_REHOME §7). */
+  retired?: boolean;
 }
 
 /** A named place with no fragment, added by the story job (a `pl-` id). Plays as an arrival. */

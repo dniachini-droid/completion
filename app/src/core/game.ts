@@ -432,7 +432,9 @@ function knownState(w: W, c: Content) {
   return S.storyState(w.all.filter(f => !(f.type === 'arrived' && !seen.has(f.seq))), c.story);
 }
 function giveFind(w: W, c: Content, why: FactOf<'findGiven'>['why'], at: Moment, day: string, job?: number) {
-  const f = S.pickFind(c.story, knownState(w, c), why);
+  /* from what Dan has been shown, but once he has gone down never the top, even before the screen that took him down
+     has shown (D-160) */
+  const f = S.pickFind(c.story, { ...knownState(w, c), departed: S.storyState(w.all, c.story).departed }, why);
   if (!f) return;
   w.put({ type: 'findGiven', id: f.id, why, ...(job ? { job } : {}) }, at, day);
   if (f.told) show(w, c, [f.told], at, day);

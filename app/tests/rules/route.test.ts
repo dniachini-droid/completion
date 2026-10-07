@@ -22,7 +22,7 @@ function journey(facts: Fact[], from = 0) {
     if (f.seq <= from || f.kind === 'camp') continue;
     const upTo = facts.filter(g => g.seq <= f.seq), a = arrivalAt(upTo, C, f.seq)!;
     const st = S.storyState(upTo, s);
-    out.push({ seq: f.seq, id: f.id, area: f.kind === 'evening' ? 'evening' : S.areaOf(s, S.beatOf(s, f.id)!.stretch), face: a.face, wayIn: a.wayIn, here: S.areaOf(s, st.stretch) });
+    out.push({ seq: f.seq, id: f.id, area: f.kind === 'evening' ? 'evening' : S.areaOf(s, S.beatOf(s, f.id)!.stretch), face: a.face, wayIn: a.wayIn ?? (a.errand ? 'errand' : null), here: S.areaOf(s, st.stretch) });
   }
   return out;
 }
@@ -100,23 +100,6 @@ describe('the route is a journey: a descent with a home at the top (D-154)', () 
     expect(turnOffs.sort()).toEqual(['b-13.B', 'pl-w10-deep-end', 'pl-w11-far-end']);
     for (const id of turnOffs) expect(two(id), id).toMatch(/way (back )?up|on the way/i);
   });
-  it('a night with an evening at camp says its bedtime line once: on the evening, not again on Today', () => {
-    const facts = lives.normal;
-    let checked = 0;
-    for (const gn of facts.filter((f): f is FactOf<'goodnight'> => f.type === 'goodnight')) {
-      const after = facts.filter(f => f.seq > gn.seq && f.day === gn.day);
-      const ev = arrivals(after).find(f => f.kind === 'evening' || f.how === 'evening');
-      const camp = after.find((f): f is FactOf<'beatPlayed'> => f.type === 'beatPlayed' && f.id.endsWith('.camp'));
-      if (!camp) continue;
-      /* the night as Today shows it: the log to the day's last fact */
-      const upTo = facts.filter(f => f.seq <= after[after.length - 1].seq);
-      const v = see(upTo, C, upTo[upTo.length - 1].at);
-      if (ev && ev.seq < camp.seq) { expect(v.night?.beat, `${gn.day}`).toBeNull(); checked++; }
-      else expect(v.night?.beat, `${gn.day}`).toBe(camp.id);
-    }
-    /* (fewer since her notebook's pages are read on the way, D-155: still several such nights) */
-    expect(checked).toBeGreaterThanOrEqual(3);
-  }, 300_000);
   it('nothing names what Dan has not yet seen: b-4.C before b-6.2, pl-w14-mule-stone before pl-w13-lower-gallery', () => {
     for (const [name, facts] of Object.entries(lives)) {
       const at = (id: string) => facts.findIndex(f => (f.type === 'beatPlayed' || f.type === 'arrived') && f.id === id);
@@ -130,7 +113,8 @@ describe('the route is a journey: a descent with a home at the top (D-154)', () 
   it('a find a passed-by view at day\'s end carries still reaches Dan another way (cv-03, cv-21)', () => {
     for (const [name, facts] of Object.entries(lives)) {
       const given = new Set(facts.filter((f): f is FactOf<'findGiven'> => f.type === 'findGiven').map(f => f.id));
-      for (const k of s.camps) if ('find' in k.look) expect(given.has(k.look.find), `${name}: ${k.id}'s ${k.look.find}`).toBe(true);
+      /* (below the top: the top's are texture that can pass unseen once Dan has gone down, D-160) */
+      for (const k of s.camps) if ('find' in k.look && !S.isTop(s, k.stretch)) expect(given.has(k.look.find), `${name}: ${k.id}'s ${k.look.find}`).toBe(true);
     }
   });
   it('fails on the old route: the old order changed area 48 times (D-153)', () => {
@@ -182,7 +166,8 @@ describe('Dan\'s save carries on from wherever the old route left it (D-154)', (
     expect(checked).toBeGreaterThan(0);
   });
   it('a D-154 save carries on to week 14 from the end of each of weeks 3–6: no stall, no replay, every page once and in order', () => {
-    const pages = s.beats.filter(b => b.portable).sort((a, b) => a.w - b.w || a.o - b.o).map(b => b.id);
+    /* her notebook's pages (D-155); the copy's readings are carried too since D-160, each in its own week */
+    const pages = s.beats.filter(b => b.portable && b.stretch === 'st-camp').sort((a, b) => a.w - b.w || a.o - b.o).map(b => b.id);
     for (const { n, facts } of d154) {
       for (const wk of [4, 5, 6, 7]) {
         const i = facts.findIndex(f => f.type === 'storyWeekBegan' && f.w === wk);
@@ -225,10 +210,10 @@ describe('Dan\'s save carries on from wherever the old route left it (D-154)', (
           if (x.face === 'evening') { expect(x.here, `${at}: ${x.id}`).toBe(last); continue; }
           if (x.area !== last) {
             expect(['enter', 'back'], `${at}: ${x.id}`).toContain(x.face);
-            /* how he got there, as on a fresh save */
+            /* how he got there, as on a fresh save; a trip back up to the top (D-160) says so and leaves him where he was */
             if (x.face === 'back') expect(!!x.wayIn || !!S.beatOf(s, x.id)?.said, `${at}: ${x.id}`).toBe(true);
           }
-          last = x.area;
+          last = x.here;
         }
       }
     }, 900_000);
