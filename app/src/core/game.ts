@@ -1505,7 +1505,9 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
     case 'addToday': addJob(w, c, v, base, day, cmd.line, day, cmd.from); break;
     case 'bedtime': if (/^\d\d:\d\d$/.test(cmd.time)) w.put({ type: 'bedtimeSet', time: cmd.time }); break;
     case 'goodnight': {
-      if (ofType(onDay(w.all, day), 'goodnight').length) break;
+      /* once a night: again on the same day only after more work since (a nap's camp, then the evening's, D-160) */
+      const gn0 = ofType(w.all, 'goodnight').pop();
+      if (gn0 && gn0.day === day && !ofType(w.all, 'stepsGained').some(f => f.seq > gn0.seq && f.job !== 'sleep')) break;
       const past = pastBedtime(bedtimeOf(w.all), now), kept = past <= BEDTIME_GRACE && past >= -BEDTIME_WINDOW;
       w.put({ type: 'goodnight', kept });
       /* the day ends here and only here (D-160): Dan camps where he is, at the place he reached or at a view of the stretch
@@ -2202,7 +2204,8 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
 
   /* slice 4: tonight, the morning after, the welcome back, the daybook's new page, the deep push */
   const sugg = suggestedOn(facts, day);
-  const gn = ofType(onDay(facts, day), 'goodnight')[0];
+  /* tonight's: the last goodnight of the day, unless there has been work since (then the day goes on, D-160) */
+  const gn = ((g) => g && !ofType(facts, 'stepsGained').some(f => f.seq > g.seq && f.job !== 'sleep') ? g : undefined)(ofType(onDay(facts, day), 'goodnight').pop());
   const campLine0 = gn ? facts.find(f => f.seq > gn.seq && f.type === 'beatPlayed' && f.id.endsWith('.camp') && f.day === day) as FactOf<'beatPlayed'> | undefined : undefined;
   /* an evening that night already ends on the bedtime line: Today doesn't say it twice (D-154) */
   const campLine = campLine0 && !facts.some(f => f.type === 'arrived' && (f.kind === 'evening' || f.how === 'evening') && f.seq > gn!.seq && f.seq < campLine0.seq) ? campLine0 : undefined;

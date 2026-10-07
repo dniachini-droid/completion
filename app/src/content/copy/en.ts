@@ -197,7 +197,7 @@ export const copy = {
   'map.walked': 'Walked',
   'map.walkedSealed': 'Walked · something inside needs a Key',
   'map.wayIn': 'The way you came in.',
-  'map.camp': 'camp, by the lamp', 'map.turnedBack': 'Turned back here',
+  'map.turnedBack': 'Camped here',
   /* a thing inside is locked, never the area itself (D-157) */
   'map.sealed': '1 lock inside', 'map.sealedN': '{n} locks inside', 'map.needsKey': 'needs a Key',
   'map.useKey': 'Use a Key', 'map.useKeySr': 'Use a Key: {where}',
@@ -327,7 +327,7 @@ export const copy = {
   'camp.night': 'Goodnight.',
 
   'morning.label': 'In the morning',
-  'morning.title': 'Something was waiting for you at camp.',
+  'morning.title': 'Something was waiting for you this morning.',
   'morning.read': 'Read the record again',
   'morning.go': 'Back to today', 'morning.startWith': 'Start with {job}',
 

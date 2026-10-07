@@ -76,7 +76,7 @@ export function storyState(facts: Fact[], s: Story): StoryState {
             /* where Dan is: the last place walked to; a place at home once the way down is open is an evening (an old save's
                too, whatever it was called then), so it never moves him (D-154) */
             /* (nor a place a Key opened in another area: a trip there he chose, which leaves him where he was, D-160) */
-            if (!(f.how === 'evening' || (departed && isHome(s, b.stretch)) || (f.how === 'key' && here !== null && areaOf(s, b.stretch) !== areaOf(s, stretch)))) { stretch = b.stretch; here = b.id; }
+            if (!(f.how === 'evening' || (departed && isTop(s, b.stretch)) || (f.how === 'key' && here !== null && areaOf(s, b.stretch) !== areaOf(s, stretch)))) { stretch = b.stretch; here = b.id; }
             if (!isHome(s, b.stretch) && b.stretch !== 'st-mouth') departed = true;
           }
         } else if (f.kind === 'camp') campsShown.push(f.id);
@@ -108,8 +108,10 @@ export const areaName = (s: Story, id: StretchId): string => stretchOf(s, areaOf
 /** Whether a place at the top plays after the way down was taken: only in a save from before D-160, as a told trip back
     up that leaves Dan where he was (D-160: no evenings at camp; the story finishes the top before he leaves it). */
 export const isEvening = (_s: Story, _st: StoryState, _b: { stretch: StretchId }) => false;
+/** The top: the Lamp Hall and the rooms off it, and the Mouth above them (D-160). */
+export const isTop = (s: Story, id: StretchId) => isHome(s, id) || id === 'st-mouth';
 /** A place or moment at the top, once Dan has gone down: a trip back up (D-160), never where he camps. */
-export const isErrand = (s: Story, st: StoryState, b: { stretch: StretchId }) => st.departed && isHome(s, b.stretch);
+export const isErrand = (s: Story, st: StoryState, b: { stretch: StretchId }) => st.departed && isTop(s, b.stretch);
 
 export const beatOf = (s: Story, id: string): Beat | undefined => s.beats.find(b => b.id === id);
 export const sealOf = (s: Story, id: string): Seal | undefined => s.seals.find(x => x.id === id);
@@ -247,7 +249,7 @@ const lineRow = (s: Story, id: string) => { const x = sealOf(s, id); return x &&
 export function campHere(s: Story, st: StoryState, sinceLast: number): { at: 'place'; id: string } | { at: 'view'; id: string; find?: string; line?: string } {
   if (st.here && sinceLast < PLACE_GAP / 2) return { at: 'place', id: st.here };
   const open = s.camps.filter(c => st.visited.has(c.stretch) && c.w <= st.week && allMet(st, c.req) && !(c.until && met(st, c.until))
-    && !(st.departed && isHome(s, c.stretch)));
+    && !(st.departed && isTop(s, c.stretch)));
   const mine = open.filter(c => c.stretch === st.stretch);
   const area = open.filter(c => c.stretch !== st.stretch && areaOf(s, c.stretch) === areaOf(s, st.stretch));
   const pool = mine.length ? mine : area;
@@ -383,7 +385,7 @@ export function pickFind(s: Story, st: StoryState, why: string, at0?: StretchId)
   const ok = (f: Find) => !st.given.has(f.id) && f.w <= st.week && allMet(st, f.req) && !(f.until && met(st, f.until))
     && (!at0 || f.stretch === at0);
   /* never from the top once Dan has gone down (D-160): what he notices is where he is */
-  const away = (id: StretchId) => st.departed && isHome(s, id);
+  const away = (id: StretchId) => st.departed && isTop(s, id);
   for (let i = at; i >= 0; i--) {
     if (away(order[i])) continue;
     const pool = s.finds.filter(f => f.stretch === order[i] && ok(f));

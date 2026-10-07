@@ -128,8 +128,6 @@
         if (fc) out[out.length - 1].sub2 = fc;
         /* the next place in this area, walked before or where Dan is: its minutes (MORNING-REPORT Part 3 #10; D-154) */
         else if (aheadOn === k && v.toNext) out[out.length - 1].sub2 = t('map.nextOn', { min: minutesShort(v.toNext) });
-        /* camp, by the lamp, where Dan sleeps every night (D-154) */
-        else if (k === 'st-hall' && !here && v.story.departed) out[out.length - 1].sub2 = t('map.camp');
         /* every place walked to here, in the order walked, the one where Dan stands marked (D-154) */
         const reads = reached.filter(r => r.stretch === k).map(r => ({ ...r, here: !r.camp && r.seq === v.here.seq }));
         if (reads.length) out[out.length - 1].reads = reads;
