@@ -52,8 +52,11 @@
   /* an evening with no one place is named for where it begins (its sections name any other area they move to), D-154 */
   const title = $derived(!a ? '' : a.kind === 'evening' ? a.area || t('arrive.byTheLamp') : a.face === 'enter' && !again ? a.area : a.name);
   /* the lead: the way in (when it is said) and the first sentence of the words, which says where and why (D-156) */
-  const sentences = $derived(!a?.line ? [] : a.line.split(/(?<=[.!?])\s+/));
-  const leadWay = $derived(a?.wayIn && !again ? a.wayIn : '');
+  /* tonight's camp at the place he reached (D-160): one line, that he camps here */
+  const said = $derived(a?.campAt ? t('arrive.campHere') : a?.line ?? '');
+  const sentences = $derived(!said ? [] : said.split(/(?<=[.!?])\s+/));
+  /* a trip back up to the top, in a save from before D-160: why, said first */
+  const leadWay = $derived(!a || again ? '' : a.errand ? t('arrive.errand', { area: a.area }) : a.wayIn ?? '');
   const leadFirst = $derived(a && !a.stopAgain ? sentences[0] ?? '' : '');
   const restLine = $derived(!a ? '' : a.stopAgain ? a.line : sentences.slice(1).join(' '));
   const over = $derived(!a ? '' : a.kind === 'evening' ? '' : a.face === 'enter' && !again ? '' : a.area);
@@ -140,9 +143,6 @@
               {:else}<button class="text-link" onclick={() => go('records', w.records[0])}><span>{t('records.read')}</span></button>{/if}
             </div>
           {/each}
-          {#if a.completedDay && !again}
-            <p class="enough">{t('arrive.enough')} <em>{t('arrive.enough2')}</em></p>
-          {/if}
         {/if}
       </div>
       <section class="bottom col">
@@ -150,10 +150,15 @@
           <!-- read again from the Map: nothing to decide, only the way back (D-135) -->
           <button class="btn resting" onclick={() => leave('today')}>{backTo(back.label)}</button>
         {:else}
-        <button class="btn resting" onclick={() => leave('today')}>{a.completedDay ? t('arrive.rest') : t('arrive.onward')}</button>
+        {#if a.kind === 'camp'}
+          <!-- tonight's camp, after Go to sleep (D-160): the night, and nothing more to do -->
+          <button class="btn resting" onclick={() => leave('today')}>{t('arrive.goodnight')}</button>
+        {:else}
+        <button class="btn resting" onclick={() => leave('today')}>{t('arrive.onward')}</button>
         <div class="btn-row"><button class="btn-quiet" onclick={() => leave('set')}><span>{t('today.keepGoing')}</span></button></div>
         <!-- where it goes, said (N clumsy 8) -->
         <p class="soft to-satchel">{t('today.keepGoingSay')}</p>
+        {/if}
         {/if}
       </section>
     </div>
@@ -201,9 +206,6 @@
   .text :global(.look) { color: var(--gold-hi); margin-top: 12px; }
   /* when the screen is short (large text), the guesses scroll in their own space, never under the buttons (D-156) */
   .mid { flex: 0 20 auto; min-height: 3.2em; overflow-y: auto; display: flex; flex-direction: column; align-items: center; padding-top: 6px; padding-bottom: 14px; }
-  .enough { font-family: var(--life); font-size: min(31px, 8vw); line-height: 1.15; color: #fff; text-align: center;
-    text-shadow: 0 0 26px rgba(242,193,112,.45), 0 2px 18px rgba(8,6,20,.9); animation: rise 1.6s 2.2s var(--ease) both; }
-  .enough em { display: inline-block; animation: rise 1.6s 3s var(--ease) both; }
   /* the way out is there early (by about 2.5 s), even while the scene is still turning gold */
   .bottom { animation: rise 1s 1.4s var(--ease) both; }
   .bottom .btn-row { margin-top: 16px; }

@@ -36,10 +36,8 @@ export const copy = {
   'today.carry.go': 'Carry on',
   'today.finishHere': 'Finish here',
   'today.label': 'Today',
-  'today.enough': 'The day’s work is done, and it was enough.',
   'today.reached': 'Today brought you to {area}, {place}.',
   /* (a stop's name is never put inside a sentence; nothing of sleep before goodnight, D-154 review) */
-  'today.camped': 'Today you turned back short of the next place: {area}.',
   'today.at': '{place}',
   'today.look': 'See where you are',
   'today.keepGoing': 'Keep going',
@@ -47,7 +45,6 @@ export const copy = {
   'today.wordWaits': 'A word waits to be cut',
   'today.owed': 'The {taken} were taken back: the next {left} make them up.',
   'today.pageWaits': 'A page was written for you · Daybook',
-  'today.deeper': 'Anything more takes you deeper.',
   'row.done': 'done',
   'nav.proto': 'Trial controls',
   'nav.settings': 'Settings',
@@ -96,7 +93,7 @@ export const copy = {
   'delve.label': 'The delve',
   'delve.doneOne': 'The delve is ended, and your lamp still burns.',
   'delve.doneRun': 'The long run is ended.',
-  'delve.sessionComplete': '{job} is done for the day: {min}.',
+  'delve.sessionComplete': '{job}: {min} today.',
   'delve.counted': 'Counted: {min}.',
   'delve.onIt': '{min} on it',
   'tally.unit': 'min',
@@ -205,6 +202,8 @@ export const copy = {
   'map.sealed': '1 lock inside', 'map.sealedN': '{n} locks inside', 'map.needsKey': 'needs a Key',
   'map.useKey': 'Use a Key', 'map.useKeySr': 'Use a Key: {where}',
   'map.noKey': 'Do a recurring job as often as you set it to earn a Key.',
+  /* a Key used on a lock left behind (D-160): a trip Dan chooses, said, that leaves him where he was */
+  'opened.trip': 'You go back up to {area} for it.', 'opened.tripBack': 'Then you go back down to where you were.',
   'opened.label': 'You used a Key',
   'opened.left.none': 'No Keys left.',
   'opened.left.one': '1 Key left.',
@@ -229,16 +228,17 @@ export const copy = {
   'look.hint': 'Pinch to look closer. Tap to come back.',
   'look.back': 'Back to the words',
   /* a day that ended short of a place (as the Map says, "Turned back here"); a turn-off on the way up is "On the way back" (D-154) */
-  'arrive.camp': 'Where you turned back', 'arrive.turnOff': 'On the way back',
+  'arrive.camp': 'Tonight’s camp', 'arrive.turnOff': 'Back up',
   /* (its name is the title above: a stop's name may start with "By…", so it is never put inside a sentence) */
-  'step.atCamp': 'At camp · {area}',
-  'arrive.stopAgain': 'You have stopped here once before.',
+  'arrive.stopAgain': 'You have camped here once before.',
   'arrive.newArea': 'A new area', 'arrive.backIn': 'Back again', 'arrive.evening': 'Tonight, at camp', 'arrive.lastNight': 'Last night, at camp', 'arrive.oneEvening': 'One evening, at camp',
   'arrive.byTheLamp': 'By the lamp', 'arrive.toward': 'Arrive',
-  'arrive.enough': 'The day’s work is done.',
   'arrive.keyOpens': 'You used a Key you were keeping.',
-  'arrive.enough2': 'Rest now.',
-  'arrive.rest': 'Rest here for today',
+  /* a place at the top in a save that had already gone down (D-160): the trip up, and why, said first */
+  'arrive.errand': 'Before you go on, you climb back up to {area}, for something there you didn’t stop for on your way down. Then you go back down to where you were.',
+  'return.errand': 'First, a climb back up to {area}, for something you didn’t stop for on your way down; then back down to where you were.',
+  'arrive.campHere': 'You camp here tonight, where you stopped.',
+  'arrive.goodnight': 'Goodnight',
   'arrive.onward': 'Back to today',
 
   /* I can't start */
@@ -291,7 +291,7 @@ export const copy = {
   'today.running.say': 'Your delve is still going. The timer keeps time whether you watch it or not.',
   'today.running.go': 'Back to the delve',
   'today.clear': 'Nothing more is on today’s list.',
-  'today.clear.say': 'Add a job, or rest. The road will keep.',
+  'today.clear.say': 'Add a job, or go to sleep where you are. The road will keep.',
   /* the day's finish line is its first 3 hours; the rest waits below (D-131) */
   'today.ifTime': 'If there’s time',
   /* the one job menu (D-131, step 3) */
@@ -335,7 +335,7 @@ export const copy = {
   'welcome.ahead': 'Ahead of you: {thing}.',
   'welcome.record': 'Read the last record',
   'welcome.go': 'Back to today',
-  'welcome.say': 'The road has waited for you. One small job is enough to take it up again.',
+  'welcome.say': 'The road has waited for you. One small job takes it up again.',
 
   'daybook.label': 'The Daybook',
   'daybook.written': 'Written for you as the week drew to its close.',
@@ -488,7 +488,7 @@ export const copy = {
   'settings.nudge.say': 'If the app hasn’t been opened for three days, one quiet word at 18:00. Never more than once a week, and never a count. Off unless you turn it on.',
   'settings.nudge.on': 'On', 'settings.nudge.off': 'Off',
   'nudge.title': 'Long Answer',
-  'nudge.body': 'Your place is kept. One small thing is enough, whenever you like.',
+  'nudge.body': 'Your place is kept. One small thing takes it up again, whenever you like.',
   'settings.reminders.refused': 'The phone is not letting the app alert you. You can allow it in the phone’s Settings, under this app’s Notifications.',
   'settings.bedtime': 'A reminder for bed by {time}',
   'settings.bedtime.say': 'Bed by',

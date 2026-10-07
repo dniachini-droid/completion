@@ -447,64 +447,21 @@ function storyClock(w: W, c: Content, at: Moment, day: string): boolean {
   return false;
 }
 
-/**
- * The evening at camp (D-154): Dan sleeps by the lamp every night, so once the way down is open the places at home, and
- * the story's moments there (her notebook, the tally), come as that night's scene: the next evening place (two when the
- * story week is otherwise done), then one home moment ready (all of a week behind, D-159). Off the walking meter. Only after a day whose work is
- * done (rule 10), once a night: at goodnight, or at the next opening (`late`).
- */
-function evening(w: W, c: Content, at: Moment, day: string, night: string, late: boolean, only?: Beat) {
-  if (!S.storyState(w.all, c.story).departed) return;
-  /* the way down waiting on one thing at home, on a very long day: that one thing, now (D-129) */
-  if (only) {
-    if (only.kind === 'step' || only.kind === 'stepKey') {
-      w.put({ type: 'arrived', kind: 'evening', id: 'evening', night }, at, day);
-      if (only.kind === 'stepKey') openSeal(w, c, S.sealOf(c.story, only.seal!)!, at, day, undefined, true);
-      else { w.put({ type: 'beatPlayed', id: only.id }, at, day); show(w, c, only.carries?.records, at, day); }
-    } else arrive(w, c, only, 'evening', at, day, { night, late: false });
-    storyClock(w, c, at, day);
-    return;
-  }
-  if (ofType(w.all, 'arrived').some(a => a.night === night)) return;
-  let wrote = false;
-  /* one home moment a night, so an evening stays light (D-159): more wait for the next night; two while one of an
-     earlier week is still waiting, so they catch up */
-  let room = 1, behind = true;
-  const steps = () => {
-    for (let k = 0; k < c.story.beats.length; k++) {
-      const st = S.storyState(w.all, c.story), b = S.homeSteps(c.story, st)[0];
-      /* (a seal that is only a line, opening no moment or place, takes no slot) */
-      const line = b?.kind === 'stepKey' && ((z) => !!z && !z.beat && !z.arrival)(S.sealOf(c.story, b.seal!));
-      if (!b) return;
-      if (behind && b.w < st.week) { room++; behind = false; }
-      if (room <= 0 && !line) return;
-      if (!line) room--;
-      if (!wrote) { w.put({ type: 'arrived', kind: 'evening', id: 'evening', night, ...(late ? { late: true } : {}) }, at, day); wrote = true; }
-      if (b.kind === 'stepKey') openSeal(w, c, S.sealOf(c.story, b.seal!)!, at, day, undefined, true);
-      else { w.put({ type: 'beatPlayed', id: b.id }, at, day); show(w, c, b.carries?.records, at, day); }
-    }
-  };
-  for (let n = 0; n < 2; n++) {
-    const st = S.storyState(w.all, c.story);
-    if (n === 1 && !S.eveningsBehind(c.story, st)) break;
-    const b = S.nextEvening(c.story, st);
-    if (!b) break;
-    arrive(w, c, b, 'evening', at, day, { night, late });
-    wrote = true;
-    steps();
-  }
-  steps();
-  storyClock(w, c, at, day);
-}
-/** Whether a day had real work in it (rule 10: opening the app earns no evening). */
 const workedDay = (facts: Fact[], day: string) => ofType(onDay(facts, day), 'stepsGained').filter(f => f.job !== 'sleep').reduce((a, f) => a + f.minutes, 0) >= S.RETURN_MIN;
-/** The evening of the last day with work in it, if it never had one (no goodnight that night): at the next opening. */
-function lastNight(w: W, c: Content, at: Moment, day: string) {
-  const last = [...new Set(ofType(w.all, 'stepsGained').filter(f => f.day < day && f.job !== 'sleep').map(f => f.day))].pop();
-  if (!last || !workedDay(w.all, last) || ofType(w.all, 'goodnight').some(g => g.day === last)) return;
-  /* an older night's plays too (a player who opens every other day still has his evenings), said as "one evening",
-     never "last night" for a week ago (the second branch review) */
-  evening(w, c, at, day, last, true);
+/** Where Dan camps when he goes to sleep (D-160): the place he reached, if not long ago, or a view of his stretch with its
+    one thing to look at (its find, or the stretch's next if that one was already found). Not moved by it: he is where he
+    was, and the next day starts there. */
+function camp(w: W, c: Content, at: Moment, day: string) {
+  const st = S.storyState(w.all, c.story);
+  if (!st.here) return;
+  const since = walked(w.all) - S.lastPlaceAt(st);
+  const where = S.campHere(c.story, st, since);
+  w.put({ type: 'arrived', kind: 'camp', id: where.id, ...(where.at === 'place' ? { where: 'place' as const } : {}) }, at, day);
+  if (where.at === 'view') {
+    const view = c.story.camps.find(x => x.id === where.id);
+    const find = where.find && !st.given.has(where.find) ? where.find : where.line ? null : S.pickFind(c.story, st, 'camp', view?.stretch)?.id;
+    if (find) w.put({ type: 'findGiven', id: find, why: 'camp' }, at, day);
+  }
 }
 
 /** A Key lands: it is kept, never spent for Dan (D-143 A). Its job's return offers "Use it here" when something is locked
@@ -523,14 +480,15 @@ function openSeal(w: W, c: Content, seal: Seal, at: Moment, day: string, job?: n
 }
 
 function pushOn(facts: Fact[], day: string): boolean {
-  const today = onDay(facts, day), dc = today.find(f => f.type === 'dayCompleted');
-  /* doing more than a normal day's jobs is pushing deeper, with no setting to choose (Dan, D-127) */
-  /* past the finish line is pushing deeper (D-131: the line is the day's first 3 hours, so "more" is work after it) */
+  const today = onDay(facts, day);
+  /* doing more is pushing deeper, with no setting to choose (Dan, D-127): past a day's first 3 hours (D-131). Nothing
+     ends the day there or says so (D-160): it only lets the walk go on into next week's places */
   return capacityOn(facts, day) === 'high' || today.some(f => f.type === 'deepCalled')
-    || (!!dc && today.some(f => f.type === 'stepsGained' && f.seq > dc.seq));   /* Keep going: effort after the day's work */
+    || ofType(today, 'stepsGained').filter(f => f.job !== 'sleep').reduce((a, f) => a + f.minutes, 0) > W.FINISH_MIN;
 }
 
-/** After anything that can complete the day or move Dan: day complete, then the places reached (§4; the story job's §0.2). */
+/** After anything that can move Dan: the places reached (§4; the story job's §0.2). Nothing ends the day but Go to sleep
+    (D-160): no day complete, no stop short of a place. */
 function gifts(w: W, c: Content, at: Moment, day: string) {
   storyClock(w, c, at, day);
   /* a deep push (a High day, a called push, or Keep going after the day's work) may go on to next week's places (§0.2) */
@@ -551,10 +509,6 @@ function gifts(w: W, c: Content, at: Moment, day: string) {
         if (!way) return n;
         /* one at a time, so a story week they finish begins before the next week's bits play */
         const b = way[0];
-        /* the way down waits on something at home (a sign an evening's place brings into view): on a day this long, Dan goes
-           up to camp for it now, as tonight's evening, rather than the road holding him back (D-129, D-154) */
-        const atHome = S.isEvening(c.story, st, b) && (c.story.route.some(r => r.places.some(p => p.id === b.id)) || S.homeSteps(c.story, st).some(x => x.id === b.id));
-        if (atHome) { evening(w, c, at, day, day, false, b); continue; }
         if (b.kind === 'stepKey') openSeal(w, c, S.sealOf(c.story, b.seal!)!, at, day, undefined, true);
         else { w.put({ type: 'beatPlayed', id: b.id }, at, day); show(w, c, b.carries?.records, at, day); }
         continue;
@@ -564,22 +518,8 @@ function gifts(w: W, c: Content, at: Moment, day: string) {
       arrive(w, c, next, 'foot', at, day); n++;
     }
   };
-  /* a place plays the moment it is reached, not held for day complete (Dan, 2026-09-24, D-073) */
-  if (!completedOn(w.all, day)) {
-    if (!listDone(c, w.all, day, at)) { reach(); return; }
-    w.put({ type: 'dayCompleted' }, at, day);
-    const earlier = ofType(onDay(w.all, day), 'arrived').some(a => a.kind === 'place');
-    if (reach() === 0 && !earlier) {
-      /* short of the next place: a camp with a view, always with one thing to look at */
-      const camp = S.nextCamp(c.story, S.storyState(w.all, c.story));
-      w.put({ type: 'arrived', kind: 'camp', id: camp.id }, at, day);
-      /* its one thing to look at: the view's own find, or the stretch's next if that one was already found */
-      const st = S.storyState(w.all, c.story);
-      const stop = c.story.camps.find(x => x.id === camp.id);
-      const find = camp.find && !st.given.has(camp.find) ? camp.find : camp.line ? null : S.pickFind(c.story, st, 'camp', stop?.stretch)?.id;
-      if (find) w.put({ type: 'findGiven', id: find, why: 'camp' }, at, day);
-    }
-  } else reach();   /* after day complete, Keep going still arrives somewhere (no dead ends for effort, D-039) */
+  /* a place plays the moment it is reached (Dan, 2026-09-24, D-073) */
+  reach();
 }
 
 /** A job's delve minutes from runs begun on an earlier game day that ended on this one (a delve begun before 04:00 and
@@ -651,7 +591,6 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string, tick
      last job and the day has had real work, the day is done (D-130) */
   if (timed === 0) {
     w.put({ type: 'jobDone', job, minutes: 0, ...(errand ? { errand } : {}) }, at, day);
-    if (!completedOn(w.all, day) && listDone(c, w.all, day, at)) gifts(w, c, at, day);
     return;
   }
   /* a session of a minute or two is done and its minutes have moved Dan, but a few one-minute stops never open the story
@@ -693,12 +632,12 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string, tick
     const n = workedOn(w.all, day).size, called = onDay(w.all, day).some(f => f.type === 'deepCalled');
     /* pushing deeper is doing more: past the day's finish line (its first 3 hours, D-131), the deep push's next beat
        plays, once a day, with no setting to choose first (Dan, D-127; a High day or a morning call did it before, D-054) */
-    const past = ofType(onDay(w.all, day), 'dayCompleted').some(f => f.seq < done.seq);
+    /* (a day's first 3 hours were its finish line; nothing ends the day there now, D-160) */
     /* past the line, and more than a short day's work behind it: 3 hours delved today, or more than a normal day's jobs
        (a line emptied by "Not today" never makes ten minutes a push, rule 10; second review of D-131) */
     const delved = ofType(onDay(w.all, day), 'stepsGained').filter(f => f.run !== undefined || f.tick).reduce((a, f) => a + f.minutes, 0)
       - ofType(w.all, 'tickTakenBack').filter(f => f.on === day).reduce((a, f) => a + f.minutes, 0);
-    const deep = ((past && (delved >= W.FINISH_MIN || n > DAY_SIZE.normal)) || (called && n >= DAY_SIZE.normal))
+    const deep = ((delved >= W.FINISH_MIN || n > DAY_SIZE.normal) || (called && n >= DAY_SIZE.normal))
       && !ofType(onDay(w.all, day), 'beatPlayed').some(f => S.beatOf(c.story, f.id)?.kind === 'deep') ? S.nextDeep(c.story, st) : null;
     if (deep) { w.put({ type: 'beatPlayed', id: deep.id, job: done.seq }, at, day); show(w, c, deep.carries?.records, at, day); }
     /* a road row's step opens its sealed thing on the way, with no Key (D-129) */
@@ -1218,7 +1157,6 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       /* no weekly floor of Keys any more (Dan, D-142): a Key always means a recurring job kept up */
       storyClock(w, c, now, day);
       lateKeys(w, c, now, day);
-      if (first) lastNight(w, c, now, day);
       weekClose(w, c, now, day, was);
       morningAfter(w, c, now, day);
       break;
@@ -1237,7 +1175,6 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       /* choosing the day as planned is an answer too: the choice has been seen (D-114) */
       if (cmd.capacity !== v.capacity || !ofType(onDay(w.all, day), 'capacityChosen').length) {
         w.put({ type: 'capacityChosen', capacity: cmd.capacity, suggested: v.suggested });
-        gifts(w, c, now, day);   /* lowering capacity can complete the day (D-043) */
       }
       break;
     case 'swap': {
@@ -1571,17 +1508,18 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       if (ofType(onDay(w.all, day), 'goodnight').length) break;
       const past = pastBedtime(bedtimeOf(w.all), now), kept = past <= BEDTIME_GRACE && past >= -BEDTIME_WINDOW;
       w.put({ type: 'goodnight', kept });
-      /* tonight's evening at camp, after a day whose work is done (D-154) */
-      if (workedDay(w.all, day)) evening(w, c, now, day, day, false);
+      /* the day ends here and only here (D-160): Dan camps where he is, at the place he reached or at a view of the stretch
+         he is walking, with one thing to look at; the next day starts from it. Before the first place, no camp. */
+      camp(w, c, now, day);
       /* kept: a camp line plays tonight, the earliest not played yet, one a night; its morning waits for tomorrow. Not
          tied to the story week Dan is in: a story week walked through between two bedtimes keeps its line (deep review S#2b) */
       if (kept) {
         /* from what Dan has been shown: a word reached but not yet cut, a place not yet on its screen, isn't known (D-154) */
         const st = knownState(w, c);
         /* never before what it describes, nor after it has changed (review, 2026-09-25) */
-        const camp = c.story.beats.find(b => b.kind === 'camp' && b.w <= st.week && !st.played.has(b.id)
+        const line = c.story.beats.find(b => b.kind === 'camp' && b.w <= st.week && !st.played.has(b.id)
           && b.req.every(r => S.met(st, r)) && !(b.until && S.met(st, b.until)));
-        if (camp) w.put({ type: 'beatPlayed', id: camp.id });
+        if (line) w.put({ type: 'beatPlayed', id: line.id });
       }
       break;
     }
@@ -1615,13 +1553,6 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
       break;
     }
     case 'nudge': { const s = ofType(w.all, 'nudgeChosen'); if ((s.length ? s[s.length - 1].on : false) !== cmd.on) w.put({ type: 'nudgeChosen', on: cmd.on }); break; }
-  }
-  /* taking the list's last job still to do off today (Not today, Delete, moved to another day, a rhythm stopped, the
-     week laid out again…) finishes a day that has had its work, as doing it would (D-130): checked after anything
-     written, since many things can shorten the list */
-  if (w.out.length && !completedOn(w.all, day)) {
-    const now2 = W.live(base, w.all);
-    if (listDone(now2, w.all, day, now)) gifts(w, now2, now, day);
   }
   return w.out;
 }
@@ -1695,6 +1626,11 @@ export interface Arrival {
   earlier?: boolean;
   /** A day's end at a stop made before: its words are not said again, only that he stops there again (D-154). */
   stopAgain?: boolean;
+  /** A place at the top reached after Dan went down (an old save's, D-160): a trip back up, said, that leaves him where
+      he was. */
+  errand?: boolean;
+  /** Tonight's camp is the place he reached (D-160): the screen says he camps there. */
+  campAt?: boolean;
   /** An evening's moments at home after its place (her notebook, the tally): each one's line, beat and records. */
   then: { beat: string; line: string; records: string[]; choice?: [string, string]; area: string }[];
   /** A word cut in four taps: one line per tap. */
@@ -1726,6 +1662,8 @@ export interface Return {
   keyAlready: 'week' | 'fortnight' | 'month' | 'year' | 'days' | 'cap' | null;
   /** A partial sign found on a deep push: its element, and the mark it belongs to (SCRIPT §8). */
   part?: { el: string; mark: string };
+  /** A moment at the top played after Dan went down (an old save's, D-160): the area he climbs back up to for it. */
+  up?: string;
 }
 /** Where Dan stands. */
 /** Where Dan stands: the last place he walked to (D-154), its area's name, and its arrival (to read again). */
@@ -1873,7 +1811,9 @@ function guessesOf(c: Content, id: string): string[] {
 /** How a place was come to (D-154), from where Dan had been before it: worked out, never stored. */
 function faceOf(c: Content, all: Fact[], f: FactOf<'arrived'>, b: Beat): Arrival['face'] {
   const before = S.storyState(all.filter(g => g.seq < f.seq), c.story);
-  if (f.how === 'evening' || S.isEvening(c.story, before, b)) return 'evening';
+  if (f.how === 'evening') return 'evening';
+  /* a place at the top once Dan has gone down (an old save's, D-160): a told trip back up */
+  if (S.isErrand(c.story, before, b)) return 'back';
   const area = S.areaOf(c.story, b.stretch);
   if (![...before.visited].some(x => S.areaOf(c.story, x) === area)) return 'enter';
   return area === S.areaOf(c.story, before.stretch) && before.here !== null ? 'on' : 'back';
@@ -1937,11 +1877,16 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
     const answers = new Set([b.id, ...way.map(x => x.beat), ...then.map(x => x.beat)]);
     const guess = [...new Set([...(b.carries?.guess ?? []), ...carried, ...keyed])].filter(m => !answers.has(S.markOf(c.story, m)?.confirmedBy ?? ''));
     const area = S.areaName(c.story, b.stretch), wayIn = c.story.stretches.find(x => x.id === S.areaOf(c.story, b.stretch))?.wayIn ?? null;
+    const errand = face === 'back' && S.isErrand(c.story, S.storyState(all.filter(g => g.seq < f.seq), c.story), b);
     /* a place whose own line says how Dan came (a turn-off on the way up) needs no way-in line over it */
-    return { seq: f.seq, kind: 'place', face, late: !!f.late, earlier: !!f.late && !!f.night && W.daysBetween(f.night, f.day) > 1, area, wayIn: face === 'back' && !b.said ? wayIn : null, turnOff: face === 'back' && !!b.turnOff, then,
+    return { seq: f.seq, kind: 'place', face, late: !!f.late, earlier: !!f.late && !!f.night && W.daysBetween(f.night, f.day) > 1, area, wayIn: face === 'back' && !b.said ? wayIn : null, turnOff: face === 'back' && (!!b.turnOff || errand), errand, then,
       opened, way, id: b.id, name: b.name ?? '', line: b.line ?? '', taps: b.taps, choice: b.choice,
       records: b.carries?.records ?? [], guess, look: null, stretch: b.stretch, painting: paintingOf(b.id, b.stretch), completedDay, byKey: f.how === 'key' };
   }
+  /* tonight's camp at the place he reached (D-160): its name and painting; the screen says he camps there */
+  const p = f.where === 'place' ? S.beatOf(c.story, f.id) : undefined;
+  if (p) return { seq: f.seq, kind: 'camp', face: 'on', late: false, area: S.areaName(c.story, p.stretch), wayIn: null, then: [], campAt: true,
+    opened: [], way: [], id: p.id, name: p.name ?? '', line: '', records: [], guess: [], look: null, stretch: p.stretch, painting: paintingOf(p.id, p.stretch), completedDay: false, byKey: false };
   const k = c.story.camps.find(x => x.id === f.id)!;
   const find = all.find(g => g.type === 'findGiven' && g.why === 'camp' && g.seq > f.seq && g.seq <= f.seq + 1) as FactOf<'findGiven'> | undefined;
   /* a stop made before: never its words again (the journey review, D-154): the screen says he stops there again, and
@@ -2008,15 +1953,18 @@ function rawReturn(c: Content, facts: Fact[], doneSeq: number): Return {
   const keyNote = keyNoteOf(facts, doneSeq, seal0 && !facts.some(f => f.type === 'sealOpened' && f.seal === seal0.id && f.how === 'road') ? seal0.id : null);
   if (!beat) return { beat: null, line: '', key: false, guess: [], records: [], finds, keyNote, keyAlready };
   if (beat.id === 'passage') return { beat: null, line: c.story.passages.find(p => p.id === beat.passage)?.line ?? '', key: false, guess: [], records: [], finds, keyNote, keyAlready };
+  /* a moment at the top that plays after Dan went down (an old save's, D-160): a trip back up, said first */
+  const up = (x: { stretch: StretchId; portable?: boolean } | undefined) => x && !x.portable
+    && S.isErrand(c.story, S.storyState(facts.filter(f => f.seq < beat.seq), c.story), x) ? { up: S.areaName(c.story, x.stretch) } : {};
   const seal = S.sealOf(c.story, beat.id);
-  if (seal) return { beat: seal.id, line: seal.line ?? '', key: !facts.some(f => f.type === 'sealOpened' && f.seal === seal.id && f.how === 'road'), guess: seal.carries?.guess ?? [], records: seal.carries?.records ?? [], finds, keyNote, keyAlready };
+  if (seal) return { ...up(seal), beat: seal.id, line: seal.line ?? '', key: !facts.some(f => f.type === 'sealOpened' && f.seal === seal.id && f.how === 'road'), guess: seal.carries?.guess ?? [], records: seal.carries?.records ?? [], finds, keyNote, keyAlready };
   const b = S.beatOf(c.story, beat.id)!;
   const viaSeal = b.seal ? S.sealOf(c.story, b.seal) : undefined;
   const guess = [...new Set([...(b.carries?.guess ?? []), ...(viaSeal?.carries?.guess ?? [])])];
   const part = b.carries?.partial && b.carries.seen?.[0] ? { el: b.carries.partial, mark: b.carries.seen[0] } : undefined;
   /* a Key's return says so; a row the road opened is a step like any other (D-129) */
   const byRoad = facts.some(f => f.type === 'sealOpened' && f.seal === b.seal && f.how === 'road');
-  return { beat: b.id, line: b.line ?? '', key: b.kind === 'stepKey' && !byRoad, guess, choice: b.choice, records: [...(b.carries?.records ?? []), ...(viaSeal?.carries?.records ?? [])], finds, keyNote, keyAlready, ...(part ? { part } : {}) };
+  return { ...up(b), beat: b.id, line: b.line ?? '', key: b.kind === 'stepKey' && !byRoad, guess, choice: b.choice, records: [...(b.carries?.records ?? []), ...(viaSeal?.carries?.records ?? [])], finds, keyNote, keyAlready, ...(part ? { part } : {}) };
 }
 
 /** Today's list, as Today shows it and as the day's finish line reads it (D-130): on a planned week, every job the plan
@@ -2167,7 +2115,8 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   const day = dayOf(facts, now), nowMs = epochOf(now), clock = now.slice(11, 16);
   const capacity = capacityOn(facts, day);
   const { size, done, order, times, slate, line } = slateOf(c, facts, day, clock);
-  const complete = completedOn(facts, day);
+  /* nothing completes a day (D-160): it ends only on Go to sleep */
+  const complete = false;
   /* "under way" was a job without a timer begun away from the phone; every job is a delve now (D-117), so an old Begin
      in a save leaves nothing under way */
   const underWay = ((u: string | null) => u && c.jobs.some(j => j.id === u && !j.delve) ? u : null)(underWayOn(facts, day));

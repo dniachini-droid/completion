@@ -190,7 +190,6 @@
             <p class="soft on-scene then-line"><Prose text={w.line} /></p>
             <div class="settle-list"><Settled beat={w.beat} /></div>
           {/each}
-          {#if a.completedDay}<p class="enough">{t('arrive.enough')} <em>{t('arrive.enough2')}</em></p>{/if}
         </div>
       {/if}
       {#if step === 0 && ask.length}<div class="ask">{#each ask as m (m)}<Guess mark={m} at={a.id} />{/each}</div>{/if}
@@ -332,8 +331,6 @@
   .after-row { display: flex; justify-content: center; margin-top: 6px; }
   .settle-list { margin-bottom: 6px; }
   .ask { margin-bottom: 4px; }
-  .enough { font-family: var(--life); font-size: min(27px, 7vw); line-height: 1.15; color: #fff; text-align: center; margin: 2px 0 12px;
-    text-shadow: 0 0 26px rgba(242,193,112,.45), 0 2px 18px rgba(8,6,20,.9); animation: rise 1.6s .8s var(--ease) both; }
   button.home { color: var(--ink-2); }
   /* cups: the group stays fully opaque; its glow and flame fade in themselves */
   .stage :global(.hall-cup) { opacity: 1; transition: none; }

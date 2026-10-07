@@ -190,6 +190,8 @@ export interface Seal {
   plain?: boolean;
   /** Opens on the road, in its turn, with no Key: its line is written for its own week (D-129). */
   road?: boolean;
+  /** In something Dan carries (her notebook's pocket, her folder): opened wherever he is, never a trip back up (D-160). */
+  portable?: boolean;
 }
 
 export interface Find {

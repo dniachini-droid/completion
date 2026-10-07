@@ -36,18 +36,6 @@
   const todoFirst = (ids: string[]) => [...ids.filter(id => !v.done.has(id)), ...ids.filter(id => v.done.has(id))].filter(id => id !== v.run?.job.id);
   const others = $derived(todoFirst(v.line));
   const extra = $derived(todoFirst(v.slate.filter(id => !v.line.includes(id))));
-  /* the last place reached (never a camp): its entry, read again from its name (D-135) */
-  /* what today's walking came to: its last place or the place it turned back at, never an evening at camp (that is
-     the night's, not the walk's) nor a place reached on another day (D-154 review) */
-  /* (one not yet shown is not yet his: it comes on its own screen first) */
-  const lastPlace = $derived.by(() => {
-    const f = game.facts.filter((x): x is FactOf<'arrived'> => x.type === 'arrived' && x.day === v.day && x.kind !== 'evening' && x.how !== 'evening'
-      && (v.arrival === null || x.seq < v.arrival.seq)).pop();
-    if (!f) return null;
-    const st = f.kind === 'camp' ? content.story.camps.find(k => k.id === f.id)?.stretch : beatOf(content.story, f.id)?.stretch;
-    return { kind: f.kind, area: st ? areaName(content.story, st) : v.here.area, name: f.kind === 'camp' ? '' : beatOf(content.story, f.id)?.name ?? '' };
-  });
-
   const recurring = (id: string) => v.content.rhythms.some(r => r.job === id);
   /* minutes into the game day, which turns at 04:00: 01:00 comes after 18:00 (review of D-144) */
   const fromFour = (hm: string) => ((+hm.slice(0, 2) + 20) % 24) * 60 + +hm.slice(3, 5);
@@ -99,7 +87,6 @@
   /* "Not today": the row stays, struck, with "Put back", for the rest of the day (J7; was only while Today stayed open) */
   function putBack(id: string) { steady(); game.do({ do: 'putBack', job: id }); }
   /* after the day's work: a timed job still ahead today is named, so "done" never hides it (review 2) */
-  const stillToCome = $derived(v.slate.filter(id => !v.done.has(id) && v.times[id]).map(id => `${job(id).name} ${t('row.at', { time: v.times[id] })}`));
 
   /* a row slides left to show "Not today" and "Delete"; a done row "Not done after all" and "Delete" (D-125, D-131) */
   function acts(j: Job) {
@@ -132,10 +119,12 @@
      sleep counts, D-083) Today carries "Tonight": the bedtime, one tap to change it, and Go to sleep. Once said, the
      night's line shows here until morning. */
   const evening = $derived(!v.night && pastBedtime(v.bedtime, game.now) >= -BEDTIME_WINDOW);
+  /* Go to sleep is there all day (D-160): the day ends only when Dan presses it, and he camps wherever he is */
+  const sleepAny = $derived(!v.night);
   /* in the last hour before bedtime, Tonight comes above the day's list, so going to bed is the next thing in view
      (D-130); before that it waits at the list's end */
   const BEDTIME_SOON = 60;
-  const nearBed = $derived(evening && !v.complete && !v.run && pastBedtime(v.bedtime, game.now) >= -BEDTIME_SOON);
+  const nearBed = $derived(evening && !v.run && pastBedtime(v.bedtime, game.now) >= -BEDTIME_SOON);
   const nightLine = $derived(v.night?.beat ? beatOf(content.story, v.night.beat)?.line ?? '' : '');
   /* where Dan is on this stretch (Dan, D-140): the delve's end's road line, still, with the minutes still to go to
      the side chamber (while it holds a find) and to the next place; nothing moves on it here */
@@ -158,7 +147,7 @@
   /* the day's first start (a delve begun, or a job ticked off) puts the line away */
   const started = $derived(game.facts.some(f => (f.type === 'delveStarted' || f.type === 'jobDone') && f.day === v.day));
   const chosenFirst = $derived.by(() => { const id = firstChosen(game.facts, v.day); return id && !started && !busy && !v.night && !v.done.has(id) && game.job(id) ? id : null; });
-  const cantFor = $derived(started || busy || v.night || v.complete ? null
+  const cantFor = $derived(started || busy || v.night ? null
     : v.line.find(id => !v.done.has(id) && game.job(id)?.avoided) ?? v.line.find(id => !v.done.has(id)) ?? null);
 
   /* "Add a job" opens the Satchel's one box, ready to type in (D-131), whose Return puts the job on today (Dan, D-143 C):
@@ -198,7 +187,7 @@
   /* the avoided job, the only one left on the line: said, once it is all that holds the day (Dan, D-143 G) */
   const onlyAvoided = $derived.by(() => {
     const left = v.line.filter(id => !v.done.has(id));
-    return !v.complete && !v.run && left.length === 1 && v.line.length > 1 && game.job(left[0])?.avoided ? game.job(left[0])!.name : null;
+    return !v.run && left.length === 1 && v.line.length > 1 && game.job(left[0])?.avoided ? game.job(left[0])!.name : null;
   });
   /* "Press and hold a job for more", said until the first time the job menu is opened (J19) */
   let held = $state(holdSeen());
@@ -337,7 +326,7 @@
         <div class="lead"><button class="btn full" onclick={() => go('delve')}>{t('errand.waitsGo')}</button></div>
         <div class="gap"></div>
       </div>
-    {:else if !v.complete}
+    {:else}
       <!-- no job is put forward (Dan, D-135): the day's jobs are one list below, each started, ticked off or set aside
            from its row; the one button adds a job (the Satchel's box, ready to type) -->
       <div class="next addcard">
@@ -347,22 +336,6 @@
           <p class="soft">{t('today.clear.say')}</p>
         {/if}
         <div class="lead"><button class="btn full today-add" onclick={add}>{t('today.addJob')}</button></div>
-      </div>
-    {:else}
-      <div class="next">
-        <div class="label-line gold">{t('today.label')}</div>
-        <h2 class="say-lg">{t('today.enough')}</h2>
-        {#if lastPlace}
-          <p class="soft">{lastPlace.kind === 'camp' ? t('today.camped', { area: lastPlace.area }) : t('today.reached', { area: inSentence(lastPlace.area), place: placeIn(lastPlace.name) })}</p>
-        {/if}
-        {#if stillToCome.length}<p class="soft still">{t('today.stillToCome', { what: stillToCome.join(', ') })}</p>{/if}
-        {#if evening}{@render tonight()}{/if}
-        <div class="btn-row after"><button class="btn-quiet" onclick={() => go('satchel')}><span>{t('today.keepGoing')}</span></button></div>
-        <p class="soft to-satchel">{t('today.keepGoingSay')}</p>
-        <!-- the one promise past the finish line: more work reaches the deep moments (D-127), said once, quietly (D-130) -->
-        <p class="soft deeper">{t('today.deeper')}</p>
-        {#if lastPlace}<div class="cant"><button class="text-link" onclick={() => go('arrival')}><span>{t('today.look')}</span></button></div>{/if}
-        <div class="gap"></div>
       </div>
     {/if}
 
@@ -431,8 +404,8 @@
     <!-- "Can't get started?" until the day's first start: "I can't start" for the first job on the line, one put off first
          (MORNING-REPORT Part 3 #4); the errand run lives in the Satchel and the job menu (simplify) -->
     {#if cantFor}<div class="cant"><button class="text-link" aria-label={t('today.cantSr', { job: job(cantFor).name })} onclick={() => go('cant', cantFor)}><span>{t('today.cantGetStarted')}</span></button></div>{/if}
-    <!-- the evening, before the day's work is done: Tonight at the end of the day's list (D-093) -->
-    {#if evening && !v.complete && !v.run && !nearBed}<section class="tonight-end">{@render tonight()}</section>{/if}
+    <!-- Tonight at the end of the day's list, all day (D-093, D-160): Go to sleep is always there -->
+    {#if sleepAny && !v.run && !nearBed}<section class="tonight-end">{@render tonight()}</section>{/if}
     </div>
     {#if nearBed}<div class="sleep-fixed">{@render sleepBtn()}</div>{/if}
     <nav class="foot" aria-label={t('today.label')}>
