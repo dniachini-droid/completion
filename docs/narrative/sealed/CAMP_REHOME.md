@@ -459,3 +459,22 @@ Normal pace: 16 of 105 moves failed by a majority (was 22 of 110); the story rea
 | 7 the hold at the top | Already one move for the copy and one visit for her notebook and folder (§10.2); not shortened further, since every remaining week-3 place carries something later beats need (`b-4.C` the door's symbols for `b-6.2`; `b-3.5` the crust; `b-3.6` the copy). |
 | 8 nits | N1 `b-4.A`: the Day 9 sheet was folded inside her notebook, never in the crack. N2 `b-w8.morning`: "the ones whose stories he cut". N3 `b-11.3`: the woman who gilded the book. N5 `b-w5.camp` (the little door) and `b-w13.camp` (the shut door's lit notches; the chips stay a once-only clue) are no longer about the lamp's base. N6 `b-w1.camp`: the rings only. N7 **`b-1.2` retired**: its passage is `b-1.A`'s first sentences. N8 `fd-e06` "one of the Stair's steps". N10 `ps-s01` reads as a return. N11 `fd-d10` no count of strokes. |
 | 9 a find twice | Skipped: the transcript showed the morning screen and the list above it (no content repeat). |
+
+### 11.1 Round 3, old saves carried on (2026-10-07; built)
+
+The engine's new `again` field is the line a beat plays on a trip back up (old saves only). Each `again` is written to read right after a climb from anywhere below, for a save that may already have seen part of the scene under an earlier build. It never says what he "never saw" or "had missed", and it never says "before you go any deeper". Each `back` gives the trip's real reason.
+
+| Item | Change |
+|---|---|
+| 1 trip scenes | `again` and a new `back` for `b-3.1` (the stretch her sheets don't cover; the shared cell), `b-3.2` (the notebook on the cot, then the folder, the recess and the ledge box), `b-3.5` (the river stones in the split, then the crust and the tally to its end), `b-3.6` (you can't carry a wall: the copy; the ledge's underside told as plain description, not as a discovery), `b-4.B` (the niche past the split) and `b-4.C` (the lamp's base and the door, taken in properly). |
+| 2 `b-4.C` back | "up close", not "close". |
+| 3 the unlit lamp | `fd-f04` no longer mentions the lamp stored at the head of the Stair: it is "not burning, but it has been used". |
+| 4 the carried notebook | `b-4.3` already requires `b-3.2`, and every later notebook beat chains from it. "Which you carry with you now" is dropped. **Engine note:** an old save's `b-3.2` fact was a step under earlier builds, and it satisfies the req. In a2f40a9 that step did take the notebook ("When you leave, you take it with you"), but in builds before that it did not. Content cannot tell these saves apart. |
+| 5 `b-3.2`'s opening | "Before you go down the stair beyond the lintel, you gather up her things." Lower-case "stair", and no "back into the Box Room". `said` is removed, so the way-in line says the entry when he comes from elsewhere. The shoebox place no longer says "you go back into the Box Room" after its own way-in line. |
+| 6 Lamp Hall way-in | `st-hall` becomes "Back in the Lamp Hall, where the lamp burns on its ledge." |
+| 7 the niche | `b-3.6`: "above the niche under the ledge"; "you had missed" is gone. |
+| 8 one place each | The rail is first told on `b-3.C`: `fd-e03`, `fd-e05`, `ps-t04`, `ps-t13` and `ps-t19` now require `b-3.C`. `b-5.0` names the sharp-edged ring as one thing among the worn ones and no longer introduces it twice after `b-3.4`. |
+| 9 the standing stone; the cupboard | The camp screen showed `b-10.B`'s own line, because an old save stood at a beat that is a step now. The engine now places that save at its stretch's last place, and `cv-55` carries no event. `pl-w11-cupboard` opens with "The blast room holds more than the log on its ledge", which reads right from any origin. |
+| 10 the Reading Room | `b-9.A` gives the reason (the one way off the Water not yet taken) and the way ("back to the Water, round its shore"). |
+| 11 the unnamed niche | `b-7.1`: "Across the square gallery from the crew's wall, at head height". `seal-7-1`'s `where` matches it. |
+| 12 the top flight's views | `cv-11` and `cv-39` read right for him camped at the worn steps. `cv-10` (the head of the Stair) gets `until: b-3.C`, so a folded camp on the top flight never puts him back on the landing. |

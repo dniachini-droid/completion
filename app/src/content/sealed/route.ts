@@ -16,7 +16,7 @@ export const stretches: Stretch[] = [
   { id: "st-mouth", name: "The Mouth", w: 1, req: [],
     wayIn: "Back to the foot of the ladder, at the bottom of the shaft." },
   { id: "st-hall", name: "The Lamp Hall", w: 1, req: [], home: true,
-    wayIn: "Back out into the Lamp Hall, where the lamp burns on its ledge." },
+    wayIn: "Back in the Lamp Hall, where the lamp burns on its ledge." },
   { id: "st-salt", name: "The Salt Gallery", w: 1, req: [], home: true, parent: "st-hall",
     wayIn: "Back into the Salt Gallery, where the air smells of salt." },
   { id: "st-camp", name: "The Box Room", w: 1, req: [], home: true, parent: "st-hall",

@@ -125,7 +125,7 @@ export const seals: Seal[] = [
     plain: true },
 
   /* ---- week 7 (run-ahead) ---- */
-  { id: 'seal-7-1', w: 7, o: 1, where: 'The square gallery, a niche', stretch: 'st-square', beat: 'b-7.1',
+  { id: 'seal-7-1', w: 7, o: 1, where: 'The square gallery, a niche across from the crew’s wall', stretch: 'st-square', beat: 'b-7.1',
     carries: { guess: ['mk-up', 'mk-stone', 'mk-child'] } },
   { id: 'seal-7-2', w: 7, o: 2, where: 'The square gallery, the crew’s wall', stretch: 'st-square', arrival: 'b-7.B',
     carries: {} },   /* X-boy has no told line or sign string of its own (the boy's slate is described in its beat) */

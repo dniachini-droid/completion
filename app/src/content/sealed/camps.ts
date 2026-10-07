@@ -114,6 +114,7 @@ export const camps: CampView[] = [
     w: 3,
     req: [],
     near: "b-3.B",
+    until: "b-3.C",   // never once he is on the top flight (an old save camped at a folded place there, round 3)
     name: "The head of the Stair",
     line: "You camp on the landing at the head of the Stair, just beyond the lintel. The landing is wide enough for a cart. Below you, the top flight goes down into the light of the flames in its cups, which were already burning before you came.",
     look: {"find": "fd-e07"},
