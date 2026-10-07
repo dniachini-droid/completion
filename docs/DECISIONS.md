@@ -1813,5 +1813,5 @@
   2. What is still missing is seen in **one** trip back up, with its reason on screen (`back`), its own wording for a save coming from below (`again`, `againName`), and "Then you go back down to where you were." A trip costs no walking.
   3. A place the old build played as a step counts as reached, and Today and the Map show it.
   4. A place folded into another since: the save stands at it, and camps at the views of the latest place on its stretch.
-- **Known limit:** a save from before the D-155 build that took her notebook as a step (without the words "you take it with you") carries on as if it had it.
+- **Known limit:** a save from before the D-155 build that took a carried item as a step whose old wording did not say he took it carries on as if he had it.
 - **Reversible:** Yes.
