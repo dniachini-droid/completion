@@ -442,4 +442,20 @@ Normal pace, judged again (22 of 110 moves failed by a majority, was 31; the sto
 | 16 the lower way | `ps-l01` (above). |
 | 17 paintings | Noted in PAINTING_BRIEFS. |
 
-Every area's way-in line is origin-neutral (§10.1), since a step told in another reached room now moves him there. **Route after round 2:** 50 places on foot (week 3 five: `b-3.A` · `b-4.C` · `b-3.2` · `b-3.5` · `b-3.6`; week 12 two: `b-12.A` · `b-12.C`).
+Every area's way-in line is origin-neutral (§10.1), since a step told in another reached room now moves him there. **Route after round 2:** 51 places on foot (week 3 five: `b-3.A` · `b-4.C` · `b-3.2` · `b-3.5` · `b-3.6`; week 12 two: `b-12.A` · `b-12.C`).
+
+## 11. Round 3 of the player's-eye review (2026-10-07; built)
+
+Normal pace: 16 of 105 moves failed by a majority (was 22 of 110); the story reader's one blocker was the engine's. Content fixes:
+
+| Item | Fix |
+|---|---|
+| 1 a camp showing a place's first (travel) sentence | Every route place now has at least one view `near` it: new `cv-58` (`b-3.2`). Checked by script: no route place without a view. |
+| 2 bare repeat camps | A second view where he camps more than one night: `cv-59` (`pl-w1-pick-niche`), `cv-60` (`b-1.B`), `cv-61` (`pl-w2-above-the-ring`), `cv-62` (`b-3.5`), `cv-63` (`b-6.A`), `cv-64` (`pl-w9-approach`), `cv-65` (`b-11.C`), `cv-66` (`pl-w11-far-end`), `cv-67` (`pl-w13-lower-gallery`). `cv-30` no longer says "clean and pale" beside `fd-g12`. |
+| 3 the channel record told at the stair's foot | `b-8.2` o 4.5, after `pl-w8-steep-foot` (o 4), so it is never one of the place's earlier steps played on the way; it comes as its own return. |
+| 4 "By the log" before the log is read | `cv-26` is "By the ledge". `b-10.3` (Day 31) already needs `b-10.2`. |
+| 5 the climb to the standing stone; week 14's last move | `pl-w6-square-gallery` describes the stone's two symbols (unread); `b-13.B` names them as the shut door record's pair for moving stone. `b-14.B` goes on down the lower way. |
+| 6 repeated words; the great door | `b-7.A` says the great door has the same pair but dark notches and another symbol: shut another way as well. `b-10.A` "the same word, for a way that is shut"; `b-14.A` "as if every fall down here answers to the same word". |
+| 7 the hold at the top | Already one move for the copy and one visit for her notebook and folder (§10.2); not shortened further, since every remaining week-3 place carries something later beats need (`b-4.C` the door's symbols for `b-6.2`; `b-3.5` the crust; `b-3.6` the copy). |
+| 8 nits | N1 `b-4.A`: the Day 9 sheet was folded inside her notebook, never in the crack. N2 `b-w8.morning`: "the ones whose stories he cut". N3 `b-11.3`: the woman who gilded the book. N5 `b-w5.camp` (the little door) and `b-w13.camp` (the shut door's lit notches; the chips stay a once-only clue) are no longer about the lamp's base. N6 `b-w1.camp`: the rings only. N7 **`b-1.2` retired**: its passage is `b-1.A`'s first sentences. N8 `fd-e06` "one of the Stair's steps". N10 `ps-s01` reads as a return. N11 `fd-d10` no count of strokes. |
+| 9 a find twice | Skipped: the transcript showed the morning screen and the list above it (no content repeat). |
