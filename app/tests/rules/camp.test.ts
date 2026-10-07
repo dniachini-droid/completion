@@ -12,6 +12,8 @@ import { readFileSync } from '../review/node';
 
 const s = C.story;
 const route = s.route.flatMap(r => r.places.map(p => p.id));
+/** Route places not yet behind Dan (an old save's place whose sealed row it already opened is behind him, D-160). */
+const left = (st: S.StoryState) => s.route.flatMap(r => r.places).filter(p => !S.placeDone(s, st, p)).map(p => p.id);
 const arrivals = (facts: Fact[]) => facts.filter((f): f is FactOf<'arrived'> => f.type === 'arrived');
 function life(kind: Week, bed: 'kept' | undefined, weeks: number) {
   const d = sim(undefined, undefined, bed);
@@ -102,9 +104,9 @@ describe('saves from the last two builds carry on (D-154, D-159 → D-160)', () 
   it('each carries on to the end of week 14: nothing lost, nothing replayed, no stall; a trip back up says so and leaves Dan where he was', () => {
     for (const { n, facts } of saves) {
       const d = sim(undefined, undefined, n.endsWith('nobed') ? undefined : 'kept', facts);
-      for (let k = 0, extra = 0; k < 30 && extra < 1; k++) { d.week('normal'); if (route.every(id => d.st().played.has(id)) && d.st().week === 14) extra++; }
+      for (let k = 0, extra = 0; k < 30 && extra < 1; k++) { d.week('normal'); if (!left(d.st()).length && d.st().week === 14) extra++; }
       const after = d.facts, st = S.storyState(after, s);
-      expect(route.filter(id => !st.played.has(id)), n).toEqual([]);
+      expect(left(st), n).toEqual([]);
       expect(st.week, n).toBe(14);
       const ids = arrivals(after).filter(f => f.kind === 'place').map(f => f.id);
       expect(ids.filter((id, i) => ids.indexOf(id) !== i), n).toEqual([]);

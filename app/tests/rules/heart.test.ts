@@ -112,9 +112,12 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     expect(q.facts.some(f => f.type === 'arrived')).toBe(false);
     /* asleep soon after a place: he camps at it */
     p.do({ do: 'seen', what: 'arrival', ref: p.view().arrival!.seq }).do({ do: 'goodnight' });
-    expect(p.view().arrival).toMatchObject({ kind: 'camp', campAt: true, id: p.view().here.id });
+    /* at the place, or at a view of it (D-160) */
+    const a = p.view().arrival!, here = p.view().here.id;
+    expect(a.kind).toBe('camp');
+    expect(a.campAt ? a.id : C.story.camps.find(c => c.id === a.id)?.near).toBe(here);
     /* the next day starts there: nothing moved */
-    expect(p.view().here.id).toBe(p.view().arrival!.id);
+    expect(p.view().here.id).toBe(here);
   });
   it('asleep again at the same place: a view of that place if it has one, else the place; never anywhere else (D-160)', () => {
     const p = player().do({ do: 'open' }).do({ do: 'capacity', capacity: 'low' });

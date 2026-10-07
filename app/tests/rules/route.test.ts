@@ -13,6 +13,8 @@ import { sim, type Week } from './sim';
 
 const s = C.story;
 const route = s.route.flatMap(r => r.places.map(p => p.id));
+/** Route places not yet behind Dan (an old save's place whose sealed row it already opened is behind him, D-160). */
+const left = (st: S.StoryState) => s.route.flatMap(r => r.places).filter(p => !S.placeDone(s, st, p)).map(p => p.id);
 const arrivals = (facts: Fact[]) => facts.filter((f): f is FactOf<'arrived'> => f.type === 'arrived');
 
 /** Where Dan is after each arrival (the area), and how each arrival was come to. */
@@ -166,9 +168,9 @@ describe('Dan\'s save carries on from wherever the old route left it (D-154)', (
         const i = facts.findIndex(f => f.type === 'storyWeekBegan' && f.w === wk);
         if (i < 0) continue;
         const d = sim(undefined, undefined, n.endsWith('nobed') ? undefined : 'kept', facts.slice(0, i));
-        for (let k = 0, extra = 0; k < 30 && extra < 2; k++) { d.week('normal'); if (route.every(id => d.st().played.has(id))) extra++; }
+        for (let k = 0, extra = 0; k < 30 && extra < 2; k++) { d.week('normal'); if (!left(d.st()).length) extra++; }
         const at = `${n} from week ${wk}`, st = S.storyState(d.facts, s);
-        expect(route.filter(id => !st.played.has(id)), at).toEqual([]);
+        expect(left(st), at).toEqual([]);
         expect(st.week, at).toBe(14);
         const played = d.facts.filter((f): f is FactOf<'beatPlayed'> => f.type === 'beatPlayed' && f.id !== 'passage').map(f => f.id);
         expect(played.filter((id, j) => played.indexOf(id) !== j), at).toEqual([]);
@@ -185,7 +187,7 @@ describe('Dan\'s save carries on from wherever the old route left it (D-154)', (
         const d = sim(undefined, undefined, n.endsWith('nobed') ? undefined : 'kept', before);
         if (n === 'keys-light') d.week('away');
         /* on until the whole route is walked (and a week more, for the evenings left) */
-        for (let k = 0, extra = 0; k < 30 && extra < 2; k++) { d.week(n.startsWith('high') ? 'high' : 'normal'); if (route.every(id => d.st().played.has(id))) extra++; }
+        for (let k = 0, extra = 0; k < 30 && extra < 2; k++) { d.week(n.startsWith('high') ? 'high' : 'normal'); if (!left(d.st()).length) extra++; }
         const after = d.facts, st = S.storyState(after, s);
         const at = `${n} stopped at ${before.filter(f => f.type === 'arrived').pop()!.id}`;
         /* nothing replays: no place reached twice, no story moment played twice */
@@ -194,7 +196,7 @@ describe('Dan\'s save carries on from wherever the old route left it (D-154)', (
         const beats = after.filter((f): f is FactOf<'beatPlayed'> => f.type === 'beatPlayed' && f.id !== 'passage').map(f => f.id);
         expect(beats.filter((id, i) => beats.indexOf(id) !== i), at).toEqual([]);
         /* no stall: the whole route walked, the story through week 14 */
-        expect(route.filter(id => !st.played.has(id)), at).toEqual([]);
+        expect(left(st), at).toEqual([]);
         expect(st.week, at).toBe(14);
         /* never stranded or teleported: every move after the stop is announced; an evening never moves him */
         let last: string = S.areaOf(s, S.storyState(before, s).stretch);

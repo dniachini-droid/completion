@@ -283,7 +283,7 @@ function roadStep(s: Story, st: StoryState, b: Beat): boolean {
  * order (as many as stand in the way, across a story week's end) play as Dan walks on and show on that place's arrival, with their records, choices and settled
  * guesses. Null if nothing so near would open the way.
  */
-export function onTheWay(s: Story, st: StoryState): Beat[] | null { return wayTo(s, st)?.bits ?? null; }
+export function onTheWay(s: Story, st: StoryState): Beat[] | null { const w = wayTo(s, st); return w && w.bits.length ? w.bits : null; }
 /** The next place Dan is walking to: the next place in reach, or the one the story bits on the way will open (D-129). */
 export const placeAhead = (s: Story, st: StoryState): Beat | null => nextPlace(s, st) ?? wayTo(s, st)?.place ?? null;
 function wayTo(s: Story, st: StoryState): { bits: Beat[]; place: Beat } | null {
@@ -292,7 +292,8 @@ function wayTo(s: Story, st: StoryState): { bits: Beat[]; place: Beat } | null {
   /* as many bits as stand in the way, across a story week's end (bounded by the story's own steps) */
   for (let k = 0; k < s.beats.length + s.seals.length; k++) {
     const place = nextPlace(s, t);
-    if (place) return out.length ? { bits: out, place } : null;
+    /* (with nothing between: the next place, a story week on, D-160) */
+    if (place) return { bits: out, place };
     const b = nextStep(s, t);
     if (!b) {
       if (weekDone(s, t) && s.route.some(r => r.w === t.week + 1)) { t = { ...t, week: t.week + 1 }; continue; }
@@ -402,11 +403,15 @@ export function pickFind(s: Story, st: StoryState, why: string, at0?: StretchId)
 
 /** A story week ends when its places and ordered steps have all played, the road's rows among them; the niches wait
     for Keys without holding the story (D-129). */
+/** A route place is behind Dan: reached, or (a place a sealed row plays) its row already open in an old save, so it never
+    plays now (D-160: an old save that opened the salt's crust before it was a place) */
+export const placeDone = (s: Story, st: StoryState, p: { id: string; k?: boolean }) =>
+  st.played.has(p.id) || (!!p.k && ((x) => !!x && st.opened.has(x.id))(sealOf(s, beatOf(s, p.id)?.seal ?? '')));
 export function weekDone(s: Story, st: StoryState): boolean {
   const rw = s.route.find(r => r.w === st.week);
   if (!rw) return false;
   /* nothing trails: the top is finished before Dan leaves it (D-160) */
-  if (!rw.places.every(p => st.played.has(p.id))) return false;
+  if (!rw.places.every(p => placeDone(s, st, p))) return false;
   return s.beats.filter(b => b.w === st.week && b.kind === 'step').every(b => st.played.has(b.id))
     && s.seals.every(x => x.w !== st.week || !onRoad(s, x.id) || st.opened.has(x.id));
 }

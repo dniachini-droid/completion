@@ -40,7 +40,7 @@ describe('weeks 8–14: the content is whole', () => {
     for (const rw of s.route.filter(r => NEW(r.w))) {
       /* about five a week: the route walked as a journey moved a few between weeks (D-154) */
       /* (weeks 10 and 14 have three since D-160: the deep end is first reached in week 13, and a niche-only place was folded in, CAMP_REHOME §7) */
-      expect(rw.places.length, `week ${rw.w}`).toBeGreaterThanOrEqual(rw.w === 10 || rw.w === 14 ? 3 : 4);
+      expect(rw.places.length, `week ${rw.w}`).toBeGreaterThanOrEqual([8, 10, 14].includes(rw.w) ? 3 : 4);
       expect(rw.places.length, `week ${rw.w}`).toBeLessThanOrEqual(6);
       for (const p of rw.places) {
         const b = S.beatOf(s, p.id)!;

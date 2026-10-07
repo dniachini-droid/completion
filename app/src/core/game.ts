@@ -885,7 +885,8 @@ function weekClose(w: W, c: Content, at: Moment, day: string, storyWeek: number)
       .filter(l => !shownSoFar.has(l.id) && l.req.every(r => S.met(st, r))).slice(0, SO_FAR_MAX).map(l => l.id);
     /* the glimpse waits until Dan has been where it looks (D-079), and has seen what it says he has (D-154): a later
        week's close shows it then */
-    const glimpse = c.story.beats.find(b => b.kind === 'close' && b.w <= storyWeek && b.w >= storyWeek - GLIMPSE_LAG
+    /* (the latest such: the week just walked, before the story moves past it, D-160) */
+    const glimpse = [...c.story.beats].reverse().find(b => b.kind === 'close' && b.w <= storyWeek && b.w >= storyWeek - GLIMPSE_LAG
       && !st.played.has(b.id) && st.visited.has(b.stretch) && b.req.every(r => S.met(st, r)) && !(b.until && S.met(st, b.until))) ?? null;
     if (glimpse) w.put({ type: 'beatPlayed', id: glimpse.id }, at, day);
     /* every niche a Key opened in the week, however it came to be used (S4: built only from the old floor's Keys, it never
@@ -1769,7 +1770,12 @@ export const STAND_IN: Record<StretchId, string> = {
 /** The places painted from their briefs so far (ids only; D-015): each shows its own painting, `pt-<id>`, which
     ui/paintings.ts carries (a test keeps the two in step); every other place shows its stretch's stand-in. */
 export const PAINTED: ReadonlySet<string> = new Set<string>(['b-1.A', 'b-1.B', 'b-1.C', 'b-2.A', 'pl-w2-smooth-place', 'pl-w1-pick-niche', 'b-5.A', 'pl-w5-ledge-lip', 'pl-w5-second-landing', 'b-7.A', 'b-7.B', 'pl-w6-square-gallery', 'b-6.B', 'pl-w6-folder', 'cv-02', 'cv-10', 'cv-11', 'cv-12', 'cv-13', 'cv-14', 'pl-w5-worn-steps', 'b-5.B', 'b-7.C', 'cv-15', 'cv-03', 'cv-04', 'cv-05', 'cv-07', 'cv-08', 'cv-09', 'pl-w2-above-the-ring', 'pl-w2-box-by-the-cot', 'b-3.A', 'b-3.B', 'b-3.C', 'b-4.A', 'b-4.B', 'b-2.B', 'pl-w1-below-the-lamp', 'pl-w3-far-end', 'cv-06', 'b-4.C', 'pl-w3-salt-lit', 'pl-w4-recess-above-the-cot', 'pl-w6-wall-shelf', 'cv-01', 'pl-w4-hollow', 'b-6.A', 'b-8.A', 'pl-w8-channel', 'b-8.B', 'pl-w8-steep-foot', 'b-8.C', 'b-9.A', 'pl-w9-benches', 'b-9.B', 'b-9.C', 'pl-w9-approach', 'pl-w10-deep-end', 'b-10.A', 'pl-w10-blast-floor', 'b-10.B', 'b-10.C', 'pl-w11-cupboard', 'b-11.A', 'b-11.B', 'pl-w11-far-end', 'b-11.C', 'b-12.A', 'pl-w12-shelf', 'b-12.B', 'pl-w12-square-way', 'b-12.C', 'pl-w13-side-gallery', 'b-13.A', 'b-13.B', 'b-13.C', 'pl-w13-lower-gallery', 'b-14.A', 'pl-w14-mule-stone', 'b-14.B', 'pl-w14-meeting', 'pl-w14-deep-niche', 'cv-16', 'cv-17', 'cv-18', 'cv-19', 'cv-20', 'cv-21']);
-export const paintingOf = (id: string | null, stretch: StretchId): string => id && PAINTED.has(id) ? `pt-${id}` : STAND_IN[stretch];
+/** A place D-160 made of a retired one, shown with that one's painting (ids only). */
+const PAINTED_AS: Readonly<Record<string, string>> = { 'b-3.5': 'pl-w3-salt-lit' };
+export const paintingOf = (id: string | null, stretch: StretchId): string => {
+  const as = id ? PAINTED_AS[id] ?? id : null;
+  return as && PAINTED.has(as) ? `pt-${as}` : STAND_IN[stretch];
+};
 
 /** The place a job's Done reached, if its return and the arrival came together: only the world's answers between. */
 const ANSWERS = new Set(['stepsGained', 'dayCompleted', 'keyEarned', 'sealOpened', 'recordShown', 'findGiven', 'beatPlayed', 'storyWeekBegan']);

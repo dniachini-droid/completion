@@ -239,7 +239,8 @@ describe('The daybook’s week close', () => {
     expect(c.learned.length).toBeLessThanOrEqual(3 * to);
     expect(c.soFar.length).toBeGreaterThanOrEqual(3);
     expect(c.soFar.length).toBeLessThanOrEqual(6);
-    expect(c.glimpse).toBe('b-w1.close');
+    /* (week 1's glimpse stops once the lintel is seen close, b-2.2, D-160: a week of play that reached it shows none) */
+    expect([null, 'b-w1.close']).toContain(c.glimpse);
   });
   it('learned lines never repeat, and only lines whose beats have played show', () => {
     const p = sim().week('normal').week('normal').week('normal').week('normal');

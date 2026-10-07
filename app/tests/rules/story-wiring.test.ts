@@ -21,7 +21,7 @@ const weekAt = (f: Fact[], seq: number) => S.storyState(f.filter(x => x.seq < se
 describe('S#1: a week close never shows a glimpse the story has moved past', () => {
   it('each glimpse whose sealed state later opens stops once it has', () => {
     const until = Object.fromEntries(s.beats.filter(b => b.kind === 'close' && b.until).map(b => [b.id, b.until]));
-    expect(until).toMatchObject({ 'b-w1.close': 'b-3.A', 'b-w4.close': 'b-5.0', 'b-w6.close': 'b-7.A', 'b-w9.close': 'b-10.A' });
+    expect(until).toMatchObject({ 'b-w1.close': 'b-2.2', 'b-w4.close': 'b-5.0', 'b-w6.close': 'b-7.A', 'b-w9.close': 'pl-w9-approach' });
   });
   it('at a High pace, no page shows a glimpse whose condition had already played', () => {
     const p = sim().week('high').week('high').week('normal');
