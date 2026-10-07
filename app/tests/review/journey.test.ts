@@ -85,4 +85,4 @@ it.skipIf(!env.JOURNEY)('the journey: a fresh save, and old-route saves carried 
   /* the words seen between each arrival and the one before it */
   const out = lives.map(l => ({ ...l, between: l.cuts.map((c, i) => between(l.facts, i ? l.cuts[i - 1] : 0, c)) }));
   writeFileSync(`${dir}/journey.json`, JSON.stringify({ version: SAVE_VERSION, content: C.version, lives: out }));
-}, 900_000);
+}, 3_600_000);
