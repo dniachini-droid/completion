@@ -110,6 +110,15 @@ _The language pass (2026-09-24, D-074; Dan: "written like a story", "full senten
 
 ---
 
+## As built (D-160, 2026-10-07): camp where you are
+
+Sealed design: `CAMP_REHOME.md` (§7 overrides). Dan camps wherever he is; the top is finished before he leaves it. Concise per week:
+
+- **Week 1–2:** unchanged places. Camp lines are thoughts before sleep (`b-w1.camp`, `b-w2.camp`); top views end at `b-3.B`.
+- **Week 3 (the lit top):** route `b-3.A` · `b-4.C` (the great door close; absorbs `pl-w3-far-end`) · `pl-w3-salt-lit`. Steps `b-3.1`, `b-3.3` (the lit base, K1), `b-4.B` (the salt block, now a step on the road), `b-3.2` (he takes the notebook), **`b-3.5`** (the one crust opens; the tally bared to its end; the hollow and the deep niche seen), **`b-3.6`** (he copies the tally, the lamp's base and the wall by the lamp; C-57; the ledge's notches; takes her dated sheets), **`b-3.7`** (he takes her folder; the recess above the cot seen). Week close `b-w3.close`: the opening under the lintel, lit.
+- **Week 4 (departure):** route `b-3.B` (HERE, DOOR; he steps through with the copy, her sheets, notebook and folder) · `b-3.C` (onto the top flight) · `pl-w5-worn-steps` · `pl-w5-second-landing` (her dictionary's slate). Steps `b-4.1` (from halfway down to the first turn), `b-4.2`, `b-4.3`, **`b-4.A`** (her Day 9 sheet against his copy; a portable step), **`b-4.4`** (portable). `b-w4.morning` reads his copy of the wall by the lamp.
+- **Week 5:** route `b-5.B` only; `b-5.A` and `b-5.3` are portable steps read in his copy (ONCE; GIVE). Camp lines read his copy of the base.
+
 ## Notes for Phase 8
 
 - Every arrival above is a *place*; every step is *movement plus one thing seen*. Nothing is ever a task.

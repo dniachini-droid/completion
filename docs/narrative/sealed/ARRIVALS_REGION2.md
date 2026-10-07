@@ -139,6 +139,20 @@ _Written 2026-09-23; revised the same day after the weeks 6–13 review (`review
 
 ---
 
+## As built (D-160, 2026-10-07): camp where you are
+
+Sealed design: `CAMP_REHOME.md` (§7 overrides). Concise per week:
+
+- **Week 6:** route `b-6.A` (a niche low in the rounded stone by the join, in view) · `pl-w6-square-gallery` · `b-6.B` · `pl-w6-wall-shelf`. **6.2** is that niche (OPEN, EAT), in the square gallery. `pl-w6-folder` cut (the folder is carried from week 3). `b-4.C` moved to week 3.
+- **Week 7:** route `b-7.B` · `b-7.A`. **7.C is retired: the great door is not opened in weeks 1–14** (§7.1). `b-7.2` is read in his copy. Camp line, close, teaser, learned line and question rewritten (the second lintel; the twelve rings).
+- **Week 8:** route `b-8.A` (a second, steeper stair comes down to the far shore out of the dark) · `pl-w8-channel` · `pl-w8-steep-foot` (unlit; cold air going up; he stops where the light gives out) · `b-8.C`. `b-8.B` is a portable step in his copy.
+- **Week 9:** `b-9.B` (the turn) is a portable step: her Day 9 sheet beside his copy; `b-9.3` read on in the copy.
+- **Week 10:** route `b-10.A` · `pl-w10-blast-floor` · `b-10.C`. No trip to the deep end (§7.2); V5 moves to week 13.
+- **Week 11:** `pl-w11-far-end` is a turn-off "Back up" for the log's tall man; nothing says "on the way back up to camp".
+- **Week 12:** `b-12.B` (S8) is a portable step in his copy; the second crust is gone (one crust, opened in week 3).
+- **Week 13:** route `pl-w13-side-gallery` · `b-13.A` · **`b-13.B`** (the one visit to the deep end: back up for the shut door's "moving stone", past the mule-shoe's notches, the standing stone's blank cut) · `pl-w13-lower-gallery`. **`b-10.B`** (V5) plays as a step after the cut. `pl-w14-mule-stone` cut.
+- **All weeks:** camp lines are thoughts before sleep, location-neutral; mornings never send him anywhere; every camp view says he camps there.
+
 ## Notes
 
 - Every arrival above is a *place*, with at most one record staged in it; every step is *movement plus one thing seen*. The three turns (8.B, 9.B, 11.B) are places, not marks-screen events: the pivot surfaces one record at the visit (SCRIPT §10) and the rest re-render at the morning or when reached.

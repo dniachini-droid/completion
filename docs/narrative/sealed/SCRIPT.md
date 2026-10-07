@@ -129,7 +129,7 @@ Words are commands: verb + object (+ modifier). Forming one is the fixed ritual 
 | # | Word | Signs | Effect in the Site | Arrives | Opens (first use) |
 |---|---|---|---|---|---|
 | W1 | **LIGHT** | FIRE-GIVE | Wakes laced lamps and lamp-lines nearby; the map reveals routes; hidden word-doors show their lintels | **wk 2–3** | The Lamp Door in the first hall |
-| W2 | OPEN-WAY | PATH-OPEN | Opens the class of word-doors | m 2 | The lintel at the foot of the Stair's second flight; the same word, with a Key, opens the Lower Door |
+| W2 | OPEN-WAY | PATH-OPEN | Opens the class of word-doors | m 2 | The lintel at the foot of the Stair's second flight, then the door below the Water; the same word, with a Key, opens the Lower Door when the story returns to the top (not in weeks 1–14, D-160, `CAMP_REHOME.md` §7.1) |
 | W3 | MOVE-STONE | STONE-MOVE | Clears falls; shifts blocks; opens routes the readers' collapses closed | m 3–4 | The roof-fall in the Surveyor's gallery |
 | W4 | ECHO | SEE-ONCE | Shows an impression the stone kept of a loud moment in this room: a short *scene* rather than a fragment. Its first blank is behind the Loud Room's fall, exposed by MOVE-STONE | m 4–5 | The Loud Room (the Engineer's chamber) |
 | W5 | HOLD | KEEP-STONE | Holds a collapse, holds a door open, holds a device | m 6 | The fallen lintel of the low passage to his workshop (week 24) |
@@ -172,7 +172,7 @@ Words that exist, can be read, and are never cut by the player:
 
 Signs are earned by Keys (one per weekly target met) and occasionally by an arrival or a record; the *order* is authored and cannot be skipped (D-013). If Dan earns Keys faster than the schedule, sealed things ahead in the Site absorb the extra Keys first (gates, niches, sealed records); the next sign is always the next in this order. If slower, the schedule stretches; nothing waits.
 
-**A Key always opens something already seen and sealed** (CORE_LOOPS). So every Key-delivered sign in weeks 1–13 is *inside* a sealed thing Dan has seen: her sealed box (week 2: the glossary sheet for GIVE, PERSON, ONE, ME), the Stair niche (week 3: a lesson-tablet with HERE and DOOR beside the second lamp), the recess under the second turn (the second-flight chamber; week 5: the tablet for ONCE and PATH/GO), the Salt Gallery's sealed record (week 6: OPEN, EAT), the Surveyor's niche (week 7: UP, STONE, CHILD), the Water niche (week 8: SEE, COUNT, DAY, numbers), the Reading Room tablets (week 9: NOT), and so on down the Site. The sign is the thing in the box.
+**A Key always opens something already seen and sealed** (CORE_LOOPS). So every Key-delivered sign in weeks 1–13 is *inside* a sealed thing Dan has seen: her sealed box (week 2: the glossary sheet for GIVE, PERSON, ONE, ME), the Stair niche (week 3: a lesson-tablet with HERE and DOOR beside the second lamp), the recess under the second turn (the second-flight chamber; week 5: the tablet for ONCE and PATH/GO), the niche by the join in the square gallery (week 6: OPEN, EAT; in the Salt Gallery's sealed record before D-160), the Surveyor's niche (week 7: UP, STONE, CHILD), the Water niche (week 8: SEE, COUNT, DAY, numbers), the Reading Room tablets (week 9: NOT), and so on down the Site. The sign is the thing in the box.
 
 ### Beat level: the first three months
 
@@ -180,7 +180,7 @@ Signs are earned by Keys (one per weekly target met) and occasionally by an arri
 |---|---|---|---|
 | 1 | Name-ring recognised; LAMP; FIRE. (High day partial: the hook element of GIVE) | | |
 | 2 | GIVE (contested), PERSON, ONE, ME | **LIGHT assembled** (FIRE-GIVE) by the end of wk 2 or during wk 3 | |
-| 3 | HERE, DOOR | LIGHT confirmed: the Lamp Door opens | |
+| 3 | HERE, DOOR | LIGHT confirmed: the Lamp Door opens | Story week 4 since D-160: offered at `b-3.B`, the step through the lintel that opens week 4; order unchanged (after GIVE, before DEEP) |
 | 4 | DEEP; hand-mark | | Every record now shows *whose hand* cut it; almost all one hand |
 | 5 | ONCE; PATH, GO | | Records open with the formula: all told after the life. Her cut pieces carry no formula: present tense, recent |
 | 6 | OPEN; EAT | | S2 and V2's *ate [ ]* rhyme (the cross reads at wk 9) |

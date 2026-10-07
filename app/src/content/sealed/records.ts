@@ -191,7 +191,7 @@ export const records: RecordFragment[] = [
 
   // ——— Week 4 ———
   {
-    id: 'rec-s4', life: 'S', kind: 'cut', where: 'the Salt Gallery, past the lone ring, to the salt crust', w: 4, firstShown: ['b-4.A'],
+    id: 'rec-s4', life: 'S', kind: 'cut', where: 'the Salt Gallery, past the lone ring, to where the crust was', w: 4, firstShown: ['b-4.A'],
     cut: [
       head('one'),
       [s('me', 'I'), s('go', 'go'), s('home', 'home'), p(';')],
@@ -215,7 +215,7 @@ export const records: RecordFragment[] = [
     ],
   },
   {
-    id: 'rec-x-neighbour', life: 'X', kind: 'cut', where: 'a niche past the split, beside the salt block', w: 4, firstShown: ['b-4.B', 'seal-4-2'],
+    id: 'rec-x-neighbour', life: 'X', kind: 'cut', where: 'a niche past the split, beside the salt block', w: 3, firstShown: ['b-4.B', 'seal-4-2'],
     cut: [
       [s('voice', 'Told'), p(':'), s('see', 'found'), pic('a salt face'), pic('a crack'), s('up', 'out'), p(';'), s('give', 'give'), s('not', 'not'), p('.')],
       [HIS],
@@ -223,14 +223,14 @@ export const records: RecordFragment[] = [
     full: 'Told: found in the face past the split; not for sale.',
   },
   {
-    id: 'rec-x-colleague', life: 'X', kind: 'paper', where: 'the Box Room, a recess above the cot, a printed email pinned inside', w: 4, firstShown: ['seal-4-3'],
+    id: 'rec-x-colleague', life: 'X', kind: 'paper', where: 'a printed email from the recess above the cot, kept in her folder', w: 3, firstShown: ['seal-4-3'],
     paper: [
       'To: I. Halloran',
       "Come home. Nobody's going to fund this. The department's asked where you are.",
     ],
   },
   {
-    id: 'rec-x-sheep', life: 'X', kind: 'cut', where: 'the Salt Gallery, a hollow in the salt', w: 4, firstShown: ['seal-4-5'],
+    id: 'rec-x-sheep', life: 'X', kind: 'cut', where: 'the Salt Gallery, a hollow in the salt', w: 3, firstShown: ['seal-4-5'],
     cut: [
       [...told('one'), pic('a sheep'), s('of', 'of'), s('child', 'the child'), s('of', 'of'), s('me', 'me'), p(';'),
         s('child', 'the child'), s('give', 'gave'), s('once', 'once'), s('here', 'here'), s('toward', 'for'), pic('an owl'), p('.')],
@@ -247,7 +247,7 @@ export const records: RecordFragment[] = [
 
   // ——— Week 5 ———
   {
-    id: 'rec-s5', life: 'S', kind: 'cut', where: 'the Salt Gallery, behind the salt crust', w: 5, firstShown: ['b-5.3', 'seal-5-2'],
+    id: 'rec-s5', life: 'S', kind: 'cut', where: 'the Salt Gallery, the stretch that lay under the crust', w: 5, firstShown: ['b-5.3'],
     cut: [
       head('one'),
       [s('one', 'He'), s('give', 'gave'), s('see', 'to see'), p(':'), s('lamp', 'the lamp'), s('mark', 'mark'), p(','), s('fire', 'the fire'), s('mark', 'mark'), p(','), s('give', 'the giving'), s('mark', 'mark'), p(':')],
@@ -277,7 +277,7 @@ export const records: RecordFragment[] = [
     full: "Told: the child's. He cut the marks again here, through [the gap].",
   },
   {
-    id: 'rec-x-hers-again', life: 'X', kind: 'cut', where: "the Lamp Hall, the ledge’s underside", w: 5, firstShown: ['seal-5-5'],
+    id: 'rec-x-hers-again', life: 'X', kind: 'cut', where: "the Lamp Hall, the ledge’s underside", w: 3, firstShown: ['seal-5-5'],
     cut: [
       [ASHTI, s('again', 'again'), p('.')],
       [s('me', 'I'), s('make', 'cut'), s('here', 'here'), p(';'), s('one', 'he'), s('see', 'saw'), s('me', 'me'), s('not', 'not'), p('.')],
@@ -346,7 +346,7 @@ export const records: RecordFragment[] = [
   },
   {
     // NOTE: MVP §4 gives w as 6–7 (seen behind the crust at seal-6-1, read at b-7.2); `w` is the earliest.
-    id: 'rec-s6', life: 'S', kind: 'cut', where: 'the Salt Gallery, past the crust', w: 6, firstShown: ['seal-6-1', 'b-7.2'],
+    id: 'rec-s6', life: 'S', kind: 'cut', where: 'the Salt Gallery, past where the crust was', w: 7, firstShown: ['b-7.2'],
     cut: [
       head('one'),
       [s('voice', 'My voice'), s('give', 'gave'), s('child', 'child'), p(':'), s('up', 'up'), pic('a barn'), pic('an owl'), s('here', 'here'), p('.')],
@@ -459,7 +459,7 @@ export const records: RecordFragment[] = [
 
   // ——— Week 10 ———
   {
-    id: 'rec-v5', life: 'V', kind: 'cut', where: 'the standing stone before the fall, at the square gallery’s deep end', w: 10, firstShown: ['b-10.B'],
+    id: 'rec-v5', life: 'V', kind: 'cut', where: 'the standing stone before the fall, at the square gallery’s deep end', w: 13, firstShown: ['b-10.B'],
     cut: [
       head('two'),
       [s('mark', 'Marks'), s('toward', 'for'), OVERSEER, p('.')],
@@ -591,7 +591,7 @@ export const records: RecordFragment[] = [
     ],
   },
   {
-    id: 'rec-s9', life: 'S', kind: 'cut', where: 'the Salt Gallery, a deep niche in the salt', w: 14, firstShown: ['b-14.4'],
+    id: 'rec-s9', life: 'S', kind: 'cut', where: 'the Salt Gallery, a deep niche in the salt', w: 3, firstShown: ['b-14.4'],
     cut: [
       head('one'),
       [pic('lambs'), pic('spring'), p(';'), pic('salt'), pic('summer'), p(';')],

@@ -83,6 +83,19 @@ _Written 2026-09-23._
 
 Row changes, recorded under MASTER_BRIEF §55 (no fact changed, no sign moved): **8.5** (the child's tablet) became week 9 row 2, so its arrival (after the turn, 9.B) can never hold a week-9 Key behind it; week 8's row 5 is new, a cork float on a knotted cord in the channel's niche (the Surveyor's; plain). Week 9's rows are now: NOT · the child's tablet · the stylus · the floor-stone · the powder-tin (B0 stays seen, not sealed). New plain rows: **11.6** a spiked iron candle-holder by the torn wall; **11.7** a pencil stub, hers, on a bench's end; **13.6** a bone folding rule marked in tens (the Surveyor's). **14.2** (E5) is a folded page left folded in week 14 and read in week 15. The app's seal ids follow these rows (`seal-8-5`, `seal-9-2`, `seal-11-6`, `seal-11-7`, `seal-13-6`).
 
+### As built for D-160 (camp where you are, 2026-10-07; `CAMP_REHOME.md` §2.3, §7)
+
+Recorded under MASTER_BRIEF §55; no told line changed, no sign moved. The top (Lamp Hall, Salt Gallery, Box Room) is finished in story week 3, before the step through the lintel opens week 4:
+
+- **Week-3 road rows:** 4.2 (the salt block, `b-4.B`, o1) and 5.2 (the crust, `b-3.5`, o2; one crust now: **12.2 is folded into it**, seen-only, kept for old saves). 3.1 (the Stair's niche) moves to week 4 o1 with `b-3.B`; 4.1 is week 4 o2.
+- **Week-3 Key niches** (in view before departure; a Key used on one later is a told trip back up the player chooses): 3.3–3.6 (o3–o6), **4.3** (o7; the email is unpinned and kept in her folder), **4.5** (o8, in view at `b-3.5`/`b-3.6`), **5.5** (o9, in view at `b-3.6`), **6.5** (o10, her folder, carried: `portable`), **14.5** (o11, the deep niche; S9 renders mostly as pictures if opened in week 3).
+- **5.4** (the notebook's pocket) is `portable`.
+- **4.6** (her dictionary) is on the second landing, low at the foot of the second flight (in view at `pl-w5-second-landing`), week 4 o3.
+- **6.1** (OPEN, EAT) is in the square gallery, low in the rounded stone just before the join (in view at `b-6.A`); it no longer holds S6 (first shown at `b-7.2`, in Dan's copy).
+- **7.5** (the great door) is seen-only: not opened in weeks 1–14.
+- **10.5 → 13** (the standing stone, V5): week 13 o4, opened on the road right after the cut at `b-13.B`, its step `b-10.B`.
+- 14.4 (the mule-shoe's line) is brought into view at `b-13.B`.
+
 ## The road and the niches (D-129, 2026-09-28)
 
 Dan chose option C for the story's pace: the main line never waits on a Key. What that means for these rows, recorded under MASTER_BRIEF §55. **No line was rewritten, no fact changed, no sign moved.**
