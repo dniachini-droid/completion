@@ -26,9 +26,9 @@ function between(facts: Fact[], from: number, to: number): string[] {
     /* (a find at a day's end is shown on its own screen, the move itself) */
     if (f.type === 'findGiven' && f.why !== 'camp') { const x = s.finds.find(y => y.id === f.id); if (x) out.push(`(a find) ${x.line}`); }
     if (f.type === 'beatPlayed' && f.job === undefined && s.beats.find(b => b.id === f.id)?.kind === 'close') out.push(`(the week's page) ${s.beats.find(b => b.id === f.id)!.line}`);
-    /* (a night's bedtime line that ends that night's evening at camp is on the evening's screen, the move itself) */
-    if (f.type === 'beatPlayed' && f.id.endsWith('.camp') && facts.some(g => g.type === 'arrived' && (g.kind === 'evening' || g.how === 'evening') && g.day === f.day && g.seq < f.seq)) continue;
-    if (f.type === 'beatPlayed' && f.job === undefined && /\.(camp|morning)$/.test(f.id)) { const b = s.beats.find(x => x.id === f.id); if (b?.line) out.push(`(${f.id.endsWith('camp') ? 'bedtime, by the lamp' : 'the morning'}) ${b.line}`); }
+    if (f.type === 'beatPlayed' && f.job === undefined && /\.(camp|morning)$/.test(f.id)) { const b = s.beats.find(x => x.id === f.id); if (b?.line) out.push(`(${f.id.endsWith('camp') ? 'going to sleep, the night\'s thought' : 'the morning'}) ${b.line}`); }
+    /* the day's minutes, so a reader knows how long the days are (D-160's paces) */
+    if (f.type === 'goodnight') out.push(`(Go to sleep pressed, ${f.at.slice(11, 16)})`);
   }
   return out;
 }
@@ -47,13 +47,18 @@ function cuts(facts: Fact[], from = 0) {
 it.skipIf(!env.JOURNEY)('the journey: a fresh save, and old-route saves carried on', () => {
   const dir = env.JOURNEY!;
   const lives: { name: string; facts: Fact[]; cuts: number[] }[] = [];
+  /* PACE (D-160): short days (about an hour), normal (about three), long (about eight) */
+  const pace = (env.PACE ?? 'normal') as 'short' | 'normal' | 'long';
   const fresh = sim(undefined, undefined, 'kept');
-  for (let i = 0; i < 22; i++) fresh.week('normal');
+  for (let i = 0; i < (pace === 'short' ? 40 : pace === 'long' ? 10 : 22); i++) fresh.week(pace);
   /* the fourteen weeks: every arrival until the last place on the route (the open route after it is not the journey) */
   const route = C.story.route.flatMap(r => r.places.map(p => p.id));
   const end = fresh.facts.findIndex((_, i) => route.every(id => fresh.facts.slice(0, i + 1).some(g => g.type === 'arrived' && g.id === id)));
   lives.push({ name: 'fresh', facts: fresh.facts, cuts: cuts(fresh.facts).filter(c => end < 0 || c <= end + 1) });
   /* Dan's possible points: the end of each of weeks 1–6, and the middle of weeks 2–4, under the old route */
+  /* OLD=1: the old saves only (their own walk, judged apart) */
+  if (env.OLD) lives.length = 0;
+  else { writeFileSync(`${dir}/journey.json`, JSON.stringify({ version: SAVE_VERSION, content: C.version, lives: lives.map(l => ({ ...l, between: l.cuts.map((c, i) => between(l.facts, i ? l.cuts[i - 1] : 0, c)) })) })); return; }
   const old = JSON.parse(readFileSync(new URL('../saves/route-old/normal-kept.json', import.meta.url), 'utf8')).facts as Fact[];
   const ends: number[] = [];
   let w = 1, n = 0;
@@ -69,6 +74,14 @@ it.skipIf(!env.JOURNEY)('the journey: a fresh save, and old-route saves carried 
     /* the moves after the stop: the next ten arrivals */
     lives.push({ name: `old-${before[before.length - 1].seq}`, facts: d.facts, cuts: cuts(d.facts, before[before.length - 1].seq).slice(0, 10) });
   }
+  /* saves from the last two builds (D-154, D-159), carried on from where they stopped */
+  for (const set of ['route-d154', 'route-d159'])
+    for (const name of set === 'route-d154' ? ['normal-kept', 'normal-nobed'] : ['normal-kept', 'normal-nobed', 'high-kept', 'low-nobed']) {
+      const before = JSON.parse(readFileSync(new URL(`../saves/${set}/${name}.json`, import.meta.url), 'utf8')).facts as Fact[];
+      const d = sim(undefined, undefined, 'kept', before);
+      for (let i = 0; i < 4; i++) d.week('normal');
+      lives.push({ name: `${set.slice(6)}-${name}`, facts: d.facts, cuts: cuts(d.facts, before[before.length - 1].seq).slice(0, 10) });
+    }
   /* the words seen between each arrival and the one before it */
   const out = lives.map(l => ({ ...l, between: l.cuts.map((c, i) => between(l.facts, i ? l.cuts[i - 1] : 0, c)) }));
   writeFileSync(`${dir}/journey.json`, JSON.stringify({ version: SAVE_VERSION, content: C.version, lives: out }));
