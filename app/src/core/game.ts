@@ -433,6 +433,10 @@ function knownState(w: W, c: Content) {
   return S.storyState(w.all.filter(f => !(f.type === 'arrived' && !seen.has(f.seq))), c.story);
 }
 function giveFind(w: W, c: Content, why: FactOf<'findGiven'>['why'], at: Moment, day: string, job?: number) {
+  /* nothing is found down the way in before the climb down it is told: that comes first (D-160, the round-4 review) */
+  const st0 = S.storyState(w.all, c.story), first = c.story.route[0]?.places[0]?.id;
+  const climb = !S.pastMouth(c.story, st0) && first ? c.story.beats.find(b => b.kind === 'step' && b.before === first && !st0.played.has(b.id) && b.req.every(r => S.met(st0, r))) : undefined;
+  if (climb) { w.put({ type: 'beatPlayed', id: climb.id, ...(job ? { job } : {}) }, at, day); show(w, c, climb.carries?.records, at, day); }
   /* from what Dan has been shown, but once he has gone down never the top, even before the screen that took him down
      has shown (D-160) */
   const f = S.pickFind(c.story, { ...knownState(w, c), departed: S.storyState(w.all, c.story).departed }, why);
@@ -1947,8 +1951,10 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
     return { seq: f.seq, kind: 'place', face, late: !!f.late, earlier: !!f.late && !!f.night && W.daysBetween(f.night, f.day) > 1, area, wayIn: face === 'back' && !b.said ? wayIn : null, turnOff: face === 'back' && (!!b.turnOff || errand), errand,
       ...(errand ? { errandWhy: errandMore ? null : b.back ?? null, errandMore, errandStays,
         ...(errandMore && prevPlace?.type === 'arrived' ? { errandFrom: S.areaName(c.story, S.beatOf(c.story, prevPlace.id)!.stretch) } : {}) } : {}), then,
-      opened, way, id: b.id, name: (errand && b.againName ? b.againName : b.name) ?? '', line: (errand && b.again ? b.again : b.line) ?? '', taps: b.taps, choice: b.choice,
-      records: b.carries?.records ?? [], guess, look: null, stretch: b.stretch, painting: paintingOf(b.id, b.stretch), completedDay, byKey: f.how === 'key' };
+      /* the walk to it (a step marked `before` it) is told first, as the start of its words (D-160) */
+      opened, way: way.filter(x => S.beatOf(c.story, x.beat)?.before !== b.id), id: b.id, name: (errand && b.againName ? b.againName : b.name) ?? '',
+      line: [...way.filter(x => S.beatOf(c.story, x.beat)?.before === b.id).map(x => x.line), (errand && b.again ? b.again : b.line) ?? ''].filter(Boolean).join(' '), taps: b.taps, choice: b.choice,
+      records: [...way.filter(x => S.beatOf(c.story, x.beat)?.before === b.id).flatMap(x => x.records), ...(b.carries?.records ?? [])], guess, look: null, stretch: b.stretch, painting: paintingOf(b.id, b.stretch), completedDay, byKey: f.how === 'key' };
   }
   /* tonight's camp at the place he reached (D-160): its name and painting; the screen says he camps there */
   const p = f.where === 'place' ? S.beatOf(c.story, f.id) : undefined;
