@@ -46,7 +46,7 @@
   /* a story moment somewhere other than where Dan is says where, so
      the words never seem to move him (the journey review, D-154) */
   const elsewhere = $derived.by(() => {
-    if (!r?.beat) return '';
+    if (!r?.beat || beatOf(content.story, r.beat)?.portable) return '';
     const st = beatOf(content.story, r.beat)?.stretch ?? sealOf(content.story, r.beat)?.stretch;
     if (!st || areaOf(content.story, st) === areaOf(content.story, v.here.stretch)) return '';
     /* a moment at home once the way down is open is at camp, as the evenings are (round 5 of the journey review) */

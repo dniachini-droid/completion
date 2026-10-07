@@ -11,17 +11,17 @@ export const learned: WeekCloseLine[] = [
   { id: "wc-w1-2", w: 1, req: ["b-1.5"], line: "In the Salt Gallery, one carver cut a long line of symbols that appears to be some kind of tally, and someone left pencilled sheets beside it." },
   { id: "wc-w1-3", w: 1, req: ["b-1.C"], line: "Someone lived in the Box Room, the small side chamber off the Lamp Hall, and left behind boots, a notebook and a stone rod." },
   { id: "wc-w2-1", w: 2, req: ["b-2.A"], line: "Read for yourself, the stretch of tally past the lone ring seems to tell of someone standing where the way turns, as tall as two of whoever told it and a lamb besides, the lamb shown as a small carved picture in the line." },
-  { id: "wc-w2-2", w: 2, req: ["b-2.3"], line: "In her notebook, the woman who camped here wrote that she met someone where the corridor turns, and took him for a pillar." },
+  { id: "wc-w2-2", w: 2, req: ["b-2.3"], line: "In her notebook, the woman who lived here wrote that she met someone where the corridor turns, and took him for a pillar." },
   { id: "wc-w2-3", w: 2, req: ["b-2.B"], line: "The rod was left for the next one, with a note: cut the two marks on the lintel." },
   { id: "wc-w3-1", w: 3, req: ["b-3.A"], line: "At the lintel, you cut the two symbols with the rod, and the cups lit one after another all the way down the Lamp Hall." },
   { id: "wc-w3-2", w: 3, req: ["b-3.2"], line: "Her notebook says that on her sixth day she cut the same two symbols, and a door opened for her too." },
   { id: "wc-w3-3", w: 3, req: ["b-3.B"], line: "At the head of the Stair, in a niche, there is a second clay lamp, unlit." },
   { id: "wc-w4-1", w: 4, req: ["b-4.A"], line: "Her sheet for the stretch of tally past the lone ring reads: *go home… lamp… gave… went up.*" },
   { id: "wc-w4-2", w: 4, req: ["b-4.4"], line: "Nearly every record here ends with a hook closed on a dot in its corner. The wall by the lamp has a different hook." },
-  { id: "wc-w4-3", w: 4, req: ["b-4.3"], line: "On her ninth day down here, the woman who camped in the Box Room made herself a rule: go up every night." },
+  { id: "wc-w4-3", w: 4, req: ["b-4.3"], line: "On her ninth day down here, the woman who lived in the Box Room made herself a rule: go up every night." },
   { id: "wc-w5-1", w: 5, req: ["b-5.A"], line: "Every record in the tally begins with the same three symbols: the bar with a tick, a ring and a single drop." },
   { id: "wc-w5-2", w: 5, req: ["b-5.3"], line: "Behind the salt crust, the lamp's symbol, the flame's and the hook-and-drop stand in a row, with no doorway-shape anywhere near them." },
-  { id: "wc-w5-3", w: 5, req: ["b-5.2"], line: "In her notebook, the woman who camped here called the one she met the Tenant, and he let her." },
+  { id: "wc-w5-3", w: 5, req: ["b-5.2"], line: "In her notebook, the woman who lived here called the one she met the Tenant, and he let her." },
   { id: "wc-w6-1", w: 6, req: ["b-6.1"], line: "According to her notebook, the carving on the wall by the lamp was cut on her twentieth day down here, for the next one." },
   { id: "wc-w6-2", w: 6, req: ["b-6.A"], line: "In the square gallery, square-cut stone meets the rounded stone, and the record on the square wall opens almost the way the tally's records do." },
   { id: "wc-w6-3", w: 6, req: ["b-6.B"], line: "In the square gallery is the crew's wall, and under it what looks like a pay tablet: a wax tablet with a ring at the head of every row." },
@@ -60,13 +60,13 @@ export const learned: WeekCloseLine[] = [
 export const soFar: SoFar[] = [
   { id: 'sf-m1', w: 1, lines: [
     "The lamp on the ledge in the Lamp Hall was lit before you came, and there is no oil in it.", // sf-m1-1
-    "Someone camped in the Box Room, the side chamber off the Lamp Hall, and left a stone rod behind.", // sf-m1-2
+    "Someone lived in the Box Room, the side chamber off the Lamp Hall, and left a stone rod behind.", // sf-m1-2
     "The long line of symbols in the salt, which seems to be some kind of tally, was cut by one carver.", // sf-m1-3
     "At the far end of the Lamp Hall is a great door that takes up most of the wall.", // sf-m1-4
   ] },
   { id: 'sf-m2', w: 5, lines: [
     "Her notebook's first page, Day 1, says the lamp on the ledge was already lit when she came down, just as it was for you.", // sf-m2-1
-    "The woman who camped here met someone tall where the corridor turns, and the tally, the long record in the salt, tells of someone tall standing where the way turns too.", // sf-m2-2
+    "The woman who lived here met someone tall where the corridor turns, and the tally, the long record in the salt, tells of someone tall standing where the way turns too.", // sf-m2-2
     "Nearly everything here was cut by one carver. The wall by the lamp was not.", // sf-m2-3
     "The little door on the Stair, which she found open, is shut to you.", // sf-m2-4
     "The great door has a row of notches, and two symbols beside a blank.", // sf-m2-5
@@ -90,11 +90,11 @@ export const soFar: SoFar[] = [
 /** NOTE: the so-far lines with their own ids (sf-mN-k) and conditions; `w` is the week of the month's first close, as in `soFar`. */
 export const soFarLines: WeekCloseLine[] = [
   { id: "sf-m1-1", w: 1, req: ["b-1.A"], line: "The lamp on the ledge in the Lamp Hall was lit before you came, and there is no oil in it." },
-  { id: "sf-m1-2", w: 1, req: ["b-1.C"], line: "Someone camped in the Box Room, the side chamber off the Lamp Hall, and left a stone rod behind." },
+  { id: "sf-m1-2", w: 1, req: ["b-1.C"], line: "Someone lived in the Box Room, the side chamber off the Lamp Hall, and left a stone rod behind." },
   { id: "sf-m1-3", w: 1, req: ["b-1.5"], line: "The long line of symbols in the salt, which seems to be some kind of tally, was cut by one carver." },
   { id: "sf-m1-4", w: 1, req: ["b-1.A"], line: "At the far end of the Lamp Hall is a great door that takes up most of the wall." },
   { id: "sf-m2-1", w: 5, req: ["b-2.3"], line: "Her notebook's first page, Day 1, says the lamp on the ledge was already lit when she came down, just as it was for you." },
-  { id: "sf-m2-2", w: 5, req: ["b-2.A", "b-2.3"], line: "The woman who camped here met someone tall where the corridor turns, and the tally, the long record in the salt, tells of someone tall standing where the way turns too." },
+  { id: "sf-m2-2", w: 5, req: ["b-2.A", "b-2.3"], line: "The woman who lived here met someone tall where the corridor turns, and the tally, the long record in the salt, tells of someone tall standing where the way turns too." },
   { id: "sf-m2-3", w: 5, req: ["b-4.4"], line: "Nearly everything here was cut by one carver. The wall by the lamp was not." },
   { id: "sf-m2-4", w: 5, req: ["b-4.3", "b-5.0"], line: "The little door on the Stair, which she found open, is shut to you." },
   { id: "sf-m2-5", w: 5, req: ["b-4.C"], line: "The great door has a row of notches, and two symbols beside a blank." },

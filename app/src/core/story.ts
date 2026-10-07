@@ -260,11 +260,11 @@ export function homeSteps(s: Story, st: StoryState): Beat[] {
 }
 /** Whether a story moment at home waits for the evening: once the way down is open, unless the way down itself needs it
     (a sign it offers, or itself), so a long day never waits on a night (D-129, D-154). */
-function held(s: Story, st: StoryState, b: { id: string; stretch: StretchId; seal?: string }): boolean {
-  return st.departed && isHome(s, b.stretch) && !frontierNeeds(s).has(b.id);
+function held(s: Story, st: StoryState, b: { id: string; stretch: StretchId; seal?: string; portable?: boolean }): boolean {
+  return st.departed && isHome(s, b.stretch) && !b.portable && !frontierNeeds(s).has(b.id);
 }
 /** Whether a story moment is one an evening at camp holds (at home, and not needed by the way down). */
-export const eveningMoment = (s: Story, id: string) => { const b = beatOf(s, id) ?? lineRow(s, id); return !!b && isHome(s, b.stretch) && !frontierNeeds(s).has(b.id); };
+export const eveningMoment = (s: Story, id: string) => { const b = beatOf(s, id) ?? lineRow(s, id); return !!b && isHome(s, b.stretch) && !(b as Beat).portable && !frontierNeeds(s).has(b.id); };
 const lineRow = (s: Story, id: string) => { const x = sealOf(s, id); return x && !x.beat && !x.arrival ? { id: x.id, stretch: x.stretch } : undefined; };
 const needsCache = new WeakMap<Story, Set<string>>();
 /** The story moments at home the way down needs before it can go on: in the `req` of a place or step away from home, or
@@ -465,7 +465,8 @@ export function weekDone(s: Story, st: StoryState): boolean {
   const rw = s.route.find(r => r.w === st.week);
   if (!rw) return false;
   /* the evenings at camp and the moments at home they hold trail behind: they never hold the week, or a long day (D-154) */
-  const trails = (b: Beat | undefined) => !!b && st.departed && isHome(s, b.stretch);
+  /* (a carried page trails too while it waits on an evening's moment, D-155) */
+  const trails = (b: Beat | undefined) => !!b && st.departed && isHome(s, b.stretch) && (!b.portable || !allMet(st, b.req));
   if (!rw.places.every(p => st.played.has(p.id) || isEvening(s, st, beatOf(s, p.id) ?? { stretch: 'st-mouth' }))) return false;
   return s.beats.filter(b => b.w === st.week && b.kind === 'step').every(b => st.played.has(b.id) || trails(b))
     && s.seals.every(x => x.w !== st.week || !onRoad(s, x.id) || st.opened.has(x.id) || trails(x.beat ? beatOf(s, x.beat) : undefined)

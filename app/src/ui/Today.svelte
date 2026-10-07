@@ -281,7 +281,7 @@
     {#if v.ahead}
       <section class="ahead rise d2">
         <!-- a locked thing left behind is never called "ahead": it is behind him, and on the Map (S3, D-143) -->
-        <div class="label-line">{v.aheadBehind ? t('today.behind') : v.aheadHere ? t('today.here') : t('today.ahead')}{#if v.aheadKey}<span class="needs-key"> · {t('today.aheadKey')}</span>{/if}</div>
+        <div class="label-line"><span>{v.aheadBehind ? t('today.behind') : v.aheadHere ? t('today.here') : t('today.ahead')}{#if v.aheadKey}<span class="needs-key"> · {t('today.aheadKey')}</span>{/if}</span></div>
         <!-- read as words, never as a button whose name is the whole passage (A#38): VoiceOver reads it all anyway; a tap
              unfolds it for the eye -->
         <div class="ahead-text" class:open={aheadOpen} role="presentation" onclick={() => (aheadOpen = !aheadOpen)}><p class="say on-scene"><Prose text={v.ahead} /></p></div>

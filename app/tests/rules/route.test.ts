@@ -42,6 +42,18 @@ function life(kind: Week, bed?: 'kept', weeks = 22) {
 
 describe('the route is a journey: a descent with a home at the top (D-154)', () => {
   const lives = { normal: life('normal', 'kept'), low: life('low', undefined, 30), high: life('high', 'kept', 8) };
+  it('an evening plays at most one home moment of its own week (the camp\'s line and line-only seals aside, D-159)', () => {
+    for (const [name, facts] of Object.entries(lives)) {
+      for (const f of arrivals(facts)) {
+        if (!(f.kind === 'evening' || f.how === 'evening')) continue;
+        const upTo = facts.filter(g => g.seq <= f.seq), a = arrivalAt(facts, C, f.seq)!, wk = S.storyState(upTo, s).week;
+        /* the home moments of its own week it played (a line-only seal and the camp's own line take no slot) */
+        const mine = a.then.filter(t => { const b = S.beatOf(s, t.beat), z = b ? undefined : S.sealOf(s, t.beat);
+          return b ? S.eveningMoment(s, b.id) && b.kind !== 'camp' && b.w >= wk : !!z && (!!z.beat || !!z.arrival) && z.w >= wk; });
+        expect(mine.length, `${name} ${f.id} @${f.seq}`).toBeLessThanOrEqual(1);
+      }
+    }
+  }, 300_000);
   it('every place on the route is reached once, and nothing plays twice', () => {
     for (const [name, facts] of Object.entries(lives)) {
       const ids = arrivals(facts).filter(f => f.kind === 'place').map(f => f.id);
@@ -102,7 +114,8 @@ describe('the route is a journey: a descent with a home at the top (D-154)', () 
       if (ev && ev.seq < camp.seq) { expect(v.night?.beat, `${gn.day}`).toBeNull(); checked++; }
       else expect(v.night?.beat, `${gn.day}`).toBe(camp.id);
     }
-    expect(checked).toBeGreaterThan(5);
+    /* (fewer since her notebook's pages are read on the way, D-155: still several such nights) */
+    expect(checked).toBeGreaterThanOrEqual(3);
   }, 300_000);
   it('nothing names what Dan has not yet seen: b-4.C before b-6.2, pl-w14-mule-stone before pl-w13-lower-gallery', () => {
     for (const [name, facts] of Object.entries(lives)) {
@@ -152,6 +165,40 @@ describe('Dan\'s save carries on from wherever the old route left it (D-154)', (
     for (let k = 1; k <= 6; k++) if (last[k] !== undefined) { let j = last[k]; while (j + 1 < facts.length && facts[j + 1].at === facts[last[k]].at) j++; out.push(j); }
     return [...new Set(out)].sort((a, b) => a - b);
   }
+  /* saves made on the D-154 order (merged), where her notebook's pages played as evenings (D-155) */
+  const d154 = ['normal-kept', 'normal-nobed'].map(n => ({ n, facts: JSON.parse(readFileSync(new URL(`../saves/route-d154/${n}.json`, import.meta.url), 'utf8')).facts as Fact[] }));
+  it('a D-154 save\'s evening keeps the notebook pages it played that night (carried pages are no longer evening moments, D-155)', () => {
+    let checked = 0;
+    for (const { n, facts } of d154) {
+      for (const f of arrivals(facts).filter(x => x.kind === 'evening' || x.how === 'evening')) {
+        /* the pages played in the same command, right after it */
+        const after = facts.filter(g => g.seq > f.seq && g.at === f.at);
+        const pages = after.filter((g): g is FactOf<'beatPlayed'> => g.type === 'beatPlayed' && g.job === undefined && !!S.beatOf(s, g.id)?.portable).map(g => g.id);
+        if (!pages.length) continue;
+        const a = arrivalAt(facts, C, f.seq)!;
+        for (const p of pages) { expect(a.then.map(x => x.beat), `${n} ${f.seq}: ${p}`).toContain(p); checked++; }
+      }
+    }
+    expect(checked).toBeGreaterThan(0);
+  });
+  it('a D-154 save carries on to week 14 from the end of each of weeks 3–6: no stall, no replay, every page once and in order', () => {
+    const pages = s.beats.filter(b => b.portable).sort((a, b) => a.w - b.w || a.o - b.o).map(b => b.id);
+    for (const { n, facts } of d154) {
+      for (const wk of [4, 5, 6, 7]) {
+        const i = facts.findIndex(f => f.type === 'storyWeekBegan' && f.w === wk);
+        if (i < 0) continue;
+        const d = sim(undefined, undefined, n.endsWith('nobed') ? undefined : 'kept', facts.slice(0, i));
+        for (let k = 0, extra = 0; k < 30 && extra < 2; k++) { d.week('normal'); if (route.every(id => d.st().played.has(id))) extra++; }
+        const at = `${n} from week ${wk}`, st = S.storyState(d.facts, s);
+        expect(route.filter(id => !st.played.has(id)), at).toEqual([]);
+        expect(st.week, at).toBe(14);
+        const played = d.facts.filter((f): f is FactOf<'beatPlayed'> => f.type === 'beatPlayed' && f.id !== 'passage').map(f => f.id);
+        expect(played.filter((id, j) => played.indexOf(id) !== j), at).toEqual([]);
+        const order = played.filter(id => pages.includes(id));
+        expect(order, at).toEqual(pages.filter(id => order.includes(id)));
+      }
+    }
+  }, 900_000);
   for (const { n, facts } of lives) {
     it(`${n}: stopped after any place, it plays on to the end of week 14 with no stall, no replay, and every move announced`, () => {
       for (const j of stops(facts, n === 'normal-kept')) {

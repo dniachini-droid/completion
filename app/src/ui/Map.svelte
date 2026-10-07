@@ -40,7 +40,7 @@
     up?: boolean;
     box: { label: string; title: string; say: string };
     /** the places reached in this area, in the order walked, each to read again (D-135, D-154) */
-    reads?: { name: string; seq: number; camp?: boolean; here?: boolean }[];
+    reads?: { name: string; seq: number; camp?: boolean; here?: boolean; turned?: boolean }[];
   }
 
   /* ---------- the region: one light per stretch, laid out as the mock-up lays out the first region ---------- */
@@ -58,7 +58,7 @@
     /* story weeks 8–14: below the first region; the map grows (and is dragged) only once they are walked or ahead */
     'st-water':   { x: 238, y: 586, lx: 274, ly: 582, anchor: 'start' },
     'st-side':    { x: 58,  y: 626, lx: 24,  ly: 666, anchor: 'start' },
-    'st-reading': { x: 330, y: 668, lx: 372, ly: 638, anchor: 'end' },
+    'st-reading': { x: 330, y: 668, lx: 372, ly: 626, anchor: 'end' },
     'st-blast':   { x: 164, y: 716, lx: 200, ly: 712, anchor: 'start' },
     'st-lower':   { x: 238, y: 826, lx: 202, ly: 822, anchor: 'end' },
   };
@@ -101,7 +101,7 @@
   /* the places reached on foot or by Key, by stretch, in the order reached: each one's entry can be read again (D-135);
      and the camps made there, each once (its latest night), so an earlier camp's words are never lost (the flow review) */
   const reached = $derived.by(() => {
-    const out: { seq: number; name: string; stretch: StretchId; camp?: boolean }[] = [], camps = new Map<string, number>();
+    const out: { seq: number; name: string; stretch: StretchId; camp?: boolean; turned?: boolean }[] = [], camps = new Map<string, number>();
     for (const f of game.facts) {
       if (f.type !== 'arrived') continue;
       if (f.kind === 'place') { const b = s.beats.find(x => x.id === f.id); if (b?.name && f.seq !== v.arrival?.seq) out.push({ seq: f.seq, name: b.name, stretch: area(b.stretch) }); }
@@ -110,7 +110,9 @@
     }
     for (const [id, seq] of camps) { const k = s.camps.find(x => x.id === id); if (k) out.push({ seq, name: k.name, stretch: area(k.stretch), camp: true }); }
     /* a stop with a place's own name is that place: one row (the round-8 review) */
-    return out.filter(r => !r.camp || !out.some(x => !x.camp && x.stretch === r.stretch && x.name === r.name)).sort((a, b) => a.seq - b.seq);
+    const merged = out.filter(r => !r.camp || !out.some(x => !x.camp && x.stretch === r.stretch && x.name === r.name))
+      .map(r => r.camp ? r : { ...r, turned: out.some(x => x.camp && x.stretch === r.stretch && x.name === r.name) });
+    return merged.sort((a, b) => a.seq - b.seq);
   });
   const region = $derived.by((): Light[] => {
     const out: Light[] = [];
@@ -119,7 +121,7 @@
       if (walkedOn.has(k)) {
         const fc = here && aheadOn === k && ahead.length ? t('map.forecast', { day: relDay(ahead[0], v.day) }) : undefined;
         out.push({ key: k, ...a, kind: here ? 'here' : 'lit', name: stretchName(k),
-          sub: here ? t('map.here') : sealedOn(k).length ? t('map.sealed') : undefined, subKind: here ? 'warm' : 'dim',
+          sub: here ? t('map.here') : sealedOn(k).length === 1 ? t('map.sealed') : sealedOn(k).length ? t('map.sealedN', { n: sealedOn(k).length }) : undefined, subKind: here ? 'warm' : 'dim',
           box: here ? hereBox
             : { label: sealedOn(k).length ? t('map.walkedSealed') : t('map.walked'), title: stretchName(k), say: t('map.wayIn') } });
         /* on its own line: joined to "you are here" it ran off the screen's left edge (UI review, D-130) */
@@ -145,20 +147,22 @@
   /* a join that a word opens is drawn once it is cut (ids only, D-015) */
   const OPENS: Partial<Record<string, string>> = { 'st-blast|st-lower': 'b-14.A' };
   const regionLinks = $derived(LINKS.filter(([a, b]) => walkedOn.has(a) && (walkedOn.has(b) || b === aheadOn) && (!OPENS[`${a}|${b}`] || v.story.played.has(OPENS[`${a}|${b}`]!)))
-    .map(([a, b]) => ({ d: curve(AT[a]!, AT[b]!), walked: walkedOn.has(b) })));
+    .map(([a, b]) => ({ d: curve(AT[a]!, AT[b]!, BEND[`${a}|${b}`]), walked: walkedOn.has(b) })));
+  /* a join that would pass over another area's light bows the other way, so it never reads as leaving from it (panel walk 5) */
+  const BEND: Partial<Record<string, number>> = { 'st-square|st-lower': -0.03 };
 
-  function curve(a: { x: number; y: number }, b: { x: number; y: number }) {
+  function curve(a: { x: number; y: number }, b: { x: number; y: number }, k = 0.18) {
     const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2, dx = b.x - a.x, dy = b.y - a.y;
-    return `M${a.x} ${a.y}Q${(mx - dy * 0.18).toFixed(1)} ${(my + dx * 0.18).toFixed(1)} ${b.x} ${b.y}`;
+    return `M${a.x} ${a.y}Q${(mx - dy * k).toFixed(1)} ${(my + dx * k).toFixed(1)} ${b.x} ${b.y}`;
   }
   /* the phone's text size (Dynamic Type, --ts): the names wrap sooner and their lines open up with it, so a bigger name
      never runs off the screen's edge or onto the line under it (spacing review) */
   const ts = typeof document === 'undefined' ? 1 : parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--ts')) || 1;
   const pitch = 20 * ts;
   /** Carved names break onto a second line past about 16 letters (SVG text does not wrap). */
-  function lines(name: string, max = Math.floor(16 / ts)): string[] {
+  function lines(name: string, max = Math.floor(16 / ts), keepCase = false): string[] {
     const out: string[] = [];
-    for (const w of name.toUpperCase().split(' ')) {
+    for (const w of (keepCase ? name : name.toUpperCase()).split(' ')) {
       const last = out[out.length - 1];
       if (last !== undefined && (last + ' ' + w).length <= max) out[out.length - 1] = last + ' ' + w; else out.push(w);
     }
@@ -303,11 +307,14 @@
           {#each ls as line, j}
             <text x={l.lx} y={ly + j * pitch} text-anchor={l.anchor} class="nn" class:here={l.kind === 'here'}>{line}</text>
           {/each}
+          <!-- the sub-label in its own case, wrapped to the room between its anchor and the edge (D-157) -->
+          {@const subs = l.sub ? lines(l.sub, Math.max(8, Math.floor((l.anchor === 'end' ? l.lx : RW - l.lx) / (6.6 * ts)) - 1), true) : []}
           {#if l.sub}
-            <text x={l.lx} y={ly + ls.length * pitch + (ls.length ? 0 : 4)} text-anchor={l.anchor} class="ns {l.subKind ?? ''}">{l.sub}</text>
+            <!-- wrapped as the names are, so it never runs off the screen's edge (D-157) -->
+            {#each subs as sl, k}<text x={l.lx} y={ly + (ls.length + k) * pitch + (ls.length ? 0 : 4)} text-anchor={l.anchor} class="ns {l.subKind ?? ''}">{sl}</text>{/each}
           {/if}
           {#if l.sub2}
-            <text x={l.lx} y={ly + ls.length * pitch + (ls.length ? 0 : 4) + pitch} text-anchor={l.anchor} class="ns gold">{l.sub2}</text>
+            <text x={l.lx} y={ly + (ls.length + Math.max(1, subs.length)) * pitch + (ls.length ? 0 : 4)} text-anchor={l.anchor} class="ns gold">{l.sub2}</text>
           {/if}
         {/each}
       </g>
@@ -340,10 +347,11 @@
                  and painting (D-135), the one Dan stands at marked; then what is said ahead; then the locked things here,
                  with "Use a Key" (D-142) or "Read again" once opened (D-143 B) -->
             {#if sel.reads?.length}
+              <!-- walking order, numbered so it reads as one (D-158: numbers beat a caption in a look at both) -->
               <ul class="rows">
-                {#each sel.reads as r (r.seq)}
-                  <li class="row"><span class="name">{r.name}</span>
-                    <button class="text-link state read" class:here={r.here} aria-label={t('map.readAgain', { place: r.name })} onclick={() => go('arrival', `again:${r.seq}`)}><span>{r.here ? t('map.here') : r.camp ? t('map.turnedBack') : t('daybook.readAgain')}</span></button></li>
+                {#each sel.reads as r, ri (r.seq)}
+                  <li class="row"><span class="name"><span class="n">{ri + 1}</span>{r.name}</span>
+                    <button class="text-link state read" class:here={r.here} aria-label={t('map.readAgain', { place: r.name })} onclick={() => go('arrival', `again:${r.seq}`)}><span>{r.here ? t('map.here') : r.camp || r.turned ? t('map.turnedBack') : t('daybook.readAgain')}</span></button></li>
                 {/each}
               </ul>
             {:else}
@@ -358,7 +366,7 @@
                   {#each locks as x (x.id)}
                     <li class="row"><span class="name">{thing(x.where, sel.key as StretchId)}</span>
                       {#if v.keys && canOpen.has(x.id)}<button class="text-link state use" aria-label={t('map.useKeySr', { where: x.where })} onclick={() => useKey(x.id)}><span>{t('map.useKey')}</span></button>
-                      {:else}<span class="sr-only">, </span><span class="state needs">{t('map.sealed')}</span>{/if}</li>
+                      {:else}<span class="sr-only">, </span><span class="state needs">{t('map.needsKey')}</span>{/if}</li>
                   {/each}
                   {#each done as x (x.id)}
                     <li class="row"><span class="name">{thing(x.where, sel.key as StretchId)}</span>
@@ -427,6 +435,7 @@
     -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 24px), transparent); mask-image: linear-gradient(180deg, #000 calc(100% - 24px), transparent); }
   .rows { list-style: none; margin: 0 0 6px; padding: 0; }
   .rows.locks { border-top: 1px solid var(--edge-2); padding-top: 4px; }
+  .rows .n { display: inline-block; min-width: 1.4em; color: var(--ink-2); font-variant-numeric: tabular-nums; }
   .row { display: flex; gap: 10px; align-items: center; justify-content: space-between; min-height: 44px; font-family: var(--life); font-size: calc(16px * var(--ts, 1)); line-height: 1.3; color: var(--ink); }
   .row .name { flex: 1; min-width: 0; }
   .row .state { flex: none; padding: 0; min-height: 44px; font-size: calc(14.5px * var(--ts, 1)); color: var(--ink-2); }

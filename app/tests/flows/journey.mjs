@@ -8,6 +8,10 @@ const { launch } = await import('./browser.mjs');
 const [,, url, out, w = '390', h = '844'] = process.argv;
 const J = JSON.parse(readFileSync(`${out}/journey.json`, 'utf8'));
 const only = process.env.LIVES ? process.env.LIVES.split(',') : null;
+/* MAX=<n>: stop each life after n moves (a quick look) */
+const max = process.env.MAX ? +process.env.MAX : Infinity;
+/* FROM=<n>: begin at move n (a quick look) */
+const from = process.env.FROM ? +process.env.FROM : 1;
 mkdirSync(`${out}/shots`, { recursive: true });
 const b = await launch();
 const errors = [], log = [];
@@ -28,11 +32,13 @@ for (const life of J.lives) {
   if (only && !only.includes(life.name)) continue;
   let k = 0;
   for (const cut of life.cuts) {
+    if (k >= max) break;
     const facts = life.facts.slice(0, cut), looked = new Set(facts.filter(f => f.type === 'seen' && f.what === 'arrival').map(f => f.ref));
     /* the arrival the app shows: the first not yet looked at */
     const arr = facts.find(f => f.type === 'arrived' && !looked.has(f.seq));
     if (!arr) continue;
     const at = facts[facts.length - 1].at, name = `${life.name}-${String(++k).padStart(3, '0')}`;
+    if (k < from) continue;
     const save = JSON.stringify({ version: J.version, content: J.content, facts });
     /* Today as the player sees it once this arrival is looked at (a later one in the same batch still waits its turn) */
     const last = facts[facts.length - 1], upTo = facts.filter(f => !(f.type === 'arrived' && f.seq > arr.seq && !looked.has(f.seq)));
@@ -65,8 +71,9 @@ for (const life of J.lives) {
     await page.screenshot({ path: `${out}/shots/${name}-t.png` });
     entry.today = await words(page);
     if (await tap(page, page.locator('button.icon-link', { hasText: 'Map' }))) {
-      /* its lights and names fade in on the page's real clock, and it centres on where Dan is once drawn */
-      await page.clock.runFor(3000); await page.waitForTimeout(2500);
+      /* its lights and names fade in on the page's real clock, and it centres on where Dan is once drawn; the routes draw
+         one after another (CSS, real time), the eleventh done by about 4 s */
+      await page.clock.runFor(3000); await page.waitForTimeout(5500);
       await page.screenshot({ path: `${out}/shots/${name}-m.png` });
       entry.map = await words(page);
     }

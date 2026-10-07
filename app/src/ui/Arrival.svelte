@@ -51,6 +51,11 @@
   /* a new area: its name is the title, the place under it; anywhere else the area sits small above the place */
   /* an evening with no one place is named for where it begins (its sections name any other area they move to), D-154 */
   const title = $derived(!a ? '' : a.kind === 'evening' ? a.area || t('arrive.byTheLamp') : a.face === 'enter' && !again ? a.area : a.name);
+  /* the lead: the way in (when it is said) and the first sentence of the words, which says where and why (D-156) */
+  const sentences = $derived(!a?.line ? [] : a.line.split(/(?<=[.!?])\s+/));
+  const leadWay = $derived(a?.wayIn && !again ? a.wayIn : '');
+  const leadFirst = $derived(a && !a.stopAgain ? sentences[0] ?? '' : '');
+  const restLine = $derived(!a ? '' : a.stopAgain ? a.line : sentences.slice(1).join(' '));
   const over = $derived(!a ? '' : a.kind === 'evening' ? '' : a.face === 'enter' && !again ? '' : a.area);
   const under = $derived(!a || again || a.face !== 'enter' ? '' : a.name);
   function pick(i: number) { if (!a) return; game.do({ do: 'choose', beat: a.id, pick: i }); go('records', a.records[i]); }
@@ -101,10 +106,11 @@
       <!-- the painting, left clear: a tap on it looks at it (D-105) -->
       <div class="gap" onclick={look} role="presentation"></div>
       <!-- the words keep to the lower half and scroll there; they can be folded away (D-085) -->
-      <div class="col text">
-        <Words {look} length={(a.line?.length ?? 0) + (a.look?.length ?? 0) + a.then.reduce((n, w) => n + w.line.length, 0)}>
-          {#if a.wayIn && !again}<span class="soft on-scene way-in">{a.wayIn}</span>{/if}
-          {#if a.line}<span class="soft on-scene"><Prose text={a.line} /></span>{/if}
+      <!-- how and why Dan came here is never folded away or squeezed: the way in and the first sentence stay above the fold (D-156) -->
+      {#if leadWay || leadFirst}<p class="col soft on-scene lead">{#if leadWay}<span class="way-in">{leadWay}</span>{' '}{/if}{#if leadFirst}<Prose text={leadFirst} />{/if}</p>{/if}
+      <div class="col text" class:lone={!restLine && !a.look && !a.then.length && !a.stopAgain}>
+        <Words {look} length={restLine.length + (a.look?.length ?? 0) + a.then.reduce((n, w) => n + w.line.length, 0)}>
+          {#if restLine}<span class="soft on-scene"><Prose text={restLine} /></span>{/if}
           {#if a.stopAgain}<span class="soft on-scene">{t('arrive.stopAgain')}</span>{/if}
           {#if a.look}<span class="soft on-scene look"><Prose text={a.look} /></span>{/if}
           {#each a.way as w (w.beat)}<p class="soft on-scene look"><Prose text={w.line} /></p>{/each}
@@ -169,7 +175,15 @@
   /* the area, small, above the place (or under a new area's name, the place): where Dan is, always said (D-154) */
   .head .area { font-family: var(--life); font-size: calc(15px * var(--ts, 1)); letter-spacing: .06em; color: var(--ink-2); margin-bottom: 4px; }
   .head .area.under { margin: 6px 0 0; }
-  .text :global(.way-in) { font-style: italic; }
+  /* the lead gives way last (only once the words and the guesses are down to their least): on a short screen with large
+     text, two of its lines stay and it scrolls (D-156) */
+  .lead { flex: 0 1 auto; min-height: calc(2 * 1.45em); overflow-y: auto; margin: 0 auto 4px; animation: rise 1.4s .6s var(--ease) both; }
+  .lead .way-in { font-style: italic; }
+  /* the rest of the words keep room for a line and their Look link, however large the text (D-156) */
+  .text :global(.words) { flex: 1 1 auto; min-height: calc(70px + 1.45em); }
+  .text :global(.words .scroll) { min-height: 0; }
+  /* a one-sentence line has nothing left to fold: no empty band */
+  .text.lone, .text.lone :global(.words) { min-height: 0; }
   /* each moment of an evening says where it is, when it is somewhere else at camp (the journey review) */
   .then-area { display: block; margin-top: 14px; font-family: var(--life); font-size: calc(13px * var(--ts, 1)); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }   /* as on the delve and the set-up (spacing review D16) */
   /* wrapped onto two lines, the links' own 44 px keep them apart: no gap between the lines (spacing review D9) */
@@ -180,10 +194,13 @@
   .head { flex: none; }
   /* with the phone's text set larger, the painting's gap gives way before the words do, so they keep their lines */
   .gap { flex: 1 1 auto; min-height: max(24px, calc(12vh - (var(--ts, 1) - 1) * 300px)); }
-  .text { flex: 0 1 auto; min-height: 0; display: flex; flex-direction: column; animation: rise 1.4s .6s var(--ease) both; }
+  /* the rest of the words give way first (they fold under Look), then the guesses, then the lead; the words' fade starts below the lead (the padding);
+     a line of the rest, with Look, always fits (D-156) */
+  .text { flex: 0 120 auto; min-height: calc(82px + 1.45em); padding-top: 12px; overflow: hidden; display: flex; flex-direction: column; animation: rise 1.4s .6s var(--ease) both; }
   .text :global(.soft) { display: block; margin-top: 6px; }
   .text :global(.look) { color: var(--gold-hi); margin-top: 12px; }
-  .mid { flex: none; display: flex; flex-direction: column; align-items: center; padding-top: 6px; padding-bottom: 14px; }
+  /* when the screen is short (large text), the guesses scroll in their own space, never under the buttons (D-156) */
+  .mid { flex: 0 20 auto; min-height: 3.2em; overflow-y: auto; display: flex; flex-direction: column; align-items: center; padding-top: 6px; padding-bottom: 14px; }
   .enough { font-family: var(--life); font-size: min(31px, 8vw); line-height: 1.15; color: #fff; text-align: center;
     text-shadow: 0 0 26px rgba(242,193,112,.45), 0 2px 18px rgba(8,6,20,.9); animation: rise 1.6s 2.2s var(--ease) both; }
   .enough em { display: inline-block; animation: rise 1.6s 3s var(--ease) both; }

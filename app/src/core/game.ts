@@ -450,7 +450,7 @@ function storyClock(w: W, c: Content, at: Moment, day: string): boolean {
 /**
  * The evening at camp (D-154): Dan sleeps by the lamp every night, so once the way down is open the places at home, and
  * the story's moments there (her notebook, the tally), come as that night's scene: the next evening place (two when the
- * story week is otherwise done), then every home moment ready. Off the walking meter. Only after a day whose work is
+ * story week is otherwise done), then one home moment ready (all of a week behind, D-159). Off the walking meter. Only after a day whose work is
  * done (rule 10), once a night: at goodnight, or at the next opening (`late`).
  */
 function evening(w: W, c: Content, at: Moment, day: string, night: string, late: boolean, only?: Beat) {
@@ -467,10 +467,18 @@ function evening(w: W, c: Content, at: Moment, day: string, night: string, late:
   }
   if (ofType(w.all, 'arrived').some(a => a.night === night)) return;
   let wrote = false;
+  /* one home moment a night, so an evening stays light (D-159): more wait for the next night; two while one of an
+     earlier week is still waiting, so they catch up */
+  let room = 1, behind = true;
   const steps = () => {
     for (let k = 0; k < c.story.beats.length; k++) {
-      const b = S.homeSteps(c.story, S.storyState(w.all, c.story))[0];
+      const st = S.storyState(w.all, c.story), b = S.homeSteps(c.story, st)[0];
+      /* (a seal that is only a line, opening no moment or place, takes no slot) */
+      const line = b?.kind === 'stepKey' && ((z) => !!z && !z.beat && !z.arrival)(S.sealOf(c.story, b.seal!));
       if (!b) return;
+      if (behind && b.w < st.week) { room++; behind = false; }
+      if (room <= 0 && !line) return;
+      if (!line) room--;
       if (!wrote) { w.put({ type: 'arrived', kind: 'evening', id: 'evening', night, ...(late ? { late: true } : {}) }, at, day); wrote = true; }
       if (b.kind === 'stepKey') openSeal(w, c, S.sealOf(c.story, b.seal!)!, at, day, undefined, true);
       else { w.put({ type: 'beatPlayed', id: b.id }, at, day); show(w, c, b.carries?.records, at, day); }
@@ -1837,12 +1845,19 @@ export function arrivalAt(facts: Fact[], base: Content, seq: number): Arrival | 
   const f = facts.find(x => x.seq === seq);
   return f && f.type === 'arrived' ? arrivalOf(W.live(base, facts), facts, f) : null;
 }
+/** A carried page (D-155) that played in an evening's own command, as a D-154 save's did: that evening's, unless the
+    same command walked on to a place, when it was on the way there (a long day) and is that place's. */
+function pageOfEvening(c: Content, all: Fact[], g: Fact, f: FactOf<'arrived'>): boolean {
+  return g.type === 'beatPlayed' && !!S.beatOf(c.story, g.id)?.portable && g.at === f.at
+    && !all.some(h => h.seq > g.seq && h.type === 'arrived' && h.kind === 'place' && h.how !== 'evening' && h.at === g.at);
+}
 /** The story moments played just after an evening at camp, before anything else happened: its home moments (D-154). */
 function thenOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival['then'] {
   const out: Arrival['then'] = [];
   for (const g of all) {
     if (g.seq <= f.seq || g.type === 'recordShown' || g.type === 'storyWeekBegan' || (g.type === 'sealOpened' && g.how === 'road')) continue;
-    if (g.type !== 'beatPlayed' || g.job !== undefined || g.id === 'passage' || !S.eveningMoment(c.story, g.id)) break;
+    /* (a carried page that played in the same evening, as an old save's did, D-155: still part of it) */
+    if (g.type !== 'beatPlayed' || g.job !== undefined || g.id === 'passage' || !(S.eveningMoment(c.story, g.id) || pageOfEvening(c, all, g, f))) break;
     const bx = S.beatOf(c.story, g.id), x = bx?.kind === 'stepKey' && bx.seal ? S.sealOf(c.story, bx.seal) : bx ? undefined : S.sealOf(c.story, g.id);
     const line = bx?.line ?? x?.line;
     const where = bx?.stretch ?? x?.stretch;
@@ -1902,6 +1917,8 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
       /* (the side chamber passed on the way is part of the walk too) */
       if (g.type === 'recordShown' || g.type === 'storyWeekBegan' || (g.type === 'findGiven' && g.why === 'chamber') || (g.type === 'sealOpened' && g.how === 'road' && S.sealOf(c.story, g.seal)?.arrival === b.id)) continue;
       if (g.type !== 'beatPlayed' || g.job !== undefined || g.id === 'passage') break;
+      /* a page an evening just before it holds is that evening's, not the walk's (D-155) */
+      if (all.some(e => e.type === 'arrived' && (e.kind === 'evening' || e.how === 'evening') && e.seq < g.seq && pageOfEvening(c, all, g, e as FactOf<'arrived'>))) break;
       let j = i - 1;
       while (all[j]?.type === 'recordShown') j--;
       const o = all[j];

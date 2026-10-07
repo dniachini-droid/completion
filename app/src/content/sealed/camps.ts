@@ -77,6 +77,7 @@ export const camps: CampView[] = [
     stretch: "st-camp",
     w: 1,
     req: [],
+    until: "b-3.2",   // it shows the notebook on the cot (D-155)
     name: "Her cot",
     line: "Today you stop at the doorway of the Box Room, the small room off the hall where the woman lived. From there you look in at her things: the cot with the boots beneath it, the notebook with its pencil, and the shelf where the rod lay.",
     look: {"find": "fd-d08"},
@@ -123,7 +124,7 @@ export const camps: CampView[] = [
     w: 5,
     req: ["b-5.0"],
     name: "The second flight",
-    line: "Today you stop on the second flight of the Stair, beside the little door, the small door in the stair wall that her notebook says she found open. It is shut, though every notch in its row is full of light. Beside it is the one ring with sharp edges among all the worn, smooth ones.",
+    line: "Today you stop on the second flight of the Stair, beside the little door, the small door in the stair wall that she once found open. It is shut, though every notch in its row is full of light. Beside it is the one ring with sharp edges among all the worn, smooth ones.",
     look: {"find": "fd-f02"},
   },
   {
