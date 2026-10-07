@@ -147,11 +147,13 @@
   /* a join that a word opens is drawn once it is cut (ids only, D-015) */
   const OPENS: Partial<Record<string, string>> = { 'st-blast|st-lower': 'b-14.A' };
   const regionLinks = $derived(LINKS.filter(([a, b]) => walkedOn.has(a) && (walkedOn.has(b) || b === aheadOn) && (!OPENS[`${a}|${b}`] || v.story.played.has(OPENS[`${a}|${b}`]!)))
-    .map(([a, b]) => ({ d: curve(AT[a]!, AT[b]!), walked: walkedOn.has(b) })));
+    .map(([a, b]) => ({ d: curve(AT[a]!, AT[b]!, BEND[`${a}|${b}`]), walked: walkedOn.has(b) })));
+  /* a join that would pass over another area's light bows the other way, so it never reads as leaving from it (panel walk 5) */
+  const BEND: Partial<Record<string, number>> = { 'st-square|st-lower': -0.03 };
 
-  function curve(a: { x: number; y: number }, b: { x: number; y: number }) {
+  function curve(a: { x: number; y: number }, b: { x: number; y: number }, k = 0.18) {
     const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2, dx = b.x - a.x, dy = b.y - a.y;
-    return `M${a.x} ${a.y}Q${(mx - dy * 0.18).toFixed(1)} ${(my + dx * 0.18).toFixed(1)} ${b.x} ${b.y}`;
+    return `M${a.x} ${a.y}Q${(mx - dy * k).toFixed(1)} ${(my + dx * k).toFixed(1)} ${b.x} ${b.y}`;
   }
   /* the phone's text size (Dynamic Type, --ts): the names wrap sooner and their lines open up with it, so a bigger name
      never runs off the screen's edge or onto the line under it (spacing review) */

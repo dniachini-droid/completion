@@ -124,7 +124,7 @@ export const camps: CampView[] = [
     w: 5,
     req: ["b-5.0"],
     name: "The second flight",
-    line: "Today you stop on the second flight of the Stair, beside the little door, the small door in the stair wall that her notebook says she found open. It is shut, though every notch in its row is full of light. Beside it is the one ring with sharp edges among all the worn, smooth ones.",
+    line: "Today you stop on the second flight of the Stair, beside the little door, the small door in the stair wall that she once found open. It is shut, though every notch in its row is full of light. Beside it is the one ring with sharp edges among all the worn, smooth ones.",
     look: {"find": "fd-f02"},
   },
   {

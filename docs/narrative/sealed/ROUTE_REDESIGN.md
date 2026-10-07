@@ -471,3 +471,4 @@ The notebook carried from `b-3.2` on is in `SITE.md` (the Box Room row) and D-15
 - `b-2.A`: the reason is the tally's notches filling with light; her sheets on top do not cover the next stretch (they did not say so before, and `b-4.A` looks right through them). `b-4.A` and the line after `b-2.A` agree.
 - `pl-w2-smooth-place`: opens with its reason (the polished wall seen at the corner, `b-1.B`'s finds), so it reads both as the next place (a fresh save) and as a return (an old save that left the hall: old-248).
 - `pl-w5-second-landing`: shows the blank and the two symbols beside the second lintel (as `b-w6.close` says), so the cut at the foot of the second flight never rests on a thing not shown.
+- `cv-` camp on the second flight by the little door (`camps.ts`, the turned-back stop): no longer credits her notebook with the door having been open (it can play before the jamb's pencil, `fd-f02`, and her notebook never says it on screen); "that she once found open".
