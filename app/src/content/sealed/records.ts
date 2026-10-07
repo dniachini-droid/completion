@@ -513,7 +513,7 @@ export const records: RecordFragment[] = [
 
   // ——— Week 12 ———
   {
-    id: 'rec-e3', life: 'E', kind: 'paper', where: 'the log on the ledge in the blast room', w: 12, firstShown: ['b-12.A'],
+    id: 'rec-e3', life: 'E', kind: 'paper', where: 'the log on the ledge in the blast room', w: 11, firstShown: ['b-11.2'],   // read with the 22nd since round 4 (S2)
     paper: [
       'Log. 25th. Well in the village stood still three days; the keeper came up to complain. Compasses swung to the hill. A sound in the sky at dusk like a door in a very large house. The men have gone. The company has written. I am taking my meals down.',
     ],

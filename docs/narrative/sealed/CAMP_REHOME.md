@@ -478,3 +478,50 @@ The engine's new `again` field is the line a beat plays on a trip back up (old s
 | 10 the Reading Room | `b-9.A` gives the reason (the one way off the Water not yet taken) and the way ("back to the Water, round its shore"). |
 | 11 the unnamed niche | `b-7.1`: "Across the square gallery from the crew's wall, at head height". `seal-7-1`'s `where` matches it. |
 | 12 the top flight's views | `cv-11` and `cv-39` read right for him camped at the worn steps. `cv-10` (the head of the Stair) gets `until: b-3.C`, so a folded camp on the top flight never puts him back on the landing. |
+
+## 12. Round 4 of the player's-eye review (2026-10-07; built)
+
+| Item | Change |
+|---|---|
+| 1 the word at the lintel | `b-3.A` now says "Before you go down, you want…" as a goal; it no longer refuses. |
+| 2 the Reading Room's way in | `b-9.A` reads "round the Water's shore to the doorway", which works from anywhere at the Water. |
+| 3 powder named early | `cv-23` reads "a faint smell, sharp and old"; `b-8.C` is still where the smell is named as powder. |
+| 4 S1, the camps | **Blast room:** `cv-18` (the tunnel back the way the log's writer came, 61 yards by his chalk), `cv-47` (both books seen from the middle of the room; the gold laid to be seen), `cv-65` becomes "Where the rails end" (the smooth roof, uncracked whatever noise the sky made), `cv-51` (the bucket on the floor, not "by the ledge"; dry wood inside). **The lintel below the Water:** `cv-64` becomes "Above the lintel" (the blank, the width of the rod's edge). **The Water's far end:** `cv-66` becomes "Under the far niche" (now also requires `seal-12-1`; the dips face the lake). **The Box Room:** `cv-09` (under her shelf, the rod within reach) and `cv-58` (just inside the doorway, packed). **The lower gallery:** `cv-67` is removed, folded into `cv-30` (the end of the lower gallery, where the stone changes). |
+| 5 S2, the log's 25th | `b-11.2` now reads the 25th straight after the 22nd, and carries `rec-e3`, which moves to w11 with `firstShown` `b-11.2`. `pl-w11-far-end`'s reason is now that page's last line ("taking my meals down: down where, and with whom?") together with the tall man of the 14th. `b-12.A` is now the bucket alone: the Water's stillness brings back the log's well, so he goes down to look at the bucket. |
+| 6 S3 | `b-10.3` (Day 31) now requires `b-10.C`, so it plays after the log's screen; "whom she calls the Engineer". `b-11.A`: the notes are in the copyist's own hand. The surveyor/boy hint is now her Day 28 guess, and Dan no longer links it himself. `b-11.3` (Day 33): her claim that the gilder was a woman who never came; "the third reader". `b-13.2` (Day 38): the second reader is set against Day 33's third reader and the shut door's "Once, the second". |
+| 7 S4, base eight | `b-8.1`: the hand is four strokes; the count runs to seven strokes, then a bar for eight, then a wedge after eight bars (SCRIPT D5). `b-8.2`: "three wedges, two bars, two strokes", worked out as two hundred and ten. `b-8.3`: "the tablet's bar is eight". `b-12.3`: "a bar and two strokes, eight and two". |
+| 8 S5, the hooks | Each hook now has a fixed name used every time: the hook closed on a dot (his); the hook-and-drop (`b-w9.camp` no longer calls it "the hook with a drop leaving it"); the hook with a tail (hers); a hook closed round a drop (`b-9.A` dropped "right"); the plain hook; the crossed hook (`b-8.2`, `sf-m3-3`); the footed hook (`b-9.A`, `sf-m3-5`). The maker marks keep their shapes: nothing sealed was changed. |
+| 9 nits | **Chalk arrow:** `b-1.C` follows the arrow as a known thing and no longer describes it as new. **Her loose Day 9 sheet:** `b-9.B`, `b-w14.morning`. **The ring:** `b-5.0` says "a single ring with sharp edges". **The inner door:** it stands open at `b-9.A`, but the dark past the third bench holds him back; `b-11.B` says it "still stands open". **The standing stone:** `b-13.B` says he saw it only from far off and could not read its pair. **The onward pull:** `b-14.B` is the second blank by the rubble (the diamond from the eye tablet, and the bar with a tick). **The surveyor/boy hint:** see S3. |
+| 10 b-1.7 | The open hook is now first seen at `pl-w1-below-the-lamp`, a place every save reaches. `b-1.7` stays the week-1 deep moment: a closer look at the same hook, with req `pl-w1-below-the-lamp`. Losing it costs nothing the story needs. |
+
+**Retcons (MASTER_BRIEF §55):**
+- **The log's 25th:** it is read in week 11, with the 22nd; it used to be week 12 (LIVES E3 and ARRIVALS_REGION2 12.A are noted). The text is unchanged.
+- **The inner door:** it was always open (b-11.B said so); it is now said at first sight.
+- **The numbers:** the values are unchanged; the tablet now shows them exactly.
+
+### 12.1 Round 4, old saves carried on (addendum; built)
+
+| Item | Change |
+|---|---|
+| A trips | `b-3.5` gets `againName` "The crust", and its `again` says plainly that the salt was seen before but the end of the tally was not: "this time" he goes on past the lone ring. `b-3.6` gets `againName` "Making a copy", and its `again` opens: "Reading the tally at the wall is one thing; carrying it with you is another". |
+| B the split | `b-3.5` (both its line and its `again`) now introduces the split as "the long crack in the salt wall that someone blocked up". |
+| B her sheets | `fd-c08` and `ps-c08` treat the loose pencilled sheets as known; `ps-c08` now requires `b-1.5`. |
+| B the notebook | `ps-s06` no longer guesses what the notebook is. |
+| B the tablet under the second turn | `b-5.A`, `b-w6.close` and `b-7.A` now name it by what it shows (the setting sun and the road), not by where it was opened. |
+| B the Reading Room | `b-9.A` gives its reason as "the one with light beyond it" instead of "the one not yet been through". |
+| C | Engine only (camps at another place's view). |
+
+### 12.2 Round 4, short and long days (second addendum; built)
+
+| Item | Change |
+|---|---|
+| 1 approach steps (`before`) | `b-1.1` (the shaft) gets `before: b-1.A`. No other step is a walk to a place (all steps were checked). `b-1.C` is the Box Room's own way in. `b-1.5` is reworded as a look along the salt wall, not a walk in (item 4). |
+| 2 the first screen | `b-1.1` introduces the iron cap itself, and `b-1.A` opens at the ladder's foot. **Engine notes:** (a) a `before` step's words show after the place's words on the arrival screen; for the climb to come first, `before` bits need to show ahead of the place's text. (b) The Mouth's finds cannot require `b-1.1`: the side chamber gives one at 38 minutes, before any step (D-122, the week tests). The climb would need to be told before the first side-chamber find. |
+| 3 the near-end camp | `fd-c01` (the far end's troughs and leaf) now requires `b-1.B`. New view `cv-68`, "Below the carved lamp", is a second near-end night (requires `b-1.3`). |
+| 4 the Salt Gallery intro | `b-1.5` now opens "In the Salt Gallery … you look along the wall of bare salt". It reads right after `pl-w1-pick-niche` has introduced the gallery, and before it as well. A `before` tag was tried and dropped: it played the step while Dan was still in the Lamp Hall (the continuity guard). |
+| 5 the copy's walk | `b-3.6` (both its line and its `again`) says he goes round the corner into the Lamp Hall for the lamp, then back. |
+| 6 the gap | `b-5.B` looks into the same gallery the landing's doorway opens on, but from higher up. It also has a thing of its own, its notched sill (`seal-5-3`), and no longer says "what you missed before". |
+| 7 the little door; the stone | `b-3.4` is now a close look at the little door, not its first telling. `b-13.B`: the blast room's fall has no blank on its face, so only the stone can be cut (its first two sentences are kept for the turn-off rule). |
+| 8 back to the ring | `pl-w2-above-the-ring` gives its reason: a closer look at the lone ring. |
+| 9 paraffin | `ps-s01` no longer refers back to a smell that was never told. |
+| 10 | Done in §12 and §12.1 (`cv-23`, `b-9.A`). |

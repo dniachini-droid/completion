@@ -205,3 +205,17 @@ Same rules as §1. Two changes from week 8: **a figure** may appear once, far an
 **Follow-up from the old-save panel (art pass, not fixed here):** `pt-cv-28` / `pt-b-14.B` (the head of the lower way) shows a vaulted hall with a water channel, but the text is a smooth, rounded, lit way with the rubble's gap beside it; `pt-b-14.A` (the back of the rubble) shows a square brick corridor, but the lower way is rounded stone and the rubble is the blast room's fall.
 
 **Follow-ups from the round-2 pace panels (art pass, not fixed here):** the square gallery's camp picture has pointed arches, but the text is a flat ceiling and square corners; the lintel's picture after the cut still shows a blank over solid wall (it should show the opening and the lit landing); the side gallery's end shows rubble where the text has a shut door. Retired this round: `pt-pl-w5-worn-steps`, `pt-pl-w12-square-way`, `pt-pl-w13-side-gallery` (it suits `b-13.1`), `pt-pl-w12-shelf`; new places on stand-ins: `b-3.2` (her notebook and folder, the Box Room), `b-13.1` (the niches by the door).
+
+**Round 4 (normal pace), list only:** `pt-cv-67` is retired (folded into `cv-30`, the end of the lower gallery). These views now show something different, so their stand-ins need a new look:
+- `cv-09`: under her shelf, the rod within reach.
+- `cv-18`: the torn wall, with the tunnel going back into the dark.
+- `cv-47`: both books on the ledge, seen from the middle of the room.
+- `cv-51`: the bucket on the floor.
+- `cv-58`: just inside the Box Room's doorway, her things packed.
+- `cv-64`: looking down the narrow way at the lintel.
+- `cv-65`: where the rails end, the smooth roof overhead.
+- `cv-66`: under the far niche, facing the lake.
+
+`pt-b-12.A` no longer has the log page as its subject: the bucket is.
+- **Round 4, short and long days:** new view `cv-68`, "Below the carved lamp" (the near end, the carved lamp and flame overhead). It uses a stand-in.
+- **Art-pass notes:** the square gallery's camp picture still shows gothic arches, but the gallery has a flat ceiling and square corners. The Salt Gallery camp and the Water's far shore share one image.

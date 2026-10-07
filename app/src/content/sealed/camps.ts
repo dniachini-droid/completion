@@ -105,7 +105,7 @@ export const camps: CampView[] = [
     until: "b-3.B",   // the top: never once he has gone down (D-160)
     near: "b-2.B",
     name: "Her shelf",
-    line: "You camp in the Box Room, on the floor beside her cot. On the shelf where the rod lay before you took it, a clean stripe the length of a forearm is left in the dust.",
+    line: "You camp in the Box Room under her shelf, with the stone rod beside you where you can reach it. On the shelf where it lay, a clean stripe the length of a forearm is left in the dust.",
     look: {"line": "For the next one. Cut the two marks on the lintel. Don’t be precious about it."},
   },
   {
@@ -197,7 +197,7 @@ export const camps: CampView[] = [
     req: ["b-10.C"],
     near: "b-10.C",
     name: "By the torn wall",
-    line: "You camp in the blast room, beside the torn wall. The powder smell has soaked into the stone, and it is strongest here, where the rock beyond the hole is dark with old smoke.",
+    line: "You camp in the blast room, beside the torn wall, where the miners' tunnel comes in. Through the hole it runs back into the dark the way the log's writer came, sixty-one yards of it by his own chalk.",
     look: {"find": "fd-i04"},
   },
   {
@@ -249,7 +249,7 @@ export const camps: CampView[] = [
     req: ["pl-w8-steep-foot"],
     near: "pl-w8-steep-foot",
     name: "The steep stair's foot",
-    line: "You camp on the Water's far shore, between the foot of the steep stair and the mouth of the narrow way beside it. All night a thin cold air goes up the stair, and a faint smell of powder comes up the narrow way.",
+    line: "You camp on the Water's far shore, between the foot of the steep stair and the mouth of the narrow way beside it. All night a thin cold air goes up the stair, and a faint smell, sharp and old, comes up the narrow way.",
     look: {"line": "The steep stair's last step stands in the water, and there is no ripple round it."},
   },
   {
@@ -319,7 +319,7 @@ export const camps: CampView[] = [
     req: ["pl-w13-lower-gallery"],
     near: "pl-w13-lower-gallery",
     name: "The lower gallery",
-    line: "You camp in the lower gallery, past where the fall stood, where cold air comes along it from the rounded stone ahead.",
+    line: "You camp at the end of the lower gallery, past where the fall stood, where the square-cut stone stops and the smooth, rounded stone begins again, and cold air comes along it from the rounded stone ahead.",
     look: {"find": "fd-g12"},
   },
   {
@@ -353,6 +353,17 @@ export const camps: CampView[] = [
     name: "Under the ledge",
     line: "You camp at the near end of the Lamp Hall with your back to the wall under the ledge, so that the lamp burns just above your head.",
     look: {"line": "The lamp's light makes a small round pool on the floor in front of you, and the dark begins at its edge."},
+  },
+  {
+    id: "cv-68",
+    stretch: "st-hall",
+    w: 1,
+    req: ["pl-w1-below-the-lamp", "b-1.3"],
+    until: "b-3.A",
+    near: "pl-w1-below-the-lamp",   // a second night at the near end (round 4, short/long 6)
+    name: "Below the carved lamp",
+    line: "You camp at the near end of the Lamp Hall below the wall by the lamp, with its two small carved pictures, the lamp and the flame, just above your head.",
+    look: {"line": "From the floor the rings round them are at the height of your eyes, their edges worn soft."},
   },
   {
     id: "cv-34",
@@ -497,8 +508,8 @@ export const camps: CampView[] = [
     req: ["b-11.A"],
     near: "b-11.A",
     name: "By the two books",
-    line: "You camp by the ledge where the log and the gilded book lie side by side.",
-    look: {"line": "Of everything in the blast room, the gold on the book's open page is what catches the light first."},
+    line: "You camp in the middle of the blast room, where you can see both books on the ledge at once: the log in its hard pencil, and the gilded book open beside it.",
+    look: {"line": "From here the gold in the book's margins catches the light before anything else in the room, as if whoever laid it wanted it seen."},
   },
   {
     id: "cv-48",
@@ -537,8 +548,8 @@ export const camps: CampView[] = [
     req: ["b-12.A"],
     near: "b-12.A",
     name: "By the bucket",
-    line: "You camp by the ledge in the blast room, beside the well bucket from the village, its iron bands cold to the touch.",
-    look: {"line": "Inside the bucket a little dust has gathered in the bottom, and nothing else."},
+    line: "You camp on the blast room's floor beside the well bucket from the village, its iron bands cold to the touch.",
+    look: {"line": "You tip it towards the light. Inside, its wood is dry and pale, as if no water has stood in it for a very long time."},
   },
   {
     id: "cv-52",
@@ -609,7 +620,7 @@ export const camps: CampView[] = [
     until: "b-3.B",
     near: "b-3.2",
     name: "Her things packed",
-    line: "You camp on the floor of the Box Room with her notebook and her folder beside your own things, ready to take down the Stair.",
+    line: "You camp just inside the Box Room's doorway, with her notebook and her folder packed beside your own things, ready to take down the stair beyond the lintel.",
     look: {"line": "Without the notebook on it, the cot looks like anyone's."},
   },
   {
@@ -673,9 +684,9 @@ export const camps: CampView[] = [
     req: ["pl-w9-approach"],
     until: "b-10.A",
     near: "pl-w9-approach",
-    name: "Beside the niches",
-    line: "You camp at the foot of the narrow way between the lintel's two niches, your back to the cool stone.",
-    look: {"line": "The niches' notches are cut so evenly that a fingertip fits each one exactly."},
+    name: "Above the lintel",
+    line: "You camp a few steps up the narrow way, looking down at the lintel and its two niches.",
+    look: {"line": "From here the blank under the lintel is a dark gap in the line of carving, the width of the rod's edge."},
   },
   {
     id: "cv-65",
@@ -683,28 +694,19 @@ export const camps: CampView[] = [
     w: 11,
     req: ["b-11.C"],
     near: "b-11.C",
-    name: "Under the torn wall's edge",
-    line: "You camp under the edge of the torn wall, where the room's smooth stone ends and the rough rock begins.",
-    look: {"line": "Where the two meet, the smooth stone ends in a clean line, as if it had been cut, not broken."},
+    name: "Where the rails end",
+    line: "You camp where the iron rails end, in the middle of the blast room, where the wagons stopped.",
+    look: {"line": "Lying on your back you look up at the room's smooth roof. Whatever noise the sky made, the roof shows no mark of it: there is not a crack in it anywhere."},
   },
   {
     id: "cv-66",
     stretch: "st-water",
     w: 11,
-    req: ["pl-w11-far-end"],
+    req: ["pl-w11-far-end", "seal-12-1"],   // under the opened niche (round 4)
     near: "pl-w11-far-end",
-    name: "On the far shore",
-    line: "You camp at the Water's far end, a little way back from the two worn dips, facing the lake.",
-    look: {"line": "The worn dips hold no dust at all, though the shore round them is grey with it."},
+    name: "Under the far niche",
+    line: "You camp at the Water's far end, under the opened niche where the tablet of hands lay, facing the lake.",
+    look: {"line": "The two worn dips face the lake, as if whoever stood in them stood looking out over the water."},
   },
-  {
-    id: "cv-67",
-    stretch: "st-square",
-    w: 13,
-    req: ["pl-w13-lower-gallery"],
-    near: "pl-w13-lower-gallery",
-    name: "Where the square stone stops",
-    line: "You camp at the end of the lower gallery, where the square-cut stone stops and the smooth, rounded stone begins again.",
-    look: {"line": "The join is as tight as the one at the top of the square gallery: you could not slip a blade into it."},
-  },
+
 ];
