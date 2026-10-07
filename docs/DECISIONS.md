@@ -1775,3 +1775,19 @@
 - **Alternatives:** one thing an evening in all (more evening nights, which the reviewers counted against it); no evening on a day that reached a new place (a deeper change to the engine, late in the round).
 - **Consequences:** an evening in the Stair weeks is at most a place, one moment and the camp's line. Simulated lives (daily, every other day, weekends only, high effort; 14 story weeks) reach week 14 with every place walked and nothing lost or replayed; their evenings were already mostly one or two moments, so the effect is small: the pull the reviewers describe comes more from how often the evenings fall between the Stair days than from their length. A rule test holds the cap.
 - **Reversible:** Yes (one cap in the engine).
+
+## D-160 — The day ends only on Sleep; camp where you are; no trips back to camp (Dan)
+- **Date:** 2026-10-07
+- **Context:** On D-154/D-159, Dan: "Why can't I just camp where I am and keep going down? What is the point of going back to camp?" D-154 made every night happen at camp by the lamp at the top, so the scenes and reading set at the top could play there. That solved a story-placement problem at the player's expense.
+- **Decision (Dan's words, confirmed point by point, 2026-10-07):**
+  1. The day ends **only** when Dan presses the sleep button. Nothing else ends it: no minute target, no time of day, no place reached.
+  2. No "the day is done / that's enough" messages anywhere. The game never tells Dan he has done enough.
+  3. Dan camps **wherever he is** when he presses sleep, however long or short the day was.
+  4. The next day starts from that spot and carries on down.
+  5. No trips back to camp at the top. The scenes and reading set there move into the journey: they travel with Dan, or happen at a place further down where they make sense.
+  6. Going back up happens only when the story gives a real reason, and the screen says what it is. A return that can't be justified *as the player sees it* is cut.
+  7. Simple: you go down; you camp where you end up.
+  8. The story must make complete sense **to a player**, not to the programmer. No filler progress, and no place that exists only to fill a day.
+  - Assumed and stated to Dan: if he never presses sleep, nothing pops up; the next morning carries on from where he was.
+- **Process (agreed):** a spoiler-free plan first (`docs/reviews/route/CAMP_PLAN.md`), checked independently against points 1–8. Then the build on its own branch. Then an exhaustive player's-eye review of the built game: all 14 weeks at short, normal and long days, read by fresh reviewers as first-time players. For every place and scene they ask: where am I, why am I here, does it follow from what I've seen, is it real progress or filler. A separate whole-story read checks for anything that doesn't add up, comes too early or feels pointless. Anything that fails is fixed and the whole review re-run until it passes. Then a plain-English result for Dan. Dan went to sleep asking that the work not stop until it is done. Nothing is merged or sent to TestFlight without his OK.
+- **Reversible:** Yes, until merged.
