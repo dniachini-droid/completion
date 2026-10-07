@@ -51,7 +51,7 @@ for (const life of J.lives) {
       const see = page.getByRole('button', { name: /see where you are/i });
       const way = (await see.count()) ? see : page.locator('button.home');
       if (!(await way.count())) break;
-      entry.between = [...entry.between, '(a job\'s end, read before this) ' + (await words(page)).replace(/\n/g, ' ')];
+      entry.between = [...entry.between, '(a screen read before this: the morning or a job\'s end, repeating what is listed above) ' + (await words(page)).replace(/\n/g, ' ')];
       if (!(await tap(page, way))) break;
       await page.clock.runFor(6000); await page.waitForTimeout(3500);
     }

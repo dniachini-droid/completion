@@ -168,6 +168,9 @@ export interface Beat {
   /** A place at the top that an old save, already gone down, still has to see (D-160): why Dan climbs back up for it,
       said on screen before it (a full sentence). */
   back?: string;
+  /** Its line when it plays as a trip back up (an old save's, gone down before it existed): written to read right after a
+      climb from anywhere below, for a save that may have seen part of it under an earlier build (D-160). */
+  again?: string;
 }
 
 /** A named place with no fragment, added by the story job (a `pl-` id). Plays as an arrival. */

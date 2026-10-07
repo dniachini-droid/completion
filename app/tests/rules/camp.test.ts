@@ -85,6 +85,10 @@ describe('camp where you are (D-160)', () => {
       expect(top, name).toEqual([]);
     }
   });
+  it('every place on the route has a camp view of its own, so a camp is never a place\'s arrival words again (round 3)', () => {
+    const near = new Set(s.camps.map(c => c.near));
+    expect(route.filter(id => !near.has(id))).toEqual([]);
+  });
   it('every move to another area is announced: a new area, or back to one with how and why', () => {
     for (const [name, facts] of Object.entries(lives)) {
       for (const f of arrivals(facts).filter(a => a.kind === 'place')) {

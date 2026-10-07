@@ -58,7 +58,7 @@
   const sentences = $derived(!said ? [] : said.split(/(?<=[.!?])\s+/));
   /* a trip back up to the top, in a save from before D-160: why, said first */
   /* (one trip sees all that waits at the top: the climb is said on its first place, the way down on its last) */
-  const leadWay = $derived(!a || again ? '' : a.errand ? (a.errandMore ? '' : a.errandWhy ?? t('arrive.errand', { area: the(a.area) })) : a.wayIn ?? '');
+  const leadWay = $derived(!a || again ? '' : a.errand ? (a.errandMore ? (a.errandFrom && a.errandFrom !== a.area ? t('arrive.errandOn', { area: the(a.area) }) : t('arrive.errandMore')) : a.errandWhy ?? t('arrive.errand', { area: the(a.area) })) : a.wayIn ?? '');
   const leadFirst = $derived(a && !a.stopAgain ? sentences[0] ?? '' : '');
   const restLine = $derived(!a ? '' : a.stopAgain ? a.line : sentences.slice(1).join(' '));
   const over = $derived(!a ? '' : a.kind === 'evening' ? '' : a.face === 'enter' && !again ? '' : a.area);
@@ -117,7 +117,7 @@
         <Words {look} length={restLine.length + (a.look?.length ?? 0) + a.then.reduce((n, w) => n + w.line.length, 0)}>
           {#if restLine}<span class="soft on-scene"><Prose text={restLine} /></span>{/if}
           {#if a.stopAgain}<span class="soft on-scene">{t('arrive.stopAgain')}</span>{/if}
-          {#if a.errand && !a.errandStays && !again}<span class="soft on-scene">{t('arrive.errandBack')}</span>{/if}
+          {#if a.errand && !again}<span class="soft on-scene">{a.errandStays ? t('arrive.errandStays') : t('arrive.errandBack')}</span>{/if}
           {#if a.look}<span class="soft on-scene look"><Prose text={a.look} /></span>{/if}
           {#each a.way as w (w.beat)}<p class="soft on-scene look"><Prose text={w.line} /></p>{/each}
           {#each a.opened as line}<p class="soft on-scene look">{t('arrive.keyOpens')} <Prose text={line} /></p>{/each}

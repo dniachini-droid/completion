@@ -1658,6 +1658,8 @@ export interface Arrival {
   errandMore?: boolean;
   /** Not the trip's last place: the way back down is said on the last. */
   errandStays?: boolean;
+  /** A later place of the trip: the area of the place before it on the trip. */
+  errandFrom?: string;
   /** Tonight's camp is the place he reached (D-160): the screen says he camps there. */
   campAt?: boolean;
   /** An evening's moments at home after its place (her notebook, the tally): each one's line, beat and records. */
@@ -1922,16 +1924,19 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
     const errandMore = errand && tripOf(prevPlace), errandStays = errand && tripOf(nextPlace);
     /* a place whose own line says how Dan came (a turn-off on the way up) needs no way-in line over it */
     return { seq: f.seq, kind: 'place', face, late: !!f.late, earlier: !!f.late && !!f.night && W.daysBetween(f.night, f.day) > 1, area, wayIn: face === 'back' && !b.said ? wayIn : null, turnOff: face === 'back' && (!!b.turnOff || errand), errand,
-      ...(errand ? { errandWhy: errandMore ? null : b.back ?? null, errandMore, errandStays } : {}), then,
-      opened, way, id: b.id, name: b.name ?? '', line: b.line ?? '', taps: b.taps, choice: b.choice,
+      ...(errand ? { errandWhy: errandMore ? null : b.back ?? null, errandMore, errandStays,
+        ...(errandMore && prevPlace?.type === 'arrived' ? { errandFrom: S.areaName(c.story, S.beatOf(c.story, prevPlace.id)!.stretch) } : {}) } : {}), then,
+      opened, way, id: b.id, name: b.name ?? '', line: (errand && b.again ? b.again : b.line) ?? '', taps: b.taps, choice: b.choice,
       records: b.carries?.records ?? [], guess, look: null, stretch: b.stretch, painting: paintingOf(b.id, b.stretch), completedDay, byKey: f.how === 'key' };
   }
   /* tonight's camp at the place he reached (D-160): its name and painting; the screen says he camps there */
   const p = f.where === 'place' ? S.beatOf(c.story, f.id) : undefined;
   const found = all.find(g => g.type === 'findGiven' && g.why === 'camp' && g.seq === f.seq + 1) as FactOf<'findGiven'> | undefined;
   /* (the place's own first sentence under it, so the night is never bare, the review's round 2) */
-  if (p) return { seq: f.seq, kind: 'camp', face: 'on', late: false, area: S.areaName(c.story, p.stretch), wayIn: null, then: [], campAt: true,
-    opened: [], way: [], id: p.id, name: p.name ?? '', line: (p.line ?? p.taps?.[0] ?? '').split(/(?<=[.!?])\s/)[0] ?? '', records: [], guess: [], look: found ? c.story.finds.find(x => x.id === found.id)?.line ?? null : null, stretch: p.stretch, painting: paintingOf(p.id, p.stretch), completedDay: false, byKey: false };
+  /* (camped at before: it says so, and only what is new follows, as at a view) */
+  const before = !!p && all.some(g => g.type === 'arrived' && g.kind === 'camp' && g.id === f.id && g.seq < f.seq);
+  if (p) return { seq: f.seq, kind: 'camp', face: 'on', late: false, area: S.areaName(c.story, p.stretch), wayIn: null, then: [], campAt: true, stopAgain: before,
+    opened: [], way: [], id: p.id, name: p.name ?? '', line: before ? '' : (p.line ?? p.taps?.[0] ?? '').split(/(?<=[.!?])\s/)[0] ?? '', records: [], guess: [], look: found ? c.story.finds.find(x => x.id === found.id)?.line ?? null : null, stretch: p.stretch, painting: paintingOf(p.id, p.stretch), completedDay: false, byKey: false };
   const k = c.story.camps.find(x => x.id === f.id)!;
   const find = all.find(g => g.type === 'findGiven' && g.why === 'camp' && g.seq > f.seq && g.seq <= f.seq + 1) as FactOf<'findGiven'> | undefined;
   /* a stop made before: never its words again (the journey review, D-154): the screen says he stops there again, and
@@ -2009,7 +2014,8 @@ function rawReturn(c: Content, facts: Fact[], doneSeq: number): Return {
   const part = b.carries?.partial && b.carries.seen?.[0] ? { el: b.carries.partial, mark: b.carries.seen[0] } : undefined;
   /* a Key's return says so; a row the road opened is a step like any other (D-129) */
   const byRoad = facts.some(f => f.type === 'sealOpened' && f.seal === b.seal && f.how === 'road');
-  return { ...up(b), beat: b.id, line: b.line ?? '', key: b.kind === 'stepKey' && !byRoad, guess, choice: b.choice, records: [...(b.carries?.records ?? []), ...(viaSeal?.carries?.records ?? [])], finds, keyNote, keyAlready, ...(part ? { part } : {}) };
+  const trip = up(b);
+  return { ...trip, beat: b.id, line: ('up' in trip && b.again ? b.again : b.line) ?? '', key: b.kind === 'stepKey' && !byRoad, guess, choice: b.choice, records: [...(b.carries?.records ?? []), ...(viaSeal?.carries?.records ?? [])], finds, keyNote, keyAlready, ...(part ? { part } : {}) };
 }
 
 /** Today's list, as Today shows it and as the day's finish line reads it (D-130): on a planned week, every job the plan

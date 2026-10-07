@@ -107,7 +107,9 @@ export function storyState(facts: Fact[], s: Story): StoryState {
             /* where Dan is: the last place walked to; a place at home once the way down is open is an evening (an old save's
                too, whatever it was called then), so it never moves him (D-154) */
             /* (nor a place a Key opened in another area: a trip there he chose, which leaves him where he was, D-160) */
-            if (!(f.how === 'evening' || (departed && isTop(s, b.stretch)) || (f.how === 'key' && here !== null && areaOf(s, b.stretch) !== areaOf(s, stretch)))) { stretch = b.stretch; here = b.id; lastOn.set(b.stretch, b.id); }
+            /* (a place an earlier build had that is a step now, an old save's: he is on its stretch, at the last place there) */
+            if (!PLACE_KINDS.has(b.kind)) { if (!(departed && isTop(s, b.stretch)) && lastOn.has(b.stretch)) { stretch = b.stretch; here = lastOn.get(b.stretch)!; } }
+            else if (!(f.how === 'evening' || (departed && isTop(s, b.stretch)) || (f.how === 'key' && here !== null && areaOf(s, b.stretch) !== areaOf(s, stretch)))) { stretch = b.stretch; here = b.id; lastOn.set(b.stretch, b.id); }
             if (!isHome(s, b.stretch) && b.stretch !== 'st-mouth') departed = true;
           }
         } else if (f.kind === 'camp') campsShown.push(f.id);
@@ -281,7 +283,10 @@ const lineRow = (s: Story, id: string) => { const x = sealOf(s, id); return x &&
 export function campHere(s: Story, st: StoryState, _sinceLast = 0): { at: 'place'; id: string } | { at: 'view'; id: string; find?: string; line?: string } {
   /* before the first place: past the way in, at a view of the first stretch (a short first day, D-160) */
   if (!st.here) { const m = s.camps.filter(c => c.stretch === s.stretches[0].id && !c.near), v = m.find(c => !st.campsShown.includes(c.id)) ?? m[m.length - 1] ?? s.camps[0]; return { at: 'view', id: v.id, ...viewLook(v) }; }
-  const near = s.camps.filter(c => c.near === st.here && c.w <= st.week && allMet(st, c.req) && !(c.until && met(st, c.until))
+  /* (a place folded into another since, where an old save stands: the views of the places he has reached on its stretch) */
+  const hb = beatOf(s, st.here);
+  const at = hb?.retired ? new Set(s.route.flatMap(r => r.places).filter(p => beatOf(s, p.id)?.stretch === hb.stretch && st.played.has(p.id)).map(p => p.id)) : new Set([st.here]);
+  const near = s.camps.filter(c => !!c.near && at.has(c.near) && c.w <= st.week && allMet(st, c.req) && !(c.until && met(st, c.until))
     && !(st.departed && isTop(s, c.stretch)));
   const fresh = near.filter(c => !st.campsShown.includes(c.id));
   const pick = fresh.find(c => c.until) ?? fresh[0];
