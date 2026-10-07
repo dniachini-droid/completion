@@ -58,11 +58,13 @@ export interface StoryState {
 
 /** Whether Dan is past the way in yet: a step at the first stretch played (before it, there is nowhere to camp). */
 export const pastMouth = (s: Story, st: StoryState) => s.beats.some(b => b.kind === 'step' && b.stretch === s.stretches[0].id && st.played.has(b.id));
-/** A step of a place's week that comes before it in the story, where Dan is or at the place itself: it plays on the way,
-    so a place never comes before the walk to it (the way in before the first place; D-160, the short-day review). */
+/** A step the story marks as a place's approach (`before`), not yet played when the place is reached: it plays on the
+    way, so a place never comes before the walk to it (D-160, the short-day review). */
 export function stepBefore(s: Story, st: StoryState, p: Beat): Beat | undefined {
-  return s.beats.find(b => b.kind === 'step' && !b.retired && !st.played.has(b.id) && b.w === p.w && (b.o ?? 0) < (p.o ?? 0)
-    && (b.stretch === p.stretch || b.stretch === st.stretch) && !(st.departed && isTop(s, b.stretch)) && b.req.every(r => met(st, r)));
+  /* (only the steps the story marks as its approach, `before`: a step set elsewhere on the stretch is never pulled onto a
+     place's screen, the round-4 review) */
+  return s.beats.find(b => b.kind === 'step' && b.before === p.id && !b.retired && !st.played.has(b.id)
+    && !(st.departed && isTop(s, b.stretch)) && b.req.every(r => met(st, r)));
 }
 /** A moment at the top that a trip back up (an old save's, D-160) plays on its way: a step or a row the road opens, due
     and not yet played, but only one that leads to a place still waiting at the top (else it waits for a job's return). */

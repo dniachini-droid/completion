@@ -173,6 +173,9 @@ export interface Beat {
   again?: string;
   /** Its name on that trip, when the save had a place of the same name under an earlier build (D-160). */
   againName?: string;
+  /** A step that must play before this place (the walk to it, its approach): if it hasn't played when the place is
+      reached, it plays on the way to it, never after (D-160). */
+  before?: string;
 }
 
 /** A named place with no fragment, added by the story job (a `pl-` id). Plays as an arrival. */
