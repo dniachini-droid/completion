@@ -459,11 +459,11 @@ function camp(w: W, c: Content, at: Moment, day: string) {
   const since = walked(w.all) - S.lastPlaceAt(st);
   const where = S.campHere(c.story, st, since);
   w.put({ type: 'arrived', kind: 'camp', id: where.id, ...(where.at === 'place' ? { where: 'place' as const } : {}) }, at, day);
-  if (where.at === 'view') {
-    const view = c.story.camps.find(x => x.id === where.id);
-    const find = where.find && !st.given.has(where.find) ? where.find : where.line ? null : S.pickFind(c.story, st, 'camp', view?.stretch)?.id;
-    if (find) w.put({ type: 'findGiven', id: find, why: 'camp' }, at, day);
-  }
+  /* its one thing to look at: the view's own (a find, or a line), else something noticed where he is (D-160) */
+  const view = where.at === 'view' ? c.story.camps.find(x => x.id === where.id) : undefined;
+  const own = where.at === 'view' ? where : undefined;
+  const find = own?.find && !st.given.has(own.find) ? own.find : own?.line ? null : S.pickFind(c.story, st, 'camp', view?.stretch ?? st.stretch)?.id;
+  if (find) w.put({ type: 'findGiven', id: find, why: 'camp' }, at, day);
 }
 
 /** A Key lands: it is kept, never spent for Dan (D-143 A). Its job's return offers "Use it here" when something is locked
@@ -1889,8 +1889,9 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
   }
   /* tonight's camp at the place he reached (D-160): its name and painting; the screen says he camps there */
   const p = f.where === 'place' ? S.beatOf(c.story, f.id) : undefined;
+  const found = all.find(g => g.type === 'findGiven' && g.why === 'camp' && g.seq === f.seq + 1) as FactOf<'findGiven'> | undefined;
   if (p) return { seq: f.seq, kind: 'camp', face: 'on', late: false, area: S.areaName(c.story, p.stretch), wayIn: null, then: [], campAt: true,
-    opened: [], way: [], id: p.id, name: p.name ?? '', line: '', records: [], guess: [], look: null, stretch: p.stretch, painting: paintingOf(p.id, p.stretch), completedDay: false, byKey: false };
+    opened: [], way: [], id: p.id, name: p.name ?? '', line: '', records: [], guess: [], look: found ? c.story.finds.find(x => x.id === found.id)?.line ?? null : null, stretch: p.stretch, painting: paintingOf(p.id, p.stretch), completedDay: false, byKey: false };
   const k = c.story.camps.find(x => x.id === f.id)!;
   const find = all.find(g => g.type === 'findGiven' && g.why === 'camp' && g.seq > f.seq && g.seq <= f.seq + 1) as FactOf<'findGiven'> | undefined;
   /* a stop made before: never its words again (the journey review, D-154): the screen says he stops there again, and

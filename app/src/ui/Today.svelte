@@ -331,10 +331,7 @@
            from its row; the one button adds a job (the Satchel's box, ready to type) -->
       <div class="next addcard">
         <div class="label-line lit">{t('today.label')}</div>
-        {#if !v.slate.some(id => !v.done.has(id))}
-          <h2 class="say-lg">{t('today.clear')}</h2>
-          <p class="soft">{t('today.clear.say')}</p>
-        {/if}
+        <!-- (an emptied list says nothing: the game never says the day's work is done, D-160) -->
         <div class="lead"><button class="btn full today-add" onclick={add}>{t('today.addJob')}</button></div>
       </div>
     {/if}

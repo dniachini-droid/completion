@@ -37,7 +37,8 @@
     root.getAnimations({ subtree: true }).forEach(x => { try { x.finish(); } catch { /* endless */ } });
   }
   /* a word is cut on its own screen, the first time it plays (Cut.svelte) */
-  const word = fresh && !!game.whole.arrival && beatOf(content.story, game.whole.arrival.id)?.kind === 'word';
+  /* (a camp at a word's place is a camp, never the word again, D-160) */
+  const word = fresh && !!game.whole.arrival && game.whole.arrival.kind === 'place' && beatOf(content.story, game.whole.arrival.id)?.kind === 'word';
   const cap = (x: string) => x.charAt(0).toUpperCase() + x.slice(1);
   /* marks seen here that can't be guessed yet: said gently, once, so a later guess doesn't come from nowhere (D-077) */
   const later = $derived(a ? marksIn(content.story, [...a.records, ...a.way.flatMap(w => w.records), ...a.then.flatMap(w => w.records)]).filter(m => !a.guess.includes(m) && !mayGuess(content.story, v.story, m)
@@ -115,6 +116,7 @@
         <Words {look} length={restLine.length + (a.look?.length ?? 0) + a.then.reduce((n, w) => n + w.line.length, 0)}>
           {#if restLine}<span class="soft on-scene"><Prose text={restLine} /></span>{/if}
           {#if a.stopAgain}<span class="soft on-scene">{t('arrive.stopAgain')}</span>{/if}
+          {#if a.errand && !again}<span class="soft on-scene">{t('arrive.errandBack')}</span>{/if}
           {#if a.look}<span class="soft on-scene look"><Prose text={a.look} /></span>{/if}
           {#each a.way as w (w.beat)}<p class="soft on-scene look"><Prose text={w.line} /></p>{/each}
           {#each a.opened as line}<p class="soft on-scene look">{t('arrive.keyOpens')} <Prose text={line} /></p>{/each}
@@ -124,10 +126,10 @@
       <div class="mid col">
         {#if a.id}
           {#each a.way as w (w.beat)}<Settled beat={fresh ? w.beat : null} />{/each}
-          {#if a.kind !== 'evening'}<Settled beat={fresh ? a.id : null} />{/if}
+          {#if a.kind === 'place'}<Settled beat={fresh ? a.id : null} />{/if}
           {#each a.then as w (w.beat)}<Settled beat={fresh ? w.beat : null} />{/each}
           {#each a.way as w (w.beat)}<Reread beat={fresh ? w.beat : null} {go} />{/each}
-          {#if a.kind !== 'evening'}<Reread beat={fresh ? a.id : null} {go} />{/if}
+          {#if a.kind === 'place'}<Reread beat={fresh ? a.id : null} {go} />{/if}
           {#each a.then as w (w.beat)}<Reread beat={fresh ? w.beat : null} {go} />{/each}
           {#each a.guess as mark (mark)}<Guess {mark} at={a.id} />{/each}
           {#if later.length}<p class="soft later">{t('arrive.marksLater')}</p>{/if}

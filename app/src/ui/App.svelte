@@ -50,7 +50,7 @@
     if ((v.runEnd && !v.runEnd.pending) || (v.run && v.run.phase !== 'held')) return 'delve';
     /* a word left to cut later waits for Dan on Today's quiet line, never forced on him (A2) */
     /* after days away the welcome back comes first: a word waiting then waits as Today's line (U5, W F8) */
-    if (v.arrival && v.arrival.seq !== moment.wordLater && v.welcome && beatKind(v.arrival.id) === 'word') leaveWord(v.arrival.seq);
+    if (v.arrival && v.arrival.seq !== moment.wordLater && v.welcome && v.arrival.kind === 'place' && beatKind(v.arrival.id) === 'word') leaveWord(v.arrival.seq);
     if (v.arrival && v.arrival.seq !== moment.wordLater) return 'arrival';
     /* then, once each: the morning after camp, the welcome back, the daybook's new page */
     /* after days away the morning is folded into the welcome back: one screen before Today (deep review W F8) */
@@ -116,7 +116,7 @@
        word to cut) does what its own arrow does, never nothing (N clumsy 5) */
     if (to === 'back' && !trail.length) {
       const v = game.whole;
-      if (screen === 'arrival' && v.arrival && !(typeof arg === 'string' && arg.startsWith('again:'))) { if (beatKind(v.arrival.id) === 'word' && moment.cutDone !== v.arrival.seq) leaveWord(v.arrival.seq); else game.do({ do: 'seen', what: 'arrival', ref: v.arrival.seq }); }
+      if (screen === 'arrival' && v.arrival && !(typeof arg === 'string' && arg.startsWith('again:'))) { if (v.arrival.kind === 'place' && beatKind(v.arrival.id) === 'word' && moment.cutDone !== v.arrival.seq) leaveWord(v.arrival.seq); else game.do({ do: 'seen', what: 'arrival', ref: v.arrival.seq }); }
       else if (screen === 'morning' && v.morning) game.do({ do: 'seen', what: 'morning', ref: v.morning.seq });
       else if (screen === 'welcome' && v.welcome) { if (v.morning) game.do({ do: 'seen', what: 'morning', ref: v.morning.seq }); game.do({ do: 'seen', what: 'welcome', ref: v.welcome.seq }); }
       else if (screen === 'daybook' && v.close) game.do({ do: 'closeRead', week: v.close.week });

@@ -215,6 +215,8 @@ export interface CampView {
   req: string[];
   /** Stops being offered once this has played. */
   until?: string;
+  /** The route place this view is at, or just past (D-160): used only when Dan camps after reaching it. */
+  near?: string;
   name: string;
   line: string;
   /** The one thing to look at: a find, or a line re-surfaced. */

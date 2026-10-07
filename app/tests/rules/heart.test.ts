@@ -116,18 +116,16 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     /* the next day starts there: nothing moved */
     expect(p.view().here.id).toBe(p.view().arrival!.id);
   });
-  it('asleep well past a place: a camp at a view of the stretch, with one thing to look at (D-160)', () => {
+  it('asleep again at the same place: a view of that place if it has one, else the place; never anywhere else (D-160)', () => {
     const p = player().do({ do: 'open' }).do({ do: 'capacity', capacity: 'low' });
     p.did('gym').did('tank');
     for (const a of p.facts.filter(f => f.type === 'arrived')) p.do({ do: 'seen', what: 'arrival', ref: a.seq });
-    /* 75 + 75 minutes: past the place by more than half the way to the next */
-    p.do({ do: 'startRun', job: 'course', minutes: 90, count: 1 }).wait(91);
-    for (const a of p.facts.filter(f => f.type === 'arrived')) p.do({ do: 'seen', what: 'arrival', ref: a.seq });
-    const here = p.view().here.id;
+    const here = p.view().here.id!;
     p.do({ do: 'goodnight' });
-    expect(p.view().arrival).toMatchObject({ kind: 'camp' });
-    expect(p.view().arrival!.campAt).toBeFalsy();
-    expect(p.view().arrival!.look).toBeTruthy();
+    const a = p.view().arrival!;
+    expect(a.kind).toBe('camp');
+    const view = C.story.camps.find(c => c.id === a.id);
+    if (view) expect(view.near).toBe(here); else expect(a.id).toBe(here);
     expect(p.view().here.id).toBe(here);
   });
   it('Done with no delve is recorded as afterwards; a delve to its enough counts as from the app (D-117)', () => {

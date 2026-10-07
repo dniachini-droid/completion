@@ -230,12 +230,13 @@ export const copy = {
   /* a day that ended short of a place (as the Map says, "Turned back here"); a turn-off on the way up is "On the way back" (D-154) */
   'arrive.camp': 'Tonight’s camp', 'arrive.turnOff': 'Back up',
   /* (its name is the title above: a stop's name may start with "By…", so it is never put inside a sentence) */
-  'arrive.stopAgain': 'You have camped here once before.',
+  'arrive.stopAgain': 'You have camped here before.',
   'arrive.newArea': 'A new area', 'arrive.backIn': 'Back again', 'arrive.evening': 'Tonight, at camp', 'arrive.lastNight': 'Last night, at camp', 'arrive.oneEvening': 'One evening, at camp',
   'arrive.byTheLamp': 'By the lamp', 'arrive.toward': 'Arrive',
   'arrive.keyOpens': 'You used a Key you were keeping.',
   /* a place at the top in a save that had already gone down (D-160): the trip up, and why, said first */
-  'arrive.errand': 'Before you go on, you climb back up to {area}, for something there you didn’t stop for on your way down. Then you go back down to where you were.',
+  'arrive.errand': 'Before you go on, you climb back up to {area}: there is something there you didn’t stop for on your way down.',
+  'arrive.errandBack': 'Then you go back down to where you were.',
   'return.errand': 'First, a climb back up to {area}, for something you didn’t stop for on your way down; then back down to where you were.',
   'arrive.campHere': 'You camp here tonight, where you stopped.',
   'arrive.goodnight': 'Goodnight',
@@ -272,7 +273,7 @@ export const copy = {
   /* the week and the gaps (slice 4) */
   'today.tonight': 'Tonight',
   'today.bedtime': 'Bed by',
-  'today.tonight.say': 'Press Go to sleep as you get into bed, then put the phone down. In bed by {bedtime}, and tomorrow begins a little further in, with something waiting for you.',
+  'today.tonight.say': 'Press Go to sleep as you get into bed, then put the phone down. In bed by {bedtime}, and tomorrow you set off from where you camp with a head start and something waiting for you.',
   'nav.week': 'Week', 'nav.daybook': 'Daybook', 'nav.back': 'Back',
   'row.at': 'at {time}',
   /* the editor's steppers and groups, each named for what it changes (deep review A#46) */
@@ -290,8 +291,6 @@ export const copy = {
   'oops.say': 'Something went wrong on this screen. Your save is safe.',
   'today.running.say': 'Your delve is still going. The timer keeps time whether you watch it or not.',
   'today.running.go': 'Back to the delve',
-  'today.clear': 'Nothing more is on today’s list.',
-  'today.clear.say': 'Add a job, or go to sleep where you are. The road will keep.',
   /* the day's finish line is its first 3 hours; the rest waits below (D-131) */
   'today.ifTime': 'If there’s time',
   /* the one job menu (D-131, step 3) */
@@ -320,9 +319,9 @@ export const copy = {
   'camp.change': 'Change',
   'camp.earlier': 'Earlier',
   'camp.later': 'Later',
-  'camp.sleep.kept': 'You are in bed on time. Tomorrow begins a little further in, with something waiting for you. Put the phone down now.',
+  'camp.sleep.kept': 'You are in bed on time. Tomorrow you set off from here with a head start, and something waiting for you. Put the phone down now.',
   'camp.sleep.late': 'Sleep well. Nothing is lost.',
-  'morning.headStart': 'You went to sleep on time, so the day begins a little further in.',
+  'morning.headStart': 'You went to sleep on time, so you set off with a head start.',
   'camp.goodnight': 'Go to sleep',
   'camp.night': 'Goodnight.',
 

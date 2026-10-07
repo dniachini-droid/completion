@@ -10,17 +10,21 @@ import type { Fact } from '../../src/core/types';
 import { content as C } from '../../src/content/world';
 import { SAVE_VERSION } from '../../src/core/save';
 import { sim } from '../rules/sim';
+import * as S from '../../src/core/story';
 
 /** What a player saw between two arrivals (their jobs' returns: the story's steps, tablets, passage lines, finds; the week's
     page): its words, in order, for the reviewer. Written outside the repository (story text, D-015). */
 function between(facts: Fact[], from: number, to: number): string[] {
-  const s = C.story, out: string[] = [];
+  const s = C.story, out: string[] = [], asked = new Set<string>();
   for (const f of facts.slice(from, to)) {
     if (f.type === 'beatPlayed' && f.job !== undefined) {
       if (f.id === 'passage') { const p = s.passages.find(x => x.id === f.passage); if (p) out.push(`(a job's return) ${p.line}`); continue; }
       const b = s.beats.find(x => x.id === f.id), x = b?.seal ? s.seals.find(y => y.id === b.seal) : s.seals.find(y => y.id === f.id);
-      const line = b?.line ?? x?.line; if (line) out.push(`(a job's return) ${line}`);
-      for (const m of [...(b?.carries?.guess ?? []), ...(x?.carries?.guess ?? [])]) out.push(`(you are asked to guess a symbol: you guess "${s.marks.find(k => k.id === m)?.candidates?.[0] ?? '?'}")`);
+      /* a moment at the top after Dan has gone down (an old save's): the screen says first that he climbs back up (D-160) */
+      const st0 = S.storyState(facts.slice(0, facts.indexOf(f)), s), where = b?.stretch ?? x?.stretch;
+      const up = where && !b?.portable && !x?.portable && S.isErrand(s, st0, { stretch: where }) ? `First, a climb back up to ${S.areaName(s, where)}, for something you didn't stop for on your way down; then back down to where you were. ` : '';
+      const line = b?.line ?? x?.line; if (line) out.push(`(a job's return) ${up}${line}`);
+      for (const m of [...new Set([...(b?.carries?.guess ?? []), ...(x?.carries?.guess ?? [])])].filter(m => !asked.has(m) && asked.add(m))) out.push(`(you are asked to guess a symbol: you guess "${s.marks.find(k => k.id === m)?.candidates?.[0] ?? '?'}")`);
     }
     if (f.type === 'sealOpened' && f.how !== 'road') { const x = s.seals.find(y => y.id === f.seal); const line = x?.beat ? s.beats.find(b => b.id === x.beat)?.line : x?.line; if (line) out.push(`(you used a Key) ${line}`); }
     /* (a find at a day's end is shown on its own screen, the move itself) */
@@ -75,12 +79,15 @@ it.skipIf(!env.JOURNEY)('the journey: a fresh save, and old-route saves carried 
     lives.push({ name: `old-${before[before.length - 1].seq}`, facts: d.facts, cuts: cuts(d.facts, before[before.length - 1].seq).slice(0, 10) });
   }
   /* saves from the last two builds (D-154, D-159), carried on from where they stopped */
-  for (const set of ['route-d154', 'route-d159'])
-    for (const name of set === 'route-d154' ? ['normal-kept', 'normal-nobed'] : ['normal-kept', 'normal-nobed', 'high-kept', 'low-nobed']) {
-      const before = JSON.parse(readFileSync(new URL(`../saves/${set}/${name}.json`, import.meta.url), 'utf8')).facts as Fact[];
+  /* (each cut at the start of a story week, so there is a journey left to carry on into) */
+  for (const [set, name, wk] of [['route-d154', 'normal-kept', 6], ['route-d154', 'normal-nobed', 9], ['route-d159', 'normal-kept', 5],
+    ['route-d159', 'normal-nobed', 8], ['route-d159', 'high-kept', 4], ['route-d159', 'low-nobed', 11]] as const) {
+      const all = JSON.parse(readFileSync(new URL(`../saves/${set}/${name}.json`, import.meta.url), 'utf8')).facts as Fact[];
+      const cut = all.findIndex(f => f.type === 'storyWeekBegan' && f.w === wk);
+      const before = cut > 0 ? all.slice(0, cut) : all;
       const d = sim(undefined, undefined, 'kept', before);
       for (let i = 0; i < 4; i++) d.week('normal');
-      lives.push({ name: `${set.slice(6)}-${name}`, facts: d.facts, cuts: cuts(d.facts, before[before.length - 1].seq).slice(0, 10) });
+      lives.push({ name: `${set.slice(6)}-${name}-w${wk}`, facts: d.facts, cuts: cuts(d.facts, before[before.length - 1].seq).slice(0, 10) });
     }
   /* the words seen between each arrival and the one before it */
   const out = lives.map(l => ({ ...l, between: l.cuts.map((c, i) => between(l.facts, i ? l.cuts[i - 1] : 0, c)) }));

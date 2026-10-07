@@ -110,13 +110,6 @@ describe('the route is a journey: a descent with a home at the top (D-154)', () 
       expect(at('pl-w14-mule-stone'), name).toBeLessThan(at('pl-w13-lower-gallery'));
     }
   }, 300_000);
-  it('a find a passed-by view at day\'s end carries still reaches Dan another way (cv-03, cv-21)', () => {
-    for (const [name, facts] of Object.entries(lives)) {
-      const given = new Set(facts.filter((f): f is FactOf<'findGiven'> => f.type === 'findGiven').map(f => f.id));
-      /* (below the top: the top's are texture that can pass unseen once Dan has gone down, D-160) */
-      for (const k of s.camps) if ('find' in k.look && !S.isTop(s, k.stretch)) expect(given.has(k.look.find), `${name}: ${k.id}'s ${k.look.find}`).toBe(true);
-    }
-  });
   it('fails on the old route: the old order changed area 48 times (D-153)', () => {
     /* the old order's areas, as played (ROUTE_REDESIGN §2.1): the measure this test holds the route to */
     const OLD = 'hall hall salt box hall salt salt box hall box hall stair salt stair hall salt salt salt box hall hall stair stair salt stair sq sq sq sq box stair sq hall water water salt water blast reading reading salt reading blast sq blast blast sq blast blast blast reading water blast blast blast salt side side side side sq reading sq blast sq lower lower salt'.split(' ');

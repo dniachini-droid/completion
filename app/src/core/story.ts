@@ -242,24 +242,15 @@ export const nextEvening = (_s: Story, _st: StoryState): Beat | null => null;
 export const eveningMoment = (s: Story, id: string) => { const b = beatOf(s, id) ?? lineRow(s, id); return !!b && isHome(s, b.stretch); };
 const lineRow = (s: Story, id: string) => { const x = sealOf(s, id); return x && !x.beat && !x.arrival ? { id: x.id, stretch: x.stretch } : undefined; };
 
-/** Where Dan camps when he goes to sleep (D-160): at the place he reached, if he reached it less than half a place's
-    walk ago; otherwise at a view of the stretch he is walking (its own first, then its area's), never one at the top
-    once he has gone down. A view he hasn't seen comes first (one that stops being offered first of all, so it isn't
-    lost), then the one seen longest ago: never the same view night after night. */
-export function campHere(s: Story, st: StoryState, sinceLast: number): { at: 'place'; id: string } | { at: 'view'; id: string; find?: string; line?: string } {
-  if (st.here && sinceLast < PLACE_GAP / 2) return { at: 'place', id: st.here };
-  const open = s.camps.filter(c => st.visited.has(c.stretch) && c.w <= st.week && allMet(st, c.req) && !(c.until && met(st, c.until))
-    && !(st.departed && isTop(s, c.stretch)));
-  const mine = open.filter(c => c.stretch === st.stretch);
-  const area = open.filter(c => c.stretch !== st.stretch && areaOf(s, c.stretch) === areaOf(s, st.stretch));
-  const pool = mine.length ? mine : area;
-  const unused = (c: { id: string }) => !st.campsShown.includes(c.id);
-  const last = (id: string) => st.campsShown.lastIndexOf(id);
-  const pick = pool.find(c => c.until && unused(c)) ?? pool.find(unused) ?? [...pool].sort((a, b) => last(a.id) - last(b.id))[0];
-  /* nowhere to look (a stretch with no view yet): at the last place reached, which is where he is */
-  if (!pick) return st.here ? { at: 'place', id: st.here } : { at: 'view', id: s.camps[0].id, ...viewLook(s.camps[0]) };
-  if (!unused(pick)) return { at: 'view', id: pick.id, find: pickFind(s, st, 'camp', pick.stretch)?.id };
-  return { at: 'view', id: pick.id, ...viewLook(pick) };
+/** Where Dan camps when he goes to sleep (D-160): where he is. At a view of the place he last reached (its `near`), one he
+    hasn't camped at yet (one that stops being offered first, so it isn't lost); else at that place itself. Never a view at
+    the top once he has gone down, and never one of another place: the camp is always where Today says he is. */
+export function campHere(s: Story, st: StoryState, _sinceLast = 0): { at: 'place'; id: string } | { at: 'view'; id: string; find?: string; line?: string } {
+  if (!st.here) return { at: 'view', id: s.camps[0].id, ...viewLook(s.camps[0]) };
+  const open = s.camps.filter(c => c.near === st.here && c.w <= st.week && allMet(st, c.req) && !(c.until && met(st, c.until))
+    && !(st.departed && isTop(s, c.stretch)) && !st.campsShown.includes(c.id));
+  const pick = open.find(c => c.until) ?? open[0];
+  return pick ? { at: 'view', id: pick.id, ...viewLook(pick) } : { at: 'place', id: st.here };
 }
 const viewLook = (c: { look: { find: string } | { line: string } }) => 'find' in c.look ? { find: c.look.find } : { line: c.look.line };
 
@@ -393,15 +384,17 @@ export function pickFind(s: Story, st: StoryState, why: string, at0?: StretchId)
     if (why === 'chamber') { const told = top.find(f => f.told); if (told) return told; }
     if (top.length) return top[0];
   }
+  /* only in the area he is in: a find describes what is in front of him, never a thing a flight or a lake away (D-160) */
+  const here = (id: StretchId) => areaOf(s, id) === areaOf(s, st.stretch);
   for (let i = at; i >= 0; i--) {
-    if (away(order[i])) continue;
+    if (away(order[i]) || !here(order[i])) continue;
     const pool = s.finds.filter(f => f.stretch === order[i] && ok(f));
     if (!pool.length) continue;
     if (why === 'chamber') { const told = pool.find(f => f.told); if (told) return told; }
     return pool[0];
   }
   /* never a find from an area Dan has not reached: it would describe a place before he is there */
-  for (const id of order) { if (!st.visited.has(id) || away(id)) continue; const f = s.finds.find(x => x.stretch === id && ok(x)); if (f) return f; }
+  for (const id of order) { if (!st.visited.has(id) || away(id) || !here(id)) continue; const f = s.finds.find(x => x.stretch === id && ok(x)); if (f) return f; }
   return null;
 }
 
