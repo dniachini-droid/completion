@@ -3,6 +3,7 @@ import { act, daySize, presetRun, see, settle, type Command } from '../../src/co
 import type { Fact } from '../../src/core/types';
 import * as W from '../../src/core/week';
 import { content as C } from '../../src/content/world';
+import * as S from '../../src/core/story';
 
 /** A tiny player: a log, and a phone clock on the same day in British Summer Time. */
 function player(start = '2026-09-24T09:00:00+01:00') {
@@ -107,9 +108,10 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     expect(q.view().walked).toBe(60);
     expect(q.view().arrival).toBeNull();
     expect(q.types()).not.toContain('dayCompleted');
-    /* asleep before the first place: no camp yet (he is still at the ladder's foot), and nothing else */
+    /* asleep before the first place: no place, only a camp on the way in if he is past it yet (D-160), and nothing else */
     q.do({ do: 'goodnight' });
-    expect(q.facts.some(f => f.type === 'arrived')).toBe(false);
+    expect(q.facts.some(f => f.type === 'arrived' && f.kind !== 'camp')).toBe(false);
+    expect(q.facts.some(f => f.type === 'arrived' && f.kind === 'camp')).toBe(S.pastMouth(C.story, S.storyState(q.facts, C.story)));
     /* asleep soon after a place: he camps at it */
     p.do({ do: 'seen', what: 'arrival', ref: p.view().arrival!.seq }).do({ do: 'goodnight' });
     /* at the place, or at a view of it (D-160) */

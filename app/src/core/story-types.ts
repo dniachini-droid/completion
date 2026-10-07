@@ -162,6 +162,12 @@ export interface Beat {
   portable?: boolean;
   /** Off the route since D-160 (merged, cut, or made a step): kept only so an old save's facts still read (CAMP_REHOME §7). */
   retired?: boolean;
+  /** What this beat took over from earlier builds' beats and rows (D-160): a save that played (or opened) every one of
+      them already has it, so it counts as played and is never played again. */
+  absorbs?: string[];
+  /** A place at the top that an old save, already gone down, still has to see (D-160): why Dan climbs back up for it,
+      said on screen before it (a full sentence). */
+  back?: string;
 }
 
 /** A named place with no fragment, added by the story job (a `pl-` id). Plays as an arrival. */

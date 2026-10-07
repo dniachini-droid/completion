@@ -6,7 +6,7 @@
   import { game, content } from './game.svelte';
   import { returnOf } from '../core/game';
   import { beatOf, sealOf, areaName, areaOf } from '../core/story';
-  import { t, partWords } from '../content/copy/en';
+  import { t, the, partWords } from '../content/copy/en';
   import Guess from './Guess.svelte';
   import Glyph from './Glyph.svelte';
   import Settled from './Settled.svelte';
@@ -73,7 +73,7 @@
          carved label's short line (Dan: "very very bad styling", D-131) -->
     {#if keyLine}<p class="key-note on-scene">{keyLine}</p>{@render offer()}{/if}
     {#each findsFirst as f (f!.id)}{@render findBlock(f)}{/each}
-    {#if r.up}<p class="say on-scene">{t('return.errand', { area: r.up })}</p>{:else if elsewhere}<p class="elsewhere">{elsewhere}</p>{/if}
+    {#if r.up}<p class="say on-scene">{r.upWhy ?? t('return.errand', { area: the(r.up) })}</p>{:else if elsewhere}<p class="elsewhere">{elsewhere}</p>{/if}
     <p class="say story on-scene"><Prose text={r.line} /></p>
     {#each findsAfter as f (f!.id)}{@render findBlock(f)}{/each}
   </Words>

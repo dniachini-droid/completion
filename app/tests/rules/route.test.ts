@@ -19,12 +19,14 @@ const arrivals = (facts: Fact[]) => facts.filter((f): f is FactOf<'arrived'> => 
 
 /** Where Dan is after each arrival (the area), and how each arrival was come to. */
 function journey(facts: Fact[], from = 0) {
-  const out: { seq: number; id: string; area: string; face: string; wayIn: string | null; here: string }[] = [];
+  const out: { seq: number; id: string; area: string; face: string; wayIn: string | null; here: string; was: string }[] = [];
   for (const f of arrivals(facts)) {
     if (f.seq <= from || f.kind === 'camp') continue;
     const upTo = facts.filter(g => g.seq <= f.seq), a = arrivalAt(upTo, C, f.seq)!;
     const st = S.storyState(upTo, s);
-    out.push({ seq: f.seq, id: f.id, area: f.kind === 'evening' ? 'evening' : S.areaOf(s, S.beatOf(s, f.id)!.stretch), face: a.face, wayIn: a.wayIn ?? (a.errand ? 'errand' : null), here: S.areaOf(s, st.stretch) });
+    out.push({ seq: f.seq, id: f.id, area: f.kind === 'evening' ? 'evening' : S.areaOf(s, S.beatOf(s, f.id)!.stretch), face: a.face, wayIn: a.wayIn ?? (a.errand ? 'errand' : null), here: S.areaOf(s, st.stretch),
+      /* where he was just before it (a job's moment in another room takes him there, D-160) */
+      was: S.areaOf(s, S.storyState(facts.filter(g => g.seq < f.seq), s).stretch) });
   }
   return out;
 }
@@ -79,7 +81,7 @@ describe('the route is a journey: a descent with a home at the top (D-154)', () 
       let last = 'st-mouth';
       for (const x of j) {
         if (x.face === 'evening') { expect(x.here, `${name} ${x.id}: an evening never moves him`).toBe(last); continue; }
-        if (x.area !== last) {
+        if (x.area !== x.was) {
           expect(['enter', 'back'], `${name} ${x.id}`).toContain(x.face);
           /* how he got there: the area's way-in line, or the place's own words (a turn-off on the way up says so itself) */
           if (x.face === 'back') expect(!!x.wayIn || !!S.beatOf(s, x.id)?.said, `${name} ${x.id}`).toBe(true);
@@ -203,7 +205,7 @@ describe('Dan\'s save carries on from wherever the old route left it (D-154)', (
         for (const x of journey(after, lastSeq)) {
           expect(playedBefore.has(x.id), `${at}: ${x.id} again`).toBe(false);
           if (x.face === 'evening') { expect(x.here, `${at}: ${x.id}`).toBe(last); continue; }
-          if (x.area !== last) {
+          if (x.area !== x.was) {
             expect(['enter', 'back'], `${at}: ${x.id}`).toContain(x.face);
             /* how he got there, as on a fresh save; a trip back up to the top (D-160) says so and leaves him where he was */
             if (x.face === 'back') expect(!!x.wayIn || !!S.beatOf(s, x.id)?.said, `${at}: ${x.id}`).toBe(true);

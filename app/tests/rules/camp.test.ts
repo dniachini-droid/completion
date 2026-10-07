@@ -52,13 +52,13 @@ describe('camp where you are (D-160)', () => {
       }
     }
   });
-  it('every goodnight after the first place camps, where Dan is: the place he reached or a view of his area, never the top once he has gone down', () => {
+  it('every goodnight once past the way in camps, where Dan is: the place he reached or a view of his area, never the top once he has gone down', () => {
     for (const [name, facts] of Object.entries(lives)) {
       const gone = departedAt(facts);
       for (const g of facts.filter(f => f.type === 'goodnight')) {
         const st = S.storyState(facts.filter(f => f.seq <= g.seq), s);
         const camp = facts.find(f => f.seq === g.seq + 1) as FactOf<'arrived'> | undefined;
-        if (!st.here) { expect(camp?.type === 'arrived' && camp.kind === 'camp', name).toBe(false); continue; }
+        if (!st.here && !S.pastMouth(s, st)) { expect(camp?.type === 'arrived' && camp.kind === 'camp', name).toBe(false); continue; }
         expect(camp?.type === 'arrived' && camp.kind === 'camp', `${name} @${g.seq}`).toBe(true);
         const where = stretchOf(camp!.id)!;
         expect(S.areaOf(s, where), `${name} ${camp!.id}`).toBe(S.areaOf(s, st.stretch));

@@ -126,7 +126,7 @@ export const copy = {
   'step.keyKeep': 'You kept up {job} and earned a Key. You keep it, for here or anywhere on the Map.',
   'step.keyAlready.week': 'You already earned this week’s Key for {job}.',
   'step.keyAlready.fortnight': 'You already earned the Key for {job} these last two weeks.',
-  'step.keyAlready.cap': 'This week’s five Keys are already earned.',
+  'step.keyAlready.cap': 'No Key this time: a week brings five at most, and the next comes on Monday.',
   'step.keyAlready.month': 'You already earned this month’s Key for {job}.',
   'step.keyAlready.year': 'You already earned this year’s Key for {job}.',
   'step.keyAlready.days': 'You already earned the Key for {job} since it last came round.',
@@ -235,9 +235,9 @@ export const copy = {
   'arrive.byTheLamp': 'By the lamp', 'arrive.toward': 'Arrive',
   'arrive.keyOpens': 'You used a Key you were keeping.',
   /* a place at the top in a save that had already gone down (D-160): the trip up, and why, said first */
-  'arrive.errand': 'Before you go on, you climb back up to {area}: there is something there you didn’t stop for on your way down.',
+  'arrive.errand': 'Before you go on, you climb back up to {area}.',
   'arrive.errandBack': 'Then you go back down to where you were.',
-  'return.errand': 'First, a climb back up to {area}, for something you didn’t stop for on your way down; then back down to where you were.',
+  'return.errand': 'First, a climb back up to {area}; then back down to where you were.',
   'arrive.campHere': 'You camp here tonight, where you stopped.',
   'arrive.goodnight': 'Goodnight',
   'arrive.onward': 'Back to today',
@@ -625,3 +625,5 @@ export function relDay(day: string, today: string): string {
   const n = new Date(`${today}T00:00:00Z`); n.setUTCDate(n.getUTCDate() + 1);
   return day === n.toISOString().slice(0, 10) ? copy['rel.tomorrow'] : dayName(day);
 }
+/** An area's name inside a sentence: its leading "The" lowercased. */
+export const the = (area: string) => area.replace(/^The /, 'the ');

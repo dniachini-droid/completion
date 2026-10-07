@@ -455,7 +455,7 @@ const workedDay = (facts: Fact[], day: string) => ofType(onDay(facts, day), 'ste
     was, and the next day starts there. */
 function camp(w: W, c: Content, at: Moment, day: string) {
   const st = S.storyState(w.all, c.story);
-  if (!st.here) return;
+  if (!st.here && !S.pastMouth(c.story, st)) return;
   const since = walked(w.all) - S.lastPlaceAt(st);
   const where = S.campHere(c.story, st, since);
   w.put({ type: 'arrived', kind: 'camp', id: where.id, ...(where.at === 'place' ? { where: 'place' as const } : {}) }, at, day);
@@ -498,9 +498,13 @@ function gifts(w: W, c: Content, at: Moment, day: string) {
   /* every 150 minutes reaches a place, as many a day as Dan walks (Dan, D-123: no one-a-day limit); a story week done on
      the way opens the next at once, so its places can be reached too */
   const reach = () => {
-    let n = 0;
+    let n = 0, trip = false;
     for (;;) {
       const st = S.storyState(w.all, c.story);
+      /* a trip back up (an old save's, D-160) sees everything still waiting at the top at once: one climb, not several */
+      const more: Beat | null = trip ? S.nextPlace(c.story, st, push) ?? null : null;
+      trip = !!more && S.isErrand(c.story, st, more);
+      if (trip) { arrive(w, c, more!, 'foot', at, day); n++; continue; }
       if (walked(w.all) < S.nextPlaceAt(st)) return n;
       const next = S.nextPlace(c.story, st, push);
       if (!next) {
@@ -517,6 +521,13 @@ function gifts(w: W, c: Content, at: Moment, day: string) {
       }
       /* the side chamber of the stretch this arrival closes, if a big move passed it on the way (deep review B5) */
       sideChamber(w, c, at, day);
+      /* the steps that come before it in the story, where he is or there, play on the way to it */
+      for (let k = 0; k < 6; k++) {
+        const b = S.stepBefore(c.story, S.storyState(w.all, c.story), next);
+        if (!b) break;
+        w.put({ type: 'beatPlayed', id: b.id }, at, day); show(w, c, b.carries?.records, at, day);
+      }
+      trip = S.isErrand(c.story, st, next);
       arrive(w, c, next, 'foot', at, day); n++;
     }
   };
@@ -1522,7 +1533,9 @@ export function act(facts: Fact[], base: Content, cmd: Command, now: Moment): Fa
         /* from what Dan has been shown: a word reached but not yet cut, a place not yet on its screen, isn't known (D-154) */
         const st = knownState(w, c);
         /* never before what it describes, nor after it has changed (review, 2026-09-25) */
-        const line = c.story.beats.find(b => b.kind === 'camp' && b.w <= st.week && !st.played.has(b.id)
+        /* (nor a week long behind him, an old save's that never kept bedtime: its night was thought somewhere he left long
+           ago, D-160) */
+        const line = c.story.beats.find(b => b.kind === 'camp' && b.w <= st.week && b.w >= st.week - 1 && !st.played.has(b.id)
           && b.req.every(r => S.met(st, r)) && !(b.until && S.met(st, b.until)));
         if (line) w.put({ type: 'beatPlayed', id: line.id });
       }
@@ -1634,6 +1647,12 @@ export interface Arrival {
   /** A place at the top reached after Dan went down (an old save's, D-160): a trip back up, said, that leaves him where
       he was. */
   errand?: boolean;
+  /** Why he climbs back up for it, in the story's words (the beat's `back`); null: the plain line. */
+  errandWhy?: string | null;
+  /** A later place of the same trip up: no climb of its own. */
+  errandMore?: boolean;
+  /** Not the trip's last place: the way back down is said on the last. */
+  errandStays?: boolean;
   /** Tonight's camp is the place he reached (D-160): the screen says he camps there. */
   campAt?: boolean;
   /** An evening's moments at home after its place (her notebook, the tally): each one's line, beat and records. */
@@ -1669,6 +1688,8 @@ export interface Return {
   part?: { el: string; mark: string };
   /** A moment at the top played after Dan went down (an old save's, D-160): the area he climbs back up to for it. */
   up?: string;
+  /** Why, in the story's words (the beat's `back`), said in place of the plain line. */
+  upWhy?: string;
 }
 /** Where Dan stands. */
 /** Where Dan stands: the last place he walked to (D-154), its area's name, and its arrival (to read again). */
@@ -1888,8 +1909,15 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
     const guess = [...new Set([...(b.carries?.guess ?? []), ...carried, ...keyed])].filter(m => !answers.has(S.markOf(c.story, m)?.confirmedBy ?? ''));
     const area = S.areaName(c.story, b.stretch), wayIn = c.story.stretches.find(x => x.id === S.areaOf(c.story, b.stretch))?.wayIn ?? null;
     const errand = face === 'back' && S.isErrand(c.story, S.storyState(all.filter(g => g.seq < f.seq), c.story), b);
+    /* one trip back up sees all that waits at the top (D-160): the climb is said on its first place, the way back down on
+       its last; the places between follow on with no climb of their own */
+    const tripOf = (g: Fact | undefined) => g?.type === 'arrived' && g.kind === 'place' && g.at === f.at && !!S.beatOf(c.story, g.id)
+      && S.isErrand(c.story, S.storyState(all.filter(h => h.seq < g.seq), c.story), S.beatOf(c.story, g.id)!);
+    const prevPlace = all.filter(g => g.seq < f.seq && g.type === 'arrived').pop(), nextPlace = all.find(g => g.seq > f.seq && g.type === 'arrived');
+    const errandMore = errand && tripOf(prevPlace), errandStays = errand && tripOf(nextPlace);
     /* a place whose own line says how Dan came (a turn-off on the way up) needs no way-in line over it */
-    return { seq: f.seq, kind: 'place', face, late: !!f.late, earlier: !!f.late && !!f.night && W.daysBetween(f.night, f.day) > 1, area, wayIn: face === 'back' && !b.said ? wayIn : null, turnOff: face === 'back' && (!!b.turnOff || errand), errand, then,
+    return { seq: f.seq, kind: 'place', face, late: !!f.late, earlier: !!f.late && !!f.night && W.daysBetween(f.night, f.day) > 1, area, wayIn: face === 'back' && !b.said ? wayIn : null, turnOff: face === 'back' && (!!b.turnOff || errand), errand,
+      ...(errand ? { errandWhy: errandMore ? null : b.back ?? null, errandMore, errandStays } : {}), then,
       opened, way, id: b.id, name: b.name ?? '', line: b.line ?? '', taps: b.taps, choice: b.choice,
       records: b.carries?.records ?? [], guess, look: null, stretch: b.stretch, painting: paintingOf(b.id, b.stretch), completedDay, byKey: f.how === 'key' };
   }
@@ -1966,8 +1994,8 @@ function rawReturn(c: Content, facts: Fact[], doneSeq: number): Return {
   if (!beat) return { beat: null, line: '', key: false, guess: [], records: [], finds, keyNote, keyAlready };
   if (beat.id === 'passage') return { beat: null, line: c.story.passages.find(p => p.id === beat.passage)?.line ?? '', key: false, guess: [], records: [], finds, keyNote, keyAlready };
   /* a moment at the top that plays after Dan went down (an old save's, D-160): a trip back up, said first */
-  const up = (x: { stretch: StretchId; portable?: boolean } | undefined) => x && !x.portable
-    && S.isErrand(c.story, S.storyState(facts.filter(f => f.seq < beat.seq), c.story), x) ? { up: S.areaName(c.story, x.stretch) } : {};
+  const up = (x: { stretch: StretchId; portable?: boolean; back?: string } | undefined) => x && !x.portable
+    && S.isErrand(c.story, S.storyState(facts.filter(f => f.seq < beat.seq), c.story), x) ? { up: S.areaName(c.story, x.stretch), ...(x.back ? { upWhy: x.back } : {}) } : {};
   const seal = S.sealOf(c.story, beat.id);
   if (seal) return { ...up(seal), beat: seal.id, line: seal.line ?? '', key: !facts.some(f => f.type === 'sealOpened' && f.seal === seal.id && f.how === 'road'), guess: seal.carries?.guess ?? [], records: seal.carries?.records ?? [], finds, keyNote, keyAlready };
   const b = S.beatOf(c.story, beat.id)!;

@@ -50,7 +50,7 @@ function cuts(facts: Fact[], from = 0) {
 }
 it.skipIf(!env.JOURNEY)('the journey: a fresh save, and old-route saves carried on', () => {
   const dir = env.JOURNEY!;
-  const lives: { name: string; facts: Fact[]; cuts: number[] }[] = [];
+  const lives: { name: string; facts: Fact[]; cuts: number[]; from?: number; past?: string[] }[] = [];
   /* PACE (D-160): short days (about an hour), normal (about three), long (about eight) */
   const pace = (env.PACE ?? 'normal') as 'short' | 'normal' | 'long';
   const fresh = sim(undefined, undefined, 'kept');
@@ -63,6 +63,9 @@ it.skipIf(!env.JOURNEY)('the journey: a fresh save, and old-route saves carried 
   /* OLD=1: the old saves only (their own walk, judged apart) */
   if (env.OLD) lives.length = 0;
   else { writeFileSync(`${dir}/journey.json`, JSON.stringify({ version: SAVE_VERSION, content: C.version, lives: lives.map(l => ({ ...l, between: l.cuts.map((c, i) => between(l.facts, i ? l.cuts[i - 1] : 0, c)) })) })); return; }
+  /* where an old save had been, by name: its own words were an older build's, so only the places are told */
+  const pastOf = (before: Fact[]) => ({ from: before[before.length - 1].seq,
+    past: [...new Set(before.flatMap(f => f.type === 'arrived' && f.kind === 'place' ? [S.beatOf(C.story, f.id)?.name ?? ''] : []))].filter(Boolean) });
   const old = JSON.parse(readFileSync(new URL('../saves/route-old/normal-kept.json', import.meta.url), 'utf8')).facts as Fact[];
   const ends: number[] = [];
   let w = 1, n = 0;
@@ -76,7 +79,7 @@ it.skipIf(!env.JOURNEY)('the journey: a fresh save, and old-route saves carried 
     const d = sim(undefined, undefined, 'kept', before);
     for (let i = 0; i < 4; i++) d.week('normal');
     /* the moves after the stop: the next ten arrivals */
-    lives.push({ name: `old-${before[before.length - 1].seq}`, facts: d.facts, cuts: cuts(d.facts, before[before.length - 1].seq).slice(0, 10) });
+    lives.push({ name: `old-${before[before.length - 1].seq}`, facts: d.facts, cuts: cuts(d.facts, before[before.length - 1].seq).slice(0, 10), ...pastOf(before) });
   }
   /* saves from the last two builds (D-154, D-159), carried on from where they stopped */
   /* (each cut at the start of a story week, so there is a journey left to carry on into) */
@@ -87,9 +90,10 @@ it.skipIf(!env.JOURNEY)('the journey: a fresh save, and old-route saves carried 
       const before = cut > 0 ? all.slice(0, cut) : all;
       const d = sim(undefined, undefined, 'kept', before);
       for (let i = 0; i < 4; i++) d.week('normal');
-      lives.push({ name: `${set.slice(6)}-${name}-w${wk}`, facts: d.facts, cuts: cuts(d.facts, before[before.length - 1].seq).slice(0, 10) });
+      lives.push({ name: `${set.slice(6)}-${name}-w${wk}`, facts: d.facts, cuts: cuts(d.facts, before[before.length - 1].seq).slice(0, 10), ...pastOf(before) });
     }
   /* the words seen between each arrival and the one before it */
-  const out = lives.map(l => ({ ...l, between: l.cuts.map((c, i) => between(l.facts, i ? l.cuts[i - 1] : 0, c)) }));
+  /* (an old save's own past was played under an older build's words: only what played after it is shown) */
+  const out = lives.map(l => ({ ...l, between: l.cuts.map((c, i) => between(l.facts, i ? l.cuts[i - 1] : (l.from ?? 0), c)) }));
   writeFileSync(`${dir}/journey.json`, JSON.stringify({ version: SAVE_VERSION, content: C.version, lives: out }));
 }, 3_600_000);

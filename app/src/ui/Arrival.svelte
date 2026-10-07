@@ -4,7 +4,7 @@
      from the floor up; "That's the day. Enough." The day's success is locked in; rest is the main offer, and a quiet
      "Keep going" is always there (D-038, D-039). A tap anywhere settles the motion at once. */
   import { game, content } from './game.svelte';
-  import { t } from '../content/copy/en';
+  import { t, the } from '../content/copy/en';
   import Scene from './Scene.svelte';
   import Guess from './Guess.svelte';
   import Settled from './Settled.svelte';
@@ -57,7 +57,8 @@
   const said = $derived(a?.campAt ? `${t('arrive.campHere')}${a.line ? ` ${a.line}` : ''}` : a?.line ?? '');
   const sentences = $derived(!said ? [] : said.split(/(?<=[.!?])\s+/));
   /* a trip back up to the top, in a save from before D-160: why, said first */
-  const leadWay = $derived(!a || again ? '' : a.errand ? t('arrive.errand', { area: a.area }) : a.wayIn ?? '');
+  /* (one trip sees all that waits at the top: the climb is said on its first place, the way down on its last) */
+  const leadWay = $derived(!a || again ? '' : a.errand ? (a.errandMore ? '' : a.errandWhy ?? t('arrive.errand', { area: the(a.area) })) : a.wayIn ?? '');
   const leadFirst = $derived(a && !a.stopAgain ? sentences[0] ?? '' : '');
   const restLine = $derived(!a ? '' : a.stopAgain ? a.line : sentences.slice(1).join(' '));
   const over = $derived(!a ? '' : a.kind === 'evening' ? '' : a.face === 'enter' && !again ? '' : a.area);
@@ -116,7 +117,7 @@
         <Words {look} length={restLine.length + (a.look?.length ?? 0) + a.then.reduce((n, w) => n + w.line.length, 0)}>
           {#if restLine}<span class="soft on-scene"><Prose text={restLine} /></span>{/if}
           {#if a.stopAgain}<span class="soft on-scene">{t('arrive.stopAgain')}</span>{/if}
-          {#if a.errand && !again}<span class="soft on-scene">{t('arrive.errandBack')}</span>{/if}
+          {#if a.errand && !a.errandStays && !again}<span class="soft on-scene">{t('arrive.errandBack')}</span>{/if}
           {#if a.look}<span class="soft on-scene look"><Prose text={a.look} /></span>{/if}
           {#each a.way as w (w.beat)}<p class="soft on-scene look"><Prose text={w.line} /></p>{/each}
           {#each a.opened as line}<p class="soft on-scene look">{t('arrive.keyOpens')} <Prose text={line} /></p>{/each}
@@ -128,9 +129,7 @@
           {#each a.way as w (w.beat)}<Settled beat={fresh ? w.beat : null} />{/each}
           {#if a.kind === 'place'}<Settled beat={fresh ? a.id : null} />{/if}
           {#each a.then as w (w.beat)}<Settled beat={fresh ? w.beat : null} />{/each}
-          {#each a.way as w (w.beat)}<Reread beat={fresh ? w.beat : null} {go} />{/each}
-          {#if a.kind === 'place'}<Reread beat={fresh ? a.id : null} {go} />{/if}
-          {#each a.then as w (w.beat)}<Reread beat={fresh ? w.beat : null} {go} />{/each}
+          <Reread beats={fresh ? [...a.way.map(w => w.beat), a.kind === 'place' ? a.id : null, ...a.then.map(w => w.beat)] : []} {go} />
           {#each a.guess as mark (mark)}<Guess {mark} at={a.id} />{/each}
           {#if later.length}<p class="soft later">{t('arrive.marksLater')}</p>{/if}
           {#if a.records.length}

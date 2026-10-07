@@ -46,8 +46,12 @@ describe('S#2b: a camp line is not tied to the story week Dan is in', () => {
     f = f.concat(act(f, C, { do: 'goodnight' }, '2026-10-05T22:45:00+01:00'));
     const night = f.find(x => x.type === 'goodnight')!;
     expect(night).toMatchObject({ kept: true });
-    /* the earliest one not played yet: week 1's */
-    expect(f.filter(x => x.seq > night.seq && x.type === 'beatPlayed').map(x => (x as { id: string }).id)).toEqual(['b-w1.camp']);
+    /* the earliest one not played yet that is not long behind him (a week walked through keeps its line; one from many
+       weeks back, thought somewhere he left long ago, does not, D-160) */
+    const wk = S.storyState(f, s).week;
+    const want = s.beats.find(b => b.kind === 'camp' && b.w >= wk - 1 && b.w <= wk && !S.storyState(f.filter(x => x.seq < night.seq), s).played.has(b.id))!.id;
+    expect(f.filter(x => x.seq > night.seq && x.type === 'beatPlayed').map(x => (x as { id: string }).id)).toEqual([want]);
+    expect(S.beatOf(s, want)!.w).toBeLessThan(wk + 1);
   }, 60_000);
 });
 
@@ -136,8 +140,10 @@ describe('S#12: a camp view that will stop being offered comes first', () => {
     const st = { ...S.storyState([], t), visited: new Set(['st-hall', 'st-salt'] as const), stretch: 'st-hall' as const, here: 'p' };
     expect(S.campHere(t, st).id).toBe('b');
     expect(S.campHere(t, { ...st, campsShown: ['b'] }).id).toBe('a');
-    /* every view of his place used: he camps at the place itself, never at another place's view */
-    expect(S.campHere(t, { ...st, campsShown: ['b', 'a'] })).toEqual({ at: 'place', id: 'p' });
+    /* every view of his place used: the one seen longest ago again (round 2: never a bare camp), never another place's */
+    expect(S.campHere(t, { ...st, campsShown: ['b', 'a'] })).toMatchObject({ at: 'view', id: 'b' });
+    /* no view of his place at all: he camps at the place itself */
+    expect(S.campHere(t, { ...st, here: 'r' })).toEqual({ at: 'place', id: 'r' });
   });
   it('one whose end has come is never offered', () => {
     const t = story([at(view('a', 'st-hall')), at(view('b', 'st-hall', 'x-done'))]);

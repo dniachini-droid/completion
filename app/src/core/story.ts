@@ -56,15 +56,45 @@ export interface StoryState {
   offered: Set<string>;
 }
 
+/** Whether Dan is past the way in yet: a step at the first stretch played (before it, there is nowhere to camp). */
+export const pastMouth = (s: Story, st: StoryState) => s.beats.some(b => b.kind === 'step' && b.stretch === s.stretches[0].id && st.played.has(b.id));
+/** A step of a place's week that comes before it in the story, where Dan is or at the place itself: it plays on the way,
+    so a place never comes before the walk to it (the way in before the first place; D-160, the short-day review). */
+export function stepBefore(s: Story, st: StoryState, p: Beat): Beat | undefined {
+  return s.beats.find(b => b.kind === 'step' && !b.retired && !st.played.has(b.id) && b.w === p.w && (b.o ?? 0) < (p.o ?? 0)
+    && (b.stretch === p.stretch || b.stretch === st.stretch) && !(st.departed && isTop(s, b.stretch)) && b.req.every(r => met(st, r)));
+}
+/** The kinds of beat that are places Dan arrives at. */
+const PLACE_KINDS = new Set(['arrival', 'arrivalKey', 'word']);
 export function storyState(facts: Fact[], s: Story): StoryState {
   const played = new Set<string>(), opened = new Set<string>(), given = new Set<string>(), guessed = new Map<string, string>();
   const records: string[] = [], passagesShown: string[] = [], campsShown: string[] = [];
   let week = 1, weekBegan: string | null = null, onFoot = 0, stretch: StretchId = s.stretches[0].id, held = 0;
   let here: string | null = null, departed = false;
   const visited = new Set<StretchId>([stretch]);
+  /* the last place reached on each stretch */
+  const lastOn = new Map<StretchId, string>();
+  /* the row the road opened last (its moment, a step on the road, moves Dan as a step does; a Key's never does) */
+  let road: string | null = null;
   for (const f of facts) {
     switch (f.type) {
-      case 'beatPlayed': played.add(f.id); if (f.passage) passagesShown.push(f.passage); break;
+      case 'beatPlayed': {
+        played.add(f.id); if (f.passage) passagesShown.push(f.passage);
+        /* a place now that an earlier build played as a step on the way (an old save's, D-160): Dan has been there, so
+           he is there, as if he had arrived (never at the top once he has gone down) */
+        const b = beatOf(s, f.id);
+        /* a step told in a room Dan has been to (a job's moment in one room while he was in another): he went
+           there for it, so he is there, and camps there (D-160, the short-day review); never at the top once he has gone
+           down, nor a page he carries */
+        if (b && (b.kind === 'step' || (b.kind === 'stepKey' && b.seal === road)) && !b.portable && b.stretch !== stretch && lastOn.has(b.stretch) && !(departed && isTop(s, b.stretch))) {
+          stretch = b.stretch; here = lastOn.get(b.stretch)!;
+        }
+        if (b && !b.retired && PLACE_KINDS.has(b.kind) && !(departed && isTop(s, b.stretch)) && s.route.some(r => r.places.some(p => p.id === b.id))) {
+          visited.add(b.stretch); stretch = b.stretch; here = b.id; lastOn.set(b.stretch, b.id);
+          if (!isHome(s, b.stretch) && b.stretch !== 'st-mouth') departed = true;
+        }
+        break;
+      }
       case 'arrived':
         if (f.kind === 'place') {
           played.add(f.id);
@@ -76,12 +106,12 @@ export function storyState(facts: Fact[], s: Story): StoryState {
             /* where Dan is: the last place walked to; a place at home once the way down is open is an evening (an old save's
                too, whatever it was called then), so it never moves him (D-154) */
             /* (nor a place a Key opened in another area: a trip there he chose, which leaves him where he was, D-160) */
-            if (!(f.how === 'evening' || (departed && isTop(s, b.stretch)) || (f.how === 'key' && here !== null && areaOf(s, b.stretch) !== areaOf(s, stretch)))) { stretch = b.stretch; here = b.id; }
+            if (!(f.how === 'evening' || (departed && isTop(s, b.stretch)) || (f.how === 'key' && here !== null && areaOf(s, b.stretch) !== areaOf(s, stretch)))) { stretch = b.stretch; here = b.id; lastOn.set(b.stretch, b.id); }
             if (!isHome(s, b.stretch) && b.stretch !== 'st-mouth') departed = true;
           }
         } else if (f.kind === 'camp') campsShown.push(f.id);
         break;
-      case 'sealOpened': opened.add(f.seal); break;
+      case 'sealOpened': opened.add(f.seal); road = f.how === 'road' ? f.seal : null; break;
       case 'markGuessed': guessed.set(f.mark, f.guess); break;
       case 'findGiven': given.add(f.id); break;
       case 'recordShown': if (!records.includes(f.id)) records.push(f.id); break;
@@ -90,6 +120,8 @@ export function storyState(facts: Fact[], s: Story): StoryState {
       case 'storyWeekBegan': week = f.w; weekBegan = calendarWeek(f.day); break;
     }
   }
+  /* what an earlier build's beats already gave an old save: held, as played (D-160) */
+  for (const b of s.beats) if (b.absorbs?.length && !played.has(b.id) && b.absorbs.every(id => id.startsWith('seal-') ? opened.has(id) : played.has(id))) played.add(b.id);
   const offered = new Set<string>();
   for (const b of s.beats) if (played.has(b.id)) b.carries?.guess?.forEach(m => offered.add(m));
   for (const x of s.seals) if (opened.has(x.id)) x.carries?.guess?.forEach(m => offered.add(m));
@@ -246,7 +278,8 @@ const lineRow = (s: Story, id: string) => { const x = sealOf(s, id); return x &&
     hasn't camped at yet (one that stops being offered first, so it isn't lost); else at that place itself. Never a view at
     the top once he has gone down, and never one of another place: the camp is always where Today says he is. */
 export function campHere(s: Story, st: StoryState, _sinceLast = 0): { at: 'place'; id: string } | { at: 'view'; id: string; find?: string; line?: string } {
-  if (!st.here) return { at: 'view', id: s.camps[0].id, ...viewLook(s.camps[0]) };
+  /* before the first place: past the way in, at a view of the first stretch (a short first day, D-160) */
+  if (!st.here) { const m = s.camps.filter(c => c.stretch === s.stretches[0].id && !c.near), v = m.find(c => !st.campsShown.includes(c.id)) ?? m[m.length - 1] ?? s.camps[0]; return { at: 'view', id: v.id, ...viewLook(v) }; }
   const near = s.camps.filter(c => c.near === st.here && c.w <= st.week && allMet(st, c.req) && !(c.until && met(st, c.until))
     && !(st.departed && isTop(s, c.stretch)));
   const fresh = near.filter(c => !st.campsShown.includes(c.id));
