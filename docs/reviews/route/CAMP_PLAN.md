@@ -41,8 +41,8 @@ If you never press Go to sleep, nothing pops up: the next morning carries on fro
 ## 3. The journey's shape now
 
 - **One way down.** The top (the Lamp Hall, the Salt Gallery, the Box Room) in weeks 1–3; then the Stair in week 4; then the deeper areas, always further down.
-- **No story moment sends you back to the top.** One big locked thing up there is opened **from below**, from the far end of a new climb in a deeper area: you see the top from a distance and turn back down.
-- **Three short trips back up remain, all inside the deeper areas** (in weeks 10, 11 and 13). Each happens because something you just learned below points at something you saw a little way above, and the screen says so. The last one leads on into a new way down. They're labelled "Back up", never "On the way back" (there's no camp to be on the way back to).
+- **No story moment sends you back to the top.** One big locked thing up there stays shut through these fourteen weeks; you see from below where it leads, and it waits for a later part of the story. (The first draft had you open it from below; the independent check found that climb didn't hold up, so it was dropped.)
+- **Two trips back up remain, both inside the deeper areas** (in weeks 11 and 13). Each happens because something you just learned below points at something you saw further up, and the screen says so in its first lines. The week-13 one leads on into a new way down. They're labelled "Back up", never "On the way back" (there's no camp to be on the way back to). A third, in week 10, was cut: you now reach that spot once, in week 13, when you can do what it asks.
 - **Where you camp:** at the place you reached, if you reached it not long before you pressed Go to sleep (less than about half the walk to the next place). Otherwise at a spot on the stretch you're walking, with one thing to look at there. Every stretch has at least two such spots; seven new ones are added in the deeper areas so none repeats too often. The spots at the top stop once you've left.
 - **Finds** (the small things you notice along the way) only ever come from where you are, never from the top once you've left.
 
@@ -51,7 +51,7 @@ If you never press Go to sleep, nothing pops up: the next morning carries on fro
 About 33 places and story moments used to play at the top after the way down opened. Now:
 - **7 play before you leave**, at the top, in week 3 (they never needed anything from below).
 - **18 travel with you:** read from what you carry, wherever you are, in the same week as before. Nothing about what they say changes, only where you read them.
-- **2 move to a place further down** where they truly make sense, keeping what they do.
+- **2 move to a place further down** where they truly make sense, keeping what they do. (One more, the opening of the big locked thing at the top, now waits for a later part of the story.)
 - **6 places are cut as places.** They existed only to show you a locked thing. Those locked things are now seen in week 3 instead, so nothing in them is lost. A few other places in the deeper areas were flagged as possibly there only to fill a day; each is cut, folded into another, or justified, and the review is asked to judge every place on exactly this.
 - **The nightly lines** become what you think about before sleep, true wherever you camp. The night's screen first says where you're camping.
 - **The morning lines** lose their mentions of the top; what they confirm is unchanged.
