@@ -23,18 +23,20 @@ If you never press Go to sleep, nothing pops up: the next morning carries on fro
 
 **The day.**
 - **Go to sleep is always there.** It sits at the end of Today's list all day, and comes to the top near your bedtime, as now. Press it at three in the afternoon or at midnight: that is where you camp.
-- **No "done" messages anywhere.** "The day's work is done, and it was enough", "Rest now", "Rest here for today", "{job} is done for the day" and their kind are gone, from Today, the arrival screens, the word screens and the delve's end. A job you finish still says it's done (that's the job, not the day).
+- **No "done" messages anywhere.** All of these go: "The day's work is done, and it was enough"; "The day's work is done. Rest now."; "Rest here for today"; "{job} is done for the day"; "Anything more takes you deeper"; "Today brought you to…" and "Today you turned back short of the next place"; "Add a job, or rest"; "One small job is enough"; "camp, by the lamp" on the Map; "Turned back here"; "At camp ·" over a story moment; and "Something was waiting for you at camp" in the morning. A job you finish still says it's done (that's the job, not the day).
 - **Today's list stays your plan for the day, and nothing more.** Doing the last job on it no longer ends anything. The list doesn't turn into a "finished" card; you can add another job, or go to sleep.
 - **"Where you turned back" is gone.** A day no longer stops short of a place by itself: the walk simply goes on while you work.
 - **Going to sleep is where you camp.** The night's screen says where you are camped, with one thing to look at there (a view of that stretch), and the night's line. In the morning, Today starts from that spot.
 - **Bedtime still matters, gently.** In bed on time, tomorrow begins a little further in, with something waiting for you, as now. Late, nothing is lost.
 - **Never pressed it?** Nothing happens. In the morning you're where you stopped working, and the day goes on.
+- **Four in the morning** still turns the date over for Today's list and the week, as now. It ends nothing in the story: no camp, no message, and you're where you were. Pressing Go to sleep after four counts for the night you're in.
+- **A nap, then more work?** Press Go to sleep, work again later, and press it again: you camp where you are each time.
 
 **The journey.**
 - **No evenings at camp.** The "Tonight, at camp" and "Last night, at camp" screens are gone.
 - **The top is finished before you leave it.** The first weeks are all at the top, as before. Before you step through onto the Stair, you see everything up there that you'll need, and you take with you what you'll want to read later: her notebook (as now), her other papers, and your own copy of the writing you can't read yet. From then on, readings that used to need a night at the top are read from what you carry, wherever you are, in the same week as before.
 - **Week 4 is the first walk down the Stair.** It now holds the Stair's first places in a row, one after another, instead of one place and a string of evenings.
-- **Locked things you leave behind at the top** can still be opened with a Key from the Map. That's a trip you choose: the screen says you go back up for it and come back down, and it doesn't move where you are. The game never prompts it.
+- **Locked things you leave behind at the top: the one exception, for your OK.** Some of the top's locked things may still be shut when you go down (Keys come only from recurring jobs kept up, so a few weeks' Keys can't open them all). What's inside them is always an extra: nothing the story needs is ever behind a lock. You can still open one with a Key from the Map. That is a trip you choose, and the screen says so: you go back up for it, then back down to where you were. It doesn't move where you are, and the game never prompts it. This is the only way the game takes you to the top after you've gone down, and it's your choice each time. **If you'd rather not have it**, the alternative is that those locks simply stay shut (their extras unread) until a later story reason takes you back up; say which you prefer.
 
 ## 3. The journey's shape now
 
@@ -50,7 +52,7 @@ About 33 places and story moments used to play at the top after the way down ope
 - **7 play before you leave**, at the top, in week 3 (they never needed anything from below).
 - **18 travel with you:** read from what you carry, wherever you are, in the same week as before. Nothing about what they say changes, only where you read them.
 - **2 move to a place further down** where they truly make sense, keeping what they do.
-- **6 places are cut as places.** They existed only to show you a locked thing. Those locked things are now seen in week 3 instead, so nothing in them is lost, and no place is left that exists only to fill a day.
+- **6 places are cut as places.** They existed only to show you a locked thing. Those locked things are now seen in week 3 instead, so nothing in them is lost. A few other places in the deeper areas were flagged as possibly there only to fill a day; each is cut, folded into another, or justified, and the review is asked to judge every place on exactly this.
 - **The nightly lines** become what you think about before sleep, true wherever you camp. The night's screen first says where you're camping.
 - **The morning lines** lose their mentions of the top; what they confirm is unchanged.
 - **Of 13 locked things at the top** that belonged to later weeks: 7 are now seen in week 3, 2 travel with you, 3 move further down, and 1 is merged into another.
@@ -59,7 +61,7 @@ About 33 places and story moments used to play at the top after the way down ope
 
 **Pacing:** 56 places to walk to across the 14 weeks, up from 53: three things that used to be free at camp are now real walks. Week 3 is all at the top and week 4 is the whole first descent. Weeks 5, 7 and 14 stay short, and aren't padded: what happens in them sets their length. The top lasts about two places' walking longer than before, so the reviewers are asked specifically whether week 3 feels like being kept at the top. If it does, one of its places can become a moment on the way instead.
 
-**Saves already past the top** that haven't had the new week-3 moments (the copying, the papers) get them as **one trip back up, told on screen** (you go back up for them, then back down to where you were), the first time you play. Nothing else in your save moves.
+**Saves already past the top** that haven't had the new week-3 moments (the copying, the papers, and up to two places) get them as **a trip back up, told on screen** (you go back up for them, then back down to where you were), as the next things you play. Nothing else in your save moves, and it can't get stuck on them.
 
 ## 5. Your save
 
@@ -94,4 +96,4 @@ A large job, done in this order, each step committed as it's done:
 
 ## 9. What stays the same
 
-The story's truth, its ending, and the order you learn the symbols in. The places' names (except where noted in the sealed record). Keys, the Map, the Daybook, delves, the Satchel, the week, reminders.
+The story's truth, its ending, and the order you learn the symbols in. (The weeks after 14 aren't in the game yet; when they're written, they'll follow the same rules: camp where you are, nothing pulls you back up without a reason.) The places' names (except where noted in the sealed record). Keys, the Map, the Daybook, delves, the Satchel, the week, reminders.
