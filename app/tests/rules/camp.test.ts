@@ -4,7 +4,7 @@
  */
 import { describe, expect, it } from 'vitest';
 import * as S from '../../src/core/story';
-import { arrivalAt } from '../../src/core/game';
+import { act, arrivalAt, see, suggestedOn, returnOf } from '../../src/core/game';
 import type { Fact, FactOf } from '../../src/core/types';
 import { content as C } from '../../src/content/world';
 import { sim, type Week } from './sim';
@@ -131,4 +131,56 @@ describe('saves from the last two builds carry on (D-154, D-159 → D-160)', () 
       }
     }
   }, 900_000);
+});
+
+describe('the adversarial review of D-160', () => {
+  it('a trip back up is one climb: an old save cut mid-route sees the top in one go, and it costs no walking', () => {
+    const load = (set: string, n: string) => JSON.parse(readFileSync(new URL(`../saves/${set}/${n}.json`, import.meta.url), 'utf8')).facts as Fact[];
+    for (const [set, n, wk] of [['route-d159', 'normal-kept', 5], ['route-d159', 'high-kept', 4], ['route-d154', 'normal-kept', 6]] as const) {
+      const all = load(set, n), cut = all.findIndex(f => f.type === 'storyWeekBegan' && f.w === wk), before = all.slice(0, cut);
+      const d = sim(undefined, undefined, 'kept', before);
+      for (let i = 0; i < 3; i++) d.week('normal');
+      const trips = arrivals(d.facts.slice(before.length)).filter(a => a.kind === 'place' && S.isErrand(s, S.storyState(d.facts.filter(g => g.seq < a.seq), s), S.beatOf(s, a.id)!));
+      expect(new Set(trips.map(a => a.at)).size, `${set} ${n}`).toBeLessThanOrEqual(1);
+      for (const a of trips) expect(a.how, `${set} ${n} ${a.id}`).toBe('trip');
+    }
+  }, 600_000);
+  it('a camp screen from last night is not shown in the morning', () => {
+    const d = sim(undefined, undefined, 'kept'); d.week('normal');
+    const gn = d.facts.filter(f => f.type === 'goodnight').pop()!;
+    /* the camp written at that goodnight, left unseen, and the app opened the next morning */
+    const upTo = d.facts.filter(f => f.seq <= gn.seq + 2 && !(f.type === 'seen'));
+    const camp = upTo.find(f => f.type === 'arrived' && f.kind === 'camp' && f.seq > gn.seq);
+    expect(camp).toBeTruthy();
+    const next = gn.at.slice(0, 10) + 'T09:00:00+01:00', morning = new Date(Date.parse(next) + 86_400_000).toISOString().slice(0, 19) + '+00:00';
+    const v = see(upTo, C, morning);
+    expect(v.arrival?.kind === 'camp' && v.arrival.seq === camp!.seq).toBe(false);
+  });
+  it('the night\'s last Go to sleep is when he went to bed: a later one past bedtime pays no head start and suggests Low', () => {
+    const d = sim(undefined, undefined, 'kept'); d.week('normal');
+    let f = d.facts;
+    const day0 = f[f.length - 1].at.slice(0, 10), plus = (d: string, n: number) => new Date(Date.parse(d + 'T12:00:00Z') + n * 86_400_000).toISOString().slice(0, 10);
+    const d1 = plus(day0, 1), d2 = plus(day0, 2);
+    f = f.concat(act(f, C, { do: 'open' }, `${d1}T09:00:00+01:00`));
+    f = f.concat(act(f, C, { do: 'goodnight' }, `${d1}T22:40:00+01:00`));
+    f = f.concat(act(f, C, { do: 'startRun', job: C.jobs[0].id, minutes: 30, count: 1 }, `${d1}T23:00:00+01:00`));
+    f = f.concat(act(f, C, { do: 'done', job: C.jobs[0].id }, `${d1}T23:35:00+01:00`));
+    f = f.concat(act(f, C, { do: 'goodnight' }, `${d2}T01:30:00+01:00`));
+    const gns = f.filter(x => x.type === 'goodnight');
+    if (gns.length < 2 || (gns[gns.length - 1] as FactOf<'goodnight'>).kept) return;   /* (the sim's bedtime may differ: nothing to check) */
+    const opened = f.concat(act(f, C, { do: 'open' }, `${d2}T09:00:00+01:00`));
+    expect(opened.slice(f.length).some(x => x.type === 'stepsGained' && x.job === 'sleep')).toBe(false);
+    expect(suggestedOn(opened, d2).capacity).toBe('low');
+  });
+  it('a job\'s step that takes Dan to another area says so on its return', () => {
+    for (const facts of [life('normal', 'kept', 22), life('short', 'kept', 40)]) {
+      for (const g of facts.filter((f): f is FactOf<'beatPlayed'> => f.type === 'beatPlayed' && f.job !== undefined)) {
+        const was = S.storyState(facts.filter(x => x.seq < g.seq), s), now = S.storyState(facts.filter(x => x.seq <= g.seq), s);
+        if (S.areaOf(s, was.stretch) === S.areaOf(s, now.stretch)) continue;
+        const done = facts.filter(x => x.type === 'jobDone' && x.seq < g.seq).pop()!;
+        const r = returnOf(C, facts, done.seq);
+        expect(!!r.moved || !!r.up, `${g.id}`).toBe(true);
+      }
+    }
+  }, 600_000);
 });

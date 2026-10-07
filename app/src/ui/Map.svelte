@@ -40,7 +40,7 @@
     up?: boolean;
     box: { label: string; title: string; say: string };
     /** the places reached in this area, in the order walked, each to read again (D-135, D-154) */
-    reads?: { name: string; seq: number; camp?: boolean; here?: boolean; turned?: boolean }[];
+    reads?: { name: string; seq: number; camp?: boolean; here?: boolean; turned?: boolean; old?: string }[];
   }
 
   /* ---------- the region: one light per stretch, laid out as the mock-up lays out the first region ---------- */
@@ -101,14 +101,17 @@
   /* the places reached on foot or by Key, by stretch, in the order reached: each one's entry can be read again (D-135);
      and the camps made there, each once (its latest night), so an earlier camp's words are never lost (the flow review) */
   const reached = $derived.by(() => {
-    const out: { seq: number; name: string; stretch: StretchId; camp?: boolean; turned?: boolean }[] = [], camps = new Map<string, number>();
+    const out: { seq: number; name: string; stretch: StretchId; camp?: boolean; turned?: boolean; old?: string }[] = [], camps = new Map<string, number>();
     for (const f of game.facts) {
+      /* (a place an earlier build played as a step, an old save's: reached, with nothing to read again, D-160) */
+      if (f.type === 'beatPlayed') { const b = s.beats.find(x => x.id === f.id); if (b?.name && !b.retired && (b.kind === 'arrival' || b.kind === 'arrivalKey') && s.route.some(r => r.places.some(p => p.id === b.id)) && !game.facts.some(g => g.type === 'arrived' && g.id === b.id)) out.push({ seq: f.seq, name: b.name, stretch: area(b.stretch), old: b.id }); continue; }
       if (f.type !== 'arrived') continue;
       if (f.kind === 'place') { const b = s.beats.find(x => x.id === f.id); if (b?.name && f.seq !== v.arrival?.seq) out.push({ seq: f.seq, name: b.name, stretch: area(b.stretch) }); }
       /* its first night, which said it in full (a stop made again says only that, D-154) */
       else if (f.kind === 'camp' && f.seq !== v.arrival?.seq && !camps.has(f.id)) camps.set(f.id, f.seq);
     }
-    for (const [id, seq] of camps) { const k = s.camps.find(x => x.id === id); if (k) out.push({ seq, name: k.name, stretch: area(k.stretch), camp: true }); }
+    /* (a camp at the place itself, D-160: that place's row says he camped there) */
+    for (const [id, seq] of camps) { const k = s.camps.find(x => x.id === id), p = k ? undefined : s.beats.find(x => x.id === id); if (k) out.push({ seq, name: k.name, stretch: area(k.stretch), camp: true }); else if (p?.name) out.push({ seq, name: p.name, stretch: area(p.stretch), camp: true }); }
     /* a stop with a place's own name is that place: one row (the round-8 review) */
     const merged = out.filter(r => !r.camp || !out.some(x => !x.camp && x.stretch === r.stretch && x.name === r.name))
       .map(r => r.camp ? r : { ...r, turned: out.some(x => x.camp && x.stretch === r.stretch && x.name === r.name) });
@@ -129,7 +132,7 @@
         /* the next place in this area, walked before or where Dan is: its minutes (MORNING-REPORT Part 3 #10; D-154) */
         else if (aheadOn === k && v.toNext) out[out.length - 1].sub2 = t('map.nextOn', { min: minutesShort(v.toNext) });
         /* every place walked to here, in the order walked, the one where Dan stands marked (D-154) */
-        const reads = reached.filter(r => r.stretch === k).map(r => ({ ...r, here: !r.camp && r.seq === v.here.seq }));
+        const reads = reached.filter(r => r.stretch === k).map(r => ({ ...r, here: !r.camp && (r.seq === v.here.seq || (v.here.seq === null && !!r.old && r.old === v.here.id)) }));
         if (reads.length) out[out.length - 1].reads = reads;
       } else if (k === aheadOn) {
         out.push({ key: k, ...a, kind: 'faint',
@@ -349,7 +352,7 @@
               <ul class="rows">
                 {#each sel.reads as r, ri (r.seq)}
                   <li class="row"><span class="name"><span class="n">{ri + 1}</span>{r.name}</span>
-                    <button class="text-link state read" class:here={r.here} aria-label={t('map.readAgain', { place: r.name })} onclick={() => go('arrival', `again:${r.seq}`)}><span>{r.here ? t('map.here') : r.camp || r.turned ? t('map.turnedBack') : t('daybook.readAgain')}</span></button></li>
+                    {#if r.old}<span class="text-link state read" class:here={r.here}><span>{r.here ? t('map.here') : ''}</span></span>{:else}<button class="text-link state read" class:here={r.here} aria-label={t('map.readAgain', { place: r.name })} onclick={() => go('arrival', `again:${r.seq}`)}><span>{r.here ? t('map.here') : r.camp || r.turned ? t('map.turnedBack') : t('daybook.readAgain')}</span></button>{/if}</li>
                 {/each}
               </ul>
             {:else}

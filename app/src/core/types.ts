@@ -130,7 +130,7 @@ export type FactBody =
       next opening); a camp view; or an evening at camp with no place, only the night's home moments (`kind: 'evening'`). */
   /* a camp (D-160): where Dan camps when he goes to sleep: the place he reached (`where: 'place'`, `id` the place's), or
      a view (`id` the view's). An old save's camp is a stop at a day's end (D-154), and its evenings at camp stay */
-  | { type: 'arrived'; kind: 'place' | 'camp' | 'evening'; id: string; how?: 'foot' | 'key' | 'evening'; night?: string; late?: boolean; where?: 'place' }
+  | { type: 'arrived'; kind: 'place' | 'camp' | 'evening'; id: string; how?: 'foot' | 'key' | 'evening' | 'trip'; night?: string; late?: boolean; where?: 'place' }
   /* the story (slice 2): each written once, when it happens */
   | { type: 'beatPlayed'; id: string; job?: number; passage?: string }
   /** `for`: a day in the period the Key was earned for, when it landed later, at an opening (D-152); else its own day. */

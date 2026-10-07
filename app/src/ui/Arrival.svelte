@@ -1,8 +1,7 @@
 <script lang="ts">
   import Prose from './Prose.svelte';
-  /* Day complete and the arrival (INTERACTION_NOTES → day complete; mock-up complete.html). Violet turns to gold
-     from the floor up; "That's the day. Enough." The day's success is locked in; rest is the main offer, and a quiet
-     "Keep going" is always there (D-038, D-039). A tap anywhere settles the motion at once. */
+  /* The arrival: a place reached, or tonight's camp (D-160: nothing ends the day but Go to sleep, and nothing says it
+     is done). A tap anywhere settles the motion at once. */
   import { game, content } from './game.svelte';
   import { t, the } from '../content/copy/en';
   import Scene from './Scene.svelte';

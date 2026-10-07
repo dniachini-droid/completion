@@ -171,6 +171,8 @@ export interface Beat {
   /** Its line when it plays as a trip back up (an old save's, gone down before it existed): written to read right after a
       climb from anywhere below, for a save that may have seen part of it under an earlier build (D-160). */
   again?: string;
+  /** Its name on that trip, when the save had a place of the same name under an earlier build (D-160). */
+  againName?: string;
 }
 
 /** A named place with no fragment, added by the story job (a `pl-` id). Plays as an arrival. */

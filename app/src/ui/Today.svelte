@@ -19,7 +19,7 @@
   import { ofLine } from './panel';
   import { beatOf, areaName } from '../core/story';
   import type { FactOf, Job } from '../core/types';
-  import { t, minutesWords, minutesShort, inSentence, placeIn, dayShort, type Weekday } from '../content/copy/en';
+  import { t, minutesWords, minutesShort, dayShort, type Weekday } from '../content/copy/en';
   import Scene from './Scene.svelte';
   import EndRoad from './EndRoad.svelte';
   import WeekMarks from './WeekMarks.svelte';

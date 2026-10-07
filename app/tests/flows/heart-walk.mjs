@@ -177,7 +177,7 @@ const cutIfAny = async (name) => {
   await page.locator('button.rodbtn').click(); await shot(name + '-cut-lock', 1000);
   await shot(name + '-cut-answer', 2500);
   await shot(name + '-cut-settled', 6000);
-  await tap('Go through'); await page.clock.runFor(800); await page.waitForTimeout(1500); await shot('stair', 4000);
+  await tap('Look through'); await page.clock.runFor(800); await page.waitForTimeout(1500); await shot('stair', 4000);
   await tap('Today'); await page.clock.runFor(1500);
   cut = true;
   /* "Today" shows any place still waiting first (D-080): play it */

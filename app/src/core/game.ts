@@ -121,7 +121,9 @@ export function suggestedOn(facts: Fact[], day: string): { capacity: Capacity; b
   if (backFrom(facts, day)) return { capacity: 'low', by: 'back' };
   const night = ofType(facts, 'goodnight').filter(f => f.day === W.addDays(day, -1));
   if (!night.length) return { capacity: 'normal', by: null };
-  const late = pastBedtime(bedtimeOf(facts.filter(f => f.seq <= night[0].seq)), night[0].at);
+  /* (the night's last goodnight: Go to sleep again after more work is when he went to bed, D-160) */
+  const last = night[night.length - 1];
+  const late = pastBedtime(bedtimeOf(facts.filter(f => f.seq <= last.seq)), last.at);
   return { capacity: late >= LATE_NIGHT ? 'low' : 'normal', by: 'bedtime' };
 }
 
@@ -161,7 +163,6 @@ export function hiddenDone(facts: Fact[]): Set<string> {
   for (const f of ofType(facts, 'doneHidden')) { const k = `${f.job}|${f.on}`; if (f.back) out.delete(k); else out.add(k); }
   return out;
 }
-const completedOn = (facts: Fact[], day: string) => onDay(facts, day).some(f => f.type === 'dayCompleted');
 export const delveMinutesOn = (facts: Fact[], day: string, job: string) =>
   ofType(onDay(facts, day), 'stepsGained').filter(f => f.job === job && f.run !== undefined).reduce((a, f) => a + f.minutes, 0);
 
@@ -416,7 +417,7 @@ function show(w: W, c: Content, ids: string[] | undefined, at: Moment, day: stri
   const st = S.storyState(w.all, c.story);
   for (const id of ids ?? []) if (!st.records.includes(id)) w.put({ type: 'recordShown', id }, at, day);
 }
-function arrive(w: W, c: Content, b: Beat, how: 'foot' | 'key' | 'evening', at: Moment, day: string, night?: { night: string; late: boolean }) {
+function arrive(w: W, c: Content, b: Beat, how: 'foot' | 'key' | 'evening' | 'trip', at: Moment, day: string, night?: { night: string; late: boolean }) {
   /* a place a Key used to play, reached on foot (or at an evening): its row opens with it, with no Key (D-129) */
   const x = how !== 'key' && b.seal ? S.sealOf(c.story, b.seal) : undefined;
   if (x && !S.storyState(w.all, c.story).opened.has(x.id)) { w.put({ type: 'sealOpened', seal: x.id, how: 'road' }, at, day); show(w, c, x.carries?.records, at, day); }
@@ -449,7 +450,6 @@ function storyClock(w: W, c: Content, at: Moment, day: string): boolean {
   return false;
 }
 
-const workedDay = (facts: Fact[], day: string) => ofType(onDay(facts, day), 'stepsGained').filter(f => f.job !== 'sleep').reduce((a, f) => a + f.minutes, 0) >= S.RETURN_MIN;
 /** Where Dan camps when he goes to sleep (D-160): the place he reached, if not long ago, or a view of his stretch with its
     one thing to look at (its find, or the stretch's next if that one was already found). Not moved by it: he is where he
     was, and the next day starts there. */
@@ -491,7 +491,9 @@ function pushOn(facts: Fact[], day: string): boolean {
   /* doing more is pushing deeper, with no setting to choose (Dan, D-127): past a day's first 3 hours (D-131). Nothing
      ends the day there or says so (D-160): it only lets the walk go on into next week's places */
   return capacityOn(facts, day) === 'high' || today.some(f => f.type === 'deepCalled')
-    || ofType(today, 'stepsGained').filter(f => f.job !== 'sleep').reduce((a, f) => a + f.minutes, 0) > W.FINISH_MIN;
+    /* (less any tick taken back: taken-back minutes never push on, rule 10) */
+    || ofType(today, 'stepsGained').filter(f => f.job !== 'sleep').reduce((a, f) => a + f.minutes, 0)
+      - ofType(today, 'tickTakenBack').reduce((a, f) => a + f.minutes, 0) > W.FINISH_MIN;
 }
 
 /** After anything that can move Dan: the places reached (§4; the story job's §0.2). Nothing ends the day but Go to sleep
@@ -506,10 +508,16 @@ function gifts(w: W, c: Content, at: Moment, day: string) {
     let n = 0, trip = false;
     for (;;) {
       const st = S.storyState(w.all, c.story);
-      /* a trip back up (an old save's, D-160) sees everything still waiting at the top at once: one climb, not several */
-      const more: Beat | null = trip ? S.nextPlace(c.story, st, push) ?? null : null;
-      trip = !!more && S.isErrand(c.story, st, more);
-      if (trip) { arrive(w, c, more!, 'foot', at, day); n++; continue; }
+      /* a trip back up (an old save's, D-160) sees everything still waiting at the top at once: one climb, not several;
+         the top's moments it needs on the way (a row the road opens, a step) play in it too, before the place they lead
+         to; it costs no walking (its places are not walked to) */
+      if (trip) {
+        const step = S.tripStep(c.story, st, push);
+        if (step) { playOnRoad(step); continue; }
+        const more = S.nextPlace(c.story, st, push);
+        if (more && S.isErrand(c.story, st, more)) { arrive(w, c, more, 'trip', at, day); n++; continue; }
+        trip = false;
+      }
       if (walked(w.all) < S.nextPlaceAt(st)) return n;
       const next = S.nextPlace(c.story, st, push);
       if (!next) {
@@ -519,9 +527,7 @@ function gifts(w: W, c: Content, at: Moment, day: string) {
         const way = S.onTheWay(c.story, st);
         if (!way) return n;
         /* one at a time, so a story week they finish begins before the next week's bits play */
-        const b = way[0];
-        if (b.kind === 'stepKey') openSeal(w, c, S.sealOf(c.story, b.seal!)!, at, day, undefined, true);
-        else { w.put({ type: 'beatPlayed', id: b.id }, at, day); show(w, c, b.carries?.records, at, day); }
+        playOnRoad(way[0]);
         continue;
       }
       /* the side chamber of the stretch this arrival closes, if a big move passed it on the way (deep review B5) */
@@ -532,9 +538,20 @@ function gifts(w: W, c: Content, at: Moment, day: string) {
         if (!b) break;
         w.put({ type: 'beatPlayed', id: b.id }, at, day); show(w, c, b.carries?.records, at, day);
       }
-      trip = S.isErrand(c.story, st, next);
+      if (S.isErrand(c.story, st, next)) {
+        /* the first place of a trip up: the top's moments it needs first, then the place, at no walking cost */
+        trip = true;
+        for (let k = 0, b = S.tripStep(c.story, st, push); b && k < 6; k++, b = S.tripStep(c.story, S.storyState(w.all, c.story), push)) playOnRoad(b);
+        const first = S.nextPlace(c.story, S.storyState(w.all, c.story), push) ?? next;
+        arrive(w, c, first, 'trip', at, day); n++; continue;
+      }
       arrive(w, c, next, 'foot', at, day); n++;
     }
+  };
+  /* a story bit played on the way (no job): a row the road opens, or a step */
+  const playOnRoad = (b: Beat) => {
+    if (b.kind === 'stepKey') openSeal(w, c, S.sealOf(c.story, b.seal!)!, at, day, undefined, true);
+    else { w.put({ type: 'beatPlayed', id: b.id }, at, day); show(w, c, b.carries?.records, at, day); }
   };
   /* a place plays the moment it is reached (Dan, 2026-09-24, D-073) */
   reach();
@@ -939,8 +956,10 @@ function morningAfter(w: W, c: Content, at: Moment, day: string) {
     const id = b.id.replace(/\.camp$/, '.morning'), ms = confirms(id);
     if (ms.length && !st.played.has(id) && ms.every(m => before.offered.has(m.id))) w.put({ type: 'beatPlayed', id }, at, day);
   }
-  const nights = ofType(w.all, 'goodnight').filter(f => f.day < day && f.kept);
-  const night = nights[nights.length - 1];
+  /* the last night's last goodnight, if it was kept (a later Go to sleep the same night, past bedtime, is when he went to
+     bed: no head start, D-160 review) */
+  const gns = ofType(w.all, 'goodnight').filter(f => f.day < day), lastGn = gns[gns.length - 1];
+  const night = lastGn?.kept ? lastGn : undefined;
   /* once per night: a later morning find (saves from before the head start) or a later head start (when no find was left
      to give, every open paid it again: deep review R#1) says this night was already paid */
   if (!night || w.all.some(f => f.seq > night.seq && ((f.type === 'findGiven' && f.why === 'morning') || (f.type === 'stepsGained' && f.job === 'sleep')))) return;
@@ -1697,6 +1716,8 @@ export interface Return {
   up?: string;
   /** Why, in the story's words (the beat's `back`), said in place of the plain line. */
   upWhy?: string;
+  /** A step that took him to another area: its name, said (D-160). */
+  moved?: string;
 }
 /** Where Dan stands. */
 /** Where Dan stands: the last place he walked to (D-154), its area's name, and its arrival (to read again). */
@@ -1926,7 +1947,7 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
     return { seq: f.seq, kind: 'place', face, late: !!f.late, earlier: !!f.late && !!f.night && W.daysBetween(f.night, f.day) > 1, area, wayIn: face === 'back' && !b.said ? wayIn : null, turnOff: face === 'back' && (!!b.turnOff || errand), errand,
       ...(errand ? { errandWhy: errandMore ? null : b.back ?? null, errandMore, errandStays,
         ...(errandMore && prevPlace?.type === 'arrived' ? { errandFrom: S.areaName(c.story, S.beatOf(c.story, prevPlace.id)!.stretch) } : {}) } : {}), then,
-      opened, way, id: b.id, name: b.name ?? '', line: (errand && b.again ? b.again : b.line) ?? '', taps: b.taps, choice: b.choice,
+      opened, way, id: b.id, name: (errand && b.againName ? b.againName : b.name) ?? '', line: (errand && b.again ? b.again : b.line) ?? '', taps: b.taps, choice: b.choice,
       records: b.carries?.records ?? [], guess, look: null, stretch: b.stretch, painting: paintingOf(b.id, b.stretch), completedDay, byKey: f.how === 'key' };
   }
   /* tonight's camp at the place he reached (D-160): its name and painting; the screen says he camps there */
@@ -2015,7 +2036,10 @@ function rawReturn(c: Content, facts: Fact[], doneSeq: number): Return {
   /* a Key's return says so; a row the road opened is a step like any other (D-129) */
   const byRoad = facts.some(f => f.type === 'sealOpened' && f.seal === b.seal && f.how === 'road');
   const trip = up(b);
-  return { ...trip, beat: b.id, line: ('up' in trip && b.again ? b.again : b.line) ?? '', key: b.kind === 'stepKey' && !byRoad, guess, choice: b.choice, records: [...(b.carries?.records ?? []), ...(viaSeal?.carries?.records ?? [])], finds, keyNote, keyAlready, ...(part ? { part } : {}) };
+  /* a step that takes him to another area (a job's moment there, D-160): said, never a silent move (D-160 review) */
+  const was = S.storyState(facts.filter(f => f.seq < beat.seq), c.story), now = S.storyState(facts.filter(f => f.seq <= beat.seq), c.story);
+  const moved = !('up' in trip) && S.areaOf(c.story, was.stretch) !== S.areaOf(c.story, now.stretch) ? { moved: S.areaName(c.story, now.stretch) } : {};
+  return { ...trip, ...moved, beat: b.id, line: ('up' in trip && b.again ? b.again : b.line) ?? '', key: b.kind === 'stepKey' && !byRoad, guess, choice: b.choice, records: [...(b.carries?.records ?? []), ...(viaSeal?.carries?.records ?? [])], finds, keyNote, keyAlready, ...(part ? { part } : {}) };
 }
 
 /** Today's list, as Today shows it and as the day's finish line reads it (D-130): on a planned week, every job the plan
@@ -2214,7 +2238,8 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   }
 
   const arrivals = ofType(facts, 'arrived');
-  const unseen = arrivals.find(a => !seen.has(a.seq));
+  /* (a camp from a night before today is past: its screen said tonight, and he went to sleep, D-160 review) */
+  const unseen = arrivals.find(a => !seen.has(a.seq) && !(a.kind === 'camp' && a.day < day));
   const arrival = unseen ? arrivalOf(c, facts, unseen) : null;
   const lastArr = arrivals.length ? arrivalOf(c, facts, arrivals[arrivals.length - 1]) : null;
 
