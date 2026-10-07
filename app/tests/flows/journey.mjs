@@ -47,7 +47,7 @@ for (const life of J.lives) {
     /* the arrival as it plays */
     let page = await open(save, at);
     /* a job's end the player read before pressing Go to sleep (the sim never marks it read): read through it to the arrival */
-    for (let g = 0; g < 3 && !(await page.locator('.arr').count()); g++) {
+    for (let g = 0; g < 3 && !(await page.locator('.arr, .cut').count()); g++) {
       const see = page.getByRole('button', { name: /see where you are/i });
       const way = (await see.count()) ? see : page.locator('button.home');
       if (!(await way.count())) break;

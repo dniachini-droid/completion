@@ -86,7 +86,8 @@ export function storyState(facts: Fact[], s: Story): StoryState {
         /* a step told in a room Dan has been to (a job's moment in one room while he was in another): he went
            there for it, so he is there, and camps there (D-160, the short-day review); never at the top once he has gone
            down, nor a page he carries */
-        if (b && (b.kind === 'step' || (b.kind === 'stepKey' && b.seal === road)) && !b.portable && b.stretch !== stretch && lastOn.has(b.stretch) && !(departed && isTop(s, b.stretch))) {
+        /* (only a job's own return: a step on the way, played with a place, never moves him off it) */
+        if (b && f.job !== undefined && (b.kind === 'step' || (b.kind === 'stepKey' && b.seal === road)) && !b.portable && b.stretch !== stretch && lastOn.has(b.stretch) && !(departed && isTop(s, b.stretch))) {
           stretch = b.stretch; here = lastOn.get(b.stretch)!;
         }
         if (b && !b.retired && PLACE_KINDS.has(b.kind) && !(departed && isTop(s, b.stretch)) && s.route.some(r => r.places.some(p => p.id === b.id))) {
