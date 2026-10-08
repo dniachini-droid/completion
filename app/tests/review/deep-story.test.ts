@@ -8,7 +8,7 @@
  * was built (FIX-LIST Stage 7): they fail on the code before it. "accepted" ones record a finding kept on purpose.
  */
 import { describe, expect, it } from 'vitest';
-import { act, see, settle, PAINTED, type Command } from '../../src/core/game';
+import { act, see, settle, PAINTED, paintingOf, STAND_IN, type Command } from '../../src/core/game';
 import * as S from '../../src/core/story';
 import type { Fact } from '../../src/core/types';
 import type { Story } from '../../src/core/story-types';
@@ -140,7 +140,7 @@ describe('deep story: the content wiring (static)', () => {
       const rows = s.seals.filter(x => x.arrival === p.id);
       if (!!p.k !== (rows.length === 1)) bad.push(`k:${p.id}`);
     }
-    for (const b of s.beats) if (['arrival', 'arrivalKey', 'word'].includes(b.kind) && !seen.has(b.id)) bad.push(`off-route:${b.id}`);
+    for (const b of s.beats) if (['arrival', 'arrivalKey', 'word'].includes(b.kind) && !seen.has(b.id) && !b.retired) bad.push(`off-route:${b.id}`);
     for (const b of s.beats.filter(x => x.kind === 'stepKey')) if (s.seals.filter(x => x.beat === b.id && x.id === b.seal).length !== 1) bad.push(`stepKey:${b.id}`);
     expect(bad).toEqual([]);
   });
@@ -158,9 +158,10 @@ describe('deep story: the content wiring (static)', () => {
     expect(s.marks.filter(m => m.candidates?.length && !m.confirmedBy).map(m => m.id).sort()).toEqual(['mk-hear', 'mk-world']);
   });
 
-  it('every route place and camp view has its own painting', () => {
-    const missing = [...s.route.flatMap(r => r.places.map(p => p.id)), ...s.camps.map(c => c.id)].filter(id => !PAINTED.has(id));
-    expect(missing).toEqual([]);
+  it('FINDING: every route place and camp view has its own painting, but the views D-160 added (their stretch\'s painting stands in)', () => {
+    const missing = [...s.route.flatMap(r => r.places.map(p => p.id)), ...s.camps.map(c => c.id)].filter(id => !PAINTED.has(id) && paintingOf(id, 'st-mouth') === STAND_IN['st-mouth']);
+    /* the places D-160 made (the copy, the first turn, the gap's record) and its views: their stretch's painting stands in */
+    expect([...missing].sort()).toEqual(['cv-00', 'b-3.2', 'b-3.6', 'b-4.2', 'b-5.1', 'b-13.1', ...Array.from({ length: 45 }, (_, i) => `cv-${22 + i}`).filter(id => id !== 'cv-49'), 'cv-68', 'cv-69', 'cv-70', 'cv-71'].sort());
   });
 
   it('fixed (S#5): one month\'s summary has six lines, and a week close can show six', () => {
@@ -200,12 +201,12 @@ describe('deep story: text hygiene', () => {
   });
   it('fixed (D-154): no place name uses the word the weeks 8-14 editing pass kept for another place', () => {
     expect(S.beatOf(s, 'b-14.A')!.name).not.toMatch(rx('reservedWord'));
-    expect(S.beatOf(s, 'b-10.B')!.name).toMatch(rx('reservedWord'));   /* the other place's */
+    /* (the other place it was kept for is a moment at the standing stone since D-160, with no name of its own) */
   });
-  it('FINDING: one physical clue the ledger hands over once appears in six texts', () => {
+  it('FINDING: one physical clue the ledger hands over once appears in seven texts', () => {
     const ids = [...s.beats, ...s.passages, ...s.teasers, ...s.learned, ...s.openQuestions]
       .filter(x => rx('clueA').test(x.line ?? '') && rx('clueB').test(x.line ?? '')).map(x => x.id).sort();
-    expect(ids).toEqual(['aw-w12', 'b-12.C', 'b-w12.tz2', 'b-w13.tz1', 'ps-d05', 'wc-w12-3']);
+    expect(ids).toEqual(['aw-w12', 'b-12.C', 'b-w12.close', 'b-w12.tz2', 'b-w13.tz1', 'ps-d05', 'wc-w12-3']);
   });
   it('FINDING: most rows the road opens without a Key still describe their count filling with light (D-129)', () => {
     const road = [...S.roadSeals(s)];
@@ -213,8 +214,8 @@ describe('deep story: text hygiene', () => {
       const x = S.sealOf(s, id)!, b = S.beatOf(s, x.beat ?? x.arrival ?? '');
       return rx('countLit', 'i').test(b?.line ?? x.line ?? '');
     });
-    expect(road.length).toBe(33);
-    expect(lit.length).toBe(29);
+    expect(road.length).toBe(30);
+    expect(lit.length).toBe(28);
   });
 });
 
@@ -259,7 +260,8 @@ describe('deep story: fourteen story weeks played through, Keys spent (dynamic)'
     expect(outOfOrder(f)).toEqual([]);
     expect(s.seals.filter(x => !x.seenOnly && !st.opened.has(x.id)).map(x => x.id)).toEqual([]);
     expect(s.records.filter(r => !st.records.includes(r.id)).map(r => r.id)).toEqual([]);
-    expect(s.finds.filter(x => !st.given.has(x.id)).map(x => x.id)).toEqual([]);
+    /* every find below the top comes; the top's are texture that can pass unseen once Dan has gone down (D-160) */
+    expect(s.finds.filter(x => !st.given.has(x.id) && !S.isTop(s, x.stretch)).map(x => x.id)).toEqual([]);
   }, 300_000);
 
   it('fixed (S#2b): every camp line plays, at any pace, bedtime kept every night', () => {
@@ -279,7 +281,7 @@ describe('deep story: fourteen story weeks played through, Keys spent (dynamic)'
       return m !== undefined && c !== undefined && m < c;
     }).map(b => b.id);
     /* (three since D-154: the night's line waits for what Dan has been shown, and week 10's now comes first) */
-    expect(early).toEqual(['b-w11.morning', 'b-w12.morning', 'b-w13.morning']);
+    expect(early).toEqual(['b-w13.morning']);
   }, 300_000);
 
   it('fixed (S#1): no week-close glimpse describes a sealed state after Dan has opened it (Normal, High)', () => {
@@ -317,7 +319,9 @@ describe('deep story: fourteen story weeks played through, Keys spent (dynamic)'
     /* (the story runs a little faster for the same effort since evenings cost no walking, D-154: one more is passed; and a
        page now waits for what it says Dan has seen, so one more is passed before a close could show it: four, each
        superseded, as the line above holds) */
-    expect(missed.length).toBeLessThanOrEqual(4);
+    /* FINDING (D-160): ten pass unseen at Normal pace now: a page shows the week just walked, and the review's round 1 ended
+       each glimpse once the story moves past what it says, so most weeks' glimpses are passed between two pages */
+    expect(missed.length).toBeLessThanOrEqual(10);
   }, 300_000);
 
   it('fixed (S#12): a camp view that stops being offered later comes first in its area (Normal, High, slow; D-154)', () => {
@@ -327,9 +331,11 @@ describe('deep story: fourteen story weeks played through, Keys spent (dynamic)'
       const f = life(name), bad: string[] = [];
       for (let i = 0; i < f.length; i++) {
         const x = f[i];
-        if (x.type !== 'arrived' || x.kind !== 'camp') continue;
+        /* (a camp at the place he reached is no view, D-160) */
+        if (x.type !== 'arrived' || x.kind !== 'camp' || x.where === 'place') continue;
         const st = S.storyState(f.slice(0, i), s), area = S.areaOf(s, st.stretch);
-        const due = s.camps.filter(c => c.until && S.areaOf(s, c.stretch) === area && st.visited.has(c.stretch) && c.w <= st.week
+        /* (a view of the place he camps at, D-160: the views are tied to places) */
+        const due = s.camps.filter(c => c.until && (c.near ? c.near === st.here : S.areaOf(s, c.stretch) === area) && st.visited.has(c.stretch) && c.w <= st.week
           && c.req.every(r => S.met(st, r)) && !S.met(st, c.until) && !st.campsShown.includes(c.id));
         if (due.length && !due.some(c => c.id === x.id)) bad.push(`${x.day} ${x.id} (${due.map(c => c.id).join(',')} due)`);
       }

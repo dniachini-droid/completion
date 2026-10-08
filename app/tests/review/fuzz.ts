@@ -86,7 +86,7 @@ export function check(facts: Fact[], view: View, now: string): Problem[] {
     if (nextF?.type === 'keyEarned') bad('tinyDoneKey', `${d.job} ${d.minutes} min`);
   }
   /* a fact's day is its moment's game day, except a run's own facts (kept on the run's day across 04:00, D-120) */
-  const runDay = new Set(['stepsGained', 'delveEnded', 'jobDone', 'findGiven', 'beatPlayed', 'arrived', 'recordShown', 'keyEarned', 'keyHeld', 'keyUsed', 'sealOpened', 'dayCompleted', 'storyWeekBegan', 'jobSaved', 'jobBegun']);
+  const runDay = new Set(['stepsGained', 'delveEnded', 'jobDone', 'findGiven', 'beatPlayed', 'arrived', 'recordShown', 'keyEarned', 'keyHeld', 'keyUsed', 'sealOpened', 'dayCompleted', 'storyWeekBegan', 'jobSaved', 'jobBegun', 'doneUndone']);
   /* (or a later day already in the log: the game day never goes back, deep review R#6) */
   let latest = '';
   for (const f of facts) {

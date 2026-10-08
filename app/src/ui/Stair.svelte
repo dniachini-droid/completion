@@ -75,8 +75,8 @@
   });
 
   function down() {
-    /* Go down: Dan chooses what to delve on in the Satchel, never a job picked for him (D-080); on a day already done,
-       Today, where the day's jobs are (L C7) */
+    /* Go down: Dan chooses what to delve on in the Satchel, never a job picked for him (D-080); with today's list all
+       done, Today, where the day's jobs are (L C7). (Nothing says the day is done, D-160.) */
     go(v.complete ? 'today' : 'satchel');
   }
   function today() { go(v.arrival ? 'arrival' : 'today'); }

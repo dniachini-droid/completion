@@ -22,7 +22,9 @@ describe('paintings', () => {
   it('a painted place shows its own painting; any other, its stretch\'s stand-in', () => {
     for (const b of C.story.beats) {
       const p = paintingOf(b.id, b.stretch);
-      expect(p).toBe(PAINTED.has(b.id) ? `pt-${b.id}` : STAND_IN[b.stretch]);
+      /* (b-3.5 shows the retired place it was made of, D-160) */
+      const as = b.id === 'b-3.5' ? 'pl-w3-salt-lit' : b.id;
+      expect(p).toBe(PAINTED.has(as) ? `pt-${as}` : STAND_IN[b.stretch]);
       expect(paintings[p], b.id).toBeDefined();
     }
     expect(paintingOf(null, 'st-hall')).toBe(STAND_IN['st-hall']);

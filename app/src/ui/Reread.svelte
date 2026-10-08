@@ -7,9 +7,11 @@
   import { light } from './relit.svelte';
   import type { Go } from './nav';
 
-  let { beat, go }: { beat: string | null; go?: Go } = $props();
-  const ids = $derived(beat ? rereadBy(content.story, game.whole.story, beat) : []);
-  $effect(() => { if (beat && ids.length) light(beat, ids); });
+  /* (several beats on one screen, a place and the bits on the way to it: one line for all, never the same line twice) */
+  let { beat = null, beats = [], go }: { beat?: string | null; beats?: (string | null)[]; go?: Go } = $props();
+  const each = $derived([beat, ...beats].filter((b): b is string => !!b).map(b => ({ b, ids: rereadBy(content.story, game.whole.story, b) })));
+  const ids = $derived([...new Set(each.flatMap(x => x.ids))]);
+  $effect(() => { for (const x of each) if (x.ids.length) light(x.b, x.ids); });
 </script>
 
 {#if ids.length}

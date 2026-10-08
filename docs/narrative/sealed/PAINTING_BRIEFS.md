@@ -193,3 +193,32 @@ Same rules as §1. Two changes from week 8: **a figure** may appear once, far an
 | `pt-cv-19` | The side gallery | narrow square walls close either side | the blast room's glow behind, fading | seated in the gallery mouth; VP into the dark | the sharp corner of the doorway | still dust | closeness |
 | `pt-cv-20` | The lower way | the lit way going down past you | cups (warm) | seated on the slope; VP down | the next flame below | cold dust drifting up | a way that keeps going |
 | `pt-cv-21` | The fall | the slope of fallen blocks to the ceiling; the standing stone beside | the round side's far light | seated at the stone's foot; VP up the slope | the snapped prop among the blocks | dust | a wall of rubble |
+
+## D-160 (camp where you are, 2026-10-07): retired and new — list only
+
+`CAMP_REHOME.md` §7. **Retired** (kept in the kit, unused while their places are off the route; a save that played them still shows them): `pt-pl-w3-far-end`, `pt-pl-w6-folder`, `pt-pl-w4-hollow`, `pt-pl-w4-recess-above-the-cot`, `pt-pl-w5-ledge-lip`, `pt-pl-w14-deep-niche`, `pt-pl-w14-mule-stone`, `pt-pl-w10-deep-end`, `pt-cv-21`, `pt-b-7.C` (the great door does not open in weeks 1–14; the brief stays for the later return), and, now steps, `pt-b-4.A`, `pt-b-4.B`, `pt-b-5.A`, `pt-b-8.B`, `pt-b-9.B`, `pt-b-10.B`, `pt-b-12.B`. **Changed in what they show:** `pt-b-4.C` (week 3, the lit hall; the door first whole, then close: may take `pt-pl-w3-far-end`'s first look), `pt-b-6.A` (a small niche low in the rounded stone just before the join), `pt-pl-w5-second-landing` (a thin slate low at the foot of the flight), `pt-pl-w8-steep-foot` (unchanged image; it no longer belongs to "the great door's stair" in any line), `pt-b-13.B` (it is now the first sight of the deep end as well as the cut). **New, stand-ins until drawn:** `pt-cv-22` the second landing, `pt-cv-23` the steep stair's foot, `pt-cv-24` the inner door, `pt-cv-25` the narrow way, `pt-cv-26` by the log, `pt-cv-27` before the shut door, `pt-cv-28` the head of the lower way, `pt-cv-29` under the crew's wall, `pt-cv-30` the lower gallery, `pt-cv-31` by the channel, `pt-cv-32` the low bench.
+
+## Round 1 of the player's-eye review (2026-10-07): list only
+
+`CAMP_REHOME.md` §8. **Off the route** (kept in the kit): `pt-pl-w2-smooth-place` (its patch is now part of the corner, `b-1.B`), `pt-pl-w3-salt-lit` (its scene is now `b-3.5`'s first half: re-key it to `b-3.5`), `pt-pl-w6-wall-shelf`. **New places, stand-ins until drawn:** `b-3.5` the salt by the new light (if not re-keyed), `b-3.6` the tally's head (Dan copying at the head of the bared tally, the sheets under a stone), `b-4.2` the first turn (the rail curling round the bend, the niche open, the second flight going on down), `b-5.1` under the second turn (the recess under the bend on the second landing). **Changed in what they show:** `pt-b-4.C` (the lamp's base close first, then the door), `pt-b-3.B` (the tablet's picture is a shut door). **New camp views, stand-ins:** `pt-cv-33` to `pt-cv-57`.
+
+**Follow-up from the old-save panel (art pass, not fixed here):** `pt-cv-28` / `pt-b-14.B` (the head of the lower way) shows a vaulted hall with a water channel, but the text is a smooth, rounded, lit way with the rubble's gap beside it; `pt-b-14.A` (the back of the rubble) shows a square brick corridor, but the lower way is rounded stone and the rubble is the blast room's fall.
+
+**Follow-ups from the round-2 pace panels (art pass, not fixed here):** the square gallery's camp picture has pointed arches, but the text is a flat ceiling and square corners; the lintel's picture after the cut still shows a blank over solid wall (it should show the opening and the lit landing); the side gallery's end shows rubble where the text has a shut door. Retired this round: `pt-pl-w5-worn-steps`, `pt-pl-w12-square-way`, `pt-pl-w13-side-gallery` (it suits `b-13.1`), `pt-pl-w12-shelf`; new places on stand-ins: `b-3.2` (her notebook and folder, the Box Room), `b-13.1` (the niches by the door).
+
+**Round 4 (normal pace), list only:** `pt-cv-67` is retired (folded into `cv-30`, the end of the lower gallery). These views now show something different, so their stand-ins need a new look:
+- `cv-09`: under her shelf, the rod within reach.
+- `cv-18`: the torn wall, with the tunnel going back into the dark.
+- `cv-47`: both books on the ledge, seen from the middle of the room.
+- `cv-51`: the bucket on the floor.
+- `cv-58`: just inside the Box Room's doorway, her things packed.
+- `cv-64`: looking down the narrow way at the lintel.
+- `cv-65`: where the rails end, the smooth roof overhead.
+- `cv-66`: under the far niche, facing the lake.
+
+`pt-b-12.A` no longer has the log page as its subject: the bucket is.
+- **Round 4, short and long days:** new view `cv-68`, "Below the carved lamp" (the near end, the carved lamp and flame overhead). It uses a stand-in.
+- **Art-pass notes:** the square gallery's camp picture still shows gothic arches, but the gallery has a flat ceiling and square corners. The Salt Gallery camp and the Water's far shore share one image.
+- **Round 5:** these are retired, because their places were folded into others: `pt-b-11.B` (into `b-13.C`), `pt-b-12.A` (into `pl-w10-blast-floor`) and `pt-pl-w11-cupboard` (into `pl-w10-blast-floor`). `pt-pl-w10-blast-floor` now also shows the cupboard and the well bucket. `pt-b-4.C` comes after the copy and shows Dan copying the lamp's base. `pt-pl-w8-channel` now has the cramped record on the channel's near lip.
+- **Art-pass note:** the first painting (`b-1.A`) has "40 FT" chalked where the text has 36 FT (`fd-a02`). The number is a clue (36 feet is the same eleven metres as the ladder), so the painting should change, not the text.
+- **Round 6:** new views on stand-ins: `cv-69` (the bared tally's far end, his sheets beside him) and `cv-70` (the side gallery's end, by the low niche). `cv-64` is now at the lintel's foot.

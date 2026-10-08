@@ -160,6 +160,25 @@ export interface Beat {
   /** Read wherever Dan is (her notebook, carried with him from the Day 6 page): never held for an evening at camp, never
       captioned with an area (D-155). */
   portable?: boolean;
+  /** Off the route since D-160 (merged, cut, or made a step): kept only so an old save's facts still read (CAMP_REHOME §7). */
+  retired?: boolean;
+  /** What this beat took over from earlier builds' beats and rows (D-160): a save that played (or opened) every one of
+      them already has it, so it counts as played and is never played again. */
+  absorbs?: string[];
+  /** Ids of which any ONE, played or opened by a save from an earlier build, means it has been past this already (a place
+      beyond it reached another way): held, as played, never played again (D-160). */
+  heldBy?: string[];
+  /** A place at the top that an old save, already gone down, still has to see (D-160): why Dan climbs back up for it,
+      said on screen before it (a full sentence). */
+  back?: string;
+  /** Its line when it plays as a trip back up (an old save's, gone down before it existed): written to read right after a
+      climb from anywhere below, for a save that may have seen part of it under an earlier build (D-160). */
+  again?: string;
+  /** Its name on that trip, when the save had a place of the same name under an earlier build (D-160). */
+  againName?: string;
+  /** A step that must play before this place (the walk to it, its approach): if it hasn't played when the place is
+      reached, it plays on the way to it, never after (D-160). */
+  before?: string;
 }
 
 /** A named place with no fragment, added by the story job (a `pl-` id). Plays as an arrival. */
@@ -190,6 +209,8 @@ export interface Seal {
   plain?: boolean;
   /** Opens on the road, in its turn, with no Key: its line is written for its own week (D-129). */
   road?: boolean;
+  /** In something Dan carries (her notebook's pocket, her folder): opened wherever he is, never a trip back up (D-160). */
+  portable?: boolean;
 }
 
 export interface Find {
@@ -211,6 +232,8 @@ export interface CampView {
   req: string[];
   /** Stops being offered once this has played. */
   until?: string;
+  /** The route place this view is at, or just past (D-160): used only when Dan camps after reaching it. */
+  near?: string;
   name: string;
   line: string;
   /** The one thing to look at: a find, or a line re-surfaced. */

@@ -21,7 +21,7 @@ const weekAt = (f: Fact[], seq: number) => S.storyState(f.filter(x => x.seq < se
 describe('S#1: a week close never shows a glimpse the story has moved past', () => {
   it('each glimpse whose sealed state later opens stops once it has', () => {
     const until = Object.fromEntries(s.beats.filter(b => b.kind === 'close' && b.until).map(b => [b.id, b.until]));
-    expect(until).toMatchObject({ 'b-w1.close': 'b-3.A', 'b-w4.close': 'b-7.C', 'b-w6.close': 'b-7.A', 'b-w9.close': 'b-10.A' });
+    expect(until).toMatchObject({ 'b-w1.close': 'b-3.A', 'b-w4.close': 'b-5.0', 'b-w6.close': 'b-7.A', 'b-w9.close': 'pl-w9-approach' });
   });
   it('at a High pace, no page shows a glimpse whose condition had already played', () => {
     const p = sim().week('high').week('high').week('normal');
@@ -46,8 +46,12 @@ describe('S#2b: a camp line is not tied to the story week Dan is in', () => {
     f = f.concat(act(f, C, { do: 'goodnight' }, '2026-10-05T22:45:00+01:00'));
     const night = f.find(x => x.type === 'goodnight')!;
     expect(night).toMatchObject({ kept: true });
-    /* the earliest one not played yet: week 1's */
-    expect(f.filter(x => x.seq > night.seq && x.type === 'beatPlayed').map(x => (x as { id: string }).id)).toEqual(['b-w1.camp']);
+    /* the earliest one not played yet that is not long behind him (a week walked through keeps its line; one from many
+       weeks back, thought somewhere he left long ago, does not, D-160) */
+    const wk = S.storyState(f, s).week;
+    const want = s.beats.find(b => b.kind === 'camp' && b.w >= wk - 1 && b.w <= wk && !S.storyState(f.filter(x => x.seq < night.seq), s).played.has(b.id))!.id;
+    expect(f.filter(x => x.seq > night.seq && x.type === 'beatPlayed').map(x => (x as { id: string }).id)).toEqual([want]);
+    expect(S.beatOf(s, want)!.w).toBeLessThan(wk + 1);
   }, 60_000);
 });
 
@@ -129,18 +133,27 @@ describe('S#12: a camp view that will stop being offered comes first', () => {
   const story = (camps: CampView[]): Story => ({
     version: 't', stretches: [{ id: 'st-hall', name: 'h', w: 1, req: [] }, { id: 'st-salt', name: 's', w: 1, req: [] }], route: [], beats: [],
     seals: [], records: [], marks: [], words: [], finds: [], camps, passages: [], teasers: [], learned: [], soFar: [], openQuestions: [] });
-  it('an unused view with an end comes before the area\'s other unused views; a view elsewhere only when the area has none (D-154)', () => {
-    const t = story([view('a', 'st-hall'), view('b', 'st-hall', 'x-later'), view('c', 'st-salt', 'x-later')]);
-    const st = { ...S.storyState([], t), visited: new Set(['st-hall', 'st-salt'] as const), stretch: 'st-hall' as const };
-    expect(S.nextCamp(t, st).id).toBe('b');
-    expect(S.nextCamp(t, { ...st, campsShown: ['b'] }).id).toBe('a');
-    /* where Dan turned back is in the area he is walking: never the salt's view while he is in the hall */
-    expect(S.nextCamp(t, { ...st, campsShown: ['b', 'a'] }).id).not.toBe('c');
+  /* a camp at a view (D-160): only a view of the place Dan last reached ('p') */
+  const at = (v: CampView, near = 'p') => ({ ...v, near });
+  it('an unused view of his place with an end comes first; never a view of another place (D-154, D-160)', () => {
+    const t = story([at(view('a', 'st-hall')), at(view('b', 'st-hall', 'x-later')), at(view('c', 'st-salt'), 'q')]);
+    const st = { ...S.storyState([], t), visited: new Set(['st-hall', 'st-salt'] as const), stretch: 'st-hall' as const, here: 'p' };
+    expect(S.campHere(t, st).id).toBe('b');
+    expect(S.campHere(t, { ...st, campsShown: ['b'] }).id).toBe('a');
+    /* every view of his place used: the one seen longest ago again (round 2: never a bare camp), never another place's */
+    expect(S.campHere(t, { ...st, campsShown: ['b', 'a'] })).toMatchObject({ at: 'view', id: 'b' });
+    /* no view of his place at all: he camps at the place itself */
+    expect(S.campHere(t, { ...st, here: 'r' })).toEqual({ at: 'place', id: 'r' });
   });
   it('one whose end has come is never offered', () => {
-    const t = story([view('a', 'st-hall'), view('b', 'st-hall', 'x-done')]);
-    const st = { ...S.storyState([], t), played: new Set(['x-done']) };
-    expect(S.nextCamp(t, st).id).toBe('a');
+    const t = story([at(view('a', 'st-hall')), at(view('b', 'st-hall', 'x-done'))]);
+    const st = { ...S.storyState([], t), played: new Set(['x-done']), here: 'p' };
+    expect(S.campHere(t, st).id).toBe('a');
+  });
+  it('a place with no view: he camps at the place (D-160)', () => {
+    const t = story([at(view('a', 'st-hall'), 'q')]);
+    const st = { ...S.storyState([], t), here: 'p' };
+    expect(S.campHere(t, st)).toEqual({ at: 'place', id: 'p' });
   });
 });
 

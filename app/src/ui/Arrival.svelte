@@ -1,10 +1,9 @@
 <script lang="ts">
   import Prose from './Prose.svelte';
-  /* Day complete and the arrival (INTERACTION_NOTES → day complete; mock-up complete.html). Violet turns to gold
-     from the floor up; "That's the day. Enough." The day's success is locked in; rest is the main offer, and a quiet
-     "Keep going" is always there (D-038, D-039). A tap anywhere settles the motion at once. */
+  /* The arrival: a place reached, or tonight's camp (D-160: nothing ends the day but Go to sleep, and nothing says it
+     is done). A tap anywhere settles the motion at once. */
   import { game, content } from './game.svelte';
-  import { t } from '../content/copy/en';
+  import { t, the } from '../content/copy/en';
   import Scene from './Scene.svelte';
   import Guess from './Guess.svelte';
   import Settled from './Settled.svelte';
@@ -37,7 +36,8 @@
     root.getAnimations({ subtree: true }).forEach(x => { try { x.finish(); } catch { /* endless */ } });
   }
   /* a word is cut on its own screen, the first time it plays (Cut.svelte) */
-  const word = fresh && !!game.whole.arrival && beatOf(content.story, game.whole.arrival.id)?.kind === 'word';
+  /* (a camp at a word's place is a camp, never the word again, D-160) */
+  const word = fresh && !!game.whole.arrival && game.whole.arrival.kind === 'place' && beatOf(content.story, game.whole.arrival.id)?.kind === 'word';
   const cap = (x: string) => x.charAt(0).toUpperCase() + x.slice(1);
   /* marks seen here that can't be guessed yet: said gently, once, so a later guess doesn't come from nowhere (D-077) */
   const later = $derived(a ? marksIn(content.story, [...a.records, ...a.way.flatMap(w => w.records), ...a.then.flatMap(w => w.records)]).filter(m => !a.guess.includes(m) && !mayGuess(content.story, v.story, m)
@@ -47,13 +47,17 @@
   /* how Dan came here (D-154): a new area, the next place in the area he is in, back to an area walked before, or an
      evening at camp; said in the label, and the area named above every place */
   const label = $derived(!a ? '' : again ? t('arrive.again') : a.kind === 'camp' ? t('arrive.camp')
-    : a.face === 'evening' ? t(a.earlier ? 'arrive.oneEvening' : a.late ? 'arrive.lastNight' : 'arrive.evening') : a.face === 'enter' ? t('arrive.newArea') : a.face === 'back' ? t(a.turnOff ? 'arrive.turnOff' : 'arrive.backIn') : t('arrive.label'));
+    : a.face === 'evening' ? t(a.earlier ? 'arrive.oneEvening' : a.late ? 'arrive.lastNight' : 'arrive.evening') : a.turnOff ? t('arrive.turnOff') : a.face === 'enter' ? t('arrive.newArea') : a.face === 'back' ? t(a.turnOff ? 'arrive.turnOff' : 'arrive.backIn') : t('arrive.label'));
   /* a new area: its name is the title, the place under it; anywhere else the area sits small above the place */
   /* an evening with no one place is named for where it begins (its sections name any other area they move to), D-154 */
   const title = $derived(!a ? '' : a.kind === 'evening' ? a.area || t('arrive.byTheLamp') : a.face === 'enter' && !again ? a.area : a.name);
   /* the lead: the way in (when it is said) and the first sentence of the words, which says where and why (D-156) */
-  const sentences = $derived(!a?.line ? [] : a.line.split(/(?<=[.!?])\s+/));
-  const leadWay = $derived(a?.wayIn && !again ? a.wayIn : '');
+  /* tonight's camp at the place he reached (D-160): one line, that he camps here */
+  const said = $derived(a?.campAt ? `${t('arrive.campHere')}${a.line ? ` ${a.line}` : ''}` : a?.line ?? '');
+  const sentences = $derived(!said ? [] : said.split(/(?<=[.!?])\s+/));
+  /* a trip back up to the top, in a save from before D-160: why, said first */
+  /* (one trip sees all that waits at the top: the climb is said on its first place, the way down on its last) */
+  const leadWay = $derived(!a || again ? '' : a.errand ? (a.errandWhy ?? (a.errandMore ? (a.errandFrom && a.errandFrom !== a.area ? t('arrive.errandOn', { area: the(a.area) }) : t('arrive.errandMore')) : t('arrive.errand', { area: the(a.area) }))) : a.wayIn ?? '');
   const leadFirst = $derived(a && !a.stopAgain ? sentences[0] ?? '' : '');
   const restLine = $derived(!a ? '' : a.stopAgain ? a.line : sentences.slice(1).join(' '));
   const over = $derived(!a ? '' : a.kind === 'evening' ? '' : a.face === 'enter' && !again ? '' : a.area);
@@ -116,16 +120,16 @@
           {#each a.way as w (w.beat)}<p class="soft on-scene look"><Prose text={w.line} /></p>{/each}
           {#each a.opened as line}<p class="soft on-scene look">{t('arrive.keyOpens')} <Prose text={line} /></p>{/each}
           {#each a.then as w, i (w.beat)}{#if w.area && w.area !== (i ? a.then[i - 1].area : a.area)}<span class="then-area">{w.area}</span>{/if}<p class="soft on-scene"><Prose text={w.line} /></p>{/each}
+          <!-- (a trip up: the way back down is said last, after all it saw, round 5) -->
+          {#if a.errand && !again}<p class="soft on-scene">{a.errandStays ? t('arrive.errandStays') : t('arrive.errandBack')}</p>{/if}
         </Words>
       </div>
       <div class="mid col">
         {#if a.id}
           {#each a.way as w (w.beat)}<Settled beat={fresh ? w.beat : null} />{/each}
-          {#if a.kind !== 'evening'}<Settled beat={fresh ? a.id : null} />{/if}
+          {#if a.kind === 'place'}<Settled beat={fresh ? a.id : null} />{/if}
           {#each a.then as w (w.beat)}<Settled beat={fresh ? w.beat : null} />{/each}
-          {#each a.way as w (w.beat)}<Reread beat={fresh ? w.beat : null} {go} />{/each}
-          {#if a.kind !== 'evening'}<Reread beat={fresh ? a.id : null} {go} />{/if}
-          {#each a.then as w (w.beat)}<Reread beat={fresh ? w.beat : null} {go} />{/each}
+          <Reread beats={fresh ? [...a.way.map(w => w.beat), a.kind === 'place' ? a.id : null, ...a.then.map(w => w.beat)] : []} {go} />
           {#each a.guess as mark (mark)}<Guess {mark} at={a.id} />{/each}
           {#if later.length}<p class="soft later">{t('arrive.marksLater')}</p>{/if}
           {#if a.records.length}
@@ -140,9 +144,6 @@
               {:else}<button class="text-link" onclick={() => go('records', w.records[0])}><span>{t('records.read')}</span></button>{/if}
             </div>
           {/each}
-          {#if a.completedDay && !again}
-            <p class="enough">{t('arrive.enough')} <em>{t('arrive.enough2')}</em></p>
-          {/if}
         {/if}
       </div>
       <section class="bottom col">
@@ -150,10 +151,15 @@
           <!-- read again from the Map: nothing to decide, only the way back (D-135) -->
           <button class="btn resting" onclick={() => leave('today')}>{backTo(back.label)}</button>
         {:else}
-        <button class="btn resting" onclick={() => leave('today')}>{a.completedDay ? t('arrive.rest') : t('arrive.onward')}</button>
+        {#if a.kind === 'camp'}
+          <!-- tonight's camp, after Go to sleep (D-160): the night, and nothing more to do -->
+          <button class="btn resting" onclick={() => leave('today')}>{t('arrive.goodnight')}</button>
+        {:else}
+        <button class="btn resting" onclick={() => leave('today')}>{t('arrive.onward')}</button>
         <div class="btn-row"><button class="btn-quiet" onclick={() => leave('set')}><span>{t('today.keepGoing')}</span></button></div>
         <!-- where it goes, said (N clumsy 8) -->
         <p class="soft to-satchel">{t('today.keepGoingSay')}</p>
+        {/if}
         {/if}
       </section>
     </div>
@@ -201,9 +207,6 @@
   .text :global(.look) { color: var(--gold-hi); margin-top: 12px; }
   /* when the screen is short (large text), the guesses scroll in their own space, never under the buttons (D-156) */
   .mid { flex: 0 20 auto; min-height: 3.2em; overflow-y: auto; display: flex; flex-direction: column; align-items: center; padding-top: 6px; padding-bottom: 14px; }
-  .enough { font-family: var(--life); font-size: min(31px, 8vw); line-height: 1.15; color: #fff; text-align: center;
-    text-shadow: 0 0 26px rgba(242,193,112,.45), 0 2px 18px rgba(8,6,20,.9); animation: rise 1.6s 2.2s var(--ease) both; }
-  .enough em { display: inline-block; animation: rise 1.6s 3s var(--ease) both; }
   /* the way out is there early (by about 2.5 s), even while the scene is still turning gold */
   .bottom { animation: rise 1s 1.4s var(--ease) both; }
   .bottom .btn-row { margin-top: 16px; }

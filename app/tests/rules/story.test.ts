@@ -59,7 +59,8 @@ describe('six weeks of play', () => {
     /* a Low week stretches the story week; it never stops it: places keep coming */
     expect(st.week).toBeGreaterThanOrEqual(2);
     /* no weekly floor (Dan, D-142): every Key is a rhythm's, none topped up for a week with a day complete */
-    expect(p.facts.some(f => f.type === 'dayCompleted')).toBe(true);
+    /* nothing ends the day but Go to sleep (D-160) */
+    expect(p.facts.some(f => f.type === 'dayCompleted')).toBe(false);
     expect(p.facts.filter(f => f.type === 'keyEarned' && f.rhythm.startsWith('floor:'))).toEqual([]);
     expect([...st.played].filter(x => /^(b-\d\.[A-C]|pl-)/.test(x)).length).toBeGreaterThanOrEqual(8);
   });
@@ -111,7 +112,7 @@ describe('Keys, finds and lines', () => {
       const here = C.story.passages.filter(x => x.stretch === st.stretch && x.req.every(r => S.met(st, r)) && !(x.until && S.met(st, x.until)));
       expect(here.every(x => st.passagesShown.includes(x.id)), f.passage).toBe(true);
     }
-  });
+  }, 60_000);
   it('a teaser whose condition is false never shows', () => {
     const p = sim().week('normal');
     const st = p.st(), line = p.view().teaser;

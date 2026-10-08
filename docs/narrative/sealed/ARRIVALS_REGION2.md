@@ -109,7 +109,7 @@ _Written 2026-09-23; revised the same day after the weeks 6–13 review (`review
 
 | Visit | Kind | The line / scene | Choice | Carries |
 |---|---|---|---|---|
-| 12.A | **arrival** | **The well.** The log, next page: *Well in the village stood still three days… Compasses swung to the hill. A sound in the sky at dusk like a door in a very large house. The men have gone. The company has written. I am taking my meals down.* On the floor under the ledge, a bucket, iron-bound, and inside its lid, in pencil: *Three days still. Not low. Still. Then it came back and was cold.* | — | **E3**; **X-well-keeper** (NICHES 11.5); C-49 |
+| 12.A | **arrival** | **The well.** (Since round 4, CAMP_REHOME §12: the log's 25th is read with the 22nd at 11.2; 12.A is the bucket, reached because the still Water recalls the well.) The log, next page: *Well in the village stood still three days… Compasses swung to the hill. A sound in the sky at dusk like a door in a very large house. The men have gone. The company has written. I am taking my meals down.* On the floor under the ledge, a bucket, iron-bound, and inside its lid, in pencil: *Three days still. Not low. Still. Then it came back and was cold.* | — | **E3**; **X-well-keeper** (NICHES 11.5); C-49 |
 | 12.1 | step (Key) | The far-shore niche: its count fills. A tablet: a hook closing on a drop beside a hand taking bread; a plain hook beside a hand; a full cell beside a lamb standing. | Guess | Key → **TAKE, HAND, GOOD** |
 | 12.2 | step | The notebook, Day 35. A table ruled across two pages, one column scored out. | — | **L13**; C-50 |
 | 12.B | **arrival (Key)** | **The end of the tally.** In the Salt Gallery, behind a count that fills, the last of the line, and after it the salt is bare to the floor: *Sleep not, day not. Count hand [ ] one: four, four, [long]. Count lamp [ ]: hand, hand, [ ]. Count child [ ] child: three. Count not day [ ] deep: day one… good.* | — | **S8** (LIVES §1; OF, MARK, ALL, AGAIN unheld; MARK re-renders it at week 13's morning) |
@@ -138,6 +138,22 @@ _Written 2026-09-23; revised the same day after the weeks 6–13 review (`review
 **Key-sealed things:** the side gallery's niche (13.1: LONG-SLEEP, MARK); the shut door (13.A: V6); the recess (13.3); the standing stone's blank (13.B: word only, no Key); the second bench (13.C).
 
 ---
+
+## As built (D-160, 2026-10-07): camp where you are
+
+Sealed design: `CAMP_REHOME.md` (§7 overrides). Concise per week:
+
+- **Week 6:** route `b-6.A` (a niche low in the rounded stone by the join, in view) · `pl-w6-square-gallery` · `b-6.B` · `pl-w6-wall-shelf`. **6.2** is that niche (OPEN, EAT), in the square gallery. `pl-w6-folder` cut (the folder is carried from week 3). `b-4.C` moved to week 3.
+- **Week 7:** route `b-7.B` · `b-7.A`. **7.C is retired: the great door is not opened in weeks 1–14** (§7.1). `b-7.2` is read in his copy. Camp line, close, teaser, learned line and question rewritten (the second lintel; the twelve rings).
+- **Week 8:** route `b-8.A` (a second, steeper stair comes down to the far shore out of the dark) · `pl-w8-channel` · `pl-w8-steep-foot` (unlit; cold air going up; he stops where the light gives out) · `b-8.C`. `b-8.B` is a portable step in his copy.
+- **Week 9:** `b-9.B` (the turn) is a portable step: her Day 9 sheet beside his copy; `b-9.3` read on in the copy.
+- **Week 10:** route `b-10.A` · `pl-w10-blast-floor` · `b-10.C`. No trip to the deep end (§7.2); V5 moves to week 13.
+- **Week 11:** `pl-w11-far-end` is a turn-off "Back up" for the log's tall man; nothing says "on the way back up to camp".
+- **Week 12:** `b-12.B` (S8) is a portable step in his copy; the second crust is gone (one crust, opened in week 3).
+- **Week 13:** route `pl-w13-side-gallery` · `b-13.A` · **`b-13.B`** (the one visit to the deep end: back up for the shut door's "moving stone", past the mule-shoe's notches, the standing stone's blank cut) · `pl-w13-lower-gallery`. **`b-10.B`** (V5) plays as a step after the cut. `pl-w14-mule-stone` cut.
+- **All weeks:** camp lines are thoughts before sleep, location-neutral; mornings never send him anywhere; every camp view says he camps there.
+
+**After round 1 of the player's-eye review (`CAMP_REHOME.md` §8, which overrides the lines above):** week 6 `b-6.A` · `pl-w6-square-gallery` (the shelf seen here; `pl-w6-wall-shelf` retired) · `b-6.B`; `b-6.2`'s tablet shows an open doorway. Week 7: `b-7.B` walks on to the end of the crew's wall. Week 8 `b-8.A` · `pl-w8-channel` · `pl-w8-steep-foot`; `b-8.2` after the channel; the week's page is the open doorway only. Week 9 `b-9.A` (from the steep stair's foot) · `pl-w9-benches` · `b-9.C` · **`b-8.C`** (moved: the narrow way is walked after the Reading Room, with its reason) · `pl-w9-approach` (straight on down). Week 10: the word `b-10.A` first; the powder tin (`seal-9-5`) and the MOVE/WATER tablet (`b-10.1`) open after it, each its own return. Week 11: `b-11.A` names the beginner's tablet under the twelve rings. Week 13: `pl-w13-side-gallery` stops short of the door; `b-13.A` is the hand on it. Week 14: `b-14.A` gives its reason; `b-14.1`, `b-14.2` go through the gap. Mornings read from his copy on screen. Every route place has a camp view tied to it (`near`).
 
 ## Notes
 

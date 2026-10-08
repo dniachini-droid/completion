@@ -5,8 +5,8 @@
      guess where one is offered; and any find. One drawable thing at a time; nothing here is a task. */
   import { game, content } from './game.svelte';
   import { returnOf } from '../core/game';
-  import { beatOf, sealOf, areaName, areaOf, isHome } from '../core/story';
-  import { t, partWords } from '../content/copy/en';
+  import { beatOf, sealOf, areaName, areaOf } from '../core/story';
+  import { t, the, partWords } from '../content/copy/en';
   import Guess from './Guess.svelte';
   import Glyph from './Glyph.svelte';
   import Settled from './Settled.svelte';
@@ -46,11 +46,10 @@
   /* a story moment somewhere other than where Dan is says where, so
      the words never seem to move him (the journey review, D-154) */
   const elsewhere = $derived.by(() => {
-    if (!r?.beat || beatOf(content.story, r.beat)?.portable) return '';
+    if (!r?.beat || beatOf(content.story, r.beat)?.portable || sealOf(content.story, r.beat)?.portable) return '';
     const st = beatOf(content.story, r.beat)?.stretch ?? sealOf(content.story, r.beat)?.stretch;
     if (!st || areaOf(content.story, st) === areaOf(content.story, v.here.stretch)) return '';
-    /* a moment at home once the way down is open is at camp, as the evenings are (round 5 of the journey review) */
-    return isHome(content.story, st) && v.story.departed ? t('step.atCamp', { area: areaName(content.story, st) }) : areaName(content.story, st);
+    return areaName(content.story, st);
   });
 </script>
 
@@ -74,7 +73,7 @@
          carved label's short line (Dan: "very very bad styling", D-131) -->
     {#if keyLine}<p class="key-note on-scene">{keyLine}</p>{@render offer()}{/if}
     {#each findsFirst as f (f!.id)}{@render findBlock(f)}{/each}
-    {#if elsewhere}<p class="elsewhere">{elsewhere}</p>{/if}
+    {#if r.up}<p class="say on-scene">{r.upWhy ?? t('return.errand', { area: the(r.up) })}</p>{:else if r.moved}<p class="say on-scene">{t('return.moved', { area: the(r.moved), from: the(r.from ?? '') })}</p>{:else if elsewhere}<p class="elsewhere">{elsewhere}</p>{/if}
     <p class="say story on-scene"><Prose text={r.line} /></p>
     {#each findsAfter as f (f!.id)}{@render findBlock(f)}{/each}
   </Words>

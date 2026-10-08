@@ -89,7 +89,7 @@ export const records: RecordFragment[] = [
     full: 'Once, the first. The hill\'s stone moved. The salt face opened. A way, deep, cut; not by water; not by us. Lamp; oil, one hand. Went in. Light had been given here, by someone.',
   },
   {
-    id: 'rec-k1', life: 'K', kind: 'cut', where: "the base of the lamp on the ledge", w: 1, firstShown: ['b-1.A', 'b-3.3'],
+    id: 'rec-k1', life: 'K', kind: 'cut', where: "the base of the lamp on the ledge", w: 1, firstShown: ['b-1.A', 'b-3.3', 'b-4.C'],
     cut: [[s('fire', 'Fire'), s('give', 'lit'), s('once', 'once'), p('.'), HIS]],
     full: 'Lit.',
   },
@@ -174,7 +174,7 @@ export const records: RecordFragment[] = [
     full: 'Once, the first. His hand over my hand. We cut two marks by the door. The lamps took fire: one, one, one, a hand; then past counting. I sat. Water from my eyes. He stood and counted.',
   },
   {
-    id: 'rec-l5', life: 'L', kind: 'paper', where: 'her notebook, from the cot in the Box Room', w: 3, firstShown: ['b-3.2'],
+    id: 'rec-l5', life: 'L', kind: 'paper', where: 'her notebook, from the cot in the Box Room', w: 2, firstShown: ['b-3.2'],
     paper: [
       'Day 6. It works. IT WORKS. The lamps in the wall-cups went down the hall like a fuse. I cut two marks in a lintel with the rod he gave me (my pillar from Day 3), which is a stone pencil, basically, and a door opened where there was stone. Note to self: when I record today, don\'t cry on the tape. Note to self: the tape recorder is dying; batteries. I am going to have to write on the walls like everybody else.',
     ],
@@ -191,7 +191,7 @@ export const records: RecordFragment[] = [
 
   // ——— Week 4 ———
   {
-    id: 'rec-s4', life: 'S', kind: 'cut', where: 'the Salt Gallery, past the lone ring, to the salt crust', w: 4, firstShown: ['b-4.A'],
+    id: 'rec-s4', life: 'S', kind: 'cut', where: 'the Salt Gallery, past the lone ring, to where the crust was', w: 4, firstShown: ['b-4.A'],
     cut: [
       head('one'),
       [s('me', 'I'), s('go', 'go'), s('home', 'home'), p(';')],
@@ -215,7 +215,7 @@ export const records: RecordFragment[] = [
     ],
   },
   {
-    id: 'rec-x-neighbour', life: 'X', kind: 'cut', where: 'a niche past the split, beside the salt block', w: 4, firstShown: ['b-4.B', 'seal-4-2'],
+    id: 'rec-x-neighbour', life: 'X', kind: 'cut', where: 'a niche past the split, beside the salt block', w: 3, firstShown: ['b-4.B', 'seal-4-2'],
     cut: [
       [s('voice', 'Told'), p(':'), s('see', 'found'), pic('a salt face'), pic('a crack'), s('up', 'out'), p(';'), s('give', 'give'), s('not', 'not'), p('.')],
       [HIS],
@@ -223,14 +223,14 @@ export const records: RecordFragment[] = [
     full: 'Told: found in the face past the split; not for sale.',
   },
   {
-    id: 'rec-x-colleague', life: 'X', kind: 'paper', where: 'the Box Room, a recess above the cot, a printed email pinned inside', w: 4, firstShown: ['seal-4-3'],
+    id: 'rec-x-colleague', life: 'X', kind: 'paper', where: 'a printed email from the recess above the cot, kept in her folder', w: 3, firstShown: ['seal-4-3'],
     paper: [
       'To: I. Halloran',
       "Come home. Nobody's going to fund this. The department's asked where you are.",
     ],
   },
   {
-    id: 'rec-x-sheep', life: 'X', kind: 'cut', where: 'the Salt Gallery, a hollow in the salt', w: 4, firstShown: ['seal-4-5'],
+    id: 'rec-x-sheep', life: 'X', kind: 'cut', where: 'the Salt Gallery, a hollow in the salt', w: 3, firstShown: ['seal-4-5'],
     cut: [
       [...told('one'), pic('a sheep'), s('of', 'of'), s('child', 'the child'), s('of', 'of'), s('me', 'me'), p(';'),
         s('child', 'the child'), s('give', 'gave'), s('once', 'once'), s('here', 'here'), s('toward', 'for'), pic('an owl'), p('.')],
@@ -247,7 +247,7 @@ export const records: RecordFragment[] = [
 
   // ——— Week 5 ———
   {
-    id: 'rec-s5', life: 'S', kind: 'cut', where: 'the Salt Gallery, behind the salt crust', w: 5, firstShown: ['b-5.3', 'seal-5-2'],
+    id: 'rec-s5', life: 'S', kind: 'cut', where: 'the Salt Gallery, the stretch that lay under the crust', w: 5, firstShown: ['b-5.3'],
     cut: [
       head('one'),
       [s('one', 'He'), s('give', 'gave'), s('see', 'to see'), p(':'), s('lamp', 'the lamp'), s('mark', 'mark'), p(','), s('fire', 'the fire'), s('mark', 'mark'), p(','), s('give', 'the giving'), s('mark', 'mark'), p(':')],
@@ -277,7 +277,7 @@ export const records: RecordFragment[] = [
     full: "Told: the child's. He cut the marks again here, through [the gap].",
   },
   {
-    id: 'rec-x-hers-again', life: 'X', kind: 'cut', where: "the Lamp Hall, the ledge’s underside", w: 5, firstShown: ['seal-5-5'],
+    id: 'rec-x-hers-again', life: 'X', kind: 'cut', where: "the Lamp Hall, the ledge’s underside", w: 3, firstShown: ['seal-5-5'],
     cut: [
       [ASHTI, s('again', 'again'), p('.')],
       [s('me', 'I'), s('make', 'cut'), s('here', 'here'), p(';'), s('one', 'he'), s('see', 'saw'), s('me', 'me'), s('not', 'not'), p('.')],
@@ -287,7 +287,7 @@ export const records: RecordFragment[] = [
   },
   {
     // NOTE: MVP §4 gives w as 5–6 (seen through the gap at b-5.B, read in part at b-6.A); `w` is the earliest.
-    id: 'rec-v1', life: 'V', kind: 'cut', where: 'the square gallery, on the square wall', w: 5, firstShown: ['b-5.B', 'b-6.A'],
+    id: 'rec-v1', life: 'V', kind: 'cut', where: 'the square gallery, on the square wall', w: 5, firstShown: ['b-6.A'],
     cut: [
       head('two'),
       [s('mark', 'Marks'), s('toward', 'for'), OVERSEER, p('.')],
@@ -346,7 +346,7 @@ export const records: RecordFragment[] = [
   },
   {
     // NOTE: MVP §4 gives w as 6–7 (seen behind the crust at seal-6-1, read at b-7.2); `w` is the earliest.
-    id: 'rec-s6', life: 'S', kind: 'cut', where: 'the Salt Gallery, past the crust', w: 6, firstShown: ['seal-6-1', 'b-7.2'],
+    id: 'rec-s6', life: 'S', kind: 'cut', where: 'the Salt Gallery, past where the crust was', w: 7, firstShown: ['b-7.2'],
     cut: [
       head('one'),
       [s('voice', 'My voice'), s('give', 'gave'), s('child', 'child'), p(':'), s('up', 'up'), pic('a barn'), pic('an owl'), s('here', 'here'), p('.')],
@@ -459,7 +459,7 @@ export const records: RecordFragment[] = [
 
   // ——— Week 10 ———
   {
-    id: 'rec-v5', life: 'V', kind: 'cut', where: 'the standing stone before the fall, at the square gallery’s deep end', w: 10, firstShown: ['b-10.B'],
+    id: 'rec-v5', life: 'V', kind: 'cut', where: 'the standing stone before the fall, at the square gallery’s deep end', w: 13, firstShown: ['b-10.B'],
     cut: [
       head('two'),
       [s('mark', 'Marks'), s('toward', 'for'), OVERSEER, p('.')],
@@ -513,13 +513,13 @@ export const records: RecordFragment[] = [
 
   // ——— Week 12 ———
   {
-    id: 'rec-e3', life: 'E', kind: 'paper', where: 'the log on the ledge in the blast room', w: 12, firstShown: ['b-12.A'],
+    id: 'rec-e3', life: 'E', kind: 'paper', where: 'the log on the ledge in the blast room', w: 11, firstShown: ['b-11.2'],   // read with the 22nd since round 4 (S2)
     paper: [
       'Log. 25th. Well in the village stood still three days; the keeper came up to complain. Compasses swung to the hill. A sound in the sky at dusk like a door in a very large house. The men have gone. The company has written. I am taking my meals down.',
     ],
   },
   {
-    id: 'rec-x-well-keeper', life: 'X', kind: 'paper', where: 'the blast room, inside the lid of an iron-bound bucket', w: 12, firstShown: ['b-12.A'],
+    id: 'rec-x-well-keeper', life: 'X', kind: 'paper', where: 'the blast room, inside the lid of an iron-bound bucket', w: 10, firstShown: ['pl-w10-blast-floor'],
     paper: ['Three days still. Not low. Still. Then it came back and was cold.'],
   },
   {
@@ -591,7 +591,7 @@ export const records: RecordFragment[] = [
     ],
   },
   {
-    id: 'rec-s9', life: 'S', kind: 'cut', where: 'the Salt Gallery, a deep niche in the salt', w: 14, firstShown: ['b-14.4'],
+    id: 'rec-s9', life: 'S', kind: 'cut', where: 'the Salt Gallery, a deep niche in the salt', w: 3, firstShown: ['b-14.4'],
     cut: [
       head('one'),
       [pic('lambs'), pic('spring'), p(';'), pic('salt'), pic('summer'), p(';')],

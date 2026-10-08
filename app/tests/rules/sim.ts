@@ -9,7 +9,8 @@ import type { Fact } from '../../src/core/types';
 import { content as C } from '../../src/content/world';
 import { live } from '../../src/core/week';
 
-export type Week = 'normal' | 'low' | 'high' | 'away';
+/** `short`: about an hour of work a day; `long`: about eight (D-160's review paces). */
+export type Week = 'normal' | 'low' | 'high' | 'away' | 'short' | 'long';
 
 /** `bed`: say goodnight each evening, on time (22:45, before the 23:00 bedtime) or late (00:30). */
 /** `pick`: the guess Dan makes for a mark on offer; null: he leaves it unanswered (a guess is always optional). */
@@ -37,7 +38,20 @@ export function sim(start = '2026-09-28T08:00:00+01:00', pick: (m: Mark) => stri
     run({ do: 'open' });
     if (kind === 'low') run({ do: 'capacity', capacity: 'low' });
     if (kind === 'high') run({ do: 'capacity', capacity: 'high' });
-    for (let guard = 0; guard < 12; guard++) {
+    /* a day by its minutes (D-160): delves on the day's jobs, then on any job, until about this much work is done */
+    const target = kind === 'short' ? 60 : kind === 'long' ? 480 : 0;
+    const today = () => facts.filter(f => f.type === 'stepsGained' && f.day === see(facts, C, at()).day && (f as { job?: string }).job !== 'sleep').reduce((a, f) => a + (f as { minutes: number }).minutes, 0);
+    for (let guard = 0; target && guard < 30 && today() < target; guard++) {
+      answer();
+      const v = see(facts, C, at());
+      const job = v.order.find(j => !v.done.has(j)) ?? C.jobs.find(j => j.delve && !j.item && (!v.done.has(j.id) || C.rhythms.some(r => r.job === j.id)))?.id;
+      if (!job) break;
+      const left = target - today(), m = Math.max(15, Math.min(60, left));
+      run({ do: 'startRun', job, minutes: m, count: 1 }); wait(m + 1);
+      if (!see(facts, C, at()).done.has(job) && C.jobs.find(x => x.id === job)?.doneBy === 'dan' && kind === 'long') run({ do: 'done', job });
+      const e = see(facts, C, at()).runEnd; if (e) run({ do: 'seen', what: 'step', ref: e.seq });
+    }
+    for (let guard = 0; !target && guard < 12; guard++) {
       answer();
       const v = see(facts, C, at());
       if (v.complete && kind !== 'high') break;

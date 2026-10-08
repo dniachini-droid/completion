@@ -3,6 +3,7 @@ import { act, daySize, presetRun, see, settle, type Command } from '../../src/co
 import type { Fact } from '../../src/core/types';
 import * as W from '../../src/core/week';
 import { content as C } from '../../src/content/world';
+import * as S from '../../src/core/story';
 
 /** A tiny player: a log, and a phone clock on the same day in British Summer Time. */
 function player(start = '2026-09-24T09:00:00+01:00') {
@@ -92,23 +93,45 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     expect(p.view().here.id).toBe('b-1.A');
     expect(p.view().next).toBeNull();
   });
-  it('a short day still arrives: a camp with a view', () => {
+  it('a short day ends nowhere by itself; Go to sleep is where Dan camps (D-160)', () => {
     const p = player().do({ do: 'open' }).do({ do: 'capacity', capacity: 'low' });
     p.did('gym').did('tank');
     expect(p.view().walked).toBe(120);
     /* 120 minutes passes the first place (75): a named place */
     expect(p.view().arrival?.kind).toBe('place');
-    /* today's whole list (the cat, the gym, the lesson) done in short delves, short of the first place: a camp */
+    /* today's whole list done in short delves, short of the first place: nothing happens, nothing is said */
     const q = player().do({ do: 'open' });
-    expect(q.view().line).toEqual(['cat', 'gym', 'course', 'lesson']);
     for (const job of q.view().line) {
       q.do({ do: 'startRun', job, minutes: 15, count: 1 }).wait(15);
       if (!q.view().done.has(job)) q.do({ do: 'done', job });
     }
     expect(q.view().walked).toBe(60);
-    expect(q.view().arrival).toMatchObject({ kind: 'camp', completedDay: true });
-    expect(q.view().arrival!.look).toBeTruthy();   /* a camp always has one thing to look at */
-    expect(q.view().here.id).toBeNull();
+    expect(q.view().arrival).toBeNull();
+    expect(q.types()).not.toContain('dayCompleted');
+    /* asleep before the first place: no place, only a camp on the way in if he is past it yet (D-160), and nothing else */
+    q.do({ do: 'goodnight' });
+    expect(q.facts.some(f => f.type === 'arrived' && f.kind !== 'camp')).toBe(false);
+    expect(q.facts.some(f => f.type === 'arrived' && f.kind === 'camp')).toBe(S.pastMouth(C.story, S.storyState(q.facts, C.story)));
+    /* asleep soon after a place: he camps at it */
+    p.do({ do: 'seen', what: 'arrival', ref: p.view().arrival!.seq }).do({ do: 'goodnight' });
+    /* at the place, or at a view of it (D-160) */
+    const a = p.view().arrival!, here = p.view().here.id;
+    expect(a.kind).toBe('camp');
+    expect(a.campAt ? a.id : C.story.camps.find(c => c.id === a.id)?.near).toBe(here);
+    /* the next day starts there: nothing moved */
+    expect(p.view().here.id).toBe(here);
+  });
+  it('asleep again at the same place: a view of that place if it has one, else the place; never anywhere else (D-160)', () => {
+    const p = player().do({ do: 'open' }).do({ do: 'capacity', capacity: 'low' });
+    p.did('gym').did('tank');
+    for (const a of p.facts.filter(f => f.type === 'arrived')) p.do({ do: 'seen', what: 'arrival', ref: a.seq });
+    const here = p.view().here.id!;
+    p.do({ do: 'goodnight' });
+    const a = p.view().arrival!;
+    expect(a.kind).toBe('camp');
+    const view = C.story.camps.find(c => c.id === a.id);
+    if (view) expect(view.near).toBe(here); else expect(a.id).toBe(here);
+    expect(p.view().here.id).toBe(here);
   });
   it('Done with no delve is recorded as afterwards; a delve to its enough counts as from the app (D-117)', () => {
     const p = player().do({ do: 'open' }).do({ do: 'done', job: 'gym' });
@@ -117,14 +140,13 @@ describe('the heart: open → Begin → delve → back → Done → the step →
     expect(q.facts.filter(f => f.type === 'jobBegun')).toEqual([expect.objectContaining({ job: 'gym', from: 'app' })]);
     expect(q.view().done.has('gym')).toBe(true);
   });
-  it('"Not today" on the list’s last job to do completes a day that had its work, and day complete locks in (D-130)', () => {
+  it('"Not today" on the list’s last job to do leaves the list done, and ends nothing (D-130, D-160)', () => {
     const p = player().do({ do: 'open' }).did('cat').did('gym').did('course');
     expect(p.view().complete).toBe(false);
     p.do({ do: 'setAside', job: 'lesson' });
     expect(p.view().complete).toBe(true);
-    p.do({ do: 'putBack', job: 'lesson' });
-    expect(p.view().complete).toBe(true);
-    expect(p.types().filter(t => t === 'dayCompleted')).toHaveLength(1);
+    expect(p.types()).not.toContain('dayCompleted');
+    expect(p.facts.some(f => f.type === 'arrived' && f.kind === 'camp')).toBe(false);
   });
   it("a delve begun before 04:00 and answered after: Done answers it, and it stays answered (Dan's report)", () => {
     const p = player('2026-09-24T23:30:00+01:00').do({ do: 'open' }).do({ do: 'addItems', lines: ['a job of his own'] });

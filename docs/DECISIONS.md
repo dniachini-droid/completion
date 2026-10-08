@@ -1791,3 +1791,34 @@
   - Assumed and stated to Dan: if he never presses sleep, nothing pops up; the next morning carries on from where he was.
 - **Process (agreed):** a spoiler-free plan first (`docs/reviews/route/CAMP_PLAN.md`), checked independently against points 1–8. Then the build on its own branch. Then an exhaustive player's-eye review of the built game: all 14 weeks at short, normal and long days, read by fresh reviewers as first-time players. For every place and scene they ask: where am I, why am I here, does it follow from what I've seen, is it real progress or filler. A separate whole-story read checks for anything that doesn't add up, comes too early or feels pointless. Anything that fails is fixed and the whole review re-run until it passes. Then a plain-English result for Dan. Dan went to sleep asking that the work not stop until it is done. Nothing is merged or sent to TestFlight without his OK.
 - **Reversible:** Yes, until merged.
+
+## D-161 — How D-160 is built: where you are, and where you camp
+- **Date:** 2026-10-08
+- **Context:** D-160 says Dan camps where he is. The build has to decide what "where he is" means when a job's story moment happens in another room, when one job both reaches a place and brings a moment elsewhere, and on the first night before the first place.
+- **Decision:**
+  1. *(Revised by D-163: a job's moment elsewhere is now a trip there and back.)* Where Dan is = the last place he reached, or the room a job's own moment took him to (and that return says so: "You go to … for this"). A moment that came with the same job as a place never moves him off that place.
+  2. A place's earlier moments (same week, before it in the story, where he is or at the place) play on the way to it, so a place never comes before the walk to it.
+  3. Go to sleep camps him at a camp view tied to the place he reached (every place on the route has one), else at the place itself. A night at the same spot again says "You have camped here before." and adds only what is new. Before the first place, once past the way in, he camps on the way in.
+  4. The night's last Go to sleep is his bedtime (for the head start and tomorrow's suggestion). Last night's camp screen, if left unread, is not shown in the morning.
+  5. Night thoughts more than a story week behind are dropped (a save that never kept bedtime used to get week-1 thoughts deep below). A week walked through between two bedtimes still keeps its thought.
+  6. The first word's button reads "Look through": the story says he does not go down yet.
+- **Alternatives:** camp only at the place itself (rejected: bare, repetitive nights); let a step never move him (rejected: returns set in another room then contradicted the camp).
+- **Reversible:** Yes.
+
+## D-162 — Saves from earlier builds under D-160
+- **Date:** 2026-10-08
+- **Context:** Dan's own save is from the D-159 build. Under D-160 some scenes moved to the top, before the way down, so a save already below has not seen them. Sending him back up for each one, or replaying what he had already seen under another name, breaks D-160 points 5–6.
+- **Decision:**
+  1. A merged scene counts as seen when the save saw every part of it under the old build (`absorbs`).
+  2. What is still missing is seen in **one** trip back up, with its reason on screen (`back`), its own wording for a save coming from below (`again`, `againName`), and "Then you go back down to where you were." A trip costs no walking.
+  3. A place the old build played as a step counts as reached, and Today and the Map show it.
+  4. A place folded into another since: the save stands at it, and camps at the views of the latest place on its stretch.
+- **Known limit:** a save from before the D-155 build that took a carried item as a step whose old wording did not say he took it carries on as if he had it.
+- **Reversible:** Yes.
+
+## D-163 — A job's moment in another room is a trip there and back (revises D-161 point 1)
+- **Date:** 2026-10-08
+- **Context:** Under D-161 point 1, a job's moment in another room moved Dan there, and he camped there. In the round-8 player's-eye review, two of three reviewers failed those nights: the camp was in an area no screen had walked him to. The earlier version, where he stayed put and the moment just named its room, had failed the round-6 review the other way round: the scene happened in one room and he slept in another, with nothing said.
+- **Decision:** a job's moment in another area never moves him. Its return says both legs: "You go to … for this, and then back to …". He camps where he was, and Today and the Map agree with that. The only things that move him are places reached on foot, and the trips back up of D-162. Two related fixes from the same round: a locked thing opened on the walk to a place is told first on that place's screen, in the order it happened, and a job's return never leans on it before that screen has been shown. A trip back up gives each place's own reason on every screen of the trip.
+- **Alternatives:** keep moving him and add a walk screen before the camp (rejected: a screen with nothing to do but walk is filler, D-160 point 8); never mention the room (rejected in round 6).
+- **Reversible:** Yes.

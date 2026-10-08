@@ -177,7 +177,7 @@ const cutIfAny = async (name) => {
   await page.locator('button.rodbtn').click(); await shot(name + '-cut-lock', 1000);
   await shot(name + '-cut-answer', 2500);
   await shot(name + '-cut-settled', 6000);
-  await tap('Go through'); await page.clock.runFor(800); await page.waitForTimeout(1500); await shot('stair', 4000);
+  await tap('Look through'); await page.clock.runFor(800); await page.waitForTimeout(1500); await shot('stair', 4000);
   await tap('Today'); await page.clock.runFor(1500);
   cut = true;
   /* "Today" shows any place still waiting first (D-080): play it */
@@ -299,12 +299,15 @@ const openers = async (name) => {
 const camp = async (name, loud) => {
   /* only from Today: an arrival also offers "Keep going", and the walk once took it for Today and waited for Go to sleep
      there (the stall seen since 2026-09-26) */
-  if (!(await has('Keep going')) || !(await page.locator('nav.foot').count())) return;
-  if (await has('Go to sleep')) errors.push('TONIGHT offered before the evening');
+  /* (D-160: Go to sleep is on Today all day, and only it ends the day; it camps Dan where he is, on its own screen) */
+  if (!(await page.locator('nav.foot').count())) return;
   await toClock(0, 22, 30); await page.clock.runFor(1500);
   if (loud) await shot(name + '-tonight', 1500);
+  if (!(await has('Go to sleep'))) { errors.push('TONIGHT has no Go to sleep'); return; }
   await tap('Go to sleep'); if (loud) await shot(name + '-goodnight', 2500); else await page.clock.runFor(800);
-  if (!(await page.locator('nav.foot').count())) errors.push('TONIGHT Go to sleep left Today');
+  /* tonight's camp, where he is, once past the way in: its one way on is Goodnight, back to Today */
+  if (await page.locator('.arr').count()) { if (loud) await shot(name + '-camp', 2500); if (!(await has('Goodnight'))) errors.push('the camp has no Goodnight'); else { await tap('Goodnight'); await page.clock.runFor(1500); } }
+  if (!(await page.locator('nav.foot').count())) errors.push('after the camp, not back on Today');
 };
 /** Do today's next job, whatever it is, and show its return. */
 const doNext = async (name) => {

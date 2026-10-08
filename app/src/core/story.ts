@@ -56,26 +56,65 @@ export interface StoryState {
   offered: Set<string>;
 }
 
+/** Whether Dan is past the way in yet: a step at the first stretch played (before it, there is nowhere to camp). */
+export const pastMouth = (s: Story, st: StoryState) => s.beats.some(b => b.kind === 'step' && b.stretch === s.stretches[0].id && st.played.has(b.id));
+/** A step the story marks as a place's approach (`before`), not yet played when the place is reached: it plays on the
+    way, so a place never comes before the walk to it (D-160, the short-day review). */
+export function stepBefore(s: Story, st: StoryState, p: Beat): Beat | undefined {
+  /* (only the steps the story marks as its approach, `before`: a step set elsewhere on the stretch is never pulled onto a
+     place's screen, the round-4 review) */
+  return s.beats.find(b => b.kind === 'step' && b.before === p.id && !b.retired && !st.played.has(b.id)
+    && !(st.departed && isTop(s, b.stretch)) && b.req.every(r => met(st, r)));
+}
+/** A moment at the top that a trip back up (an old save's, D-160) plays on its way: a step or a row the road opens, due
+    and not yet played, but only one that leads to a place still waiting at the top (else it waits for a job's return). */
+export function tripStep(s: Story, st: StoryState, push = false): Beat | undefined {
+  const road = roadSeals(s);
+  return s.beats.find(b => (b.kind === 'step' || (b.kind === 'stepKey' && !!b.seal && road.has(b.seal) && !st.opened.has(b.seal)))
+    && !b.retired && !b.portable && !st.played.has(b.id) && isErrand(s, st, b) && inWeek(st, b) && b.req.every(r => met(st, r))
+    && ((after) => { const n = nextPlace(s, after, push); return !!n && isErrand(s, after, n); })({
+      ...st, played: new Set([...st.played, b.id]), opened: new Set([...st.opened, ...(b.seal ? [b.seal] : [])]) }));
+}
+/** The kinds of beat that are places Dan arrives at. */
+const PLACE_KINDS = new Set(['arrival', 'arrivalKey', 'word']);
 export function storyState(facts: Fact[], s: Story): StoryState {
   const played = new Set<string>(), opened = new Set<string>(), given = new Set<string>(), guessed = new Map<string, string>();
   const records: string[] = [], passagesShown: string[] = [], campsShown: string[] = [];
   let week = 1, weekBegan: string | null = null, onFoot = 0, stretch: StretchId = s.stretches[0].id, held = 0;
   let here: string | null = null, departed = false;
   const visited = new Set<StretchId>([stretch]);
+  /* the last place reached on each stretch */
+  const lastOn = new Map<StretchId, string>();
   for (const f of facts) {
     switch (f.type) {
-      case 'beatPlayed': played.add(f.id); if (f.passage) passagesShown.push(f.passage); break;
+      case 'beatPlayed': {
+        played.add(f.id); if (f.passage) passagesShown.push(f.passage);
+        /* a place now that an earlier build played as a step on the way (an old save's, D-160): Dan has been there, so
+           he is there, as if he had arrived (never at the top once he has gone down) */
+        const b = beatOf(s, f.id);
+        /* a job's moment in another room never moves him: he goes there for it and comes back, and its return says so
+           (D-160; the round-8 review: a camp in another area after no screen of the walk there read as a jump) */
+        if (b && !b.retired && PLACE_KINDS.has(b.kind) && !(departed && isTop(s, b.stretch)) && s.route.some(r => r.places.some(p => p.id === b.id))) {
+          visited.add(b.stretch); stretch = b.stretch; here = b.id; lastOn.set(b.stretch, b.id);
+          if (!isHome(s, b.stretch) && b.stretch !== 'st-mouth') departed = true;
+        }
+        break;
+      }
       case 'arrived':
         if (f.kind === 'place') {
           played.add(f.id);
           /* an evening costs no walking (D-154); a place reached on foot before evenings existed was walked, and stays so */
-          if (f.how !== 'key' && f.how !== 'evening') onFoot++;
+          /* (nor a trip back up, an old save's: not walked to, D-160) */
+          if (f.how !== 'key' && f.how !== 'evening' && f.how !== 'trip') onFoot++;
           const b = beatOf(s, f.id);
           if (b) {
             visited.add(b.stretch);
             /* where Dan is: the last place walked to; a place at home once the way down is open is an evening (an old save's
                too, whatever it was called then), so it never moves him (D-154) */
-            if (!(f.how === 'evening' || (departed && isHome(s, b.stretch)))) { stretch = b.stretch; here = b.id; }
+            /* (nor a place a Key opened in another area: a trip there he chose, which leaves him where he was, D-160) */
+            /* (a place an earlier build had that is a step now, an old save's: he is on its stretch, at the last place there) */
+            if (!PLACE_KINDS.has(b.kind)) { if (!(departed && isTop(s, b.stretch)) && lastOn.has(b.stretch)) { stretch = b.stretch; here = lastOn.get(b.stretch)!; } }
+            else if (!(f.how === 'evening' || (departed && isTop(s, b.stretch)) || (f.how === 'key' && here !== null && areaOf(s, b.stretch) !== areaOf(s, stretch)))) { stretch = b.stretch; here = b.id; lastOn.set(b.stretch, b.id); }
             if (!isHome(s, b.stretch) && b.stretch !== 'st-mouth') departed = true;
           }
         } else if (f.kind === 'camp') campsShown.push(f.id);
@@ -89,6 +128,10 @@ export function storyState(facts: Fact[], s: Story): StoryState {
       case 'storyWeekBegan': week = f.w; weekBegan = calendarWeek(f.day); break;
     }
   }
+  /* what an earlier build's beats already gave an old save: held, as played (D-160) */
+  const had = (id: string) => id.startsWith('seal-') ? opened.has(id) : played.has(id);
+  /* (a place with a row that a save held this way has seen past: its row counts as open too, or the road would wait on it) */
+  for (const b of s.beats) if (!played.has(b.id) && ((b.absorbs?.length && b.absorbs.every(had)) || b.heldBy?.some(had))) { played.add(b.id); if (b.heldBy?.some(had) && b.seal) opened.add(b.seal); }
   const offered = new Set<string>();
   for (const b of s.beats) if (played.has(b.id)) b.carries?.guess?.forEach(m => offered.add(m));
   for (const x of s.seals) if (opened.has(x.id)) x.carries?.guess?.forEach(m => offered.add(m));
@@ -104,8 +147,13 @@ export const isHome = (s: Story, id: StretchId) => !!stretchOf(s, id)?.home;
 export const areaOf = (s: Story, id: StretchId): StretchId => stretchOf(s, id)?.area ?? id;
 /** An area's name, as every screen shows it. */
 export const areaName = (s: Story, id: StretchId): string => stretchOf(s, areaOf(s, id))?.name ?? '';
-/** Whether a place plays as an evening at camp now: at home, once the way down is open (D-154). */
-export const isEvening = (s: Story, st: StoryState, b: { stretch: StretchId }) => st.departed && isHome(s, b.stretch);
+/** Whether a place at the top plays after the way down was taken: only in a save from before D-160, as a told trip back
+    up that leaves Dan where he was (D-160: no evenings at camp; the story finishes the top before he leaves it). */
+export const isEvening = (_s: Story, _st: StoryState, _b: { stretch: StretchId }) => false;
+/** The top: the Lamp Hall and the rooms off it, and the Mouth above them (D-160). */
+export const isTop = (s: Story, id: StretchId) => isHome(s, id) || id === 'st-mouth';
+/** A place or moment at the top, once Dan has gone down: a trip back up (D-160), never where he camps. */
+export const isErrand = (s: Story, st: StoryState, b: { stretch: StretchId }) => st.departed && isTop(s, b.stretch);
 
 export const beatOf = (s: Story, id: string): Beat | undefined => s.beats.find(b => b.id === id);
 export const sealOf = (s: Story, id: string): Seal | undefined => s.seals.find(x => x.id === id);
@@ -190,9 +238,7 @@ export const onRoad = (s: Story, id: string | undefined) => !!id && roadSeals(s)
 /** A road row opens in the order Keys opened it (story week, then row), so a place never comes before the sign it
     confirms, or a row before the one it follows (D-129). */
 const roadTurn = (s: Story, st: StoryState, x: Seal) =>
-  s.seals.every(y => !onRoad(s, y.id) || st.opened.has(y.id) || y.w > x.w || (y.w === x.w && y.o >= x.o)
-    /* a row at home waits for an evening and never holds the road below (D-154); the road's order still holds at home */
-    || (st.departed && isHome(s, y.stretch) && !isHome(s, x.stretch)));
+  s.seals.every(y => !onRoad(s, y.id) || st.opened.has(y.id) || y.w > x.w || (y.w === x.w && y.o >= x.o));
 
 /* ---------- the route: places reached on foot ---------- */
 
@@ -215,8 +261,6 @@ export function nextPlace(s: Story, st: StoryState, _push = false): Beat | null 
       if (st.played.has(p.id)) continue;
       const b = beatOf(s, p.id);
       if (!b) continue;
-      /* a place at home once the way down is open is an evening at camp, never walked to (D-154) */
-      if (isEvening(s, st, b)) continue;
       /* a place a Key used to play is reached on foot now, once its sealed thing could be opened (D-129) */
       if (p.k) {
         const x = b.seal ? sealOf(s, b.seal) : undefined;
@@ -227,115 +271,56 @@ export function nextPlace(s: Story, st: StoryState, _push = false): Beat | null 
       const ahead = rw.w === st.week + 1 && p.id.startsWith('pl-') && areaOf(s, b.stretch) === areaOf(s, st.stretch);
       if (!(inWeek(st, b) || ahead)) return null;
       if (b.kind === 'word' && !EARLY.has(b.id) && b.w > st.week) return null;
-      /* never skipped for a place further on, in another area: what it waits for plays on the way (D-129), or it waits for
-         tonight's evening (D-154) */
+      /* never skipped for a place further on, in another area: what it waits for plays on the way (D-129) */
       return allMet(st, b.req) ? b : null;
     }
   }
   return null;
 }
 
-/** The next evening at camp (D-154): the first place at home on the route, of a story week begun, that can play now; once
-    the way down is open. Evenings play in route order, each when its own `req` is met. */
-export function nextEvening(s: Story, st: StoryState): Beat | null {
-  if (!st.departed) return null;
-  for (const rw of s.route) {
-    if (rw.w > st.week) return null;
-    for (const p of rw.places) {
-      if (st.played.has(p.id)) continue;
-      const b = beatOf(s, p.id);
-      if (!b || !isEvening(s, st, b)) continue;
-      if (p.k) { const x = b.seal ? sealOf(s, b.seal) : undefined; if (x && (st.opened.has(x.id) || !mayOpen(s, st, x) || !roadTurn(s, st, x))) continue; }
-      if (allMet(st, b.req)) return b;
-    }
-  }
-  return null;
-}
-
-/** The story moments at home that wait for the evening once the way down is open (her notebook, the tally, D-154): ready
-    now, in order. */
-export function homeSteps(s: Story, st: StoryState): Beat[] {
-  if (!st.departed) return [];
-  return candidateSteps(s, st).filter(b => held(s, st, b));
-}
-/** Whether a story moment at home waits for the evening: once the way down is open, unless the way down itself needs it
-    (a sign it offers, or itself), so a long day never waits on a night (D-129, D-154). */
-function held(s: Story, st: StoryState, b: { id: string; stretch: StretchId; seal?: string; portable?: boolean }): boolean {
-  return st.departed && isHome(s, b.stretch) && !b.portable && !frontierNeeds(s).has(b.id);
-}
-/** Whether a story moment is one an evening at camp holds (at home, and not needed by the way down). */
-export const eveningMoment = (s: Story, id: string) => { const b = beatOf(s, id) ?? lineRow(s, id); return !!b && isHome(s, b.stretch) && !(b as Beat).portable && !frontierNeeds(s).has(b.id); };
+/** No evenings at camp (D-160): kept for an old save's evening, read again, only. */
+export const nextEvening = (_s: Story, _st: StoryState): Beat | null => null;
+/** The story moments an old save's evening at camp held, read again (D-154, D-160): at the top. */
+export const eveningMoment = (s: Story, id: string) => { const b = beatOf(s, id) ?? lineRow(s, id); return !!b && isHome(s, b.stretch); };
 const lineRow = (s: Story, id: string) => { const x = sealOf(s, id); return x && !x.beat && !x.arrival ? { id: x.id, stretch: x.stretch } : undefined; };
-const needsCache = new WeakMap<Story, Set<string>>();
-/** The story moments at home the way down needs before it can go on: in the `req` of a place or step away from home, or
-    offering a sign one needs (closed under their own `req`). */
-function frontierNeeds(s: Story): Set<string> {
-  const hit = needsCache.get(s);
-  if (hit) return hit;
-  const out = new Set<string>(), todo: string[] = [];
-  const places = new Set(s.route.flatMap(r => r.places.map(p => p.id)));
-  for (const b of s.beats) if (!isHome(s, b.stretch) && (places.has(b.id) || b.kind === 'step' || b.kind === 'stepKey' || b.kind === 'word')) todo.push(...b.req);
-  for (const x of s.stretches) if (!x.home) todo.push(...x.req);
-  const offers = (b: Beat) => [...(b.carries?.guess ?? []), ...(b.seal ? sealOf(s, b.seal)?.carries?.guess ?? [] : [])];
-  const seen = new Set<string>();
-  while (todo.length) {
-    const id = todo.pop()!;
-    if (seen.has(id)) continue;
-    seen.add(id);
-    for (const b of s.beats) {
-      if (!isHome(s, b.stretch) || places.has(b.id)) continue;
-      if (b.id === id || b.seal === id || (id.startsWith('mk-') && offers(b).includes(id))) { out.add(b.id); todo.push(...b.req); }
-    }
-  }
-  needsCache.set(s, out);
-  return out;
-}
-/** Evenings waiting from a story week already behind (then two a night, D-154). */
-export function eveningsBehind(s: Story, st: StoryState): boolean {
-  return s.route.some(rw => rw.w < st.week && rw.places.some(p => { const b = beatOf(s, p.id); return !st.played.has(p.id) && !!b && isEvening(s, st, b); }));
-}
 
-/** The camp with a view for a day that completes short of the next place: the stretch's next unused view, then an
-    unused one back along the route Dan has walked; once all are used, the one seen longest ago (never the same view
-    night after night). */
-export function nextCamp(s: Story, st: StoryState): { id: string; find?: string; line?: string } {
-  const open = s.camps.filter(c => st.visited.has(c.stretch) && c.w <= st.week && allMet(st, c.req) && !(c.until && met(st, c.until)));
-  /* where Dan turned back today is in the area he is walking (D-154): one elsewhere only if his has none at all */
-  /* (on his own stretch first, then the deepest of his area: never the head of the Stair when he is two flights down) */
-  const deep = (c: { stretch: StretchId }) => s.stretches.findIndex(x => x.id === c.stretch);
-  const ok = open.filter(c => areaOf(s, c.stretch) === areaOf(s, st.stretch))
-    .sort((a, b) => Number(b.stretch === st.stretch) - Number(a.stretch === st.stretch) || deep(b) - deep(a));
-  /* none there: the deepest area walked (never home once the way down is open) */
-  if (ok.length) open.splice(0, open.length, ...ok);
-  else {
-    const depth = (c: { stretch: StretchId }) => s.stretches.findIndex(x => x.id === c.stretch);
-    const away = open.filter(c => !(st.departed && isHome(s, c.stretch))).sort((a, b) => depth(b) - depth(a));
-    if (away.length) open.splice(0, open.length, ...away.filter(c => depth(c) === depth(away[0])));
-  }
-  /* an unused view that stops being offered once the story moves on comes first, here or back along the route, so it is
-     not lost (deep review S#12) */
-  const unused = (c: { id: string }) => !st.campsShown.includes(c.id);
-  const fresh = ok.find(c => c.until && unused(c)) ?? open.find(c => c.until && unused(c)) ?? ok.find(unused) ?? open.find(unused);
-  if (fresh) return { id: fresh.id, ...('find' in fresh.look ? { find: fresh.look.find } : { line: fresh.look.line }) };
+/** Where Dan camps when he goes to sleep (D-160): where he is. At a view of the place he last reached (its `near`), one he
+    hasn't camped at yet (one that stops being offered first, so it isn't lost); else at that place itself. Never a view at
+    the top once he has gone down, and never one of another place: the camp is always where Today says he is. */
+export function campHere(s: Story, st: StoryState, _sinceLast = 0): { at: 'place'; id: string } | { at: 'view'; id: string; find?: string; line?: string } {
+  /* before the first place: past the way in, at a view of the first stretch (a short first day, D-160) */
+  /* (on the hillside before the climb down, at the foot of the ladder after it: each view's req and until) */
+  if (!st.here) { const m = s.camps.filter(c => c.stretch === s.stretches[0].id && !c.near && allMet(st, c.req) && !(c.until && met(st, c.until))), v = m.find(c => !st.campsShown.includes(c.id)) ?? m[m.length - 1] ?? s.camps[0]; return { at: 'view', id: v.id, ...viewLook(v) }; }
+  /* (a place folded into another since, where an old save stands: the views of the places he has reached on its stretch) */
+  const hb = beatOf(s, st.here);
+  /* (the latest such place in route order: the one he is nearest, the round-4 review) */
+  const latest = hb?.retired ? s.route.flatMap(r => r.places).filter(p => beatOf(s, p.id)?.stretch === hb.stretch && st.played.has(p.id)).pop()?.id : undefined;
+  const at = new Set([hb?.retired && latest ? latest : st.here]);
+  const near = s.camps.filter(c => !!c.near && at.has(c.near) && c.w <= st.week && allMet(st, c.req) && !(c.until && met(st, c.until))
+    && !(st.departed && isTop(s, c.stretch)));
+  const fresh = near.filter(c => !st.campsShown.includes(c.id));
+  const pick = fresh.find(c => c.until) ?? fresh[0];
+  if (pick) return { at: 'view', id: pick.id, ...viewLook(pick) };
+  /* all used: the one camped at longest ago, said again briefly (never a bare night, the review's round 2) */
   const last = (id: string) => st.campsShown.lastIndexOf(id);
-  const first = [...ok, ...open.filter(c => c.stretch !== st.stretch)].sort((a, b) => last(a.id) - last(b.id))[0]
-    ?? s.camps.find(c => c.stretch === st.stretch) ?? s.camps[0];
-  return { id: first.id, find: pickFind(s, st, 'camp', first.stretch)?.id };
+  const again = [...near].sort((a, b) => last(a.id) - last(b.id))[0];
+  return again ? { at: 'view', id: again.id } : { at: 'place', id: st.here };
 }
+const viewLook = (c: { look: { find: string } | { line: string } }) => 'find' in c.look ? { find: c.look.find } : { line: c.look.line };
 
 /* ---------- steps: what a job's return shows ---------- */
 
 /** The next ordered step beat (after a main job): this story week's, in table order, each after its arrival. */
 export function nextStep(s: Story, st: StoryState): Beat | null {
-  /* a story moment at home waits for the evening once the way down is open (D-154) */
-  return candidateSteps(s, st).find(b => !held(s, st, b)) ?? null;
+  return candidateSteps(s, st)[0] ?? null;
 }
-function candidateSteps(s: Story, st: StoryState): Beat[] {
+export function candidateSteps(s: Story, st: StoryState): Beat[] {
   /* never about a stretch Dan hasn't been to (D-079); a road row's step plays in its turn, with no Key (D-129), and a
      road row with only a line plays as a step of its own */
   const lineRows: Beat[] = s.seals.filter(x => !x.beat && !x.arrival && onRoad(s, x.id))
     .map(x => ({ id: x.id, kind: 'stepKey', w: x.w, o: x.o, seal: x.id, req: [], stretch: x.stretch }));
-  const steps = [...s.beats, ...lineRows].filter(b => (b.kind === 'step' || roadStep(s, st, b)) && !st.played.has(b.id) && inWeek(st, b) && allMet(st, b.req) && st.visited.has(b.stretch));
+  /* (never a retired one: off the route, kept only for old saves' facts, D-160) */
+  const steps = [...s.beats, ...lineRows].filter(b => !b.retired && (b.kind === 'step' || roadStep(s, st, b)) && !st.played.has(b.id) && inWeek(st, b) && allMet(st, b.req) && st.visited.has(b.stretch));
   steps.sort((a, b) => a.w - b.w || a.o - b.o);
   return steps;
 }
@@ -353,7 +338,7 @@ function roadStep(s: Story, st: StoryState, b: Beat): boolean {
  * order (as many as stand in the way, across a story week's end) play as Dan walks on and show on that place's arrival, with their records, choices and settled
  * guesses. Null if nothing so near would open the way.
  */
-export function onTheWay(s: Story, st: StoryState): Beat[] | null { return wayTo(s, st)?.bits ?? null; }
+export function onTheWay(s: Story, st: StoryState): Beat[] | null { const w = wayTo(s, st); return w && w.bits.length ? w.bits : null; }
 /** The next place Dan is walking to: the next place in reach, or the one the story bits on the way will open (D-129). */
 export const placeAhead = (s: Story, st: StoryState): Beat | null => nextPlace(s, st) ?? wayTo(s, st)?.place ?? null;
 function wayTo(s: Story, st: StoryState): { bits: Beat[]; place: Beat } | null {
@@ -362,15 +347,15 @@ function wayTo(s: Story, st: StoryState): { bits: Beat[]; place: Beat } | null {
   /* as many bits as stand in the way, across a story week's end (bounded by the story's own steps) */
   for (let k = 0; k < s.beats.length + s.seals.length; k++) {
     const place = nextPlace(s, t);
-    if (place) return out.length ? { bits: out, place } : null;
-    /* what stands in the way may be at home: an evening's place or moment, which a day this long goes up to camp for (D-154) */
-    const b = nextStep(s, t) ?? nextEvening(s, t) ?? homeSteps(s, t)[0] ?? null;
+    /* (with nothing between: the next place, a story week on, D-160) */
+    if (place) return { bits: out, place };
+    const b = nextStep(s, t);
     if (!b) {
       if (weekDone(s, t) && s.route.some(r => r.w === t.week + 1)) { t = { ...t, week: t.week + 1 }; continue; }
       return null;
     }
     out.push(b);
-    const x = b.kind === 'stepKey' || (b.seal && isEvening(s, t, b)) ? sealOf(s, b.seal!) : undefined;
+    const x = b.kind === 'stepKey' ? sealOf(s, b.seal!) : undefined;
     const played = new Set(t.played); played.add(b.id);
     const opened = new Set(t.opened); if (x) opened.add(x.id);
     const offered = new Set(t.offered);
@@ -446,14 +431,29 @@ export function pickFind(s: Story, st: StoryState, why: string, at0?: StretchId)
   /* `at`: only a find on that stretch (a stop at a day's end shows what is there, never a thing out of sight, D-154) */
   const ok = (f: Find) => !st.given.has(f.id) && f.w <= st.week && allMet(st, f.req) && !(f.until && met(st, f.until))
     && (!at0 || f.stretch === at0);
+  /* never from the top once Dan has gone down (D-160): what he notices is where he is */
+  const away = (id: StretchId) => st.departed && isTop(s, id);
+  /* at the top, before he goes down: any of its rooms he has been in, the earliest first, so its finds come before he
+     leaves them for good (D-160) */
+  if (!st.departed && !at0) {
+    /* (one that hands over a record first, so no record is left behind at the top; then one in the room he is in) */
+    const inRoom = (f: Find) => areaOf(s, f.stretch) === areaOf(s, st.stretch);
+    const top = s.finds.filter(f => ok(f) && st.visited.has(f.stretch) && isTop(s, f.stretch))
+      .sort((a, b) => (+!inRoom(a) - +!inRoom(b)) || (+!a.told - +!b.told) || a.w - b.w);
+    if (why === 'chamber') { const told = top.find(f => f.told); if (told) return told; }
+    if (top.length) return top[0];
+  }
+  /* only in the area he is in: a find describes what is in front of him, never a thing a flight or a lake away (D-160) */
+  const here = (id: StretchId) => areaOf(s, id) === areaOf(s, st.stretch);
   for (let i = at; i >= 0; i--) {
+    if (away(order[i]) || !here(order[i])) continue;
     const pool = s.finds.filter(f => f.stretch === order[i] && ok(f));
     if (!pool.length) continue;
     if (why === 'chamber') { const told = pool.find(f => f.told); if (told) return told; }
     return pool[0];
   }
   /* never a find from an area Dan has not reached: it would describe a place before he is there */
-  for (const id of order) { if (!st.visited.has(id)) continue; const f = s.finds.find(x => x.stretch === id && ok(x)); if (f) return f; }
+  for (const id of order) { if (!st.visited.has(id) || away(id) || !here(id)) continue; const f = s.finds.find(x => x.stretch === id && ok(x)); if (f) return f; }
   return null;
 }
 
@@ -461,16 +461,17 @@ export function pickFind(s: Story, st: StoryState, why: string, at0?: StretchId)
 
 /** A story week ends when its places and ordered steps have all played, the road's rows among them; the niches wait
     for Keys without holding the story (D-129). */
+/** A route place is behind Dan: reached, or (a place a sealed row plays) its row already open in an old save, so it never
+    plays now (D-160: an old save that opened the salt's crust before it was a place) */
+export const placeDone = (s: Story, st: StoryState, p: { id: string; k?: boolean }) =>
+  st.played.has(p.id) || (!!p.k && ((x) => !!x && st.opened.has(x.id))(sealOf(s, beatOf(s, p.id)?.seal ?? '')));
 export function weekDone(s: Story, st: StoryState): boolean {
   const rw = s.route.find(r => r.w === st.week);
   if (!rw) return false;
-  /* the evenings at camp and the moments at home they hold trail behind: they never hold the week, or a long day (D-154) */
-  /* (a carried page trails too while it waits on an evening's moment, D-155) */
-  const trails = (b: Beat | undefined) => !!b && st.departed && isHome(s, b.stretch) && (!b.portable || !allMet(st, b.req));
-  if (!rw.places.every(p => st.played.has(p.id) || isEvening(s, st, beatOf(s, p.id) ?? { stretch: 'st-mouth' }))) return false;
-  return s.beats.filter(b => b.w === st.week && b.kind === 'step').every(b => st.played.has(b.id) || trails(b))
-    && s.seals.every(x => x.w !== st.week || !onRoad(s, x.id) || st.opened.has(x.id) || trails(x.beat ? beatOf(s, x.beat) : undefined)
-      || (!x.beat && !x.arrival && st.departed && isHome(s, x.stretch)) || (!!x.arrival && isEvening(s, st, beatOf(s, x.arrival) ?? { stretch: 'st-mouth' })));
+  /* nothing trails: the top is finished before Dan leaves it (D-160) */
+  if (!rw.places.every(p => placeDone(s, st, p))) return false;
+  return s.beats.filter(b => b.w === st.week && b.kind === 'step' && !b.retired).every(b => st.played.has(b.id))
+    && s.seals.every(x => x.w !== st.week || !onRoad(s, x.id) || st.opened.has(x.id));
 }
 /** The next story week may begin as soon as this one is done: no calendar-week wait, so more work is never held back
     (Dan, D-123; was at most one story week a calendar week). */
@@ -643,7 +644,8 @@ export function settledBy(s: Story, st: StoryState, beat: string): { mark: strin
 
 /** The next deep beat that may play: this story week's, in order, its req met. */
 export function nextDeep(s: Story, st: StoryState): Beat | null {
-  const deep = s.beats.filter(b => b.kind === 'deep' && !st.played.has(b.id) && b.w <= st.week && allMet(st, b.req));
+  /* never one at the top once Dan has gone down (D-160): a deep push is where he is */
+  const deep = s.beats.filter(b => b.kind === 'deep' && !b.retired && !st.played.has(b.id) && b.w <= st.week && allMet(st, b.req) && !(st.departed && isTop(s, b.stretch)));
   deep.sort((a, b) => a.w - b.w || a.o - b.o);
   return deep[0] ?? null;
 }

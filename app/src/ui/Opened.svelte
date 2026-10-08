@@ -6,7 +6,7 @@
      again from the Map (`again:` id), it says it was opened, without the Keys left (D-143 B). */
   import { game, content } from './game.svelte';
   import { t } from '../content/copy/en';
-  import { sealOf, beatOf } from '../core/story';
+  import { sealOf, beatOf, areaOf, areaName } from '../core/story';
   import { paintingOf } from '../core/game';
   import Scene from './Scene.svelte';
   import Words from './Words.svelte';
@@ -32,6 +32,9 @@
     const named = there.find(b => x.where.toLowerCase().startsWith(b.name!.toLowerCase()));
     return paintingOf((named ?? there[there.length - 1])?.id ?? null, x.stretch);
   });
+  /* a lock in another area, behind Dan (left at the top): opening it is a trip he chooses, said so; it leaves him where he
+     was (D-160). One he carries (her papers) opens where he is */
+  const trip = $derived(!!x && !x.portable && !again && areaOf(s, x.stretch) !== areaOf(s, v.here.stretch) ? areaName(s, x.stretch) : '');
   const left = $derived(v.keys === 0 ? t('opened.left.none') : v.keys === 1 ? t('opened.left.one') : t('opened.left.many', { n: v.keys }));
 </script>
 
@@ -49,7 +52,7 @@
       {#if x && opened}
         <div class="label-line centred gold rise">{again ? t('opened.again') : t('opened.label')}</div>
         <h2 class="carve md rise d1">{x.where}</h2>
-        {#if line}<div class="rise d2"><Words plain length={line.length}><p class="say story on-scene"><Prose text={line} /></p></Words></div>{/if}
+        {#if line}<div class="rise d2"><Words plain length={line.length + (trip ? 90 : 0)}>{#if trip}<p class="say on-scene">{t('opened.trip', { area: trip })}</p>{/if}<p class="say story on-scene"><Prose text={line} /></p>{#if trip}<p class="say on-scene">{t('opened.tripBack')}</p>{/if}</Words></div>{/if}
         {#if records.length}<p class="rise d3 recs"><button class="text-link" onclick={() => go('records', records[0])}><span>{t('opened.records')}</span></button></p>{/if}
         {#if !again}<p class="soft rise d3 left">{left}</p>{/if}
       {/if}

@@ -43,9 +43,18 @@ for (const life of J.lives) {
     /* Today as the player sees it once this arrival is looked at (a later one in the same batch still waits its turn) */
     const last = facts[facts.length - 1], upTo = facts.filter(f => !(f.type === 'arrived' && f.seq > arr.seq && !looked.has(f.seq)));
     const seen = JSON.stringify({ version: J.version, content: J.content, facts: [...upTo, { seq: last.seq + 1, at, day: last.day, type: 'seen', what: 'arrival', ref: arr.seq }] });
-    const entry = { life: life.name, n: k, id: arr.id, kind: arr.kind, how: arr.how ?? null, day: arr.day, between: life.between?.[life.cuts.indexOf(cut)] ?? [] };
+    const entry = { life: life.name, n: k, id: arr.id, kind: arr.kind, how: arr.how ?? null, day: arr.day, between: life.between?.[life.cuts.indexOf(cut)] ?? [], ...(k === 1 && life.past ? { past: life.past } : {}) };
     /* the arrival as it plays */
     let page = await open(save, at);
+    /* a job's end the player read before pressing Go to sleep (the sim never marks it read): read through it to the arrival */
+    for (let g = 0; g < 3 && !(await page.locator('.arr, .cut').count()); g++) {
+      const see = page.getByRole('button', { name: /see where you are/i });
+      const way = (await see.count()) ? see : page.locator('button.home');
+      if (!(await way.count())) break;
+      entry.between = [...entry.between, '(a screen read before this: the morning or a job\'s end, repeating what is listed above) ' + (await words(page)).replace(/\n/g, ' ')];
+      if (!(await tap(page, way))) break;
+      await page.clock.runFor(6000); await page.waitForTimeout(3500);
+    }
     await page.screenshot({ path: `${out}/shots/${name}-a.png` });
     entry.arrival = await words(page);
     /* a word: cut it as a player does (a guess it asks first, the rod, each mark, the lock), and read the place's answer */
@@ -70,6 +79,8 @@ for (const life of J.lives) {
     for (let g = 0; g < 6 && !(await page.locator('nav.foot').count()); g++) { const way = (await page.locator('button.home').count()) ? page.locator('button.home') : page.locator('button.btn'); if (!(await tap(page, way))) break; }
     await page.screenshot({ path: `${out}/shots/${name}-t.png` });
     entry.today = await words(page);
+    /* (another screen of the same moment waits: the app shows it straight on, never Today in between) */
+    if (facts.some(f => f.type === 'arrived' && f.seq > arr.seq && !looked.has(f.seq) && f.at === arr.at)) entry.today = 'RECORDS\n(the next screen follows straight on: Today is not shown in between)';
     if (await tap(page, page.locator('button.icon-link', { hasText: 'Map' }))) {
       /* its lights and names fade in on the page's real clock, and it centres on where Dan is once drawn; the routes draw
          one after another (CSS, real time), the eleventh done by about 4 s */

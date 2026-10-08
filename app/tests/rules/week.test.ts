@@ -178,7 +178,8 @@ describe('Dan’s rhythms and the satchel', () => {
 describe('Camp, bedtime and the morning', () => {
   it('goodnight by bedtime plays the week’s camp line; the morning after, its morning waits', () => {
     const p = player().do({ do: 'open' }).clock('22:40').do({ do: 'goodnight' });
-    expect(p.view().night).toEqual({ kept: true, beat: 'b-w1.camp' });
+    /* before the first place, no camp line yet: it thinks of what Dan has seen there (D-160 fact check) */
+    expect(p.view().night).toEqual({ kept: true, beat: null });
     p.next().do({ do: 'open' });
     const v = p.view();
     /* week 1's camp has no morning line of its own (its morning id is the story's opening, never replayed); the find waits */
@@ -238,7 +239,8 @@ describe('The daybook’s week close', () => {
     expect(c.learned.length).toBeLessThanOrEqual(3 * to);
     expect(c.soFar.length).toBeGreaterThanOrEqual(3);
     expect(c.soFar.length).toBeLessThanOrEqual(6);
-    expect(c.glimpse).toBe('b-w1.close');
+    /* (week 1's glimpse stops once the lintel is seen close, b-2.2, D-160: a week of play that reached it shows none) */
+    expect([null, 'b-w1.close']).toContain(c.glimpse);
   });
   it('learned lines never repeat, and only lines whose beats have played show', () => {
     const p = sim().week('normal').week('normal').week('normal').week('normal');

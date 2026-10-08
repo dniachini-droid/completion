@@ -43,13 +43,15 @@ describe('Today shows the Keys kept and what needs one (Dan, D-142)', () => {
   it('the count is the Keys earned and not yet used; "Needs a Key" only on a sealed thing a Key alone opens', async () => {
     const S = await import('../../src/core/story');
     const { see } = await import('../../src/core/game');
-    const { facts } = heavy(35, 2);
+    /* (Keys kept, not spent on the Map: since D-160 the top's locks are all in view by week 3, so a player who spends every
+       Key at the day's end never holds one overnight) */
+    const { facts } = heavy(35, 2, true, 1, { noMap: true });
     let kept = 0, needs = 0;
     for (const day of [...new Set(facts.map(f => f.day))]) {
       const upTo = facts.filter(f => f.day <= day), last = upTo[upTo.length - 1];
       const v = see(upTo, C, last.at), st = S.storyState(upTo, C.story);
       expect(v.keys, day).toBe(st.held);
-      const view = S.inView(C.story, st);
+      const view = S.inView(C.story, st, st.stretch);
       expect(v.aheadKey, day).toBe(!!view && !S.onRoad(C.story, view.id));
       if (v.keys) kept++; if (v.aheadKey) needs++;
     }
@@ -92,8 +94,11 @@ describe('a Key is never spent for Dan; the Map and Today agree (D-143 A)', () =
   it('"Ahead" never names a locked thing behind Dan while one is in view where he is; behind, it says so', async () => {
     const S = await import('../../src/core/story');
     const { see } = await import('../../src/core/game');
-    const { facts } = heavy(35, 2, true, 1, { noMap: true });
     let behind = 0;
+    /* (at three paces: since a job's moment elsewhere no longer moves Dan, D-160 round 8, one pace may never leave a
+       locked thing only behind him) */
+    for (const h of [2, 3, 8]) {
+    const { facts } = heavy(35, h, true, 1, { noMap: true });
     for (const day of [...new Set(facts.map(f => f.day))]) {
       const upTo = facts.filter(f => f.day <= day), last = upTo[upTo.length - 1];
       const v = see(upTo, C, last.at), st = S.storyState(upTo, C.story);
@@ -105,8 +110,9 @@ describe('a Key is never spent for Dan; the Map and Today agree (D-143 A)', () =
       if (shut.some(x => S.areaOf(C.story, x!.stretch) === S.areaOf(C.story, st.stretch))) expect(v.aheadBehind, day).toBe(null);
       else { const x = shut[shut.length - 1]!; if (S.onRoad(C.story, x.id)) continue; behind++; expect(v.aheadBehind, day).toBe(x.stretch); }
     }
+    }
     expect(behind, 'a day with a locked thing only behind Dan').toBeGreaterThan(0);
-  }, 120_000);
+  }, 360_000);
   it('a niche of a later story week is never offered on a stretch the route loops back to (rule 5)', async () => {
     const S = await import('../../src/core/story');
     const { facts } = heavy(35, 2, true, 1, { noMap: true });

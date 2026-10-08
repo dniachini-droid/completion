@@ -96,8 +96,8 @@ await tap(btn('Order the cat’s medication: put it back on today'), 'Put it bac
 if (!(await row('Order the cat').count()) || await page.locator('.aside-row', { hasText: 'Order the cat' }).count()) fails.push('Put it back did not put the job back on the list');
 
 /* E, J18: a run of two delves on a new job; paused, Today keeps Add a job and the menus, and says which delve */
-/* (the day is done now: "Not today" on its last job finished it, D-130; Keep going leads to the Satchel) */
-await tap(btn('Keep going'), 'Keep going');
+/* (today's list is all done or set aside now: nothing ends the day, D-160; the Satchel is where a new job is added) */
+await tap(page.locator('.foot').getByRole('button', { name: 'Satchel', exact: true }), 'Satchel');
 await page.locator('.satchel-add input').focus(); await page.keyboard.type('Letters'); await page.keyboard.press('Enter'); await page.clock.runFor(1200);
 await tap(page.locator('.item button.row').filter({ has: page.locator('.t', { hasText: /^Letters/ }) }), 'Letters in the Satchel');
 await tap(btn('One more delve'), 'One more delve');
