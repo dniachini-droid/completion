@@ -575,3 +575,26 @@ The engine's new `again` field is the line a beat plays on a trip back up (old s
 ### 13.3 Round 5, the way in (engine aa55bae)
 
 `fd-a01`, `fd-a02`, `fd-a04`, `fd-a05` and `fd-a06` (all at the shaft's foot) now require `b-1.1`. The only find at the Mouth that the first side chamber can pick before the climb is `fd-a03`. It now lies at the top: a wrapper "tucked under the rim of the iron cap lying in the grass".
+
+## 14. Round 6 of the player's-eye review (2026-10-08; built; small, local edits)
+
+| Item | Change |
+|---|---|
+| 1 | `b-1.C`: "The rest of the tally's notches stay dark". |
+| 2 repeat nights | New views: `cv-69` "Where the tally ends" (`b-3.6`) and `cv-70` "By the low niche" (`b-13.1`). `cv-66` no longer requires `seal-12-1`; it is now under the far niche, not yet opened. |
+| 3 the channel record twice | The retired step `b-8.2` was still playing, because the engine does not skip a retired step. It now requires its own id, so it never plays. |
+| 4 the lintel's second night | `cv-64` keeps him at the lintel's foot, with his back against its stone ("Against the lintel's stone"). |
+| 5 the side gallery's why | `b-12.C` now opens with the one way below the Water still untried, and he goes back down the narrow way to it. |
+| 6a the tall figure | `cv-16`: across the lake he looks again, and nothing stands there now. `pl-w11-far-end`: a small dark ring the size of a lamp's foot, by the dips. |
+| 7 nits | `fd-j04` says "anywhere in the hall" once. `b-4.C`: "you come to the ledge" (no second "back into the Lamp Hall"). `pl-w9-approach`: the lintel's row of small dark cuts is shown, looking like part of the carving. |
+
+### 14.1 Round 6, old saves carried on (addendum; built)
+
+| Item | Change |
+|---|---|
+| 1 the trip chain | The lamp's base is now copied once, in one place, after it is looked at. `b-3.6`'s `again` copies only the tally and opens without a reason of its own ("You copy the tally too, while you are here."). `b-4.C` loses `absorbs`: every old save now climbs to it for the copy of what is by the lamp (its new `back`). Its `again` looks at the base, copies it with the wall and the ledge's notches, then the door. `b-3.6` keeps your `heldBy: [b-5.A]`. |
+| 2 the clay lamp | One place, as canon has it (NICHES 3.1): the unlit second lamp is in the niche at the head of the Stair (`b-3.B`, `pl-w8-steep-foot`, `b-9.A`). The lamp on the second landing (`fd-f04`) is a different one, already used, and is never called the spare. |
+| 3 a camp at the second turn | New view `cv-71` "Under the bend" (w4, requires `b-5.1`). `cv-13` needs `b-5.0`, which an old save may not have. |
+| 4 how and why | `b-11.A`: the leather book is still shut, and he goes to it. `b-9.A`: the steep stair and the narrow way both go into the dark, and only the doorway has light, so "it is there you go". `b-12.C` was done in §14. |
+| 5 the niche across the gallery | `b-7.1` opens with "Turning back along the square gallery". |
+| 6 the barn and the owl | `b-7.2` is now w8 and requires `b-8.A`: it is a return at the Water, never on the way to its first sight. |

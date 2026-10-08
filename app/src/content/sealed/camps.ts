@@ -148,7 +148,17 @@ export const camps: CampView[] = [
     name: "The second flight",
     line: "You camp on the second flight of the Stair, a few steps up from the landing, beside the little door. It is shut, though every notch in its row is full of light. Beside it is the one ring with sharp edges among all the worn, smooth ones.",
     look: {"find": "fd-f02"},
+  },  {
+    id: "cv-71",
+    stretch: "st-flight2",
+    w: 4,
+    req: ["b-5.1"],
+    near: "b-5.1",   // reachable for any save at the second turn (round 6, old saves)
+    name: "Under the bend",
+    line: "You camp on the second landing, under the bend of the stair where the recess is cut, with the opened recess at your shoulder.",
+    look: {"line": "Above you the second flight climbs away round the bend, its cups lit, step after step."},
   },
+
   {
     id: "cv-14",
     stretch: "st-flight2",
@@ -177,7 +187,7 @@ export const camps: CampView[] = [
     req: ["b-8.A"],
     near: "b-8.A",
     name: "The Water's edge",
-    line: "You camp on the Water's near shore, at the foot of the Stair. The flames in the cups on the last flight lie reflected on the black surface, perfectly still, like flames painted on glass.",
+    line: "You camp on the Water's near shore, at the foot of the Stair. The flames in the cups on the last flight lie reflected on the black surface, perfectly still, like flames painted on glass. Across the lake you look again for the tall shape you saw by a small light, but nothing stands there now.",
     look: {"find": "fd-h01"},
   },
   {
@@ -419,7 +429,18 @@ export const camps: CampView[] = [
     name: "Your copy",
     line: "You camp at the head of the tally with your copy beside you, the sheets squared up under a stone so that they will not slide.",
     look: {"line": "Your fingers are grey with pencil, and there is salt in the creases of your knuckles."},
+  },  {
+    id: "cv-69",
+    stretch: "st-salt",
+    w: 3,
+    req: ["b-3.6"],
+    until: "b-3.B",
+    near: "b-3.6",   // a second night at the copy (round 6)
+    name: "Where the tally ends",
+    line: "You camp at the far end of the tally, below its last line, where the salt is bare to the floor.",
+    look: {"line": "From here you can see the whole bared line of it running back towards the corner, and every cell of it is in the sheets beside you."},
   },
+
   {
     id: "cv-39",
     stretch: "st-stair",
@@ -570,7 +591,17 @@ export const camps: CampView[] = [
     name: "Between the niches",
     line: "You camp at the end of the side gallery, between the niche by the shut door and the recess across from it.",
     look: {"line": "The air is so still here that the dust you stir hangs a long time before it settles."},
+  },  {
+    id: "cv-70",
+    stretch: "st-side",
+    w: 13,
+    req: ["b-13.1"],
+    near: "b-13.1",   // a second night by the shut door (round 6)
+    name: "By the low niche",
+    line: "You camp at the end of the side gallery beside the third, smaller niche low by the floor.",
+    look: {"line": "Its notches are cut so close to the floor that the dust has drifted into them, and you blow them clean."},
   },
+
   {
     id: "cv-54",
     stretch: "st-side",
@@ -684,9 +715,9 @@ export const camps: CampView[] = [
     req: ["pl-w9-approach"],
     until: "b-10.A",
     near: "pl-w9-approach",
-    name: "Above the lintel",
-    line: "You camp a few steps up the narrow way, looking down at the lintel and its two niches.",
-    look: {"line": "From here the blank under the lintel is a dark gap in the line of carving, the width of the rod's edge."},
+    name: "Against the lintel's stone",
+    line: "You camp at the foot of the narrow way with your back against the stone under the lintel, between its two niches.",
+    look: {"line": "Close to, the blank above your head is a dark gap in the line of carving, the width of the rod's edge."},
   },
   {
     id: "cv-65",
@@ -702,10 +733,10 @@ export const camps: CampView[] = [
     id: "cv-66",
     stretch: "st-water",
     w: 11,
-    req: ["pl-w11-far-end", "seal-12-1"],   // under the opened niche (round 4)
+    req: ["pl-w11-far-end"],
     near: "pl-w11-far-end",
     name: "Under the far niche",
-    line: "You camp at the Water's far end, under the opened niche where the tablet of hands lay, facing the lake.",
+    line: "You camp at the Water's far end, under the niche in the wall beside the dips, facing the lake.",
     look: {"line": "The two worn dips face the lake, as if whoever stood in them stood looking out over the water."},
   },
 
