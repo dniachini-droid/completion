@@ -9,6 +9,8 @@ import { env, readFileSync, writeFileSync } from './node';
 import type { Fact } from '../../src/core/types';
 import { content as C } from '../../src/content/world';
 import { SAVE_VERSION } from '../../src/core/save';
+import { returnOf } from '../../src/core/game';
+import { the } from '../../src/content/copy/en';
 import { sim } from '../rules/sim';
 import * as S from '../../src/core/story';
 
@@ -21,9 +23,11 @@ function between(facts: Fact[], from: number, to: number): string[] {
       if (f.id === 'passage') { const p = s.passages.find(x => x.id === f.passage); if (p) out.push(`(a job's return) ${p.line}`); continue; }
       const b = s.beats.find(x => x.id === f.id), x = b?.seal ? s.seals.find(y => y.id === b.seal) : s.seals.find(y => y.id === f.id);
       /* a moment at the top after Dan has gone down (an old save's): the screen says first that he climbs back up (D-160) */
-      const st0 = S.storyState(facts.slice(0, facts.indexOf(f)), s), where = b?.stretch ?? x?.stretch;
-      const up = where && !b?.portable && !x?.portable && S.isErrand(s, st0, { stretch: where }) ? `First, a climb back up to ${S.areaName(s, where)}, for something you didn't stop for on your way down; then back down to where you were. ` : '';
-      const line = b?.line ?? x?.line; if (line) out.push(`(a job's return) ${up}${line}`);
+      /* as its return screen says it: a climb up said first (D-160), a move to another room said (D-161), its own words */
+      const done = facts.filter(g => g.type === 'jobDone' && g.seq < f.seq).pop();
+      const r0 = done ? returnOf(C, facts, done.seq) : null, r = r0 && [b?.id, x?.id, b?.seal].includes(r0.beat ?? '') ? r0 : null;
+      const lead = r?.up ? `${r.upWhy ?? `First, a climb back up to ${the(r.up)}; then back down to where you were.`} ` : r?.moved ? `You go to ${the(r.moved)} for this. ` : '';
+      const line = r?.line || (b?.line ?? x?.line); if (line) out.push(`(a job's return) ${lead}${line}`);
       for (const m of [...new Set([...(b?.carries?.guess ?? []), ...(x?.carries?.guess ?? [])])].filter(m => !asked.has(m) && asked.add(m))) out.push(`(you are asked to guess a symbol: you guess "${s.marks.find(k => k.id === m)?.candidates?.[0] ?? '?'}")`);
     }
     if (f.type === 'sealOpened' && f.how !== 'road') { const x = s.seals.find(y => y.id === f.seal); const line = x?.beat ? s.beats.find(b => b.id === x.beat)?.line : x?.line; if (line) out.push(`(you used a Key) ${line}`); }

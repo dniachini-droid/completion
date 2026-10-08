@@ -249,7 +249,7 @@
          painting, at any time of day (D-135) -->
     {#if v.here.seq !== null && v.here.id}<h1 class="carve lg rise"><button class="here" aria-describedby="here-again" onclick={() => go('arrival', `again:${v.here.seq}`)}>{v.here.area}</button></h1>
       <button class="text-link at-place rise" onclick={() => go('arrival', `again:${v.here.seq}`)}><span>{t('today.at', { place: v.here.name })}</span></button><span id="here-again" class="sr-only">{t('map.readHere')}</span>
-    {:else}<h1 class="carve lg rise">{v.here.area}</h1>{#if v.here.id}<span class="at-place plain rise">{t('today.at', { place: v.here.name })}</span>{/if}{/if}
+    {:else}<h1 class="carve lg rise">{v.here.area}</h1>{#if v.here.id || v.here.name !== v.here.area}<span class="at-place plain rise">{t('today.at', { place: v.here.name })}</span>{/if}{/if}
     <section class="where rise d2" aria-label={roadSay || undefined}>
       <EndRoad road={v.road} from={v.walked} to={v.walked} mode="still" notes={roadNotes} spoken={false} />
     </section>

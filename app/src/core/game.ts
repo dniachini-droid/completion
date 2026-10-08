@@ -2273,7 +2273,10 @@ export function see(facts: Fact[], base: Content, now: Moment): View {
   const hereSeq = lastPlace ? ofType(shown, 'arrived').filter(a => a.kind === 'place' && a.id === lastPlace.id).pop()?.seq ?? null : null;
   const here: Here = lastPlace
     ? { id: lastPlace.id, name: lastPlace.name ?? stretch.name, line: lastPlace.line ?? '', stretch: st.stretch, painting: paintingOf(lastPlace.id, st.stretch), area, seq: hereSeq }
-    : { id: null, name: stretch.name, line: opening?.line ?? '', stretch: st.stretch, painting: STAND_IN[st.stretch], area, seq: null };
+    /* (camped on the way in, before the first place: that spot, by the camp's name and words, round 5) */
+    : ((k) => k ? { id: null, name: k.name, line: k.line, stretch: st.stretch, painting: paintingOf(k.id, st.stretch), area, seq: null }
+      : { id: null, name: stretch.name, line: opening?.line ?? '', stretch: st.stretch, painting: STAND_IN[st.stretch], area, seq: null })(
+      c.story.camps.find(x => x.id === ofType(shown, 'arrived').filter(a => a.kind === 'camp').pop()?.id));
   /* the road counts on from the last place reached, even one not yet looked at (a word left for later): the minutes
      still visibly go somewhere (deep review B13, W F7); it names nothing, so it reveals nothing */
   const wordWaits = !!arrival && S.beatOf(c.story, arrival.id)?.kind === 'word';
