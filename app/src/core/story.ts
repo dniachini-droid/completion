@@ -332,7 +332,8 @@ function candidateSteps(s: Story, st: StoryState): Beat[] {
      road row with only a line plays as a step of its own */
   const lineRows: Beat[] = s.seals.filter(x => !x.beat && !x.arrival && onRoad(s, x.id))
     .map(x => ({ id: x.id, kind: 'stepKey', w: x.w, o: x.o, seal: x.id, req: [], stretch: x.stretch }));
-  const steps = [...s.beats, ...lineRows].filter(b => (b.kind === 'step' || roadStep(s, st, b)) && !st.played.has(b.id) && inWeek(st, b) && allMet(st, b.req) && st.visited.has(b.stretch));
+  /* (never a retired one: off the route, kept only for old saves' facts, D-160) */
+  const steps = [...s.beats, ...lineRows].filter(b => !b.retired && (b.kind === 'step' || roadStep(s, st, b)) && !st.played.has(b.id) && inWeek(st, b) && allMet(st, b.req) && st.visited.has(b.stretch));
   steps.sort((a, b) => a.w - b.w || a.o - b.o);
   return steps;
 }
@@ -451,7 +452,7 @@ export function pickFind(s: Story, st: StoryState, why: string, at0?: StretchId)
     /* (one that hands over a record first, so no record is left behind at the top; then one in the room he is in) */
     const inRoom = (f: Find) => areaOf(s, f.stretch) === areaOf(s, st.stretch);
     const top = s.finds.filter(f => ok(f) && st.visited.has(f.stretch) && isTop(s, f.stretch))
-      .sort((a, b) => (+!a.told - +!b.told) || (+!inRoom(a) - +!inRoom(b)) || a.w - b.w);
+      .sort((a, b) => (+!inRoom(a) - +!inRoom(b)) || (+!a.told - +!b.told) || a.w - b.w);
     if (why === 'chamber') { const told = top.find(f => f.told); if (told) return told; }
     if (top.length) return top[0];
   }
@@ -482,7 +483,7 @@ export function weekDone(s: Story, st: StoryState): boolean {
   if (!rw) return false;
   /* nothing trails: the top is finished before Dan leaves it (D-160) */
   if (!rw.places.every(p => placeDone(s, st, p))) return false;
-  return s.beats.filter(b => b.w === st.week && b.kind === 'step').every(b => st.played.has(b.id))
+  return s.beats.filter(b => b.w === st.week && b.kind === 'step' && !b.retired).every(b => st.played.has(b.id))
     && s.seals.every(x => x.w !== st.week || !onRoad(s, x.id) || st.opened.has(x.id));
 }
 /** The next story week may begin as soon as this one is done: no calendar-week wait, so more work is never held back
@@ -657,7 +658,7 @@ export function settledBy(s: Story, st: StoryState, beat: string): { mark: strin
 /** The next deep beat that may play: this story week's, in order, its req met. */
 export function nextDeep(s: Story, st: StoryState): Beat | null {
   /* never one at the top once Dan has gone down (D-160): a deep push is where he is */
-  const deep = s.beats.filter(b => b.kind === 'deep' && !st.played.has(b.id) && b.w <= st.week && allMet(st, b.req) && !(st.departed && isTop(s, b.stretch)));
+  const deep = s.beats.filter(b => b.kind === 'deep' && !b.retired && !st.played.has(b.id) && b.w <= st.week && allMet(st, b.req) && !(st.departed && isTop(s, b.stretch)));
   deep.sort((a, b) => a.w - b.w || a.o - b.o);
   return deep[0] ?? null;
 }

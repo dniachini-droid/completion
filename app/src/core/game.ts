@@ -1955,9 +1955,10 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
       ...(errand ? { errandWhy: errandMore ? null : b.back ?? null, errandMore, errandStays,
         ...(errandMore && prevPlace?.type === 'arrived' ? { errandFrom: S.areaName(c.story, S.beatOf(c.story, prevPlace.id)!.stretch) } : {}) } : {}), then,
       /* the walk to it (a step marked `before` it) is told first, as the start of its words (D-160) */
-      opened, way: way.filter(x => S.beatOf(c.story, x.beat)?.before !== b.id), id: b.id, name: (errand && b.againName ? b.againName : b.name) ?? '',
-      line: [...way.filter(x => S.beatOf(c.story, x.beat)?.before === b.id).map(x => x.line), (errand && b.again ? b.again : b.line) ?? ''].filter(Boolean).join(' '), taps: b.taps, choice: b.choice,
-      records: [...way.filter(x => S.beatOf(c.story, x.beat)?.before === b.id).flatMap(x => x.records), ...(b.carries?.records ?? [])], guess, look: null, stretch: b.stretch, painting: paintingOf(b.id, b.stretch), completedDay, byKey: f.how === 'key' };
+      /* (on a trip up, what it saw on the way is told first too, before the place: never after "Then you go back down") */
+      opened, way: way.filter(x => !errand && S.beatOf(c.story, x.beat)?.before !== b.id), id: b.id, name: (errand && b.againName ? b.againName : b.name) ?? '',
+      line: [...way.filter(x => errand || S.beatOf(c.story, x.beat)?.before === b.id).map(x => x.line), (errand && b.again ? b.again : b.line) ?? ''].filter(Boolean).join(' '), taps: b.taps, choice: b.choice,
+      records: [...way.filter(x => errand || S.beatOf(c.story, x.beat)?.before === b.id).flatMap(x => x.records), ...(b.carries?.records ?? [])], guess, look: null, stretch: b.stretch, painting: paintingOf(b.id, b.stretch), completedDay, byKey: f.how === 'key' };
   }
   /* tonight's camp at the place he reached (D-160): its name and painting; the screen says he camps there */
   const p = f.where === 'place' ? S.beatOf(c.story, f.id) : undefined;
