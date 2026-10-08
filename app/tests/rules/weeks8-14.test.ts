@@ -40,8 +40,8 @@ describe('weeks 8–14: the content is whole', () => {
     for (const rw of s.route.filter(r => NEW(r.w))) {
       /* about five a week: the route walked as a journey moved a few between weeks (D-154) */
       /* (weeks 10 and 14 have three since D-160: the deep end is first reached in week 13, and a niche-only place was folded in, CAMP_REHOME §7) */
-      /* (week 12 has two since round 2 of the D-160 review: two places that only restated were folded into others) */
-      expect(rw.places.length, `week ${rw.w}`).toBeGreaterThanOrEqual(rw.w === 12 ? 2 : [8, 10, 14].includes(rw.w) ? 3 : 4);
+      /* (week 12 has one since round 5 of the D-160 review: the places that only restated were folded into others) */
+      expect(rw.places.length, `week ${rw.w}`).toBeGreaterThanOrEqual(rw.w === 12 ? 1 : [8, 10, 14].includes(rw.w) ? 3 : 4);
       expect(rw.places.length, `week ${rw.w}`).toBeLessThanOrEqual(6);
       for (const p of rw.places) {
         const b = S.beatOf(s, p.id)!;
@@ -109,7 +109,7 @@ describe('weeks 8–14 play in order', () => {
       if (kind !== 'low') {
         const st = p.st();
         /* every place and ordered step of weeks 8–13 has played, and week 14's places */
-        const missing = s.beats.filter(b => NEW(b.w) && (b.w < 14 ? ['step', 'arrival', 'word'] : ['arrival', 'word']).includes(b.kind)
+        const missing = s.beats.filter(b => NEW(b.w) && !b.retired && (b.w < 14 ? ['step', 'arrival', 'word'] : ['arrival', 'word']).includes(b.kind)
           && s.route.some(r => r.w === b.w) && !st.played.has(b.id) && (b.kind !== 'arrival' || s.route.find(r => r.w === b.w)!.places.some(x => x.id === b.id) || !b.id.startsWith('pl-')));
         expect(missing.map(b => b.id)).toEqual([]);
       }

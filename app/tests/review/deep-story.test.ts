@@ -281,7 +281,7 @@ describe('deep story: fourteen story weeks played through, Keys spent (dynamic)'
       return m !== undefined && c !== undefined && m < c;
     }).map(b => b.id);
     /* (three since D-154: the night's line waits for what Dan has been shown, and week 10's now comes first) */
-    expect(early).toEqual(['b-w12.morning', 'b-w13.morning']);
+    expect(early).toEqual(['b-w13.morning']);
   }, 300_000);
 
   it('fixed (S#1): no week-close glimpse describes a sealed state after Dan has opened it (Normal, High)', () => {

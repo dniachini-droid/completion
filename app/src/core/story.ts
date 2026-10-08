@@ -144,7 +144,8 @@ export function storyState(facts: Fact[], s: Story): StoryState {
   }
   /* what an earlier build's beats already gave an old save: held, as played (D-160) */
   const had = (id: string) => id.startsWith('seal-') ? opened.has(id) : played.has(id);
-  for (const b of s.beats) if (!played.has(b.id) && ((b.absorbs?.length && b.absorbs.every(had)) || b.heldBy?.some(had))) played.add(b.id);
+  /* (a place with a row that a save held this way has seen past: its row counts as open too, or the road would wait on it) */
+  for (const b of s.beats) if (!played.has(b.id) && ((b.absorbs?.length && b.absorbs.every(had)) || b.heldBy?.some(had))) { played.add(b.id); if (b.heldBy?.some(had) && b.seal) opened.add(b.seal); }
   const offered = new Set<string>();
   for (const b of s.beats) if (played.has(b.id)) b.carries?.guess?.forEach(m => offered.add(m));
   for (const x of s.seals) if (opened.has(x.id)) x.carries?.guess?.forEach(m => offered.add(m));

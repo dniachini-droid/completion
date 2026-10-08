@@ -289,6 +289,7 @@ export const beats: Beat[] = [
     againName: "The crust",
     again: "The salt you have seen in the new light; what you have not seen is the end of the tally. In the Salt Gallery the light from the hall still glitters on the salt and on the river stones packed into the split, the long crack in the salt wall that someone blocked up. This time you go on past the lone ring, to where the carving disappears under a crust of salt: a hard skin grown over the stone, like the scale inside an old kettle, with a row of notches on it. As you watch, the notches fill with light, and the crust cracks and falls away along the wall in pieces. Under it the tally runs on, entry after entry, and you follow it. Low in the salt wall you pass a hollow the size of two cupped hands, with a row of dark notches round its rim, and in its floor four small flat places, close together, as if something small with four feet once stood there. Then the tally ends, and below its last line the salt is bare to the floor. Just past the end is a niche set deeper into the salt than any other, its mouth as wide as your shoulders, with a row of dark notches along its lip. In the shadow inside, its back wall is cut with symbols.",
     absorbs: ["pl-w3-salt-lit", "seal-5-2"],
+    heldBy: ["pl-w4-hollow"],   // a save that reached the hollow, past the crust, under an earlier build has seen it fall (D-160, round 5)
     kind: "arrivalKey",
     w: 3,
     o: 7,
