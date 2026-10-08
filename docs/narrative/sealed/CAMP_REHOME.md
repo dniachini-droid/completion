@@ -525,3 +525,53 @@ The engine's new `again` field is the line a beat plays on a trip back up (old s
 | 8 back to the ring | `pl-w2-above-the-ring` gives its reason: a closer look at the lone ring. |
 | 9 paraffin | `ps-s01` no longer refers back to a smell that was never told. |
 | 10 | Done in §12 and §12.1 (`cv-23`, `b-9.A`). |
+
+## 13. Round 5 of the player's-eye review (2026-10-07; built)
+
+| Item | Change |
+|---|---|
+| B1 how she got through | **What canon says:** L16 (month 7): "the doors I opened give me up and down; they know me". L6: on Day 9 the little door "is open", yet it is shut to Dan. L15 (month 4): "the rod he cut me when I asked for a second; the first stays on the shelf for the next one". MVP §1: he seals every reader's things for the next one. So a door she opened opens for her, and stands shut and blank for the next reader. **Planted now:** `b-2.2`: the lintel's blank holds two faint shapes, worn almost smooth, "as if marks were cut there once and the stone has closed over them again". `fd-f02`: she wrote "open" on the little door, and it is shut now, "as if it closed again behind her". `b-2.B`: a second, shorter clean stripe in the dust beside the rod's, "as if another rod lay beside this one until it was taken". Nothing says who closes the doors or cut her second rod: those answers stay for later. |
+| B2 Day 28 | `b-9.1` now shows her calling the crew's wall record "the surveyor's, I think" (as in rec-l10). `b-11.A` refers to it without "you remember". |
+| S1 the hold at the top | The top's texture finds from weeks 1–2 (16 of them) get `until: b-3.A`, so they no longer fill the nights after the lintel. Finds that are clues or carry a record keep playing (`fd-a01`, `fd-a06`, `fd-b01`, `fd-b04`, `fd-b08`, `fd-b09`, `fd-c02`–`fd-c05`, `fd-c11`, `fd-d04`). The packing (`b-3.2`) now comes before the lintel: it is the last place of week 2 (w2, requires `b-2.B`; `rec-l5` and `cv-58` are now w2). Its reason is to take her things wherever the lintel leads, and her Day 6 page ('I cut two marks in a lintel') comes just before he cuts. This also removes a Box Room, Lamp Hall, Box Room bounce. `b-3.1` now requires `b-3.2`. The crust and the copy stay. |
+| S2 below the Water | `b-11.B` is retired and taken off the route: its reread of the inner door is folded into `b-13.C` (which now requires `seal-11-1` and carries `rec-lintel`). Moved to `b-13.C` as well: `mk-voice` is confirmed there, and `wc-w11-2`, `ps-r07` and `cv-24` hang on it. `b-12.A` is retired and taken off the route: the bucket and its lid's pencil become part of the blast room's first look (`pl-w10-blast-floor`, which carries `rec-x-well-keeper`, now w10). The connection to the well is made with the 25th page at `b-11.2`. `b-12.2`, `b-w12.camp`, `b-w11.close`, `b-w12.tz1`, `wc-w12-1`, `sf-m4-3` and `cv-51` are re-hung to match. Week 12's route is now `b-12.C` alone. `b-13.B` says why it can't wait: with the shut door closed to him, the fall is the only way on. |
+| S4 the spare lamp | `b-3.B`: the second clay lamp is dry, with nothing to fill it, so he leaves it. `pl-w8-steep-foot` and `b-9.A` each point back to it in one clause. |
+| 6 the word's why | `b-3.A` opens with her note under the shelf, and he takes the rod to the lintel. |
+| 7 the gap | `b-5.B`: a draught on the landing, smelling of old smoke, leads him back up a few steps to find the gap. |
+| Nits | N1 `b-1.1`: the padlock lies in the grass before he picks it up. N2 `b-4.C` (its line and `again`, and the retired `b-3.3`): the fourth symbol is "too small and faint to show by the lamp's own light". N3 `fd-d03`: a biscuit tin, not a third mug. N4 `b-3.5`: grey and white bands, with pink between them in this light. N5 `b-8.1`: the hand's label is "a row of strokes", not four. N6 `fd-b11` and `fd-j04` trimmed. N7 `b-11.3`: "she writes it as if someone told her". N8 "cut by whoever cut the tally" now alternates with "cut in the tally's hand" in `beats.ts`. N9 `seal-1-6` is a different niche from the pick niche (`seal-1-2`): its `where` is now "a niche beside the split". N10 `b-10.C` and `cv-18`: the tunnel is choked a few yards back. |
+
+**Retcons (MASTER_BRIEF §55):** none of fact. The healed blank and the second stripe show what L15 and L16 already hold. The well bucket's lid is now read in week 10, not week 12, and its text is unchanged.
+
+### 13.1 Round 5, old saves carried on (addendum; built)
+
+| Item | Change |
+|---|---|
+| A the crust | I tried `heldBy: [pl-w4-hollow, pl-w14-deep-niche, b-14.4]` on `b-3.5` and dropped it. `b-3.5` is a K place, so a held save never opens `seal-5-2`, and the road behind it stalled at `b-5.1` (in the old-save route tests). **Engine:** a K place counted seen through `heldBy` should open its seal as well; then the field can go back on. `b-3.6`'s `again` now lists the notches under the ledge, and the niche at the foot of the wall, as things he copies, not as things he finds. No `heldBy` covers the whole of `b-3.6`, because no earlier build ever made a copy. The other trip scenes were checked and need nothing. |
+| B the tablets at the turns | Nothing to change. The old build (a2f40a9) showed the same tablets in `b-4.2` and `b-5.1` (stepKeys on `seal-4-1` and `seal-5-1`). Both are K places now, so a save counts them as reached only when their seal is open, which means it saw the tablet. |
+| C Day 9 | `b-4.3` now also requires `b-3.6` and `b-4.C`, so it comes after every trip scene. |
+| D the Reading Room from below | `b-9.A` gets an `again`: the narrow way is dark and the doorway has light, and he climbs back up to the Water. **Engine:** this needs showing when the save stands below the Water, which today happens only on a trip. |
+| E the little door | `b-3.4` now also requires `pl-w5-second-landing`. **Engine:** a deep beat whose stretch Dan has long left (old-save d159-low, in the blast room) still plays there. It needs a gate. |
+
+### 13.2 Round 5, short and long days (addendum; built)
+
+| Item | Change |
+|---|---|
+| 1 36 FT | Art note only (PAINTING_BRIEFS). |
+| 2 back to the salt | `b-2.A` reads "the last time you saw it". It no longer says "when you left the salt". |
+| 3 Day 28 | Done in §13 (B2). |
+| 4 the sideways fork | The channel record now names the fork ("Near its end stands a fork open sideways…"). `b-13.C` no longer says "you remember". |
+| 5 the chalk arrow | `b-1.C` gives a reason to leave the salt (the tally's notches stay dark). The chalk "catches your eye", which reads right whether or not `fd-b10` came first. |
+| 6 the camp at the first lintel | `cv-36` is now w2, because the word can come in week 2; otherwise the camp fell back on the word's own line. The views near the other words (`cv-42`, `cv-45`, `cv-55`, `cv-28`) only describe where he lies. |
+| 7 one place per screen | Week 3's route is now the lintel, `b-3.2`, `b-3.5`, `b-3.6`, then `b-4.C`. `b-3.6` copies only the tally, at the salt. `b-4.C` (now requiring `b-3.6`) is where he copies the lamp's base, the wall, the ledge's notches and the foot niche, onto his spare sheets, and then sees the door (it also has `seal-5-5` and `seal-3-4` in view). `b-4.B` no longer compares its mark to the lamp's base, since that is now copied later. For old saves, `b-3.6`'s `again` still includes the lamp's copy, and `b-4.C`'s `again` does not. |
+| 8 the gap | The round-5 wording (the draught leads him back up) is the fix. The long panel ran on round-4 text. |
+| 9 the channel record | `b-8.2` is retired, and its record is now on `pl-w8-channel` (which requires `seal-8-1` and carries `rec-v4`). `wc-w8-3`, `sf-m3-3` and `sf-m3-5` now hang on the place. |
+| 10 the tunnel camp | `cv-18` reads "the way the miners came in". |
+| 11 the far end | `pl-w11-far-end` now also requires `b-11.2` (the 25th). |
+| 12 the rubble's back | `b-14.A` is in the same area as the place before it (the lower way), so "Arrived" is right. Its line says he climbs a little uphill along the same way. |
+| 13 the cupboard | `pl-w11-cupboard` is retired. The cupboard is now part of the blast room's first look (`pl-w10-blast-floor`, with `seal-11-1` in view). `cv-46` and `tz-w11-a` hang there. |
+| 14 the cross | `b-9.B` now requires `b-9.C`, so it comes after the screen that shows the lamp tablet. |
+| 15 the square gallery's record | `b-6.A` no longer compares the record's opening to the tally's, ahead of the tally check. |
+| 16 "ready" | `cv-58` drops "ready to take down the stair". |
+
+### 13.3 Round 5, the way in (engine aa55bae)
+
+`fd-a01`, `fd-a02`, `fd-a04`, `fd-a05` and `fd-a06` (all at the shaft's foot) now require `b-1.1`. The only find at the Mouth that the first side chamber can pick before the climb is `fd-a03`. It now lies at the top: a wrapper "tucked under the rim of the iron cap lying in the grass".

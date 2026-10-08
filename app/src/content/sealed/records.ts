@@ -174,7 +174,7 @@ export const records: RecordFragment[] = [
     full: 'Once, the first. His hand over my hand. We cut two marks by the door. The lamps took fire: one, one, one, a hand; then past counting. I sat. Water from my eyes. He stood and counted.',
   },
   {
-    id: 'rec-l5', life: 'L', kind: 'paper', where: 'her notebook, from the cot in the Box Room', w: 3, firstShown: ['b-3.2'],
+    id: 'rec-l5', life: 'L', kind: 'paper', where: 'her notebook, from the cot in the Box Room', w: 2, firstShown: ['b-3.2'],
     paper: [
       'Day 6. It works. IT WORKS. The lamps in the wall-cups went down the hall like a fuse. I cut two marks in a lintel with the rod he gave me (my pillar from Day 3), which is a stone pencil, basically, and a door opened where there was stone. Note to self: when I record today, don\'t cry on the tape. Note to self: the tape recorder is dying; batteries. I am going to have to write on the walls like everybody else.',
     ],
@@ -519,7 +519,7 @@ export const records: RecordFragment[] = [
     ],
   },
   {
-    id: 'rec-x-well-keeper', life: 'X', kind: 'paper', where: 'the blast room, inside the lid of an iron-bound bucket', w: 12, firstShown: ['b-12.A'],
+    id: 'rec-x-well-keeper', life: 'X', kind: 'paper', where: 'the blast room, inside the lid of an iron-bound bucket', w: 10, firstShown: ['pl-w10-blast-floor'],
     paper: ['Three days still. Not low. Still. Then it came back and was cold.'],
   },
   {

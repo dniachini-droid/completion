@@ -186,7 +186,7 @@ export const passages: Passage[] = [
   { id: "ps-r04", stretch: "st-reading", req: [], line: "In the Reading Room you stop at a tablet at the height of your face. Its cuts are worn round, like old coins." },
   { id: "ps-r05", stretch: "st-reading", req: [], line: "You walk the length of the Reading Room. The benches stand in rows, evenly spaced, like the pews in a church." },
   { id: "ps-r06", stretch: "st-reading", req: [], line: "In the Reading Room, the dust between the benches is thin and even, and your footprints show clearly in it." },
-  { id: "ps-r07", stretch: "st-reading", req: ["b-11.B"], line: "You pass the Reading Room's inner door. Beyond it the benches go on, and the light stops at the third one." },
+  { id: "ps-r07", stretch: "st-reading", req: ["b-13.C"], line: "You pass the Reading Room's inner door. Beyond it the benches go on, and the light stops at the third one." },
   { id: "ps-r08", stretch: "st-reading", req: [], line: "In the Reading Room, one tablet has a lamp carved on it, and beside it the lamp's symbol, the same as on the wall by the lamp in the Lamp Hall." },
   { id: "ps-b01", stretch: "st-blast", req: [], until: "b-10.A", line: "You walk the narrow way below the Water. In one place the floor is gritty underfoot, with flakes of grey stone that crunch like old snow." },
   { id: "ps-b02", stretch: "st-blast", req: [], until: "b-10.A", line: "In one place on the narrow way below the Water, the walls come in so close that your sleeves brush the stone on both sides." },

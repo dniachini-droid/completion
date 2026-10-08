@@ -25,7 +25,7 @@ export const seals: Seal[] = [
   { id: 'seal-1-5', w: 1, o: 4, where: 'The Mouth, beside the foot of the ladder', stretch: 'st-mouth',
     line: 'At the bottom of the shaft, beside the foot of the ladder, is a recess in the brick wall: a small alcove like a little cupboard, with a nail above it and a row of notches along its lip. Soft light fills the notches, the whole row at once, and the recess opens. Inside, a brass tag hangs on a nail, stamped with a shaft number. It looks like an official label for the shaft, the kind a company or council would use. You leave it hanging.',
     plain: true },
-  { id: 'seal-1-6', w: 1, o: 5, where: 'The Salt Gallery, a niche low in the salt wall', stretch: 'st-salt',
+  { id: 'seal-1-6', w: 1, o: 5, where: 'The Salt Gallery, a niche beside the split', stretch: 'st-salt',
     line: 'In the Salt Gallery, low down beside the split in the salt wall, is a niche with its mouth closed and a row of dark notches on its lip. Light fills them, the whole row at once, and the niche opens. Inside is a small clay flask, stoppered with a twist of wool. You lift it out: it is empty, and as light as an eggshell, like something put away with care. You set it back where you found it.',
     plain: true },
 
@@ -143,7 +143,7 @@ export const seals: Seal[] = [
   { id: 'seal-8-1', w: 8, o: 1, where: 'The Water, a niche by the Stair’s last step', stretch: 'st-water', beat: 'b-8.1',
     carries: { guess: ['mk-see', 'mk-count', 'mk-day', 'mk-number'] } },
   { id: 'seal-8-2', w: 8, o: 0, where: 'The Water, the channel’s near lip', stretch: 'st-water', seenOnly: true },
-  // NOTE: seal-8-2 is V4, seen in the open at b-8.2.
+  // NOTE: seal-8-2 is V4, seen in the open at pl-w8-channel (b-8.2 folded in, round 5).
   { id: 'seal-8-3', w: 8, o: 2, where: 'The Water, a step under the water', stretch: 'st-water', beat: 'b-8.4', plain: true },
   { id: 'seal-8-4', w: 9, o: 5, where: 'Below the Water, a niche on the narrow way down', stretch: 'st-blast', arrival: 'b-8.C' },
   { id: 'seal-8-5', w: 8, o: 4, where: 'The Water, a niche in the channel', stretch: 'st-water',
@@ -182,7 +182,7 @@ export const seals: Seal[] = [
   { id: 'seal-11-4', w: 11, o: 3, where: 'Below the Water, a crack by the torn wall in the blast room', stretch: 'st-blast', arrival: 'b-11.C',
     carries: { records: ['rec-x-powder-man'] } },
   { id: 'seal-11-5', w: 11, o: 0, where: 'Below the Water, under the ledge in the blast room', stretch: 'st-blast', seenOnly: true },
-  // NOTE: seal-11-5 is the well-keeper's bucket, seen in the open at b-12.A.
+  // NOTE: seal-11-5 is the well-keeper's bucket, seen in the open at pl-w10-blast-floor (round 5).
   { id: 'seal-11-6', w: 11, o: 4, where: 'Below the Water, a split in the floor by the rails in the blast room', stretch: 'st-blast',
     line: 'Where the iron rails stop in the middle of the blast room, a row of notches along a split in the floor fills with light. Driven into the split is a spiked iron candle-holder, the kind miners drove into a wall to hold a candle while they worked. A stub of wax is still in its cup.',
     plain: true },

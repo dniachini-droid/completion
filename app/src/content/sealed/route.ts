@@ -45,8 +45,8 @@ export const stretches: Stretch[] = [
     beats.ts for old saves, off the route. */
 export const route: RouteWeek[] = [
   { w: 1, places: [{ id: "b-1.A" }, { id: "pl-w1-below-the-lamp" }, { id: "b-1.B" }, { id: "pl-w1-pick-niche" }, { id: "b-1.C" }] },
-  { w: 2, places: [{ id: "b-2.A" }, { id: "pl-w2-above-the-ring" }, { id: "pl-w2-box-by-the-cot" }, { id: "b-2.B" }] },
-  { w: 3, places: [{ id: "b-3.A" }, { id: "b-4.C" }, { id: "b-3.2" }, { id: "b-3.5", k: true }, { id: "b-3.6" }] },
+  { w: 2, places: [{ id: "b-2.A" }, { id: "pl-w2-above-the-ring" }, { id: "pl-w2-box-by-the-cot" }, { id: "b-2.B" }, { id: "b-3.2" }] },
+  { w: 3, places: [{ id: "b-3.A" }, { id: "b-3.5", k: true }, { id: "b-3.6" }, { id: "b-4.C" }] },
   { w: 4, places: [{ id: "b-3.B", k: true }, { id: "b-3.C" }, { id: "b-4.2", k: true }, { id: "pl-w5-second-landing" }] },
   { w: 5, places: [{ id: "b-5.1", k: true }, { id: "b-5.B" }] },
   { w: 6, places: [{ id: "b-6.A" }, { id: "pl-w6-square-gallery" }, { id: "b-6.B", k: true }] },
@@ -54,8 +54,8 @@ export const route: RouteWeek[] = [
   { w: 8, places: [{ id: "b-8.A" }, { id: "pl-w8-channel" }, { id: "pl-w8-steep-foot" }] },
   { w: 9, places: [{ id: "b-9.A" }, { id: "pl-w9-benches" }, { id: "b-9.C", k: true }, { id: "b-8.C", k: true }, { id: "pl-w9-approach" }] },
   { w: 10, places: [{ id: "b-10.A", k: true }, { id: "pl-w10-blast-floor" }, { id: "b-10.C", k: true }] },
-  { w: 11, places: [{ id: "pl-w11-cupboard" }, { id: "b-11.A", k: true }, { id: "b-11.C", k: true }, { id: "pl-w11-far-end" }, { id: "b-11.B" }, { id: "b-13.C", k: true }] },
-  { w: 12, places: [{ id: "b-12.A" }, { id: "b-12.C", k: true }] },
+  { w: 11, places: [{ id: "b-11.A", k: true }, { id: "b-11.C", k: true }, { id: "pl-w11-far-end" }, { id: "b-13.C", k: true }] },
+  { w: 12, places: [{ id: "b-12.C", k: true }] },
   { w: 13, places: [{ id: "b-13.1", k: true }, { id: "b-13.A", k: true }, { id: "b-13.B" }, { id: "pl-w13-lower-gallery" }] },
   { w: 14, places: [{ id: "pl-w14-meeting" }, { id: "b-14.A" }, { id: "b-14.B" }] },
 ];

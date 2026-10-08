@@ -197,7 +197,7 @@ export const camps: CampView[] = [
     req: ["b-10.C"],
     near: "b-10.C",
     name: "By the torn wall",
-    line: "You camp in the blast room, beside the torn wall, where the miners' tunnel comes in. Through the hole it runs back into the dark the way the log's writer came, sixty-one yards of it by his own chalk.",
+    line: "You camp in the blast room, beside the torn wall, where the miners' tunnel comes in. Through the hole it runs back a few yards, the way the miners came in, and stops, choked with fallen rock.",
     look: {"find": "fd-i04"},
   },
   {
@@ -256,8 +256,8 @@ export const camps: CampView[] = [
     id: "cv-24",
     stretch: "st-reading",
     w: 11,
-    req: ["b-11.B"],
-    near: "b-11.B",
+    req: ["b-13.C"],
+    near: "b-13.C",   // the inner door, read at the bench apart since round 5
     name: "The inner door",
     line: "You camp in the Reading Room by its inner door. Under the lintel the doorway stands open, and beyond it the benches go on into the dark, past the third, where the light stops.",
     look: {"find": "fd-j02"},
@@ -390,7 +390,7 @@ export const camps: CampView[] = [
   {
     id: "cv-36",
     stretch: "st-hall",
-    w: 3,
+    w: 2,   // the word may come in week 2 (round 5, long 13)
     req: ["b-3.A"],
     until: "b-3.B",
     near: "b-3.A",
@@ -495,8 +495,8 @@ export const camps: CampView[] = [
     id: "cv-46",
     stretch: "st-blast",
     w: 11,
-    req: ["pl-w11-cupboard"],
-    near: "pl-w11-cupboard",
+    req: ["pl-w10-blast-floor"],
+    near: "pl-w10-blast-floor",   // the cupboard is seen here since round 5
     name: "By the cupboard",
     line: "You camp against the wall of the blast room beside the cupboard, with POWDER scratched out on its stone door above your head.",
     look: {"line": "Under the crossed-out word, fainter, someone has scratched it once more and crossed that out too."},
@@ -545,8 +545,8 @@ export const camps: CampView[] = [
     id: "cv-51",
     stretch: "st-blast",
     w: 12,
-    req: ["b-12.A"],
-    near: "b-12.A",
+    req: ["pl-w10-blast-floor"],
+    near: "pl-w10-blast-floor",   // the bucket is seen here since round 5
     name: "By the bucket",
     line: "You camp on the blast room's floor beside the well bucket from the village, its iron bands cold to the touch.",
     look: {"line": "You tip it towards the light. Inside, its wood is dry and pale, as if no water has stood in it for a very long time."},
@@ -615,12 +615,12 @@ export const camps: CampView[] = [
   {
     id: "cv-58",
     stretch: "st-camp",
-    w: 3,
+    w: 2,
     req: ["b-3.2"],
     until: "b-3.B",
     near: "b-3.2",
     name: "Her things packed",
-    line: "You camp just inside the Box Room's doorway, with her notebook and her folder packed beside your own things, ready to take down the stair beyond the lintel.",
+    line: "You camp just inside the Box Room's doorway, with her notebook and her folder packed beside your own things.",
     look: {"line": "Without the notebook on it, the cot looks like anyone's."},
   },
   {

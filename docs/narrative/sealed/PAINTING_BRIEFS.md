@@ -219,3 +219,5 @@ Same rules as §1. Two changes from week 8: **a figure** may appear once, far an
 `pt-b-12.A` no longer has the log page as its subject: the bucket is.
 - **Round 4, short and long days:** new view `cv-68`, "Below the carved lamp" (the near end, the carved lamp and flame overhead). It uses a stand-in.
 - **Art-pass notes:** the square gallery's camp picture still shows gothic arches, but the gallery has a flat ceiling and square corners. The Salt Gallery camp and the Water's far shore share one image.
+- **Round 5:** these are retired, because their places were folded into others: `pt-b-11.B` (into `b-13.C`), `pt-b-12.A` (into `pl-w10-blast-floor`) and `pt-pl-w11-cupboard` (into `pl-w10-blast-floor`). `pt-pl-w10-blast-floor` now also shows the cupboard and the well bucket. `pt-b-4.C` comes after the copy and shows Dan copying the lamp's base. `pt-pl-w8-channel` now has the cramped record on the channel's near lip.
+- **Art-pass note:** the first painting (`b-1.A`) has "40 FT" chalked where the text has 36 FT (`fd-a02`). The number is a clue (36 feet is the same eleven metres as the ladder), so the painting should change, not the text.

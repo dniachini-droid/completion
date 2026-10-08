@@ -156,7 +156,7 @@ export const marks: Mark[] = [
   {
     id: 'mk-voice', sign: 'VOICE', w: 11, elements: ['fork-sideways'], shape: 'a fork open sideways',
     guessAt: 'b-11.1', context: 'a carved mouth', candidates: ['voice', 'mouth', 'breath', 'fire'], right: ['voice'],
-    tempting: 'mouth', confirmedBy: 'b-11.B', struck: 'Not the mouth. What comes out of it: a voice.',
+    tempting: 'mouth', confirmedBy: 'b-13.C', struck: 'Not the mouth. What comes out of it: a voice.',
   },
   {
     id: 'mk-sleep', sign: 'SLEEP', w: 11, elements: ['bar', 'bar'], shape: 'a bar over a bar',
