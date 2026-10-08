@@ -435,6 +435,23 @@ function knownState(w: W, c: Content) {
   return S.storyState(w.all.filter(f => !(f.type === 'arrived' && !seen.has(f.seq))
     && !(f.type === 'beatPlayed' && f.job === undefined && unseen.has(S.beatOf(c.story, f.id)?.before ?? ''))), c.story);
 }
+/** What the walk opened or played just before a place reached but not yet shown on its screen (its `way`, told there):
+    ids of those beats and seals. */
+function onTheWay(w: W, c: Content): Set<string> {
+  const seen = new Set(w.all.filter(f => f.type === 'seen' && f.what === 'arrival').map(f => (f as FactOf<'seen'>).ref));
+  const out = new Set<string>();
+  w.all.forEach((f, i) => {
+    if (f.type !== 'arrived' || f.kind !== 'place' || seen.has(f.seq)) return;
+    for (let j = i - 1; j >= 0; j--) {
+      const g = w.all[j];
+      if (g.type === 'recordShown' || g.type === 'storyWeekBegan' || g.type === 'findGiven') continue;
+      if (g.type === 'sealOpened' && g.how === 'road') { out.add(g.seal); continue; }
+      if (g.type === 'beatPlayed' && g.job === undefined && g.id !== 'passage') { out.add(g.id); continue; }
+      break;
+    }
+  });
+  return out;
+}
 function giveFind(w: W, c: Content, why: FactOf<'findGiven'>['why'], at: Moment, day: string, job?: number) {
   /* nothing is found down the way in before the climb down it is told: on a job's return the climb comes first (D-160,
      the round-4 review); a side chamber before it (no return to tell it on) gives a find that reads right before the climb */
@@ -672,7 +689,10 @@ function markDoneIn(w: W, c: Content, job: string, at: Moment, day: string, tick
      jobs are done if Dan called the push in the morning (D-054); else the story's next step; else a line of the passage */
   {
     /* from where Dan knows he is: a place the job reached comes after its words, on its own screen (D-154) */
-    const st = knownState(w, c), step = S.nextStep(c.story, st);
+    /* (nor on what the walk opened just before a place not yet on screen: that place's screen tells it, after this
+       return, the round-8 review) */
+    const st = knownState(w, c), ahead = onTheWay(w, c), next = S.nextStep(c.story, st);
+    const step = next && !next.req.some(r => ahead.has(r)) ? next : null;
     const n = workedOn(w.all, day).size, called = onDay(w.all, day).some(f => f.type === 'deepCalled');
     /* pushing deeper is doing more: past the day's finish line (its first 3 hours, D-131), the deep push's next beat
        plays, once a day, with no setting to choose first (Dan, D-127; a High day or a morning call did it before, D-054) */
@@ -1726,8 +1746,10 @@ export interface Return {
   up?: string;
   /** Why, in the story's words (the beat's `back`), said in place of the plain line. */
   upWhy?: string;
-  /** A step that took him to another area: its name, said (D-160). */
+  /** A moment in another area: its name, said; he goes there for it and comes back (D-160, round 8). */
   moved?: string;
+  /** (and the area he comes back to afterwards, where he still is) */
+  from?: string;
 }
 /** Where Dan stands. */
 /** Where Dan stands: the last place he walked to (D-154), its area's name, and its arrival (to read again). */
@@ -1821,7 +1843,7 @@ export interface View {
 /** The stand-in painting for a place until its own is painted from its brief (PROTOTYPE_NOTES.md). */
 export const STAND_IN: Record<StretchId, string> = {
   /* the Box Room is small and low: it borrows its own first painting, not a hall's (the round-6 short review) */
-  'st-mouth': 'sample-well-stair', 'st-hall': 'sample-rib-gallery', 'st-salt': 'sample-pool-dome', 'st-camp': 'pt-b-2.A',
+  'st-mouth': 'sample-well-stair', 'st-hall': 'sample-rib-gallery', 'st-salt': 'sample-pool-dome', 'st-camp': 'pt-pl-w2-box-by-the-cot',
   'st-stair': 'sample-well-stair', 'st-flight2': 'sample-well-stair', 'st-square': 'sample-rib-gallery',
   /* story weeks 8–14: the side gallery is square stone, so it borrows the square gallery's own painting */
   'st-water': 'sample-pool-dome', 'st-reading': 'sample-rib-gallery', 'st-blast': 'sample-well-stair',
@@ -1831,7 +1853,8 @@ export const STAND_IN: Record<StretchId, string> = {
     ui/paintings.ts carries (a test keeps the two in step); every other place shows its stretch's stand-in. */
 export const PAINTED: ReadonlySet<string> = new Set<string>(['b-1.A', 'b-1.B', 'b-1.C', 'b-2.A', 'pl-w2-smooth-place', 'pl-w1-pick-niche', 'b-5.A', 'pl-w5-ledge-lip', 'pl-w5-second-landing', 'b-7.A', 'b-7.B', 'pl-w6-square-gallery', 'b-6.B', 'pl-w6-folder', 'cv-02', 'cv-10', 'cv-11', 'cv-12', 'cv-13', 'cv-14', 'pl-w5-worn-steps', 'b-5.B', 'b-7.C', 'cv-15', 'cv-03', 'cv-04', 'cv-05', 'cv-07', 'cv-08', 'cv-09', 'pl-w2-above-the-ring', 'pl-w2-box-by-the-cot', 'b-3.A', 'b-3.B', 'b-3.C', 'b-4.A', 'b-4.B', 'b-2.B', 'pl-w1-below-the-lamp', 'pl-w3-far-end', 'cv-06', 'b-4.C', 'pl-w3-salt-lit', 'pl-w4-recess-above-the-cot', 'pl-w6-wall-shelf', 'cv-01', 'pl-w4-hollow', 'b-6.A', 'b-8.A', 'pl-w8-channel', 'b-8.B', 'pl-w8-steep-foot', 'b-8.C', 'b-9.A', 'pl-w9-benches', 'b-9.B', 'b-9.C', 'pl-w9-approach', 'pl-w10-deep-end', 'b-10.A', 'pl-w10-blast-floor', 'b-10.B', 'b-10.C', 'pl-w11-cupboard', 'b-11.A', 'b-11.B', 'pl-w11-far-end', 'b-11.C', 'b-12.A', 'pl-w12-shelf', 'b-12.B', 'pl-w12-square-way', 'b-12.C', 'pl-w13-side-gallery', 'b-13.A', 'b-13.B', 'b-13.C', 'pl-w13-lower-gallery', 'b-14.A', 'pl-w14-mule-stone', 'b-14.B', 'pl-w14-meeting', 'pl-w14-deep-niche', 'cv-16', 'cv-17', 'cv-18', 'cv-19', 'cv-20', 'cv-21']);
 /** A place D-160 made of a retired one, shown with that one's painting (ids only). */
-const PAINTED_AS: Readonly<Record<string, string>> = { 'b-3.5': 'pl-w3-salt-lit' };
+/* (and a view at a painted place, where its stretch's stand-in would show the wrong thing: cv-49, round 8) */
+const PAINTED_AS: Readonly<Record<string, string>> = { 'b-3.5': 'pl-w3-salt-lit', 'cv-49': 'pl-w11-far-end' };
 export const paintingOf = (id: string | null, stretch: StretchId): string => {
   const as = id ? PAINTED_AS[id] ?? id : null;
   return as && PAINTED.has(as) ? `pt-${as}` : STAND_IN[stretch];
@@ -1943,6 +1966,7 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
     /* never a guess the screen itself answers: the place, or a bit on the way here (D-129) */
     /* an evening's home moments after it: their lines, records and guesses, asked here (D-154) */
     const face = faceOf(c, all, f, b), then = face === 'evening' ? thenOf(c, all, f) : [];
+    const first = (x: Arrival['way'][number]) => errand || S.beatOf(c.story, x.beat)?.before === b.id || (S.beatOf(c.story, x.beat)?.kind === 'stepKey' && !x.choice);
     for (const x of then) keyed.push(...guessesOf(c, x.beat));
     const answers = new Set([b.id, ...way.map(x => x.beat), ...then.map(x => x.beat)]);
     const guess = [...new Set([...(b.carries?.guess ?? []), ...carried, ...keyed])].filter(m => !answers.has(S.markOf(c.story, m)?.confirmedBy ?? ''));
@@ -1956,13 +1980,16 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
     const errandMore = errand && tripOf(prevPlace), errandStays = errand && tripOf(nextPlace);
     /* a place whose own line says how Dan came (a turn-off on the way up) needs no way-in line over it */
     return { seq: f.seq, kind: 'place', face, late: !!f.late, earlier: !!f.late && !!f.night && W.daysBetween(f.night, f.day) > 1, area, wayIn: face === 'back' && !b.said ? wayIn : null, turnOff: ((face === 'back' || face === 'on') && !!b.turnOff) || (face === 'back' && errand), errand,
-      ...(errand ? { errandWhy: errandMore ? null : b.back ?? null, errandMore, errandStays,
+      /* (a place with its own reason says it on every trip, first or not, the round-8 review) */
+        ...(errand ? { errandWhy: b.back ?? null, errandMore, errandStays,
         ...(errandMore && prevPlace?.type === 'arrived' ? { errandFrom: S.areaName(c.story, S.beatOf(c.story, prevPlace.id)!.stretch) } : {}) } : {}), then,
       /* the walk to it (a step marked `before` it) is told first, as the start of its words (D-160) */
       /* (on a trip up, what it saw on the way is told first too, before the place: never after "Then you go back down") */
-      opened, way: way.filter(x => !errand && S.beatOf(c.story, x.beat)?.before !== b.id), id: b.id, name: (errand && b.againName ? b.againName : b.name) ?? '',
-      line: [...way.filter(x => errand || S.beatOf(c.story, x.beat)?.before === b.id).map(x => x.line), (errand && b.again ? b.again : b.line) ?? ''].filter(Boolean).join(' '), taps: b.taps, choice: b.choice,
-      records: [...way.filter(x => errand || S.beatOf(c.story, x.beat)?.before === b.id).flatMap(x => x.records), ...(b.carries?.records ?? [])], guess, look: null, stretch: b.stretch, painting: paintingOf(b.id, b.stretch), completedDay, byKey: f.how === 'key' };
+      /* (and a sealed thing the road opened on the way here, before it: in the order it happened, the round-8 review;
+         one with buttons of its own stays after) */
+      opened, way: way.filter(x => !errand && !first(x)), id: b.id, name: (errand && b.againName ? b.againName : b.name) ?? '',
+      line: [...way.filter(first).map(x => x.line), (errand && b.again ? b.again : b.line) ?? ''].filter(Boolean).join(' '), taps: b.taps, choice: b.choice,
+      records: [...way.filter(first).flatMap(x => x.records), ...(b.carries?.records ?? [])], guess, look: null, stretch: b.stretch, painting: paintingOf(b.id, b.stretch), completedDay, byKey: f.how === 'key' };
   }
   /* tonight's camp at the place he reached (D-160): its name and painting; the screen says he camps there */
   const p = f.where === 'place' ? S.beatOf(c.story, f.id) : undefined;
@@ -2050,9 +2077,10 @@ function rawReturn(c: Content, facts: Fact[], doneSeq: number): Return {
   /* a Key's return says so; a row the road opened is a step like any other (D-129) */
   const byRoad = facts.some(f => f.type === 'sealOpened' && f.seal === b.seal && f.how === 'road');
   const trip = up(b);
-  /* a step that takes him to another area (a job's moment there, D-160): said, never a silent move (D-160 review) */
-  const was = S.storyState(facts.filter(f => f.seq < beat.seq), c.story), now = S.storyState(facts.filter(f => f.seq <= beat.seq), c.story);
-  const moved = !('up' in trip) && S.areaOf(c.story, was.stretch) !== S.areaOf(c.story, now.stretch) ? { moved: S.areaName(c.story, now.stretch) } : {};
+  /* a moment in another area (a job's there, D-160): he goes there for it and comes back, said, never a silent jump
+     (the round-8 review) */
+  const was = S.storyState(facts.filter(f => f.seq < beat.seq), c.story);
+  const moved = !('up' in trip) && !b.portable && S.areaOf(c.story, b.stretch) !== S.areaOf(c.story, was.stretch) ? { moved: S.areaName(c.story, b.stretch), from: S.areaName(c.story, was.stretch) } : {};
   return { ...trip, ...moved, beat: b.id, line: ('up' in trip && b.again ? b.again : b.line) ?? '', key: b.kind === 'stepKey' && !byRoad, guess, choice: b.choice, records: [...(b.carries?.records ?? []), ...(viaSeal?.carries?.records ?? [])], finds, keyNote, keyAlready, ...(part ? { part } : {}) };
 }
 

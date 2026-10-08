@@ -598,3 +598,19 @@ The engine's new `again` field is the line a beat plays on a trip back up (old s
 | 4 how and why | `b-11.A`: the leather book is still shut, and he goes to it. `b-9.A`: the steep stair and the narrow way both go into the dark, and only the doorway has light, so "it is there you go". `b-12.C` was done in §14. |
 | 5 the niche across the gallery | `b-7.1` opens with "Turning back along the square gallery". |
 | 6 the barn and the owl | `b-7.2` is now w8 and requires `b-8.A`: it is a return at the Water, never on the way to its first sight. |
+
+## 15. Rounds 6 (short pace) and 8 of the player's-eye review (2026-10-08; built)
+
+| Item | Change |
+|---|---|
+| a first short day | New view `cv-00` "The hillside" (`until: b-1.1`): a night before the climb down is told camps by the iron cap. `cv-01`, `cv-02` now require `b-1.1`. A find is never picked from below the climb while the climb's screen is still unseen (engine). |
+| a job's moment in another room | It never moves Dan: he goes there for it and comes back, and its return says so ("You go to … for this, and then back to …"). Round 8: a camp in another area after no screen of the walk read as a jump (engine). |
+| the salt's notches | `b-1.C` opens "You leave the salt for now." (the tally may not be seen yet at short pace; at normal pace its first notch is lit). |
+| a few steps back up | `b-5.B` and `b-14.A` are `turnOff`: labelled Back up within their area. |
+| the Box Room's painting | Its stand-in is now `pt-pl-w2-box-by-the-cot`, not a hall's. `cv-49` (by the two dips) shows `pt-pl-w11-far-end`: the Water's stand-in has a standing shape in it. |
+| the counting tablet | A sealed thing the road opens on the way to a place (`b-8.1` before `pl-w8-channel`) is told first on that place's screen; a job's return never plays a step that leans on it until that screen has shown (engine). |
+| light below the Water | `b-9.A`: the narrow way turns out of sight with the smell coming up it; only the doorway shows light. `b-8.C`: the narrow way's cups are lit, like the Stair's. Its `again` no longer calls the narrow way dark. |
+| the spare lamp | `b-9.A` (both), `pl-w8-steep-foot`: the spare clay lamp in its niche at the head of the Stair is named as new information, since an old save may never have seen `b-3.B`. Canon unchanged (NICHES 3.1). |
+| old saves, the trip chain | A place with its own `back` says it on every screen of a trip, first or not. `b-3.6`'s `again` drops "You copy the tally too, while you are here."; its `back` and `b-4.C`'s are origin-neutral. |
+| the book of paper | `b-10.A` at the narrow way's foot: "a book of paper", which an old save may not have seen through the niche. |
+| long pace | `b-3.1` reads the stretch her sheets do not cover without "further than before" (it may come after the copy). `b-11.A`: "beside the book of paper", before the log is read. The Day 3 page opens the notebook "from the cot" whether or not it is packed. `fd-i06` is w11. |

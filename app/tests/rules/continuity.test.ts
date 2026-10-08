@@ -94,7 +94,7 @@ describe('Guesses are asked where their marks are, never where they are answered
           asked++;
           if (S.markOf(C.story, m)?.confirmedBy === f.id) bad.push(`${f.id}:${m} (its own confirmation)`);
           /* a tablet a kept Key opened here, or a road row opened on the way here (D-129), asks its marks here */
-          const tablet = a.opened.length > 0 || a.way.length > 0;
+          const tablet = a.opened.length > 0 || a.way.length > 0 || C.story.beats.some(x => x.kind === 'stepKey' && !!x.line && a.line.includes(x.line));
           if (!(b.carries?.guess ?? []).includes(m) && !here.includes(m) && !tablet) bad.push(`${f.id}:${m} (not carried here)`);
         }
       }

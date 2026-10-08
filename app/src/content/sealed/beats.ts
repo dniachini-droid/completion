@@ -112,7 +112,7 @@ export const beats: Beat[] = [
     w: 1,
     o: 10,
     name: "The cot and the shelf",
-    line: "The notches in the salt stay dark, and you leave the salt for now. Back in the Lamp Hall, the chalk on the floor catches your eye: an arrow pointing at a round-topped doorway in the side wall, with the word CAMP written beside it. You go through the doorway into a small side chamber, no bigger than a box room, with a ceiling low enough to touch. Someone has lived here, and from now on you think of it as the Box Room. There is a camp cot, and under it a pair of women's walking boots stands side by side, laced and dry, as if set out for the morning. On the cot lie a notebook with a pencil tucked into it, and a tin box with a row of small notches across its lid, the same kind as on the niches in the rock. On a shelf lies a rod of stone as long as your forearm, with one edge finer than a knife's, like a smooth stone bar with one side ground thin. You take it all in from the doorway before touching anything.",
+    line: "You leave the salt for now. Back in the Lamp Hall, the chalk on the floor catches your eye: an arrow pointing at a round-topped doorway in the side wall, with the word CAMP written beside it. You go through the doorway into a small side chamber, no bigger than a box room, with a ceiling low enough to touch. Someone has lived here, and from now on you think of it as the Box Room. There is a camp cot, and under it a pair of women's walking boots stands side by side, laced and dry, as if set out for the morning. On the cot lie a notebook with a pencil tucked into it, and a tin box with a row of small notches across its lid, the same kind as on the niches in the rock. On a shelf lies a rod of stone as long as your forearm, with one edge finer than a knife's, like a smooth stone bar with one side ground thin. You take it all in from the doorway before touching anything.",
     choice: ["Open the notebook", "Look at the shelf"],
     req: [],
     stretch: "st-camp",
@@ -192,7 +192,7 @@ export const beats: Beat[] = [
     kind: "step",
     w: 2,
     o: 4,
-    line: "In the Box Room you pick up the notebook from the cot, with its pencil tucked inside, and open it at the page headed Day 3. It seems to be her diary: her own account of that day, in her own handwriting. It begins: He was standing where the corridor turns. I took him for a pillar.",
+    line: "In the Box Room you open her notebook, the one from the cot with its pencil tucked inside, at the page headed Day 3. It seems to be her diary: her own account of that day, in her own handwriting. It begins: He was standing where the corridor turns. I took him for a pillar.",
     req: ["b-2.A"],
     stretch: "st-camp",
     carries: {"records": ["rec-l3"]},
@@ -263,7 +263,7 @@ export const beats: Beat[] = [
     kind: "step",
     w: 3,
     o: 2,
-    line: "In the Salt Gallery, you follow the tally further than before. The sheets of hers you have looked through, the pencilled notes tucked beside it, do not cover this part. Halfway along, two symbols share one cell, one small box of the writing: the flame's symbol and the hook-and-drop, the same pair you cut at the lintel. Side by side like that, they look as if they belong together.",
+    line: "In the Salt Gallery, you look again along the stretch of the tally that her pencilled sheets do not cover. Halfway along, two symbols share one cell, one small box of the writing: the flame's symbol and the hook-and-drop, the same pair you cut at the lintel. Side by side like that, they look as if they belong together.",
     req: ["b-3.A", "b-3.2"],   // after her things are gathered, so the salt's moments come together (round 5)
     stretch: "st-salt",
     carries: {"records": ["rec-s3"], "inView": ["seal-3-2"]},
@@ -304,9 +304,9 @@ export const beats: Beat[] = [
   },
   {
     id: "b-3.6",
-    back: "The tally is cut into the salt wall, and you cannot carry a wall: you want a copy you can read wherever you are, so you climb back up to the Salt Gallery to make one.",
+    back: "The tally is cut into the salt wall, and you cannot carry a wall: you want a copy you can read wherever you are, so you go to the tally's head to make one.",
     againName: "Making a copy",
-    again: "You copy the tally too, while you are here. At the tally you take blank sheets from under her dated ones in the crack beside it, and the stub of pencil lying with them, sit down at its head, and copy it: cell by cell, every symbol and every carved picture, from its head to its end, past a hollow low in the salt and on to where a niche is set deeper than any other. You copy each one as exactly as you can, and check it against the salt before you go on to the next. It takes hours. Last, you take her dated sheets from the crack beside you and pack them with your copy, to carry with you.",
+    again: "At the tally you take blank sheets from under her dated ones in the crack beside it, and the stub of pencil lying with them, sit down at its head, and copy it: cell by cell, every symbol and every carved picture, from its head to its end, past a hollow low in the salt and on to where a niche is set deeper than any other. You copy each one as exactly as you can, and check it against the salt before you go on to the next. It takes hours. Last, you take her dated sheets from the crack beside you and pack them with your copy, to carry with you.",
     heldBy: ["b-5.A"],   // a save that read the tally from its head under an earlier build has read it all: no trip up to copy it (D-160, round 6)
     kind: "arrival",
     w: 3,
@@ -484,7 +484,7 @@ export const beats: Beat[] = [
   // NOTE: inView seal-4-4 (the Lower Door's count: seen, not sealed, NICHES 4.4).
   {
     id: "b-4.C",
-    back: "You want a copy of what is by the lamp to go with your copy of the tally, so you climb back up to the Lamp Hall.",
+    back: "You want a copy of what is by the lamp to go with your copy of the tally, so you go to the Lamp Hall.",
     again: "In the Lamp Hall, lit now all the way down, you bend close to the lamp on the ledge without touching it. The three small symbols on its base are plain. Two are the pair you cut at the lintel: the flame's symbol and the hook-and-drop. The third is a bar with a tick, like a tick mark on a line. In a corner of the base, on its own, is one more, too small and faint to show by the lamp's own light: a hook closed on a dot, its curve curled round the dot like a seed in a husk. You copy the base onto one of your spare sheets, and then the wall beside it, cell by cell; close to, the small carved lamp's cuts are sharp-edged, crisper than the worn rings round it. You copy too the row of notches along the underside of the ledge's front edge, set so low that nobody standing would ever see it, and the small niche cut at the foot of the wall. Then you walk to the far end of the hall, where the last cup stands a stride from the great door, and go right up to the door. It rises past where the light reaches, into the curve of the ceiling, and cold comes off its face, the way cold comes off a window in winter. Close to, you can see what is cut into it. First there is a row of notches, like those on the niches, and every one is dark. Beside them is a blank, an empty gap in a line of writing, like the one the lintel had before you cut it. Two symbols stand next to the blank: the bar-with-a-drop, a straight bar with a drop at one end, and two drops parted, two small drops set apart as if moving away from each other. Under the notches is one more symbol, shaped like a path doubling back on itself, like a hairpin bend. The door looks shut in two ways at once, as if it needs both.",
     kind: "arrival",
     w: 3,
@@ -1084,7 +1084,7 @@ export const beats: Beat[] = [
     o: 6,
     name: "The niche with no back",
     said: true,   // its own words bring him out of the Reading Room to the narrow way (round 1, item 10)
-    line: "Most of what is cut in the Reading Room is still beyond what you can read. So you come back out and round the shore to the narrow way beside the steep stair's foot, where the sharp smell comes up, and follow it down. Close to, the smell is powder, old, like a spent firework. In the wall is a niche with a row of notches. The notches fill with light and the niche opens, but it has no back. You look through it into a chamber below. On a ledge down there lies a book of paper, open, with a pencil in its fold. It is too far away to read.",
+    line: "Most of what is cut in the Reading Room is still beyond what you can read. So you come back out and round the shore to the narrow way beside the steep stair's foot, where the sharp smell comes up, and follow it down. Cups are cut in its walls like the Stair's, their small flames lit and still, so you can see your way. Close to, the smell is powder, old, like a spent firework. In the wall is a niche with a row of notches. The notches fill with light and the niche opens, but it has no back. You look through it into a chamber below. On a ledge down there lies a book of paper, open, with a pencil in its fold. It is too far away to read.",
     seal: "seal-8-4",
     req: ["b-8.A"],   // week 9 since round 1 (item 10): after the Reading Room, so the narrow way is walked on down without a turn back
     stretch: "st-blast",
@@ -1138,7 +1138,7 @@ export const beats: Beat[] = [
     w: 8,
     o: 4,
     name: "The steep stair's foot",
-    line: "You follow the shore round to the far side, where the second stair comes down. Its steps are twice as steep as the Stair's, and the last of them stands in the water's edge. No cup is lit along it. Looking up, you see it climb into darkness, and a thin cold air goes past you and up it. You climb the first few steps, until the light from the Water gives out, and stop: the steps are too steep to take blind, and there is nothing up there to see by; the clay lamp in the niche at the head of the Stair would be no help, with no oil in it. Beside the stair's foot a narrower way leads down into the rock, below the level of the Water, and a faint smell comes up it, sharp and old.",
+    line: "You follow the shore round to the far side, where the second stair comes down. Its steps are twice as steep as the Stair's, and the last of them stands in the water's edge. No cup is lit along it. Looking up, you see it climb into darkness, and a thin cold air goes past you and up it. You climb the first few steps, until the light from the Water gives out, and stop: the steps are too steep to take blind, and there is nothing up there to see by; the spare clay lamp in its niche at the head of the Stair would be no help, with no oil in it. Beside the stair's foot a narrower way leads down into the rock, below the level of the Water, and a faint smell comes up it, sharp and old.",
     req: ["b-8.A"],
     stretch: "st-water",
     painting: "pt-pl-w8-steep-foot",
@@ -1146,12 +1146,12 @@ export const beats: Beat[] = [
   // ---- Week 9 ----
   {
     id: "b-9.A",
-    again: "The narrow way below the Water goes on down into the dark, and of the ways off the Water only the wide doorway you saw from the foot of the Stair has light beyond it. You climb the narrow way back up to the Water, go round its shore to the doorway, and through it into the hall beyond. It is long and quiet, and full of benches cut from the floor, too high to sit on: their tops come to your chest. Every wall is set with tablets, from the height of your head up past where you could reach, like books on a library's high shelves. This is the Reading Room. At its far end, over an inner door, is a lintel with three symbols: a hook closed round a drop; a fork open sideways; and a cross. The inner door stands open, and more benches go on beyond it, but the light reaches only as far as the third of them, and with no light of your own (the clay lamp at the head of the Stair is dry) you do not go on into the dark. The nearest tablet shows a flame beside a symbol, a lamp beside a symbol, and two symbols cut together: the same lesson as the wall by the lamp, but these cuts are worn round with age. In its corner is a hook with a short bar under its foot, a footed hook: the mark of whoever made this tablet, a maker's hook. It is not the tally's.",   // for a save already below the Water (round 5, old saves); the engine shows it only on a trip
+    again: "Of the ways off the Water, only the wide doorway you saw from the foot of the Stair shows light beyond it, and you have not yet been through it. You climb the narrow way back up to the Water, go round its shore to the doorway, and through it into the hall beyond. It is long and quiet, and full of benches cut from the floor, too high to sit on: their tops come to your chest. Every wall is set with tablets, from the height of your head up past where you could reach, like books on a library's high shelves. This is the Reading Room. At its far end, over an inner door, is a lintel with three symbols: a hook closed round a drop; a fork open sideways; and a cross. The inner door stands open, and more benches go on beyond it, but the light reaches only as far as the third of them, and with no light of your own (the only spare lamp, a clay one in a niche at the head of the Stair, is dry) you do not go on into the dark. The nearest tablet shows a flame beside a symbol, a lamp beside a symbol, and two symbols cut together: the same lesson as the wall by the lamp, but these cuts are worn round with age. In its corner is a hook with a short bar under its foot, a footed hook: the mark of whoever made this tablet, a maker's hook. It is not the tally's.",   // for a save already below the Water (round 5, old saves); the engine shows it only on a trip
     kind: "arrival",
     w: 9,
     o: 1,
     name: "The first tablet",
-    line: "The steep stair and the narrow way beside it both go on into the dark, and of the ways off the Water only the wide doorway you saw from the foot of the Stair has light beyond it, so it is there you go, round the Water's shore and through it into the hall beyond. It is long and quiet, and full of benches cut from the floor, too high to sit on: their tops come to your chest. Every wall is set with tablets, from the height of your head up past where you could reach, like books on a library's high shelves. This is the Reading Room. At its far end, over an inner door, is a lintel with three symbols: a hook closed round a drop; a fork open sideways; and a cross. The inner door stands open, and more benches go on beyond it, but the light reaches only as far as the third of them, and with no light of your own (the clay lamp at the head of the Stair is dry) you do not go on into the dark. The nearest tablet shows a flame beside a symbol, a lamp beside a symbol, and two symbols cut together: the same lesson as the wall by the lamp, but these cuts are worn round with age. In its corner is a hook with a short bar under its foot, a footed hook: the mark of whoever made this tablet, a maker's hook. It is not the tally's.",
+    line: "The steep stair climbs away into the dark, and the narrow way beside its foot turns out of sight, a sharp smell coming up it; of the ways off the Water, only the wide doorway you saw from the foot of the Stair shows light beyond it, so it is there you go, round the Water's shore and through it into the hall beyond. It is long and quiet, and full of benches cut from the floor, too high to sit on: their tops come to your chest. Every wall is set with tablets, from the height of your head up past where you could reach, like books on a library's high shelves. This is the Reading Room. At its far end, over an inner door, is a lintel with three symbols: a hook closed round a drop; a fork open sideways; and a cross. The inner door stands open, and more benches go on beyond it, but the light reaches only as far as the third of them, and with no light of your own (the only spare lamp, a clay one in a niche at the head of the Stair, is dry) you do not go on into the dark. The nearest tablet shows a flame beside a symbol, a lamp beside a symbol, and two symbols cut together: the same lesson as the wall by the lamp, but these cuts are worn round with age. In its corner is a hook with a short bar under its foot, a footed hook: the mark of whoever made this tablet, a maker's hook. It is not the tally's.",
     req: ["b-8.A"],
     stretch: "st-reading",
     painting: "pt-b-9.A",
@@ -1318,7 +1318,7 @@ export const beats: Beat[] = [
     o: 3,
     name: "The door at the foot",
     line: "At the lintel at the foot of the narrow way, under its two symbols, a row of notches you had taken for part of the carving is filling with light as you watch, and the powder smell seems to come from behind the stone. The pair beside the blank is the one you cut at the second lintel on the Stair, the bar with a drop and the two drops parted: the same word, for a way that is shut.",
-    taps: ["You set the rod’s edge in the blank.", "You cut the first mark, the bar with a drop.", "You cut the second, the two drops parted.", "The cuts fill with light and the rod gives one low ring. The stone beneath the lintel is gone. Beyond it the powder smell is thick, and on a ledge lies the book of paper, open."],
+    taps: ["You set the rod’s edge in the blank.", "You cut the first mark, the bar with a drop.", "You cut the second, the two drops parted.", "The cuts fill with light and the rod gives one low ring. The stone beneath the lintel is gone. Beyond it the powder smell is thick, and on a ledge lies a book of paper, open."],
     seal: "seal-10-2",
     req: ["pl-w9-approach"],
     stretch: "st-blast",
@@ -1442,7 +1442,7 @@ export const beats: Beat[] = [
     w: 11,
     o: 3,
     name: "The book",
-    line: "The second book on the ledge in the blast room, bound in leather beside the log, is still shut, and you go to it. The row of notches along the edge of the ledge fills with light, and the book falls open. It is bound in leather, and its pages are vellum, fine calf-skin, written in a small, careful script. Down its margins some of the carved symbols have been copied and covered with gold leaf, with notes in ink beside them in the same small hand, as if whoever copied the book also laid the gold. On the lip of the ledge, cut in the tally's hand, are three symbols over a row of notches: a hook closed round a drop, the bar with a tick, and in the corner the hook closed on a dot. The note beside the gold begins: In the margin: these are holy words… Whoever wrote it writes of a surveyor, and of his boy. Her Day 28 page called the record on the crew's wall the surveyor's.",
+    line: "The second book on the ledge in the blast room, bound in leather beside the book of paper, is still shut, and you go to it. The row of notches along the edge of the ledge fills with light, and the book falls open. It is bound in leather, and its pages are vellum, fine calf-skin, written in a small, careful script. Down its margins some of the carved symbols have been copied and covered with gold leaf, with notes in ink beside them in the same small hand, as if whoever copied the book also laid the gold. On the lip of the ledge, cut in the tally's hand, are three symbols over a row of notches: a hook closed round a drop, the bar with a tick, and in the corner the hook closed on a dot. The note beside the gold begins: In the margin: these are holy words… Whoever wrote it writes of a surveyor, and of his boy. Her Day 28 page called the record on the crew's wall the surveyor's.",
     choice: ["Read the margin", "Look at the symbols on the ledge"],
     seal: "seal-11-2",
     req: ["b-10.C"],   // the ledge's lip seen here (seal-12-3 in view, round 2)

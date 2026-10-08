@@ -57,7 +57,7 @@
   const sentences = $derived(!said ? [] : said.split(/(?<=[.!?])\s+/));
   /* a trip back up to the top, in a save from before D-160: why, said first */
   /* (one trip sees all that waits at the top: the climb is said on its first place, the way down on its last) */
-  const leadWay = $derived(!a || again ? '' : a.errand ? (a.errandMore ? (a.errandFrom && a.errandFrom !== a.area ? t('arrive.errandOn', { area: the(a.area) }) : t('arrive.errandMore')) : a.errandWhy ?? t('arrive.errand', { area: the(a.area) })) : a.wayIn ?? '');
+  const leadWay = $derived(!a || again ? '' : a.errand ? (a.errandWhy ?? (a.errandMore ? (a.errandFrom && a.errandFrom !== a.area ? t('arrive.errandOn', { area: the(a.area) }) : t('arrive.errandMore')) : t('arrive.errand', { area: the(a.area) }))) : a.wayIn ?? '');
   const leadFirst = $derived(a && !a.stopAgain ? sentences[0] ?? '' : '');
   const restLine = $derived(!a ? '' : a.stopAgain ? a.line : sentences.slice(1).join(' '));
   const over = $derived(!a ? '' : a.kind === 'evening' ? '' : a.face === 'enter' && !again ? '' : a.area);

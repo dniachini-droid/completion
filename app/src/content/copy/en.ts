@@ -237,7 +237,7 @@ export const copy = {
   /* a place at the top in a save that had already gone down (D-160): the trip up, and why, said first */
   'arrive.errand': 'Before you go on, you climb back up to {area}.',
   'arrive.errandBack': 'Then you go back down to where you were.',
-  'return.moved': 'You go to {area} for this.',
+  'return.moved': 'You go to {area} for this, and then back to {from}.',
   'arrive.errandOn': 'While you are up here, you go on to {area}.',
   'arrive.errandMore': 'While you are up here, there is one more thing to see.',
   'arrive.errandStays': 'There is more to see while you are up here.',

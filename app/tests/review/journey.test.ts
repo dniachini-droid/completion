@@ -26,7 +26,7 @@ function between(facts: Fact[], from: number, to: number): string[] {
       /* as its return screen says it: a climb up said first (D-160), a move to another room said (D-161), its own words */
       const done = facts.filter(g => g.type === 'jobDone' && g.seq < f.seq).pop();
       const r0 = done ? returnOf(C, facts, done.seq) : null, r = r0 && [b?.id, x?.id, b?.seal].includes(r0.beat ?? '') ? r0 : null;
-      const lead = r?.up ? `${r.upWhy ?? `First, a climb back up to ${the(r.up)}; then back down to where you were.`} ` : r?.moved ? `You go to ${the(r.moved)} for this. ` : '';
+      const lead = r?.up ? `${r.upWhy ?? `First, a climb back up to ${the(r.up)}; then back down to where you were.`} ` : r?.moved ? `You go to ${the(r.moved)} for this, and then back to ${the(r.from ?? '')}. ` : '';
       const line = r?.line || (b?.line ?? x?.line); if (line) out.push(`(a job's return) ${lead}${line}`);
       for (const m of [...new Set([...(b?.carries?.guess ?? []), ...(x?.carries?.guess ?? [])])].filter(m => !asked.has(m) && asked.add(m))) out.push(`(you are asked to guess a symbol: you guess "${s.marks.find(k => k.id === m)?.candidates?.[0] ?? '?'}")`);
     }
