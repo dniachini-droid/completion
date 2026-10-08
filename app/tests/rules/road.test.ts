@@ -162,6 +162,8 @@ describe('Keys open only the niches; the road opens its own rows on the way (D-1
       const a = see(facts.slice(0, upTo), C, arr.at).arrival!;
       expect(a.seq, f.id).toBe(arr.seq);
       const line = b?.line ?? x?.line;
+      /* (the walk to the place, `before` it: told first, as the start of its own words, D-160) */
+      if (b?.before === arr.id) { expect(a.line.startsWith(line!), f.id).toBe(true); for (const r of b.carries?.records ?? []) expect(a.records.includes(r), `${f.id} ${r}`).toBe(true); continue; }
       const w = (evening ? a.then : a.way).find(v => v.beat === f.id);
       expect(!!w && w.line === line, f.id).toBe(true);
       expect(a.opened.includes(line!), f.id).toBe(false);
