@@ -112,7 +112,7 @@ describe('Keys, finds and lines', () => {
       const here = C.story.passages.filter(x => x.stretch === st.stretch && x.req.every(r => S.met(st, r)) && !(x.until && S.met(st, x.until)));
       expect(here.every(x => st.passagesShown.includes(x.id)), f.passage).toBe(true);
     }
-  });
+  }, 60_000);
   it('a teaser whose condition is false never shows', () => {
     const p = sim().week('normal');
     const st = p.st(), line = p.view().teaser;

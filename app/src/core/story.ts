@@ -314,7 +314,7 @@ const viewLook = (c: { look: { find: string } | { line: string } }) => 'find' in
 export function nextStep(s: Story, st: StoryState): Beat | null {
   return candidateSteps(s, st)[0] ?? null;
 }
-function candidateSteps(s: Story, st: StoryState): Beat[] {
+export function candidateSteps(s: Story, st: StoryState): Beat[] {
   /* never about a stretch Dan hasn't been to (D-079); a road row's step plays in its turn, with no Key (D-129), and a
      road row with only a line plays as a step of its own */
   const lineRows: Beat[] = s.seals.filter(x => !x.beat && !x.arrival && onRoad(s, x.id))

@@ -614,3 +614,15 @@ The engine's new `again` field is the line a beat plays on a trip back up (old s
 | old saves, the trip chain | A place with its own `back` says it on every screen of a trip, first or not. `b-3.6`'s `again` drops "You copy the tally too, while you are here."; its `back` and `b-4.C`'s are origin-neutral. |
 | the book of paper | `b-10.A` at the narrow way's foot: "a book of paper", which an old save may not have seen through the niche. |
 | long pace | `b-3.1` reads the stretch her sheets do not cover without "further than before" (it may come after the copy). `b-11.A`: "beside the book of paper", before the log is read. The Day 3 page opens the notebook "from the cot" whether or not it is packed. `fd-i06` is w11. |
+
+## 16. Round 9 of the player's-eye review (2026-10-08; built)
+
+| Item | Change |
+|---|---|
+| the first word's order | `b-2.2`: the flame's symbol is on the blank's left, the hook-and-drop on its right. |
+| the notebook's pocket | `b-3.2` (and its `again`): the back cover's pocket, closed with a row of notches, is shown when he takes the notebook (`seal-5-4` comes into view there). |
+| the second night at the copy | `cv-69` "Along the bared tally": at the tally's head again, where Today says he is. |
+| a trip's reasons | `b-3.1`, `b-3.2`, `b-3.5`, `b-4.B`: `back` says "you go back to …", not "climb back up", since it is now shown on every screen of a trip. |
+| engine | A job's "and then back to …" names where Dan knows he is (never a place not yet on screen); the first climb is never played twice; a return never plays what the walk already played or opened before the place's screen; only the leading road rows fold into a place's words. |
+| the spare lamp | `b-9.A` (both) and `pl-w8-steep-foot` no longer give the spare lamp as the reason: an old save may never have seen it, and the lit lamps make "no oil" a poor reason. He has no light of his own, and the steps are too steep to take blind. Canon unchanged (NICHES 3.1). |
+| still open | The climb back up to the standing stone that comes out beside the blast room (S4) are left as they are: both touch canon, for the sealed story's own session. |

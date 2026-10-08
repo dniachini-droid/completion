@@ -4,7 +4,7 @@
  */
 import { describe, expect, it } from 'vitest';
 import * as S from '../../src/core/story';
-import { act, arrivalAt, see, suggestedOn, returnOf } from '../../src/core/game';
+import { act, arrivalAt, see, settle, suggestedOn, returnOf } from '../../src/core/game';
 import type { Fact, FactOf } from '../../src/core/types';
 import { content as C } from '../../src/content/world';
 import { sim, type Week } from './sim';
@@ -173,15 +173,39 @@ describe('the adversarial review of D-160', () => {
     expect(opened.slice(f.length).some(x => x.type === 'stepsGained' && x.job === 'sleep')).toBe(false);
     expect(suggestedOn(opened, d2).capacity).toBe('low');
   });
-  it('a job\'s step that takes Dan to another area says so on its return', () => {
+  it('a job\'s moment in another area is a trip there and back, said on its return; it never moves Dan (D-163)', () => {
+    let said = 0;
     for (const facts of [life('normal', 'kept', 22), life('short', 'kept', 40)]) {
-      for (const g of facts.filter((f): f is FactOf<'beatPlayed'> => f.type === 'beatPlayed' && f.job !== undefined)) {
+      for (const g of facts.filter((f): f is FactOf<'beatPlayed'> => f.type === 'beatPlayed' && f.job !== undefined && f.id !== 'passage')) {
         const was = S.storyState(facts.filter(x => x.seq < g.seq), s), now = S.storyState(facts.filter(x => x.seq <= g.seq), s);
-        if (S.areaOf(s, was.stretch) === S.areaOf(s, now.stretch)) continue;
-        const done = facts.filter(x => x.type === 'jobDone' && x.seq < g.seq).pop()!;
+        /* never moved by it */
+        expect(now.stretch, g.id).toBe(was.stretch);
+        /* where Dan knows he is: a place not yet on its screen doesn't count */
+        const seen = new Set(facts.filter(x => x.type === 'seen' && x.seq < g.seq).map(x => (x as FactOf<'seen'>).ref));
+        const known = S.storyState(facts.filter(x => x.seq < g.seq && !(x.type === 'arrived' && !seen.has(x.seq))), s);
+        const x = S.beatOf(s, g.id) ?? S.sealOf(s, g.id);
+        const done = facts.filter(y => y.type === 'jobDone' && y.seq < g.seq).pop()!;
         const r = returnOf(C, facts, done.seq);
-        expect(!!r.moved || !!r.up, `${g.id}`).toBe(true);
+        if (!x || x.portable || r.up) continue;
+        if (S.areaOf(s, x.stretch) !== S.areaOf(s, known.stretch)) {
+          said++;
+          expect(r.moved, g.id).toBe(S.areaName(s, x.stretch));
+          expect(r.from, g.id).toBe(S.areaName(s, known.stretch));
+        } else expect(r.moved, g.id).toBeUndefined();
       }
     }
+    expect(said).toBeGreaterThan(0);
+  }, 600_000);
+  it('the first climb plays once, even when a job reaches the first place before its screen is seen (round-8 review)', () => {
+    let facts: Fact[] = [];
+    const run = (cmd: Parameters<typeof act>[2], at: string) => { facts = facts.concat(act(facts, C, cmd, at)); };
+    run({ do: 'open' }, '2026-09-28T08:00:00+01:00');
+    /* a repeating job's delve, done in the same settle that reaches the first place (its screen not yet seen) */
+    const job = C.jobs.find(j => j.delve)!.id;
+    run({ do: 'startRun', job, minutes: 25, count: 4 }, '2026-09-28T08:00:00+01:00');
+    facts = facts.concat(settle(facts, C, '2026-09-28T09:50:00+01:00'));
+    expect(facts.some(f => f.type === 'arrived' && f.kind === 'place')).toBe(true);
+    const first = s.route[0].places[0].id, climb = s.beats.find(b => b.before === first)!;
+    expect(facts.filter(f => f.type === 'beatPlayed' && f.id === climb.id).length).toBeLessThanOrEqual(1);
   }, 600_000);
 });

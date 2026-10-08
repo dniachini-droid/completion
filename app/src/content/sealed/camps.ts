@@ -447,9 +447,9 @@ export const camps: CampView[] = [
     req: ["b-3.6"],
     until: "b-3.B",
     near: "b-3.6",   // a second night at the copy (round 6)
-    name: "Where the tally ends",
-    line: "You camp at the far end of the tally, below its last line, where the salt is bare to the floor.",
-    look: {"line": "From here you can see the whole bared line of it running back towards the corner, and every cell of it is in the sheets beside you."},
+    name: "Along the bared tally",
+    line: "You camp at the tally's head again, close against the salt wall, where the bared line of it begins.",
+    look: {"line": "From here you can see the whole bared line of it running away from you to where it ends, and every cell of it is in the sheets beside you."},
   },
 
   {
