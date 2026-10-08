@@ -433,10 +433,11 @@ function knownState(w: W, c: Content) {
   return S.storyState(w.all.filter(f => !(f.type === 'arrived' && !seen.has(f.seq))), c.story);
 }
 function giveFind(w: W, c: Content, why: FactOf<'findGiven'>['why'], at: Moment, day: string, job?: number) {
-  /* nothing is found down the way in before the climb down it is told: that comes first (D-160, the round-4 review) */
+  /* nothing is found down the way in before the climb down it is told: on a job's return the climb comes first (D-160,
+     the round-4 review); a side chamber before it (no return to tell it on) gives a find that reads right before the climb */
   const st0 = S.storyState(w.all, c.story), first = c.story.route[0]?.places[0]?.id;
-  const climb = !S.pastMouth(c.story, st0) && first ? c.story.beats.find(b => b.kind === 'step' && b.before === first && !st0.played.has(b.id) && b.req.every(r => S.met(st0, r))) : undefined;
-  if (climb) { w.put({ type: 'beatPlayed', id: climb.id, ...(job ? { job } : {}) }, at, day); show(w, c, climb.carries?.records, at, day); }
+  const climb = job && !S.pastMouth(c.story, st0) && first ? c.story.beats.find(b => b.kind === 'step' && b.before === first && !st0.played.has(b.id) && b.req.every(r => S.met(st0, r))) : undefined;
+  if (climb) { w.put({ type: 'beatPlayed', id: climb.id, job }, at, day); show(w, c, climb.carries?.records, at, day); }
   /* from what Dan has been shown, but once he has gone down never the top, even before the screen that took him down
      has shown (D-160) */
   const f = S.pickFind(c.story, { ...knownState(w, c), departed: S.storyState(w.all, c.story).departed }, why);
