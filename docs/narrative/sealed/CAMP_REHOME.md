@@ -626,3 +626,7 @@ The engine's new `again` field is the line a beat plays on a trip back up (old s
 | engine | A job's "and then back to …" names where Dan knows he is (never a place not yet on screen); the first climb is never played twice; a return never plays what the walk already played or opened before the place's screen; only the leading road rows fold into a place's words. |
 | the spare lamp | `b-9.A` (both) and `pl-w8-steep-foot` no longer give the spare lamp as the reason: an old save may never have seen it, and the lit lamps make "no oil" a poor reason. He has no light of his own, and the steps are too steep to take blind. Canon unchanged (NICHES 3.1). |
 | still open | The climb back up to the standing stone that comes out beside the blast room (S4) are left as they are: both touch canon, for the sealed story's own session. |
+
+### 16.1 After round 10 (wording only; the rule suite checks it, no further panel round)
+
+`b-1.C` gives its reason again ("Nothing more opens in the salt yet"). `b-8.C`: the narrow way's cups are lit past its turn, out of sight from the Water, so `b-9.A`'s "only the doorway shows light" still holds.
