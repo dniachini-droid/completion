@@ -101,8 +101,9 @@ describe('the route is a journey: a descent with a home at the top (D-154)', () 
     /* a turn-off: its reason, and that it is on the way back up, in its first two sentences */
     const two = (id: string) => (S.beatOf(s, id)!.line ?? '').split(/(?<=[.!?])\s/).slice(0, 2).join(' ');
     const turnOffs = s.beats.filter(b => b.turnOff).map(b => b.id);
-    expect(turnOffs.sort()).toEqual(['b-13.B', 'pl-w10-deep-end', 'pl-w11-far-end']);
-    for (const id of turnOffs) expect(two(id), id).toMatch(/way (back )?up|on the way/i);
+    expect(turnOffs.sort()).toEqual(['b-13.B', 'b-14.A', 'b-5.B', 'pl-w10-deep-end', 'pl-w11-far-end']);
+    /* (or a few steps back up within an area: "back up", "uphill", the round-6 short review) */
+    for (const id of turnOffs) expect(two(id), id).toMatch(/way (back )?up|on the way|back up|uphill/i);
   });
   it('nothing names what Dan has not yet seen: b-4.C before b-6.2, pl-w14-mule-stone before pl-w13-lower-gallery', () => {
     for (const [name, facts] of Object.entries(lives)) {

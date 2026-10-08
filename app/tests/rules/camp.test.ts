@@ -58,7 +58,8 @@ describe('camp where you are (D-160)', () => {
       for (const g of facts.filter(f => f.type === 'goodnight')) {
         const st = S.storyState(facts.filter(f => f.seq <= g.seq), s);
         const camp = facts.find(f => f.seq === g.seq + 1) as FactOf<'arrived'> | undefined;
-        if (!st.here && !S.pastMouth(s, st)) { expect(camp?.type === 'arrived' && camp.kind === 'camp', name).toBe(false); continue; }
+        /* (a first night before the climb down is told: on the hillside, the round-6 short review) */
+        if (!st.here && !S.pastMouth(s, st)) { expect(camp?.type === 'arrived' && camp.kind === 'camp' && camp.id, name).toBe('cv-00'); continue; }
         expect(camp?.type === 'arrived' && camp.kind === 'camp', `${name} @${g.seq}`).toBe(true);
         const where = stretchOf(camp!.id)!;
         expect(S.areaOf(s, where), `${name} ${camp!.id}`).toBe(S.areaOf(s, st.stretch));

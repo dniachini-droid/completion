@@ -161,7 +161,7 @@ describe('deep story: the content wiring (static)', () => {
   it('FINDING: every route place and camp view has its own painting, but the views D-160 added (their stretch\'s painting stands in)', () => {
     const missing = [...s.route.flatMap(r => r.places.map(p => p.id)), ...s.camps.map(c => c.id)].filter(id => !PAINTED.has(id) && paintingOf(id, 'st-mouth') === STAND_IN['st-mouth']);
     /* the places D-160 made (the copy, the first turn, the gap's record) and its views: their stretch's painting stands in */
-    expect([...missing].sort()).toEqual(['b-3.2', 'b-3.6', 'b-4.2', 'b-5.1', 'b-13.1', ...Array.from({ length: 45 }, (_, i) => `cv-${22 + i}`), 'cv-68', 'cv-69', 'cv-70', 'cv-71'].sort());
+    expect([...missing].sort()).toEqual(['cv-00', 'b-3.2', 'b-3.6', 'b-4.2', 'b-5.1', 'b-13.1', ...Array.from({ length: 45 }, (_, i) => `cv-${22 + i}`), 'cv-68', 'cv-69', 'cv-70', 'cv-71'].sort());
   });
 
   it('fixed (S#5): one month\'s summary has six lines, and a week close can show six', () => {

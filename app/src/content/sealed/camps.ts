@@ -11,11 +11,22 @@ import type { CampView } from '../../core/story-types';
     so the view and the Today screen always agree where he is. Each `line` says he camps there; the top's views end at
     departure (`until: b-3.B`). The two views at the Mouth have no `near`: they are for a night before the first place. */
 export const camps: CampView[] = [
+  /* a first night before the climb down is told (a short first day, the round-6 short review): on the hillside */
+  {
+    id: "cv-00",
+    stretch: "st-mouth",
+    w: 1,
+    req: [],
+    until: "b-1.1",
+    name: "The hillside",
+    line: "You camp on the hillside, in the long grass beside the iron cap. Where the cap has been pushed aside, cool air rises steadily out of the dark below it.",
+    look: {"line": "Before you sleep, you drop a small stone through the gap. You count past one before it clicks on stone, far below."},
+  },
   {
     id: "cv-01",
     stretch: "st-mouth",
     w: 1,
-    req: [],
+    req: ["b-1.1"],
     until: "b-3.B",   // the top: never once he has gone down (D-160)
     name: "The ladder's foot",
     line: "You camp at the bottom of the shaft, by the foot of the ladder. Eleven metres above you is a small square of sky, and the ladder climbs straight up to it. The air moves past you, up the shaft and out.",
@@ -25,7 +36,7 @@ export const camps: CampView[] = [
     id: "cv-02",
     stretch: "st-mouth",
     w: 1,
-    req: [],
+    req: ["b-1.1"],
     until: "b-3.B",   // the top: never once he has gone down (D-160)
     name: "The pipe",
     line: "You camp in the passage at the foot of the shaft, the smooth tunnel shaped like the inside of a pipe. It leads away from the ladder into the hill, its floor and walls one curve, and it bends so gently that you can only see the bend where the light gives out.",

@@ -112,7 +112,7 @@ export const beats: Beat[] = [
     w: 1,
     o: 10,
     name: "The cot and the shelf",
-    line: "The rest of the tally's notches stay dark, and you leave the salt for now. Back in the Lamp Hall, the chalk on the floor catches your eye: an arrow pointing at a round-topped doorway in the side wall, with the word CAMP written beside it. You go through the doorway into a small side chamber, no bigger than a box room, with a ceiling low enough to touch. Someone has lived here, and from now on you think of it as the Box Room. There is a camp cot, and under it a pair of women's walking boots stands side by side, laced and dry, as if set out for the morning. On the cot lie a notebook with a pencil tucked into it, and a tin box with a row of small notches across its lid, the same kind as on the niches in the rock. On a shelf lies a rod of stone as long as your forearm, with one edge finer than a knife's, like a smooth stone bar with one side ground thin. You take it all in from the doorway before touching anything.",
+    line: "The notches in the salt stay dark, and you leave the salt for now. Back in the Lamp Hall, the chalk on the floor catches your eye: an arrow pointing at a round-topped doorway in the side wall, with the word CAMP written beside it. You go through the doorway into a small side chamber, no bigger than a box room, with a ceiling low enough to touch. Someone has lived here, and from now on you think of it as the Box Room. There is a camp cot, and under it a pair of women's walking boots stands side by side, laced and dry, as if set out for the morning. On the cot lie a notebook with a pencil tucked into it, and a tin box with a row of small notches across its lid, the same kind as on the niches in the rock. On a shelf lies a rod of stone as long as your forearm, with one edge finer than a knife's, like a smooth stone bar with one side ground thin. You take it all in from the doorway before touching anything.",
     choice: ["Open the notebook", "Look at the shelf"],
     req: [],
     stretch: "st-camp",
@@ -576,6 +576,7 @@ export const beats: Beat[] = [
   },
   {
     id: "b-5.B",
+    turnOff: true,   // a few steps back up: labelled Back up (the round-6 short review)
     kind: "arrival",
     w: 5,
     o: 5,
@@ -1806,6 +1807,7 @@ export const beats: Beat[] = [
   // ---- Week 14 (ARRIVALS_REGION3 week 14) ----
   {
     id: "b-14.A",
+    turnOff: true,   // a few steps back up: labelled Back up (the round-6 short review)
     kind: "word",
     w: 14,
     o: 1,

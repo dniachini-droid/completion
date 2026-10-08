@@ -430,7 +430,10 @@ function arrive(w: W, c: Content, b: Beat, how: 'foot' | 'key' | 'evening' | 'tr
     it (the journey review, D-154; finds did so first). */
 function knownState(w: W, c: Content) {
   const seen = new Set(w.all.filter(f => f.type === 'seen' && f.what === 'arrival').map(f => (f as FactOf<'seen'>).ref));
-  return S.storyState(w.all.filter(f => !(f.type === 'arrived' && !seen.has(f.seq))), c.story);
+  /* (nor the approach told in that place's words, its `before` step: the climb down, the short-day review) */
+  const unseen = new Set(w.all.filter(f => f.type === 'arrived' && f.kind === 'place' && !seen.has(f.seq)).map(f => (f as FactOf<'arrived'>).id));
+  return S.storyState(w.all.filter(f => !(f.type === 'arrived' && !seen.has(f.seq))
+    && !(f.type === 'beatPlayed' && f.job === undefined && unseen.has(S.beatOf(c.story, f.id)?.before ?? ''))), c.story);
 }
 function giveFind(w: W, c: Content, why: FactOf<'findGiven'>['why'], at: Moment, day: string, job?: number) {
   /* nothing is found down the way in before the climb down it is told: on a job's return the climb comes first (D-160,
@@ -460,7 +463,6 @@ function storyClock(w: W, c: Content, at: Moment, day: string): boolean {
     was, and the next day starts there. */
 function camp(w: W, c: Content, at: Moment, day: string) {
   const st = S.storyState(w.all, c.story);
-  if (!st.here && !S.pastMouth(c.story, st)) return;
   const since = walked(w.all) - S.lastPlaceAt(st);
   const where = S.campHere(c.story, st, since);
   w.put({ type: 'arrived', kind: 'camp', id: where.id, ...(where.at === 'place' ? { where: 'place' as const } : {}) }, at, day);
@@ -1669,7 +1671,8 @@ export interface Arrival {
   /** The area's name, as every screen shows it, and how Dan gets there (shown when he comes back to it). */
   area: string;
   wayIn: string | null;
-  /** A turn-off on the way back up (a return whose own words say why, D-154): "On the way back". */
+  /** A turn-off on the way back up (a return whose own words say why, D-154): "Back up"; a few steps back up within an
+      area too (the round-6 short review). */
   turnOff?: boolean;
   /** An evening from before last night, played at this opening: "One evening, at camp". */
   earlier?: boolean;
@@ -1817,7 +1820,8 @@ export interface View {
 
 /** The stand-in painting for a place until its own is painted from its brief (PROTOTYPE_NOTES.md). */
 export const STAND_IN: Record<StretchId, string> = {
-  'st-mouth': 'sample-well-stair', 'st-hall': 'sample-rib-gallery', 'st-salt': 'sample-pool-dome', 'st-camp': 'sample-rib-gallery',
+  /* the Box Room is small and low: it borrows its own first painting, not a hall's (the round-6 short review) */
+  'st-mouth': 'sample-well-stair', 'st-hall': 'sample-rib-gallery', 'st-salt': 'sample-pool-dome', 'st-camp': 'pt-b-2.A',
   'st-stair': 'sample-well-stair', 'st-flight2': 'sample-well-stair', 'st-square': 'sample-rib-gallery',
   /* story weeks 8–14: the side gallery is square stone, so it borrows the square gallery's own painting */
   'st-water': 'sample-pool-dome', 'st-reading': 'sample-rib-gallery', 'st-blast': 'sample-well-stair',
@@ -1951,7 +1955,7 @@ function arrivalOf(c: Content, all: Fact[], f: FactOf<'arrived'>): Arrival {
     const prevPlace = all.filter(g => g.seq < f.seq && g.type === 'arrived').pop(), nextPlace = all.find(g => g.seq > f.seq && g.type === 'arrived');
     const errandMore = errand && tripOf(prevPlace), errandStays = errand && tripOf(nextPlace);
     /* a place whose own line says how Dan came (a turn-off on the way up) needs no way-in line over it */
-    return { seq: f.seq, kind: 'place', face, late: !!f.late, earlier: !!f.late && !!f.night && W.daysBetween(f.night, f.day) > 1, area, wayIn: face === 'back' && !b.said ? wayIn : null, turnOff: face === 'back' && (!!b.turnOff || errand), errand,
+    return { seq: f.seq, kind: 'place', face, late: !!f.late, earlier: !!f.late && !!f.night && W.daysBetween(f.night, f.day) > 1, area, wayIn: face === 'back' && !b.said ? wayIn : null, turnOff: ((face === 'back' || face === 'on') && !!b.turnOff) || (face === 'back' && errand), errand,
       ...(errand ? { errandWhy: errandMore ? null : b.back ?? null, errandMore, errandStays,
         ...(errandMore && prevPlace?.type === 'arrived' ? { errandFrom: S.areaName(c.story, S.beatOf(c.story, prevPlace.id)!.stretch) } : {}) } : {}), then,
       /* the walk to it (a step marked `before` it) is told first, as the start of its words (D-160) */
